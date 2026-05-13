@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/artifact-reference.schema.json",
+  "title": "OpenVA Artifact Reference",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_id",
+    "vendor_id",
+    "source_id",
+    "artifact_type",
+    "canonical_url",
+    "source_language",
+    "access_class",
+    "rights_class",
+    "hashes",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "artifact_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "artifact_type": {
+      "enum": [
+        "dpa",
+        "subprocessors_list",
+        "privacy_notice",
+        "trust_center",
+        "security_page",
+        "compliance_page",
+        "certification_reference",
+        "terms_of_service",
+        "kyc_statement",
+        "aml_statement",
+        "ai_terms",
+        "government_request_policy",
+        "transparency_report",
+        "questionnaire_template",
+        "evidence_request_template",
+        "other_public_artifact"
+      ]
+    },
+    "canonical_url": { "type": "string", "format": "uri" },
+    "source_language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
+    "region_scope": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "default": [] },
+    "product_scope": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "default": [] },
+    "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
+    "rights_class": { "enum": ["metadata_only", "public_link_only", "snapshot_allowed", "snapshot_forbidden", "gated_excluded"] },
+    "effective_or_published_at": { "type": ["string", "null"], "format": "date" },
+    "hashes": {
+      "type": "object",
+      "required": ["raw_sha256", "normalized_text_sha256"],
+      "properties": {
+        "raw_sha256": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}|^sha256:TBD$" },
+        "normalized_text_sha256": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}|^sha256:TBD$" },
+        "hash_method": { "type": "string", "default": "metadata_plus_hash_only" }
+      },
+      "additionalProperties": false
+    },
+    "storage": {
+      "type": "object",
+      "required": ["raw_document_stored", "extracted_text_stored", "screenshot_stored"],
+      "properties": {
+        "raw_document_stored": { "const": false },
+        "extracted_text_stored": { "type": "boolean" },
+        "screenshot_stored": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false
+}

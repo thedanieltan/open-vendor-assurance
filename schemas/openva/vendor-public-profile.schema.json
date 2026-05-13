@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/vendor-public-profile.schema.json",
+  "title": "OpenVA Vendor Public Profile",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "vendor_id",
+    "display_name",
+    "legal_name",
+    "headquarters_country",
+    "official_domains",
+    "source_policy",
+    "status"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "display_name": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "legal_name": { "type": ["string", "null"], "maxLength": 240 },
+    "headquarters_country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+    "regions_served": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 2, "maxLength": 40 },
+      "uniqueItems": true,
+      "default": []
+    },
+    "official_domains": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "public_entrypoints": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "vendor_categories": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "source_policy": {
+      "type": "object",
+      "required": ["public_sources_only", "gated_materials_excluded", "raw_documents_mirrored_by_default"],
+      "properties": {
+        "public_sources_only": { "const": true },
+        "gated_materials_excluded": { "const": true },
+        "raw_documents_mirrored_by_default": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "status": { "enum": ["active", "watchlist", "deprecated", "quarantined"] },
+    "notes": { "type": ["string", "null"], "maxLength": 1000 }
+  },
+  "additionalProperties": false
+}
