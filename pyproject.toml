@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "open-vendor-assurance"
 version = "0.1.0"
@@ -13,6 +17,10 @@ dev = [
   "pytest>=8.0.0",
   "ruff>=0.6.0"
 ]
+
+[tool.setuptools.packages.find]
+include = ["tools*"]
+exclude = ["config*", "schemas*", "docs*", "examples*", "tests*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
