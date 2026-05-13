@@ -1,0 +1,19 @@
+schema_version: 0.1.0
+vendor_id: example-cloud
+display_name: Example Cloud
+legal_name: Example Cloud Ltd.
+headquarters_country: SG
+regions_served:
+  - global
+official_domains:
+  - example.com
+public_entrypoints:
+  - https://example.com/trust
+vendor_categories:
+  - cloud_infrastructure
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: watchlist
+notes: Example fixture for schema validation only. Not a real vendor record.
