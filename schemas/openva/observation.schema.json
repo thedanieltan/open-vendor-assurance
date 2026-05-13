@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/observation.schema.json",
+  "title": "OpenVA Source Observation",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "observation_id",
+    "vendor_id",
+    "source_id",
+    "observed_at",
+    "result",
+    "access_class",
+    "hashes",
+    "storage"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "observation_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "artifact_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "result": { "enum": ["ok", "not_modified", "moved", "access_changed", "fetch_failed", "quarantined"] },
+    "http_status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+    "final_url": { "type": ["string", "null"], "format": "uri" },
+    "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
+    "hashes": {
+      "type": "object",
+      "required": ["raw_sha256", "normalized_text_sha256"],
+      "properties": {
+        "raw_sha256": { "type": "string", "pattern": "^(sha256:[a-fA-F0-9]{64}|sha256:TBD)$" },
+        "normalized_text_sha256": { "type": "string", "pattern": "^(sha256:[a-fA-F0-9]{64}|sha256:TBD)$" },
+        "etag": { "type": ["string", "null"] },
+        "last_modified": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "storage": {
+      "type": "object",
+      "required": ["raw_document_stored", "extracted_text_stored", "screenshot_stored"],
+      "properties": {
+        "raw_document_stored": { "const": false },
+        "extracted_text_stored": { "type": "boolean" },
+        "screenshot_stored": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "notes": { "type": ["string", "null"], "maxLength": 1000 }
+  },
+  "additionalProperties": false
+}
