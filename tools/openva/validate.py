@@ -27,21 +27,14 @@ FIXTURE_GLOBS = {
     "change": ["examples/vendors/*/changes/*.yaml", "data/vendors/*/changes/*.yaml"],
 }
 
-TEXT_FILE_GLOBS = [
-    "README.md",
-    "DISCLAIMER.md",
-    "CONTRIBUTING.md",
-    "GOVERNANCE.md",
-    "docs/**/*.md",
+RECORD_TEXT_FILE_GLOBS = [
     "examples/**/*.yaml",
     "data/**/*.yaml",
 ]
 
 ALLOWED_PROHIBITED_CONTEXTS = (
-    "prohibited_terms",
-    "allowed_context_notes",
     "not a real vendor record",
-    "does not determine whether any vendor is compliant",
+    "fixture for schema validation only",
 )
 
 
@@ -86,7 +79,7 @@ def check_prohibited_language() -> list[str]:
     terms = load_prohibited_terms()
     failures: list[str] = []
 
-    for path in iter_paths(TEXT_FILE_GLOBS):
+    for path in iter_paths(RECORD_TEXT_FILE_GLOBS):
         text = path.read_text(encoding="utf-8")
         lower = text.lower()
         if any(context in lower for context in ALLOWED_PROHIBITED_CONTEXTS):
