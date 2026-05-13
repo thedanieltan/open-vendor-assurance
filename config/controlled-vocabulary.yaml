@@ -1,0 +1,67 @@
+schema_version: 0.1.0
+
+source_types:
+  - dpa
+  - subprocessors_list
+  - privacy_notice
+  - trust_center
+  - security_page
+  - compliance_page
+  - certification_reference
+  - terms_of_service
+  - kyc_statement
+  - aml_statement
+  - ai_terms
+  - government_request_policy
+  - transparency_report
+  - other_public_source
+
+artifact_types:
+  - dpa
+  - subprocessors_list
+  - privacy_notice
+  - trust_center
+  - security_page
+  - compliance_page
+  - certification_reference
+  - terms_of_service
+  - kyc_statement
+  - aml_statement
+  - ai_terms
+  - government_request_policy
+  - transparency_report
+  - questionnaire_template
+  - evidence_request_template
+  - other_public_artifact
+
+access_classes:
+  - public_web
+  - public_pdf
+  - public_doc_portal
+  - public_landing_gated_docs
+  - excluded_non_public
+
+rights_classes:
+  - metadata_only
+  - public_link_only
+  - snapshot_allowed
+  - snapshot_forbidden
+  - gated_excluded
+
+review_states:
+  - proposed
+  - validated
+  - quarantined
+  - superseded
+
+materiality:
+  - low
+  - medium
+  - high
+  - unknown
+
+vendor_statuses:
+  - active
+  - watchlist
+  - deprecated
+  - quarantined
