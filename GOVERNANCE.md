@@ -2,6 +2,8 @@
 
 open-vendor-assurance is maintained as a public-good metadata registry for public vendor assurance references.
 
+It is not a legal, compliance, procurement, security, KYC, AML, or vendor-risk advisory service.
+
 ## Governance principles
 
 Maintainers must preserve the following project boundaries:
@@ -26,7 +28,16 @@ Maintainers are responsible for:
 - reviewing non-English source interpretation;
 - rejecting advisory, promotional, or conclusory wording;
 - ensuring generated indexes are reproducible;
-- keeping automation constrained to pull-request proposals.
+- keeping automation constrained to pull-request proposals;
+- applying issue and PR triage rules consistently.
+
+See also:
+
+```text
+MAINTAINERS.md
+docs/triage-policy.md
+docs/public-launch-checklist.md
+```
 
 ## Human review required
 
@@ -42,6 +53,30 @@ Human review is required for:
 - workflow changes;
 - schema changes;
 - export compatibility profiles.
+
+## Pull request lanes
+
+### Core lane
+
+Core-lane PRs may affect schemas, validators, pack contracts, observation behavior, workflows, governance, security posture, conformance fixtures, and release semantics.
+
+Core-lane PRs require maintainer review.
+
+### Catalog lane
+
+Catalog-lane PRs should start with:
+
+```text
+Catalog:
+```
+
+Catalog-lane PRs must follow:
+
+```text
+docs/catalog-agent-protocol.md
+```
+
+They should remain metadata-only and small, normally three to five vendors per PR.
 
 ## Automation rule
 
@@ -60,3 +95,13 @@ Automation must not:
 ## Dataset maturity
 
 Records are best-effort public metadata. A record being present in OpenVA does not mean a vendor is approved, compliant, suitable, or recommended.
+
+## Public launch posture
+
+Before public launch, maintainers should confirm the checklist in:
+
+```text
+docs/public-launch-checklist.md
+```
+
+Open issues and PRs that could confuse the project boundary should be triaged, labelled, closed, or documented before launch.
