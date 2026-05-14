@@ -1,5 +1,5 @@
 {
-  "count": 17,
+  "count": 20,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -171,6 +171,62 @@
         "screenshot_stored": false
       },
       "vendor_id": "example-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/github/artifacts/github-security.yaml",
+      "access_class": "public_web",
+      "artifact_id": "github-security",
+      "artifact_type": "security_page",
+      "canonical_url": "https://github.com/security",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "github-security",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "github"
+    },
+    {
+      "_openva_path": "data/vendors/gitlab/artifacts/gitlab-security.yaml",
+      "access_class": "public_web",
+      "artifact_id": "gitlab-security",
+      "artifact_type": "security_page",
+      "canonical_url": "https://about.gitlab.com/security/",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "gitlab-security",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "gitlab"
     },
     {
       "_openva_path": "data/vendors/google-cloud/artifacts/google-cloud-subprocessors.yaml",
@@ -423,6 +479,34 @@
         "screenshot_stored": false
       },
       "vendor_id": "tencent-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/vercel/artifacts/vercel-security.yaml",
+      "access_class": "public_web",
+      "artifact_id": "vercel-security",
+      "artifact_type": "security_page",
+      "canonical_url": "https://vercel.com/security",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "vercel-security",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "vercel"
     },
     {
       "_openva_path": "data/vendors/workday/artifacts/workday-security-trust.yaml",
