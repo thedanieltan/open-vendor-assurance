@@ -2,6 +2,15 @@ name: observe-dry-run
 
 on:
   workflow_dispatch:
+    inputs:
+      emit_yaml:
+        description: "Print raw observation YAML after the compact summary"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
 permissions:
   contents: read
@@ -23,4 +32,9 @@ jobs:
       - name: Validate current records
         run: python -m tools.openva.validate validate
       - name: Run public-source observation pilot dry run
-        run: python -m tools.openva.observe observe-pilot --dry-run
+        run: |
+          if [ "${{ inputs.emit_yaml }}" = "true" ]; then
+            python -m tools.openva.observe observe-pilot --dry-run --emit-yaml
+          else
+            python -m tools.openva.observe observe-pilot --dry-run
+          fi
