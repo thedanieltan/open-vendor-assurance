@@ -1,0 +1,44 @@
+name: observe-report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: observe-report-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  observe-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Validate current records
+        run: python -m tools.openva.validate validate
+      - name: Run full public-source observation dry run
+        run: python -m tools.openva.observe observe-all --dry-run --emit-yaml > /tmp/openva-observations.yaml
+      - name: Generate observation report
+        run: |
+          mkdir -p reports
+          python -m tools.openva.observation_report /tmp/openva-observations.yaml \
+            --markdown-out reports/observation-report.md \
+            --json-out reports/observation-report.json
+      - name: Print observation report
+        run: cat reports/observation-report.md
+      - name: Upload observation report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: openva-observation-report
+          path: |
+            reports/observation-report.md
+            reports/observation-report.json
+          if-no-files-found: error
