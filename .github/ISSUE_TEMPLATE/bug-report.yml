@@ -1,0 +1,59 @@
+name: Bug report
+
+description: Report validator, pack, observation, fixture, workflow, or documentation bugs.
+title: "Bug: "
+labels: ["status:needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for bugs in OpenVA tooling, schemas, fixtures, workflows, or documentation.
+
+        Do not include credentials, tokens, private materials, gated portal content, SOC reports, ISO certificates, or exploit details in public issues.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - validator
+        - pack
+        - observation
+        - catalog guard
+        - conformance fixtures
+        - schema
+        - workflow
+        - documentation
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include commands, file paths, or fixture names where possible.
+      placeholder: |
+        1. Run `python -m tools.openva.validate validate`
+        2. Observe ...
+    validations:
+      required: false
+  - type: checkboxes
+    id: sensitive
+    attributes:
+      label: Sensitive material check
+      options:
+        - label: This report does not include credentials, tokens, private customer materials, gated portal content, SOC reports, ISO certificates, or exploit details.
+          required: true

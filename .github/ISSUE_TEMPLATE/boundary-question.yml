@@ -1,0 +1,47 @@
+name: Boundary question
+
+description: Ask whether a source or contribution is in scope before submitting data.
+title: "Boundary question: "
+labels: ["status:needs-triage", "area:governance", "scope:public-source-only"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when you are unsure whether a source is public, gated, vendor-controlled, or suitable for OpenVA.
+
+        Do not paste private, gated, customer-specific, NDA, portal, SOC report, ISO certificate, credential, token, or sensitive content into this issue.
+  - type: input
+    id: source_url
+    attributes:
+      label: Source URL
+      description: Public URL under consideration, if any.
+    validations:
+      required: false
+  - type: dropdown
+    id: concern
+    attributes:
+      label: Main concern
+      options:
+        - Public vs gated access
+        - Vendor-controlled source authority
+        - Native-language interpretation
+        - Rights or redistribution concern
+        - Advisory wording concern
+        - Artifact type concern
+        - Other boundary concern
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Ask the boundary question without including private or gated materials.
+    validations:
+      required: true
+  - type: checkboxes
+    id: private_materials
+    attributes:
+      label: Sensitive material check
+      options:
+        - label: I have not included private, gated, customer-specific, NDA, portal, credential, token, SOC report, ISO certificate, or sensitive content in this issue.
+          required: true
