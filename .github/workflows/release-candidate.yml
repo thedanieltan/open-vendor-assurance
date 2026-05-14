@@ -1,0 +1,50 @@
+name: release-candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload_artifacts:
+        description: "Upload generated release artifacts"
+        required: false
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Validate current records
+        run: python -m tools.openva.validate validate
+      - name: Run tests
+        run: pytest -q
+      - name: Run release smoke test
+        run: python -m tools.openva.release_smoke
+      - name: Build release artifact manifest
+        run: python -m tools.openva.release_artifacts build
+      - name: Check release artifact manifest
+        run: python -m tools.openva.release_artifacts check
+      - name: Print release artifact manifest
+        run: cat release-artifacts.json
+      - name: Upload release candidate artifacts
+        if: inputs.upload_artifacts == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: openva-release-candidate-artifacts
+          path: release-artifacts.json
+          if-no-files-found: error

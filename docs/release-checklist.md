@@ -8,6 +8,16 @@ Use this checklist before tagging an OpenVA release.
 - [ ] Confirm whether any schema, pack, profile, or importer compatibility changes exist.
 - [ ] Confirm release notes include known limitations and non-advisory boundaries.
 
+## Manual workflow
+
+Before tagging, maintainers may run the manual release candidate workflow:
+
+```text
+release-candidate
+```
+
+The workflow is manual-only, read-only, does not tag, does not publish a release, and uploads `release-artifacts.json` as a workflow artifact when requested.
+
 ## Required commands
 
 Run the full release smoke test:
