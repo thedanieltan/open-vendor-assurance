@@ -1,0 +1,48 @@
+name: source-refinement-queue
+
+on:
+  workflow_dispatch:
+    inputs:
+      observation_report_json:
+        description: "Path to observation report JSON in the checked-out repository"
+        required: false
+        default: "reports/observation-report.json"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-refinement-queue-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-refinement-queue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Validate current records
+        run: python -m tools.openva.validate validate
+      - name: Check observation report path
+        run: test -f "${{ inputs.observation_report_json }}"
+      - name: Generate source refinement queue
+        run: |
+          mkdir -p reports
+          python -m tools.openva.source_refinement_queue "${{ inputs.observation_report_json }}" \
+            --markdown-out reports/source-refinement-queue.md \
+            --json-out reports/source-refinement-queue.json
+      - name: Print source refinement queue
+        run: cat reports/source-refinement-queue.md
+      - name: Upload source refinement queue artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: openva-source-refinement-queue
+          path: |
+            reports/source-refinement-queue.md
+            reports/source-refinement-queue.json
+          if-no-files-found: error
