@@ -1,4 +1,15 @@
+import subprocess
 from pathlib import Path
+
+
+def tracked_files() -> list[str]:
+    result = subprocess.run(
+        ["git", "ls-files"],
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
 
 
 def test_gitignore_covers_local_generated_artifacts():
@@ -16,12 +27,12 @@ def test_gitignore_covers_local_generated_artifacts():
 
 
 def test_no_tracked_python_bytecode_files():
-    forbidden = list(Path(".").glob("**/*.pyc")) + list(Path(".").glob("**/*.pyo"))
+    forbidden = [path for path in tracked_files() if path.endswith((".pyc", ".pyo"))]
 
     assert forbidden == []
 
 
-def test_no_tracked_pycache_directories_with_files():
-    cache_files = [path for path in Path(".").glob("**/__pycache__/*") if path.is_file()]
+def test_no_tracked_pycache_paths():
+    forbidden = [path for path in tracked_files() if "/__pycache__/" in path or path.startswith("__pycache__/")]
 
-    assert cache_files == []
+    assert forbidden == []
