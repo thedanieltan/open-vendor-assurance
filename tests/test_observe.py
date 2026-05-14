@@ -127,7 +127,7 @@ def test_ambiguous_results_are_identified():
     assert observe.is_ambiguous_result("ok") is False
 
 
-def test_observe_sources_skips_ambiguous_writes_by_default(monkeypatch, tmp_path):
+def test_observe_sources_skips_ambiguous_writes_by_default(monkeypatch):
     source = {
         "source_id": "example-source",
         "vendor_id": "example-vendor",
@@ -155,14 +155,18 @@ def test_observe_sources_skips_ambiguous_writes_by_default(monkeypatch, tmp_path
         },
     )
     written = []
-    monkeypatch.setattr(observe, "write_observation", lambda observation: written.append(observation) or tmp_path / "x.yaml")
+    monkeypatch.setattr(
+        observe,
+        "write_observation",
+        lambda observation: written.append(observation) or observe.ROOT / "data/vendors/example-vendor/observations/x.yaml",
+    )
 
     observe.observe_sources(dry_run=False, pilot_only=True)
 
     assert written == []
 
 
-def test_observe_sources_can_write_ambiguous_when_explicitly_allowed(monkeypatch, tmp_path):
+def test_observe_sources_can_write_ambiguous_when_explicitly_allowed(monkeypatch):
     source = {
         "source_id": "example-source",
         "vendor_id": "example-vendor",
@@ -187,7 +191,11 @@ def test_observe_sources_can_write_ambiguous_when_explicitly_allowed(monkeypatch
     monkeypatch.setattr(observe, "select_sources", lambda pilot_only: [source])
     monkeypatch.setattr(observe, "observation_for_source", lambda _source: observation)
     written = []
-    monkeypatch.setattr(observe, "write_observation", lambda item: written.append(item) or tmp_path / "x.yaml")
+    monkeypatch.setattr(
+        observe,
+        "write_observation",
+        lambda item: written.append(item) or observe.ROOT / "data/vendors/example-vendor/observations/x.yaml",
+    )
 
     observe.observe_sources(dry_run=False, pilot_only=True, allow_ambiguous_write=True)
 
