@@ -1,8 +1,8 @@
 # Observation Pilot
 
-P17 introduces a narrow observation pilot for selected public sources.
+P17 introduced a narrow observation pilot for selected public sources. P18 hardens the pilot output and write behavior before broader automation.
 
-The goal is to validate observation behavior before running broader automated observation across the catalog.
+The goal is to validate observation behavior before running automated observation across the catalog or using observations in export-pack trust signals.
 
 ## Pilot scope
 
@@ -12,7 +12,7 @@ The pilot source list lives in:
 config/observation-pilot.yaml
 ```
 
-The initial pilot focuses on a small set of cloud-provider public sources that already exist in OpenVA.
+The pilot must stay small and controlled until observation behavior is proven against real public sources.
 
 ## Run dry-run pilot
 
@@ -20,7 +20,26 @@ The initial pilot focuses on a small set of cloud-provider public sources that a
 python -m tools.openva.observe observe-pilot --dry-run
 ```
 
-Dry-run output prints observation records to stdout and does not write files.
+Dry-run output defaults to a compact summary:
+
+```text
+OpenVA observation summary
+mode: dry-run
+sources: 5
+bot_protected: 1
+ok: 4
+
+Results by source:
+- example-source: ok (http=200, final_url=https://example.com)
+```
+
+Dry-run does not write files.
+
+To inspect raw observation YAML after the compact summary:
+
+```bash
+python -m tools.openva.observe observe-pilot --dry-run --emit-yaml
+```
 
 ## Write pilot observations
 
@@ -33,31 +52,30 @@ pytest -q
 
 Only maintainers should write pilot observations until the behavior is proven.
 
-## Result meanings
+Ambiguous results are skipped by default during write runs:
 
-### `ok`
+```text
+bot_protected
+size_limited
+fetch_failed
+quarantined
+```
 
-The public source was fetched without storing raw content. Hashes were computed from the fetched response.
+A maintainer can intentionally write ambiguous results with:
 
-### `bot_protected`
+```bash
+python -m tools.openva.observe observe-pilot --allow-ambiguous-write
+```
 
-The source appears public to normal users, but OpenVA's transparent observer could not fetch it because the site required additional human or controlled-access interaction.
+Use that override only when the result itself is meaningful public history.
 
-OpenVA respects that boundary. No hashes are produced.
+## Result taxonomy
 
-### `size_limited`
+See:
 
-The public source response exceeded OpenVA's observation byte limit.
-
-OpenVA does not store or hash partial oversized responses in the pilot. No hashes are produced.
-
-### `fetch_failed`
-
-The request failed for reasons other than recognised access-boundary, size-limit, or quarantine outcomes.
-
-### `quarantined`
-
-The URL or redirect target failed URL-safety checks.
+```text
+docs/observation-result-taxonomy.md
+```
 
 ## Boundary
 
@@ -66,6 +84,7 @@ The observation pilot must not:
 - use credentials or private access;
 - submit forms;
 - perform restricted-access workarounds;
+- bypass anti-bot, CAPTCHA, login, portal, or access-control systems;
 - collect gated materials;
 - store raw documents;
 - store screenshots;
