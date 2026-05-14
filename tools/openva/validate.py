@@ -11,6 +11,8 @@ import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.openva.indexes import build_indexes, check_generated_current, records_for
+from tools.openva.pack import verify_pack_integrity
+from tools.openva.url_safety import validate_url_safety
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -172,6 +174,7 @@ def validate_quality_gates() -> list[str]:
     for source in records_for("source"):
         path = source["_openva_path"]
         failures.extend(validate_access_rights(path, source))
+        failures.extend(f"{path}: source_url: {failure}" for failure in validate_url_safety(source["source_url"]))
         if path.startswith("data/"):
             expected_path = f"data/vendors/{source['vendor_id']}/sources/{source['source_id']}.yaml"
             if path != expected_path:
@@ -190,6 +193,7 @@ def validate_quality_gates() -> list[str]:
     for artifact in records_for("artifact"):
         path = artifact["_openva_path"]
         failures.extend(validate_access_rights(path, artifact))
+        failures.extend(f"{path}: canonical_url: {failure}" for failure in validate_url_safety(artifact["canonical_url"]))
         if path.startswith("data/"):
             expected_path = f"data/vendors/{artifact['vendor_id']}/artifacts/{artifact['artifact_id']}.yaml"
             if path != expected_path:
@@ -230,6 +234,7 @@ def validate_all() -> int:
         failures.extend(validate_schema(kind))
     failures.extend(validate_cross_references())
     failures.extend(validate_quality_gates())
+    failures.extend(verify_pack_integrity())
     failures.extend(check_prohibited_language())
     failures.extend(check_generated_current())
 
