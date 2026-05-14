@@ -10,7 +10,13 @@ Use this checklist before tagging an OpenVA release.
 
 ## Required commands
 
-Run:
+Run the full release smoke test:
+
+```bash
+python -m tools.openva.release_smoke
+```
+
+The smoke test covers the core release checklist. Maintainers may also run the underlying commands individually:
 
 ```bash
 python -m tools.openva.validate build-indexes
