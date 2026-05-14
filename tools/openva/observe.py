@@ -84,7 +84,7 @@ def fetch_public(url: str) -> tuple[str, int | None, str | None, bytes]:
                 return "quarantined", status, final_url, b""
             data = response.read(MAX_BYTES + 1)
             if len(data) > MAX_BYTES:
-                return "fetch_failed", status, final_url, b""
+                return "size_limited", status, final_url, b""
             return "ok", status, final_url, data
     except urllib.error.HTTPError as error:
         status = int(error.code)
