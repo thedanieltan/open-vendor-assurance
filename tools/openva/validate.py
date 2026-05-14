@@ -5,6 +5,7 @@ import json
 import re
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
@@ -32,6 +33,7 @@ FIXTURE_GLOBS = {
 
 RECORD_TEXT_FILE_GLOBS = ["examples/**/*.yaml", "data/**/*.yaml"]
 ALLOWED_PROHIBITED_CONTEXTS = ("not a real vendor record", "fixture for schema validation only")
+RAW_CONTENT_DIR_NAMES = {"raw", "raw-documents", "snapshots", "screenshots", "extracted-text"}
 
 
 def load_yaml(path: Path) -> Any:
@@ -109,6 +111,56 @@ def validate_cross_references() -> list[str]:
     return failures
 
 
+def domain_matches(host: str, official_domains: list[str]) -> bool:
+    host = host.lower().removeprefix("www.")
+    for domain in official_domains:
+        domain = domain.lower().removeprefix("www.")
+        if host == domain or host.endswith("." + domain):
+            return True
+    return False
+
+
+def validate_quality_gates() -> list[str]:
+    failures: list[str] = []
+    vendors = {record["vendor_id"]: record for record in records_for("vendor")}
+    seen_urls: dict[str, str] = {}
+
+    for vendor_id, vendor in vendors.items():
+        expected_path = f"data/vendors/{vendor_id}/vendor.yaml"
+        if vendor["_openva_path"].startswith("data/") and vendor["_openva_path"] != expected_path:
+            failures.append(f"{vendor['_openva_path']}: vendor_id does not match canonical path {expected_path}")
+
+    for source in records_for("source"):
+        path = source["_openva_path"]
+        if path.startswith("data/"):
+            expected_path = f"data/vendors/{source['vendor_id']}/sources/{source['source_id']}.yaml"
+            if path != expected_path:
+                failures.append(f"{path}: source_id/vendor_id do not match canonical path {expected_path}")
+
+        url = source["source_url"].rstrip("/")
+        if url in seen_urls:
+            failures.append(f"{path}: duplicate source_url also used by {seen_urls[url]}")
+        seen_urls[url] = path
+
+        parsed = urlparse(source["source_url"])
+        vendor = vendors.get(source["vendor_id"])
+        if vendor and parsed.hostname and not domain_matches(parsed.hostname, vendor["official_domains"]):
+            failures.append(f"{path}: source host {parsed.hostname} is not within official_domains for {source['vendor_id']}")
+
+    for artifact in records_for("artifact"):
+        path = artifact["_openva_path"]
+        if path.startswith("data/"):
+            expected_path = f"data/vendors/{artifact['vendor_id']}/artifacts/{artifact['artifact_id']}.yaml"
+            if path != expected_path:
+                failures.append(f"{path}: artifact_id/vendor_id do not match canonical path {expected_path}")
+
+    for path in ROOT.glob("**/*"):
+        if path.is_dir() and path.name in RAW_CONTENT_DIR_NAMES:
+            failures.append(f"{path.relative_to(ROOT)}: raw content directory is not allowed by default")
+
+    return failures
+
+
 def load_prohibited_terms() -> list[str]:
     config = load_yaml(ROOT / "config/prohibited-claims.yaml")
     return [str(term).lower() for term in config.get("prohibited_terms", [])]
@@ -136,6 +188,7 @@ def validate_all() -> int:
     for kind in SCHEMA_MAP:
         failures.extend(validate_schema(kind))
     failures.extend(validate_cross_references())
+    failures.extend(validate_quality_gates())
     failures.extend(check_prohibited_language())
     failures.extend(check_generated_current())
 
