@@ -1,0 +1,22 @@
+schema_version: 0.1.0
+vendor_id: tencent-cloud
+display_name: Tencent Cloud
+legal_name: Tencent Cloud
+headquarters_country: CN
+regions_served:
+- global
+- CN
+- APAC
+official_domains:
+- tencentcloud.com
+public_entrypoints:
+- https://www.tencentcloud.com/services/compliance
+- https://www.tencentcloud.com/document/product/1033/32281
+vendor_categories:
+- cloud_infrastructure
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Initial public-source seed record for a major mainland China cloud provider.

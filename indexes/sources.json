@@ -1,7 +1,51 @@
 {
-  "count": 1,
+  "count": 6,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
+    {
+      "_openva_path": "data/vendors/alibaba-cloud/sources/alibaba-cloud-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "alibaba-cloud-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://www.alibabacloud.com/en/trust-center",
+      "summary_en": "Public Alibaba Cloud trust center landing page for security, privacy, and assurance materials.",
+      "summary_native": "Public Alibaba Cloud trust center landing page for security, privacy, and assurance materials.",
+      "title_en": "Alibaba Cloud Trust Center",
+      "title_native": "Alibaba Cloud Trust Center",
+      "vendor_id": "alibaba-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/aws/sources/aws-sub-processors.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "aws-sub-processors",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://aws.amazon.com/compliance/sub-processors/",
+      "summary_en": "Public AWS page describing sub-processors for AWS services.",
+      "summary_native": "Public AWS page describing sub-processors for AWS services.",
+      "title_en": "AWS Sub-processors",
+      "title_native": "AWS Sub-processors",
+      "vendor_id": "aws"
+    },
     {
       "_openva_path": "examples/vendors/example-cloud/sources/example-cloud-trust-center.yaml",
       "access_class": "public_web",
@@ -23,6 +67,72 @@
       "title_en": "Example Cloud Trust Center",
       "title_native": "Example Cloud Trust Center",
       "vendor_id": "example-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/google-cloud/sources/google-cloud-subprocessors.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "google-cloud-subprocessors",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://cloud.google.com/terms/subprocessors",
+      "summary_en": "Public Google Cloud page listing subprocessors and related information.",
+      "summary_native": "Public Google Cloud page listing subprocessors and related information.",
+      "title_en": "Google Cloud Subprocessors",
+      "title_native": "Google Cloud Subprocessors",
+      "vendor_id": "google-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/microsoft/sources/microsoft-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "microsoft-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA",
+      "summary_en": "Public Microsoft licensing page for the Microsoft Products and Services Data Protection Addendum.",
+      "summary_native": "Public Microsoft licensing page for the Microsoft Products and Services Data Protection Addendum.",
+      "title_en": "Microsoft Products and Services Data Protection Addendum",
+      "title_native": "Microsoft Products and Services Data Protection Addendum",
+      "vendor_id": "microsoft"
+    },
+    {
+      "_openva_path": "data/vendors/tencent-cloud/sources/tencent-cloud-subprocessors.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "tencent-cloud-subprocessors",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.tencentcloud.com/document/product/1033/32281",
+      "summary_en": "Public Tencent Cloud page describing sub-processors and other third parties.",
+      "summary_native": "Public Tencent Cloud page describing sub-processors and other third parties.",
+      "title_en": "Sub-processors and Other Third Parties",
+      "title_native": "Sub-processors and Other Third Parties",
+      "vendor_id": "tencent-cloud"
     }
   ],
   "kind": "source",
