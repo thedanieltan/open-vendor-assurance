@@ -21,6 +21,7 @@ docs/public-launch-checklist.md
 docs/roadmap.md
 docs/triage-policy.md
 docs/first-good-issue-policy.md
+docs/ci-and-branch-protection.md
 MAINTAINERS.md
 ```
 
