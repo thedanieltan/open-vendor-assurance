@@ -1,0 +1,91 @@
+# OpenVA Documentation Index
+
+This index helps contributors, maintainers, catalog agents, and downstream consumers find the right OpenVA document quickly.
+
+## Project boundary
+
+Read these first to understand what OpenVA is and is not:
+
+```text
+README.md
+DISCLAIMER.md
+GOVERNANCE.md
+CONTRIBUTING.md
+SECURITY.md
+```
+
+## Public launch and governance
+
+```text
+docs/public-launch-checklist.md
+docs/roadmap.md
+docs/triage-policy.md
+docs/first-good-issue-policy.md
+MAINTAINERS.md
+```
+
+## Catalog contribution workflow
+
+```text
+docs/catalog-agent-protocol.md
+docs/catalog-batch-generator.md
+docs/coverage-map.md
+docs/vendor-expansion-backlog.md
+docs/public-update-pathway.md
+docs/vendor-public-manifest.md
+```
+
+## Observation workflow
+
+```text
+docs/observation-pilot.md
+docs/observation-result-taxonomy.md
+config/observation-pilot.yaml
+```
+
+## Consumer and importer workflow
+
+```text
+docs/consumer-conformance-fixtures.md
+docs/versioning-policy.md
+docs/release-policy.md
+docs/release-checklist.md
+fixtures/packs/
+openva-pack.json
+indexes/
+schemas/openva/
+```
+
+## Policies
+
+```text
+policy/scope.md
+policy/non-advisory-policy.md
+policy/public-sources-only.md
+policy/language-policy.md
+policy/retention-policy.md
+policy/controlled-vocabulary.yaml
+```
+
+## Validation commands
+
+Every core change should pass:
+
+```bash
+python -m tools.openva.validate validate
+pytest -q
+```
+
+Before release or pack pinning, run:
+
+```bash
+python -m tools.openva.validate build-indexes
+python -m tools.openva.validate validate
+pytest -q
+python -m tools.openva.conformance fixtures/packs/minimal-valid
+python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation
+```
+
+## Non-advisory reminder
+
+OpenVA records public-source metadata. It does not approve, recommend, certify, score, or determine whether any vendor is compliant, safe, adequate, suitable, low risk, or high risk.
