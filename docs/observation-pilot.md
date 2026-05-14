@@ -41,13 +41,19 @@ The public source was fetched without storing raw content. Hashes were computed 
 
 ### `bot_protected`
 
-The source appears public, but automation was blocked or challenged by anti-bot behavior, access controls, or bot-protection status codes.
+The source appears public to normal users, but OpenVA's transparent observer could not fetch it because the site required additional human or controlled-access interaction.
 
-OpenVA must not bypass the protection. No hashes are produced.
+OpenVA respects that boundary. No hashes are produced.
+
+### `size_limited`
+
+The public source response exceeded OpenVA's observation byte limit.
+
+OpenVA does not store or hash partial oversized responses in the pilot. No hashes are produced.
 
 ### `fetch_failed`
 
-The request failed for reasons other than recognised bot protection or quarantining.
+The request failed for reasons other than recognised access-boundary, size-limit, or quarantine outcomes.
 
 ### `quarantined`
 
@@ -57,11 +63,11 @@ The URL or redirect target failed URL-safety checks.
 
 The observation pilot must not:
 
-- log in;
+- use credentials or private access;
 - submit forms;
-- solve CAPTCHAs;
-- rotate proxies;
-- bypass anti-bot controls;
+- perform restricted-access workarounds;
+- collect gated materials;
 - store raw documents;
 - store screenshots;
+- hash partial oversized responses;
 - generate legal, compliance, procurement, security, KYC, AML, or risk conclusions.
