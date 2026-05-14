@@ -24,12 +24,15 @@ python -m tools.openva.validate validate
 pytest -q
 python -m tools.openva.conformance fixtures/packs/minimal-valid
 python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation
+python -m tools.openva.release_artifacts build
+python -m tools.openva.release_artifacts check
 ```
 
 ## Generated files
 
 - [ ] `openva-pack.json` is committed and current.
 - [ ] `indexes/*.json` are committed and current.
+- [ ] `release-artifacts.json` is generated for the release candidate or release asset.
 - [ ] No generated diff remains after `build-indexes`.
 
 ## Compatibility
@@ -41,6 +44,7 @@ python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observatio
 - [ ] Compatibility-impacting changes are explicitly called out.
 - [ ] Breaking changes are explicitly called out.
 - [ ] Consumer pinning guidance is included.
+- [ ] Release artifact checksums are available for `openva-pack.json`, `indexes/`, `schemas/openva/`, and `fixtures/packs/`.
 
 ## Scope and safety
 
@@ -66,6 +70,7 @@ Release notes should include:
 - [ ] Tooling changes, if any.
 - [ ] Governance/docs changes, if any.
 - [ ] Conformance fixture changes, if any.
+- [ ] Release artifact checksum note.
 - [ ] Known limitations.
 - [ ] Upgrade notes.
 
