@@ -4,6 +4,7 @@ from tools.openva.catalog_guard import validate_catalog_paths
 def test_catalog_guard_allows_catalog_files():
     failures = validate_catalog_paths(
         [
+            "catalog-batches/p26-project-management-saas.yaml",
             "data/vendors/example/vendor.yaml",
             "data/vendors/example/sources/example-source.yaml",
             "data/vendors/example/artifacts/example-artifact.yaml",
