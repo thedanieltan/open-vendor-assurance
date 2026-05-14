@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/catalog-batch.schema.json",
+  "title": "OpenVA Catalog Batch Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "batch_id",
+    "collected_at",
+    "observer",
+    "vendors"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "batch_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "collected_at": { "type": "string", "format": "date-time" },
+    "observer": { "enum": ["human", "agent", "hybrid"] },
+    "vendors": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/vendor_entry" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "url": { "type": "string", "format": "uri" },
+    "vendor_entry": {
+      "type": "object",
+      "required": [
+        "vendor_id",
+        "display_name",
+        "legal_name",
+        "headquarters_country",
+        "regions_served",
+        "official_domains",
+        "public_entrypoints",
+        "vendor_categories",
+        "source",
+        "artifact"
+      ],
+      "properties": {
+        "vendor_id": { "$ref": "#/$defs/id" },
+        "display_name": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "legal_name": { "type": ["string", "null"], "maxLength": 240 },
+        "headquarters_country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+        "regions_served": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2, "maxLength": 40 },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "official_domains": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$" },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "public_entrypoints": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/url" },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "vendor_categories": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "notes": { "type": ["string", "null"], "maxLength": 1000 },
+        "source": { "$ref": "#/$defs/source_entry" },
+        "artifact": { "$ref": "#/$defs/artifact_entry" }
+      },
+      "additionalProperties": false
+    },
+    "source_entry": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "source_type",
+        "title_native",
+        "title_en",
+        "source_url",
+        "source_language",
+        "summary_native",
+        "summary_en"
+      ],
+      "properties": {
+        "source_id": { "$ref": "#/$defs/id" },
+        "source_type": {
+          "enum": [
+            "dpa",
+            "subprocessors_list",
+            "privacy_notice",
+            "trust_center",
+            "security_page",
+            "compliance_page",
+            "certification_reference",
+            "terms_of_service",
+            "kyc_statement",
+            "aml_statement",
+            "ai_terms",
+            "government_request_policy",
+            "transparency_report",
+            "other_public_source"
+          ]
+        },
+        "title_native": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "title_en": { "type": ["string", "null"], "maxLength": 300 },
+        "source_url": { "$ref": "#/$defs/url" },
+        "source_language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
+        "summary_native": { "type": ["string", "null"], "maxLength": 1200 },
+        "summary_en": { "type": ["string", "null"], "maxLength": 1200 },
+        "confidence": { "enum": ["low", "medium", "high"], "default": "medium" }
+      },
+      "additionalProperties": false
+    },
+    "artifact_entry": {
+      "type": "object",
+      "required": ["artifact_id", "artifact_type"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/id" },
+        "artifact_type": {
+          "enum": [
+            "dpa",
+            "subprocessors_list",
+            "privacy_notice",
+            "trust_center",
+            "security_page",
+            "compliance_page",
+            "certification_reference",
+            "terms_of_service",
+            "kyc_statement",
+            "aml_statement",
+            "ai_terms",
+            "government_request_policy",
+            "transparency_report",
+            "questionnaire_template",
+            "evidence_request_template",
+            "other_public_artifact"
+          ]
+        },
+        "region_scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true,
+          "default": []
+        },
+        "product_scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true,
+          "default": []
+        },
+        "effective_or_published_at": { "type": ["string", "null"], "format": "date" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
