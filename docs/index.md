@@ -17,6 +17,7 @@ SECURITY.md
 ## Public launch and governance
 
 ```text
+docs/v0.1.0-public-launch-readiness.md
 docs/public-launch-checklist.md
 docs/public-launch-cutover.md
 docs/v0.1.0-release-candidate.md
