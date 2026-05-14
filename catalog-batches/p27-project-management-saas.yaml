@@ -1,0 +1,149 @@
+schema_version: 0.1.0
+batch_id: p27-project-management-saas
+collected_at: '2026-05-14T00:00:00Z'
+observer: human
+vendors:
+  - vendor_id: asana
+    display_name: Asana
+    legal_name: Asana, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - asana.com
+    public_entrypoints:
+      - https://asana.com/security
+    vendor_categories:
+      - enterprise_software
+      - collaboration_software
+      - project_management
+      - work_management
+    notes: Initial public-source catalog record for a major work management and collaboration software provider.
+    source:
+      source_id: asana-security
+      source_type: security_page
+      title_native: Asana Security
+      title_en: Asana Security
+      source_url: https://asana.com/security
+      source_language: en
+      summary_native: Public Asana page describing security and trust information.
+      summary_en: Public Asana page describing security and trust information.
+    artifact:
+      artifact_id: asana-security
+      artifact_type: security_page
+
+  - vendor_id: monday-com
+    display_name: monday.com
+    legal_name: monday.com Ltd.
+    headquarters_country: IL
+    regions_served:
+      - global
+    official_domains:
+      - monday.com
+    public_entrypoints:
+      - https://monday.com/trustcenter
+    vendor_categories:
+      - enterprise_software
+      - collaboration_software
+      - project_management
+      - work_management
+    notes: Initial public-source catalog record for a major work management and collaboration software provider.
+    source:
+      source_id: monday-com-trust-center
+      source_type: trust_center
+      title_native: monday.com Trust Center
+      title_en: monday.com Trust Center
+      source_url: https://monday.com/trustcenter
+      source_language: en
+      summary_native: Public monday.com page describing trust, security, privacy, and compliance information.
+      summary_en: Public monday.com page describing trust, security, privacy, and compliance information.
+    artifact:
+      artifact_id: monday-com-trust-center
+      artifact_type: trust_center
+
+  - vendor_id: clickup
+    display_name: ClickUp
+    legal_name: Mango Technologies, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - clickup.com
+    public_entrypoints:
+      - https://clickup.com/security
+    vendor_categories:
+      - enterprise_software
+      - collaboration_software
+      - project_management
+      - productivity_software
+    notes: Initial public-source catalog record for a major productivity and project management software provider.
+    source:
+      source_id: clickup-security
+      source_type: security_page
+      title_native: ClickUp Security
+      title_en: ClickUp Security
+      source_url: https://clickup.com/security
+      source_language: en
+      summary_native: Public ClickUp page describing security and trust information.
+      summary_en: Public ClickUp page describing security and trust information.
+    artifact:
+      artifact_id: clickup-security
+      artifact_type: security_page
+
+  - vendor_id: airtable
+    display_name: Airtable
+    legal_name: Formagrid Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - airtable.com
+    public_entrypoints:
+      - https://www.airtable.com/security
+    vendor_categories:
+      - enterprise_software
+      - collaboration_software
+      - database
+      - work_management
+    notes: Initial public-source catalog record for a major collaborative app platform and work management software provider.
+    source:
+      source_id: airtable-security
+      source_type: security_page
+      title_native: Airtable Security
+      title_en: Airtable Security
+      source_url: https://www.airtable.com/security
+      source_language: en
+      summary_native: Public Airtable page describing security and trust information.
+      summary_en: Public Airtable page describing security and trust information.
+    artifact:
+      artifact_id: airtable-security
+      artifact_type: security_page
+
+  - vendor_id: linear
+    display_name: Linear
+    legal_name: null
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - linear.app
+    public_entrypoints:
+      - https://linear.app/security
+    vendor_categories:
+      - enterprise_software
+      - project_management
+      - issue_tracking
+      - developer_platform
+    notes: Initial public-source catalog record for a major issue tracking and product development workflow provider.
+    source:
+      source_id: linear-security
+      source_type: security_page
+      title_native: Linear Security
+      title_en: Linear Security
+      source_url: https://linear.app/security
+      source_language: en
+      summary_native: Public Linear page describing security and trust information.
+      summary_en: Public Linear page describing security and trust information.
+    artifact:
+      artifact_id: linear-security
+      artifact_type: security_page
