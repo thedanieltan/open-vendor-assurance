@@ -27,6 +27,16 @@ docs/ci-and-branch-protection.md
 MAINTAINERS.md
 ```
 
+## Review operations
+
+```text
+docs/human-review-operations.md
+docs/source-refinement-workflow.md
+docs/observation-reporting.md
+docs/agent-control-plane.md
+docs/agent-runbook.md
+```
+
 ## Catalog contribution workflow
 
 ```text
