@@ -18,6 +18,8 @@ SECURITY.md
 
 ```text
 docs/public-launch-checklist.md
+docs/public-launch-cutover.md
+docs/v0.1.0-release-candidate.md
 docs/roadmap.md
 docs/triage-policy.md
 docs/first-good-issue-policy.md
