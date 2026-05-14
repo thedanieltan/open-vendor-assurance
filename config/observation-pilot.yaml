@@ -1,0 +1,11 @@
+schema_version: 0.1.0
+
+# Small controlled source list for observation pilot runs.
+# Keep this list narrow until observation behavior is proven against real public sources.
+
+sources:
+  - aws-sub-processors
+  - google-cloud-subprocessors
+  - microsoft-dpa
+  - alibaba-cloud-trust-center
+  - tencent-cloud-subprocessors

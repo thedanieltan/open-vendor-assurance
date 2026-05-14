@@ -17,6 +17,9 @@ from tools.openva.url_safety import validate_url_safety
 USER_AGENT = "open-vendor-assurance-observer/0.1 (+metadata-only; public sources only)"
 MAX_BYTES = 2_000_000
 TIMEOUT_SECONDS = 20
+PILOT_CONFIG = ROOT / "config" / "observation-pilot.yaml"
+
+BOT_PROTECTED_STATUS_CODES = {401, 403, 407, 429}
 
 BLOCKED_HINTS = (
     "login",
@@ -29,6 +32,9 @@ BLOCKED_HINTS = (
     "customer portal",
     "trust portal",
     "request access",
+    "cloudflare",
+    "checking your browser",
+    "attention required",
 )
 
 
@@ -39,6 +45,30 @@ def now_iso() -> str:
 def safe_observation_id(source_id: str, observed_at: str) -> str:
     date = observed_at[:10]
     return f"{source_id}-{date}"
+
+
+def load_pilot_source_ids() -> set[str]:
+    if not PILOT_CONFIG.exists():
+        raise FileNotFoundError(f"{PILOT_CONFIG.relative_to(ROOT)} is missing")
+    config = yaml.safe_load(PILOT_CONFIG.read_text(encoding="utf-8")) or {}
+    source_ids = config.get("sources", [])
+    if not isinstance(source_ids, list) or not all(isinstance(item, str) for item in source_ids):
+        raise ValueError("config/observation-pilot.yaml: sources must be a list of source_id strings")
+    return set(source_ids)
+
+
+def select_sources(*, pilot_only: bool) -> list[dict[str, Any]]:
+    sources = [source for source in records_for("source") if not source["_openva_path"].startswith("examples/")]
+    if not pilot_only:
+        return sources
+
+    pilot_ids = load_pilot_source_ids()
+    available_ids = {source["source_id"] for source in sources}
+    missing_ids = sorted(pilot_ids - available_ids)
+    if missing_ids:
+        missing = ", ".join(missing_ids)
+        raise ValueError(f"config/observation-pilot.yaml references unknown source_id(s): {missing}")
+    return [source for source in sources if source["source_id"] in pilot_ids]
 
 
 def fetch_public(url: str) -> tuple[str, int | None, str | None, bytes]:
@@ -54,12 +84,12 @@ def fetch_public(url: str) -> tuple[str, int | None, str | None, bytes]:
                 return "quarantined", status, final_url, b""
             data = response.read(MAX_BYTES + 1)
             if len(data) > MAX_BYTES:
-                return "fetch_failed", status, final_url, b""
+                return "size_limited", status, final_url, b""
             return "ok", status, final_url, data
     except urllib.error.HTTPError as error:
         status = int(error.code)
-        if status in {401, 403, 407, 429}:
-            return "access_changed", status, url, b""
+        if status in BOT_PROTECTED_STATUS_CODES:
+            return "bot_protected", status, url, b""
         return "fetch_failed", status, url, b""
     except (urllib.error.URLError, TimeoutError, socket.timeout):
         return "fetch_failed", None, url, b""
@@ -76,7 +106,7 @@ def observation_for_source(source: dict[str, Any]) -> dict[str, Any]:
     result, http_status, final_url, data = fetch_public(source["source_url"])
 
     if result == "ok" and looks_blocked(data):
-        result = "access_changed"
+        result = "bot_protected"
         data = b""
 
     if result == "ok":
@@ -121,11 +151,9 @@ def write_observation(observation: dict[str, Any]) -> Path:
     return path
 
 
-def observe_all(dry_run: bool) -> int:
+def observe_sources(dry_run: bool, *, pilot_only: bool) -> int:
     created = []
-    for source in records_for("source"):
-        if source["_openva_path"].startswith("examples/"):
-            continue
+    for source in select_sources(pilot_only=pilot_only):
         observation = observation_for_source(source)
         if dry_run:
             print(yaml.safe_dump(observation, sort_keys=False, allow_unicode=True))
@@ -140,12 +168,14 @@ def observe_all(dry_run: bool) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(prog="openva-observe")
-    parser.add_argument("command", choices=["observe-all"])
+    parser.add_argument("command", choices=["observe-all", "observe-pilot"])
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
     if args.command == "observe-all":
-        return observe_all(dry_run=args.dry_run)
+        return observe_sources(dry_run=args.dry_run, pilot_only=False)
+    if args.command == "observe-pilot":
+        return observe_sources(dry_run=args.dry_run, pilot_only=True)
 
     raise AssertionError("unreachable")
 
