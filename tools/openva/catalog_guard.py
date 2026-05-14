@@ -4,6 +4,7 @@ import argparse
 from pathlib import PurePosixPath
 
 ALLOWED_PREFIXES = (
+    "catalog-batches/",
     "data/vendors/",
     "indexes/",
 )
