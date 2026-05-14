@@ -2,7 +2,7 @@
 
 This policy defines how OpenVA releases should be prepared, described, and consumed.
 
-OpenVA releases are metadata and tooling releases. They are not vendor certifications or advisory outputs.
+OpenVA releases are metadata and tooling releases. They are not legal, compliance, procurement, security, KYC, AML, or vendor-risk certifications.
 
 ## Release goals
 
@@ -86,7 +86,7 @@ Also verify:
 - `openva-pack.json` is current;
 - release artifact checksums are available for downstream consumers;
 - no raw documents, screenshots, portal exports, private certificates, or extracted full text are committed by default;
-- release notes contain no advisory conclusions;
+- release notes contain no legal, compliance, procurement, security, KYC, AML, or risk advice;
 - release notes distinguish catalog changes from substrate changes;
 - any compatibility-impacting change is called out explicitly.
 
@@ -188,5 +188,5 @@ Every release should preserve the limitation that OpenVA is best-effort public m
 Suggested wording:
 
 ```text
-OpenVA records are best-effort metadata about public vendor-published sources. They may be incomplete or outdated. OpenVA is not an advisory product and does not include bespoke, customer-specific, gated, or private materials.
+OpenVA records are best-effort metadata about public vendor-published sources. They may be incomplete or outdated. OpenVA does not provide legal, compliance, procurement, security, KYC, AML, or vendor-risk advice and does not include bespoke, customer-specific, gated, or private materials.
 ```
