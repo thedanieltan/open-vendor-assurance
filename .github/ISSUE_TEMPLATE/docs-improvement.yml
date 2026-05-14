@@ -1,0 +1,35 @@
+name: Documentation improvement
+
+description: Suggest improvements to documentation, examples, or contributor guidance.
+title: "Docs: "
+labels: ["status:needs-triage", "area:docs"]
+body:
+  - type: input
+    id: document
+    attributes:
+      label: Document or page
+      description: Which file or page should be improved?
+      placeholder: docs/consumer-conformance-fixtures.md
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is unclear or missing?
+      description: Describe the documentation issue.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed improvement
+      description: Suggest factual wording if helpful. Avoid legal, compliance, procurement, security, or risk advice.
+    validations:
+      required: false
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This documentation request does not ask OpenVA to provide legal, compliance, procurement, security, KYC, AML, or vendor-risk advice.
+          required: true
