@@ -1,0 +1,51 @@
+name: Source correction
+
+description: Correct factual metadata for an existing public source.
+title: "Source correction: "
+labels: ["status:needs-triage", "area:catalog", "scope:public-source-only"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for factual corrections to existing public-source metadata.
+
+        Do not include private, gated, customer-specific, NDA, portal, SOC report, ISO certificate, or login-required materials.
+  - type: input
+    id: vendor
+    attributes:
+      label: Vendor ID or name
+      description: Which existing vendor record needs correction?
+    validations:
+      required: true
+  - type: input
+    id: current_source
+    attributes:
+      label: Current source URL or record
+      description: Link or path to the current OpenVA source metadata.
+    validations:
+      required: true
+  - type: input
+    id: corrected_source
+    attributes:
+      label: Correct public source URL
+      description: Must be public and vendor-controlled, regulator-controlled, or standards-body-controlled.
+    validations:
+      required: true
+  - type: checkboxes
+    id: public_scope
+    attributes:
+      label: Public-source confirmation
+      options:
+        - label: The corrected source is public.
+          required: true
+        - label: The corrected source does not require login, credentials, NDA, sales approval, customer status, support ticket access, form submission, private portal access, or anti-bot bypass.
+          required: true
+        - label: I am not including gated, private, customer-specific, or bespoke materials.
+          required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Correction requested
+      description: Describe the factual correction. Do not include advice or vendor recommendation language.
+    validations:
+      required: true
