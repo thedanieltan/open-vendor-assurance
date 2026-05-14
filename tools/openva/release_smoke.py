@@ -3,13 +3,13 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
 from tools.openva.conformance import validate_pack_dir
 from tools.openva.indexes import EXPORT_PROFILE_ID, EXPORT_SCHEMA_VERSION, ROOT, SCHEMA_VERSION
 from tools.openva.pack import verify_pack_integrity
+from tools.openva.release_artifacts import build_manifest
 from tools.openva.validate import validate_all
 
 REQUIRED_RELEASE_DOCS = [
@@ -30,6 +30,7 @@ REQUIRED_RELEASE_DOCS = [
 ]
 
 REQUIRED_RELEASE_COMMANDS = [
+    "python -m tools.openva.release_artifacts build",
     "python -m tools.openva.validate build-indexes",
     "python -m tools.openva.validate validate",
     "pytest -q",
@@ -123,6 +124,19 @@ def check_conformance_fixtures() -> list[str]:
     return failures
 
 
+def check_release_artifact_manifest_builds() -> list[str]:
+    manifest = build_manifest()
+    artifacts = manifest.get("artifacts")
+    if not isinstance(artifacts, list) or not artifacts:
+        return ["release artifact manifest must contain at least one artifact"]
+    for artifact in artifacts:
+        if not str(artifact.get("sha256", "")).startswith("sha256:"):
+            return [f"release artifact {artifact.get('path', '<unknown>')} is missing sha256"]
+        if not isinstance(artifact.get("size_bytes"), int) or artifact["size_bytes"] <= 0:
+            return [f"release artifact {artifact.get('path', '<unknown>')} must have positive size_bytes"]
+    return []
+
+
 def check_git_generated_diff() -> list[str]:
     command = ["git", "diff", "--exit-code", "openva-pack.json", "indexes/"]
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
@@ -141,6 +155,7 @@ def run_release_smoke(*, check_git_diff: bool = True) -> list[str]:
     failures.extend(check_release_docs())
     failures.extend(verify_pack_integrity())
     failures.extend(check_conformance_fixtures())
+    failures.extend(check_release_artifact_manifest_builds())
 
     validation_status = validate_all()
     if validation_status != 0:
