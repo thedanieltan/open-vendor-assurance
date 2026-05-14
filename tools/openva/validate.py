@@ -35,6 +35,14 @@ RECORD_TEXT_FILE_GLOBS = ["examples/**/*.yaml", "data/**/*.yaml"]
 ALLOWED_PROHIBITED_CONTEXTS = ("not a real vendor record", "fixture for schema validation only")
 RAW_CONTENT_DIR_NAMES = {"raw", "raw-documents", "snapshots", "screenshots", "extracted-text"}
 
+VALID_ACCESS_RIGHTS = {
+    "public_web": {"metadata_only", "public_link_only", "snapshot_forbidden", "snapshot_allowed"},
+    "public_pdf": {"metadata_only", "public_link_only", "snapshot_forbidden", "snapshot_allowed"},
+    "public_doc_portal": {"metadata_only", "public_link_only", "snapshot_forbidden"},
+    "public_landing_gated_docs": {"metadata_only", "public_link_only", "gated_excluded"},
+    "excluded_non_public": {"gated_excluded"},
+}
+
 
 def load_yaml(path: Path) -> Any:
     with path.open("r", encoding="utf-8") as handle:
@@ -120,10 +128,41 @@ def domain_matches(host: str, official_domains: list[str]) -> bool:
     return False
 
 
+def load_official_publisher_exceptions() -> set[tuple[str, str]]:
+    path = ROOT / "config/official-publisher-exceptions.yaml"
+    if not path.exists():
+        return set()
+    config = load_yaml(path) or {}
+    exceptions = set()
+    for item in config.get("exceptions", []):
+        vendor_id = str(item.get("vendor_id", ""))
+        domain = str(item.get("domain", "")).lower().removeprefix("www.")
+        if vendor_id and domain:
+            exceptions.add((vendor_id, domain))
+    return exceptions
+
+
+def source_domain_allowed(vendor_id: str, host: str, official_domains: list[str], exceptions: set[tuple[str, str]]) -> bool:
+    normalized = host.lower().removeprefix("www.")
+    if domain_matches(normalized, official_domains):
+        return True
+    return any(vendor_id == allowed_vendor and (normalized == domain or normalized.endswith("." + domain)) for allowed_vendor, domain in exceptions)
+
+
+def validate_access_rights(path: str, record: dict[str, Any]) -> list[str]:
+    access_class = record.get("access_class")
+    rights_class = record.get("rights_class")
+    allowed = VALID_ACCESS_RIGHTS.get(access_class, set())
+    if rights_class not in allowed:
+        return [f"{path}: rights_class {rights_class} is not allowed for access_class {access_class}"]
+    return []
+
+
 def validate_quality_gates() -> list[str]:
     failures: list[str] = []
     vendors = {record["vendor_id"]: record for record in records_for("vendor")}
     seen_urls: dict[str, str] = {}
+    exceptions = load_official_publisher_exceptions()
 
     for vendor_id, vendor in vendors.items():
         expected_path = f"data/vendors/{vendor_id}/vendor.yaml"
@@ -132,6 +171,7 @@ def validate_quality_gates() -> list[str]:
 
     for source in records_for("source"):
         path = source["_openva_path"]
+        failures.extend(validate_access_rights(path, source))
         if path.startswith("data/"):
             expected_path = f"data/vendors/{source['vendor_id']}/sources/{source['source_id']}.yaml"
             if path != expected_path:
@@ -144,11 +184,12 @@ def validate_quality_gates() -> list[str]:
 
         parsed = urlparse(source["source_url"])
         vendor = vendors.get(source["vendor_id"])
-        if vendor and parsed.hostname and not domain_matches(parsed.hostname, vendor["official_domains"]):
-            failures.append(f"{path}: source host {parsed.hostname} is not within official_domains for {source['vendor_id']}")
+        if vendor and parsed.hostname and not source_domain_allowed(source["vendor_id"], parsed.hostname, vendor["official_domains"], exceptions):
+            failures.append(f"{path}: source host {parsed.hostname} is not within official_domains or official publisher exceptions for {source['vendor_id']}")
 
     for artifact in records_for("artifact"):
         path = artifact["_openva_path"]
+        failures.extend(validate_access_rights(path, artifact))
         if path.startswith("data/"):
             expected_path = f"data/vendors/{artifact['vendor_id']}/artifacts/{artifact['artifact_id']}.yaml"
             if path != expected_path:
