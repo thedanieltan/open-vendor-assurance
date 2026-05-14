@@ -9,12 +9,19 @@ def load_workflow(name: str) -> dict:
     return yaml.safe_load((WORKFLOW_DIR / name).read_text(encoding="utf-8"))
 
 
+def workflow_triggers(workflow: dict) -> dict:
+    # PyYAML uses YAML 1.1 boolean parsing, where the plain scalar key `on`
+    # is parsed as True. GitHub Actions treats it as the trigger key.
+    return workflow.get("on") or workflow.get(True) or {}
+
+
 def test_validate_workflow_uses_read_only_permissions_and_expected_triggers():
     workflow = load_workflow("validate.yml")
+    triggers = workflow_triggers(workflow)
 
     assert workflow["permissions"] == {"contents": "read"}
-    assert "pull_request" in workflow["on"]
-    assert workflow["on"]["push"]["branches"] == ["main"]
+    assert "pull_request" in triggers
+    assert triggers["push"]["branches"] == ["main"]
 
 
 def test_validate_workflow_checks_generated_pack_and_indexes():
@@ -28,17 +35,19 @@ def test_validate_workflow_checks_generated_pack_and_indexes():
 
 def test_catalog_guard_workflow_is_read_only_and_pr_scoped():
     workflow = load_workflow("catalog-pr-guard.yml")
+    triggers = workflow_triggers(workflow)
 
     assert workflow["permissions"] == {"contents": "read", "pull-requests": "read"}
-    assert "pull_request" in workflow["on"]
+    assert "pull_request" in triggers
     assert workflow["jobs"]["catalog-pr-guard"]["if"] == "startsWith(github.event.pull_request.title, 'Catalog:')"
 
 
 def test_observation_dry_run_is_manual_only_and_read_only():
     workflow = load_workflow("observe-dry-run.yml")
+    triggers = workflow_triggers(workflow)
 
     assert workflow["permissions"] == {"contents": "read"}
-    assert set(workflow["on"].keys()) == {"workflow_dispatch"}
+    assert set(triggers.keys()) == {"workflow_dispatch"}
 
 
 def test_no_workflow_requests_write_permissions():
