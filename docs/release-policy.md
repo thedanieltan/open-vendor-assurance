@@ -2,7 +2,7 @@
 
 This policy defines how OpenVA releases should be prepared, described, and consumed.
 
-OpenVA releases are metadata and tooling releases. They are not legal, compliance, procurement, security, KYC, AML, or vendor-risk certifications.
+OpenVA releases are metadata and tooling releases. They are not vendor certifications or advisory outputs.
 
 ## Release goals
 
@@ -13,7 +13,8 @@ A release should give downstream consumers a stable point to pin:
 - generated indexes;
 - schema files;
 - conformance fixtures;
-- tooling version.
+- tooling version;
+- release artifact checksums.
 
 ## Release artifacts
 
@@ -25,14 +26,49 @@ openva-pack.json
 indexes/*.json
 schemas/openva/*.json
 fixtures/packs/**
+release-artifacts.json
 release notes
 ```
 
 Raw vendor documents are not release artifacts by default.
 
+## Release artifact manifest
+
+OpenVA can generate a deterministic release artifact manifest:
+
+```bash
+python -m tools.openva.release_artifacts build
+python -m tools.openva.release_artifacts check
+```
+
+The manifest records:
+
+```text
+path
+sha256
+size_bytes
+```
+
+for release-facing artifacts under:
+
+```text
+openva-pack.json
+indexes/*.json
+schemas/openva/*.json
+fixtures/packs/**/*.json
+```
+
+The manifest is intended for release candidates and release assets. It does not change the pack contract and does not include raw vendor documents.
+
 ## Release readiness checklist
 
 Before tagging a release:
+
+```bash
+python -m tools.openva.release_smoke
+```
+
+Maintainers may also run the underlying commands individually:
 
 ```bash
 python -m tools.openva.validate build-indexes
@@ -40,14 +76,17 @@ python -m tools.openva.validate validate
 pytest -q
 python -m tools.openva.conformance fixtures/packs/minimal-valid
 python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation
+python -m tools.openva.release_artifacts build
+python -m tools.openva.release_artifacts check
 ```
 
 Also verify:
 
 - no generated index diff remains uncommitted;
 - `openva-pack.json` is current;
-- no raw documents, screenshots, SOC reports, ISO certificates, portal exports, or extracted full text are committed by default;
-- release notes contain no legal, compliance, procurement, security, KYC, AML, or risk advice;
+- release artifact checksums are available for downstream consumers;
+- no raw documents, screenshots, portal exports, private certificates, or extracted full text are committed by default;
+- release notes contain no advisory conclusions;
 - release notes distinguish catalog changes from substrate changes;
 - any compatibility-impacting change is called out explicitly.
 
@@ -77,6 +116,7 @@ Observation changes
 Tooling changes
 Governance/docs changes
 Conformance fixtures
+Release artifact checksums
 Known limitations
 Upgrade notes
 ```
@@ -89,6 +129,7 @@ Catalog-only releases may include:
 - updated source URLs;
 - updated artifact metadata;
 - generated index refreshes;
+- refreshed release artifact checksums;
 - no schema or pack contract changes.
 
 Catalog-only release notes should not imply vendor approval, verification, recommendation, suitability, adequacy, or risk status.
@@ -104,7 +145,8 @@ Substrate releases include changes to:
 - observation behavior;
 - URL safety;
 - workflow/security posture;
-- release/versioning policy.
+- release/versioning policy;
+- release artifact generation.
 
 Substrate releases require careful compatibility notes.
 
@@ -134,6 +176,7 @@ profileId
 schemaVersion
 packId
 pack digest or commit SHA
+release-artifacts.json checksums
 ```
 
 Consumers should not import a pack merely because it has a newer timestamp.
@@ -145,5 +188,5 @@ Every release should preserve the limitation that OpenVA is best-effort public m
 Suggested wording:
 
 ```text
-OpenVA records are best-effort metadata about public vendor-published sources. They may be incomplete or outdated. OpenVA does not provide legal, compliance, procurement, security, KYC, AML, or vendor-risk advice and does not include bespoke, customer-specific, gated, or private materials.
+OpenVA records are best-effort metadata about public vendor-published sources. They may be incomplete or outdated. OpenVA is not an advisory product and does not include bespoke, customer-specific, gated, or private materials.
 ```
