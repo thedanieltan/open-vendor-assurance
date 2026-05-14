@@ -1,0 +1,27 @@
+{
+  "description": "Public-source-only vendor assurance metadata substrate.",
+  "generated_at": "1970-01-01T00:00:00Z",
+  "guarantees": {
+    "metadata_first": true,
+    "non_advisory": true,
+    "public_sources_only": true,
+    "raw_documents_mirrored_by_default": false
+  },
+  "indexes": {
+    "artifacts": "indexes/artifacts.json",
+    "changes": "indexes/changes.json",
+    "observations": "indexes/observations.json",
+    "sources": "indexes/sources.json",
+    "summary": "indexes/summary.json",
+    "vendors": "indexes/vendors.json"
+  },
+  "license": {
+    "code": "MIT",
+    "metadata": "CC0-1.0",
+    "vendor_materials": "Vendor materials remain owned by their respective owners."
+  },
+  "name": "open-vendor-assurance",
+  "pack_id": "open-vendor-assurance",
+  "publisher": "open-vendor-assurance",
+  "schema_version": "0.1.0"
+}

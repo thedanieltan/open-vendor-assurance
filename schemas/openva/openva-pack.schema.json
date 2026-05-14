@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva-pack.schema.json",
+  "title": "OpenVA Universal Pack Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_id",
+    "name",
+    "description",
+    "publisher",
+    "license",
+    "generated_at",
+    "indexes",
+    "guarantees"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "pack_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "publisher": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "license": {
+      "type": "object",
+      "required": ["metadata", "code", "vendor_materials"],
+      "properties": {
+        "metadata": { "type": "string" },
+        "code": { "type": "string" },
+        "vendor_materials": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "indexes": {
+      "type": "object",
+      "required": ["vendors", "sources", "artifacts", "observations", "changes", "summary"],
+      "properties": {
+        "vendors": { "type": "string" },
+        "sources": { "type": "string" },
+        "artifacts": { "type": "string" },
+        "observations": { "type": "string" },
+        "changes": { "type": "string" },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "guarantees": {
+      "type": "object",
+      "required": ["public_sources_only", "metadata_first", "non_advisory", "raw_documents_mirrored_by_default"],
+      "properties": {
+        "public_sources_only": { "const": true },
+        "metadata_first": { "const": true },
+        "non_advisory": { "const": true },
+        "raw_documents_mirrored_by_default": { "const": false }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
