@@ -7,12 +7,12 @@ import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
 
 import yaml
 
 from tools.openva.hash import sha256_bytes, sha256_normalized_text
 from tools.openva.indexes import ROOT, records_for
+from tools.openva.url_safety import validate_url_safety
 
 USER_AGENT = "open-vendor-assurance-observer/0.1 (+metadata-only; public sources only)"
 MAX_BYTES = 2_000_000
@@ -41,13 +41,8 @@ def safe_observation_id(source_id: str, observed_at: str) -> str:
     return f"{source_id}-{date}"
 
 
-def is_http_url(url: str) -> bool:
-    parsed = urlparse(url)
-    return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
-
-
 def fetch_public(url: str) -> tuple[str, int | None, str | None, bytes]:
-    if not is_http_url(url):
+    if validate_url_safety(url):
         return "quarantined", None, None, b""
 
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
@@ -55,6 +50,8 @@ def fetch_public(url: str) -> tuple[str, int | None, str | None, bytes]:
         with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:
             status = int(response.status)
             final_url = response.geturl()
+            if validate_url_safety(final_url):
+                return "quarantined", status, final_url, b""
             data = response.read(MAX_BYTES + 1)
             if len(data) > MAX_BYTES:
                 return "fetch_failed", status, final_url, b""
