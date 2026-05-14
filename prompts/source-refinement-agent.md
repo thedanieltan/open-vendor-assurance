@@ -28,6 +28,8 @@ quarantined
 
 identify whether a better public vendor-controlled source exists.
 
+Do not write ambiguous observations by default.
+
 ## Allowed outputs
 
 Open a catalog PR only when the replacement is clear:
