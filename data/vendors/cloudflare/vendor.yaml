@@ -1,0 +1,20 @@
+schema_version: 0.1.0
+vendor_id: cloudflare
+display_name: Cloudflare
+legal_name: Cloudflare, Inc.
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- cloudflare.com
+public_entrypoints:
+- https://www.cloudflare.com/trust-hub/
+vendor_categories:
+- security
+- network_infrastructure
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Initial public-source seed record for a major network and security provider.
