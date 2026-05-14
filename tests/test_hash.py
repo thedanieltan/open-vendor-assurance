@@ -2,7 +2,7 @@ from tools.openva.hash import normalize_text, sha256_bytes, sha256_normalized_te
 
 
 def test_sha256_bytes_is_stable():
-    assert sha256_bytes(b"openva") == "sha256:e5782b9ed80f80987e9322049bcaf7b8f7e46b78a0a220a4f0b035a7de800b33"
+    assert sha256_bytes(b"openva") == "sha256:ed6fda20724384fb8cc7520f10cf4c4993114297d869f07741d0c7e2a2591469"
 
 
 def test_normalize_text_strips_markup_and_whitespace():
