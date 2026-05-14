@@ -8,6 +8,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_VERSION = "0.1.0"
+EXPORT_PROFILE_ID = "openva.public-metadata.v1"
+EXPORT_SCHEMA_VERSION = "openva-export-pack.v1"
 GENERATED_AT = "1970-01-01T00:00:00Z"
 
 RECORD_GLOBS = {
@@ -92,6 +94,10 @@ def build_indexes() -> int:
     })
 
     write_json(ROOT / "openva-pack.json", {
+        "profileId": EXPORT_PROFILE_ID,
+        "schemaVersion": EXPORT_SCHEMA_VERSION,
+        "packId": "open-vendor-assurance",
+        "generatedAt": GENERATED_AT,
         "schema_version": SCHEMA_VERSION,
         "pack_id": "open-vendor-assurance",
         "name": "open-vendor-assurance",
