@@ -9,6 +9,8 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
+from tools.openva.indexes import build_indexes, check_generated_current, records_for
+
 ROOT = Path(__file__).resolve().parents[2]
 
 SCHEMA_MAP = {
@@ -17,6 +19,7 @@ SCHEMA_MAP = {
     "artifact": ROOT / "schemas/openva/artifact-reference.schema.json",
     "observation": ROOT / "schemas/openva/observation.schema.json",
     "change": ROOT / "schemas/openva/change-event.schema.json",
+    "pack": ROOT / "schemas/openva/openva-pack.schema.json",
 }
 
 FIXTURE_GLOBS = {
@@ -27,15 +30,8 @@ FIXTURE_GLOBS = {
     "change": ["examples/vendors/*/changes/*.yaml", "data/vendors/*/changes/*.yaml"],
 }
 
-RECORD_TEXT_FILE_GLOBS = [
-    "examples/**/*.yaml",
-    "data/**/*.yaml",
-]
-
-ALLOWED_PROHIBITED_CONTEXTS = (
-    "not a real vendor record",
-    "fixture for schema validation only",
-)
+RECORD_TEXT_FILE_GLOBS = ["examples/**/*.yaml", "data/**/*.yaml"]
+ALLOWED_PROHIBITED_CONTEXTS = ("not a real vendor record", "fixture for schema validation only")
 
 
 def load_yaml(path: Path) -> Any:
@@ -60,12 +56,55 @@ def validate_schema(kind: str) -> list[str]:
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     failures: list[str] = []
 
-    for path in iter_paths(FIXTURE_GLOBS[kind]):
-        data = load_yaml(path)
+    if kind == "pack":
+        pack_path = ROOT / "openva-pack.json"
+        paths = [pack_path] if pack_path.exists() else []
+    else:
+        paths = iter_paths(FIXTURE_GLOBS[kind])
+
+    for path in paths:
+        data = load_json(path) if path.suffix == ".json" else load_yaml(path)
         errors = sorted(validator.iter_errors(data), key=lambda err: list(err.path))
         for error in errors:
             location = ".".join(str(part) for part in error.path) or "<root>"
             failures.append(f"{path}: {location}: {error.message}")
+
+    return failures
+
+
+def validate_cross_references() -> list[str]:
+    failures: list[str] = []
+    vendors = {record["vendor_id"] for record in records_for("vendor")}
+    sources = {record["source_id"] for record in records_for("source")}
+    artifacts = {record["artifact_id"] for record in records_for("artifact")}
+
+    for source in records_for("source"):
+        if source["vendor_id"] not in vendors:
+            failures.append(f"{source['_openva_path']}: unknown vendor_id {source['vendor_id']}")
+
+    for artifact in records_for("artifact"):
+        if artifact["vendor_id"] not in vendors:
+            failures.append(f"{artifact['_openva_path']}: unknown vendor_id {artifact['vendor_id']}")
+        if artifact["source_id"] not in sources:
+            failures.append(f"{artifact['_openva_path']}: unknown source_id {artifact['source_id']}")
+
+    for observation in records_for("observation"):
+        if observation["vendor_id"] not in vendors:
+            failures.append(f"{observation['_openva_path']}: unknown vendor_id {observation['vendor_id']}")
+        if observation["source_id"] not in sources:
+            failures.append(f"{observation['_openva_path']}: unknown source_id {observation['source_id']}")
+        artifact_id = observation.get("artifact_id")
+        if artifact_id and artifact_id not in artifacts:
+            failures.append(f"{observation['_openva_path']}: unknown artifact_id {artifact_id}")
+
+    for change in records_for("change"):
+        if change["vendor_id"] not in vendors:
+            failures.append(f"{change['_openva_path']}: unknown vendor_id {change['vendor_id']}")
+        if change["source_id"] not in sources:
+            failures.append(f"{change['_openva_path']}: unknown source_id {change['source_id']}")
+        artifact_id = change.get("artifact_id")
+        if artifact_id and artifact_id not in artifacts:
+            failures.append(f"{change['_openva_path']}: unknown artifact_id {artifact_id}")
 
     return failures
 
@@ -96,7 +135,9 @@ def validate_all() -> int:
     failures: list[str] = []
     for kind in SCHEMA_MAP:
         failures.extend(validate_schema(kind))
+    failures.extend(validate_cross_references())
     failures.extend(check_prohibited_language())
+    failures.extend(check_generated_current())
 
     if failures:
         for failure in failures:
@@ -109,12 +150,14 @@ def validate_all() -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(prog="openva-validate")
-    parser.add_argument("command", choices=["validate"])
+    parser = argparse.ArgumentParser(prog="openva")
+    parser.add_argument("command", choices=["validate", "build-indexes"])
     args = parser.parse_args()
 
     if args.command == "validate":
         return validate_all()
+    if args.command == "build-indexes":
+        return build_indexes()
 
     raise AssertionError("unreachable")
 
