@@ -1,0 +1,26 @@
+name: observe-dry-run
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: observe-dry-run-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  observe-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Validate current records
+        run: python -m tools.openva.validate validate
+      - name: Run public-source observation dry run
+        run: python -m tools.openva.observe observe-all --dry-run
