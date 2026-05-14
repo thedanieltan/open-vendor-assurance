@@ -85,3 +85,22 @@ Pull requests must:
 - avoid advisory language;
 - explain whether any generated files were updated;
 - pass validation checks once P1/P2 tooling is added.
+
+## Catalog-agent pull requests
+
+Catalog-agent PRs must follow:
+
+```text
+docs/catalog-agent-protocol.md
+```
+
+Catalog-agent PRs should use the catalog PR template and title format:
+
+```text
+Catalog: add <category> vendor batch <N>
+Catalog: update <vendor-id> public source metadata
+Catalog: add <region> vendor batch <N>
+Catalog: fix <vendor-id> catalog metadata
+```
+
+Catalog-agent PRs are limited to small metadata-only batches, normally three to five vendors, and must not modify substrate, schema, workflow, policy, governance, or observation tooling unless a maintainer explicitly assigns that work.
