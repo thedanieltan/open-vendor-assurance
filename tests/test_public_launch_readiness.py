@@ -1,0 +1,101 @@
+from pathlib import Path
+
+REQUIRED_DOCS = [
+    "README.md",
+    "DISCLAIMER.md",
+    "CONTRIBUTING.md",
+    "GOVERNANCE.md",
+    "MAINTAINERS.md",
+    "SECURITY.md",
+    "docs/index.md",
+    "docs/public-launch-checklist.md",
+    "docs/roadmap.md",
+    "docs/triage-policy.md",
+    "docs/first-good-issue-policy.md",
+    "docs/versioning-policy.md",
+    "docs/release-policy.md",
+    "docs/release-checklist.md",
+    "docs/consumer-conformance-fixtures.md",
+]
+
+
+def read(path: str) -> str:
+    return Path(path).read_text(encoding="utf-8")
+
+
+def test_public_launch_docs_exist():
+    for path in REQUIRED_DOCS:
+        assert Path(path).exists(), path
+
+
+def test_readme_has_public_launch_start_here_navigation():
+    text = read("README.md")
+
+    assert "## Start here" in text
+    assert "docs/consumer-conformance-fixtures.md" in text
+    assert "docs/versioning-policy.md" in text
+    assert "docs/release-policy.md" in text
+    assert "docs/public-launch-checklist.md" in text
+    assert "docs/triage-policy.md" in text
+    assert "docs/index.md" not in text or "docs/index.md" in read("docs/index.md")
+
+
+def test_readme_preserves_non_advisory_public_source_boundary():
+    text = read("README.md").lower()
+
+    assert "public-source-only" in text
+    assert "metadata-first" in text
+    assert "not a legal" in text
+    assert "vendor-risk advice" in text
+    assert "raw document mirroring" in text
+    assert "anti-bot bypass" in text
+    assert "authenticated trust-center" in text
+
+
+def test_docs_index_links_launch_and_consumer_docs():
+    text = read("docs/index.md")
+
+    expected = [
+        "docs/public-launch-checklist.md",
+        "docs/roadmap.md",
+        "docs/triage-policy.md",
+        "docs/catalog-agent-protocol.md",
+        "docs/observation-result-taxonomy.md",
+        "docs/consumer-conformance-fixtures.md",
+        "docs/versioning-policy.md",
+        "docs/release-policy.md",
+        "docs/release-checklist.md",
+    ]
+    for item in expected:
+        assert item in text
+
+
+def test_launch_checklist_has_required_validation_commands():
+    text = read("docs/public-launch-checklist.md") + "\n" + read("README.md")
+
+    commands = [
+        "python -m tools.openva.validate build-indexes",
+        "python -m tools.openva.validate validate",
+        "pytest -q",
+        "python -m tools.openva.conformance fixtures/packs/minimal-valid",
+        "python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation",
+    ]
+    for command in commands:
+        assert command in text
+
+
+def test_disclaimer_and_readme_align_on_no_advice_boundary():
+    disclaimer = read("DISCLAIMER.md").lower()
+    readme = read("README.md").lower()
+
+    for phrase in [
+        "legal",
+        "compliance",
+        "procurement",
+        "security",
+        "kyc",
+        "aml",
+        "vendor-risk",
+    ]:
+        assert phrase in disclaimer
+        assert phrase in readme
