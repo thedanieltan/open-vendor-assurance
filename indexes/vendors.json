@@ -1,5 +1,5 @@
 {
-  "count": 14,
+  "count": 17,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -117,6 +117,35 @@
       "vendor_id": "cloudflare"
     },
     {
+      "_openva_path": "data/vendors/datadog/vendor.yaml",
+      "display_name": "Datadog",
+      "headquarters_country": "US",
+      "legal_name": "Datadog, Inc.",
+      "notes": "Initial public-source seed record for a major observability and monitoring software provider.",
+      "official_domains": [
+        "datadoghq.com"
+      ],
+      "public_entrypoints": [
+        "https://www.datadoghq.com/security/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "observability",
+        "monitoring",
+        "enterprise_software"
+      ],
+      "vendor_id": "datadog"
+    },
+    {
       "_openva_path": "examples/vendors/example-cloud/vendor.yaml",
       "display_name": "Example Cloud",
       "headquarters_country": "SG",
@@ -200,6 +229,35 @@
         "enterprise_software"
       ],
       "vendor_id": "microsoft"
+    },
+    {
+      "_openva_path": "data/vendors/mongodb/vendor.yaml",
+      "display_name": "MongoDB",
+      "headquarters_country": "US",
+      "legal_name": "MongoDB, Inc.",
+      "notes": "Initial public-source seed record for a major database and data platform provider.",
+      "official_domains": [
+        "mongodb.com"
+      ],
+      "public_entrypoints": [
+        "https://www.mongodb.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "database",
+        "data_platform",
+        "enterprise_software"
+      ],
+      "vendor_id": "mongodb"
     },
     {
       "_openva_path": "data/vendors/oracle-cloud/vendor.yaml",
@@ -312,6 +370,35 @@
         "workflow_automation"
       ],
       "vendor_id": "servicenow"
+    },
+    {
+      "_openva_path": "data/vendors/snowflake/vendor.yaml",
+      "display_name": "Snowflake",
+      "headquarters_country": "US",
+      "legal_name": "Snowflake Inc.",
+      "notes": "Initial public-source seed record for a major cloud data platform provider.",
+      "official_domains": [
+        "snowflake.com"
+      ],
+      "public_entrypoints": [
+        "https://www.snowflake.com/en/trust-center/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "data_platform",
+        "cloud_data_warehouse",
+        "enterprise_software"
+      ],
+      "vendor_id": "snowflake"
     },
     {
       "_openva_path": "data/vendors/tencent-cloud/vendor.yaml",
