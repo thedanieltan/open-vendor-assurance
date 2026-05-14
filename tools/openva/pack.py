@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from tools.openva.indexes import ROOT
+from tools.openva.indexes import EXPORT_PROFILE_ID, EXPORT_SCHEMA_VERSION, ROOT
 
 PACK_PATH = ROOT / "openva-pack.json"
 REQUIRED_INDEX_KEYS = {"vendors", "sources", "artifacts", "observations", "changes", "summary"}
@@ -35,6 +35,19 @@ def pack_digest() -> str:
     return sha256_bytes(canonical_json(digest_material))
 
 
+def verify_export_contract(pack: dict[str, Any]) -> list[str]:
+    failures: list[str] = []
+    if pack.get("profileId") != EXPORT_PROFILE_ID:
+        failures.append(f"openva-pack.json: profileId must be {EXPORT_PROFILE_ID}")
+    if pack.get("schemaVersion") != EXPORT_SCHEMA_VERSION:
+        failures.append(f"openva-pack.json: schemaVersion must be {EXPORT_SCHEMA_VERSION}")
+    if pack.get("packId") != pack.get("pack_id"):
+        failures.append("openva-pack.json: packId must match pack_id during transition")
+    if pack.get("generatedAt") != pack.get("generated_at"):
+        failures.append("openva-pack.json: generatedAt must match generated_at during transition")
+    return failures
+
+
 def verify_pack_integrity() -> list[str]:
     failures: list[str] = []
 
@@ -42,9 +55,11 @@ def verify_pack_integrity() -> list[str]:
         return ["openva-pack.json is missing"]
 
     pack = load_json(PACK_PATH)
+    failures.extend(verify_export_contract(pack))
+
     indexes = pack.get("indexes")
     if not isinstance(indexes, dict):
-        return ["openva-pack.json: indexes must be an object"]
+        return [*failures, "openva-pack.json: indexes must be an object"]
 
     missing_keys = sorted(REQUIRED_INDEX_KEYS - set(indexes))
     extra_keys = sorted(set(indexes) - REQUIRED_INDEX_KEYS)
