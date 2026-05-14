@@ -1,7 +1,37 @@
 {
-  "count": 20,
+  "count": 29,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
+    {
+      "_openva_path": "data/vendors/adobe/vendor.yaml",
+      "display_name": "Adobe",
+      "headquarters_country": "US",
+      "legal_name": "Adobe Inc.",
+      "notes": "Initial public-source catalog record for a major enterprise software, creative software, document cloud, and marketing technology provider.",
+      "official_domains": [
+        "adobe.com"
+      ],
+      "public_entrypoints": [
+        "https://www.adobe.com/trust.html"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "enterprise_software",
+        "creative_software",
+        "document_cloud",
+        "marketing_technology"
+      ],
+      "vendor_id": "adobe"
+    },
     {
       "_openva_path": "data/vendors/alibaba-cloud/vendor.yaml",
       "display_name": "Alibaba Cloud",
@@ -173,6 +203,36 @@
       "vendor_id": "example-cloud"
     },
     {
+      "_openva_path": "data/vendors/figma/vendor.yaml",
+      "display_name": "Figma",
+      "headquarters_country": "US",
+      "legal_name": "Figma, Inc.",
+      "notes": "Initial public-source catalog record for a major design, collaboration, and product development software provider.",
+      "official_domains": [
+        "figma.com"
+      ],
+      "public_entrypoints": [
+        "https://www.figma.com/security/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "design_software",
+        "collaboration_software",
+        "enterprise_software",
+        "developer_platform"
+      ],
+      "vendor_id": "figma"
+    },
+    {
       "_openva_path": "data/vendors/github/vendor.yaml",
       "display_name": "GitHub",
       "headquarters_country": "US",
@@ -259,6 +319,37 @@
       "vendor_id": "google-cloud"
     },
     {
+      "_openva_path": "data/vendors/huawei-cloud/vendor.yaml",
+      "display_name": "Huawei Cloud",
+      "headquarters_country": "CN",
+      "legal_name": "Huawei Cloud Computing Technologies Co., Ltd.",
+      "notes": "Initial public-source catalog record for a major mainland China cloud provider.",
+      "official_domains": [
+        "huaweicloud.com"
+      ],
+      "public_entrypoints": [
+        "https://www.huaweicloud.com/intl/en-us/trust-center/",
+        "https://www.huaweicloud.com/intl/en-us/declaration/sa_prp.html"
+      ],
+      "regions_served": [
+        "global",
+        "CN",
+        "APAC"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "enterprise_software"
+      ],
+      "vendor_id": "huawei-cloud"
+    },
+    {
       "_openva_path": "data/vendors/microsoft/vendor.yaml",
       "display_name": "Microsoft",
       "headquarters_country": "US",
@@ -289,6 +380,38 @@
       "vendor_id": "microsoft"
     },
     {
+      "_openva_path": "data/vendors/miro/vendor.yaml",
+      "display_name": "Miro",
+      "headquarters_country": "US",
+      "legal_name": "RealtimeBoard, Inc.",
+      "notes": "Initial public-source catalog record for a major visual collaboration and online whiteboarding provider.",
+      "official_domains": [
+        "miro.com",
+        "trust.miro.com"
+      ],
+      "public_entrypoints": [
+        "https://miro.com/trust/",
+        "https://trust.miro.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "collaboration_software",
+        "whiteboarding",
+        "enterprise_software",
+        "productivity_software"
+      ],
+      "vendor_id": "miro"
+    },
+    {
       "_openva_path": "data/vendors/mongodb/vendor.yaml",
       "display_name": "MongoDB",
       "headquarters_country": "US",
@@ -316,6 +439,67 @@
         "enterprise_software"
       ],
       "vendor_id": "mongodb"
+    },
+    {
+      "_openva_path": "data/vendors/notion/vendor.yaml",
+      "display_name": "Notion",
+      "headquarters_country": "US",
+      "legal_name": "Notion Labs, Inc.",
+      "notes": "Initial public-source catalog record for a major productivity, collaboration, and AI workspace provider.",
+      "official_domains": [
+        "notion.com"
+      ],
+      "public_entrypoints": [
+        "https://www.notion.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "enterprise_software",
+        "collaboration_software",
+        "productivity_software",
+        "ai_workspace"
+      ],
+      "vendor_id": "notion"
+    },
+    {
+      "_openva_path": "data/vendors/openai/vendor.yaml",
+      "display_name": "OpenAI",
+      "headquarters_country": "US",
+      "legal_name": "OpenAI, L.L.C.",
+      "notes": "Initial public-source catalog record for a major AI platform and developer platform provider.",
+      "official_domains": [
+        "openai.com"
+      ],
+      "public_entrypoints": [
+        "https://openai.com/policies/",
+        "https://openai.com/policies/data-processing-addendum/",
+        "https://openai.com/policies/subprocessors/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "ai_platform",
+        "enterprise_software",
+        "developer_platform"
+      ],
+      "vendor_id": "openai"
     },
     {
       "_openva_path": "data/vendors/oracle-cloud/vendor.yaml",
@@ -430,6 +614,37 @@
       "vendor_id": "servicenow"
     },
     {
+      "_openva_path": "data/vendors/shopify/vendor.yaml",
+      "display_name": "Shopify",
+      "headquarters_country": "CA",
+      "legal_name": "Shopify Inc.",
+      "notes": "Initial public-source catalog record for a major ecommerce platform and commerce infrastructure provider.",
+      "official_domains": [
+        "shopify.com"
+      ],
+      "public_entrypoints": [
+        "https://www.shopify.com/legal",
+        "https://www.shopify.com/legal/dpa",
+        "https://www.shopify.com/legal/subprocessors"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "ecommerce_platform",
+        "enterprise_software",
+        "payments"
+      ],
+      "vendor_id": "shopify"
+    },
+    {
       "_openva_path": "data/vendors/snowflake/vendor.yaml",
       "display_name": "Snowflake",
       "headquarters_country": "US",
@@ -457,6 +672,37 @@
         "enterprise_software"
       ],
       "vendor_id": "snowflake"
+    },
+    {
+      "_openva_path": "data/vendors/stripe/vendor.yaml",
+      "display_name": "Stripe",
+      "headquarters_country": "US",
+      "legal_name": "Stripe, Inc.",
+      "notes": "Initial public-source catalog record for a major payments and financial infrastructure provider.",
+      "official_domains": [
+        "stripe.com"
+      ],
+      "public_entrypoints": [
+        "https://stripe.com/legal",
+        "https://stripe.com/legal/dpa",
+        "https://stripe.com/legal/service-providers"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure",
+        "enterprise_software"
+      ],
+      "vendor_id": "stripe"
     },
     {
       "_openva_path": "data/vendors/tencent-cloud/vendor.yaml",
@@ -544,6 +790,38 @@
         "hr_software"
       ],
       "vendor_id": "workday"
+    },
+    {
+      "_openva_path": "data/vendors/zoho/vendor.yaml",
+      "display_name": "Zoho",
+      "headquarters_country": "IN",
+      "legal_name": "Zoho Corporation Pvt. Ltd.",
+      "notes": "Initial public-source catalog record for a major global enterprise software provider headquartered in India.",
+      "official_domains": [
+        "zoho.com"
+      ],
+      "public_entrypoints": [
+        "https://www.zoho.com/privacy.html",
+        "https://www.zoho.com/privacy/dpa.html",
+        "https://www.zoho.com/sub-processors.html"
+      ],
+      "regions_served": [
+        "global",
+        "APAC"
+      ],
+      "schema_version": "0.1.0",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "enterprise_software",
+        "crm",
+        "productivity_software"
+      ],
+      "vendor_id": "zoho"
     },
     {
       "_openva_path": "data/vendors/zoom/vendor.yaml",

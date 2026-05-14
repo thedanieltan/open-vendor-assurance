@@ -1,7 +1,29 @@
 {
-  "count": 20,
+  "count": 29,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
+    {
+      "_openva_path": "data/vendors/adobe/sources/adobe-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "adobe-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://www.adobe.com/trust.html",
+      "summary_en": "Public Adobe page for trust, security, privacy, and compliance information.",
+      "summary_native": "Public Adobe page for trust, security, privacy, and compliance information.",
+      "title_en": "Adobe Trust Center",
+      "title_native": "Adobe Trust Center",
+      "vendor_id": "adobe"
+    },
     {
       "_openva_path": "data/vendors/alibaba-cloud/sources/alibaba-cloud-trust-center.yaml",
       "access_class": "public_web",
@@ -135,6 +157,28 @@
       "vendor_id": "example-cloud"
     },
     {
+      "_openva_path": "data/vendors/figma/sources/figma-security.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "figma-security",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://www.figma.com/security/",
+      "summary_en": "Public Figma page describing security information for Figma products and services.",
+      "summary_native": "Public Figma page describing security information for Figma products and services.",
+      "title_en": "Figma Security",
+      "title_native": "Figma Security",
+      "vendor_id": "figma"
+    },
+    {
       "_openva_path": "data/vendors/github/sources/github-security.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -201,6 +245,28 @@
       "vendor_id": "google-cloud"
     },
     {
+      "_openva_path": "data/vendors/huawei-cloud/sources/huawei-cloud-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "huawei-cloud-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://www.huaweicloud.com/intl/en-us/trust-center/",
+      "summary_en": "Public Huawei Cloud page describing trust, security, privacy, and compliance information.",
+      "summary_native": "Public Huawei Cloud page describing trust, security, privacy, and compliance information.",
+      "title_en": "Huawei Cloud Trust Center",
+      "title_native": "Huawei Cloud Trust Center",
+      "vendor_id": "huawei-cloud"
+    },
+    {
       "_openva_path": "data/vendors/microsoft/sources/microsoft-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -223,6 +289,28 @@
       "vendor_id": "microsoft"
     },
     {
+      "_openva_path": "data/vendors/miro/sources/miro-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "miro-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://trust.miro.com/",
+      "summary_en": "Public Miro trust center page for security, privacy, and trust information.",
+      "summary_native": "Public Miro trust center page for security, privacy, and trust information.",
+      "title_en": "Miro Trust Center",
+      "title_native": "Miro Trust Center",
+      "vendor_id": "miro"
+    },
+    {
       "_openva_path": "data/vendors/mongodb/sources/mongodb-security.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -243,6 +331,50 @@
       "title_en": "MongoDB Security",
       "title_native": "MongoDB Security",
       "vendor_id": "mongodb"
+    },
+    {
+      "_openva_path": "data/vendors/notion/sources/notion-security.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "notion-security",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://www.notion.com/security",
+      "summary_en": "Public Notion page describing security, privacy, compliance, AI governance, and reliability information.",
+      "summary_native": "Public Notion page describing security, privacy, compliance, AI governance, and reliability information.",
+      "title_en": "Notion Security & Privacy",
+      "title_native": "Notion Security & Privacy",
+      "vendor_id": "notion"
+    },
+    {
+      "_openva_path": "data/vendors/openai/sources/openai-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "openai-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://openai.com/policies/data-processing-addendum/",
+      "summary_en": "Public OpenAI page for its data processing addendum.",
+      "summary_native": "Public OpenAI page for its data processing addendum.",
+      "title_en": "OpenAI Data Processing Addendum",
+      "title_native": "OpenAI Data Processing Addendum",
+      "vendor_id": "openai"
     },
     {
       "_openva_path": "data/vendors/oracle-cloud/sources/oracle-cloud-trust.yaml",
@@ -333,6 +465,28 @@
       "vendor_id": "servicenow"
     },
     {
+      "_openva_path": "data/vendors/shopify/sources/shopify-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "shopify-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.shopify.com/legal/dpa",
+      "summary_en": "Public Shopify page for its data processing addendum.",
+      "summary_native": "Public Shopify page for its data processing addendum.",
+      "title_en": "Shopify Data Processing Addendum",
+      "title_native": "Shopify Data Processing Addendum",
+      "vendor_id": "shopify"
+    },
+    {
       "_openva_path": "data/vendors/snowflake/sources/snowflake-trust-center.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -353,6 +507,28 @@
       "title_en": "Snowflake Trust Center",
       "title_native": "Snowflake Trust Center",
       "vendor_id": "snowflake"
+    },
+    {
+      "_openva_path": "data/vendors/stripe/sources/stripe-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "stripe-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://stripe.com/legal/dpa",
+      "summary_en": "Public Stripe page for its data processing agreement.",
+      "summary_native": "Public Stripe page for its data processing agreement.",
+      "title_en": "Stripe Data Processing Agreement",
+      "title_native": "Stripe Data Processing Agreement",
+      "vendor_id": "stripe"
     },
     {
       "_openva_path": "data/vendors/tencent-cloud/sources/tencent-cloud-subprocessors.yaml",
@@ -419,6 +595,28 @@
       "title_en": "Workday Security and Trust",
       "title_native": "Workday Security and Trust",
       "vendor_id": "workday"
+    },
+    {
+      "_openva_path": "data/vendors/zoho/sources/zoho-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-14T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "zoho-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.zoho.com/privacy/dpa.html",
+      "summary_en": "Public Zoho page for its data processing addendum.",
+      "summary_native": "Public Zoho page for its data processing addendum.",
+      "title_en": "Zoho Data Processing Addendum",
+      "title_native": "Zoho Data Processing Addendum",
+      "vendor_id": "zoho"
     },
     {
       "_openva_path": "data/vendors/zoom/sources/zoom-trust.yaml",
