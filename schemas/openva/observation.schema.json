@@ -21,7 +21,7 @@
     "source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "artifact_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "observed_at": { "type": "string", "format": "date-time" },
-    "result": { "enum": ["ok", "not_modified", "moved", "access_changed", "bot_protected", "fetch_failed", "quarantined"] },
+    "result": { "enum": ["ok", "not_modified", "moved", "access_changed", "bot_protected", "size_limited", "fetch_failed", "quarantined"] },
     "http_status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
     "final_url": { "type": ["string", "null"], "format": "uri" },
     "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
