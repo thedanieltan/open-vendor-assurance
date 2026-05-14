@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/source-reference.schema.json",
+  "title": "OpenVA Source Reference",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_id",
+    "vendor_id",
+    "source_type",
+    "title_native",
+    "source_url",
+    "source_language",
+    "access_class",
+    "rights_class",
+    "provenance",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "source_type": {
+      "enum": [
+        "dpa",
+        "subprocessors_list",
+        "privacy_notice",
+        "trust_center",
+        "security_page",
+        "compliance_page",
+        "certification_reference",
+        "terms_of_service",
+        "kyc_statement",
+        "aml_statement",
+        "ai_terms",
+        "government_request_policy",
+        "transparency_report",
+        "other_public_source"
+      ]
+    },
+    "title_native": { "type": "string", "minLength": 1, "maxLength": 300 },
+    "title_en": { "type": ["string", "null"], "maxLength": 300 },
+    "source_url": { "type": "string", "format": "uri" },
+    "source_language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
+    "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
+    "rights_class": { "enum": ["metadata_only", "public_link_only", "snapshot_allowed", "snapshot_forbidden", "gated_excluded"] },
+    "summary_native": { "type": ["string", "null"], "maxLength": 1200 },
+    "summary_en": { "type": ["string", "null"], "maxLength": 1200 },
+    "provenance": {
+      "type": "object",
+      "required": ["publisher", "collected_at", "observer", "confidence"],
+      "properties": {
+        "publisher": { "enum": ["vendor", "standards_body", "regulator", "other_public_authority"] },
+        "collected_at": { "type": "string", "format": "date-time" },
+        "observer": { "enum": ["human", "agent", "hybrid"] },
+        "confidence": { "enum": ["low", "medium", "high"] }
+      },
+      "additionalProperties": false
+    },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false
+}

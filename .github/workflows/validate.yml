@@ -1,0 +1,32 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Run OpenVA validator
+        run: python -m tools.openva.validate validate
+      - name: Rebuild generated indexes
+        run: python -m tools.openva.validate build-indexes
+      - name: Check generated files are committed
+        run: git diff --exit-code openva-pack.json indexes/
+      - name: Run tests
+        run: pytest -q

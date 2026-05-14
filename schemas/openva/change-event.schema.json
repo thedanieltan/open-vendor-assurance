@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/change-event.schema.json",
+  "title": "OpenVA Change Event",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "change_id",
+    "vendor_id",
+    "source_id",
+    "change_type",
+    "detected_at",
+    "materiality",
+    "review_state",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "change_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "artifact_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "change_type": { "enum": ["created", "updated", "removed", "moved", "hash_changed", "metadata_changed", "access_changed", "rights_changed", "language_changed", "quarantined"] },
+    "detected_at": { "type": "string", "format": "date-time" },
+    "from_hash": { "type": ["string", "null"], "pattern": "^(sha256:[a-fA-F0-9]{64}|sha256:TBD)$" },
+    "to_hash": { "type": ["string", "null"], "pattern": "^(sha256:[a-fA-F0-9]{64}|sha256:TBD)$" },
+    "materiality": { "enum": ["low", "medium", "high", "unknown"] },
+    "review_state": { "enum": ["proposed", "validated", "quarantined", "superseded"] },
+    "summary": { "type": ["string", "null"], "maxLength": 1000 },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false
+}
