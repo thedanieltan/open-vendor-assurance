@@ -45,6 +45,7 @@ docs/catalog-agent-protocol.md
 docs/catalog-batch-generator.md
 docs/breadth-depth-operating-model.md
 docs/category-coverage-program.md
+docs/category-lane-execution-backlog.md
 config/category-taxonomy.yaml
 docs/coverage-map.md
 docs/vendor-expansion-backlog.md
