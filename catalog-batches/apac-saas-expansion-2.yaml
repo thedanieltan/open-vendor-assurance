@@ -1,0 +1,144 @@
+schema_version: 0.1.0
+batch_id: apac-saas-expansion-2
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: lark
+    display_name: Lark
+    legal_name: Lark Technologies Pte. Ltd.
+    headquarters_country: SG
+    regions_served: [global, APAC]
+    official_domains: [larksuite.com]
+    public_entrypoints:
+      - https://www.larksuite.com/en_sg/security
+      - https://www.larksuite.com/en_sg/privacy
+    vendor_categories: [collaboration, productivity_software, enterprise_software]
+    notes: Initial public-source catalog record for a collaboration and productivity software provider.
+    source:
+      source_id: lark-security
+      source_type: security_page
+      title_native: Lark Security
+      title_en: Lark Security
+      source_url: https://www.larksuite.com/en_sg/security
+      source_language: en
+      summary_native: Lark publishes a public security page describing security resources for its collaboration platform.
+      summary_en: Lark publishes a public security page describing security resources for its collaboration platform.
+      confidence: medium
+    artifact:
+      artifact_id: lark-security
+      artifact_type: security_page
+      region_scope: [global, APAC]
+      product_scope: [Lark platform]
+      effective_or_published_at: null
+
+  - vendor_id: dingtalk
+    display_name: DingTalk
+    legal_name: Alibaba Cloud Computing Ltd.
+    headquarters_country: CN
+    regions_served: [global, APAC]
+    official_domains: [dingtalk.com]
+    public_entrypoints:
+      - https://www.dingtalk.com/en
+      - https://terms.alicdn.com/legal-agreement/terms/suit_bu1_alibaba/suit_bu1_alibaba202005141945_80189.html
+    vendor_categories: [collaboration, productivity_software, enterprise_software]
+    notes: Initial public-source catalog record for a collaboration and workplace platform associated with Alibaba.
+    source:
+      source_id: dingtalk-public-site
+      source_type: other_public_source
+      title_native: DingTalk public site
+      title_en: DingTalk public site
+      source_url: https://www.dingtalk.com/en
+      source_language: en
+      summary_native: DingTalk publishes a public website describing its workplace collaboration platform.
+      summary_en: DingTalk publishes a public website describing its workplace collaboration platform.
+      confidence: medium
+    artifact:
+      artifact_id: dingtalk-public-site
+      artifact_type: other_public_source
+      region_scope: [global, APAC]
+      product_scope: [DingTalk platform]
+      effective_or_published_at: null
+
+  - vendor_id: line-works
+    display_name: LINE WORKS
+    legal_name: Works Mobile Corp.
+    headquarters_country: JP
+    regions_served: [APAC]
+    official_domains: [line-works.com, worksmobile.com]
+    public_entrypoints:
+      - https://line-works.com/en/security/
+      - https://line-works.com/en/privacy/
+    vendor_categories: [collaboration, productivity_software, enterprise_software]
+    notes: Initial public-source catalog record for a business collaboration and communication platform provider.
+    source:
+      source_id: line-works-security
+      source_type: security_page
+      title_native: LINE WORKS Security
+      title_en: LINE WORKS Security
+      source_url: https://line-works.com/en/security/
+      source_language: en
+      summary_native: LINE WORKS publishes a public security page describing security resources for its collaboration platform.
+      summary_en: LINE WORKS publishes a public security page describing security resources for its collaboration platform.
+      confidence: medium
+    artifact:
+      artifact_id: line-works-security
+      artifact_type: security_page
+      region_scope: [APAC]
+      product_scope: [LINE WORKS]
+      effective_or_published_at: null
+
+  - vendor_id: naver-cloud
+    display_name: NAVER Cloud
+    legal_name: NAVER Cloud Corp.
+    headquarters_country: KR
+    regions_served: [global, APAC]
+    official_domains: [ncloud.com]
+    public_entrypoints:
+      - https://www.ncloud.com/security
+      - https://www.ncloud.com/policy/infou
+    vendor_categories: [cloud_infrastructure, enterprise_software]
+    notes: Initial public-source catalog record for a Korean cloud infrastructure and enterprise cloud services provider.
+    source:
+      source_id: naver-cloud-security
+      source_type: security_page
+      title_native: NAVER Cloud Security
+      title_en: NAVER Cloud Security
+      source_url: https://www.ncloud.com/security
+      source_language: en
+      summary_native: NAVER Cloud publishes a public security page describing security resources for its cloud services.
+      summary_en: NAVER Cloud publishes a public security page describing security resources for its cloud services.
+      confidence: medium
+    artifact:
+      artifact_id: naver-cloud-security
+      artifact_type: security_page
+      region_scope: [global, APAC]
+      product_scope: [NAVER Cloud]
+      effective_or_published_at: null
+
+  - vendor_id: cybozu
+    display_name: Cybozu
+    legal_name: Cybozu, Inc.
+    headquarters_country: JP
+    regions_served: [global, APAC]
+    official_domains: [cybozu.com, kintone.com]
+    public_entrypoints:
+      - https://www.cybozu.com/privacy/
+      - https://www.kintone.com/security/
+    vendor_categories: [collaboration, workflow_automation, enterprise_software]
+    notes: Initial public-source catalog record for a Japanese collaboration and workflow software provider.
+    source:
+      source_id: kintone-security
+      source_type: security_page
+      title_native: Kintone Security
+      title_en: Kintone Security
+      source_url: https://www.kintone.com/security/
+      source_language: en
+      summary_native: Kintone publishes a public security page describing security resources for Cybozu's workflow platform.
+      summary_en: Kintone publishes a public security page describing security resources for Cybozu's workflow platform.
+      confidence: medium
+    artifact:
+      artifact_id: kintone-security
+      artifact_type: security_page
+      region_scope: [global, APAC]
+      product_scope: [Kintone, Cybozu services]
+      effective_or_published_at: null
