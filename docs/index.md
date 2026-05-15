@@ -48,6 +48,8 @@ docs/breadth-depth-operating-model.md
 docs/category-coverage-program.md
 docs/category-lane-execution-backlog.md
 config/category-taxonomy.yaml
+config/region-taxonomy.yaml
+docs/region-taxonomy.md
 docs/coverage-map.md
 docs/vendor-expansion-backlog.md
 docs/public-update-pathway.md
