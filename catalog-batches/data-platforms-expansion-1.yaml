@@ -1,0 +1,144 @@
+schema_version: 0.1.0
+batch_id: data-platforms-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: databricks
+    display_name: Databricks
+    legal_name: Databricks, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [databricks.com]
+    public_entrypoints:
+      - https://www.databricks.com/trust
+      - https://www.databricks.com/legal/privacynotice
+    vendor_categories: [data_platform, analytics, ai_platform, enterprise_software]
+    notes: Initial public-source catalog record for a data, analytics, and AI platform provider.
+    source:
+      source_id: databricks-trust
+      source_type: trust_center
+      title_native: Databricks Trust Center
+      title_en: Databricks Trust Center
+      source_url: https://www.databricks.com/trust
+      source_language: en
+      summary_native: Databricks publishes public trust resources describing security, privacy, compliance, and platform assurance information.
+      summary_en: Databricks publishes public trust resources describing security, privacy, compliance, and platform assurance information.
+      confidence: medium
+    artifact:
+      artifact_id: databricks-trust
+      artifact_type: trust_center
+      region_scope: [global]
+      product_scope: [Databricks platform]
+      effective_or_published_at: null
+
+  - vendor_id: fivetran
+    display_name: Fivetran
+    legal_name: Fivetran Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [fivetran.com]
+    public_entrypoints:
+      - https://www.fivetran.com/security
+      - https://www.fivetran.com/legal/privacy
+    vendor_categories: [data_integration, data_platform, enterprise_software]
+    notes: Initial public-source catalog record for a data movement and data integration platform provider.
+    source:
+      source_id: fivetran-security
+      source_type: security_page
+      title_native: Fivetran Security
+      title_en: Fivetran Security
+      source_url: https://www.fivetran.com/security
+      source_language: en
+      summary_native: Fivetran publishes a public security page describing security and assurance resources for its data integration platform.
+      summary_en: Fivetran publishes a public security page describing security and assurance resources for its data integration platform.
+      confidence: medium
+    artifact:
+      artifact_id: fivetran-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Fivetran platform]
+      effective_or_published_at: null
+
+  - vendor_id: dbt-labs
+    display_name: dbt Labs
+    legal_name: dbt Labs, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [getdbt.com]
+    public_entrypoints:
+      - https://www.getdbt.com/security
+      - https://www.getdbt.com/privacy-policy
+    vendor_categories: [data_platform, analytics, developer_platform, enterprise_software]
+    notes: Initial public-source catalog record for a data transformation and analytics engineering platform provider.
+    source:
+      source_id: dbt-labs-security
+      source_type: security_page
+      title_native: dbt Labs Security
+      title_en: dbt Labs Security
+      source_url: https://www.getdbt.com/security
+      source_language: en
+      summary_native: dbt Labs publishes a public security page describing security resources for its platform.
+      summary_en: dbt Labs publishes a public security page describing security resources for its platform.
+      confidence: medium
+    artifact:
+      artifact_id: dbt-labs-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [dbt platform]
+      effective_or_published_at: null
+
+  - vendor_id: airbyte
+    display_name: Airbyte
+    legal_name: Airbyte, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [airbyte.com]
+    public_entrypoints:
+      - https://airbyte.com/security
+      - https://airbyte.com/privacy-policy
+    vendor_categories: [data_integration, data_platform, developer_platform]
+    notes: Initial public-source catalog record for a data integration and data movement platform provider.
+    source:
+      source_id: airbyte-security
+      source_type: security_page
+      title_native: Airbyte Security
+      title_en: Airbyte Security
+      source_url: https://airbyte.com/security
+      source_language: en
+      summary_native: Airbyte publishes a public security page describing security resources for its data integration platform.
+      summary_en: Airbyte publishes a public security page describing security resources for its data integration platform.
+      confidence: medium
+    artifact:
+      artifact_id: airbyte-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Airbyte platform]
+      effective_or_published_at: null
+
+  - vendor_id: clickhouse
+    display_name: ClickHouse
+    legal_name: ClickHouse, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [clickhouse.com]
+    public_entrypoints:
+      - https://clickhouse.com/trust
+      - https://clickhouse.com/legal/privacy-policy
+    vendor_categories: [database, analytics, data_platform, enterprise_software]
+    notes: Initial public-source catalog record for an analytical database and data platform provider.
+    source:
+      source_id: clickhouse-trust
+      source_type: trust_center
+      title_native: ClickHouse Trust Center
+      title_en: ClickHouse Trust Center
+      source_url: https://clickhouse.com/trust
+      source_language: en
+      summary_native: ClickHouse publishes public trust resources describing security and assurance information for its platform.
+      summary_en: ClickHouse publishes public trust resources describing security and assurance information for its platform.
+      confidence: medium
+    artifact:
+      artifact_id: clickhouse-trust
+      artifact_type: trust_center
+      region_scope: [global]
+      product_scope: [ClickHouse platform]
+      effective_or_published_at: null
