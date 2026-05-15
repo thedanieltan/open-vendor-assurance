@@ -63,7 +63,10 @@ def test_source_health_report_is_read_only_scheduled_inventory():
 
 
 def test_no_workflow_requests_write_permissions_except_manual_pr_creator():
-    allowed_write_workflows = {"catalog-agent-pr.yml"}
+    allowed_write_workflows = {
+        "catalog-agent-pr.yml",
+        "catalog-reset-pr.yml",
+    }
 
     for path in WORKFLOW_DIR.glob("*.yml"):
         workflow = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -95,6 +98,19 @@ def test_catalog_agent_pr_workflow_is_manual_pr_only():
     assert "branch_name must start with agent-" in text
     assert "pr_title must start with Catalog:" in text
     assert "This workflow creates a pull request only. It does not merge catalog changes." in text
+
+
+def test_catalog_reset_pr_workflow_is_manual_confirmed_pr_only():
+    workflow = load_workflow("catalog-reset-pr.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "catalog-reset-pr.yml").read_text(encoding="utf-8")
+
+    assert set(triggers.keys()) == {"workflow_dispatch"}
+    assert workflow["permissions"] == {"contents": "write", "pull-requests": "write"}
+    assert "RESET-CATALOG-LAYER" in text
+    assert "branch_name must start with reset-" in text
+    assert "pr_title must start with P:" in text
+    assert "peter-evans/create-pull-request@v6" in text
 
 
 def test_ci_policy_documents_required_checks_and_branch_protection():
