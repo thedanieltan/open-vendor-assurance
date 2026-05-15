@@ -82,7 +82,7 @@ jobs:
             - Skips vendors already materialized under `data/vendors/{vendor_id}/vendor.yaml`.
             - Rebuilds generated indexes and `openva-pack.json`.
             - Runs validation and tests before opening the PR.
-            - Does not fetch live vendor content.
+            - does not fetch live vendor content.
             - Does not use gated/private materials.
             - Does not mirror raw documents.
             - Does not provide legal, compliance, procurement, audit, security, or vendor-risk advice.
