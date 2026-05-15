@@ -1,0 +1,225 @@
+schema_version: 0.1.0
+batch_id: secops-cloud-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: palo-alto-networks
+    display_name: Palo Alto Networks
+    legal_name: Palo Alto Networks, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [paloaltonetworks.com]
+    public_entrypoints: [https://www.paloaltonetworks.com/legal-notices/privacy, https://www.paloaltonetworks.com/legal-notices]
+    vendor_categories: [security, network_security, cloud_security]
+    notes: Initial public-source catalog record for a cybersecurity and network security provider.
+    source: {source_id: palo-alto-networks-privacy, source_type: privacy_notice, title_native: Palo Alto Networks Privacy Notice, title_en: Palo Alto Networks Privacy Notice, source_url: https://www.paloaltonetworks.com/legal-notices/privacy, source_language: en, summary_native: Palo Alto Networks publishes a public privacy notice for its services., summary_en: Palo Alto Networks publishes a public privacy notice for its services., confidence: medium}
+    artifact: {artifact_id: palo-alto-networks-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Palo Alto Networks services], effective_or_published_at: null}
+  - vendor_id: zscaler
+    display_name: Zscaler
+    legal_name: Zscaler, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [zscaler.com]
+    public_entrypoints: [https://www.zscaler.com/trust, https://www.zscaler.com/privacy]
+    vendor_categories: [security, cloud_security, zero_trust_networking]
+    notes: Initial public-source catalog record for a cloud security and zero trust networking provider.
+    source: {source_id: zscaler-trust, source_type: trust_center, title_native: Zscaler Trust, title_en: Zscaler Trust, source_url: https://www.zscaler.com/trust, source_language: en, summary_native: Zscaler publishes public trust resources for its cloud security platform., summary_en: Zscaler publishes public trust resources for its cloud security platform., confidence: medium}
+    artifact: {artifact_id: zscaler-trust, artifact_type: trust_center, region_scope: [global], product_scope: [Zscaler platform], effective_or_published_at: null}
+  - vendor_id: wiz
+    display_name: Wiz
+    legal_name: Wiz, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [wiz.io]
+    public_entrypoints: [https://www.wiz.io/trust-center, https://www.wiz.io/privacy-policy]
+    vendor_categories: [security, cloud_security, cnapp]
+    notes: Initial public-source catalog record for a cloud security platform provider.
+    source: {source_id: wiz-trust-center, source_type: trust_center, title_native: Wiz Trust Center, title_en: Wiz Trust Center, source_url: https://www.wiz.io/trust-center, source_language: en, summary_native: Wiz publishes public trust resources for its cloud security platform., summary_en: Wiz publishes public trust resources for its cloud security platform., confidence: medium}
+    artifact: {artifact_id: wiz-trust-center, artifact_type: trust_center, region_scope: [global], product_scope: [Wiz platform], effective_or_published_at: null}
+  - vendor_id: lacework
+    display_name: Lacework
+    legal_name: Lacework, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [lacework.com]
+    public_entrypoints: [https://www.lacework.com/trust, https://www.lacework.com/privacy-policy]
+    vendor_categories: [security, cloud_security, cnapp]
+    notes: Initial public-source catalog record for a cloud security platform provider.
+    source: {source_id: lacework-trust, source_type: trust_center, title_native: Lacework Trust, title_en: Lacework Trust, source_url: https://www.lacework.com/trust, source_language: en, summary_native: Lacework publishes public trust resources for its cloud security platform., summary_en: Lacework publishes public trust resources for its cloud security platform., confidence: medium}
+    artifact: {artifact_id: lacework-trust, artifact_type: trust_center, region_scope: [global], product_scope: [Lacework platform], effective_or_published_at: null}
+  - vendor_id: orca-security
+    display_name: Orca Security
+    legal_name: Orca Security Ltd.
+    headquarters_country: IL
+    regions_served: [global]
+    official_domains: [orca.security]
+    public_entrypoints: [https://orca.security/security/, https://orca.security/privacy-policy/]
+    vendor_categories: [security, cloud_security, cnapp]
+    notes: Initial public-source catalog record for a cloud security platform provider.
+    source: {source_id: orca-security-security, source_type: security_page, title_native: Orca Security, title_en: Orca Security, source_url: https://orca.security/security/, source_language: en, summary_native: Orca Security publishes public security information for its platform., summary_en: Orca Security publishes public security information for its platform., confidence: medium}
+    artifact: {artifact_id: orca-security-security, artifact_type: security_page, region_scope: [global], product_scope: [Orca Security platform], effective_or_published_at: null}
+  - vendor_id: tenable
+    display_name: Tenable
+    legal_name: Tenable, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [tenable.com]
+    public_entrypoints: [https://www.tenable.com/security, https://www.tenable.com/privacy-policy]
+    vendor_categories: [security, vulnerability_management, enterprise_software]
+    notes: Initial public-source catalog record for a vulnerability management and exposure management provider.
+    source: {source_id: tenable-security, source_type: security_page, title_native: Tenable Security, title_en: Tenable Security, source_url: https://www.tenable.com/security, source_language: en, summary_native: Tenable publishes public security information for its platform., summary_en: Tenable publishes public security information for its platform., confidence: medium}
+    artifact: {artifact_id: tenable-security, artifact_type: security_page, region_scope: [global], product_scope: [Tenable platform], effective_or_published_at: null}
+  - vendor_id: qualys
+    display_name: Qualys
+    legal_name: Qualys, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [qualys.com]
+    public_entrypoints: [https://www.qualys.com/company/privacy/, https://www.qualys.com/company/]
+    vendor_categories: [security, vulnerability_management, enterprise_software]
+    notes: Initial public-source catalog record for a vulnerability management and cloud security provider.
+    source: {source_id: qualys-privacy, source_type: privacy_notice, title_native: Qualys Privacy, title_en: Qualys Privacy, source_url: https://www.qualys.com/company/privacy/, source_language: en, summary_native: Qualys publishes a public privacy notice for its services., summary_en: Qualys publishes a public privacy notice for its services., confidence: medium}
+    artifact: {artifact_id: qualys-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Qualys services], effective_or_published_at: null}
+  - vendor_id: rapid7
+    display_name: Rapid7
+    legal_name: Rapid7, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [rapid7.com]
+    public_entrypoints: [https://www.rapid7.com/trust/, https://www.rapid7.com/privacy-policy/]
+    vendor_categories: [security, vulnerability_management, siem]
+    notes: Initial public-source catalog record for a security operations and vulnerability management provider.
+    source: {source_id: rapid7-trust, source_type: trust_center, title_native: Rapid7 Trust, title_en: Rapid7 Trust, source_url: https://www.rapid7.com/trust/, source_language: en, summary_native: Rapid7 publishes public trust resources for its security platform., summary_en: Rapid7 publishes public trust resources for its security platform., confidence: medium}
+    artifact: {artifact_id: rapid7-trust, artifact_type: trust_center, region_scope: [global], product_scope: [Rapid7 platform], effective_or_published_at: null}
+  - vendor_id: check-point
+    display_name: Check Point
+    legal_name: Check Point Software Technologies Ltd.
+    headquarters_country: IL
+    regions_served: [global]
+    official_domains: [checkpoint.com]
+    public_entrypoints: [https://www.checkpoint.com/privacy/, https://www.checkpoint.com/about-us/]
+    vendor_categories: [security, network_security, cloud_security]
+    notes: Initial public-source catalog record for a cybersecurity and network security provider.
+    source: {source_id: check-point-privacy, source_type: privacy_notice, title_native: Check Point Privacy Policy, title_en: Check Point Privacy Policy, source_url: https://www.checkpoint.com/privacy/, source_language: en, summary_native: Check Point publishes a public privacy policy for its services., summary_en: Check Point publishes a public privacy policy for its services., confidence: medium}
+    artifact: {artifact_id: check-point-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Check Point services], effective_or_published_at: null}
+  - vendor_id: fortinet
+    display_name: Fortinet
+    legal_name: Fortinet, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [fortinet.com]
+    public_entrypoints: [https://www.fortinet.com/corporate/about-us/privacy, https://www.fortinet.com/trust]
+    vendor_categories: [security, network_security, cloud_security]
+    notes: Initial public-source catalog record for a cybersecurity and network security provider.
+    source: {source_id: fortinet-trust, source_type: trust_center, title_native: Fortinet Trust, title_en: Fortinet Trust, source_url: https://www.fortinet.com/trust, source_language: en, summary_native: Fortinet publishes public trust resources for its security products and services., summary_en: Fortinet publishes public trust resources for its security products and services., confidence: medium}
+    artifact: {artifact_id: fortinet-trust, artifact_type: trust_center, region_scope: [global], product_scope: [Fortinet platform], effective_or_published_at: null}
+  - vendor_id: sophos
+    display_name: Sophos
+    legal_name: Sophos Limited
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [sophos.com]
+    public_entrypoints: [https://www.sophos.com/en-us/legal/sophos-group-privacy-notice, https://www.sophos.com/en-us/trust]
+    vendor_categories: [security, endpoint_security, network_security]
+    notes: Initial public-source catalog record for a cybersecurity platform provider.
+    source: {source_id: sophos-trust, source_type: trust_center, title_native: Sophos Trust, title_en: Sophos Trust, source_url: https://www.sophos.com/en-us/trust, source_language: en, summary_native: Sophos publishes public trust resources for its security products and services., summary_en: Sophos publishes public trust resources for its security products and services., confidence: medium}
+    artifact: {artifact_id: sophos-trust, artifact_type: trust_center, region_scope: [global], product_scope: [Sophos platform], effective_or_published_at: null}
+  - vendor_id: netskope
+    display_name: Netskope
+    legal_name: Netskope, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [netskope.com]
+    public_entrypoints: [https://www.netskope.com/privacy-policy, https://www.netskope.com/platform/sase]
+    vendor_categories: [security, cloud_security, zero_trust_networking]
+    notes: Initial public-source catalog record for a cloud security and SASE platform provider.
+    source: {source_id: netskope-privacy, source_type: privacy_notice, title_native: Netskope Privacy Policy, title_en: Netskope Privacy Policy, source_url: https://www.netskope.com/privacy-policy, source_language: en, summary_native: Netskope publishes a public privacy policy for its services., summary_en: Netskope publishes a public privacy policy for its services., confidence: medium}
+    artifact: {artifact_id: netskope-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Netskope services], effective_or_published_at: null}
+  - vendor_id: proofpoint
+    display_name: Proofpoint
+    legal_name: Proofpoint, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [proofpoint.com]
+    public_entrypoints: [https://www.proofpoint.com/us/legal/privacy-policy, https://www.proofpoint.com/us/security]
+    vendor_categories: [security, email_security, enterprise_software]
+    notes: Initial public-source catalog record for an email security and cybersecurity provider.
+    source: {source_id: proofpoint-security, source_type: security_page, title_native: Proofpoint Security, title_en: Proofpoint Security, source_url: https://www.proofpoint.com/us/security, source_language: en, summary_native: Proofpoint publishes public security information for its platform., summary_en: Proofpoint publishes public security information for its platform., confidence: medium}
+    artifact: {artifact_id: proofpoint-security, artifact_type: security_page, region_scope: [global], product_scope: [Proofpoint platform], effective_or_published_at: null}
+  - vendor_id: mimecast
+    display_name: Mimecast
+    legal_name: Mimecast Limited
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [mimecast.com]
+    public_entrypoints: [https://www.mimecast.com/company/mimecast-trust-center/, https://www.mimecast.com/company/legal/privacy-statement/]
+    vendor_categories: [security, email_security, enterprise_software]
+    notes: Initial public-source catalog record for an email security and cyber resilience provider.
+    source: {source_id: mimecast-trust-center, source_type: trust_center, title_native: Mimecast Trust Center, title_en: Mimecast Trust Center, source_url: https://www.mimecast.com/company/mimecast-trust-center/, source_language: en, summary_native: Mimecast publishes public trust resources for its security platform., summary_en: Mimecast publishes public trust resources for its security platform., confidence: medium}
+    artifact: {artifact_id: mimecast-trust-center, artifact_type: trust_center, region_scope: [global], product_scope: [Mimecast platform], effective_or_published_at: null}
+  - vendor_id: snyk
+    display_name: Snyk
+    legal_name: Snyk Limited
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [snyk.io]
+    public_entrypoints: [https://snyk.io/security/, https://snyk.io/policies/privacy/]
+    vendor_categories: [security, application_security, developer_platform]
+    notes: Initial public-source catalog record for an application security and developer security platform provider.
+    source: {source_id: snyk-security, source_type: security_page, title_native: Snyk Security, title_en: Snyk Security, source_url: https://snyk.io/security/, source_language: en, summary_native: Snyk publishes public security information for its developer security platform., summary_en: Snyk publishes public security information for its developer security platform., confidence: medium}
+    artifact: {artifact_id: snyk-security, artifact_type: security_page, region_scope: [global], product_scope: [Snyk platform], effective_or_published_at: null}
+  - vendor_id: sonarqube-cloud
+    display_name: SonarQube Cloud
+    legal_name: SonarSource S.A.
+    headquarters_country: CH
+    regions_served: [global, EU]
+    official_domains: [sonarsource.com, sonarcloud.io]
+    public_entrypoints: [https://www.sonarsource.com/security/, https://www.sonarsource.com/legal/privacy/]
+    vendor_categories: [security, application_security, developer_platform]
+    notes: Initial public-source catalog record for a code quality and application security platform provider.
+    source: {source_id: sonarqube-cloud-security, source_type: security_page, title_native: SonarSource Security, title_en: SonarSource Security, source_url: https://www.sonarsource.com/security/, source_language: en, summary_native: SonarSource publishes public security information for its platform., summary_en: SonarSource publishes public security information for its platform., confidence: medium}
+    artifact: {artifact_id: sonarqube-cloud-security, artifact_type: security_page, region_scope: [global, EU], product_scope: [SonarQube Cloud], effective_or_published_at: null}
+  - vendor_id: veracode
+    display_name: Veracode
+    legal_name: Veracode, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [veracode.com]
+    public_entrypoints: [https://www.veracode.com/security/, https://www.veracode.com/privacy-policy/]
+    vendor_categories: [security, application_security, enterprise_software]
+    notes: Initial public-source catalog record for an application security testing platform provider.
+    source: {source_id: veracode-security, source_type: security_page, title_native: Veracode Security, title_en: Veracode Security, source_url: https://www.veracode.com/security/, source_language: en, summary_native: Veracode publishes public security information for its application security platform., summary_en: Veracode publishes public security information for its application security platform., confidence: medium}
+    artifact: {artifact_id: veracode-security, artifact_type: security_page, region_scope: [global], product_scope: [Veracode platform], effective_or_published_at: null}
+  - vendor_id: checkmarx
+    display_name: Checkmarx
+    legal_name: Checkmarx Ltd.
+    headquarters_country: IL
+    regions_served: [global]
+    official_domains: [checkmarx.com]
+    public_entrypoints: [https://checkmarx.com/privacy-policy/, https://checkmarx.com/security/]
+    vendor_categories: [security, application_security, enterprise_software]
+    notes: Initial public-source catalog record for an application security testing platform provider.
+    source: {source_id: checkmarx-security, source_type: security_page, title_native: Checkmarx Security, title_en: Checkmarx Security, source_url: https://checkmarx.com/security/, source_language: en, summary_native: Checkmarx publishes public security information for its application security platform., summary_en: Checkmarx publishes public security information for its application security platform., confidence: medium}
+    artifact: {artifact_id: checkmarx-security, artifact_type: security_page, region_scope: [global], product_scope: [Checkmarx platform], effective_or_published_at: null}
+  - vendor_id: semgrep
+    display_name: Semgrep
+    legal_name: Semgrep, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [semgrep.dev]
+    public_entrypoints: [https://semgrep.dev/legal/privacy, https://semgrep.dev/legal/terms]
+    vendor_categories: [security, application_security, developer_platform]
+    notes: Initial public-source catalog record for an application security and code scanning platform provider.
+    source: {source_id: semgrep-privacy, source_type: privacy_notice, title_native: Semgrep Privacy Policy, title_en: Semgrep Privacy Policy, source_url: https://semgrep.dev/legal/privacy, source_language: en, summary_native: Semgrep publishes a public privacy policy for its security platform., summary_en: Semgrep publishes a public privacy policy for its security platform., confidence: medium}
+    artifact: {artifact_id: semgrep-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Semgrep platform], effective_or_published_at: null}
+  - vendor_id: arctic-wolf
+    display_name: Arctic Wolf
+    legal_name: Arctic Wolf Networks, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [arcticwolf.com]
+    public_entrypoints: [https://arcticwolf.com/privacy-policy/, https://arcticwolf.com/security/]
+    vendor_categories: [security, managed_security, security_operations]
+    notes: Initial public-source catalog record for a managed detection and response security provider.
+    source: {source_id: arctic-wolf-security, source_type: security_page, title_native: Arctic Wolf Security, title_en: Arctic Wolf Security, source_url: https://arcticwolf.com/security/, source_language: en, summary_native: Arctic Wolf publishes public security information for its managed security services., summary_en: Arctic Wolf publishes public security information for its managed security services., confidence: medium}
+    artifact: {artifact_id: arctic-wolf-security, artifact_type: security_page, region_scope: [global], product_scope: [Arctic Wolf services], effective_or_published_at: null}
