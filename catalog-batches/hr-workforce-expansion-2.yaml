@@ -1,0 +1,144 @@
+schema_version: 0.1.0
+batch_id: hr-workforce-expansion-2
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: remote
+    display_name: Remote
+    legal_name: Remote Technology, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [remote.com]
+    public_entrypoints:
+      - https://remote.com/security
+      - https://remote.com/legal
+    vendor_categories: [hr_software, payroll_software, workforce_management]
+    notes: Initial public-source catalog record for a global employment, payroll, and HR platform provider.
+    source:
+      source_id: remote-security
+      source_type: security_page
+      title_native: Remote Security
+      title_en: Remote Security
+      source_url: https://remote.com/security
+      source_language: en
+      summary_native: Remote publishes a public security page describing security practices for its platform.
+      summary_en: Remote publishes a public security page describing security practices for its platform.
+      confidence: high
+    artifact:
+      artifact_id: remote-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Remote platform]
+      effective_or_published_at: null
+
+  - vendor_id: bamboohr
+    display_name: BambooHR
+    legal_name: Bamboo HR LLC
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [bamboohr.com]
+    public_entrypoints:
+      - https://www.bamboohr.com/security
+      - https://www.bamboohr.com/privacy-policy
+    vendor_categories: [hr_software, workforce_management]
+    notes: Initial public-source catalog record for an HR information system provider.
+    source:
+      source_id: bamboohr-security
+      source_type: security_page
+      title_native: BambooHR Security
+      title_en: BambooHR Security
+      source_url: https://www.bamboohr.com/security
+      source_language: en
+      summary_native: BambooHR publishes a public security page describing security practices for its HR platform.
+      summary_en: BambooHR publishes a public security page describing security practices for its HR platform.
+      confidence: high
+    artifact:
+      artifact_id: bamboohr-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [BambooHR platform]
+      effective_or_published_at: null
+
+  - vendor_id: hibob
+    display_name: HiBob
+    legal_name: Hi Bob Ltd.
+    headquarters_country: GB
+    regions_served: [global, EU]
+    official_domains: [hibob.com]
+    public_entrypoints:
+      - https://www.hibob.com/security/
+      - https://www.hibob.com/privacy-policy/
+    vendor_categories: [hr_software, workforce_management]
+    notes: Initial public-source catalog record for an HR platform provider.
+    source:
+      source_id: hibob-security
+      source_type: security_page
+      title_native: HiBob Security
+      title_en: HiBob Security
+      source_url: https://www.hibob.com/security/
+      source_language: en
+      summary_native: HiBob publishes a public security page describing security resources for its HR platform.
+      summary_en: HiBob publishes a public security page describing security resources for its HR platform.
+      confidence: medium
+    artifact:
+      artifact_id: hibob-security
+      artifact_type: security_page
+      region_scope: [global, EU]
+      product_scope: [HiBob platform]
+      effective_or_published_at: null
+
+  - vendor_id: ashby
+    display_name: Ashby
+    legal_name: Ashby, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [ashbyhq.com]
+    public_entrypoints:
+      - https://www.ashbyhq.com/security
+      - https://www.ashbyhq.com/privacy
+    vendor_categories: [hr_software, recruiting_software]
+    notes: Initial public-source catalog record for a recruiting and applicant tracking platform provider.
+    source:
+      source_id: ashby-security
+      source_type: security_page
+      title_native: Ashby Security
+      title_en: Ashby Security
+      source_url: https://www.ashbyhq.com/security
+      source_language: en
+      summary_native: Ashby publishes a public security page describing security resources for its recruiting platform.
+      summary_en: Ashby publishes a public security page describing security resources for its recruiting platform.
+      confidence: medium
+    artifact:
+      artifact_id: ashby-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Ashby platform]
+      effective_or_published_at: null
+
+  - vendor_id: lattice
+    display_name: Lattice
+    legal_name: Degree, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [lattice.com]
+    public_entrypoints:
+      - https://lattice.com/security
+      - https://lattice.com/privacy
+    vendor_categories: [hr_software, performance_management, workforce_management]
+    notes: Initial public-source catalog record for a people management and performance platform provider.
+    source:
+      source_id: lattice-security
+      source_type: security_page
+      title_native: Lattice Security
+      title_en: Lattice Security
+      source_url: https://lattice.com/security
+      source_language: en
+      summary_native: Lattice publishes a public security page describing security resources for its people management platform.
+      summary_en: Lattice publishes a public security page describing security resources for its people management platform.
+      confidence: medium
+    artifact:
+      artifact_id: lattice-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Lattice platform]
+      effective_or_published_at: null
