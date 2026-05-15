@@ -1,0 +1,225 @@
+schema_version: 0.1.0
+batch_id: ai-data-tools-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: anthropic
+    display_name: Anthropic
+    legal_name: Anthropic, PBC
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [anthropic.com]
+    public_entrypoints: [https://www.anthropic.com/legal/privacy, https://trust.anthropic.com/]
+    vendor_categories: [ai_platform, foundation_model, enterprise_software]
+    notes: Initial public-source catalog record for an AI model and platform provider.
+    source: {source_id: anthropic-trust, source_type: trust_center, title_native: Anthropic Trust Center, title_en: Anthropic Trust Center, source_url: https://trust.anthropic.com/, source_language: en, summary_native: Anthropic publishes public trust resources for its AI platform., summary_en: Anthropic publishes public trust resources for its AI platform., confidence: medium}
+    artifact: {artifact_id: anthropic-trust, artifact_type: trust_center, region_scope: [global], product_scope: [Anthropic platform], effective_or_published_at: null}
+  - vendor_id: cohere
+    display_name: Cohere
+    legal_name: Cohere Inc.
+    headquarters_country: CA
+    regions_served: [global]
+    official_domains: [cohere.com]
+    public_entrypoints: [https://cohere.com/security, https://cohere.com/privacy]
+    vendor_categories: [ai_platform, foundation_model, enterprise_software]
+    notes: Initial public-source catalog record for an AI model and platform provider.
+    source: {source_id: cohere-security, source_type: security_page, title_native: Cohere Security, title_en: Cohere Security, source_url: https://cohere.com/security, source_language: en, summary_native: Cohere publishes public security information for its AI platform., summary_en: Cohere publishes public security information for its AI platform., confidence: medium}
+    artifact: {artifact_id: cohere-security, artifact_type: security_page, region_scope: [global], product_scope: [Cohere platform], effective_or_published_at: null}
+  - vendor_id: mistral-ai
+    display_name: Mistral AI
+    legal_name: Mistral AI SAS
+    headquarters_country: FR
+    regions_served: [global, EU]
+    official_domains: [mistral.ai]
+    public_entrypoints: [https://mistral.ai/terms/, https://mistral.ai/privacy/]
+    vendor_categories: [ai_platform, foundation_model]
+    notes: Initial public-source catalog record for an AI model and platform provider.
+    source: {source_id: mistral-ai-privacy, source_type: privacy_notice, title_native: Mistral AI Privacy Policy, title_en: Mistral AI Privacy Policy, source_url: https://mistral.ai/privacy/, source_language: en, summary_native: Mistral AI publishes a public privacy policy for its services., summary_en: Mistral AI publishes a public privacy policy for its services., confidence: medium}
+    artifact: {artifact_id: mistral-ai-privacy, artifact_type: privacy_notice, region_scope: [global, EU], product_scope: [Mistral AI services], effective_or_published_at: null}
+  - vendor_id: hugging-face
+    display_name: Hugging Face
+    legal_name: Hugging Face, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [huggingface.co]
+    public_entrypoints: [https://huggingface.co/security, https://huggingface.co/privacy]
+    vendor_categories: [ai_platform, developer_platform, model_hosting]
+    notes: Initial public-source catalog record for an AI model hosting and developer platform provider.
+    source: {source_id: hugging-face-security, source_type: security_page, title_native: Hugging Face Security, title_en: Hugging Face Security, source_url: https://huggingface.co/security, source_language: en, summary_native: Hugging Face publishes public security information for its platform., summary_en: Hugging Face publishes public security information for its platform., confidence: medium}
+    artifact: {artifact_id: hugging-face-security, artifact_type: security_page, region_scope: [global], product_scope: [Hugging Face platform], effective_or_published_at: null}
+  - vendor_id: replicate
+    display_name: Replicate
+    legal_name: Replicate, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [replicate.com]
+    public_entrypoints: [https://replicate.com/privacy, https://replicate.com/terms]
+    vendor_categories: [ai_platform, model_hosting, developer_platform]
+    notes: Initial public-source catalog record for an AI model hosting and inference platform provider.
+    source: {source_id: replicate-privacy, source_type: privacy_notice, title_native: Replicate Privacy Policy, title_en: Replicate Privacy Policy, source_url: https://replicate.com/privacy, source_language: en, summary_native: Replicate publishes a public privacy policy for its platform., summary_en: Replicate publishes a public privacy policy for its platform., confidence: medium}
+    artifact: {artifact_id: replicate-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Replicate platform], effective_or_published_at: null}
+  - vendor_id: runway
+    display_name: Runway
+    legal_name: Runway AI, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [runwayml.com]
+    public_entrypoints: [https://runwayml.com/privacy, https://runwayml.com/terms]
+    vendor_categories: [ai_platform, creative_tools, video_ai]
+    notes: Initial public-source catalog record for an AI creative tools platform provider.
+    source: {source_id: runway-privacy, source_type: privacy_notice, title_native: Runway Privacy Policy, title_en: Runway Privacy Policy, source_url: https://runwayml.com/privacy, source_language: en, summary_native: Runway publishes a public privacy policy for its AI creative platform., summary_en: Runway publishes a public privacy policy for its AI creative platform., confidence: medium}
+    artifact: {artifact_id: runway-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Runway platform], effective_or_published_at: null}
+  - vendor_id: perplexity
+    display_name: Perplexity
+    legal_name: Perplexity AI, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [perplexity.ai]
+    public_entrypoints: [https://www.perplexity.ai/privacy, https://www.perplexity.ai/terms]
+    vendor_categories: [ai_platform, search, productivity_software]
+    notes: Initial public-source catalog record for an AI answer and search platform provider.
+    source: {source_id: perplexity-privacy, source_type: privacy_notice, title_native: Perplexity Privacy Policy, title_en: Perplexity Privacy Policy, source_url: https://www.perplexity.ai/privacy, source_language: en, summary_native: Perplexity publishes a public privacy policy for its AI search platform., summary_en: Perplexity publishes a public privacy policy for its AI search platform., confidence: medium}
+    artifact: {artifact_id: perplexity-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Perplexity platform], effective_or_published_at: null}
+  - vendor_id: scale-ai
+    display_name: Scale AI
+    legal_name: Scale AI, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [scale.com]
+    public_entrypoints: [https://scale.com/privacy, https://scale.com/security]
+    vendor_categories: [ai_platform, data_labeling, data_platform]
+    notes: Initial public-source catalog record for an AI data and model evaluation platform provider.
+    source: {source_id: scale-ai-security, source_type: security_page, title_native: Scale Security, title_en: Scale Security, source_url: https://scale.com/security, source_language: en, summary_native: Scale publishes public security information for its AI data platform., summary_en: Scale publishes public security information for its AI data platform., confidence: medium}
+    artifact: {artifact_id: scale-ai-security, artifact_type: security_page, region_scope: [global], product_scope: [Scale platform], effective_or_published_at: null}
+  - vendor_id: labelbox
+    display_name: Labelbox
+    legal_name: Labelbox, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [labelbox.com]
+    public_entrypoints: [https://labelbox.com/security/, https://labelbox.com/privacy-policy/]
+    vendor_categories: [ai_platform, data_labeling, data_platform]
+    notes: Initial public-source catalog record for a data labeling and AI data platform provider.
+    source: {source_id: labelbox-security, source_type: security_page, title_native: Labelbox Security, title_en: Labelbox Security, source_url: https://labelbox.com/security/, source_language: en, summary_native: Labelbox publishes public security information for its data platform., summary_en: Labelbox publishes public security information for its data platform., confidence: medium}
+    artifact: {artifact_id: labelbox-security, artifact_type: security_page, region_scope: [global], product_scope: [Labelbox platform], effective_or_published_at: null}
+  - vendor_id: weights-biases
+    display_name: Weights & Biases
+    legal_name: Weights & Biases, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [wandb.ai]
+    public_entrypoints: [https://wandb.ai/site/security, https://wandb.ai/site/privacy]
+    vendor_categories: [ai_platform, mlops, developer_platform]
+    notes: Initial public-source catalog record for an MLOps and experiment tracking platform provider.
+    source: {source_id: weights-biases-security, source_type: security_page, title_native: Weights & Biases Security, title_en: Weights & Biases Security, source_url: https://wandb.ai/site/security, source_language: en, summary_native: Weights & Biases publishes public security information for its MLOps platform., summary_en: Weights & Biases publishes public security information for its MLOps platform., confidence: medium}
+    artifact: {artifact_id: weights-biases-security, artifact_type: security_page, region_scope: [global], product_scope: [Weights & Biases platform], effective_or_published_at: null}
+  - vendor_id: pinecone
+    display_name: Pinecone
+    legal_name: Pinecone Systems, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [pinecone.io]
+    public_entrypoints: [https://www.pinecone.io/security/, https://www.pinecone.io/privacy/]
+    vendor_categories: [vector_database, ai_platform, data_platform]
+    notes: Initial public-source catalog record for a vector database platform provider.
+    source: {source_id: pinecone-security, source_type: security_page, title_native: Pinecone Security, title_en: Pinecone Security, source_url: https://www.pinecone.io/security/, source_language: en, summary_native: Pinecone publishes public security information for its vector database platform., summary_en: Pinecone publishes public security information for its vector database platform., confidence: medium}
+    artifact: {artifact_id: pinecone-security, artifact_type: security_page, region_scope: [global], product_scope: [Pinecone platform], effective_or_published_at: null}
+  - vendor_id: weaviate
+    display_name: Weaviate
+    legal_name: Weaviate B.V.
+    headquarters_country: NL
+    regions_served: [global, EU]
+    official_domains: [weaviate.io]
+    public_entrypoints: [https://weaviate.io/security, https://weaviate.io/privacy-policy]
+    vendor_categories: [vector_database, ai_platform, data_platform]
+    notes: Initial public-source catalog record for a vector database platform provider.
+    source: {source_id: weaviate-security, source_type: security_page, title_native: Weaviate Security, title_en: Weaviate Security, source_url: https://weaviate.io/security, source_language: en, summary_native: Weaviate publishes public security information for its vector database platform., summary_en: Weaviate publishes public security information for its vector database platform., confidence: medium}
+    artifact: {artifact_id: weaviate-security, artifact_type: security_page, region_scope: [global, EU], product_scope: [Weaviate platform], effective_or_published_at: null}
+  - vendor_id: qdrant
+    display_name: Qdrant
+    legal_name: Qdrant Solutions GmbH
+    headquarters_country: DE
+    regions_served: [global, EU]
+    official_domains: [qdrant.tech]
+    public_entrypoints: [https://qdrant.tech/legal/privacy-policy/, https://qdrant.tech/documentation/cloud/security/]
+    vendor_categories: [vector_database, ai_platform, data_platform]
+    notes: Initial public-source catalog record for a vector database platform provider.
+    source: {source_id: qdrant-cloud-security, source_type: security_page, title_native: Qdrant Cloud Security, title_en: Qdrant Cloud Security, source_url: https://qdrant.tech/documentation/cloud/security/, source_language: en, summary_native: Qdrant publishes public security information for its cloud vector database platform., summary_en: Qdrant publishes public security information for its cloud vector database platform., confidence: medium}
+    artifact: {artifact_id: qdrant-cloud-security, artifact_type: security_page, region_scope: [global, EU], product_scope: [Qdrant Cloud], effective_or_published_at: null}
+  - vendor_id: langchain
+    display_name: LangChain
+    legal_name: LangChain, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [langchain.com]
+    public_entrypoints: [https://www.langchain.com/privacy-policy, https://www.langchain.com/terms-of-service]
+    vendor_categories: [ai_platform, developer_platform, llmops]
+    notes: Initial public-source catalog record for an AI application development platform provider.
+    source: {source_id: langchain-privacy, source_type: privacy_notice, title_native: LangChain Privacy Policy, title_en: LangChain Privacy Policy, source_url: https://www.langchain.com/privacy-policy, source_language: en, summary_native: LangChain publishes a public privacy policy for its AI application platform., summary_en: LangChain publishes a public privacy policy for its AI application platform., confidence: medium}
+    artifact: {artifact_id: langchain-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [LangChain platform], effective_or_published_at: null}
+  - vendor_id: llamaindex
+    display_name: LlamaIndex
+    legal_name: LlamaIndex, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [llamaindex.ai]
+    public_entrypoints: [https://www.llamaindex.ai/privacy, https://www.llamaindex.ai/terms]
+    vendor_categories: [ai_platform, developer_platform, llmops]
+    notes: Initial public-source catalog record for an AI data framework and application platform provider.
+    source: {source_id: llamaindex-privacy, source_type: privacy_notice, title_native: LlamaIndex Privacy Policy, title_en: LlamaIndex Privacy Policy, source_url: https://www.llamaindex.ai/privacy, source_language: en, summary_native: LlamaIndex publishes a public privacy policy for its AI platform., summary_en: LlamaIndex publishes a public privacy policy for its AI platform., confidence: medium}
+    artifact: {artifact_id: llamaindex-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [LlamaIndex platform], effective_or_published_at: null}
+  - vendor_id: dataiku
+    display_name: Dataiku
+    legal_name: Dataiku Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [dataiku.com]
+    public_entrypoints: [https://www.dataiku.com/trust/, https://www.dataiku.com/privacy/]
+    vendor_categories: [ai_platform, data_science, enterprise_software]
+    notes: Initial public-source catalog record for an enterprise AI and data science platform provider.
+    source: {source_id: dataiku-trust, source_type: trust_center, title_native: Dataiku Trust Center, title_en: Dataiku Trust Center, source_url: https://www.dataiku.com/trust/, source_language: en, summary_native: Dataiku publishes public trust resources for its enterprise AI platform., summary_en: Dataiku publishes public trust resources for its enterprise AI platform., confidence: medium}
+    artifact: {artifact_id: dataiku-trust, artifact_type: trust_center, region_scope: [global], product_scope: [Dataiku platform], effective_or_published_at: null}
+  - vendor_id: datarobot
+    display_name: DataRobot
+    legal_name: DataRobot, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [datarobot.com]
+    public_entrypoints: [https://www.datarobot.com/trust/, https://www.datarobot.com/privacy-policy/]
+    vendor_categories: [ai_platform, data_science, enterprise_software]
+    notes: Initial public-source catalog record for an enterprise AI and machine learning platform provider.
+    source: {source_id: datarobot-trust, source_type: trust_center, title_native: DataRobot Trust, title_en: DataRobot Trust, source_url: https://www.datarobot.com/trust/, source_language: en, summary_native: DataRobot publishes public trust resources for its AI platform., summary_en: DataRobot publishes public trust resources for its AI platform., confidence: medium}
+    artifact: {artifact_id: datarobot-trust, artifact_type: trust_center, region_scope: [global], product_scope: [DataRobot platform], effective_or_published_at: null}
+  - vendor_id: domino-data-lab
+    display_name: Domino Data Lab
+    legal_name: Domino Data Lab, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [dominodatalab.com]
+    public_entrypoints: [https://domino.ai/security, https://domino.ai/privacy]
+    vendor_categories: [ai_platform, data_science, mlops]
+    notes: Initial public-source catalog record for an enterprise AI and data science platform provider.
+    source: {source_id: domino-data-lab-security, source_type: security_page, title_native: Domino Security, title_en: Domino Security, source_url: https://domino.ai/security, source_language: en, summary_native: Domino publishes public security information for its AI platform., summary_en: Domino publishes public security information for its AI platform., confidence: medium}
+    artifact: {artifact_id: domino-data-lab-security, artifact_type: security_page, region_scope: [global], product_scope: [Domino platform], effective_or_published_at: null}
+  - vendor_id: modal
+    display_name: Modal
+    legal_name: Modal Labs, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [modal.com]
+    public_entrypoints: [https://modal.com/legal/privacy, https://modal.com/legal/terms]
+    vendor_categories: [ai_platform, cloud_infrastructure, developer_platform]
+    notes: Initial public-source catalog record for an AI cloud and developer platform provider.
+    source: {source_id: modal-privacy, source_type: privacy_notice, title_native: Modal Privacy Policy, title_en: Modal Privacy Policy, source_url: https://modal.com/legal/privacy, source_language: en, summary_native: Modal publishes a public privacy policy for its cloud platform., summary_en: Modal publishes a public privacy policy for its cloud platform., confidence: medium}
+    artifact: {artifact_id: modal-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Modal platform], effective_or_published_at: null}
+  - vendor_id: together-ai
+    display_name: Together AI
+    legal_name: Together Computer, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [together.ai]
+    public_entrypoints: [https://www.together.ai/privacy-policy, https://www.together.ai/terms-of-service]
+    vendor_categories: [ai_platform, foundation_model, developer_platform]
+    notes: Initial public-source catalog record for an AI cloud and model platform provider.
+    source: {source_id: together-ai-privacy, source_type: privacy_notice, title_native: Together AI Privacy Policy, title_en: Together AI Privacy Policy, source_url: https://www.together.ai/privacy-policy, source_language: en, summary_native: Together AI publishes a public privacy policy for its AI platform., summary_en: Together AI publishes a public privacy policy for its AI platform., confidence: medium}
+    artifact: {artifact_id: together-ai-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Together AI platform], effective_or_published_at: null}
