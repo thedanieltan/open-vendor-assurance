@@ -6,6 +6,13 @@ from tools.openva.source_health import build_source_health_report
 
 WORKFLOW = Path(".github/workflows/source-health-report.yml")
 
+PUBLIC_ACCESS_CLASSES = {
+    "public_web",
+    "public_pdf",
+    "public_doc_portal",
+    "public_landing_gated_docs",
+}
+
 
 def workflow_triggers(workflow: dict) -> dict:
     return workflow.get("on") or workflow.get(True) or {}
@@ -51,5 +58,5 @@ def test_source_health_report_preserves_public_metadata_contract():
 
     for source in report["sources"]:
         assert source["source_url"].startswith(("http://", "https://"))
-        assert source["access_class"] == "public_web"
+        assert source["access_class"] in PUBLIC_ACCESS_CLASSES
         assert source["rights_class"] == "metadata_only"
