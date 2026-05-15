@@ -48,6 +48,8 @@ jobs:
         run: python -m tools.openva.reset_catalog --dry-run --output catalog-reset-dry-run.json
       - name: Run controlled catalog-layer reset
         run: python -m tools.openva.reset_catalog --output catalog-reset-report.json
+      - name: Remove local generated package metadata
+        run: rm -rf *.egg-info
       - name: Validate reset state
         run: python -m tools.openva.validate validate
       - name: Run tests
