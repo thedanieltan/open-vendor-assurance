@@ -1,6 +1,6 @@
 # Human Review Operations
 
-OpenVA human review is a lightweight maintainer workflow for deciding what to do with generated reports, review queues, and proposed catalog changes.
+OpenVA human review is a lightweight maintainer workflow for deciding what to do with generated reports, review queues, workflow changes, and proposed catalog changes.
 
 It is not a legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk review process.
 
@@ -18,7 +18,7 @@ CODEOWNERS review
 local CLI commands
 ```
 
-A separate UI is not required for the current OpenVA phase.
+A separate UI is not required for the current OpenVA maturity level.
 
 ## Why a UI is not required yet
 
@@ -28,8 +28,10 @@ The current review objects are simple and file-based:
 - `observation-report.json`
 - `source-refinement-queue.md`
 - `source-refinement-queue.json`
+- `catalog-maintenance-report.md`
 - `release-artifacts.json`
 - catalog PR diffs
+- workflow PR diffs
 
 GitHub already provides:
 
@@ -95,6 +97,18 @@ May decide:
 - reject gated/private materials;
 - require index or pack regeneration.
 
+### Workflow reviewer
+
+Reviews GitHub Actions and automation posture.
+
+May decide:
+
+- create a workflow when a repeatable human task is being performed manually;
+- update a workflow when it is still useful but incomplete, inaccurate, or too permissive;
+- consolidate workflows when two workflows perform overlapping validation, reporting, or PR creation;
+- delete a workflow when it is stale, duplicative, unsafe, or no longer mapped to a maintainer decision;
+- require tighter permissions or human gates before enabling a workflow.
+
 ### Release reviewer
 
 Reviews release-candidate outputs.
@@ -111,11 +125,7 @@ May decide:
 
 ### Observation report
 
-Produced by:
-
-```text
-observe-report
-```
+Produced by observation tooling when enabled.
 
 Artifacts:
 
@@ -134,12 +144,13 @@ Reviewer focus:
 
 ### Source refinement queue
 
-Produced by:
+Produced from observation reports when source-quality triage is needed.
 
-```bash
-python -m tools.openva.source_refinement_queue observation-report.json \
-  --markdown-out source-refinement-queue.md \
-  --json-out source-refinement-queue.json
+Expected artifacts:
+
+```text
+source-refinement-queue.md
+source-refinement-queue.json
 ```
 
 Reviewer focus:
@@ -151,13 +162,54 @@ Reviewer focus:
 - suggested operational next action;
 - whether a source metadata PR is warranted.
 
-### Release candidate artifacts
+### Catalog maintenance report
 
-Produced by:
+Produced by scheduled catalog maintenance.
+
+Artifact:
 
 ```text
-release-candidate
+catalog-maintenance-report.md
 ```
+
+Reviewer focus:
+
+- validation success or failure;
+- generated-file drift;
+- test results;
+- whether any recurring failure should become a source-refinement issue or catalog PR.
+
+### Catalog-agent pull requests
+
+Produced by the manual catalog-agent PR workflow or by a human maintainer.
+
+Reviewer focus:
+
+- vendor list;
+- source authority;
+- public accessibility;
+- metadata-only compliance;
+- non-advisory wording;
+- generated indexes and pack updates;
+- validation and tests;
+- regional and language handling.
+
+### Workflow review
+
+Produced by maintainers as part of automation hygiene.
+
+Reviewer focus:
+
+- whether each workflow has a clear owner and purpose;
+- whether permissions are minimal;
+- whether the workflow is scheduled, manual, pull-request, or push-triggered for the right reason;
+- whether generated outputs are artifacts, PRs, or direct writes;
+- whether direct writes to `main` are avoided;
+- whether human review remains mandatory for catalog, policy, schema, governance, and workflow changes.
+
+### Release candidate artifacts
+
+Produced by release-candidate tooling when enabled.
 
 Artifact:
 
@@ -183,11 +235,45 @@ needs-source-update
 needs-language-review
 needs-maintainer-review
 needs-catalog-pr
+needs-workflow-update
+needs-workflow-consolidation
 blocked-gated-source
 blocked-unsafe-url
 blocked-policy-boundary
 non-blocking-source-quality
 release-blocker
+```
+
+## Workflow lifecycle decisions
+
+Use this decision model for `.github/workflows/**`:
+
+| Decision | Use when | Required posture |
+| --- | --- | --- |
+| Create | A repeated maintainer task has a stable command sequence and clear review output. | Prefer report artifacts or PRs over direct writes. |
+| Update | The workflow is useful but stale, inaccurate, missing checks, or too broad. | Preserve least privilege and human review gates. |
+| Consolidate | Two workflows duplicate validation, reporting, or PR creation. | Keep the clearer trigger and remove redundant behavior. |
+| Delete | The workflow is stale, unsafe, unused, duplicative, or unmapped to a maintainer decision. | Delete with a short rationale in the PR body. |
+
+Default workflow posture:
+
+```text
+pull_request        validation and guardrails
+push to main        validation after merge
+schedule            non-mutating maintenance/reporting
+workflow_dispatch   controlled maintainer operations and agent PR generation
+```
+
+Avoid:
+
+```text
+automatic merge
+direct scheduled commits to main
+credentialed scraping
+anti-bot bypass
+broad write permissions without need
+catalog mutation without a PR
+policy, schema, license, or workflow mutation by catalog agents
 ```
 
 ## Blocking vs non-blocking
@@ -227,9 +313,34 @@ For each item:
 6. Do not add advisory wording.
 7. Do not bypass access controls.
 
+## Reviewer checklist for catalog-agent PRs
+
+For each PR:
+
+1. Confirm the manifest path is under `catalog-batches/`.
+2. Confirm the branch name is descriptive and agent-owned.
+3. Confirm the PR title starts with `Catalog:`.
+4. Confirm vendor records are metadata-only.
+5. Confirm source URLs are public and authoritative.
+6. Confirm no raw documents, screenshots, or extracted full text were committed.
+7. Confirm generated indexes and `openva-pack.json` are included.
+8. Confirm validation and tests pass.
+
+## Reviewer checklist for workflows
+
+For each workflow:
+
+1. Confirm the trigger matches the intended control level.
+2. Confirm permissions are minimal.
+3. Confirm scheduled workflows are non-mutating by default.
+4. Confirm write-capable workflows create PRs rather than changing `main`.
+5. Confirm agent workflows cannot change policy, schema, license, security, or governance files by default.
+6. Confirm the workflow output maps to a maintainer decision.
+7. Consolidate or delete workflows that duplicate another workflow's purpose.
+
 ## Reviewer checklist for release candidates
 
-1. Confirm `release-candidate` workflow passed.
+1. Confirm release-candidate workflow passed.
 2. Download `release-artifacts.json`.
 3. Confirm artifact paths are expected.
 4. Confirm SHA-256 and size fields are present.
@@ -239,22 +350,24 @@ For each item:
 
 ## Recommended operating cadence
 
-Before public launch:
+Before public relaunch:
 
 ```text
-weekly observation review
+weekly maintenance review
 per-PR catalog review
 per-release release-candidate review
 ad hoc boundary review
+workflow review before enabling new automation
 ```
 
-After public launch:
+After public relaunch:
 
 ```text
 daily issue triage during first week
-weekly observation review
+weekly maintenance review
 weekly catalog review queue
 release-candidate review before each tag
+monthly workflow hygiene review
 ```
 
 ## UI decision
