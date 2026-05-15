@@ -6,6 +6,7 @@
   "required": [
     "schema_version",
     "batch_id",
+    "operation",
     "collected_at",
     "observer",
     "vendors"
@@ -13,6 +14,7 @@
   "properties": {
     "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
     "batch_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "operation": { "enum": ["create", "refresh", "deprecate"] },
     "collected_at": { "type": "string", "format": "date-time" },
     "observer": { "enum": ["human", "agent", "hybrid"] },
     "vendors": {
@@ -26,6 +28,7 @@
   "$defs": {
     "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "url": { "type": "string", "format": "uri" },
+    "region_tag": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
     "vendor_entry": {
       "type": "object",
       "required": [
@@ -37,8 +40,7 @@
         "official_domains",
         "public_entrypoints",
         "vendor_categories",
-        "source",
-        "artifact"
+        "sources"
       ],
       "properties": {
         "vendor_id": { "$ref": "#/$defs/id" },
@@ -47,7 +49,7 @@
         "headquarters_country": { "type": "string", "pattern": "^[A-Z]{2}$" },
         "regions_served": {
           "type": "array",
-          "items": { "type": "string", "minLength": 2, "maxLength": 40 },
+          "items": { "$ref": "#/$defs/region_tag" },
           "uniqueItems": true,
           "minItems": 1
         },
@@ -69,9 +71,14 @@
           "uniqueItems": true,
           "minItems": 1
         },
+        "status": { "enum": ["active", "watchlist", "deprecated", "quarantined"], "default": "active" },
         "notes": { "type": ["string", "null"], "maxLength": 1000 },
-        "source": { "$ref": "#/$defs/source_entry" },
-        "artifact": { "$ref": "#/$defs/artifact_entry" }
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 25,
+          "items": { "$ref": "#/$defs/source_entry" }
+        }
       },
       "additionalProperties": false
     },
@@ -85,7 +92,8 @@
         "source_url",
         "source_language",
         "summary_native",
-        "summary_en"
+        "summary_en",
+        "artifact"
       ],
       "properties": {
         "source_id": { "$ref": "#/$defs/id" },
@@ -111,9 +119,14 @@
         "title_en": { "type": ["string", "null"], "maxLength": 300 },
         "source_url": { "$ref": "#/$defs/url" },
         "source_language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
+        "access_class": {
+          "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs"],
+          "default": "public_web"
+        },
         "summary_native": { "type": ["string", "null"], "maxLength": 1200 },
         "summary_en": { "type": ["string", "null"], "maxLength": 1200 },
-        "confidence": { "enum": ["low", "medium", "high"], "default": "medium" }
+        "confidence": { "enum": ["low", "medium", "high"], "default": "medium" },
+        "artifact": { "$ref": "#/$defs/artifact_entry" }
       },
       "additionalProperties": false
     },
@@ -138,12 +151,13 @@
             "government_request_policy",
             "transparency_report",
             "questionnaire_template",
+            "evidence_request_template",
             "other_public_artifact"
           ]
         },
         "region_scope": {
           "type": "array",
-          "items": { "type": "string", "minLength": 2, "maxLength": 40 },
+          "items": { "$ref": "#/$defs/region_tag" },
           "uniqueItems": true,
           "default": []
         },
