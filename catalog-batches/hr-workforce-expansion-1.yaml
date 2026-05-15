@@ -1,0 +1,236 @@
+schema_version: 0.1.0
+batch_id: hr-workforce-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: bamboohr
+    display_name: BambooHR
+    legal_name: Bamboo HR LLC
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [bamboohr.com]
+    public_entrypoints: [https://www.bamboohr.com/security, https://www.bamboohr.com/privacy-policy]
+    vendor_categories: [hris, hr_software, enterprise_software]
+    notes: Initial public-source catalog record for an HR information system provider.
+    source: {source_id: bamboohr-security, source_type: security_page, title_native: BambooHR Security, title_en: BambooHR Security, source_url: https://www.bamboohr.com/security, source_language: en, summary_native: BambooHR publishes public security information for its HR platform., summary_en: BambooHR publishes public security information for its HR platform., confidence: medium}
+    artifact: {artifact_id: bamboohr-security, artifact_type: security_page, region_scope: [global], product_scope: [BambooHR platform], effective_or_published_at: null}
+  - vendor_id: rippling
+    display_name: Rippling
+    legal_name: Rippling People Center Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [rippling.com]
+    public_entrypoints: [https://www.rippling.com/security, https://www.rippling.com/privacy]
+    vendor_categories: [hris, payroll, identity_management]
+    notes: Initial public-source catalog record for a workforce management and HR platform provider.
+    source: {source_id: rippling-security, source_type: security_page, title_native: Rippling Security, title_en: Rippling Security, source_url: https://www.rippling.com/security, source_language: en, summary_native: Rippling publishes public security information for its workforce platform., summary_en: Rippling publishes public security information for its workforce platform., confidence: medium}
+    artifact: {artifact_id: rippling-security, artifact_type: security_page, region_scope: [global], product_scope: [Rippling platform], effective_or_published_at: null}
+  - vendor_id: gusto
+    display_name: Gusto
+    legal_name: Gusto, Inc.
+    headquarters_country: US
+    regions_served: [US]
+    official_domains: [gusto.com]
+    public_entrypoints: [https://gusto.com/about/security, https://gusto.com/about/privacy]
+    vendor_categories: [payroll, hr_software, benefits_administration]
+    notes: Initial public-source catalog record for a payroll, HR, and benefits platform provider.
+    source: {source_id: gusto-security, source_type: security_page, title_native: Gusto Security, title_en: Gusto Security, source_url: https://gusto.com/about/security, source_language: en, summary_native: Gusto publishes public security information for its payroll and HR platform., summary_en: Gusto publishes public security information for its payroll and HR platform., confidence: medium}
+    artifact: {artifact_id: gusto-security, artifact_type: security_page, region_scope: [US], product_scope: [Gusto platform], effective_or_published_at: null}
+  - vendor_id: deel
+    display_name: Deel
+    legal_name: Deel Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [deel.com]
+    public_entrypoints: [https://www.deel.com/security, https://www.deel.com/privacy]
+    vendor_categories: [payroll, employer_of_record, hr_software]
+    notes: Initial public-source catalog record for a global payroll and employer-of-record platform provider.
+    source: {source_id: deel-security, source_type: security_page, title_native: Deel Security, title_en: Deel Security, source_url: https://www.deel.com/security, source_language: en, summary_native: Deel publishes public security information for its global workforce platform., summary_en: Deel publishes public security information for its global workforce platform., confidence: medium}
+    artifact: {artifact_id: deel-security, artifact_type: security_page, region_scope: [global], product_scope: [Deel platform], effective_or_published_at: null}
+  - vendor_id: remote-com
+    display_name: Remote
+    legal_name: Remote Europe Holding B.V.
+    headquarters_country: NL
+    regions_served: [global, EU]
+    official_domains: [remote.com]
+    public_entrypoints: [https://remote.com/security, https://remote.com/privacy-policy]
+    vendor_categories: [payroll, employer_of_record, hr_software]
+    notes: Initial public-source catalog record for a global employment, payroll, and employer-of-record platform provider.
+    source: {source_id: remote-com-security, source_type: security_page, title_native: Remote Security, title_en: Remote Security, source_url: https://remote.com/security, source_language: en, summary_native: Remote publishes public security information for its global employment platform., summary_en: Remote publishes public security information for its global employment platform., confidence: medium}
+    artifact: {artifact_id: remote-com-security, artifact_type: security_page, region_scope: [global, EU], product_scope: [Remote platform], effective_or_published_at: null}
+  - vendor_id: oyster-hr
+    display_name: Oyster HR
+    legal_name: Oyster HR, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [oysterhr.com]
+    public_entrypoints: [https://www.oysterhr.com/security, https://www.oysterhr.com/privacy]
+    vendor_categories: [payroll, employer_of_record, hr_software]
+    notes: Initial public-source catalog record for a global employment and HR platform provider.
+    source: {source_id: oyster-hr-security, source_type: security_page, title_native: Oyster Security, title_en: Oyster Security, source_url: https://www.oysterhr.com/security, source_language: en, summary_native: Oyster publishes public security information for its global HR platform., summary_en: Oyster publishes public security information for its global HR platform., confidence: medium}
+    artifact: {artifact_id: oyster-hr-security, artifact_type: security_page, region_scope: [global], product_scope: [Oyster platform], effective_or_published_at: null}
+  - vendor_id: justworks
+    display_name: Justworks
+    legal_name: Justworks, Inc.
+    headquarters_country: US
+    regions_served: [US]
+    official_domains: [justworks.com]
+    public_entrypoints: [https://www.justworks.com/security, https://www.justworks.com/privacy]
+    vendor_categories: [payroll, benefits_administration, hr_software]
+    notes: Initial public-source catalog record for a payroll, benefits, and HR platform provider.
+    source: {source_id: justworks-security, source_type: security_page, title_native: Justworks Security, title_en: Justworks Security, source_url: https://www.justworks.com/security, source_language: en, summary_native: Justworks publishes public security information for its HR platform., summary_en: Justworks publishes public security information for its HR platform., confidence: medium}
+    artifact: {artifact_id: justworks-security, artifact_type: security_page, region_scope: [US], product_scope: [Justworks platform], effective_or_published_at: null}
+  - vendor_id: adp
+    display_name: ADP
+    legal_name: ADP, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [adp.com]
+    public_entrypoints: [https://www.adp.com/about-adp/data-security.aspx, https://www.adp.com/privacy.aspx]
+    vendor_categories: [payroll, hris, enterprise_software]
+    notes: Initial public-source catalog record for a payroll and human capital management provider.
+    source: {source_id: adp-data-security, source_type: security_page, title_native: ADP Data Security, title_en: ADP Data Security, source_url: https://www.adp.com/about-adp/data-security.aspx, source_language: en, summary_native: ADP publishes public security information for its payroll and HCM services., summary_en: ADP publishes public security information for its payroll and HCM services., confidence: medium}
+    artifact: {artifact_id: adp-data-security, artifact_type: security_page, region_scope: [global], product_scope: [ADP platform], effective_or_published_at: null}
+  - vendor_id: paychex
+    display_name: Paychex
+    legal_name: Paychex, Inc.
+    headquarters_country: US
+    regions_served: [US]
+    official_domains: [paychex.com]
+    public_entrypoints: [https://www.paychex.com/security, https://www.paychex.com/privacy]
+    vendor_categories: [payroll, hris, hr_software]
+    notes: Initial public-source catalog record for a payroll and HR services provider.
+    source: {source_id: paychex-security, source_type: security_page, title_native: Paychex Security, title_en: Paychex Security, source_url: https://www.paychex.com/security, source_language: en, summary_native: Paychex publishes public security information for its payroll and HR platform., summary_en: Paychex publishes public security information for its payroll and HR platform., confidence: medium}
+    artifact: {artifact_id: paychex-security, artifact_type: security_page, region_scope: [US], product_scope: [Paychex platform], effective_or_published_at: null}
+  - vendor_id: paylocity
+    display_name: Paylocity
+    legal_name: Paylocity Corporation
+    headquarters_country: US
+    regions_served: [US]
+    official_domains: [paylocity.com]
+    public_entrypoints: [https://www.paylocity.com/privacy-policy, https://www.paylocity.com/security]
+    vendor_categories: [payroll, hris, hr_software]
+    notes: Initial public-source catalog record for a payroll and HR software provider.
+    source: {source_id: paylocity-security, source_type: security_page, title_native: Paylocity Security, title_en: Paylocity Security, source_url: https://www.paylocity.com/security, source_language: en, summary_native: Paylocity publishes public security information for its HR platform., summary_en: Paylocity publishes public security information for its HR platform., confidence: medium}
+    artifact: {artifact_id: paylocity-security, artifact_type: security_page, region_scope: [US], product_scope: [Paylocity platform], effective_or_published_at: null}
+  - vendor_id: paycor
+    display_name: Paycor
+    legal_name: Paycor, Inc.
+    headquarters_country: US
+    regions_served: [US]
+    official_domains: [paycor.com]
+    public_entrypoints: [https://www.paycor.com/privacy-policy, https://www.paycor.com/security]
+    vendor_categories: [payroll, hris, hr_software]
+    notes: Initial public-source catalog record for a payroll and HR software provider.
+    source: {source_id: paycor-security, source_type: security_page, title_native: Paycor Security, title_en: Paycor Security, source_url: https://www.paycor.com/security, source_language: en, summary_native: Paycor publishes public security information for its HR platform., summary_en: Paycor publishes public security information for its HR platform., confidence: medium}
+    artifact: {artifact_id: paycor-security, artifact_type: security_page, region_scope: [US], product_scope: [Paycor platform], effective_or_published_at: null}
+  - vendor_id: ukg
+    display_name: UKG
+    legal_name: UKG Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [ukg.com]
+    public_entrypoints: [https://www.ukg.com/privacy, https://www.ukg.com/trust]
+    vendor_categories: [hris, workforce_management, payroll]
+    notes: Initial public-source catalog record for a workforce management and HCM provider.
+    source: {source_id: ukg-trust, source_type: trust_center, title_native: UKG Trust, title_en: UKG Trust, source_url: https://www.ukg.com/trust, source_language: en, summary_native: UKG publishes public trust resources for its workforce management platform., summary_en: UKG publishes public trust resources for its workforce management platform., confidence: medium}
+    artifact: {artifact_id: ukg-trust, artifact_type: trust_center, region_scope: [global], product_scope: [UKG platform], effective_or_published_at: null}
+  - vendor_id: dayforce
+    display_name: Dayforce
+    legal_name: Dayforce, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [dayforce.com]
+    public_entrypoints: [https://www.dayforce.com/privacy, https://www.dayforce.com/security]
+    vendor_categories: [hris, workforce_management, payroll]
+    notes: Initial public-source catalog record for a human capital management platform provider.
+    source: {source_id: dayforce-security, source_type: security_page, title_native: Dayforce Security, title_en: Dayforce Security, source_url: https://www.dayforce.com/security, source_language: en, summary_native: Dayforce publishes public security information for its HCM platform., summary_en: Dayforce publishes public security information for its HCM platform., confidence: medium}
+    artifact: {artifact_id: dayforce-security, artifact_type: security_page, region_scope: [global], product_scope: [Dayforce platform], effective_or_published_at: null}
+  - vendor_id: hibob
+    display_name: HiBob
+    legal_name: Hi Bob Ltd.
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [hibob.com]
+    public_entrypoints: [https://www.hibob.com/security/, https://www.hibob.com/privacy-policy/]
+    vendor_categories: [hris, hr_software, workforce_management]
+    notes: Initial public-source catalog record for an HR platform provider.
+    source: {source_id: hibob-security, source_type: security_page, title_native: HiBob Security, title_en: HiBob Security, source_url: https://www.hibob.com/security/, source_language: en, summary_native: HiBob publishes public security information for its HR platform., summary_en: HiBob publishes public security information for its HR platform., confidence: medium}
+    artifact: {artifact_id: hibob-security, artifact_type: security_page, region_scope: [global], product_scope: [HiBob platform], effective_or_published_at: null}
+  - vendor_id: personio
+    display_name: Personio
+    legal_name: Personio SE & Co. KG
+    headquarters_country: DE
+    regions_served: [EU]
+    official_domains: [personio.com]
+    public_entrypoints: [https://www.personio.com/security/, https://www.personio.com/privacy-policy/]
+    vendor_categories: [hris, hr_software, workforce_management]
+    notes: Initial public-source catalog record for an HR software provider.
+    source: {source_id: personio-security, source_type: security_page, title_native: Personio Security, title_en: Personio Security, source_url: https://www.personio.com/security/, source_language: en, summary_native: Personio publishes public security information for its HR platform., summary_en: Personio publishes public security information for its HR platform., confidence: medium}
+    artifact: {artifact_id: personio-security, artifact_type: security_page, region_scope: [EU], product_scope: [Personio platform], effective_or_published_at: null}
+  - vendor_id: factorial-hr
+    display_name: Factorial HR
+    legal_name: Everyday Software, S.L.
+    headquarters_country: ES
+    regions_served: [global, EU]
+    official_domains: [factorialhr.com]
+    public_entrypoints: [https://factorialhr.com/security, https://factorialhr.com/privacy-policy]
+    vendor_categories: [hris, hr_software, workforce_management]
+    notes: Initial public-source catalog record for an HR software provider.
+    source: {source_id: factorial-hr-security, source_type: security_page, title_native: Factorial Security, title_en: Factorial Security, source_url: https://factorialhr.com/security, source_language: en, summary_native: Factorial publishes public security information for its HR platform., summary_en: Factorial publishes public security information for its HR platform., confidence: medium}
+    artifact: {artifact_id: factorial-hr-security, artifact_type: security_page, region_scope: [global, EU], product_scope: [Factorial HR platform], effective_or_published_at: null}
+  - vendor_id: greenhouse
+    display_name: Greenhouse
+    legal_name: Greenhouse Software, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [greenhouse.com]
+    public_entrypoints: [https://www.greenhouse.com/security, https://www.greenhouse.com/privacy-policy]
+    vendor_categories: [recruiting, applicant_tracking, hr_software]
+    notes: Initial public-source catalog record for a recruiting and applicant tracking platform provider.
+    source: {source_id: greenhouse-security, source_type: security_page, title_native: Greenhouse Security, title_en: Greenhouse Security, source_url: https://www.greenhouse.com/security, source_language: en, summary_native: Greenhouse publishes public security information for its recruiting platform., summary_en: Greenhouse publishes public security information for its recruiting platform., confidence: medium}
+    artifact: {artifact_id: greenhouse-security, artifact_type: security_page, region_scope: [global], product_scope: [Greenhouse platform], effective_or_published_at: null}
+  - vendor_id: lever
+    display_name: Lever
+    legal_name: Employ Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [lever.co]
+    public_entrypoints: [https://www.lever.co/security/, https://www.lever.co/privacy/]
+    vendor_categories: [recruiting, applicant_tracking, hr_software]
+    notes: Initial public-source catalog record for a recruiting and applicant tracking platform provider.
+    source: {source_id: lever-security, source_type: security_page, title_native: Lever Security, title_en: Lever Security, source_url: https://www.lever.co/security/, source_language: en, summary_native: Lever publishes public security information for its recruiting platform., summary_en: Lever publishes public security information for its recruiting platform., confidence: medium}
+    artifact: {artifact_id: lever-security, artifact_type: security_page, region_scope: [global], product_scope: [Lever platform], effective_or_published_at: null}
+  - vendor_id: workable
+    display_name: Workable
+    legal_name: Workable Software Limited
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [workable.com]
+    public_entrypoints: [https://www.workable.com/security, https://www.workable.com/privacy]
+    vendor_categories: [recruiting, applicant_tracking, hr_software]
+    notes: Initial public-source catalog record for a recruiting and HR platform provider.
+    source: {source_id: workable-security, source_type: security_page, title_native: Workable Security, title_en: Workable Security, source_url: https://www.workable.com/security, source_language: en, summary_native: Workable publishes public security information for its recruiting platform., summary_en: Workable publishes public security information for its recruiting platform., confidence: medium}
+    artifact: {artifact_id: workable-security, artifact_type: security_page, region_scope: [global], product_scope: [Workable platform], effective_or_published_at: null}
+  - vendor_id: smartrecruiters
+    display_name: SmartRecruiters
+    legal_name: SmartRecruiters Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [smartrecruiters.com]
+    public_entrypoints: [https://www.smartrecruiters.com/legal/security, https://www.smartrecruiters.com/legal/privacy-policy]
+    vendor_categories: [recruiting, applicant_tracking, hr_software]
+    notes: Initial public-source catalog record for a talent acquisition platform provider.
+    source: {source_id: smartrecruiters-security, source_type: security_page, title_native: SmartRecruiters Security, title_en: SmartRecruiters Security, source_url: https://www.smartrecruiters.com/legal/security, source_language: en, summary_native: SmartRecruiters publishes public security information for its recruiting platform., summary_en: SmartRecruiters publishes public security information for its recruiting platform., confidence: medium}
+    artifact: {artifact_id: smartrecruiters-security, artifact_type: security_page, region_scope: [global], product_scope: [SmartRecruiters platform], effective_or_published_at: null}
+  - vendor_id: ashby
+    display_name: Ashby
+    legal_name: Ashby, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [ashbyhq.com]
+    public_entrypoints: [https://www.ashbyhq.com/security, https://www.ashbyhq.com/privacy]
+    vendor_categories: [recruiting, applicant_tracking, hr_software]
+    notes: Initial public-source catalog record for a recruiting platform provider.
+    source: {source_id: ashby-security, source_type: security_page, title_native: Ashby Security, title_en: Ashby Security, source_url: https://www.ashbyhq.com/security, source_language: en, summary_native: Ashby publishes public security information for its recruiting platform., summary_en: Ashby publishes public security information for its recruiting platform., confidence: medium}
+    artifact: {artifact_id: ashby-security, artifact_type: security_page, region_scope: [global], product_scope: [Ashby platform], effective_or_published_at: null}
