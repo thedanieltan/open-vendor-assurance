@@ -1,0 +1,555 @@
+schema_version: 0.1.0
+batch_id: devtools-ops-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: circleci
+    display_name: 'CircleCI'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [circleci.com]
+    public_entrypoints: ['https://circleci.com/security/']
+    vendor_categories: [ci_cd, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for CircleCI in the developer tooling and operations lane.
+    source: {source_id: circleci-security, source_type: security_page, title_native: 'CircleCI Security', title_en: 'CircleCI Security', source_url: 'https://circleci.com/security/', source_language: en, summary_native: 'CircleCI publishes public security information for its platform.', summary_en: 'CircleCI publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: circleci-security, artifact_type: security_page, region_scope: [global], product_scope: ['CircleCI platform'], effective_or_published_at: null}
+  - vendor_id: travis-ci
+    display_name: 'Travis CI'
+    legal_name: null
+    headquarters_country: DE
+    regions_served: [global]
+    official_domains: [travis-ci.com]
+    public_entrypoints: ['https://www.travis-ci.com/security/']
+    vendor_categories: [ci_cd, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Travis CI in the developer tooling and operations lane.
+    source: {source_id: travis-ci-security, source_type: security_page, title_native: 'Travis CI Security', title_en: 'Travis CI Security', source_url: 'https://www.travis-ci.com/security/', source_language: en, summary_native: 'Travis CI publishes public security information for its platform.', summary_en: 'Travis CI publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: travis-ci-security, artifact_type: security_page, region_scope: [global], product_scope: ['Travis CI platform'], effective_or_published_at: null}
+  - vendor_id: semaphore-ci
+    display_name: 'Semaphore CI'
+    legal_name: null
+    headquarters_country: RS
+    regions_served: [global]
+    official_domains: [semaphoreci.com]
+    public_entrypoints: ['https://semaphoreci.com/security']
+    vendor_categories: [ci_cd, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Semaphore CI in the developer tooling and operations lane.
+    source: {source_id: semaphore-ci-security, source_type: security_page, title_native: 'Semaphore CI Security', title_en: 'Semaphore CI Security', source_url: 'https://semaphoreci.com/security', source_language: en, summary_native: 'Semaphore CI publishes public security information for its platform.', summary_en: 'Semaphore CI publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: semaphore-ci-security, artifact_type: security_page, region_scope: [global], product_scope: ['Semaphore CI platform'], effective_or_published_at: null}
+  - vendor_id: buildkite
+    display_name: 'Buildkite'
+    legal_name: null
+    headquarters_country: AU
+    regions_served: [global]
+    official_domains: [buildkite.com]
+    public_entrypoints: ['https://buildkite.com/security']
+    vendor_categories: [ci_cd, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Buildkite in the developer tooling and operations lane.
+    source: {source_id: buildkite-security, source_type: security_page, title_native: 'Buildkite Security', title_en: 'Buildkite Security', source_url: 'https://buildkite.com/security', source_language: en, summary_native: 'Buildkite publishes public security information for its platform.', summary_en: 'Buildkite publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: buildkite-security, artifact_type: security_page, region_scope: [global], product_scope: ['Buildkite platform'], effective_or_published_at: null}
+  - vendor_id: teamcity-cloud
+    display_name: 'TeamCity Cloud'
+    legal_name: null
+    headquarters_country: CZ
+    regions_served: [global]
+    official_domains: [jetbrains.com]
+    public_entrypoints: ['https://www.jetbrains.com/legal/docs/privacy/security/']
+    vendor_categories: [ci_cd, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for TeamCity Cloud in the developer tooling and operations lane.
+    source: {source_id: teamcity-cloud-security, source_type: security_page, title_native: 'TeamCity Cloud Security', title_en: 'TeamCity Cloud Security', source_url: 'https://www.jetbrains.com/legal/docs/privacy/security/', source_language: en, summary_native: 'TeamCity Cloud publishes public security information for its platform.', summary_en: 'TeamCity Cloud publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: teamcity-cloud-security, artifact_type: security_page, region_scope: [global], product_scope: ['TeamCity Cloud platform'], effective_or_published_at: null}
+  - vendor_id: sentry
+    display_name: 'Sentry'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [sentry.io]
+    public_entrypoints: ['https://sentry.io/security/']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Sentry in the developer tooling and operations lane.
+    source: {source_id: sentry-security, source_type: security_page, title_native: 'Sentry Security', title_en: 'Sentry Security', source_url: 'https://sentry.io/security/', source_language: en, summary_native: 'Sentry publishes public security information for its platform.', summary_en: 'Sentry publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: sentry-security, artifact_type: security_page, region_scope: [global], product_scope: ['Sentry platform'], effective_or_published_at: null}
+  - vendor_id: datadog
+    display_name: 'Datadog'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [datadoghq.com]
+    public_entrypoints: ['https://www.datadoghq.com/security/']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Datadog in the developer tooling and operations lane.
+    source: {source_id: datadog-security, source_type: security_page, title_native: 'Datadog Security', title_en: 'Datadog Security', source_url: 'https://www.datadoghq.com/security/', source_language: en, summary_native: 'Datadog publishes public security information for its platform.', summary_en: 'Datadog publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: datadog-security, artifact_type: security_page, region_scope: [global], product_scope: ['Datadog platform'], effective_or_published_at: null}
+  - vendor_id: new-relic
+    display_name: 'New Relic'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [newrelic.com]
+    public_entrypoints: ['https://newrelic.com/security']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for New Relic in the developer tooling and operations lane.
+    source: {source_id: new-relic-security, source_type: security_page, title_native: 'New Relic Security', title_en: 'New Relic Security', source_url: 'https://newrelic.com/security', source_language: en, summary_native: 'New Relic publishes public security information for its platform.', summary_en: 'New Relic publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: new-relic-security, artifact_type: security_page, region_scope: [global], product_scope: ['New Relic platform'], effective_or_published_at: null}
+  - vendor_id: honeycomb
+    display_name: 'Honeycomb'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [honeycomb.io]
+    public_entrypoints: ['https://www.honeycomb.io/security']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Honeycomb in the developer tooling and operations lane.
+    source: {source_id: honeycomb-security, source_type: security_page, title_native: 'Honeycomb Security', title_en: 'Honeycomb Security', source_url: 'https://www.honeycomb.io/security', source_language: en, summary_native: 'Honeycomb publishes public security information for its platform.', summary_en: 'Honeycomb publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: honeycomb-security, artifact_type: security_page, region_scope: [global], product_scope: ['Honeycomb platform'], effective_or_published_at: null}
+  - vendor_id: grafana-labs
+    display_name: 'Grafana Labs'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [grafana.com]
+    public_entrypoints: ['https://grafana.com/trust/']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Grafana Labs in the developer tooling and operations lane.
+    source: {source_id: grafana-labs-trust, source_type: trust_center, title_native: 'Grafana Labs Trust Center', title_en: 'Grafana Labs Trust Center', source_url: 'https://grafana.com/trust/', source_language: en, summary_native: 'Grafana Labs publishes public trust information for its platform.', summary_en: 'Grafana Labs publishes public trust information for its platform.', confidence: medium}
+    artifact: {artifact_id: grafana-labs-trust, artifact_type: trust_center, region_scope: [global], product_scope: ['Grafana Labs platform'], effective_or_published_at: null}
+  - vendor_id: pagerduty
+    display_name: 'PagerDuty'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [pagerduty.com]
+    public_entrypoints: ['https://www.pagerduty.com/security/']
+    vendor_categories: [incident_management, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for PagerDuty in the developer tooling and operations lane.
+    source: {source_id: pagerduty-security, source_type: security_page, title_native: 'PagerDuty Security', title_en: 'PagerDuty Security', source_url: 'https://www.pagerduty.com/security/', source_language: en, summary_native: 'PagerDuty publishes public security information for its platform.', summary_en: 'PagerDuty publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: pagerduty-security, artifact_type: security_page, region_scope: [global], product_scope: ['PagerDuty platform'], effective_or_published_at: null}
+  - vendor_id: incident-io
+    display_name: 'incident.io'
+    legal_name: null
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [incident.io]
+    public_entrypoints: ['https://incident.io/security']
+    vendor_categories: [incident_management, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for incident.io in the developer tooling and operations lane.
+    source: {source_id: incident-io-security, source_type: security_page, title_native: 'incident.io Security', title_en: 'incident.io Security', source_url: 'https://incident.io/security', source_language: en, summary_native: 'incident.io publishes public security information for its platform.', summary_en: 'incident.io publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: incident-io-security, artifact_type: security_page, region_scope: [global], product_scope: ['incident.io platform'], effective_or_published_at: null}
+  - vendor_id: firehydrant
+    display_name: 'FireHydrant'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [firehydrant.com]
+    public_entrypoints: ['https://firehydrant.com/security/']
+    vendor_categories: [incident_management, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for FireHydrant in the developer tooling and operations lane.
+    source: {source_id: firehydrant-security, source_type: security_page, title_native: 'FireHydrant Security', title_en: 'FireHydrant Security', source_url: 'https://firehydrant.com/security/', source_language: en, summary_native: 'FireHydrant publishes public security information for its platform.', summary_en: 'FireHydrant publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: firehydrant-security, artifact_type: security_page, region_scope: [global], product_scope: ['FireHydrant platform'], effective_or_published_at: null}
+  - vendor_id: rootly
+    display_name: 'Rootly'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [rootly.com]
+    public_entrypoints: ['https://rootly.com/security']
+    vendor_categories: [incident_management, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Rootly in the developer tooling and operations lane.
+    source: {source_id: rootly-security, source_type: security_page, title_native: 'Rootly Security', title_en: 'Rootly Security', source_url: 'https://rootly.com/security', source_language: en, summary_native: 'Rootly publishes public security information for its platform.', summary_en: 'Rootly publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: rootly-security, artifact_type: security_page, region_scope: [global], product_scope: ['Rootly platform'], effective_or_published_at: null}
+  - vendor_id: spacelift
+    display_name: 'Spacelift'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [spacelift.io]
+    public_entrypoints: ['https://spacelift.io/security']
+    vendor_categories: [infrastructure_as_code, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Spacelift in the developer tooling and operations lane.
+    source: {source_id: spacelift-security, source_type: security_page, title_native: 'Spacelift Security', title_en: 'Spacelift Security', source_url: 'https://spacelift.io/security', source_language: en, summary_native: 'Spacelift publishes public security information for its platform.', summary_en: 'Spacelift publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: spacelift-security, artifact_type: security_page, region_scope: [global], product_scope: ['Spacelift platform'], effective_or_published_at: null}
+  - vendor_id: launchdarkly
+    display_name: 'LaunchDarkly'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [launchdarkly.com]
+    public_entrypoints: ['https://launchdarkly.com/security/']
+    vendor_categories: [feature_flags, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for LaunchDarkly in the developer tooling and operations lane.
+    source: {source_id: launchdarkly-security, source_type: security_page, title_native: 'LaunchDarkly Security', title_en: 'LaunchDarkly Security', source_url: 'https://launchdarkly.com/security/', source_language: en, summary_native: 'LaunchDarkly publishes public security information for its platform.', summary_en: 'LaunchDarkly publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: launchdarkly-security, artifact_type: security_page, region_scope: [global], product_scope: ['LaunchDarkly platform'], effective_or_published_at: null}
+  - vendor_id: split-io
+    display_name: 'Split'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [split.io]
+    public_entrypoints: ['https://www.split.io/security/']
+    vendor_categories: [feature_flags, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Split in the developer tooling and operations lane.
+    source: {source_id: split-io-security, source_type: security_page, title_native: 'Split Security', title_en: 'Split Security', source_url: 'https://www.split.io/security/', source_language: en, summary_native: 'Split publishes public security information for its platform.', summary_en: 'Split publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: split-io-security, artifact_type: security_page, region_scope: [global], product_scope: ['Split platform'], effective_or_published_at: null}
+  - vendor_id: flagsmith
+    display_name: 'Flagsmith'
+    legal_name: null
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [flagsmith.com]
+    public_entrypoints: ['https://www.flagsmith.com/security']
+    vendor_categories: [feature_flags, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Flagsmith in the developer tooling and operations lane.
+    source: {source_id: flagsmith-security, source_type: security_page, title_native: 'Flagsmith Security', title_en: 'Flagsmith Security', source_url: 'https://www.flagsmith.com/security', source_language: en, summary_native: 'Flagsmith publishes public security information for its platform.', summary_en: 'Flagsmith publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: flagsmith-security, artifact_type: security_page, region_scope: [global], product_scope: ['Flagsmith platform'], effective_or_published_at: null}
+  - vendor_id: posthog
+    display_name: 'PostHog'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [posthog.com]
+    public_entrypoints: ['https://posthog.com/security']
+    vendor_categories: [product_analytics, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for PostHog in the developer tooling and operations lane.
+    source: {source_id: posthog-security, source_type: security_page, title_native: 'PostHog Security', title_en: 'PostHog Security', source_url: 'https://posthog.com/security', source_language: en, summary_native: 'PostHog publishes public security information for its platform.', summary_en: 'PostHog publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: posthog-security, artifact_type: security_page, region_scope: [global], product_scope: ['PostHog platform'], effective_or_published_at: null}
+  - vendor_id: amplitude
+    display_name: 'Amplitude'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [amplitude.com]
+    public_entrypoints: ['https://amplitude.com/security']
+    vendor_categories: [product_analytics, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Amplitude in the developer tooling and operations lane.
+    source: {source_id: amplitude-security, source_type: security_page, title_native: 'Amplitude Security', title_en: 'Amplitude Security', source_url: 'https://amplitude.com/security', source_language: en, summary_native: 'Amplitude publishes public security information for its platform.', summary_en: 'Amplitude publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: amplitude-security, artifact_type: security_page, region_scope: [global], product_scope: ['Amplitude platform'], effective_or_published_at: null}
+  - vendor_id: mixpanel
+    display_name: 'Mixpanel'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [mixpanel.com]
+    public_entrypoints: ['https://mixpanel.com/security/']
+    vendor_categories: [product_analytics, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Mixpanel in the developer tooling and operations lane.
+    source: {source_id: mixpanel-security, source_type: security_page, title_native: 'Mixpanel Security', title_en: 'Mixpanel Security', source_url: 'https://mixpanel.com/security/', source_language: en, summary_native: 'Mixpanel publishes public security information for its platform.', summary_en: 'Mixpanel publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: mixpanel-security, artifact_type: security_page, region_scope: [global], product_scope: ['Mixpanel platform'], effective_or_published_at: null}
+  - vendor_id: heap
+    display_name: 'Heap'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [heap.io]
+    public_entrypoints: ['https://heap.io/security']
+    vendor_categories: [product_analytics, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Heap in the developer tooling and operations lane.
+    source: {source_id: heap-security, source_type: security_page, title_native: 'Heap Security', title_en: 'Heap Security', source_url: 'https://heap.io/security', source_language: en, summary_native: 'Heap publishes public security information for its platform.', summary_en: 'Heap publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: heap-security, artifact_type: security_page, region_scope: [global], product_scope: ['Heap platform'], effective_or_published_at: null}
+  - vendor_id: pendo
+    display_name: 'Pendo'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [pendo.io]
+    public_entrypoints: ['https://www.pendo.io/security/']
+    vendor_categories: [product_analytics, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Pendo in the developer tooling and operations lane.
+    source: {source_id: pendo-security, source_type: security_page, title_native: 'Pendo Security', title_en: 'Pendo Security', source_url: 'https://www.pendo.io/security/', source_language: en, summary_native: 'Pendo publishes public security information for its platform.', summary_en: 'Pendo publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: pendo-security, artifact_type: security_page, region_scope: [global], product_scope: ['Pendo platform'], effective_or_published_at: null}
+  - vendor_id: logrocket
+    display_name: 'LogRocket'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [logrocket.com]
+    public_entrypoints: ['https://logrocket.com/security']
+    vendor_categories: [session_replay, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for LogRocket in the developer tooling and operations lane.
+    source: {source_id: logrocket-security, source_type: security_page, title_native: 'LogRocket Security', title_en: 'LogRocket Security', source_url: 'https://logrocket.com/security', source_language: en, summary_native: 'LogRocket publishes public security information for its platform.', summary_en: 'LogRocket publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: logrocket-security, artifact_type: security_page, region_scope: [global], product_scope: ['LogRocket platform'], effective_or_published_at: null}
+  - vendor_id: rollbar
+    display_name: 'Rollbar'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [rollbar.com]
+    public_entrypoints: ['https://rollbar.com/security/']
+    vendor_categories: [error_monitoring, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Rollbar in the developer tooling and operations lane.
+    source: {source_id: rollbar-security, source_type: security_page, title_native: 'Rollbar Security', title_en: 'Rollbar Security', source_url: 'https://rollbar.com/security/', source_language: en, summary_native: 'Rollbar publishes public security information for its platform.', summary_en: 'Rollbar publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: rollbar-security, artifact_type: security_page, region_scope: [global], product_scope: ['Rollbar platform'], effective_or_published_at: null}
+  - vendor_id: bugsnag
+    display_name: 'Bugsnag'
+    legal_name: null
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [bugsnag.com]
+    public_entrypoints: ['https://www.bugsnag.com/security/']
+    vendor_categories: [error_monitoring, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Bugsnag in the developer tooling and operations lane.
+    source: {source_id: bugsnag-security, source_type: security_page, title_native: 'Bugsnag Security', title_en: 'Bugsnag Security', source_url: 'https://www.bugsnag.com/security/', source_language: en, summary_native: 'Bugsnag publishes public security information for its platform.', summary_en: 'Bugsnag publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: bugsnag-security, artifact_type: security_page, region_scope: [global], product_scope: ['Bugsnag platform'], effective_or_published_at: null}
+  - vendor_id: airbrake
+    display_name: 'Airbrake'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [airbrake.io]
+    public_entrypoints: ['https://www.airbrake.io/security']
+    vendor_categories: [error_monitoring, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Airbrake in the developer tooling and operations lane.
+    source: {source_id: airbrake-security, source_type: security_page, title_native: 'Airbrake Security', title_en: 'Airbrake Security', source_url: 'https://www.airbrake.io/security', source_language: en, summary_native: 'Airbrake publishes public security information for its platform.', summary_en: 'Airbrake publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: airbrake-security, artifact_type: security_page, region_scope: [global], product_scope: ['Airbrake platform'], effective_or_published_at: null}
+  - vendor_id: better-stack
+    display_name: 'Better Stack'
+    legal_name: null
+    headquarters_country: CZ
+    regions_served: [global]
+    official_domains: [betterstack.com]
+    public_entrypoints: ['https://betterstack.com/security']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Better Stack in the developer tooling and operations lane.
+    source: {source_id: better-stack-security, source_type: security_page, title_native: 'Better Stack Security', title_en: 'Better Stack Security', source_url: 'https://betterstack.com/security', source_language: en, summary_native: 'Better Stack publishes public security information for its platform.', summary_en: 'Better Stack publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: better-stack-security, artifact_type: security_page, region_scope: [global], product_scope: ['Better Stack platform'], effective_or_published_at: null}
+  - vendor_id: cronitor
+    display_name: 'Cronitor'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [cronitor.io]
+    public_entrypoints: ['https://cronitor.io/security']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Cronitor in the developer tooling and operations lane.
+    source: {source_id: cronitor-security, source_type: security_page, title_native: 'Cronitor Security', title_en: 'Cronitor Security', source_url: 'https://cronitor.io/security', source_language: en, summary_native: 'Cronitor publishes public security information for its platform.', summary_en: 'Cronitor publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: cronitor-security, artifact_type: security_page, region_scope: [global], product_scope: ['Cronitor platform'], effective_or_published_at: null}
+  - vendor_id: checkly
+    display_name: 'Checkly'
+    legal_name: null
+    headquarters_country: DE
+    regions_served: [global]
+    official_domains: [checklyhq.com]
+    public_entrypoints: ['https://www.checklyhq.com/security/']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Checkly in the developer tooling and operations lane.
+    source: {source_id: checkly-security, source_type: security_page, title_native: 'Checkly Security', title_en: 'Checkly Security', source_url: 'https://www.checklyhq.com/security/', source_language: en, summary_native: 'Checkly publishes public security information for its platform.', summary_en: 'Checkly publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: checkly-security, artifact_type: security_page, region_scope: [global], product_scope: ['Checkly platform'], effective_or_published_at: null}
+  - vendor_id: chronosphere
+    display_name: 'Chronosphere'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [chronosphere.io]
+    public_entrypoints: ['https://chronosphere.io/security/']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Chronosphere in the developer tooling and operations lane.
+    source: {source_id: chronosphere-security, source_type: security_page, title_native: 'Chronosphere Security', title_en: 'Chronosphere Security', source_url: 'https://chronosphere.io/security/', source_language: en, summary_native: 'Chronosphere publishes public security information for its platform.', summary_en: 'Chronosphere publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: chronosphere-security, artifact_type: security_page, region_scope: [global], product_scope: ['Chronosphere platform'], effective_or_published_at: null}
+  - vendor_id: splunk
+    display_name: 'Splunk'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [splunk.com]
+    public_entrypoints: ['https://www.splunk.com/en_us/legal/splunk-security.html']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Splunk in the developer tooling and operations lane.
+    source: {source_id: splunk-security, source_type: security_page, title_native: 'Splunk Security', title_en: 'Splunk Security', source_url: 'https://www.splunk.com/en_us/legal/splunk-security.html', source_language: en, summary_native: 'Splunk publishes public security information for its platform.', summary_en: 'Splunk publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: splunk-security, artifact_type: security_page, region_scope: [global], product_scope: ['Splunk platform'], effective_or_published_at: null}
+  - vendor_id: sumo-logic
+    display_name: 'Sumo Logic'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [sumologic.com]
+    public_entrypoints: ['https://www.sumologic.com/security/']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Sumo Logic in the developer tooling and operations lane.
+    source: {source_id: sumo-logic-security, source_type: security_page, title_native: 'Sumo Logic Security', title_en: 'Sumo Logic Security', source_url: 'https://www.sumologic.com/security/', source_language: en, summary_native: 'Sumo Logic publishes public security information for its platform.', summary_en: 'Sumo Logic publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: sumo-logic-security, artifact_type: security_page, region_scope: [global], product_scope: ['Sumo Logic platform'], effective_or_published_at: null}
+  - vendor_id: solarwinds
+    display_name: 'SolarWinds'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [solarwinds.com]
+    public_entrypoints: ['https://www.solarwinds.com/security']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for SolarWinds in the developer tooling and operations lane.
+    source: {source_id: solarwinds-security, source_type: security_page, title_native: 'SolarWinds Security', title_en: 'SolarWinds Security', source_url: 'https://www.solarwinds.com/security', source_language: en, summary_native: 'SolarWinds publishes public security information for its platform.', summary_en: 'SolarWinds publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: solarwinds-security, artifact_type: security_page, region_scope: [global], product_scope: ['SolarWinds platform'], effective_or_published_at: null}
+  - vendor_id: sonatype
+    display_name: 'Sonatype'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [sonatype.com]
+    public_entrypoints: ['https://www.sonatype.com/security']
+    vendor_categories: [software_supply_chain, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Sonatype in the developer tooling and operations lane.
+    source: {source_id: sonatype-security, source_type: security_page, title_native: 'Sonatype Security', title_en: 'Sonatype Security', source_url: 'https://www.sonatype.com/security', source_language: en, summary_native: 'Sonatype publishes public security information for its platform.', summary_en: 'Sonatype publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: sonatype-security, artifact_type: security_page, region_scope: [global], product_scope: ['Sonatype platform'], effective_or_published_at: null}
+  - vendor_id: jfrog
+    display_name: 'JFrog'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [jfrog.com]
+    public_entrypoints: ['https://jfrog.com/trust/']
+    vendor_categories: [software_supply_chain, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for JFrog in the developer tooling and operations lane.
+    source: {source_id: jfrog-trust, source_type: trust_center, title_native: 'JFrog Trust Center', title_en: 'JFrog Trust Center', source_url: 'https://jfrog.com/trust/', source_language: en, summary_native: 'JFrog publishes public trust information for its platform.', summary_en: 'JFrog publishes public trust information for its platform.', confidence: medium}
+    artifact: {artifact_id: jfrog-trust, artifact_type: trust_center, region_scope: [global], product_scope: ['JFrog platform'], effective_or_published_at: null}
+  - vendor_id: cloudsmith
+    display_name: 'Cloudsmith'
+    legal_name: null
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [cloudsmith.com]
+    public_entrypoints: ['https://cloudsmith.com/security/']
+    vendor_categories: [software_supply_chain, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Cloudsmith in the developer tooling and operations lane.
+    source: {source_id: cloudsmith-security, source_type: security_page, title_native: 'Cloudsmith Security', title_en: 'Cloudsmith Security', source_url: 'https://cloudsmith.com/security/', source_language: en, summary_native: 'Cloudsmith publishes public security information for its platform.', summary_en: 'Cloudsmith publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: cloudsmith-security, artifact_type: security_page, region_scope: [global], product_scope: ['Cloudsmith platform'], effective_or_published_at: null}
+  - vendor_id: docker
+    display_name: 'Docker'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [docker.com]
+    public_entrypoints: ['https://www.docker.com/legal/security/']
+    vendor_categories: [developer_platform, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Docker in the developer tooling and operations lane.
+    source: {source_id: docker-security, source_type: security_page, title_native: 'Docker Security', title_en: 'Docker Security', source_url: 'https://www.docker.com/legal/security/', source_language: en, summary_native: 'Docker publishes public security information for its platform.', summary_en: 'Docker publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: docker-security, artifact_type: security_page, region_scope: [global], product_scope: ['Docker platform'], effective_or_published_at: null}
+  - vendor_id: hashicorp
+    display_name: 'HashiCorp'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [hashicorp.com]
+    public_entrypoints: ['https://www.hashicorp.com/security']
+    vendor_categories: [infrastructure_as_code, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for HashiCorp in the developer tooling and operations lane.
+    source: {source_id: hashicorp-security, source_type: security_page, title_native: 'HashiCorp Security', title_en: 'HashiCorp Security', source_url: 'https://www.hashicorp.com/security', source_language: en, summary_native: 'HashiCorp publishes public security information for its platform.', summary_en: 'HashiCorp publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: hashicorp-security, artifact_type: security_page, region_scope: [global], product_scope: ['HashiCorp platform'], effective_or_published_at: null}
+  - vendor_id: pulumi
+    display_name: 'Pulumi'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [pulumi.com]
+    public_entrypoints: ['https://www.pulumi.com/security/']
+    vendor_categories: [infrastructure_as_code, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Pulumi in the developer tooling and operations lane.
+    source: {source_id: pulumi-security, source_type: security_page, title_native: 'Pulumi Security', title_en: 'Pulumi Security', source_url: 'https://www.pulumi.com/security/', source_language: en, summary_native: 'Pulumi publishes public security information for its platform.', summary_en: 'Pulumi publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: pulumi-security, artifact_type: security_page, region_scope: [global], product_scope: ['Pulumi platform'], effective_or_published_at: null}
+  - vendor_id: netlify
+    display_name: 'Netlify'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [netlify.com]
+    public_entrypoints: ['https://www.netlify.com/security/']
+    vendor_categories: [hosting, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Netlify in the developer tooling and operations lane.
+    source: {source_id: netlify-security, source_type: security_page, title_native: 'Netlify Security', title_en: 'Netlify Security', source_url: 'https://www.netlify.com/security/', source_language: en, summary_native: 'Netlify publishes public security information for its platform.', summary_en: 'Netlify publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: netlify-security, artifact_type: security_page, region_scope: [global], product_scope: ['Netlify platform'], effective_or_published_at: null}
+  - vendor_id: vercel
+    display_name: 'Vercel'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [vercel.com]
+    public_entrypoints: ['https://vercel.com/security']
+    vendor_categories: [hosting, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Vercel in the developer tooling and operations lane.
+    source: {source_id: vercel-security, source_type: security_page, title_native: 'Vercel Security', title_en: 'Vercel Security', source_url: 'https://vercel.com/security', source_language: en, summary_native: 'Vercel publishes public security information for its platform.', summary_en: 'Vercel publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: vercel-security, artifact_type: security_page, region_scope: [global], product_scope: ['Vercel platform'], effective_or_published_at: null}
+  - vendor_id: fly-io
+    display_name: 'Fly.io'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [fly.io]
+    public_entrypoints: ['https://fly.io/legal/privacy-policy/']
+    vendor_categories: [hosting, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Fly.io in the developer tooling and operations lane.
+    source: {source_id: fly-io-privacy, source_type: privacy_notice, title_native: 'Fly.io Privacy Policy', title_en: 'Fly.io Privacy Policy', source_url: 'https://fly.io/legal/privacy-policy/', source_language: en, summary_native: 'Fly.io publishes public privacy information for its platform.', summary_en: 'Fly.io publishes public privacy information for its platform.', confidence: medium}
+    artifact: {artifact_id: fly-io-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: ['Fly.io platform'], effective_or_published_at: null}
+  - vendor_id: railway
+    display_name: 'Railway'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [railway.com]
+    public_entrypoints: ['https://railway.com/legal/privacy']
+    vendor_categories: [hosting, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Railway in the developer tooling and operations lane.
+    source: {source_id: railway-privacy, source_type: privacy_notice, title_native: 'Railway Privacy Policy', title_en: 'Railway Privacy Policy', source_url: 'https://railway.com/legal/privacy', source_language: en, summary_native: 'Railway publishes public privacy information for its platform.', summary_en: 'Railway publishes public privacy information for its platform.', confidence: medium}
+    artifact: {artifact_id: railway-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: ['Railway platform'], effective_or_published_at: null}
+  - vendor_id: render
+    display_name: 'Render'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [render.com]
+    public_entrypoints: ['https://render.com/security']
+    vendor_categories: [hosting, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Render in the developer tooling and operations lane.
+    source: {source_id: render-security, source_type: security_page, title_native: 'Render Security', title_en: 'Render Security', source_url: 'https://render.com/security', source_language: en, summary_native: 'Render publishes public security information for its platform.', summary_en: 'Render publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: render-security, artifact_type: security_page, region_scope: [global], product_scope: ['Render platform'], effective_or_published_at: null}
+  - vendor_id: heroku
+    display_name: 'Heroku'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [heroku.com]
+    public_entrypoints: ['https://www.heroku.com/policy/security']
+    vendor_categories: [hosting, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Heroku in the developer tooling and operations lane.
+    source: {source_id: heroku-security, source_type: security_page, title_native: 'Heroku Security', title_en: 'Heroku Security', source_url: 'https://www.heroku.com/policy/security', source_language: en, summary_native: 'Heroku publishes public security information for its platform.', summary_en: 'Heroku publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: heroku-security, artifact_type: security_page, region_scope: [global], product_scope: ['Heroku platform'], effective_or_published_at: null}
+  - vendor_id: digitalocean
+    display_name: 'DigitalOcean'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [digitalocean.com]
+    public_entrypoints: ['https://www.digitalocean.com/security']
+    vendor_categories: [cloud_infrastructure, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for DigitalOcean in the developer tooling and operations lane.
+    source: {source_id: digitalocean-security, source_type: security_page, title_native: 'DigitalOcean Security', title_en: 'DigitalOcean Security', source_url: 'https://www.digitalocean.com/security', source_language: en, summary_native: 'DigitalOcean publishes public security information for its platform.', summary_en: 'DigitalOcean publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: digitalocean-security, artifact_type: security_page, region_scope: [global], product_scope: ['DigitalOcean platform'], effective_or_published_at: null}
+  - vendor_id: fastly
+    display_name: 'Fastly'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [fastly.com]
+    public_entrypoints: ['https://www.fastly.com/security']
+    vendor_categories: [cdn, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Fastly in the developer tooling and operations lane.
+    source: {source_id: fastly-security, source_type: security_page, title_native: 'Fastly Security', title_en: 'Fastly Security', source_url: 'https://www.fastly.com/security', source_language: en, summary_native: 'Fastly publishes public security information for its platform.', summary_en: 'Fastly publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: fastly-security, artifact_type: security_page, region_scope: [global], product_scope: ['Fastly platform'], effective_or_published_at: null}
+  - vendor_id: akamai
+    display_name: 'Akamai'
+    legal_name: null
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [akamai.com]
+    public_entrypoints: ['https://www.akamai.com/security']
+    vendor_categories: [cdn, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for Akamai in the developer tooling and operations lane.
+    source: {source_id: akamai-security, source_type: security_page, title_native: 'Akamai Security', title_en: 'Akamai Security', source_url: 'https://www.akamai.com/security', source_language: en, summary_native: 'Akamai publishes public security information for its platform.', summary_en: 'Akamai publishes public security information for its platform.', confidence: medium}
+    artifact: {artifact_id: akamai-security, artifact_type: security_page, region_scope: [global], product_scope: ['Akamai platform'], effective_or_published_at: null}
+  - vendor_id: statuscake
+    display_name: 'StatusCake'
+    legal_name: null
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [statuscake.com]
+    public_entrypoints: ['https://www.statuscake.com/privacy-policy/']
+    vendor_categories: [observability, developer_tools, enterprise_software]
+    notes: Initial public-source catalog record for StatusCake in the developer tooling and operations lane.
+    source: {source_id: statuscake-privacy, source_type: privacy_notice, title_native: 'StatusCake Privacy Policy', title_en: 'StatusCake Privacy Policy', source_url: 'https://www.statuscake.com/privacy-policy/', source_language: en, summary_native: 'StatusCake publishes public privacy information for its platform.', summary_en: 'StatusCake publishes public privacy information for its platform.', confidence: medium}
+    artifact: {artifact_id: statuscake-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: ['StatusCake platform'], effective_or_published_at: null}
