@@ -1,0 +1,144 @@
+schema_version: 0.1.0
+batch_id: product-research-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: miro
+    display_name: Miro
+    legal_name: RealtimeBoard, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [miro.com]
+    public_entrypoints:
+      - https://miro.com/trust/
+      - https://miro.com/legal/privacy-policy/
+    vendor_categories: [collaboration, whiteboarding, product_software]
+    notes: Initial public-source catalog record for a visual collaboration and whiteboarding platform provider.
+    source:
+      source_id: miro-trust
+      source_type: trust_center
+      title_native: Miro Trust Center
+      title_en: Miro Trust Center
+      source_url: https://miro.com/trust/
+      source_language: en
+      summary_native: Miro publishes a public trust center describing security, privacy, and compliance resources for its collaboration platform.
+      summary_en: Miro publishes a public trust center describing security, privacy, and compliance resources for its collaboration platform.
+      confidence: high
+    artifact:
+      artifact_id: miro-trust
+      artifact_type: trust_center
+      region_scope: [global]
+      product_scope: [Miro platform]
+      effective_or_published_at: null
+
+  - vendor_id: mural
+    display_name: Mural
+    legal_name: Tactivos, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [mural.co]
+    public_entrypoints:
+      - https://www.mural.co/trust
+      - https://www.mural.co/privacy-policy
+    vendor_categories: [collaboration, whiteboarding, product_software]
+    notes: Initial public-source catalog record for a visual collaboration and whiteboarding platform provider.
+    source:
+      source_id: mural-trust
+      source_type: trust_center
+      title_native: Mural Trust
+      title_en: Mural Trust
+      source_url: https://www.mural.co/trust
+      source_language: en
+      summary_native: Mural publishes a public trust page describing security and privacy resources for its collaboration platform.
+      summary_en: Mural publishes a public trust page describing security and privacy resources for its collaboration platform.
+      confidence: medium
+    artifact:
+      artifact_id: mural-trust
+      artifact_type: trust_center
+      region_scope: [global]
+      product_scope: [Mural platform]
+      effective_or_published_at: null
+
+  - vendor_id: maze
+    display_name: Maze
+    legal_name: Maze.design Limited
+    headquarters_country: GB
+    regions_served: [global]
+    official_domains: [maze.co]
+    public_entrypoints:
+      - https://maze.co/security/
+      - https://maze.co/privacy-policy/
+    vendor_categories: [product_research, user_research, product_software]
+    notes: Initial public-source catalog record for a product research and user testing platform provider.
+    source:
+      source_id: maze-security
+      source_type: security_page
+      title_native: Maze Security
+      title_en: Maze Security
+      source_url: https://maze.co/security/
+      source_language: en
+      summary_native: Maze publishes a public security page describing security resources for its product research platform.
+      summary_en: Maze publishes a public security page describing security resources for its product research platform.
+      confidence: medium
+    artifact:
+      artifact_id: maze-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Maze platform]
+      effective_or_published_at: null
+
+  - vendor_id: dovetail
+    display_name: Dovetail
+    legal_name: Dovetail Research Pty. Ltd.
+    headquarters_country: AU
+    regions_served: [global, APAC]
+    official_domains: [dovetail.com]
+    public_entrypoints:
+      - https://dovetail.com/security/
+      - https://dovetail.com/privacy/
+    vendor_categories: [product_research, user_research, knowledge_management]
+    notes: Initial public-source catalog record for a customer research and insights repository platform provider.
+    source:
+      source_id: dovetail-security
+      source_type: security_page
+      title_native: Dovetail Security
+      title_en: Dovetail Security
+      source_url: https://dovetail.com/security/
+      source_language: en
+      summary_native: Dovetail publishes a public security page describing security resources for its research platform.
+      summary_en: Dovetail publishes a public security page describing security resources for its research platform.
+      confidence: high
+    artifact:
+      artifact_id: dovetail-security
+      artifact_type: security_page
+      region_scope: [global, APAC]
+      product_scope: [Dovetail platform]
+      effective_or_published_at: null
+
+  - vendor_id: productboard
+    display_name: Productboard
+    legal_name: Productboard, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [productboard.com]
+    public_entrypoints:
+      - https://www.productboard.com/security/
+      - https://www.productboard.com/privacy-policy/
+    vendor_categories: [product_software, product_management, enterprise_software]
+    notes: Initial public-source catalog record for a product management and roadmap platform provider.
+    source:
+      source_id: productboard-security
+      source_type: security_page
+      title_native: Productboard Security
+      title_en: Productboard Security
+      source_url: https://www.productboard.com/security/
+      source_language: en
+      summary_native: Productboard publishes a public security page describing security resources for its product management platform.
+      summary_en: Productboard publishes a public security page describing security resources for its product management platform.
+      confidence: medium
+    artifact:
+      artifact_id: productboard-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Productboard platform]
+      effective_or_published_at: null
