@@ -1,0 +1,144 @@
+schema_version: 0.1.0
+batch_id: ops-observability-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: pagerduty
+    display_name: PagerDuty
+    legal_name: PagerDuty, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [pagerduty.com]
+    public_entrypoints:
+      - https://www.pagerduty.com/security/
+      - https://www.pagerduty.com/privacy/
+    vendor_categories: [incident_management, operations_software, enterprise_software]
+    notes: Initial public-source catalog record for an incident management and operations software provider.
+    source:
+      source_id: pagerduty-security
+      source_type: security_page
+      title_native: PagerDuty Security
+      title_en: PagerDuty Security
+      source_url: https://www.pagerduty.com/security/
+      source_language: en
+      summary_native: PagerDuty publishes a public security page describing security resources for its incident management platform.
+      summary_en: PagerDuty publishes a public security page describing security resources for its incident management platform.
+      confidence: high
+    artifact:
+      artifact_id: pagerduty-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [PagerDuty platform]
+      effective_or_published_at: null
+
+  - vendor_id: splunk
+    display_name: Splunk
+    legal_name: Splunk LLC
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [splunk.com]
+    public_entrypoints:
+      - https://www.splunk.com/en_us/about-splunk/splunk-security.html
+      - https://www.splunk.com/en_us/legal/privacy.html
+    vendor_categories: [observability, security, data_platform, enterprise_software]
+    notes: Initial public-source catalog record for an observability, security, and data platform provider.
+    source:
+      source_id: splunk-security
+      source_type: security_page
+      title_native: Splunk Security
+      title_en: Splunk Security
+      source_url: https://www.splunk.com/en_us/about-splunk/splunk-security.html
+      source_language: en
+      summary_native: Splunk publishes public security information for its services and platform.
+      summary_en: Splunk publishes public security information for its services and platform.
+      confidence: medium
+    artifact:
+      artifact_id: splunk-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Splunk platform]
+      effective_or_published_at: null
+
+  - vendor_id: grafana-cloud
+    display_name: Grafana Cloud
+    legal_name: Grafana Labs, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [grafana.com]
+    public_entrypoints:
+      - https://grafana.com/security/
+      - https://grafana.com/legal/privacy-policy/
+    vendor_categories: [observability, monitoring, enterprise_software]
+    notes: Initial public-source catalog record for Grafana Labs' managed observability platform.
+    source:
+      source_id: grafana-security
+      source_type: security_page
+      title_native: Grafana Security
+      title_en: Grafana Security
+      source_url: https://grafana.com/security/
+      source_language: en
+      summary_native: Grafana Labs publishes a public security page describing security resources for Grafana services.
+      summary_en: Grafana Labs publishes a public security page describing security resources for Grafana services.
+      confidence: high
+    artifact:
+      artifact_id: grafana-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Grafana Cloud]
+      effective_or_published_at: null
+
+  - vendor_id: better-stack
+    display_name: Better Stack
+    legal_name: Better Stack, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [betterstack.com]
+    public_entrypoints:
+      - https://betterstack.com/security
+      - https://betterstack.com/privacy
+    vendor_categories: [observability, incident_management, monitoring]
+    notes: Initial public-source catalog record for an observability, log management, and incident management platform provider.
+    source:
+      source_id: better-stack-security
+      source_type: security_page
+      title_native: Better Stack Security
+      title_en: Better Stack Security
+      source_url: https://betterstack.com/security
+      source_language: en
+      summary_native: Better Stack publishes a public security page describing security resources for its platform.
+      summary_en: Better Stack publishes a public security page describing security resources for its platform.
+      confidence: medium
+    artifact:
+      artifact_id: better-stack-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Better Stack platform]
+      effective_or_published_at: null
+
+  - vendor_id: uptimerobot
+    display_name: UptimeRobot
+    legal_name: UptimeRobot s.r.o.
+    headquarters_country: CZ
+    regions_served: [global, EU]
+    official_domains: [uptimerobot.com]
+    public_entrypoints:
+      - https://uptimerobot.com/privacy-policy/
+      - https://uptimerobot.com/terms/
+    vendor_categories: [monitoring, operations_software]
+    notes: Initial public-source catalog record for a website and service uptime monitoring provider.
+    source:
+      source_id: uptimerobot-privacy
+      source_type: privacy_notice
+      title_native: UptimeRobot Privacy Policy
+      title_en: UptimeRobot Privacy Policy
+      source_url: https://uptimerobot.com/privacy-policy/
+      source_language: en
+      summary_native: UptimeRobot publishes a public privacy policy for its monitoring service.
+      summary_en: UptimeRobot publishes a public privacy policy for its monitoring service.
+      confidence: medium
+    artifact:
+      artifact_id: uptimerobot-privacy
+      artifact_type: privacy_notice
+      region_scope: [global, EU]
+      product_scope: [UptimeRobot]
+      effective_or_published_at: null
