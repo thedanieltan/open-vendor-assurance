@@ -41,6 +41,46 @@ The catalog guard enforces the catalog-agent file boundary and then runs validat
 
 Catalog PRs should not modify substrate, governance, workflow, schema, validator, observation, release, or security files unless explicitly moved into the core lane.
 
+## Catalog agent PR workflow
+
+The catalog agent PR workflow is manual-only:
+
+```text
+catalog agent PR / propose-catalog-update
+workflow_dispatch
+```
+
+It may request `contents: write` and `pull-requests: write` only to create or update a catalog proposal pull request. It must not merge pull requests, change branch protection, publish releases, or write directly to `main`.
+
+Catalog agent PR inputs must preserve these boundaries:
+
+- `manifest_path` must point to a catalog batch manifest under `catalog-batches/`;
+- `branch_name` must start with `agent-`;
+- `pr_title` must start with `Catalog:`;
+- generated pull requests must remain human-reviewed.
+
+## Source health report
+
+The source health report workflow is the first scheduled maintenance layer:
+
+```text
+source-health-report / source-health-report
+workflow_dispatch
+schedule
+```
+
+It is read-only and produces a workflow artifact named:
+
+```text
+openva-source-health-report
+```
+
+The report is an inventory and metadata-quality report only. It must not fetch live vendor content, hash remote pages, write observation records, open pull requests, or change repository state.
+
+The report may classify local source metadata issues such as missing domains, non-HTTPS URLs, unexpected access classes, unexpected rights classes, and missing non-advisory flags.
+
+This workflow is intentionally separate from observation. It gives maintainers a low-risk scheduled signal as the catalog grows.
+
 ## Observation dry run
 
 Observation dry run must remain manual-only:
@@ -84,6 +124,15 @@ actions: write
 id-token: write
 ```
 
+The only current exception is the manual catalog agent PR workflow, which may use:
+
+```yaml
+contents: write
+pull-requests: write
+```
+
+solely to create or update human-reviewed catalog proposal pull requests.
+
 ## Branch protection expectations
 
 Before public launch, protect `main` with these expectations:
@@ -119,7 +168,7 @@ If a future workflow requires secrets, it must be reviewed as a security-sensiti
 
 ## Network posture
 
-Validation, tests, pack conformance, and catalog guards should not depend on live vendor network access.
+Validation, tests, pack conformance, catalog guards, and source health inventory reports should not depend on live vendor network access.
 
 The only workflow that may attempt public network fetches is the manual observation dry-run workflow.
 

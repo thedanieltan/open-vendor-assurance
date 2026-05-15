@@ -50,6 +50,18 @@ def test_observation_dry_run_is_manual_only_and_read_only():
     assert set(triggers.keys()) == {"workflow_dispatch"}
 
 
+def test_source_health_report_is_read_only_scheduled_inventory():
+    workflow = load_workflow("source-health-report.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "source-health-report.yml").read_text(encoding="utf-8")
+
+    assert workflow["permissions"] == {"contents": "read"}
+    assert set(triggers.keys()) == {"workflow_dispatch", "schedule"}
+    assert "python -m tools.openva.source_health build --output source-health-report.json" in text
+    assert "actions/upload-artifact@v4" in text
+    assert "peter-evans/create-pull-request" not in text
+
+
 def test_no_workflow_requests_write_permissions_except_manual_pr_creator():
     allowed_write_workflows = {"catalog-agent-pr.yml"}
 
@@ -90,9 +102,11 @@ def test_ci_policy_documents_required_checks_and_branch_protection():
 
     assert "validate / validate" in text
     assert "catalog-pr-guard / catalog-pr-guard" in text
+    assert "source-health-report / source-health-report" in text
     assert "require pull requests before merging" in text
     assert "require the `validate / validate` status check" in text
     assert "git diff --exit-code openva-pack.json indexes/" in text
+    assert "The report is an inventory and metadata-quality report only" in text
 
 
 def test_docs_index_links_ci_policy():
