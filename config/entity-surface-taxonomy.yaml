@@ -1,0 +1,44 @@
+schema_version: 0.1.0
+
+purpose: >-
+  Controlled entity-surface tags for distinguishing public vendor assurance
+  surfaces without merging distinct legal, regional, language, or product
+  contexts.
+
+non_advisory: true
+
+surfaces:
+  international:
+    label: International-facing public surface
+  mainland_china:
+    label: Mainland China native public surface
+  hong_kong:
+    label: Hong Kong public surface
+  singapore:
+    label: Singapore public surface
+  global_brand:
+    label: Global brand-level public surface
+  product_surface:
+    label: Product-specific public surface
+  regional_surface:
+    label: Regional public surface
+  unknown:
+    label: Entity surface not yet determined
+
+conventions:
+  entity_family:
+    description: Stable grouping key for related public vendor records.
+    example: alibaba-cloud
+  entity_surface:
+    description: Controlled tag describing the public metadata surface represented by the record.
+    example: international
+  related_vendor_ids:
+    description: Related OpenVA vendor IDs. Links records without merging them.
+  source_authority_language:
+    description: Language whose public sources should be treated as authoritative for the record.
+    example: zh
+
+boundary:
+  - Entity-surface tags are catalog metadata only.
+  - They do not determine legal identity, compliance, availability, adequacy, risk, or procurement suitability.
+  - They should preserve public-source scope and prevent accidental record collapse.
