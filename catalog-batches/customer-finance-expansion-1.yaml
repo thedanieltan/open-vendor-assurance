@@ -1,0 +1,144 @@
+schema_version: 0.1.0
+batch_id: customer-finance-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: salesforce
+    display_name: Salesforce
+    legal_name: Salesforce, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [salesforce.com]
+    public_entrypoints:
+      - https://www.salesforce.com/company/trust/
+      - https://www.salesforce.com/company/legal/agreements/
+    vendor_categories: [crm, enterprise_software, customer_platform]
+    notes: Initial public-source catalog record for a major CRM and enterprise cloud software provider.
+    source:
+      source_id: salesforce-trust
+      source_type: trust_center
+      title_native: Salesforce Trust
+      title_en: Salesforce Trust
+      source_url: https://www.salesforce.com/company/trust/
+      source_language: en
+      summary_native: Salesforce publishes a public trust site describing security, privacy, compliance, and availability resources.
+      summary_en: Salesforce publishes a public trust site describing security, privacy, compliance, and availability resources.
+      confidence: high
+    artifact:
+      artifact_id: salesforce-trust
+      artifact_type: trust_center
+      region_scope: [global]
+      product_scope: [Salesforce services]
+      effective_or_published_at: null
+
+  - vendor_id: zoho-crm
+    display_name: Zoho CRM
+    legal_name: Zoho Corporation Pvt. Ltd.
+    headquarters_country: IN
+    regions_served: [global, APAC]
+    official_domains: [zoho.com]
+    public_entrypoints:
+      - https://www.zoho.com/security.html
+      - https://www.zoho.com/privacy.html
+    vendor_categories: [crm, enterprise_software, customer_platform]
+    notes: Initial public-source catalog record for Zoho's CRM and customer platform software.
+    source:
+      source_id: zoho-security
+      source_type: security_page
+      title_native: Zoho Security
+      title_en: Zoho Security
+      source_url: https://www.zoho.com/security.html
+      source_language: en
+      summary_native: Zoho publishes a public security page describing security practices for Zoho services.
+      summary_en: Zoho publishes a public security page describing security practices for Zoho services.
+      confidence: high
+    artifact:
+      artifact_id: zoho-security
+      artifact_type: security_page
+      region_scope: [global, APAC]
+      product_scope: [Zoho CRM, Zoho services]
+      effective_or_published_at: null
+
+  - vendor_id: mailchimp
+    display_name: Mailchimp
+    legal_name: The Rocket Science Group LLC
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [mailchimp.com]
+    public_entrypoints:
+      - https://mailchimp.com/legal/data-processing-addendum/
+      - https://mailchimp.com/about/security/
+    vendor_categories: [marketing_technology, email_marketing, customer_engagement]
+    notes: Initial public-source catalog record for an email marketing and marketing automation provider.
+    source:
+      source_id: mailchimp-dpa
+      source_type: dpa
+      title_native: Mailchimp Data Processing Addendum
+      title_en: Mailchimp Data Processing Addendum
+      source_url: https://mailchimp.com/legal/data-processing-addendum/
+      source_language: en
+      summary_native: Mailchimp publishes a public data processing addendum for its services.
+      summary_en: Mailchimp publishes a public data processing addendum for its services.
+      confidence: high
+    artifact:
+      artifact_id: mailchimp-dpa
+      artifact_type: dpa
+      region_scope: [global]
+      product_scope: [Mailchimp]
+      effective_or_published_at: null
+
+  - vendor_id: paypal
+    display_name: PayPal
+    legal_name: PayPal, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [paypal.com]
+    public_entrypoints:
+      - https://www.paypal.com/us/legalhub/privacy-full
+      - https://www.paypal.com/us/security
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Initial public-source catalog record for a major payments and financial technology provider.
+    source:
+      source_id: paypal-privacy
+      source_type: privacy_notice
+      title_native: PayPal Privacy Statement
+      title_en: PayPal Privacy Statement
+      source_url: https://www.paypal.com/us/legalhub/privacy-full
+      source_language: en
+      summary_native: PayPal publishes a public privacy statement for its services.
+      summary_en: PayPal publishes a public privacy statement for its services.
+      confidence: medium
+    artifact:
+      artifact_id: paypal-privacy
+      artifact_type: privacy_notice
+      region_scope: [global]
+      product_scope: [PayPal services]
+      effective_or_published_at: null
+
+  - vendor_id: xero
+    display_name: Xero
+    legal_name: Xero Limited
+    headquarters_country: NZ
+    regions_served: [global, APAC]
+    official_domains: [xero.com]
+    public_entrypoints:
+      - https://www.xero.com/about/security/
+      - https://www.xero.com/about/legal/privacy/
+    vendor_categories: [accounting_software, finance_software, enterprise_software]
+    notes: Initial public-source catalog record for an accounting and finance software provider.
+    source:
+      source_id: xero-security
+      source_type: security_page
+      title_native: Xero Security
+      title_en: Xero Security
+      source_url: https://www.xero.com/about/security/
+      source_language: en
+      summary_native: Xero publishes a public security page describing security practices for its accounting platform.
+      summary_en: Xero publishes a public security page describing security practices for its accounting platform.
+      confidence: high
+    artifact:
+      artifact_id: xero-security
+      artifact_type: security_page
+      region_scope: [global, APAC]
+      product_scope: [Xero platform]
+      effective_or_published_at: null
