@@ -1,0 +1,245 @@
+schema_version: 0.1.0
+
+purpose: >-
+  Controlled metadata tags for OpenVA category coverage reporting. Categories are
+  tags on vendor and artifact records, not standalone vendor entities.
+
+non_advisory: true
+
+vendor_categories:
+  cloud_infrastructure:
+    label: Cloud infrastructure
+    description: Cloud compute, storage, networking, hyperscaler, edge, CDN, and hosting platforms.
+  productivity_software:
+    label: Productivity software
+    description: Productivity suites, office tools, notes, docs, and knowledge work software.
+  collaboration_software:
+    label: Collaboration software
+    description: Team collaboration, work management, meetings, messaging, whiteboarding, and shared workspaces.
+  project_management:
+    label: Project management
+    description: Project planning, task tracking, issue management, and work orchestration tools.
+  crm:
+    label: CRM
+    description: Customer relationship management, sales, service, and customer lifecycle platforms.
+  customer_support:
+    label: Customer support
+    description: Helpdesk, support ticketing, live chat, customer service, and contact center tools.
+  customer_engagement:
+    label: Customer engagement
+    description: Customer messaging, marketing automation, lifecycle engagement, and campaign orchestration platforms.
+  marketing_technology:
+    label: Marketing technology
+    description: Marketing, email, CDP, product analytics, advertising, and personalization platforms.
+  payments:
+    label: Payments
+    description: Payment processing, payment orchestration, acquiring, issuing, and checkout platforms.
+  financial_infrastructure:
+    label: Financial infrastructure
+    description: Banking infrastructure, open banking, fintech infrastructure, billing, spend, tax, and finance operations.
+  kyc_kyb_aml:
+    label: KYC, KYB, and AML
+    description: Identity verification, KYB, AML, sanctions screening, transaction monitoring, and compliance operations tools.
+  fraud_risk:
+    label: Fraud and risk
+    description: Fraud prevention, trust and safety, risk scoring, abuse prevention, and transaction risk systems.
+  hr_software:
+    label: HR software
+    description: HRIS, HCM, payroll, employer-of-record, recruiting, workforce, performance, and people operations platforms.
+  education_systems:
+    label: Education systems
+    description: LMS, student systems, classroom tools, assessment, and enterprise learning platforms.
+  healthcare_software:
+    label: Healthcare software
+    description: EHR, telehealth, practice management, healthcare integration, clinical workflow, and healthcare communications.
+  security:
+    label: Security
+    description: Security operations, endpoint, cloud security, identity security, vulnerability management, appsec, and network security.
+  identity_access:
+    label: Identity and access
+    description: IAM, SSO, password management, identity governance, access control, and device identity tooling.
+  data_platform:
+    label: Data platform
+    description: Data warehouse, lakehouse, ETL, ELT, analytics engineering, reverse ETL, and data infrastructure platforms.
+  database:
+    label: Database
+    description: Operational databases, analytics databases, vector databases, query engines, and managed database services.
+  analytics_bi:
+    label: Analytics and BI
+    description: Analytics, dashboarding, business intelligence, product analytics, reporting, and experimentation tools.
+  ai_platform:
+    label: AI platform
+    description: AI platforms, LLM tooling, MLOps, model hosting, AI data, annotation, evaluation, and vector tooling.
+  developer_platform:
+    label: Developer platform
+    description: Source control, CI/CD, API tooling, developer environments, deployment, observability, and internal developer platforms.
+  observability:
+    label: Observability
+    description: Monitoring, logging, tracing, incident response, status, uptime, and operations visibility tools.
+  ecommerce_platform:
+    label: Ecommerce platform
+    description: Ecommerce, commerce infrastructure, marketplace, checkout, storefront, and web commerce platforms.
+  content_management:
+    label: Content management
+    description: CMS, headless CMS, content operations, search, discovery, document workflow, and web publishing systems.
+  document_workflow:
+    label: Document workflow
+    description: E-signature, document automation, contract management, legal operations, and document lifecycle platforms.
+  grc_privacy:
+    label: GRC and privacy
+    description: GRC, privacy management, data governance, consent, DSAR, trust automation, and security compliance automation.
+  logistics_supply_chain:
+    label: Logistics and supply chain
+    description: Logistics, shipping, supply chain visibility, fleet, telematics, inventory, manufacturing, and field operations.
+  regional_apac:
+    label: Regional APAC
+    description: Regional APAC, mainland China, Japan, Korea, India, Australia, and Southeast Asia platforms.
+
+artifact_categories:
+  data_processing_terms:
+    label: Data processing terms
+    maps_to_artifact_types:
+      - dpa
+      - data_transfer_terms
+  subprocessor_disclosure:
+    label: Subprocessor disclosure
+    maps_to_artifact_types:
+      - subprocessors_list
+  privacy_notice:
+    label: Privacy notice
+    maps_to_artifact_types:
+      - privacy_notice
+  security_assurance:
+    label: Security assurance
+    maps_to_artifact_types:
+      - security_page
+      - security_whitepaper
+      - trust_center
+  compliance_assurance:
+    label: Compliance assurance
+    maps_to_artifact_types:
+      - compliance_certifications_page
+      - trust_center
+  product_terms:
+    label: Product terms
+    maps_to_artifact_types:
+      - product_terms
+      - ai_terms
+      - shared_responsibility_model
+
+coverage_lanes:
+  cloud_platforms:
+    label: Cloud infrastructure and hyperscalers
+    vendor_category_tags:
+      - cloud_infrastructure
+      - developer_platform
+      - database
+    target_materialized_vendors: 30
+    target_deep_vendors: 15
+    tier_1_min_core_artifacts: 4
+  productivity_collaboration:
+    label: Productivity, collaboration, and work management
+    vendor_category_tags:
+      - productivity_software
+      - collaboration_software
+      - project_management
+    target_materialized_vendors: 40
+    target_deep_vendors: 20
+    tier_1_min_core_artifacts: 3
+  crm_customer_marketing:
+    label: CRM, customer engagement, support, and marketing
+    vendor_category_tags:
+      - crm
+      - customer_support
+      - customer_engagement
+      - marketing_technology
+    target_materialized_vendors: 50
+    target_deep_vendors: 25
+    tier_1_min_core_artifacts: 3
+  payments_fintech:
+    label: Payments, billing, fintech infrastructure, and tax
+    vendor_category_tags:
+      - payments
+      - financial_infrastructure
+    target_materialized_vendors: 40
+    target_deep_vendors: 20
+    tier_1_min_core_artifacts: 3
+  kyc_risk:
+    label: KYC, KYB, AML, identity verification, fraud, and risk
+    vendor_category_tags:
+      - kyc_kyb_aml
+      - fraud_risk
+    target_materialized_vendors: 30
+    target_deep_vendors: 20
+    tier_1_min_core_artifacts: 3
+  hr_education:
+    label: HR, payroll, workforce, recruiting, and education systems
+    vendor_category_tags:
+      - hr_software
+      - education_systems
+    target_materialized_vendors: 60
+    target_deep_vendors: 30
+    tier_1_min_core_artifacts: 3
+  healthcare:
+    label: Healthcare SaaS and health data platforms
+    vendor_category_tags:
+      - healthcare_software
+    target_materialized_vendors: 30
+    target_deep_vendors: 20
+    tier_1_min_core_artifacts: 3
+  security_identity:
+    label: Security, identity, device management, and SecOps
+    vendor_category_tags:
+      - security
+      - identity_access
+    target_materialized_vendors: 50
+    target_deep_vendors: 25
+    tier_1_min_core_artifacts: 3
+  data_ai:
+    label: Data platforms, databases, analytics, BI, and AI tooling
+    vendor_category_tags:
+      - data_platform
+      - database
+      - analytics_bi
+      - ai_platform
+    target_materialized_vendors: 60
+    target_deep_vendors: 30
+    tier_1_min_core_artifacts: 3
+  devtools_ops:
+    label: Developer tools, observability, IT operations, and automation
+    vendor_category_tags:
+      - developer_platform
+      - observability
+    target_materialized_vendors: 50
+    target_deep_vendors: 25
+    tier_1_min_core_artifacts: 3
+  commerce_content_docs:
+    label: Ecommerce, CMS, website platforms, and document workflows
+    vendor_category_tags:
+      - ecommerce_platform
+      - content_management
+      - document_workflow
+    target_materialized_vendors: 40
+    target_deep_vendors: 20
+    tier_1_min_core_artifacts: 3
+  grc_privacy_trust:
+    label: GRC, privacy, trust automation, and data governance
+    vendor_category_tags:
+      - grc_privacy
+    target_materialized_vendors: 30
+    target_deep_vendors: 20
+    tier_1_min_core_artifacts: 3
+  logistics_manufacturing:
+    label: Logistics, manufacturing, supply chain, and field operations
+    vendor_category_tags:
+      - logistics_supply_chain
+    target_materialized_vendors: 30
+    target_deep_vendors: 15
+    tier_1_min_core_artifacts: 2
+  regional_apac:
+    label: APAC, mainland China, Japan, Korea, India, and regional platforms
+    vendor_category_tags:
+      - regional_apac
+    target_materialized_vendors: 60
+    target_deep_vendors: 30
+    tier_1_min_core_artifacts: 2
