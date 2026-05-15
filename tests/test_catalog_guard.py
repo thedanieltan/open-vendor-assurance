@@ -1,4 +1,4 @@
-from tools.openva.catalog_guard import validate_catalog_paths
+from tools.openva.catalog_guard import validate_catalog_batch_duplicates, validate_catalog_paths
 
 
 def test_catalog_guard_allows_catalog_files():
@@ -42,3 +42,41 @@ def test_catalog_guard_rejects_unknown_docs():
     failures = validate_catalog_paths(["docs/new-policy.md"])
 
     assert failures == ["docs/new-policy.md: catalog PR path is outside the allowed catalog-agent file set"]
+
+
+def test_catalog_batch_guard_rejects_duplicate_vendor_id_in_manifest(tmp_path):
+    batch_path = tmp_path / "catalog-batches" / "example.yaml"
+    batch_path.parent.mkdir(parents=True)
+    batch_path.write_text(
+        """
+vendors:
+  - vendor_id: duplicate
+  - vendor_id: duplicate
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    failures = validate_catalog_batch_duplicates(["catalog-batches/example.yaml"], root=tmp_path)
+
+    assert failures == ["catalog-batches/example.yaml: duplicate: duplicate vendor_id in batch manifest"]
+
+
+def test_catalog_batch_guard_rejects_vendor_id_already_in_catalog(tmp_path):
+    batch_path = tmp_path / "catalog-batches" / "example.yaml"
+    batch_path.parent.mkdir(parents=True)
+    batch_path.write_text(
+        """
+vendors:
+  - vendor_id: existing-vendor
+""".lstrip(),
+        encoding="utf-8",
+    )
+    existing_vendor_path = tmp_path / "data" / "vendors" / "existing-vendor" / "vendor.yaml"
+    existing_vendor_path.parent.mkdir(parents=True)
+    existing_vendor_path.write_text("vendor_id: existing-vendor\n", encoding="utf-8")
+
+    failures = validate_catalog_batch_duplicates(["catalog-batches/example.yaml"], root=tmp_path)
+
+    assert failures == [
+        "catalog-batches/example.yaml: existing-vendor: vendor_id already exists at data/vendors/existing-vendor/vendor.yaml"
+    ]
