@@ -1,0 +1,144 @@
+schema_version: 0.1.0
+batch_id: identity-security-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: okta
+    display_name: Okta
+    legal_name: Okta, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [okta.com]
+    public_entrypoints:
+      - https://trust.okta.com/
+      - https://www.okta.com/privacy-policy/
+    vendor_categories: [identity_access, security, enterprise_software]
+    notes: Initial public-source catalog record for a major identity and access management provider.
+    source:
+      source_id: okta-trust
+      source_type: trust_center
+      title_native: Okta Trust
+      title_en: Okta Trust
+      source_url: https://trust.okta.com/
+      source_language: en
+      summary_native: Okta publishes a public trust site describing security, privacy, compliance, and availability resources.
+      summary_en: Okta publishes a public trust site describing security, privacy, compliance, and availability resources.
+      confidence: high
+    artifact:
+      artifact_id: okta-trust
+      artifact_type: trust_center
+      region_scope: [global]
+      product_scope: [Okta services]
+      effective_or_published_at: null
+
+  - vendor_id: auth0
+    display_name: Auth0
+    legal_name: Okta, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [auth0.com, okta.com]
+    public_entrypoints:
+      - https://auth0.com/security
+      - https://auth0.com/privacy
+    vendor_categories: [identity_access, security, developer_platform]
+    notes: Initial public-source catalog record for Auth0 as an identity and authentication platform operated by Okta.
+    source:
+      source_id: auth0-security
+      source_type: security_page
+      title_native: Auth0 Security
+      title_en: Auth0 Security
+      source_url: https://auth0.com/security
+      source_language: en
+      summary_native: Auth0 publishes a public security page describing security practices for its identity platform.
+      summary_en: Auth0 publishes a public security page describing security practices for its identity platform.
+      confidence: high
+    artifact:
+      artifact_id: auth0-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Auth0]
+      effective_or_published_at: null
+
+  - vendor_id: onepassword
+    display_name: 1Password
+    legal_name: AgileBits Inc.
+    headquarters_country: CA
+    regions_served: [global]
+    official_domains: [1password.com]
+    public_entrypoints:
+      - https://1password.com/security
+      - https://1password.com/legal/privacy
+    vendor_categories: [security, password_management, enterprise_software]
+    notes: Initial public-source catalog record for a password management and secrets management provider.
+    source:
+      source_id: onepassword-security
+      source_type: security_page
+      title_native: 1Password Security
+      title_en: 1Password Security
+      source_url: https://1password.com/security
+      source_language: en
+      summary_native: 1Password publishes a public security page describing security practices for its password management platform.
+      summary_en: 1Password publishes a public security page describing security practices for its password management platform.
+      confidence: high
+    artifact:
+      artifact_id: onepassword-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [1Password]
+      effective_or_published_at: null
+
+  - vendor_id: bitwarden
+    display_name: Bitwarden
+    legal_name: Bitwarden, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [bitwarden.com]
+    public_entrypoints:
+      - https://bitwarden.com/help/security-faqs/
+      - https://bitwarden.com/privacy/
+    vendor_categories: [security, password_management, enterprise_software]
+    notes: Initial public-source catalog record for a password management and secrets management provider.
+    source:
+      source_id: bitwarden-security-faq
+      source_type: security_page
+      title_native: Bitwarden Security FAQs
+      title_en: Bitwarden Security FAQs
+      source_url: https://bitwarden.com/help/security-faqs/
+      source_language: en
+      summary_native: Bitwarden publishes public security information for its password management platform.
+      summary_en: Bitwarden publishes public security information for its password management platform.
+      confidence: high
+    artifact:
+      artifact_id: bitwarden-security-faq
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [Bitwarden]
+      effective_or_published_at: null
+
+  - vendor_id: jumpcloud
+    display_name: JumpCloud
+    legal_name: JumpCloud Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [jumpcloud.com]
+    public_entrypoints:
+      - https://jumpcloud.com/security
+      - https://jumpcloud.com/privacy
+    vendor_categories: [identity_access, device_management, security]
+    notes: Initial public-source catalog record for an identity, access, and device management platform provider.
+    source:
+      source_id: jumpcloud-security
+      source_type: security_page
+      title_native: JumpCloud Security
+      title_en: JumpCloud Security
+      source_url: https://jumpcloud.com/security
+      source_language: en
+      summary_native: JumpCloud publishes a public security page describing security resources for its platform.
+      summary_en: JumpCloud publishes a public security page describing security resources for its platform.
+      confidence: high
+    artifact:
+      artifact_id: jumpcloud-security
+      artifact_type: security_page
+      region_scope: [global]
+      product_scope: [JumpCloud platform]
+      effective_or_published_at: null
