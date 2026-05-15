@@ -1,0 +1,170 @@
+schema_version: 0.1.0
+batch_id: data-enrichment-expansion-1
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: zoominfo
+    display_name: ZoomInfo
+    legal_name: ZoomInfo Technologies LLC
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [zoominfo.com]
+    public_entrypoints: [https://www.zoominfo.com/about-zoominfo/privacy-center, https://www.zoominfo.com/about-zoominfo/security]
+    vendor_categories: [data_provider, sales_intelligence, data_enrichment]
+    notes: Initial public-source catalog record for a B2B sales intelligence and data provider.
+    source: {source_id: zoominfo-security, source_type: security_page, title_native: ZoomInfo Security, title_en: ZoomInfo Security, source_url: https://www.zoominfo.com/about-zoominfo/security, source_language: en, summary_native: ZoomInfo publishes public security information for its sales intelligence platform., summary_en: ZoomInfo publishes public security information for its sales intelligence platform., confidence: medium}
+    artifact: {artifact_id: zoominfo-security, artifact_type: security_page, region_scope: [global], product_scope: [ZoomInfo platform], effective_or_published_at: null}
+  - vendor_id: clearbit
+    display_name: Clearbit
+    legal_name: HubSpot, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [clearbit.com]
+    public_entrypoints: [https://clearbit.com/privacy, https://clearbit.com/security]
+    vendor_categories: [data_provider, data_enrichment, marketing_technology]
+    notes: Initial public-source catalog record for a data enrichment platform associated with HubSpot.
+    source: {source_id: clearbit-security, source_type: security_page, title_native: Clearbit Security, title_en: Clearbit Security, source_url: https://clearbit.com/security, source_language: en, summary_native: Clearbit publishes public security information for its data enrichment platform., summary_en: Clearbit publishes public security information for its data enrichment platform., confidence: medium}
+    artifact: {artifact_id: clearbit-security, artifact_type: security_page, region_scope: [global], product_scope: [Clearbit platform], effective_or_published_at: null}
+  - vendor_id: apollo-io
+    display_name: Apollo.io
+    legal_name: Apollo.io, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [apollo.io]
+    public_entrypoints: [https://www.apollo.io/privacy-policy, https://www.apollo.io/security]
+    vendor_categories: [sales_intelligence, data_provider, sales_engagement]
+    notes: Initial public-source catalog record for a sales intelligence and engagement platform provider.
+    source: {source_id: apollo-io-security, source_type: security_page, title_native: Apollo.io Security, title_en: Apollo.io Security, source_url: https://www.apollo.io/security, source_language: en, summary_native: Apollo.io publishes public security information for its sales intelligence platform., summary_en: Apollo.io publishes public security information for its sales intelligence platform., confidence: medium}
+    artifact: {artifact_id: apollo-io-security, artifact_type: security_page, region_scope: [global], product_scope: [Apollo.io platform], effective_or_published_at: null}
+  - vendor_id: cognism
+    display_name: Cognism
+    legal_name: Cognism Limited
+    headquarters_country: GB
+    regions_served: [global, EU]
+    official_domains: [cognism.com]
+    public_entrypoints: [https://www.cognism.com/privacy-policy, https://www.cognism.com/security]
+    vendor_categories: [sales_intelligence, data_provider, data_enrichment]
+    notes: Initial public-source catalog record for a B2B sales intelligence data provider.
+    source: {source_id: cognism-security, source_type: security_page, title_native: Cognism Security, title_en: Cognism Security, source_url: https://www.cognism.com/security, source_language: en, summary_native: Cognism publishes public security information for its sales intelligence platform., summary_en: Cognism publishes public security information for its sales intelligence platform., confidence: medium}
+    artifact: {artifact_id: cognism-security, artifact_type: security_page, region_scope: [global, EU], product_scope: [Cognism platform], effective_or_published_at: null}
+  - vendor_id: lusha
+    display_name: Lusha
+    legal_name: Lusha Systems Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [lusha.com]
+    public_entrypoints: [https://www.lusha.com/privacy-policy/, https://www.lusha.com/security/]
+    vendor_categories: [sales_intelligence, data_provider, data_enrichment]
+    notes: Initial public-source catalog record for a B2B contact data and sales intelligence provider.
+    source: {source_id: lusha-security, source_type: security_page, title_native: Lusha Security, title_en: Lusha Security, source_url: https://www.lusha.com/security/, source_language: en, summary_native: Lusha publishes public security information for its sales intelligence platform., summary_en: Lusha publishes public security information for its sales intelligence platform., confidence: medium}
+    artifact: {artifact_id: lusha-security, artifact_type: security_page, region_scope: [global], product_scope: [Lusha platform], effective_or_published_at: null}
+  - vendor_id: rocketreach
+    display_name: RocketReach
+    legal_name: RocketReach LLC
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [rocketreach.co]
+    public_entrypoints: [https://rocketreach.co/privacy, https://rocketreach.co/security]
+    vendor_categories: [sales_intelligence, data_provider, data_enrichment]
+    notes: Initial public-source catalog record for a professional contact data provider.
+    source: {source_id: rocketreach-security, source_type: security_page, title_native: RocketReach Security, title_en: RocketReach Security, source_url: https://rocketreach.co/security, source_language: en, summary_native: RocketReach publishes public security information for its contact data platform., summary_en: RocketReach publishes public security information for its contact data platform., confidence: medium}
+    artifact: {artifact_id: rocketreach-security, artifact_type: security_page, region_scope: [global], product_scope: [RocketReach platform], effective_or_published_at: null}
+  - vendor_id: people-data-labs
+    display_name: People Data Labs
+    legal_name: People Data Labs, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [peopledatalabs.com]
+    public_entrypoints: [https://www.peopledatalabs.com/privacy-policy, https://www.peopledatalabs.com/security]
+    vendor_categories: [data_provider, data_enrichment, api_platform]
+    notes: Initial public-source catalog record for a people and company data API provider.
+    source: {source_id: people-data-labs-security, source_type: security_page, title_native: People Data Labs Security, title_en: People Data Labs Security, source_url: https://www.peopledatalabs.com/security, source_language: en, summary_native: People Data Labs publishes public security information for its data API platform., summary_en: People Data Labs publishes public security information for its data API platform., confidence: medium}
+    artifact: {artifact_id: people-data-labs-security, artifact_type: security_page, region_scope: [global], product_scope: [People Data Labs platform], effective_or_published_at: null}
+  - vendor_id: fullcontact
+    display_name: FullContact
+    legal_name: FullContact Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [fullcontact.com]
+    public_entrypoints: [https://www.fullcontact.com/privacy-center/, https://www.fullcontact.com/security/]
+    vendor_categories: [data_provider, identity_resolution, data_enrichment]
+    notes: Initial public-source catalog record for an identity resolution and data enrichment provider.
+    source: {source_id: fullcontact-security, source_type: security_page, title_native: FullContact Security, title_en: FullContact Security, source_url: https://www.fullcontact.com/security/, source_language: en, summary_native: FullContact publishes public security information for its identity resolution platform., summary_en: FullContact publishes public security information for its identity resolution platform., confidence: medium}
+    artifact: {artifact_id: fullcontact-security, artifact_type: security_page, region_scope: [global], product_scope: [FullContact platform], effective_or_published_at: null}
+  - vendor_id: dun-bradstreet
+    display_name: Dun & Bradstreet
+    legal_name: Dun & Bradstreet, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [dnb.com]
+    public_entrypoints: [https://www.dnb.com/utility-pages/privacy-policy.html, https://www.dnb.com/about-us/data-security.html]
+    vendor_categories: [data_provider, business_data, risk_intelligence]
+    notes: Initial public-source catalog record for a business data and analytics provider.
+    source: {source_id: dun-bradstreet-data-security, source_type: security_page, title_native: Dun & Bradstreet Data Security, title_en: Dun & Bradstreet Data Security, source_url: https://www.dnb.com/about-us/data-security.html, source_language: en, summary_native: Dun & Bradstreet publishes public security information for its business data services., summary_en: Dun & Bradstreet publishes public security information for its business data services., confidence: medium}
+    artifact: {artifact_id: dun-bradstreet-data-security, artifact_type: security_page, region_scope: [global], product_scope: [Dun & Bradstreet services], effective_or_published_at: null}
+  - vendor_id: crunchbase
+    display_name: Crunchbase
+    legal_name: Crunchbase, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [crunchbase.com]
+    public_entrypoints: [https://about.crunchbase.com/privacy-policy/, https://about.crunchbase.com/security/]
+    vendor_categories: [data_provider, business_data, sales_intelligence]
+    notes: Initial public-source catalog record for a company data and prospecting platform provider.
+    source: {source_id: crunchbase-security, source_type: security_page, title_native: Crunchbase Security, title_en: Crunchbase Security, source_url: https://about.crunchbase.com/security/, source_language: en, summary_native: Crunchbase publishes public security information for its company data platform., summary_en: Crunchbase publishes public security information for its company data platform., confidence: medium}
+    artifact: {artifact_id: crunchbase-security, artifact_type: security_page, region_scope: [global], product_scope: [Crunchbase platform], effective_or_published_at: null}
+  - vendor_id: demandbase
+    display_name: Demandbase
+    legal_name: Demandbase, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [demandbase.com]
+    public_entrypoints: [https://www.demandbase.com/privacy-policy/, https://www.demandbase.com/security/]
+    vendor_categories: [account_based_marketing, data_provider, sales_intelligence]
+    notes: Initial public-source catalog record for an account-based marketing and B2B data platform provider.
+    source: {source_id: demandbase-security, source_type: security_page, title_native: Demandbase Security, title_en: Demandbase Security, source_url: https://www.demandbase.com/security/, source_language: en, summary_native: Demandbase publishes public security information for its B2B go-to-market platform., summary_en: Demandbase publishes public security information for its B2B go-to-market platform., confidence: medium}
+    artifact: {artifact_id: demandbase-security, artifact_type: security_page, region_scope: [global], product_scope: [Demandbase platform], effective_or_published_at: null}
+  - vendor_id: 6sense
+    display_name: 6sense
+    legal_name: 6sense Insights, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [6sense.com]
+    public_entrypoints: [https://6sense.com/privacy-policy/, https://6sense.com/security/]
+    vendor_categories: [account_based_marketing, data_provider, sales_intelligence]
+    notes: Initial public-source catalog record for an account engagement and revenue intelligence platform provider.
+    source: {source_id: 6sense-security, source_type: security_page, title_native: 6sense Security, title_en: 6sense Security, source_url: https://6sense.com/security/, source_language: en, summary_native: 6sense publishes public security information for its revenue intelligence platform., summary_en: 6sense publishes public security information for its revenue intelligence platform., confidence: medium}
+    artifact: {artifact_id: 6sense-security, artifact_type: security_page, region_scope: [global], product_scope: [6sense platform], effective_or_published_at: null}
+  - vendor_id: clearbit-advertising
+    display_name: Clearbit Advertising
+    legal_name: HubSpot, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [clearbit.com]
+    public_entrypoints: [https://clearbit.com/privacy, https://clearbit.com/security]
+    vendor_categories: [data_provider, advertising_technology, data_enrichment]
+    notes: Product-specific record for Clearbit advertising and enrichment use cases where organizations treat it separately from enrichment APIs.
+    source: {source_id: clearbit-advertising-security, source_type: security_page, title_native: Clearbit Security, title_en: Clearbit Security, source_url: https://clearbit.com/security, source_language: en, summary_native: Clearbit publishes public security information for its data platform., summary_en: Clearbit publishes public security information for its data platform., confidence: medium}
+    artifact: {artifact_id: clearbit-advertising-security, artifact_type: security_page, region_scope: [global], product_scope: [Clearbit Advertising], effective_or_published_at: null}
+  - vendor_id: bombora
+    display_name: Bombora
+    legal_name: Bombora, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    official_domains: [bombora.com]
+    public_entrypoints: [https://bombora.com/privacy/, https://bombora.com/security/]
+    vendor_categories: [data_provider, intent_data, advertising_technology]
+    notes: Initial public-source catalog record for a B2B intent data provider.
+    source: {source_id: bombora-security, source_type: security_page, title_native: Bombora Security, title_en: Bombora Security, source_url: https://bombora.com/security/, source_language: en, summary_native: Bombora publishes public security information for its B2B intent data platform., summary_en: Bombora publishes public security information for its B2B intent data platform., confidence: medium}
+    artifact: {artifact_id: bombora-security, artifact_type: security_page, region_scope: [global], product_scope: [Bombora platform], effective_or_published_at: null}
+  - vendor_id: leadfeeder
+    display_name: Leadfeeder
+    legal_name: Dealfront Group GmbH
+    headquarters_country: DE
+    regions_served: [global, EU]
+    official_domains: [leadfeeder.com]
+    public_entrypoints: [https://www.leadfeeder.com/privacy/, https://www.leadfeeder.com/security/]
+    vendor_categories: [sales_intelligence, visitor_identification, data_provider]
+    notes: Initial public-source catalog record for a website visitor identification and sales intelligence platform.
+    source: {source_id: leadfeeder-security, source_type: security_page, title_native: Leadfeeder Security, title_en: Leadfeeder Security, source_url: https://www.leadfeeder.com/security/, source_language: en, summary_native: Leadfeeder publishes public security information for its visitor identification platform., summary_en: Leadfeeder publishes public security information for its visitor identification platform., confidence: medium}
+    artifact: {artifact_id: leadfeeder-security, artifact_type: security_page, region_scope: [global, EU], product_scope: [Leadfeeder platform], effective_or_published_at: null}
