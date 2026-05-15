@@ -144,6 +144,14 @@ def load_official_publisher_exceptions() -> set[tuple[str, str]]:
     return exceptions
 
 
+def load_region_tags() -> set[str]:
+    path = ROOT / "config/region-taxonomy.yaml"
+    config = load_yaml(path) or {}
+    country_markets = config.get("country_markets", {}) or {}
+    regional_markets = config.get("regional_markets", {}) or {}
+    return {str(tag) for tag in [*country_markets.keys(), *regional_markets.keys()]}
+
+
 def source_domain_allowed(vendor_id: str, host: str, official_domains: list[str], exceptions: set[tuple[str, str]]) -> bool:
     normalized = host.lower().removeprefix("www.")
     if domain_matches(normalized, official_domains):
@@ -160,16 +168,28 @@ def validate_access_rights(path: str, record: dict[str, Any]) -> list[str]:
     return []
 
 
+def validate_region_tags(path: str, field: str, values: list[str], allowed_tags: set[str]) -> list[str]:
+    failures: list[str] = []
+    for value in values:
+        if value != value.lower():
+            failures.append(f"{path}: {field} tag {value} must be lowercase")
+        if value not in allowed_tags:
+            failures.append(f"{path}: {field} tag {value} is not defined in config/region-taxonomy.yaml")
+    return failures
+
+
 def validate_quality_gates() -> list[str]:
     failures: list[str] = []
     vendors = {record["vendor_id"]: record for record in records_for("vendor")}
     seen_urls: dict[str, str] = {}
     exceptions = load_official_publisher_exceptions()
+    region_tags = load_region_tags()
 
     for vendor_id, vendor in vendors.items():
         expected_path = f"data/vendors/{vendor_id}/vendor.yaml"
         if vendor["_openva_path"].startswith("data/") and vendor["_openva_path"] != expected_path:
             failures.append(f"{vendor['_openva_path']}: vendor_id does not match canonical path {expected_path}")
+        failures.extend(validate_region_tags(vendor["_openva_path"], "regions_served", vendor.get("regions_served", []), region_tags))
 
     for source in records_for("source"):
         path = source["_openva_path"]
@@ -193,6 +213,7 @@ def validate_quality_gates() -> list[str]:
     for artifact in records_for("artifact"):
         path = artifact["_openva_path"]
         failures.extend(validate_access_rights(path, artifact))
+        failures.extend(validate_region_tags(path, "region_scope", artifact.get("region_scope", []), region_tags))
         failures.extend(f"{path}: canonical_url: {failure}" for failure in validate_url_safety(artifact["canonical_url"]))
         if path.startswith("data/"):
             expected_path = f"data/vendors/{artifact['vendor_id']}/artifacts/{artifact['artifact_id']}.yaml"

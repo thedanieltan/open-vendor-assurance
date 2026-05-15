@@ -43,7 +43,12 @@
     },
     "canonical_url": { "type": "string", "format": "uri" },
     "source_language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
-    "region_scope": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "default": [] },
+    "region_scope": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
+      "uniqueItems": true,
+      "default": []
+    },
     "product_scope": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "default": [] },
     "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
     "rights_class": { "enum": ["metadata_only", "public_link_only", "snapshot_allowed", "snapshot_forbidden", "gated_excluded"] },
