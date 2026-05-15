@@ -1,0 +1,714 @@
+schema_version: 0.1.0
+batch_id: core-infrastructure-saas-expansion
+collected_at: '2026-05-15T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: microsoft-azure
+    display_name: Microsoft Azure
+    legal_name: Microsoft Corporation
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - azure.microsoft.com
+      - microsoft.com
+    public_entrypoints:
+      - https://www.microsoft.com/trust-center
+      - https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA
+    vendor_categories:
+      - cloud_infrastructure
+      - enterprise_software
+      - productivity_software
+    notes: Initial public-source catalog record for a major cloud infrastructure and enterprise software provider.
+    source:
+      source_id: microsoft-azure-trust-center
+      source_type: trust_center
+      title_native: Microsoft Trust Center
+      title_en: Microsoft Trust Center
+      source_url: https://www.microsoft.com/trust-center
+      source_language: en
+      summary_native: Microsoft publishes a public trust center describing security, privacy, compliance, and transparency resources.
+      summary_en: Microsoft publishes a public trust center describing security, privacy, compliance, and transparency resources.
+      confidence: high
+    artifact:
+      artifact_id: microsoft-azure-trust-center
+      artifact_type: trust_center
+      region_scope:
+        - global
+      product_scope:
+        - Microsoft Azure
+        - Microsoft cloud services
+      effective_or_published_at: null
+
+  - vendor_id: oracle-cloud
+    display_name: Oracle Cloud Infrastructure
+    legal_name: Oracle Corporation
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - oracle.com
+    public_entrypoints:
+      - https://www.oracle.com/corporate/security-practices/
+      - https://www.oracle.com/legal/privacy/services-privacy-policy.html
+    vendor_categories:
+      - cloud_infrastructure
+      - enterprise_software
+      - database
+    notes: Initial public-source catalog record for a major cloud infrastructure, database, and enterprise software provider.
+    source:
+      source_id: oracle-cloud-security-practices
+      source_type: security_page
+      title_native: Oracle Corporate Security Practices
+      title_en: Oracle Corporate Security Practices
+      source_url: https://www.oracle.com/corporate/security-practices/
+      source_language: en
+      summary_native: Oracle publishes a public page describing corporate security practices for Oracle services and operations.
+      summary_en: Oracle publishes a public page describing corporate security practices for Oracle services and operations.
+      confidence: high
+    artifact:
+      artifact_id: oracle-cloud-security-practices
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Oracle Cloud Infrastructure
+        - Oracle services
+      effective_or_published_at: null
+
+  - vendor_id: ibm-cloud
+    display_name: IBM Cloud
+    legal_name: International Business Machines Corporation
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - ibm.com
+    public_entrypoints:
+      - https://www.ibm.com/cloud/compliance
+      - https://www.ibm.com/privacy
+    vendor_categories:
+      - cloud_infrastructure
+      - enterprise_software
+      - ai_platform
+    notes: Initial public-source catalog record for a major cloud infrastructure and enterprise technology provider.
+    source:
+      source_id: ibm-cloud-compliance
+      source_type: compliance_page
+      title_native: IBM Cloud Compliance
+      title_en: IBM Cloud Compliance
+      source_url: https://www.ibm.com/cloud/compliance
+      source_language: en
+      summary_native: IBM publishes a public cloud compliance page describing compliance and assurance resources for IBM Cloud.
+      summary_en: IBM publishes a public cloud compliance page describing compliance and assurance resources for IBM Cloud.
+      confidence: high
+    artifact:
+      artifact_id: ibm-cloud-compliance
+      artifact_type: compliance_page
+      region_scope:
+        - global
+      product_scope:
+        - IBM Cloud
+      effective_or_published_at: null
+
+  - vendor_id: digitalocean
+    display_name: DigitalOcean
+    legal_name: DigitalOcean, LLC
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - digitalocean.com
+    public_entrypoints:
+      - https://www.digitalocean.com/trust
+      - https://www.digitalocean.com/legal
+    vendor_categories:
+      - cloud_infrastructure
+      - developer_platform
+      - hosting
+    notes: Initial public-source catalog record for a cloud infrastructure and developer hosting provider.
+    source:
+      source_id: digitalocean-trust
+      source_type: trust_center
+      title_native: DigitalOcean Trust Center
+      title_en: DigitalOcean Trust Center
+      source_url: https://www.digitalocean.com/trust
+      source_language: en
+      summary_native: DigitalOcean publishes a public trust page for security, privacy, and compliance resources.
+      summary_en: DigitalOcean publishes a public trust page for security, privacy, and compliance resources.
+      confidence: high
+    artifact:
+      artifact_id: digitalocean-trust
+      artifact_type: trust_center
+      region_scope:
+        - global
+      product_scope:
+        - DigitalOcean cloud services
+      effective_or_published_at: null
+
+  - vendor_id: akamai
+    display_name: Akamai
+    legal_name: Akamai Technologies, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - akamai.com
+    public_entrypoints:
+      - https://www.akamai.com/legal/privacy-and-policies
+      - https://www.akamai.com/site/en/documents/akamai/akamai-information-security-management-system.pdf
+    vendor_categories:
+      - network_infrastructure
+      - security
+      - cloud_infrastructure
+    notes: Initial public-source catalog record for a major content delivery, edge, cloud, and security provider.
+    source:
+      source_id: akamai-privacy-policies
+      source_type: privacy_notice
+      title_native: Akamai Privacy and Policies
+      title_en: Akamai Privacy and Policies
+      source_url: https://www.akamai.com/legal/privacy-and-policies
+      source_language: en
+      summary_native: Akamai publishes public privacy and policy resources related to its services.
+      summary_en: Akamai publishes public privacy and policy resources related to its services.
+      confidence: medium
+    artifact:
+      artifact_id: akamai-privacy-policies
+      artifact_type: privacy_notice
+      region_scope:
+        - global
+      product_scope:
+        - Akamai services
+      effective_or_published_at: null
+
+  - vendor_id: fastly
+    display_name: Fastly
+    legal_name: Fastly, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - fastly.com
+    public_entrypoints:
+      - https://www.fastly.com/security
+      - https://www.fastly.com/privacy
+    vendor_categories:
+      - network_infrastructure
+      - security
+      - edge_cloud
+    notes: Initial public-source catalog record for an edge cloud, CDN, and security services provider.
+    source:
+      source_id: fastly-security
+      source_type: security_page
+      title_native: Fastly Security
+      title_en: Fastly Security
+      source_url: https://www.fastly.com/security
+      source_language: en
+      summary_native: Fastly publishes a public security page describing security resources and practices.
+      summary_en: Fastly publishes a public security page describing security resources and practices.
+      confidence: high
+    artifact:
+      artifact_id: fastly-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Fastly services
+      effective_or_published_at: null
+
+  - vendor_id: backblaze
+    display_name: Backblaze
+    legal_name: Backblaze, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - backblaze.com
+    public_entrypoints:
+      - https://www.backblaze.com/company/security
+      - https://www.backblaze.com/company/legal/privacy
+    vendor_categories:
+      - cloud_storage
+      - backup
+      - cloud_infrastructure
+    notes: Initial public-source catalog record for a cloud storage and backup services provider.
+    source:
+      source_id: backblaze-security
+      source_type: security_page
+      title_native: Backblaze Security
+      title_en: Backblaze Security
+      source_url: https://www.backblaze.com/company/security
+      source_language: en
+      summary_native: Backblaze publishes a public security page describing security practices for its storage and backup services.
+      summary_en: Backblaze publishes a public security page describing security practices for its storage and backup services.
+      confidence: high
+    artifact:
+      artifact_id: backblaze-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Backblaze B2
+        - Backblaze backup services
+      effective_or_published_at: null
+
+  - vendor_id: wasabi
+    display_name: Wasabi
+    legal_name: Wasabi Technologies LLC
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - wasabi.com
+    public_entrypoints:
+      - https://wasabi.com/security
+      - https://wasabi.com/legal
+    vendor_categories:
+      - cloud_storage
+      - cloud_infrastructure
+    notes: Initial public-source catalog record for a cloud object storage provider.
+    source:
+      source_id: wasabi-security
+      source_type: security_page
+      title_native: Wasabi Security
+      title_en: Wasabi Security
+      source_url: https://wasabi.com/security
+      source_language: en
+      summary_native: Wasabi publishes a public security page describing security resources for its cloud storage services.
+      summary_en: Wasabi publishes a public security page describing security resources for its cloud storage services.
+      confidence: medium
+    artifact:
+      artifact_id: wasabi-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Wasabi cloud storage
+      effective_or_published_at: null
+
+  - vendor_id: docker
+    display_name: Docker
+    legal_name: Docker, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - docker.com
+    public_entrypoints:
+      - https://www.docker.com/legal/security-and-privacy/
+      - https://www.docker.com/legal/data-processing-agreement/
+    vendor_categories:
+      - developer_platform
+      - container_platform
+      - enterprise_software
+    notes: Initial public-source catalog record for a container platform and developer tooling provider.
+    source:
+      source_id: docker-security-privacy
+      source_type: security_page
+      title_native: Docker Security and Privacy
+      title_en: Docker Security and Privacy
+      source_url: https://www.docker.com/legal/security-and-privacy/
+      source_language: en
+      summary_native: Docker publishes public security and privacy information for Docker services.
+      summary_en: Docker publishes public security and privacy information for Docker services.
+      confidence: high
+    artifact:
+      artifact_id: docker-security-privacy
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Docker services
+      effective_or_published_at: null
+
+  - vendor_id: vercel
+    display_name: Vercel
+    legal_name: Vercel Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - vercel.com
+    public_entrypoints:
+      - https://vercel.com/security
+      - https://vercel.com/legal
+    vendor_categories:
+      - developer_platform
+      - hosting
+      - edge_cloud
+    notes: Initial public-source catalog record for a frontend cloud, hosting, and developer platform provider.
+    source:
+      source_id: vercel-security
+      source_type: security_page
+      title_native: Vercel Security
+      title_en: Vercel Security
+      source_url: https://vercel.com/security
+      source_language: en
+      summary_native: Vercel publishes a public security page describing security resources for its platform.
+      summary_en: Vercel publishes a public security page describing security resources for its platform.
+      confidence: high
+    artifact:
+      artifact_id: vercel-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Vercel platform
+      effective_or_published_at: null
+
+  - vendor_id: netlify
+    display_name: Netlify
+    legal_name: Netlify, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - netlify.com
+    public_entrypoints:
+      - https://www.netlify.com/security/
+      - https://www.netlify.com/privacy/
+    vendor_categories:
+      - developer_platform
+      - hosting
+      - edge_cloud
+    notes: Initial public-source catalog record for a frontend cloud, hosting, and developer platform provider.
+    source:
+      source_id: netlify-security
+      source_type: security_page
+      title_native: Netlify Security
+      title_en: Netlify Security
+      source_url: https://www.netlify.com/security/
+      source_language: en
+      summary_native: Netlify publishes a public security page describing security resources for its platform.
+      summary_en: Netlify publishes a public security page describing security resources for its platform.
+      confidence: high
+    artifact:
+      artifact_id: netlify-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Netlify platform
+      effective_or_published_at: null
+
+  - vendor_id: render
+    display_name: Render
+    legal_name: Render Services, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - render.com
+    public_entrypoints:
+      - https://render.com/security
+      - https://render.com/legal/privacy
+    vendor_categories:
+      - developer_platform
+      - hosting
+      - cloud_infrastructure
+    notes: Initial public-source catalog record for a cloud application hosting and developer platform provider.
+    source:
+      source_id: render-security
+      source_type: security_page
+      title_native: Render Security
+      title_en: Render Security
+      source_url: https://render.com/security
+      source_language: en
+      summary_native: Render publishes a public security page describing security practices for its platform.
+      summary_en: Render publishes a public security page describing security practices for its platform.
+      confidence: medium
+    artifact:
+      artifact_id: render-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Render platform
+      effective_or_published_at: null
+
+  - vendor_id: railway
+    display_name: Railway
+    legal_name: Railway Corp.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - railway.com
+    public_entrypoints:
+      - https://railway.com/legal/privacy
+      - https://railway.com/legal
+    vendor_categories:
+      - developer_platform
+      - hosting
+      - cloud_infrastructure
+    notes: Initial public-source catalog record for an application hosting and developer platform provider.
+    source:
+      source_id: railway-privacy
+      source_type: privacy_notice
+      title_native: Railway Privacy Policy
+      title_en: Railway Privacy Policy
+      source_url: https://railway.com/legal/privacy
+      source_language: en
+      summary_native: Railway publishes a public privacy policy for its platform.
+      summary_en: Railway publishes a public privacy policy for its platform.
+      confidence: medium
+    artifact:
+      artifact_id: railway-privacy
+      artifact_type: privacy_notice
+      region_scope:
+        - global
+      product_scope:
+        - Railway platform
+      effective_or_published_at: null
+
+  - vendor_id: heroku
+    display_name: Heroku
+    legal_name: Salesforce, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - heroku.com
+      - salesforce.com
+    public_entrypoints:
+      - https://www.heroku.com/policy/security
+      - https://www.salesforce.com/company/legal/agreements/
+    vendor_categories:
+      - developer_platform
+      - hosting
+      - cloud_infrastructure
+    notes: Initial public-source catalog record for an application platform and hosting provider operated by Salesforce.
+    source:
+      source_id: heroku-security
+      source_type: security_page
+      title_native: Heroku Security Policy
+      title_en: Heroku Security Policy
+      source_url: https://www.heroku.com/policy/security
+      source_language: en
+      summary_native: Heroku publishes a public security policy page for its platform.
+      summary_en: Heroku publishes a public security policy page for its platform.
+      confidence: high
+    artifact:
+      artifact_id: heroku-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Heroku platform
+      effective_or_published_at: null
+
+  - vendor_id: circleci
+    display_name: CircleCI
+    legal_name: Circle Internet Services, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - circleci.com
+    public_entrypoints:
+      - https://circleci.com/security/
+      - https://circleci.com/legal/
+    vendor_categories:
+      - developer_platform
+      - ci_cd
+      - enterprise_software
+    notes: Initial public-source catalog record for a continuous integration and delivery platform provider.
+    source:
+      source_id: circleci-security
+      source_type: security_page
+      title_native: CircleCI Security
+      title_en: CircleCI Security
+      source_url: https://circleci.com/security/
+      source_language: en
+      summary_native: CircleCI publishes a public security page describing security resources for its platform.
+      summary_en: CircleCI publishes a public security page describing security resources for its platform.
+      confidence: high
+    artifact:
+      artifact_id: circleci-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - CircleCI platform
+      effective_or_published_at: null
+
+  - vendor_id: bitbucket
+    display_name: Bitbucket
+    legal_name: Atlassian Pty Ltd
+    headquarters_country: AU
+    regions_served:
+      - global
+    official_domains:
+      - bitbucket.org
+      - atlassian.com
+    public_entrypoints:
+      - https://www.atlassian.com/trust
+      - https://www.atlassian.com/legal/data-processing-addendum
+    vendor_categories:
+      - developer_platform
+      - source_code_management
+      - enterprise_software
+    notes: Initial public-source catalog record for Atlassian's source code management and developer collaboration platform.
+    source:
+      source_id: bitbucket-atlassian-trust
+      source_type: trust_center
+      title_native: Atlassian Trust Center
+      title_en: Atlassian Trust Center
+      source_url: https://www.atlassian.com/trust
+      source_language: en
+      summary_native: Atlassian publishes a public trust center that covers security, privacy, and compliance resources for Atlassian products including Bitbucket.
+      summary_en: Atlassian publishes a public trust center that covers security, privacy, and compliance resources for Atlassian products including Bitbucket.
+      confidence: high
+    artifact:
+      artifact_id: bitbucket-atlassian-trust
+      artifact_type: trust_center
+      region_scope:
+        - global
+      product_scope:
+        - Bitbucket
+        - Atlassian cloud products
+      effective_or_published_at: null
+
+  - vendor_id: postman
+    display_name: Postman
+    legal_name: Postman, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - postman.com
+    public_entrypoints:
+      - https://www.postman.com/security/
+      - https://www.postman.com/legal/privacy-policy/
+    vendor_categories:
+      - developer_platform
+      - api_platform
+      - enterprise_software
+    notes: Initial public-source catalog record for an API collaboration and developer platform provider.
+    source:
+      source_id: postman-security
+      source_type: security_page
+      title_native: Postman Security
+      title_en: Postman Security
+      source_url: https://www.postman.com/security/
+      source_language: en
+      summary_native: Postman publishes a public security page describing security resources for its API platform.
+      summary_en: Postman publishes a public security page describing security resources for its API platform.
+      confidence: high
+    artifact:
+      artifact_id: postman-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Postman platform
+      effective_or_published_at: null
+
+  - vendor_id: sentry
+    display_name: Sentry
+    legal_name: Functional Software, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - sentry.io
+    public_entrypoints:
+      - https://sentry.io/security/
+      - https://sentry.io/legal/dpa/
+    vendor_categories:
+      - developer_platform
+      - observability
+      - error_monitoring
+    notes: Initial public-source catalog record for an application monitoring and error tracking platform provider.
+    source:
+      source_id: sentry-security
+      source_type: security_page
+      title_native: Sentry Security
+      title_en: Sentry Security
+      source_url: https://sentry.io/security/
+      source_language: en
+      summary_native: Sentry publishes a public security page describing security resources for its platform.
+      summary_en: Sentry publishes a public security page describing security resources for its platform.
+      confidence: high
+    artifact:
+      artifact_id: sentry-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - Sentry platform
+      effective_or_published_at: null
+
+  - vendor_id: new-relic
+    display_name: New Relic
+    legal_name: New Relic, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - newrelic.com
+    public_entrypoints:
+      - https://newrelic.com/security
+      - https://newrelic.com/termsandconditions
+    vendor_categories:
+      - observability
+      - monitoring
+      - enterprise_software
+    notes: Initial public-source catalog record for an observability and application performance monitoring provider.
+    source:
+      source_id: new-relic-security
+      source_type: security_page
+      title_native: New Relic Security
+      title_en: New Relic Security
+      source_url: https://newrelic.com/security
+      source_language: en
+      summary_native: New Relic publishes a public security page describing security resources for its observability platform.
+      summary_en: New Relic publishes a public security page describing security resources for its observability platform.
+      confidence: high
+    artifact:
+      artifact_id: new-relic-security
+      artifact_type: security_page
+      region_scope:
+        - global
+      product_scope:
+        - New Relic platform
+      effective_or_published_at: null
+
+  - vendor_id: elastic
+    display_name: Elastic
+    legal_name: Elasticsearch B.V.
+    headquarters_country: NL
+    regions_served:
+      - global
+      - EU
+    official_domains:
+      - elastic.co
+    public_entrypoints:
+      - https://www.elastic.co/trust
+      - https://www.elastic.co/legal
+    vendor_categories:
+      - search
+      - observability
+      - security
+      - enterprise_software
+    notes: Initial public-source catalog record for a search, observability, and security software provider.
+    source:
+      source_id: elastic-trust
+      source_type: trust_center
+      title_native: Elastic Trust Center
+      title_en: Elastic Trust Center
+      source_url: https://www.elastic.co/trust
+      source_language: en
+      summary_native: Elastic publishes a public trust center describing security, privacy, and compliance resources for its platform.
+      summary_en: Elastic publishes a public trust center describing security, privacy, and compliance resources for its platform.
+      confidence: high
+    artifact:
+      artifact_id: elastic-trust
+      artifact_type: trust_center
+      region_scope:
+        - global
+        - EU
+      product_scope:
+        - Elastic Cloud
+        - Elastic platform
+      effective_or_published_at: null
