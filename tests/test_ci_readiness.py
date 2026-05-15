@@ -50,12 +50,39 @@ def test_observation_dry_run_is_manual_only_and_read_only():
     assert set(triggers.keys()) == {"workflow_dispatch"}
 
 
-def test_no_workflow_requests_write_permissions():
+def test_no_workflow_requests_write_permissions_except_manual_pr_creator():
+    allowed_write_workflows = {"catalog-agent-pr.yml"}
+
     for path in WORKFLOW_DIR.glob("*.yml"):
         workflow = yaml.safe_load(path.read_text(encoding="utf-8"))
         permissions = workflow.get("permissions", {})
-        for permission, value in permissions.items():
-            assert value != "write", f"{path}: {permission} requests write permission"
+        triggers = workflow_triggers(workflow)
+        write_permissions = {
+            permission: value for permission, value in permissions.items() if value == "write"
+        }
+
+        if not write_permissions:
+            continue
+
+        assert path.name in allowed_write_workflows, f"{path}: unexpected write permissions"
+        assert set(triggers.keys()) == {"workflow_dispatch"}, f"{path}: write workflow must be manual-only"
+        assert write_permissions == {
+            "contents": "write",
+            "pull-requests": "write",
+        }, f"{path}: write permissions must be limited to PR creation"
+
+
+def test_catalog_agent_pr_workflow_is_manual_pr_only():
+    workflow = load_workflow("catalog-agent-pr.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "catalog-agent-pr.yml").read_text(encoding="utf-8")
+
+    assert set(triggers.keys()) == {"workflow_dispatch"}
+    assert workflow["permissions"] == {"contents": "write", "pull-requests": "write"}
+    assert "peter-evans/create-pull-request" in text
+    assert "branch_name must start with agent-" in text
+    assert "pr_title must start with Catalog:" in text
+    assert "This workflow creates a pull request only. It does not merge catalog changes." in text
 
 
 def test_ci_policy_documents_required_checks_and_branch_protection():
