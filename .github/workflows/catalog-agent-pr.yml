@@ -1,0 +1,88 @@
+name: catalog agent PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_path:
+        description: "Catalog batch manifest path, for example catalog-batches/apac-saas.yaml"
+        required: true
+        type: string
+      branch_name:
+        description: "Branch name to create or update"
+        required: true
+        type: string
+      pr_title:
+        description: "Pull request title"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: catalog-agent-pr-${{ inputs.branch_name }}
+  cancel-in-progress: false
+
+jobs:
+  propose-catalog-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate workflow inputs
+        run: |
+          case "${{ inputs.manifest_path }}" in
+            catalog-batches/*.yaml) ;;
+            *) echo "manifest_path must be under catalog-batches/ and end with .yaml"; exit 1 ;;
+          esac
+          case "${{ inputs.branch_name }}" in
+            agent-*) ;;
+            *) echo "branch_name must start with agent-"; exit 1 ;;
+          esac
+          case "${{ inputs.pr_title }}" in
+            Catalog:*) ;;
+            *) echo "pr_title must start with Catalog:"; exit 1 ;;
+          esac
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Generate catalog batch
+        run: python -m tools.openva.catalog_batch "${{ inputs.manifest_path }}" --build-indexes
+      - name: Validate catalog and tests
+        run: |
+          python -m tools.openva.validate validate
+          pytest -q
+      - name: Stop if no changes were produced
+        run: |
+          if git diff --quiet; then
+            echo "No catalog changes produced."
+            exit 1
+          fi
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: ${{ inputs.branch_name }}
+          delete-branch: false
+          title: ${{ inputs.pr_title }}
+          commit-message: ${{ inputs.pr_title }}
+          body: |
+            ## Summary
+
+            Agent-generated catalog proposal from `${{ inputs.manifest_path }}`.
+
+            ## Human review checklist
+
+            - [ ] Vendor list is correct.
+            - [ ] Sources are public and authoritative.
+            - [ ] No gated, private, NDA, portal, or customer-specific material was used.
+            - [ ] No raw documents, screenshots, or extracted full text were committed.
+            - [ ] No advisory language was introduced.
+            - [ ] Generated indexes and `openva-pack.json` are included.
+            - [ ] Validation and tests pass.
+
+            This workflow creates a pull request only. It does not merge catalog changes.
+          labels: catalog, agent-generated, needs-human-review

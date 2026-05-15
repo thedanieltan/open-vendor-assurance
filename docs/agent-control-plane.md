@@ -1,6 +1,6 @@
 # Agent Control Plane
 
-OpenVA supports agent-assisted maintenance, but agents operate through bounded, reviewable workflows.
+OpenVA supports agent-assisted maintenance through bounded, reviewable workflows.
 
 The control plane defines what agents may do autonomously, what they may propose through pull requests, and where human review is mandatory.
 
@@ -23,7 +23,7 @@ expand the public vendor catalog through bounded catalog batches
 Allowed outputs:
 
 ```text
-catalog-batches/pXX-{theme}.yaml
+catalog-batches/{theme}.yaml
 data/vendors/**
 indexes/**
 openva-pack.json
@@ -33,7 +33,7 @@ Catalog: PRs
 Required commands:
 
 ```bash
-python -m tools.openva.catalog_batch catalog-batches/pXX-{theme}.yaml --build-indexes
+python -m tools.openva.catalog_batch catalog-batches/{theme}.yaml --build-indexes
 python -m tools.openva.validate validate
 pytest -q
 ```
@@ -125,6 +125,7 @@ URL safety checks
 observation dry-run reports
 coverage statistics
 backlog statistics
+workflow inventory reports
 ```
 
 ### Agent-proposed
@@ -138,6 +139,7 @@ source URL corrections
 coverage/backlog updates
 observation review summaries
 release-readiness findings
+workflow review findings
 ```
 
 ### Human-gated
@@ -159,21 +161,21 @@ repository visibility changes
 
 ## Branch naming
 
-Use agent-owned branch names:
+Use descriptive agent-owned branch names:
 
 ```text
-agent-{agent-name}-{phase}-{theme}
+agent-{agent-name}-{theme}
 ```
 
 Examples:
 
 ```text
-agent-catalog-curator-p40-identity-security
-agent-source-refinement-p41-observation-fixes
-p37-agent-control-plane
+agent-catalog-curator-identity-security
+agent-source-refinement-observation-fixes
+agent-backlog-curator-apac-saas
 ```
 
-Avoid generic names such as:
+Avoid generic or sequence-only names such as:
 
 ```text
 20
@@ -187,17 +189,17 @@ main-work
 Catalog PRs must use:
 
 ```text
-Catalog: PXX add {theme} catalog batch
-Catalog: PXX update {theme} source metadata
+Catalog: add {theme} vendor batch
+Catalog: update {theme} source metadata
 ```
 
 Core PRs should use:
 
 ```text
-PXX: {core change}
+{area}: {core change}
 ```
 
-Do not reuse phase labels already assigned to another agent or lane.
+Do not use internal phase labels in public-facing PR titles, docs, or descriptions.
 
 ## Stop conditions
 
@@ -243,13 +245,14 @@ The source is a public trust-center landing page.
 A low-human-intervention OpenVA loop should run as follows:
 
 ```text
-1. Observation report runs weekly.
+1. Observation report runs on a schedule.
 2. Observation review agent summarizes ambiguous sources.
 3. Source refinement agent proposes source fixes where public alternatives exist.
 4. Catalog curator agent proposes one bounded vendor batch.
 5. CI validates generated files, guardrails, and tests.
 6. Maintainer reviews source authority and merges clean PRs.
 7. Backlog curator updates coverage gaps.
+8. Workflow review confirms automation remains useful and non-duplicative.
 ```
 
 The human role should focus on trust boundaries, not repetitive YAML production.
