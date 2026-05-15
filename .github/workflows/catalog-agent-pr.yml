@@ -3,6 +3,11 @@ name: catalog agent PR
 on:
   workflow_dispatch:
     inputs:
+      source_ref:
+        description: "Branch, tag, or SHA containing the catalog batch manifest"
+        required: true
+        default: "main"
+        type: string
       manifest_path:
         description: "Catalog batch manifest path, for example catalog-batches/apac-saas.yaml"
         required: true
@@ -30,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ inputs.source_ref }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -72,7 +77,7 @@ jobs:
           body: |
             ## Summary
 
-            Agent-generated catalog proposal from `${{ inputs.manifest_path }}`.
+            Agent-generated catalog proposal from `${{ inputs.manifest_path }}` on `${{ inputs.source_ref }}`.
 
             ## Human review checklist
 
