@@ -1,0 +1,25 @@
+schema_version: 0.1.0
+vendor_id: aws
+display_name: AWS
+legal_name: Amazon Web Services, Inc.
+headquarters_country: US
+regions_served:
+  - global
+official_domains:
+  - amazon.com
+  - aws.amazon.com
+  - awsstatic.com
+public_entrypoints:
+  - https://aws.amazon.com/security/
+  - https://aws.amazon.com/compliance/
+vendor_categories:
+  - cloud_infrastructure
+  - developer_platform
+  - database
+  - data_platform
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only reseed record. Metadata references general public AWS assurance materials and does not cover bespoke customer agreements.
