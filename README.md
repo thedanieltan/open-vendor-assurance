@@ -1,12 +1,12 @@
-# open-vendor-assurance
+# Open Vendor Assurance
 
-A public-source-only, metadata-first registry of vendor-published assurance references.
+Open Vendor Assurance (OpenVA) is a public-source-only, metadata-first registry of vendor-published assurance references.
 
-OpenVA is intended to be a public vendor assurance knowledge substrate. It records public-source factual metadata about vendor assurance materials such as data processing addenda, subprocessor lists, trust-center pages, privacy notices, security pages, certification references, KYC/AML statements where public, AI/data terms, and related source references.
+OpenVA records factual metadata about public vendor assurance materials such as data processing addenda, subprocessor lists, trust-center pages, privacy notices, security pages, certification references, public KYC/AML statements, AI/data terms, and related source references.
 
 OpenVA is not a legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice product.
 
-## What OpenVA is
+## Scope
 
 OpenVA is:
 
@@ -18,8 +18,6 @@ OpenVA is:
 - hash-friendly;
 - exportable through universal packs;
 - usable independently of any one runtime or application.
-
-## What OpenVA is not
 
 OpenVA does not:
 
@@ -38,6 +36,8 @@ For contributors and maintainers:
 ```text
 CONTRIBUTING.md
 docs/catalog-agent-protocol.md
+docs/agent-control-plane.md
+docs/human-review-operations.md
 MAINTAINERS.md
 GOVERNANCE.md
 SECURITY.md
@@ -55,7 +55,7 @@ indexes/
 schemas/openva/
 ```
 
-For public launch readiness:
+For public relaunch readiness:
 
 ```text
 docs/public-launch-checklist.md
@@ -63,6 +63,7 @@ docs/roadmap.md
 docs/triage-policy.md
 docs/first-good-issue-policy.md
 DISCLAIMER.md
+LICENSE
 ```
 
 ## Validate the repository
@@ -83,6 +84,22 @@ pytest -q
 python -m tools.openva.conformance fixtures/packs/minimal-valid
 python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation
 ```
+
+## Automation posture
+
+OpenVA uses automation for repeatable checks and catalog expansion assistance, but catalog changes remain review-gated.
+
+Current workflow posture:
+
+```text
+validate.yml                 validates PRs and pushes to main
+catalog-maintenance.yml      scheduled non-mutating maintenance report
+catalog-agent-pr.yml         manual agent-generated catalog PRs for human review
+```
+
+Scheduled maintenance should detect drift and produce artifacts. It should not silently change `main`.
+
+Agent-generated catalog work should enter through pull requests. Human review remains required for source authority, public accessibility, metadata-only compliance, non-advisory wording, and generated pack/index correctness.
 
 ## Architecture stance
 
@@ -155,9 +172,13 @@ docs/versioning-policy.md
 docs/release-policy.md
 ```
 
+## License
+
+OpenVA is free to use under the MIT License. See [LICENSE](LICENSE).
+
 ## Project status
 
-OpenVA is in active pre-public-launch development. The schema, validation tooling, generated indexes, universal pack manifest, observation workflow, conformance fixtures, governance docs, and initial seed catalog are available, but the dataset should not be treated as complete.
+OpenVA is in active pre-public-relaunch development. The schema, validation tooling, generated indexes, universal pack manifest, maintenance workflow, agent PR workflow, conformance fixtures, governance docs, and initial seed catalog are available, but the dataset should not be treated as complete.
 
 ## Disclaimer
 
