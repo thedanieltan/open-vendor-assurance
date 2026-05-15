@@ -1,0 +1,53 @@
+schema_version: 0.1.0
+
+purpose: >-
+  Defines bounded materialization lanes for converting merged catalog-batch
+  manifests into canonical data/vendors records. Lanes are operational groupings
+  only and do not create category entities.
+
+non_advisory: true
+
+lanes:
+  infra-data-ai-devtools:
+    label: Cloud, security, data, AI, and developer infrastructure
+    manifests:
+      - catalog-batches/core-infrastructure-saas-expansion.yaml
+      - catalog-batches/secops-cloud-expansion-1.yaml
+      - catalog-batches/database-infra-expansion-1.yaml
+      - catalog-batches/ai-data-tools-expansion-1.yaml
+      - catalog-batches/devtools-ops-expansion-1.yaml
+      - catalog-batches/storage-backup-expansion-1.yaml
+  payments-kyc-fintech:
+    label: Payments, KYC, fintech, and data enrichment
+    manifests:
+      - catalog-batches/payments-billing-expansion-1.yaml
+      - catalog-batches/kyc-risk-expansion-1.yaml
+      - catalog-batches/data-enrichment-expansion-1.yaml
+      - catalog-batches/finance-procurement-expansion-1.yaml
+  hr-health-education-logistics:
+    label: HR, healthcare, education, logistics, and workforce systems
+    manifests:
+      - catalog-batches/hr-workforce-expansion-1.yaml
+      - catalog-batches/healthcare-saas-expansion-1.yaml
+      - catalog-batches/education-systems-expansion-1.yaml
+      - catalog-batches/logistics-manufacturing-expansion-1.yaml
+  collaboration-commerce-grc:
+    label: Collaboration, commerce, marketing, GRC, content, support, and workflow software
+    manifests:
+      - catalog-batches/project-planning-expansion-1.yaml
+      - catalog-batches/product-research-expansion-1.yaml
+      - catalog-batches/support-tools-expansion-1.yaml
+      - catalog-batches/marketing-engagement-expansion-1.yaml
+      - catalog-batches/grc-privacy-expansion-1.yaml
+      - catalog-batches/trust-automation-expansion-1.yaml
+      - catalog-batches/content-experimentation-expansion-1.yaml
+      - catalog-batches/document-workflows-expansion-1.yaml
+      - catalog-batches/commerce-web-expansion-1.yaml
+      - catalog-batches/dashboards-expansion-1.yaml
+      - catalog-batches/feedback-lms-expansion-1.yaml
+  regional-apac-china:
+    label: APAC, mainland China, and regional platforms
+    manifests:
+      - catalog-batches/apac-saas-expansion-2.yaml
+      - catalog-batches/p29-china-ai-cloud-saas.yaml
+      - catalog-batches/p33-apac-saas.yaml
