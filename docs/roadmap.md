@@ -6,7 +6,7 @@ OpenVA is a public-source-only, metadata-first vendor assurance registry. It is 
 
 ## Current maturity
 
-OpenVA is pre-public-launch infrastructure.
+OpenVA is pre-public-relaunch infrastructure.
 
 Current focus:
 
@@ -14,16 +14,16 @@ Current focus:
 - public-source-only contribution workflow;
 - reproducible generated indexes;
 - export pack contract;
-- observation dry-run quality;
+- scheduled maintenance reports;
 - catalog-agent guardrails;
 - consumer conformance fixtures;
 - public governance readiness.
 
-## Near-term phases
+## Active workstreams
 
-### Governance before public launch
+### Governance and public boundaries
 
-Goal: make contribution boundaries clear before the repository is public.
+Goal: make contribution boundaries clear before the repository is public again.
 
 Includes:
 
@@ -33,7 +33,8 @@ Includes:
 - public launch checklist;
 - label taxonomy;
 - public roadmap;
-- first-good-issue policy.
+- first-good-issue policy;
+- non-advisory disclaimer.
 
 ### Release and versioning discipline
 
@@ -55,11 +56,36 @@ Goal: expand coverage through small metadata-only PRs.
 Rules:
 
 - public sources only;
-- 3-5 vendors per catalog-agent PR;
+- bounded catalog-agent PRs;
 - no gated materials;
 - no raw document mirroring;
 - no advisory language;
 - generated indexes and pack updated before merge.
+
+### Scheduled catalog maintenance
+
+Goal: keep the catalog usable without relying on one-off manual sweeps.
+
+Includes:
+
+- scheduled validation;
+- generated-index drift checks;
+- source-observation reports;
+- source-refinement queues;
+- workflow inventory review;
+- maintainer-facing artifacts rather than automatic writes to `main`.
+
+### Agent-assisted expansion
+
+Goal: let agents expand the vendor catalog while keeping human review at the trust boundary.
+
+Includes:
+
+- bounded catalog-batch manifests;
+- agent-created catalog PRs;
+- generated index and pack updates;
+- public-source checks;
+- maintainer approval before merge.
 
 ### Observation hardening
 
@@ -126,17 +152,19 @@ Not good first issues:
 - vendor-submitted promotional updates;
 - large vendor catalog batches.
 
-## Public launch readiness
+## Public relaunch readiness
 
-Before public launch, maintainers should confirm:
+Before public relaunch, maintainers should confirm:
 
 - README accurately states scope and limitations;
 - CONTRIBUTING and GOVERNANCE are current;
 - SECURITY is current;
+- LICENSE reflects the intended free-use posture;
 - CODEOWNERS covers governance-sensitive paths;
 - issue templates route users correctly;
 - PR templates communicate source and non-advisory checks;
 - validation workflow is green;
-- catalog-agent guard is active;
+- scheduled maintenance workflow is enabled;
+- catalog-agent workflow is manual and review-gated;
 - consumer conformance fixtures pass;
 - open PRs that may confuse launch state are resolved or clearly labelled.
