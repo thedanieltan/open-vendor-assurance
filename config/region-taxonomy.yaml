@@ -1,0 +1,67 @@
+schema_version: 0.1.0
+
+purpose: >-
+  Controlled market-region tags for OpenVA vendor and artifact metadata. Region
+  tags describe broad public-market coverage, not legal advice, data residency,
+  service availability commitments, regulatory status, or procurement fitness.
+
+non_advisory: true
+
+conventions:
+  tag_case: lowercase
+  headquarters_country_case: ISO-3166 alpha-2 uppercase
+  regions_served_case: lowercase controlled tags
+  notes:
+    - Use headquarters_country for the vendor's headquarters country code.
+    - Use regions_served for broad public market coverage tags.
+    - Do not use regions_served as a data-residency, legal entity, or compliance determination field.
+
+country_markets:
+  au:
+    label: Australia
+    iso_country: AU
+  ca:
+    label: Canada
+    iso_country: CA
+  cn:
+    label: Mainland China
+    iso_country: CN
+  hk:
+    label: Hong Kong
+    iso_country: HK
+  in:
+    label: India
+    iso_country: IN
+  jp:
+    label: Japan
+    iso_country: JP
+  kr:
+    label: South Korea
+    iso_country: KR
+  sg:
+    label: Singapore
+    iso_country: SG
+  uk:
+    label: United Kingdom
+    iso_country: GB
+  us:
+    label: United States
+    iso_country: US
+
+regional_markets:
+  global:
+    label: Global
+  apac:
+    label: Asia-Pacific
+  sea:
+    label: Southeast Asia
+  eu:
+    label: European Union
+  eea:
+    label: European Economic Area
+  emea:
+    label: Europe, Middle East, and Africa
+  latam:
+    label: Latin America
+  mena:
+    label: Middle East and North Africa
