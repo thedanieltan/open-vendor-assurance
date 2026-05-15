@@ -1,0 +1,109 @@
+# Manifest retained with generated Cloudflare catalog records for lifecycle materialization review.
+schema_version: 0.1.0
+batch_id: cloudflare-one-vendor
+operation: create
+collected_at: '2026-05-15T00:00:00Z'
+observer: human
+vendors:
+  - vendor_id: cloudflare
+    display_name: Cloudflare
+    legal_name: Cloudflare, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - cloudflare.com
+    public_entrypoints:
+      - https://www.cloudflare.com/trust-hub/
+      - https://www.cloudflare.com/privacypolicy/
+    vendor_categories:
+      - cloud_infrastructure
+      - security
+      - developer_platform
+    notes: Public-source-only catalog record. Metadata references general public Cloudflare assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: cloudflare-dpa
+        source_type: dpa
+        title_native: Cloudflare Customer Data Processing Addendum
+        title_en: Cloudflare Customer Data Processing Addendum
+        source_url: https://www.cloudflare.com/cloudflare-customer-dpa/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Cloudflare customer data processing addendum metadata reference.
+        summary_en: Public Cloudflare customer data processing addendum metadata reference.
+        confidence: medium
+        artifact:
+          artifact_id: cloudflare-dpa
+          artifact_type: dpa
+          region_scope:
+            - global
+          product_scope:
+            - Cloudflare services
+      - source_id: cloudflare-subprocessors
+        source_type: subprocessors_list
+        title_native: Cloudflare Subprocessors
+        title_en: Cloudflare Subprocessors
+        source_url: https://www.cloudflare.com/privacypolicy/subprocessors/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Cloudflare subprocessors metadata reference.
+        summary_en: Public Cloudflare subprocessors metadata reference.
+        confidence: medium
+        artifact:
+          artifact_id: cloudflare-subprocessors
+          artifact_type: subprocessors_list
+          region_scope:
+            - global
+          product_scope:
+            - Cloudflare services
+      - source_id: cloudflare-privacy
+        source_type: privacy_notice
+        title_native: Cloudflare Privacy Policy
+        title_en: Cloudflare Privacy Policy
+        source_url: https://www.cloudflare.com/privacypolicy/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Cloudflare privacy policy metadata reference.
+        summary_en: Public Cloudflare privacy policy metadata reference.
+        confidence: medium
+        artifact:
+          artifact_id: cloudflare-privacy
+          artifact_type: privacy_notice
+          region_scope:
+            - global
+          product_scope:
+            - Cloudflare services
+      - source_id: cloudflare-security
+        source_type: security_page
+        title_native: Cloudflare Trust Hub
+        title_en: Cloudflare Trust Hub
+        source_url: https://www.cloudflare.com/trust-hub/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Cloudflare Trust Hub metadata reference for security and trust information.
+        summary_en: Public Cloudflare Trust Hub metadata reference for security and trust information.
+        confidence: medium
+        artifact:
+          artifact_id: cloudflare-security
+          artifact_type: security_page
+          region_scope:
+            - global
+          product_scope:
+            - Cloudflare services
+      - source_id: cloudflare-compliance
+        source_type: compliance_page
+        title_native: Cloudflare Compliance Resources
+        title_en: Cloudflare Compliance Resources
+        source_url: https://www.cloudflare.com/trust-hub/compliance-resources/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Cloudflare compliance resources metadata reference.
+        summary_en: Public Cloudflare compliance resources metadata reference.
+        confidence: medium
+        artifact:
+          artifact_id: cloudflare-compliance
+          artifact_type: compliance_page
+          region_scope:
+            - global
+          product_scope:
+            - Cloudflare services
