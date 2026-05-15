@@ -81,6 +81,8 @@ def validate_catalog_paths(paths: list[str]) -> list[str]:
 
 def validate_catalog_batch_duplicates(paths: list[str], *, root: Path = ROOT) -> list[str]:
     failures: list[str] = []
+    changed_paths = {normalize_path(path) for path in paths}
+
     for raw_path in paths:
         path = normalize_path(raw_path)
         if not is_catalog_batch_path(path):
@@ -106,7 +108,10 @@ def validate_catalog_batch_duplicates(paths: list[str], *, root: Path = ROOT) ->
             failures.append(f"{path}: {vendor_id}: duplicate vendor_id in batch manifest")
 
         for vendor_id in sorted({vendor_id for vendor_id in vendor_ids if isinstance(vendor_id, str)}):
-            vendor_path = root / "data" / "vendors" / vendor_id / "vendor.yaml"
+            vendor_record_path = f"data/vendors/{vendor_id}/vendor.yaml"
+            if vendor_record_path in changed_paths:
+                continue
+            vendor_path = root / vendor_record_path
             if vendor_path.exists():
                 failures.append(
                     f"{path}: {vendor_id}: vendor_id already exists at {vendor_path.relative_to(root)}"
