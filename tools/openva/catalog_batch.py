@@ -94,7 +94,7 @@ def validate_manifest_rules(manifest: dict[str, Any], *, force: bool) -> list[st
 
 
 def vendor_record(vendor: dict[str, Any], operation: str) -> dict[str, Any]:
-    return {
+    record = {
         "schema_version": SCHEMA_VERSION,
         "vendor_id": vendor["vendor_id"],
         "display_name": vendor["display_name"],
@@ -108,6 +108,10 @@ def vendor_record(vendor: dict[str, Any], operation: str) -> dict[str, Any]:
         "status": vendor.get("status", "deprecated" if operation == "deprecate" else "active"),
         "notes": vendor.get("notes") or f"Public-source catalog record for {vendor['display_name']}.",
     }
+    for field in ("entity_family", "entity_surface", "related_vendor_ids", "source_authority_language"):
+        if field in vendor:
+            record[field] = vendor[field]
+    return record
 
 
 def source_record(vendor: dict[str, Any], source: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
