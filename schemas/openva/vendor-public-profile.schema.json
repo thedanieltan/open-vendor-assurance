@@ -21,7 +21,7 @@
     "headquarters_country": { "type": "string", "pattern": "^[A-Z]{2}$" },
     "regions_served": {
       "type": "array",
-      "items": { "type": "string", "minLength": 2, "maxLength": 40 },
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,39}$" },
       "uniqueItems": true,
       "default": []
     },
