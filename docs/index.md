@@ -43,6 +43,7 @@ docs/agent-runbook.md
 ```text
 docs/catalog-agent-protocol.md
 docs/catalog-batch-generator.md
+docs/batch-materialization-workflow.md
 docs/breadth-depth-operating-model.md
 docs/category-coverage-program.md
 docs/category-lane-execution-backlog.md
