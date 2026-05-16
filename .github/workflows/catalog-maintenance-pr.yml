@@ -96,39 +96,53 @@ jobs:
             echo "No catalog maintenance changes produced."
             exit 1
           fi
-      - name: Build cleanup proposal for PR body
+      - name: Build cleanup proposal artifact
         run: |
           python -m tools.openva.cleanup_proposals build \
             --promotion-plan promotion-plan.json \
             --json-output cleanup-proposal.json \
             --markdown-output cleanup-proposal.md
-      - name: Prepare PR body
+      - name: Prepare compact PR body
         run: |
-          cat > catalog-maintenance-pr-body.md <<'MARKDOWN'
-          ## Summary
+          python - <<'PY'
+          import json
+          from pathlib import Path
 
-          Applies reviewed OpenVA source maintenance cleanup generated from the maintenance pipeline.
-
-          This PR is non-advisory. It does not make legal, procurement, compliance, risk, vendor approval, or vendor recommendation conclusions.
-
-          ## What changed
-
-          - Removes canonical source records selected by `promotion-plan.json` cleanup actions.
-          - Removes dependent artifact records and change records referencing those sources.
-          - Adds unavailable-source ledger entries for cleaned-up source types.
-          - Rebuilds indexes and `openva-pack.json`.
-
-          ## Guardrails
-
-          - Generated from `python -m tools.openva.maintenance_actions apply`.
-          - Does not promote candidate sources.
-          - Does not mirror raw documents.
-          - Does not merge automatically.
-
-          ## Cleanup proposal
-
-          MARKDOWN
-          cat cleanup-proposal.md >> catalog-maintenance-pr-body.md
+          maintenance = json.load(open('maintenance-action-report.json', encoding='utf-8'))
+          proposal = json.load(open('cleanup-proposal.json', encoding='utf-8'))
+          lines = [
+              '## Summary',
+              '',
+              'Applies reviewed OpenVA source maintenance cleanup generated from the maintenance pipeline.',
+              '',
+              'This PR is non-advisory. It does not make legal, procurement, compliance, risk, vendor approval, or vendor recommendation conclusions.',
+              '',
+              '## What changed',
+              '',
+              '- Removes canonical source records selected by `promotion-plan.json` cleanup actions.',
+              '- Removes dependent artifact records and change records referencing those sources.',
+              '- Adds unavailable-source ledger entries for cleaned-up source types.',
+              '- Rebuilds indexes and `openva-pack.json`.',
+              '',
+              '## Counts',
+              '',
+              f"- Cleanup actions selected: `{maintenance['summary']['cleanup_actions_selected']}`",
+              f"- File actions applied: `{maintenance['summary']['file_actions_applied']}`",
+              f"- Skipped actions: `{maintenance['summary']['skipped_actions']}`",
+              f"- Blocking cleanup actions: `{proposal['summary']['blocking_cleanup_actions']}`",
+              f"- Promotable candidate actions, not applied: `{proposal['summary']['promotable_candidate_actions']}`",
+              '',
+              '## Guardrails',
+              '',
+              '- Generated from `python -m tools.openva.maintenance_actions apply`.',
+              '- Does not promote candidate sources.',
+              '- Does not mirror raw documents.',
+              '- Does not merge automatically.',
+              '- Full cleanup proposal is available in the workflow artifact `cleanup-proposal.md`.',
+              '',
+          ]
+          Path('catalog-maintenance-pr-body.md').write_text('\n'.join(lines), encoding='utf-8')
+          PY
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
         with:
