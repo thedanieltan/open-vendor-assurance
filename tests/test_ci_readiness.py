@@ -72,6 +72,10 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "triggers": {"workflow_dispatch", "schedule"},
             "permissions": {"contents": "write", "pull-requests": "write"},
         },
+        "candidate-promotion-pr.yml": {
+            "triggers": {"workflow_dispatch"},
+            "permissions": {"contents": "write", "pull-requests": "write"},
+        },
         "cleanup-proposal-issue.yml": {
             "triggers": {"workflow_dispatch", "schedule"},
             "permissions": {"contents": "read", "issues": "write"},
