@@ -1,0 +1,974 @@
+schema_version: 0.1.0
+batch_id: cloud-platform-batch-2
+operation: create
+collected_at: '2026-05-16T00:00:00Z'
+observer: human
+vendors:
+- vendor_id: oracle-cloud
+  display_name: Oracle Cloud
+  legal_name: Oracle Corporation
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - oracle.com
+  public_entrypoints:
+  - https://www.oracle.com/cloud/
+  - https://www.oracle.com/corporate/cloud-compliance/
+  vendor_categories:
+  - cloud_infrastructure
+  - database
+  - developer_platform
+  - data_platform
+  notes: Public-source-only catalog record. Metadata references general public Oracle
+    Cloud assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: oracle-cloud-dpa
+    source_type: dpa
+    title_native: Oracle Data Processing Agreement
+    title_en: Oracle Data Processing Agreement
+    source_url: https://www.oracle.com/a/ocom/docs/corporate/data-processing-agreement-062619.pdf
+    source_language: en
+    access_class: public_pdf
+    summary_native: Public Oracle data processing agreement metadata reference.
+    summary_en: Public Oracle data processing agreement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: oracle-cloud-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Oracle Cloud
+  - source_id: oracle-cloud-subprocessors
+    source_type: subprocessors_list
+    title_native: Oracle Cloud Subprocessors
+    title_en: Oracle Cloud Subprocessors
+    source_url: https://www.oracle.com/corporate/cloud-compliance/subprocessors/
+    source_language: en
+    summary_native: Public Oracle Cloud subprocessors metadata reference.
+    summary_en: Public Oracle Cloud subprocessors metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: oracle-cloud-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Oracle Cloud
+  - source_id: oracle-cloud-privacy
+    source_type: privacy_notice
+    title_native: Oracle Privacy Policy
+    title_en: Oracle Privacy Policy
+    source_url: https://www.oracle.com/legal/privacy/
+    source_language: en
+    summary_native: Public Oracle privacy policy metadata reference.
+    summary_en: Public Oracle privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: oracle-cloud-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Oracle Cloud
+  - source_id: oracle-cloud-security
+    source_type: security_page
+    title_native: Oracle Corporate Security Practices
+    title_en: Oracle Corporate Security Practices
+    source_url: https://www.oracle.com/corporate/security-practices/
+    source_language: en
+    summary_native: Public Oracle security practices metadata reference.
+    summary_en: Public Oracle security practices metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: oracle-cloud-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Oracle Cloud
+  - source_id: oracle-cloud-compliance
+    source_type: compliance_page
+    title_native: Oracle Cloud Compliance
+    title_en: Oracle Cloud Compliance
+    source_url: https://www.oracle.com/corporate/cloud-compliance/
+    source_language: en
+    summary_native: Public Oracle Cloud compliance metadata reference.
+    summary_en: Public Oracle Cloud compliance metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: oracle-cloud-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Oracle Cloud
+- vendor_id: ibm-cloud
+  display_name: IBM Cloud
+  legal_name: International Business Machines Corporation
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - ibm.com
+  public_entrypoints:
+  - https://www.ibm.com/cloud
+  - https://www.ibm.com/cloud/compliance
+  vendor_categories:
+  - cloud_infrastructure
+  - database
+  - developer_platform
+  - data_platform
+  - ai_platform
+  notes: Public-source-only catalog record. Metadata references general public IBM
+    Cloud assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: ibm-cloud-dpa
+    source_type: dpa
+    title_native: IBM Data Processing Addendum
+    title_en: IBM Data Processing Addendum
+    source_url: https://www.ibm.com/support/customer/csol/terms/?id=i126-7807
+    source_language: en
+    summary_native: Public IBM data processing addendum metadata reference.
+    summary_en: Public IBM data processing addendum metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: ibm-cloud-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - IBM Cloud
+  - source_id: ibm-cloud-subprocessors
+    source_type: subprocessors_list
+    title_native: IBM Subprocessors
+    title_en: IBM Subprocessors
+    source_url: https://www.ibm.com/support/customer/csol/terms/subprocessors
+    source_language: en
+    summary_native: Public IBM subprocessors metadata reference.
+    summary_en: Public IBM subprocessors metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: ibm-cloud-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - IBM Cloud
+  - source_id: ibm-cloud-privacy
+    source_type: privacy_notice
+    title_native: IBM Privacy Statement
+    title_en: IBM Privacy Statement
+    source_url: https://www.ibm.com/privacy
+    source_language: en
+    summary_native: Public IBM privacy statement metadata reference.
+    summary_en: Public IBM privacy statement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: ibm-cloud-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - IBM Cloud
+  - source_id: ibm-cloud-security
+    source_type: security_page
+    title_native: IBM Cloud Security
+    title_en: IBM Cloud Security
+    source_url: https://www.ibm.com/cloud/security
+    source_language: en
+    summary_native: Public IBM Cloud security metadata reference.
+    summary_en: Public IBM Cloud security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: ibm-cloud-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - IBM Cloud
+  - source_id: ibm-cloud-compliance
+    source_type: compliance_page
+    title_native: IBM Cloud Compliance
+    title_en: IBM Cloud Compliance
+    source_url: https://www.ibm.com/cloud/compliance
+    source_language: en
+    summary_native: Public IBM Cloud compliance metadata reference.
+    summary_en: Public IBM Cloud compliance metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: ibm-cloud-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - IBM Cloud
+- vendor_id: digitalocean
+  display_name: DigitalOcean
+  legal_name: DigitalOcean, LLC
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - digitalocean.com
+  public_entrypoints:
+  - https://www.digitalocean.com/trust
+  - https://www.digitalocean.com/legal
+  vendor_categories:
+  - cloud_infrastructure
+  - developer_platform
+  - database
+  notes: Public-source-only catalog record. Metadata references general public DigitalOcean
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: digitalocean-dpa
+    source_type: dpa
+    title_native: DigitalOcean Data Processing Agreement
+    title_en: DigitalOcean Data Processing Agreement
+    source_url: https://www.digitalocean.com/legal/data-processing-agreement
+    source_language: en
+    summary_native: Public DigitalOcean data processing agreement metadata reference.
+    summary_en: Public DigitalOcean data processing agreement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: digitalocean-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - DigitalOcean services
+  - source_id: digitalocean-subprocessors
+    source_type: subprocessors_list
+    title_native: DigitalOcean Subprocessors
+    title_en: DigitalOcean Subprocessors
+    source_url: https://www.digitalocean.com/legal/subprocessors
+    source_language: en
+    summary_native: Public DigitalOcean subprocessors metadata reference.
+    summary_en: Public DigitalOcean subprocessors metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: digitalocean-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - DigitalOcean services
+  - source_id: digitalocean-privacy
+    source_type: privacy_notice
+    title_native: DigitalOcean Privacy Policy
+    title_en: DigitalOcean Privacy Policy
+    source_url: https://www.digitalocean.com/legal/privacy-policy
+    source_language: en
+    summary_native: Public DigitalOcean privacy policy metadata reference.
+    summary_en: Public DigitalOcean privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: digitalocean-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - DigitalOcean services
+  - source_id: digitalocean-security
+    source_type: security_page
+    title_native: DigitalOcean Trust
+    title_en: DigitalOcean Trust
+    source_url: https://www.digitalocean.com/trust
+    source_language: en
+    summary_native: Public DigitalOcean trust and security metadata reference.
+    summary_en: Public DigitalOcean trust and security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: digitalocean-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - DigitalOcean services
+  - source_id: digitalocean-compliance
+    source_type: compliance_page
+    title_native: DigitalOcean Compliance
+    title_en: DigitalOcean Compliance
+    source_url: https://www.digitalocean.com/trust/certification-reports
+    source_language: en
+    summary_native: Public DigitalOcean certification and reports metadata reference.
+    summary_en: Public DigitalOcean certification and reports metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: digitalocean-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - DigitalOcean services
+- vendor_id: alibaba-cloud-international
+  display_name: Alibaba Cloud International
+  legal_name: Alibaba Cloud (Singapore) Private Limited
+  headquarters_country: SG
+  regions_served:
+  - global
+  - apac
+  entity_family: alibaba-cloud
+  entity_surface: international
+  related_vendor_ids:
+  - aliyun
+  source_authority_language: en
+  official_domains:
+  - alibabacloud.com
+  public_entrypoints:
+  - https://www.alibabacloud.com/trust-center
+  - https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-privacy-policy
+  vendor_categories:
+  - cloud_infrastructure
+  - database
+  - developer_platform
+  - data_platform
+  - ai_platform
+  notes: International-facing Alibaba Cloud public-source record. Related mainland/native
+    record may exist separately and should not be merged with this record.
+  sources:
+  - source_id: alibaba-cloud-international-dpa
+    source_type: dpa
+    title_native: Alibaba Cloud Data Processing Agreement
+    title_en: Alibaba Cloud Data Processing Agreement
+    source_url: https://www.alibabacloud.com/help/en/legal/latest/data-processing-agreement
+    source_language: en
+    summary_native: Public Alibaba Cloud international data processing agreement metadata
+      reference.
+    summary_en: Public Alibaba Cloud international data processing agreement metadata
+      reference.
+    confidence: medium
+    artifact:
+      artifact_id: alibaba-cloud-international-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Alibaba Cloud International
+  - source_id: alibaba-cloud-international-subprocessors
+    source_type: subprocessors_list
+    title_native: Alibaba Cloud Subprocessors
+    title_en: Alibaba Cloud Subprocessors
+    source_url: https://www.alibabacloud.com/help/en/legal/latest/list-of-sub-processors
+    source_language: en
+    summary_native: Public Alibaba Cloud international subprocessors metadata reference.
+    summary_en: Public Alibaba Cloud international subprocessors metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: alibaba-cloud-international-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Alibaba Cloud International
+  - source_id: alibaba-cloud-international-privacy
+    source_type: privacy_notice
+    title_native: Alibaba Cloud International Website Privacy Policy
+    title_en: Alibaba Cloud International Website Privacy Policy
+    source_url: https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-privacy-policy
+    source_language: en
+    summary_native: Public Alibaba Cloud international privacy policy metadata reference.
+    summary_en: Public Alibaba Cloud international privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: alibaba-cloud-international-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Alibaba Cloud International
+  - source_id: alibaba-cloud-international-security
+    source_type: security_page
+    title_native: Alibaba Cloud Trust Center
+    title_en: Alibaba Cloud Trust Center
+    source_url: https://www.alibabacloud.com/trust-center
+    source_language: en
+    summary_native: Public Alibaba Cloud international trust center metadata reference.
+    summary_en: Public Alibaba Cloud international trust center metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: alibaba-cloud-international-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Alibaba Cloud International
+  - source_id: alibaba-cloud-international-compliance
+    source_type: compliance_page
+    title_native: Alibaba Cloud Compliance
+    title_en: Alibaba Cloud Compliance
+    source_url: https://www.alibabacloud.com/trust-center/compliance
+    source_language: en
+    summary_native: Public Alibaba Cloud international compliance metadata reference.
+    summary_en: Public Alibaba Cloud international compliance metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: alibaba-cloud-international-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Alibaba Cloud International
+- vendor_id: aliyun
+  display_name: 阿里云
+  legal_name: 阿里云计算有限公司
+  headquarters_country: CN
+  regions_served:
+  - cn
+  entity_family: alibaba-cloud
+  entity_surface: mainland_china
+  related_vendor_ids:
+  - alibaba-cloud-international
+  source_authority_language: zh
+  official_domains:
+  - aliyun.com
+  public_entrypoints:
+  - https://www.aliyun.com/
+  - https://terms.aliyun.com/
+  vendor_categories:
+  - cloud_infrastructure
+  - database
+  - developer_platform
+  - data_platform
+  - ai_platform
+  notes: Mainland China/native 阿里云 public-source record. Related international Alibaba
+    Cloud record may exist separately and should not be merged with this record.
+  sources:
+  - source_id: aliyun-dpa
+    source_type: dpa
+    title_native: 阿里云数据处理相关条款
+    title_en: Aliyun data processing terms reference
+    source_url: https://terms.aliyun.com/legal-agreement/terms/suit_bu1_ali_cloud/suit_bu1_ali_cloud202109221836_54211.html
+    source_language: zh
+    summary_native: 阿里云公开数据处理相关条款元数据引用。
+    summary_en: Public Aliyun data processing terms metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: aliyun-dpa
+      artifact_type: dpa
+      region_scope:
+      - cn
+      product_scope:
+      - 阿里云
+  - source_id: aliyun-subprocessors
+    source_type: subprocessors_list
+    title_native: 阿里云分包商相关公开资料
+    title_en: Aliyun subprocessors public reference
+    source_url: https://terms.aliyun.com/
+    source_language: zh
+    summary_native: 阿里云公开分包商或相关条款入口元数据引用。
+    summary_en: Public Aliyun subprocessors or related terms entrypoint metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: aliyun-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - cn
+      product_scope:
+      - 阿里云
+  - source_id: aliyun-privacy
+    source_type: privacy_notice
+    title_native: 阿里云隐私政策
+    title_en: Aliyun Privacy Policy
+    source_url: https://terms.aliyun.com/legal-agreement/terms/suit_bu1_ali_cloud/suit_bu1_ali_cloud201902141711_54837.html
+    source_language: zh
+    summary_native: 阿里云公开隐私政策元数据引用。
+    summary_en: Public Aliyun privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: aliyun-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - cn
+      product_scope:
+      - 阿里云
+  - source_id: aliyun-security
+    source_type: security_page
+    title_native: 阿里云安全
+    title_en: Aliyun Security
+    source_url: https://www.aliyun.com/product/security
+    source_language: zh
+    summary_native: 阿里云公开安全产品与安全信息页面元数据引用。
+    summary_en: Public Aliyun security page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: aliyun-security
+      artifact_type: security_page
+      region_scope:
+      - cn
+      product_scope:
+      - 阿里云
+  - source_id: aliyun-compliance
+    source_type: compliance_page
+    title_native: 阿里云信任中心
+    title_en: Aliyun Trust Center
+    source_url: https://www.aliyun.com/trust-center
+    source_language: zh
+    summary_native: 阿里云公开信任中心或合规信息元数据引用。
+    summary_en: Public Aliyun trust or compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: aliyun-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - cn
+      product_scope:
+      - 阿里云
+- vendor_id: tencent-cloud-international
+  display_name: Tencent Cloud International
+  legal_name: Tencent Cloud International Pte. Ltd.
+  headquarters_country: SG
+  regions_served:
+  - global
+  - apac
+  entity_family: tencent-cloud
+  entity_surface: international
+  related_vendor_ids:
+  - tencent-cloud-cn
+  source_authority_language: en
+  official_domains:
+  - tencentcloud.com
+  public_entrypoints:
+  - https://www.tencentcloud.com/
+  - https://www.tencentcloud.com/document/product/301
+  vendor_categories:
+  - cloud_infrastructure
+  - database
+  - developer_platform
+  - data_platform
+  - ai_platform
+  notes: International-facing Tencent Cloud public-source record. Related mainland/native
+    Tencent Cloud record may exist separately and should not be merged with this record.
+  sources:
+  - source_id: tencent-cloud-international-dpa
+    source_type: dpa
+    title_native: Tencent Cloud Data Processing and Security Agreement
+    title_en: Tencent Cloud Data Processing and Security Agreement
+    source_url: https://www.tencentcloud.com/document/product/301/17345
+    source_language: en
+    summary_native: Public Tencent Cloud international data processing/security agreement
+      metadata reference.
+    summary_en: Public Tencent Cloud international data processing/security agreement
+      metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: tencent-cloud-international-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Tencent Cloud International
+  - source_id: tencent-cloud-international-subprocessors
+    source_type: subprocessors_list
+    title_native: Tencent Cloud Subprocessors
+    title_en: Tencent Cloud Subprocessors
+    source_url: https://www.tencentcloud.com/document/product/301/17347
+    source_language: en
+    summary_native: Public Tencent Cloud international subprocessors metadata reference.
+    summary_en: Public Tencent Cloud international subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: tencent-cloud-international-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Tencent Cloud International
+  - source_id: tencent-cloud-international-privacy
+    source_type: privacy_notice
+    title_native: Tencent Cloud Privacy Policy
+    title_en: Tencent Cloud Privacy Policy
+    source_url: https://www.tencentcloud.com/document/product/301/11470
+    source_language: en
+    summary_native: Public Tencent Cloud international privacy/legal metadata reference.
+    summary_en: Public Tencent Cloud international privacy/legal metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: tencent-cloud-international-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Tencent Cloud International
+  - source_id: tencent-cloud-international-security
+    source_type: security_page
+    title_native: Tencent Cloud Security
+    title_en: Tencent Cloud Security
+    source_url: https://www.tencentcloud.com/solutions/security
+    source_language: en
+    summary_native: Public Tencent Cloud international security metadata reference.
+    summary_en: Public Tencent Cloud international security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: tencent-cloud-international-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Tencent Cloud International
+  - source_id: tencent-cloud-international-compliance
+    source_type: compliance_page
+    title_native: Tencent Cloud Compliance
+    title_en: Tencent Cloud Compliance
+    source_url: https://www.tencentcloud.com/document/product/301
+    source_language: en
+    summary_native: Public Tencent Cloud international compliance/legal documentation
+      metadata reference.
+    summary_en: Public Tencent Cloud international compliance/legal documentation
+      metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: tencent-cloud-international-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Tencent Cloud International
+- vendor_id: tencent-cloud-cn
+  display_name: 腾讯云
+  legal_name: 腾讯云计算（北京）有限责任公司
+  headquarters_country: CN
+  regions_served:
+  - cn
+  entity_family: tencent-cloud
+  entity_surface: mainland_china
+  related_vendor_ids:
+  - tencent-cloud-international
+  source_authority_language: zh
+  official_domains:
+  - cloud.tencent.com
+  - tencent.com
+  public_entrypoints:
+  - https://cloud.tencent.com/
+  - https://cloud.tencent.com/document/product/301
+  vendor_categories:
+  - cloud_infrastructure
+  - database
+  - developer_platform
+  - data_platform
+  - ai_platform
+  notes: Mainland China/native 腾讯云 public-source record. Public-source metadata requires
+    later refinement.
+  sources:
+  - source_id: tencent-cloud-cn-dpa
+    source_type: dpa
+    title_native: 腾讯云数据处理相关条款
+    title_en: Tencent Cloud China data processing terms reference
+    source_url: https://cloud.tencent.com/document/product/301/11470#data-processing
+    source_language: zh
+    summary_native: 腾讯云公开数据处理或隐私相关条款元数据引用。
+    summary_en: Public Tencent Cloud China data processing or privacy terms metadata
+      reference.
+    confidence: low
+    artifact:
+      artifact_id: tencent-cloud-cn-dpa
+      artifact_type: dpa
+      region_scope:
+      - cn
+      product_scope:
+      - 腾讯云
+  - source_id: tencent-cloud-cn-subprocessors
+    source_type: subprocessors_list
+    title_native: 腾讯云分包商相关公开资料
+    title_en: Tencent Cloud China subprocessors public reference
+    source_url: https://cloud.tencent.com/document/product/301#subprocessors
+    source_language: zh
+    summary_native: 腾讯云公开分包商或法律文档入口元数据引用。
+    summary_en: Public Tencent Cloud China subprocessors or legal documentation entrypoint
+      metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: tencent-cloud-cn-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - cn
+      product_scope:
+      - 腾讯云
+  - source_id: tencent-cloud-cn-privacy
+    source_type: privacy_notice
+    title_native: 腾讯云隐私政策
+    title_en: Tencent Cloud China Privacy Policy
+    source_url: https://cloud.tencent.com/document/product/301/11470#privacy
+    source_language: zh
+    summary_native: 腾讯云公开隐私政策或相关法律文档元数据引用。
+    summary_en: Public Tencent Cloud China privacy policy metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: tencent-cloud-cn-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - cn
+      product_scope:
+      - 腾讯云
+  - source_id: tencent-cloud-cn-security
+    source_type: security_page
+    title_native: 腾讯云安全
+    title_en: Tencent Cloud China Security
+    source_url: https://cloud.tencent.com/product/ssa
+    source_language: zh
+    summary_native: 腾讯云公开安全信息页面元数据引用。
+    summary_en: Public Tencent Cloud China security page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: tencent-cloud-cn-security
+      artifact_type: security_page
+      region_scope:
+      - cn
+      product_scope:
+      - 腾讯云
+  - source_id: tencent-cloud-cn-compliance
+    source_type: compliance_page
+    title_native: 腾讯云合规
+    title_en: Tencent Cloud China Compliance
+    source_url: https://cloud.tencent.com/document/product/301#compliance
+    source_language: zh
+    summary_native: 腾讯云公开合规或法律文档入口元数据引用。
+    summary_en: Public Tencent Cloud China compliance or legal documentation metadata
+      reference.
+    confidence: low
+    artifact:
+      artifact_id: tencent-cloud-cn-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - cn
+      product_scope:
+      - 腾讯云
+- vendor_id: huawei-cloud-international
+  display_name: Huawei Cloud International
+  legal_name: Huawei Cloud
+  headquarters_country: CN
+  regions_served:
+  - global
+  - apac
+  entity_family: huawei-cloud
+  entity_surface: international
+  related_vendor_ids:
+  - huawei-cloud-cn
+  source_authority_language: en
+  official_domains:
+  - huaweicloud.com
+  public_entrypoints:
+  - https://www.huaweicloud.com/intl/en-us/
+  - https://www.huaweicloud.com/intl/en-us/trust-center/
+  vendor_categories:
+  - cloud_infrastructure
+  - database
+  - developer_platform
+  - data_platform
+  - ai_platform
+  notes: International-facing Huawei Cloud public-source record. Related mainland/native
+    Huawei Cloud record may exist separately and should not be merged with this record.
+  sources:
+  - source_id: huawei-cloud-international-dpa
+    source_type: dpa
+    title_native: Huawei Cloud Data Protection Terms
+    title_en: Huawei Cloud Data Protection Terms
+    source_url: https://www.huaweicloud.com/intl/en-us/declaration/sa_prp.html#data-protection
+    source_language: en
+    summary_native: Public Huawei Cloud international data protection/privacy terms
+      metadata reference.
+    summary_en: Public Huawei Cloud international data protection/privacy terms metadata
+      reference.
+    confidence: low
+    artifact:
+      artifact_id: huawei-cloud-international-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Huawei Cloud International
+  - source_id: huawei-cloud-international-subprocessors
+    source_type: subprocessors_list
+    title_native: Huawei Cloud Subprocessors
+    title_en: Huawei Cloud Subprocessors
+    source_url: https://www.huaweicloud.com/intl/en-us/declaration/sa_prp.html#subprocessors
+    source_language: en
+    summary_native: Public Huawei Cloud international subprocessor or privacy terms
+      metadata reference.
+    summary_en: Public Huawei Cloud international subprocessor or privacy terms metadata
+      reference.
+    confidence: low
+    artifact:
+      artifact_id: huawei-cloud-international-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Huawei Cloud International
+  - source_id: huawei-cloud-international-privacy
+    source_type: privacy_notice
+    title_native: Huawei Cloud Privacy Statement
+    title_en: Huawei Cloud Privacy Statement
+    source_url: https://www.huaweicloud.com/intl/en-us/declaration/sa_prp.html#privacy
+    source_language: en
+    summary_native: Public Huawei Cloud international privacy statement metadata reference.
+    summary_en: Public Huawei Cloud international privacy statement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: huawei-cloud-international-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Huawei Cloud International
+  - source_id: huawei-cloud-international-security
+    source_type: security_page
+    title_native: Huawei Cloud Trust Center
+    title_en: Huawei Cloud Trust Center
+    source_url: https://www.huaweicloud.com/intl/en-us/trust-center/
+    source_language: en
+    summary_native: Public Huawei Cloud international trust center metadata reference.
+    summary_en: Public Huawei Cloud international trust center metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: huawei-cloud-international-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Huawei Cloud International
+  - source_id: huawei-cloud-international-compliance
+    source_type: compliance_page
+    title_native: Huawei Cloud Compliance
+    title_en: Huawei Cloud Compliance
+    source_url: https://www.huaweicloud.com/intl/en-us/trust-center/compliance.html
+    source_language: en
+    summary_native: Public Huawei Cloud international compliance metadata reference.
+    summary_en: Public Huawei Cloud international compliance metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: huawei-cloud-international-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Huawei Cloud International
+- vendor_id: huawei-cloud-cn
+  display_name: 华为云
+  legal_name: 华为云计算技术有限公司
+  headquarters_country: CN
+  regions_served:
+  - cn
+  entity_family: huawei-cloud
+  entity_surface: mainland_china
+  related_vendor_ids:
+  - huawei-cloud-international
+  source_authority_language: zh
+  official_domains:
+  - huaweicloud.com
+  public_entrypoints:
+  - https://www.huaweicloud.com/
+  - https://www.huaweicloud.com/trustcenter/
+  vendor_categories:
+  - cloud_infrastructure
+  - database
+  - developer_platform
+  - data_platform
+  - ai_platform
+  notes: Mainland China/native 华为云 public-source record. Public-source metadata requires
+    later refinement.
+  sources:
+  - source_id: huawei-cloud-cn-dpa
+    source_type: dpa
+    title_native: 华为云数据保护相关条款
+    title_en: Huawei Cloud China data protection terms reference
+    source_url: https://www.huaweicloud.com/declaration/sa_prp.html#data-protection
+    source_language: zh
+    summary_native: 华为云公开数据保护或隐私相关条款元数据引用。
+    summary_en: Public Huawei Cloud China data protection or privacy terms metadata
+      reference.
+    confidence: low
+    artifact:
+      artifact_id: huawei-cloud-cn-dpa
+      artifact_type: dpa
+      region_scope:
+      - cn
+      product_scope:
+      - 华为云
+  - source_id: huawei-cloud-cn-subprocessors
+    source_type: subprocessors_list
+    title_native: 华为云分包商相关公开资料
+    title_en: Huawei Cloud China subprocessors public reference
+    source_url: https://www.huaweicloud.com/declaration/sa_prp.html#subprocessors
+    source_language: zh
+    summary_native: 华为云公开分包商或隐私相关条款元数据引用。
+    summary_en: Public Huawei Cloud China subprocessors or privacy terms metadata
+      reference.
+    confidence: low
+    artifact:
+      artifact_id: huawei-cloud-cn-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - cn
+      product_scope:
+      - 华为云
+  - source_id: huawei-cloud-cn-privacy
+    source_type: privacy_notice
+    title_native: 华为云隐私声明
+    title_en: Huawei Cloud China Privacy Statement
+    source_url: https://www.huaweicloud.com/declaration/sa_prp.html#privacy
+    source_language: zh
+    summary_native: 华为云公开隐私声明元数据引用。
+    summary_en: Public Huawei Cloud China privacy statement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: huawei-cloud-cn-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - cn
+      product_scope:
+      - 华为云
+  - source_id: huawei-cloud-cn-security
+    source_type: security_page
+    title_native: 华为云信任中心
+    title_en: Huawei Cloud China Trust Center
+    source_url: https://www.huaweicloud.com/trustcenter/
+    source_language: zh
+    summary_native: 华为云公开信任中心安全信息元数据引用。
+    summary_en: Public Huawei Cloud China trust center security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: huawei-cloud-cn-security
+      artifact_type: security_page
+      region_scope:
+      - cn
+      product_scope:
+      - 华为云
+  - source_id: huawei-cloud-cn-compliance
+    source_type: compliance_page
+    title_native: 华为云合规
+    title_en: Huawei Cloud China Compliance
+    source_url: https://www.huaweicloud.com/trustcenter/compliance.html
+    source_language: zh
+    summary_native: 华为云公开合规信息元数据引用。
+    summary_en: Public Huawei Cloud China compliance metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: huawei-cloud-cn-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - cn
+      product_scope:
+      - 华为云
