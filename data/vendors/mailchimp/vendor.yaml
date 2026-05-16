@@ -1,0 +1,26 @@
+schema_version: 0.1.0
+vendor_id: mailchimp
+display_name: Mailchimp
+legal_name: The Rocket Science Group LLC
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- mailchimp.com
+public_entrypoints:
+- https://mailchimp.com/legal/
+- https://mailchimp.com/about/security/
+vendor_categories:
+- marketing_platform
+- customer_engagement
+- email_marketing
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Mailchimp is modeled as a product surface
+  with its own public assurance materials.
+entity_family: intuit
+entity_surface: product_surface
+source_authority_language: en

@@ -1,0 +1,25 @@
+schema_version: 0.1.0
+vendor_id: zendesk
+display_name: Zendesk
+legal_name: Zendesk, Inc.
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- zendesk.com
+public_entrypoints:
+- https://www.zendesk.com/trust-center/
+- https://www.zendesk.com/company/agreements-and-terms/privacy-notice/
+vendor_categories:
+- customer_support
+- customer_engagement
+- enterprise_software
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Metadata references general public Zendesk
+  assurance materials and does not cover bespoke customer agreements.
+entity_surface: global_brand
+source_authority_language: en
