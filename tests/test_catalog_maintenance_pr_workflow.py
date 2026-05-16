@@ -31,11 +31,15 @@ def test_catalog_maintenance_pr_workflow_consumes_reviewed_plan_without_live_net
     assert "--promotion-plan \"$PROMOTION_PLAN_PATH\"" in text
     assert "python -m tools.openva.cleanup_proposals build" in text
     assert "python -m tools.openva.validate validate" in text
-    assert "peter-evans/create-pull-request@v7" in text
-    assert "delete-branch: false" in text
+    assert "git switch -c \"$PR_BRANCH\"" in text
+    assert "git push --force-with-lease origin \"$PR_BRANCH\"" in text
+    assert "gh pr list --state open --head \"$PR_BRANCH\"" in text
+    assert "gh pr create" in text
+    assert "gh pr edit" in text
     assert "data" in text
     assert "indexes" in text
     assert "openva-pack.json" in text
+    assert "peter-evans/create-pull-request@v7" not in text
     assert "python -m tools.openva.source_verification verify" not in text
     assert "python -m tools.openva.source_discovery discover" not in text
     assert "python -m tools.openva.promotion_planner plan" not in text
