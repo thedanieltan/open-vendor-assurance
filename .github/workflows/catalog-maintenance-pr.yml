@@ -13,12 +13,12 @@ on:
         type: string
       pr_branch:
         description: "Branch name for the generated cleanup PR. Must start with agent-"
-        required: true
+        required: false
         type: string
         default: "agent-catalog-maintenance-cleanup"
       pr_title:
         description: "Cleanup PR title. Must start with Catalog:"
-        required: true
+        required: false
         type: string
         default: "Catalog: apply reviewed source maintenance cleanup"
 
@@ -33,6 +33,9 @@ concurrency:
 jobs:
   catalog-maintenance-pr:
     runs-on: ubuntu-latest
+    env:
+      PR_BRANCH: ${{ inputs.pr_branch || 'agent-catalog-maintenance-cleanup' }}
+      PR_TITLE: ${{ inputs.pr_title || 'Catalog: apply reviewed source maintenance cleanup' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -43,11 +46,15 @@ jobs:
       - name: Validate workflow inputs
         run: |
           set -euo pipefail
-          case "${{ inputs.pr_branch }}" in
+          PR_BRANCH="$(printf '%s' "$PR_BRANCH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          PR_TITLE="$(printf '%s' "$PR_TITLE" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
+          echo "PR_TITLE=$PR_TITLE" >> "$GITHUB_ENV"
+          case "$PR_BRANCH" in
             agent-*) ;;
             *) echo "pr_branch must start with agent-" >&2; exit 1 ;;
           esac
-          case "${{ inputs.pr_title }}" in
+          case "$PR_TITLE" in
             Catalog:*) ;;
             *) echo "pr_title must start with Catalog:" >&2; exit 1 ;;
           esac
@@ -125,11 +132,11 @@ jobs:
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
         with:
-          branch: ${{ inputs.pr_branch }}
+          branch: ${{ env.PR_BRANCH }}
           delete-branch: false
-          title: ${{ inputs.pr_title }}
+          title: ${{ env.PR_TITLE }}
           body-path: catalog-maintenance-pr-body.md
-          commit-message: ${{ inputs.pr_title }}
+          commit-message: ${{ env.PR_TITLE }}
           add-paths: |
             data
             indexes
