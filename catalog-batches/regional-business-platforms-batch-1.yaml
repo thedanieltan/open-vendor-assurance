@@ -1,0 +1,1330 @@
+schema_version: 0.1.0
+batch_id: regional-business-platforms-batch-1
+operation: create
+collected_at: '2026-05-16T00:00:00Z'
+observer: human
+vendors:
+- vendor_id: zoho
+  display_name: Zoho
+  legal_name: Zoho Corporation Private Limited
+  headquarters_country: IN
+  regions_served: &id001
+  - global
+  - apac
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - zoho.com
+  public_entrypoints:
+  - https://www.zoho.com/privacy/dpa.html
+  - https://www.zoho.com/privacy/sub-processors.html
+  vendor_categories:
+  - crm
+  - productivity
+  - finance_platform
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Zoho
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: zoho-dpa
+    source_type: dpa
+    title_native: Zoho Data Processing Addendum
+    title_en: Zoho Data Processing Addendum
+    source_url: https://www.zoho.com/privacy/dpa.html
+    source_language: en
+    summary_native: Public Zoho data processing addendum metadata reference.
+    summary_en: Public Zoho data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: zoho-dpa
+      artifact_type: dpa
+      region_scope: *id001
+      product_scope:
+      - Zoho services
+  - source_id: zoho-subprocessors
+    source_type: subprocessors_list
+    title_native: Zoho Subprocessors
+    title_en: Zoho Subprocessors
+    source_url: https://www.zoho.com/privacy/sub-processors.html
+    source_language: en
+    summary_native: Public Zoho subprocessors metadata reference.
+    summary_en: Public Zoho subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: zoho-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id001
+      product_scope:
+      - Zoho services
+  - source_id: zoho-privacy
+    source_type: privacy_notice
+    title_native: Zoho Privacy Notice
+    title_en: Zoho Privacy Notice
+    source_url: https://www.zoho.com/privacy.html
+    source_language: en
+    summary_native: Public Zoho privacy notice metadata reference.
+    summary_en: Public Zoho privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: zoho-privacy
+      artifact_type: privacy_notice
+      region_scope: *id001
+      product_scope:
+      - Zoho services
+  - source_id: zoho-security
+    source_type: security_page
+    title_native: Zoho Security
+    title_en: Zoho Security
+    source_url: https://www.zoho.com/security.html
+    source_language: en
+    summary_native: Public Zoho security metadata reference.
+    summary_en: Public Zoho security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: zoho-security
+      artifact_type: security_page
+      region_scope: *id001
+      product_scope:
+      - Zoho services
+  - source_id: zoho-compliance
+    source_type: compliance_page
+    title_native: Zoho Compliance
+    title_en: Zoho Compliance
+    source_url: https://www.zoho.com/compliance.html
+    source_language: en
+    summary_native: Public Zoho compliance metadata reference.
+    summary_en: Public Zoho compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: zoho-compliance
+      artifact_type: compliance_page
+      region_scope: *id001
+      product_scope:
+      - Zoho services
+- vendor_id: odoo
+  display_name: Odoo
+  legal_name: Odoo S.A.
+  headquarters_country: BE
+  regions_served: &id002
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - odoo.com
+  public_entrypoints:
+  - https://www.odoo.com/privacy/dpa
+  - https://www.odoo.com/privacy
+  vendor_categories:
+  - erp
+  - crm
+  - finance_platform
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Odoo
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: odoo-dpa
+    source_type: dpa
+    title_native: Odoo Data Processing Addendum
+    title_en: Odoo Data Processing Addendum
+    source_url: https://www.odoo.com/privacy/dpa
+    source_language: en
+    summary_native: Public Odoo data processing addendum metadata reference.
+    summary_en: Public Odoo data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: odoo-dpa
+      artifact_type: dpa
+      region_scope: *id002
+      product_scope:
+      - Odoo services
+  - source_id: odoo-privacy
+    source_type: privacy_notice
+    title_native: Odoo Privacy Notice
+    title_en: Odoo Privacy Notice
+    source_url: https://www.odoo.com/privacy
+    source_language: en
+    summary_native: Public Odoo privacy notice metadata reference.
+    summary_en: Public Odoo privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: odoo-privacy
+      artifact_type: privacy_notice
+      region_scope: *id002
+      product_scope:
+      - Odoo services
+  - source_id: odoo-security
+    source_type: security_page
+    title_native: Odoo Security
+    title_en: Odoo Security
+    source_url: https://www.odoo.com/security
+    source_language: en
+    summary_native: Public Odoo security metadata reference.
+    summary_en: Public Odoo security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: odoo-security
+      artifact_type: security_page
+      region_scope: *id002
+      product_scope:
+      - Odoo services
+- vendor_id: sage
+  display_name: Sage
+  legal_name: The Sage Group plc
+  headquarters_country: GB
+  regions_served: &id003
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - sage.com
+  public_entrypoints:
+  - https://www.sage.com/en-us/legal/data-processing-addendum/
+  - https://www.sage.com/en-us/legal/subprocessors/
+  vendor_categories:
+  - finance_platform
+  - accounting
+  - erp
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Sage
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: sage-dpa
+    source_type: dpa
+    title_native: Sage Data Processing Addendum
+    title_en: Sage Data Processing Addendum
+    source_url: https://www.sage.com/en-us/legal/data-processing-addendum/
+    source_language: en
+    summary_native: Public Sage data processing addendum metadata reference.
+    summary_en: Public Sage data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: sage-dpa
+      artifact_type: dpa
+      region_scope: *id003
+      product_scope:
+      - Sage services
+  - source_id: sage-subprocessors
+    source_type: subprocessors_list
+    title_native: Sage Subprocessors
+    title_en: Sage Subprocessors
+    source_url: https://www.sage.com/en-us/legal/subprocessors/
+    source_language: en
+    summary_native: Public Sage subprocessors metadata reference.
+    summary_en: Public Sage subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: sage-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id003
+      product_scope:
+      - Sage services
+  - source_id: sage-privacy
+    source_type: privacy_notice
+    title_native: Sage Privacy Notice
+    title_en: Sage Privacy Notice
+    source_url: https://www.sage.com/en-us/legal/privacy-and-cookies/
+    source_language: en
+    summary_native: Public Sage privacy notice metadata reference.
+    summary_en: Public Sage privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: sage-privacy
+      artifact_type: privacy_notice
+      region_scope: *id003
+      product_scope:
+      - Sage services
+  - source_id: sage-security
+    source_type: security_page
+    title_native: Sage Security
+    title_en: Sage Security
+    source_url: https://www.sage.com/en-us/trust-security/
+    source_language: en
+    summary_native: Public Sage security metadata reference.
+    summary_en: Public Sage security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: sage-security
+      artifact_type: security_page
+      region_scope: *id003
+      product_scope:
+      - Sage services
+- vendor_id: sap
+  display_name: SAP
+  legal_name: SAP SE
+  headquarters_country: DE
+  regions_served: &id004
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - sap.com
+  public_entrypoints:
+  - https://www.sap.com/about/trust-center/agreements/data-processing-agreement.html
+  - https://www.sap.com/about/trust-center/cloud-service-status/subprocessors.html
+  vendor_categories:
+  - erp
+  - enterprise_software
+  - hris
+  - finance_platform
+  notes: Public-source-only catalog record. Metadata references general public SAP
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: sap-dpa
+    source_type: dpa
+    title_native: SAP Data Processing Addendum
+    title_en: SAP Data Processing Addendum
+    source_url: https://www.sap.com/about/trust-center/agreements/data-processing-agreement.html
+    source_language: en
+    summary_native: Public SAP data processing addendum metadata reference.
+    summary_en: Public SAP data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: sap-dpa
+      artifact_type: dpa
+      region_scope: *id004
+      product_scope:
+      - SAP services
+  - source_id: sap-subprocessors
+    source_type: subprocessors_list
+    title_native: SAP Subprocessors
+    title_en: SAP Subprocessors
+    source_url: https://www.sap.com/about/trust-center/cloud-service-status/subprocessors.html
+    source_language: en
+    summary_native: Public SAP subprocessors metadata reference.
+    summary_en: Public SAP subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: sap-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id004
+      product_scope:
+      - SAP services
+  - source_id: sap-privacy
+    source_type: privacy_notice
+    title_native: SAP Privacy Notice
+    title_en: SAP Privacy Notice
+    source_url: https://www.sap.com/about/legal/privacy.html
+    source_language: en
+    summary_native: Public SAP privacy notice metadata reference.
+    summary_en: Public SAP privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: sap-privacy
+      artifact_type: privacy_notice
+      region_scope: *id004
+      product_scope:
+      - SAP services
+  - source_id: sap-security
+    source_type: security_page
+    title_native: SAP Security
+    title_en: SAP Security
+    source_url: https://www.sap.com/about/trust-center.html
+    source_language: en
+    summary_native: Public SAP security metadata reference.
+    summary_en: Public SAP security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: sap-security
+      artifact_type: security_page
+      region_scope: *id004
+      product_scope:
+      - SAP services
+  - source_id: sap-compliance
+    source_type: compliance_page
+    title_native: SAP Compliance
+    title_en: SAP Compliance
+    source_url: https://www.sap.com/about/trust-center/certification-compliance.html
+    source_language: en
+    summary_native: Public SAP compliance metadata reference.
+    summary_en: Public SAP compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: sap-compliance
+      artifact_type: compliance_page
+      region_scope: *id004
+      product_scope:
+      - SAP services
+- vendor_id: netsuite
+  display_name: NetSuite
+  legal_name: Oracle NetSuite
+  headquarters_country: US
+  regions_served: &id005
+  - global
+  entity_surface: product_surface
+  source_authority_language: en
+  official_domains:
+  - netsuite.com
+  public_entrypoints:
+  - https://www.oracle.com/legal/privacy/
+  - https://www.netsuite.com/portal/platform/security.shtml
+  vendor_categories:
+  - erp
+  - finance_platform
+  - commerce_platform
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public NetSuite
+    assurance materials and does not cover bespoke customer agreements. NetSuite is
+    modeled as an Oracle product surface. Distinct public NetSuite-specific DPA and
+    subprocessor URLs were not identified in this batch, so those source records are
+    intentionally omitted rather than inferred from Oracle-level materials.
+  sources:
+  - source_id: netsuite-security
+    source_type: security_page
+    title_native: NetSuite Security
+    title_en: NetSuite Security
+    source_url: https://www.netsuite.com/portal/platform/security.shtml
+    source_language: en
+    summary_native: Public NetSuite security metadata reference.
+    summary_en: Public NetSuite security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: netsuite-security
+      artifact_type: security_page
+      region_scope: *id005
+      product_scope:
+      - NetSuite services
+  - source_id: netsuite-compliance
+    source_type: compliance_page
+    title_native: NetSuite Compliance
+    title_en: NetSuite Compliance
+    source_url: https://www.netsuite.com/portal/platform/compliance.shtml
+    source_language: en
+    summary_native: Public NetSuite compliance metadata reference.
+    summary_en: Public NetSuite compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: netsuite-compliance
+      artifact_type: compliance_page
+      region_scope: *id005
+      product_scope:
+      - NetSuite services
+  entity_family: oracle
+  related_vendor_ids:
+  - oracle-cloud
+- vendor_id: adp
+  display_name: ADP
+  legal_name: ADP, Inc.
+  headquarters_country: US
+  regions_served: &id006
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - adp.com
+  public_entrypoints:
+  - https://www.adp.com/legal/data-privacy/data-processing-addendum.aspx
+  - https://www.adp.com/legal/data-privacy/subprocessors.aspx
+  vendor_categories:
+  - payroll
+  - hris
+  - workforce_management
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public ADP
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: adp-dpa
+    source_type: dpa
+    title_native: ADP Data Processing Addendum
+    title_en: ADP Data Processing Addendum
+    source_url: https://www.adp.com/legal/data-privacy/data-processing-addendum.aspx
+    source_language: en
+    summary_native: Public ADP data processing addendum metadata reference.
+    summary_en: Public ADP data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: adp-dpa
+      artifact_type: dpa
+      region_scope: *id006
+      product_scope:
+      - ADP services
+  - source_id: adp-subprocessors
+    source_type: subprocessors_list
+    title_native: ADP Subprocessors
+    title_en: ADP Subprocessors
+    source_url: https://www.adp.com/legal/data-privacy/subprocessors.aspx
+    source_language: en
+    summary_native: Public ADP subprocessors metadata reference.
+    summary_en: Public ADP subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: adp-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id006
+      product_scope:
+      - ADP services
+  - source_id: adp-privacy
+    source_type: privacy_notice
+    title_native: ADP Privacy Notice
+    title_en: ADP Privacy Notice
+    source_url: https://www.adp.com/privacy.aspx
+    source_language: en
+    summary_native: Public ADP privacy notice metadata reference.
+    summary_en: Public ADP privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: adp-privacy
+      artifact_type: privacy_notice
+      region_scope: *id006
+      product_scope:
+      - ADP services
+  - source_id: adp-security
+    source_type: security_page
+    title_native: ADP Security
+    title_en: ADP Security
+    source_url: https://www.adp.com/about-adp/data-security.aspx
+    source_language: en
+    summary_native: Public ADP security metadata reference.
+    summary_en: Public ADP security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: adp-security
+      artifact_type: security_page
+      region_scope: *id006
+      product_scope:
+      - ADP services
+- vendor_id: paychex
+  display_name: Paychex
+  legal_name: Paychex, Inc.
+  headquarters_country: US
+  regions_served: &id007
+  - us
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - paychex.com
+  public_entrypoints:
+  - https://www.paychex.com/privacy
+  - https://www.paychex.com/corporate/security
+  vendor_categories:
+  - payroll
+  - hris
+  - finance_platform
+  notes: Public-source-only catalog record. Metadata references general public Paychex
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: paychex-privacy
+    source_type: privacy_notice
+    title_native: Paychex Privacy Notice
+    title_en: Paychex Privacy Notice
+    source_url: https://www.paychex.com/privacy
+    source_language: en
+    summary_native: Public Paychex privacy notice metadata reference.
+    summary_en: Public Paychex privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: paychex-privacy
+      artifact_type: privacy_notice
+      region_scope: *id007
+      product_scope:
+      - Paychex services
+  - source_id: paychex-security
+    source_type: security_page
+    title_native: Paychex Security
+    title_en: Paychex Security
+    source_url: https://www.paychex.com/corporate/security
+    source_language: en
+    summary_native: Public Paychex security metadata reference.
+    summary_en: Public Paychex security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: paychex-security
+      artifact_type: security_page
+      region_scope: *id007
+      product_scope:
+      - Paychex services
+- vendor_id: greythr
+  display_name: greytHR
+  legal_name: Greytip Software Private Limited
+  headquarters_country: IN
+  regions_served: &id008
+  - apac
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - greythr.com
+  public_entrypoints:
+  - https://www.greythr.com/privacy-policy/
+  - https://www.greythr.com/security/
+  vendor_categories:
+  - hris
+  - payroll
+  - workforce_management
+  notes: Public-source-only catalog record. Metadata references general public greytHR
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: greythr-privacy
+    source_type: privacy_notice
+    title_native: greytHR Privacy Notice
+    title_en: greytHR Privacy Notice
+    source_url: https://www.greythr.com/privacy-policy/
+    source_language: en
+    summary_native: Public greytHR privacy notice metadata reference.
+    summary_en: Public greytHR privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: greythr-privacy
+      artifact_type: privacy_notice
+      region_scope: *id008
+      product_scope:
+      - greytHR services
+  - source_id: greythr-security
+    source_type: security_page
+    title_native: greytHR Security
+    title_en: greytHR Security
+    source_url: https://www.greythr.com/security/
+    source_language: en
+    summary_native: Public greytHR security metadata reference.
+    summary_en: Public greytHR security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: greythr-security
+      artifact_type: security_page
+      region_scope: *id008
+      product_scope:
+      - greytHR services
+- vendor_id: darwinbox
+  display_name: Darwinbox
+  legal_name: Darwinbox Digital Solutions Private Limited
+  headquarters_country: IN
+  regions_served: &id009
+  - global
+  - apac
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - darwinbox.com
+  public_entrypoints:
+  - https://darwinbox.com/privacy-policy/
+  - https://darwinbox.com/security/
+  vendor_categories:
+  - hris
+  - payroll
+  - workforce_management
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Darwinbox
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: darwinbox-privacy
+    source_type: privacy_notice
+    title_native: Darwinbox Privacy Notice
+    title_en: Darwinbox Privacy Notice
+    source_url: https://darwinbox.com/privacy-policy/
+    source_language: en
+    summary_native: Public Darwinbox privacy notice metadata reference.
+    summary_en: Public Darwinbox privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: darwinbox-privacy
+      artifact_type: privacy_notice
+      region_scope: *id009
+      product_scope:
+      - Darwinbox services
+  - source_id: darwinbox-security
+    source_type: security_page
+    title_native: Darwinbox Security
+    title_en: Darwinbox Security
+    source_url: https://darwinbox.com/security/
+    source_language: en
+    summary_native: Public Darwinbox security metadata reference.
+    summary_en: Public Darwinbox security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: darwinbox-security
+      artifact_type: security_page
+      region_scope: *id009
+      product_scope:
+      - Darwinbox services
+- vendor_id: employment-hero
+  display_name: Employment Hero
+  legal_name: Employment Hero Pty Ltd
+  headquarters_country: AU
+  regions_served: &id010
+  - global
+  - apac
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - employmenthero.com
+  public_entrypoints:
+  - https://employmenthero.com/privacy-policy/
+  - https://employmenthero.com/security/
+  vendor_categories:
+  - hris
+  - payroll
+  - workforce_management
+  notes: Public-source-only catalog record. Metadata references general public Employment
+    Hero assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: employment-hero-privacy
+    source_type: privacy_notice
+    title_native: Employment Hero Privacy Notice
+    title_en: Employment Hero Privacy Notice
+    source_url: https://employmenthero.com/privacy-policy/
+    source_language: en
+    summary_native: Public Employment Hero privacy notice metadata reference.
+    summary_en: Public Employment Hero privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: employment-hero-privacy
+      artifact_type: privacy_notice
+      region_scope: *id010
+      product_scope:
+      - Employment Hero services
+  - source_id: employment-hero-security
+    source_type: security_page
+    title_native: Employment Hero Security
+    title_en: Employment Hero Security
+    source_url: https://employmenthero.com/security/
+    source_language: en
+    summary_native: Public Employment Hero security metadata reference.
+    summary_en: Public Employment Hero security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: employment-hero-security
+      artifact_type: security_page
+      region_scope: *id010
+      product_scope:
+      - Employment Hero services
+- vendor_id: personio
+  display_name: Personio
+  legal_name: Personio SE & Co. KG
+  headquarters_country: DE
+  regions_served: &id011
+  - eu
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - personio.com
+  public_entrypoints:
+  - https://www.personio.com/legal/data-processing-agreement/
+  - https://www.personio.com/privacy-policy/
+  vendor_categories:
+  - hris
+  - payroll
+  - workforce_management
+  notes: Public-source-only catalog record. Metadata references general public Personio
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: personio-dpa
+    source_type: dpa
+    title_native: Personio Data Processing Addendum
+    title_en: Personio Data Processing Addendum
+    source_url: https://www.personio.com/legal/data-processing-agreement/
+    source_language: en
+    summary_native: Public Personio data processing addendum metadata reference.
+    summary_en: Public Personio data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: personio-dpa
+      artifact_type: dpa
+      region_scope: *id011
+      product_scope:
+      - Personio services
+  - source_id: personio-privacy
+    source_type: privacy_notice
+    title_native: Personio Privacy Notice
+    title_en: Personio Privacy Notice
+    source_url: https://www.personio.com/privacy-policy/
+    source_language: en
+    summary_native: Public Personio privacy notice metadata reference.
+    summary_en: Public Personio privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: personio-privacy
+      artifact_type: privacy_notice
+      region_scope: *id011
+      product_scope:
+      - Personio services
+  - source_id: personio-security
+    source_type: security_page
+    title_native: Personio Security
+    title_en: Personio Security
+    source_url: https://www.personio.com/security/
+    source_language: en
+    summary_native: Public Personio security metadata reference.
+    summary_en: Public Personio security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: personio-security
+      artifact_type: security_page
+      region_scope: *id011
+      product_scope:
+      - Personio services
+- vendor_id: hibob
+  display_name: HiBob
+  legal_name: Hi Bob Ltd.
+  headquarters_country: GB
+  regions_served: &id012
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - hibob.com
+  public_entrypoints:
+  - https://www.hibob.com/privacy-policy/
+  - https://www.hibob.com/security/
+  vendor_categories:
+  - hris
+  - workforce_management
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public HiBob
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: hibob-privacy
+    source_type: privacy_notice
+    title_native: HiBob Privacy Notice
+    title_en: HiBob Privacy Notice
+    source_url: https://www.hibob.com/privacy-policy/
+    source_language: en
+    summary_native: Public HiBob privacy notice metadata reference.
+    summary_en: Public HiBob privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: hibob-privacy
+      artifact_type: privacy_notice
+      region_scope: *id012
+      product_scope:
+      - HiBob services
+  - source_id: hibob-security
+    source_type: security_page
+    title_native: HiBob Security
+    title_en: HiBob Security
+    source_url: https://www.hibob.com/security/
+    source_language: en
+    summary_native: Public HiBob security metadata reference.
+    summary_en: Public HiBob security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: hibob-security
+      artifact_type: security_page
+      region_scope: *id012
+      product_scope:
+      - HiBob services
+- vendor_id: lattice
+  display_name: Lattice
+  legal_name: Degree, Inc.
+  headquarters_country: US
+  regions_served: &id013
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - lattice.com
+  public_entrypoints:
+  - https://lattice.com/data-processing-addendum
+  - https://lattice.com/privacy
+  vendor_categories:
+  - hris
+  - performance_management
+  - workforce_management
+  notes: Public-source-only catalog record. Metadata references general public Lattice
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: lattice-dpa
+    source_type: dpa
+    title_native: Lattice Data Processing Addendum
+    title_en: Lattice Data Processing Addendum
+    source_url: https://lattice.com/data-processing-addendum
+    source_language: en
+    summary_native: Public Lattice data processing addendum metadata reference.
+    summary_en: Public Lattice data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: lattice-dpa
+      artifact_type: dpa
+      region_scope: *id013
+      product_scope:
+      - Lattice services
+  - source_id: lattice-privacy
+    source_type: privacy_notice
+    title_native: Lattice Privacy Notice
+    title_en: Lattice Privacy Notice
+    source_url: https://lattice.com/privacy
+    source_language: en
+    summary_native: Public Lattice privacy notice metadata reference.
+    summary_en: Public Lattice privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: lattice-privacy
+      artifact_type: privacy_notice
+      region_scope: *id013
+      product_scope:
+      - Lattice services
+  - source_id: lattice-security
+    source_type: security_page
+    title_native: Lattice Security
+    title_en: Lattice Security
+    source_url: https://lattice.com/security
+    source_language: en
+    summary_native: Public Lattice security metadata reference.
+    summary_en: Public Lattice security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: lattice-security
+      artifact_type: security_page
+      region_scope: *id013
+      product_scope:
+      - Lattice services
+- vendor_id: culture-amp
+  display_name: Culture Amp
+  legal_name: Culture Amp Pty Ltd
+  headquarters_country: AU
+  regions_served: &id014
+  - global
+  - apac
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - cultureamp.com
+  public_entrypoints:
+  - https://www.cultureamp.com/privacy-policy
+  - https://www.cultureamp.com/security
+  vendor_categories:
+  - hris
+  - employee_engagement
+  - workforce_management
+  notes: Public-source-only catalog record. Metadata references general public Culture
+    Amp assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: culture-amp-privacy
+    source_type: privacy_notice
+    title_native: Culture Amp Privacy Notice
+    title_en: Culture Amp Privacy Notice
+    source_url: https://www.cultureamp.com/privacy-policy
+    source_language: en
+    summary_native: Public Culture Amp privacy notice metadata reference.
+    summary_en: Public Culture Amp privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: culture-amp-privacy
+      artifact_type: privacy_notice
+      region_scope: *id014
+      product_scope:
+      - Culture Amp services
+  - source_id: culture-amp-security
+    source_type: security_page
+    title_native: Culture Amp Security
+    title_en: Culture Amp Security
+    source_url: https://www.cultureamp.com/security
+    source_language: en
+    summary_native: Public Culture Amp security metadata reference.
+    summary_en: Public Culture Amp security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: culture-amp-security
+      artifact_type: security_page
+      region_scope: *id014
+      product_scope:
+      - Culture Amp services
+- vendor_id: greenhouse
+  display_name: Greenhouse
+  legal_name: Greenhouse Software, Inc.
+  headquarters_country: US
+  regions_served: &id015
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - greenhouse.com
+  public_entrypoints:
+  - https://www.greenhouse.com/data-processing-addendum
+  - https://www.greenhouse.com/subprocessors
+  vendor_categories:
+  - recruiting
+  - ats
+  - hris
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Greenhouse
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: greenhouse-dpa
+    source_type: dpa
+    title_native: Greenhouse Data Processing Addendum
+    title_en: Greenhouse Data Processing Addendum
+    source_url: https://www.greenhouse.com/data-processing-addendum
+    source_language: en
+    summary_native: Public Greenhouse data processing addendum metadata reference.
+    summary_en: Public Greenhouse data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: greenhouse-dpa
+      artifact_type: dpa
+      region_scope: *id015
+      product_scope:
+      - Greenhouse services
+  - source_id: greenhouse-subprocessors
+    source_type: subprocessors_list
+    title_native: Greenhouse Subprocessors
+    title_en: Greenhouse Subprocessors
+    source_url: https://www.greenhouse.com/subprocessors
+    source_language: en
+    summary_native: Public Greenhouse subprocessors metadata reference.
+    summary_en: Public Greenhouse subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: greenhouse-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id015
+      product_scope:
+      - Greenhouse services
+  - source_id: greenhouse-privacy
+    source_type: privacy_notice
+    title_native: Greenhouse Privacy Notice
+    title_en: Greenhouse Privacy Notice
+    source_url: https://www.greenhouse.com/privacy-policy
+    source_language: en
+    summary_native: Public Greenhouse privacy notice metadata reference.
+    summary_en: Public Greenhouse privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: greenhouse-privacy
+      artifact_type: privacy_notice
+      region_scope: *id015
+      product_scope:
+      - Greenhouse services
+  - source_id: greenhouse-security
+    source_type: security_page
+    title_native: Greenhouse Security
+    title_en: Greenhouse Security
+    source_url: https://www.greenhouse.com/security
+    source_language: en
+    summary_native: Public Greenhouse security metadata reference.
+    summary_en: Public Greenhouse security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: greenhouse-security
+      artifact_type: security_page
+      region_scope: *id015
+      product_scope:
+      - Greenhouse services
+- vendor_id: lever
+  display_name: Lever
+  legal_name: Employ, Inc.
+  headquarters_country: US
+  regions_served: &id016
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - lever.co
+  public_entrypoints:
+  - https://www.lever.co/privacy-policy/
+  - https://www.lever.co/security/
+  vendor_categories:
+  - recruiting
+  - ats
+  - hris
+  notes: Public-source-only catalog record. Metadata references general public Lever
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: lever-privacy
+    source_type: privacy_notice
+    title_native: Lever Privacy Notice
+    title_en: Lever Privacy Notice
+    source_url: https://www.lever.co/privacy-policy/
+    source_language: en
+    summary_native: Public Lever privacy notice metadata reference.
+    summary_en: Public Lever privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: lever-privacy
+      artifact_type: privacy_notice
+      region_scope: *id016
+      product_scope:
+      - Lever services
+  - source_id: lever-security
+    source_type: security_page
+    title_native: Lever Security
+    title_en: Lever Security
+    source_url: https://www.lever.co/security/
+    source_language: en
+    summary_native: Public Lever security metadata reference.
+    summary_en: Public Lever security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: lever-security
+      artifact_type: security_page
+      region_scope: *id016
+      product_scope:
+      - Lever services
+- vendor_id: calendly
+  display_name: Calendly
+  legal_name: Calendly, LLC
+  headquarters_country: US
+  regions_served: &id017
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - calendly.com
+  public_entrypoints:
+  - https://calendly.com/dpa
+  - https://calendly.com/privacy
+  vendor_categories:
+  - productivity
+  - scheduling
+  - collaboration
+  notes: Public-source-only catalog record. Metadata references general public Calendly
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: calendly-dpa
+    source_type: dpa
+    title_native: Calendly Data Processing Addendum
+    title_en: Calendly Data Processing Addendum
+    source_url: https://calendly.com/dpa
+    source_language: en
+    summary_native: Public Calendly data processing addendum metadata reference.
+    summary_en: Public Calendly data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: calendly-dpa
+      artifact_type: dpa
+      region_scope: *id017
+      product_scope:
+      - Calendly services
+  - source_id: calendly-privacy
+    source_type: privacy_notice
+    title_native: Calendly Privacy Notice
+    title_en: Calendly Privacy Notice
+    source_url: https://calendly.com/privacy
+    source_language: en
+    summary_native: Public Calendly privacy notice metadata reference.
+    summary_en: Public Calendly privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: calendly-privacy
+      artifact_type: privacy_notice
+      region_scope: *id017
+      product_scope:
+      - Calendly services
+  - source_id: calendly-security
+    source_type: security_page
+    title_native: Calendly Security
+    title_en: Calendly Security
+    source_url: https://calendly.com/security
+    source_language: en
+    summary_native: Public Calendly security metadata reference.
+    summary_en: Public Calendly security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: calendly-security
+      artifact_type: security_page
+      region_scope: *id017
+      product_scope:
+      - Calendly services
+- vendor_id: acuity-scheduling
+  display_name: Acuity Scheduling
+  legal_name: Squarespace, Inc.
+  headquarters_country: US
+  regions_served: &id018
+  - global
+  entity_surface: product_surface
+  source_authority_language: en
+  official_domains:
+  - acuityscheduling.com
+  public_entrypoints:
+  - https://www.acuityscheduling.com/privacy
+  - https://www.acuityscheduling.com/security
+  vendor_categories:
+  - scheduling
+  - productivity
+  - customer_engagement
+  notes: Public-source-only catalog record. Metadata references general public Acuity
+    Scheduling assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: acuity-scheduling-privacy
+    source_type: privacy_notice
+    title_native: Acuity Scheduling Privacy Notice
+    title_en: Acuity Scheduling Privacy Notice
+    source_url: https://www.acuityscheduling.com/privacy
+    source_language: en
+    summary_native: Public Acuity Scheduling privacy notice metadata reference.
+    summary_en: Public Acuity Scheduling privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: acuity-scheduling-privacy
+      artifact_type: privacy_notice
+      region_scope: *id018
+      product_scope:
+      - Acuity Scheduling services
+  - source_id: acuity-scheduling-security
+    source_type: security_page
+    title_native: Acuity Scheduling Security
+    title_en: Acuity Scheduling Security
+    source_url: https://www.acuityscheduling.com/security
+    source_language: en
+    summary_native: Public Acuity Scheduling security metadata reference.
+    summary_en: Public Acuity Scheduling security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: acuity-scheduling-security
+      artifact_type: security_page
+      region_scope: *id018
+      product_scope:
+      - Acuity Scheduling services
+  entity_family: squarespace
+  related_vendor_ids: []
+- vendor_id: surveymonkey
+  display_name: SurveyMonkey
+  legal_name: SurveyMonkey Inc.
+  headquarters_country: US
+  regions_served: &id019
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - surveymonkey.com
+  public_entrypoints:
+  - https://www.surveymonkey.com/mp/legal/data-processing-agreement/
+  - https://www.surveymonkey.com/mp/legal/subprocessors/
+  vendor_categories:
+  - survey_platform
+  - customer_engagement
+  - analytics
+  notes: Public-source-only catalog record. Metadata references general public SurveyMonkey
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: surveymonkey-dpa
+    source_type: dpa
+    title_native: SurveyMonkey Data Processing Addendum
+    title_en: SurveyMonkey Data Processing Addendum
+    source_url: https://www.surveymonkey.com/mp/legal/data-processing-agreement/
+    source_language: en
+    summary_native: Public SurveyMonkey data processing addendum metadata reference.
+    summary_en: Public SurveyMonkey data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: surveymonkey-dpa
+      artifact_type: dpa
+      region_scope: *id019
+      product_scope:
+      - SurveyMonkey services
+  - source_id: surveymonkey-subprocessors
+    source_type: subprocessors_list
+    title_native: SurveyMonkey Subprocessors
+    title_en: SurveyMonkey Subprocessors
+    source_url: https://www.surveymonkey.com/mp/legal/subprocessors/
+    source_language: en
+    summary_native: Public SurveyMonkey subprocessors metadata reference.
+    summary_en: Public SurveyMonkey subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: surveymonkey-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id019
+      product_scope:
+      - SurveyMonkey services
+  - source_id: surveymonkey-privacy
+    source_type: privacy_notice
+    title_native: SurveyMonkey Privacy Notice
+    title_en: SurveyMonkey Privacy Notice
+    source_url: https://www.surveymonkey.com/mp/legal/privacy/
+    source_language: en
+    summary_native: Public SurveyMonkey privacy notice metadata reference.
+    summary_en: Public SurveyMonkey privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: surveymonkey-privacy
+      artifact_type: privacy_notice
+      region_scope: *id019
+      product_scope:
+      - SurveyMonkey services
+  - source_id: surveymonkey-security
+    source_type: security_page
+    title_native: SurveyMonkey Security
+    title_en: SurveyMonkey Security
+    source_url: https://www.surveymonkey.com/mp/legal/security/
+    source_language: en
+    summary_native: Public SurveyMonkey security metadata reference.
+    summary_en: Public SurveyMonkey security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: surveymonkey-security
+      artifact_type: security_page
+      region_scope: *id019
+      product_scope:
+      - SurveyMonkey services
+- vendor_id: qualtrics
+  display_name: Qualtrics
+  legal_name: Qualtrics, LLC
+  headquarters_country: US
+  regions_served: &id020
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - qualtrics.com
+  public_entrypoints:
+  - https://www.qualtrics.com/legal/data-processing-agreement/
+  - https://www.qualtrics.com/subprocessors/
+  vendor_categories:
+  - survey_platform
+  - customer_experience
+  - analytics
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Qualtrics
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: qualtrics-dpa
+    source_type: dpa
+    title_native: Qualtrics Data Processing Addendum
+    title_en: Qualtrics Data Processing Addendum
+    source_url: https://www.qualtrics.com/legal/data-processing-agreement/
+    source_language: en
+    summary_native: Public Qualtrics data processing addendum metadata reference.
+    summary_en: Public Qualtrics data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: qualtrics-dpa
+      artifact_type: dpa
+      region_scope: *id020
+      product_scope:
+      - Qualtrics services
+  - source_id: qualtrics-subprocessors
+    source_type: subprocessors_list
+    title_native: Qualtrics Subprocessors
+    title_en: Qualtrics Subprocessors
+    source_url: https://www.qualtrics.com/subprocessors/
+    source_language: en
+    summary_native: Public Qualtrics subprocessors metadata reference.
+    summary_en: Public Qualtrics subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: qualtrics-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id020
+      product_scope:
+      - Qualtrics services
+  - source_id: qualtrics-privacy
+    source_type: privacy_notice
+    title_native: Qualtrics Privacy Notice
+    title_en: Qualtrics Privacy Notice
+    source_url: https://www.qualtrics.com/privacy-statement/
+    source_language: en
+    summary_native: Public Qualtrics privacy notice metadata reference.
+    summary_en: Public Qualtrics privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: qualtrics-privacy
+      artifact_type: privacy_notice
+      region_scope: *id020
+      product_scope:
+      - Qualtrics services
+  - source_id: qualtrics-security
+    source_type: security_page
+    title_native: Qualtrics Security
+    title_en: Qualtrics Security
+    source_url: https://www.qualtrics.com/security-statement/
+    source_language: en
+    summary_native: Public Qualtrics security metadata reference.
+    summary_en: Public Qualtrics security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: qualtrics-security
+      artifact_type: security_page
+      region_scope: *id020
+      product_scope:
+      - Qualtrics services
