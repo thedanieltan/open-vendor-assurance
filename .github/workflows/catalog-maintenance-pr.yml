@@ -36,6 +36,8 @@ jobs:
       PR_TITLE: "${{ inputs.pr_title || 'Catalog: apply reviewed source maintenance cleanup' }}"
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -133,18 +135,31 @@ jobs:
           ]
           Path('catalog-maintenance-pr-body.md').write_text('\n'.join(lines), encoding='utf-8')
           PY
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          branch: ${{ env.PR_BRANCH }}
-          delete-branch: false
-          title: ${{ env.PR_TITLE }}
-          body-path: catalog-maintenance-pr-body.md
-          commit-message: ${{ env.PR_TITLE }}
-          add-paths: |
-            data
-            indexes
-            openva-pack.json
+      - name: Commit and push maintenance branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$PR_BRANCH"
+          git add data indexes openva-pack.json
+          git commit -m "$PR_TITLE"
+          git push --force-with-lease origin "$PR_BRANCH"
+      - name: Create or update pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          EXISTING=$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh pr edit "$EXISTING" --title "$PR_TITLE" --body-file catalog-maintenance-pr-body.md
+            echo "Updated PR #$EXISTING"
+          else
+            gh pr create \
+              --base main \
+              --head "$PR_BRANCH" \
+              --title "$PR_TITLE" \
+              --body-file catalog-maintenance-pr-body.md
+          fi
       - name: Upload maintenance artifacts
         uses: actions/upload-artifact@v4
         with:
