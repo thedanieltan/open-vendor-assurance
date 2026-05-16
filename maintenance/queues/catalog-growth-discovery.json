@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1.0",
+  "queue_type": "catalog_growth_discovery_queue",
+  "purpose": "Drive launch-corpus discovery from OpenVA coverage lanes without treating discovered vendors or sources as canonical truth.",
+  "non_advisory": true,
+  "posture": {
+    "network_fetch_performed": false,
+    "writes_repository_state": false,
+    "writes_canonical_sources": false,
+    "creates_candidate_sources": false
+  },
+  "limits": {
+    "target_vendor_candidates": 240,
+    "max_vendors_per_discovery_run": 25,
+    "max_candidate_sources_per_report": 100,
+    "max_reviewed_actions_per_plan": 50
+  },
+  "source_types": [
+    "dpa",
+    "subprocessors_list",
+    "privacy_notice",
+    "security_page"
+  ],
+  "discovery_modes": [
+    "public_index_vendor_discovery",
+    "official_domain_source_discovery"
+  ],
+  "cohorts": [
+    {"cohort_id": "cloud-platforms-launch", "coverage_lane": "cloud_platforms", "target_vendor_candidates": 25, "priority": "high", "status": "queued"},
+    {"cohort_id": "crm-customer-marketing-launch", "coverage_lane": "crm_customer_marketing", "target_vendor_candidates": 25, "priority": "high", "status": "queued"},
+    {"cohort_id": "payments-fintech-launch", "coverage_lane": "payments_fintech", "target_vendor_candidates": 20, "priority": "high", "status": "queued"},
+    {"cohort_id": "security-identity-launch", "coverage_lane": "security_identity", "target_vendor_candidates": 25, "priority": "high", "status": "queued"},
+    {"cohort_id": "data-ai-launch", "coverage_lane": "data_ai", "target_vendor_candidates": 25, "priority": "high", "status": "queued"},
+    {"cohort_id": "devtools-ops-launch", "coverage_lane": "devtools_ops", "target_vendor_candidates": 25, "priority": "high", "status": "queued"},
+    {"cohort_id": "productivity-collaboration-launch", "coverage_lane": "productivity_collaboration", "target_vendor_candidates": 20, "priority": "medium", "status": "queued"},
+    {"cohort_id": "hr-education-launch", "coverage_lane": "hr_education", "target_vendor_candidates": 20, "priority": "medium", "status": "queued"},
+    {"cohort_id": "commerce-content-docs-launch", "coverage_lane": "commerce_content_docs", "target_vendor_candidates": 20, "priority": "medium", "status": "queued"},
+    {"cohort_id": "grc-privacy-trust-launch", "coverage_lane": "grc_privacy_trust", "target_vendor_candidates": 15, "priority": "medium", "status": "queued"},
+    {"cohort_id": "kyc-risk-launch", "coverage_lane": "kyc_risk", "target_vendor_candidates": 15, "priority": "medium", "status": "queued"},
+    {"cohort_id": "regional-apac-launch", "coverage_lane": "regional_apac", "target_vendor_candidates": 25, "priority": "medium", "status": "queued"}
+  ]
+}
