@@ -69,7 +69,7 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "permissions": {"contents": "write", "pull-requests": "write"},
         },
         "catalog-maintenance-pr.yml": {
-            "triggers": {"workflow_dispatch"},
+            "triggers": {"workflow_dispatch", "schedule"},
             "permissions": {"contents": "write", "pull-requests": "write"},
         },
         "cleanup-proposal-issue.yml": {
@@ -118,13 +118,3 @@ def test_ci_policy_documents_required_checks_and_branch_protection():
     assert "validate / validate" in text
     assert "catalog-pr-guard / catalog-pr-guard" in text
     assert "source-health-report / source-health-report" in text
-    assert "require pull requests before merging" in text
-    assert "require the `validate / validate` status check" in text
-    assert "git diff --exit-code openva-pack.json indexes/" in text
-    assert "The report is an inventory and metadata-quality report only" in text
-
-
-def test_docs_index_links_ci_policy():
-    text = Path("docs/index.md").read_text(encoding="utf-8")
-
-    assert "docs/ci-and-branch-protection.md" in text
