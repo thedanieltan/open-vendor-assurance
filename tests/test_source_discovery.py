@@ -1,0 +1,143 @@
+from pathlib import Path
+
+import yaml
+
+from tools.openva.source_discovery import build_discovery_report, discover_for_vendor
+from tools.openva.source_verification import FetchResult
+
+
+def fetcher_for(matches: dict[str, str]):
+    def fetch(url: str) -> FetchResult:
+        body = matches.get(url, "not found")
+        status = 200 if url in matches else 404
+        return FetchResult(
+            requested_url=url,
+            final_url=url,
+            http_status=status,
+            content_type="text/html; charset=utf-8",
+            content_length=len(body),
+            etag=None,
+            last_modified=None,
+            body_sample=body.encode("utf-8"),
+        )
+
+    return fetch
+
+
+def vendor_record() -> dict:
+    return {
+        "schema_version": "0.1.0",
+        "vendor_id": "example",
+        "display_name": "Example",
+        "legal_name": "Example Inc.",
+        "headquarters_country": "US",
+        "official_domains": ["example.com"],
+        "public_entrypoints": ["https://www.example.com/privacy", "https://www.example.com/security"],
+        "source_policy": {
+            "public_sources_only": True,
+            "gated_materials_excluded": True,
+            "raw_documents_mirrored_by_default": False,
+        },
+        "status": "active",
+    }
+
+
+def write_vendor(root: Path, vendor: dict) -> None:
+    path = root / "data/vendors" / vendor["vendor_id"] / "vendor.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump(vendor, sort_keys=False), encoding="utf-8")
+
+
+def test_discovery_finds_candidate_from_official_domain():
+    vendor = vendor_record()
+    url = "https://www.example.com/legal/data-processing-addendum"
+
+    result = discover_for_vendor(
+        vendor,
+        root=Path("/tmp/nonexistent-openva-root"),
+        fetcher=fetcher_for({url: "Data Processing Addendum processor controller"}),
+        source_types=("dpa",),
+    )
+
+    assert len(result["candidates"]) == 1
+    assert result["candidates"][0]["candidate_url"] == url
+    assert result["candidates"][0]["source_type_candidate"] == "dpa"
+    assert result["candidates"][0]["requires_review"] is True
+    assert result["candidates"][0]["confidence"] == "likely"
+    assert result["unavailable_sources"] == []
+
+
+def test_discovery_records_unavailable_when_no_candidate_matches():
+    vendor = vendor_record()
+
+    result = discover_for_vendor(
+        vendor,
+        root=Path("/tmp/nonexistent-openva-root"),
+        fetcher=fetcher_for({}),
+        source_types=("subprocessors_list",),
+    )
+
+    assert result["candidates"] == []
+    assert len(result["unavailable_sources"]) == 1
+    unavailable = result["unavailable_sources"][0]
+    assert unavailable["source_type"] == "subprocessors_list"
+    assert unavailable["status"] == "not_identified"
+    assert unavailable["reason"] == "distinct_public_url_not_identified"
+    assert unavailable["not_advice"] is True
+    assert unavailable["candidate_urls_checked"]
+
+
+def test_discovery_skips_existing_canonical_source_type(tmp_path):
+    vendor = vendor_record()
+    write_vendor(tmp_path, vendor)
+    source_dir = tmp_path / "data/vendors/example/sources"
+    source_dir.mkdir(parents=True)
+    (source_dir / "example-dpa.yaml").write_text(
+        "schema_version: 0.1.0\n"
+        "source_id: example-dpa\n"
+        "vendor_id: example\n"
+        "source_type: dpa\n"
+        "title_native: Example DPA\n"
+        "source_url: https://www.example.com/legal/dpa\n"
+        "source_language: en\n"
+        "access_class: public_web\n"
+        "rights_class: metadata_only\n"
+        "provenance:\n"
+        "  publisher: vendor\n"
+        "  collected_at: '2026-05-16T00:00:00Z'\n"
+        "  observer: human\n"
+        "  confidence: medium\n"
+        "not_advice: true\n",
+        encoding="utf-8",
+    )
+
+    result = discover_for_vendor(
+        vendor,
+        root=tmp_path,
+        fetcher=fetcher_for(
+            {"https://www.example.com/legal/data-processing-addendum": "Data Processing Addendum processor controller"}
+        ),
+        source_types=("dpa",),
+    )
+
+    assert result["candidates"] == []
+    assert result["unavailable_sources"] == []
+
+
+def test_discovery_write_mode_writes_only_candidate_and_unavailable_records(tmp_path):
+    vendor = vendor_record()
+    write_vendor(tmp_path, vendor)
+
+    report = build_discovery_report(
+        root=tmp_path,
+        fetcher=fetcher_for(
+            {"https://www.example.com/privacy": "Privacy policy personal data"}
+        ),
+        write=True,
+    )
+
+    assert report["posture"]["writes_repository_state"] is True
+    assert report["posture"]["writes_canonical_sources"] is False
+    assert list((tmp_path / "data/vendors/example/sources").glob("*.yaml")) == []
+    assert list((tmp_path / "data/vendors/example/candidate_sources").glob("*.yaml"))
+    assert list((tmp_path / "data/vendors/example/unavailable_sources").glob("*.yaml"))
