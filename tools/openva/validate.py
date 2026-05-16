@@ -22,6 +22,8 @@ SCHEMA_MAP = {
     "artifact": ROOT / "schemas/openva/artifact-reference.schema.json",
     "observation": ROOT / "schemas/openva/observation.schema.json",
     "change": ROOT / "schemas/openva/change-event.schema.json",
+    "candidate_source": ROOT / "schemas/openva/candidate-source.schema.json",
+    "unavailable_source": ROOT / "schemas/openva/unavailable-source.schema.json",
     "pack": ROOT / "schemas/openva/openva-pack.schema.json",
 }
 
@@ -31,6 +33,8 @@ FIXTURE_GLOBS = {
     "artifact": ["examples/vendors/*/artifacts/*.yaml", "data/vendors/*/artifacts/*.yaml"],
     "observation": ["examples/vendors/*/observations/*.yaml", "data/vendors/*/observations/*.yaml"],
     "change": ["examples/vendors/*/changes/*.yaml", "data/vendors/*/changes/*.yaml"],
+    "candidate_source": ["examples/vendors/*/candidate_sources/*.yaml", "data/vendors/*/candidate_sources/*.yaml"],
+    "unavailable_source": ["examples/vendors/*/unavailable_sources/*.yaml", "data/vendors/*/unavailable_sources/*.yaml"],
 }
 
 RECORD_TEXT_FILE_GLOBS = ["examples/**/*.yaml", "data/**/*.yaml"]
@@ -84,6 +88,16 @@ def validate_schema(kind: str) -> list[str]:
     return failures
 
 
+def records_for_optional_kind(kind: str) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for path in iter_paths(FIXTURE_GLOBS[kind]):
+        record = load_yaml(path)
+        if isinstance(record, dict):
+            record["_openva_path"] = str(path.relative_to(ROOT))
+            records.append(record)
+    return records
+
+
 def validate_cross_references() -> list[str]:
     failures: list[str] = []
     vendors = {record["vendor_id"] for record in records_for("vendor")}
@@ -117,6 +131,17 @@ def validate_cross_references() -> list[str]:
         artifact_id = change.get("artifact_id")
         if artifact_id and artifact_id not in artifacts:
             failures.append(f"{change['_openva_path']}: unknown artifact_id {artifact_id}")
+
+    for candidate in records_for_optional_kind("candidate_source"):
+        if candidate["vendor_id"] not in vendors:
+            failures.append(f"{candidate['_openva_path']}: unknown vendor_id {candidate['vendor_id']}")
+
+    for unavailable in records_for_optional_kind("unavailable_source"):
+        if unavailable["vendor_id"] not in vendors:
+            failures.append(f"{unavailable['_openva_path']}: unknown vendor_id {unavailable['vendor_id']}")
+        for related_vendor_id in unavailable.get("related_vendor_ids", []):
+            if related_vendor_id not in vendors:
+                failures.append(f"{unavailable['_openva_path']}: unknown related_vendor_id {related_vendor_id}")
 
     return failures
 
@@ -178,6 +203,47 @@ def validate_region_tags(path: str, field: str, values: list[str], allowed_tags:
     return failures
 
 
+def validate_optional_source_ledgers(vendors: dict[str, dict[str, Any]], exceptions: set[tuple[str, str]]) -> list[str]:
+    failures: list[str] = []
+    seen_candidates: dict[str, str] = {}
+    seen_unavailable: dict[tuple[str, str], str] = {}
+
+    for candidate in records_for_optional_kind("candidate_source"):
+        path = candidate["_openva_path"]
+        if path.startswith("data/"):
+            expected_path = f"data/vendors/{candidate['vendor_id']}/candidate_sources/{candidate['candidate_source_id']}.yaml"
+            if path != expected_path:
+                failures.append(f"{path}: candidate_source_id/vendor_id do not match canonical path {expected_path}")
+
+        url = candidate["candidate_url"].rstrip("/")
+        failures.extend(f"{path}: candidate_url: {failure}" for failure in validate_url_safety(candidate["candidate_url"]))
+        if url in seen_candidates:
+            failures.append(f"{path}: duplicate candidate_url also used by {seen_candidates[url]}")
+        seen_candidates[url] = path
+
+        parsed = urlparse(candidate["candidate_url"])
+        vendor = vendors.get(candidate["vendor_id"])
+        if vendor and parsed.hostname and not source_domain_allowed(candidate["vendor_id"], parsed.hostname, vendor["official_domains"], exceptions):
+            failures.append(f"{path}: candidate host {parsed.hostname} is not within official_domains or official publisher exceptions for {candidate['vendor_id']}")
+
+    for unavailable in records_for_optional_kind("unavailable_source"):
+        path = unavailable["_openva_path"]
+        if path.startswith("data/"):
+            expected_path = f"data/vendors/{unavailable['vendor_id']}/unavailable_sources/{unavailable['unavailable_source_id']}.yaml"
+            if path != expected_path:
+                failures.append(f"{path}: unavailable_source_id/vendor_id do not match canonical path {expected_path}")
+
+        key = (unavailable["vendor_id"], unavailable["source_type"])
+        if key in seen_unavailable:
+            failures.append(f"{path}: duplicate unavailable source_type for vendor also used by {seen_unavailable[key]}")
+        seen_unavailable[key] = path
+
+        for candidate_url in unavailable.get("candidate_urls_checked", []):
+            failures.extend(f"{path}: candidate_urls_checked: {failure}" for failure in validate_url_safety(candidate_url))
+
+    return failures
+
+
 def validate_quality_gates() -> list[str]:
     failures: list[str] = []
     vendors = {record["vendor_id"]: record for record in records_for("vendor")}
@@ -219,6 +285,8 @@ def validate_quality_gates() -> list[str]:
             expected_path = f"data/vendors/{artifact['vendor_id']}/artifacts/{artifact['artifact_id']}.yaml"
             if path != expected_path:
                 failures.append(f"{path}: artifact_id/vendor_id do not match canonical path {expected_path}")
+
+    failures.extend(validate_optional_source_ledgers(vendors, exceptions))
 
     for path in ROOT.glob("**/*"):
         if path.is_dir() and path.name in RAW_CONTENT_DIR_NAMES:
