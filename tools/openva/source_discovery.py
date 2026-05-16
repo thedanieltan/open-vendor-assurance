@@ -1,0 +1,330 @@
+from __future__ import annotations
+
+import argparse
+import json
+from datetime import UTC, date, datetime, timedelta
+from pathlib import Path
+from typing import Any, Callable
+from urllib.parse import urlparse
+
+import yaml
+
+from tools.openva.source_verification import (
+    FetchResult,
+    ROOT,
+    fetch_url,
+    normalize_text,
+    semantic_match,
+    title_from_sample,
+)
+
+DEFAULT_SOURCE_TYPES = (
+    "dpa",
+    "subprocessors_list",
+    "privacy_notice",
+    "security_page",
+    "compliance_page",
+)
+
+DISCOVERY_PATHS: dict[str, tuple[str, ...]] = {
+    "dpa": (
+        "/legal/data-processing-addendum",
+        "/data-processing-addendum",
+        "/legal/dpa",
+        "/dpa",
+        "/privacy/dpa.html",
+        "/privacy/dpa",
+    ),
+    "subprocessors_list": (
+        "/legal/subprocessors",
+        "/subprocessors",
+        "/legal/sub-processors",
+        "/sub-processors",
+        "/privacy/sub-processors.html",
+        "/privacy/subprocessors",
+    ),
+    "privacy_notice": (
+        "/privacy",
+        "/privacy-policy",
+        "/legal/privacy",
+        "/legal/privacy-policy",
+        "/privacy.html",
+    ),
+    "security_page": (
+        "/security",
+        "/trust",
+        "/trust-center",
+        "/trustcenter",
+        "/security.html",
+    ),
+    "compliance_page": (
+        "/compliance",
+        "/security/compliance",
+        "/trust/compliance",
+        "/trust-center/compliance",
+        "/trustcenter/compliance",
+        "/compliance.html",
+    ),
+}
+
+UNAVAILABLE_REASON = {
+    "dpa": "distinct_public_url_not_identified",
+    "subprocessors_list": "distinct_public_url_not_identified",
+    "privacy_notice": "distinct_public_url_not_identified",
+    "security_page": "distinct_public_url_not_identified",
+    "compliance_page": "distinct_public_url_not_identified",
+}
+
+
+def load_yaml(path: Path) -> dict[str, Any]:
+    with path.open("r", encoding="utf-8") as handle:
+        data = yaml.safe_load(handle)
+    if not isinstance(data, dict):
+        raise ValueError(f"{path}: expected YAML mapping")
+    return data
+
+
+def write_yaml(path: Path, data: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+
+def vendor_paths(root: Path = ROOT) -> list[Path]:
+    return sorted((root / "data" / "vendors").glob("*/vendor.yaml"))
+
+
+def canonical_source_types_for_vendor(vendor_id: str, root: Path = ROOT) -> set[str]:
+    result: set[str] = set()
+    for path in sorted((root / "data" / "vendors" / vendor_id / "sources").glob("*.yaml")):
+        source = load_yaml(path)
+        source_type = source.get("source_type")
+        if isinstance(source_type, str):
+            result.add(source_type)
+    return result
+
+
+def unavailable_source_types_for_vendor(vendor_id: str, root: Path = ROOT) -> set[str]:
+    result: set[str] = set()
+    for path in sorted((root / "data" / "vendors" / vendor_id / "unavailable_sources").glob("*.yaml")):
+        unavailable = load_yaml(path)
+        source_type = unavailable.get("source_type")
+        if isinstance(source_type, str):
+            result.add(source_type)
+    return result
+
+
+def base_urls_for_vendor(vendor: dict[str, Any]) -> list[str]:
+    bases: list[str] = []
+    for entrypoint in vendor.get("public_entrypoints", []) or []:
+        parsed = urlparse(str(entrypoint))
+        if parsed.scheme and parsed.netloc:
+            bases.append(f"{parsed.scheme}://{parsed.netloc}")
+    for domain in vendor.get("official_domains", []) or []:
+        bases.append(f"https://www.{domain}")
+        bases.append(f"https://{domain}")
+    return list(dict.fromkeys(base.rstrip("/") for base in bases))
+
+
+def candidate_urls_for(vendor: dict[str, Any], source_type: str) -> list[str]:
+    urls: list[str] = []
+    for base in base_urls_for_vendor(vendor):
+        for path in DISCOVERY_PATHS.get(source_type, ()):
+            urls.append(f"{base}{path}")
+    return list(dict.fromkeys(urls))
+
+
+def is_candidate_match(source_type: str, result: FetchResult) -> tuple[bool, dict[str, Any]]:
+    if result.http_status != 200:
+        return False, {"status": "not_checked_non_200", "matched_terms": []}
+    text = normalize_text(result.body_sample, result.content_type)
+    semantic = semantic_match(source_type, text, result.content_type)
+    return semantic.get("status") in {"strong", "weak", "not_evaluated_pdf_sample"}, semantic
+
+
+def candidate_source_id(vendor_id: str, source_type: str) -> str:
+    suffix = source_type.replace("_", "-")
+    return f"{vendor_id}-{suffix}-candidate"
+
+
+def unavailable_source_id(vendor_id: str, source_type: str) -> str:
+    suffix = source_type.replace("_", "-")
+    return f"{vendor_id}-{suffix}"
+
+
+def candidate_record(
+    vendor_id: str,
+    source_type: str,
+    url: str,
+    result: FetchResult,
+    semantic: dict[str, Any],
+    discovered_at: str,
+) -> dict[str, Any]:
+    return {
+        "schema_version": "0.1.0",
+        "candidate_source_id": candidate_source_id(vendor_id, source_type),
+        "vendor_id": vendor_id,
+        "source_type_candidate": source_type,
+        "candidate_url": url,
+        "discovery_method": "official_domain_crawl",
+        "confidence": "likely" if semantic.get("status") == "strong" else "candidate",
+        "requires_review": True,
+        "discovered_at": discovered_at,
+        "discovered_by": "agent",
+        "evidence": {
+            "page_title": title_from_sample(result.body_sample, result.content_type),
+            "matched_terms": semantic.get("matched_terms", []),
+            "final_url": result.final_url,
+            "http_status": result.http_status,
+            "content_type": result.content_type,
+        },
+        "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
+        "not_advice": True,
+    }
+
+
+def unavailable_record(
+    vendor_id: str,
+    source_type: str,
+    checked_urls: list[str],
+    reviewed_at: str,
+    next_review_after: str,
+) -> dict[str, Any]:
+    return {
+        "schema_version": "0.1.0",
+        "unavailable_source_id": unavailable_source_id(vendor_id, source_type),
+        "vendor_id": vendor_id,
+        "source_type": source_type,
+        "status": "not_identified",
+        "reason": UNAVAILABLE_REASON.get(source_type, "other"),
+        "reviewed_at": reviewed_at,
+        "reviewed_by": "agent",
+        "next_review_after": next_review_after,
+        "candidate_urls_checked": checked_urls[:20],
+        "notes": "No matching public source was identified by narrow official-domain candidate discovery. This is not a legal or procurement conclusion.",
+        "not_advice": True,
+    }
+
+
+def discover_for_vendor(
+    vendor: dict[str, Any],
+    root: Path = ROOT,
+    fetcher: Callable[[str], FetchResult] = fetch_url,
+    source_types: tuple[str, ...] = DEFAULT_SOURCE_TYPES,
+    max_urls_per_type: int = 20,
+) -> dict[str, Any]:
+    vendor_id = str(vendor["vendor_id"])
+    existing_types = canonical_source_types_for_vendor(vendor_id, root) | unavailable_source_types_for_vendor(vendor_id, root)
+    discovered_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    next_review_after = (date.today() + timedelta(days=90)).isoformat()
+    candidates: list[dict[str, Any]] = []
+    unavailable: list[dict[str, Any]] = []
+    observations: list[dict[str, Any]] = []
+
+    for source_type in source_types:
+        if source_type in existing_types:
+            continue
+        checked_urls: list[str] = []
+        selected: dict[str, Any] | None = None
+        for url in candidate_urls_for(vendor, source_type)[:max_urls_per_type]:
+            checked_urls.append(url)
+            result = fetcher(url)
+            matched, semantic = is_candidate_match(source_type, result)
+            observations.append(
+                {
+                    "source_type": source_type,
+                    "candidate_url": url,
+                    "http_status": result.http_status,
+                    "final_url": result.final_url,
+                    "content_type": result.content_type,
+                    "semantic_status": semantic.get("status"),
+                    "matched_terms": semantic.get("matched_terms", []),
+                }
+            )
+            if matched:
+                selected = candidate_record(vendor_id, source_type, url, result, semantic, discovered_at)
+                break
+        if selected:
+            candidates.append(selected)
+        else:
+            unavailable.append(
+                unavailable_record(
+                    vendor_id,
+                    source_type,
+                    checked_urls,
+                    discovered_at,
+                    next_review_after,
+                )
+            )
+
+    return {
+        "vendor_id": vendor_id,
+        "candidates": candidates,
+        "unavailable_sources": unavailable,
+        "observations": observations,
+    }
+
+
+def write_discovery_outputs(discovery: dict[str, Any], root: Path = ROOT) -> None:
+    vendor_id = discovery["vendor_id"]
+    base = root / "data" / "vendors" / vendor_id
+    for candidate in discovery["candidates"]:
+        write_yaml(base / "candidate_sources" / f"{candidate['candidate_source_id']}.yaml", candidate)
+    for unavailable in discovery["unavailable_sources"]:
+        write_yaml(base / "unavailable_sources" / f"{unavailable['unavailable_source_id']}.yaml", unavailable)
+
+
+def build_discovery_report(
+    root: Path = ROOT,
+    fetcher: Callable[[str], FetchResult] = fetch_url,
+    vendor_limit: int | None = None,
+    write: bool = False,
+) -> dict[str, Any]:
+    paths = vendor_paths(root)
+    if vendor_limit is not None:
+        paths = paths[:vendor_limit]
+
+    vendor_results: list[dict[str, Any]] = []
+    for path in paths:
+        vendor = load_yaml(path)
+        result = discover_for_vendor(vendor, root=root, fetcher=fetcher)
+        if write:
+            write_discovery_outputs(result, root=root)
+        vendor_results.append(result)
+
+    return {
+        "schema_version": "0.1.0",
+        "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "report_type": "source_discovery_report",
+        "posture": {
+            "network_fetch_performed": True,
+            "writes_repository_state": write,
+            "writes_canonical_sources": False,
+            "opens_pull_requests": False,
+            "public_sources_only": True,
+            "non_advisory": True,
+        },
+        "summary": {
+            "vendors_checked": len(vendor_results),
+            "candidate_sources_written_or_reported": sum(len(item["candidates"]) for item in vendor_results),
+            "unavailable_sources_written_or_reported": sum(len(item["unavailable_sources"]) for item in vendor_results),
+        },
+        "vendors": vendor_results,
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(prog="openva-source-discovery")
+    parser.add_argument("command", choices={"discover"})
+    parser.add_argument("--vendor-limit", type=int)
+    parser.add_argument("--write", action="store_true")
+    parser.add_argument("--output", type=Path, default=ROOT / "source-discovery-report.json")
+    args = parser.parse_args()
+
+    report = build_discovery_report(vendor_limit=args.vendor_limit, write=args.write)
+    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(json.dumps(report["summary"], indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
