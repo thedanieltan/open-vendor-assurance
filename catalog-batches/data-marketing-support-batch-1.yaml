@@ -1,0 +1,656 @@
+schema_version: 0.1.0
+batch_id: data-marketing-support-batch-1
+operation: create
+collected_at: '2026-05-16T00:00:00Z'
+observer: human
+vendors:
+  - vendor_id: snowflake
+    display_name: Snowflake
+    legal_name: Snowflake Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [snowflake.com]
+    public_entrypoints:
+      - https://www.snowflake.com/en/legal/
+      - https://www.snowflake.com/en/trust/
+    vendor_categories: [data_platform, cloud_data_warehouse, analytics, ai_platform]
+    notes: Public-source-only catalog record. Metadata references general public Snowflake assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: snowflake-dpa
+        source_type: dpa
+        title_native: Snowflake Data Processing Addendum
+        title_en: Snowflake Data Processing Addendum
+        source_url: https://www.snowflake.com/en/legal/data-processing-addendum/
+        source_language: en
+        summary_native: Public Snowflake data processing addendum metadata reference.
+        summary_en: Public Snowflake data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: snowflake-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Snowflake services] }
+      - source_id: snowflake-subprocessors
+        source_type: subprocessors_list
+        title_native: Snowflake Subprocessors
+        title_en: Snowflake Subprocessors
+        source_url: https://www.snowflake.com/en/legal/subprocessors/
+        source_language: en
+        summary_native: Public Snowflake subprocessors metadata reference.
+        summary_en: Public Snowflake subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: snowflake-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Snowflake services] }
+      - source_id: snowflake-privacy
+        source_type: privacy_notice
+        title_native: Snowflake Privacy Notice
+        title_en: Snowflake Privacy Notice
+        source_url: https://www.snowflake.com/en/legal/privacy-notice/
+        source_language: en
+        summary_native: Public Snowflake privacy notice metadata reference.
+        summary_en: Public Snowflake privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: snowflake-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Snowflake services] }
+      - source_id: snowflake-security
+        source_type: security_page
+        title_native: Snowflake Trust Center
+        title_en: Snowflake Trust Center
+        source_url: https://www.snowflake.com/en/trust/
+        source_language: en
+        summary_native: Public Snowflake trust and security metadata reference.
+        summary_en: Public Snowflake trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: snowflake-security, artifact_type: security_page, region_scope: [global], product_scope: [Snowflake services] }
+      - source_id: snowflake-compliance
+        source_type: compliance_page
+        title_native: Snowflake Compliance
+        title_en: Snowflake Compliance
+        source_url: https://www.snowflake.com/en/trust/compliance/
+        source_language: en
+        summary_native: Public Snowflake compliance metadata reference.
+        summary_en: Public Snowflake compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: snowflake-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Snowflake services] }
+
+  - vendor_id: databricks
+    display_name: Databricks
+    legal_name: Databricks, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [databricks.com]
+    public_entrypoints:
+      - https://www.databricks.com/legal
+      - https://www.databricks.com/trust
+    vendor_categories: [data_platform, analytics, ai_platform, developer_platform]
+    notes: Public-source-only catalog record. Metadata references general public Databricks assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: databricks-dpa
+        source_type: dpa
+        title_native: Databricks Data Processing Addendum
+        title_en: Databricks Data Processing Addendum
+        source_url: https://www.databricks.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public Databricks data processing addendum metadata reference.
+        summary_en: Public Databricks data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: databricks-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Databricks services] }
+      - source_id: databricks-subprocessors
+        source_type: subprocessors_list
+        title_native: Databricks Subprocessors
+        title_en: Databricks Subprocessors
+        source_url: https://www.databricks.com/legal/subprocessors
+        source_language: en
+        summary_native: Public Databricks subprocessors metadata reference.
+        summary_en: Public Databricks subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: databricks-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Databricks services] }
+      - source_id: databricks-privacy
+        source_type: privacy_notice
+        title_native: Databricks Privacy Notice
+        title_en: Databricks Privacy Notice
+        source_url: https://www.databricks.com/legal/privacynotice
+        source_language: en
+        summary_native: Public Databricks privacy notice metadata reference.
+        summary_en: Public Databricks privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: databricks-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Databricks services] }
+      - source_id: databricks-security
+        source_type: security_page
+        title_native: Databricks Trust Center
+        title_en: Databricks Trust Center
+        source_url: https://www.databricks.com/trust
+        source_language: en
+        summary_native: Public Databricks trust and security metadata reference.
+        summary_en: Public Databricks trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: databricks-security, artifact_type: security_page, region_scope: [global], product_scope: [Databricks services] }
+      - source_id: databricks-compliance
+        source_type: compliance_page
+        title_native: Databricks Compliance
+        title_en: Databricks Compliance
+        source_url: https://www.databricks.com/trust/compliance
+        source_language: en
+        summary_native: Public Databricks compliance metadata reference.
+        summary_en: Public Databricks compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: databricks-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Databricks services] }
+
+  - vendor_id: mongodb
+    display_name: MongoDB
+    legal_name: MongoDB, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [mongodb.com]
+    public_entrypoints:
+      - https://www.mongodb.com/legal
+      - https://www.mongodb.com/trust
+    vendor_categories: [database, data_platform, developer_platform]
+    notes: Public-source-only catalog record. Metadata references general public MongoDB assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: mongodb-dpa
+        source_type: dpa
+        title_native: MongoDB Data Processing Agreement
+        title_en: MongoDB Data Processing Agreement
+        source_url: https://www.mongodb.com/legal/dpa
+        source_language: en
+        summary_native: Public MongoDB data processing agreement metadata reference.
+        summary_en: Public MongoDB data processing agreement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: mongodb-dpa, artifact_type: dpa, region_scope: [global], product_scope: [MongoDB services] }
+      - source_id: mongodb-subprocessors
+        source_type: subprocessors_list
+        title_native: MongoDB Subprocessors
+        title_en: MongoDB Subprocessors
+        source_url: https://www.mongodb.com/legal/subprocessors
+        source_language: en
+        summary_native: Public MongoDB subprocessors metadata reference.
+        summary_en: Public MongoDB subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: mongodb-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [MongoDB services] }
+      - source_id: mongodb-privacy
+        source_type: privacy_notice
+        title_native: MongoDB Privacy Policy
+        title_en: MongoDB Privacy Policy
+        source_url: https://www.mongodb.com/legal/privacy-policy
+        source_language: en
+        summary_native: Public MongoDB privacy policy metadata reference.
+        summary_en: Public MongoDB privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: mongodb-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [MongoDB services] }
+      - source_id: mongodb-security
+        source_type: security_page
+        title_native: MongoDB Trust Center
+        title_en: MongoDB Trust Center
+        source_url: https://www.mongodb.com/trust
+        source_language: en
+        summary_native: Public MongoDB trust and security metadata reference.
+        summary_en: Public MongoDB trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: mongodb-security, artifact_type: security_page, region_scope: [global], product_scope: [MongoDB services] }
+      - source_id: mongodb-compliance
+        source_type: compliance_page
+        title_native: MongoDB Compliance
+        title_en: MongoDB Compliance
+        source_url: https://www.mongodb.com/trust/compliance
+        source_language: en
+        summary_native: Public MongoDB compliance metadata reference.
+        summary_en: Public MongoDB compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: mongodb-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [MongoDB services] }
+
+  - vendor_id: hubspot
+    display_name: HubSpot
+    legal_name: HubSpot, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [hubspot.com]
+    public_entrypoints:
+      - https://legal.hubspot.com/
+      - https://trust.hubspot.com/
+    vendor_categories: [crm, marketing_platform, sales_platform, customer_engagement]
+    notes: Public-source-only catalog record. Metadata references general public HubSpot assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: hubspot-dpa
+        source_type: dpa
+        title_native: HubSpot Data Processing Agreement
+        title_en: HubSpot Data Processing Agreement
+        source_url: https://legal.hubspot.com/dpa
+        source_language: en
+        summary_native: Public HubSpot data processing agreement metadata reference.
+        summary_en: Public HubSpot data processing agreement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: hubspot-dpa, artifact_type: dpa, region_scope: [global], product_scope: [HubSpot services] }
+      - source_id: hubspot-subprocessors
+        source_type: subprocessors_list
+        title_native: HubSpot Subprocessors
+        title_en: HubSpot Subprocessors
+        source_url: https://legal.hubspot.com/subprocessors-page
+        source_language: en
+        summary_native: Public HubSpot subprocessors metadata reference.
+        summary_en: Public HubSpot subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: hubspot-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [HubSpot services] }
+      - source_id: hubspot-privacy
+        source_type: privacy_notice
+        title_native: HubSpot Privacy Policy
+        title_en: HubSpot Privacy Policy
+        source_url: https://legal.hubspot.com/privacy-policy
+        source_language: en
+        summary_native: Public HubSpot privacy policy metadata reference.
+        summary_en: Public HubSpot privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: hubspot-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [HubSpot services] }
+      - source_id: hubspot-security
+        source_type: security_page
+        title_native: HubSpot Trust Center
+        title_en: HubSpot Trust Center
+        source_url: https://trust.hubspot.com/
+        source_language: en
+        summary_native: Public HubSpot trust and security metadata reference.
+        summary_en: Public HubSpot trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: hubspot-security, artifact_type: security_page, region_scope: [global], product_scope: [HubSpot services] }
+      - source_id: hubspot-compliance
+        source_type: compliance_page
+        title_native: HubSpot Compliance
+        title_en: HubSpot Compliance
+        source_url: https://trust.hubspot.com/compliance
+        source_language: en
+        summary_native: Public HubSpot compliance metadata reference.
+        summary_en: Public HubSpot compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: hubspot-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [HubSpot services] }
+
+  - vendor_id: mailchimp
+    display_name: Mailchimp
+    legal_name: The Rocket Science Group LLC
+    headquarters_country: US
+    regions_served: [global]
+    entity_family: intuit
+    entity_surface: product_surface
+    source_authority_language: en
+    official_domains: [mailchimp.com]
+    public_entrypoints:
+      - https://mailchimp.com/legal/
+      - https://mailchimp.com/about/security/
+    vendor_categories: [marketing_platform, customer_engagement, email_marketing]
+    notes: Public-source-only catalog record. Mailchimp is modeled as a product surface with its own public assurance materials.
+    sources:
+      - source_id: mailchimp-dpa
+        source_type: dpa
+        title_native: Mailchimp Data Processing Addendum
+        title_en: Mailchimp Data Processing Addendum
+        source_url: https://mailchimp.com/legal/data-processing-addendum/
+        source_language: en
+        summary_native: Public Mailchimp data processing addendum metadata reference.
+        summary_en: Public Mailchimp data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: mailchimp-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Mailchimp] }
+      - source_id: mailchimp-subprocessors
+        source_type: subprocessors_list
+        title_native: Mailchimp Subprocessors
+        title_en: Mailchimp Subprocessors
+        source_url: https://mailchimp.com/legal/subprocessors/
+        source_language: en
+        summary_native: Public Mailchimp subprocessors metadata reference.
+        summary_en: Public Mailchimp subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: mailchimp-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Mailchimp] }
+      - source_id: mailchimp-privacy
+        source_type: privacy_notice
+        title_native: Mailchimp Privacy Statement
+        title_en: Mailchimp Privacy Statement
+        source_url: https://mailchimp.com/legal/privacy/
+        source_language: en
+        summary_native: Public Mailchimp privacy statement metadata reference.
+        summary_en: Public Mailchimp privacy statement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: mailchimp-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Mailchimp] }
+      - source_id: mailchimp-security
+        source_type: security_page
+        title_native: Mailchimp Security
+        title_en: Mailchimp Security
+        source_url: https://mailchimp.com/about/security/
+        source_language: en
+        summary_native: Public Mailchimp security metadata reference.
+        summary_en: Public Mailchimp security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: mailchimp-security, artifact_type: security_page, region_scope: [global], product_scope: [Mailchimp] }
+      - source_id: mailchimp-compliance
+        source_type: compliance_page
+        title_native: Mailchimp Compliance
+        title_en: Mailchimp Compliance
+        source_url: https://mailchimp.com/legal/
+        source_language: en
+        summary_native: Public Mailchimp legal/compliance entrypoint metadata reference.
+        summary_en: Public Mailchimp legal/compliance entrypoint metadata reference.
+        confidence: low
+        artifact: { artifact_id: mailchimp-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Mailchimp] }
+
+  - vendor_id: intercom
+    display_name: Intercom
+    legal_name: Intercom, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [intercom.com]
+    public_entrypoints:
+      - https://www.intercom.com/legal
+      - https://www.intercom.com/security
+    vendor_categories: [customer_support, customer_engagement, messaging, ai_platform]
+    notes: Public-source-only catalog record. Metadata references general public Intercom assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: intercom-dpa
+        source_type: dpa
+        title_native: Intercom Data Processing Agreement
+        title_en: Intercom Data Processing Agreement
+        source_url: https://www.intercom.com/legal/data-processing-agreement
+        source_language: en
+        summary_native: Public Intercom data processing agreement metadata reference.
+        summary_en: Public Intercom data processing agreement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: intercom-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Intercom services] }
+      - source_id: intercom-subprocessors
+        source_type: subprocessors_list
+        title_native: Intercom Subprocessors
+        title_en: Intercom Subprocessors
+        source_url: https://www.intercom.com/legal/subprocessors
+        source_language: en
+        summary_native: Public Intercom subprocessors metadata reference.
+        summary_en: Public Intercom subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: intercom-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Intercom services] }
+      - source_id: intercom-privacy
+        source_type: privacy_notice
+        title_native: Intercom Privacy Policy
+        title_en: Intercom Privacy Policy
+        source_url: https://www.intercom.com/legal/privacy
+        source_language: en
+        summary_native: Public Intercom privacy policy metadata reference.
+        summary_en: Public Intercom privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: intercom-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Intercom services] }
+      - source_id: intercom-security
+        source_type: security_page
+        title_native: Intercom Security
+        title_en: Intercom Security
+        source_url: https://www.intercom.com/security
+        source_language: en
+        summary_native: Public Intercom security metadata reference.
+        summary_en: Public Intercom security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: intercom-security, artifact_type: security_page, region_scope: [global], product_scope: [Intercom services] }
+      - source_id: intercom-compliance
+        source_type: compliance_page
+        title_native: Intercom Compliance
+        title_en: Intercom Compliance
+        source_url: https://www.intercom.com/security#compliance
+        source_language: en
+        summary_native: Public Intercom compliance metadata reference.
+        summary_en: Public Intercom compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: intercom-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Intercom services] }
+
+  - vendor_id: zendesk
+    display_name: Zendesk
+    legal_name: Zendesk, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [zendesk.com]
+    public_entrypoints:
+      - https://www.zendesk.com/trust-center/
+      - https://www.zendesk.com/company/agreements-and-terms/privacy-notice/
+    vendor_categories: [customer_support, customer_engagement, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Zendesk assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: zendesk-dpa
+        source_type: dpa
+        title_native: Zendesk Data Processing Agreement
+        title_en: Zendesk Data Processing Agreement
+        source_url: https://www.zendesk.com/company/agreements-and-terms/data-processing-agreement/
+        source_language: en
+        summary_native: Public Zendesk data processing agreement metadata reference.
+        summary_en: Public Zendesk data processing agreement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zendesk-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Zendesk services] }
+      - source_id: zendesk-subprocessors
+        source_type: subprocessors_list
+        title_native: Zendesk Subprocessors
+        title_en: Zendesk Subprocessors
+        source_url: https://www.zendesk.com/company/agreements-and-terms/subprocessors/
+        source_language: en
+        summary_native: Public Zendesk subprocessors metadata reference.
+        summary_en: Public Zendesk subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zendesk-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Zendesk services] }
+      - source_id: zendesk-privacy
+        source_type: privacy_notice
+        title_native: Zendesk Privacy Notice
+        title_en: Zendesk Privacy Notice
+        source_url: https://www.zendesk.com/company/agreements-and-terms/privacy-notice/
+        source_language: en
+        summary_native: Public Zendesk privacy notice metadata reference.
+        summary_en: Public Zendesk privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zendesk-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Zendesk services] }
+      - source_id: zendesk-security
+        source_type: security_page
+        title_native: Zendesk Trust Center
+        title_en: Zendesk Trust Center
+        source_url: https://www.zendesk.com/trust-center/
+        source_language: en
+        summary_native: Public Zendesk trust and security metadata reference.
+        summary_en: Public Zendesk trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zendesk-security, artifact_type: security_page, region_scope: [global], product_scope: [Zendesk services] }
+      - source_id: zendesk-compliance
+        source_type: compliance_page
+        title_native: Zendesk Compliance
+        title_en: Zendesk Compliance
+        source_url: https://www.zendesk.com/trust-center/compliance/
+        source_language: en
+        summary_native: Public Zendesk compliance metadata reference.
+        summary_en: Public Zendesk compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zendesk-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Zendesk services] }
+
+  - vendor_id: freshworks
+    display_name: Freshworks
+    legal_name: Freshworks Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [freshworks.com]
+    public_entrypoints:
+      - https://www.freshworks.com/security/
+      - https://www.freshworks.com/privacy/
+    vendor_categories: [customer_support, customer_engagement, crm, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Freshworks assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: freshworks-dpa
+        source_type: dpa
+        title_native: Freshworks Data Processing Addendum
+        title_en: Freshworks Data Processing Addendum
+        source_url: https://www.freshworks.com/data-processing-addendum/
+        source_language: en
+        summary_native: Public Freshworks data processing addendum metadata reference.
+        summary_en: Public Freshworks data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: freshworks-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Freshworks services] }
+      - source_id: freshworks-subprocessors
+        source_type: subprocessors_list
+        title_native: Freshworks Subprocessors
+        title_en: Freshworks Subprocessors
+        source_url: https://www.freshworks.com/subprocessors/
+        source_language: en
+        summary_native: Public Freshworks subprocessors metadata reference.
+        summary_en: Public Freshworks subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: freshworks-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Freshworks services] }
+      - source_id: freshworks-privacy
+        source_type: privacy_notice
+        title_native: Freshworks Privacy Notice
+        title_en: Freshworks Privacy Notice
+        source_url: https://www.freshworks.com/privacy/
+        source_language: en
+        summary_native: Public Freshworks privacy notice metadata reference.
+        summary_en: Public Freshworks privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: freshworks-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Freshworks services] }
+      - source_id: freshworks-security
+        source_type: security_page
+        title_native: Freshworks Security
+        title_en: Freshworks Security
+        source_url: https://www.freshworks.com/security/
+        source_language: en
+        summary_native: Public Freshworks security metadata reference.
+        summary_en: Public Freshworks security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: freshworks-security, artifact_type: security_page, region_scope: [global], product_scope: [Freshworks services] }
+      - source_id: freshworks-compliance
+        source_type: compliance_page
+        title_native: Freshworks Compliance
+        title_en: Freshworks Compliance
+        source_url: https://www.freshworks.com/security/compliance/
+        source_language: en
+        summary_native: Public Freshworks compliance metadata reference.
+        summary_en: Public Freshworks compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: freshworks-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Freshworks services] }
+
+  - vendor_id: stripe
+    display_name: Stripe
+    legal_name: Stripe, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [stripe.com]
+    public_entrypoints:
+      - https://stripe.com/legal
+      - https://stripe.com/docs/security
+    vendor_categories: [payments, fintech, financial_infrastructure, developer_platform]
+    notes: Public-source-only catalog record. Metadata references general public Stripe assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: stripe-dpa
+        source_type: dpa
+        title_native: Stripe Data Processing Agreement
+        title_en: Stripe Data Processing Agreement
+        source_url: https://stripe.com/legal/dpa
+        source_language: en
+        summary_native: Public Stripe data processing agreement metadata reference.
+        summary_en: Public Stripe data processing agreement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: stripe-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Stripe services] }
+      - source_id: stripe-subprocessors
+        source_type: subprocessors_list
+        title_native: Stripe Subprocessors
+        title_en: Stripe Subprocessors
+        source_url: https://stripe.com/legal/service-providers
+        source_language: en
+        summary_native: Public Stripe service providers/subprocessors metadata reference.
+        summary_en: Public Stripe service providers/subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: stripe-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Stripe services] }
+      - source_id: stripe-privacy
+        source_type: privacy_notice
+        title_native: Stripe Privacy Policy
+        title_en: Stripe Privacy Policy
+        source_url: https://stripe.com/privacy
+        source_language: en
+        summary_native: Public Stripe privacy policy metadata reference.
+        summary_en: Public Stripe privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: stripe-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Stripe services] }
+      - source_id: stripe-security
+        source_type: security_page
+        title_native: Stripe Security
+        title_en: Stripe Security
+        source_url: https://stripe.com/docs/security
+        source_language: en
+        summary_native: Public Stripe security metadata reference.
+        summary_en: Public Stripe security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: stripe-security, artifact_type: security_page, region_scope: [global], product_scope: [Stripe services] }
+      - source_id: stripe-compliance
+        source_type: compliance_page
+        title_native: Stripe Compliance
+        title_en: Stripe Compliance
+        source_url: https://stripe.com/guides/general-data-protection-regulation
+        source_language: en
+        summary_native: Public Stripe compliance/legal guidance metadata reference.
+        summary_en: Public Stripe compliance/legal guidance metadata reference.
+        confidence: low
+        artifact: { artifact_id: stripe-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Stripe services] }
+
+  - vendor_id: twilio
+    display_name: Twilio
+    legal_name: Twilio Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [twilio.com]
+    public_entrypoints:
+      - https://www.twilio.com/en-us/legal
+      - https://www.twilio.com/en-us/trust/security
+    vendor_categories: [communications_platform, messaging, developer_platform, customer_engagement]
+    notes: Public-source-only catalog record. Metadata references general public Twilio assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: twilio-dpa
+        source_type: dpa
+        title_native: Twilio Data Protection Addendum
+        title_en: Twilio Data Protection Addendum
+        source_url: https://www.twilio.com/en-us/legal/data-protection-addendum
+        source_language: en
+        summary_native: Public Twilio data protection addendum metadata reference.
+        summary_en: Public Twilio data protection addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: twilio-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Twilio services] }
+      - source_id: twilio-subprocessors
+        source_type: subprocessors_list
+        title_native: Twilio Subprocessors
+        title_en: Twilio Subprocessors
+        source_url: https://www.twilio.com/en-us/legal/sub-processors
+        source_language: en
+        summary_native: Public Twilio subprocessors metadata reference.
+        summary_en: Public Twilio subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: twilio-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Twilio services] }
+      - source_id: twilio-privacy
+        source_type: privacy_notice
+        title_native: Twilio Privacy Notice
+        title_en: Twilio Privacy Notice
+        source_url: https://www.twilio.com/en-us/legal/privacy
+        source_language: en
+        summary_native: Public Twilio privacy notice metadata reference.
+        summary_en: Public Twilio privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: twilio-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Twilio services] }
+      - source_id: twilio-security
+        source_type: security_page
+        title_native: Twilio Security
+        title_en: Twilio Security
+        source_url: https://www.twilio.com/en-us/trust/security
+        source_language: en
+        summary_native: Public Twilio security metadata reference.
+        summary_en: Public Twilio security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: twilio-security, artifact_type: security_page, region_scope: [global], product_scope: [Twilio services] }
+      - source_id: twilio-compliance
+        source_type: compliance_page
+        title_native: Twilio Trust Center
+        title_en: Twilio Trust Center
+        source_url: https://www.twilio.com/en-us/trust
+        source_language: en
+        summary_native: Public Twilio trust/compliance metadata reference.
+        summary_en: Public Twilio trust/compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: twilio-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Twilio services] }

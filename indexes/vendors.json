@@ -1,5 +1,5 @@
 {
-  "count": 24,
+  "count": 34,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -246,6 +246,39 @@
       "vendor_id": "cloudflare"
     },
     {
+      "_openva_path": "data/vendors/databricks/vendor.yaml",
+      "display_name": "Databricks",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Databricks, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Databricks assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "databricks.com"
+      ],
+      "public_entrypoints": [
+        "https://www.databricks.com/legal",
+        "https://www.databricks.com/trust"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "data_platform",
+        "analytics",
+        "ai_platform",
+        "developer_platform"
+      ],
+      "vendor_id": "databricks"
+    },
+    {
       "_openva_path": "data/vendors/digitalocean/vendor.yaml",
       "display_name": "DigitalOcean",
       "entity_surface": "global_brand",
@@ -303,6 +336,39 @@
         "cloud_infrastructure"
       ],
       "vendor_id": "example-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/freshworks/vendor.yaml",
+      "display_name": "Freshworks",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Freshworks Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Freshworks assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "freshworks.com"
+      ],
+      "public_entrypoints": [
+        "https://www.freshworks.com/security/",
+        "https://www.freshworks.com/privacy/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "customer_support",
+        "customer_engagement",
+        "crm",
+        "enterprise_software"
+      ],
+      "vendor_id": "freshworks"
     },
     {
       "_openva_path": "data/vendors/github/vendor.yaml",
@@ -452,6 +518,39 @@
       "vendor_id": "huawei-cloud-international"
     },
     {
+      "_openva_path": "data/vendors/hubspot/vendor.yaml",
+      "display_name": "HubSpot",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "HubSpot, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public HubSpot assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "hubspot.com"
+      ],
+      "public_entrypoints": [
+        "https://legal.hubspot.com/",
+        "https://trust.hubspot.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "crm",
+        "marketing_platform",
+        "sales_platform",
+        "customer_engagement"
+      ],
+      "vendor_id": "hubspot"
+    },
+    {
       "_openva_path": "data/vendors/ibm-cloud/vendor.yaml",
       "display_name": "IBM Cloud",
       "entity_surface": "global_brand",
@@ -486,6 +585,72 @@
       "vendor_id": "ibm-cloud"
     },
     {
+      "_openva_path": "data/vendors/intercom/vendor.yaml",
+      "display_name": "Intercom",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Intercom, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Intercom assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "intercom.com"
+      ],
+      "public_entrypoints": [
+        "https://www.intercom.com/legal",
+        "https://www.intercom.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "customer_support",
+        "customer_engagement",
+        "messaging",
+        "ai_platform"
+      ],
+      "vendor_id": "intercom"
+    },
+    {
+      "_openva_path": "data/vendors/mailchimp/vendor.yaml",
+      "display_name": "Mailchimp",
+      "entity_family": "intuit",
+      "entity_surface": "product_surface",
+      "headquarters_country": "US",
+      "legal_name": "The Rocket Science Group LLC",
+      "notes": "Public-source-only catalog record. Mailchimp is modeled as a product surface with its own public assurance materials.",
+      "official_domains": [
+        "mailchimp.com"
+      ],
+      "public_entrypoints": [
+        "https://mailchimp.com/legal/",
+        "https://mailchimp.com/about/security/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "marketing_platform",
+        "customer_engagement",
+        "email_marketing"
+      ],
+      "vendor_id": "mailchimp"
+    },
+    {
       "_openva_path": "data/vendors/microsoft/vendor.yaml",
       "display_name": "Microsoft",
       "headquarters_country": "US",
@@ -517,6 +682,38 @@
         "ai_platform"
       ],
       "vendor_id": "microsoft"
+    },
+    {
+      "_openva_path": "data/vendors/mongodb/vendor.yaml",
+      "display_name": "MongoDB",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "MongoDB, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public MongoDB assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "mongodb.com"
+      ],
+      "public_entrypoints": [
+        "https://www.mongodb.com/legal",
+        "https://www.mongodb.com/trust"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "database",
+        "data_platform",
+        "developer_platform"
+      ],
+      "vendor_id": "mongodb"
     },
     {
       "_openva_path": "data/vendors/okta/vendor.yaml",
@@ -682,6 +879,72 @@
       "vendor_id": "slack"
     },
     {
+      "_openva_path": "data/vendors/snowflake/vendor.yaml",
+      "display_name": "Snowflake",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Snowflake Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Snowflake assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "snowflake.com"
+      ],
+      "public_entrypoints": [
+        "https://www.snowflake.com/en/legal/",
+        "https://www.snowflake.com/en/trust/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "data_platform",
+        "cloud_data_warehouse",
+        "analytics",
+        "ai_platform"
+      ],
+      "vendor_id": "snowflake"
+    },
+    {
+      "_openva_path": "data/vendors/stripe/vendor.yaml",
+      "display_name": "Stripe",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Stripe, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Stripe assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "stripe.com"
+      ],
+      "public_entrypoints": [
+        "https://stripe.com/legal",
+        "https://stripe.com/docs/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "fintech",
+        "financial_infrastructure",
+        "developer_platform"
+      ],
+      "vendor_id": "stripe"
+    },
+    {
       "_openva_path": "data/vendors/tencent-cloud-cn/vendor.yaml",
       "display_name": "腾讯云",
       "entity_family": "tencent-cloud",
@@ -760,6 +1023,39 @@
       "vendor_id": "tencent-cloud-international"
     },
     {
+      "_openva_path": "data/vendors/twilio/vendor.yaml",
+      "display_name": "Twilio",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Twilio Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Twilio assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "twilio.com"
+      ],
+      "public_entrypoints": [
+        "https://www.twilio.com/en-us/legal",
+        "https://www.twilio.com/en-us/trust/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "communications_platform",
+        "messaging",
+        "developer_platform",
+        "customer_engagement"
+      ],
+      "vendor_id": "twilio"
+    },
+    {
       "_openva_path": "data/vendors/workday/vendor.yaml",
       "display_name": "Workday",
       "entity_surface": "global_brand",
@@ -790,6 +1086,38 @@
         "enterprise_software"
       ],
       "vendor_id": "workday"
+    },
+    {
+      "_openva_path": "data/vendors/zendesk/vendor.yaml",
+      "display_name": "Zendesk",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Zendesk, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Zendesk assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "zendesk.com"
+      ],
+      "public_entrypoints": [
+        "https://www.zendesk.com/trust-center/",
+        "https://www.zendesk.com/company/agreements-and-terms/privacy-notice/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "customer_support",
+        "customer_engagement",
+        "enterprise_software"
+      ],
+      "vendor_id": "zendesk"
     },
     {
       "_openva_path": "data/vendors/zoom/vendor.yaml",
