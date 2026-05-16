@@ -1,0 +1,25 @@
+schema_version: 0.1.0
+vendor_id: pagerduty
+display_name: PagerDuty
+legal_name: PagerDuty, Inc.
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- pagerduty.com
+public_entrypoints:
+- https://www.pagerduty.com/security/
+- https://www.pagerduty.com/privacy/
+vendor_categories:
+- incident_management
+- observability
+- enterprise_software
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Metadata references general public PagerDuty
+  assurance materials and does not cover bespoke customer agreements.
+entity_surface: global_brand
+source_authority_language: en
