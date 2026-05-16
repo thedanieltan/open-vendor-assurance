@@ -1,0 +1,27 @@
+schema_version: 0.1.0
+vendor_id: ibm-cloud
+display_name: IBM Cloud
+legal_name: International Business Machines Corporation
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- ibm.com
+public_entrypoints:
+- https://www.ibm.com/cloud
+- https://www.ibm.com/cloud/compliance
+vendor_categories:
+- cloud_infrastructure
+- database
+- developer_platform
+- data_platform
+- ai_platform
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Metadata references general public IBM Cloud
+  assurance materials and does not cover bespoke customer agreements.
+entity_surface: global_brand
+source_authority_language: en

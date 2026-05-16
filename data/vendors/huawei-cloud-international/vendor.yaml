@@ -1,0 +1,31 @@
+schema_version: 0.1.0
+vendor_id: huawei-cloud-international
+display_name: Huawei Cloud International
+legal_name: Huawei Cloud
+headquarters_country: CN
+regions_served:
+- global
+- apac
+official_domains:
+- huaweicloud.com
+public_entrypoints:
+- https://www.huaweicloud.com/intl/en-us/
+- https://www.huaweicloud.com/intl/en-us/trust-center/
+vendor_categories:
+- cloud_infrastructure
+- database
+- developer_platform
+- data_platform
+- ai_platform
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: International-facing Huawei Cloud public-source record. Related mainland/native
+  Huawei Cloud record may exist separately and should not be merged with this record.
+entity_family: huawei-cloud
+entity_surface: international
+related_vendor_ids:
+- huawei-cloud-cn
+source_authority_language: en

@@ -1,0 +1,31 @@
+schema_version: 0.1.0
+vendor_id: tencent-cloud-cn
+display_name: 腾讯云
+legal_name: 腾讯云计算（北京）有限责任公司
+headquarters_country: CN
+regions_served:
+- cn
+official_domains:
+- cloud.tencent.com
+- tencent.com
+public_entrypoints:
+- https://cloud.tencent.com/
+- https://cloud.tencent.com/document/product/301
+vendor_categories:
+- cloud_infrastructure
+- database
+- developer_platform
+- data_platform
+- ai_platform
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Mainland China/native 腾讯云 public-source record. Public-source metadata requires
+  later refinement.
+entity_family: tencent-cloud
+entity_surface: mainland_china
+related_vendor_ids:
+- tencent-cloud-international
+source_authority_language: zh

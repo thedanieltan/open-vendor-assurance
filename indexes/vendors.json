@@ -1,7 +1,84 @@
 {
-  "count": 5,
+  "count": 14,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
+    {
+      "_openva_path": "data/vendors/alibaba-cloud-international/vendor.yaml",
+      "display_name": "Alibaba Cloud International",
+      "entity_family": "alibaba-cloud",
+      "entity_surface": "international",
+      "headquarters_country": "SG",
+      "legal_name": "Alibaba Cloud (Singapore) Private Limited",
+      "notes": "International-facing Alibaba Cloud public-source record. Related mainland/native record may exist separately and should not be merged with this record.",
+      "official_domains": [
+        "alibabacloud.com"
+      ],
+      "public_entrypoints": [
+        "https://www.alibabacloud.com/trust-center",
+        "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-privacy-policy"
+      ],
+      "regions_served": [
+        "global",
+        "apac"
+      ],
+      "related_vendor_ids": [
+        "aliyun"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "database",
+        "developer_platform",
+        "data_platform",
+        "ai_platform"
+      ],
+      "vendor_id": "alibaba-cloud-international"
+    },
+    {
+      "_openva_path": "data/vendors/aliyun/vendor.yaml",
+      "display_name": "阿里云",
+      "entity_family": "alibaba-cloud",
+      "entity_surface": "mainland_china",
+      "headquarters_country": "CN",
+      "legal_name": "阿里云计算有限公司",
+      "notes": "Mainland China/native 阿里云 public-source record. Related international Alibaba Cloud record may exist separately and should not be merged with this record.",
+      "official_domains": [
+        "aliyun.com"
+      ],
+      "public_entrypoints": [
+        "https://www.aliyun.com/",
+        "https://terms.aliyun.com/"
+      ],
+      "regions_served": [
+        "cn"
+      ],
+      "related_vendor_ids": [
+        "alibaba-cloud-international"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "zh",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "database",
+        "developer_platform",
+        "data_platform",
+        "ai_platform"
+      ],
+      "vendor_id": "aliyun"
+    },
     {
       "_openva_path": "data/vendors/aws/vendor.yaml",
       "display_name": "AWS",
@@ -66,6 +143,38 @@
       "vendor_id": "cloudflare"
     },
     {
+      "_openva_path": "data/vendors/digitalocean/vendor.yaml",
+      "display_name": "DigitalOcean",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "DigitalOcean, LLC",
+      "notes": "Public-source-only catalog record. Metadata references general public DigitalOcean assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "digitalocean.com"
+      ],
+      "public_entrypoints": [
+        "https://www.digitalocean.com/trust",
+        "https://www.digitalocean.com/legal"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "developer_platform",
+        "database"
+      ],
+      "vendor_id": "digitalocean"
+    },
+    {
       "_openva_path": "examples/vendors/example-cloud/vendor.yaml",
       "display_name": "Example Cloud",
       "headquarters_country": "SG",
@@ -126,6 +235,117 @@
       "vendor_id": "google-cloud"
     },
     {
+      "_openva_path": "data/vendors/huawei-cloud-cn/vendor.yaml",
+      "display_name": "华为云",
+      "entity_family": "huawei-cloud",
+      "entity_surface": "mainland_china",
+      "headquarters_country": "CN",
+      "legal_name": "华为云计算技术有限公司",
+      "notes": "Mainland China/native 华为云 public-source record. Public-source metadata requires later refinement.",
+      "official_domains": [
+        "huaweicloud.com"
+      ],
+      "public_entrypoints": [
+        "https://www.huaweicloud.com/",
+        "https://www.huaweicloud.com/trustcenter/"
+      ],
+      "regions_served": [
+        "cn"
+      ],
+      "related_vendor_ids": [
+        "huawei-cloud-international"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "zh",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "database",
+        "developer_platform",
+        "data_platform",
+        "ai_platform"
+      ],
+      "vendor_id": "huawei-cloud-cn"
+    },
+    {
+      "_openva_path": "data/vendors/huawei-cloud-international/vendor.yaml",
+      "display_name": "Huawei Cloud International",
+      "entity_family": "huawei-cloud",
+      "entity_surface": "international",
+      "headquarters_country": "CN",
+      "legal_name": "Huawei Cloud",
+      "notes": "International-facing Huawei Cloud public-source record. Related mainland/native Huawei Cloud record may exist separately and should not be merged with this record.",
+      "official_domains": [
+        "huaweicloud.com"
+      ],
+      "public_entrypoints": [
+        "https://www.huaweicloud.com/intl/en-us/",
+        "https://www.huaweicloud.com/intl/en-us/trust-center/"
+      ],
+      "regions_served": [
+        "global",
+        "apac"
+      ],
+      "related_vendor_ids": [
+        "huawei-cloud-cn"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "database",
+        "developer_platform",
+        "data_platform",
+        "ai_platform"
+      ],
+      "vendor_id": "huawei-cloud-international"
+    },
+    {
+      "_openva_path": "data/vendors/ibm-cloud/vendor.yaml",
+      "display_name": "IBM Cloud",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "International Business Machines Corporation",
+      "notes": "Public-source-only catalog record. Metadata references general public IBM Cloud assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "ibm.com"
+      ],
+      "public_entrypoints": [
+        "https://www.ibm.com/cloud",
+        "https://www.ibm.com/cloud/compliance"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "database",
+        "developer_platform",
+        "data_platform",
+        "ai_platform"
+      ],
+      "vendor_id": "ibm-cloud"
+    },
+    {
       "_openva_path": "data/vendors/microsoft/vendor.yaml",
       "display_name": "Microsoft",
       "headquarters_country": "US",
@@ -157,6 +377,117 @@
         "ai_platform"
       ],
       "vendor_id": "microsoft"
+    },
+    {
+      "_openva_path": "data/vendors/oracle-cloud/vendor.yaml",
+      "display_name": "Oracle Cloud",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Oracle Corporation",
+      "notes": "Public-source-only catalog record. Metadata references general public Oracle Cloud assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "oracle.com"
+      ],
+      "public_entrypoints": [
+        "https://www.oracle.com/cloud/",
+        "https://www.oracle.com/corporate/cloud-compliance/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "database",
+        "developer_platform",
+        "data_platform"
+      ],
+      "vendor_id": "oracle-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/tencent-cloud-cn/vendor.yaml",
+      "display_name": "腾讯云",
+      "entity_family": "tencent-cloud",
+      "entity_surface": "mainland_china",
+      "headquarters_country": "CN",
+      "legal_name": "腾讯云计算（北京）有限责任公司",
+      "notes": "Mainland China/native 腾讯云 public-source record. Public-source metadata requires later refinement.",
+      "official_domains": [
+        "cloud.tencent.com",
+        "tencent.com"
+      ],
+      "public_entrypoints": [
+        "https://cloud.tencent.com/",
+        "https://cloud.tencent.com/document/product/301"
+      ],
+      "regions_served": [
+        "cn"
+      ],
+      "related_vendor_ids": [
+        "tencent-cloud-international"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "zh",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "database",
+        "developer_platform",
+        "data_platform",
+        "ai_platform"
+      ],
+      "vendor_id": "tencent-cloud-cn"
+    },
+    {
+      "_openva_path": "data/vendors/tencent-cloud-international/vendor.yaml",
+      "display_name": "Tencent Cloud International",
+      "entity_family": "tencent-cloud",
+      "entity_surface": "international",
+      "headquarters_country": "SG",
+      "legal_name": "Tencent Cloud International Pte. Ltd.",
+      "notes": "International-facing Tencent Cloud public-source record. Related mainland/native Tencent Cloud record may exist separately and should not be merged with this record.",
+      "official_domains": [
+        "tencentcloud.com"
+      ],
+      "public_entrypoints": [
+        "https://www.tencentcloud.com/",
+        "https://www.tencentcloud.com/document/product/301"
+      ],
+      "regions_served": [
+        "global",
+        "apac"
+      ],
+      "related_vendor_ids": [
+        "tencent-cloud-cn"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "database",
+        "developer_platform",
+        "data_platform",
+        "ai_platform"
+      ],
+      "vendor_id": "tencent-cloud-international"
     }
   ],
   "kind": "vendor",
