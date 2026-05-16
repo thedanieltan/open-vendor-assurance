@@ -96,10 +96,11 @@ def test_planner_promotes_likely_candidate_for_review(tmp_path):
 
     assert plan["posture"]["writes_repository_state"] is False
     assert plan["posture"]["writes_canonical_sources"] is False
-    assert plan["summary"]["action_types"] == {"promote_candidate_for_review": 1}
+    assert plan["summary"]["action_types"] == {"promote_candidate_source_for_review": 1}
     action = plan["actions"][0]
     assert action["candidate_source_id"] == "example-dpa-candidate"
     assert action["requires_human_review"] is True
+    assert action["writes_canonical_sources"] is False
     assert action["non_advisory"] is True
 
 
