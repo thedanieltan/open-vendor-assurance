@@ -1,0 +1,27 @@
+schema_version: 0.1.0
+vendor_id: sap
+display_name: SAP
+legal_name: SAP SE
+headquarters_country: DE
+regions_served:
+- global
+- eu
+official_domains:
+- sap.com
+public_entrypoints:
+- https://www.sap.com/about/trust-center/agreements/data-processing-agreement.html
+- https://www.sap.com/about/trust-center/cloud-service-status/subprocessors.html
+vendor_categories:
+- erp
+- enterprise_software
+- hris
+- finance_platform
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Metadata references general public SAP assurance
+  materials and does not cover bespoke customer agreements.
+entity_surface: global_brand
+source_authority_language: en
