@@ -1,0 +1,233 @@
+{
+  "schema_version": "0.1.0",
+  "generated_at": "2026-05-16T07:55:00Z",
+  "report_type": "promotion_plan",
+  "posture": {
+    "network_fetch_performed": false,
+    "writes_repository_state": false,
+    "opens_pull_requests": false,
+    "writes_canonical_sources": false,
+    "non_advisory": true
+  },
+  "summary": {
+    "action_count": 10,
+    "actions_requiring_human_review": 10,
+    "action_types": {
+      "cleanup_source_for_review": 10
+    },
+    "vendors_with_actions": {
+      "bill-com": [
+        "cleanup_source_for_review"
+      ],
+      "drata": [
+        "cleanup_source_for_review"
+      ],
+      "figma": [
+        "cleanup_source_for_review"
+      ],
+      "miro": [
+        "cleanup_source_for_review"
+      ],
+      "retool": [
+        "cleanup_source_for_review"
+      ],
+      "sage": [
+        "cleanup_source_for_review"
+      ],
+      "segment": [
+        "cleanup_source_for_review"
+      ],
+      "vanta": [
+        "cleanup_source_for_review"
+      ],
+      "webflow": [
+        "cleanup_source_for_review"
+      ],
+      "zapier": [
+        "cleanup_source_for_review"
+      ]
+    }
+  },
+  "actions": [
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "miro",
+      "source_id": "miro-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.miro.com/legal/data-processing-addendum",
+      "path": "data/vendors/miro/sources/miro-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.miro.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "sage",
+      "source_id": "sage-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.sage.com/legal/data-processing-addendum",
+      "path": "data/vendors/sage/sources/sage-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.sage.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "drata",
+      "source_id": "drata-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.drata.com/legal/data-processing-addendum",
+      "path": "data/vendors/drata/sources/drata-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.drata.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "vanta",
+      "source_id": "vanta-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.vanta.com/legal/data-processing-addendum",
+      "path": "data/vendors/vanta/sources/vanta-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.vanta.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "figma",
+      "source_id": "figma-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.figma.com/legal/data-processing-addendum",
+      "path": "data/vendors/figma/sources/figma-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.figma.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "zapier",
+      "source_id": "zapier-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.zapier.com/legal/data-processing-addendum",
+      "path": "data/vendors/zapier/sources/zapier-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.zapier.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "retool",
+      "source_id": "retool-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.retool.com/legal/data-processing-addendum",
+      "path": "data/vendors/retool/sources/retool-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.retool.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "webflow",
+      "source_id": "webflow-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.webflow.com/legal/data-processing-addendum",
+      "path": "data/vendors/webflow/sources/webflow-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.webflow.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "segment",
+      "source_id": "segment-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.segment.com/legal/data-processing-addendum",
+      "path": "data/vendors/segment/sources/segment-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.segment.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 1: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "bill-com",
+      "source_id": "bill-com-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.bill.com/legal/data-processing-addendum",
+      "path": "data/vendors/bill-com/sources/bill-com-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.bill.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    }
+  ]
+}
