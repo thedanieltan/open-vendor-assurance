@@ -1,0 +1,1006 @@
+schema_version: 0.1.0
+batch_id: grc-privacy-assurance-batch-1
+operation: create
+collected_at: '2026-05-16T00:00:00Z'
+observer: human
+vendors:
+- vendor_id: onetrust
+  display_name: OneTrust
+  legal_name: OneTrust, LLC
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - onetrust.com
+  public_entrypoints:
+  - https://www.onetrust.com/privacy/
+  - https://www.onetrust.com/trust/
+  vendor_categories:
+  - privacy_management
+  - grc
+  - vendor_assurance
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public OneTrust
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: onetrust-dpa
+    source_type: dpa
+    title_native: OneTrust Data Processing Addendum
+    title_en: OneTrust Data Processing Addendum
+    source_url: https://www.onetrust.com/legal/data-processing-addendum/
+    source_language: en
+    summary_native: Public OneTrust data processing addendum metadata reference.
+    summary_en: Public OneTrust data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: onetrust-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - OneTrust services
+  - source_id: onetrust-subprocessors
+    source_type: subprocessors_list
+    title_native: OneTrust Subprocessors
+    title_en: OneTrust Subprocessors
+    source_url: https://www.onetrust.com/legal/subprocessors/
+    source_language: en
+    summary_native: Public OneTrust subprocessors metadata reference.
+    summary_en: Public OneTrust subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: onetrust-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - OneTrust services
+  - source_id: onetrust-privacy
+    source_type: privacy_notice
+    title_native: OneTrust Privacy Notice
+    title_en: OneTrust Privacy Notice
+    source_url: https://www.onetrust.com/privacy/
+    source_language: en
+    summary_native: Public OneTrust privacy notice metadata reference.
+    summary_en: Public OneTrust privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: onetrust-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - OneTrust services
+  - source_id: onetrust-security
+    source_type: security_page
+    title_native: OneTrust Trust Center
+    title_en: OneTrust Trust Center
+    source_url: https://www.onetrust.com/trust/
+    source_language: en
+    summary_native: Public OneTrust trust/security metadata reference.
+    summary_en: Public OneTrust trust/security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: onetrust-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - OneTrust services
+- vendor_id: trustarc
+  display_name: TrustArc
+  legal_name: TrustArc Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - trustarc.com
+  public_entrypoints:
+  - https://trustarc.com/privacy-policy/
+  - https://trustarc.com/security/
+  vendor_categories:
+  - privacy_management
+  - grc
+  - vendor_assurance
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public TrustArc
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: trustarc-dpa
+    source_type: dpa
+    title_native: TrustArc Data Processing Addendum
+    title_en: TrustArc Data Processing Addendum
+    source_url: https://trustarc.com/data-processing-addendum/
+    source_language: en
+    summary_native: Public TrustArc data processing addendum metadata reference.
+    summary_en: Public TrustArc data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: trustarc-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - TrustArc services
+  - source_id: trustarc-subprocessors
+    source_type: subprocessors_list
+    title_native: TrustArc Subprocessors
+    title_en: TrustArc Subprocessors
+    source_url: https://trustarc.com/subprocessors/
+    source_language: en
+    summary_native: Public TrustArc subprocessors metadata reference.
+    summary_en: Public TrustArc subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: trustarc-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - TrustArc services
+  - source_id: trustarc-privacy
+    source_type: privacy_notice
+    title_native: TrustArc Privacy Policy
+    title_en: TrustArc Privacy Policy
+    source_url: https://trustarc.com/privacy-policy/
+    source_language: en
+    summary_native: Public TrustArc privacy policy metadata reference.
+    summary_en: Public TrustArc privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: trustarc-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - TrustArc services
+  - source_id: trustarc-security
+    source_type: security_page
+    title_native: TrustArc Security
+    title_en: TrustArc Security
+    source_url: https://trustarc.com/security/
+    source_language: en
+    summary_native: Public TrustArc security metadata reference.
+    summary_en: Public TrustArc security metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: trustarc-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - TrustArc services
+  - source_id: trustarc-compliance
+    source_type: compliance_page
+    title_native: TrustArc Certifications and Compliance
+    title_en: TrustArc Certifications and Compliance
+    source_url: https://trustarc.com/certifications/
+    source_language: en
+    summary_native: Public TrustArc certifications/compliance metadata reference.
+    summary_en: Public TrustArc certifications/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: trustarc-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - TrustArc services
+- vendor_id: drata
+  display_name: Drata
+  legal_name: Drata Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - drata.com
+  public_entrypoints:
+  - https://drata.com/privacy
+  - https://drata.com/security
+  vendor_categories:
+  - grc
+  - compliance_automation
+  - vendor_assurance
+  - security
+  notes: Public-source-only catalog record. Metadata references general public Drata
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: drata-dpa
+    source_type: dpa
+    title_native: Drata Data Processing Addendum
+    title_en: Drata Data Processing Addendum
+    source_url: https://drata.com/legal/data-processing-addendum
+    source_language: en
+    summary_native: Public Drata data processing addendum metadata reference.
+    summary_en: Public Drata data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: drata-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Drata services
+  - source_id: drata-subprocessors
+    source_type: subprocessors_list
+    title_native: Drata Subprocessors
+    title_en: Drata Subprocessors
+    source_url: https://drata.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Drata subprocessors metadata reference.
+    summary_en: Public Drata subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: drata-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Drata services
+  - source_id: drata-privacy
+    source_type: privacy_notice
+    title_native: Drata Privacy Policy
+    title_en: Drata Privacy Policy
+    source_url: https://drata.com/privacy
+    source_language: en
+    summary_native: Public Drata privacy policy metadata reference.
+    summary_en: Public Drata privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: drata-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Drata services
+  - source_id: drata-security
+    source_type: security_page
+    title_native: Drata Security
+    title_en: Drata Security
+    source_url: https://drata.com/security
+    source_language: en
+    summary_native: Public Drata security metadata reference.
+    summary_en: Public Drata security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: drata-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Drata services
+  - source_id: drata-compliance
+    source_type: compliance_page
+    title_native: Drata Trust Center
+    title_en: Drata Trust Center
+    source_url: https://drata.com/trust
+    source_language: en
+    summary_native: Public Drata trust/compliance metadata reference.
+    summary_en: Public Drata trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: drata-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Drata services
+- vendor_id: vanta
+  display_name: Vanta
+  legal_name: Vanta Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - vanta.com
+  public_entrypoints:
+  - https://www.vanta.com/privacy
+  - https://www.vanta.com/security
+  vendor_categories:
+  - grc
+  - compliance_automation
+  - vendor_assurance
+  - security
+  notes: Public-source-only catalog record. Metadata references general public Vanta
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: vanta-dpa
+    source_type: dpa
+    title_native: Vanta Data Processing Addendum
+    title_en: Vanta Data Processing Addendum
+    source_url: https://www.vanta.com/legal/data-processing-addendum
+    source_language: en
+    summary_native: Public Vanta data processing addendum metadata reference.
+    summary_en: Public Vanta data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: vanta-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Vanta services
+  - source_id: vanta-subprocessors
+    source_type: subprocessors_list
+    title_native: Vanta Subprocessors
+    title_en: Vanta Subprocessors
+    source_url: https://www.vanta.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Vanta subprocessors metadata reference.
+    summary_en: Public Vanta subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: vanta-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Vanta services
+  - source_id: vanta-privacy
+    source_type: privacy_notice
+    title_native: Vanta Privacy Policy
+    title_en: Vanta Privacy Policy
+    source_url: https://www.vanta.com/privacy
+    source_language: en
+    summary_native: Public Vanta privacy policy metadata reference.
+    summary_en: Public Vanta privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: vanta-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Vanta services
+  - source_id: vanta-security
+    source_type: security_page
+    title_native: Vanta Security
+    title_en: Vanta Security
+    source_url: https://www.vanta.com/security
+    source_language: en
+    summary_native: Public Vanta security metadata reference.
+    summary_en: Public Vanta security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: vanta-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Vanta services
+  - source_id: vanta-compliance
+    source_type: compliance_page
+    title_native: Vanta Trust Center
+    title_en: Vanta Trust Center
+    source_url: https://www.vanta.com/trust
+    source_language: en
+    summary_native: Public Vanta trust/compliance metadata reference.
+    summary_en: Public Vanta trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: vanta-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Vanta services
+- vendor_id: secureframe
+  display_name: Secureframe
+  legal_name: Secureframe, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - secureframe.com
+  public_entrypoints:
+  - https://secureframe.com/privacy
+  - https://secureframe.com/security
+  vendor_categories:
+  - grc
+  - compliance_automation
+  - vendor_assurance
+  - security
+  notes: Public-source-only catalog record. Metadata references general public Secureframe
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: secureframe-dpa
+    source_type: dpa
+    title_native: Secureframe Data Processing Addendum
+    title_en: Secureframe Data Processing Addendum
+    source_url: https://secureframe.com/legal/data-processing-addendum
+    source_language: en
+    summary_native: Public Secureframe data processing addendum metadata reference.
+    summary_en: Public Secureframe data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: secureframe-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Secureframe services
+  - source_id: secureframe-subprocessors
+    source_type: subprocessors_list
+    title_native: Secureframe Subprocessors
+    title_en: Secureframe Subprocessors
+    source_url: https://secureframe.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Secureframe subprocessors metadata reference.
+    summary_en: Public Secureframe subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: secureframe-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Secureframe services
+  - source_id: secureframe-privacy
+    source_type: privacy_notice
+    title_native: Secureframe Privacy Policy
+    title_en: Secureframe Privacy Policy
+    source_url: https://secureframe.com/privacy
+    source_language: en
+    summary_native: Public Secureframe privacy policy metadata reference.
+    summary_en: Public Secureframe privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: secureframe-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Secureframe services
+  - source_id: secureframe-security
+    source_type: security_page
+    title_native: Secureframe Security
+    title_en: Secureframe Security
+    source_url: https://secureframe.com/security
+    source_language: en
+    summary_native: Public Secureframe security metadata reference.
+    summary_en: Public Secureframe security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: secureframe-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Secureframe services
+  - source_id: secureframe-compliance
+    source_type: compliance_page
+    title_native: Secureframe Trust Center
+    title_en: Secureframe Trust Center
+    source_url: https://secureframe.com/trust
+    source_language: en
+    summary_native: Public Secureframe trust/compliance metadata reference.
+    summary_en: Public Secureframe trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: secureframe-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Secureframe services
+- vendor_id: scrut-automation
+  display_name: Scrut Automation
+  legal_name: Scrut Automation Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  - apac
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - scrut.io
+  public_entrypoints:
+  - https://www.scrut.io/privacy-policy
+  - https://www.scrut.io/security
+  vendor_categories:
+  - grc
+  - compliance_automation
+  - vendor_assurance
+  - security
+  notes: Public-source-only catalog record. Metadata references general public Scrut
+    Automation assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: scrut-automation-dpa
+    source_type: dpa
+    title_native: Scrut Automation Data Processing Addendum
+    title_en: Scrut Automation Data Processing Addendum
+    source_url: https://www.scrut.io/data-processing-addendum
+    source_language: en
+    summary_native: Public Scrut Automation data processing addendum metadata reference.
+    summary_en: Public Scrut Automation data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: scrut-automation-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Scrut Automation services
+  - source_id: scrut-automation-subprocessors
+    source_type: subprocessors_list
+    title_native: Scrut Automation Subprocessors
+    title_en: Scrut Automation Subprocessors
+    source_url: https://www.scrut.io/subprocessors
+    source_language: en
+    summary_native: Public Scrut Automation subprocessors metadata reference.
+    summary_en: Public Scrut Automation subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: scrut-automation-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Scrut Automation services
+  - source_id: scrut-automation-privacy
+    source_type: privacy_notice
+    title_native: Scrut Automation Privacy Policy
+    title_en: Scrut Automation Privacy Policy
+    source_url: https://www.scrut.io/privacy-policy
+    source_language: en
+    summary_native: Public Scrut Automation privacy policy metadata reference.
+    summary_en: Public Scrut Automation privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: scrut-automation-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Scrut Automation services
+  - source_id: scrut-automation-security
+    source_type: security_page
+    title_native: Scrut Automation Security
+    title_en: Scrut Automation Security
+    source_url: https://www.scrut.io/security
+    source_language: en
+    summary_native: Public Scrut Automation security metadata reference.
+    summary_en: Public Scrut Automation security metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: scrut-automation-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Scrut Automation services
+  - source_id: scrut-automation-compliance
+    source_type: compliance_page
+    title_native: Scrut Automation Compliance
+    title_en: Scrut Automation Compliance
+    source_url: https://www.scrut.io/compliance
+    source_language: en
+    summary_native: Public Scrut Automation compliance metadata reference.
+    summary_en: Public Scrut Automation compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: scrut-automation-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Scrut Automation services
+- vendor_id: thoropass
+  display_name: Thoropass
+  legal_name: Thoropass, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - thoropass.com
+  public_entrypoints:
+  - https://thoropass.com/privacy-policy/
+  - https://thoropass.com/security/
+  vendor_categories:
+  - grc
+  - compliance_automation
+  - audit
+  - vendor_assurance
+  notes: Public-source-only catalog record. Metadata references general public Thoropass
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: thoropass-dpa
+    source_type: dpa
+    title_native: Thoropass Data Processing Addendum
+    title_en: Thoropass Data Processing Addendum
+    source_url: https://thoropass.com/data-processing-addendum/
+    source_language: en
+    summary_native: Public Thoropass data processing addendum metadata reference.
+    summary_en: Public Thoropass data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: thoropass-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Thoropass services
+  - source_id: thoropass-subprocessors
+    source_type: subprocessors_list
+    title_native: Thoropass Subprocessors
+    title_en: Thoropass Subprocessors
+    source_url: https://thoropass.com/subprocessors/
+    source_language: en
+    summary_native: Public Thoropass subprocessors metadata reference.
+    summary_en: Public Thoropass subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: thoropass-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Thoropass services
+  - source_id: thoropass-privacy
+    source_type: privacy_notice
+    title_native: Thoropass Privacy Policy
+    title_en: Thoropass Privacy Policy
+    source_url: https://thoropass.com/privacy-policy/
+    source_language: en
+    summary_native: Public Thoropass privacy policy metadata reference.
+    summary_en: Public Thoropass privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: thoropass-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Thoropass services
+  - source_id: thoropass-security
+    source_type: security_page
+    title_native: Thoropass Security
+    title_en: Thoropass Security
+    source_url: https://thoropass.com/security/
+    source_language: en
+    summary_native: Public Thoropass security metadata reference.
+    summary_en: Public Thoropass security metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: thoropass-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Thoropass services
+  - source_id: thoropass-compliance
+    source_type: compliance_page
+    title_native: Thoropass Compliance
+    title_en: Thoropass Compliance
+    source_url: https://thoropass.com/compliance/
+    source_language: en
+    summary_native: Public Thoropass compliance metadata reference.
+    summary_en: Public Thoropass compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: thoropass-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Thoropass services
+- vendor_id: hyperproof
+  display_name: Hyperproof
+  legal_name: Hyperproof, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - hyperproof.io
+  public_entrypoints:
+  - https://hyperproof.io/privacy-policy/
+  - https://hyperproof.io/security/
+  vendor_categories:
+  - grc
+  - compliance_automation
+  - audit
+  - risk_management
+  notes: Public-source-only catalog record. Metadata references general public Hyperproof
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: hyperproof-dpa
+    source_type: dpa
+    title_native: Hyperproof Data Processing Addendum
+    title_en: Hyperproof Data Processing Addendum
+    source_url: https://hyperproof.io/data-processing-addendum/
+    source_language: en
+    summary_native: Public Hyperproof data processing addendum metadata reference.
+    summary_en: Public Hyperproof data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: hyperproof-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Hyperproof services
+  - source_id: hyperproof-subprocessors
+    source_type: subprocessors_list
+    title_native: Hyperproof Subprocessors
+    title_en: Hyperproof Subprocessors
+    source_url: https://hyperproof.io/subprocessors/
+    source_language: en
+    summary_native: Public Hyperproof subprocessors metadata reference.
+    summary_en: Public Hyperproof subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: hyperproof-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Hyperproof services
+  - source_id: hyperproof-privacy
+    source_type: privacy_notice
+    title_native: Hyperproof Privacy Policy
+    title_en: Hyperproof Privacy Policy
+    source_url: https://hyperproof.io/privacy-policy/
+    source_language: en
+    summary_native: Public Hyperproof privacy policy metadata reference.
+    summary_en: Public Hyperproof privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: hyperproof-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Hyperproof services
+  - source_id: hyperproof-security
+    source_type: security_page
+    title_native: Hyperproof Security
+    title_en: Hyperproof Security
+    source_url: https://hyperproof.io/security/
+    source_language: en
+    summary_native: Public Hyperproof security metadata reference.
+    summary_en: Public Hyperproof security metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: hyperproof-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Hyperproof services
+  - source_id: hyperproof-compliance
+    source_type: compliance_page
+    title_native: Hyperproof Compliance
+    title_en: Hyperproof Compliance
+    source_url: https://hyperproof.io/compliance/
+    source_language: en
+    summary_native: Public Hyperproof compliance metadata reference.
+    summary_en: Public Hyperproof compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: hyperproof-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Hyperproof services
+- vendor_id: auditboard
+  display_name: AuditBoard
+  legal_name: AuditBoard, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - auditboard.com
+  public_entrypoints:
+  - https://www.auditboard.com/privacy-policy/
+  - https://www.auditboard.com/security/
+  vendor_categories:
+  - grc
+  - audit
+  - risk_management
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public AuditBoard
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: auditboard-dpa
+    source_type: dpa
+    title_native: AuditBoard Data Processing Addendum
+    title_en: AuditBoard Data Processing Addendum
+    source_url: https://www.auditboard.com/data-processing-addendum/
+    source_language: en
+    summary_native: Public AuditBoard data processing addendum metadata reference.
+    summary_en: Public AuditBoard data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: auditboard-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - AuditBoard services
+  - source_id: auditboard-subprocessors
+    source_type: subprocessors_list
+    title_native: AuditBoard Subprocessors
+    title_en: AuditBoard Subprocessors
+    source_url: https://www.auditboard.com/subprocessors/
+    source_language: en
+    summary_native: Public AuditBoard subprocessors metadata reference.
+    summary_en: Public AuditBoard subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: auditboard-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - AuditBoard services
+  - source_id: auditboard-privacy
+    source_type: privacy_notice
+    title_native: AuditBoard Privacy Policy
+    title_en: AuditBoard Privacy Policy
+    source_url: https://www.auditboard.com/privacy-policy/
+    source_language: en
+    summary_native: Public AuditBoard privacy policy metadata reference.
+    summary_en: Public AuditBoard privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: auditboard-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - AuditBoard services
+  - source_id: auditboard-security
+    source_type: security_page
+    title_native: AuditBoard Security
+    title_en: AuditBoard Security
+    source_url: https://www.auditboard.com/security/
+    source_language: en
+    summary_native: Public AuditBoard security metadata reference.
+    summary_en: Public AuditBoard security metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: auditboard-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - AuditBoard services
+  - source_id: auditboard-compliance
+    source_type: compliance_page
+    title_native: AuditBoard Compliance
+    title_en: AuditBoard Compliance
+    source_url: https://www.auditboard.com/compliance/
+    source_language: en
+    summary_native: Public AuditBoard compliance metadata reference.
+    summary_en: Public AuditBoard compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: auditboard-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - AuditBoard services
+- vendor_id: logicgate
+  display_name: LogicGate
+  legal_name: LogicGate, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - logicgate.com
+  public_entrypoints:
+  - https://www.logicgate.com/privacy-policy/
+  - https://www.logicgate.com/security/
+  vendor_categories:
+  - grc
+  - risk_management
+  - compliance_automation
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public LogicGate
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: logicgate-dpa
+    source_type: dpa
+    title_native: LogicGate Data Processing Addendum
+    title_en: LogicGate Data Processing Addendum
+    source_url: https://www.logicgate.com/data-processing-addendum/
+    source_language: en
+    summary_native: Public LogicGate data processing addendum metadata reference.
+    summary_en: Public LogicGate data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: logicgate-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - LogicGate services
+  - source_id: logicgate-subprocessors
+    source_type: subprocessors_list
+    title_native: LogicGate Subprocessors
+    title_en: LogicGate Subprocessors
+    source_url: https://www.logicgate.com/subprocessors/
+    source_language: en
+    summary_native: Public LogicGate subprocessors metadata reference.
+    summary_en: Public LogicGate subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: logicgate-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - LogicGate services
+  - source_id: logicgate-privacy
+    source_type: privacy_notice
+    title_native: LogicGate Privacy Policy
+    title_en: LogicGate Privacy Policy
+    source_url: https://www.logicgate.com/privacy-policy/
+    source_language: en
+    summary_native: Public LogicGate privacy policy metadata reference.
+    summary_en: Public LogicGate privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: logicgate-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - LogicGate services
+  - source_id: logicgate-security
+    source_type: security_page
+    title_native: LogicGate Security
+    title_en: LogicGate Security
+    source_url: https://www.logicgate.com/security/
+    source_language: en
+    summary_native: Public LogicGate security metadata reference.
+    summary_en: Public LogicGate security metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: logicgate-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - LogicGate services
+  - source_id: logicgate-compliance
+    source_type: compliance_page
+    title_native: LogicGate Compliance
+    title_en: LogicGate Compliance
+    source_url: https://www.logicgate.com/compliance/
+    source_language: en
+    summary_native: Public LogicGate compliance metadata reference.
+    summary_en: Public LogicGate compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: logicgate-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - LogicGate services
