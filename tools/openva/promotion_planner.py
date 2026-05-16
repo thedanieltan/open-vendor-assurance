@@ -13,6 +13,7 @@ from tools.openva.source_verification import ROOT, display_path
 
 PROMOTABLE_VERIFICATION_STATUSES = {"ok", "redirected"}
 PROMOTABLE_SEMANTIC_STATUSES = {"strong", "not_evaluated_pdf_sample"}
+REVIEWED_CANDIDATE_PROMOTION_ACTION = "promote_candidate_source_for_review"
 REVIEWABLE_VERIFICATION_STATUSES = {
     "suspect_inferred_url",
     "possible_mismatch",
@@ -102,7 +103,7 @@ def plan_for_candidate(
         action = "no_action_existing_source_type"
         reason = "A canonical source already exists for this vendor/source_type."
     elif confidence == "likely" and http_status == 200 and semantic_terms:
-        action = "promote_candidate_for_review"
+        action = REVIEWED_CANDIDATE_PROMOTION_ACTION
         reason = "Candidate has public HTTP 200 evidence and matched terms, but still requires review before canonical promotion."
     else:
         action = "manual_review_required"
@@ -123,6 +124,7 @@ def plan_for_candidate(
             "page_title": evidence.get("page_title") or report_evidence.get("page_title"),
         },
         "requires_human_review": True,
+        "writes_canonical_sources": False,
         "non_advisory": True,
     }
 
