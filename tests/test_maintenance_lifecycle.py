@@ -7,8 +7,18 @@ import pytest
 from tools.openva import maintenance_lifecycle
 
 
-def write_plan(path: Path, action_type: str = "cleanup_source_for_review") -> None:
+def write_plan(path: Path, action_type: str = "cleanup_source_for_review", action_count: int = 1) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    actions = [
+        {
+            "action": action_type,
+            "vendor_id": f"example-{index}",
+            "source_id": f"example-{index}-dpa",
+            "source_type": "dpa",
+            "non_advisory": True,
+        }
+        for index in range(action_count)
+    ]
     path.write_text(
         json.dumps(
             {
@@ -20,15 +30,7 @@ def write_plan(path: Path, action_type: str = "cleanup_source_for_review") -> No
                     "writes_canonical_sources": False,
                     "non_advisory": True,
                 },
-                "actions": [
-                    {
-                        "action": action_type,
-                        "vendor_id": "example",
-                        "source_id": "example-dpa",
-                        "source_type": "dpa",
-                        "non_advisory": True,
-                    }
-                ],
+                "actions": actions,
             }
         ),
         encoding="utf-8",
@@ -86,3 +88,12 @@ def test_validate_reviewed_cleanup_plan_rejects_candidate_promotion_action(tmp_p
 
     with pytest.raises(ValueError, match="unsupported reviewed cleanup action"):
         maintenance_lifecycle.validate_reviewed_cleanup_plan(plan, tmp_path)
+
+
+def test_validate_reviewed_cleanup_plan_rejects_oversized_batches(tmp_path):
+    plan = tmp_path / "maintenance" / "reviewed" / "promotion-plan-cleanup-large.json"
+    write_plan(plan, action_count=3)
+    write_registry(tmp_path, [])
+
+    with pytest.raises(ValueError, match="exceeds max_actions_per_plan=2"):
+        maintenance_lifecycle.validate_reviewed_cleanup_plan(plan, tmp_path, max_actions=2)
