@@ -27,7 +27,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh pr view "${{ github.event.pull_request.number }}" --json files --jq '.files[].path' > /tmp/catalog-pr-files.txt
+          gh api --paginate "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files" --jq '.[].filename' > /tmp/catalog-pr-files.txt
           cat /tmp/catalog-pr-files.txt
       - name: Enforce catalog-agent file boundary
         run: python -m tools.openva.catalog_guard $(cat /tmp/catalog-pr-files.txt)
