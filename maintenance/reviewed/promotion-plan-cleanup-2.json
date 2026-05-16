@@ -1,0 +1,149 @@
+{
+  "schema_version": "0.1.0",
+  "generated_at": "2026-05-16T08:41:33.858682Z",
+  "report_type": "promotion_plan",
+  "posture": {
+    "network_fetch_performed": false,
+    "writes_repository_state": false,
+    "opens_pull_requests": false,
+    "writes_canonical_sources": false,
+    "non_advisory": true
+  },
+  "summary": {
+    "action_count": 6,
+    "actions_requiring_human_review": 6,
+    "action_types": {
+      "cleanup_source_for_review": 6
+    },
+    "vendors_with_actions": {
+      "onetrust": [
+        "cleanup_source_for_review"
+      ],
+      "pinecone": [
+        "cleanup_source_for_review"
+      ],
+      "planetscale": [
+        "cleanup_source_for_review"
+      ],
+      "secureframe": [
+        "cleanup_source_for_review"
+      ],
+      "servicenow": [
+        "cleanup_source_for_review"
+      ],
+      "weaviate": [
+        "cleanup_source_for_review"
+      ]
+    }
+  },
+  "actions": [
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 2: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "onetrust",
+      "source_id": "onetrust-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.onetrust.com/legal/data-processing-addendum/",
+      "path": "data/vendors/onetrust/sources/onetrust-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.onetrust.com/legal/data-processing-addendum/",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 2: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "pinecone",
+      "source_id": "pinecone-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.pinecone.io/legal/data-processing-addendum/",
+      "path": "data/vendors/pinecone/sources/pinecone-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.pinecone.io/legal/data-processing-addendum/",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 2: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "planetscale",
+      "source_id": "planetscale-dpa",
+      "source_type": "dpa",
+      "source_url": "https://planetscale.com/legal/data-processing-addendum",
+      "path": "data/vendors/planetscale/sources/planetscale-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://planetscale.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 2: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "secureframe",
+      "source_id": "secureframe-dpa",
+      "source_type": "dpa",
+      "source_url": "https://secureframe.com/legal/data-processing-addendum",
+      "path": "data/vendors/secureframe/sources/secureframe-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://secureframe.com/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 2: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "servicenow",
+      "source_id": "servicenow-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/data-processing-addendum.pdf",
+      "path": "data/vendors/servicenow/sources/servicenow-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/data-processing-addendum.pdf",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    },
+    {
+      "action": "cleanup_source_for_review",
+      "reason": "Reviewed cleanup batch 2: low-confidence DPA source uses a template-like public URL pattern and should be replaced by an unavailable-source ledger entry unless separately verified.",
+      "vendor_id": "weaviate",
+      "source_id": "weaviate-dpa",
+      "source_type": "dpa",
+      "source_url": "https://weaviate.io/legal/data-processing-addendum",
+      "path": "data/vendors/weaviate/sources/weaviate-dpa.yaml",
+      "verification": {
+        "verification_status": "suspect_inferred_url",
+        "semantic_status": "not_evaluated_reviewed_plan",
+        "http_status": null,
+        "final_url": "https://weaviate.io/legal/data-processing-addendum",
+        "title_detected": null
+      },
+      "requires_human_review": true,
+      "non_advisory": true
+    }
+  ]
+}
