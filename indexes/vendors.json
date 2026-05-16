@@ -1,7 +1,40 @@
 {
-  "count": 14,
+  "count": 24,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
+    {
+      "_openva_path": "data/vendors/adobe/vendor.yaml",
+      "display_name": "Adobe",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Adobe Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Adobe assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "adobe.com"
+      ],
+      "public_entrypoints": [
+        "https://www.adobe.com/trust.html",
+        "https://www.adobe.com/privacy.html"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "creative_software",
+        "marketing_platform",
+        "document_platform",
+        "enterprise_software"
+      ],
+      "vendor_id": "adobe"
+    },
     {
       "_openva_path": "data/vendors/alibaba-cloud-international/vendor.yaml",
       "display_name": "Alibaba Cloud International",
@@ -78,6 +111,76 @@
         "ai_platform"
       ],
       "vendor_id": "aliyun"
+    },
+    {
+      "_openva_path": "data/vendors/atlassian/vendor.yaml",
+      "display_name": "Atlassian",
+      "entity_surface": "global_brand",
+      "headquarters_country": "AU",
+      "legal_name": "Atlassian Pty Ltd",
+      "notes": "Public-source-only catalog record. Metadata references general public Atlassian assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "atlassian.com"
+      ],
+      "public_entrypoints": [
+        "https://www.atlassian.com/trust",
+        "https://www.atlassian.com/legal/privacy-policy"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "collaboration",
+        "project_management",
+        "developer_platform",
+        "enterprise_software"
+      ],
+      "vendor_id": "atlassian"
+    },
+    {
+      "_openva_path": "data/vendors/auth0/vendor.yaml",
+      "display_name": "Auth0",
+      "entity_family": "okta",
+      "entity_surface": "product_surface",
+      "headquarters_country": "US",
+      "legal_name": "Auth0, Inc.",
+      "notes": "Public-source-only catalog record. Auth0 is modeled as a related product surface rather than merged into the Okta record.",
+      "official_domains": [
+        "auth0.com"
+      ],
+      "public_entrypoints": [
+        "https://auth0.com/security",
+        "https://auth0.com/privacy"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "related_vendor_ids": [
+        "okta"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "identity",
+        "access_management",
+        "developer_platform",
+        "security"
+      ],
+      "vendor_id": "auth0"
     },
     {
       "_openva_path": "data/vendors/aws/vendor.yaml",
@@ -200,6 +303,43 @@
         "cloud_infrastructure"
       ],
       "vendor_id": "example-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/github/vendor.yaml",
+      "display_name": "GitHub",
+      "entity_family": "microsoft",
+      "entity_surface": "product_surface",
+      "headquarters_country": "US",
+      "legal_name": "GitHub, Inc.",
+      "notes": "Public-source-only catalog record. GitHub is modeled as a related product surface rather than merged into the Microsoft record.",
+      "official_domains": [
+        "github.com"
+      ],
+      "public_entrypoints": [
+        "https://github.com/security",
+        "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "related_vendor_ids": [
+        "microsoft"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "developer_platform",
+        "collaboration",
+        "source_code_management",
+        "ci_cd"
+      ],
+      "vendor_id": "github"
     },
     {
       "_openva_path": "data/vendors/google-cloud/vendor.yaml",
@@ -379,6 +519,39 @@
       "vendor_id": "microsoft"
     },
     {
+      "_openva_path": "data/vendors/okta/vendor.yaml",
+      "display_name": "Okta",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Okta, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Okta assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "okta.com"
+      ],
+      "public_entrypoints": [
+        "https://www.okta.com/trust/",
+        "https://www.okta.com/privacy-policy/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "identity",
+        "access_management",
+        "security",
+        "enterprise_software"
+      ],
+      "vendor_id": "okta"
+    },
+    {
       "_openva_path": "data/vendors/oracle-cloud/vendor.yaml",
       "display_name": "Oracle Cloud",
       "entity_surface": "global_brand",
@@ -410,6 +583,103 @@
         "data_platform"
       ],
       "vendor_id": "oracle-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/salesforce/vendor.yaml",
+      "display_name": "Salesforce",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Salesforce, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Salesforce assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "salesforce.com"
+      ],
+      "public_entrypoints": [
+        "https://www.salesforce.com/company/privacy/",
+        "https://trust.salesforce.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "crm",
+        "enterprise_software",
+        "data_platform",
+        "ai_platform"
+      ],
+      "vendor_id": "salesforce"
+    },
+    {
+      "_openva_path": "data/vendors/servicenow/vendor.yaml",
+      "display_name": "ServiceNow",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "ServiceNow, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public ServiceNow assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "servicenow.com"
+      ],
+      "public_entrypoints": [
+        "https://www.servicenow.com/company/trust.html",
+        "https://www.servicenow.com/privacy.html"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "enterprise_software",
+        "workflow_platform",
+        "it_service_management"
+      ],
+      "vendor_id": "servicenow"
+    },
+    {
+      "_openva_path": "data/vendors/slack/vendor.yaml",
+      "display_name": "Slack",
+      "entity_surface": "product_surface",
+      "headquarters_country": "US",
+      "legal_name": "Slack Technologies, LLC",
+      "notes": "Public-source-only catalog record. Metadata references general public Slack assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "slack.com"
+      ],
+      "public_entrypoints": [
+        "https://slack.com/trust",
+        "https://slack.com/privacy"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "collaboration",
+        "messaging",
+        "enterprise_software"
+      ],
+      "vendor_id": "slack"
     },
     {
       "_openva_path": "data/vendors/tencent-cloud-cn/vendor.yaml",
@@ -488,6 +758,71 @@
         "ai_platform"
       ],
       "vendor_id": "tencent-cloud-international"
+    },
+    {
+      "_openva_path": "data/vendors/workday/vendor.yaml",
+      "display_name": "Workday",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Workday, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Workday assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "workday.com"
+      ],
+      "public_entrypoints": [
+        "https://www.workday.com/en-us/privacy.html",
+        "https://www.workday.com/en-us/company/about-workday/security-trust.html"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "hris",
+        "finance_platform",
+        "enterprise_software"
+      ],
+      "vendor_id": "workday"
+    },
+    {
+      "_openva_path": "data/vendors/zoom/vendor.yaml",
+      "display_name": "Zoom",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Zoom Communications, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Zoom assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "zoom.com",
+        "zoom.us"
+      ],
+      "public_entrypoints": [
+        "https://www.zoom.com/en/trust/",
+        "https://www.zoom.com/en/privacy/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "collaboration",
+        "video_conferencing",
+        "enterprise_software"
+      ],
+      "vendor_id": "zoom"
     }
   ],
   "kind": "vendor",

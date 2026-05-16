@@ -1,0 +1,29 @@
+schema_version: 0.1.0
+vendor_id: auth0
+display_name: Auth0
+legal_name: Auth0, Inc.
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- auth0.com
+public_entrypoints:
+- https://auth0.com/security
+- https://auth0.com/privacy
+vendor_categories:
+- identity
+- access_management
+- developer_platform
+- security
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Auth0 is modeled as a related product surface
+  rather than merged into the Okta record.
+entity_family: okta
+entity_surface: product_surface
+related_vendor_ids:
+- okta
+source_authority_language: en
