@@ -1,0 +1,659 @@
+schema_version: 0.1.0
+batch_id: hr-finance-procurement-batch-1
+operation: create
+collected_at: '2026-05-16T00:00:00Z'
+observer: human
+vendors:
+  - vendor_id: bamboohr
+    display_name: BambooHR
+    legal_name: Bamboo HR LLC
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [bamboohr.com]
+    public_entrypoints:
+      - https://www.bamboohr.com/legal
+      - https://www.bamboohr.com/security
+    vendor_categories: [hris, payroll, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public BambooHR assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: bamboohr-dpa
+        source_type: dpa
+        title_native: BambooHR Data Processing Addendum
+        title_en: BambooHR Data Processing Addendum
+        source_url: https://www.bamboohr.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public BambooHR data processing addendum metadata reference.
+        summary_en: Public BambooHR data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: bamboohr-dpa, artifact_type: dpa, region_scope: [global], product_scope: [BambooHR services] }
+      - source_id: bamboohr-subprocessors
+        source_type: subprocessors_list
+        title_native: BambooHR Subprocessors
+        title_en: BambooHR Subprocessors
+        source_url: https://www.bamboohr.com/legal/subprocessors
+        source_language: en
+        summary_native: Public BambooHR subprocessors metadata reference.
+        summary_en: Public BambooHR subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: bamboohr-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [BambooHR services] }
+      - source_id: bamboohr-privacy
+        source_type: privacy_notice
+        title_native: BambooHR Privacy Notice
+        title_en: BambooHR Privacy Notice
+        source_url: https://www.bamboohr.com/privacy-policy
+        source_language: en
+        summary_native: Public BambooHR privacy notice metadata reference.
+        summary_en: Public BambooHR privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: bamboohr-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [BambooHR services] }
+      - source_id: bamboohr-security
+        source_type: security_page
+        title_native: BambooHR Security
+        title_en: BambooHR Security
+        source_url: https://www.bamboohr.com/security
+        source_language: en
+        summary_native: Public BambooHR security metadata reference.
+        summary_en: Public BambooHR security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: bamboohr-security, artifact_type: security_page, region_scope: [global], product_scope: [BambooHR services] }
+      - source_id: bamboohr-compliance
+        source_type: compliance_page
+        title_native: BambooHR Security and Compliance
+        title_en: BambooHR Security and Compliance
+        source_url: https://www.bamboohr.com/security#compliance
+        source_language: en
+        summary_native: Public BambooHR compliance metadata reference.
+        summary_en: Public BambooHR compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: bamboohr-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [BambooHR services] }
+
+  - vendor_id: rippling
+    display_name: Rippling
+    legal_name: Rippling People Center Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [rippling.com]
+    public_entrypoints:
+      - https://www.rippling.com/legal
+      - https://www.rippling.com/security
+    vendor_categories: [hris, payroll, identity, finance_platform, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Rippling assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: rippling-dpa
+        source_type: dpa
+        title_native: Rippling Data Processing Addendum
+        title_en: Rippling Data Processing Addendum
+        source_url: https://www.rippling.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public Rippling data processing addendum metadata reference.
+        summary_en: Public Rippling data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: rippling-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Rippling services] }
+      - source_id: rippling-subprocessors
+        source_type: subprocessors_list
+        title_native: Rippling Subprocessors
+        title_en: Rippling Subprocessors
+        source_url: https://www.rippling.com/legal/subprocessors
+        source_language: en
+        summary_native: Public Rippling subprocessors metadata reference.
+        summary_en: Public Rippling subprocessors metadata reference.
+        confidence: low
+        artifact: { artifact_id: rippling-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Rippling services] }
+      - source_id: rippling-privacy
+        source_type: privacy_notice
+        title_native: Rippling Privacy Notice
+        title_en: Rippling Privacy Notice
+        source_url: https://www.rippling.com/privacy
+        source_language: en
+        summary_native: Public Rippling privacy notice metadata reference.
+        summary_en: Public Rippling privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: rippling-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Rippling services] }
+      - source_id: rippling-security
+        source_type: security_page
+        title_native: Rippling Security
+        title_en: Rippling Security
+        source_url: https://www.rippling.com/security
+        source_language: en
+        summary_native: Public Rippling security metadata reference.
+        summary_en: Public Rippling security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: rippling-security, artifact_type: security_page, region_scope: [global], product_scope: [Rippling services] }
+      - source_id: rippling-compliance
+        source_type: compliance_page
+        title_native: Rippling Security and Compliance
+        title_en: Rippling Security and Compliance
+        source_url: https://www.rippling.com/security#compliance
+        source_language: en
+        summary_native: Public Rippling compliance metadata reference.
+        summary_en: Public Rippling compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: rippling-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Rippling services] }
+
+  - vendor_id: deel
+    display_name: Deel
+    legal_name: Deel Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [deel.com]
+    public_entrypoints:
+      - https://www.deel.com/legal
+      - https://www.deel.com/security
+    vendor_categories: [hris, payroll, workforce_management, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Deel assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: deel-dpa
+        source_type: dpa
+        title_native: Deel Data Processing Addendum
+        title_en: Deel Data Processing Addendum
+        source_url: https://www.deel.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public Deel data processing addendum metadata reference.
+        summary_en: Public Deel data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: deel-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Deel services] }
+      - source_id: deel-subprocessors
+        source_type: subprocessors_list
+        title_native: Deel Subprocessors
+        title_en: Deel Subprocessors
+        source_url: https://www.deel.com/legal/subprocessors
+        source_language: en
+        summary_native: Public Deel subprocessors metadata reference.
+        summary_en: Public Deel subprocessors metadata reference.
+        confidence: low
+        artifact: { artifact_id: deel-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Deel services] }
+      - source_id: deel-privacy
+        source_type: privacy_notice
+        title_native: Deel Privacy Policy
+        title_en: Deel Privacy Policy
+        source_url: https://www.deel.com/privacy
+        source_language: en
+        summary_native: Public Deel privacy policy metadata reference.
+        summary_en: Public Deel privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: deel-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Deel services] }
+      - source_id: deel-security
+        source_type: security_page
+        title_native: Deel Security
+        title_en: Deel Security
+        source_url: https://www.deel.com/security
+        source_language: en
+        summary_native: Public Deel security metadata reference.
+        summary_en: Public Deel security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: deel-security, artifact_type: security_page, region_scope: [global], product_scope: [Deel services] }
+      - source_id: deel-compliance
+        source_type: compliance_page
+        title_native: Deel Compliance
+        title_en: Deel Compliance
+        source_url: https://www.deel.com/security#compliance
+        source_language: en
+        summary_native: Public Deel compliance metadata reference.
+        summary_en: Public Deel compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: deel-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Deel services] }
+
+  - vendor_id: gusto
+    display_name: Gusto
+    legal_name: Gusto, Inc.
+    headquarters_country: US
+    regions_served: [us]
+    entity_surface: regional_surface
+    source_authority_language: en
+    official_domains: [gusto.com]
+    public_entrypoints:
+      - https://gusto.com/about/security
+      - https://gusto.com/about/privacy
+    vendor_categories: [payroll, hris, finance_platform]
+    notes: Public-source-only catalog record. Metadata references general public Gusto assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: gusto-dpa
+        source_type: dpa
+        title_native: Gusto Data Processing Addendum
+        title_en: Gusto Data Processing Addendum
+        source_url: https://gusto.com/about/data-processing-addendum
+        source_language: en
+        summary_native: Public Gusto data processing addendum metadata reference.
+        summary_en: Public Gusto data processing addendum metadata reference.
+        confidence: low
+        artifact: { artifact_id: gusto-dpa, artifact_type: dpa, region_scope: [us], product_scope: [Gusto services] }
+      - source_id: gusto-subprocessors
+        source_type: subprocessors_list
+        title_native: Gusto Subprocessors
+        title_en: Gusto Subprocessors
+        source_url: https://gusto.com/about/subprocessors
+        source_language: en
+        summary_native: Public Gusto subprocessors metadata reference.
+        summary_en: Public Gusto subprocessors metadata reference.
+        confidence: low
+        artifact: { artifact_id: gusto-subprocessors, artifact_type: subprocessors_list, region_scope: [us], product_scope: [Gusto services] }
+      - source_id: gusto-privacy
+        source_type: privacy_notice
+        title_native: Gusto Privacy Notice
+        title_en: Gusto Privacy Notice
+        source_url: https://gusto.com/about/privacy
+        source_language: en
+        summary_native: Public Gusto privacy notice metadata reference.
+        summary_en: Public Gusto privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: gusto-privacy, artifact_type: privacy_notice, region_scope: [us], product_scope: [Gusto services] }
+      - source_id: gusto-security
+        source_type: security_page
+        title_native: Gusto Security
+        title_en: Gusto Security
+        source_url: https://gusto.com/about/security
+        source_language: en
+        summary_native: Public Gusto security metadata reference.
+        summary_en: Public Gusto security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: gusto-security, artifact_type: security_page, region_scope: [us], product_scope: [Gusto services] }
+      - source_id: gusto-compliance
+        source_type: compliance_page
+        title_native: Gusto Security and Compliance
+        title_en: Gusto Security and Compliance
+        source_url: https://gusto.com/about/security#compliance
+        source_language: en
+        summary_native: Public Gusto compliance metadata reference.
+        summary_en: Public Gusto compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: gusto-compliance, artifact_type: compliance_page, region_scope: [us], product_scope: [Gusto services] }
+
+  - vendor_id: quickbooks
+    display_name: QuickBooks
+    legal_name: Intuit Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_family: intuit
+    entity_surface: product_surface
+    related_vendor_ids: [mailchimp]
+    source_authority_language: en
+    official_domains: [quickbooks.intuit.com, intuit.com]
+    public_entrypoints:
+      - https://www.intuit.com/privacy/
+      - https://security.intuit.com/
+    vendor_categories: [finance_platform, accounting, payroll, enterprise_software]
+    notes: Public-source-only catalog record. QuickBooks is modeled as an Intuit product surface with its own public assurance context.
+    sources:
+      - source_id: quickbooks-dpa
+        source_type: dpa
+        title_native: Intuit Data Processing Agreement
+        title_en: Intuit Data Processing Agreement
+        source_url: https://www.intuit.com/legal/data-processing-agreement/
+        source_language: en
+        summary_native: Public Intuit/QuickBooks data processing agreement metadata reference.
+        summary_en: Public Intuit/QuickBooks data processing agreement metadata reference.
+        confidence: low
+        artifact: { artifact_id: quickbooks-dpa, artifact_type: dpa, region_scope: [global], product_scope: [QuickBooks] }
+      - source_id: quickbooks-subprocessors
+        source_type: subprocessors_list
+        title_native: Intuit Subprocessors
+        title_en: Intuit Subprocessors
+        source_url: https://www.intuit.com/privacy/subprocessors/
+        source_language: en
+        summary_native: Public Intuit/QuickBooks subprocessors metadata reference.
+        summary_en: Public Intuit/QuickBooks subprocessors metadata reference.
+        confidence: low
+        artifact: { artifact_id: quickbooks-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [QuickBooks] }
+      - source_id: quickbooks-privacy
+        source_type: privacy_notice
+        title_native: Intuit Privacy Statement
+        title_en: Intuit Privacy Statement
+        source_url: https://www.intuit.com/privacy/statement/
+        source_language: en
+        summary_native: Public Intuit/QuickBooks privacy statement metadata reference.
+        summary_en: Public Intuit/QuickBooks privacy statement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: quickbooks-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [QuickBooks] }
+      - source_id: quickbooks-security
+        source_type: security_page
+        title_native: Intuit Security
+        title_en: Intuit Security
+        source_url: https://security.intuit.com/
+        source_language: en
+        summary_native: Public Intuit/QuickBooks security metadata reference.
+        summary_en: Public Intuit/QuickBooks security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: quickbooks-security, artifact_type: security_page, region_scope: [global], product_scope: [QuickBooks] }
+      - source_id: quickbooks-compliance
+        source_type: compliance_page
+        title_native: Intuit Security and Compliance
+        title_en: Intuit Security and Compliance
+        source_url: https://security.intuit.com/security-practices/
+        source_language: en
+        summary_native: Public Intuit/QuickBooks security and compliance metadata reference.
+        summary_en: Public Intuit/QuickBooks security and compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: quickbooks-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [QuickBooks] }
+
+  - vendor_id: xero
+    display_name: Xero
+    legal_name: Xero Limited
+    headquarters_country: NZ
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [xero.com]
+    public_entrypoints:
+      - https://www.xero.com/about/legal/
+      - https://www.xero.com/about/security/
+    vendor_categories: [finance_platform, accounting, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Xero assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: xero-dpa
+        source_type: dpa
+        title_native: Xero Data Processing Addendum
+        title_en: Xero Data Processing Addendum
+        source_url: https://www.xero.com/about/legal/terms/data-processing-addendum/
+        source_language: en
+        summary_native: Public Xero data processing addendum metadata reference.
+        summary_en: Public Xero data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: xero-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Xero services] }
+      - source_id: xero-subprocessors
+        source_type: subprocessors_list
+        title_native: Xero Subprocessors
+        title_en: Xero Subprocessors
+        source_url: https://www.xero.com/about/legal/subprocessors/
+        source_language: en
+        summary_native: Public Xero subprocessors metadata reference.
+        summary_en: Public Xero subprocessors metadata reference.
+        confidence: low
+        artifact: { artifact_id: xero-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Xero services] }
+      - source_id: xero-privacy
+        source_type: privacy_notice
+        title_native: Xero Privacy Notice
+        title_en: Xero Privacy Notice
+        source_url: https://www.xero.com/about/legal/privacy/
+        source_language: en
+        summary_native: Public Xero privacy notice metadata reference.
+        summary_en: Public Xero privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: xero-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Xero services] }
+      - source_id: xero-security
+        source_type: security_page
+        title_native: Xero Security
+        title_en: Xero Security
+        source_url: https://www.xero.com/about/security/
+        source_language: en
+        summary_native: Public Xero security metadata reference.
+        summary_en: Public Xero security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: xero-security, artifact_type: security_page, region_scope: [global], product_scope: [Xero services] }
+      - source_id: xero-compliance
+        source_type: compliance_page
+        title_native: Xero Security and Compliance
+        title_en: Xero Security and Compliance
+        source_url: https://www.xero.com/about/security/#compliance
+        source_language: en
+        summary_native: Public Xero compliance metadata reference.
+        summary_en: Public Xero compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: xero-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Xero services] }
+
+  - vendor_id: bill-com
+    display_name: BILL
+    legal_name: Bill.com, LLC
+    headquarters_country: US
+    regions_served: [us]
+    entity_surface: regional_surface
+    source_authority_language: en
+    official_domains: [bill.com]
+    public_entrypoints:
+      - https://www.bill.com/legal
+      - https://www.bill.com/security
+    vendor_categories: [finance_platform, payments, procurement, accounts_payable]
+    notes: Public-source-only catalog record. Metadata references general public BILL assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: bill-com-dpa
+        source_type: dpa
+        title_native: BILL Data Processing Addendum
+        title_en: BILL Data Processing Addendum
+        source_url: https://www.bill.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public BILL data processing addendum metadata reference.
+        summary_en: Public BILL data processing addendum metadata reference.
+        confidence: low
+        artifact: { artifact_id: bill-com-dpa, artifact_type: dpa, region_scope: [us], product_scope: [BILL services] }
+      - source_id: bill-com-subprocessors
+        source_type: subprocessors_list
+        title_native: BILL Subprocessors
+        title_en: BILL Subprocessors
+        source_url: https://www.bill.com/legal/subprocessors
+        source_language: en
+        summary_native: Public BILL subprocessors metadata reference.
+        summary_en: Public BILL subprocessors metadata reference.
+        confidence: low
+        artifact: { artifact_id: bill-com-subprocessors, artifact_type: subprocessors_list, region_scope: [us], product_scope: [BILL services] }
+      - source_id: bill-com-privacy
+        source_type: privacy_notice
+        title_native: BILL Privacy Notice
+        title_en: BILL Privacy Notice
+        source_url: https://www.bill.com/privacy
+        source_language: en
+        summary_native: Public BILL privacy notice metadata reference.
+        summary_en: Public BILL privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: bill-com-privacy, artifact_type: privacy_notice, region_scope: [us], product_scope: [BILL services] }
+      - source_id: bill-com-security
+        source_type: security_page
+        title_native: BILL Security
+        title_en: BILL Security
+        source_url: https://www.bill.com/security
+        source_language: en
+        summary_native: Public BILL security metadata reference.
+        summary_en: Public BILL security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: bill-com-security, artifact_type: security_page, region_scope: [us], product_scope: [BILL services] }
+      - source_id: bill-com-compliance
+        source_type: compliance_page
+        title_native: BILL Security and Compliance
+        title_en: BILL Security and Compliance
+        source_url: https://www.bill.com/security#compliance
+        source_language: en
+        summary_native: Public BILL compliance metadata reference.
+        summary_en: Public BILL compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: bill-com-compliance, artifact_type: compliance_page, region_scope: [us], product_scope: [BILL services] }
+
+  - vendor_id: docusign
+    display_name: DocuSign
+    legal_name: DocuSign, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [docusign.com]
+    public_entrypoints:
+      - https://www.docusign.com/trust
+      - https://www.docusign.com/privacy
+    vendor_categories: [document_platform, e_signature, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public DocuSign assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: docusign-dpa
+        source_type: dpa
+        title_native: DocuSign Data Processing Addendum
+        title_en: DocuSign Data Processing Addendum
+        source_url: https://www.docusign.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public DocuSign data processing addendum metadata reference.
+        summary_en: Public DocuSign data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docusign-dpa, artifact_type: dpa, region_scope: [global], product_scope: [DocuSign services] }
+      - source_id: docusign-subprocessors
+        source_type: subprocessors_list
+        title_native: DocuSign Subprocessors
+        title_en: DocuSign Subprocessors
+        source_url: https://www.docusign.com/legal/subprocessors
+        source_language: en
+        summary_native: Public DocuSign subprocessors metadata reference.
+        summary_en: Public DocuSign subprocessors metadata reference.
+        confidence: low
+        artifact: { artifact_id: docusign-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [DocuSign services] }
+      - source_id: docusign-privacy
+        source_type: privacy_notice
+        title_native: DocuSign Privacy Notice
+        title_en: DocuSign Privacy Notice
+        source_url: https://www.docusign.com/privacy
+        source_language: en
+        summary_native: Public DocuSign privacy notice metadata reference.
+        summary_en: Public DocuSign privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docusign-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [DocuSign services] }
+      - source_id: docusign-security
+        source_type: security_page
+        title_native: DocuSign Trust Center
+        title_en: DocuSign Trust Center
+        source_url: https://www.docusign.com/trust
+        source_language: en
+        summary_native: Public DocuSign trust and security metadata reference.
+        summary_en: Public DocuSign trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docusign-security, artifact_type: security_page, region_scope: [global], product_scope: [DocuSign services] }
+      - source_id: docusign-compliance
+        source_type: compliance_page
+        title_native: DocuSign Compliance
+        title_en: DocuSign Compliance
+        source_url: https://www.docusign.com/trust/compliance
+        source_language: en
+        summary_native: Public DocuSign compliance metadata reference.
+        summary_en: Public DocuSign compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docusign-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [DocuSign services] }
+
+  - vendor_id: dropbox
+    display_name: Dropbox
+    legal_name: Dropbox, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [dropbox.com]
+    public_entrypoints:
+      - https://www.dropbox.com/security
+      - https://www.dropbox.com/privacy
+    vendor_categories: [document_platform, collaboration, cloud_storage, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Dropbox assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: dropbox-dpa
+        source_type: dpa
+        title_native: Dropbox Data Processing Agreement
+        title_en: Dropbox Data Processing Agreement
+        source_url: https://assets.dropbox.com/documents/en/legal/dfb-data-processing-agreement.pdf
+        source_language: en
+        access_class: public_pdf
+        summary_native: Public Dropbox data processing agreement metadata reference.
+        summary_en: Public Dropbox data processing agreement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: dropbox-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Dropbox services] }
+      - source_id: dropbox-subprocessors
+        source_type: subprocessors_list
+        title_native: Dropbox Subprocessors
+        title_en: Dropbox Subprocessors
+        source_url: https://assets.dropbox.com/documents/en/legal/data-transfer-and-subprocessors.pdf
+        source_language: en
+        access_class: public_pdf
+        summary_native: Public Dropbox data transfer and subprocessors metadata reference.
+        summary_en: Public Dropbox data transfer and subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: dropbox-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Dropbox services] }
+      - source_id: dropbox-privacy
+        source_type: privacy_notice
+        title_native: Dropbox Privacy Policy
+        title_en: Dropbox Privacy Policy
+        source_url: https://www.dropbox.com/privacy
+        source_language: en
+        summary_native: Public Dropbox privacy policy metadata reference.
+        summary_en: Public Dropbox privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: dropbox-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Dropbox services] }
+      - source_id: dropbox-security
+        source_type: security_page
+        title_native: Dropbox Security
+        title_en: Dropbox Security
+        source_url: https://www.dropbox.com/security
+        source_language: en
+        summary_native: Public Dropbox security metadata reference.
+        summary_en: Public Dropbox security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: dropbox-security, artifact_type: security_page, region_scope: [global], product_scope: [Dropbox services] }
+      - source_id: dropbox-compliance
+        source_type: compliance_page
+        title_native: Dropbox Compliance
+        title_en: Dropbox Compliance
+        source_url: https://www.dropbox.com/business/trust/compliance
+        source_language: en
+        summary_native: Public Dropbox compliance metadata reference.
+        summary_en: Public Dropbox compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: dropbox-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Dropbox services] }
+
+  - vendor_id: box
+    display_name: Box
+    legal_name: Box, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [box.com]
+    public_entrypoints:
+      - https://www.box.com/security
+      - https://www.box.com/legal
+    vendor_categories: [document_platform, collaboration, cloud_storage, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Box assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: box-dpa
+        source_type: dpa
+        title_native: Box Data Processing Addendum
+        title_en: Box Data Processing Addendum
+        source_url: https://www.box.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public Box data processing addendum metadata reference.
+        summary_en: Public Box data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: box-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Box services] }
+      - source_id: box-subprocessors
+        source_type: subprocessors_list
+        title_native: Box Subprocessors
+        title_en: Box Subprocessors
+        source_url: https://www.box.com/legal/subprocessors
+        source_language: en
+        summary_native: Public Box subprocessors metadata reference.
+        summary_en: Public Box subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: box-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Box services] }
+      - source_id: box-privacy
+        source_type: privacy_notice
+        title_native: Box Privacy Notice
+        title_en: Box Privacy Notice
+        source_url: https://www.box.com/legal/privacy-policy
+        source_language: en
+        summary_native: Public Box privacy notice metadata reference.
+        summary_en: Public Box privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: box-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Box services] }
+      - source_id: box-security
+        source_type: security_page
+        title_native: Box Security
+        title_en: Box Security
+        source_url: https://www.box.com/security
+        source_language: en
+        summary_native: Public Box security metadata reference.
+        summary_en: Public Box security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: box-security, artifact_type: security_page, region_scope: [global], product_scope: [Box services] }
+      - source_id: box-compliance
+        source_type: compliance_page
+        title_native: Box Compliance
+        title_en: Box Compliance
+        source_url: https://www.box.com/security/compliance
+        source_language: en
+        summary_native: Public Box compliance metadata reference.
+        summary_en: Public Box compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: box-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Box services] }

@@ -1,5 +1,5 @@
 {
-  "count": 44,
+  "count": 54,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -216,6 +216,104 @@
       "vendor_id": "aws"
     },
     {
+      "_openva_path": "data/vendors/bamboohr/vendor.yaml",
+      "display_name": "BambooHR",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Bamboo HR LLC",
+      "notes": "Public-source-only catalog record. Metadata references general public BambooHR assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "bamboohr.com"
+      ],
+      "public_entrypoints": [
+        "https://www.bamboohr.com/legal",
+        "https://www.bamboohr.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "hris",
+        "payroll",
+        "enterprise_software"
+      ],
+      "vendor_id": "bamboohr"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/vendor.yaml",
+      "display_name": "BILL",
+      "entity_surface": "regional_surface",
+      "headquarters_country": "US",
+      "legal_name": "Bill.com, LLC",
+      "notes": "Public-source-only catalog record. Metadata references general public BILL assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "bill.com"
+      ],
+      "public_entrypoints": [
+        "https://www.bill.com/legal",
+        "https://www.bill.com/security"
+      ],
+      "regions_served": [
+        "us"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "finance_platform",
+        "payments",
+        "procurement",
+        "accounts_payable"
+      ],
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/box/vendor.yaml",
+      "display_name": "Box",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Box, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Box assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "box.com"
+      ],
+      "public_entrypoints": [
+        "https://www.box.com/security",
+        "https://www.box.com/legal"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "document_platform",
+        "collaboration",
+        "cloud_storage",
+        "enterprise_software"
+      ],
+      "vendor_id": "box"
+    },
+    {
       "_openva_path": "data/vendors/cloudflare/vendor.yaml",
       "display_name": "Cloudflare",
       "headquarters_country": "US",
@@ -312,6 +410,39 @@
       "vendor_id": "datadog"
     },
     {
+      "_openva_path": "data/vendors/deel/vendor.yaml",
+      "display_name": "Deel",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Deel Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Deel assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "deel.com"
+      ],
+      "public_entrypoints": [
+        "https://www.deel.com/legal",
+        "https://www.deel.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "hris",
+        "payroll",
+        "workforce_management",
+        "enterprise_software"
+      ],
+      "vendor_id": "deel"
+    },
+    {
       "_openva_path": "data/vendors/digitalocean/vendor.yaml",
       "display_name": "DigitalOcean",
       "entity_surface": "global_brand",
@@ -374,6 +505,71 @@
         "ci_cd"
       ],
       "vendor_id": "docker"
+    },
+    {
+      "_openva_path": "data/vendors/docusign/vendor.yaml",
+      "display_name": "DocuSign",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "DocuSign, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public DocuSign assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "docusign.com"
+      ],
+      "public_entrypoints": [
+        "https://www.docusign.com/trust",
+        "https://www.docusign.com/privacy"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "document_platform",
+        "e_signature",
+        "enterprise_software"
+      ],
+      "vendor_id": "docusign"
+    },
+    {
+      "_openva_path": "data/vendors/dropbox/vendor.yaml",
+      "display_name": "Dropbox",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Dropbox, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Dropbox assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "dropbox.com"
+      ],
+      "public_entrypoints": [
+        "https://www.dropbox.com/security",
+        "https://www.dropbox.com/privacy"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "document_platform",
+        "collaboration",
+        "cloud_storage",
+        "enterprise_software"
+      ],
+      "vendor_id": "dropbox"
     },
     {
       "_openva_path": "data/vendors/elastic/vendor.yaml",
@@ -537,6 +733,38 @@
         "ai_platform"
       ],
       "vendor_id": "google-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/gusto/vendor.yaml",
+      "display_name": "Gusto",
+      "entity_surface": "regional_surface",
+      "headquarters_country": "US",
+      "legal_name": "Gusto, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Gusto assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "gusto.com"
+      ],
+      "public_entrypoints": [
+        "https://gusto.com/about/security",
+        "https://gusto.com/about/privacy"
+      ],
+      "regions_served": [
+        "us"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payroll",
+        "hris",
+        "finance_platform"
+      ],
+      "vendor_id": "gusto"
     },
     {
       "_openva_path": "data/vendors/hashicorp/vendor.yaml",
@@ -1010,6 +1238,78 @@
       "vendor_id": "pagerduty"
     },
     {
+      "_openva_path": "data/vendors/quickbooks/vendor.yaml",
+      "display_name": "QuickBooks",
+      "entity_family": "intuit",
+      "entity_surface": "product_surface",
+      "headquarters_country": "US",
+      "legal_name": "Intuit Inc.",
+      "notes": "Public-source-only catalog record. QuickBooks is modeled as an Intuit product surface with its own public assurance context.",
+      "official_domains": [
+        "quickbooks.intuit.com",
+        "intuit.com"
+      ],
+      "public_entrypoints": [
+        "https://www.intuit.com/privacy/",
+        "https://security.intuit.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "related_vendor_ids": [
+        "mailchimp"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "finance_platform",
+        "accounting",
+        "payroll",
+        "enterprise_software"
+      ],
+      "vendor_id": "quickbooks"
+    },
+    {
+      "_openva_path": "data/vendors/rippling/vendor.yaml",
+      "display_name": "Rippling",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Rippling People Center Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Rippling assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "rippling.com"
+      ],
+      "public_entrypoints": [
+        "https://www.rippling.com/legal",
+        "https://www.rippling.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "hris",
+        "payroll",
+        "identity",
+        "finance_platform",
+        "enterprise_software"
+      ],
+      "vendor_id": "rippling"
+    },
+    {
       "_openva_path": "data/vendors/salesforce/vendor.yaml",
       "display_name": "Salesforce",
       "entity_surface": "global_brand",
@@ -1412,6 +1712,38 @@
         "enterprise_software"
       ],
       "vendor_id": "workday"
+    },
+    {
+      "_openva_path": "data/vendors/xero/vendor.yaml",
+      "display_name": "Xero",
+      "entity_surface": "global_brand",
+      "headquarters_country": "NZ",
+      "legal_name": "Xero Limited",
+      "notes": "Public-source-only catalog record. Metadata references general public Xero assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "xero.com"
+      ],
+      "public_entrypoints": [
+        "https://www.xero.com/about/legal/",
+        "https://www.xero.com/about/security/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "finance_platform",
+        "accounting",
+        "enterprise_software"
+      ],
+      "vendor_id": "xero"
     },
     {
       "_openva_path": "data/vendors/zendesk/vendor.yaml",
