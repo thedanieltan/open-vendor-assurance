@@ -4,12 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       promotion_plan_path:
-        description: "Optional reviewed promotion plan JSON. If blank, the workflow selects the first unapplied reviewed plan."
+        description: "Optional reviewed promotion plan JSON. If blank, selects the first unapplied reviewed plan."
         required: false
         type: string
         default: ""
+      max_actions_per_plan:
+        description: "Maximum reviewed actions to apply in one generated Catalog PR."
+        required: false
+        type: string
+        default: "50"
       pr_branch:
-        description: "Optional branch name for the generated cleanup PR. Must start with agent-. If blank, derived from the selected plan."
+        description: "Optional generated PR branch. Must start with agent-. If blank, derived from selected plan."
         required: false
         type: string
         default: ""
@@ -34,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REQUESTED_PROMOTION_PLAN_PATH: "${{ inputs.promotion_plan_path || '' }}"
+      REQUESTED_MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '50' }}"
       REQUESTED_PR_BRANCH: "${{ inputs.pr_branch || '' }}"
       PR_TITLE: "${{ inputs.pr_title || 'Catalog: apply reviewed source maintenance cleanup' }}"
     steps:
@@ -52,8 +58,13 @@ jobs:
         run: |
           set -euo pipefail
           REQUESTED_PROMOTION_PLAN_PATH="$(printf '%s' "$REQUESTED_PROMOTION_PLAN_PATH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          REQUESTED_MAX_ACTIONS_PER_PLAN="$(printf '%s' "$REQUESTED_MAX_ACTIONS_PER_PLAN" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          case "$REQUESTED_MAX_ACTIONS_PER_PLAN" in
+            ''|*[!0-9]*) echo "max_actions_per_plan must be a non-negative integer" >&2; exit 1 ;;
+          esac
           python -m tools.openva.maintenance_lifecycle select \
             --promotion-plan "$REQUESTED_PROMOTION_PLAN_PATH" \
+            --max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN" \
             --output reviewed-plan.env
           cat reviewed-plan.env >> "$GITHUB_ENV"
           cat reviewed-plan.env >> "$GITHUB_OUTPUT"
@@ -77,6 +88,8 @@ jobs:
           fi
           echo "PROMOTION_PLAN_PATH=$SELECTED_PLAN_PATH" >> "$GITHUB_ENV"
           echo "PROMOTION_PLAN_SHA256=$SELECTED_PLAN_SHA256" >> "$GITHUB_ENV"
+          echo "PROMOTION_PLAN_ACTION_COUNT=$SELECTED_PLAN_ACTION_COUNT" >> "$GITHUB_ENV"
+          echo "MAX_ACTIONS_PER_PLAN=$REQUESTED_MAX_ACTIONS_PER_PLAN" >> "$GITHUB_ENV"
           echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
           echo "PR_TITLE=$PR_TITLE" >> "$GITHUB_ENV"
           case "$SELECTED_PLAN_PATH" in
@@ -130,26 +143,17 @@ jobs:
 
           maintenance = json.load(open('maintenance-action-report.json', encoding='utf-8'))
           proposal = json.load(open('cleanup-proposal.json', encoding='utf-8'))
-          plan_path = os.environ['PROMOTION_PLAN_PATH']
-          plan_sha256 = os.environ['PROMOTION_PLAN_SHA256']
           lines = [
               '## Summary',
               '',
-              'Applies reviewed OpenVA source maintenance cleanup from a committed promotion plan.',
-              '',
-              'This PR is non-advisory. It does not make legal, procurement, compliance, risk, vendor approval, or vendor recommendation conclusions.',
+              'Applies a committed reviewed OpenVA maintenance plan.',
               '',
               '## Reviewed input',
               '',
-              f'- Promotion plan: `{plan_path}`',
-              f'- Promotion plan SHA-256: `{plan_sha256}`',
-              '',
-              '## What changed',
-              '',
-              '- Removes canonical source records selected by reviewed cleanup actions.',
-              '- Removes dependent artifact records and change records referencing those sources.',
-              '- Adds unavailable-source ledger entries for cleaned-up source types.',
-              '- Rebuilds indexes and `openva-pack.json`.',
+              f"- Promotion plan: `{os.environ['PROMOTION_PLAN_PATH']}`",
+              f"- Promotion plan SHA-256: `{os.environ['PROMOTION_PLAN_SHA256']}`",
+              f"- Reviewed action count: `{os.environ['PROMOTION_PLAN_ACTION_COUNT']}`",
+              f"- Max actions per generated PR: `{os.environ['MAX_ACTIONS_PER_PLAN']}`",
               '',
               '## Counts',
               '',
@@ -159,15 +163,19 @@ jobs:
               f"- Blocking cleanup actions: `{proposal['summary']['blocking_cleanup_actions']}`",
               f"- Promotable candidate actions, not applied: `{proposal['summary']['promotable_candidate_actions']}`",
               '',
+              '## Scale posture',
+              '',
+              '- Processes one reviewed plan per workflow run.',
+              '- Enforces a bounded reviewed action count per generated Catalog PR.',
+              '- Oversized reviewed plans must be split before application.',
+              '',
               '## Guardrails',
               '',
-              '- Selected automatically only from committed reviewed plans under `maintenance/reviewed/` that are not registered as applied.',
-              '- Does not perform live source verification.',
-              '- Does not perform live source discovery.',
+              '- Uses only committed reviewed plans under `maintenance/reviewed/` that are not registered as applied.',
+              '- Does not run live verification or discovery.',
               '- Does not promote candidate sources.',
               '- Does not mirror raw documents.',
               '- Does not merge automatically.',
-              '- Full cleanup proposal is available in the workflow artifact `cleanup-proposal.md`.',
               '',
           ]
           Path('catalog-maintenance-pr-body.md').write_text('\n'.join(lines), encoding='utf-8')
