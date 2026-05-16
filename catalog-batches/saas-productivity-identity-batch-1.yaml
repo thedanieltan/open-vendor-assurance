@@ -1,0 +1,661 @@
+schema_version: 0.1.0
+batch_id: saas-productivity-identity-batch-1
+operation: create
+collected_at: '2026-05-16T00:00:00Z'
+observer: human
+vendors:
+  - vendor_id: salesforce
+    display_name: Salesforce
+    legal_name: Salesforce, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [salesforce.com]
+    public_entrypoints:
+      - https://www.salesforce.com/company/privacy/
+      - https://trust.salesforce.com/
+    vendor_categories: [crm, enterprise_software, data_platform, ai_platform]
+    notes: Public-source-only catalog record. Metadata references general public Salesforce assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: salesforce-dpa
+        source_type: dpa
+        title_native: Salesforce Data Processing Addendum
+        title_en: Salesforce Data Processing Addendum
+        source_url: https://www.salesforce.com/company/privacy/data-processing-addendum/
+        source_language: en
+        summary_native: Public Salesforce data processing addendum metadata reference.
+        summary_en: Public Salesforce data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: salesforce-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Salesforce services] }
+      - source_id: salesforce-subprocessors
+        source_type: subprocessors_list
+        title_native: Salesforce Infrastructure and Subprocessor Documentation
+        title_en: Salesforce Infrastructure and Subprocessor Documentation
+        source_url: https://www.salesforce.com/company/privacy/infrastructure-sub-processors/
+        source_language: en
+        summary_native: Public Salesforce subprocessor metadata reference.
+        summary_en: Public Salesforce subprocessor metadata reference.
+        confidence: medium
+        artifact: { artifact_id: salesforce-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Salesforce services] }
+      - source_id: salesforce-privacy
+        source_type: privacy_notice
+        title_native: Salesforce Privacy Statement
+        title_en: Salesforce Privacy Statement
+        source_url: https://www.salesforce.com/company/privacy/
+        source_language: en
+        summary_native: Public Salesforce privacy statement metadata reference.
+        summary_en: Public Salesforce privacy statement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: salesforce-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Salesforce services] }
+      - source_id: salesforce-security
+        source_type: security_page
+        title_native: Salesforce Trust
+        title_en: Salesforce Trust
+        source_url: https://trust.salesforce.com/
+        source_language: en
+        summary_native: Public Salesforce trust and security metadata reference.
+        summary_en: Public Salesforce trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: salesforce-security, artifact_type: security_page, region_scope: [global], product_scope: [Salesforce services] }
+      - source_id: salesforce-compliance
+        source_type: compliance_page
+        title_native: Salesforce Compliance
+        title_en: Salesforce Compliance
+        source_url: https://compliance.salesforce.com/
+        source_language: en
+        summary_native: Public Salesforce compliance metadata reference.
+        summary_en: Public Salesforce compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: salesforce-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Salesforce services] }
+
+  - vendor_id: servicenow
+    display_name: ServiceNow
+    legal_name: ServiceNow, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [servicenow.com]
+    public_entrypoints:
+      - https://www.servicenow.com/company/trust.html
+      - https://www.servicenow.com/privacy.html
+    vendor_categories: [enterprise_software, workflow_platform, it_service_management]
+    notes: Public-source-only catalog record. Metadata references general public ServiceNow assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: servicenow-dpa
+        source_type: dpa
+        title_native: ServiceNow Data Processing Addendum
+        title_en: ServiceNow Data Processing Addendum
+        source_url: https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/data-processing-addendum.pdf
+        source_language: en
+        access_class: public_pdf
+        summary_native: Public ServiceNow data processing addendum metadata reference.
+        summary_en: Public ServiceNow data processing addendum metadata reference.
+        confidence: low
+        artifact: { artifact_id: servicenow-dpa, artifact_type: dpa, region_scope: [global], product_scope: [ServiceNow services] }
+      - source_id: servicenow-subprocessors
+        source_type: subprocessors_list
+        title_native: ServiceNow Subprocessors
+        title_en: ServiceNow Subprocessors
+        source_url: https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/subprocessor-list.pdf
+        source_language: en
+        access_class: public_pdf
+        summary_native: Public ServiceNow subprocessor list metadata reference.
+        summary_en: Public ServiceNow subprocessor list metadata reference.
+        confidence: low
+        artifact: { artifact_id: servicenow-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [ServiceNow services] }
+      - source_id: servicenow-privacy
+        source_type: privacy_notice
+        title_native: ServiceNow Privacy Statement
+        title_en: ServiceNow Privacy Statement
+        source_url: https://www.servicenow.com/privacy.html
+        source_language: en
+        summary_native: Public ServiceNow privacy statement metadata reference.
+        summary_en: Public ServiceNow privacy statement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: servicenow-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [ServiceNow services] }
+      - source_id: servicenow-security
+        source_type: security_page
+        title_native: ServiceNow Trust
+        title_en: ServiceNow Trust
+        source_url: https://www.servicenow.com/company/trust.html
+        source_language: en
+        summary_native: Public ServiceNow trust and security metadata reference.
+        summary_en: Public ServiceNow trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: servicenow-security, artifact_type: security_page, region_scope: [global], product_scope: [ServiceNow services] }
+      - source_id: servicenow-compliance
+        source_type: compliance_page
+        title_native: ServiceNow Compliance
+        title_en: ServiceNow Compliance
+        source_url: https://www.servicenow.com/company/trust/compliance.html
+        source_language: en
+        summary_native: Public ServiceNow compliance metadata reference.
+        summary_en: Public ServiceNow compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: servicenow-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [ServiceNow services] }
+
+  - vendor_id: workday
+    display_name: Workday
+    legal_name: Workday, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [workday.com]
+    public_entrypoints:
+      - https://www.workday.com/en-us/privacy.html
+      - https://www.workday.com/en-us/company/about-workday/security-trust.html
+    vendor_categories: [hris, finance_platform, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Workday assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: workday-dpa
+        source_type: dpa
+        title_native: Workday Data Processing Terms
+        title_en: Workday Data Processing Terms
+        source_url: https://www.workday.com/en-us/legal/contract-terms-and-conditions/data-processing-terms.html
+        source_language: en
+        summary_native: Public Workday data processing terms metadata reference.
+        summary_en: Public Workday data processing terms metadata reference.
+        confidence: medium
+        artifact: { artifact_id: workday-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Workday services] }
+      - source_id: workday-subprocessors
+        source_type: subprocessors_list
+        title_native: Workday Subprocessors
+        title_en: Workday Subprocessors
+        source_url: https://www.workday.com/en-us/legal/subprocessors.html
+        source_language: en
+        summary_native: Public Workday subprocessor metadata reference.
+        summary_en: Public Workday subprocessor metadata reference.
+        confidence: medium
+        artifact: { artifact_id: workday-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Workday services] }
+      - source_id: workday-privacy
+        source_type: privacy_notice
+        title_native: Workday Privacy Statement
+        title_en: Workday Privacy Statement
+        source_url: https://www.workday.com/en-us/privacy.html
+        source_language: en
+        summary_native: Public Workday privacy statement metadata reference.
+        summary_en: Public Workday privacy statement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: workday-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Workday services] }
+      - source_id: workday-security
+        source_type: security_page
+        title_native: Workday Security and Trust
+        title_en: Workday Security and Trust
+        source_url: https://www.workday.com/en-us/company/about-workday/security-trust.html
+        source_language: en
+        summary_native: Public Workday security and trust metadata reference.
+        summary_en: Public Workday security and trust metadata reference.
+        confidence: medium
+        artifact: { artifact_id: workday-security, artifact_type: security_page, region_scope: [global], product_scope: [Workday services] }
+      - source_id: workday-compliance
+        source_type: compliance_page
+        title_native: Workday Compliance
+        title_en: Workday Compliance
+        source_url: https://www.workday.com/en-us/company/about-workday/security-trust/compliance.html
+        source_language: en
+        summary_native: Public Workday compliance metadata reference.
+        summary_en: Public Workday compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: workday-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Workday services] }
+
+  - vendor_id: adobe
+    display_name: Adobe
+    legal_name: Adobe Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [adobe.com]
+    public_entrypoints:
+      - https://www.adobe.com/trust.html
+      - https://www.adobe.com/privacy.html
+    vendor_categories: [creative_software, marketing_platform, document_platform, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Adobe assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: adobe-dpa
+        source_type: dpa
+        title_native: Adobe Data Processing Agreement
+        title_en: Adobe Data Processing Agreement
+        source_url: https://www.adobe.com/legal/terms/enterprise-licensing/data-processing-agreement.html
+        source_language: en
+        summary_native: Public Adobe data processing agreement metadata reference.
+        summary_en: Public Adobe data processing agreement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: adobe-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Adobe services] }
+      - source_id: adobe-subprocessors
+        source_type: subprocessors_list
+        title_native: Adobe Subprocessors
+        title_en: Adobe Subprocessors
+        source_url: https://www.adobe.com/privacy/sub-processors.html
+        source_language: en
+        summary_native: Public Adobe subprocessors metadata reference.
+        summary_en: Public Adobe subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: adobe-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Adobe services] }
+      - source_id: adobe-privacy
+        source_type: privacy_notice
+        title_native: Adobe Privacy Policy
+        title_en: Adobe Privacy Policy
+        source_url: https://www.adobe.com/privacy/policy.html
+        source_language: en
+        summary_native: Public Adobe privacy policy metadata reference.
+        summary_en: Public Adobe privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: adobe-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Adobe services] }
+      - source_id: adobe-security
+        source_type: security_page
+        title_native: Adobe Trust Center
+        title_en: Adobe Trust Center
+        source_url: https://www.adobe.com/trust.html
+        source_language: en
+        summary_native: Public Adobe trust and security metadata reference.
+        summary_en: Public Adobe trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: adobe-security, artifact_type: security_page, region_scope: [global], product_scope: [Adobe services] }
+      - source_id: adobe-compliance
+        source_type: compliance_page
+        title_native: Adobe Compliance
+        title_en: Adobe Compliance
+        source_url: https://www.adobe.com/trust/compliance.html
+        source_language: en
+        summary_native: Public Adobe compliance metadata reference.
+        summary_en: Public Adobe compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: adobe-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Adobe services] }
+
+  - vendor_id: atlassian
+    display_name: Atlassian
+    legal_name: Atlassian Pty Ltd
+    headquarters_country: AU
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [atlassian.com]
+    public_entrypoints:
+      - https://www.atlassian.com/trust
+      - https://www.atlassian.com/legal/privacy-policy
+    vendor_categories: [collaboration, project_management, developer_platform, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Atlassian assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: atlassian-dpa
+        source_type: dpa
+        title_native: Atlassian Data Processing Addendum
+        title_en: Atlassian Data Processing Addendum
+        source_url: https://www.atlassian.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public Atlassian data processing addendum metadata reference.
+        summary_en: Public Atlassian data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: atlassian-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Atlassian cloud services] }
+      - source_id: atlassian-subprocessors
+        source_type: subprocessors_list
+        title_native: Atlassian Subprocessors
+        title_en: Atlassian Subprocessors
+        source_url: https://www.atlassian.com/legal/sub-processors
+        source_language: en
+        summary_native: Public Atlassian subprocessors metadata reference.
+        summary_en: Public Atlassian subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: atlassian-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Atlassian cloud services] }
+      - source_id: atlassian-privacy
+        source_type: privacy_notice
+        title_native: Atlassian Privacy Policy
+        title_en: Atlassian Privacy Policy
+        source_url: https://www.atlassian.com/legal/privacy-policy
+        source_language: en
+        summary_native: Public Atlassian privacy policy metadata reference.
+        summary_en: Public Atlassian privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: atlassian-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Atlassian cloud services] }
+      - source_id: atlassian-security
+        source_type: security_page
+        title_native: Atlassian Trust Center
+        title_en: Atlassian Trust Center
+        source_url: https://www.atlassian.com/trust
+        source_language: en
+        summary_native: Public Atlassian trust and security metadata reference.
+        summary_en: Public Atlassian trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: atlassian-security, artifact_type: security_page, region_scope: [global], product_scope: [Atlassian cloud services] }
+      - source_id: atlassian-compliance
+        source_type: compliance_page
+        title_native: Atlassian Compliance
+        title_en: Atlassian Compliance
+        source_url: https://www.atlassian.com/trust/compliance
+        source_language: en
+        summary_native: Public Atlassian compliance metadata reference.
+        summary_en: Public Atlassian compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: atlassian-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Atlassian cloud services] }
+
+  - vendor_id: slack
+    display_name: Slack
+    legal_name: Slack Technologies, LLC
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: product_surface
+    source_authority_language: en
+    official_domains: [slack.com]
+    public_entrypoints:
+      - https://slack.com/trust
+      - https://slack.com/privacy
+    vendor_categories: [collaboration, messaging, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Slack assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: slack-dpa
+        source_type: dpa
+        title_native: Slack Data Processing Addendum
+        title_en: Slack Data Processing Addendum
+        source_url: https://slack.com/terms-of-service/data-processing
+        source_language: en
+        summary_native: Public Slack data processing addendum metadata reference.
+        summary_en: Public Slack data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: slack-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Slack] }
+      - source_id: slack-subprocessors
+        source_type: subprocessors_list
+        title_native: Slack Subprocessors
+        title_en: Slack Subprocessors
+        source_url: https://slack.com/subprocessors
+        source_language: en
+        summary_native: Public Slack subprocessors metadata reference.
+        summary_en: Public Slack subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: slack-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Slack] }
+      - source_id: slack-privacy
+        source_type: privacy_notice
+        title_native: Slack Privacy Policy
+        title_en: Slack Privacy Policy
+        source_url: https://slack.com/privacy
+        source_language: en
+        summary_native: Public Slack privacy policy metadata reference.
+        summary_en: Public Slack privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: slack-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Slack] }
+      - source_id: slack-security
+        source_type: security_page
+        title_native: Slack Trust Center
+        title_en: Slack Trust Center
+        source_url: https://slack.com/trust
+        source_language: en
+        summary_native: Public Slack trust and security metadata reference.
+        summary_en: Public Slack trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: slack-security, artifact_type: security_page, region_scope: [global], product_scope: [Slack] }
+      - source_id: slack-compliance
+        source_type: compliance_page
+        title_native: Slack Compliance
+        title_en: Slack Compliance
+        source_url: https://slack.com/trust/compliance
+        source_language: en
+        summary_native: Public Slack compliance metadata reference.
+        summary_en: Public Slack compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: slack-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Slack] }
+
+  - vendor_id: zoom
+    display_name: Zoom
+    legal_name: Zoom Communications, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [zoom.com, zoom.us]
+    public_entrypoints:
+      - https://www.zoom.com/en/trust/
+      - https://www.zoom.com/en/privacy/
+    vendor_categories: [collaboration, video_conferencing, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Zoom assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: zoom-dpa
+        source_type: dpa
+        title_native: Zoom Data Processing Addendum
+        title_en: Zoom Data Processing Addendum
+        source_url: https://www.zoom.com/en/trust/legal-compliance/data-processing-addendum/
+        source_language: en
+        summary_native: Public Zoom data processing addendum metadata reference.
+        summary_en: Public Zoom data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zoom-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Zoom services] }
+      - source_id: zoom-subprocessors
+        source_type: subprocessors_list
+        title_native: Zoom Subprocessors
+        title_en: Zoom Subprocessors
+        source_url: https://www.zoom.com/en/trust/subprocessors/
+        source_language: en
+        summary_native: Public Zoom subprocessors metadata reference.
+        summary_en: Public Zoom subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zoom-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Zoom services] }
+      - source_id: zoom-privacy
+        source_type: privacy_notice
+        title_native: Zoom Privacy Statement
+        title_en: Zoom Privacy Statement
+        source_url: https://www.zoom.com/en/privacy/
+        source_language: en
+        summary_native: Public Zoom privacy statement metadata reference.
+        summary_en: Public Zoom privacy statement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zoom-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Zoom services] }
+      - source_id: zoom-security
+        source_type: security_page
+        title_native: Zoom Trust Center
+        title_en: Zoom Trust Center
+        source_url: https://www.zoom.com/en/trust/
+        source_language: en
+        summary_native: Public Zoom trust and security metadata reference.
+        summary_en: Public Zoom trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zoom-security, artifact_type: security_page, region_scope: [global], product_scope: [Zoom services] }
+      - source_id: zoom-compliance
+        source_type: compliance_page
+        title_native: Zoom Compliance
+        title_en: Zoom Compliance
+        source_url: https://www.zoom.com/en/trust/legal-compliance/
+        source_language: en
+        summary_native: Public Zoom legal and compliance metadata reference.
+        summary_en: Public Zoom legal and compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: zoom-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Zoom services] }
+
+  - vendor_id: okta
+    display_name: Okta
+    legal_name: Okta, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [okta.com]
+    public_entrypoints:
+      - https://www.okta.com/trust/
+      - https://www.okta.com/privacy-policy/
+    vendor_categories: [identity, access_management, security, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public Okta assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: okta-dpa
+        source_type: dpa
+        title_native: Okta Data Processing Addendum
+        title_en: Okta Data Processing Addendum
+        source_url: https://www.okta.com/legal/data-processing-addendum/
+        source_language: en
+        summary_native: Public Okta data processing addendum metadata reference.
+        summary_en: Public Okta data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: okta-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Okta services] }
+      - source_id: okta-subprocessors
+        source_type: subprocessors_list
+        title_native: Okta Subprocessors
+        title_en: Okta Subprocessors
+        source_url: https://www.okta.com/subprocessors/
+        source_language: en
+        summary_native: Public Okta subprocessors metadata reference.
+        summary_en: Public Okta subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: okta-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Okta services] }
+      - source_id: okta-privacy
+        source_type: privacy_notice
+        title_native: Okta Privacy Policy
+        title_en: Okta Privacy Policy
+        source_url: https://www.okta.com/privacy-policy/
+        source_language: en
+        summary_native: Public Okta privacy policy metadata reference.
+        summary_en: Public Okta privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: okta-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Okta services] }
+      - source_id: okta-security
+        source_type: security_page
+        title_native: Okta Trust
+        title_en: Okta Trust
+        source_url: https://www.okta.com/trust/
+        source_language: en
+        summary_native: Public Okta trust and security metadata reference.
+        summary_en: Public Okta trust and security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: okta-security, artifact_type: security_page, region_scope: [global], product_scope: [Okta services] }
+      - source_id: okta-compliance
+        source_type: compliance_page
+        title_native: Okta Compliance
+        title_en: Okta Compliance
+        source_url: https://www.okta.com/trust/compliance/
+        source_language: en
+        summary_native: Public Okta compliance metadata reference.
+        summary_en: Public Okta compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: okta-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Okta services] }
+
+  - vendor_id: auth0
+    display_name: Auth0
+    legal_name: Auth0, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_family: okta
+    entity_surface: product_surface
+    related_vendor_ids: [okta]
+    source_authority_language: en
+    official_domains: [auth0.com]
+    public_entrypoints:
+      - https://auth0.com/security
+      - https://auth0.com/privacy
+    vendor_categories: [identity, access_management, developer_platform, security]
+    notes: Public-source-only catalog record. Auth0 is modeled as a related product surface rather than merged into the Okta record.
+    sources:
+      - source_id: auth0-dpa
+        source_type: dpa
+        title_native: Auth0 Data Processing Addendum
+        title_en: Auth0 Data Processing Addendum
+        source_url: https://auth0.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public Auth0 data processing addendum metadata reference.
+        summary_en: Public Auth0 data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: auth0-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Auth0] }
+      - source_id: auth0-subprocessors
+        source_type: subprocessors_list
+        title_native: Auth0 Subprocessors
+        title_en: Auth0 Subprocessors
+        source_url: https://auth0.com/legal/subprocessors
+        source_language: en
+        summary_native: Public Auth0 subprocessors metadata reference.
+        summary_en: Public Auth0 subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: auth0-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Auth0] }
+      - source_id: auth0-privacy
+        source_type: privacy_notice
+        title_native: Auth0 Privacy Policy
+        title_en: Auth0 Privacy Policy
+        source_url: https://auth0.com/privacy
+        source_language: en
+        summary_native: Public Auth0 privacy policy metadata reference.
+        summary_en: Public Auth0 privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: auth0-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Auth0] }
+      - source_id: auth0-security
+        source_type: security_page
+        title_native: Auth0 Security
+        title_en: Auth0 Security
+        source_url: https://auth0.com/security
+        source_language: en
+        summary_native: Public Auth0 security metadata reference.
+        summary_en: Public Auth0 security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: auth0-security, artifact_type: security_page, region_scope: [global], product_scope: [Auth0] }
+      - source_id: auth0-compliance
+        source_type: compliance_page
+        title_native: Auth0 Compliance
+        title_en: Auth0 Compliance
+        source_url: https://auth0.com/security/compliance
+        source_language: en
+        summary_native: Public Auth0 compliance metadata reference.
+        summary_en: Public Auth0 compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: auth0-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Auth0] }
+
+  - vendor_id: github
+    display_name: GitHub
+    legal_name: GitHub, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_family: microsoft
+    entity_surface: product_surface
+    related_vendor_ids: [microsoft]
+    source_authority_language: en
+    official_domains: [github.com]
+    public_entrypoints:
+      - https://github.com/security
+      - https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+    vendor_categories: [developer_platform, collaboration, source_code_management, ci_cd]
+    notes: Public-source-only catalog record. GitHub is modeled as a related product surface rather than merged into the Microsoft record.
+    sources:
+      - source_id: github-dpa
+        source_type: dpa
+        title_native: GitHub Data Protection Agreement
+        title_en: GitHub Data Protection Agreement
+        source_url: https://github.com/customer-terms/github-data-protection-agreement
+        source_language: en
+        summary_native: Public GitHub data protection agreement metadata reference.
+        summary_en: Public GitHub data protection agreement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: github-dpa, artifact_type: dpa, region_scope: [global], product_scope: [GitHub] }
+      - source_id: github-subprocessors
+        source_type: subprocessors_list
+        title_native: GitHub Subprocessors
+        title_en: GitHub Subprocessors
+        source_url: https://docs.github.com/en/site-policy/privacy-policies/github-subprocessors-and-cookies
+        source_language: en
+        summary_native: Public GitHub subprocessors metadata reference.
+        summary_en: Public GitHub subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: github-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [GitHub] }
+      - source_id: github-privacy
+        source_type: privacy_notice
+        title_native: GitHub General Privacy Statement
+        title_en: GitHub General Privacy Statement
+        source_url: https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+        source_language: en
+        summary_native: Public GitHub privacy statement metadata reference.
+        summary_en: Public GitHub privacy statement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: github-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [GitHub] }
+      - source_id: github-security
+        source_type: security_page
+        title_native: GitHub Security
+        title_en: GitHub Security
+        source_url: https://github.com/security
+        source_language: en
+        summary_native: Public GitHub security metadata reference.
+        summary_en: Public GitHub security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: github-security, artifact_type: security_page, region_scope: [global], product_scope: [GitHub] }
+      - source_id: github-compliance
+        source_type: compliance_page
+        title_native: GitHub Trust Center
+        title_en: GitHub Trust Center
+        source_url: https://resources.github.com/security/
+        source_language: en
+        summary_native: Public GitHub trust/security resources metadata reference.
+        summary_en: Public GitHub trust/security resources metadata reference.
+        confidence: medium
+        artifact: { artifact_id: github-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [GitHub] }
