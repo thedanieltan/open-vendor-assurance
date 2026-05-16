@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/candidate-source.schema.json",
+  "title": "OpenVA Candidate Source",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "candidate_source_id",
+    "vendor_id",
+    "source_type_candidate",
+    "candidate_url",
+    "discovery_method",
+    "confidence",
+    "requires_review",
+    "discovered_at",
+    "discovered_by",
+    "evidence",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "candidate_source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "source_type_candidate": {
+      "enum": [
+        "dpa",
+        "subprocessors_list",
+        "privacy_notice",
+        "trust_center",
+        "security_page",
+        "compliance_page",
+        "certification_reference",
+        "terms_of_service",
+        "kyc_statement",
+        "aml_statement",
+        "ai_terms",
+        "government_request_policy",
+        "transparency_report",
+        "other_public_source"
+      ]
+    },
+    "candidate_url": { "type": "string", "format": "uri" },
+    "discovery_method": { "enum": ["manual_seed", "official_entrypoint", "sitemap", "robots_txt", "official_domain_crawl", "search_result", "redirect_observation"] },
+    "confidence": { "enum": ["candidate", "possible", "likely"] },
+    "requires_review": { "const": true },
+    "discovered_at": { "type": "string", "format": "date-time" },
+    "discovered_by": { "enum": ["human", "agent", "hybrid"] },
+    "evidence": {
+      "type": "object",
+      "required": ["matched_terms"],
+      "properties": {
+        "page_title": { "type": ["string", "null"], "maxLength": 300 },
+        "matched_terms": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "uniqueItems": true,
+          "default": []
+        },
+        "final_url": { "type": ["string", "null"], "format": "uri" },
+        "http_status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+        "content_type": { "type": ["string", "null"], "maxLength": 160 }
+      },
+      "additionalProperties": false
+    },
+    "notes": { "type": ["string", "null"], "maxLength": 1000 },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false
+}
