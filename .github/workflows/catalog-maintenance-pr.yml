@@ -3,14 +3,11 @@ name: catalog-maintenance-pr
 on:
   workflow_dispatch:
     inputs:
-      source_limit:
-        description: "Optional number of sources to verify"
-        required: false
+      promotion_plan_path:
+        description: "Path to reviewed promotion plan JSON committed in the repository"
+        required: true
         type: string
-      vendor_limit:
-        description: "Optional number of vendors to discover against"
-        required: false
-        type: string
+        default: "maintenance/reviewed/promotion-plan.json"
       pr_branch:
         description: "Branch name for the generated cleanup PR. Must start with agent-"
         required: false
@@ -34,6 +31,7 @@ jobs:
   catalog-maintenance-pr:
     runs-on: ubuntu-latest
     env:
+      PROMOTION_PLAN_PATH: "${{ inputs.promotion_plan_path }}"
       PR_BRANCH: "${{ inputs.pr_branch || 'agent-catalog-maintenance-cleanup' }}"
       PR_TITLE: "${{ inputs.pr_title || 'Catalog: apply reviewed source maintenance cleanup' }}"
     steps:
@@ -46,10 +44,17 @@ jobs:
       - name: Validate workflow inputs
         run: |
           set -euo pipefail
+          PROMOTION_PLAN_PATH="$(printf '%s' "$PROMOTION_PLAN_PATH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           PR_BRANCH="$(printf '%s' "$PR_BRANCH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           PR_TITLE="$(printf '%s' "$PR_TITLE" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          echo "PROMOTION_PLAN_PATH=$PROMOTION_PLAN_PATH" >> "$GITHUB_ENV"
           echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
           echo "PR_TITLE=$PR_TITLE" >> "$GITHUB_ENV"
+          case "$PROMOTION_PLAN_PATH" in
+            maintenance/reviewed/*.json) ;;
+            *) echo "promotion_plan_path must be under maintenance/reviewed/ and end with .json" >&2; exit 1 ;;
+          esac
+          test -f "$PROMOTION_PLAN_PATH" || { echo "promotion plan file not found: $PROMOTION_PLAN_PATH" >&2; exit 1; }
           case "$PR_BRANCH" in
             agent-*) ;;
             *) echo "pr_branch must start with agent-" >&2; exit 1 ;;
@@ -60,32 +65,10 @@ jobs:
           esac
       - name: Validate current records
         run: python -m tools.openva.validate validate
-      - name: Build network source verification report
-        run: |
-          LIMIT="${{ inputs.source_limit }}"
-          if [ -n "$LIMIT" ]; then
-            python -m tools.openva.source_verification verify --limit "$LIMIT" --output source-verification-report.json
-          else
-            python -m tools.openva.source_verification verify --output source-verification-report.json
-          fi
-      - name: Build candidate source discovery report
-        run: |
-          LIMIT="${{ inputs.vendor_limit }}"
-          if [ -n "$LIMIT" ]; then
-            python -m tools.openva.source_discovery discover --vendor-limit "$LIMIT" --output source-discovery-report.json
-          else
-            python -m tools.openva.source_discovery discover --output source-discovery-report.json
-          fi
-      - name: Build promotion plan
-        run: |
-          python -m tools.openva.promotion_planner plan \
-            --verification-report source-verification-report.json \
-            --discovery-report source-discovery-report.json \
-            --output promotion-plan.json
-      - name: Apply maintenance actions
+      - name: Apply reviewed maintenance actions
         run: |
           python -m tools.openva.maintenance_actions apply \
-            --promotion-plan promotion-plan.json \
+            --promotion-plan "$PROMOTION_PLAN_PATH" \
             --output maintenance-action-report.json
       - name: Validate generated catalog cleanup
         run: python -m tools.openva.validate validate
@@ -99,27 +82,33 @@ jobs:
       - name: Build cleanup proposal artifact
         run: |
           python -m tools.openva.cleanup_proposals build \
-            --promotion-plan promotion-plan.json \
+            --promotion-plan "$PROMOTION_PLAN_PATH" \
             --json-output cleanup-proposal.json \
             --markdown-output cleanup-proposal.md
       - name: Prepare compact PR body
         run: |
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
 
           maintenance = json.load(open('maintenance-action-report.json', encoding='utf-8'))
           proposal = json.load(open('cleanup-proposal.json', encoding='utf-8'))
+          plan_path = os.environ['PROMOTION_PLAN_PATH']
           lines = [
               '## Summary',
               '',
-              'Applies reviewed OpenVA source maintenance cleanup generated from the maintenance pipeline.',
+              'Applies reviewed OpenVA source maintenance cleanup from a committed promotion plan.',
               '',
               'This PR is non-advisory. It does not make legal, procurement, compliance, risk, vendor approval, or vendor recommendation conclusions.',
               '',
+              '## Reviewed input',
+              '',
+              f'- Promotion plan: `{plan_path}`',
+              '',
               '## What changed',
               '',
-              '- Removes canonical source records selected by `promotion-plan.json` cleanup actions.',
+              '- Removes canonical source records selected by reviewed cleanup actions.',
               '- Removes dependent artifact records and change records referencing those sources.',
               '- Adds unavailable-source ledger entries for cleaned-up source types.',
               '- Rebuilds indexes and `openva-pack.json`.',
@@ -134,7 +123,8 @@ jobs:
               '',
               '## Guardrails',
               '',
-              '- Generated from `python -m tools.openva.maintenance_actions apply`.',
+              '- Does not perform live source verification.',
+              '- Does not perform live source discovery.',
               '- Does not promote candidate sources.',
               '- Does not mirror raw documents.',
               '- Does not merge automatically.',
@@ -160,9 +150,7 @@ jobs:
         with:
           name: openva-catalog-maintenance-pr-artifacts
           path: |
-            source-verification-report.json
-            source-discovery-report.json
-            promotion-plan.json
+            ${{ env.PROMOTION_PLAN_PATH }}
             maintenance-action-report.json
             cleanup-proposal.json
             cleanup-proposal.md
