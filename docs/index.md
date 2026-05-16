@@ -36,6 +36,7 @@ docs/source-refinement-workflow.md
 docs/observation-reporting.md
 docs/agent-control-plane.md
 docs/agent-runbook.md
+docs/maintenance/operator-runbook.md
 ```
 
 ## Catalog contribution workflow
