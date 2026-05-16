@@ -34,8 +34,8 @@ jobs:
   catalog-maintenance-pr:
     runs-on: ubuntu-latest
     env:
-      PR_BRANCH: ${{ inputs.pr_branch || 'agent-catalog-maintenance-cleanup' }}
-      PR_TITLE: ${{ inputs.pr_title || 'Catalog: apply reviewed source maintenance cleanup' }}
+      PR_BRANCH: "${{ inputs.pr_branch || 'agent-catalog-maintenance-cleanup' }}"
+      PR_TITLE: "${{ inputs.pr_title || 'Catalog: apply reviewed source maintenance cleanup' }}"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
