@@ -1,0 +1,30 @@
+schema_version: 0.1.0
+vendor_id: quickbooks
+display_name: QuickBooks
+legal_name: Intuit Inc.
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- quickbooks.intuit.com
+- intuit.com
+public_entrypoints:
+- https://www.intuit.com/privacy/
+- https://security.intuit.com/
+vendor_categories:
+- finance_platform
+- accounting
+- payroll
+- enterprise_software
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. QuickBooks is modeled as an Intuit product
+  surface with its own public assurance context.
+entity_family: intuit
+entity_surface: product_surface
+related_vendor_ids:
+- mailchimp
+source_authority_language: en

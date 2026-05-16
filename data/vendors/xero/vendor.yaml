@@ -1,0 +1,25 @@
+schema_version: 0.1.0
+vendor_id: xero
+display_name: Xero
+legal_name: Xero Limited
+headquarters_country: NZ
+regions_served:
+- global
+official_domains:
+- xero.com
+public_entrypoints:
+- https://www.xero.com/about/legal/
+- https://www.xero.com/about/security/
+vendor_categories:
+- finance_platform
+- accounting
+- enterprise_software
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Metadata references general public Xero
+  assurance materials and does not cover bespoke customer agreements.
+entity_surface: global_brand
+source_authority_language: en
