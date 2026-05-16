@@ -101,11 +101,18 @@ class FetchResult:
     error: str | None = None
 
 
+def display_path(path: Path, root: Path = ROOT) -> str:
+    try:
+        return str(path.resolve().relative_to(root.resolve()))
+    except ValueError:
+        return path.as_posix()
+
+
 def load_yaml(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         data = yaml.safe_load(handle)
     if not isinstance(data, dict):
-        raise ValueError(f"{path.relative_to(ROOT)}: expected YAML mapping")
+        raise ValueError(f"{display_path(path)}: expected YAML mapping")
     return data
 
 
@@ -260,6 +267,7 @@ def verify_source(
     source: dict[str, Any],
     path: Path,
     fetcher: Callable[[str], FetchResult] = fetch_url,
+    root: Path = ROOT,
 ) -> dict[str, Any]:
     url = str(source.get("source_url") or "")
     result = fetcher(url)
@@ -268,7 +276,7 @@ def verify_source(
     status = classify_status(source, result, semantic)
 
     return {
-        "path": str(path.relative_to(ROOT)),
+        "path": display_path(path, root),
         "vendor_id": source.get("vendor_id"),
         "source_id": source.get("source_id"),
         "source_type": source.get("source_type"),
@@ -302,9 +310,9 @@ def build_source_verification_report(
     for path in paths:
         try:
             source = load_yaml(path)
-            verifications.append(verify_source(source, path, fetcher=fetcher))
+            verifications.append(verify_source(source, path, fetcher=fetcher, root=root))
         except Exception as exc:  # noqa: BLE001 - report generation should continue per source.
-            failures.append(f"{path.relative_to(root)}: {type(exc).__name__}: {exc}")
+            failures.append(f"{display_path(path, root)}: {type(exc).__name__}: {exc}")
 
     status_counter = Counter(item["verification_status"] for item in verifications)
     type_counter = Counter(str(item.get("source_type") or "unknown") for item in verifications)
