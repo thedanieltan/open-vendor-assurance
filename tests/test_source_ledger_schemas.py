@@ -1,0 +1,87 @@
+import json
+from pathlib import Path
+
+from jsonschema import Draft202012Validator, FormatChecker
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def load_schema(name: str) -> dict:
+    return json.loads((ROOT / "schemas/openva" / name).read_text(encoding="utf-8"))
+
+
+def assert_valid(schema_name: str, instance: dict) -> None:
+    schema = load_schema(schema_name)
+    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    errors = sorted(validator.iter_errors(instance), key=lambda err: list(err.path))
+    assert errors == []
+
+
+def assert_invalid(schema_name: str, instance: dict) -> None:
+    schema = load_schema(schema_name)
+    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    errors = sorted(validator.iter_errors(instance), key=lambda err: list(err.path))
+    assert errors != []
+
+
+def valid_unavailable_source() -> dict:
+    return {
+        "schema_version": "0.1.0",
+        "unavailable_source_id": "example-dpa",
+        "vendor_id": "example",
+        "source_type": "dpa",
+        "status": "not_identified",
+        "reason": "distinct_public_url_not_identified",
+        "reviewed_at": "2026-05-16T00:00:00Z",
+        "reviewed_by": "agent",
+        "next_review_after": "2026-08-16",
+        "candidate_urls_checked": ["https://example.com/legal"],
+        "notes": "Public DPA URL not identified in this batch.",
+        "not_advice": True,
+    }
+
+
+def valid_candidate_source() -> dict:
+    return {
+        "schema_version": "0.1.0",
+        "candidate_source_id": "example-dpa",
+        "vendor_id": "example",
+        "source_type_candidate": "dpa",
+        "candidate_url": "https://example.com/legal/dpa",
+        "discovery_method": "official_domain_crawl",
+        "confidence": "candidate",
+        "requires_review": True,
+        "discovered_at": "2026-05-16T00:00:00Z",
+        "discovered_by": "agent",
+        "evidence": {
+            "page_title": "Data Processing Addendum",
+            "matched_terms": ["data processing", "addendum"],
+            "final_url": "https://example.com/legal/dpa",
+            "http_status": 200,
+            "content_type": "text/html",
+        },
+        "notes": "Candidate only; not promoted to canonical source.",
+        "not_advice": True,
+    }
+
+
+def test_unavailable_source_schema_accepts_reviewed_absence():
+    assert_valid("unavailable-source.schema.json", valid_unavailable_source())
+
+
+def test_unavailable_source_schema_requires_non_advisory_flag():
+    instance = valid_unavailable_source()
+    instance["not_advice"] = False
+
+    assert_invalid("unavailable-source.schema.json", instance)
+
+
+def test_candidate_source_schema_accepts_agent_candidate():
+    assert_valid("candidate-source.schema.json", valid_candidate_source())
+
+
+def test_candidate_source_schema_requires_review_gate():
+    instance = valid_candidate_source()
+    instance["requires_review"] = False
+
+    assert_invalid("candidate-source.schema.json", instance)
