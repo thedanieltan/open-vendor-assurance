@@ -176,6 +176,7 @@ jobs:
               '- Does not promote candidate sources.',
               '- Does not mirror raw documents.',
               '- Does not merge automatically.',
+              '- Full cleanup proposal is available in the workflow artifact `cleanup-proposal.md`.',
               '',
           ]
           Path('catalog-maintenance-pr-body.md').write_text('\n'.join(lines), encoding='utf-8')
