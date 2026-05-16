@@ -1,0 +1,1022 @@
+schema_version: 0.1.0
+batch_id: ai-data-devtools-batch-1
+operation: create
+collected_at: '2026-05-16T00:00:00Z'
+observer: human
+vendors:
+- vendor_id: openai
+  display_name: OpenAI
+  legal_name: OpenAI, L.L.C.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - openai.com
+  public_entrypoints:
+  - https://openai.com/policies/
+  - https://trust.openai.com/
+  vendor_categories:
+  - ai_platform
+  - model_provider
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public OpenAI
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: openai-dpa
+    source_type: dpa
+    title_native: OpenAI Data Processing Addendum
+    title_en: OpenAI Data Processing Addendum
+    source_url: https://openai.com/policies/data-processing-addendum/
+    source_language: en
+    summary_native: Public OpenAI data processing addendum metadata reference.
+    summary_en: Public OpenAI data processing addendum metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: openai-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - OpenAI services
+  - source_id: openai-subprocessors
+    source_type: subprocessors_list
+    title_native: OpenAI Subprocessors
+    title_en: OpenAI Subprocessors
+    source_url: https://openai.com/policies/subprocessors/
+    source_language: en
+    summary_native: Public OpenAI subprocessors metadata reference.
+    summary_en: Public OpenAI subprocessors metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: openai-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - OpenAI services
+  - source_id: openai-privacy
+    source_type: privacy_notice
+    title_native: OpenAI Privacy Policy
+    title_en: OpenAI Privacy Policy
+    source_url: https://openai.com/policies/privacy-policy/
+    source_language: en
+    summary_native: Public OpenAI privacy policy metadata reference.
+    summary_en: Public OpenAI privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: openai-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - OpenAI services
+  - source_id: openai-security
+    source_type: security_page
+    title_native: OpenAI Trust Portal
+    title_en: OpenAI Trust Portal
+    source_url: https://trust.openai.com/
+    source_language: en
+    summary_native: Public OpenAI trust/security metadata reference.
+    summary_en: Public OpenAI trust/security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: openai-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - OpenAI services
+  - source_id: openai-compliance
+    source_type: compliance_page
+    title_native: OpenAI Trust Portal
+    title_en: OpenAI Trust Portal
+    source_url: https://trust.openai.com/?itemName=compliance
+    source_language: en
+    summary_native: Public OpenAI compliance/trust metadata reference.
+    summary_en: Public OpenAI compliance/trust metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: openai-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - OpenAI services
+- vendor_id: anthropic
+  display_name: Anthropic
+  legal_name: Anthropic, PBC
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - anthropic.com
+  public_entrypoints:
+  - https://www.anthropic.com/legal
+  - https://trust.anthropic.com/
+  vendor_categories:
+  - ai_platform
+  - model_provider
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public Anthropic
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: anthropic-dpa
+    source_type: dpa
+    title_native: Anthropic Data Processing Addendum
+    title_en: Anthropic Data Processing Addendum
+    source_url: https://www.anthropic.com/legal/data-processing-addendum
+    source_language: en
+    summary_native: Public Anthropic data processing addendum metadata reference.
+    summary_en: Public Anthropic data processing addendum metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: anthropic-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Anthropic services
+  - source_id: anthropic-subprocessors
+    source_type: subprocessors_list
+    title_native: Anthropic Subprocessors
+    title_en: Anthropic Subprocessors
+    source_url: https://www.anthropic.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Anthropic subprocessors metadata reference.
+    summary_en: Public Anthropic subprocessors metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: anthropic-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Anthropic services
+  - source_id: anthropic-privacy
+    source_type: privacy_notice
+    title_native: Anthropic Privacy Policy
+    title_en: Anthropic Privacy Policy
+    source_url: https://www.anthropic.com/legal/privacy
+    source_language: en
+    summary_native: Public Anthropic privacy policy metadata reference.
+    summary_en: Public Anthropic privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: anthropic-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Anthropic services
+  - source_id: anthropic-security
+    source_type: security_page
+    title_native: Anthropic Trust Center
+    title_en: Anthropic Trust Center
+    source_url: https://trust.anthropic.com/
+    source_language: en
+    summary_native: Public Anthropic trust/security metadata reference.
+    summary_en: Public Anthropic trust/security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: anthropic-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Anthropic services
+  - source_id: anthropic-compliance
+    source_type: compliance_page
+    title_native: Anthropic Trust Center
+    title_en: Anthropic Trust Center
+    source_url: https://trust.anthropic.com/?itemName=compliance
+    source_language: en
+    summary_native: Public Anthropic compliance/trust metadata reference.
+    summary_en: Public Anthropic compliance/trust metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: anthropic-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Anthropic services
+- vendor_id: cohere
+  display_name: Cohere
+  legal_name: Cohere Inc.
+  headquarters_country: CA
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - cohere.com
+  public_entrypoints:
+  - https://cohere.com/privacy
+  - https://cohere.com/security
+  vendor_categories:
+  - ai_platform
+  - model_provider
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public Cohere
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: cohere-dpa
+    source_type: dpa
+    title_native: Cohere Data Processing Addendum
+    title_en: Cohere Data Processing Addendum
+    source_url: https://cohere.com/data-processing-addendum
+    source_language: en
+    summary_native: Public Cohere data processing addendum metadata reference.
+    summary_en: Public Cohere data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: cohere-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Cohere services
+  - source_id: cohere-subprocessors
+    source_type: subprocessors_list
+    title_native: Cohere Subprocessors
+    title_en: Cohere Subprocessors
+    source_url: https://cohere.com/subprocessors
+    source_language: en
+    summary_native: Public Cohere subprocessors metadata reference.
+    summary_en: Public Cohere subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: cohere-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Cohere services
+  - source_id: cohere-privacy
+    source_type: privacy_notice
+    title_native: Cohere Privacy Policy
+    title_en: Cohere Privacy Policy
+    source_url: https://cohere.com/privacy
+    source_language: en
+    summary_native: Public Cohere privacy policy metadata reference.
+    summary_en: Public Cohere privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: cohere-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Cohere services
+  - source_id: cohere-security
+    source_type: security_page
+    title_native: Cohere Security
+    title_en: Cohere Security
+    source_url: https://cohere.com/security
+    source_language: en
+    summary_native: Public Cohere security metadata reference.
+    summary_en: Public Cohere security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: cohere-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Cohere services
+  - source_id: cohere-compliance
+    source_type: compliance_page
+    title_native: Cohere Trust Center
+    title_en: Cohere Trust Center
+    source_url: https://trust.cohere.com/
+    source_language: en
+    summary_native: Public Cohere trust/compliance metadata reference.
+    summary_en: Public Cohere trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: cohere-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Cohere services
+- vendor_id: mistral-ai
+  display_name: Mistral AI
+  legal_name: Mistral AI SAS
+  headquarters_country: FR
+  regions_served:
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - mistral.ai
+  public_entrypoints:
+  - https://mistral.ai/terms/
+  - https://mistral.ai/privacy/
+  vendor_categories:
+  - ai_platform
+  - model_provider
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public Mistral
+    AI assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: mistral-ai-dpa
+    source_type: dpa
+    title_native: Mistral AI Data Processing Addendum
+    title_en: Mistral AI Data Processing Addendum
+    source_url: https://mistral.ai/terms/data-processing-addendum/
+    source_language: en
+    summary_native: Public Mistral AI data processing addendum metadata reference.
+    summary_en: Public Mistral AI data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: mistral-ai-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Mistral AI services
+  - source_id: mistral-ai-subprocessors
+    source_type: subprocessors_list
+    title_native: Mistral AI Subprocessors
+    title_en: Mistral AI Subprocessors
+    source_url: https://mistral.ai/terms/subprocessors/
+    source_language: en
+    summary_native: Public Mistral AI subprocessors metadata reference.
+    summary_en: Public Mistral AI subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: mistral-ai-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Mistral AI services
+  - source_id: mistral-ai-privacy
+    source_type: privacy_notice
+    title_native: Mistral AI Privacy Policy
+    title_en: Mistral AI Privacy Policy
+    source_url: https://mistral.ai/privacy/
+    source_language: en
+    summary_native: Public Mistral AI privacy policy metadata reference.
+    summary_en: Public Mistral AI privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: mistral-ai-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Mistral AI services
+  - source_id: mistral-ai-security
+    source_type: security_page
+    title_native: Mistral AI Security
+    title_en: Mistral AI Security
+    source_url: https://mistral.ai/security/
+    source_language: en
+    summary_native: Public Mistral AI security metadata reference.
+    summary_en: Public Mistral AI security metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: mistral-ai-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Mistral AI services
+  - source_id: mistral-ai-compliance
+    source_type: compliance_page
+    title_native: Mistral AI Trust and Compliance
+    title_en: Mistral AI Trust and Compliance
+    source_url: https://mistral.ai/trust/
+    source_language: en
+    summary_native: Public Mistral AI trust/compliance metadata reference.
+    summary_en: Public Mistral AI trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: mistral-ai-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Mistral AI services
+- vendor_id: hugging-face
+  display_name: Hugging Face
+  legal_name: Hugging Face, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - huggingface.co
+  public_entrypoints:
+  - https://huggingface.co/privacy
+  - https://huggingface.co/security
+  vendor_categories:
+  - ai_platform
+  - model_hosting
+  - developer_platform
+  - data_platform
+  notes: Public-source-only catalog record. Metadata references general public Hugging
+    Face assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: hugging-face-dpa
+    source_type: dpa
+    title_native: Hugging Face Data Processing Addendum
+    title_en: Hugging Face Data Processing Addendum
+    source_url: https://huggingface.co/data-processing-addendum
+    source_language: en
+    summary_native: Public Hugging Face data processing addendum metadata reference.
+    summary_en: Public Hugging Face data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: hugging-face-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Hugging Face services
+  - source_id: hugging-face-subprocessors
+    source_type: subprocessors_list
+    title_native: Hugging Face Subprocessors
+    title_en: Hugging Face Subprocessors
+    source_url: https://huggingface.co/subprocessors
+    source_language: en
+    summary_native: Public Hugging Face subprocessors metadata reference.
+    summary_en: Public Hugging Face subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: hugging-face-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Hugging Face services
+  - source_id: hugging-face-privacy
+    source_type: privacy_notice
+    title_native: Hugging Face Privacy Policy
+    title_en: Hugging Face Privacy Policy
+    source_url: https://huggingface.co/privacy
+    source_language: en
+    summary_native: Public Hugging Face privacy policy metadata reference.
+    summary_en: Public Hugging Face privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: hugging-face-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Hugging Face services
+  - source_id: hugging-face-security
+    source_type: security_page
+    title_native: Hugging Face Security
+    title_en: Hugging Face Security
+    source_url: https://huggingface.co/security
+    source_language: en
+    summary_native: Public Hugging Face security metadata reference.
+    summary_en: Public Hugging Face security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: hugging-face-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Hugging Face services
+  - source_id: hugging-face-compliance
+    source_type: compliance_page
+    title_native: Hugging Face Trust and Safety
+    title_en: Hugging Face Trust and Safety
+    source_url: https://huggingface.co/trust
+    source_language: en
+    summary_native: Public Hugging Face trust/compliance metadata reference.
+    summary_en: Public Hugging Face trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: hugging-face-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Hugging Face services
+- vendor_id: pinecone
+  display_name: Pinecone
+  legal_name: Pinecone Systems, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - pinecone.io
+  public_entrypoints:
+  - https://www.pinecone.io/legal/
+  - https://www.pinecone.io/security/
+  vendor_categories:
+  - vector_database
+  - data_platform
+  - ai_platform
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public Pinecone
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: pinecone-dpa
+    source_type: dpa
+    title_native: Pinecone Data Processing Addendum
+    title_en: Pinecone Data Processing Addendum
+    source_url: https://www.pinecone.io/legal/data-processing-addendum/
+    source_language: en
+    summary_native: Public Pinecone data processing addendum metadata reference.
+    summary_en: Public Pinecone data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: pinecone-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Pinecone services
+  - source_id: pinecone-subprocessors
+    source_type: subprocessors_list
+    title_native: Pinecone Subprocessors
+    title_en: Pinecone Subprocessors
+    source_url: https://www.pinecone.io/legal/subprocessors/
+    source_language: en
+    summary_native: Public Pinecone subprocessors metadata reference.
+    summary_en: Public Pinecone subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: pinecone-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Pinecone services
+  - source_id: pinecone-privacy
+    source_type: privacy_notice
+    title_native: Pinecone Privacy Policy
+    title_en: Pinecone Privacy Policy
+    source_url: https://www.pinecone.io/privacy-policy/
+    source_language: en
+    summary_native: Public Pinecone privacy policy metadata reference.
+    summary_en: Public Pinecone privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: pinecone-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Pinecone services
+  - source_id: pinecone-security
+    source_type: security_page
+    title_native: Pinecone Security
+    title_en: Pinecone Security
+    source_url: https://www.pinecone.io/security/
+    source_language: en
+    summary_native: Public Pinecone security metadata reference.
+    summary_en: Public Pinecone security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: pinecone-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Pinecone services
+  - source_id: pinecone-compliance
+    source_type: compliance_page
+    title_native: Pinecone Trust Center
+    title_en: Pinecone Trust Center
+    source_url: https://trust.pinecone.io/
+    source_language: en
+    summary_native: Public Pinecone trust/compliance metadata reference.
+    summary_en: Public Pinecone trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: pinecone-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Pinecone services
+- vendor_id: weaviate
+  display_name: Weaviate
+  legal_name: Weaviate B.V.
+  headquarters_country: NL
+  regions_served:
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - weaviate.io
+  public_entrypoints:
+  - https://weaviate.io/legal
+  - https://weaviate.io/security
+  vendor_categories:
+  - vector_database
+  - data_platform
+  - ai_platform
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public Weaviate
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: weaviate-dpa
+    source_type: dpa
+    title_native: Weaviate Data Processing Addendum
+    title_en: Weaviate Data Processing Addendum
+    source_url: https://weaviate.io/legal/data-processing-addendum
+    source_language: en
+    summary_native: Public Weaviate data processing addendum metadata reference.
+    summary_en: Public Weaviate data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: weaviate-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Weaviate services
+  - source_id: weaviate-subprocessors
+    source_type: subprocessors_list
+    title_native: Weaviate Subprocessors
+    title_en: Weaviate Subprocessors
+    source_url: https://weaviate.io/legal/subprocessors
+    source_language: en
+    summary_native: Public Weaviate subprocessors metadata reference.
+    summary_en: Public Weaviate subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: weaviate-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Weaviate services
+  - source_id: weaviate-privacy
+    source_type: privacy_notice
+    title_native: Weaviate Privacy Policy
+    title_en: Weaviate Privacy Policy
+    source_url: https://weaviate.io/privacy-policy
+    source_language: en
+    summary_native: Public Weaviate privacy policy metadata reference.
+    summary_en: Public Weaviate privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: weaviate-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Weaviate services
+  - source_id: weaviate-security
+    source_type: security_page
+    title_native: Weaviate Security
+    title_en: Weaviate Security
+    source_url: https://weaviate.io/security
+    source_language: en
+    summary_native: Public Weaviate security metadata reference.
+    summary_en: Public Weaviate security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: weaviate-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Weaviate services
+  - source_id: weaviate-compliance
+    source_type: compliance_page
+    title_native: Weaviate Trust Center
+    title_en: Weaviate Trust Center
+    source_url: https://trust.weaviate.io/
+    source_language: en
+    summary_native: Public Weaviate trust/compliance metadata reference.
+    summary_en: Public Weaviate trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: weaviate-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Weaviate services
+- vendor_id: supabase
+  display_name: Supabase
+  legal_name: Supabase, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - supabase.com
+  public_entrypoints:
+  - https://supabase.com/privacy
+  - https://supabase.com/security
+  vendor_categories:
+  - developer_platform
+  - database
+  - data_platform
+  - cloud_infrastructure
+  notes: Public-source-only catalog record. Metadata references general public Supabase
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: supabase-dpa
+    source_type: dpa
+    title_native: Supabase Data Processing Addendum
+    title_en: Supabase Data Processing Addendum
+    source_url: https://supabase.com/legal/dpa
+    source_language: en
+    summary_native: Public Supabase data processing addendum metadata reference.
+    summary_en: Public Supabase data processing addendum metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: supabase-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Supabase services
+  - source_id: supabase-subprocessors
+    source_type: subprocessors_list
+    title_native: Supabase Subprocessors
+    title_en: Supabase Subprocessors
+    source_url: https://supabase.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Supabase subprocessors metadata reference.
+    summary_en: Public Supabase subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: supabase-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Supabase services
+  - source_id: supabase-privacy
+    source_type: privacy_notice
+    title_native: Supabase Privacy Policy
+    title_en: Supabase Privacy Policy
+    source_url: https://supabase.com/privacy
+    source_language: en
+    summary_native: Public Supabase privacy policy metadata reference.
+    summary_en: Public Supabase privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: supabase-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Supabase services
+  - source_id: supabase-security
+    source_type: security_page
+    title_native: Supabase Security
+    title_en: Supabase Security
+    source_url: https://supabase.com/security
+    source_language: en
+    summary_native: Public Supabase security metadata reference.
+    summary_en: Public Supabase security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: supabase-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Supabase services
+  - source_id: supabase-compliance
+    source_type: compliance_page
+    title_native: Supabase Compliance
+    title_en: Supabase Compliance
+    source_url: https://supabase.com/security#compliance
+    source_language: en
+    summary_native: Public Supabase compliance metadata reference.
+    summary_en: Public Supabase compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: supabase-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Supabase services
+- vendor_id: planetscale
+  display_name: PlanetScale
+  legal_name: PlanetScale, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - planetscale.com
+  public_entrypoints:
+  - https://planetscale.com/legal
+  - https://planetscale.com/security
+  vendor_categories:
+  - database
+  - developer_platform
+  - data_platform
+  notes: Public-source-only catalog record. Metadata references general public PlanetScale
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: planetscale-dpa
+    source_type: dpa
+    title_native: PlanetScale Data Processing Addendum
+    title_en: PlanetScale Data Processing Addendum
+    source_url: https://planetscale.com/legal/data-processing-addendum
+    source_language: en
+    summary_native: Public PlanetScale data processing addendum metadata reference.
+    summary_en: Public PlanetScale data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: planetscale-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - PlanetScale services
+  - source_id: planetscale-subprocessors
+    source_type: subprocessors_list
+    title_native: PlanetScale Subprocessors
+    title_en: PlanetScale Subprocessors
+    source_url: https://planetscale.com/legal/subprocessors
+    source_language: en
+    summary_native: Public PlanetScale subprocessors metadata reference.
+    summary_en: Public PlanetScale subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: planetscale-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - PlanetScale services
+  - source_id: planetscale-privacy
+    source_type: privacy_notice
+    title_native: PlanetScale Privacy Policy
+    title_en: PlanetScale Privacy Policy
+    source_url: https://planetscale.com/legal/privacy
+    source_language: en
+    summary_native: Public PlanetScale privacy policy metadata reference.
+    summary_en: Public PlanetScale privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: planetscale-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - PlanetScale services
+  - source_id: planetscale-security
+    source_type: security_page
+    title_native: PlanetScale Security
+    title_en: PlanetScale Security
+    source_url: https://planetscale.com/security
+    source_language: en
+    summary_native: Public PlanetScale security metadata reference.
+    summary_en: Public PlanetScale security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: planetscale-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - PlanetScale services
+  - source_id: planetscale-compliance
+    source_type: compliance_page
+    title_native: PlanetScale Trust Center
+    title_en: PlanetScale Trust Center
+    source_url: https://trust.planetscale.com/
+    source_language: en
+    summary_native: Public PlanetScale trust/compliance metadata reference.
+    summary_en: Public PlanetScale trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: planetscale-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - PlanetScale services
+- vendor_id: retool
+  display_name: Retool
+  legal_name: Retool, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - retool.com
+  public_entrypoints:
+  - https://retool.com/legal
+  - https://retool.com/security
+  vendor_categories:
+  - developer_platform
+  - internal_tools
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Retool
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: retool-dpa
+    source_type: dpa
+    title_native: Retool Data Processing Addendum
+    title_en: Retool Data Processing Addendum
+    source_url: https://retool.com/legal/data-processing-addendum
+    source_language: en
+    summary_native: Public Retool data processing addendum metadata reference.
+    summary_en: Public Retool data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: retool-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Retool services
+  - source_id: retool-subprocessors
+    source_type: subprocessors_list
+    title_native: Retool Subprocessors
+    title_en: Retool Subprocessors
+    source_url: https://retool.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Retool subprocessors metadata reference.
+    summary_en: Public Retool subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: retool-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Retool services
+  - source_id: retool-privacy
+    source_type: privacy_notice
+    title_native: Retool Privacy Policy
+    title_en: Retool Privacy Policy
+    source_url: https://retool.com/legal/privacy-policy
+    source_language: en
+    summary_native: Public Retool privacy policy metadata reference.
+    summary_en: Public Retool privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: retool-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Retool services
+  - source_id: retool-security
+    source_type: security_page
+    title_native: Retool Security
+    title_en: Retool Security
+    source_url: https://retool.com/security
+    source_language: en
+    summary_native: Public Retool security metadata reference.
+    summary_en: Public Retool security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: retool-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Retool services
+  - source_id: retool-compliance
+    source_type: compliance_page
+    title_native: Retool Trust Center
+    title_en: Retool Trust Center
+    source_url: https://trust.retool.com/
+    source_language: en
+    summary_native: Public Retool trust/compliance metadata reference.
+    summary_en: Public Retool trust/compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: retool-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Retool services
