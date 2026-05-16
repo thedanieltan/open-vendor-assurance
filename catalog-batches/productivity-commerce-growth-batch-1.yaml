@@ -1,0 +1,1985 @@
+schema_version: 0.1.0
+batch_id: productivity-commerce-growth-batch-1
+operation: create
+collected_at: '2026-05-16T00:00:00Z'
+observer: human
+vendors:
+- vendor_id: notion
+  display_name: Notion
+  legal_name: Notion Labs, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - notion.so
+  public_entrypoints:
+  - https://www.notion.so/security
+  - https://www.notion.so/privacy
+  vendor_categories:
+  - productivity
+  - collaboration
+  - knowledge_management
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Notion
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: notion-dpa
+    source_type: dpa
+    title_native: Notion Data Processing Addendum
+    title_en: Notion Data Processing Addendum
+    source_url: https://www.notion.so/Data-Processing-Addendum-361b540101274b1fa7e16b90402b0d99
+    source_language: en
+    summary_native: Public Notion data processing addendum metadata reference.
+    summary_en: Public Notion data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: notion-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Notion services
+  - source_id: notion-subprocessors
+    source_type: subprocessors_list
+    title_native: Notion Subprocessors
+    title_en: Notion Subprocessors
+    source_url: https://www.notion.so/Subprocessors-268fa5bcfa51491bbaf04bb4f64e1632
+    source_language: en
+    summary_native: Public Notion subprocessors metadata reference.
+    summary_en: Public Notion subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: notion-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Notion services
+  - source_id: notion-privacy
+    source_type: privacy_notice
+    title_native: Notion Privacy Notice
+    title_en: Notion Privacy Notice
+    source_url: https://www.notion.so/privacy
+    source_language: en
+    summary_native: Public Notion privacy notice metadata reference.
+    summary_en: Public Notion privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: notion-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Notion services
+  - source_id: notion-security
+    source_type: security_page
+    title_native: Notion Security
+    title_en: Notion Security
+    source_url: https://www.notion.so/security
+    source_language: en
+    summary_native: Public Notion security metadata reference.
+    summary_en: Public Notion security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: notion-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Notion services
+- vendor_id: asana
+  display_name: Asana
+  legal_name: Asana, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - asana.com
+  public_entrypoints:
+  - https://asana.com/security
+  - https://asana.com/privacy
+  vendor_categories:
+  - project_management
+  - collaboration
+  - productivity
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Asana
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: asana-dpa
+    source_type: dpa
+    title_native: Asana Data Processing Addendum
+    title_en: Asana Data Processing Addendum
+    source_url: https://asana.com/terms/data-processing-addendum
+    source_language: en
+    summary_native: Public Asana data processing addendum metadata reference.
+    summary_en: Public Asana data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: asana-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Asana services
+  - source_id: asana-subprocessors
+    source_type: subprocessors_list
+    title_native: Asana Subprocessors
+    title_en: Asana Subprocessors
+    source_url: https://asana.com/terms/subprocessors
+    source_language: en
+    summary_native: Public Asana subprocessors metadata reference.
+    summary_en: Public Asana subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: asana-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Asana services
+  - source_id: asana-privacy
+    source_type: privacy_notice
+    title_native: Asana Privacy Notice
+    title_en: Asana Privacy Notice
+    source_url: https://asana.com/privacy
+    source_language: en
+    summary_native: Public Asana privacy notice metadata reference.
+    summary_en: Public Asana privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: asana-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Asana services
+  - source_id: asana-security
+    source_type: security_page
+    title_native: Asana Security
+    title_en: Asana Security
+    source_url: https://asana.com/security
+    source_language: en
+    summary_native: Public Asana security metadata reference.
+    summary_en: Public Asana security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: asana-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Asana services
+  - source_id: asana-compliance
+    source_type: compliance_page
+    title_native: Asana Compliance
+    title_en: Asana Compliance
+    source_url: https://asana.com/security/compliance
+    source_language: en
+    summary_native: Public Asana compliance metadata reference.
+    summary_en: Public Asana compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: asana-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Asana services
+- vendor_id: monday
+  display_name: monday.com
+  legal_name: monday.com Ltd.
+  headquarters_country: IL
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - monday.com
+  public_entrypoints:
+  - https://monday.com/trustcenter
+  - https://monday.com/privacy/privacy-policy
+  vendor_categories:
+  - project_management
+  - workflow_platform
+  - collaboration
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public monday.com
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: monday-dpa
+    source_type: dpa
+    title_native: monday.com Data Processing Addendum
+    title_en: monday.com Data Processing Addendum
+    source_url: https://monday.com/l/data-processing-addendum/
+    source_language: en
+    summary_native: Public monday.com data processing addendum metadata reference.
+    summary_en: Public monday.com data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: monday-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - monday.com services
+  - source_id: monday-subprocessors
+    source_type: subprocessors_list
+    title_native: monday.com Subprocessors
+    title_en: monday.com Subprocessors
+    source_url: https://monday.com/l/subprocessors/
+    source_language: en
+    summary_native: Public monday.com subprocessors metadata reference.
+    summary_en: Public monday.com subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: monday-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - monday.com services
+  - source_id: monday-privacy
+    source_type: privacy_notice
+    title_native: monday.com Privacy Notice
+    title_en: monday.com Privacy Notice
+    source_url: https://monday.com/privacy/privacy-policy
+    source_language: en
+    summary_native: Public monday.com privacy notice metadata reference.
+    summary_en: Public monday.com privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: monday-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - monday.com services
+  - source_id: monday-security
+    source_type: security_page
+    title_native: monday.com Security
+    title_en: monday.com Security
+    source_url: https://monday.com/trustcenter
+    source_language: en
+    summary_native: Public monday.com security metadata reference.
+    summary_en: Public monday.com security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: monday-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - monday.com services
+  - source_id: monday-compliance
+    source_type: compliance_page
+    title_native: monday.com Compliance
+    title_en: monday.com Compliance
+    source_url: https://monday.com/trustcenter/compliance
+    source_language: en
+    summary_native: Public monday.com compliance metadata reference.
+    summary_en: Public monday.com compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: monday-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - monday.com services
+- vendor_id: clickup
+  display_name: ClickUp
+  legal_name: Mango Technologies, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - clickup.com
+  public_entrypoints:
+  - https://clickup.com/security
+  - https://clickup.com/privacy
+  vendor_categories:
+  - project_management
+  - productivity
+  - collaboration
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public ClickUp
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: clickup-dpa
+    source_type: dpa
+    title_native: ClickUp Data Processing Addendum
+    title_en: ClickUp Data Processing Addendum
+    source_url: https://clickup.com/legal/dpa
+    source_language: en
+    summary_native: Public ClickUp data processing addendum metadata reference.
+    summary_en: Public ClickUp data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: clickup-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - ClickUp services
+  - source_id: clickup-subprocessors
+    source_type: subprocessors_list
+    title_native: ClickUp Subprocessors
+    title_en: ClickUp Subprocessors
+    source_url: https://clickup.com/legal/subprocessors
+    source_language: en
+    summary_native: Public ClickUp subprocessors metadata reference.
+    summary_en: Public ClickUp subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: clickup-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - ClickUp services
+  - source_id: clickup-privacy
+    source_type: privacy_notice
+    title_native: ClickUp Privacy Notice
+    title_en: ClickUp Privacy Notice
+    source_url: https://clickup.com/privacy
+    source_language: en
+    summary_native: Public ClickUp privacy notice metadata reference.
+    summary_en: Public ClickUp privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: clickup-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - ClickUp services
+  - source_id: clickup-security
+    source_type: security_page
+    title_native: ClickUp Security
+    title_en: ClickUp Security
+    source_url: https://clickup.com/security
+    source_language: en
+    summary_native: Public ClickUp security metadata reference.
+    summary_en: Public ClickUp security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: clickup-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - ClickUp services
+  - source_id: clickup-compliance
+    source_type: compliance_page
+    title_native: ClickUp Compliance
+    title_en: ClickUp Compliance
+    source_url: https://clickup.com/security#compliance
+    source_language: en
+    summary_native: Public ClickUp compliance metadata reference.
+    summary_en: Public ClickUp compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: clickup-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - ClickUp services
+- vendor_id: miro
+  display_name: Miro
+  legal_name: RealtimeBoard, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - miro.com
+  public_entrypoints:
+  - https://miro.com/security/
+  - https://miro.com/legal/privacy-policy/
+  vendor_categories:
+  - collaboration
+  - whiteboarding
+  - productivity
+  - enterprise_software
+  notes: Public-source-only catalog record. Metadata references general public Miro
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: miro-dpa
+    source_type: dpa
+    title_native: Miro Data Processing Addendum
+    title_en: Miro Data Processing Addendum
+    source_url: https://miro.com/legal/data-processing-addendum/
+    source_language: en
+    summary_native: Public Miro data processing addendum metadata reference.
+    summary_en: Public Miro data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: miro-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Miro services
+  - source_id: miro-subprocessors
+    source_type: subprocessors_list
+    title_native: Miro Subprocessors
+    title_en: Miro Subprocessors
+    source_url: https://miro.com/legal/subprocessors/
+    source_language: en
+    summary_native: Public Miro subprocessors metadata reference.
+    summary_en: Public Miro subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: miro-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Miro services
+  - source_id: miro-privacy
+    source_type: privacy_notice
+    title_native: Miro Privacy Notice
+    title_en: Miro Privacy Notice
+    source_url: https://miro.com/legal/privacy-policy/
+    source_language: en
+    summary_native: Public Miro privacy notice metadata reference.
+    summary_en: Public Miro privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: miro-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Miro services
+  - source_id: miro-security
+    source_type: security_page
+    title_native: Miro Security
+    title_en: Miro Security
+    source_url: https://miro.com/security/
+    source_language: en
+    summary_native: Public Miro security metadata reference.
+    summary_en: Public Miro security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: miro-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Miro services
+  - source_id: miro-compliance
+    source_type: compliance_page
+    title_native: Miro Compliance
+    title_en: Miro Compliance
+    source_url: https://miro.com/security/compliance/
+    source_language: en
+    summary_native: Public Miro compliance metadata reference.
+    summary_en: Public Miro compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: miro-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Miro services
+- vendor_id: figma
+  display_name: Figma
+  legal_name: Figma, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - figma.com
+  public_entrypoints:
+  - https://www.figma.com/security/
+  - https://www.figma.com/privacy/
+  vendor_categories:
+  - design_platform
+  - collaboration
+  - productivity
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public Figma
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: figma-dpa
+    source_type: dpa
+    title_native: Figma Data Processing Addendum
+    title_en: Figma Data Processing Addendum
+    source_url: https://www.figma.com/legal/data-processing-addendum/
+    source_language: en
+    summary_native: Public Figma data processing addendum metadata reference.
+    summary_en: Public Figma data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: figma-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Figma services
+  - source_id: figma-subprocessors
+    source_type: subprocessors_list
+    title_native: Figma Subprocessors
+    title_en: Figma Subprocessors
+    source_url: https://www.figma.com/legal/sub-processors/
+    source_language: en
+    summary_native: Public Figma subprocessors metadata reference.
+    summary_en: Public Figma subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: figma-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Figma services
+  - source_id: figma-privacy
+    source_type: privacy_notice
+    title_native: Figma Privacy Notice
+    title_en: Figma Privacy Notice
+    source_url: https://www.figma.com/privacy/
+    source_language: en
+    summary_native: Public Figma privacy notice metadata reference.
+    summary_en: Public Figma privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: figma-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Figma services
+  - source_id: figma-security
+    source_type: security_page
+    title_native: Figma Security
+    title_en: Figma Security
+    source_url: https://www.figma.com/security/
+    source_language: en
+    summary_native: Public Figma security metadata reference.
+    summary_en: Public Figma security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: figma-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Figma services
+  - source_id: figma-compliance
+    source_type: compliance_page
+    title_native: Figma Compliance
+    title_en: Figma Compliance
+    source_url: https://www.figma.com/security/#compliance
+    source_language: en
+    summary_native: Public Figma compliance metadata reference.
+    summary_en: Public Figma compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: figma-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Figma services
+- vendor_id: canva
+  display_name: Canva
+  legal_name: Canva Pty Ltd
+  headquarters_country: AU
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - canva.com
+  public_entrypoints:
+  - https://www.canva.com/security/
+  - https://www.canva.com/policies/privacy-policy/
+  vendor_categories:
+  - design_platform
+  - collaboration
+  - productivity
+  - marketing_platform
+  notes: Public-source-only catalog record. Metadata references general public Canva
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: canva-dpa
+    source_type: dpa
+    title_native: Canva Data Processing Addendum
+    title_en: Canva Data Processing Addendum
+    source_url: https://www.canva.com/policies/data-processing-addendum/
+    source_language: en
+    summary_native: Public Canva data processing addendum metadata reference.
+    summary_en: Public Canva data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: canva-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Canva services
+  - source_id: canva-subprocessors
+    source_type: subprocessors_list
+    title_native: Canva Subprocessors
+    title_en: Canva Subprocessors
+    source_url: https://www.canva.com/policies/subprocessors/
+    source_language: en
+    summary_native: Public Canva subprocessors metadata reference.
+    summary_en: Public Canva subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: canva-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Canva services
+  - source_id: canva-privacy
+    source_type: privacy_notice
+    title_native: Canva Privacy Notice
+    title_en: Canva Privacy Notice
+    source_url: https://www.canva.com/policies/privacy-policy/
+    source_language: en
+    summary_native: Public Canva privacy notice metadata reference.
+    summary_en: Public Canva privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: canva-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Canva services
+  - source_id: canva-security
+    source_type: security_page
+    title_native: Canva Security
+    title_en: Canva Security
+    source_url: https://www.canva.com/security/
+    source_language: en
+    summary_native: Public Canva security metadata reference.
+    summary_en: Public Canva security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: canva-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Canva services
+  - source_id: canva-compliance
+    source_type: compliance_page
+    title_native: Canva Compliance
+    title_en: Canva Compliance
+    source_url: https://www.canva.com/security/#compliance
+    source_language: en
+    summary_native: Public Canva compliance metadata reference.
+    summary_en: Public Canva compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: canva-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Canva services
+- vendor_id: airtable
+  display_name: Airtable
+  legal_name: Formagrid Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - airtable.com
+  public_entrypoints:
+  - https://www.airtable.com/security
+  - https://www.airtable.com/privacy
+  vendor_categories:
+  - no_code
+  - database
+  - collaboration
+  - workflow_platform
+  notes: Public-source-only catalog record. Metadata references general public Airtable
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: airtable-dpa
+    source_type: dpa
+    title_native: Airtable Data Processing Addendum
+    title_en: Airtable Data Processing Addendum
+    source_url: https://www.airtable.com/legal/dpa
+    source_language: en
+    summary_native: Public Airtable data processing addendum metadata reference.
+    summary_en: Public Airtable data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: airtable-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Airtable services
+  - source_id: airtable-subprocessors
+    source_type: subprocessors_list
+    title_native: Airtable Subprocessors
+    title_en: Airtable Subprocessors
+    source_url: https://www.airtable.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Airtable subprocessors metadata reference.
+    summary_en: Public Airtable subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: airtable-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Airtable services
+  - source_id: airtable-privacy
+    source_type: privacy_notice
+    title_native: Airtable Privacy Notice
+    title_en: Airtable Privacy Notice
+    source_url: https://www.airtable.com/privacy
+    source_language: en
+    summary_native: Public Airtable privacy notice metadata reference.
+    summary_en: Public Airtable privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: airtable-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Airtable services
+  - source_id: airtable-security
+    source_type: security_page
+    title_native: Airtable Security
+    title_en: Airtable Security
+    source_url: https://www.airtable.com/security
+    source_language: en
+    summary_native: Public Airtable security metadata reference.
+    summary_en: Public Airtable security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: airtable-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Airtable services
+  - source_id: airtable-compliance
+    source_type: compliance_page
+    title_native: Airtable Compliance
+    title_en: Airtable Compliance
+    source_url: https://www.airtable.com/security#compliance
+    source_language: en
+    summary_native: Public Airtable compliance metadata reference.
+    summary_en: Public Airtable compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: airtable-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Airtable services
+- vendor_id: typeform
+  display_name: Typeform
+  legal_name: Typeform S.L.
+  headquarters_country: ES
+  regions_served: &id001
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - typeform.com
+  public_entrypoints:
+  - https://www.typeform.com/help/a/security-at-typeform-360029581691/
+  - https://admin.typeform.com/to/dwk6gt
+  vendor_categories:
+  - forms
+  - survey_platform
+  - customer_engagement
+  - no_code
+  notes: Public-source-only catalog record. Metadata references general public Typeform
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: typeform-dpa
+    source_type: dpa
+    title_native: Typeform Data Processing Addendum
+    title_en: Typeform Data Processing Addendum
+    source_url: https://www.typeform.com/help/a/data-processing-agreement-360029259552/
+    source_language: en
+    summary_native: Public Typeform data processing addendum metadata reference.
+    summary_en: Public Typeform data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: typeform-dpa
+      artifact_type: dpa
+      region_scope: *id001
+      product_scope:
+      - Typeform services
+  - source_id: typeform-subprocessors
+    source_type: subprocessors_list
+    title_native: Typeform Subprocessors
+    title_en: Typeform Subprocessors
+    source_url: https://www.typeform.com/help/a/sub-processors-360029259552/
+    source_language: en
+    summary_native: Public Typeform subprocessors metadata reference.
+    summary_en: Public Typeform subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: typeform-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id001
+      product_scope:
+      - Typeform services
+  - source_id: typeform-privacy
+    source_type: privacy_notice
+    title_native: Typeform Privacy Notice
+    title_en: Typeform Privacy Notice
+    source_url: https://admin.typeform.com/to/dwk6gt
+    source_language: en
+    summary_native: Public Typeform privacy notice metadata reference.
+    summary_en: Public Typeform privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: typeform-privacy
+      artifact_type: privacy_notice
+      region_scope: *id001
+      product_scope:
+      - Typeform services
+  - source_id: typeform-security
+    source_type: security_page
+    title_native: Typeform Security
+    title_en: Typeform Security
+    source_url: https://www.typeform.com/help/a/security-at-typeform-360029581691/
+    source_language: en
+    summary_native: Public Typeform security metadata reference.
+    summary_en: Public Typeform security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: typeform-security
+      artifact_type: security_page
+      region_scope: *id001
+      product_scope:
+      - Typeform services
+- vendor_id: zapier
+  display_name: Zapier
+  legal_name: Zapier, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - zapier.com
+  public_entrypoints:
+  - https://zapier.com/security
+  - https://zapier.com/privacy
+  vendor_categories:
+  - workflow_automation
+  - no_code
+  - integration_platform
+  - productivity
+  notes: Public-source-only catalog record. Metadata references general public Zapier
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: zapier-dpa
+    source_type: dpa
+    title_native: Zapier Data Processing Addendum
+    title_en: Zapier Data Processing Addendum
+    source_url: https://zapier.com/legal/data-processing-addendum
+    source_language: en
+    summary_native: Public Zapier data processing addendum metadata reference.
+    summary_en: Public Zapier data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: zapier-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Zapier services
+  - source_id: zapier-subprocessors
+    source_type: subprocessors_list
+    title_native: Zapier Subprocessors
+    title_en: Zapier Subprocessors
+    source_url: https://zapier.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Zapier subprocessors metadata reference.
+    summary_en: Public Zapier subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: zapier-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Zapier services
+  - source_id: zapier-privacy
+    source_type: privacy_notice
+    title_native: Zapier Privacy Notice
+    title_en: Zapier Privacy Notice
+    source_url: https://zapier.com/privacy
+    source_language: en
+    summary_native: Public Zapier privacy notice metadata reference.
+    summary_en: Public Zapier privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: zapier-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Zapier services
+  - source_id: zapier-security
+    source_type: security_page
+    title_native: Zapier Security
+    title_en: Zapier Security
+    source_url: https://zapier.com/security
+    source_language: en
+    summary_native: Public Zapier security metadata reference.
+    summary_en: Public Zapier security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: zapier-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Zapier services
+  - source_id: zapier-compliance
+    source_type: compliance_page
+    title_native: Zapier Compliance
+    title_en: Zapier Compliance
+    source_url: https://zapier.com/security#compliance
+    source_language: en
+    summary_native: Public Zapier compliance metadata reference.
+    summary_en: Public Zapier compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: zapier-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Zapier services
+- vendor_id: shopify
+  display_name: Shopify
+  legal_name: Shopify Inc.
+  headquarters_country: CA
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - shopify.com
+  public_entrypoints:
+  - https://www.shopify.com/security
+  - https://www.shopify.com/legal/privacy
+  vendor_categories:
+  - commerce_platform
+  - payments
+  - retail_platform
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public Shopify
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: shopify-dpa
+    source_type: dpa
+    title_native: Shopify Data Processing Addendum
+    title_en: Shopify Data Processing Addendum
+    source_url: https://www.shopify.com/legal/dpa
+    source_language: en
+    summary_native: Public Shopify data processing addendum metadata reference.
+    summary_en: Public Shopify data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: shopify-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Shopify services
+  - source_id: shopify-subprocessors
+    source_type: subprocessors_list
+    title_native: Shopify Subprocessors
+    title_en: Shopify Subprocessors
+    source_url: https://www.shopify.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Shopify subprocessors metadata reference.
+    summary_en: Public Shopify subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: shopify-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Shopify services
+  - source_id: shopify-privacy
+    source_type: privacy_notice
+    title_native: Shopify Privacy Notice
+    title_en: Shopify Privacy Notice
+    source_url: https://www.shopify.com/legal/privacy
+    source_language: en
+    summary_native: Public Shopify privacy notice metadata reference.
+    summary_en: Public Shopify privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: shopify-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Shopify services
+  - source_id: shopify-security
+    source_type: security_page
+    title_native: Shopify Security
+    title_en: Shopify Security
+    source_url: https://www.shopify.com/security
+    source_language: en
+    summary_native: Public Shopify security metadata reference.
+    summary_en: Public Shopify security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: shopify-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Shopify services
+  - source_id: shopify-compliance
+    source_type: compliance_page
+    title_native: Shopify Compliance
+    title_en: Shopify Compliance
+    source_url: https://www.shopify.com/security#compliance
+    source_language: en
+    summary_native: Public Shopify compliance metadata reference.
+    summary_en: Public Shopify compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: shopify-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Shopify services
+- vendor_id: klaviyo
+  display_name: Klaviyo
+  legal_name: Klaviyo, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - klaviyo.com
+  public_entrypoints:
+  - https://www.klaviyo.com/legal
+  - https://www.klaviyo.com/security
+  vendor_categories:
+  - marketing_platform
+  - customer_engagement
+  - email_marketing
+  - commerce_platform
+  notes: Public-source-only catalog record. Metadata references general public Klaviyo
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: klaviyo-dpa
+    source_type: dpa
+    title_native: Klaviyo Data Processing Addendum
+    title_en: Klaviyo Data Processing Addendum
+    source_url: https://www.klaviyo.com/legal/data-processing-agreement
+    source_language: en
+    summary_native: Public Klaviyo data processing addendum metadata reference.
+    summary_en: Public Klaviyo data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: klaviyo-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Klaviyo services
+  - source_id: klaviyo-subprocessors
+    source_type: subprocessors_list
+    title_native: Klaviyo Subprocessors
+    title_en: Klaviyo Subprocessors
+    source_url: https://www.klaviyo.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Klaviyo subprocessors metadata reference.
+    summary_en: Public Klaviyo subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: klaviyo-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Klaviyo services
+  - source_id: klaviyo-privacy
+    source_type: privacy_notice
+    title_native: Klaviyo Privacy Notice
+    title_en: Klaviyo Privacy Notice
+    source_url: https://www.klaviyo.com/legal/privacy
+    source_language: en
+    summary_native: Public Klaviyo privacy notice metadata reference.
+    summary_en: Public Klaviyo privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: klaviyo-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Klaviyo services
+  - source_id: klaviyo-security
+    source_type: security_page
+    title_native: Klaviyo Security
+    title_en: Klaviyo Security
+    source_url: https://www.klaviyo.com/security
+    source_language: en
+    summary_native: Public Klaviyo security metadata reference.
+    summary_en: Public Klaviyo security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: klaviyo-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Klaviyo services
+  - source_id: klaviyo-compliance
+    source_type: compliance_page
+    title_native: Klaviyo Compliance
+    title_en: Klaviyo Compliance
+    source_url: https://www.klaviyo.com/security#compliance
+    source_language: en
+    summary_native: Public Klaviyo compliance metadata reference.
+    summary_en: Public Klaviyo compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: klaviyo-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Klaviyo services
+- vendor_id: segment
+  display_name: Segment
+  legal_name: Segment.io, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - segment.com
+  public_entrypoints:
+  - https://segment.com/legal/
+  - https://segment.com/security/
+  vendor_categories:
+  - customer_data_platform
+  - analytics
+  - marketing_platform
+  - data_platform
+  notes: Public-source-only catalog record. Metadata references general public Segment
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: segment-dpa
+    source_type: dpa
+    title_native: Segment Data Processing Addendum
+    title_en: Segment Data Processing Addendum
+    source_url: https://segment.com/legal/data-processing-addendum/
+    source_language: en
+    summary_native: Public Segment data processing addendum metadata reference.
+    summary_en: Public Segment data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: segment-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Segment services
+  - source_id: segment-subprocessors
+    source_type: subprocessors_list
+    title_native: Segment Subprocessors
+    title_en: Segment Subprocessors
+    source_url: https://segment.com/legal/subprocessors/
+    source_language: en
+    summary_native: Public Segment subprocessors metadata reference.
+    summary_en: Public Segment subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: segment-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Segment services
+  - source_id: segment-privacy
+    source_type: privacy_notice
+    title_native: Segment Privacy Notice
+    title_en: Segment Privacy Notice
+    source_url: https://segment.com/legal/privacy/
+    source_language: en
+    summary_native: Public Segment privacy notice metadata reference.
+    summary_en: Public Segment privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: segment-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Segment services
+  - source_id: segment-security
+    source_type: security_page
+    title_native: Segment Security
+    title_en: Segment Security
+    source_url: https://segment.com/security/
+    source_language: en
+    summary_native: Public Segment security metadata reference.
+    summary_en: Public Segment security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: segment-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Segment services
+  - source_id: segment-compliance
+    source_type: compliance_page
+    title_native: Segment Compliance
+    title_en: Segment Compliance
+    source_url: https://segment.com/security/#compliance
+    source_language: en
+    summary_native: Public Segment compliance metadata reference.
+    summary_en: Public Segment compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: segment-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Segment services
+  entity_family: twilio
+  related_vendor_ids:
+  - twilio
+- vendor_id: amplitude
+  display_name: Amplitude
+  legal_name: Amplitude, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - amplitude.com
+  public_entrypoints:
+  - https://amplitude.com/security
+  - https://amplitude.com/privacy
+  vendor_categories:
+  - analytics
+  - product_analytics
+  - customer_data_platform
+  - data_platform
+  notes: Public-source-only catalog record. Metadata references general public Amplitude
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: amplitude-dpa
+    source_type: dpa
+    title_native: Amplitude Data Processing Addendum
+    title_en: Amplitude Data Processing Addendum
+    source_url: https://amplitude.com/data-processing-addendum
+    source_language: en
+    summary_native: Public Amplitude data processing addendum metadata reference.
+    summary_en: Public Amplitude data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: amplitude-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Amplitude services
+  - source_id: amplitude-subprocessors
+    source_type: subprocessors_list
+    title_native: Amplitude Subprocessors
+    title_en: Amplitude Subprocessors
+    source_url: https://amplitude.com/subprocessors
+    source_language: en
+    summary_native: Public Amplitude subprocessors metadata reference.
+    summary_en: Public Amplitude subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: amplitude-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Amplitude services
+  - source_id: amplitude-privacy
+    source_type: privacy_notice
+    title_native: Amplitude Privacy Notice
+    title_en: Amplitude Privacy Notice
+    source_url: https://amplitude.com/privacy
+    source_language: en
+    summary_native: Public Amplitude privacy notice metadata reference.
+    summary_en: Public Amplitude privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: amplitude-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Amplitude services
+  - source_id: amplitude-security
+    source_type: security_page
+    title_native: Amplitude Security
+    title_en: Amplitude Security
+    source_url: https://amplitude.com/security
+    source_language: en
+    summary_native: Public Amplitude security metadata reference.
+    summary_en: Public Amplitude security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: amplitude-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Amplitude services
+  - source_id: amplitude-compliance
+    source_type: compliance_page
+    title_native: Amplitude Compliance
+    title_en: Amplitude Compliance
+    source_url: https://amplitude.com/security#compliance
+    source_language: en
+    summary_native: Public Amplitude compliance metadata reference.
+    summary_en: Public Amplitude compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: amplitude-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Amplitude services
+- vendor_id: mixpanel
+  display_name: Mixpanel
+  legal_name: Mixpanel, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - mixpanel.com
+  public_entrypoints:
+  - https://mixpanel.com/legal/
+  - https://mixpanel.com/security/
+  vendor_categories:
+  - analytics
+  - product_analytics
+  - customer_data_platform
+  - data_platform
+  notes: Public-source-only catalog record. Metadata references general public Mixpanel
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: mixpanel-dpa
+    source_type: dpa
+    title_native: Mixpanel Data Processing Addendum
+    title_en: Mixpanel Data Processing Addendum
+    source_url: https://mixpanel.com/legal/dpa/
+    source_language: en
+    summary_native: Public Mixpanel data processing addendum metadata reference.
+    summary_en: Public Mixpanel data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: mixpanel-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Mixpanel services
+  - source_id: mixpanel-subprocessors
+    source_type: subprocessors_list
+    title_native: Mixpanel Subprocessors
+    title_en: Mixpanel Subprocessors
+    source_url: https://mixpanel.com/legal/subprocessors/
+    source_language: en
+    summary_native: Public Mixpanel subprocessors metadata reference.
+    summary_en: Public Mixpanel subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: mixpanel-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Mixpanel services
+  - source_id: mixpanel-privacy
+    source_type: privacy_notice
+    title_native: Mixpanel Privacy Notice
+    title_en: Mixpanel Privacy Notice
+    source_url: https://mixpanel.com/legal/privacy-policy/
+    source_language: en
+    summary_native: Public Mixpanel privacy notice metadata reference.
+    summary_en: Public Mixpanel privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: mixpanel-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Mixpanel services
+  - source_id: mixpanel-security
+    source_type: security_page
+    title_native: Mixpanel Security
+    title_en: Mixpanel Security
+    source_url: https://mixpanel.com/security/
+    source_language: en
+    summary_native: Public Mixpanel security metadata reference.
+    summary_en: Public Mixpanel security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: mixpanel-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Mixpanel services
+  - source_id: mixpanel-compliance
+    source_type: compliance_page
+    title_native: Mixpanel Compliance
+    title_en: Mixpanel Compliance
+    source_url: https://mixpanel.com/security/#compliance
+    source_language: en
+    summary_native: Public Mixpanel compliance metadata reference.
+    summary_en: Public Mixpanel compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: mixpanel-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Mixpanel services
+- vendor_id: posthog
+  display_name: PostHog
+  legal_name: PostHog, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - posthog.com
+  public_entrypoints:
+  - https://posthog.com/security
+  - https://posthog.com/privacy
+  vendor_categories:
+  - analytics
+  - product_analytics
+  - developer_platform
+  - data_platform
+  notes: Public-source-only catalog record. Metadata references general public PostHog
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: posthog-dpa
+    source_type: dpa
+    title_native: PostHog Data Processing Addendum
+    title_en: PostHog Data Processing Addendum
+    source_url: https://posthog.com/dpa
+    source_language: en
+    summary_native: Public PostHog data processing addendum metadata reference.
+    summary_en: Public PostHog data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: posthog-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - PostHog services
+  - source_id: posthog-subprocessors
+    source_type: subprocessors_list
+    title_native: PostHog Subprocessors
+    title_en: PostHog Subprocessors
+    source_url: https://posthog.com/subprocessors
+    source_language: en
+    summary_native: Public PostHog subprocessors metadata reference.
+    summary_en: Public PostHog subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: posthog-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - PostHog services
+  - source_id: posthog-privacy
+    source_type: privacy_notice
+    title_native: PostHog Privacy Notice
+    title_en: PostHog Privacy Notice
+    source_url: https://posthog.com/privacy
+    source_language: en
+    summary_native: Public PostHog privacy notice metadata reference.
+    summary_en: Public PostHog privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: posthog-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - PostHog services
+  - source_id: posthog-security
+    source_type: security_page
+    title_native: PostHog Security
+    title_en: PostHog Security
+    source_url: https://posthog.com/security
+    source_language: en
+    summary_native: Public PostHog security metadata reference.
+    summary_en: Public PostHog security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: posthog-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - PostHog services
+  - source_id: posthog-compliance
+    source_type: compliance_page
+    title_native: PostHog Compliance
+    title_en: PostHog Compliance
+    source_url: https://posthog.com/security#compliance
+    source_language: en
+    summary_native: Public PostHog compliance metadata reference.
+    summary_en: Public PostHog compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: posthog-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - PostHog services
+- vendor_id: webflow
+  display_name: Webflow
+  legal_name: Webflow, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - webflow.com
+  public_entrypoints:
+  - https://webflow.com/security
+  - https://webflow.com/legal/privacy
+  vendor_categories:
+  - website_platform
+  - cms
+  - no_code
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public Webflow
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: webflow-dpa
+    source_type: dpa
+    title_native: Webflow Data Processing Addendum
+    title_en: Webflow Data Processing Addendum
+    source_url: https://webflow.com/legal/data-processing-addendum
+    source_language: en
+    summary_native: Public Webflow data processing addendum metadata reference.
+    summary_en: Public Webflow data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: webflow-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Webflow services
+  - source_id: webflow-subprocessors
+    source_type: subprocessors_list
+    title_native: Webflow Subprocessors
+    title_en: Webflow Subprocessors
+    source_url: https://webflow.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Webflow subprocessors metadata reference.
+    summary_en: Public Webflow subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: webflow-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Webflow services
+  - source_id: webflow-privacy
+    source_type: privacy_notice
+    title_native: Webflow Privacy Notice
+    title_en: Webflow Privacy Notice
+    source_url: https://webflow.com/legal/privacy
+    source_language: en
+    summary_native: Public Webflow privacy notice metadata reference.
+    summary_en: Public Webflow privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: webflow-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Webflow services
+  - source_id: webflow-security
+    source_type: security_page
+    title_native: Webflow Security
+    title_en: Webflow Security
+    source_url: https://webflow.com/security
+    source_language: en
+    summary_native: Public Webflow security metadata reference.
+    summary_en: Public Webflow security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: webflow-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Webflow services
+  - source_id: webflow-compliance
+    source_type: compliance_page
+    title_native: Webflow Compliance
+    title_en: Webflow Compliance
+    source_url: https://webflow.com/security#compliance
+    source_language: en
+    summary_native: Public Webflow compliance metadata reference.
+    summary_en: Public Webflow compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: webflow-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Webflow services
+- vendor_id: contentful
+  display_name: Contentful
+  legal_name: Contentful GmbH
+  headquarters_country: DE
+  regions_served: &id002
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - contentful.com
+  public_entrypoints:
+  - https://www.contentful.com/security/
+  - https://www.contentful.com/legal/privacy/
+  vendor_categories:
+  - cms
+  - content_platform
+  - developer_platform
+  - marketing_platform
+  notes: Public-source-only catalog record. Metadata references general public Contentful
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: contentful-dpa
+    source_type: dpa
+    title_native: Contentful Data Processing Addendum
+    title_en: Contentful Data Processing Addendum
+    source_url: https://www.contentful.com/legal/dpa/
+    source_language: en
+    summary_native: Public Contentful data processing addendum metadata reference.
+    summary_en: Public Contentful data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: contentful-dpa
+      artifact_type: dpa
+      region_scope: *id002
+      product_scope:
+      - Contentful services
+  - source_id: contentful-subprocessors
+    source_type: subprocessors_list
+    title_native: Contentful Subprocessors
+    title_en: Contentful Subprocessors
+    source_url: https://www.contentful.com/legal/subprocessors/
+    source_language: en
+    summary_native: Public Contentful subprocessors metadata reference.
+    summary_en: Public Contentful subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: contentful-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id002
+      product_scope:
+      - Contentful services
+  - source_id: contentful-privacy
+    source_type: privacy_notice
+    title_native: Contentful Privacy Notice
+    title_en: Contentful Privacy Notice
+    source_url: https://www.contentful.com/legal/privacy/
+    source_language: en
+    summary_native: Public Contentful privacy notice metadata reference.
+    summary_en: Public Contentful privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: contentful-privacy
+      artifact_type: privacy_notice
+      region_scope: *id002
+      product_scope:
+      - Contentful services
+  - source_id: contentful-security
+    source_type: security_page
+    title_native: Contentful Security
+    title_en: Contentful Security
+    source_url: https://www.contentful.com/security/
+    source_language: en
+    summary_native: Public Contentful security metadata reference.
+    summary_en: Public Contentful security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: contentful-security
+      artifact_type: security_page
+      region_scope: *id002
+      product_scope:
+      - Contentful services
+  - source_id: contentful-compliance
+    source_type: compliance_page
+    title_native: Contentful Compliance
+    title_en: Contentful Compliance
+    source_url: https://www.contentful.com/security/compliance/
+    source_language: en
+    summary_native: Public Contentful compliance metadata reference.
+    summary_en: Public Contentful compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: contentful-compliance
+      artifact_type: compliance_page
+      region_scope: *id002
+      product_scope:
+      - Contentful services
+- vendor_id: sanity
+  display_name: Sanity
+  legal_name: Sanity AS
+  headquarters_country: 'NO'
+  regions_served: &id003
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - sanity.io
+  public_entrypoints:
+  - https://www.sanity.io/security
+  - https://www.sanity.io/legal/privacy
+  vendor_categories:
+  - cms
+  - content_platform
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references general public Sanity
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: sanity-dpa
+    source_type: dpa
+    title_native: Sanity Data Processing Addendum
+    title_en: Sanity Data Processing Addendum
+    source_url: https://www.sanity.io/legal/dpa
+    source_language: en
+    summary_native: Public Sanity data processing addendum metadata reference.
+    summary_en: Public Sanity data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: sanity-dpa
+      artifact_type: dpa
+      region_scope: *id003
+      product_scope:
+      - Sanity services
+  - source_id: sanity-subprocessors
+    source_type: subprocessors_list
+    title_native: Sanity Subprocessors
+    title_en: Sanity Subprocessors
+    source_url: https://www.sanity.io/legal/subprocessors
+    source_language: en
+    summary_native: Public Sanity subprocessors metadata reference.
+    summary_en: Public Sanity subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: sanity-subprocessors
+      artifact_type: subprocessors_list
+      region_scope: *id003
+      product_scope:
+      - Sanity services
+  - source_id: sanity-privacy
+    source_type: privacy_notice
+    title_native: Sanity Privacy Notice
+    title_en: Sanity Privacy Notice
+    source_url: https://www.sanity.io/legal/privacy
+    source_language: en
+    summary_native: Public Sanity privacy notice metadata reference.
+    summary_en: Public Sanity privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: sanity-privacy
+      artifact_type: privacy_notice
+      region_scope: *id003
+      product_scope:
+      - Sanity services
+  - source_id: sanity-security
+    source_type: security_page
+    title_native: Sanity Security
+    title_en: Sanity Security
+    source_url: https://www.sanity.io/security
+    source_language: en
+    summary_native: Public Sanity security metadata reference.
+    summary_en: Public Sanity security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: sanity-security
+      artifact_type: security_page
+      region_scope: *id003
+      product_scope:
+      - Sanity services
+  - source_id: sanity-compliance
+    source_type: compliance_page
+    title_native: Sanity Compliance
+    title_en: Sanity Compliance
+    source_url: https://www.sanity.io/security#compliance
+    source_language: en
+    summary_native: Public Sanity compliance metadata reference.
+    summary_en: Public Sanity compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: sanity-compliance
+      artifact_type: compliance_page
+      region_scope: *id003
+      product_scope:
+      - Sanity services
+- vendor_id: algolia
+  display_name: Algolia
+  legal_name: Algolia, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - algolia.com
+  public_entrypoints:
+  - https://www.algolia.com/security/
+  - https://www.algolia.com/policies/privacy/
+  vendor_categories:
+  - search
+  - developer_platform
+  - data_platform
+  - ai_platform
+  notes: Public-source-only catalog record. Metadata references general public Algolia
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: algolia-dpa
+    source_type: dpa
+    title_native: Algolia Data Processing Addendum
+    title_en: Algolia Data Processing Addendum
+    source_url: https://www.algolia.com/policies/data-processing-addendum/
+    source_language: en
+    summary_native: Public Algolia data processing addendum metadata reference.
+    summary_en: Public Algolia data processing addendum metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: algolia-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Algolia services
+  - source_id: algolia-subprocessors
+    source_type: subprocessors_list
+    title_native: Algolia Subprocessors
+    title_en: Algolia Subprocessors
+    source_url: https://www.algolia.com/policies/subprocessors/
+    source_language: en
+    summary_native: Public Algolia subprocessors metadata reference.
+    summary_en: Public Algolia subprocessors metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: algolia-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Algolia services
+  - source_id: algolia-privacy
+    source_type: privacy_notice
+    title_native: Algolia Privacy Notice
+    title_en: Algolia Privacy Notice
+    source_url: https://www.algolia.com/policies/privacy/
+    source_language: en
+    summary_native: Public Algolia privacy notice metadata reference.
+    summary_en: Public Algolia privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: algolia-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Algolia services
+  - source_id: algolia-security
+    source_type: security_page
+    title_native: Algolia Security
+    title_en: Algolia Security
+    source_url: https://www.algolia.com/security/
+    source_language: en
+    summary_native: Public Algolia security metadata reference.
+    summary_en: Public Algolia security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: algolia-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Algolia services
+  - source_id: algolia-compliance
+    source_type: compliance_page
+    title_native: Algolia Compliance
+    title_en: Algolia Compliance
+    source_url: https://www.algolia.com/security/#compliance
+    source_language: en
+    summary_native: Public Algolia compliance metadata reference.
+    summary_en: Public Algolia compliance metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: algolia-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Algolia services
