@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/unavailable-source.schema.json",
+  "title": "OpenVA Unavailable Source Ledger Entry",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "unavailable_source_id",
+    "vendor_id",
+    "source_type",
+    "status",
+    "reason",
+    "reviewed_at",
+    "reviewed_by",
+    "next_review_after",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "unavailable_source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "source_type": {
+      "enum": [
+        "dpa",
+        "subprocessors_list",
+        "privacy_notice",
+        "trust_center",
+        "security_page",
+        "compliance_page",
+        "certification_reference",
+        "terms_of_service",
+        "kyc_statement",
+        "aml_statement",
+        "ai_terms",
+        "government_request_policy",
+        "transparency_report",
+        "other_public_source"
+      ]
+    },
+    "status": { "enum": ["not_publicly_available", "not_identified", "intentionally_omitted", "gated_excluded"] },
+    "reason": {
+      "enum": [
+        "distinct_public_url_not_identified",
+        "only_gated_or_authenticated_material_found",
+        "only_parent_or_related_entity_source_identified",
+        "source_type_not_applicable_from_public_materials",
+        "public_source_temporarily_unavailable",
+        "other"
+      ]
+    },
+    "reviewed_at": { "type": "string", "format": "date-time" },
+    "reviewed_by": { "enum": ["human", "agent", "hybrid"] },
+    "next_review_after": { "type": "string", "format": "date" },
+    "related_vendor_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "candidate_urls_checked": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "notes": { "type": ["string", "null"], "maxLength": 1000 },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false
+}
