@@ -62,9 +62,16 @@ def test_source_health_report_is_read_only_scheduled_inventory():
     assert "peter-evans/create-pull-request" not in text
 
 
-def test_no_workflow_requests_write_permissions_except_manual_pr_creator():
+def test_no_workflow_requests_write_permissions_except_approved_handoffs():
     allowed_write_workflows = {
-        "catalog-agent-pr.yml",
+        "catalog-agent-pr.yml": {
+            "triggers": {"workflow_dispatch"},
+            "permissions": {"contents": "write", "pull-requests": "write"},
+        },
+        "cleanup-proposal-issue.yml": {
+            "triggers": {"workflow_dispatch", "schedule"},
+            "permissions": {"contents": "read", "issues": "write"},
+        },
     }
 
     for path in WORKFLOW_DIR.glob("*.yml"):
@@ -79,11 +86,9 @@ def test_no_workflow_requests_write_permissions_except_manual_pr_creator():
             continue
 
         assert path.name in allowed_write_workflows, f"{path}: unexpected write permissions"
-        assert set(triggers.keys()) == {"workflow_dispatch"}, f"{path}: write workflow must be manual-only"
-        assert write_permissions == {
-            "contents": "write",
-            "pull-requests": "write",
-        }, f"{path}: write permissions must be limited to PR creation"
+        allowed = allowed_write_workflows[path.name]
+        assert set(triggers.keys()) == allowed["triggers"], f"{path}: unexpected write workflow triggers"
+        assert permissions == allowed["permissions"], f"{path}: unexpected write workflow permissions"
 
 
 def test_catalog_agent_pr_workflow_is_manual_pr_only():
