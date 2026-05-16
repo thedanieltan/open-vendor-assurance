@@ -4,20 +4,27 @@ on:
   workflow_dispatch:
     inputs:
       promotion_plan_path:
-        description: "Path to reviewed promotion plan JSON committed in the repository"
-        required: true
-        type: string
-        default: "maintenance/reviewed/promotion-plan.json"
-      pr_branch:
-        description: "Branch name for the generated cleanup PR. Must start with agent-"
+        description: "Optional reviewed promotion plan JSON. If blank, selects the first unapplied reviewed plan."
         required: false
         type: string
-        default: "agent-catalog-maintenance-cleanup"
+        default: ""
+      max_actions_per_plan:
+        description: "Maximum reviewed actions to apply in one generated Catalog PR."
+        required: false
+        type: string
+        default: "50"
+      pr_branch:
+        description: "Optional generated PR branch. Must start with agent-. If blank, derived from selected plan."
+        required: false
+        type: string
+        default: ""
       pr_title:
         description: "Cleanup PR title. Must start with Catalog:"
         required: false
         type: string
         default: "Catalog: apply reviewed source maintenance cleanup"
+  schedule:
+    - cron: "41 7 * * 3"
 
 permissions:
   contents: write
@@ -31,8 +38,9 @@ jobs:
   catalog-maintenance-pr:
     runs-on: ubuntu-latest
     env:
-      PROMOTION_PLAN_PATH: "${{ inputs.promotion_plan_path }}"
-      PR_BRANCH: "${{ inputs.pr_branch || 'agent-catalog-maintenance-cleanup' }}"
+      REQUESTED_PROMOTION_PLAN_PATH: "${{ inputs.promotion_plan_path || '' }}"
+      REQUESTED_MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '50' }}"
+      REQUESTED_PR_BRANCH: "${{ inputs.pr_branch || '' }}"
       PR_TITLE: "${{ inputs.pr_title || 'Catalog: apply reviewed source maintenance cleanup' }}"
     steps:
       - uses: actions/checkout@v4
@@ -43,20 +51,52 @@ jobs:
           python-version: "3.12"
       - name: Install package
         run: pip install -e ".[dev]"
-      - name: Validate workflow inputs
+      - name: Validate current records
+        run: python -m tools.openva.validate validate
+      - name: Select reviewed maintenance plan
+        id: reviewed_plan
         run: |
           set -euo pipefail
-          PROMOTION_PLAN_PATH="$(printf '%s' "$PROMOTION_PLAN_PATH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          PR_BRANCH="$(printf '%s' "$PR_BRANCH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          REQUESTED_PROMOTION_PLAN_PATH="$(printf '%s' "$REQUESTED_PROMOTION_PLAN_PATH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          REQUESTED_MAX_ACTIONS_PER_PLAN="$(printf '%s' "$REQUESTED_MAX_ACTIONS_PER_PLAN" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          case "$REQUESTED_MAX_ACTIONS_PER_PLAN" in
+            ''|*[!0-9]*) echo "max_actions_per_plan must be a non-negative integer" >&2; exit 1 ;;
+          esac
+          python -m tools.openva.maintenance_lifecycle select \
+            --promotion-plan "$REQUESTED_PROMOTION_PLAN_PATH" \
+            --max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN" \
+            --output reviewed-plan.env
+          cat reviewed-plan.env >> "$GITHUB_ENV"
+          cat reviewed-plan.env >> "$GITHUB_OUTPUT"
+      - name: Stop when no unapplied reviewed plan exists
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN != 'true'
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.reviewed_plan.outputs.REVIEWED_PLAN_ALREADY_APPLIED }}" = "true" ]; then
+            echo "Reviewed plan already applied."
+          else
+            echo "No unapplied reviewed maintenance plans found."
+          fi
+      - name: Validate workflow inputs
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
+        run: |
+          set -euo pipefail
+          PR_BRANCH="$(printf '%s' "$REQUESTED_PR_BRANCH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           PR_TITLE="$(printf '%s' "$PR_TITLE" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          echo "PROMOTION_PLAN_PATH=$PROMOTION_PLAN_PATH" >> "$GITHUB_ENV"
+          if [ -z "$PR_BRANCH" ]; then
+            PR_BRANCH="$SELECTED_PR_BRANCH"
+          fi
+          echo "PROMOTION_PLAN_PATH=$SELECTED_PLAN_PATH" >> "$GITHUB_ENV"
+          echo "PROMOTION_PLAN_SHA256=$SELECTED_PLAN_SHA256" >> "$GITHUB_ENV"
+          echo "PROMOTION_PLAN_ACTION_COUNT=$SELECTED_PLAN_ACTION_COUNT" >> "$GITHUB_ENV"
+          echo "MAX_ACTIONS_PER_PLAN=$REQUESTED_MAX_ACTIONS_PER_PLAN" >> "$GITHUB_ENV"
           echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
           echo "PR_TITLE=$PR_TITLE" >> "$GITHUB_ENV"
-          case "$PROMOTION_PLAN_PATH" in
+          case "$SELECTED_PLAN_PATH" in
             maintenance/reviewed/*.json) ;;
             *) echo "promotion_plan_path must be under maintenance/reviewed/ and end with .json" >&2; exit 1 ;;
           esac
-          test -f "$PROMOTION_PLAN_PATH" || { echo "promotion plan file not found: $PROMOTION_PLAN_PATH" >&2; exit 1; }
+          test -f "$SELECTED_PLAN_PATH" || { echo "promotion plan file not found: $SELECTED_PLAN_PATH" >&2; exit 1; }
           case "$PR_BRANCH" in
             agent-*) ;;
             *) echo "pr_branch must start with agent-" >&2; exit 1 ;;
@@ -65,16 +105,17 @@ jobs:
             Catalog:*) ;;
             *) echo "pr_title must start with Catalog:" >&2; exit 1 ;;
           esac
-      - name: Validate current records
-        run: python -m tools.openva.validate validate
       - name: Apply reviewed maintenance actions
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: |
           python -m tools.openva.maintenance_actions apply \
             --promotion-plan "$PROMOTION_PLAN_PATH" \
             --output maintenance-action-report.json
       - name: Validate generated catalog cleanup
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: python -m tools.openva.validate validate
       - name: Check whether catalog changes were produced
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         id: catalog_changes
         run: |
           set -euo pipefail
@@ -86,14 +127,14 @@ jobs:
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Build cleanup proposal artifact
-        if: steps.catalog_changes.outputs.has_changes == 'true'
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         run: |
           python -m tools.openva.cleanup_proposals build \
             --promotion-plan "$PROMOTION_PLAN_PATH" \
             --json-output cleanup-proposal.json \
             --markdown-output cleanup-proposal.md
       - name: Prepare compact PR body
-        if: steps.catalog_changes.outputs.has_changes == 'true'
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         run: |
           python - <<'PY'
           import json
@@ -102,24 +143,17 @@ jobs:
 
           maintenance = json.load(open('maintenance-action-report.json', encoding='utf-8'))
           proposal = json.load(open('cleanup-proposal.json', encoding='utf-8'))
-          plan_path = os.environ['PROMOTION_PLAN_PATH']
           lines = [
               '## Summary',
               '',
-              'Applies reviewed OpenVA source maintenance cleanup from a committed promotion plan.',
-              '',
-              'This PR is non-advisory. It does not make legal, procurement, compliance, risk, vendor approval, or vendor recommendation conclusions.',
+              'Applies a committed reviewed OpenVA maintenance plan.',
               '',
               '## Reviewed input',
               '',
-              f'- Promotion plan: `{plan_path}`',
-              '',
-              '## What changed',
-              '',
-              '- Removes canonical source records selected by reviewed cleanup actions.',
-              '- Removes dependent artifact records and change records referencing those sources.',
-              '- Adds unavailable-source ledger entries for cleaned-up source types.',
-              '- Rebuilds indexes and `openva-pack.json`.',
+              f"- Promotion plan: `{os.environ['PROMOTION_PLAN_PATH']}`",
+              f"- Promotion plan SHA-256: `{os.environ['PROMOTION_PLAN_SHA256']}`",
+              f"- Reviewed action count: `{os.environ['PROMOTION_PLAN_ACTION_COUNT']}`",
+              f"- Max actions per generated PR: `{os.environ['MAX_ACTIONS_PER_PLAN']}`",
               '',
               '## Counts',
               '',
@@ -129,10 +163,16 @@ jobs:
               f"- Blocking cleanup actions: `{proposal['summary']['blocking_cleanup_actions']}`",
               f"- Promotable candidate actions, not applied: `{proposal['summary']['promotable_candidate_actions']}`",
               '',
+              '## Scale posture',
+              '',
+              '- Processes one reviewed plan per workflow run.',
+              '- Enforces a bounded reviewed action count per generated Catalog PR.',
+              '- Oversized reviewed plans must be split before application.',
+              '',
               '## Guardrails',
               '',
-              '- Does not perform live source verification.',
-              '- Does not perform live source discovery.',
+              '- Uses only committed reviewed plans under `maintenance/reviewed/` that are not registered as applied.',
+              '- Does not run live verification or discovery.',
               '- Does not promote candidate sources.',
               '- Does not mirror raw documents.',
               '- Does not merge automatically.',
@@ -142,7 +182,7 @@ jobs:
           Path('catalog-maintenance-pr-body.md').write_text('\n'.join(lines), encoding='utf-8')
           PY
       - name: Commit and push maintenance branch
-        if: steps.catalog_changes.outputs.has_changes == 'true'
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -152,7 +192,7 @@ jobs:
           git commit -m "$PR_TITLE"
           git push --force-with-lease origin "$PR_BRANCH"
       - name: Create or update pull request
-        if: steps.catalog_changes.outputs.has_changes == 'true'
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -169,7 +209,7 @@ jobs:
               --body-file catalog-maintenance-pr-body.md
           fi
       - name: Upload maintenance artifacts
-        if: steps.catalog_changes.outputs.has_changes == 'true'
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: openva-catalog-maintenance-pr-artifacts
