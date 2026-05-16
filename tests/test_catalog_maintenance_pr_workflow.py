@@ -47,3 +47,13 @@ def test_catalog_maintenance_pr_workflow_consumes_reviewed_plan_without_live_net
     assert "source-discovery-report.json" not in text
     assert "gh pr merge" not in text
     assert "merge_pull_request" not in text
+
+
+def test_catalog_maintenance_pr_workflow_treats_noop_as_success_and_skips_pr_steps():
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "Check whether catalog changes were produced" in text
+    assert "has_changes=false" in text
+    assert "has_changes=true" in text
+    assert "No catalog maintenance changes produced." in text
+    assert "if: steps.catalog_changes.outputs.has_changes == 'true'" in text
