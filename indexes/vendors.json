@@ -1,5 +1,5 @@
 {
-  "count": 34,
+  "count": 44,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -279,6 +279,39 @@
       "vendor_id": "databricks"
     },
     {
+      "_openva_path": "data/vendors/datadog/vendor.yaml",
+      "display_name": "Datadog",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Datadog, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Datadog assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "datadoghq.com"
+      ],
+      "public_entrypoints": [
+        "https://www.datadoghq.com/legal/",
+        "https://www.datadoghq.com/security/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "observability",
+        "monitoring",
+        "security",
+        "developer_platform"
+      ],
+      "vendor_id": "datadog"
+    },
+    {
       "_openva_path": "data/vendors/digitalocean/vendor.yaml",
       "display_name": "DigitalOcean",
       "entity_surface": "global_brand",
@@ -309,6 +342,71 @@
         "database"
       ],
       "vendor_id": "digitalocean"
+    },
+    {
+      "_openva_path": "data/vendors/docker/vendor.yaml",
+      "display_name": "Docker",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Docker, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Docker assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "docker.com"
+      ],
+      "public_entrypoints": [
+        "https://www.docker.com/legal/",
+        "https://www.docker.com/security/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "developer_platform",
+        "container_platform",
+        "ci_cd"
+      ],
+      "vendor_id": "docker"
+    },
+    {
+      "_openva_path": "data/vendors/elastic/vendor.yaml",
+      "display_name": "Elastic",
+      "entity_surface": "global_brand",
+      "headquarters_country": "NL",
+      "legal_name": "Elasticsearch B.V.",
+      "notes": "Public-source-only catalog record. Metadata references general public Elastic assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "elastic.co"
+      ],
+      "public_entrypoints": [
+        "https://www.elastic.co/legal",
+        "https://www.elastic.co/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "search",
+        "observability",
+        "security",
+        "data_platform"
+      ],
+      "vendor_id": "elastic"
     },
     {
       "_openva_path": "examples/vendors/example-cloud/vendor.yaml",
@@ -439,6 +537,39 @@
         "ai_platform"
       ],
       "vendor_id": "google-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/hashicorp/vendor.yaml",
+      "display_name": "HashiCorp",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "HashiCorp, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public HashiCorp assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "hashicorp.com"
+      ],
+      "public_entrypoints": [
+        "https://www.hashicorp.com/security",
+        "https://www.hashicorp.com/legal"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "developer_platform",
+        "infrastructure_as_code",
+        "security",
+        "cloud_infrastructure"
+      ],
+      "vendor_id": "hashicorp"
     },
     {
       "_openva_path": "data/vendors/huawei-cloud-cn/vendor.yaml",
@@ -716,6 +847,38 @@
       "vendor_id": "mongodb"
     },
     {
+      "_openva_path": "data/vendors/new-relic/vendor.yaml",
+      "display_name": "New Relic",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "New Relic, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public New Relic assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "newrelic.com"
+      ],
+      "public_entrypoints": [
+        "https://newrelic.com/termsandconditions",
+        "https://newrelic.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "observability",
+        "monitoring",
+        "developer_platform"
+      ],
+      "vendor_id": "new-relic"
+    },
+    {
       "_openva_path": "data/vendors/okta/vendor.yaml",
       "display_name": "Okta",
       "entity_surface": "global_brand",
@@ -747,6 +910,39 @@
         "enterprise_software"
       ],
       "vendor_id": "okta"
+    },
+    {
+      "_openva_path": "data/vendors/onepassword/vendor.yaml",
+      "display_name": "1Password",
+      "entity_surface": "product_surface",
+      "headquarters_country": "CA",
+      "legal_name": "AgileBits Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public 1Password assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "1password.com"
+      ],
+      "public_entrypoints": [
+        "https://1password.com/legal",
+        "https://1password.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "identity",
+        "password_management",
+        "security",
+        "access_management"
+      ],
+      "vendor_id": "onepassword"
     },
     {
       "_openva_path": "data/vendors/oracle-cloud/vendor.yaml",
@@ -782,6 +978,38 @@
       "vendor_id": "oracle-cloud"
     },
     {
+      "_openva_path": "data/vendors/pagerduty/vendor.yaml",
+      "display_name": "PagerDuty",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "PagerDuty, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public PagerDuty assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "pagerduty.com"
+      ],
+      "public_entrypoints": [
+        "https://www.pagerduty.com/security/",
+        "https://www.pagerduty.com/privacy/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "incident_management",
+        "observability",
+        "enterprise_software"
+      ],
+      "vendor_id": "pagerduty"
+    },
+    {
       "_openva_path": "data/vendors/salesforce/vendor.yaml",
       "display_name": "Salesforce",
       "entity_surface": "global_brand",
@@ -813,6 +1041,38 @@
         "ai_platform"
       ],
       "vendor_id": "salesforce"
+    },
+    {
+      "_openva_path": "data/vendors/sentry/vendor.yaml",
+      "display_name": "Sentry",
+      "entity_surface": "product_surface",
+      "headquarters_country": "US",
+      "legal_name": "Functional Software, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Sentry assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "sentry.io"
+      ],
+      "public_entrypoints": [
+        "https://sentry.io/legal/",
+        "https://sentry.io/security/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "developer_platform",
+        "observability",
+        "error_monitoring"
+      ],
+      "vendor_id": "sentry"
     },
     {
       "_openva_path": "data/vendors/servicenow/vendor.yaml",
@@ -910,6 +1170,39 @@
         "ai_platform"
       ],
       "vendor_id": "snowflake"
+    },
+    {
+      "_openva_path": "data/vendors/splunk/vendor.yaml",
+      "display_name": "Splunk",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Splunk LLC",
+      "notes": "Public-source-only catalog record. Metadata references general public Splunk assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "splunk.com"
+      ],
+      "public_entrypoints": [
+        "https://www.splunk.com/en_us/legal.html",
+        "https://www.splunk.com/en_us/about-splunk/splunk-security.html"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "observability",
+        "security",
+        "analytics",
+        "data_platform"
+      ],
+      "vendor_id": "splunk"
     },
     {
       "_openva_path": "data/vendors/stripe/vendor.yaml",
@@ -1054,6 +1347,39 @@
         "customer_engagement"
       ],
       "vendor_id": "twilio"
+    },
+    {
+      "_openva_path": "data/vendors/vercel/vendor.yaml",
+      "display_name": "Vercel",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Vercel Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Vercel assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "vercel.com"
+      ],
+      "public_entrypoints": [
+        "https://vercel.com/legal",
+        "https://vercel.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "developer_platform",
+        "hosting",
+        "edge_platform",
+        "ci_cd"
+      ],
+      "vendor_id": "vercel"
     },
     {
       "_openva_path": "data/vendors/workday/vendor.yaml",

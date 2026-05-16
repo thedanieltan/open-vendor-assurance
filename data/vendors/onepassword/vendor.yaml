@@ -1,0 +1,26 @@
+schema_version: 0.1.0
+vendor_id: onepassword
+display_name: 1Password
+legal_name: AgileBits Inc.
+headquarters_country: CA
+regions_served:
+- global
+official_domains:
+- 1password.com
+public_entrypoints:
+- https://1password.com/legal
+- https://1password.com/security
+vendor_categories:
+- identity
+- password_management
+- security
+- access_management
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Metadata references general public 1Password
+  assurance materials and does not cover bespoke customer agreements.
+entity_surface: product_surface
+source_authority_language: en

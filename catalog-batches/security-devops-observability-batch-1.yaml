@@ -1,0 +1,655 @@
+schema_version: 0.1.0
+batch_id: security-devops-observability-batch-1
+operation: create
+collected_at: '2026-05-16T00:00:00Z'
+observer: human
+vendors:
+  - vendor_id: datadog
+    display_name: Datadog
+    legal_name: Datadog, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [datadoghq.com]
+    public_entrypoints:
+      - https://www.datadoghq.com/legal/
+      - https://www.datadoghq.com/security/
+    vendor_categories: [observability, monitoring, security, developer_platform]
+    notes: Public-source-only catalog record. Metadata references general public Datadog assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: datadog-dpa
+        source_type: dpa
+        title_native: Datadog Data Processing Addendum
+        title_en: Datadog Data Processing Addendum
+        source_url: https://www.datadoghq.com/legal/dpa/
+        source_language: en
+        summary_native: Public Datadog data processing addendum metadata reference.
+        summary_en: Public Datadog data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: datadog-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Datadog services] }
+      - source_id: datadog-subprocessors
+        source_type: subprocessors_list
+        title_native: Datadog Subprocessors
+        title_en: Datadog Subprocessors
+        source_url: https://www.datadoghq.com/legal/subprocessors/
+        source_language: en
+        summary_native: Public Datadog subprocessors metadata reference.
+        summary_en: Public Datadog subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: datadog-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Datadog services] }
+      - source_id: datadog-privacy
+        source_type: privacy_notice
+        title_native: Datadog Privacy Notice
+        title_en: Datadog Privacy Notice
+        source_url: https://www.datadoghq.com/legal/privacy/
+        source_language: en
+        summary_native: Public Datadog privacy notice metadata reference.
+        summary_en: Public Datadog privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: datadog-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Datadog services] }
+      - source_id: datadog-security
+        source_type: security_page
+        title_native: Datadog Security
+        title_en: Datadog Security
+        source_url: https://www.datadoghq.com/security/
+        source_language: en
+        summary_native: Public Datadog security metadata reference.
+        summary_en: Public Datadog security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: datadog-security, artifact_type: security_page, region_scope: [global], product_scope: [Datadog services] }
+      - source_id: datadog-compliance
+        source_type: compliance_page
+        title_native: Datadog Compliance
+        title_en: Datadog Compliance
+        source_url: https://www.datadoghq.com/security/#compliance
+        source_language: en
+        summary_native: Public Datadog compliance metadata reference.
+        summary_en: Public Datadog compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: datadog-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Datadog services] }
+
+  - vendor_id: new-relic
+    display_name: New Relic
+    legal_name: New Relic, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [newrelic.com]
+    public_entrypoints:
+      - https://newrelic.com/termsandconditions
+      - https://newrelic.com/security
+    vendor_categories: [observability, monitoring, developer_platform]
+    notes: Public-source-only catalog record. Metadata references general public New Relic assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: new-relic-dpa
+        source_type: dpa
+        title_native: New Relic Data Processing Addendum
+        title_en: New Relic Data Processing Addendum
+        source_url: https://newrelic.com/termsandconditions/data-processing-addendum
+        source_language: en
+        summary_native: Public New Relic data processing addendum metadata reference.
+        summary_en: Public New Relic data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: new-relic-dpa, artifact_type: dpa, region_scope: [global], product_scope: [New Relic services] }
+      - source_id: new-relic-subprocessors
+        source_type: subprocessors_list
+        title_native: New Relic Subprocessors
+        title_en: New Relic Subprocessors
+        source_url: https://newrelic.com/termsandconditions/subprocessors
+        source_language: en
+        summary_native: Public New Relic subprocessors metadata reference.
+        summary_en: Public New Relic subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: new-relic-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [New Relic services] }
+      - source_id: new-relic-privacy
+        source_type: privacy_notice
+        title_native: New Relic Privacy Notice
+        title_en: New Relic Privacy Notice
+        source_url: https://newrelic.com/termsandconditions/privacy
+        source_language: en
+        summary_native: Public New Relic privacy notice metadata reference.
+        summary_en: Public New Relic privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: new-relic-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [New Relic services] }
+      - source_id: new-relic-security
+        source_type: security_page
+        title_native: New Relic Security
+        title_en: New Relic Security
+        source_url: https://newrelic.com/security
+        source_language: en
+        summary_native: Public New Relic security metadata reference.
+        summary_en: Public New Relic security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: new-relic-security, artifact_type: security_page, region_scope: [global], product_scope: [New Relic services] }
+      - source_id: new-relic-compliance
+        source_type: compliance_page
+        title_native: New Relic Security and Compliance
+        title_en: New Relic Security and Compliance
+        source_url: https://newrelic.com/security#compliance
+        source_language: en
+        summary_native: Public New Relic compliance metadata reference.
+        summary_en: Public New Relic compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: new-relic-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [New Relic services] }
+
+  - vendor_id: splunk
+    display_name: Splunk
+    legal_name: Splunk LLC
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [splunk.com]
+    public_entrypoints:
+      - https://www.splunk.com/en_us/legal.html
+      - https://www.splunk.com/en_us/about-splunk/splunk-security.html
+    vendor_categories: [observability, security, analytics, data_platform]
+    notes: Public-source-only catalog record. Metadata references general public Splunk assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: splunk-dpa
+        source_type: dpa
+        title_native: Splunk Data Processing Addendum
+        title_en: Splunk Data Processing Addendum
+        source_url: https://www.splunk.com/en_us/legal/data-processing-addendum.html
+        source_language: en
+        summary_native: Public Splunk data processing addendum metadata reference.
+        summary_en: Public Splunk data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: splunk-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Splunk services] }
+      - source_id: splunk-subprocessors
+        source_type: subprocessors_list
+        title_native: Splunk Subprocessors
+        title_en: Splunk Subprocessors
+        source_url: https://www.splunk.com/en_us/legal/subprocessors.html
+        source_language: en
+        summary_native: Public Splunk subprocessors metadata reference.
+        summary_en: Public Splunk subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: splunk-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Splunk services] }
+      - source_id: splunk-privacy
+        source_type: privacy_notice
+        title_native: Splunk Privacy Notice
+        title_en: Splunk Privacy Notice
+        source_url: https://www.splunk.com/en_us/legal/privacy/privacy-policy.html
+        source_language: en
+        summary_native: Public Splunk privacy notice metadata reference.
+        summary_en: Public Splunk privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: splunk-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Splunk services] }
+      - source_id: splunk-security
+        source_type: security_page
+        title_native: Splunk Security
+        title_en: Splunk Security
+        source_url: https://www.splunk.com/en_us/about-splunk/splunk-security.html
+        source_language: en
+        summary_native: Public Splunk security metadata reference.
+        summary_en: Public Splunk security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: splunk-security, artifact_type: security_page, region_scope: [global], product_scope: [Splunk services] }
+      - source_id: splunk-compliance
+        source_type: compliance_page
+        title_native: Splunk Compliance
+        title_en: Splunk Compliance
+        source_url: https://www.splunk.com/en_us/about-splunk/splunk-security/compliance.html
+        source_language: en
+        summary_native: Public Splunk compliance metadata reference.
+        summary_en: Public Splunk compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: splunk-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Splunk services] }
+
+  - vendor_id: elastic
+    display_name: Elastic
+    legal_name: Elasticsearch B.V.
+    headquarters_country: NL
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [elastic.co]
+    public_entrypoints:
+      - https://www.elastic.co/legal
+      - https://www.elastic.co/security
+    vendor_categories: [search, observability, security, data_platform]
+    notes: Public-source-only catalog record. Metadata references general public Elastic assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: elastic-dpa
+        source_type: dpa
+        title_native: Elastic Data Processing Addendum
+        title_en: Elastic Data Processing Addendum
+        source_url: https://www.elastic.co/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public Elastic data processing addendum metadata reference.
+        summary_en: Public Elastic data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: elastic-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Elastic services] }
+      - source_id: elastic-subprocessors
+        source_type: subprocessors_list
+        title_native: Elastic Subprocessors
+        title_en: Elastic Subprocessors
+        source_url: https://www.elastic.co/legal/subprocessors
+        source_language: en
+        summary_native: Public Elastic subprocessors metadata reference.
+        summary_en: Public Elastic subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: elastic-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Elastic services] }
+      - source_id: elastic-privacy
+        source_type: privacy_notice
+        title_native: Elastic Privacy Statement
+        title_en: Elastic Privacy Statement
+        source_url: https://www.elastic.co/legal/privacy-statement
+        source_language: en
+        summary_native: Public Elastic privacy statement metadata reference.
+        summary_en: Public Elastic privacy statement metadata reference.
+        confidence: medium
+        artifact: { artifact_id: elastic-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Elastic services] }
+      - source_id: elastic-security
+        source_type: security_page
+        title_native: Elastic Security
+        title_en: Elastic Security
+        source_url: https://www.elastic.co/security
+        source_language: en
+        summary_native: Public Elastic security metadata reference.
+        summary_en: Public Elastic security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: elastic-security, artifact_type: security_page, region_scope: [global], product_scope: [Elastic services] }
+      - source_id: elastic-compliance
+        source_type: compliance_page
+        title_native: Elastic Trust Center
+        title_en: Elastic Trust Center
+        source_url: https://www.elastic.co/trust
+        source_language: en
+        summary_native: Public Elastic trust/compliance metadata reference.
+        summary_en: Public Elastic trust/compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: elastic-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Elastic services] }
+
+  - vendor_id: sentry
+    display_name: Sentry
+    legal_name: Functional Software, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: product_surface
+    source_authority_language: en
+    official_domains: [sentry.io]
+    public_entrypoints:
+      - https://sentry.io/legal/
+      - https://sentry.io/security/
+    vendor_categories: [developer_platform, observability, error_monitoring]
+    notes: Public-source-only catalog record. Metadata references general public Sentry assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: sentry-dpa
+        source_type: dpa
+        title_native: Sentry Data Processing Addendum
+        title_en: Sentry Data Processing Addendum
+        source_url: https://sentry.io/legal/dpa/
+        source_language: en
+        summary_native: Public Sentry data processing addendum metadata reference.
+        summary_en: Public Sentry data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: sentry-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Sentry] }
+      - source_id: sentry-subprocessors
+        source_type: subprocessors_list
+        title_native: Sentry Subprocessors
+        title_en: Sentry Subprocessors
+        source_url: https://sentry.io/legal/subprocessors/
+        source_language: en
+        summary_native: Public Sentry subprocessors metadata reference.
+        summary_en: Public Sentry subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: sentry-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Sentry] }
+      - source_id: sentry-privacy
+        source_type: privacy_notice
+        title_native: Sentry Privacy Policy
+        title_en: Sentry Privacy Policy
+        source_url: https://sentry.io/privacy/
+        source_language: en
+        summary_native: Public Sentry privacy policy metadata reference.
+        summary_en: Public Sentry privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: sentry-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Sentry] }
+      - source_id: sentry-security
+        source_type: security_page
+        title_native: Sentry Security
+        title_en: Sentry Security
+        source_url: https://sentry.io/security/
+        source_language: en
+        summary_native: Public Sentry security metadata reference.
+        summary_en: Public Sentry security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: sentry-security, artifact_type: security_page, region_scope: [global], product_scope: [Sentry] }
+      - source_id: sentry-compliance
+        source_type: compliance_page
+        title_native: Sentry Security and Compliance
+        title_en: Sentry Security and Compliance
+        source_url: https://sentry.io/security/#compliance
+        source_language: en
+        summary_native: Public Sentry compliance metadata reference.
+        summary_en: Public Sentry compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: sentry-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Sentry] }
+
+  - vendor_id: pagerduty
+    display_name: PagerDuty
+    legal_name: PagerDuty, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [pagerduty.com]
+    public_entrypoints:
+      - https://www.pagerduty.com/security/
+      - https://www.pagerduty.com/privacy/
+    vendor_categories: [incident_management, observability, enterprise_software]
+    notes: Public-source-only catalog record. Metadata references general public PagerDuty assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: pagerduty-dpa
+        source_type: dpa
+        title_native: PagerDuty Data Processing Addendum
+        title_en: PagerDuty Data Processing Addendum
+        source_url: https://www.pagerduty.com/legal/data-processing-addendum/
+        source_language: en
+        summary_native: Public PagerDuty data processing addendum metadata reference.
+        summary_en: Public PagerDuty data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: pagerduty-dpa, artifact_type: dpa, region_scope: [global], product_scope: [PagerDuty services] }
+      - source_id: pagerduty-subprocessors
+        source_type: subprocessors_list
+        title_native: PagerDuty Subprocessors
+        title_en: PagerDuty Subprocessors
+        source_url: https://www.pagerduty.com/legal/subprocessors/
+        source_language: en
+        summary_native: Public PagerDuty subprocessors metadata reference.
+        summary_en: Public PagerDuty subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: pagerduty-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [PagerDuty services] }
+      - source_id: pagerduty-privacy
+        source_type: privacy_notice
+        title_native: PagerDuty Privacy Notice
+        title_en: PagerDuty Privacy Notice
+        source_url: https://www.pagerduty.com/privacy/
+        source_language: en
+        summary_native: Public PagerDuty privacy notice metadata reference.
+        summary_en: Public PagerDuty privacy notice metadata reference.
+        confidence: medium
+        artifact: { artifact_id: pagerduty-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [PagerDuty services] }
+      - source_id: pagerduty-security
+        source_type: security_page
+        title_native: PagerDuty Security
+        title_en: PagerDuty Security
+        source_url: https://www.pagerduty.com/security/
+        source_language: en
+        summary_native: Public PagerDuty security metadata reference.
+        summary_en: Public PagerDuty security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: pagerduty-security, artifact_type: security_page, region_scope: [global], product_scope: [PagerDuty services] }
+      - source_id: pagerduty-compliance
+        source_type: compliance_page
+        title_native: PagerDuty Compliance
+        title_en: PagerDuty Compliance
+        source_url: https://www.pagerduty.com/security/compliance/
+        source_language: en
+        summary_native: Public PagerDuty compliance metadata reference.
+        summary_en: Public PagerDuty compliance metadata reference.
+        confidence: medium
+        artifact: { artifact_id: pagerduty-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [PagerDuty services] }
+
+  - vendor_id: hashicorp
+    display_name: HashiCorp
+    legal_name: HashiCorp, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [hashicorp.com]
+    public_entrypoints:
+      - https://www.hashicorp.com/security
+      - https://www.hashicorp.com/legal
+    vendor_categories: [developer_platform, infrastructure_as_code, security, cloud_infrastructure]
+    notes: Public-source-only catalog record. Metadata references general public HashiCorp assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: hashicorp-dpa
+        source_type: dpa
+        title_native: HashiCorp Data Processing Addendum
+        title_en: HashiCorp Data Processing Addendum
+        source_url: https://www.hashicorp.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public HashiCorp data processing addendum metadata reference.
+        summary_en: Public HashiCorp data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: hashicorp-dpa, artifact_type: dpa, region_scope: [global], product_scope: [HashiCorp services] }
+      - source_id: hashicorp-subprocessors
+        source_type: subprocessors_list
+        title_native: HashiCorp Subprocessors
+        title_en: HashiCorp Subprocessors
+        source_url: https://www.hashicorp.com/legal/subprocessors
+        source_language: en
+        summary_native: Public HashiCorp subprocessors metadata reference.
+        summary_en: Public HashiCorp subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: hashicorp-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [HashiCorp services] }
+      - source_id: hashicorp-privacy
+        source_type: privacy_notice
+        title_native: HashiCorp Privacy Policy
+        title_en: HashiCorp Privacy Policy
+        source_url: https://www.hashicorp.com/privacy
+        source_language: en
+        summary_native: Public HashiCorp privacy policy metadata reference.
+        summary_en: Public HashiCorp privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: hashicorp-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [HashiCorp services] }
+      - source_id: hashicorp-security
+        source_type: security_page
+        title_native: HashiCorp Security
+        title_en: HashiCorp Security
+        source_url: https://www.hashicorp.com/security
+        source_language: en
+        summary_native: Public HashiCorp security metadata reference.
+        summary_en: Public HashiCorp security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: hashicorp-security, artifact_type: security_page, region_scope: [global], product_scope: [HashiCorp services] }
+      - source_id: hashicorp-compliance
+        source_type: compliance_page
+        title_native: HashiCorp Trust Center
+        title_en: HashiCorp Trust Center
+        source_url: https://www.hashicorp.com/trust
+        source_language: en
+        summary_native: Public HashiCorp trust/compliance metadata reference.
+        summary_en: Public HashiCorp trust/compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: hashicorp-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [HashiCorp services] }
+
+  - vendor_id: vercel
+    display_name: Vercel
+    legal_name: Vercel Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [vercel.com]
+    public_entrypoints:
+      - https://vercel.com/legal
+      - https://vercel.com/security
+    vendor_categories: [developer_platform, hosting, edge_platform, ci_cd]
+    notes: Public-source-only catalog record. Metadata references general public Vercel assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: vercel-dpa
+        source_type: dpa
+        title_native: Vercel Data Processing Addendum
+        title_en: Vercel Data Processing Addendum
+        source_url: https://vercel.com/legal/dpa
+        source_language: en
+        summary_native: Public Vercel data processing addendum metadata reference.
+        summary_en: Public Vercel data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: vercel-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Vercel services] }
+      - source_id: vercel-subprocessors
+        source_type: subprocessors_list
+        title_native: Vercel Subprocessors
+        title_en: Vercel Subprocessors
+        source_url: https://vercel.com/legal/subprocessors
+        source_language: en
+        summary_native: Public Vercel subprocessors metadata reference.
+        summary_en: Public Vercel subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: vercel-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Vercel services] }
+      - source_id: vercel-privacy
+        source_type: privacy_notice
+        title_native: Vercel Privacy Policy
+        title_en: Vercel Privacy Policy
+        source_url: https://vercel.com/legal/privacy-policy
+        source_language: en
+        summary_native: Public Vercel privacy policy metadata reference.
+        summary_en: Public Vercel privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: vercel-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Vercel services] }
+      - source_id: vercel-security
+        source_type: security_page
+        title_native: Vercel Security
+        title_en: Vercel Security
+        source_url: https://vercel.com/security
+        source_language: en
+        summary_native: Public Vercel security metadata reference.
+        summary_en: Public Vercel security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: vercel-security, artifact_type: security_page, region_scope: [global], product_scope: [Vercel services] }
+      - source_id: vercel-compliance
+        source_type: compliance_page
+        title_native: Vercel Compliance
+        title_en: Vercel Compliance
+        source_url: https://vercel.com/security#compliance
+        source_language: en
+        summary_native: Public Vercel compliance metadata reference.
+        summary_en: Public Vercel compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: vercel-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Vercel services] }
+
+  - vendor_id: docker
+    display_name: Docker
+    legal_name: Docker, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [docker.com]
+    public_entrypoints:
+      - https://www.docker.com/legal/
+      - https://www.docker.com/security/
+    vendor_categories: [developer_platform, container_platform, ci_cd]
+    notes: Public-source-only catalog record. Metadata references general public Docker assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: docker-dpa
+        source_type: dpa
+        title_native: Docker Data Processing Addendum
+        title_en: Docker Data Processing Addendum
+        source_url: https://www.docker.com/legal/data-processing-agreement/
+        source_language: en
+        summary_native: Public Docker data processing addendum metadata reference.
+        summary_en: Public Docker data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docker-dpa, artifact_type: dpa, region_scope: [global], product_scope: [Docker services] }
+      - source_id: docker-subprocessors
+        source_type: subprocessors_list
+        title_native: Docker Subprocessors
+        title_en: Docker Subprocessors
+        source_url: https://www.docker.com/legal/subprocessors/
+        source_language: en
+        summary_native: Public Docker subprocessors metadata reference.
+        summary_en: Public Docker subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docker-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [Docker services] }
+      - source_id: docker-privacy
+        source_type: privacy_notice
+        title_native: Docker Privacy Policy
+        title_en: Docker Privacy Policy
+        source_url: https://www.docker.com/legal/privacy/
+        source_language: en
+        summary_native: Public Docker privacy policy metadata reference.
+        summary_en: Public Docker privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docker-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Docker services] }
+      - source_id: docker-security
+        source_type: security_page
+        title_native: Docker Security
+        title_en: Docker Security
+        source_url: https://www.docker.com/security/
+        source_language: en
+        summary_native: Public Docker security metadata reference.
+        summary_en: Public Docker security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docker-security, artifact_type: security_page, region_scope: [global], product_scope: [Docker services] }
+      - source_id: docker-compliance
+        source_type: compliance_page
+        title_native: Docker Trust
+        title_en: Docker Trust
+        source_url: https://www.docker.com/trust/
+        source_language: en
+        summary_native: Public Docker trust/compliance metadata reference.
+        summary_en: Public Docker trust/compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: docker-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [Docker services] }
+
+  - vendor_id: onepassword
+    display_name: 1Password
+    legal_name: AgileBits Inc.
+    headquarters_country: CA
+    regions_served: [global]
+    entity_surface: product_surface
+    source_authority_language: en
+    official_domains: [1password.com]
+    public_entrypoints:
+      - https://1password.com/legal
+      - https://1password.com/security
+    vendor_categories: [identity, password_management, security, access_management]
+    notes: Public-source-only catalog record. Metadata references general public 1Password assurance materials and does not cover bespoke customer agreements.
+    sources:
+      - source_id: onepassword-dpa
+        source_type: dpa
+        title_native: 1Password Data Processing Addendum
+        title_en: 1Password Data Processing Addendum
+        source_url: https://1password.com/legal/data-processing-addendum
+        source_language: en
+        summary_native: Public 1Password data processing addendum metadata reference.
+        summary_en: Public 1Password data processing addendum metadata reference.
+        confidence: medium
+        artifact: { artifact_id: onepassword-dpa, artifact_type: dpa, region_scope: [global], product_scope: [1Password] }
+      - source_id: onepassword-subprocessors
+        source_type: subprocessors_list
+        title_native: 1Password Subprocessors
+        title_en: 1Password Subprocessors
+        source_url: https://1password.com/legal/subprocessors
+        source_language: en
+        summary_native: Public 1Password subprocessors metadata reference.
+        summary_en: Public 1Password subprocessors metadata reference.
+        confidence: medium
+        artifact: { artifact_id: onepassword-subprocessors, artifact_type: subprocessors_list, region_scope: [global], product_scope: [1Password] }
+      - source_id: onepassword-privacy
+        source_type: privacy_notice
+        title_native: 1Password Privacy Policy
+        title_en: 1Password Privacy Policy
+        source_url: https://1password.com/legal/privacy
+        source_language: en
+        summary_native: Public 1Password privacy policy metadata reference.
+        summary_en: Public 1Password privacy policy metadata reference.
+        confidence: medium
+        artifact: { artifact_id: onepassword-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [1Password] }
+      - source_id: onepassword-security
+        source_type: security_page
+        title_native: 1Password Security
+        title_en: 1Password Security
+        source_url: https://1password.com/security
+        source_language: en
+        summary_native: Public 1Password security metadata reference.
+        summary_en: Public 1Password security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: onepassword-security, artifact_type: security_page, region_scope: [global], product_scope: [1Password] }
+      - source_id: onepassword-compliance
+        source_type: compliance_page
+        title_native: 1Password Compliance
+        title_en: 1Password Compliance
+        source_url: https://1password.com/security#compliance
+        source_language: en
+        summary_native: Public 1Password compliance metadata reference.
+        summary_en: Public 1Password compliance metadata reference.
+        confidence: low
+        artifact: { artifact_id: onepassword-compliance, artifact_type: compliance_page, region_scope: [global], product_scope: [1Password] }
