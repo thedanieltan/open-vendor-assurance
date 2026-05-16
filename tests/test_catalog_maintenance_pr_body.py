@@ -12,4 +12,4 @@ def test_catalog_maintenance_pr_body_is_compact_and_artifact_backed():
     assert "cleanup-proposal.md" in text
     assert "maintenance-action-report.json" in text
     assert "catalog-maintenance-pr-body.md" in text
-    assert "body-path: catalog-maintenance-pr-body.md" in text
+    assert "--body-file catalog-maintenance-pr-body.md" in text
