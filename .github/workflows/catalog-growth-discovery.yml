@@ -42,6 +42,10 @@ jobs:
         run: |
           python -m tools.openva.catalog_growth_discovery_queue validate \
             --output catalog-growth-discovery-queue-summary.json
+      - name: Build vendor candidate discovery report
+        run: |
+          python -m tools.openva.vendor_candidate_discovery discover \
+            --output vendor-candidate-discovery-report.json
       - name: Build source discovery report
         run: |
           set -euo pipefail
@@ -74,6 +78,7 @@ jobs:
           from pathlib import Path
 
           queue = json.load(open('catalog-growth-discovery-queue-summary.json', encoding='utf-8'))
+          vendors = json.load(open('vendor-candidate-discovery-report.json', encoding='utf-8'))
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
           batches = json.load(open('promotion-plan-batch-summary.json', encoding='utf-8'))
@@ -92,9 +97,14 @@ jobs:
               f"- Queued cohorts: `{queue['queued_cohort_count']}`",
               f"- Target vendor candidates: `{queue['target_vendor_candidates']}`",
               '',
-              '## Discovery summary',
+              '## Vendor candidate discovery',
               '',
-              f"- Vendors checked: `{discovery['summary']['vendors_checked']}`",
+              f"- New vendor candidates reported: `{vendors['summary']['candidate_vendor_count']}`",
+              f"- Known vendors skipped from candidate report: `{vendors['summary']['known_vendor_count']}`",
+              '',
+              '## Source discovery summary',
+              '',
+              f"- Existing vendors checked: `{discovery['summary']['vendors_checked']}`",
               f"- Candidate sources reported: `{discovery['summary']['candidate_sources_written_or_reported']}`",
               f"- Unavailable sources reported: `{discovery['summary']['unavailable_sources_written_or_reported']}`",
               '',
@@ -106,7 +116,7 @@ jobs:
               '',
               '## Next step',
               '',
-              'Review generated candidate-promotion plan proposals from workflow artifacts before copying approved plans into `maintenance/reviewed/`.',
+              'Review vendor-candidate and candidate-promotion artifacts before copying approved plans into `maintenance/reviewed/`.',
               '',
           ]
           Path('catalog-growth-discovery-issue.md').write_text('\n'.join(lines), encoding='utf-8')
@@ -130,6 +140,7 @@ jobs:
           name: openva-catalog-growth-discovery-artifacts
           path: |
             catalog-growth-discovery-queue-summary.json
+            vendor-candidate-discovery-report.json
             source-discovery-report.json
             promotion-plan.json
             promotion-plan-batch-summary.json
