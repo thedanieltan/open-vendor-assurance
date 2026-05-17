@@ -4,11 +4,14 @@ from tools.openva.vendor_candidate_discovery import build_vendor_candidate_repor
 
 def fetcher(url: str) -> FetchResult:
     return FetchResult(
-        url=url,
+        requested_url=url,
         final_url=url,
         http_status=200,
         content_type="text/html",
-        body_sample='<html><head><title>Example Index</title></head><body><a href="https://newvendor.test">New Vendor</a></body></html>',
+        content_length=None,
+        etag=None,
+        last_modified=None,
+        body_sample=b'<html><head><title>Example Index</title></head><body><a href="https://newvendor.test">New Vendor</a></body></html>',
         error=None,
     )
 
