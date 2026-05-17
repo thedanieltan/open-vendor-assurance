@@ -264,8 +264,7 @@ def build_indexes() -> int:
 
 def generated_paths() -> list[Path]:
     index_dir = ROOT / "indexes"
-    dist_dir = ROOT / "dist" / "vendors"
-    return [ROOT / "openva-pack.json", *(index_dir.glob("*.json")), *(dist_dir.glob("*.json"))]
+    return [ROOT / "openva-pack.json", *(index_dir.glob("*.json"))]
 
 
 def check_generated_current() -> list[str]:
