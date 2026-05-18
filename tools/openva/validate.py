@@ -178,6 +178,13 @@ def load_region_tags() -> set[str]:
     return {str(tag) for tag in [*country_markets.keys(), *regional_markets.keys()]}
 
 
+def load_vendor_category_tags() -> set[str]:
+    path = ROOT / "config/category-taxonomy.yaml"
+    config = load_yaml(path) or {}
+    categories = config.get("vendor_categories", {}) or {}
+    return {str(tag) for tag in categories.keys()}
+
+
 def source_domain_allowed(vendor_id: str, host: str, official_domains: list[str], exceptions: set[tuple[str, str]]) -> bool:
     normalized = host.lower().removeprefix("www.")
     if domain_matches(normalized, official_domains):
@@ -201,6 +208,16 @@ def validate_region_tags(path: str, field: str, values: list[str], allowed_tags:
             failures.append(f"{path}: {field} tag {value} must be lowercase")
         if value not in allowed_tags:
             failures.append(f"{path}: {field} tag {value} is not defined in config/region-taxonomy.yaml")
+    return failures
+
+
+def validate_vendor_category_tags(path: str, values: list[str], allowed_tags: set[str]) -> list[str]:
+    failures: list[str] = []
+    for value in values:
+        if value not in allowed_tags:
+            failures.append(
+                f"{path}: vendor_categories tag {value} is not defined in config/category-taxonomy.yaml"
+            )
     return failures
 
 
@@ -251,12 +268,20 @@ def validate_quality_gates() -> list[str]:
     seen_urls: dict[str, str] = {}
     exceptions = load_official_publisher_exceptions()
     region_tags = load_region_tags()
+    vendor_category_tags = load_vendor_category_tags()
 
     for vendor_id, vendor in vendors.items():
         expected_path = f"data/vendors/{vendor_id}/vendor.yaml"
         if vendor["_openva_path"].startswith("data/") and vendor["_openva_path"] != expected_path:
             failures.append(f"{vendor['_openva_path']}: vendor_id does not match canonical path {expected_path}")
         failures.extend(validate_region_tags(vendor["_openva_path"], "regions_served", vendor.get("regions_served", []), region_tags))
+        failures.extend(
+            validate_vendor_category_tags(
+                vendor["_openva_path"],
+                vendor.get("vendor_categories", []),
+                vendor_category_tags,
+            )
+        )
 
     for source in records_for("source"):
         path = source["_openva_path"]
