@@ -1,0 +1,83 @@
+from pathlib import Path
+
+import yaml
+
+
+ISSUE_TEMPLATE_DIR = Path(".github/ISSUE_TEMPLATE")
+WORKFLOW_DIR = Path(".github/workflows")
+
+
+def load_yaml(path: Path) -> dict:
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def workflow_triggers(workflow: dict) -> dict:
+    # PyYAML uses YAML 1.1 boolean parsing, where the plain scalar key `on`
+    # is parsed as True. GitHub Actions treats it as the trigger key.
+    return workflow.get("on") or workflow.get(True) or {}
+
+
+def test_public_issue_template_list_is_consolidated_for_non_devs():
+    templates = sorted(path.name for path in ISSUE_TEMPLATE_DIR.glob("*.yml"))
+
+    assert templates == [
+        "boundary-question.yml",
+        "bug-report.yml",
+        "catalog-update.yml",
+        "config.yml",
+        "docs-improvement.yml",
+    ]
+
+
+def test_catalog_update_template_covers_add_update_and_guardrails():
+    template = load_yaml(ISSUE_TEMPLATE_DIR / "catalog-update.yml")
+    text = (ISSUE_TEMPLATE_DIR / "catalog-update.yml").read_text(encoding="utf-8")
+    fields = {
+        item["id"]: item
+        for item in template["body"]
+        if isinstance(item, dict) and "id" in item
+    }
+
+    assert template["name"] == "Vendor catalog update"
+    assert template["title"] == "Catalog update: "
+    assert "area:catalog" in template["labels"]
+    assert "lane:catalog-agent" in template["labels"]
+    assert fields["request_type"]["attributes"]["options"] == [
+        "Add a new vendor",
+        "Add a public source to an existing vendor",
+        "Correct an existing source URL",
+        "Mark a source as moved or retired",
+        "Correct vendor metadata",
+        "Correct source title, language, date, or type",
+        "Other factual catalog update",
+    ]
+    assert "anti-bot bypass" in text
+    assert "login-only documents" in text
+    assert "This update is factual public metadata only." in text
+
+
+def test_scope_template_absorbs_out_of_scope_question_path():
+    template = load_yaml(ISSUE_TEMPLATE_DIR / "boundary-question.yml")
+    text = (ISSUE_TEMPLATE_DIR / "boundary-question.yml").read_text(encoding="utf-8")
+
+    assert template["name"] == "Scope or boundary question"
+    assert "Legal or compliance interpretation request" in text
+    assert "Vendor risk scoring request" in text
+    assert "Bot-protection or access-control bypass request" in text
+    assert "OpenVA does not bypass anti-bot systems" in text
+
+
+def test_catalog_intake_handoff_is_issue_only_and_non_mutating():
+    workflow = load_yaml(WORKFLOW_DIR / "catalog-intake-handoff.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "catalog-intake-handoff.yml").read_text(encoding="utf-8")
+
+    assert workflow["permissions"] == {"contents": "read", "issues": "write"}
+    assert set(triggers.keys()) == {"issues"}
+    assert triggers["issues"]["types"] == ["opened", "edited", "labeled"]
+    assert "openva-catalog-intake-handoff" in text
+    assert "This issue is review input only" in text
+    assert "prepare a small \\`Catalog:\\` PR" in text
+    assert "peter-evans/create-pull-request" not in text
+    assert "contents: write" not in text
+    assert "pull-requests: write" not in text

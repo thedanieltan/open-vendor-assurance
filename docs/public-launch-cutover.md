@@ -82,11 +82,10 @@ Start here:
 
 Maintainers should expect and triage:
 
-- source corrections;
-- catalog requests;
+- vendor catalog updates;
 - boundary questions;
 - documentation fixes;
-- out-of-scope requests for legal/compliance/vendor-risk advice;
+- scope questions for legal/compliance/vendor-risk advice requests;
 - vendor-submitted corrections;
 - requests to include gated trust-center materials.
 
@@ -103,7 +102,8 @@ Recommended maintainer actions:
 
 - review new issues daily for scope violations;
 - close or redirect private/gated material requests quickly;
-- label source-correction and catalog-request issues consistently;
+- let the catalog intake handoff comment turn catalog update issues into a clear maintainer or catalog-agent next step;
+- label catalog update and scope question issues consistently;
 - avoid merging large catalog batches until public contribution behavior is understood;
 - keep automation PR-based and human-reviewed;
 - monitor whether README and DISCLAIMER prevent advisory misunderstanding;

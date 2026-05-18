@@ -84,6 +84,10 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "triggers": {"workflow_dispatch", "schedule"},
             "permissions": {"contents": "read", "issues": "write"},
         },
+        "catalog-intake-handoff.yml": {
+            "triggers": {"issues"},
+            "permissions": {"contents": "read", "issues": "write"},
+        },
     }
 
     for path in WORKFLOW_DIR.glob("*.yml"):

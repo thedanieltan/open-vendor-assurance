@@ -1,0 +1,124 @@
+name: Vendor catalog update
+
+description: Add or correct public vendor-source metadata.
+title: "Catalog update: "
+labels: ["status:needs-triage", "area:catalog", "lane:catalog-agent", "scope:public-source-only"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to add a vendor, add a public source, or correct factual public-source metadata.
+
+        OpenVA accepts public metadata only. Do not submit private agreements, gated trust-center exports, SOC reports, ISO certificates, screenshots, copied document text, customer-specific terms, credentials, or anything that requires anti-bot bypass.
+  - type: dropdown
+    id: request_type
+    attributes:
+      label: What needs to change?
+      options:
+        - Add a new vendor
+        - Add a public source to an existing vendor
+        - Correct an existing source URL
+        - Mark a source as moved or retired
+        - Correct vendor metadata
+        - Correct source title, language, date, or type
+        - Other factual catalog update
+    validations:
+      required: true
+  - type: input
+    id: vendor
+    attributes:
+      label: Vendor name or OpenVA vendor ID
+      description: Use the public vendor name if you do not know the OpenVA ID.
+      placeholder: Example Vendor, example-vendor
+    validations:
+      required: true
+  - type: input
+    id: submitter_role
+    attributes:
+      label: Submitter role
+      description: Vendor staff, vendor representative, customer, researcher, consultant, contributor, or other.
+    validations:
+      required: true
+  - type: textarea
+    id: public_sources
+    attributes:
+      label: Public source URL(s)
+      description: List public vendor-controlled, regulator-controlled, or standards-body-controlled URLs. Use the correction summary below to explain moved or retired URLs.
+      placeholder: |
+        - https://vendor.example/legal/dpa
+        - https://vendor.example/trust/subprocessors
+    validations:
+      required: true
+  - type: dropdown
+    id: source_type
+    attributes:
+      label: Best source type
+      description: Choose the closest fit. Maintainers can reclassify during review.
+      options:
+        - dpa
+        - subprocessors_list
+        - privacy_notice
+        - trust_center
+        - security_page
+        - compliance_page
+        - certification_reference
+        - terms_of_service
+        - kyc_statement
+        - aml_statement
+        - ai_terms
+        - data_residency
+        - legal_terms
+        - public_changelog
+        - government_request_policy
+        - transparency_report
+        - other_public_source
+        - help_classify
+    validations:
+      required: true
+  - type: input
+    id: source_language
+    attributes:
+      label: Source language
+      description: Use a language tag if known.
+      placeholder: en, zh-CN, ja, de, fr, unknown
+    validations:
+      required: false
+  - type: textarea
+    id: factual_summary
+    attributes:
+      label: Factual update summary
+      description: Describe the requested metadata change. Do not include legal, compliance, procurement, security, KYC, AML, or vendor-risk advice.
+      placeholder: |
+        Add Example Vendor's public DPA page.
+        Replace the old subprocessor URL because the vendor moved it to a new public trust page.
+    validations:
+      required: true
+  - type: checkboxes
+    id: public_source_checks
+    attributes:
+      label: Public-source checks
+      options:
+        - label: The listed source is public.
+          required: true
+        - label: The listed source is vendor-controlled, regulator-controlled, standards-body-controlled, or otherwise clearly authoritative.
+          required: true
+        - label: The listed source does not require login, credentials, NDA, customer status, sales approval, support ticket access, private portal access, form submission, or anti-bot bypass.
+          required: true
+        - label: I am not submitting private customer agreements, bespoke terms, customer portal exports, private trust-center documents, private reports, private certificates, screenshots, copied full text, or login-only documents.
+          required: true
+  - type: checkboxes
+    id: non_advisory_checks
+    attributes:
+      label: Non-advisory checks
+      options:
+        - label: This update does not claim the vendor is approved, recommended, compliant, suitable, safe, adequate, trusted, best-in-class, audit-ready, certified for a user's use case, low risk, or high risk.
+          required: true
+        - label: This update is factual public metadata only.
+          required: true
+  - type: textarea
+    id: review_notes
+    attributes:
+      label: Review notes
+      description: Optional factual context for maintainers. Do not paste private, gated, customer-specific, or copied document text.
+    validations:
+      required: false

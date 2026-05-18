@@ -112,7 +112,7 @@ permissions:
   pull-requests: read
 ```
 
-Workflows must not request write permissions unless a maintainer explicitly approves a core-lane workflow change.
+Workflows must not request write permissions unless a maintainer explicitly approves a core-lane workflow change and the workflow has a narrow, documented output.
 
 Disallowed by default:
 
@@ -124,7 +124,12 @@ actions: write
 id-token: write
 ```
 
-The only current exception is the manual catalog agent PR workflow, which may use:
+Approved write scopes are limited to:
+
+- proposal PR workflows that create human-reviewed pull requests;
+- issue handoff or queue workflows that create or update maintainer-facing issues or comments.
+
+Proposal PR workflows may use:
 
 ```yaml
 contents: write
@@ -132,6 +137,15 @@ pull-requests: write
 ```
 
 solely to create or update human-reviewed catalog proposal pull requests.
+
+Issue handoff or queue workflows may use:
+
+```yaml
+contents: read
+issues: write
+```
+
+solely to create or update issue comments or maintainer queue issues. They must not write catalog files, open pull requests, or change `main`.
 
 ## Branch protection expectations
 

@@ -1,15 +1,36 @@
-name: Boundary question
+name: Scope or boundary question
 
-description: Ask whether a source or contribution is in scope before submitting data.
-title: "Boundary question: "
+description: Ask whether a source, request, or contribution is in scope before submitting data.
+title: "Scope question: "
 labels: ["status:needs-triage", "area:governance", "scope:public-source-only"]
 body:
   - type: markdown
     attributes:
       value: |
-        Use this template when you are unsure whether a source is public, gated, vendor-controlled, or suitable for OpenVA.
+        Use this form when you are unsure whether a source, request, or contribution is in scope for OpenVA.
+
+        OpenVA does not provide legal, compliance, procurement, security, KYC, AML, vendor-risk, or due-diligence advice.
 
         Do not paste private, gated, customer-specific, NDA, portal, SOC report, ISO certificate, credential, token, or sensitive content into this issue.
+  - type: dropdown
+    id: request_type
+    attributes:
+      label: What are you checking?
+      options:
+        - Public vs gated source
+        - Vendor-controlled or authoritative source
+        - Native-language or translation boundary
+        - Rights or redistribution boundary
+        - Advisory wording boundary
+        - Artifact type boundary
+        - Legal or compliance interpretation request
+        - Procurement or vendor recommendation request
+        - Vendor risk scoring request
+        - Private or customer-specific material request
+        - Bot-protection or access-control bypass request
+        - Other scope boundary
+    validations:
+      required: true
   - type: input
     id: source_url
     attributes:
@@ -17,25 +38,11 @@ body:
       description: Public URL under consideration, if any.
     validations:
       required: false
-  - type: dropdown
-    id: concern
-    attributes:
-      label: Main concern
-      options:
-        - Public vs gated access
-        - Vendor-controlled source authority
-        - Native-language interpretation
-        - Rights or redistribution concern
-        - Advisory wording concern
-        - Artifact type concern
-        - Other boundary concern
-    validations:
-      required: true
   - type: textarea
     id: question
     attributes:
       label: Question
-      description: Ask the boundary question without including private or gated materials.
+      description: Ask the scope or boundary question without including private, gated, sensitive, or customer-specific materials.
     validations:
       required: true
   - type: checkboxes
@@ -44,4 +51,6 @@ body:
       label: Sensitive material check
       options:
         - label: I have not included private, gated, customer-specific, NDA, portal, credential, token, SOC report, ISO certificate, or sensitive content in this issue.
+          required: true
+        - label: I understand OpenVA does not bypass anti-bot systems, CAPTCHAs, login gates, private portals, form gates, or access controls.
           required: true
