@@ -26,7 +26,44 @@ non_advisory: true
 
 The launch corpus target is a sizable starter registry, not every vendor in the world.
 
-The queue targets broad coverage across major lanes such as cloud platforms, CRM, payments, security, data and AI, developer tools, productivity, HR, commerce, GRC, KYC/risk, and regional APAC.
+The seed corpus favors global and regulated-industry spread over raw count. It should cover
+major lanes such as cloud platforms, CRM, payments, security, data and AI, developer tools,
+productivity, HR, healthcare, insurance, public sector and defense, commerce, GRC, KYC/risk,
+logistics, and APAC-focused discovery.
+
+APAC discovery is a regional lane, not a vendor category shortcut. Vendors in that lane must
+still carry functional `vendor_category_candidates` such as payments, cloud infrastructure,
+HR software, collaboration software, or ecommerce.
+
+## Staged identity-to-source pipeline
+
+The catalog growth path is intentionally staged:
+
+```text
+seed vendor identities
+-> validate IDs, domains, category tags, coverage lanes, and country-code shape
+-> generate reviewed vendor-candidate reports
+-> run official-domain source discovery for approved/materialized vendors
+-> write candidate_sources or unavailable_sources
+-> human review candidate promotions
+-> promote approved sources into canonical records
+-> use observation workflows to maintain freshness
+```
+
+Seed identities live under `maintenance/seeds/vendors/`. They are not canonical vendor
+records and must keep:
+
+```text
+requires_review: true
+writes_canonical_vendors: false
+non_advisory: true
+```
+
+Validate seed identity shape with:
+
+```text
+python -m tools.openva.vendor_candidate_discovery validate-seeds
+```
 
 ## Automated workflow
 
@@ -58,6 +95,8 @@ candidate_vendor_id
 display_name_candidate
 official_domain_candidate
 coverage_lane
+vendor_category_candidates
+headquarters_country_candidate
 cohort_id
 source_index_url
 ```
