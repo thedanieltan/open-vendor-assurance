@@ -1,0 +1,377 @@
+schema_version: 0.1.0
+batch_id: payments-kyc-batch-1
+operation: create
+collected_at: '2026-05-18T00:00:00Z'
+observer: hybrid
+vendors:
+- vendor_id: adyen
+  display_name: Adyen
+  legal_name: Adyen N.V.
+  headquarters_country: NL
+  regions_served:
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - adyen.com
+  public_entrypoints:
+  - https://www.adyen.com/en_GB/legal
+  vendor_categories:
+  - payments
+  - financial_infrastructure
+  notes: Public-source-only catalog record. Metadata references public Adyen assurance
+    materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: adyen-subprocessors
+    source_type: subprocessors_list
+    title_native: List of Adyen subprocessors
+    title_en: List of Adyen subprocessors
+    source_url: https://www.adyen.com/en_GB/legal/list-of-adyen-subprocessors
+    source_language: en
+    summary_native: Public Adyen subprocessor list metadata reference.
+    summary_en: Public Adyen subprocessor list metadata reference.
+    confidence: high
+    artifact:
+      artifact_id: adyen-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Adyen services
+- vendor_id: paypal
+  display_name: PayPal
+  legal_name: PayPal, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - paypal.com
+  public_entrypoints:
+  - https://www.paypal.com/us/legalhub/home
+  vendor_categories:
+  - payments
+  - financial_infrastructure
+  notes: Public-source-only catalog record. Metadata references public PayPal assurance
+    materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: paypal-dpa
+    source_type: dpa
+    title_native: PayPal Data Protection Terms
+    title_en: PayPal Data Protection Terms
+    source_url: https://www.paypal.com/us/legalhub/paypal/data-protection
+    source_language: en
+    summary_native: Public PayPal data protection terms metadata reference.
+    summary_en: Public PayPal data protection terms metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: paypal-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - PayPal services
+- vendor_id: airwallex
+  display_name: Airwallex
+  legal_name: Airwallex Pty Ltd
+  headquarters_country: AU
+  regions_served:
+  - global
+  - apac
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - airwallex.com
+  public_entrypoints:
+  - https://security.airwallex.com/
+  vendor_categories:
+  - payments
+  - financial_infrastructure
+  - regional_apac
+  notes: Public-source-only catalog record. Metadata references public Airwallex assurance
+    materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: airwallex-trust
+    source_type: trust_center
+    title_native: Airwallex Trust Center
+    title_en: Airwallex Trust Center
+    source_url: https://security.airwallex.com/
+    source_language: en
+    summary_native: Public Airwallex trust center metadata reference.
+    summary_en: Public Airwallex trust center metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: airwallex-trust
+      artifact_type: trust_center
+      region_scope:
+      - global
+      - apac
+      product_scope:
+      - Airwallex services
+- vendor_id: plaid
+  display_name: Plaid
+  legal_name: Plaid Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - plaid.com
+  public_entrypoints:
+  - https://plaid.com/legal/
+  vendor_categories:
+  - financial_infrastructure
+  - developer_platform
+  notes: Public-source-only catalog record. Metadata references public Plaid assurance
+    materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: plaid-privacy
+    source_type: privacy_notice
+    title_native: Plaid Privacy Statement
+    title_en: Plaid Privacy Statement
+    source_url: https://plaid.com/legal/#privacy-statement
+    source_language: en
+    summary_native: Public Plaid privacy statement metadata reference.
+    summary_en: Public Plaid privacy statement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: plaid-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Plaid services
+- vendor_id: wise
+  display_name: Wise
+  legal_name: Wise Payments Limited
+  headquarters_country: GB
+  regions_served:
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - wise.com
+  public_entrypoints:
+  - https://wise.com/privacy-policy
+  vendor_categories:
+  - payments
+  - financial_infrastructure
+  notes: Public-source-only catalog record. Metadata references public Wise assurance
+    materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: wise-privacy
+    source_type: privacy_notice
+    title_native: Wise Privacy Policy
+    title_en: Wise Privacy Policy
+    source_url: https://wise.com/privacy-policy
+    source_language: en
+    summary_native: Public Wise privacy policy metadata reference.
+    summary_en: Public Wise privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: wise-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Wise services
+- vendor_id: trulioo
+  display_name: Trulioo
+  legal_name: Trulioo Information Services Inc.
+  headquarters_country: CA
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - trulioo.com
+  public_entrypoints:
+  - https://www.trulioo.com/security
+  vendor_categories:
+  - kyc_kyb_aml
+  - fraud_risk
+  notes: Public-source-only catalog record. Metadata references public Trulioo assurance
+    materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: trulioo-security
+    source_type: security_page
+    title_native: Trulioo Security
+    title_en: Trulioo Security
+    source_url: https://www.trulioo.com/security
+    source_language: en
+    summary_native: Public Trulioo security page metadata reference.
+    summary_en: Public Trulioo security page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: trulioo-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Trulioo services
+- vendor_id: sumsub
+  display_name: Sumsub
+  legal_name: Sum and Substance Ltd
+  headquarters_country: GB
+  regions_served:
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - sumsub.com
+  public_entrypoints:
+  - https://sumsub.com/security/
+  vendor_categories:
+  - kyc_kyb_aml
+  - fraud_risk
+  notes: Public-source-only catalog record. Metadata references public Sumsub assurance
+    materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: sumsub-security
+    source_type: security_page
+    title_native: Sumsub Security
+    title_en: Sumsub Security
+    source_url: https://sumsub.com/security/
+    source_language: en
+    summary_native: Public Sumsub security page metadata reference.
+    summary_en: Public Sumsub security page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: sumsub-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - Sumsub services
+- vendor_id: alloy
+  display_name: Alloy
+  legal_name: First Mile Group, Inc. (dba Alloy)
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - alloy.app
+  - alloy.com
+  public_entrypoints:
+  - https://alloy.app/legal/dpa
+  - https://www.alloy.com/privacy-policy
+  vendor_categories:
+  - kyc_kyb_aml
+  - fraud_risk
+  notes: Public-source-only catalog record. Metadata references public Alloy assurance
+    materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: alloy-dpa
+    source_type: dpa
+    title_native: Alloy Data Processing Agreement
+    title_en: Alloy Data Processing Agreement
+    source_url: https://alloy.app/legal/dpa
+    source_language: en
+    summary_native: Public Alloy data processing addendum metadata reference.
+    summary_en: Public Alloy data processing addendum metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: alloy-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Alloy services
+      effective_or_published_at: '2025-11-18'
+  - source_id: alloy-privacy
+    source_type: privacy_notice
+    title_native: Alloy Privacy Policy
+    title_en: Alloy Privacy Policy
+    source_url: https://www.alloy.com/privacy-policy
+    source_language: en
+    summary_native: Public Alloy privacy policy metadata reference.
+    summary_en: Public Alloy privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: alloy-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Alloy services
+- vendor_id: chainalysis
+  display_name: Chainalysis
+  legal_name: Chainalysis Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - chainalysis.com
+  public_entrypoints:
+  - https://www.chainalysis.com/privacy-policy/
+  vendor_categories:
+  - kyc_kyb_aml
+  - fraud_risk
+  - financial_infrastructure
+  notes: Public-source-only catalog record. Metadata references public Chainalysis
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: chainalysis-privacy
+    source_type: privacy_notice
+    title_native: Chainalysis Privacy Policy
+    title_en: Chainalysis Privacy Policy
+    source_url: https://www.chainalysis.com/privacy-policy/
+    source_language: en
+    summary_native: Public Chainalysis privacy policy metadata reference.
+    summary_en: Public Chainalysis privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: chainalysis-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Chainalysis services
+- vendor_id: complyadvantage
+  display_name: ComplyAdvantage
+  legal_name: ComplyAdvantage Group Limited
+  headquarters_country: GB
+  regions_served:
+  - global
+  - eu
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - complyadvantage.com
+  public_entrypoints:
+  - https://complyadvantage.com/privacy-policy/
+  vendor_categories:
+  - kyc_kyb_aml
+  - fraud_risk
+  notes: Public-source-only catalog record. Metadata references public ComplyAdvantage
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: complyadvantage-privacy
+    source_type: privacy_notice
+    title_native: ComplyAdvantage Privacy Policy
+    title_en: ComplyAdvantage Privacy Policy
+    source_url: https://complyadvantage.com/privacy-policy/
+    source_language: en
+    summary_native: Public ComplyAdvantage privacy policy metadata reference.
+    summary_en: Public ComplyAdvantage privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: complyadvantage-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      - eu
+      product_scope:
+      - ComplyAdvantage services

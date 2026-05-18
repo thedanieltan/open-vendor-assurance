@@ -1,0 +1,25 @@
+schema_version: 0.1.0
+vendor_id: alloy
+display_name: Alloy
+legal_name: First Mile Group, Inc. (dba Alloy)
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- alloy.app
+- alloy.com
+public_entrypoints:
+- https://alloy.app/legal/dpa
+- https://www.alloy.com/privacy-policy
+vendor_categories:
+- kyc_kyb_aml
+- fraud_risk
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Metadata references public Alloy assurance
+  materials and does not cover bespoke customer agreements.
+entity_surface: global_brand
+source_authority_language: en

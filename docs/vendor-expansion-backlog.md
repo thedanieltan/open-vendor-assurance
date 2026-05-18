@@ -176,3 +176,9 @@ Do not prioritize these until the public-source-only and metadata-only boundarie
 - vendors whose sources require form submission;
 - vendors whose public pages are mostly marketing claims with little assurance metadata;
 - vendors whose sources are primarily third-party mirrors.
+
+## Priority 8: payments and KYC expansion
+
+Recent payments and KYC expansion added public metadata for Adyen, PayPal, Airwallex, Plaid, Wise, Trulioo, Sumsub, Alloy, Chainalysis, and ComplyAdvantage.
+
+Future work in this lane should prioritize deeper public DPA, subprocessor, security, and trust-center coverage for these vendors where clear public vendor-controlled sources are available.
