@@ -10,7 +10,7 @@ The scheduled report:
 
 1. validates the current catalog;
 2. runs a public-source observation dry run across all catalog sources;
-3. converts the dry-run YAML into Markdown and JSON reports;
+3. converts the dry-run YAML into Markdown, JSON, and CSV reports;
 4. uploads the report as a GitHub Actions artifact;
 5. prints the Markdown summary in the workflow log.
 
@@ -75,9 +75,10 @@ The workflow uploads:
 ```text
 reports/observation-report.md
 reports/observation-report.json
+reports/observation-review-queue.csv
 ```
 
-The Markdown report is for maintainers. The JSON report is for downstream automation or dashboards.
+The Markdown report is for maintainers. The JSON report is for downstream automation or dashboards. The CSV export is for quick reviewer filtering and sorting.
 
 ## Maintainer use
 

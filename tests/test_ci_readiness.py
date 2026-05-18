@@ -3,6 +3,21 @@ from pathlib import Path
 import yaml
 
 WORKFLOW_DIR = Path(".github/workflows")
+EXPECTED_PUBLIC_WORKFLOWS = {
+    "candidate-promotion-pr.yml",
+    "catalog-agent-pr.yml",
+    "catalog-growth-discovery.yml",
+    "catalog-maintenance-pr.yml",
+    "catalog-maintenance.yml",
+    "catalog-pr-guard.yml",
+    "contribution-intake-agent.yml",
+    "coverage-audit.yml",
+    "observe-report.yml",
+    "release-candidate.yml",
+    "source-maintenance-report.yml",
+    "source-refinement-queue.yml",
+    "validate.yml",
+}
 
 
 def load_workflow(name: str) -> dict:
@@ -13,6 +28,10 @@ def workflow_triggers(workflow: dict) -> dict:
     # PyYAML uses YAML 1.1 boolean parsing, where the plain scalar key `on`
     # is parsed as True. GitHub Actions treats it as the trigger key.
     return workflow.get("on") or workflow.get(True) or {}
+
+
+def test_actions_tab_contains_only_purposeful_public_workflows():
+    assert {path.name for path in WORKFLOW_DIR.glob("*.yml")} == EXPECTED_PUBLIC_WORKFLOWS
 
 
 def test_validate_workflow_uses_read_only_permissions_and_expected_triggers():
@@ -42,22 +61,17 @@ def test_catalog_guard_workflow_is_read_only_and_pr_scoped():
     assert workflow["jobs"]["catalog-pr-guard"]["if"] == "startsWith(github.event.pull_request.title, 'Catalog:')"
 
 
-def test_observation_dry_run_is_manual_only_and_read_only():
-    workflow = load_workflow("observe-dry-run.yml")
+def test_observation_report_is_single_read_only_observation_workflow():
+    workflow = load_workflow("observe-report.yml")
     triggers = workflow_triggers(workflow)
-
-    assert workflow["permissions"] == {"contents": "read"}
-    assert set(triggers.keys()) == {"workflow_dispatch"}
-
-
-def test_source_health_report_is_read_only_scheduled_inventory():
-    workflow = load_workflow("source-health-report.yml")
-    triggers = workflow_triggers(workflow)
-    text = (WORKFLOW_DIR / "source-health-report.yml").read_text(encoding="utf-8")
+    text = (WORKFLOW_DIR / "observe-report.yml").read_text(encoding="utf-8")
 
     assert workflow["permissions"] == {"contents": "read"}
     assert set(triggers.keys()) == {"workflow_dispatch", "schedule"}
-    assert "python -m tools.openva.source_health build --output source-health-report.json" in text
+    assert "python -m tools.openva.observe observe-all --dry-run --emit-yaml" in text
+    assert "reports/observation-report.md" in text
+    assert "reports/observation-report.json" in text
+    assert "reports/observation-review-queue.csv" in text
     assert "actions/upload-artifact@v4" in text
     assert "peter-evans/create-pull-request" not in text
 
@@ -76,17 +90,13 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "triggers": {"workflow_dispatch", "schedule"},
             "permissions": {"contents": "write", "pull-requests": "write"},
         },
-        "cleanup-proposal-issue.yml": {
-            "triggers": {"workflow_dispatch", "schedule"},
-            "permissions": {"contents": "read", "issues": "write"},
-        },
         "catalog-growth-discovery.yml": {
             "triggers": {"workflow_dispatch", "schedule"},
             "permissions": {"contents": "read", "issues": "write"},
         },
-        "catalog-intake-handoff.yml": {
-            "triggers": {"issues"},
-            "permissions": {"contents": "read", "issues": "write"},
+        "contribution-intake-agent.yml": {
+            "triggers": {"issues", "workflow_dispatch"},
+            "permissions": {"contents": "write", "pull-requests": "write", "issues": "write"},
         },
     }
 
@@ -124,9 +134,70 @@ def test_catalog_reset_workflow_has_been_removed_after_one_time_reset():
     assert not (WORKFLOW_DIR / "catalog-reset-pr.yml").exists()
 
 
+def test_superseded_narrow_report_workflows_are_removed():
+    removed = {
+        "catalog-intake-handoff.yml",
+        "cleanup-proposal-issue.yml",
+        "cleanup-proposal-report.yml",
+        "observe-dry-run.yml",
+        "promotion-plan-report.yml",
+        "source-discovery-report.yml",
+        "source-health-report.yml",
+        "source-verification-report.yml",
+    }
+
+    for name in removed:
+        assert not (WORKFLOW_DIR / name).exists()
+
+
+def test_report_workflows_upload_reviewer_friendly_artifacts():
+    expected_paths = {
+        "catalog-growth-discovery.yml": {
+            "reports/catalog-growth-discovery-summary.md",
+            "vendor-candidate-discovery-report.json",
+            "reports/vendor-candidates.csv",
+            "reports/source-discovery-candidates.csv",
+            "reports/promotion-plan-actions.csv",
+        },
+        "coverage-audit.yml": {
+            "reports/coverage-audit-summary.md",
+            "reports/coverage-audit-report.json",
+            "reports/coverage-audit-vendors.csv",
+        },
+        "observe-report.yml": {
+            "reports/observation-report.md",
+            "reports/observation-report.json",
+            "reports/observation-review-queue.csv",
+        },
+        "source-maintenance-report.yml": {
+            "summary.md",
+            "source-health-report.json",
+            "source-verification-report.json",
+            "source-discovery-report.json",
+            "promotion-plan.json",
+            "cleanup-proposal.json",
+            "source-health.csv",
+            "source-verification.csv",
+            "source-discovery-candidates.csv",
+            "promotion-plan-actions.csv",
+        },
+        "source-refinement-queue.yml": {
+            "reports/source-refinement-queue.md",
+            "reports/source-refinement-queue.json",
+            "reports/source-refinement-queue.csv",
+        },
+    }
+
+    for workflow_name, paths in expected_paths.items():
+        text = (WORKFLOW_DIR / workflow_name).read_text(encoding="utf-8")
+        assert "actions/upload-artifact@v4" in text
+        for path in paths:
+            assert path in text
+
+
 def test_ci_policy_documents_required_checks_and_branch_protection():
     text = Path("docs/ci-and-branch-protection.md").read_text(encoding="utf-8")
 
     assert "validate / validate" in text
     assert "catalog-pr-guard / catalog-pr-guard" in text
-    assert "source-health-report / source-health-report" in text
+    assert "source-maintenance-report / source-maintenance-report" in text

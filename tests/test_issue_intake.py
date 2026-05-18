@@ -51,6 +51,10 @@ def test_catalog_update_template_covers_add_update_and_guardrails():
         "Correct source title, language, date, or type",
         "Other factual catalog update",
     ]
+    assert "source_type" not in fields
+    assert "source_language" not in fields
+    assert "contributor_context" in fields
+    assert "agent will classify metadata" in text
     assert "anti-bot bypass" in text
     assert "login-only documents" in text
     assert "This update is factual public metadata only." in text
@@ -67,17 +71,23 @@ def test_scope_template_absorbs_out_of_scope_question_path():
     assert "OpenVA does not bypass anti-bot systems" in text
 
 
-def test_catalog_intake_handoff_is_issue_only_and_non_mutating():
-    workflow = load_yaml(WORKFLOW_DIR / "catalog-intake-handoff.yml")
+def test_contribution_intake_agent_opens_reviewed_prs_without_auto_merge():
+    workflow = load_yaml(WORKFLOW_DIR / "contribution-intake-agent.yml")
     triggers = workflow_triggers(workflow)
-    text = (WORKFLOW_DIR / "catalog-intake-handoff.yml").read_text(encoding="utf-8")
+    text = (WORKFLOW_DIR / "contribution-intake-agent.yml").read_text(encoding="utf-8")
 
-    assert workflow["permissions"] == {"contents": "read", "issues": "write"}
-    assert set(triggers.keys()) == {"issues"}
+    assert workflow["permissions"] == {
+        "contents": "write",
+        "pull-requests": "write",
+        "issues": "write",
+    }
+    assert set(triggers.keys()) == {"issues", "workflow_dispatch"}
     assert triggers["issues"]["types"] == ["opened", "edited", "labeled"]
-    assert "openva-catalog-intake-handoff" in text
-    assert "This issue is review input only" in text
-    assert "prepare a small \\`Catalog:\\` PR" in text
-    assert "peter-evans/create-pull-request" not in text
-    assert "contents: write" not in text
-    assert "pull-requests: write" not in text
+    assert "python -m tools.openva.contribution_intake issue" in text
+    assert "--network-check" in text
+    assert "python -m tools.openva.catalog_batch" in text
+    assert "peter-evans/create-pull-request" in text
+    assert "add-paths:" in text
+    assert ".openva-intake/*" not in text
+    assert "Catalog:" in text
+    assert "merge" not in text.lower()

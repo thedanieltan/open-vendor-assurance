@@ -50,6 +50,7 @@ The workflow has read-only repository permissions and uploads:
 ```text
 reports/source-refinement-queue.md
 reports/source-refinement-queue.json
+reports/source-refinement-queue.csv
 ```
 
 as workflow artifacts.
@@ -65,7 +66,7 @@ The Markdown queue contains:
 - HTTP status and final URL where available;
 - operational suggested action.
 
-The JSON queue contains the same machine-readable items plus safety guarantees:
+The JSON queue contains the same machine-readable items plus safety guarantees. The CSV export is for quick reviewer filtering and sorting:
 
 ```json
 {

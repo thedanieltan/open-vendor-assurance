@@ -102,7 +102,7 @@ Recommended maintainer actions:
 
 - review new issues daily for scope violations;
 - close or redirect private/gated material requests quickly;
-- let the catalog intake handoff comment turn catalog update issues into a clear maintainer or catalog-agent next step;
+- let the contribution intake agent turn catalog update issues into either a clear reviewed `Catalog:` PR or a human-review decision;
 - label catalog update and scope question issues consistently;
 - avoid merging large catalog batches until public contribution behavior is understood;
 - keep automation PR-based and human-reviewed;

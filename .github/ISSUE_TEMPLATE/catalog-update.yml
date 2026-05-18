@@ -49,48 +49,14 @@ body:
         - https://vendor.example/trust/subprocessors
     validations:
       required: true
-  - type: dropdown
-    id: source_type
-    attributes:
-      label: Best source type
-      description: Choose the closest fit. Maintainers can reclassify during review.
-      options:
-        - dpa
-        - subprocessors_list
-        - privacy_notice
-        - trust_center
-        - security_page
-        - compliance_page
-        - certification_reference
-        - terms_of_service
-        - kyc_statement
-        - aml_statement
-        - ai_terms
-        - data_residency
-        - legal_terms
-        - public_changelog
-        - government_request_policy
-        - transparency_report
-        - other_public_source
-        - help_classify
-    validations:
-      required: true
-  - type: input
-    id: source_language
-    attributes:
-      label: Source language
-      description: Use a language tag if known.
-      placeholder: en, zh-CN, ja, de, fr, unknown
-    validations:
-      required: false
   - type: textarea
-    id: factual_summary
+    id: contributor_context
     attributes:
-      label: Factual update summary
-      description: Describe the requested metadata change. Do not include legal, compliance, procurement, security, KYC, AML, or vendor-risk advice.
+      label: What should OpenVA look at?
+      description: Describe the requested public-source update in plain language. An OpenVA agent will classify metadata during PR preparation.
       placeholder: |
-        Add Example Vendor's public DPA page.
-        Replace the old subprocessor URL because the vendor moved it to a new public trust page.
+        Add Example Vendor's public legal page for data processing terms.
+        Replace the old public subprocessor URL because the vendor moved it to a new public trust page.
     validations:
       required: true
   - type: checkboxes

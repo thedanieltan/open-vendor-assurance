@@ -59,12 +59,24 @@ Catalog agent PR inputs must preserve these boundaries:
 - `pr_title` must start with `Catalog:`;
 - generated pull requests must remain human-reviewed.
 
-## Source health report
+## Contribution intake agent
 
-The source health report workflow is the first scheduled maintenance layer:
+The contribution intake agent processes catalog update issues:
 
 ```text
-source-health-report / source-health-report
+contribution-intake-agent
+issues
+workflow_dispatch
+```
+
+It may request `contents: write`, `pull-requests: write`, and `issues: write` only to comment intake decisions and create or update human-reviewed `Catalog:` pull requests for low-risk existing-vendor source updates. It must not merge pull requests, change branch protection, publish releases, write directly to `main`, bypass access controls, or remove catalog sources because of automated fetch failures.
+
+## Source maintenance report
+
+The source maintenance report workflow is the consolidated scheduled maintenance layer:
+
+```text
+source-maintenance-report / source-maintenance-report
 workflow_dispatch
 schedule
 ```
@@ -72,26 +84,26 @@ schedule
 It is read-only and produces a workflow artifact named:
 
 ```text
-openva-source-health-report
+openva-source-maintenance-report
 ```
 
-The report is an inventory and metadata-quality report only. It must not fetch live vendor content, hash remote pages, write observation records, open pull requests, or change repository state.
+The artifact includes a maintainer-readable summary, JSON reports, CSV exports, and cleanup proposal Markdown. It consolidates source health inventory, public-source verification, source discovery, promotion planning, and cleanup proposal output.
 
-The report may classify local source metadata issues such as missing domains, non-HTTPS URLs, unexpected access classes, unexpected rights classes, and missing non-advisory flags.
+It must not write observation records, open pull requests, change repository state, bypass access controls, or make advisory claims.
 
-This workflow is intentionally separate from observation. It gives maintainers a low-risk scheduled signal as the catalog grows.
+## Observation report
 
-## Observation dry run
-
-Observation dry run must remain manual-only:
+Observation reporting is the single scheduled observation workflow:
 
 ```text
+observe-report / observe-report
 workflow_dispatch
+schedule
 ```
 
 It must not run on every pull request by default because it performs public network fetch attempts and may encounter transient source behavior.
 
-Observation dry run must remain read-only and must not write observation records.
+Observation reporting must remain read-only and must not write observation records.
 
 ## Workflow permissions
 
@@ -137,6 +149,14 @@ pull-requests: write
 ```
 
 solely to create or update human-reviewed catalog proposal pull requests.
+
+Contribution intake workflows may additionally use:
+
+```yaml
+issues: write
+```
+
+solely to comment agent check results on the source issue.
 
 Issue handoff or queue workflows may use:
 
@@ -184,7 +204,7 @@ If a future workflow requires secrets, it must be reviewed as a security-sensiti
 
 Validation, tests, pack conformance, catalog guards, and source health inventory reports should not depend on live vendor network access.
 
-The only workflow that may attempt public network fetches is the manual observation dry-run workflow.
+The only workflows that may attempt public network fetches are observation/reporting workflows and the contribution intake agent's transparent public-source check. They must not use credentials, submit forms, solve CAPTCHAs, rotate proxies, or bypass access controls.
 
 ## Release readiness
 

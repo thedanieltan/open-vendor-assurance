@@ -66,3 +66,9 @@ The normalized text hash is usually more useful for HTML pages because it reduce
 Observation tooling should create observation records. It should not automatically rewrite source or artifact records unless a maintainer explicitly chooses to do so.
 
 This keeps hashing as provenance evidence, not as a required gate for contribution.
+
+## Fetch failures do not invalidate sources
+
+Automated fetch failure does not invalidate a public source record. A 403, CAPTCHA, WAF block, timeout, or bot-protection response must be recorded as an observation or review result only.
+
+Observation tooling and intake agents must not remove, deprecate, downgrade, or exclude source metadata based only on automated fetch failure. Source-removal or deprecation requires separate public evidence, such as an official replacement URL, vendor-published retirement notice, unrelated redirect target, confirmed loss of public access, misattribution, or maintainer-reviewed maintenance action.
