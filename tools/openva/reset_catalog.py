@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from tools.openva.indexes import build_indexes
+from tools.openva.paths import relative_repo_path
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_REPORT = ROOT / "catalog-reset-report.json"
@@ -23,7 +24,7 @@ PRESERVE_PATHS = (
 
 
 def relative(path: Path) -> str:
-    return str(path.relative_to(ROOT))
+    return relative_repo_path(path, ROOT)
 
 
 def existing_reset_targets() -> list[Path]:

@@ -9,6 +9,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.openva.catalog_lifecycle import change_event, lifecycle_change_type
 from tools.openva.indexes import build_indexes
+from tools.openva.paths import relative_repo_path
 from tools.openva.url_safety import validate_url_safety
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,7 +28,7 @@ def load_yaml(path: Path) -> dict[str, Any]:
 
 def write_yaml(path: Path, data: dict[str, Any], *, force: bool) -> None:
     if path.exists() and not force:
-        raise FileExistsError(f"{path.relative_to(ROOT)} already exists; pass --force to overwrite")
+        raise FileExistsError(f"{relative_repo_path(path, ROOT)} already exists; pass --force to overwrite")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
@@ -61,9 +62,9 @@ def validate_manifest_rules(manifest: dict[str, Any], *, force: bool) -> list[st
 
         vendor_path = ROOT / f"data/vendors/{vendor_id}/vendor.yaml"
         if operation == "create" and vendor_path.exists() and not force:
-            failures.append(f"{vendor_path.relative_to(ROOT)} already exists")
+            failures.append(f"{relative_repo_path(vendor_path, ROOT)} already exists")
         if operation in {"refresh", "deprecate"} and not vendor_path.exists():
-            failures.append(f"{vendor_path.relative_to(ROOT)} does not exist")
+            failures.append(f"{relative_repo_path(vendor_path, ROOT)} does not exist")
 
         for source in sources_for(vendor):
             artifact = source["artifact"]
@@ -87,9 +88,9 @@ def validate_manifest_rules(manifest: dict[str, Any], *, force: bool) -> list[st
                 ROOT / f"data/vendors/{vendor_id}/artifacts/{artifact_id}.yaml",
             ):
                 if operation == "create" and path.exists() and not force:
-                    failures.append(f"{path.relative_to(ROOT)} already exists")
+                    failures.append(f"{relative_repo_path(path, ROOT)} already exists")
                 if operation in {"refresh", "deprecate"} and not path.exists():
-                    failures.append(f"{path.relative_to(ROOT)} does not exist")
+                    failures.append(f"{relative_repo_path(path, ROOT)} does not exist")
     return failures
 
 
@@ -203,7 +204,7 @@ def generate_catalog_batch(manifest_path: Path, *, force: bool = False, build: b
     if build:
         build_indexes()
     for path in generated_paths_for(manifest):
-        print(path.relative_to(ROOT))
+        print(relative_repo_path(path, ROOT))
     return 0
 
 

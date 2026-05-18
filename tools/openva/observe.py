@@ -13,6 +13,7 @@ import yaml
 
 from tools.openva.hash import sha256_bytes, sha256_normalized_text
 from tools.openva.indexes import ROOT, records_for
+from tools.openva.paths import relative_repo_path
 from tools.openva.url_safety import validate_url_safety
 
 USER_AGENT = "open-vendor-assurance-observer/0.1 (+metadata-only; public sources only)"
@@ -73,7 +74,7 @@ def result_note(result: str) -> str:
 
 def load_pilot_source_ids() -> set[str]:
     if not PILOT_CONFIG.exists():
-        raise FileNotFoundError(f"{PILOT_CONFIG.relative_to(ROOT)} is missing")
+        raise FileNotFoundError(f"{relative_repo_path(PILOT_CONFIG, ROOT)} is missing")
     config = yaml.safe_load(PILOT_CONFIG.read_text(encoding="utf-8")) or {}
     source_ids = config.get("sources", [])
     if not isinstance(source_ids, list) or not all(isinstance(item, str) for item in source_ids):
@@ -217,7 +218,7 @@ def observe_sources(dry_run: bool, *, pilot_only: bool, allow_ambiguous_write: b
     if created:
         print("\nWritten observations:")
         for path in created:
-            print(path.relative_to(ROOT))
+            print(relative_repo_path(path, ROOT))
     return 0
 
 
