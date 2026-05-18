@@ -1,0 +1,24 @@
+schema_version: 0.1.0
+vendor_id: adyen
+display_name: Adyen
+legal_name: Adyen N.V.
+headquarters_country: NL
+regions_served:
+- global
+- eu
+official_domains:
+- adyen.com
+public_entrypoints:
+- https://www.adyen.com/en_GB/legal
+vendor_categories:
+- payments
+- financial_infrastructure
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+status: active
+notes: Public-source-only catalog record. Metadata references public Adyen assurance
+  materials and does not cover bespoke customer agreements.
+entity_surface: global_brand
+source_authority_language: en

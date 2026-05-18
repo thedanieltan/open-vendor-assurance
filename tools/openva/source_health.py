@@ -14,6 +14,10 @@ from tools.openva.paths import relative_repo_path
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "source-health-report.json"
+ACCEPTED_PUBLIC_ACCESS_CLASSES = {
+    "public_web",
+    "public_pdf",
+}
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -32,7 +36,7 @@ def artifact_paths(root: Path = ROOT) -> list[Path]:
     return sorted((root / "data" / "vendors").glob("*/artifacts/*.yaml"))
 
 
-def classify_source(source: dict[str, Any], path: Path) -> dict[str, Any]:
+def classify_source(source: dict[str, Any], path: Path, root: Path = ROOT) -> dict[str, Any]:
     source_url = str(source.get("source_url") or "")
     parsed = urlparse(source_url)
     issues: list[str] = []
@@ -45,15 +49,15 @@ def classify_source(source: dict[str, Any], path: Path) -> dict[str, Any]:
         issues.append("plain_http_source_url")
     if not parsed.netloc:
         issues.append("missing_source_domain")
-    if source.get("access_class") != "public_web":
-        issues.append("non_public_web_access_class")
+    if source.get("access_class") not in ACCEPTED_PUBLIC_ACCESS_CLASSES:
+        issues.append("non_standard_public_access_class")
     if source.get("rights_class") != "metadata_only":
         issues.append("unexpected_rights_class")
     if source.get("not_advice") is not True:
         issues.append("missing_not_advice_true")
 
     return {
-        "path": relative_repo_path(path, ROOT),
+        "path": relative_repo_path(path, root),
         "vendor_id": source.get("vendor_id"),
         "source_id": source.get("source_id"),
         "source_type": source.get("source_type"),
@@ -76,7 +80,7 @@ def build_source_health_report(root: Path = ROOT) -> dict[str, Any]:
         except ValueError as exc:
             failures.append(str(exc))
             continue
-        sources.append(classify_source(source, path))
+        sources.append(classify_source(source, path, root))
 
     artifact_count = len(artifact_paths(root))
     issue_counter: Counter[str] = Counter(issue for source in sources for issue in source.get("issues", []))

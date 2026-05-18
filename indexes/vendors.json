@@ -1,5 +1,5 @@
 {
-  "count": 114,
+  "count": 124,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -103,6 +103,37 @@
       "vendor_id": "adp"
     },
     {
+      "_openva_path": "data/vendors/adyen/vendor.yaml",
+      "display_name": "Adyen",
+      "entity_surface": "global_brand",
+      "headquarters_country": "NL",
+      "legal_name": "Adyen N.V.",
+      "notes": "Public-source-only catalog record. Metadata references public Adyen assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "adyen.com"
+      ],
+      "public_entrypoints": [
+        "https://www.adyen.com/en_GB/legal"
+      ],
+      "regions_served": [
+        "global",
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "adyen"
+    },
+    {
       "_openva_path": "data/vendors/airtable/vendor.yaml",
       "display_name": "Airtable",
       "entity_surface": "global_brand",
@@ -134,6 +165,38 @@
         "workflow_platform"
       ],
       "vendor_id": "airtable"
+    },
+    {
+      "_openva_path": "data/vendors/airwallex/vendor.yaml",
+      "display_name": "Airwallex",
+      "entity_surface": "global_brand",
+      "headquarters_country": "AU",
+      "legal_name": "Airwallex Pty Ltd",
+      "notes": "Public-source-only catalog record. Metadata references public Airwallex assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "airwallex.com"
+      ],
+      "public_entrypoints": [
+        "https://security.airwallex.com/"
+      ],
+      "regions_served": [
+        "global",
+        "apac"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure",
+        "regional_apac"
+      ],
+      "vendor_id": "airwallex"
     },
     {
       "_openva_path": "data/vendors/algolia/vendor.yaml",
@@ -244,6 +307,38 @@
         "ai_platform"
       ],
       "vendor_id": "aliyun"
+    },
+    {
+      "_openva_path": "data/vendors/alloy/vendor.yaml",
+      "display_name": "Alloy",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "First Mile Group, Inc. (dba Alloy)",
+      "notes": "Public-source-only catalog record. Metadata references public Alloy assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "alloy.app",
+        "alloy.com"
+      ],
+      "public_entrypoints": [
+        "https://alloy.app/legal/dpa",
+        "https://www.alloy.com/privacy-policy"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "kyc_kyb_aml",
+        "fraud_risk"
+      ],
+      "vendor_id": "alloy"
     },
     {
       "_openva_path": "data/vendors/amplitude/vendor.yaml",
@@ -643,6 +738,37 @@
       "vendor_id": "canva"
     },
     {
+      "_openva_path": "data/vendors/chainalysis/vendor.yaml",
+      "display_name": "Chainalysis",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Chainalysis Inc.",
+      "notes": "Public-source-only catalog record. Metadata references public Chainalysis assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "chainalysis.com"
+      ],
+      "public_entrypoints": [
+        "https://www.chainalysis.com/privacy-policy/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "kyc_kyb_aml",
+        "fraud_risk",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "chainalysis"
+    },
+    {
       "_openva_path": "data/vendors/clickup/vendor.yaml",
       "display_name": "ClickUp",
       "entity_surface": "global_brand",
@@ -736,6 +862,37 @@
         "developer_platform"
       ],
       "vendor_id": "cohere"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/vendor.yaml",
+      "display_name": "ComplyAdvantage",
+      "entity_surface": "global_brand",
+      "headquarters_country": "GB",
+      "legal_name": "ComplyAdvantage Group Limited",
+      "notes": "Public-source-only catalog record. Metadata references public ComplyAdvantage assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "complyadvantage.com"
+      ],
+      "public_entrypoints": [
+        "https://complyadvantage.com/privacy-policy/"
+      ],
+      "regions_served": [
+        "global",
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "kyc_kyb_aml",
+        "fraud_risk"
+      ],
+      "vendor_id": "complyadvantage"
     },
     {
       "_openva_path": "data/vendors/contentful/vendor.yaml",
@@ -2458,6 +2615,36 @@
       "vendor_id": "paychex"
     },
     {
+      "_openva_path": "data/vendors/paypal/vendor.yaml",
+      "display_name": "PayPal",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "PayPal, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references public PayPal assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "paypal.com"
+      ],
+      "public_entrypoints": [
+        "https://www.paypal.com/us/legalhub/home"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "paypal"
+    },
+    {
       "_openva_path": "data/vendors/personio/vendor.yaml",
       "display_name": "Personio",
       "entity_surface": "global_brand",
@@ -2522,6 +2709,36 @@
         "developer_platform"
       ],
       "vendor_id": "pinecone"
+    },
+    {
+      "_openva_path": "data/vendors/plaid/vendor.yaml",
+      "display_name": "Plaid",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Plaid Inc.",
+      "notes": "Public-source-only catalog record. Metadata references public Plaid assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "plaid.com"
+      ],
+      "public_entrypoints": [
+        "https://plaid.com/legal/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "financial_infrastructure",
+        "developer_platform"
+      ],
+      "vendor_id": "plaid"
     },
     {
       "_openva_path": "data/vendors/planetscale/vendor.yaml",
@@ -3191,6 +3408,37 @@
       "vendor_id": "stripe"
     },
     {
+      "_openva_path": "data/vendors/sumsub/vendor.yaml",
+      "display_name": "Sumsub",
+      "entity_surface": "global_brand",
+      "headquarters_country": "GB",
+      "legal_name": "Sum and Substance Ltd",
+      "notes": "Public-source-only catalog record. Metadata references public Sumsub assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "sumsub.com"
+      ],
+      "public_entrypoints": [
+        "https://sumsub.com/security/"
+      ],
+      "regions_served": [
+        "global",
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "kyc_kyb_aml",
+        "fraud_risk"
+      ],
+      "vendor_id": "sumsub"
+    },
+    {
       "_openva_path": "data/vendors/supabase/vendor.yaml",
       "display_name": "Supabase",
       "entity_surface": "global_brand",
@@ -3365,6 +3613,36 @@
         "vendor_assurance"
       ],
       "vendor_id": "thoropass"
+    },
+    {
+      "_openva_path": "data/vendors/trulioo/vendor.yaml",
+      "display_name": "Trulioo",
+      "entity_surface": "global_brand",
+      "headquarters_country": "CA",
+      "legal_name": "Trulioo Information Services Inc.",
+      "notes": "Public-source-only catalog record. Metadata references public Trulioo assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "trulioo.com"
+      ],
+      "public_entrypoints": [
+        "https://www.trulioo.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "kyc_kyb_aml",
+        "fraud_risk"
+      ],
+      "vendor_id": "trulioo"
     },
     {
       "_openva_path": "data/vendors/trustarc/vendor.yaml",
@@ -3598,6 +3876,37 @@
         "developer_platform"
       ],
       "vendor_id": "webflow"
+    },
+    {
+      "_openva_path": "data/vendors/wise/vendor.yaml",
+      "display_name": "Wise",
+      "entity_surface": "global_brand",
+      "headquarters_country": "GB",
+      "legal_name": "Wise Payments Limited",
+      "notes": "Public-source-only catalog record. Metadata references public Wise assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "wise.com"
+      ],
+      "public_entrypoints": [
+        "https://wise.com/privacy-policy"
+      ],
+      "regions_served": [
+        "global",
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "wise"
     },
     {
       "_openva_path": "data/vendors/workday/vendor.yaml",
