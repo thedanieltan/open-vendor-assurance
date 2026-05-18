@@ -15,7 +15,7 @@ TAXONOMY_PATH = ROOT / "config" / "category-taxonomy.yaml"
 ALLOWED_PRIORITIES = {"high", "medium", "low"}
 ALLOWED_STATUSES = {"queued", "paused", "done"}
 ALLOWED_DISCOVERY_MODES = {
-    "public_index_vendor_discovery",
+    "seed_file_vendor_discovery",
     "official_domain_source_discovery",
 }
 

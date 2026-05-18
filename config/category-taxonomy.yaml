@@ -52,6 +52,12 @@ vendor_categories:
   healthcare_software:
     label: Healthcare software
     description: EHR, telehealth, practice management, healthcare integration, clinical workflow, and healthcare communications.
+  insurance_software:
+    label: Insurance software
+    description: Insurance core systems, underwriting, claims, broker, distribution, actuarial, and insurance operations platforms.
+  public_sector_defense:
+    label: Public sector and defense
+    description: Public sector, defense, aerospace, mission operations, government technology, and regulated public-sector platforms.
   security:
     label: Security
     description: Security operations, endpoint, cloud security, identity security, vulnerability management, appsec, and network security.
@@ -186,6 +192,20 @@ coverage_lanes:
       - healthcare_software
     target_materialized_vendors: 30
     target_deep_vendors: 20
+    tier_1_min_core_artifacts: 3
+  insurance:
+    label: Insurance platforms and insurance operations
+    vendor_category_tags:
+      - insurance_software
+    target_materialized_vendors: 30
+    target_deep_vendors: 15
+    tier_1_min_core_artifacts: 3
+  public_sector_defense:
+    label: Public sector, defense, and mission platforms
+    vendor_category_tags:
+      - public_sector_defense
+    target_materialized_vendors: 30
+    target_deep_vendors: 15
     tier_1_min_core_artifacts: 3
   security_identity:
     label: Security, identity, device management, and SecOps
