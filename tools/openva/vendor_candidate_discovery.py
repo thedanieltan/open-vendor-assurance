@@ -57,7 +57,9 @@ def candidate_from_url(url: str, coverage_lane: str, cohort_id: str, source_url:
     }
 
 
-def extract_links(body: str) -> list[str]:
+def extract_links(body: str | bytes) -> list[str]:
+    if isinstance(body, bytes):
+        body = body.decode("utf-8", errors="ignore")
     return re.findall(r"https?://[^\s\"'<>]+", body or "")
 
 
