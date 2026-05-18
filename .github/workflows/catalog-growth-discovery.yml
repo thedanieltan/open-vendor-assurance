@@ -132,7 +132,7 @@ jobs:
             gh issue edit "$EXISTING" --body-file catalog-growth-discovery-issue.md
             echo "Updated catalog growth discovery issue #$EXISTING"
           else
-            gh issue create --title "$TITLE" --body-file catalog-growth-discovery-issue.md --label "maintenance"
+            gh issue create --title "$TITLE" --body-file catalog-growth-discovery-issue.md
           fi
       - name: Upload catalog growth discovery artifacts
         uses: actions/upload-artifact@v4
