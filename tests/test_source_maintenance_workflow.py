@@ -21,11 +21,20 @@ def test_source_maintenance_workflow_is_read_only_scheduled_and_manual():
 def test_source_maintenance_workflow_runs_full_non_mutating_pipeline():
     text = WORKFLOW.read_text(encoding="utf-8")
 
+    assert "python -m tools.openva.source_health build --output source-health-report.json" in text
     assert "python -m tools.openva.source_verification verify" in text
     assert "python -m tools.openva.source_discovery discover" in text
     assert "python -m tools.openva.promotion_planner plan" in text
+    assert "python -m tools.openva.cleanup_proposals build" in text
     assert "--verification-report source-verification-report.json" in text
     assert "--discovery-report source-discovery-report.json" in text
+    assert "summary.md" in text
+    assert "source-health.csv" in text
+    assert "source-verification.csv" in text
+    assert "source-discovery-candidates.csv" in text
+    assert "source-discovery-unavailable.csv" in text
+    assert "promotion-plan-actions.csv" in text
+    assert "cleanup-proposal.md" in text
     assert "actions/upload-artifact@v4" in text
     assert "--write" not in text
     assert "contents: write" not in text

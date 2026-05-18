@@ -85,6 +85,8 @@ Examples:
 
 OpenVA does not bypass these controls and does not compute hashes for this result.
 
+This result does not invalidate the underlying source record by itself. It means OpenVA automation could not fetch the source transparently at that time. Removing, deprecating, or downgrading source metadata requires separate public evidence or maintainer review.
+
 Write behavior:
 
 ```text

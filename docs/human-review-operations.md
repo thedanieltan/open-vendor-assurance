@@ -26,9 +26,12 @@ The current review objects are simple and file-based:
 
 - `observation-report.md`
 - `observation-report.json`
+- `observation-review-queue.csv`
 - `source-refinement-queue.md`
 - `source-refinement-queue.json`
+- `source-refinement-queue.csv`
 - `catalog-maintenance-report.md`
+- source maintenance summary, JSON, and CSV artifacts
 - `release-artifacts.json`
 - catalog PR diffs
 - workflow PR diffs
@@ -40,7 +43,7 @@ GitHub already provides:
 - comments;
 - checks;
 - artifact downloads;
-- issue templates and catalog intake handoff comments;
+- issue templates and contribution intake agent comments;
 - labels;
 - audit history.
 
@@ -132,6 +135,7 @@ Artifacts:
 ```text
 observation-report.md
 observation-report.json
+observation-review-queue.csv
 ```
 
 Reviewer focus:
@@ -151,6 +155,7 @@ Expected artifacts:
 ```text
 source-refinement-queue.md
 source-refinement-queue.json
+source-refinement-queue.csv
 ```
 
 Reviewer focus:
@@ -194,7 +199,7 @@ Reviewer focus:
 - validation and tests;
 - regional and language handling.
 
-### Catalog intake issues
+### Contribution intake issues
 
 Produced by the consolidated vendor catalog update issue form.
 
@@ -203,6 +208,7 @@ Reviewer focus:
 - submitted URLs are public and authoritative;
 - no private, gated, copied, screenshot, credential, or anti-bot bypass material is present;
 - the request is factual metadata only;
+- whether agent-classified metadata is accurate;
 - whether the issue should become a small `Catalog:` PR, be redirected to a scope question, or be closed as blocked by policy;
 - link the resulting PR back to the issue before closing it.
 
@@ -312,6 +318,8 @@ Usually non-blocking:
 - a public page temporarily fails to fetch;
 - a better public source may exist but has not been found;
 - a non-English summary could be improved later.
+
+Automated 403, CAPTCHA, WAF, timeout, or bot-protection results must not remove, deprecate, or downgrade a catalog source by themselves. Source removal or deprecation requires separate public evidence or maintainer-reviewed maintenance action.
 
 ## Reviewer checklist for source queues
 

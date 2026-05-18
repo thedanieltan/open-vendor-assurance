@@ -51,7 +51,10 @@ def test_coverage_audit_workflow_is_read_only_scheduled_and_manual():
 
     assert workflow["permissions"] == {"contents": "read"}
     assert set(triggers.keys()) == {"workflow_dispatch", "schedule"}
-    assert "python -m tools.openva.coverage_audit build --output coverage-audit-report.json" in text
+    assert "python -m tools.openva.coverage_audit build --output reports/coverage-audit-report.json" in text
+    assert "reports/coverage-audit-summary.md" in text
+    assert "reports/coverage-audit-report.json" in text
+    assert "reports/coverage-audit-vendors.csv" in text
     assert "actions/upload-artifact@v4" in text
     assert "peter-evans/create-pull-request" not in text
     assert "contents: write" not in text

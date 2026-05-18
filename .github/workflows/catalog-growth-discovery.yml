@@ -74,9 +74,11 @@ jobs:
       - name: Prepare discovery issue body
         run: |
           python - <<'PY'
+          import csv
           import json
           from pathlib import Path
 
+          Path('reports').mkdir(exist_ok=True)
           queue = json.load(open('catalog-growth-discovery-queue-summary.json', encoding='utf-8'))
           vendors = json.load(open('vendor-candidate-discovery-report.json', encoding='utf-8'))
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
@@ -120,6 +122,64 @@ jobs:
               '',
           ]
           Path('catalog-growth-discovery-issue.md').write_text('\n'.join(lines), encoding='utf-8')
+          Path('reports/catalog-growth-discovery-summary.md').write_text('\n'.join(lines), encoding='utf-8')
+
+          with open('reports/vendor-candidates.csv', 'w', encoding='utf-8', newline='') as handle:
+              fields = [
+                  'candidate_vendor_id',
+                  'display_name_candidate',
+                  'official_domain_candidate',
+                  'coverage_lane',
+                  'cohort_id',
+                  'source_index_url',
+              ]
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+              writer.writeheader()
+              for candidate in vendors.get('vendor_candidates', []):
+                  writer.writerow(candidate)
+
+          candidate_rows = []
+          unavailable_rows = []
+          for vendor in discovery.get('vendors', []):
+              for candidate in vendor.get('candidates', []):
+                  evidence = candidate.get('evidence', {})
+                  candidate_rows.append({
+                      'vendor_id': candidate.get('vendor_id'),
+                      'candidate_source_id': candidate.get('candidate_source_id'),
+                      'source_type_candidate': candidate.get('source_type_candidate'),
+                      'candidate_url': candidate.get('candidate_url'),
+                      'confidence': candidate.get('confidence'),
+                      'http_status': evidence.get('http_status'),
+                      'final_url': evidence.get('final_url'),
+                      'matched_terms': ';'.join(evidence.get('matched_terms', [])),
+                  })
+              for unavailable in vendor.get('unavailable_sources', []):
+                  unavailable_rows.append({
+                      'vendor_id': unavailable.get('vendor_id'),
+                      'unavailable_source_id': unavailable.get('unavailable_source_id'),
+                      'source_type': unavailable.get('source_type'),
+                      'status': unavailable.get('status'),
+                      'reason': unavailable.get('reason'),
+                      'next_review_after': unavailable.get('next_review_after'),
+                  })
+          with open('reports/source-discovery-candidates.csv', 'w', encoding='utf-8', newline='') as handle:
+              fields = ['vendor_id', 'candidate_source_id', 'source_type_candidate', 'candidate_url', 'confidence', 'http_status', 'final_url', 'matched_terms']
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+              writer.writeheader()
+              for row in candidate_rows:
+                  writer.writerow(row)
+          with open('reports/source-discovery-unavailable.csv', 'w', encoding='utf-8', newline='') as handle:
+              fields = ['vendor_id', 'unavailable_source_id', 'source_type', 'status', 'reason', 'next_review_after']
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+              writer.writeheader()
+              for row in unavailable_rows:
+                  writer.writerow(row)
+          with open('reports/promotion-plan-actions.csv', 'w', encoding='utf-8', newline='') as handle:
+              fields = ['action', 'vendor_id', 'source_type', 'source_id', 'candidate_source_id', 'unavailable_source_id', 'reason']
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+              writer.writeheader()
+              for action in promotion.get('actions', []):
+                  writer.writerow(action)
           PY
       - name: Create or update catalog growth discovery issue
         env:
@@ -139,6 +199,11 @@ jobs:
         with:
           name: openva-catalog-growth-discovery-artifacts
           path: |
+            reports/catalog-growth-discovery-summary.md
+            reports/vendor-candidates.csv
+            reports/source-discovery-candidates.csv
+            reports/source-discovery-unavailable.csv
+            reports/promotion-plan-actions.csv
             catalog-growth-discovery-queue-summary.json
             vendor-candidate-discovery-report.json
             source-discovery-report.json

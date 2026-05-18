@@ -25,13 +25,61 @@ jobs:
       - name: Validate current records
         run: python -m tools.openva.validate validate
       - name: Build breadth and depth coverage audit
-        run: python -m tools.openva.coverage_audit build --output coverage-audit-report.json
-      - name: Print coverage audit summary
         run: |
+          mkdir -p reports
+          python -m tools.openva.coverage_audit build --output reports/coverage-audit-report.json
+      - name: Build reviewer-friendly summary and CSV export
+        run: |
+          mkdir -p reports
           python - <<'PY'
+          import csv
           import json
-          report = json.load(open('coverage-audit-report.json', encoding='utf-8'))
-          print(json.dumps(report['summary'], indent=2, sort_keys=True))
+          from pathlib import Path
+
+          report = json.load(open('reports/coverage-audit-report.json', encoding='utf-8'))
+          lines = [
+              "# OpenVA Coverage Audit",
+              "",
+              "This report measures catalog breadth and depth only. It is not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+              "",
+              "## Summary",
+              "",
+              f"- Vendors: `{report['summary']['vendor_count']}`",
+              f"- Artifacts: `{report['summary']['artifact_count']}`",
+              f"- Vendors with DPA: `{report['summary']['vendors_with_dpa']}`",
+              f"- Vendors with subprocessors list: `{report['summary']['vendors_with_subprocessors_list']}`",
+              f"- Vendors with at least three core artifacts: `{report['summary']['vendors_with_at_least_three_core_artifacts']}`",
+              f"- Parse failures: `{report['summary']['parse_failures']}`",
+              "",
+              "## Files",
+              "",
+              "- `coverage-audit-summary.md`: maintainer-readable summary.",
+              "- `coverage-audit-report.json`: machine-readable source of truth.",
+              "- `coverage-audit-vendors.csv`: reviewer-friendly vendor coverage export.",
+              "",
+          ]
+          Path('reports/coverage-audit-summary.md').write_text('\n'.join(lines), encoding='utf-8')
+          with open('reports/coverage-audit-vendors.csv', 'w', encoding='utf-8', newline='') as handle:
+              fields = [
+                  'vendor_id',
+                  'display_name',
+                  'artifact_count',
+                  'artifact_types',
+                  'core_artifacts_present',
+                  'core_artifacts_missing',
+                  'depth_score',
+                  'depth_tier',
+              ]
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+              writer.writeheader()
+              for vendor in report.get('vendors', []):
+                  writer.writerow({
+                      **vendor,
+                      'artifact_types': ';'.join(vendor.get('artifact_types', [])),
+                      'core_artifacts_present': ';'.join(vendor.get('core_artifacts_present', [])),
+                      'core_artifacts_missing': ';'.join(vendor.get('core_artifacts_missing', [])),
+                  })
+          print(Path('reports/coverage-audit-summary.md').read_text(encoding='utf-8'))
           print(json.dumps(report['breakdowns'].get('artifact_types', {}), indent=2, sort_keys=True))
           print(json.dumps(report['breakdowns'].get('depth_tiers', {}), indent=2, sort_keys=True))
           PY
@@ -39,5 +87,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: openva-coverage-audit-report
-          path: coverage-audit-report.json
+          path: |
+            reports/coverage-audit-summary.md
+            reports/coverage-audit-report.json
+            reports/coverage-audit-vendors.csv
           if-no-files-found: error

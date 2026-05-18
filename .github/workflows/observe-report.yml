@@ -32,6 +32,20 @@ jobs:
           python -m tools.openva.observation_report /tmp/openva-observations.yaml \
             --markdown-out reports/observation-report.md \
             --json-out reports/observation-report.json
+      - name: Build observation CSV export
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+
+          report = json.load(open("reports/observation-report.json", encoding="utf-8"))
+          with open("reports/observation-review-queue.csv", "w", encoding="utf-8", newline="") as handle:
+              fields = ["vendor_id", "source_id", "result", "http_status", "final_url", "observed_at", "notes"]
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+              writer.writeheader()
+              for item in report.get("human_review_queue", []):
+                  writer.writerow(item)
+          PY
       - name: Print observation report
         run: cat reports/observation-report.md
       - name: Upload observation report artifacts
@@ -41,4 +55,5 @@ jobs:
           path: |
             reports/observation-report.md
             reports/observation-report.json
+            reports/observation-review-queue.csv
           if-no-files-found: error

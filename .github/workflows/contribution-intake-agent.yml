@@ -1,0 +1,132 @@
+name: contribution-intake-agent
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Catalog update issue number to process"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: contribution-intake-agent-${{ github.event.issue.number || inputs.issue_number }}
+  cancel-in-progress: true
+
+jobs:
+  contribution-intake-agent:
+    if: github.event_name == 'workflow_dispatch' || contains(join(github.event.issue.labels.*.name, ','), 'area:catalog') || startsWith(github.event.issue.title, 'Catalog update:')
+    runs-on: ubuntu-latest
+    env:
+      ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Fetch issue body
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue view "$ISSUE_NUMBER" --json body --jq .body > issue-body.md
+      - name: Build contribution intake decision
+        run: |
+          python -m tools.openva.contribution_intake issue \
+            --issue-body issue-body.md \
+            --issue-number "$ISSUE_NUMBER" \
+            --output-dir .openva-intake \
+            --network-check \
+            --github-env "$GITHUB_ENV"
+      - name: Generate catalog proposal
+        if: env.OPENVA_INTAKE_SHOULD_OPEN_PR == 'true'
+        run: python -m tools.openva.catalog_batch "$OPENVA_INTAKE_MANIFEST_PATH" --force --build-indexes
+      - name: Validate generated PR inputs
+        if: env.OPENVA_INTAKE_SHOULD_OPEN_PR == 'true'
+        run: |
+          case "$OPENVA_INTAKE_MANIFEST_PATH" in
+            catalog-batches/intake/*.yaml) ;;
+            *) echo "manifest path must be under catalog-batches/intake/"; exit 1 ;;
+          esac
+          case "$OPENVA_INTAKE_PR_BRANCH" in
+            agent-*) ;;
+            *) echo "PR branch must start with agent-"; exit 1 ;;
+          esac
+          case "$OPENVA_INTAKE_PR_TITLE" in
+            Catalog:*) ;;
+            *) echo "PR title must start with Catalog:"; exit 1 ;;
+          esac
+      - name: Validate generated catalog proposal
+        if: env.OPENVA_INTAKE_SHOULD_OPEN_PR == 'true'
+        run: |
+          python -m tools.openva.validate validate
+          pytest -q
+      - name: Create or update catalog pull request
+        if: env.OPENVA_INTAKE_SHOULD_OPEN_PR == 'true'
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: ${{ env.OPENVA_INTAKE_PR_BRANCH }}
+          delete-branch: false
+          title: ${{ env.OPENVA_INTAKE_PR_TITLE }}
+          commit-message: ${{ env.OPENVA_INTAKE_PR_TITLE }}
+          body-path: .openva-intake/pr-body.md
+          labels: catalog, agent-generated, needs-human-review
+          add-paths: |
+            catalog-batches/intake/*.yaml
+            data/vendors/**
+            indexes/**
+            openva-pack.json
+      - name: Comment intake decision on issue
+        uses: actions/github-script@v7
+        env:
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- openva-contribution-intake-agent -->';
+            const issueNumber = Number(process.env.ISSUE_NUMBER);
+            let body = fs.readFileSync('.openva-intake/intake-comment.md', 'utf8');
+            if (process.env.PR_URL) {
+              body += `\n\nPrepared PR: ${process.env.PR_URL}\n`;
+            }
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              per_page: 100,
+            });
+            const existing = comments.find((comment) => comment.user?.type === 'Bot' && comment.body?.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body,
+              });
+            }
+      - name: Upload intake artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: openva-contribution-intake-agent
+          path: |
+            .openva-intake/intake-report.json
+            .openva-intake/intake-comment.md
+            .openva-intake/pr-body.md
+            catalog-batches/intake/*.yaml
+          if-no-files-found: warn

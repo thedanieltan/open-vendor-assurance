@@ -31,7 +31,7 @@ Examples:
 - public subprocessor page moved;
 - language classification needs correction.
 
-The catalog intake handoff workflow adds a checklist to catalog update issues. That comment is a handoff aid only; catalog data changes still require a reviewed `Catalog:` PR.
+The contribution intake agent comments automated checks on catalog update issues and may open a reviewed `Catalog:` PR for low-risk existing-vendor source updates. That comment is a handoff aid only; catalog data changes still require a reviewed `Catalog:` PR.
 
 ### Scope or boundary question
 

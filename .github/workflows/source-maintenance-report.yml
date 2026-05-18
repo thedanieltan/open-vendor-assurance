@@ -33,6 +33,8 @@ jobs:
         run: pip install -e ".[dev]"
       - name: Validate current records
         run: python -m tools.openva.validate validate
+      - name: Build source health inventory report
+        run: python -m tools.openva.source_health build --output source-health-report.json
       - name: Build network source verification report
         run: |
           LIMIT="${{ inputs.source_limit }}"
@@ -55,14 +57,123 @@ jobs:
             --verification-report source-verification-report.json \
             --discovery-report source-discovery-report.json \
             --output promotion-plan.json
-      - name: Print source maintenance summary
+      - name: Build cleanup proposal from promotion plan
+        run: |
+          python -m tools.openva.cleanup_proposals build \
+            --promotion-plan promotion-plan.json \
+            --json-output cleanup-proposal.json \
+            --markdown-output cleanup-proposal.md
+      - name: Build reviewer-friendly summary and CSV exports
         run: |
           python - <<'PY'
+          import csv
           import json
+          from pathlib import Path
+
+          reports = Path("reports")
+          reports.mkdir(exist_ok=True)
+
+          health = json.load(open('source-health-report.json', encoding='utf-8'))
+          verification = json.load(open('source-verification-report.json', encoding='utf-8'))
+          discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
+          promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
+          cleanup = json.load(open('cleanup-proposal.json', encoding='utf-8'))
+
+          lines = [
+              "# OpenVA Source Maintenance Report",
+              "",
+              "This artifact consolidates source health, network verification, source discovery, promotion planning, and cleanup proposal outputs.",
+              "",
+              "It is operational metadata only. It is not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+              "",
+              "## Summary",
+              "",
+              f"- Source health issues: `{health['summary']['sources_with_issues']}`",
+              f"- Verification sources requiring review: `{verification['summary']['sources_requiring_review']}`",
+              f"- Candidate sources reported: `{discovery['summary']['candidate_sources_written_or_reported']}`",
+              f"- Unavailable sources reported: `{discovery['summary']['unavailable_sources_written_or_reported']}`",
+              f"- Promotion plan actions: `{promotion['summary']['action_count']}`",
+              f"- Cleanup proposal actions: `{cleanup['summary']['action_count']}`",
+              f"- Blocking cleanup actions: `{cleanup['summary']['blocking_cleanup_actions']}`",
+              "",
+              "## Files",
+              "",
+              "- `summary.md`: maintainer-readable summary.",
+              "- `*.json`: machine-readable source of truth.",
+              "- `*.csv`: reviewer-friendly exports for scanning and sorting.",
+              "- `cleanup-proposal.md`: detailed maintainer proposal generated from the promotion plan.",
+              "",
+          ]
+          Path("summary.md").write_text("\n".join(lines), encoding="utf-8")
+
+          def write_rows(path, fields, rows):
+              with open(path, "w", encoding="utf-8", newline="") as handle:
+                  writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+                  writer.writeheader()
+                  for row in rows:
+                      writer.writerow(row)
+
+          write_rows(
+              "source-health.csv",
+              ["vendor_id", "source_id", "source_type", "source_url", "access_class", "source_language", "issues"],
+              [
+                  {**source, "issues": ";".join(source.get("issues", []))}
+                  for source in health.get("sources", [])
+              ],
+          )
+          write_rows(
+              "source-verification.csv",
+              ["vendor_id", "source_id", "source_type", "source_url", "verification_status", "http_status", "final_url", "requires_review"],
+              verification.get("sources", []),
+          )
+          candidate_rows = []
+          unavailable_rows = []
+          for vendor in discovery.get("vendors", []):
+              for candidate in vendor.get("candidates", []):
+                  evidence = candidate.get("evidence", {})
+                  candidate_rows.append({
+                      "vendor_id": candidate.get("vendor_id"),
+                      "candidate_source_id": candidate.get("candidate_source_id"),
+                      "source_type_candidate": candidate.get("source_type_candidate"),
+                      "candidate_url": candidate.get("candidate_url"),
+                      "confidence": candidate.get("confidence"),
+                      "http_status": evidence.get("http_status"),
+                      "final_url": evidence.get("final_url"),
+                      "matched_terms": ";".join(evidence.get("matched_terms", [])),
+                  })
+              for unavailable in vendor.get("unavailable_sources", []):
+                  unavailable_rows.append({
+                      "vendor_id": unavailable.get("vendor_id"),
+                      "unavailable_source_id": unavailable.get("unavailable_source_id"),
+                      "source_type": unavailable.get("source_type"),
+                      "status": unavailable.get("status"),
+                      "reason": unavailable.get("reason"),
+                      "next_review_after": unavailable.get("next_review_after"),
+                      "candidate_urls_checked": ";".join(unavailable.get("candidate_urls_checked", [])),
+                  })
+          write_rows(
+              "source-discovery-candidates.csv",
+              ["vendor_id", "candidate_source_id", "source_type_candidate", "candidate_url", "confidence", "http_status", "final_url", "matched_terms"],
+              candidate_rows,
+          )
+          write_rows(
+              "source-discovery-unavailable.csv",
+              ["vendor_id", "unavailable_source_id", "source_type", "status", "reason", "next_review_after", "candidate_urls_checked"],
+              unavailable_rows,
+          )
+          write_rows(
+              "promotion-plan-actions.csv",
+              ["action", "vendor_id", "source_type", "source_id", "candidate_source_id", "unavailable_source_id", "reason"],
+              promotion.get("actions", []),
+          )
+          print(Path("summary.md").read_text(encoding="utf-8"))
+          print("## JSON summaries")
           for path in [
+              'source-health-report.json',
               'source-verification-report.json',
               'source-discovery-report.json',
               'promotion-plan.json',
+              'cleanup-proposal.json',
           ]:
               report = json.load(open(path, encoding='utf-8'))
               print(f'## {path}')
@@ -73,7 +184,16 @@ jobs:
         with:
           name: openva-source-maintenance-report
           path: |
+            summary.md
+            cleanup-proposal.md
+            source-health.csv
+            source-verification.csv
+            source-discovery-candidates.csv
+            source-discovery-unavailable.csv
+            promotion-plan-actions.csv
+            source-health-report.json
             source-verification-report.json
             source-discovery-report.json
             promotion-plan.json
+            cleanup-proposal.json
           if-no-files-found: error

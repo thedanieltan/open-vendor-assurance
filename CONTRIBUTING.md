@@ -48,7 +48,7 @@ If a public page points to gated documents, record only the public page metadata
 
 If you are not opening a pull request, use the `Vendor catalog update` GitHub issue form to add a vendor, add a public source, or correct factual catalog metadata.
 
-The issue is an intake request, not canonical catalog data. Maintainers or catalog agents review the submitted public URLs, comment with the handoff checklist, and open a reviewed `Catalog:` PR when the update is accepted.
+The issue is an intake request, not canonical catalog data. You do not need to classify source types, artifact types, source language, access class, or rights class. The contribution intake agent classifies metadata during PR preparation, comments its checks on the issue, and opens a reviewed `Catalog:` PR only for low-risk existing-vendor source updates.
 
 Use the `Scope or boundary question` issue form first when you are unsure whether a source or request is in scope.
 

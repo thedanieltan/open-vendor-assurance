@@ -36,6 +36,29 @@ jobs:
           python -m tools.openva.source_refinement_queue "${{ inputs.observation_report_json }}" \
             --markdown-out reports/source-refinement-queue.md \
             --json-out reports/source-refinement-queue.json
+      - name: Build source refinement CSV export
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+
+          report = json.load(open("reports/source-refinement-queue.json", encoding="utf-8"))
+          with open("reports/source-refinement-queue.csv", "w", encoding="utf-8", newline="") as handle:
+              fields = [
+                  "vendor_id",
+                  "source_id",
+                  "result",
+                  "http_status",
+                  "final_url",
+                  "observed_at",
+                  "suggested_action",
+                  "notes",
+              ]
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+              writer.writeheader()
+              for item in report.get("items", []):
+                  writer.writerow(item)
+          PY
       - name: Print source refinement queue
         run: cat reports/source-refinement-queue.md
       - name: Upload source refinement queue artifacts
@@ -45,4 +68,5 @@ jobs:
           path: |
             reports/source-refinement-queue.md
             reports/source-refinement-queue.json
+            reports/source-refinement-queue.csv
           if-no-files-found: error

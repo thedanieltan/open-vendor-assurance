@@ -40,6 +40,29 @@ pytest -q
 
 Human review is required before merge.
 
+### Contribution intake agent
+
+Purpose:
+
+```text
+turn public catalog update issues into checked intake decisions and reviewed Catalog PRs
+```
+
+Allowed outputs:
+
+```text
+issue comments
+catalog-batches/intake/**
+data/vendors/**
+indexes/**
+openva-pack.json
+Catalog: PRs
+```
+
+The contribution intake agent may classify metadata and open PRs for low-risk existing-vendor source additions or corrections only. It must route new vendors, disputed metadata, unclear authority, regulated KYC/AML ambiguity, non-English uncertainty, schema gaps, or access-control concerns to human review.
+
+Automated fetch failures, including 403 and bot-protection responses, must not remove, deprecate, or downgrade catalog sources.
+
 ### Source refinement agent
 
 Purpose:
@@ -117,6 +140,7 @@ Use these prompt files as the starting instruction set for autonomous or semi-au
 | Agent | Prompt | Primary automation | Default mutation posture |
 | --- | --- | --- | --- |
 | Catalog curator | `prompts/catalog-curator-agent.md` | `catalog-agent-pr`, `candidate-promotion-pr` | PR-only catalog changes |
+| Contribution intake | `tools/openva/contribution_intake.py` | `contribution-intake-agent` | PR-only low-risk existing-vendor updates |
 | Source refinement | `prompts/source-refinement-agent.md` | `source-refinement-queue`, source maintenance workflows | PR-only source metadata fixes when clear |
 | Observation review | `prompts/observation-review-agent.md` | `observe-report`, `source-refinement-queue` | Non-mutating summaries |
 | Backlog curator | `prompts/backlog-curator-agent.md` | `catalog-growth-discovery` | Planning files only |
@@ -149,6 +173,7 @@ The following may be proposed through pull requests or issues:
 ```text
 vendor batch manifests
 generated catalog records
+contribution intake PRs
 source URL corrections
 coverage/backlog updates
 observation review summaries
@@ -169,6 +194,7 @@ official publisher exceptions
 non-English uncertain interpretation
 writing ambiguous observations
 handling gated or bot-protected sources
+new vendor identity from public issues
 release tagging
 repository visibility changes
 ```

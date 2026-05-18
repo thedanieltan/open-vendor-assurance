@@ -19,7 +19,7 @@ Use this checklist before making OpenVA public or announcing broader contributio
 - [ ] General PR template is current.
 - [ ] Catalog PR template is current.
 - [ ] Issue templates use a small public-facing set: vendor catalog updates, scope or boundary questions, bugs, and docs.
-- [ ] Catalog update issues receive a maintainer or catalog-agent handoff checklist before any catalog PR is opened.
+- [ ] Catalog update issues receive contribution-intake agent comments and either a reviewed `Catalog:` PR or a clear human-review decision.
 - [ ] Label taxonomy is documented.
 - [ ] Good-first-issue policy is documented.
 - [ ] Vendor-submitted update rules are documented.
@@ -29,7 +29,8 @@ Use this checklist before making OpenVA public or announcing broader contributio
 
 - [ ] Validation workflow passes on main.
 - [ ] Catalog PR guard workflow is active.
-- [ ] Observation dry-run workflow is manual-only.
+- [ ] Observation report workflow is read-only and does not write observation records.
+- [ ] Source maintenance report workflow is read-only and publishes maintainer-readable summary, JSON, and CSV artifacts.
 - [ ] Automation cannot merge directly to main.
 - [ ] Workflows use least-privilege permissions.
 - [ ] No workflow requires credentials for public source collection.
