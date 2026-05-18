@@ -14,6 +14,8 @@ def test_agent_control_plane_docs_exist():
         "prompts/catalog-curator-agent.md",
         "prompts/source-refinement-agent.md",
         "prompts/observation-review-agent.md",
+        "prompts/backlog-curator-agent.md",
+        "prompts/release-readiness-agent.md",
         "catalog-batches/backlog/README.md",
     ]
 
@@ -100,6 +102,34 @@ def test_source_and_observation_prompts_do_not_allow_mutating_reports_by_default
     assert "You must not:" in observation_text
     assert "write observation records" in observation_text
     assert "update vendor/source/artifact records" in observation_text
+
+
+def test_backlog_curator_prompt_keeps_candidates_out_of_canonical_catalog():
+    text = read("prompts/backlog-curator-agent.md")
+
+    assert "Backlog entries are planning inputs only" in text
+    assert "You must not create or update canonical catalog records" in text
+    assert "data/vendors/**" in text
+    assert "vendor scores" in text
+    assert "Catalog growth discovery artifacts are not source authority" in text
+
+
+def test_release_readiness_prompt_does_not_mutate_catalog_by_default():
+    text = read("prompts/release-readiness-agent.md")
+
+    for command in [
+        "python -m tools.openva.validate build-indexes",
+        "python -m tools.openva.validate validate",
+        "pytest -q",
+        "python -m tools.openva.conformance fixtures/packs/minimal-valid",
+        "python -m tools.openva.release_smoke",
+        "python -m tools.openva.release_artifacts check",
+    ]:
+        assert command in text
+
+    assert "You must not change catalog records" in text
+    assert "Do not write:" in text
+    assert "data/vendors/**" in text
 
 
 def test_backlog_readme_marks_backlog_as_planning_not_catalog_records():

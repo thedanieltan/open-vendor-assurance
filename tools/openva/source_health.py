@@ -10,6 +10,8 @@ from urllib.parse import urlparse
 
 import yaml
 
+from tools.openva.paths import relative_repo_path
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "source-health-report.json"
 
@@ -18,7 +20,7 @@ def load_yaml(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         data = yaml.safe_load(handle)
     if not isinstance(data, dict):
-        raise ValueError(f"{path.relative_to(ROOT)}: expected YAML mapping")
+        raise ValueError(f"{relative_repo_path(path, ROOT)}: expected YAML mapping")
     return data
 
 
@@ -51,7 +53,7 @@ def classify_source(source: dict[str, Any], path: Path) -> dict[str, Any]:
         issues.append("missing_not_advice_true")
 
     return {
-        "path": str(path.relative_to(ROOT)),
+        "path": relative_repo_path(path, ROOT),
         "vendor_id": source.get("vendor_id"),
         "source_id": source.get("source_id"),
         "source_type": source.get("source_type"),

@@ -9,6 +9,8 @@ from typing import Any
 
 import yaml
 
+from tools.openva.paths import relative_repo_path
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "coverage-audit-report.json"
 
@@ -28,7 +30,7 @@ def load_yaml(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         data = yaml.safe_load(handle)
     if not isinstance(data, dict):
-        raise ValueError(f"{path.relative_to(ROOT)}: expected YAML mapping")
+        raise ValueError(f"{relative_repo_path(path, ROOT)}: expected YAML mapping")
     return data
 
 
@@ -59,7 +61,7 @@ def build_coverage_audit(root: Path = ROOT) -> dict[str, Any]:
             "headquarters_country": vendor.get("headquarters_country"),
             "regions_served": vendor.get("regions_served", []),
             "vendor_categories": vendor.get("vendor_categories", []),
-            "path": str(path.relative_to(root)),
+            "path": relative_repo_path(path, root),
         }
 
     for path in artifact_paths(root):
@@ -74,7 +76,7 @@ def build_coverage_audit(root: Path = ROOT) -> dict[str, Any]:
                 "artifact_id": artifact.get("artifact_id"),
                 "artifact_type": artifact.get("artifact_type"),
                 "canonical_url": artifact.get("canonical_url"),
-                "path": str(path.relative_to(root)),
+                "path": relative_repo_path(path, root),
             }
         )
 

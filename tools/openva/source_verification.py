@@ -15,6 +15,8 @@ from urllib.request import Request, urlopen
 
 import yaml
 
+from tools.openva.paths import display_path as normalized_display_path
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "source-verification-report.json"
 USER_AGENT = "OpenVA-SourceVerifier/0.1 (+https://github.com/thedanieltan/open-vendor-assurance)"
@@ -102,10 +104,7 @@ class FetchResult:
 
 
 def display_path(path: Path, root: Path = ROOT) -> str:
-    try:
-        return str(path.resolve().relative_to(root.resolve()))
-    except ValueError:
-        return path.as_posix()
+    return normalized_display_path(path, root)
 
 
 def load_yaml(path: Path) -> dict[str, Any]:

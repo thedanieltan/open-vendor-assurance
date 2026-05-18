@@ -12,6 +12,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.openva.indexes import build_indexes, check_generated_current, records_for
 from tools.openva.pack import verify_pack_integrity
+from tools.openva.paths import relative_repo_path
 from tools.openva.url_safety import validate_url_safety
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -93,7 +94,7 @@ def records_for_optional_kind(kind: str) -> list[dict[str, Any]]:
     for path in iter_paths(FIXTURE_GLOBS[kind]):
         record = load_yaml(path)
         if isinstance(record, dict):
-            record["_openva_path"] = str(path.relative_to(ROOT))
+            record["_openva_path"] = relative_repo_path(path, ROOT)
             records.append(record)
     return records
 
@@ -290,7 +291,7 @@ def validate_quality_gates() -> list[str]:
 
     for path in ROOT.glob("**/*"):
         if path.is_dir() and path.name in RAW_CONTENT_DIR_NAMES:
-            failures.append(f"{path.relative_to(ROOT)}: raw content directory is not allowed by default")
+            failures.append(f"{relative_repo_path(path, ROOT)}: raw content directory is not allowed by default")
 
     return failures
 

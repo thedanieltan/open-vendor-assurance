@@ -118,6 +118,15 @@ quarantined
 3. Mark whether each candidate has clear public trust/legal/security pages.
 4. Do not expand the catalog unless assigned a phase.
 
+## Release readiness workflow
+
+1. Rebuild generated files.
+2. Validate catalog records.
+3. Run tests and conformance fixtures.
+4. Build and check release artifacts.
+5. Report generated-file drift, release blockers, and human-review notes.
+6. Do not change catalog records unless separately assigned.
+
 ## Required cleanup before commit
 
 Remove generated Python cache and accidental lockfiles:

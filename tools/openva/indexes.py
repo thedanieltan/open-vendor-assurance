@@ -7,6 +7,8 @@ from typing import Any
 
 import yaml
 
+from tools.openva.paths import relative_repo_path
+
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_VERSION = "0.1.0"
 EXPORT_PROFILE_ID = "openva.public-metadata.v1"
@@ -46,7 +48,7 @@ def records_for(kind: str) -> list[dict[str, Any]]:
     records = []
     for path in iter_paths(RECORD_GLOBS[kind]):
         record = load_yaml(path)
-        record["_openva_path"] = str(path.relative_to(ROOT))
+        record["_openva_path"] = relative_repo_path(path, ROOT)
         records.append(record)
     return sorted(records, key=lambda record: str(record[ID_KEYS[kind]]))
 
@@ -88,7 +90,9 @@ def vendor_manifest(vendor: dict[str, Any], sources: list[dict[str, Any]], artif
 
 
 def build_search_index(record_sets: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
-    sources = by_vendor(record_sets["source"]); candidates = by_vendor(record_sets["candidate_source"]); unavailable = by_vendor(record_sets["unavailable_source"])
+    sources = by_vendor(record_sets["source"])
+    candidates = by_vendor(record_sets["candidate_source"])
+    unavailable = by_vendor(record_sets["unavailable_source"])
     items = []
     for vendor in record_sets["vendor"]:
         vendor_id = str(vendor["vendor_id"])
@@ -118,7 +122,12 @@ def build_source_coverage(record_sets: dict[str, list[dict[str, Any]]]) -> dict[
 
 
 def build_registry_outputs(record_sets: dict[str, list[dict[str, Any]]]) -> None:
-    sources = by_vendor(record_sets["source"]); artifacts = by_vendor(record_sets["artifact"]); observations = by_vendor(record_sets["observation"]); changes = by_vendor(record_sets["change"]); candidates = by_vendor(record_sets["candidate_source"]); unavailable = by_vendor(record_sets["unavailable_source"])
+    sources = by_vendor(record_sets["source"])
+    artifacts = by_vendor(record_sets["artifact"])
+    observations = by_vendor(record_sets["observation"])
+    changes = by_vendor(record_sets["change"])
+    candidates = by_vendor(record_sets["candidate_source"])
+    unavailable = by_vendor(record_sets["unavailable_source"])
     for vendor in record_sets["vendor"]:
         vendor_id = str(vendor["vendor_id"])
         write_json(ROOT / "dist" / "vendors" / f"{vendor_id}.json", vendor_manifest(vendor, sources.get(vendor_id, []), artifacts.get(vendor_id, []), observations.get(vendor_id, []), changes.get(vendor_id, []), candidates.get(vendor_id, []), unavailable.get(vendor_id, [])))
@@ -131,7 +140,8 @@ def build_indexes() -> int:
     record_sets = {kind: records_for(kind) for kind in RECORD_GLOBS}
     counts = {}
     for kind, filename in INDEX_FILES.items():
-        records = record_sets[kind]; counts[kind] = len(records)
+        records = record_sets[kind]
+        counts[kind] = len(records)
         write_json(index_dir / filename, {"schema_version": SCHEMA_VERSION, "kind": kind, "generated_at": GENERATED_AT, "count": len(records), "items": records})
     write_json(index_dir / "summary.json", {"schema_version": SCHEMA_VERSION, "generated_at": GENERATED_AT, "counts": counts})
     build_registry_outputs(record_sets)
@@ -164,4 +174,8 @@ def check_generated_current() -> list[str]:
     before = {path: path.read_text(encoding="utf-8") if path.exists() else None for path in paths}
     build_indexes()
     after = {path: path.read_text(encoding="utf-8") if path.exists() else None for path in paths}
-    return [f"{path.relative_to(ROOT)} is not up to date; run python -m tools.openva.validate build-indexes" for path in paths if before.get(path) != after.get(path)]
+    return [
+        f"{relative_repo_path(path, ROOT)} is not up to date; run python -m tools.openva.validate build-indexes"
+        for path in paths
+        if before.get(path) != after.get(path)
+    ]

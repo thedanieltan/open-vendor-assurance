@@ -110,6 +110,20 @@ core PRs when explicitly assigned
 
 The release readiness agent must not change catalog records unless explicitly assigned.
 
+## Agent setup matrix
+
+Use these prompt files as the starting instruction set for autonomous or semi-autonomous runs:
+
+| Agent | Prompt | Primary automation | Default mutation posture |
+| --- | --- | --- | --- |
+| Catalog curator | `prompts/catalog-curator-agent.md` | `catalog-agent-pr`, `candidate-promotion-pr` | PR-only catalog changes |
+| Source refinement | `prompts/source-refinement-agent.md` | `source-refinement-queue`, source maintenance workflows | PR-only source metadata fixes when clear |
+| Observation review | `prompts/observation-review-agent.md` | `observe-report`, `source-refinement-queue` | Non-mutating summaries |
+| Backlog curator | `prompts/backlog-curator-agent.md` | `catalog-growth-discovery` | Planning files only |
+| Release readiness | `prompts/release-readiness-agent.md` | `release-candidate`, validation workflows | Non-catalog release reports by default |
+
+Agents that produce catalog changes must use `Catalog:` pull requests and must keep human review at the source-authority boundary.
+
 ## Automation levels
 
 ### Fully automated
@@ -252,7 +266,8 @@ A low-human-intervention OpenVA loop should run as follows:
 5. CI validates generated files, guardrails, and tests.
 6. Maintainer reviews source authority and merges clean PRs.
 7. Backlog curator updates coverage gaps.
-8. Workflow review confirms automation remains useful and non-duplicative.
+8. Release readiness agent checks pack, fixture, workflow, and release posture.
+9. Workflow review confirms automation remains useful and non-duplicative.
 ```
 
 The human role should focus on trust boundaries, not repetitive YAML production.

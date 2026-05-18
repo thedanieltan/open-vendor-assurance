@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 from typing import Any
 
 import yaml
+
+from tools.openva.paths import normalize_repo_path, relative_repo_path
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -39,7 +41,7 @@ PROHIBITED_FILES = {
 
 
 def normalize_path(path: str) -> str:
-    return str(PurePosixPath(path.strip()))
+    return normalize_repo_path(path)
 
 
 def is_allowed_catalog_path(path: str) -> bool:
@@ -61,7 +63,7 @@ def load_yaml(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         data = yaml.safe_load(handle)
     if not isinstance(data, dict):
-        raise ValueError(f"{path.relative_to(ROOT)}: expected YAML mapping")
+        raise ValueError(f"{relative_repo_path(path, ROOT)}: expected YAML mapping")
     return data
 
 
@@ -114,7 +116,7 @@ def validate_catalog_batch_duplicates(paths: list[str], *, root: Path = ROOT) ->
             vendor_path = root / vendor_record_path
             if vendor_path.exists():
                 failures.append(
-                    f"{path}: {vendor_id}: vendor_id already exists at {vendor_path.relative_to(root)}"
+                    f"{path}: {vendor_id}: vendor_id already exists at {relative_repo_path(vendor_path, root)}"
                 )
 
     return failures
