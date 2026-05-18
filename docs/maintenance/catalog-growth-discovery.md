@@ -10,7 +10,7 @@ OpenVA uses taxonomy-driven discovery to grow the launch corpus without treating
 
 ## Discovery boundary
 
-The queue drives discovery reports and generated candidate-promotion plan proposals. It does not write canonical source records.
+The queue drives discovery reports and generated candidate-promotion plan proposals. It does not write canonical vendor or source records.
 
 Required queue posture:
 
@@ -37,7 +37,8 @@ It performs this path:
 ```text
 catalog-growth-discovery queue
 -> validate taxonomy-linked queue
--> run source discovery against bounded vendor scope
+-> discover new vendor candidates from public index surfaces
+-> run source discovery against bounded existing vendor scope
 -> build promotion plan
 -> split candidate promotion actions into generated plan proposals
 -> update catalog growth discovery issue
@@ -46,7 +47,26 @@ catalog-growth-discovery queue
 
 The workflow writes no canonical records and opens no Catalog PR directly.
 
-Generated plan proposals are review inputs. Maintainers may copy approved proposals into `maintenance/reviewed/` before using `candidate-promotion-pr`.
+## Vendor candidates
+
+Vendor candidates are launch-corpus discovery outputs. They are not catalog vendor records.
+
+A vendor candidate may identify:
+
+```text
+candidate_vendor_id
+display_name_candidate
+official_domain_candidate
+coverage_lane
+cohort_id
+source_index_url
+```
+
+A maintainer must review vendor candidates before any canonical vendor record is created.
+
+## Source candidates
+
+Generated candidate-promotion plan proposals are review inputs. Maintainers may copy approved proposals into `maintenance/reviewed/` before using `candidate-promotion-pr`.
 
 ## Batching
 
