@@ -40,7 +40,7 @@ GitHub already provides:
 - comments;
 - checks;
 - artifact downloads;
-- issue templates;
+- issue templates and catalog intake handoff comments;
 - labels;
 - audit history.
 
@@ -193,6 +193,18 @@ Reviewer focus:
 - generated indexes and pack updates;
 - validation and tests;
 - regional and language handling.
+
+### Catalog intake issues
+
+Produced by the consolidated vendor catalog update issue form.
+
+Reviewer focus:
+
+- submitted URLs are public and authoritative;
+- no private, gated, copied, screenshot, credential, or anti-bot bypass material is present;
+- the request is factual metadata only;
+- whether the issue should become a small `Catalog:` PR, be redirected to a scope question, or be closed as blocked by policy;
+- link the resulting PR back to the issue before closing it.
 
 ### Workflow review
 

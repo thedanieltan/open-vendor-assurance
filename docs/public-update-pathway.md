@@ -45,6 +45,16 @@ Vendor cooperation should create better public update paths, not exceptions to O
 
 ## Update paths
 
+### Non-technical contributor updates
+
+Non-technical contributors should use the GitHub issue form named:
+
+```text
+Vendor catalog update
+```
+
+That issue is an intake request, not a catalog record. The catalog intake handoff workflow comments with the maintainer or catalog-agent checklist, and an accepted request must still become a reviewed `Catalog:` PR before it changes OpenVA data.
+
 ### Agent-observed updates
 
 An agent may observe public vendor URLs, compute metadata or hashes when safe, and propose updates.
@@ -87,3 +97,5 @@ Every update is reviewed against the same boundaries:
 - no gated materials;
 - no promotional claims;
 - source URL must be vendor-controlled or covered by an approved public publisher exception.
+
+The handoff is complete only when the resulting PR is linked back to the intake issue or the issue is closed with a clear scope decision.

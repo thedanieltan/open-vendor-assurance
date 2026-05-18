@@ -44,6 +44,14 @@ A source must be public. Public means accessible without login, credentials, NDA
 
 If a public page points to gated documents, record only the public page metadata. Do not include gated contents, gated document hashes, summaries of gated documents, or extracted gated text.
 
+## Non-technical catalog updates
+
+If you are not opening a pull request, use the `Vendor catalog update` GitHub issue form to add a vendor, add a public source, or correct factual catalog metadata.
+
+The issue is an intake request, not canonical catalog data. Maintainers or catalog agents review the submitted public URLs, comment with the handoff checklist, and open a reviewed `Catalog:` PR when the update is accepted.
+
+Use the `Scope or boundary question` issue form first when you are unsure whether a source or request is in scope.
+
 ## Language rules
 
 The native-language source remains authoritative.

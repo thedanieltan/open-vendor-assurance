@@ -161,7 +161,7 @@ Before public relaunch, maintainers should confirm:
 - SECURITY is current;
 - LICENSE reflects the intended free-use posture;
 - CODEOWNERS covers governance-sensitive paths;
-- issue templates route users correctly;
+- issue templates route users through a small catalog update, scope question, bug, and docs set;
 - PR templates communicate source and non-advisory checks;
 - validation workflow is green;
 - scheduled maintenance workflow is enabled;

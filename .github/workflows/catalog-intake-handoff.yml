@@ -1,0 +1,59 @@
+name: Catalog intake handoff
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  catalog-intake-handoff:
+    if: contains(join(github.event.issue.labels.*.name, ','), 'area:catalog') || startsWith(github.event.issue.title, 'Catalog update:')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create or update handoff comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = '<!-- openva-catalog-intake-handoff -->';
+            const issue = context.payload.issue;
+            const body = `${marker}
+            Thanks for the catalog update. This issue is review input only; it is not canonical OpenVA catalog metadata until a reviewed PR is merged.
+
+            Maintainer or catalog-agent handoff:
+
+            - Confirm every submitted URL is public and authoritative.
+            - Reject or redirect the issue if it includes gated/private materials, copied full text, screenshots, credentials, or anti-bot/access-control bypass.
+            - Reject or reword advisory claims such as compliant, safe, approved, recommended, suitable, adequate, low risk, or high risk.
+            - If accepted, prepare a small \`Catalog:\` PR or reviewed batch manifest under \`catalog-batches/\`.
+            - Generate records and indexes from the reviewed batch when applicable.
+            - Run \`python -m tools.openva.validate validate\` and \`pytest -q\`.
+            - Link the resulting PR back to this issue before closing it.
+
+            Useful decision states: \`accepted\`, \`needs-source-update\`, \`needs-language-review\`, \`needs-catalog-pr\`, \`blocked-gated-source\`, \`blocked-policy-boundary\`.`;
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find((comment) => comment.user?.type === 'Bot' && comment.body?.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body,
+              });
+            }

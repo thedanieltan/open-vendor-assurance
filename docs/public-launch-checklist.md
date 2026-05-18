@@ -18,7 +18,8 @@ Use this checklist before making OpenVA public or announcing broader contributio
 
 - [ ] General PR template is current.
 - [ ] Catalog PR template is current.
-- [ ] Issue templates exist for source corrections, catalog requests, boundary questions, bugs, docs, and out-of-scope requests.
+- [ ] Issue templates use a small public-facing set: vendor catalog updates, scope or boundary questions, bugs, and docs.
+- [ ] Catalog update issues receive a maintainer or catalog-agent handoff checklist before any catalog PR is opened.
 - [ ] Label taxonomy is documented.
 - [ ] Good-first-issue policy is documented.
 - [ ] Vendor-submitted update rules are documented.
@@ -56,8 +57,8 @@ Use this checklist before making OpenVA public or announcing broader contributio
 
 - [ ] Open catalog PRs are labelled or reviewed.
 - [ ] Open governance-sensitive PRs are reviewed or clearly blocked.
-- [ ] Issues requesting private/gated materials are closed or labelled out-of-scope.
-- [ ] Issues requesting legal/compliance/procurement/risk advice are closed or labelled out-of-scope.
+- [ ] Issues requesting private/gated materials are closed or labelled as blocked by scope.
+- [ ] Issues requesting legal/compliance/procurement/risk advice are closed or labelled as blocked by scope.
 - [ ] Security-sensitive reports are not exposed publicly.
 
 ## Launch note

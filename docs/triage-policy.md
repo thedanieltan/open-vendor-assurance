@@ -18,26 +18,24 @@ Triage should protect OpenVA's boundaries:
 
 Use these categories when triaging issues.
 
-### Source correction
+### Vendor catalog update
 
-Use for factual corrections to existing public source metadata.
+Use for requests to add vendors, add public sources, or correct factual public vendor-source metadata.
 
 Examples:
 
+- new vendor has suitable public sources;
+- public source should be added to an existing vendor;
 - source URL changed;
 - vendor legal name changed;
 - public subprocessor page moved;
 - language classification needs correction.
 
-### Catalog request
+The catalog intake handoff workflow adds a checklist to catalog update issues. That comment is a handoff aid only; catalog data changes still require a reviewed `Catalog:` PR.
 
-Use for requests to add vendors or artifact references.
+### Scope or boundary question
 
-A catalog request is acceptable only when the requested vendor has suitable public sources.
-
-### Boundary question
-
-Use for questions about whether a source is public, gated, private, vendor-controlled, or suitable for OpenVA.
+Use for questions about whether a source, request, or contribution is public, gated, private, vendor-controlled, advisory, out of scope, or otherwise suitable for OpenVA.
 
 Boundary questions should be resolved before any data is added.
 
@@ -53,7 +51,7 @@ Use for unclear README, contributor, policy, protocol, or fixture documentation.
 
 Use only for public-safe security process issues. Do not ask reporters to disclose secrets, credentials, vulnerabilities, or exploit details in public issues.
 
-### Out of scope
+### Blocked by scope
 
 Use when the issue asks for:
 
@@ -135,7 +133,7 @@ scope:public-source-only
 scope:gated-material
 scope:metadata-only
 scope:non-advisory
-scope:out-of-scope
+scope:blocked
 
 priority:p0
 priority:p1
