@@ -12,7 +12,8 @@
     "result",
     "access_class",
     "hashes",
-    "storage"
+    "storage",
+    "not_advice"
   ],
   "properties": {
     "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
@@ -46,6 +47,7 @@
       },
       "additionalProperties": false
     },
+    "not_advice": { "const": true },
     "notes": { "type": ["string", "null"], "maxLength": 1000 }
   },
   "additionalProperties": false

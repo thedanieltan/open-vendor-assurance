@@ -116,7 +116,7 @@ subprocessors_list
 privacy_notice
 security_page
 trust_center
-compliance_certifications_page
+compliance_page
 ai_terms
 data_transfer_terms
 product_terms
@@ -132,7 +132,7 @@ dpa
 subprocessors_list
 privacy_notice
 security_page or trust_center
-compliance_certifications_page
+compliance_page
 ```
 
 Where a public artifact is unavailable, the PR should not invent a substitute. It should record a coverage gap or omit the artifact until a public source is available.

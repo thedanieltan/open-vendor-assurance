@@ -20,7 +20,7 @@ CORE_ARTIFACT_TYPES = (
     "privacy_notice",
     "security_page",
     "trust_center",
-    "compliance_certifications_page",
+    "compliance_page",
 )
 
 HIGH_VALUE_ARTIFACT_TYPES = frozenset(CORE_ARTIFACT_TYPES)

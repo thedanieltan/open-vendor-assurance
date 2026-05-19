@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/adapter-normalized-record.schema.json",
+  "title": "OpenVA Adapter Normalized Record",
+  "type": "object",
+  "required": ["record_class", "canonical", "advisory_boundary"],
+  "properties": {
+    "record_class": {
+      "enum": [
+        "vendor",
+        "canonical",
+        "candidate",
+        "unavailable",
+        "observation",
+        "artifact",
+        "change",
+        "coverage"
+      ]
+    },
+    "canonical": { "type": "boolean" },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "record_class": { "const": "canonical" } },
+        "required": ["record_class"]
+      },
+      "then": {
+        "properties": { "canonical": { "const": true } }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "record_class": {
+            "enum": ["vendor", "candidate", "unavailable", "observation", "artifact", "change", "coverage"]
+          }
+        },
+        "required": ["record_class"]
+      },
+      "then": {
+        "properties": { "canonical": { "const": false } }
+      }
+    }
+  ]
+}

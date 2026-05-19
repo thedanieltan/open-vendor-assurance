@@ -1,1 +1,40 @@
-{"profileId":"openva.public-metadata.v1","schemaVersion":"openva-export-pack.v1","packId":"invalid-missing-guarantee","generatedAt":"1970-01-01T00:00:00Z","schema_version":"0.1.0","pack_id":"invalid-missing-guarantee","name":"invalid-missing-guarantee","description":"Consumer conformance fixture pack.","publisher":"OpenVA fixtures","license":{"metadata":"CC0-1.0","code":"MIT","vendor_materials":"not included"},"generated_at":"1970-01-01T00:00:00Z","indexes":{"vendors":"indexes/vendors.json","sources":"indexes/sources.json","artifacts":"indexes/artifacts.json","observations":"indexes/observations.json","changes":"indexes/changes.json","summary":"indexes/summary.json","vendor_search":"indexes/vendor-search.json","source_coverage":"indexes/source-coverage.json","legal_entities":"indexes/legal-entities.json","entity_mentions":"indexes/entity-mentions.json","contracting_entity_resolution":"indexes/contracting-entity-resolution.json"},"guarantees":{"public_sources_only":true,"metadata_first":true,"raw_documents_mirrored_by_default":false},"registry_outputs":{"vendor_manifests":"dist/vendors/{vendor_id}.json"}}
+{
+    "profileId":  "openva.public-metadata.v1",
+    "schemaVersion":  "openva-export-pack.v1",
+    "packId":  "invalid-missing-guarantee",
+    "generatedAt":  "1970-01-01T00:00:00Z",
+    "schema_version":  "0.1.0",
+    "pack_id":  "invalid-missing-guarantee",
+    "name":  "invalid-missing-guarantee",
+    "description":  "Consumer conformance fixture pack.",
+    "publisher":  "OpenVA fixtures",
+    "license":  {
+                    "metadata":  "CC0-1.0",
+                    "code":  "MIT",
+                    "vendor_materials":  "not included"
+                },
+    "generated_at":  "1970-01-01T00:00:00Z",
+    "indexes":  {
+                    "vendors":  "indexes/vendors.json",
+                    "sources":  "indexes/sources.json",
+                    "artifacts":  "indexes/artifacts.json",
+                    "observations":  "indexes/observations.json",
+                    "changes":  "indexes/changes.json",
+                    "summary":  "indexes/summary.json",
+                    "vendor_search":  "indexes/vendor-search.json",
+                    "source_coverage":  "indexes/source-coverage.json",
+                    "legal_entities":  "indexes/legal-entities.json",
+                    "entity_mentions":  "indexes/entity-mentions.json",
+                    "contracting_entity_resolution":  "indexes/contracting-entity-resolution.json",
+                    "candidate_sources":  "indexes/candidate-sources.json",
+                    "unavailable_sources":  "indexes/unavailable-sources.json"
+                },
+    "guarantees":  {
+                       "public_sources_only":  true,
+                       "metadata_first":  true,
+                       "raw_documents_mirrored_by_default":  false
+                   },
+    "registry_outputs":  {
+                             "vendor_manifests":  "dist/vendors/{vendor_id}.json"
+                         }
+}

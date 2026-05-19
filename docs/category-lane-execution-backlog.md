@@ -45,7 +45,7 @@ subprocessors_list
 privacy_notice
 security_page
 trust_center
-compliance_certifications_page
+compliance_page
 ```
 
 ## Baseline targets
@@ -197,7 +197,7 @@ subprocessors_list
 privacy_notice
 security_page
 trust_center
-compliance_certifications_page
+compliance_page
 ```
 
 ### B2. Payments, fintech, KYC, and risk tier-1 vendors

@@ -16,15 +16,15 @@ EXPORT_SCHEMA_VERSION = "openva-export-pack.v1"
 GENERATED_AT = "1970-01-01T00:00:00Z"
 
 RECORD_GLOBS = {
-    "vendor": ["examples/vendors/*/vendor.yaml", "data/vendors/*/vendor.yaml"],
-    "source": ["examples/vendors/*/sources/*.yaml", "data/vendors/*/sources/*.yaml"],
-    "artifact": ["examples/vendors/*/artifacts/*.yaml", "data/vendors/*/artifacts/*.yaml"],
-    "observation": ["examples/vendors/*/observations/*.yaml", "data/vendors/*/observations/*.yaml"],
-    "change": ["examples/vendors/*/changes/*.yaml", "data/vendors/*/changes/*.yaml"],
-    "legal_entity": ["examples/vendors/*/legal_entities/*.yaml", "data/vendors/*/legal_entities/*.yaml"],
-    "entity_mention": ["examples/vendors/*/entity_mentions/*.yaml", "data/vendors/*/entity_mentions/*.yaml"],
-    "candidate_source": ["examples/vendors/*/candidate_sources/*.yaml", "data/vendors/*/candidate_sources/*.yaml"],
-    "unavailable_source": ["examples/vendors/*/unavailable_sources/*.yaml", "data/vendors/*/unavailable_sources/*.yaml"],
+    "vendor": ["data/vendors/*/vendor.yaml"],
+    "source": ["data/vendors/*/sources/*.yaml"],
+    "artifact": ["data/vendors/*/artifacts/*.yaml"],
+    "observation": ["data/vendors/*/observations/*.yaml"],
+    "change": ["data/vendors/*/changes/*.yaml"],
+    "legal_entity": ["data/vendors/*/legal_entities/*.yaml"],
+    "entity_mention": ["data/vendors/*/entity_mentions/*.yaml"],
+    "candidate_source": ["data/vendors/*/candidate_sources/*.yaml"],
+    "unavailable_source": ["data/vendors/*/unavailable_sources/*.yaml"],
 }
 INDEX_FILES = {
     "vendor": "vendors.json",
@@ -34,6 +34,8 @@ INDEX_FILES = {
     "change": "changes.json",
     "legal_entity": "legal-entities.json",
     "entity_mention": "entity-mentions.json",
+    "candidate_source": "candidate-sources.json",
+    "unavailable_source": "unavailable-sources.json",
 }
 REGISTRY_INDEX_FILES = {
     "vendor_search": "vendor-search.json",
@@ -73,6 +75,16 @@ def records_for(kind: str) -> list[dict[str, Any]]:
     records = []
     for path in iter_paths(RECORD_GLOBS[kind]):
         record = load_yaml(path)
+        if kind == "vendor":
+            catalog_status = record.get("catalog_status", record.get("status"))
+            if catalog_status is not None:
+                record["catalog_status"] = catalog_status
+                record.setdefault("status", catalog_status)
+        if kind == "change":
+            significance = record.get("catalog_change_significance", record.get("materiality"))
+            if significance is not None:
+                record["catalog_change_significance"] = significance
+                record.setdefault("materiality", significance)
         record["_openva_path"] = relative_repo_path(path, ROOT)
         records.append(record)
     return sorted(records, key=lambda record: str(record[ID_KEYS[kind]]))
@@ -141,7 +153,8 @@ def build_search_index(record_sets: dict[str, list[dict[str, Any]]]) -> dict[str
             "legal_name": vendor.get("legal_name"),
             "official_domains": vendor.get("official_domains", []),
             "headquarters_country": vendor.get("headquarters_country"),
-            "status": vendor.get("status"),
+            "catalog_status": vendor.get("catalog_status", vendor.get("status")),
+            "status": vendor.get("status", vendor.get("catalog_status")),
             "source_types": types(sources.get(vendor_id, []), "source_type"),
             "candidate_source_types": types(candidates.get(vendor_id, []), "source_type_candidate"),
             "unavailable_source_types": types(unavailable.get(vendor_id, []), "source_type"),
@@ -151,12 +164,33 @@ def build_search_index(record_sets: dict[str, list[dict[str, Any]]]) -> dict[str
 
 
 def build_source_coverage(record_sets: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+    sources = by_vendor(record_sets["source"])
+    candidates = by_vendor(record_sets["candidate_source"])
+    unavailable = by_vendor(record_sets["unavailable_source"])
+    vendor_coverage = []
+    core_source_types = {"dpa", "privacy_notice", "security_page", "subprocessor_list"}
+    for vendor in record_sets["vendor"]:
+        vendor_id = str(vendor["vendor_id"])
+        canonical_types = types(sources.get(vendor_id, []), "source_type")
+        candidate_types = types(candidates.get(vendor_id, []), "source_type_candidate")
+        unavailable_types = types(unavailable.get(vendor_id, []), "source_type")
+        covered_types = set(canonical_types) | set(candidate_types) | set(unavailable_types)
+        vendor_coverage.append(
+            {
+                "vendor_id": vendor_id,
+                "canonical_source_types": canonical_types,
+                "candidate_source_types": candidate_types,
+                "unavailable_source_types": unavailable_types,
+                "missing_core_source_types": sorted(core_source_types - covered_types),
+            }
+        )
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": GENERATED_AT,
         "source_type_counts": dict(sorted(Counter(str(item["source_type"]) for item in record_sets["source"] if item.get("source_type")).items())),
         "candidate_source_type_counts": dict(sorted(Counter(str(item["source_type_candidate"]) for item in record_sets["candidate_source"] if item.get("source_type_candidate")).items())),
         "unavailable_source_type_counts": dict(sorted(Counter(str(item["source_type"]) for item in record_sets["unavailable_source"] if item.get("source_type")).items())),
+        "vendor_coverage": sorted(vendor_coverage, key=lambda item: item["vendor_id"]),
     }
 
 
@@ -276,6 +310,8 @@ def build_indexes() -> int:
         "change": "changes",
         "legal_entity": "legal_entities",
         "entity_mention": "entity_mentions",
+        "candidate_source": "candidate_sources",
+        "unavailable_source": "unavailable_sources",
     }
     index_paths = {
         **{index_names[key]: f"indexes/{filename}" for key, filename in INDEX_FILES.items()},
