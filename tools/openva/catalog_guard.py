@@ -15,12 +15,14 @@ ALLOWED_PREFIXES = (
     "catalog-batches/",
     "data/vendors/",
     "indexes/",
+    "dist/",
 )
 
 ALLOWED_FILES = {
     "openva-pack.json",
     "docs/coverage-map.md",
     "docs/vendor-expansion-backlog.md",
+    "maintenance/applied/applied-plans.json",
 }
 
 PROHIBITED_PREFIXES = (

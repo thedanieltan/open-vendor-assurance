@@ -37,13 +37,26 @@ def test_apply_reviewed_candidate_promotion_writes_canonical_source(tmp_path):
 
     report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
     source_path = tmp_path / "data/vendors/example/sources/example-dpa.yaml"
+    artifact_path = tmp_path / "data/vendors/example/artifacts/example-dpa.yaml"
+    change_path = tmp_path / "data/vendors/example/changes/candidate-promotion-example-dpa.yaml"
     source = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    artifact = yaml.safe_load(artifact_path.read_text(encoding="utf-8"))
+    change = yaml.safe_load(change_path.read_text(encoding="utf-8"))
 
     assert report["summary"]["canonical_sources_written"] == 1
+    assert report["summary"]["canonical_artifacts_written"] == 1
+    assert report["summary"]["change_events_written"] == 1
     assert source["source_id"] == "example-dpa"
     assert source["source_url"] == "https://example.test/dpa"
     assert source["rights_class"] == "metadata_only"
+    assert source["provenance"]["confidence"] == "high"
     assert source["not_advice"] is True
+    assert artifact["artifact_id"] == "example-dpa"
+    assert artifact["source_id"] == "example-dpa"
+    assert artifact["hashes"]["raw_sha256"] == "sha256:TBD"
+    assert artifact["storage"]["raw_document_stored"] is False
+    assert change["change_type"] == "created"
+    assert change["not_advice"] is True
 
 
 def test_apply_reviewed_candidate_promotion_skips_duplicate_source(tmp_path):

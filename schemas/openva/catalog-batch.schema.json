@@ -61,6 +61,12 @@
           "uniqueItems": true,
           "default": []
         },
+        "observed_entity_mention_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true,
+          "default": []
+        },
         "source_authority_language": { "type": ["string", "null"], "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
         "official_domains": {
           "type": "array",
@@ -124,6 +130,17 @@
             "other_public_source"
           ]
         },
+        "entity_id": { "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] },
+        "source_authority_class": {
+          "enum": [
+            "vendor_published",
+            "public_registry",
+            "public_authority",
+            "court_or_regulatory_filing",
+            "vendor_legal_terms"
+          ],
+          "default": "vendor_published"
+        },
         "title_native": { "type": "string", "minLength": 1, "maxLength": 300 },
         "title_en": { "type": ["string", "null"], "maxLength": 300 },
         "source_url": { "$ref": "#/$defs/url" },
@@ -169,6 +186,20 @@
           "items": { "$ref": "#/$defs/region_tag" },
           "uniqueItems": true,
           "default": []
+        },
+        "entity_scope": {
+          "type": "object",
+          "required": ["scope_type"],
+          "properties": {
+            "scope_type": { "enum": ["specific_entities", "entity_family", "brand_surface"] },
+            "entity_ids": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/id" },
+              "uniqueItems": true,
+              "default": []
+            }
+          },
+          "additionalProperties": false
         },
         "product_scope": {
           "type": "array",

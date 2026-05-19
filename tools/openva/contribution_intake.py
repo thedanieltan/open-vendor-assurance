@@ -280,6 +280,7 @@ def build_source_entry(vendor: VendorMatch, url: str, source_type: str) -> dict[
     return {
         "source_id": source_id,
         "source_type": source_type,
+        "source_authority_class": "vendor_published",
         "title_native": title,
         "title_en": title,
         "source_url": url,
@@ -479,7 +480,7 @@ def intake_decision(
                         url_checks["passed"] = False
                         status = verification["verification_status"]
                         url_checks["messages"].append(f"network verification requires review: {status}")
-                        if status == "forbidden_or_gated":
+                        if status in {"bot_protected", "gated_or_login_required", "forbidden_unknown", "rate_limited"}:
                             reasons.append("automated_observation_blocked_not_source_removal")
                         else:
                             reasons.append("network_verification_needs_human_review")

@@ -1,0 +1,364 @@
+{
+  "artifacts": [
+    {
+      "_openva_path": "data/vendors/bill-com/artifacts/bill-com-compliance.yaml",
+      "access_class": "public_web",
+      "artifact_id": "bill-com-compliance",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.bill.com/security#compliance",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "BILL services"
+      ],
+      "region_scope": [
+        "us"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "bill-com-compliance",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/artifacts/bill-com-privacy.yaml",
+      "access_class": "public_web",
+      "artifact_id": "bill-com-privacy",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://www.bill.com/privacy",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "BILL services"
+      ],
+      "region_scope": [
+        "us"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "bill-com-privacy",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/artifacts/bill-com-security.yaml",
+      "access_class": "public_web",
+      "artifact_id": "bill-com-security",
+      "artifact_type": "security_page",
+      "canonical_url": "https://www.bill.com/security",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "BILL services"
+      ],
+      "region_scope": [
+        "us"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "bill-com-security",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/artifacts/bill-com-subprocessors.yaml",
+      "access_class": "public_web",
+      "artifact_id": "bill-com-subprocessors",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://www.bill.com/legal/subprocessors",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "BILL services"
+      ],
+      "region_scope": [
+        "us"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "bill-com-subprocessors",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "bill-com"
+    }
+  ],
+  "candidate_sources": [],
+  "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/bill-com/sources/bill-com-compliance.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-16T00:00:00Z",
+        "confidence": "low",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "bill-com-compliance",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.bill.com/security#compliance",
+      "summary_en": "Public BILL compliance metadata reference.",
+      "summary_native": "Public BILL compliance metadata reference.",
+      "title_en": "BILL Security and Compliance",
+      "title_native": "BILL Security and Compliance",
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/sources/bill-com-privacy.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-16T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "bill-com-privacy",
+      "source_language": "en",
+      "source_type": "privacy_notice",
+      "source_url": "https://www.bill.com/privacy",
+      "summary_en": "Public BILL privacy notice metadata reference.",
+      "summary_native": "Public BILL privacy notice metadata reference.",
+      "title_en": "BILL Privacy Notice",
+      "title_native": "BILL Privacy Notice",
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/sources/bill-com-security.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-16T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "bill-com-security",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://www.bill.com/security",
+      "summary_en": "Public BILL security metadata reference.",
+      "summary_native": "Public BILL security metadata reference.",
+      "title_en": "BILL Security",
+      "title_native": "BILL Security",
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/sources/bill-com-subprocessors.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-16T00:00:00Z",
+        "confidence": "low",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "bill-com-subprocessors",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.bill.com/legal/subprocessors",
+      "summary_en": "Public BILL subprocessors metadata reference.",
+      "summary_native": "Public BILL subprocessors metadata reference.",
+      "title_en": "BILL Subprocessors",
+      "title_native": "BILL Subprocessors",
+      "vendor_id": "bill-com"
+    }
+  ],
+  "changes": [
+    {
+      "_openva_path": "data/vendors/bill-com/changes/hr-finance-procurement-batch-1-bill-com-compliance.yaml",
+      "artifact_id": "bill-com-compliance",
+      "change_id": "hr-finance-procurement-batch-1-bill-com-compliance",
+      "change_type": "created",
+      "detected_at": "2026-05-16T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "bill-com-compliance",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/changes/hr-finance-procurement-batch-1-bill-com-privacy.yaml",
+      "artifact_id": "bill-com-privacy",
+      "change_id": "hr-finance-procurement-batch-1-bill-com-privacy",
+      "change_type": "created",
+      "detected_at": "2026-05-16T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "bill-com-privacy",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/changes/hr-finance-procurement-batch-1-bill-com-security.yaml",
+      "artifact_id": "bill-com-security",
+      "change_id": "hr-finance-procurement-batch-1-bill-com-security",
+      "change_type": "created",
+      "detected_at": "2026-05-16T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "bill-com-security",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bill-com/changes/hr-finance-procurement-batch-1-bill-com-subprocessors.yaml",
+      "artifact_id": "bill-com-subprocessors",
+      "change_id": "hr-finance-procurement-batch-1-bill-com-subprocessors",
+      "change_type": "created",
+      "detected_at": "2026-05-16T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "bill-com-subprocessors",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "bill-com"
+    }
+  ],
+  "entity_mentions": [],
+  "generated_at": "1970-01-01T00:00:00Z",
+  "guarantees": {
+    "metadata_first": true,
+    "non_advisory": true,
+    "public_sources_only": true,
+    "raw_documents_mirrored_by_default": false
+  },
+  "legal_entities": [],
+  "observations": [],
+  "schema_version": "0.1.0",
+  "summary": {
+    "artifact_count": 4,
+    "candidate_source_count": 0,
+    "candidate_source_types": [],
+    "canonical_source_count": 4,
+    "entity_mention_count": 0,
+    "legal_entity_count": 0,
+    "source_types": [
+      "compliance_page",
+      "privacy_notice",
+      "security_page",
+      "subprocessors_list"
+    ],
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "dpa"
+    ]
+  },
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/bill-com/unavailable_sources/bill-com-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://www.bill.com/legal/data-processing-addendum"
+      ],
+      "next_review_after": "2026-08-14",
+      "not_advice": true,
+      "notes": "Canonical source removed through reviewed maintenance action because the promotion plan marked it as cleanup_source_for_review. This is not a legal, procurement, compliance, risk, or vendor approval conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-05-16T08:00:44.381172Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "bill-com-dpa",
+      "vendor_id": "bill-com"
+    }
+  ],
+  "vendor": {
+    "_openva_path": "data/vendors/bill-com/vendor.yaml",
+    "display_name": "BILL",
+    "entity_surface": "regional_surface",
+    "headquarters_country": "US",
+    "legal_name": "Bill.com, LLC",
+    "notes": "Public-source-only catalog record. Metadata references general public BILL assurance materials and does not cover bespoke customer agreements.",
+    "official_domains": [
+      "bill.com"
+    ],
+    "public_entrypoints": [
+      "https://www.bill.com/legal",
+      "https://www.bill.com/security"
+    ],
+    "regions_served": [
+      "us"
+    ],
+    "schema_version": "0.1.0",
+    "source_authority_language": "en",
+    "source_policy": {
+      "gated_materials_excluded": true,
+      "public_sources_only": true,
+      "raw_documents_mirrored_by_default": false
+    },
+    "status": "active",
+    "vendor_categories": [
+      "financial_infrastructure",
+      "payments"
+    ],
+    "vendor_id": "bill-com"
+  }
+}

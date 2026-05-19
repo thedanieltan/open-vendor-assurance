@@ -1,5 +1,5 @@
 {
-  "description": "Public-source-only vendor assurance metadata substrate.",
+  "description": "Public-source-only vendor assurance metadata substrate. Entity resolution reflects observed public evidence, not current corporate status or legal advice.",
   "generatedAt": "1970-01-01T00:00:00Z",
   "generated_at": "1970-01-01T00:00:00Z",
   "guarantees": {
@@ -11,9 +11,14 @@
   "indexes": {
     "artifacts": "indexes/artifacts.json",
     "changes": "indexes/changes.json",
+    "contracting_entity_resolution": "indexes/contracting-entity-resolution.json",
+    "entity_mentions": "indexes/entity-mentions.json",
+    "legal_entities": "indexes/legal-entities.json",
     "observations": "indexes/observations.json",
+    "source_coverage": "indexes/source-coverage.json",
     "sources": "indexes/sources.json",
     "summary": "indexes/summary.json",
+    "vendor_search": "indexes/vendor-search.json",
     "vendors": "indexes/vendors.json"
   },
   "license": {
@@ -26,6 +31,9 @@
   "pack_id": "open-vendor-assurance",
   "profileId": "openva.public-metadata.v1",
   "publisher": "open-vendor-assurance",
+  "registry_outputs": {
+    "vendor_manifests": "dist/vendors/{vendor_id}.json"
+  },
   "schemaVersion": "openva-export-pack.v1",
   "schema_version": "0.1.0"
 }

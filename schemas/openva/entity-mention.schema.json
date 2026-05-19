@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/entity-mention.schema.json",
+  "title": "OpenVA Entity Mention",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "mention_id",
+    "vendor_id",
+    "observed_name",
+    "observed_role",
+    "appears_in_source_id",
+    "observed_at",
+    "assertion_source",
+    "resolution",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "mention_id": { "$ref": "#/$defs/id" },
+    "vendor_id": { "$ref": "#/$defs/id" },
+    "observed_name": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "observed_role": { "enum": ["subprocessor", "processor", "controller", "affiliate", "partner"] },
+    "appears_in_source_id": { "$ref": "#/$defs/id" },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "assertion_source": { "const": "vendor_published" },
+    "resolution": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["unresolved", "matched_to_entity", "not_modeled"] },
+        "matched_entity_id": { "$ref": "#/$defs/id" },
+        "match_method": { "enum": ["legal_name_exact", "legal_name_normalised", "manual_review"] },
+        "matched_by": { "enum": ["human", "agent"] },
+        "match_confidence": { "enum": ["low", "medium", "high"] },
+        "match_source_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "matched_at": { "type": "string", "format": "date-time" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "matched_to_entity" } },
+            "required": ["status"]
+          },
+          "then": {
+            "required": [
+              "matched_entity_id",
+              "match_method",
+              "matched_by",
+              "match_confidence",
+              "match_source_ids",
+              "matched_at"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": { "status": { "enum": ["unresolved", "not_modeled"] } },
+            "required": ["status"]
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                { "required": ["matched_entity_id"] },
+                { "required": ["match_method"] },
+                { "required": ["matched_by"] },
+                { "required": ["match_confidence"] },
+                { "required": ["match_source_ids"] },
+                { "required": ["matched_at"] }
+              ]
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "notes": { "type": ["string", "null"], "maxLength": 1000 },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" }
+  }
+}

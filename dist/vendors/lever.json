@@ -1,0 +1,203 @@
+{
+  "artifacts": [
+    {
+      "_openva_path": "data/vendors/lever/artifacts/lever-privacy.yaml",
+      "access_class": "public_web",
+      "artifact_id": "lever-privacy",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://www.lever.co/privacy-policy/",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Lever services"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "lever-privacy",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "lever"
+    },
+    {
+      "_openva_path": "data/vendors/lever/artifacts/lever-security.yaml",
+      "access_class": "public_web",
+      "artifact_id": "lever-security",
+      "artifact_type": "security_page",
+      "canonical_url": "https://www.lever.co/security/",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Lever services"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "lever-security",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "lever"
+    }
+  ],
+  "candidate_sources": [],
+  "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/lever/sources/lever-privacy.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-16T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "lever-privacy",
+      "source_language": "en",
+      "source_type": "privacy_notice",
+      "source_url": "https://www.lever.co/privacy-policy/",
+      "summary_en": "Public Lever privacy notice metadata reference.",
+      "summary_native": "Public Lever privacy notice metadata reference.",
+      "title_en": "Lever Privacy Notice",
+      "title_native": "Lever Privacy Notice",
+      "vendor_id": "lever"
+    },
+    {
+      "_openva_path": "data/vendors/lever/sources/lever-security.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-16T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "lever-security",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://www.lever.co/security/",
+      "summary_en": "Public Lever security metadata reference.",
+      "summary_native": "Public Lever security metadata reference.",
+      "title_en": "Lever Security",
+      "title_native": "Lever Security",
+      "vendor_id": "lever"
+    }
+  ],
+  "changes": [
+    {
+      "_openva_path": "data/vendors/lever/changes/regional-business-platforms-batch-1-lever-privacy.yaml",
+      "artifact_id": "lever-privacy",
+      "change_id": "regional-business-platforms-batch-1-lever-privacy",
+      "change_type": "created",
+      "detected_at": "2026-05-16T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "lever-privacy",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "lever"
+    },
+    {
+      "_openva_path": "data/vendors/lever/changes/regional-business-platforms-batch-1-lever-security.yaml",
+      "artifact_id": "lever-security",
+      "change_id": "regional-business-platforms-batch-1-lever-security",
+      "change_type": "created",
+      "detected_at": "2026-05-16T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "lever-security",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "lever"
+    }
+  ],
+  "entity_mentions": [],
+  "generated_at": "1970-01-01T00:00:00Z",
+  "guarantees": {
+    "metadata_first": true,
+    "non_advisory": true,
+    "public_sources_only": true,
+    "raw_documents_mirrored_by_default": false
+  },
+  "legal_entities": [],
+  "observations": [],
+  "schema_version": "0.1.0",
+  "summary": {
+    "artifact_count": 2,
+    "candidate_source_count": 0,
+    "candidate_source_types": [],
+    "canonical_source_count": 2,
+    "entity_mention_count": 0,
+    "legal_entity_count": 0,
+    "source_types": [
+      "privacy_notice",
+      "security_page"
+    ],
+    "unavailable_source_count": 0,
+    "unavailable_source_types": []
+  },
+  "unavailable_sources": [],
+  "vendor": {
+    "_openva_path": "data/vendors/lever/vendor.yaml",
+    "display_name": "Lever",
+    "entity_surface": "global_brand",
+    "headquarters_country": "US",
+    "legal_name": "Employ, Inc.",
+    "notes": "Public-source-only catalog record. Metadata references general public Lever assurance materials and does not cover bespoke customer agreements.",
+    "official_domains": [
+      "lever.co"
+    ],
+    "public_entrypoints": [
+      "https://www.lever.co/privacy-policy/",
+      "https://www.lever.co/security/"
+    ],
+    "regions_served": [
+      "global"
+    ],
+    "schema_version": "0.1.0",
+    "source_authority_language": "en",
+    "source_policy": {
+      "gated_materials_excluded": true,
+      "public_sources_only": true,
+      "raw_documents_mirrored_by_default": false
+    },
+    "status": "active",
+    "vendor_categories": [
+      "hr_software"
+    ],
+    "vendor_id": "lever"
+  }
+}

@@ -9,18 +9,22 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.openva.indexes import EXPORT_PROFILE_ID, EXPORT_SCHEMA_VERSION, ROOT
-from tools.openva.pack import REQUIRED_INDEX_KEYS, verify_export_contract
+from tools.openva.pack import REQUIRED_INDEX_KEYS, REQUIRED_REGISTRY_OUTPUT_KEYS, verify_export_contract
 from tools.openva.url_safety import validate_url_safety
 
 PACK_FILENAME = "openva-pack.json"
-COUNT_INDEX_KEYS = ["vendors", "sources", "artifacts", "observations", "changes"]
+COUNT_INDEX_KEYS = ["vendors", "sources", "artifacts", "observations", "changes", "legal_entities", "entity_mentions"]
 SUMMARY_COUNT_MAP = {
     "vendor": "vendors",
     "source": "sources",
     "artifact": "artifacts",
     "observation": "observations",
     "change": "changes",
+    "legal_entity": "legal_entities",
+    "entity_mention": "entity_mentions",
 }
+RESOLUTION_STATUSES = {"resolved", "candidate", "ambiguous", "brand_only_fallback"}
+AMBIGUITY_REASONS = {"multiple_candidates", "source_too_broad", "no_public_source", "jurisdiction_overlap"}
 
 
 def load_json(path: Path) -> Any:
@@ -97,6 +101,22 @@ def validate_guarantees(pack: dict[str, Any]) -> list[str]:
     return failures
 
 
+def validate_registry_outputs(pack: dict[str, Any]) -> list[str]:
+    failures: list[str] = []
+    registry_outputs = pack.get("registry_outputs")
+    if not isinstance(registry_outputs, dict):
+        return ["openva-pack.json: registry_outputs must be an object"]
+    missing_keys = sorted(REQUIRED_REGISTRY_OUTPUT_KEYS - set(registry_outputs))
+    extra_keys = sorted(set(registry_outputs) - REQUIRED_REGISTRY_OUTPUT_KEYS)
+    if missing_keys:
+        failures.append(f"openva-pack.json: missing registry output keys {missing_keys}")
+    if extra_keys:
+        failures.append(f"openva-pack.json: unexpected registry output keys {extra_keys}")
+    if registry_outputs.get("vendor_manifests") != "dist/vendors/{vendor_id}.json":
+        failures.append("openva-pack.json: registry_outputs.vendor_manifests must be dist/vendors/{vendor_id}.json")
+    return failures
+
+
 def validate_source_urls(loaded_indexes: dict[str, Any]) -> list[str]:
     failures: list[str] = []
     sources = loaded_indexes.get("sources", {})
@@ -137,6 +157,29 @@ def validate_observation_records(loaded_indexes: dict[str, Any]) -> list[str]:
                 failures.append(f"observations:{observation_id}: non-ok result must not include normalized_text_sha256")
         if storage.get("raw_document_stored") is not False:
             failures.append(f"observations:{observation_id}: raw_document_stored must be false")
+    return failures
+
+
+def validate_contracting_entity_resolution(loaded_indexes: dict[str, Any]) -> list[str]:
+    failures: list[str] = []
+    resolution = loaded_indexes.get("contracting_entity_resolution", {})
+    if not isinstance(resolution, dict):
+        return failures
+
+    for item in resolution.get("items", []):
+        vendor_id = item.get("vendor_id", "<unknown-vendor>")
+        jurisdiction = item.get("jurisdiction", "<unknown-jurisdiction>")
+        location = f"contracting_entity_resolution:{vendor_id}:{jurisdiction}"
+        status = item.get("resolution_status")
+        if status not in RESOLUTION_STATUSES:
+            failures.append(f"{location}: unknown resolution_status {status}")
+        if status == "brand_only_fallback" and item.get("resolved_entity_id") is not None:
+            failures.append(f"{location}: brand_only_fallback must not include resolved_entity_id")
+        if status == "resolved" and not item.get("resolved_entity_id"):
+            failures.append(f"{location}: resolved status must include resolved_entity_id")
+        for reason in item.get("ambiguity_reasons", []) or []:
+            if reason not in AMBIGUITY_REASONS:
+                failures.append(f"{location}: unknown ambiguity_reason {reason}")
     return failures
 
 
@@ -205,9 +248,11 @@ def validate_pack_dir(pack_dir: Path) -> list[str]:
             failures.append(f"{rel_path}: invalid JSON: {error}")
 
     failures.extend(validate_index_counts(indexes, loaded_indexes))
+    failures.extend(validate_registry_outputs(pack))
     failures.extend(validate_guarantees(pack))
     failures.extend(validate_source_urls(loaded_indexes))
     failures.extend(validate_observation_records(loaded_indexes))
+    failures.extend(validate_contracting_entity_resolution(loaded_indexes))
     failures.extend(validate_non_advisory_text(pack, loaded_indexes))
     return failures
 

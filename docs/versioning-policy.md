@@ -159,6 +159,14 @@ index file digests
 repository commit SHA or release tag
 ```
 
+## Entity Resolution Boundary
+
+Entity resolution is based on public evidence observed at pack generation time or source observation time.
+
+Resolution confidence tiers such as `resolved`, `candidate`, `ambiguous`, and `brand_only_fallback` describe evidentiary quality in the public metadata. They are not legal status, contracting authority, regulatory, procurement, compliance, security, KYC, AML, sanctions, or vendor-risk determinations.
+
+Absence of lifecycle events in a legal entity record means OpenVA has not recorded lifecycle evidence. It does not mean the entity is currently active or unchanged.
+
 ## Pre-1.0 caution
 
 OpenVA is currently in the `0.1.x` line.

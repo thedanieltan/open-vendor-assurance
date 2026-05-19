@@ -18,6 +18,10 @@ def test_release_smoke_conformance_fixtures_pass():
     assert release_smoke.check_conformance_fixtures() == []
 
 
+def test_release_smoke_includes_brand_only_fallback_fixture():
+    assert any(path.name == "valid-brand-only-fallback" for path in release_smoke.VALID_FIXTURE_PACKS)
+
+
 def test_release_smoke_required_constants_are_expected():
     assert SCHEMA_VERSION == "0.1.0"
     assert EXPORT_PROFILE_ID == "openva.public-metadata.v1"

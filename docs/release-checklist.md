@@ -34,6 +34,7 @@ python -m tools.openva.validate validate
 pytest -q
 python -m tools.openva.conformance fixtures/packs/minimal-valid
 python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation
+python -m tools.openva.conformance fixtures/packs/valid-brand-only-fallback
 python -m tools.openva.release_artifacts build
 python -m tools.openva.release_artifacts check
 ```

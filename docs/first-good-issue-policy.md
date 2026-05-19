@@ -16,6 +16,7 @@ Suitable examples:
 - add tests for existing behavior;
 - improve fixture documentation;
 - add one clearly public source reference after maintainer approval;
+- add one canonical legal entity record after maintainer approval, using a public verification source and the entity promotion policy;
 - correct a broken public URL when the replacement is vendor-controlled and public;
 - improve comments or error messages without changing behavior.
 
@@ -59,6 +60,8 @@ Good first issues should include:
 - validation commands;
 - links to relevant policy docs;
 - a reminder to avoid advisory language.
+
+For canonical legal entity issues, link to `docs/entity-promotion-policy.md` and the `examples/vendors/example-cloud/legal_entities/` and `examples/vendors/example-cloud/entity_mentions/` fixtures. The issue should identify the public verification source to review and remind contributors that entity records do not verify current corporate status.
 
 Example:
 

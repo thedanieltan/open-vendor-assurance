@@ -9,7 +9,9 @@ def test_catalog_guard_allows_catalog_files():
             "data/vendors/example/sources/example-source.yaml",
             "data/vendors/example/artifacts/example-artifact.yaml",
             "indexes/vendors.json",
+            "dist/vendors/example.json",
             "openva-pack.json",
+            "maintenance/applied/applied-plans.json",
             "docs/coverage-map.md",
             "docs/vendor-expansion-backlog.md",
         ]

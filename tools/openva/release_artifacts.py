@@ -14,6 +14,7 @@ MANIFEST_SCHEMA_VERSION = "0.1.0"
 ARTIFACT_PATTERNS = [
     "openva-pack.json",
     "indexes/*.json",
+    "dist/vendors/*.json",
     "schemas/openva/*.json",
     "fixtures/packs/**/*.json",
 ]

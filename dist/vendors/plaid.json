@@ -1,0 +1,133 @@
+{
+  "artifacts": [
+    {
+      "_openva_path": "data/vendors/plaid/artifacts/plaid-privacy.yaml",
+      "access_class": "public_web",
+      "artifact_id": "plaid-privacy",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://plaid.com/legal/#privacy-statement",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Plaid services"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "plaid-privacy",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "plaid"
+    }
+  ],
+  "candidate_sources": [],
+  "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/plaid/sources/plaid-privacy.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-18T00:00:00Z",
+        "confidence": "medium",
+        "observer": "hybrid",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "plaid-privacy",
+      "source_language": "en",
+      "source_type": "privacy_notice",
+      "source_url": "https://plaid.com/legal/#privacy-statement",
+      "summary_en": "Public Plaid privacy statement metadata reference.",
+      "summary_native": "Public Plaid privacy statement metadata reference.",
+      "title_en": "Plaid Privacy Statement",
+      "title_native": "Plaid Privacy Statement",
+      "vendor_id": "plaid"
+    }
+  ],
+  "changes": [
+    {
+      "_openva_path": "data/vendors/plaid/changes/payments-kyc-batch-1-plaid-privacy.yaml",
+      "artifact_id": "plaid-privacy",
+      "change_id": "payments-kyc-batch-1-plaid-privacy",
+      "change_type": "created",
+      "detected_at": "2026-05-18T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "plaid-privacy",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "plaid"
+    }
+  ],
+  "entity_mentions": [],
+  "generated_at": "1970-01-01T00:00:00Z",
+  "guarantees": {
+    "metadata_first": true,
+    "non_advisory": true,
+    "public_sources_only": true,
+    "raw_documents_mirrored_by_default": false
+  },
+  "legal_entities": [],
+  "observations": [],
+  "schema_version": "0.1.0",
+  "summary": {
+    "artifact_count": 1,
+    "candidate_source_count": 0,
+    "candidate_source_types": [],
+    "canonical_source_count": 1,
+    "entity_mention_count": 0,
+    "legal_entity_count": 0,
+    "source_types": [
+      "privacy_notice"
+    ],
+    "unavailable_source_count": 0,
+    "unavailable_source_types": []
+  },
+  "unavailable_sources": [],
+  "vendor": {
+    "_openva_path": "data/vendors/plaid/vendor.yaml",
+    "display_name": "Plaid",
+    "entity_surface": "global_brand",
+    "headquarters_country": "US",
+    "legal_name": "Plaid Inc.",
+    "notes": "Public-source-only catalog record. Metadata references public Plaid assurance materials and does not cover bespoke customer agreements.",
+    "official_domains": [
+      "plaid.com"
+    ],
+    "public_entrypoints": [
+      "https://plaid.com/legal/"
+    ],
+    "regions_served": [
+      "global"
+    ],
+    "schema_version": "0.1.0",
+    "source_authority_language": "en",
+    "source_policy": {
+      "gated_materials_excluded": true,
+      "public_sources_only": true,
+      "raw_documents_mirrored_by_default": false
+    },
+    "status": "active",
+    "vendor_categories": [
+      "financial_infrastructure",
+      "developer_platform"
+    ],
+    "vendor_id": "plaid"
+  }
+}

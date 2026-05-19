@@ -31,7 +31,7 @@ def test_release_candidate_doc_includes_required_commands():
 
     for command in REQUIRED_RELEASE_COMMANDS:
         assert command in text
-    assert "git diff --exit-code openva-pack.json indexes/" in text
+    assert "git diff --exit-code openva-pack.json indexes/ dist/" in text
 
 
 def test_release_candidate_doc_preserves_scope_exclusions():

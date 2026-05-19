@@ -41,6 +41,7 @@ REQUIRED_RELEASE_COMMANDS = [
 VALID_FIXTURE_PACKS = [
     ROOT / "fixtures/packs/minimal-valid",
     ROOT / "fixtures/packs/valid-bot-protected-observation",
+    ROOT / "fixtures/packs/valid-brand-only-fallback",
 ]
 
 REQUIRED_LIMITATION_PHRASES = [
@@ -138,7 +139,7 @@ def check_release_artifact_manifest_builds() -> list[str]:
 
 
 def check_git_generated_diff() -> list[str]:
-    command = ["git", "diff", "--exit-code", "openva-pack.json", "indexes/"]
+    command = ["git", "diff", "--exit-code", "openva-pack.json", "indexes/", "dist/"]
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
     if result.returncode == 0:
         return []
