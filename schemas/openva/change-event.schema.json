@@ -10,7 +10,7 @@
     "source_id",
     "change_type",
     "detected_at",
-    "materiality",
+    "catalog_change_significance",
     "review_state",
     "not_advice"
   ],
@@ -24,7 +24,12 @@
     "detected_at": { "type": "string", "format": "date-time" },
     "from_hash": { "type": ["string", "null"], "pattern": "^(sha256:[a-fA-F0-9]{64}|sha256:TBD)$" },
     "to_hash": { "type": ["string", "null"], "pattern": "^(sha256:[a-fA-F0-9]{64}|sha256:TBD)$" },
-    "materiality": { "enum": ["low", "medium", "high", "unknown"] },
+    "catalog_change_significance": { "enum": ["low", "medium", "high", "unknown"] },
+    "materiality": {
+      "enum": ["low", "medium", "high", "unknown"],
+      "deprecated": true,
+      "description": "Deprecated v0.1.x compatibility alias for catalog_change_significance. Remove in v0.2.0 or openva-export-pack.v2, whichever ships first."
+    },
     "review_state": { "enum": ["proposed", "validated", "quarantined", "superseded"] },
     "summary": { "type": ["string", "null"], "maxLength": 1000 },
     "not_advice": { "const": true }

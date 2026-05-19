@@ -16,6 +16,8 @@ REQUIRED_INDEX_KEYS = {
     "changes",
     "legal_entities",
     "entity_mentions",
+    "candidate_sources",
+    "unavailable_sources",
     "summary",
     "vendor_search",
     "source_coverage",
@@ -116,7 +118,17 @@ def verify_pack_integrity() -> list[str]:
             continue
         loaded_indexes[key] = load_json(path)
 
-    for key in ["vendors", "sources", "artifacts", "observations", "changes", "legal_entities", "entity_mentions"]:
+    for key in [
+        "vendors",
+        "sources",
+        "artifacts",
+        "observations",
+        "changes",
+        "legal_entities",
+        "entity_mentions",
+        "candidate_sources",
+        "unavailable_sources",
+    ]:
         index = loaded_indexes.get(key)
         if not index:
             continue
@@ -139,6 +151,8 @@ def verify_pack_integrity() -> list[str]:
             "change": "changes",
             "legal_entity": "legal_entities",
             "entity_mention": "entity_mentions",
+            "candidate_source": "candidate_sources",
+            "unavailable_source": "unavailable_sources",
         }
         for summary_key, index_key in count_key_map.items():
             index = loaded_indexes.get(index_key)

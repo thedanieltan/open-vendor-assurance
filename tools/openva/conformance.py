@@ -13,7 +13,17 @@ from tools.openva.pack import REQUIRED_INDEX_KEYS, REQUIRED_REGISTRY_OUTPUT_KEYS
 from tools.openva.url_safety import validate_url_safety
 
 PACK_FILENAME = "openva-pack.json"
-COUNT_INDEX_KEYS = ["vendors", "sources", "artifacts", "observations", "changes", "legal_entities", "entity_mentions"]
+COUNT_INDEX_KEYS = [
+    "vendors",
+    "sources",
+    "artifacts",
+    "observations",
+    "changes",
+    "legal_entities",
+    "entity_mentions",
+    "candidate_sources",
+    "unavailable_sources",
+]
 SUMMARY_COUNT_MAP = {
     "vendor": "vendors",
     "source": "sources",
@@ -22,6 +32,8 @@ SUMMARY_COUNT_MAP = {
     "change": "changes",
     "legal_entity": "legal_entities",
     "entity_mention": "entity_mentions",
+    "candidate_source": "candidate_sources",
+    "unavailable_source": "unavailable_sources",
 }
 RESOLUTION_STATUSES = {"resolved", "candidate", "ambiguous", "brand_only_fallback"}
 AMBIGUITY_REASONS = {"multiple_candidates", "source_too_broad", "no_public_source", "jurisdiction_overlap"}
@@ -147,6 +159,8 @@ def validate_observation_records(loaded_indexes: dict[str, Any]) -> list[str]:
 
     for item in observations.get("items", []):
         observation_id = item.get("observation_id", "<unknown-observation>")
+        if item.get("not_advice") is not True:
+            failures.append(f"observations:{observation_id}: not_advice must be true")
         result = item.get("result")
         hashes = item.get("hashes", {})
         storage = item.get("storage", {})

@@ -42,7 +42,21 @@
     "generated_at": { "type": "string", "format": "date-time" },
     "indexes": {
       "type": "object",
-      "required": ["vendors", "sources", "artifacts", "observations", "changes", "legal_entities", "entity_mentions", "summary", "vendor_search", "source_coverage", "contracting_entity_resolution"],
+      "required": [
+        "vendors",
+        "sources",
+        "artifacts",
+        "observations",
+        "changes",
+        "legal_entities",
+        "entity_mentions",
+        "candidate_sources",
+        "unavailable_sources",
+        "summary",
+        "vendor_search",
+        "source_coverage",
+        "contracting_entity_resolution"
+      ],
       "properties": {
         "vendors": { "type": "string" },
         "sources": { "type": "string" },
@@ -51,6 +65,8 @@
         "changes": { "type": "string" },
         "legal_entities": { "type": "string" },
         "entity_mentions": { "type": "string" },
+        "candidate_sources": { "type": "string" },
+        "unavailable_sources": { "type": "string" },
         "summary": { "type": "string" },
         "vendor_search": { "type": "string" },
         "source_coverage": { "type": "string" },

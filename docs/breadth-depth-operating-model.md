@@ -48,7 +48,7 @@ subprocessors_list
 privacy_notice
 security_page
 trust_center
-compliance_certifications_page
+compliance_page
 ```
 
 Additional useful artifact types include:

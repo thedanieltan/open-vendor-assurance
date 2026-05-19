@@ -15,9 +15,11 @@ def change_event(
     change_type: str,
     detected_at: str,
     summary: str,
-    materiality: str = "unknown",
+    catalog_change_significance: str = "unknown",
+    materiality: str | None = None,
     review_state: str = "proposed",
 ) -> dict[str, Any]:
+    significance = materiality or catalog_change_significance
     return {
         "schema_version": SCHEMA_VERSION,
         "change_id": change_id,
@@ -28,7 +30,8 @@ def change_event(
         "detected_at": detected_at,
         "from_hash": HASH_TBD,
         "to_hash": HASH_TBD,
-        "materiality": materiality,
+        "catalog_change_significance": significance,
+        "materiality": significance,
         "review_state": review_state,
         "summary": summary,
         "not_advice": True,
