@@ -18,6 +18,8 @@ canonical_sources
 artifacts
 observations
 changes
+legal_entities
+entity_mentions
 candidate_sources
 unavailable_sources
 summary
@@ -46,6 +48,27 @@ indexes/source-coverage.json
 
 It summarizes canonical, candidate, and unavailable source-type counts.
 
+## Contracting entity resolution index
+
+The contracting entity resolution index is generated at:
+
+```text
+indexes/contracting-entity-resolution.json
+```
+
+It contains generated resolution entries for canonical legal entities only. Stub legal entities and unresolved observed mentions are excluded.
+
+Resolution statuses describe available public evidence:
+
+```text
+resolved
+candidate
+ambiguous
+brand_only_fallback
+```
+
+These statuses do not determine current corporate status, legal effect, approval, suitability, risk, compliance, or contracting authority for any customer.
+
 ## Pack manifest
 
 `openva-pack.json` advertises these outputs through:
@@ -53,8 +76,11 @@ It summarizes canonical, candidate, and unavailable source-type counts.
 ```text
 indexes.vendor_search
 indexes.source_coverage
+indexes.contracting_entity_resolution
 registry_outputs.vendor_manifests
 ```
+
+See `docs/adapter-contract.md` for supported import semantics.
 
 ## Guardrails
 

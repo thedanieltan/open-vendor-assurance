@@ -195,7 +195,7 @@ Reviewer focus:
 - public accessibility;
 - metadata-only compliance;
 - non-advisory wording;
-- generated indexes and pack updates;
+- generated indexes, registry outputs, and pack updates;
 - validation and tests;
 - regional and language handling.
 
@@ -343,8 +343,9 @@ For each PR:
 4. Confirm vendor records are metadata-only.
 5. Confirm source URLs are public and authoritative.
 6. Confirm no raw documents, screenshots, or extracted full text were committed.
-7. Confirm generated indexes and `openva-pack.json` are included.
-8. Confirm validation and tests pass.
+7. Confirm summary fields describe public evidence only; reject summaries that state implication, risk, suitability, approval, legal effect, or operational recommendation.
+8. Confirm generated indexes, registry outputs, and `openva-pack.json` are included.
+9. Confirm validation and tests pass.
 
 ## Reviewer checklist for workflows
 

@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/legal-entity.schema.json",
+  "title": "OpenVA Legal Entity",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "entity_id",
+    "vendor_id",
+    "legal_name",
+    "jurisdiction",
+    "verification_source_ids",
+    "catalog_status",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "entity_id": { "$ref": "#/$defs/id" },
+    "vendor_id": { "$ref": "#/$defs/id" },
+    "legal_name": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "jurisdiction": { "type": "string", "pattern": "^[A-Z]{2}$" },
+    "registration_number": { "type": ["string", "null"], "maxLength": 120 },
+    "parent_entity_id": { "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] },
+    "former_legal_names": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "source_ids"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 240 },
+          "as_of": { "type": ["string", "null"], "format": "date" },
+          "source_ids": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/id" },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "verification_source_ids": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/id" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "verified_observed_at": { "type": ["string", "null"], "format": "date-time" },
+    "official_domains": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "public_entrypoints": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "contracting_jurisdictions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["jurisdiction", "role", "confidence", "source_id"],
+        "properties": {
+          "jurisdiction": { "type": "string", "pattern": "^[A-Z]{2}$" },
+          "role": { "enum": ["primary_contracting_entity", "candidate_contracting_entity"] },
+          "confidence": { "enum": ["low", "medium", "high"] },
+          "source_id": { "$ref": "#/$defs/id" },
+          "summary": { "type": ["string", "null"], "maxLength": 500 }
+        },
+        "additionalProperties": false
+      },
+      "default": []
+    },
+    "lifecycle_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["event_type", "source_ids"],
+        "properties": {
+          "event_type": { "enum": ["renamed", "merged", "dissolved", "split", "acquired"] },
+          "effective_at": { "type": ["string", "null"], "format": "date" },
+          "former_name": { "type": ["string", "null"], "maxLength": 240 },
+          "successor_entity_ids": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/id" },
+            "uniqueItems": true,
+            "default": []
+          },
+          "predecessor_entity_ids": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/id" },
+            "uniqueItems": true,
+            "default": []
+          },
+          "source_ids": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/id" },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "default": []
+    },
+    "catalog_status": { "enum": ["canonical", "stub"] },
+    "notes": { "type": ["string", "null"], "maxLength": 1000 },
+    "not_advice": { "const": true }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "catalog_status": { "const": "canonical" } },
+        "required": ["catalog_status"]
+      },
+      "then": {
+        "properties": { "verification_source_ids": { "minItems": 1 } }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" }
+  }
+}

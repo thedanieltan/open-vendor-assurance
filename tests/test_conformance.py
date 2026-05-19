@@ -14,6 +14,10 @@ def test_valid_bot_protected_observation_fixture_passes_conformance():
     assert validate_pack_dir(FIXTURES / "valid-bot-protected-observation") == []
 
 
+def test_valid_brand_only_fallback_fixture_passes_conformance():
+    assert validate_pack_dir(FIXTURES / "valid-brand-only-fallback") == []
+
+
 def test_missing_guarantee_fixture_fails_conformance():
     failures = validate_pack_dir(FIXTURES / "invalid-missing-guarantee")
 

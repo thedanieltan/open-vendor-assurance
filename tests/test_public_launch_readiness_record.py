@@ -16,7 +16,7 @@ def test_public_launch_readiness_records_final_dry_run_results():
     for phrase in [
         "release-candidate-ready",
         "OpenVA validation passed.",
-        "123 passed.",
+        "268 passed.",
         "Release smoke test passed.",
         "no tracked Python bytecode files",
     ]:

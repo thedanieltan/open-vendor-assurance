@@ -69,7 +69,20 @@ def test_404_is_not_found():
     assert result["requires_review"] is True
 
 
-def test_gated_or_forbidden_source_requires_review():
+def test_401_login_required_source_requires_review():
+    source = source_record("security_page", "https://trust.example.com/security")
+
+    result = verify_source(
+        source,
+        Path("data/vendors/example/sources/example-security.yaml"),
+        fetcher=lambda url: html_fetch(url, "login required", status=401),
+    )
+
+    assert result["verification_status"] == "gated_or_login_required"
+    assert result["requires_review"] is True
+
+
+def test_plain_403_is_forbidden_unknown():
     source = source_record("security_page", "https://trust.example.com/security")
 
     result = verify_source(
@@ -78,7 +91,46 @@ def test_gated_or_forbidden_source_requires_review():
         fetcher=lambda url: html_fetch(url, "forbidden", status=403),
     )
 
-    assert result["verification_status"] == "forbidden_or_gated"
+    assert result["verification_status"] == "forbidden_unknown"
+    assert result["requires_review"] is True
+
+
+def test_waf_like_403_is_bot_protected():
+    source = source_record("security_page", "https://trust.example.com/security")
+
+    result = verify_source(
+        source,
+        Path("data/vendors/example/sources/example-security.yaml"),
+        fetcher=lambda url: html_fetch(url, "Checking your browser before accessing", status=403),
+    )
+
+    assert result["verification_status"] == "bot_protected"
+    assert result["requires_review"] is True
+
+
+def test_login_like_403_is_gated_or_login_required():
+    source = source_record("security_page", "https://trust.example.com/security")
+
+    result = verify_source(
+        source,
+        Path("data/vendors/example/sources/example-security.yaml"),
+        fetcher=lambda url: html_fetch(url, "Sign in to continue to the trust portal", status=403),
+    )
+
+    assert result["verification_status"] == "gated_or_login_required"
+    assert result["requires_review"] is True
+
+
+def test_429_is_rate_limited():
+    source = source_record("security_page", "https://trust.example.com/security")
+
+    result = verify_source(
+        source,
+        Path("data/vendors/example/sources/example-security.yaml"),
+        fetcher=lambda url: html_fetch(url, "too many requests", status=429),
+    )
+
+    assert result["verification_status"] == "rate_limited"
     assert result["requires_review"] is True
 
 

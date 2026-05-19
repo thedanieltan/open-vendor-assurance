@@ -1,0 +1,135 @@
+{
+  "artifacts": [
+    {
+      "_openva_path": "data/vendors/airwallex/artifacts/airwallex-trust.yaml",
+      "access_class": "public_web",
+      "artifact_id": "airwallex-trust",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://security.airwallex.com/",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Airwallex services"
+      ],
+      "region_scope": [
+        "global",
+        "apac"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "airwallex-trust",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "airwallex"
+    }
+  ],
+  "candidate_sources": [],
+  "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/airwallex/sources/airwallex-trust.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-18T00:00:00Z",
+        "confidence": "medium",
+        "observer": "hybrid",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "airwallex-trust",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://security.airwallex.com/",
+      "summary_en": "Public Airwallex trust center metadata reference.",
+      "summary_native": "Public Airwallex trust center metadata reference.",
+      "title_en": "Airwallex Trust Center",
+      "title_native": "Airwallex Trust Center",
+      "vendor_id": "airwallex"
+    }
+  ],
+  "changes": [
+    {
+      "_openva_path": "data/vendors/airwallex/changes/payments-kyc-batch-1-airwallex-trust.yaml",
+      "artifact_id": "airwallex-trust",
+      "change_id": "payments-kyc-batch-1-airwallex-trust",
+      "change_type": "created",
+      "detected_at": "2026-05-18T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "airwallex-trust",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "airwallex"
+    }
+  ],
+  "entity_mentions": [],
+  "generated_at": "1970-01-01T00:00:00Z",
+  "guarantees": {
+    "metadata_first": true,
+    "non_advisory": true,
+    "public_sources_only": true,
+    "raw_documents_mirrored_by_default": false
+  },
+  "legal_entities": [],
+  "observations": [],
+  "schema_version": "0.1.0",
+  "summary": {
+    "artifact_count": 1,
+    "candidate_source_count": 0,
+    "candidate_source_types": [],
+    "canonical_source_count": 1,
+    "entity_mention_count": 0,
+    "legal_entity_count": 0,
+    "source_types": [
+      "trust_center"
+    ],
+    "unavailable_source_count": 0,
+    "unavailable_source_types": []
+  },
+  "unavailable_sources": [],
+  "vendor": {
+    "_openva_path": "data/vendors/airwallex/vendor.yaml",
+    "display_name": "Airwallex",
+    "entity_surface": "global_brand",
+    "headquarters_country": "AU",
+    "legal_name": "Airwallex Pty Ltd",
+    "notes": "Public-source-only catalog record. Metadata references public Airwallex assurance materials and does not cover bespoke customer agreements.",
+    "official_domains": [
+      "airwallex.com"
+    ],
+    "public_entrypoints": [
+      "https://security.airwallex.com/"
+    ],
+    "regions_served": [
+      "global",
+      "apac"
+    ],
+    "schema_version": "0.1.0",
+    "source_authority_language": "en",
+    "source_policy": {
+      "gated_materials_excluded": true,
+      "public_sources_only": true,
+      "raw_documents_mirrored_by_default": false
+    },
+    "status": "active",
+    "vendor_categories": [
+      "payments",
+      "financial_infrastructure"
+    ],
+    "vendor_id": "airwallex"
+  }
+}

@@ -16,6 +16,7 @@
     "license",
     "generated_at",
     "indexes",
+    "registry_outputs",
     "guarantees"
   ],
   "properties": {
@@ -41,14 +42,27 @@
     "generated_at": { "type": "string", "format": "date-time" },
     "indexes": {
       "type": "object",
-      "required": ["vendors", "sources", "artifacts", "observations", "changes", "summary"],
+      "required": ["vendors", "sources", "artifacts", "observations", "changes", "legal_entities", "entity_mentions", "summary", "vendor_search", "source_coverage", "contracting_entity_resolution"],
       "properties": {
         "vendors": { "type": "string" },
         "sources": { "type": "string" },
         "artifacts": { "type": "string" },
         "observations": { "type": "string" },
         "changes": { "type": "string" },
-        "summary": { "type": "string" }
+        "legal_entities": { "type": "string" },
+        "entity_mentions": { "type": "string" },
+        "summary": { "type": "string" },
+        "vendor_search": { "type": "string" },
+        "source_coverage": { "type": "string" },
+        "contracting_entity_resolution": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "registry_outputs": {
+      "type": "object",
+      "required": ["vendor_manifests"],
+      "properties": {
+        "vendor_manifests": { "const": "dist/vendors/{vendor_id}.json" }
       },
       "additionalProperties": false
     },

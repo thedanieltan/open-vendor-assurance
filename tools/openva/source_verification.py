@@ -71,6 +71,29 @@ SOURCE_TYPE_KEYWORDS: dict[str, tuple[str, ...]] = {
     ),
 }
 
+BOT_PROTECTION_HINTS = (
+    "captcha",
+    "cloudflare",
+    "checking your browser",
+    "verify you are human",
+    "attention required",
+    "access denied",
+    "bot protection",
+    "security check",
+)
+
+LOGIN_GATE_HINTS = (
+    "login",
+    "log in",
+    "sign in",
+    "signin",
+    "customer portal",
+    "trust portal",
+    "request access",
+    "authentication required",
+    "credentials required",
+)
+
 SUSPECT_TEMPLATE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
     re.compile(pattern)
     for pattern in (
@@ -139,6 +162,23 @@ def title_from_sample(data: bytes, content_type: str | None) -> str | None:
     if not match:
         return None
     return re.sub(r"\s+", " ", match.group(1)).strip()
+
+
+def lower_sample(result: FetchResult) -> str:
+    title = title_from_sample(result.body_sample, result.content_type) or ""
+    body = normalize_text(result.body_sample, result.content_type)
+    final_url = result.final_url or ""
+    return " ".join([title, body, final_url]).lower()
+
+
+def looks_like_bot_challenge(result: FetchResult) -> bool:
+    sample = lower_sample(result)
+    return any(hint in sample for hint in BOT_PROTECTION_HINTS)
+
+
+def looks_like_login_gate(result: FetchResult) -> bool:
+    sample = lower_sample(result)
+    return any(hint in sample for hint in LOGIN_GATE_HINTS)
 
 
 def semantic_match(source_type: str | None, text: str, content_type: str | None) -> dict[str, Any]:
@@ -241,8 +281,16 @@ def classify_status(source: dict[str, Any], result: FetchResult, semantic: dict[
     status = result.http_status
     if status is None:
         return "unreachable"
-    if status in {401, 403}:
-        return "forbidden_or_gated"
+    if status == 401:
+        return "gated_or_login_required"
+    if status == 403:
+        if looks_like_bot_challenge(result):
+            return "bot_protected"
+        if looks_like_login_gate(result):
+            return "gated_or_login_required"
+        return "forbidden_unknown"
+    if status == 429:
+        return "rate_limited"
     if status == 404:
         return "not_found"
     if status == 410:

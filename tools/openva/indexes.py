@@ -21,11 +21,36 @@ RECORD_GLOBS = {
     "artifact": ["examples/vendors/*/artifacts/*.yaml", "data/vendors/*/artifacts/*.yaml"],
     "observation": ["examples/vendors/*/observations/*.yaml", "data/vendors/*/observations/*.yaml"],
     "change": ["examples/vendors/*/changes/*.yaml", "data/vendors/*/changes/*.yaml"],
+    "legal_entity": ["examples/vendors/*/legal_entities/*.yaml", "data/vendors/*/legal_entities/*.yaml"],
+    "entity_mention": ["examples/vendors/*/entity_mentions/*.yaml", "data/vendors/*/entity_mentions/*.yaml"],
     "candidate_source": ["examples/vendors/*/candidate_sources/*.yaml", "data/vendors/*/candidate_sources/*.yaml"],
     "unavailable_source": ["examples/vendors/*/unavailable_sources/*.yaml", "data/vendors/*/unavailable_sources/*.yaml"],
 }
-INDEX_FILES = {"vendor": "vendors.json", "source": "sources.json", "artifact": "artifacts.json", "observation": "observations.json", "change": "changes.json"}
-ID_KEYS = {"vendor": "vendor_id", "source": "source_id", "artifact": "artifact_id", "observation": "observation_id", "change": "change_id", "candidate_source": "candidate_source_id", "unavailable_source": "unavailable_source_id"}
+INDEX_FILES = {
+    "vendor": "vendors.json",
+    "source": "sources.json",
+    "artifact": "artifacts.json",
+    "observation": "observations.json",
+    "change": "changes.json",
+    "legal_entity": "legal-entities.json",
+    "entity_mention": "entity-mentions.json",
+}
+REGISTRY_INDEX_FILES = {
+    "vendor_search": "vendor-search.json",
+    "source_coverage": "source-coverage.json",
+    "contracting_entity_resolution": "contracting-entity-resolution.json",
+}
+ID_KEYS = {
+    "vendor": "vendor_id",
+    "source": "source_id",
+    "artifact": "artifact_id",
+    "observation": "observation_id",
+    "change": "change_id",
+    "legal_entity": "entity_id",
+    "entity_mention": "mention_id",
+    "candidate_source": "candidate_source_id",
+    "unavailable_source": "unavailable_source_id",
+}
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -65,7 +90,17 @@ def types(records: list[dict[str, Any]], key: str) -> list[str]:
     return sorted({str(record[key]) for record in records if record.get(key)})
 
 
-def vendor_manifest(vendor: dict[str, Any], sources: list[dict[str, Any]], artifacts: list[dict[str, Any]], observations: list[dict[str, Any]], changes: list[dict[str, Any]], candidates: list[dict[str, Any]], unavailable: list[dict[str, Any]]) -> dict[str, Any]:
+def vendor_manifest(
+    vendor: dict[str, Any],
+    sources: list[dict[str, Any]],
+    artifacts: list[dict[str, Any]],
+    observations: list[dict[str, Any]],
+    changes: list[dict[str, Any]],
+    legal_entities: list[dict[str, Any]],
+    entity_mentions: list[dict[str, Any]],
+    candidates: list[dict[str, Any]],
+    unavailable: list[dict[str, Any]],
+) -> dict[str, Any]:
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": GENERATED_AT,
@@ -74,6 +109,8 @@ def vendor_manifest(vendor: dict[str, Any], sources: list[dict[str, Any]], artif
         "artifacts": artifacts,
         "observations": observations,
         "changes": changes,
+        "legal_entities": legal_entities,
+        "entity_mentions": entity_mentions,
         "candidate_sources": candidates,
         "unavailable_sources": unavailable,
         "summary": {
@@ -81,6 +118,8 @@ def vendor_manifest(vendor: dict[str, Any], sources: list[dict[str, Any]], artif
             "artifact_count": len(artifacts),
             "candidate_source_count": len(candidates),
             "unavailable_source_count": len(unavailable),
+            "legal_entity_count": len(legal_entities),
+            "entity_mention_count": len(entity_mentions),
             "source_types": types(sources, "source_type"),
             "candidate_source_types": types(candidates, "source_type_candidate"),
             "unavailable_source_types": types(unavailable, "source_type"),
@@ -121,18 +160,102 @@ def build_source_coverage(record_sets: dict[str, list[dict[str, Any]]]) -> dict[
     }
 
 
+def build_contracting_entity_resolution(record_sets: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+    items: list[dict[str, Any]] = []
+    for entity in record_sets["legal_entity"]:
+        if entity.get("catalog_status") != "canonical":
+            continue
+        entity_id = str(entity["entity_id"])
+        vendor_id = str(entity["vendor_id"])
+        for mapping in entity.get("contracting_jurisdictions", []) or []:
+            status = "resolved" if mapping.get("role") == "primary_contracting_entity" else "candidate"
+            items.append(
+                {
+                    "vendor_id": vendor_id,
+                    "jurisdiction": mapping.get("jurisdiction"),
+                    "resolution_status": status,
+                    "resolved_entity_id": entity_id if status == "resolved" else None,
+                    "candidate_entity_ids": [entity_id],
+                    "ambiguity_reasons": [],
+                    "evidence_source_ids": [mapping.get("source_id")] if mapping.get("source_id") else [],
+                    "resolution_confidence": mapping.get("confidence", "medium"),
+                    "summary": mapping.get("summary"),
+                    "pack_generated_at": GENERATED_AT,
+                }
+            )
+
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for item in items:
+        grouped[(str(item["vendor_id"]), str(item["jurisdiction"]))].append(item)
+
+    resolved_items: list[dict[str, Any]] = []
+    for group in grouped.values():
+        if len(group) == 1:
+            resolved_items.append(group[0])
+            continue
+        entity_ids = sorted({entity_id for item in group for entity_id in item["candidate_entity_ids"]})
+        evidence_source_ids = sorted({source_id for item in group for source_id in item["evidence_source_ids"]})
+        confidences = {str(item.get("resolution_confidence", "medium")) for item in group}
+        resolved_items.append(
+            {
+                "vendor_id": group[0]["vendor_id"],
+                "jurisdiction": group[0]["jurisdiction"],
+                "resolution_status": "ambiguous",
+                "resolved_entity_id": None,
+                "candidate_entity_ids": entity_ids,
+                "ambiguity_reasons": ["jurisdiction_overlap"],
+                "evidence_source_ids": evidence_source_ids,
+                "resolution_confidence": "high" if confidences == {"high"} else "medium" if "medium" in confidences else "low",
+                "summary": "Multiple public sources identify candidate contracting entities for this jurisdiction.",
+                "pack_generated_at": GENERATED_AT,
+            }
+        )
+
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "generated_at": GENERATED_AT,
+        "count": len(resolved_items),
+        "items": sorted(
+            resolved_items,
+            key=lambda item: (str(item["vendor_id"]), str(item["jurisdiction"]), str(item.get("resolved_entity_id"))),
+        ),
+    }
+
+
 def build_registry_outputs(record_sets: dict[str, list[dict[str, Any]]]) -> None:
+    manifest_dir = ROOT / "dist" / "vendors"
     sources = by_vendor(record_sets["source"])
     artifacts = by_vendor(record_sets["artifact"])
     observations = by_vendor(record_sets["observation"])
     changes = by_vendor(record_sets["change"])
+    legal_entities = by_vendor(record_sets["legal_entity"])
+    entity_mentions = by_vendor(record_sets["entity_mention"])
     candidates = by_vendor(record_sets["candidate_source"])
     unavailable = by_vendor(record_sets["unavailable_source"])
+    vendor_ids = {str(vendor["vendor_id"]) for vendor in record_sets["vendor"]}
+    if manifest_dir.exists():
+        for stale in manifest_dir.glob("*.json"):
+            if stale.stem not in vendor_ids:
+                stale.unlink()
     for vendor in record_sets["vendor"]:
         vendor_id = str(vendor["vendor_id"])
-        write_json(ROOT / "dist" / "vendors" / f"{vendor_id}.json", vendor_manifest(vendor, sources.get(vendor_id, []), artifacts.get(vendor_id, []), observations.get(vendor_id, []), changes.get(vendor_id, []), candidates.get(vendor_id, []), unavailable.get(vendor_id, [])))
+        write_json(
+            manifest_dir / f"{vendor_id}.json",
+            vendor_manifest(
+                vendor,
+                sources.get(vendor_id, []),
+                artifacts.get(vendor_id, []),
+                observations.get(vendor_id, []),
+                changes.get(vendor_id, []),
+                legal_entities.get(vendor_id, []),
+                entity_mentions.get(vendor_id, []),
+                candidates.get(vendor_id, []),
+                unavailable.get(vendor_id, []),
+            ),
+        )
     write_json(ROOT / "indexes" / "vendor-search.json", build_search_index(record_sets))
     write_json(ROOT / "indexes" / "source-coverage.json", build_source_coverage(record_sets))
+    write_json(ROOT / "indexes" / "contracting-entity-resolution.json", build_contracting_entity_resolution(record_sets))
 
 
 def build_indexes() -> int:
@@ -145,6 +268,22 @@ def build_indexes() -> int:
         write_json(index_dir / filename, {"schema_version": SCHEMA_VERSION, "kind": kind, "generated_at": GENERATED_AT, "count": len(records), "items": records})
     write_json(index_dir / "summary.json", {"schema_version": SCHEMA_VERSION, "generated_at": GENERATED_AT, "counts": counts})
     build_registry_outputs(record_sets)
+    index_names = {
+        "vendor": "vendors",
+        "source": "sources",
+        "artifact": "artifacts",
+        "observation": "observations",
+        "change": "changes",
+        "legal_entity": "legal_entities",
+        "entity_mention": "entity_mentions",
+    }
+    index_paths = {
+        **{index_names[key]: f"indexes/{filename}" for key, filename in INDEX_FILES.items()},
+        "summary": "indexes/summary.json",
+        "vendor_search": "indexes/vendor-search.json",
+        "source_coverage": "indexes/source-coverage.json",
+        "contracting_entity_resolution": "indexes/contracting-entity-resolution.json",
+    }
     write_json(ROOT / "openva-pack.json", {
         "profileId": EXPORT_PROFILE_ID,
         "schemaVersion": EXPORT_SCHEMA_VERSION,
@@ -153,11 +292,12 @@ def build_indexes() -> int:
         "schema_version": SCHEMA_VERSION,
         "pack_id": "open-vendor-assurance",
         "name": "open-vendor-assurance",
-        "description": "Public-source-only vendor assurance metadata substrate.",
+        "description": "Public-source-only vendor assurance metadata substrate. Entity resolution reflects observed public evidence, not current corporate status or legal advice.",
         "publisher": "open-vendor-assurance",
         "license": {"metadata": "CC0-1.0", "code": "MIT", "vendor_materials": "Vendor materials remain owned by their respective owners."},
         "generated_at": GENERATED_AT,
-        "indexes": {"vendors": "indexes/vendors.json", "sources": "indexes/sources.json", "artifacts": "indexes/artifacts.json", "observations": "indexes/observations.json", "changes": "indexes/changes.json", "summary": "indexes/summary.json"},
+        "indexes": index_paths,
+        "registry_outputs": {"vendor_manifests": "dist/vendors/{vendor_id}.json"},
         "guarantees": {"public_sources_only": True, "metadata_first": True, "non_advisory": True, "raw_documents_mirrored_by_default": False},
     })
     print("Built OpenVA indexes, registry outputs, and pack manifest.")
@@ -166,7 +306,18 @@ def build_indexes() -> int:
 
 def generated_paths() -> list[Path]:
     index_dir = ROOT / "indexes"
-    return [ROOT / "openva-pack.json", *(index_dir / filename for filename in INDEX_FILES.values()), index_dir / "summary.json"]
+    manifest_dir = ROOT / "dist" / "vendors"
+    vendor_ids = {str(record["vendor_id"]) for record in records_for("vendor")}
+    existing_manifests = set(manifest_dir.glob("*.json")) if manifest_dir.exists() else set()
+    expected_manifests = {manifest_dir / f"{vendor_id}.json" for vendor_id in vendor_ids}
+    manifests = sorted(existing_manifests | expected_manifests)
+    return [
+        ROOT / "openva-pack.json",
+        *(index_dir / filename for filename in INDEX_FILES.values()),
+        *(index_dir / filename for filename in REGISTRY_INDEX_FILES.values()),
+        index_dir / "summary.json",
+        *manifests,
+    ]
 
 
 def check_generated_current() -> list[str]:

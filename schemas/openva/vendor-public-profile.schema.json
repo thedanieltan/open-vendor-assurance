@@ -33,6 +33,12 @@
       "uniqueItems": true,
       "default": []
     },
+    "observed_entity_mention_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+      "uniqueItems": true,
+      "default": []
+    },
     "source_authority_language": { "type": ["string", "null"], "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
     "official_domains": {
       "type": "array",

@@ -69,6 +69,7 @@ config/observation-pilot.yaml
 
 ```text
 docs/consumer-conformance-fixtures.md
+docs/adapter-contract.md
 docs/versioning-policy.md
 docs/release-policy.md
 docs/release-checklist.md
@@ -106,6 +107,7 @@ python -m tools.openva.validate validate
 pytest -q
 python -m tools.openva.conformance fixtures/packs/minimal-valid
 python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation
+python -m tools.openva.conformance fixtures/packs/valid-brand-only-fallback
 ```
 
 ## Non-advisory reminder

@@ -17,7 +17,12 @@ indexes/sources.json
 indexes/artifacts.json
 indexes/observations.json
 indexes/changes.json
+indexes/legal-entities.json
+indexes/entity-mentions.json
 indexes/summary.json
+indexes/vendor-search.json
+indexes/source-coverage.json
+indexes/contracting-entity-resolution.json
 ```
 
 ## Checker
@@ -34,9 +39,11 @@ The checker validates consumer-facing import safety:
 - export schema version;
 - transition aliases;
 - required index keys;
+- registry output declarations;
 - index path containment;
 - index counts;
 - summary counts;
+- legal entity and entity mention index presence;
 - pack guarantees;
 - source and artifact URL safety;
 - non-`ok` observation hash behavior;
@@ -64,6 +71,16 @@ pass
 ```
 
 Purpose: confirms that `bot_protected` is a valid observation result when hashes remain `sha256:TBD` and raw storage remains false.
+
+### `valid-brand-only-fallback`
+
+Expected result:
+
+```text
+pass
+```
+
+Purpose: confirms that `brand_only_fallback` is a valid contracting-entity resolution output when no canonical legal entity mapping is present. Importers must treat this as an expected non-error state.
 
 ### `invalid-missing-guarantee`
 
@@ -100,3 +117,11 @@ Purpose: confirms consumers reject pack metadata containing prohibited advisory 
 These fixtures are not vendor records and are not catalog entries. They are importer conformance fixtures only.
 
 They must not be used as evidence about any vendor.
+
+Importers must not treat absence of lifecycle events as evidence of current active status.
+
+Importers must not treat `resolution_status: resolved` as vendor approval, contracting authority, legal advice, compliance advice, procurement advice, security advice, KYC/AML advice, sanctions advice, regulatory advice, or vendor-risk advice.
+
+Importers must not treat `matched_to_entity` as independent verification of corporate existence.
+
+Importers must handle empty contracting-entity resolution indexes and `brand_only_fallback` outputs gracefully. These states mean OpenVA has not recorded canonical entity-level evidence for that vendor/jurisdiction, not that the pack is broken.

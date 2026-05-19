@@ -109,14 +109,14 @@ def vendor_record(vendor: dict[str, Any], operation: str) -> dict[str, Any]:
         "status": vendor.get("status", "deprecated" if operation == "deprecate" else "active"),
         "notes": vendor.get("notes") or f"Public-source catalog record for {vendor['display_name']}.",
     }
-    for field in ("entity_family", "entity_surface", "related_vendor_ids", "source_authority_language"):
+    for field in ("entity_family", "entity_surface", "related_vendor_ids", "source_authority_language", "observed_entity_mention_ids"):
         if field in vendor:
             record[field] = vendor[field]
     return record
 
 
 def source_record(vendor: dict[str, Any], source: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
-    return {
+    record = {
         "schema_version": SCHEMA_VERSION,
         "source_id": source["source_id"],
         "vendor_id": vendor["vendor_id"],
@@ -125,6 +125,7 @@ def source_record(vendor: dict[str, Any], source: dict[str, Any], manifest: dict
         "title_en": source.get("title_en"),
         "source_url": source["source_url"],
         "source_language": source["source_language"],
+        "source_authority_class": source.get("source_authority_class", "vendor_published"),
         "access_class": source.get("access_class", "public_web"),
         "rights_class": RIGHTS_CLASS,
         "summary_native": source.get("summary_native"),
@@ -132,6 +133,9 @@ def source_record(vendor: dict[str, Any], source: dict[str, Any], manifest: dict
         "provenance": {"publisher": "vendor", "collected_at": manifest["collected_at"], "observer": manifest["observer"], "confidence": source.get("confidence", "medium")},
         "not_advice": True,
     }
+    if source.get("entity_id"):
+        record["entity_id"] = source["entity_id"]
+    return record
 
 
 def artifact_record(vendor: dict[str, Any], source: dict[str, Any]) -> dict[str, Any]:
@@ -145,6 +149,7 @@ def artifact_record(vendor: dict[str, Any], source: dict[str, Any]) -> dict[str,
         "canonical_url": source["source_url"],
         "source_language": source["source_language"],
         "region_scope": artifact.get("region_scope", vendor["regions_served"]),
+        "entity_scope": artifact.get("entity_scope", {"scope_type": "brand_surface", "entity_ids": []}),
         "product_scope": artifact.get("product_scope", []),
         "access_class": source.get("access_class", "public_web"),
         "rights_class": RIGHTS_CLASS,

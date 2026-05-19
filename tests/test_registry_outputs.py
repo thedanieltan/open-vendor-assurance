@@ -1,4 +1,4 @@
-from tools.openva.indexes import build_search_index, build_source_coverage, vendor_manifest
+from tools.openva.indexes import build_contracting_entity_resolution, build_search_index, build_source_coverage, vendor_manifest
 
 
 def record_sets():
@@ -17,6 +17,24 @@ def record_sets():
         "artifact": [],
         "observation": [],
         "change": [],
+        "legal_entity": [
+            {
+                "entity_id": "example-us",
+                "vendor_id": "example",
+                "catalog_status": "canonical",
+                "contracting_jurisdictions": [
+                    {
+                        "jurisdiction": "US",
+                        "role": "primary_contracting_entity",
+                        "confidence": "high",
+                        "source_id": "example-dpa",
+                        "summary": "Public source identifies the US contracting entity.",
+                    }
+                ],
+            },
+            {"entity_id": "example-stub", "vendor_id": "example", "catalog_status": "stub"},
+        ],
+        "entity_mention": [{"mention_id": "example-mention", "vendor_id": "example"}],
         "candidate_source": [
             {
                 "vendor_id": "example",
@@ -41,6 +59,8 @@ def test_vendor_manifest_exposes_canonical_candidate_and_unavailable_records():
         [],
         [],
         [],
+        record_sets()["legal_entity"],
+        record_sets()["entity_mention"],
         record_sets()["candidate_source"],
         record_sets()["unavailable_source"],
     )
@@ -73,3 +93,35 @@ def test_source_coverage_counts_canonical_candidate_and_unavailable_types():
     assert coverage["source_type_counts"] == {"dpa": 1}
     assert coverage["candidate_source_type_counts"] == {"security_page": 1}
     assert coverage["unavailable_source_type_counts"] == {"subprocessors_list": 1}
+
+
+def test_vendor_manifest_semantics_are_adapter_safe():
+    manifest = vendor_manifest(
+        record_sets()["vendor"][0],
+        record_sets()["source"],
+        [],
+        [{"result": "bot_protected", "http_status": 403}],
+        [],
+        [],
+        [],
+        record_sets()["candidate_source"],
+        record_sets()["unavailable_source"],
+    )
+
+    assert manifest["canonical_sources"][0]["source_type"] == "dpa"
+    assert manifest["candidate_sources"][0]["source_type_candidate"] == "security_page"
+    assert manifest["unavailable_sources"][0]["source_type"] == "subprocessors_list"
+    assert manifest["observations"][0]["result"] == "bot_protected"
+    assert manifest["guarantees"]["non_advisory"] is True
+
+
+def test_contracting_entity_resolution_includes_canonical_entities_only():
+    resolution = build_contracting_entity_resolution(record_sets())
+
+    assert resolution["count"] == 1
+    item = resolution["items"][0]
+    assert item["vendor_id"] == "example"
+    assert item["jurisdiction"] == "US"
+    assert item["resolution_status"] == "resolved"
+    assert item["resolved_entity_id"] == "example-us"
+    assert item["candidate_entity_ids"] == ["example-us"]

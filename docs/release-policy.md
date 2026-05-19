@@ -11,6 +11,7 @@ A release should give downstream consumers a stable point to pin:
 - repository tag;
 - `openva-pack.json`;
 - generated indexes;
+- generated registry outputs;
 - schema files;
 - conformance fixtures;
 - tooling version;
@@ -24,6 +25,7 @@ A normal OpenVA release should include:
 source repository tag
 openva-pack.json
 indexes/*.json
+dist/vendors/*.json
 schemas/openva/*.json
 fixtures/packs/**
 release-artifacts.json
@@ -54,6 +56,7 @@ for release-facing artifacts under:
 ```text
 openva-pack.json
 indexes/*.json
+dist/vendors/*.json
 schemas/openva/*.json
 fixtures/packs/**/*.json
 ```
@@ -76,6 +79,7 @@ python -m tools.openva.validate validate
 pytest -q
 python -m tools.openva.conformance fixtures/packs/minimal-valid
 python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation
+python -m tools.openva.conformance fixtures/packs/valid-brand-only-fallback
 python -m tools.openva.release_artifacts build
 python -m tools.openva.release_artifacts check
 ```

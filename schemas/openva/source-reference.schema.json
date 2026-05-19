@@ -11,6 +11,7 @@
     "title_native",
     "source_url",
     "source_language",
+    "source_authority_class",
     "access_class",
     "rights_class",
     "provenance",
@@ -20,6 +21,7 @@
     "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
     "source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "entity_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "source_type": {
       "enum": [
         "dpa",
@@ -42,6 +44,15 @@
     "title_en": { "type": ["string", "null"], "maxLength": 300 },
     "source_url": { "type": "string", "format": "uri" },
     "source_language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
+    "source_authority_class": {
+      "enum": [
+        "vendor_published",
+        "public_registry",
+        "public_authority",
+        "court_or_regulatory_filing",
+        "vendor_legal_terms"
+      ]
+    },
     "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
     "rights_class": { "enum": ["metadata_only", "public_link_only", "snapshot_allowed", "snapshot_forbidden", "gated_excluded"] },
     "summary_native": { "type": ["string", "null"], "maxLength": 1200 },
@@ -59,5 +70,18 @@
     },
     "not_advice": { "const": true }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source_authority_class": {
+            "enum": ["public_registry", "public_authority", "court_or_regulatory_filing"]
+          }
+        },
+        "required": ["source_authority_class"]
+      },
+      "then": { "required": ["entity_id"], "properties": { "entity_id": { "type": "string" } } }
+    }
+  ],
   "additionalProperties": false
 }
