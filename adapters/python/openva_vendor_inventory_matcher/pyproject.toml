@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openva-vendor-inventory-matcher"
+version = "0.1.0"
+description = "Vendor inventory matching adapter for OpenVA public metadata packs."
+requires-python = ">=3.11"
+license = "MIT"
+
+[project.scripts]
+openva-vendor-inventory-match = "openva_vendor_inventory_matcher.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["openva_vendor_inventory_matcher"]
