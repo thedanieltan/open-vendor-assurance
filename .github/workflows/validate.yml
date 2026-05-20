@@ -22,6 +22,8 @@ jobs:
           python-version: "3.12"
       - name: Install package
         run: pip install -e ".[dev]"
+      - name: Install match service test dependencies
+        run: pip install -e "services/openva_match_service[dev]"
       - name: Run OpenVA validator
         run: python -m tools.openva.validate validate
       - name: Rebuild generated indexes
