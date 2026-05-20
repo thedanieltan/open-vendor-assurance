@@ -86,6 +86,21 @@ def test_exact_normalized_name_match_works_without_domain(tmp_path):
     assert row["match_method"] == "name_exact"
 
 
+def test_normalized_legal_suffix_name_match_works_without_domain(monkeypatch, tmp_path):
+    monkeypatch.setattr(matcher.OpenVAPack, "load", lambda _: SyntheticPack.single_match())
+    input_path = tmp_path / "vendors.csv"
+    output_path = tmp_path / "matched.csv"
+    write_inventory(input_path, [{"vendor_name": "Acme", "domain": "", "category": "test"}])
+
+    match_inventory("unused-pack-path", input_path, output_path)
+
+    row = read_csv(output_path)[0]
+    assert row["match_status"] == "matched"
+    assert row["matched_vendor_id"] == "acme"
+    assert row["match_confidence"] == "0.90"
+    assert row["match_method"] == "name_exact"
+
+
 def test_single_above_threshold_candidate_is_not_ambiguous(monkeypatch, tmp_path):
     monkeypatch.setattr(matcher.OpenVAPack, "load", lambda _: SyntheticPack.single_match())
     input_path = tmp_path / "vendors.csv"
@@ -166,11 +181,64 @@ def test_json_payloads_are_compact_and_preserve_source_semantics(tmp_path):
     assert isinstance(json.loads(row["canonical_source_types_json"]), list)
     canonical_sources = json.loads(row["canonical_sources_json"])
     assert canonical_sources
-    assert {"source_id", "source_type", "source_url", "title_en"} == set(canonical_sources[0])
+    assert {"source_id", "source_type", "source_url", "title_en", "effective_or_published_at"} == set(canonical_sources[0])
     assert any(source["source_type"] == "dpa" for source in canonical_sources)
+    primary_sources = json.loads(row["primary_source_by_type_json"])
+    assert primary_sources["dpa"]["source_type"] == "dpa"
     assert json.loads(row["candidate_sources_json"]) == []
     assert row["canonical_sources_available"] == "true"
     assert row["candidate_sources_available"] == "false"
+
+
+def test_primary_source_by_type_prefers_newest_dated_source(monkeypatch, tmp_path):
+    monkeypatch.setattr(matcher.OpenVAPack, "load", lambda _: SyntheticPack.with_dated_sources())
+    input_path = tmp_path / "vendors.csv"
+    output_path = tmp_path / "matched.csv"
+    write_inventory(input_path, [{"vendor_name": "Acme", "domain": "acme.example", "category": "test"}])
+
+    match_inventory("unused-pack-path", input_path, output_path)
+
+    row = read_csv(output_path)[0]
+    primary_sources = json.loads(row["primary_source_by_type_json"])
+    assert primary_sources["dpa"]["source_id"] == "acme-dpa-new"
+    assert primary_sources["privacy_notice"]["source_id"] == "acme-privacy"
+
+
+def test_google_domain_collision_matches_specific_subdomain(tmp_path):
+    input_path = tmp_path / "vendors.csv"
+    output_path = tmp_path / "matched.csv"
+    write_inventory(
+        input_path,
+        [
+            {"vendor_name": "Google Workspace", "domain": "workspace.google.com", "category": "productivity"},
+            {"vendor_name": "Google Cloud", "domain": "cloud.google.com", "category": "cloud"},
+        ],
+    )
+
+    match_inventory(".", input_path, output_path)
+
+    rows = read_csv(output_path)
+    assert rows[0]["match_status"] == "matched"
+    assert rows[0]["matched_vendor_id"] == "google-workspace"
+    assert rows[0]["match_confidence"] == "1.00"
+    assert rows[0]["match_method"] == "domain_exact"
+    assert rows[1]["match_status"] == "matched"
+    assert rows[1]["matched_vendor_id"] == "google-cloud"
+    assert rows[1]["match_confidence"] == "1.00"
+    assert rows[1]["match_method"] == "domain_exact"
+
+
+def test_google_bare_name_is_ambiguous_between_workspace_and_cloud(tmp_path):
+    input_path = tmp_path / "vendors.csv"
+    output_path = tmp_path / "matched.csv"
+    write_inventory(input_path, [{"vendor_name": "Google", "domain": "", "category": "productivity"}])
+
+    match_inventory(".", input_path, output_path)
+
+    row = read_csv(output_path)[0]
+    assert row["match_status"] == "ambiguous"
+    candidate_ids = [candidate["vendor_id"] for candidate in json.loads(row["candidate_matches_json"])]
+    assert candidate_ids == ["google-cloud", "google-workspace"]
 
 
 def test_candidate_source_payloads_use_expected_shape(monkeypatch, tmp_path):
@@ -283,11 +351,13 @@ class SyntheticPack:
         coverage: list[dict[str, object]] | None = None,
         candidates: list[dict[str, object]] | None = None,
         observations: list[dict[str, object]] | None = None,
+        sources: list[dict[str, object]] | None = None,
     ):
         self._vendors = vendors
         self._coverage = coverage or []
         self._candidates = candidates or []
         self._observations = observations or []
+        self._sources = sources or []
 
     @classmethod
     def single_match(cls):
@@ -327,6 +397,47 @@ class SyntheticPack:
         )
 
     @classmethod
+    def with_dated_sources(cls):
+        return cls(
+            [synthetic_vendor("acme", "Acme", ["acme.example"])],
+            coverage=[
+                {
+                    "vendor_id": "acme",
+                    "canonical_source_types": ["dpa", "privacy_notice"],
+                    "candidate_source_types": [],
+                    "unavailable_source_types": [],
+                    "missing_core_source_types": [],
+                }
+            ],
+            sources=[
+                {
+                    "vendor_id": "acme",
+                    "source_id": "acme-dpa-old",
+                    "source_type": "dpa",
+                    "source_url": "https://acme.example/dpa-old",
+                    "title_en": "Acme DPA Old",
+                    "effective_or_published_at": "2025-01-01",
+                },
+                {
+                    "vendor_id": "acme",
+                    "source_id": "acme-dpa-new",
+                    "source_type": "dpa",
+                    "source_url": "https://acme.example/dpa-new",
+                    "title_en": "Acme DPA New",
+                    "effective_or_published_at": "2026-01-01",
+                },
+                {
+                    "vendor_id": "acme",
+                    "source_id": "acme-privacy",
+                    "source_type": "privacy_notice",
+                    "source_url": "https://acme.example/privacy",
+                    "title_en": "Acme Privacy",
+                    "effective_or_published_at": "",
+                },
+            ],
+        )
+
+    @classmethod
     def with_unavailable_and_observations(cls):
         return cls(
             [synthetic_vendor("acme", "Acme", ["acme.example"])],
@@ -360,7 +471,7 @@ class SyntheticPack:
         return {"vendor_coverage": self._coverage}
 
     def canonical_sources(self):
-        return []
+        return self._sources
 
     def candidate_sources(self):
         return self._candidates

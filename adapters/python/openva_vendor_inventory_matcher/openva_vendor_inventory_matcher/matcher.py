@@ -32,6 +32,7 @@ ENRICHMENT_COLUMNS = [
     "candidate_sources_available",
     "unavailable_sources_recorded",
     "canonical_sources_json",
+    "primary_source_by_type_json",
     "candidate_sources_json",
     "latest_observation_result",
     "latest_observed_at",
@@ -145,6 +146,7 @@ def vendor_record(row: dict[str, Any]) -> VendorRecord:
     legal_name = scalar(row.get("legal_name"))
     domains = [domain for domain in [normalize_domain(value) for value in row.get("official_domains", [])] if domain]
     name_keys = {normalize_name(value) for value in [vendor_id, display_name, legal_name, vendor_id.replace("-", " ")]}
+    name_keys.add(strip_legal_suffixes(legal_name))
     return VendorRecord(
         vendor_id=vendor_id,
         display_name=display_name,
@@ -161,6 +163,7 @@ def candidate_for_vendor(vendor: VendorRecord, domain: str, name: str) -> MatchC
         for official_domain in vendor.official_domains:
             if domain == official_domain:
                 return MatchCandidate(vendor, 1.00, "domain_exact")
+        for official_domain in vendor.official_domains:
             if domain.endswith(f".{official_domain}"):
                 return MatchCandidate(vendor, 0.95, "domain_subdomain")
     if name and name in vendor.name_keys:
@@ -211,6 +214,7 @@ def enrichment_fields(vendor: VendorRecord, index: MatcherIndex) -> dict[str, st
         "candidate_sources_available": bool_cell(bool(candidate_source_types)),
         "unavailable_sources_recorded": bool_cell(bool(unavailable_source_types)),
         "canonical_sources_json": json_cell(canonical_sources),
+        "primary_source_by_type_json": json_cell(primary_source_by_type(canonical_sources)),
         "candidate_sources_json": json_cell(candidate_sources),
         "latest_observation_result": scalar(observation.get("result")),
         "latest_observed_at": scalar(observation.get("observed_at")),
@@ -240,7 +244,31 @@ def canonical_source_json(row: dict[str, Any]) -> dict[str, str]:
         "source_type": scalar(row.get("source_type")),
         "source_url": scalar(row.get("source_url")),
         "title_en": scalar(row.get("title_en")),
+        "effective_or_published_at": scalar(row.get("effective_or_published_at")),
     }
+
+
+def primary_source_by_type(sources: list[dict[str, str]]) -> dict[str, dict[str, str]]:
+    by_type: dict[str, list[dict[str, str]]] = defaultdict(list)
+    for source in sources:
+        source_type = source.get("source_type", "")
+        if source_type:
+            by_type[source_type].append(source)
+    return {
+        source_type: sorted(
+            typed_sources,
+            key=lambda item: (
+                item.get("effective_or_published_at", "") == "",
+                reverse_date_key(item.get("effective_or_published_at", "")),
+                item.get("source_id", ""),
+            ),
+        )[0]
+        for source_type, typed_sources in sorted(by_type.items())
+    }
+
+
+def reverse_date_key(value: str) -> str:
+    return "".join(chr(255 - ord(character)) for character in value)
 
 
 def candidate_source_json(row: dict[str, Any]) -> dict[str, str]:
@@ -298,6 +326,14 @@ def normalize_name(value: str | None) -> str:
     raw = raw.replace("&", " and ")
     raw = re.sub(r"[^a-z0-9]+", " ", raw)
     return " ".join(raw.split())
+
+
+def strip_legal_suffixes(value: str | None) -> str:
+    tokens = normalize_name(value).split()
+    suffixes = {"inc", "llc", "ltd", "limited", "corp", "corporation", "company", "co"}
+    while tokens and tokens[-1] in suffixes:
+        tokens.pop()
+    return " ".join(tokens)
 
 
 def scalar(value: Any) -> str:

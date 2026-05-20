@@ -31,6 +31,36 @@
       "vendor_id": "aws"
     },
     {
+      "_openva_path": "data/vendors/aws/artifacts/aws-customer-agreement.yaml",
+      "access_class": "public_web",
+      "artifact_id": "aws-customer-agreement",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://aws.amazon.com/agreement/",
+      "effective_or_published_at": "2026-03-13",
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "AWS"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "aws-customer-agreement",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "aws"
+    },
+    {
       "_openva_path": "data/vendors/aws/artifacts/aws-dpa.yaml",
       "access_class": "public_pdf",
       "artifact_id": "aws-dpa",
@@ -66,7 +96,7 @@
       "artifact_id": "aws-privacy",
       "artifact_type": "privacy_notice",
       "canonical_url": "https://aws.amazon.com/privacy/",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2026-05-18",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -177,6 +207,30 @@
       "vendor_id": "aws"
     },
     {
+      "_openva_path": "data/vendors/aws/sources/aws-customer-agreement.yaml",
+      "access_class": "public_web",
+      "effective_or_published_at": "2026-03-13",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-20T00:00:00Z",
+        "confidence": "high",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_legal_terms",
+      "source_id": "aws-customer-agreement",
+      "source_language": "en",
+      "source_type": "terms_of_service",
+      "source_url": "https://aws.amazon.com/agreement/",
+      "summary_en": "Public AWS customer agreement metadata reference, including AWS contracting party information.",
+      "summary_native": "Public AWS customer agreement metadata reference, including AWS contracting party information.",
+      "title_en": "AWS Customer Agreement",
+      "title_native": "AWS Customer Agreement",
+      "vendor_id": "aws"
+    },
+    {
       "_openva_path": "data/vendors/aws/sources/aws-dpa.yaml",
       "access_class": "public_pdf",
       "not_advice": true,
@@ -202,6 +256,7 @@
     {
       "_openva_path": "data/vendors/aws/sources/aws-privacy.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2026-05-18",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-15T00:00:00Z",
@@ -270,7 +325,24 @@
     }
   ],
   "changes": [],
-  "entity_mentions": [],
+  "entity_mentions": [
+    {
+      "_openva_path": "data/vendors/aws/entity_mentions/aws-singapore-private-limited.yaml",
+      "appears_in_source_id": "aws-customer-agreement",
+      "assertion_source": "vendor_published",
+      "mention_id": "aws-singapore-private-limited",
+      "not_advice": true,
+      "notes": "Observed Singapore AWS contracting-party mention from the public AWS Customer Agreement; not promoted to a canonical legal entity record.",
+      "observed_at": "2026-05-20T00:00:00Z",
+      "observed_name": "Amazon Web Services Singapore Private Limited",
+      "observed_role": "affiliate",
+      "resolution": {
+        "status": "unresolved"
+      },
+      "schema_version": "0.1.0",
+      "vendor_id": "aws"
+    }
+  ],
   "generated_at": "1970-01-01T00:00:00Z",
   "guarantees": {
     "metadata_first": true,
@@ -282,18 +354,19 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 5,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 5,
-    "entity_mention_count": 0,
+    "canonical_source_count": 6,
+    "entity_mention_count": 1,
     "legal_entity_count": 0,
     "source_types": [
       "compliance_page",
       "dpa",
       "privacy_notice",
       "security_page",
-      "subprocessors_list"
+      "subprocessors_list",
+      "terms_of_service"
     ],
     "unavailable_source_count": 0,
     "unavailable_source_types": []
@@ -306,6 +379,9 @@
     "headquarters_country": "US",
     "legal_name": "Amazon Web Services, Inc.",
     "notes": "Public-source-only reseed record. Metadata references general public AWS assurance materials and does not cover bespoke customer agreements.",
+    "observed_entity_mention_ids": [
+      "aws-singapore-private-limited"
+    ],
     "official_domains": [
       "amazon.com",
       "aws.amazon.com",

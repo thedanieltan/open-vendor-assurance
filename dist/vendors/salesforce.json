@@ -36,7 +36,7 @@
       "artifact_id": "salesforce-dpa",
       "artifact_type": "dpa",
       "canonical_url": "https://www.salesforce.com/company/privacy/data-processing-addendum/",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2026-04-10",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -179,6 +179,7 @@
     {
       "_openva_path": "data/vendors/salesforce/sources/salesforce-dpa.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2026-04-10",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-16T00:00:00Z",
@@ -356,7 +357,24 @@
       "vendor_id": "salesforce"
     }
   ],
-  "entity_mentions": [],
+  "entity_mentions": [
+    {
+      "_openva_path": "data/vendors/salesforce/entity_mentions/salesforce-inc.yaml",
+      "appears_in_source_id": "salesforce-dpa",
+      "assertion_source": "vendor_published",
+      "mention_id": "salesforce-inc",
+      "not_advice": true,
+      "notes": "Observed legal entity mention from Salesforce's public DPA; not promoted to a canonical legal entity record.",
+      "observed_at": "2026-05-20T00:00:00Z",
+      "observed_name": "Salesforce, Inc.",
+      "observed_role": "processor",
+      "resolution": {
+        "status": "unresolved"
+      },
+      "schema_version": "0.1.0",
+      "vendor_id": "salesforce"
+    }
+  ],
   "generated_at": "1970-01-01T00:00:00Z",
   "guarantees": {
     "metadata_first": true,
@@ -372,7 +390,7 @@
     "candidate_source_count": 0,
     "candidate_source_types": [],
     "canonical_source_count": 5,
-    "entity_mention_count": 0,
+    "entity_mention_count": 1,
     "legal_entity_count": 0,
     "source_types": [
       "compliance_page",
@@ -393,6 +411,9 @@
     "headquarters_country": "US",
     "legal_name": "Salesforce, Inc.",
     "notes": "Public-source-only catalog record. Metadata references general public Salesforce assurance materials and does not cover bespoke customer agreements.",
+    "observed_entity_mention_ids": [
+      "salesforce-inc"
+    ],
     "official_domains": [
       "salesforce.com"
     ],

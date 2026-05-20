@@ -6,4 +6,7 @@ schema_version: 0.1.0
 # Keep this list narrow. Exceptions are for clearly official publication
 # patterns only, not scraped copies, gated portals, or unofficial mirrors.
 
-exceptions: []
+exceptions:
+  - vendor_id: google-workspace
+    domain: cloud.google.com
+    reason: Google Workspace current data processing and privacy terms are published under the official Google Cloud terms surface.

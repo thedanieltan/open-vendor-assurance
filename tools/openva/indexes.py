@@ -168,7 +168,7 @@ def build_source_coverage(record_sets: dict[str, list[dict[str, Any]]]) -> dict[
     candidates = by_vendor(record_sets["candidate_source"])
     unavailable = by_vendor(record_sets["unavailable_source"])
     vendor_coverage = []
-    core_source_types = {"dpa", "privacy_notice", "security_page", "subprocessor_list"}
+    core_source_types = {"dpa", "privacy_notice", "security_page", "subprocessors_list"}
     for vendor in record_sets["vendor"]:
         vendor_id = str(vendor["vendor_id"])
         canonical_types = types(sources.get(vendor_id, []), "source_type")
