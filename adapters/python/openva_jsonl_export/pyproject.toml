@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openva-jsonl-export"
+version = "0.1.0"
+description = "JSONL export adapter for OpenVA public metadata packs."
+requires-python = ">=3.11"
+license = "MIT"
+
+[project.scripts]
+openva-jsonl-export = "openva_jsonl_export.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["openva_jsonl_export"]
