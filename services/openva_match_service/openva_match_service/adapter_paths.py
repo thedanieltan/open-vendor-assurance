@@ -1,0 +1,15 @@
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+
+def ensure_adapter_paths() -> None:
+    repo_root = Path(__file__).resolve().parents[3]
+    for relative in [
+        "adapters/python/openva_pack_reader",
+        "adapters/python/openva_vendor_inventory_matcher",
+    ]:
+        path = str(repo_root / relative)
+        if path not in sys.path:
+            sys.path.insert(0, path)
