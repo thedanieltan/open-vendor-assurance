@@ -1,7 +1,120 @@
 {
-  "count": 0,
+  "count": 7,
   "generated_at": "1970-01-01T00:00:00Z",
-  "items": [],
+  "items": [
+    {
+      "_openva_path": "data/vendors/aws/entity_mentions/aws-singapore-private-limited.yaml",
+      "appears_in_source_id": "aws-customer-agreement",
+      "assertion_source": "vendor_published",
+      "mention_id": "aws-singapore-private-limited",
+      "not_advice": true,
+      "notes": "Observed Singapore AWS contracting-party mention from the public AWS Customer Agreement; not promoted to a canonical legal entity record.",
+      "observed_at": "2026-05-20T00:00:00Z",
+      "observed_name": "Amazon Web Services Singapore Private Limited",
+      "observed_role": "affiliate",
+      "resolution": {
+        "status": "unresolved"
+      },
+      "schema_version": "0.1.0",
+      "vendor_id": "aws"
+    },
+    {
+      "_openva_path": "data/vendors/google-workspace/entity_mentions/google-workspace-google-llc.yaml",
+      "appears_in_source_id": "google-workspace-dpa",
+      "assertion_source": "vendor_published",
+      "mention_id": "google-workspace-google-llc",
+      "not_advice": true,
+      "notes": "Observed legal entity mention from the public Google Workspace data processing terms surface; not promoted to a canonical legal entity record.",
+      "observed_at": "2026-05-20T00:00:00Z",
+      "observed_name": "Google LLC",
+      "observed_role": "processor",
+      "resolution": {
+        "status": "unresolved"
+      },
+      "schema_version": "0.1.0",
+      "vendor_id": "google-workspace"
+    },
+    {
+      "_openva_path": "data/vendors/notion/entity_mentions/notion-labs-inc.yaml",
+      "appears_in_source_id": "notion-privacy",
+      "assertion_source": "vendor_published",
+      "mention_id": "notion-labs-inc",
+      "not_advice": true,
+      "notes": "Observed legal entity mention from Notion's public privacy policy; not promoted to a canonical legal entity record.",
+      "observed_at": "2026-05-20T00:00:00Z",
+      "observed_name": "Notion Labs, Inc.",
+      "observed_role": "processor",
+      "resolution": {
+        "status": "unresolved"
+      },
+      "schema_version": "0.1.0",
+      "vendor_id": "notion"
+    },
+    {
+      "_openva_path": "data/vendors/salesforce/entity_mentions/salesforce-inc.yaml",
+      "appears_in_source_id": "salesforce-dpa",
+      "assertion_source": "vendor_published",
+      "mention_id": "salesforce-inc",
+      "not_advice": true,
+      "notes": "Observed legal entity mention from Salesforce's public DPA; not promoted to a canonical legal entity record.",
+      "observed_at": "2026-05-20T00:00:00Z",
+      "observed_name": "Salesforce, Inc.",
+      "observed_role": "processor",
+      "resolution": {
+        "status": "unresolved"
+      },
+      "schema_version": "0.1.0",
+      "vendor_id": "salesforce"
+    },
+    {
+      "_openva_path": "data/vendors/slack/entity_mentions/slack-technologies-llc.yaml",
+      "appears_in_source_id": "slack-privacy",
+      "assertion_source": "vendor_published",
+      "mention_id": "slack-technologies-llc",
+      "not_advice": true,
+      "notes": "Observed legal entity mention from Slack's public privacy policy; not promoted to a canonical legal entity record.",
+      "observed_at": "2026-05-20T00:00:00Z",
+      "observed_name": "Slack Technologies, LLC",
+      "observed_role": "processor",
+      "resolution": {
+        "status": "unresolved"
+      },
+      "schema_version": "0.1.0",
+      "vendor_id": "slack"
+    },
+    {
+      "_openva_path": "data/vendors/stripe/entity_mentions/stripe-stripe-llc.yaml",
+      "appears_in_source_id": "stripe-dpa",
+      "assertion_source": "vendor_published",
+      "mention_id": "stripe-stripe-llc",
+      "not_advice": true,
+      "notes": "Observed legal entity mention from Stripe's public DPA; not promoted to a canonical legal entity record.",
+      "observed_at": "2026-05-20T00:00:00Z",
+      "observed_name": "Stripe, LLC",
+      "observed_role": "processor",
+      "resolution": {
+        "status": "unresolved"
+      },
+      "schema_version": "0.1.0",
+      "vendor_id": "stripe"
+    },
+    {
+      "_openva_path": "data/vendors/zoom/entity_mentions/zoom-communications-inc.yaml",
+      "appears_in_source_id": "zoom-privacy",
+      "assertion_source": "vendor_published",
+      "mention_id": "zoom-communications-inc",
+      "not_advice": true,
+      "notes": "Observed legal entity mention from Zoom's public privacy statement; not promoted to a canonical legal entity record.",
+      "observed_at": "2026-05-20T00:00:00Z",
+      "observed_name": "Zoom Communications, Inc.",
+      "observed_role": "processor",
+      "resolution": {
+        "status": "unresolved"
+      },
+      "schema_version": "0.1.0",
+      "vendor_id": "zoom"
+    }
+  ],
   "kind": "entity_mention",
   "schema_version": "0.1.0"
 }

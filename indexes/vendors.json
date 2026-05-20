@@ -1,5 +1,5 @@
 {
-  "count": 137,
+  "count": 138,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -647,6 +647,9 @@
       "headquarters_country": "US",
       "legal_name": "Amazon Web Services, Inc.",
       "notes": "Public-source-only reseed record. Metadata references general public AWS assurance materials and does not cover bespoke customer agreements.",
+      "observed_entity_mention_ids": [
+        "aws-singapore-private-limited"
+      ],
       "official_domains": [
         "amazon.com",
         "aws.amazon.com",
@@ -1594,6 +1597,45 @@
       "vendor_id": "google-cloud"
     },
     {
+      "_openva_path": "data/vendors/google-workspace/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Google Workspace",
+      "entity_surface": "product_surface",
+      "headquarters_country": "US",
+      "legal_name": "Google LLC",
+      "notes": "Public-source-only record for the Google Workspace contracting surface. Related to google-cloud through shared Google infrastructure and terms, but modeled separately because Workspace is a distinct enterprise SaaS surface for customer inventories.",
+      "observed_entity_mention_ids": [
+        "google-workspace-google-llc"
+      ],
+      "official_domains": [
+        "google.com",
+        "workspace.google.com"
+      ],
+      "public_entrypoints": [
+        "https://workspace.google.com/",
+        "https://workspace.google.com/security/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "related_vendor_ids": [
+        "google-cloud"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "productivity_software",
+        "collaboration_software"
+      ],
+      "vendor_id": "google-workspace"
+    },
+    {
       "_openva_path": "data/vendors/govini/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Govini",
@@ -2525,6 +2567,9 @@
       "headquarters_country": "US",
       "legal_name": "Notion Labs, Inc.",
       "notes": "Public-source-only catalog record. Metadata references general public Notion assurance materials and does not cover bespoke customer agreements.",
+      "observed_entity_mention_ids": [
+        "notion-labs-inc"
+      ],
       "official_domains": [
         "notion.so"
       ],
@@ -3276,6 +3321,9 @@
       "headquarters_country": "US",
       "legal_name": "Salesforce, Inc.",
       "notes": "Public-source-only catalog record. Metadata references general public Salesforce assurance materials and does not cover bespoke customer agreements.",
+      "observed_entity_mention_ids": [
+        "salesforce-inc"
+      ],
       "official_domains": [
         "salesforce.com"
       ],
@@ -3671,6 +3719,9 @@
       "headquarters_country": "US",
       "legal_name": "Slack Technologies, LLC",
       "notes": "Public-source-only catalog record. Metadata references general public Slack assurance materials and does not cover bespoke customer agreements.",
+      "observed_entity_mention_ids": [
+        "slack-technologies-llc"
+      ],
       "official_domains": [
         "slack.com"
       ],
@@ -3771,6 +3822,9 @@
       "headquarters_country": "US",
       "legal_name": "Stripe, Inc.",
       "notes": "Public-source-only catalog record. Metadata references general public Stripe assurance materials and does not cover bespoke customer agreements.",
+      "observed_entity_mention_ids": [
+        "stripe-stripe-llc"
+      ],
       "official_domains": [
         "stripe.com"
       ],
@@ -4500,6 +4554,9 @@
       "headquarters_country": "US",
       "legal_name": "Zoom Communications, Inc.",
       "notes": "Public-source-only catalog record. Metadata references general public Zoom assurance materials and does not cover bespoke customer agreements.",
+      "observed_entity_mention_ids": [
+        "zoom-communications-inc"
+      ],
       "official_domains": [
         "zoom.com",
         "zoom.us"

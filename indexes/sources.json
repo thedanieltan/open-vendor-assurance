@@ -1,5 +1,5 @@
 {
-  "count": 559,
+  "count": 564,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -1728,6 +1728,30 @@
       "vendor_id": "aws"
     },
     {
+      "_openva_path": "data/vendors/aws/sources/aws-customer-agreement.yaml",
+      "access_class": "public_web",
+      "effective_or_published_at": "2026-03-13",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-20T00:00:00Z",
+        "confidence": "high",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_legal_terms",
+      "source_id": "aws-customer-agreement",
+      "source_language": "en",
+      "source_type": "terms_of_service",
+      "source_url": "https://aws.amazon.com/agreement/",
+      "summary_en": "Public AWS customer agreement metadata reference, including AWS contracting party information.",
+      "summary_native": "Public AWS customer agreement metadata reference, including AWS contracting party information.",
+      "title_en": "AWS Customer Agreement",
+      "title_native": "AWS Customer Agreement",
+      "vendor_id": "aws"
+    },
+    {
       "_openva_path": "data/vendors/aws/sources/aws-dpa.yaml",
       "access_class": "public_pdf",
       "not_advice": true,
@@ -1753,6 +1777,7 @@
     {
       "_openva_path": "data/vendors/aws/sources/aws-privacy.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2026-05-18",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-15T00:00:00Z",
@@ -4398,6 +4423,7 @@
     {
       "_openva_path": "data/vendors/google-cloud/sources/google-cloud-dpa.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2025-10-23",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-15T00:00:00Z",
@@ -4421,6 +4447,7 @@
     {
       "_openva_path": "data/vendors/google-cloud/sources/google-cloud-privacy.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2026-04-08",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-15T00:00:00Z",
@@ -4467,6 +4494,7 @@
     {
       "_openva_path": "data/vendors/google-cloud/sources/google-cloud-subprocessors.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2026-05-19",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-15T00:00:00Z",
@@ -4486,6 +4514,101 @@
       "title_en": "Google Cloud Subprocessors",
       "title_native": "Google Cloud Subprocessors",
       "vendor_id": "google-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/google-workspace/sources/google-workspace-dpa.yaml",
+      "access_class": "public_web",
+      "effective_or_published_at": "2025-10-23",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-20T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_legal_terms",
+      "source_id": "google-workspace-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://cloud.google.com/terms/data-processing-addendum?service=workspace",
+      "summary_en": "Public Google Cloud Data Processing Addendum metadata reference for Google Workspace and related services.",
+      "summary_native": "Public Google Cloud Data Processing Addendum metadata reference for Google Workspace and related services.",
+      "title_en": "Google Workspace Cloud Data Processing Addendum",
+      "title_native": "Google Workspace Cloud Data Processing Addendum",
+      "vendor_id": "google-workspace"
+    },
+    {
+      "_openva_path": "data/vendors/google-workspace/sources/google-workspace-privacy.yaml",
+      "access_class": "public_web",
+      "effective_or_published_at": "2026-04-08",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-20T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "google-workspace-privacy",
+      "source_language": "en",
+      "source_type": "privacy_notice",
+      "source_url": "https://cloud.google.com/terms/cloud-privacy-notice?service=workspace",
+      "summary_en": "Public Google privacy notice metadata reference for Google Workspace service data and related Cloud terms.",
+      "summary_native": "Public Google privacy notice metadata reference for Google Workspace service data and related Cloud terms.",
+      "title_en": "Google Cloud Privacy Notice",
+      "title_native": "Google Cloud Privacy Notice",
+      "vendor_id": "google-workspace"
+    },
+    {
+      "_openva_path": "data/vendors/google-workspace/sources/google-workspace-security.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-20T00:00:00Z",
+        "confidence": "high",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "google-workspace-security",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://workspace.google.com/security/",
+      "summary_en": "Public Google Workspace security and trust metadata reference.",
+      "summary_native": "Public Google Workspace security and trust metadata reference.",
+      "title_en": "Google Workspace Security and Trust",
+      "title_native": "Google Workspace Security and Trust",
+      "vendor_id": "google-workspace"
+    },
+    {
+      "_openva_path": "data/vendors/google-workspace/sources/google-workspace-subprocessors.yaml",
+      "access_class": "public_web",
+      "effective_or_published_at": "2026-05-14",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-05-20T00:00:00Z",
+        "confidence": "high",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "google-workspace-subprocessors",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://workspace.google.com/terms/subprocessors/",
+      "summary_en": "Public Google Workspace subprocessor list metadata reference.",
+      "summary_native": "Public Google Workspace subprocessor list metadata reference.",
+      "title_en": "Google Workspace Subprocessors",
+      "title_native": "Google Workspace Subprocessors",
+      "vendor_id": "google-workspace"
     },
     {
       "_openva_path": "data/vendors/govini/sources/govini-about.yaml",
@@ -7227,6 +7350,7 @@
     {
       "_openva_path": "data/vendors/notion/sources/notion-privacy.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2025-09-29",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-16T00:00:00Z",
@@ -9182,6 +9306,7 @@
     {
       "_openva_path": "data/vendors/salesforce/sources/salesforce-dpa.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2026-04-10",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-16T00:00:00Z",
@@ -10378,6 +10503,7 @@
     {
       "_openva_path": "data/vendors/slack/sources/slack-privacy.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2023-07-05",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-16T00:00:00Z",
@@ -10700,6 +10826,7 @@
     {
       "_openva_path": "data/vendors/stripe/sources/stripe-dpa.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2025-11-18",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-16T00:00:00Z",
@@ -10723,6 +10850,7 @@
     {
       "_openva_path": "data/vendors/stripe/sources/stripe-privacy.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2026-01-16",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-16T00:00:00Z",
@@ -10769,6 +10897,7 @@
     {
       "_openva_path": "data/vendors/stripe/sources/stripe-subprocessors.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2025-12-20",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-16T00:00:00Z",
@@ -12793,6 +12922,7 @@
     {
       "_openva_path": "data/vendors/zoom/sources/zoom-privacy.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2026-02-02",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-16T00:00:00Z",
@@ -12839,6 +12969,7 @@
     {
       "_openva_path": "data/vendors/zoom/sources/zoom-subprocessors.yaml",
       "access_class": "public_web",
+      "effective_or_published_at": "2026-04-29",
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-05-16T00:00:00Z",

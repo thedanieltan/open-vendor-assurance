@@ -47,11 +47,11 @@ def test_export_sqlite_creates_expected_tables_and_counts(tmp_path):
     assert db_path == tmp_path / "openva.sqlite"
     with connect(db_path) as connection:
         assert table_names(connection) == EXPECTED_TABLES
-        assert connection.execute("select count(*) from vendors").fetchone()[0] == 137
-        assert connection.execute("select count(*) from canonical_sources").fetchone()[0] == 559
-        assert connection.execute("select count(*) from artifacts").fetchone()[0] == 559
+        assert connection.execute("select count(*) from vendors").fetchone()[0] == 138
+        assert connection.execute("select count(*) from canonical_sources").fetchone()[0] == 564
+        assert connection.execute("select count(*) from artifacts").fetchone()[0] == 564
         assert connection.execute("select count(*) from unavailable_sources").fetchone()[0] == 16
-        assert connection.execute("select count(*) from source_coverage").fetchone()[0] == 137
+        assert connection.execute("select count(*) from source_coverage").fetchone()[0] == 138
 
 
 def test_export_sqlite_replaces_existing_database(tmp_path):
@@ -70,9 +70,9 @@ def test_export_sqlite_replaces_existing_database(tmp_path):
         names = table_names(connection)
         assert names == EXPECTED_TABLES
         assert "stale_table" not in names
-        assert connection.execute("select count(*) from vendors").fetchone()[0] == 137
-        assert connection.execute("select count(*) from canonical_sources").fetchone()[0] == 559
-        assert connection.execute("select count(*) from source_coverage").fetchone()[0] == 137
+        assert connection.execute("select count(*) from vendors").fetchone()[0] == 138
+        assert connection.execute("select count(*) from canonical_sources").fetchone()[0] == 564
+        assert connection.execute("select count(*) from source_coverage").fetchone()[0] == 138
 
 
 def test_export_preserves_adapter_annotations_and_record_classes(tmp_path):

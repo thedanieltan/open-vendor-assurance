@@ -44,6 +44,7 @@
     "title_en": { "type": ["string", "null"], "maxLength": 300 },
     "source_url": { "type": "string", "format": "uri" },
     "source_language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
+    "effective_or_published_at": { "type": ["string", "null"], "format": "date" },
     "source_authority_class": {
       "enum": [
         "vendor_published",

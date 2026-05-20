@@ -1,5 +1,5 @@
 {
-  "count": 559,
+  "count": 564,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -2260,6 +2260,36 @@
       "vendor_id": "aws"
     },
     {
+      "_openva_path": "data/vendors/aws/artifacts/aws-customer-agreement.yaml",
+      "access_class": "public_web",
+      "artifact_id": "aws-customer-agreement",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://aws.amazon.com/agreement/",
+      "effective_or_published_at": "2026-03-13",
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "AWS"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "aws-customer-agreement",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "aws"
+    },
+    {
       "_openva_path": "data/vendors/aws/artifacts/aws-dpa.yaml",
       "access_class": "public_pdf",
       "artifact_id": "aws-dpa",
@@ -2295,7 +2325,7 @@
       "artifact_id": "aws-privacy",
       "artifact_type": "privacy_notice",
       "canonical_url": "https://aws.amazon.com/privacy/",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2026-05-18",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -5757,7 +5787,7 @@
       "artifact_id": "google-cloud-dpa",
       "artifact_type": "dpa",
       "canonical_url": "https://cloud.google.com/terms/data-processing-addendum",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2025-10-23",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -5787,7 +5817,7 @@
       "artifact_id": "google-cloud-privacy",
       "artifact_type": "privacy_notice",
       "canonical_url": "https://cloud.google.com/terms/cloud-privacy-notice",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2026-04-08",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -5847,7 +5877,7 @@
       "artifact_id": "google-cloud-subprocessors",
       "artifact_type": "subprocessors_list",
       "canonical_url": "https://cloud.google.com/terms/subprocessors",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2026-05-19",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -5870,6 +5900,126 @@
         "screenshot_stored": false
       },
       "vendor_id": "google-cloud"
+    },
+    {
+      "_openva_path": "data/vendors/google-workspace/artifacts/google-workspace-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "google-workspace-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://cloud.google.com/terms/data-processing-addendum?service=workspace",
+      "effective_or_published_at": "2025-10-23",
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Google Workspace"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "google-workspace-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "google-workspace"
+    },
+    {
+      "_openva_path": "data/vendors/google-workspace/artifacts/google-workspace-privacy.yaml",
+      "access_class": "public_web",
+      "artifact_id": "google-workspace-privacy",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://cloud.google.com/terms/cloud-privacy-notice?service=workspace",
+      "effective_or_published_at": "2026-04-08",
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Google Workspace"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "google-workspace-privacy",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "google-workspace"
+    },
+    {
+      "_openva_path": "data/vendors/google-workspace/artifacts/google-workspace-security.yaml",
+      "access_class": "public_web",
+      "artifact_id": "google-workspace-security",
+      "artifact_type": "security_page",
+      "canonical_url": "https://workspace.google.com/security/",
+      "effective_or_published_at": null,
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Google Workspace"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "google-workspace-security",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "google-workspace"
+    },
+    {
+      "_openva_path": "data/vendors/google-workspace/artifacts/google-workspace-subprocessors.yaml",
+      "access_class": "public_web",
+      "artifact_id": "google-workspace-subprocessors",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://workspace.google.com/terms/subprocessors/",
+      "effective_or_published_at": "2026-05-14",
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Google Workspace"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "google-workspace-subprocessors",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "google-workspace"
     },
     {
       "_openva_path": "data/vendors/govini/artifacts/govini-about.yaml",
@@ -9457,7 +9607,7 @@
       "artifact_id": "notion-privacy",
       "artifact_type": "privacy_notice",
       "canonical_url": "https://www.notion.so/privacy",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2025-09-29",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -12013,7 +12163,7 @@
       "artifact_id": "salesforce-dpa",
       "artifact_type": "dpa",
       "canonical_url": "https://www.salesforce.com/company/privacy/data-processing-addendum/",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2026-04-10",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -13588,7 +13738,7 @@
       "artifact_id": "slack-privacy",
       "artifact_type": "privacy_notice",
       "canonical_url": "https://slack.com/privacy",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2023-07-05",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -14008,7 +14158,7 @@
       "artifact_id": "stripe-dpa",
       "artifact_type": "dpa",
       "canonical_url": "https://stripe.com/legal/dpa",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2025-11-18",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -14038,7 +14188,7 @@
       "artifact_id": "stripe-privacy",
       "artifact_type": "privacy_notice",
       "canonical_url": "https://stripe.com/privacy",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2026-01-16",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -14098,7 +14248,7 @@
       "artifact_id": "stripe-subprocessors",
       "artifact_type": "subprocessors_list",
       "canonical_url": "https://stripe.com/legal/service-providers",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2025-12-20",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -16758,7 +16908,7 @@
       "artifact_id": "zoom-privacy",
       "artifact_type": "privacy_notice",
       "canonical_url": "https://www.zoom.com/en/privacy/",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2026-02-02",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -16818,7 +16968,7 @@
       "artifact_id": "zoom-subprocessors",
       "artifact_type": "subprocessors_list",
       "canonical_url": "https://www.zoom.com/en/trust/subprocessors/",
-      "effective_or_published_at": null,
+      "effective_or_published_at": "2026-04-29",
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",

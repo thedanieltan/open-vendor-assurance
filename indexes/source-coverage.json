@@ -4,12 +4,12 @@
   "schema_version": "0.1.0",
   "source_type_counts": {
     "compliance_page": 94,
-    "dpa": 90,
+    "dpa": 91,
     "other_public_source": 2,
-    "privacy_notice": 133,
-    "security_page": 129,
-    "subprocessors_list": 101,
-    "terms_of_service": 6,
+    "privacy_notice": 134,
+    "security_page": 130,
+    "subprocessors_list": 102,
+    "terms_of_service": 7,
     "trust_center": 4
   },
   "unavailable_source_type_counts": {
@@ -24,7 +24,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "acuity-scheduling"
@@ -38,9 +38,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "adobe"
     },
@@ -52,9 +50,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "adp"
     },
@@ -66,8 +62,7 @@
       "missing_core_source_types": [
         "dpa",
         "privacy_notice",
-        "security_page",
-        "subprocessor_list"
+        "security_page"
       ],
       "unavailable_source_types": [],
       "vendor_id": "adyen"
@@ -81,9 +76,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "airtable"
     },
@@ -96,7 +89,7 @@
         "dpa",
         "privacy_notice",
         "security_page",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "airwallex"
@@ -110,7 +103,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "akur8"
@@ -124,9 +117,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "algolia"
     },
@@ -139,9 +130,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "alibaba-cloud-international"
     },
@@ -154,9 +143,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "aliyun"
     },
@@ -168,7 +155,7 @@
       ],
       "missing_core_source_types": [
         "security_page",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "alloy"
@@ -182,9 +169,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "amplitude"
     },
@@ -197,9 +182,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "anthropic"
     },
@@ -212,7 +195,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "applied-systems"
@@ -226,9 +209,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "asana"
     },
@@ -241,7 +222,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "athenahealth"
@@ -255,9 +236,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "atlassian"
     },
@@ -270,9 +249,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "auditboard"
     },
@@ -285,9 +262,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "auth0"
     },
@@ -298,11 +273,10 @@
         "dpa",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "aws"
     },
@@ -315,9 +289,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "bamboohr"
     },
@@ -329,9 +301,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -346,9 +316,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "box"
     },
@@ -360,7 +328,7 @@
         "security_page"
       ],
       "missing_core_source_types": [
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "calendly"
@@ -374,9 +342,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "canva"
     },
@@ -388,7 +354,7 @@
       "missing_core_source_types": [
         "dpa",
         "security_page",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "chainalysis"
@@ -402,9 +368,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "clickup"
     },
@@ -417,9 +381,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "cloudflare"
     },
@@ -432,9 +394,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "cohere"
     },
@@ -446,7 +406,7 @@
       "missing_core_source_types": [
         "dpa",
         "security_page",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "complyadvantage"
@@ -460,9 +420,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "contentful"
     },
@@ -474,7 +432,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "culture-amp"
@@ -487,7 +445,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "darwinbox"
@@ -501,9 +459,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "databricks"
     },
@@ -516,9 +472,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "datadog"
     },
@@ -531,9 +485,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "deel"
     },
@@ -546,9 +498,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "digitalocean"
     },
@@ -561,9 +511,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "docker"
     },
@@ -576,9 +524,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "docusign"
     },
@@ -590,9 +536,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -607,9 +551,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "dropbox"
     },
@@ -623,7 +565,7 @@
       "missing_core_source_types": [
         "dpa",
         "security_page",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "duck-creek-technologies"
@@ -637,9 +579,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "elastic"
     },
@@ -651,7 +591,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "employment-hero"
@@ -664,9 +604,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -681,9 +619,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "freshworks"
     },
@@ -696,9 +632,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "github"
     },
@@ -711,11 +645,21 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "google-cloud"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "missing_core_source_types": [],
+      "unavailable_source_types": [],
+      "vendor_id": "google-workspace"
     },
     {
       "candidate_source_types": [],
@@ -726,7 +670,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "govini"
@@ -739,9 +683,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "greenhouse"
     },
@@ -753,7 +695,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "greythr"
@@ -767,7 +709,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "guidewire"
@@ -781,9 +723,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "gusto"
     },
@@ -796,9 +736,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "hashicorp"
     },
@@ -810,7 +748,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "hibob"
@@ -824,9 +762,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "huawei-cloud-cn"
     },
@@ -839,9 +775,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "huawei-cloud-international"
     },
@@ -854,9 +788,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "hubspot"
     },
@@ -869,9 +801,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "hugging-face"
     },
@@ -884,9 +814,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "hyperproof"
     },
@@ -899,9 +827,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "ibm-cloud"
     },
@@ -914,9 +840,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "intercom"
     },
@@ -929,9 +853,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "klaviyo"
     },
@@ -943,7 +865,7 @@
         "security_page"
       ],
       "missing_core_source_types": [
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "lattice"
@@ -956,7 +878,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "lever"
@@ -970,9 +892,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "logicgate"
     },
@@ -985,9 +905,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "mailchimp"
     },
@@ -1000,7 +918,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "meditech"
@@ -1014,9 +932,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "microsoft"
     },
@@ -1028,9 +944,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1045,9 +959,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "mistral-ai"
     },
@@ -1060,9 +972,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "mixpanel"
     },
@@ -1075,9 +985,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "monday"
     },
@@ -1090,9 +998,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "mongodb"
     },
@@ -1105,7 +1011,7 @@
       "missing_core_source_types": [
         "dpa",
         "privacy_notice",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "netsuite"
@@ -1119,9 +1025,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "new-relic"
     },
@@ -1133,9 +1037,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "notion"
     },
@@ -1147,7 +1049,7 @@
         "security_page"
       ],
       "missing_core_source_types": [
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "odoo"
@@ -1161,9 +1063,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "okta"
     },
@@ -1176,9 +1076,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "onepassword"
     },
@@ -1189,9 +1087,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1206,9 +1102,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "openai"
     },
@@ -1221,9 +1115,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "oracle-cloud"
     },
@@ -1236,9 +1128,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "pagerduty"
     },
@@ -1250,7 +1140,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "palantir"
@@ -1263,7 +1153,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "paychex"
@@ -1276,7 +1166,7 @@
       "missing_core_source_types": [
         "privacy_notice",
         "security_page",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "paypal"
@@ -1289,7 +1179,7 @@
         "security_page"
       ],
       "missing_core_source_types": [
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "personio"
@@ -1302,9 +1192,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1318,7 +1206,7 @@
       "missing_core_source_types": [
         "dpa",
         "security_page",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "plaid"
@@ -1331,9 +1219,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1348,7 +1234,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "pointclickcare"
@@ -1362,9 +1248,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "posthog"
     },
@@ -1376,9 +1260,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "qualtrics"
     },
@@ -1391,9 +1273,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "quickbooks"
     },
@@ -1405,7 +1285,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "redox"
@@ -1418,9 +1298,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1435,9 +1313,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "rippling"
     },
@@ -1448,9 +1324,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1465,9 +1339,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "salesforce"
     },
@@ -1480,9 +1352,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "sanity"
     },
@@ -1495,9 +1365,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "sap"
     },
@@ -1510,9 +1378,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "scrut-automation"
     },
@@ -1526,7 +1392,7 @@
       "missing_core_source_types": [
         "dpa",
         "security_page",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "second-front-systems"
@@ -1539,9 +1405,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1555,9 +1419,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1572,9 +1434,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "sentry"
     },
@@ -1586,9 +1446,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1603,7 +1461,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "shield-ai"
@@ -1616,7 +1474,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "shift-technology"
@@ -1630,9 +1488,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "shopify"
     },
@@ -1645,9 +1501,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "slack"
     },
@@ -1660,9 +1514,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "snowflake"
     },
@@ -1675,9 +1527,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "splunk"
     },
@@ -1690,9 +1540,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "stripe"
     },
@@ -1704,7 +1552,7 @@
       "missing_core_source_types": [
         "dpa",
         "privacy_notice",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "sumsub"
@@ -1718,9 +1566,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "supabase"
     },
@@ -1732,9 +1578,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "surveymonkey"
     },
@@ -1747,9 +1591,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "tencent-cloud-cn"
     },
@@ -1762,9 +1604,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "tencent-cloud-international"
     },
@@ -1777,9 +1617,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "thoropass"
     },
@@ -1791,7 +1629,7 @@
       "missing_core_source_types": [
         "dpa",
         "privacy_notice",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "trulioo"
@@ -1805,9 +1643,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "trustarc"
     },
@@ -1820,9 +1656,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "twilio"
     },
@@ -1834,9 +1668,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "typeform"
     },
@@ -1848,9 +1680,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1865,9 +1695,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "vercel"
     },
@@ -1879,7 +1707,7 @@
       ],
       "missing_core_source_types": [
         "dpa",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "vertafore"
@@ -1892,9 +1720,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1908,9 +1734,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1924,7 +1748,7 @@
       "missing_core_source_types": [
         "dpa",
         "security_page",
-        "subprocessor_list"
+        "subprocessors_list"
       ],
       "unavailable_source_types": [],
       "vendor_id": "wise"
@@ -1938,9 +1762,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "workday"
     },
@@ -1953,9 +1775,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "xero"
     },
@@ -1967,9 +1787,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [
         "dpa"
       ],
@@ -1984,9 +1802,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "zendesk"
     },
@@ -1999,9 +1815,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "zoho"
     },
@@ -2014,9 +1828,7 @@
         "security_page",
         "subprocessors_list"
       ],
-      "missing_core_source_types": [
-        "subprocessor_list"
-      ],
+      "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "zoom"
     }
