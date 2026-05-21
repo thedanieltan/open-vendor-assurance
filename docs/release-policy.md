@@ -25,6 +25,7 @@ A normal OpenVA release should include:
 source repository tag
 openva-pack.json
 indexes/*.json
+indexes/vendor-match-index.json
 dist/vendors/*.json
 schemas/openva/*.json
 fixtures/packs/**
@@ -63,6 +64,24 @@ fixtures/packs/**/*.json
 
 The manifest is intended for release candidates and release assets. It does not change the pack contract and does not include raw vendor documents.
 
+## Non-technical release downloads
+
+OpenVA distributes non-technical download assets through GitHub Releases, not a hosted website or central upload service.
+
+On tag push for tags matching `v*`, the `release-downloads` workflow generates and attaches:
+
+```text
+release-artifacts.json
+openva-csv.zip
+openva-sample-inventory.csv
+openva-inventory-template.csv
+openva-release-downloads-manifest.json
+```
+
+The workflow has `contents: write` because GitHub requires that permission to attach assets to a release. This is a deliberate least-privilege exception for release distribution only. The workflow is restricted to `v*` tag pushes and must not run on ordinary pushes to `main`.
+
+The download manifest records SHA-256 checksums and sizes for the generated non-technical assets. Release maintainers verify the uploaded assets and checksums rather than generating the assets manually.
+
 ## Release readiness checklist
 
 Before tagging a release:
@@ -88,7 +107,9 @@ Also verify:
 
 - no generated index diff remains uncommitted;
 - `openva-pack.json` is current;
+- `indexes/vendor-match-index.json` is current;
 - release artifact checksums are available for downstream consumers;
+- release download checksums are available for `openva-csv.zip`, `openva-sample-inventory.csv`, and `openva-inventory-template.csv`;
 - no raw documents, screenshots, portal exports, private certificates, or extracted full text are committed by default;
 - release notes contain no legal, compliance, procurement, security, KYC, AML, or risk advice;
 - release notes distinguish catalog changes from substrate changes;

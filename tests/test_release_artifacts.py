@@ -13,6 +13,7 @@ def test_artifact_paths_include_release_facing_files():
     assert "indexes/artifacts.json" in paths
     assert "indexes/summary.json" in paths
     assert "indexes/vendor-search.json" in paths
+    assert "indexes/vendor-match-index.json" in paths
     assert "indexes/source-coverage.json" in paths
     assert any(path.startswith("dist/vendors/") for path in paths)
     assert "schemas/openva/openva-pack.schema.json" in paths

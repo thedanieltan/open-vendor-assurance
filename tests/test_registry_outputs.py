@@ -1,4 +1,10 @@
-from tools.openva.indexes import build_contracting_entity_resolution, build_search_index, build_source_coverage, vendor_manifest
+from tools.openva.indexes import (
+    build_contracting_entity_resolution,
+    build_search_index,
+    build_source_coverage,
+    build_vendor_match_index,
+    vendor_manifest,
+)
 
 
 def record_sets():
@@ -13,7 +19,17 @@ def record_sets():
                 "status": "active",
             }
         ],
-        "source": [{"vendor_id": "example", "source_id": "example-dpa", "source_type": "dpa"}],
+        "source": [
+            {
+                "vendor_id": "example",
+                "source_id": "example-dpa",
+                "source_type": "dpa",
+                "source_url": "https://example.test/dpa",
+                "title_en": "Example DPA",
+                "confidence": "high",
+                "effective_or_published_at": "2026-01-01",
+            }
+        ],
         "artifact": [],
         "observation": [],
         "change": [],
@@ -40,6 +56,8 @@ def record_sets():
                 "vendor_id": "example",
                 "candidate_source_id": "example-security-candidate",
                 "source_type_candidate": "security_page",
+                "candidate_url": "https://example.test/security",
+                "confidence": "medium",
             }
         ],
         "unavailable_source": [
@@ -125,3 +143,40 @@ def test_contracting_entity_resolution_includes_canonical_entities_only():
     assert item["resolution_status"] == "resolved"
     assert item["resolved_entity_id"] == "example-us"
     assert item["candidate_entity_ids"] == ["example-us"]
+
+
+def test_vendor_match_index_is_compact_and_non_advisory():
+    match_index = build_vendor_match_index(record_sets())
+    item = match_index["items"][0]
+
+    assert match_index["profileId"] == "openva.public-metadata.v1"
+    assert match_index["schemaVersion"] == "openva-export-pack.v1"
+    assert match_index["advisory_boundary"] == "non_advisory"
+    assert match_index["non_advisory"] is True
+    assert match_index["count"] == 1
+    assert item["vendor_id"] == "example"
+    assert item["canonical_source_types"] == ["dpa"]
+    assert item["candidate_source_types"] == ["security_page"]
+    assert item["unavailable_source_types"] == ["subprocessors_list"]
+    assert item["canonical_sources"] == [
+        {
+            "confidence": "high",
+            "effective_or_published_at": "2026-01-01",
+            "source_id": "example-dpa",
+            "source_type": "dpa",
+            "source_url": "https://example.test/dpa",
+            "title": "Example DPA",
+        }
+    ]
+    assert item["candidate_sources"] == [
+        {
+            "confidence": "medium",
+            "source_id": "example-security-candidate",
+            "source_type": "security_page",
+            "source_url": "https://example.test/security",
+            "title": None,
+        }
+    ]
+    assert item["primary_source_by_type"]["dpa"]["source_id"] == "example-dpa"
+    assert "risk" not in str(match_index).lower()
+    assert "approval" not in str(match_index).lower()
