@@ -56,9 +56,9 @@ Version 1 accepts CSV only as multipart form field `inventory_csv`.
 Minimum input columns: include at least one of `vendor_name`, `business_entity_name`, or `domain`.
 
 ```csv
-vendor_name,business_entity_name,domain
-Stripe,,
-,Slack Technologies LLC,
+vendor_name,business_entity_name,registered_address,domain
+Stripe,,,
+,Slack Technologies LLC,,
 ```
 
 Response:

@@ -42,10 +42,10 @@ openva-inventory-template.csv
 to prepare your own vendor inventory for matching with OpenVA tooling. Use whichever columns you already have:
 
 ```text
-vendor_name,business_entity_name,domain
+vendor_name,business_entity_name,registered_address,domain
 ```
 
-`vendor_name` is usually enough. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `domain` is optional but improves match confidence when available.
+`vendor_name` is usually enough. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `registered_address` is optional context from your own inventory and is preserved in the output. `domain` is optional but improves match confidence when available.
 
 Use:
 
@@ -96,7 +96,7 @@ business_entity_name
 domain
 ```
 
-Other columns, such as an internal owner, business unit, or category, are preserved in the output but are not required for matching.
+`registered_address` and other columns, such as an internal owner, business unit, or category, are preserved in the output but are not required for matching.
 
 and writes an enriched CSV with OpenVA public metadata references.
 
