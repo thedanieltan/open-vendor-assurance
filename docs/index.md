@@ -67,6 +67,16 @@ config/observation-pilot.yaml
 
 ## Consumer and importer workflow
 
+For spreadsheet-first users, start with GitHub Releases. Release assets include:
+
+```text
+openva-csv.zip
+openva-sample-inventory.csv
+openva-inventory-template.csv
+```
+
+For developers and downstream importers, use:
+
 ```text
 docs/consumer-conformance-fixtures.md
 docs/adapter-contract.md

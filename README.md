@@ -46,6 +46,7 @@ SECURITY.md
 For consumers and downstream importers:
 
 ```text
+GitHub Releases
 docs/adapter-contract.md
 docs/adapter-output-contract.md
 docs/consumer-conformance-fixtures.md
@@ -180,6 +181,20 @@ docs/versioning-policy.md
 docs/release-policy.md
 ```
 
+## Release Downloads
+
+For spreadsheet-first users, OpenVA publishes non-technical download assets through GitHub Releases:
+
+```text
+openva-csv.zip
+openva-sample-inventory.csv
+openva-inventory-template.csv
+```
+
+`openva-csv.zip` contains curated CSV exports for vendors, sources, artifacts, observations, candidate sources, unavailable sources, and source coverage. The sample and template inventory files show the expected `vendor_name`, `domain`, and `category` columns for matching a vendor list against OpenVA.
+
+These files are generated from the tagged repository state. OpenVA does not operate a central hosted upload service; users keep their vendor inventories local unless they choose to run their own tooling.
+
 ## Adapters
 
 OpenVA ships small Python adapters for common consumption paths. Install an adapter from the repository checkout, then point it at the pack directory or `openva-pack.json`.
@@ -221,7 +236,7 @@ OpenVA is free to use under the MIT License. See [LICENSE](LICENSE).
 
 ## Project status
 
-OpenVA is in active pre-public-relaunch development. The schema, validation tooling, generated indexes, universal pack manifest, maintenance workflow, agent PR workflow, conformance fixtures, governance docs, and initial seed catalog are available, but the dataset should not be treated as complete.
+OpenVA is in early public development. The schema, validation tooling, generated indexes, universal pack manifest, maintenance workflow, agent PR workflow, conformance fixtures, governance docs, adapters, release downloads, and initial seed catalog are available, but the dataset should not be treated as complete.
 
 ## Disclaimer
 
