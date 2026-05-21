@@ -41,17 +41,35 @@ def table_columns(connection: sqlite3.Connection, table_name: str) -> list[str]:
     return [row["name"] for row in connection.execute(f"pragma table_info({table_name})")]
 
 
+def current_pack_counts() -> dict[str, int]:
+    return {
+        "vendors": json.loads(Path("indexes/vendors.json").read_text(encoding="utf-8"))["count"],
+        "canonical_sources": json.loads(
+            Path("indexes/sources.json").read_text(encoding="utf-8")
+        )["count"],
+        "artifacts": json.loads(Path("indexes/artifacts.json").read_text(encoding="utf-8"))[
+            "count"
+        ],
+        "unavailable_sources": json.loads(
+            Path("indexes/unavailable-sources.json").read_text(encoding="utf-8")
+        )["count"],
+        "source_coverage": len(
+            json.loads(Path("indexes/source-coverage.json").read_text(encoding="utf-8"))[
+                "vendor_coverage"
+            ]
+        ),
+    }
+
+
 def test_export_sqlite_creates_expected_tables_and_counts(tmp_path):
     db_path = export_sqlite(".", tmp_path / "openva.sqlite")
+    counts = current_pack_counts()
 
     assert db_path == tmp_path / "openva.sqlite"
     with connect(db_path) as connection:
         assert table_names(connection) == EXPECTED_TABLES
-        assert connection.execute("select count(*) from vendors").fetchone()[0] == 138
-        assert connection.execute("select count(*) from canonical_sources").fetchone()[0] == 564
-        assert connection.execute("select count(*) from artifacts").fetchone()[0] == 564
-        assert connection.execute("select count(*) from unavailable_sources").fetchone()[0] == 16
-        assert connection.execute("select count(*) from source_coverage").fetchone()[0] == 138
+        for table_name, expected_count in counts.items():
+            assert connection.execute(f"select count(*) from {table_name}").fetchone()[0] == expected_count
 
 
 def test_export_sqlite_replaces_existing_database(tmp_path):
@@ -65,14 +83,14 @@ def test_export_sqlite_replaces_existing_database(tmp_path):
         connection.close()
 
     export_sqlite(".", db_path)
+    counts = current_pack_counts()
 
     with connect(db_path) as connection:
         names = table_names(connection)
         assert names == EXPECTED_TABLES
         assert "stale_table" not in names
-        assert connection.execute("select count(*) from vendors").fetchone()[0] == 138
-        assert connection.execute("select count(*) from canonical_sources").fetchone()[0] == 564
-        assert connection.execute("select count(*) from source_coverage").fetchone()[0] == 138
+        for table_name in ("vendors", "canonical_sources", "source_coverage"):
+            assert connection.execute(f"select count(*) from {table_name}").fetchone()[0] == counts[table_name]
 
 
 def test_export_preserves_adapter_annotations_and_record_classes(tmp_path):

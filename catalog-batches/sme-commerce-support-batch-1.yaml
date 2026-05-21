@@ -1,0 +1,387 @@
+schema_version: 0.1.0
+batch_id: sme-commerce-support-batch-1
+operation: create
+collected_at: '2026-05-21T00:00:00Z'
+observer: agent
+vendors:
+- vendor_id: square
+  display_name: Square
+  legal_name: Block, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  official_domains:
+  - squareup.com
+  public_entrypoints:
+  - https://squareup.com/legal/privacy
+  - https://squareup.com/legal/general/data-processing
+  vendor_categories:
+  - payments
+  - financial_infrastructure
+  - ecommerce_platform
+  notes: Public-source-only catalog record for Square public privacy, data processing, and security metadata.
+  entity_surface: global_brand
+  source_authority_language: en
+  sources:
+  - source_id: square-dpa
+    source_type: dpa
+    title_native: Square Data Processing Agreement
+    title_en: Square Data Processing Agreement
+    source_url: https://squareup.com/legal/general/data-processing
+    source_language: en
+    summary_native: Public Square data processing agreement metadata reference.
+    summary_en: Public Square data processing agreement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: square-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Square services
+  - source_id: square-privacy
+    source_type: privacy_notice
+    title_native: Square Privacy Notice
+    title_en: Square Privacy Notice
+    source_url: https://squareup.com/legal/privacy
+    source_language: en
+    summary_native: Public Square privacy notice metadata reference.
+    summary_en: Public Square privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: square-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Square services
+  - source_id: square-security
+    source_type: security_page
+    title_native: Square Privacy and Security Measures
+    title_en: Square Privacy and Security Measures
+    source_url: https://squareup.com/help/us/en/article/3796-privacy-and-security
+    source_language: en
+    summary_native: Public Square support page describing privacy and security measures.
+    summary_en: Public Square support page describing privacy and security measures.
+    confidence: low
+    artifact:
+      artifact_id: square-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Square services
+- vendor_id: wix
+  display_name: Wix
+  legal_name: Wix.com Ltd.
+  headquarters_country: IL
+  regions_served:
+  - global
+  official_domains:
+  - wix.com
+  public_entrypoints:
+  - https://www.wix.com/about/privacy
+  - https://www.wix.com/trust-center/security
+  vendor_categories:
+  - ecommerce_platform
+  - content_management
+  - marketing_technology
+  notes: Public-source-only catalog record for Wix public privacy, data processing, subprocessor, and security metadata.
+  entity_surface: global_brand
+  source_authority_language: en
+  sources:
+  - source_id: wix-dpa
+    source_type: dpa
+    title_native: Wix Data Processing Agreement for Wix Users
+    title_en: Wix Data Processing Agreement for Wix Users
+    source_url: https://support.wix.com/en/article/wixs-data-processing-agreement-for-wix-users
+    source_language: en
+    summary_native: Public Wix data processing agreement metadata reference.
+    summary_en: Public Wix data processing agreement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: wix-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Wix services
+  - source_id: wix-subprocessors
+    source_type: subprocessors_list
+    title_native: Wix Subprocessors
+    title_en: Wix Subprocessors
+    source_url: https://support.wix.com/en/article/list-of-wix-subprocessors
+    source_language: en
+    summary_native: Public Wix subprocessor list metadata reference.
+    summary_en: Public Wix subprocessor list metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: wix-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Wix services
+  - source_id: wix-privacy
+    source_type: privacy_notice
+    title_native: Wix Privacy Policy
+    title_en: Wix Privacy Policy
+    source_url: https://www.wix.com/about/privacy
+    source_language: en
+    summary_native: Public Wix privacy policy metadata reference.
+    summary_en: Public Wix privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: wix-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Wix services
+  - source_id: wix-security
+    source_type: security_page
+    title_native: Wix Security Framework and Compliance
+    title_en: Wix Security Framework and Compliance
+    source_url: https://www.wix.com/trust-center/security
+    source_language: en
+    summary_native: Public Wix trust center security metadata reference.
+    summary_en: Public Wix trust center security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: wix-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Wix services
+- vendor_id: squarespace
+  display_name: Squarespace
+  legal_name: Squarespace, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  official_domains:
+  - squarespace.com
+  public_entrypoints:
+  - https://www.squarespace.com/privacy/
+  - https://www.squarespace.com/dpa
+  vendor_categories:
+  - ecommerce_platform
+  - content_management
+  notes: Public-source-only catalog record for Squarespace public privacy, data processing, and security metadata.
+  entity_surface: global_brand
+  source_authority_language: en
+  sources:
+  - source_id: squarespace-dpa
+    source_type: dpa
+    title_native: Squarespace Data Processing Addendum
+    title_en: Squarespace Data Processing Addendum
+    source_url: https://www.squarespace.com/dpa
+    source_language: en
+    summary_native: Public Squarespace data processing addendum metadata reference.
+    summary_en: Public Squarespace data processing addendum metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: squarespace-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Squarespace services
+  - source_id: squarespace-privacy
+    source_type: privacy_notice
+    title_native: Squarespace Privacy Policy
+    title_en: Squarespace Privacy Policy
+    source_url: https://www.squarespace.com/privacy/
+    source_language: en
+    summary_native: Public Squarespace privacy policy metadata reference.
+    summary_en: Public Squarespace privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: squarespace-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Squarespace services
+  - source_id: squarespace-security
+    source_type: security_page
+    title_native: Squarespace Security
+    title_en: Squarespace Security
+    source_url: https://www.squarespace.com/security
+    source_language: en
+    summary_native: Public Squarespace security page metadata reference.
+    summary_en: Public Squarespace security page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: squarespace-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Squarespace services
+- vendor_id: help-scout
+  display_name: Help Scout
+  legal_name: Help Scout PBC
+  headquarters_country: US
+  regions_served:
+  - global
+  official_domains:
+  - helpscout.com
+  public_entrypoints:
+  - https://www.helpscout.com/company/legal/privacy/
+  - https://docs.helpscout.com/article/1263-security-at-help-scout
+  vendor_categories:
+  - customer_support
+  - customer_engagement
+  notes: Public-source-only catalog record for Help Scout public privacy, data processing, subprocessor, and security metadata.
+  entity_surface: global_brand
+  source_authority_language: en
+  sources:
+  - source_id: help-scout-dpa
+    source_type: dpa
+    title_native: Help Scout Data Processing Amendment
+    title_en: Help Scout Data Processing Amendment
+    source_url: https://www.helpscout.com/company/legal/dpa/
+    source_language: en
+    summary_native: Public Help Scout data processing amendment metadata reference.
+    summary_en: Public Help Scout data processing amendment metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: help-scout-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Help Scout services
+  - source_id: help-scout-subprocessors
+    source_type: subprocessors_list
+    title_native: Help Scout List of Sub-processors
+    title_en: Help Scout List of Sub-processors
+    source_url: https://www.helpscout.com/company/legal/sub-processors/
+    source_language: en
+    summary_native: Public Help Scout subprocessor list metadata reference.
+    summary_en: Public Help Scout subprocessor list metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: help-scout-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Help Scout services
+  - source_id: help-scout-privacy
+    source_type: privacy_notice
+    title_native: Help Scout Privacy Policy
+    title_en: Help Scout Privacy Policy
+    source_url: https://www.helpscout.com/company/legal/privacy/
+    source_language: en
+    summary_native: Public Help Scout privacy policy metadata reference.
+    summary_en: Public Help Scout privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: help-scout-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Help Scout services
+  - source_id: help-scout-security
+    source_type: security_page
+    title_native: Help Scout Security
+    title_en: Help Scout Security
+    source_url: https://www.helpscout.com/company/legal/security/
+    source_language: en
+    summary_native: Public Help Scout security metadata reference.
+    summary_en: Public Help Scout security metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: help-scout-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Help Scout services
+- vendor_id: gorgias
+  display_name: Gorgias
+  legal_name: Gorgias Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  official_domains:
+  - gorgias.com
+  public_entrypoints:
+  - https://www.gorgias.com/legal
+  - https://www.gorgias.com/security
+  vendor_categories:
+  - customer_support
+  - customer_engagement
+  - ecommerce_platform
+  notes: Public-source-only catalog record for Gorgias public privacy, data processing, subprocessor, and security metadata.
+  entity_surface: global_brand
+  source_authority_language: en
+  sources:
+  - source_id: gorgias-dpa
+    source_type: dpa
+    title_native: Gorgias Data Processing Agreement
+    title_en: Gorgias Data Processing Agreement
+    source_url: https://www.gorgias.com/legal/data-processing-agreement
+    source_language: en
+    summary_native: Public Gorgias data processing agreement metadata reference.
+    summary_en: Public Gorgias data processing agreement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: gorgias-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Gorgias services
+  - source_id: gorgias-subprocessors
+    source_type: subprocessors_list
+    title_native: Gorgias List of Data Subprocessors
+    title_en: Gorgias List of Data Subprocessors
+    source_url: https://www.gorgias.com/legal/list-of-data-subprocessors
+    source_language: en
+    summary_native: Public Gorgias subprocessor list metadata reference.
+    summary_en: Public Gorgias subprocessor list metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: gorgias-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Gorgias services
+  - source_id: gorgias-privacy
+    source_type: privacy_notice
+    title_native: Gorgias Privacy Notice
+    title_en: Gorgias Privacy Notice
+    source_url: https://www.gorgias.com/legal/privacy
+    source_language: en
+    summary_native: Public Gorgias privacy notice metadata reference.
+    summary_en: Public Gorgias privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: gorgias-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Gorgias services
+  - source_id: gorgias-security
+    source_type: security_page
+    title_native: Security at Gorgias
+    title_en: Security at Gorgias
+    source_url: https://www.gorgias.com/security
+    source_language: en
+    summary_native: Public Gorgias security page metadata reference.
+    summary_en: Public Gorgias security page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: gorgias-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Gorgias services

@@ -106,7 +106,7 @@ def vendor_record(vendor: dict[str, Any], operation: str) -> dict[str, Any]:
         "public_entrypoints": vendor["public_entrypoints"],
         "vendor_categories": vendor["vendor_categories"],
         "source_policy": {"public_sources_only": True, "gated_materials_excluded": True, "raw_documents_mirrored_by_default": False},
-        "status": vendor.get("status", "deprecated" if operation == "deprecate" else "active"),
+        "catalog_status": vendor.get("status", "deprecated" if operation == "deprecate" else "active"),
         "notes": vendor.get("notes") or f"Public-source catalog record for {vendor['display_name']}.",
     }
     for field in ("entity_family", "entity_surface", "related_vendor_ids", "source_authority_language", "observed_entity_mention_ids"):
