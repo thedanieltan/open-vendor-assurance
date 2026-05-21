@@ -96,6 +96,8 @@ def test_catalog_batch_generates_vendor_sources_artifacts_and_changes(tmp_path, 
         "gated_materials_excluded": True,
         "raw_documents_mirrored_by_default": False,
     }
+    assert vendor["catalog_status"] == "active"
+    assert "status" not in vendor
     assert source["access_class"] == "public_web"
     assert source["rights_class"] == "metadata_only"
     assert source["not_advice"] is True
