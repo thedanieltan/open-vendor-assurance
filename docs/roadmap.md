@@ -6,7 +6,7 @@ OpenVA is a public-source-only, metadata-first vendor assurance registry. It is 
 
 ## Current maturity
 
-OpenVA is pre-public-relaunch infrastructure.
+OpenVA is early public infrastructure.
 
 Current focus:
 
@@ -23,7 +23,7 @@ Current focus:
 
 ### Governance and public boundaries
 
-Goal: make contribution boundaries clear before the repository is public again.
+Goal: keep contribution boundaries clear as public participation grows.
 
 Includes:
 
@@ -152,9 +152,9 @@ Not good first issues:
 - vendor-submitted promotional updates;
 - large vendor catalog batches.
 
-## Public relaunch readiness
+## Public readiness
 
-Before public relaunch, maintainers should confirm:
+For public operation, maintainers should continue to confirm:
 
 - README accurately states scope and limitations;
 - CONTRIBUTING and GOVERNANCE are current;
