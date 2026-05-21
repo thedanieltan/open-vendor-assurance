@@ -36,6 +36,7 @@ def test_release_downloads_workflow_builds_and_uploads_expected_assets():
 
     expected = [
         "python -m tools.openva.validate validate",
+        'pip install -e "services/openva_match_service[dev]"',
         "pytest -q",
         "python -m tools.openva.validate build-indexes",
         "git diff --exit-code openva-pack.json indexes/ dist/",
