@@ -44,6 +44,32 @@ A source must be public. Public means accessible without login, credentials, NDA
 
 If a public page points to gated documents, record only the public page metadata. Do not include gated contents, gated document hashes, summaries of gated documents, or extracted gated text.
 
+## Repository layout
+
+Common paths:
+
+```text
+data/vendors/                canonical vendor, source, artifact, change, and entity metadata
+catalog-batches/             reviewed batch manifests used to generate catalog records
+schemas/openva/              JSON Schemas for OpenVA records and pack contracts
+tools/openva/                validation, indexing, catalog, maintenance, and release tooling
+adapters/python/             pack reader, CSV, SQLite, JSONL, and inventory matcher adapters
+services/openva_match_service/ optional self-hosted HTTP wrapper for inventory matching
+docs/                        policy, workflow, adapter, service, and maintainer documentation
+.github/workflows/           CI, catalog guard, maintenance, discovery, observation, and release workflows
+fixtures/packs/              consumer conformance fixture packs
+```
+
+Generated public outputs:
+
+```text
+indexes/
+dist/vendors/
+openva-pack.json
+```
+
+When catalog records change, regenerate and commit the generated outputs. Adapter and service changes should not alter catalog data unless the PR is explicitly scoped for that.
+
 ## Non-technical catalog updates
 
 If you are not opening a pull request, use the `Vendor catalog update` GitHub issue form to add a vendor, add a public source, or correct factual catalog metadata.
@@ -92,7 +118,7 @@ Pull requests must:
 - preserve native-language context where relevant;
 - avoid advisory language;
 - explain whether any generated files were updated;
-- pass validation checks once P1/P2 tooling is added.
+- pass validation checks.
 
 ## Catalog-agent pull requests
 

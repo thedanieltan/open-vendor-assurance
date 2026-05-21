@@ -35,5 +35,6 @@ Commit changes to:
 
 ```text
 indexes/
+dist/vendors/
 openva-pack.json
 ```

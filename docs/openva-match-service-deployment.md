@@ -1,6 +1,8 @@
 # OpenVA Match Service Deployment
 
-The OpenVA match service is a small HTTP wrapper around the pack reader and vendor inventory matcher. It serves public metadata enrichment only. It does not make risk, compliance, approval, or suitability assertions.
+The OpenVA match service is an optional self-hosted HTTP wrapper around the pack reader and vendor inventory matcher. It serves public metadata enrichment only. It does not make risk, compliance, approval, or suitability assertions.
+
+OpenVA does not operate a central hosted service. Consumers that want HTTP access should run their own service instance from a pinned repository commit or release.
 
 ## Pack Strategy
 

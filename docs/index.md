@@ -82,12 +82,13 @@ schemas/openva/
 ## Policies
 
 ```text
-policy/scope.md
-policy/non-advisory-policy.md
-policy/public-sources-only.md
-policy/language-policy.md
-policy/retention-policy.md
-policy/controlled-vocabulary.yaml
+docs/doctrine.md
+docs/non-advisory-policy.md
+docs/public-sources-only.md
+docs/language-policy.md
+docs/retention-policy.md
+docs/rights-policy.md
+config/controlled-vocabulary.yaml
 ```
 
 ## Validation commands
