@@ -86,6 +86,21 @@ def test_exact_normalized_name_match_works_without_domain(tmp_path):
     assert row["match_method"] == "name_exact"
 
 
+def test_business_entity_name_match_works_without_vendor_name_or_domain(tmp_path):
+    input_path = tmp_path / "vendors.csv"
+    output_path = tmp_path / "matched.csv"
+    write_inventory(input_path, [{"business_entity_name": "Slack Technologies LLC"}])
+
+    match_inventory(".", input_path, output_path)
+
+    row = read_csv(output_path)[0]
+    assert row["business_entity_name"] == "Slack Technologies LLC"
+    assert row["match_status"] == "matched"
+    assert row["matched_vendor_id"] == "slack"
+    assert row["match_confidence"] == "0.90"
+    assert row["match_method"] == "name_exact"
+
+
 def test_normalized_legal_suffix_name_match_works_without_domain(monkeypatch, tmp_path):
     monkeypatch.setattr(matcher.OpenVAPack, "load", lambda _: SyntheticPack.single_match())
     input_path = tmp_path / "vendors.csv"
@@ -290,12 +305,12 @@ def test_output_does_not_emit_risk_or_approval_fields(tmp_path):
     assert not any(fragment in field.lower() for fragment in forbidden_fragments for field in fieldnames)
 
 
-def test_input_requires_domain_or_vendor_name_column(tmp_path):
+def test_input_requires_matchable_identity_column(tmp_path):
     input_path = tmp_path / "vendors.csv"
     output_path = tmp_path / "matched.csv"
     write_inventory(input_path, [{"name": "Stripe", "website": "stripe.com"}])
 
-    with pytest.raises(ValueError, match="domain and/or vendor_name"):
+    with pytest.raises(ValueError, match="domain, vendor_name, or business_entity_name"):
         match_inventory(".", input_path, output_path)
 
 

@@ -13,6 +13,7 @@ from openva_pack_reader import OpenVAPack
 
 MINIMUM_MATCH_CONFIDENCE = 0.90
 AMBIGUITY_MARGIN = 0.05
+MATCH_INPUT_COLUMNS = {"domain", "vendor_name", "business_entity_name"}
 
 ENRICHMENT_COLUMNS = [
     "match_status",
@@ -70,8 +71,8 @@ def match_inventory(pack_path: str | Path, input_csv: str | Path, output_csv: st
     with input_path.open("r", encoding="utf-8-sig", newline="") as input_handle:
         reader = csv.DictReader(input_handle)
         fieldnames = list(reader.fieldnames or [])
-        if "domain" not in fieldnames and "vendor_name" not in fieldnames:
-            raise ValueError("input CSV must include a domain and/or vendor_name column")
+        if not MATCH_INPUT_COLUMNS.intersection(fieldnames):
+            raise ValueError("input CSV must include domain, vendor_name, or business_entity_name")
         rows = [index.enrich_row(row) for row in reader]
 
     output_columns = [*fieldnames, *[column for column in ENRICHMENT_COLUMNS if column not in fieldnames]]
@@ -129,7 +130,7 @@ class MatcherIndex:
 
     def match_candidates(self, input_row: dict[str, str]) -> list[MatchCandidate]:
         domain = normalize_domain(input_row.get("domain", ""))
-        name = normalize_name(input_row.get("vendor_name", ""))
+        name = normalize_name(input_row.get("vendor_name", "")) or normalize_name(input_row.get("business_entity_name", ""))
         candidates: dict[str, MatchCandidate] = {}
         for vendor in self.vendors:
             candidate = candidate_for_vendor(vendor, domain, name)

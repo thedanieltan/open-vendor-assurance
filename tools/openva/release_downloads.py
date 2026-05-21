@@ -28,10 +28,10 @@ SAMPLE_INVENTORY_NAME = "openva-sample-inventory.csv"
 TEMPLATE_INVENTORY_NAME = "openva-inventory-template.csv"
 DOWNLOAD_NAMES = [CSV_ZIP_NAME, SAMPLE_INVENTORY_NAME, TEMPLATE_INVENTORY_NAME]
 
-INVENTORY_COLUMNS = ["vendor_name", "domain", "category"]
+INVENTORY_COLUMNS = ["vendor_name", "business_entity_name", "domain"]
 SAMPLE_ROWS = [
-    {"vendor_name": "Stripe", "domain": "stripe.com", "category": "payments"},
-    {"vendor_name": "Slack", "domain": "slack.com", "category": "collaboration"},
+    {"vendor_name": "Stripe", "business_entity_name": "", "domain": ""},
+    {"vendor_name": "", "business_entity_name": "Slack Technologies, LLC", "domain": ""},
 ]
 
 

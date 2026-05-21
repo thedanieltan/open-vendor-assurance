@@ -39,11 +39,13 @@ Use:
 openva-inventory-template.csv
 ```
 
-to prepare your own vendor inventory for matching with OpenVA tooling. The expected columns are:
+to prepare your own vendor inventory for matching with OpenVA tooling. Use whichever columns you already have:
 
 ```text
-vendor_name,domain,category
+vendor_name,business_entity_name,domain
 ```
+
+`vendor_name` is usually enough. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `domain` is optional but improves match confidence when available.
 
 Use:
 
@@ -86,11 +88,15 @@ If you want to match a vendor list against OpenVA today:
 - run the local Python matcher, or ask a technical teammate to run it locally;
 - keep the input vendor inventory inside your own environment.
 
-The local matcher accepts:
+The local matcher accepts any of these columns:
 
 ```text
-vendor_name,domain,category
+vendor_name
+business_entity_name
+domain
 ```
+
+Other columns, such as an internal owner, business unit, or category, are preserved in the output but are not required for matching.
 
 and writes an enriched CSV with OpenVA public metadata references.
 

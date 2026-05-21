@@ -11,12 +11,12 @@ python -m pip install adapters/python/openva_vendor_inventory_matcher
 
 ## Input
 
-The input is a CSV file with `vendor_name`, `domain`, or both. Other input columns are preserved in the output.
+The input is a CSV file with `vendor_name`, `business_entity_name`, `domain`, or any combination of those columns. Other input columns are preserved in the output.
 
 ```csv
-vendor_name,domain,category
-Stripe,stripe.com,payments
-Slack,slack.com,collaboration
+vendor_name,business_entity_name,domain
+Stripe,,
+,Slack Technologies LLC,
 ```
 
 ## Basic usage

@@ -5,7 +5,7 @@ import io
 import json
 from typing import Any
 
-from openva_vendor_inventory_matcher.matcher import ENRICHMENT_COLUMNS, MatcherIndex
+from openva_vendor_inventory_matcher.matcher import ENRICHMENT_COLUMNS, MATCH_INPUT_COLUMNS, MatcherIndex
 
 JSON_FIELD_RENAMES = {
     "candidate_matches_json": "candidate_matches",
@@ -35,8 +35,8 @@ def match_csv_bytes(csv_bytes: bytes, matcher_index: MatcherIndex) -> list[dict[
 
     reader = csv.DictReader(io.StringIO(text, newline=""))
     fieldnames = list(reader.fieldnames or [])
-    if "domain" not in fieldnames and "vendor_name" not in fieldnames:
-        raise ValueError("input CSV must include a domain and/or vendor_name column")
+    if not MATCH_INPUT_COLUMNS.intersection(fieldnames):
+        raise ValueError("input CSV must include domain, vendor_name, or business_entity_name")
 
     rows: list[dict[str, Any]] = []
     for input_row in reader:

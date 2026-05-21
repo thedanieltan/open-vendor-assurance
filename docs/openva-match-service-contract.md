@@ -53,12 +53,12 @@ Returns pack metadata:
 
 Version 1 accepts CSV only as multipart form field `inventory_csv`.
 
-Minimum input columns:
+Minimum input columns: include at least one of `vendor_name`, `business_entity_name`, or `domain`.
 
 ```csv
-vendor_name,domain,category
-Stripe,stripe.com,payments
-Slack,slack.com,collaboration
+vendor_name,business_entity_name,domain
+Stripe,,
+,Slack Technologies LLC,
 ```
 
 Response:

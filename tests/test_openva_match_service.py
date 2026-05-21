@@ -69,7 +69,7 @@ def test_match_requires_valid_api_key():
 
 
 def test_match_csv_upload_matches_stripe_and_slack():
-    csv_body = "vendor_name,domain,category\nStripe,stripe.com,payments\nSlack,slack.com,collaboration\n"
+    csv_body = "vendor_name,business_entity_name,domain\nStripe,,\n,Slack Technologies LLC,\n"
 
     with TestClient(make_test_app()) as client:
         response = client.post(
@@ -85,7 +85,8 @@ def test_match_csv_upload_matches_stripe_and_slack():
     rows = payload["rows"]
     assert [row["matched_vendor_id"] for row in rows] == ["stripe", "slack"]
     assert [row["match_status"] for row in rows] == ["matched", "matched"]
-    assert rows[0]["match_confidence"] == 1.0
+    assert rows[0]["match_confidence"] == 0.9
+    assert rows[1]["business_entity_name"] == "Slack Technologies LLC"
     assert rows[0]["canonical"] is False
     assert rows[0]["canonical_sources_available"] is True
 
@@ -110,6 +111,22 @@ def test_match_response_uses_native_json_fields_and_strips_json_suffixes():
     assert isinstance(row["candidate_sources"], list)
     assert isinstance(row["primary_source_by_type"], dict)
     assert "dpa" in row["primary_source_by_type"]
+
+
+def test_match_accepts_business_entity_name_without_domain_or_vendor_name():
+    csv_body = "business_entity_name\nStripe Inc\n"
+
+    with TestClient(make_test_app()) as client:
+        response = client.post(
+            "/match",
+            headers=AUTH_HEADERS,
+            files={"inventory_csv": ("vendors.csv", csv_body, "text/csv")},
+        )
+
+    row = response.json()["rows"][0]
+    assert row["business_entity_name"] == "Stripe Inc"
+    assert row["match_status"] == "matched"
+    assert row["matched_vendor_id"] == "stripe"
 
 
 def test_no_match_row_survives_csv_to_json_conversion():
