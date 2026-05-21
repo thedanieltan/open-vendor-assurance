@@ -42,6 +42,7 @@ REGISTRY_INDEX_FILES = {
     "source_coverage": "source-coverage.json",
     "contracting_entity_resolution": "contracting-entity-resolution.json",
 }
+VENDOR_MATCH_INDEX_FILE = "vendor-match-index.json"
 ID_KEYS = {
     "vendor": "vendor_id",
     "source": "source_id",
@@ -256,6 +257,93 @@ def build_contracting_entity_resolution(record_sets: dict[str, list[dict[str, An
     }
 
 
+def source_payload(source: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "source_id": source.get("source_id"),
+        "source_type": source.get("source_type"),
+        "source_url": source.get("source_url"),
+        "title": source.get("title_en") or source.get("title_native"),
+        "confidence": source.get("confidence"),
+        "effective_or_published_at": source.get("effective_or_published_at"),
+    }
+
+
+def candidate_source_payload(candidate: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "source_id": candidate.get("candidate_source_id"),
+        "source_type": candidate.get("source_type_candidate"),
+        "source_url": candidate.get("candidate_url"),
+        "title": candidate.get("title_en") or candidate.get("title_native"),
+        "confidence": candidate.get("confidence"),
+    }
+
+
+def primary_source_by_type(sources: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for source in sources:
+        source_type = source.get("source_type")
+        if isinstance(source_type, str) and source_type:
+            grouped[source_type].append(source)
+    return {
+        source_type: sorted(
+            typed_sources,
+            key=lambda item: (
+                item.get("effective_or_published_at") in (None, ""),
+                reverse_date_key(str(item.get("effective_or_published_at") or "")),
+                str(item.get("source_id") or ""),
+            ),
+        )[0]
+        for source_type, typed_sources in sorted(grouped.items())
+    }
+
+
+def reverse_date_key(value: str) -> str:
+    return "".join(chr(255 - ord(character)) for character in value)
+
+
+def build_vendor_match_index(record_sets: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+    sources = by_vendor(record_sets["source"])
+    candidates = by_vendor(record_sets["candidate_source"])
+    coverage = {
+        row["vendor_id"]: row
+        for row in build_source_coverage(record_sets)["vendor_coverage"]
+        if isinstance(row.get("vendor_id"), str)
+    }
+    items = []
+    for vendor in record_sets["vendor"]:
+        vendor_id = str(vendor["vendor_id"])
+        canonical_sources = [source_payload(source) for source in sources.get(vendor_id, [])]
+        candidate_sources = [candidate_source_payload(candidate) for candidate in candidates.get(vendor_id, [])]
+        coverage_row = coverage.get(vendor_id, {})
+        items.append(
+            {
+                "vendor_id": vendor_id,
+                "display_name": vendor.get("display_name"),
+                "legal_name": vendor.get("legal_name"),
+                "catalog_status": vendor.get("catalog_status", vendor.get("status")),
+                "official_domains": vendor.get("official_domains", []),
+                "manifest_path": f"dist/vendors/{vendor_id}.json",
+                "canonical_source_types": coverage_row.get("canonical_source_types", []),
+                "candidate_source_types": coverage_row.get("candidate_source_types", []),
+                "unavailable_source_types": coverage_row.get("unavailable_source_types", []),
+                "missing_core_source_types": coverage_row.get("missing_core_source_types", []),
+                "canonical_sources": canonical_sources,
+                "candidate_sources": candidate_sources,
+                "primary_source_by_type": primary_source_by_type(canonical_sources),
+            }
+        )
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "profileId": EXPORT_PROFILE_ID,
+        "schemaVersion": EXPORT_SCHEMA_VERSION,
+        "generated_at": GENERATED_AT,
+        "advisory_boundary": "non_advisory",
+        "non_advisory": True,
+        "count": len(items),
+        "items": sorted(items, key=lambda item: item["vendor_id"]),
+    }
+
+
 def build_registry_outputs(record_sets: dict[str, list[dict[str, Any]]]) -> None:
     manifest_dir = ROOT / "dist" / "vendors"
     sources = by_vendor(record_sets["source"])
@@ -290,6 +378,7 @@ def build_registry_outputs(record_sets: dict[str, list[dict[str, Any]]]) -> None
     write_json(ROOT / "indexes" / "vendor-search.json", build_search_index(record_sets))
     write_json(ROOT / "indexes" / "source-coverage.json", build_source_coverage(record_sets))
     write_json(ROOT / "indexes" / "contracting-entity-resolution.json", build_contracting_entity_resolution(record_sets))
+    write_json(ROOT / "indexes" / VENDOR_MATCH_INDEX_FILE, build_vendor_match_index(record_sets))
 
 
 def build_indexes() -> int:
@@ -351,6 +440,7 @@ def generated_paths() -> list[Path]:
         ROOT / "openva-pack.json",
         *(index_dir / filename for filename in INDEX_FILES.values()),
         *(index_dir / filename for filename in REGISTRY_INDEX_FILES.values()),
+        index_dir / VENDOR_MATCH_INDEX_FILE,
         index_dir / "summary.json",
         *manifests,
     ]

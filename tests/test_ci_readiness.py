@@ -14,6 +14,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "coverage-audit.yml",
     "observe-report.yml",
     "release-candidate.yml",
+    "release-downloads.yml",
     "source-maintenance-report.yml",
     "source-refinement-queue.yml",
     "validate.yml",
@@ -98,6 +99,10 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "triggers": {"issues", "workflow_dispatch"},
             "permissions": {"contents": "write", "pull-requests": "write", "issues": "write"},
         },
+        "release-downloads.yml": {
+            "triggers": {"push"},
+            "permissions": {"contents": "write"},
+        },
     }
 
     for path in WORKFLOW_DIR.glob("*.yml"):
@@ -115,6 +120,8 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         allowed = allowed_write_workflows[path.name]
         assert set(triggers.keys()) == allowed["triggers"], f"{path}: unexpected write workflow triggers"
         assert permissions == allowed["permissions"], f"{path}: unexpected write workflow permissions"
+        if path.name == "release-downloads.yml":
+            assert triggers["push"] == {"tags": ["v*"]}, f"{path}: release downloads must be tag-only"
 
 
 def test_catalog_agent_pr_workflow_is_manual_pr_only():
