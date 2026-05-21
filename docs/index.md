@@ -75,6 +75,12 @@ openva-sample-inventory.csv
 openva-inventory-template.csv
 ```
 
+Plain-language guide:
+
+```text
+docs/release-downloads.md
+```
+
 For developers and downstream importers, use:
 
 ```text

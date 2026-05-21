@@ -38,7 +38,7 @@ def test_release_candidate_workflow_wraps_existing_release_commands():
 def test_release_candidate_workflow_uploads_manifest_only():
     text = WORKFLOW.read_text(encoding="utf-8")
 
-    assert "actions/upload-artifact@v4" in text
+    assert "actions/upload-artifact@v6" in text
     assert "name: openva-release-candidate-artifacts" in text
     assert "path: release-artifacts.json" in text
 

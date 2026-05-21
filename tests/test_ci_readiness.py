@@ -35,6 +35,19 @@ def test_actions_tab_contains_only_purposeful_public_workflows():
     assert {path.name for path in WORKFLOW_DIR.glob("*.yml")} == EXPECTED_PUBLIC_WORKFLOWS
 
 
+def test_workflows_use_node24_compatible_action_versions():
+    stale_actions = [
+        "actions/checkout@v4",
+        "actions/setup-python@v5",
+        "actions/upload-artifact@v4",
+        "softprops/action-gh-release@v2",
+    ]
+    for path in WORKFLOW_DIR.glob("*.yml"):
+        text = path.read_text(encoding="utf-8")
+        for action in stale_actions:
+            assert action not in text, f"{path}: stale Node 20 action reference {action}"
+
+
 def test_validate_workflow_uses_read_only_permissions_and_expected_triggers():
     workflow = load_workflow("validate.yml")
     triggers = workflow_triggers(workflow)
@@ -73,7 +86,7 @@ def test_observation_report_is_single_read_only_observation_workflow():
     assert "reports/observation-report.md" in text
     assert "reports/observation-report.json" in text
     assert "reports/observation-review-queue.csv" in text
-    assert "actions/upload-artifact@v4" in text
+    assert "actions/upload-artifact@v6" in text
     assert "peter-evans/create-pull-request" not in text
 
 
@@ -197,7 +210,7 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
 
     for workflow_name, paths in expected_paths.items():
         text = (WORKFLOW_DIR / workflow_name).read_text(encoding="utf-8")
-        assert "actions/upload-artifact@v4" in text
+        assert "actions/upload-artifact@v6" in text
         for path in paths:
             assert path in text
 

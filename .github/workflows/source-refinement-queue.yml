@@ -20,8 +20,8 @@ jobs:
   source-refinement-queue:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install package
@@ -62,7 +62,7 @@ jobs:
       - name: Print source refinement queue
         run: cat reports/source-refinement-queue.md
       - name: Upload source refinement queue artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: openva-source-refinement-queue
           path: |

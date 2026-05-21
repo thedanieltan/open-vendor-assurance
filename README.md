@@ -47,6 +47,7 @@ For consumers and downstream importers:
 
 ```text
 GitHub Releases
+docs/release-downloads.md
 docs/adapter-contract.md
 docs/adapter-output-contract.md
 docs/consumer-conformance-fixtures.md
@@ -194,6 +195,8 @@ openva-inventory-template.csv
 `openva-csv.zip` contains curated CSV exports for vendors, sources, artifacts, observations, candidate sources, unavailable sources, and source coverage. The sample and template inventory files show the expected `vendor_name`, `domain`, and `category` columns for matching a vendor list against OpenVA.
 
 These files are generated from the tagged repository state. OpenVA does not operate a central hosted upload service; users keep their vendor inventories local unless they choose to run their own tooling.
+
+See `docs/release-downloads.md` for a plain-language walkthrough of the release assets.
 
 ## Adapters
 
