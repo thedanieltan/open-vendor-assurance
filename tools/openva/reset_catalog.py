@@ -11,7 +11,7 @@ from tools.openva.indexes import build_indexes
 from tools.openva.paths import relative_repo_path
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_REPORT = ROOT / "catalog-reset-report.json"
+DEFAULT_REPORT = ROOT / "reports" / "catalog-reset-report.json"
 
 RESET_PATHS = (
     ROOT / "data" / "vendors",
@@ -98,6 +98,7 @@ def run_reset(*, dry_run: bool, output: Path) -> dict[str, Any]:
         for target in RESET_PATHS:
             remove_path(target)
         build_indexes()
+    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return report
 
