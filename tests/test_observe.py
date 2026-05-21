@@ -44,9 +44,11 @@ def test_observation_for_source_does_not_hash_access_changed(monkeypatch):
 
 def test_load_pilot_source_ids_includes_expected_sources():
     source_ids = observe.load_pilot_source_ids()
-    assert "aws-sub-processors" in source_ids
+    assert "aws-subprocessors" in source_ids
     assert "google-cloud-subprocessors" in source_ids
     assert "microsoft-dpa" in source_ids
+    assert "alibaba-cloud-international-subprocessors" in source_ids
+    assert "tencent-cloud-international-subprocessors" in source_ids
 
 
 def test_select_sources_pilot_rejects_unknown_source(monkeypatch):
