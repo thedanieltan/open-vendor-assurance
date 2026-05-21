@@ -46,6 +46,8 @@ SECURITY.md
 For consumers and downstream importers:
 
 ```text
+docs/adapter-contract.md
+docs/adapter-output-contract.md
 docs/consumer-conformance-fixtures.md
 docs/versioning-policy.md
 docs/release-policy.md
@@ -89,12 +91,18 @@ python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observatio
 
 OpenVA uses automation for repeatable checks and catalog expansion assistance, but catalog changes remain review-gated.
 
-Current workflow posture:
+The full workflow inventory lives in `.github/workflows/`. Current public-facing workflow groups are:
 
 ```text
-validate.yml                 validates PRs and pushes to main
-catalog-maintenance.yml      scheduled non-mutating maintenance report
-catalog-agent-pr.yml         manual agent-generated catalog PRs for human review
+validate.yml                         validates PRs and pushes to main
+catalog-pr-guard.yml                 enforces Catalog PR boundaries
+catalog-agent-pr.yml                 manual agent-generated Catalog PRs for human review
+contribution-intake-agent.yml        issue-to-PR intake for bounded catalog updates
+catalog-maintenance.yml              scheduled non-mutating maintenance report
+source-maintenance-report.yml        scheduled source health and discovery report
+observe-report.yml                   read-only observation report
+coverage-audit.yml                   catalog breadth/depth audit
+release-candidate.yml                release artifact smoke workflow
 ```
 
 Scheduled maintenance should detect drift and produce artifacts. It should not silently change `main`.
@@ -171,6 +179,41 @@ See:
 docs/versioning-policy.md
 docs/release-policy.md
 ```
+
+## Adapters
+
+OpenVA ships small Python adapters for common consumption paths. Install an adapter from the repository checkout, then point it at the pack directory or `openva-pack.json`.
+
+```bash
+python -m pip install adapters/python/openva_pack_reader
+python -m pip install adapters/python/openva_csv_export
+python -m pip install adapters/python/openva_sqlite_export
+python -m pip install adapters/python/openva_jsonl_export
+python -m pip install adapters/python/openva_vendor_inventory_matcher
+```
+
+Available adapters:
+
+```text
+openva_pack_reader                  read-only pack, index, and vendor manifest reader
+openva_csv_export                   spreadsheet-friendly CSV export
+openva_sqlite_export                local SQLite export
+openva_jsonl_export                 pipeline-friendly JSONL export
+openva_vendor_inventory_matcher     conservative inventory-to-OpenVA matcher
+```
+
+Examples:
+
+```bash
+python -m openva_csv_export --pack . --out ./openva-csv
+python -m openva_sqlite_export --pack . --out ./openva.sqlite
+python -m openva_jsonl_export --pack . --out ./openva-jsonl
+python -m openva_vendor_inventory_matcher --pack . --input customer_vendors.csv --out matched_vendors.csv
+```
+
+The optional match service in `services/openva_match_service/` wraps the pack reader and inventory matcher as a self-hosted HTTP service. OpenVA does not operate a central hosted service.
+
+Adapter outputs preserve the OpenVA boundary: they expose public metadata references only and do not make legal, compliance, procurement, security, KYC, AML, approval, suitability, or vendor-risk decisions.
 
 ## License
 

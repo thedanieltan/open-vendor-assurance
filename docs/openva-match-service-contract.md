@@ -1,6 +1,8 @@
 # OpenVA Match Service Contract
 
-The OpenVA match service is a thin hosted HTTP wrapper around the OpenVA pack reader and vendor inventory matcher. It returns public metadata references only. It does not make risk, compliance, approval, or suitability assertions.
+The OpenVA match service is an optional self-hosted HTTP wrapper around the OpenVA pack reader and vendor inventory matcher. It returns public metadata references only. It does not make risk, compliance, approval, or suitability assertions.
+
+OpenVA does not operate a central hosted service. Consumers that want HTTP access run their own service instance from a pinned repository commit or release.
 
 ## Startup
 
@@ -38,8 +40,8 @@ Returns pack metadata:
   "schema_version": "openva-export-pack.v1",
   "generated_at": "1970-01-01T00:00:00Z",
   "counts": {
-    "vendors": 138,
-    "sources": 564,
+    "vendors": 143,
+    "sources": 582,
     "candidate_sources": 0,
     "unavailable_sources": 16
   },
@@ -68,8 +70,8 @@ Response:
     "schema_version": "openva-export-pack.v1",
     "generated_at": "1970-01-01T00:00:00Z",
     "counts": {
-      "vendors": 138,
-      "sources": 564,
+      "vendors": 143,
+      "sources": 582,
       "candidate_sources": 0,
       "unavailable_sources": 16
     },

@@ -82,7 +82,9 @@ tools/**
 tests/**
 .github/workflows/**
 .github/CODEOWNERS
-policy/**
+docs/*policy*.md
+docs/doctrine.md
+docs/rights-policy.md
 LICENSE
 SECURITY.md
 README.md
