@@ -16,8 +16,8 @@ jobs:
   observe-report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install package
@@ -49,7 +49,7 @@ jobs:
       - name: Print observation report
         run: cat reports/observation-report.md
       - name: Upload observation report artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: openva-observation-report
           path: |

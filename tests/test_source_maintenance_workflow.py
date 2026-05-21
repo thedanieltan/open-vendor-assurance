@@ -35,7 +35,7 @@ def test_source_maintenance_workflow_runs_full_non_mutating_pipeline():
     assert "source-discovery-unavailable.csv" in text
     assert "promotion-plan-actions.csv" in text
     assert "cleanup-proposal.md" in text
-    assert "actions/upload-artifact@v4" in text
+    assert "actions/upload-artifact@v6" in text
     assert "--write" not in text
     assert "contents: write" not in text
     assert "pull-requests: write" not in text

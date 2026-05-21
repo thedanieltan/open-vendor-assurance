@@ -30,8 +30,8 @@ jobs:
       VENDOR_LIMIT: "${{ inputs.vendor_limit || '' }}"
       MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '50' }}"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install package
@@ -195,7 +195,7 @@ jobs:
             gh issue create --title "$TITLE" --body-file catalog-growth-discovery-issue.md
           fi
       - name: Upload catalog growth discovery artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: openva-catalog-growth-discovery-artifacts
           path: |

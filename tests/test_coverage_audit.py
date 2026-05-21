@@ -55,7 +55,7 @@ def test_coverage_audit_workflow_is_read_only_scheduled_and_manual():
     assert "reports/coverage-audit-summary.md" in text
     assert "reports/coverage-audit-report.json" in text
     assert "reports/coverage-audit-vendors.csv" in text
-    assert "actions/upload-artifact@v4" in text
+    assert "actions/upload-artifact@v6" in text
     assert "peter-evans/create-pull-request" not in text
     assert "contents: write" not in text
 

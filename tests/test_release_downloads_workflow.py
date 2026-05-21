@@ -42,7 +42,7 @@ def test_release_downloads_workflow_builds_and_uploads_expected_assets():
         "git diff --exit-code openva-pack.json indexes/ dist/",
         "python -m tools.openva.release_downloads build --out release-downloads",
         "python -m tools.openva.release_downloads manifest --out release-downloads",
-        "softprops/action-gh-release@v2",
+        "softprops/action-gh-release@v3",
         "release-artifacts.json",
         "release-downloads/openva-csv.zip",
         "release-downloads/openva-sample-inventory.csv",

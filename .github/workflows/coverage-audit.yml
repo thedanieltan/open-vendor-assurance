@@ -16,8 +16,8 @@ jobs:
   coverage-audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install package
@@ -84,7 +84,7 @@ jobs:
           print(json.dumps(report['breakdowns'].get('depth_tiers', {}), indent=2, sort_keys=True))
           PY
       - name: Upload coverage audit report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: openva-coverage-audit-report
           path: |
