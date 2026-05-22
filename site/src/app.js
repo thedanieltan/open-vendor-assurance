@@ -60,13 +60,12 @@ function renderHome() {
   const meta = catalogData.meta;
   const feedTimestamp = feedData.generated_at || "No live observation events are available yet";
   document.getElementById("home-stats").innerHTML = [
-    ["Reviewed catalog snapshot", meta.catalog_snapshot_identity],
-    ["Catalog snapshot date", meta.catalog_snapshot_date],
-    ["Latest observation feed timestamp", feedTimestamp],
-    ["Vendor count", meta.vendor_count],
-    ["Source count", meta.source_count],
+    ["Reviewed vendors", meta.vendor_count],
+    ["Reviewed source records", meta.source_count],
+    ["Snapshot date", meta.catalog_snapshot_date],
+    ["Observation feed", feedTimestamp],
     ["Site data contract", meta.site_data_contract],
-    ["Non-advisory boundary", "non_advisory"],
+    ["Boundary", "non_advisory"],
   ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
 }
 
@@ -349,6 +348,7 @@ function setupFilters() {
   document.getElementById("select-visible").addEventListener("click", () => {
     visibleVendors.forEach((vendor) => selectedVendors.add(vendor.vendor_id));
     renderCatalog();
+    renderExport();
   });
   document.getElementById("clear-selection").addEventListener("click", () => {
     selectedVendors.clear();
@@ -377,20 +377,33 @@ function vendorMatches(vendor) {
     && (!coverage || (vendor.source_types || []).includes(coverage));
 }
 
+function renderCatalogSummary() {
+  const node = document.getElementById("catalog-summary");
+  if (!node) return;
+  node.innerHTML = [
+    [visibleVendors.length, "visible vendors"],
+    [catalogData.vendors.length, "total vendors"],
+    [selectedVendors.size, "selected vendors"],
+    [selectedSources.size, "selected sources"],
+  ].map(([value, label]) => `<span><strong>${html(value)}</strong><small>${html(label)}</small></span>`).join("");
+}
+
 function renderCatalog() {
   visibleVendors = catalogData.vendors.filter(vendorMatches);
-  document.getElementById("vendor-list").innerHTML = visibleVendors.map((vendor) => `
+  renderCatalogSummary();
+  document.getElementById("vendor-list").innerHTML = visibleVendors.length ? visibleVendors.map((vendor) => `
     <article class="vendor-card">
       <label><input type="checkbox" data-select-vendor="${html(vendor.vendor_id)}" ${selectedVendors.has(vendor.vendor_id) ? "checked" : ""}> Select public vendor metadata</label>
       <h4><button class="secondary" type="button" data-open-vendor="${html(vendor.vendor_id)}">${html(vendor.display_name)}</button></h4>
       <div class="meta-line">${html(vendor.legal_name)} · ${html(vendor.headquarters_country)} · ${html(vendor.catalog_status)}</div>
       <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
     </article>
-  `).join("");
+  `).join("") : `<article class="event-card"><h3>No vendors match these filters.</h3><p>Try clearing one filter or searching by vendor name, legal name, vendor ID, or official domain.</p></article>`;
   document.querySelectorAll("[data-select-vendor]").forEach((box) => {
     box.addEventListener("change", (event) => {
       const vendorId = event.target.dataset.selectVendor;
       event.target.checked ? selectedVendors.add(vendorId) : selectedVendors.delete(vendorId);
+      renderCatalogSummary();
       renderExport();
     });
   });
@@ -402,42 +415,55 @@ function renderCatalog() {
 }
 
 async function renderVendorDetail(vendorId) {
-  const detail = await loadVendorDetail(vendorId);
-  const vendor = detail.vendor;
-  const sources = detail.canonical_sources || [];
-  const candidates = detail.candidate_sources || [];
-  const unavailable = detail.unavailable_sources || [];
-  const observations = detail.latest_observations || [];
-  document.getElementById("vendor-detail").innerHTML = `
-    <h3>${html(vendor.display_name)}</h3>
-    <p class="meta-line">${html(vendor.legal_name)} · vendor_id: ${html(vendor.vendor_id)}</p>
-    <p>Catalog status: ${html(vendor.catalog_status)}</p>
-    <p>Official domains: ${(vendor.official_domains || []).map((domain) => `<code>${html(domain)}</code>`).join(" ") || "Unavailable"}</p>
-    <p>Headquarters country: ${html(vendor.headquarters_country)}</p>
-    <p>Vendor categories: ${(vendor.vendor_categories || []).map(html).join(", ") || "Unavailable"}</p>
-    <div class="snapshot-box">${snapshotDisclosure()}</div>
-    <h4>Source coverage summary</h4>
-    <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
-    <h4>Canonical source records</h4>
-    <ul class="source-list">${sources.map(sourceTemplate).join("") || "<li>No reviewed source records.</li>"}</ul>
-    <h4>Candidate source records, non-canonical</h4>
-    <ul class="source-list">${candidates.map(candidateTemplate).join("") || "<li>No candidate source records.</li>"}</ul>
-    <h4>Unavailable source notes, non-advisory</h4>
-    <ul class="source-list">${unavailable.map((item) => `<li>${html(item.source_type)} · ${html(item.unavailability_status || item.status)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("") || "<li>No unavailable source notes.</li>"}</ul>
-    <h4>Related observation events</h4>
-    ${
-      observations.length
-        ? `<ul class="source-list">${observations.map((item) => `<li>${html(item.source_id)} · ${html(item.result)} · catalog_tier: ${html(item.catalog_tier)} · canonical: false · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("")}</ul>`
-        : "<p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>"
-    }
-  `;
-  document.querySelectorAll("[data-select-source]").forEach((box) => {
-    box.addEventListener("change", (event) => {
-      const sourceId = event.target.dataset.selectSource;
-      event.target.checked ? selectedSources.add(sourceId) : selectedSources.delete(sourceId);
-      renderExport();
+  const detailPanel = document.getElementById("vendor-detail");
+  detailPanel.innerHTML = `<p class="eyebrow">Loading</p><h3>Loading vendor detail...</h3>`;
+  try {
+    const detail = await loadVendorDetail(vendorId);
+    const vendor = detail.vendor;
+    const sources = detail.canonical_sources || [];
+    const candidates = detail.candidate_sources || [];
+    const unavailable = detail.unavailable_sources || [];
+    const observations = detail.latest_observations || [];
+    detailPanel.innerHTML = `
+      <p class="eyebrow">Vendor detail</p>
+      <h3>${html(vendor.display_name)}</h3>
+      <p class="meta-line">${html(vendor.legal_name)} · vendor_id: ${html(vendor.vendor_id)}</p>
+      <div class="summary-strip">
+        <span><strong>${html(sources.length)}</strong><small>canonical sources</small></span>
+        <span><strong>${html(candidates.length)}</strong><small>candidate sources</small></span>
+        <span><strong>${html(unavailable.length)}</strong><small>unavailable notes</small></span>
+      </div>
+      <p>Catalog status: ${html(vendor.catalog_status)}</p>
+      <p>Official domains: ${(vendor.official_domains || []).map((domain) => `<code>${html(domain)}</code>`).join(" ") || "Unavailable"}</p>
+      <p>Headquarters country: ${html(vendor.headquarters_country)}</p>
+      <p>Vendor categories: ${(vendor.vendor_categories || []).map(html).join(", ") || "Unavailable"}</p>
+      <div class="snapshot-box">${snapshotDisclosure()}</div>
+      <h4>Source coverage summary</h4>
+      <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
+      <h4>Canonical source records</h4>
+      <ul class="source-list">${sources.map(sourceTemplate).join("") || "<li>No reviewed source records.</li>"}</ul>
+      <h4>Candidate source records, non-canonical</h4>
+      <ul class="source-list">${candidates.map(candidateTemplate).join("") || "<li>No candidate source records.</li>"}</ul>
+      <h4>Unavailable source notes, non-advisory</h4>
+      <ul class="source-list">${unavailable.map((item) => `<li>${html(item.source_type)} · ${html(item.unavailability_status || item.status)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("") || "<li>No unavailable source notes.</li>"}</ul>
+      <h4>Related observation events</h4>
+      ${
+        observations.length
+          ? `<ul class="source-list">${observations.map((item) => `<li>${html(item.source_id)} · ${html(item.result)} · catalog_tier: ${html(item.catalog_tier)} · canonical: false · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("")}</ul>`
+          : "<p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>"
+      }
+    `;
+    document.querySelectorAll("[data-select-source]").forEach((box) => {
+      box.addEventListener("change", (event) => {
+        const sourceId = event.target.dataset.selectSource;
+        event.target.checked ? selectedSources.add(sourceId) : selectedSources.delete(sourceId);
+        renderCatalogSummary();
+        renderExport();
+      });
     });
-  });
+  } catch (error) {
+    detailPanel.innerHTML = `<p class="eyebrow">Vendor detail</p><h3>Could not load vendor detail</h3><p>${html(error.message)}</p>`;
+  }
 }
 
 function sourceTemplate(source) {
@@ -529,8 +555,10 @@ function exportMetadata() {
 async function renderExport() {
   const records = await selectedRecords();
   document.getElementById("selection-summary").innerHTML = `
-    <p>Selected public vendors: ${html(records.vendors.length)}</p>
-    <p>Selected reviewed source records: ${html(records.sources.length)}</p>
+    <div class="summary-strip">
+      <span><strong>${html(records.vendors.length)}</strong><small>selected public vendors</small></span>
+      <span><strong>${html(records.sources.length)}</strong><small>selected reviewed sources</small></span>
+    </div>
     <pre>${html(JSON.stringify(exportMetadata(), null, 2))}</pre>
   `;
 }
@@ -559,6 +587,14 @@ function route() {
   document.querySelectorAll(".view").forEach((view) => view.classList.add("hidden"));
   const current = document.getElementById(`${name}-view`) || document.getElementById("home-view");
   current.classList.remove("hidden");
+  document.querySelectorAll("nav a").forEach((link) => {
+    const active = link.getAttribute("href") === `#${name}` || (!location.hash && link.getAttribute("href") === "#home");
+    if (active) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
   if (name === "export") renderExport();
   if (name === "feed") renderFeed();
 }
