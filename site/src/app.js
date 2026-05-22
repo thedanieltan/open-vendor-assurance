@@ -3,11 +3,22 @@ let feedData = null;
 let visibleVendors = [];
 const selectedVendors = new Set();
 const selectedSources = new Set();
+let localInventoryRows = [];
+let localMatchRows = [];
 
 const CORE_COVERAGE = ["dpa", "privacy_notice", "security_page", "subprocessors_list", "trust_center"];
 
 function text(value) {
   return value === null || value === undefined || value === "" ? "Unavailable" : String(value);
+}
+
+function html(value) {
+  return text(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function csvCell(value) {
@@ -28,11 +39,11 @@ function download(filename, content, type) {
 function snapshotDisclosure() {
   const meta = catalogData.meta;
   return `
-    <strong>Reviewed catalog snapshot: ${text(meta.catalog_snapshot_identity)}</strong><br>
-    Catalog date: ${text(meta.catalog_snapshot_date)}<br>
+    <strong>Reviewed catalog snapshot: ${html(meta.catalog_snapshot_identity)}</strong><br>
+    Catalog date: ${html(meta.catalog_snapshot_date)}<br>
     This catalog is a read-only view of an OpenVA public metadata snapshot, not a live monitoring feed.
-    For the latest reproducible pack, check <a href="${meta.github_releases_url}">GitHub Releases</a>.
-    ${meta.release_tag ? `Release tag: ${meta.release_tag}` : `Commit SHA: ${text(meta.commit_sha)}`}
+    For the latest reproducible pack, check <a href="${html(meta.github_releases_url)}">GitHub Releases</a>.
+    ${meta.release_tag ? `Release tag: ${html(meta.release_tag)}` : `Commit SHA: ${html(meta.commit_sha)}`}
   `;
 }
 
@@ -53,12 +64,245 @@ function renderHome() {
     ["Vendor count", meta.vendor_count],
     ["Source count", meta.source_count],
     ["Non-advisory boundary", "non_advisory"],
-  ].map(([label, value]) => `<article><strong>${label}</strong><p>${text(value)}</p></article>`).join("");
+  ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
+}
+
+function normalizeForMatch(value) {
+  return text(value)
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/\/$/, "")
+    .replace(/[^a-z0-9.]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizeDomain(value) {
+  return normalizeForMatch(value).split("/")[0];
+}
+
+function parseCsv(content) {
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+  for (let index = 0; index < content.length; index += 1) {
+    const char = content[index];
+    const next = content[index + 1];
+    if (quoted && char === '"' && next === '"') {
+      cell += '"';
+      index += 1;
+    } else if (char === '"') {
+      quoted = !quoted;
+    } else if (!quoted && char === ",") {
+      row.push(cell);
+      cell = "";
+    } else if (!quoted && (char === "\n" || char === "\r")) {
+      if (char === "\r" && next === "\n") index += 1;
+      row.push(cell);
+      if (row.some((value) => value !== "")) rows.push(row);
+      row = [];
+      cell = "";
+    } else {
+      cell += char;
+    }
+  }
+  row.push(cell);
+  if (row.some((value) => value !== "")) rows.push(row);
+  if (!rows.length) return [];
+  const headers = rows[0].map((header) => header.trim());
+  return rows.slice(1).map((values) => Object.fromEntries(headers.map((header, index) => [header, values[index] || ""])));
+}
+
+function serializeCsv(rows, preferredColumns = []) {
+  const columns = [...preferredColumns];
+  rows.forEach((row) => {
+    Object.keys(row).forEach((key) => {
+      if (!columns.includes(key)) columns.push(key);
+    });
+  });
+  return [columns.join(","), ...rows.map((row) => columns.map((key) => csvCell(row[key])).join(","))].join("\n") + "\n";
+}
+
+function vendorSourceSummary(vendorId) {
+  const sources = catalogData.sources.filter((source) => source.vendor_id === vendorId);
+  const candidates = catalogData.candidate_sources.filter((source) => source.vendor_id === vendorId);
+  const unavailable = catalogData.unavailable_sources.filter((source) => source.vendor_id === vendorId);
+  return {
+    sources,
+    candidates,
+    unavailable,
+    sourceTypes: [...new Set(sources.map((source) => source.source_type))].sort(),
+    sourceUrls: sources.map((source) => source.source_url).filter(Boolean),
+  };
+}
+
+function buildLocalMatchIndexes() {
+  const domainIndex = new Map();
+  const nameIndex = new Map();
+  catalogData.vendors.forEach((vendor) => {
+    (vendor.official_domains || []).forEach((domain) => domainIndex.set(normalizeDomain(domain), vendor));
+    [vendor.display_name, vendor.legal_name, vendor.vendor_id].forEach((name) => {
+      const normalized = normalizeForMatch(name);
+      if (normalized) nameIndex.set(normalized, vendor);
+    });
+  });
+  return { domainIndex, nameIndex };
+}
+
+function matchInventoryRow(row, indexes) {
+  const domain = normalizeDomain(row.domain || "");
+  const vendorName = normalizeForMatch(row.vendor_name || "");
+  const businessName = normalizeForMatch(row.business_entity_name || "");
+  let vendor = null;
+  let matchMethod = "no_match";
+  let confidence = "0.00";
+
+  if (domain && indexes.domainIndex.has(domain)) {
+    vendor = indexes.domainIndex.get(domain);
+    matchMethod = "domain_exact";
+    confidence = "1.00";
+  } else if (vendorName && indexes.nameIndex.has(vendorName)) {
+    vendor = indexes.nameIndex.get(vendorName);
+    matchMethod = "vendor_name_exact";
+    confidence = "0.95";
+  } else if (businessName && indexes.nameIndex.has(businessName)) {
+    vendor = indexes.nameIndex.get(businessName);
+    matchMethod = "business_entity_name_exact";
+    confidence = "0.90";
+  }
+
+  if (!vendor) {
+    return {
+      ...row,
+      matched_vendor_id: "",
+      matched_vendor_name: "",
+      match_method: matchMethod,
+      match_confidence: confidence,
+      catalog_tier: "",
+      review_state: "human_review_required",
+      advisory_boundary: "non_advisory",
+      matched_source_types: "",
+      canonical_source_urls: "",
+      candidate_source_count: "0",
+      unavailable_source_count: "0",
+      notes: "No conservative OpenVA match found.",
+    };
+  }
+
+  const summary = vendorSourceSummary(vendor.vendor_id);
+  return {
+    ...row,
+    matched_vendor_id: vendor.vendor_id,
+    matched_vendor_name: vendor.display_name,
+    match_method: matchMethod,
+    match_confidence: confidence,
+    catalog_tier: "human_reviewed",
+    review_state: "human_reviewed",
+    advisory_boundary: "non_advisory",
+    matched_source_types: summary.sourceTypes.join("; "),
+    canonical_source_urls: summary.sourceUrls.join("; "),
+    candidate_source_count: String(summary.candidates.length),
+    unavailable_source_count: String(summary.unavailable.length),
+    notes: "Matched against OpenVA public metadata. This is not vendor approval, compliance advice, risk scoring, or a procurement recommendation.",
+  };
+}
+
+function renderLocalMatcher() {
+  const total = localMatchRows.length;
+  const matched = localMatchRows.filter((row) => row.matched_vendor_id).length;
+  const unmatched = total - matched;
+  document.getElementById("match-summary").innerHTML = [
+    ["Rows processed", total],
+    ["Matched rows", matched],
+    ["Unmatched rows", unmatched],
+    ["Processing boundary", "browser-local; not uploaded to OpenVA"],
+  ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
+
+  document.getElementById("match-preview").innerHTML = localMatchRows.length
+    ? `<table><thead><tr><th>Input vendor</th><th>Matched vendor</th><th>Method</th><th>Confidence</th><th>Source types</th></tr></thead><tbody>${
+        localMatchRows.slice(0, 20).map((row) => `
+          <tr>
+            <td>${html(row.vendor_name || row.business_entity_name || row.domain || row.registration_number)}</td>
+            <td>${html(row.matched_vendor_name || "No match")}</td>
+            <td>${html(row.match_method)}</td>
+            <td>${html(row.match_confidence)}</td>
+            <td>${html(row.matched_source_types)}</td>
+          </tr>
+        `).join("")
+      }</tbody></table><p>Preview shows up to 20 rows. Download CSV or JSON for the full local result.</p>`
+    : "<p>No local match results yet.</p>";
+}
+
+function setupLocalMatcher() {
+  const fileInput = document.getElementById("inventory-file");
+  if (!fileInput) return;
+
+  fileInput.addEventListener("change", async (event) => {
+    const file = event.target.files[0];
+    localInventoryRows = [];
+    localMatchRows = [];
+    if (!file) {
+      document.getElementById("matcher-status").textContent = "No CSV selected. Your file will be processed locally in your browser and is not uploaded to OpenVA.";
+      renderLocalMatcher();
+      return;
+    }
+    const content = await file.text();
+    localInventoryRows = parseCsv(content);
+    document.getElementById("matcher-status").textContent = `${localInventoryRows.length} row(s) loaded locally from ${file.name}. The file was not uploaded to OpenVA.`;
+    renderLocalMatcher();
+  });
+
+  document.getElementById("run-local-match").addEventListener("click", () => {
+    const indexes = buildLocalMatchIndexes();
+    localMatchRows = localInventoryRows.map((row) => matchInventoryRow(row, indexes));
+    document.getElementById("matcher-status").textContent = `${localMatchRows.length} row(s) matched locally in browser memory. No private inventory data was uploaded.`;
+    renderLocalMatcher();
+  });
+
+  document.getElementById("clear-local-match").addEventListener("click", () => {
+    localInventoryRows = [];
+    localMatchRows = [];
+    fileInput.value = "";
+    document.getElementById("matcher-status").textContent = "Local inventory data cleared from browser memory.";
+    renderLocalMatcher();
+  });
+
+  document.getElementById("download-matches-csv").addEventListener("click", () => {
+    const preferred = [
+      "vendor_name",
+      "business_entity_name",
+      "domain",
+      "jurisdiction",
+      "registration_number",
+      "registered_address",
+      "matched_vendor_id",
+      "matched_vendor_name",
+      "match_method",
+      "match_confidence",
+      "catalog_tier",
+      "review_state",
+      "advisory_boundary",
+      "matched_source_types",
+      "canonical_source_urls",
+      "candidate_source_count",
+      "unavailable_source_count",
+      "notes",
+    ];
+    download("openva-matched-inventory.csv", serializeCsv(localMatchRows, preferred), "text/csv");
+  });
+
+  document.getElementById("download-matches-json").addEventListener("click", () => {
+    download("openva-matched-inventory.json", JSON.stringify({ meta: { ...exportMetadata(), export_scope: "browser_local_inventory_match" }, rows: localMatchRows }, null, 2) + "\n", "application/json");
+  });
+
+  renderLocalMatcher();
 }
 
 function optionList(values, label) {
   const unique = [...new Set(values.filter(Boolean))].sort();
-  return [`<option value="">${label}</option>`, ...unique.map((value) => `<option value="${value}">${value}</option>`)].join("");
+  return [`<option value="">${html(label)}</option>`, ...unique.map((value) => `<option value="${html(value)}">${html(value)}</option>`)].join("");
 }
 
 function setupFilters() {
@@ -105,10 +349,10 @@ function renderCatalog() {
   visibleVendors = catalogData.vendors.filter(vendorMatches);
   document.getElementById("vendor-list").innerHTML = visibleVendors.map((vendor) => `
     <article class="vendor-card">
-      <label><input type="checkbox" data-select-vendor="${vendor.vendor_id}" ${selectedVendors.has(vendor.vendor_id) ? "checked" : ""}> Select public vendor metadata</label>
-      <h4><button class="secondary" type="button" data-open-vendor="${vendor.vendor_id}">${text(vendor.display_name)}</button></h4>
-      <div class="meta-line">${text(vendor.legal_name)} · ${text(vendor.headquarters_country)} · ${text(vendor.catalog_status)}</div>
-      <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${item}</span>`).join("")}</div>
+      <label><input type="checkbox" data-select-vendor="${html(vendor.vendor_id)}" ${selectedVendors.has(vendor.vendor_id) ? "checked" : ""}> Select public vendor metadata</label>
+      <h4><button class="secondary" type="button" data-open-vendor="${html(vendor.vendor_id)}">${html(vendor.display_name)}</button></h4>
+      <div class="meta-line">${html(vendor.legal_name)} · ${html(vendor.headquarters_country)} · ${html(vendor.catalog_status)}</div>
+      <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
     </article>
   `).join("");
   document.querySelectorAll("[data-select-vendor]").forEach((box) => {
@@ -129,21 +373,21 @@ function renderVendorDetail(vendorId) {
   const candidates = catalogData.candidate_sources.filter((source) => source.vendor_id === vendorId);
   const unavailable = catalogData.unavailable_sources.filter((source) => source.vendor_id === vendorId);
   document.getElementById("vendor-detail").innerHTML = `
-    <h3>${text(vendor.display_name)}</h3>
-    <p class="meta-line">${text(vendor.legal_name)} · vendor_id: ${vendor.vendor_id}</p>
-    <p>Catalog status: ${text(vendor.catalog_status)}</p>
-    <p>Official domains: ${(vendor.official_domains || []).map((domain) => `<code>${domain}</code>`).join(" ") || "Unavailable"}</p>
-    <p>Headquarters country: ${text(vendor.headquarters_country)}</p>
-    <p>Vendor categories: ${(vendor.vendor_categories || []).join(", ") || "Unavailable"}</p>
+    <h3>${html(vendor.display_name)}</h3>
+    <p class="meta-line">${html(vendor.legal_name)} · vendor_id: ${html(vendor.vendor_id)}</p>
+    <p>Catalog status: ${html(vendor.catalog_status)}</p>
+    <p>Official domains: ${(vendor.official_domains || []).map((domain) => `<code>${html(domain)}</code>`).join(" ") || "Unavailable"}</p>
+    <p>Headquarters country: ${html(vendor.headquarters_country)}</p>
+    <p>Vendor categories: ${(vendor.vendor_categories || []).map(html).join(", ") || "Unavailable"}</p>
     <div class="snapshot-box">${snapshotDisclosure()}</div>
     <h4>Source coverage summary</h4>
-    <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${item}</span>`).join("")}</div>
+    <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
     <h4>Canonical source records</h4>
     <ul class="source-list">${sources.map(sourceTemplate).join("") || "<li>No reviewed source records.</li>"}</ul>
     <h4>Candidate source records, non-canonical</h4>
     <ul class="source-list">${candidates.map(candidateTemplate).join("") || "<li>No candidate source records.</li>"}</ul>
     <h4>Unavailable source notes, non-advisory</h4>
-    <ul class="source-list">${unavailable.map((item) => `<li>${text(item.source_type)} · ${text(item.unavailability_status || item.status)} · advisory_boundary: ${item.advisory_boundary}</li>`).join("") || "<li>No unavailable source notes.</li>"}</ul>
+    <ul class="source-list">${unavailable.map((item) => `<li>${html(item.source_type)} · ${html(item.unavailability_status || item.status)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("") || "<li>No unavailable source notes.</li>"}</ul>
     <h4>Related observation events</h4>
     <p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>
   `;
@@ -159,16 +403,16 @@ function renderVendorDetail(vendorId) {
 function sourceTemplate(source) {
   return `
     <li>
-      <label><input type="checkbox" data-select-source="${source.source_id}" ${selectedSources.has(source.source_id) ? "checked" : ""}> Select source</label>
-      <strong>${text(source.source_type)}</strong> · <a href="${source.source_url}" target="_blank" rel="noreferrer">${text(source.title)}</a><br>
-      language: ${text(source.source_language)} · authority: ${text(source.source_authority_class)} · access: ${text(source.access_class)} · rights: ${text(source.rights_class)}<br>
-      provenance.collected_at: ${text(source.provenance && source.provenance.collected_at)} · catalog_tier: ${source.catalog_tier} · review_state: ${source.review_state} · advisory_boundary: ${source.advisory_boundary}
+      <label><input type="checkbox" data-select-source="${html(source.source_id)}" ${selectedSources.has(source.source_id) ? "checked" : ""}> Select source</label>
+      <strong>${html(source.source_type)}</strong> · <a href="${html(source.source_url)}" target="_blank" rel="noreferrer">${html(source.title)}</a><br>
+      language: ${html(source.source_language)} · authority: ${html(source.source_authority_class)} · access: ${html(source.access_class)} · rights: ${html(source.rights_class)}<br>
+      provenance.collected_at: ${html(source.provenance && source.provenance.collected_at)} · catalog_tier: ${html(source.catalog_tier)} · review_state: ${html(source.review_state)} · advisory_boundary: ${html(source.advisory_boundary)}
     </li>
   `;
 }
 
 function candidateTemplate(candidate) {
-  return `<li>${text(candidate.source_type_candidate)} · ${text(candidate.candidate_url)} · canonical: false · catalog_tier: ${candidate.catalog_tier} · review_state: ${candidate.review_state} · advisory_boundary: ${candidate.advisory_boundary}</li>`;
+  return `<li>${html(candidate.source_type_candidate)} · ${html(candidate.candidate_url)} · canonical: false · catalog_tier: ${html(candidate.catalog_tier)} · review_state: ${html(candidate.review_state)} · advisory_boundary: ${html(candidate.advisory_boundary)}</li>`;
 }
 
 function eventMatches(event) {
@@ -184,8 +428,8 @@ function eventMatches(event) {
 
 function renderFeed() {
   document.getElementById("feed-meta").innerHTML = `
-    <p>Latest feed generated timestamp: ${text(feedData.generated_at)}</p>
-    <p>Feed source commit/workflow identifier: ${text(feedData.source_commit)} / ${text(feedData.workflow)}</p>
+    <p>Latest feed generated timestamp: ${html(feedData.generated_at)}</p>
+    <p>Feed source commit/workflow identifier: ${html(feedData.source_commit)} / ${html(feedData.workflow)}</p>
     <p>catalog_tier: observation · review_state: auto_observed or human_review_required · canonical: false · advisory_boundary: non_advisory</p>
   `;
   const events = (feedData.events || []).filter(eventMatches);
@@ -200,10 +444,10 @@ function eventTemplate(event) {
     : "";
   return `
     <article class="event-card">
-      <h4>${text(event.event_type)}</h4>
-      <p>${text(event.vendor_id)} · ${text(event.source_id)} · ${text(event.source_type)} · ${text(event.observed_at)}</p>
-      <p>result: ${text(event.result)} · http_status: ${text(event.http_status)}</p>
-      <p>catalog_tier: ${text(event.catalog_tier)} · review_state: ${text(event.review_state)} · canonical: false · advisory_boundary: ${text(event.advisory_boundary)}</p>
+      <h4>${html(event.event_type)}</h4>
+      <p>${html(event.vendor_id)} · ${html(event.source_id)} · ${html(event.source_type)} · ${html(event.observed_at)}</p>
+      <p>result: ${html(event.result)} · http_status: ${html(event.http_status)}</p>
+      <p>catalog_tier: ${html(event.catalog_tier)} · review_state: ${html(event.review_state)} · canonical: false · advisory_boundary: ${html(event.advisory_boundary)}</p>
       ${hashNote}
     </article>
   `;
@@ -235,9 +479,9 @@ function exportMetadata() {
 function renderExport() {
   const records = selectedRecords();
   document.getElementById("selection-summary").innerHTML = `
-    <p>Selected public vendors: ${records.vendors.length}</p>
-    <p>Selected reviewed source records: ${records.sources.length}</p>
-    <pre>${JSON.stringify(exportMetadata(), null, 2)}</pre>
+    <p>Selected public vendors: ${html(records.vendors.length)}</p>
+    <p>Selected reviewed source records: ${html(records.sources.length)}</p>
+    <pre>${html(JSON.stringify(exportMetadata(), null, 2))}</pre>
   `;
 }
 
@@ -280,6 +524,7 @@ async function init() {
   renderHome();
   setupFilters();
   setupExport();
+  setupLocalMatcher();
   renderCatalog();
   renderFeed();
   document.getElementById("feed-filters").addEventListener("input", renderFeed);

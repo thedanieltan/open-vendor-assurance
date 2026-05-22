@@ -16,6 +16,7 @@
         <a href="#home">Home</a>
         <a href="#catalog">Reviewed Catalog</a>
         <a href="#feed">Live Observation Feed</a>
+        <a href="#matcher">Local Matcher</a>
         <a href="#export">Export</a>
       </nav>
     </header>
@@ -45,10 +46,15 @@
             <p>Machine-generated public-source observations, not canonical records.</p>
             <a class="button" href="#feed">View live feed shell</a>
           </article>
+          <article>
+            <h3>Local Matcher</h3>
+            <p>Match your own vendor CSV locally in your browser. Your CSV is not uploaded to OpenVA.</p>
+            <a class="button" href="#matcher">Match a local CSV</a>
+          </article>
         </div>
         <section>
           <h3>Need to match your private vendor inventory?</h3>
-          <p>Use the local Python matcher or deploy the optional self-hosted match service inside your own environment. Do not upload private vendor inventories to OpenVA.</p>
+          <p>Use the browser-local matcher, local Python matcher, or optional self-hosted match service inside your own environment. Do not upload private vendor inventories to OpenVA.</p>
           <p>
             <a href="../docs/release-downloads.md">Release downloads</a>
             <a href="../docs/openva-match-service-contract.md">Self-hosted matcher docs</a>
@@ -105,6 +111,52 @@
           <label>Review state <input id="feed-review-filter" type="search" autocomplete="off"></label>
         </form>
         <div id="feed-list"></div>
+      </section>
+
+      <section id="matcher-view" class="view hidden">
+        <div class="section-heading">
+          <h2>Local Matcher</h2>
+          <p>Your CSV is processed locally in your browser. It is not uploaded to OpenVA.</p>
+        </div>
+        <div class="snapshot-box" data-snapshot-disclosure></div>
+        <aside class="boundary-note">
+          <strong>Browser-local processing only.</strong>
+          Select a CSV from your computer to match against OpenVA public metadata already loaded by this page.
+          The file is parsed in browser memory only. OpenVA does not receive, store, persist, or transmit your private vendor inventory.
+        </aside>
+        <section>
+          <h3>Accepted columns</h3>
+          <p>Use whichever columns you have. At least one of <code>vendor_name</code>, <code>business_entity_name</code>, <code>domain</code>, or <code>registration_number</code> is required per row.</p>
+          <pre>vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address</pre>
+        </section>
+        <div class="actions">
+          <label class="button">
+            Choose local CSV
+            <input id="inventory-file" type="file" accept=".csv,text/csv" hidden>
+          </label>
+          <button type="button" id="run-local-match">Run local match</button>
+          <button type="button" id="clear-local-match">Clear local data</button>
+        </div>
+        <div id="matcher-status" class="feed-warning">
+          No CSV selected. Your file will be processed locally in your browser and is not uploaded to OpenVA.
+        </div>
+        <section>
+          <h3>Match summary</h3>
+          <div id="match-summary" class="stats-grid"></div>
+        </section>
+        <section>
+          <h3>Matched results preview</h3>
+          <div id="match-preview" class="detail-panel">
+            <p>No local match results yet.</p>
+          </div>
+        </section>
+        <div class="actions">
+          <button type="button" id="download-matches-csv">Download openva-matched-inventory.csv</button>
+          <button type="button" id="download-matches-json">Download openva-matched-inventory.json</button>
+        </div>
+        <p class="feed-warning">
+          Local match results are not vendor approval, compliance findings, risk scores, procurement recommendations, legal opinions, or suitability determinations.
+        </p>
       </section>
 
       <section id="export-view" class="view hidden">

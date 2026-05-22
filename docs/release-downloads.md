@@ -112,7 +112,8 @@ environment.
 If you want to match a vendor list against OpenVA today:
 
 - prepare your file using `openva-inventory-template.csv`;
-- run the local Python matcher, or ask a technical teammate to run it locally;
+- use the hosted site's browser-local matcher, where your CSV is processed locally in your browser and is not uploaded to OpenVA;
+- or run the local Python matcher / optional self-hosted match service inside your own environment;
 - keep the input vendor inventory inside your own environment.
 
 The local matcher accepts these columns:
@@ -154,7 +155,7 @@ recommendations, legal opinions, or materiality determinations.
 
 The site is deployed to GitHub Pages from the static site build output.
 
-For private inventory matching, use the local matcher or optional self-hosted
+For private inventory matching, use the browser-local matcher, local matcher, or optional self-hosted
 match service inside your own environment.
 
 ## Legal entity resolution
