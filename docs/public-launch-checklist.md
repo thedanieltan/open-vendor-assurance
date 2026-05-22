@@ -68,7 +68,7 @@ Use this checklist before making OpenVA public or announcing broader contributio
 ## Launch note
 
 - [ ] Public launch copy describes OpenVA as an infrastructure launch.
-- [ ] Public launch copy does not imply a hosted catalog, central service, vendor rating, or completeness claim.
+- [ ] Public launch copy distinguishes the hosted read-only catalog viewer/browser-local matcher from any hosted upload service, central API, vendor rating, or completeness claim.
 - [ ] Spreadsheet and local/self-hosted workflows are documented without requiring users to upload private vendor inventories to OpenVA.
 - [ ] Hosted catalog viewer is read-only.
 - [ ] Site is deployed to GitHub Pages from static build output.
@@ -106,10 +106,7 @@ workflows, matching public vendor assurance references, and contributing
 public-source metadata, but it should not be treated as complete vendor
 assurance coverage.
 
-OpenVA does not operate a public upload service or central hosted matching
-service. HTTP access is available only through the optional self-hosted match
-service. Users should keep private vendor inventories inside their own
-environment.
+OpenVA does not operate a hosted private inventory upload service or central hosted matching service. The hosted site may offer a read-only viewer and browser-local matcher, but private inventory data should remain inside the user's browser session, local environment, or self-hosted environment.
 ```
 
 Do not describe OpenVA as:

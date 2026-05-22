@@ -30,14 +30,14 @@ jobs:
         run: pip install -e "services/openva_match_service[dev]"
       - name: Validate current records
         run: python -m tools.openva.validate validate
-      - name: Run tests
-        run: pytest -q
-      - name: Build compiled site distribution
-        run: python site/build.py --out site/dist
       - name: Rebuild generated indexes
         run: python -m tools.openva.validate build-indexes
       - name: Refuse generated drift
         run: git diff --exit-code openva-pack.json indexes/ dist/
+      - name: Run tests
+        run: pytest -q
+      - name: Build compiled site distribution
+        run: python site/build.py --out site/dist
       - name: Build release artifact manifest
         run: python -m tools.openva.release_artifacts build
       - name: Check release artifact manifest

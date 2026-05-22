@@ -202,33 +202,28 @@ These files are generated from the tagged repository state. OpenVA does not oper
 
 See `docs/release-downloads.md` for a plain-language walkthrough of the release assets.
 
-## Hosted catalog viewer and live observation feed
+## Hosted catalog viewer
 
-OpenVA provides a hosted viewer for browsing and exporting selected public
-OpenVA metadata from a reviewed catalog snapshot.
+OpenVA also provides a GitHub Pages catalog viewer for non-dev users.
 
-The viewer may also display a live observation feed of machine-generated
-public-source events. The live feed is non-canonical and is separate from the
-human-reviewed catalog.
+The hosted site is a static, read-only viewer over public OpenVA metadata. It lets users browse the reviewed catalog snapshot, view the live observation feed shell, use the browser-local matcher, and export selected public metadata.
 
-The live feed UI shell currently ships with an empty state. Real observation
-events require the observation ledger workflow, which is a subsequent PR.
+The site does not provide accounts, workspaces, server-side matching, hosted private inventory upload, vendor scoring, vendor approval, or compliance conclusions. Private vendor inventories should remain browser-local, local, or self-hosted inside the user's own environment.
 
-The viewer does not accept private vendor inventory uploads, private contracts,
-SOC reports, credentials, screenshots, or customer-specific evidence.
+The hosted site is generated as a compiled catalog distribution:
 
-The reviewed catalog is not a live monitoring feed. The page displays the
-release tag, commit SHA, and catalog snapshot date where available. For
-reproducible use, pin the GitHub release or commit.
+```text
+data/meta.json
+data/vendor-search.min.json
+data/source-types.json
+data/coverage-summary.json
+data/vendors/{vendor_id}.json
+data/observation-feed.json
+```
 
-Live observation events are machine-generated public-source facts. They are not
-vendor approval, compliance findings, risk findings, procurement
-recommendations, legal opinions, or materiality determinations.
+The reviewed catalog is a release snapshot, not a live monitoring feed. The live observation feed shell is non-canonical and remains empty until the observation ledger workflow ships.
 
-The site is deployed to GitHub Pages from the static site build output.
-
-For private inventory matching, use the local matcher or optional self-hosted
-match service inside your own environment.
+For details, see `docs/release-downloads.md` and `site/README.md`.
 
 ## Adapters
 
