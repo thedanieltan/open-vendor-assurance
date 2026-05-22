@@ -86,6 +86,75 @@ def test_exact_normalized_name_match_works_without_domain(tmp_path):
     assert row["match_method"] == "name_exact"
 
 
+def test_business_entity_name_match_works_without_vendor_name_or_domain(tmp_path):
+    input_path = tmp_path / "vendors.csv"
+    output_path = tmp_path / "matched.csv"
+    write_inventory(input_path, [{"business_entity_name": "Slack Technologies LLC"}])
+
+    match_inventory(".", input_path, output_path)
+
+    row = read_csv(output_path)[0]
+    assert row["business_entity_name"] == "Slack Technologies LLC"
+    assert row["match_status"] == "matched"
+    assert row["matched_vendor_id"] == "slack"
+    assert row["match_confidence"] == "0.90"
+    assert row["match_method"] == "name_exact"
+
+
+def test_registration_number_exact_matches_legal_entity(monkeypatch, tmp_path):
+    monkeypatch.setattr(matcher.OpenVAPack, "load", lambda _: SyntheticPack.with_legal_entities())
+    input_path = tmp_path / "vendors.csv"
+    output_path = tmp_path / "matched.csv"
+    write_inventory(input_path, [{"registration_number": "202012345A", "jurisdiction": "SG"}])
+
+    match_inventory("unused-pack-path", input_path, output_path)
+
+    row = read_csv(output_path)[0]
+    assert row["match_status"] == "matched"
+    assert row["matched_vendor_id"] == "stripe"
+    assert row["match_method"] == "registration_number_exact"
+    assert row["match_confidence"] == "1.00"
+    assert row["legal_entity_match_method"] == "registration_number_exact"
+    assert row["legal_entity_resolution_confidence"] == "matched"
+    assert row["matched_legal_entity_id"] == "stripe-payments-sg"
+    assert row["matched_legal_entity_name"] == "Stripe Payments Singapore Pte. Ltd."
+    assert row["legal_entity_registration_number"] == "202012345A"
+    assert json.loads(row["candidate_legal_entities_json"])[0]["entity_id"] == "stripe-payments-sg"
+
+
+def test_domain_plus_jurisdiction_uses_resolution_index(monkeypatch, tmp_path):
+    monkeypatch.setattr(matcher.OpenVAPack, "load", lambda _: SyntheticPack.with_legal_entities())
+    input_path = tmp_path / "vendors.csv"
+    output_path = tmp_path / "matched.csv"
+    write_inventory(input_path, [{"vendor_name": "Stripe", "domain": "stripe.com", "jurisdiction": "SG"}])
+
+    match_inventory("unused-pack-path", input_path, output_path)
+
+    row = read_csv(output_path)[0]
+    assert row["matched_vendor_id"] == "stripe"
+    assert row["match_method"] == "domain_exact"
+    assert row["legal_entity_match_method"] == "jurisdiction_resolution_index"
+    assert row["legal_entity_resolution_confidence"] == "candidate"
+    assert row["matched_legal_entity_id"] == "stripe-payments-sg"
+    assert json.loads(row["candidate_legal_entities_json"])[0]["registration_number"] == "202012345A"
+
+
+def test_domain_only_leaves_legal_entity_unresolved(monkeypatch, tmp_path):
+    monkeypatch.setattr(matcher.OpenVAPack, "load", lambda _: SyntheticPack.with_legal_entities())
+    input_path = tmp_path / "vendors.csv"
+    output_path = tmp_path / "matched.csv"
+    write_inventory(input_path, [{"vendor_name": "Stripe", "domain": "stripe.com"}])
+
+    match_inventory("unused-pack-path", input_path, output_path)
+
+    row = read_csv(output_path)[0]
+    assert row["matched_vendor_id"] == "stripe"
+    assert row["legal_entity_match_method"] == "unresolved"
+    assert row["legal_entity_resolution_confidence"] == "unresolved"
+    assert row["matched_legal_entity_id"] == ""
+    assert json.loads(row["legal_entities_json"])[0]["entity_id"] == "stripe-payments-sg"
+
+
 def test_normalized_legal_suffix_name_match_works_without_domain(monkeypatch, tmp_path):
     monkeypatch.setattr(matcher.OpenVAPack, "load", lambda _: SyntheticPack.single_match())
     input_path = tmp_path / "vendors.csv"
@@ -288,14 +357,18 @@ def test_output_does_not_emit_risk_or_approval_fields(tmp_path):
     assert fieldnames is not None
     forbidden_fragments = ["risk", "approval", "approved", "suitability"]
     assert not any(fragment in field.lower() for fragment in forbidden_fragments for field in fieldnames)
+    assert "legal_entity_match_basis" not in fieldnames
+    assert "legal_entity_match_status" not in fieldnames
+    assert "dpa_contracting_entity_verification_status" not in fieldnames
+    assert "dpa_contracting_entity_verification_note" not in fieldnames
 
 
-def test_input_requires_domain_or_vendor_name_column(tmp_path):
+def test_input_requires_matchable_identity_column(tmp_path):
     input_path = tmp_path / "vendors.csv"
     output_path = tmp_path / "matched.csv"
     write_inventory(input_path, [{"name": "Stripe", "website": "stripe.com"}])
 
-    with pytest.raises(ValueError, match="domain and/or vendor_name"):
+    with pytest.raises(ValueError, match="domain, vendor_name, business_entity_name, or registration_number"):
         match_inventory(".", input_path, output_path)
 
 
@@ -352,12 +425,16 @@ class SyntheticPack:
         candidates: list[dict[str, object]] | None = None,
         observations: list[dict[str, object]] | None = None,
         sources: list[dict[str, object]] | None = None,
+        legal_entities: list[dict[str, object]] | None = None,
+        contracting_resolution: list[dict[str, object]] | None = None,
     ):
         self._vendors = vendors
         self._coverage = coverage or []
         self._candidates = candidates or []
         self._observations = observations or []
         self._sources = sources or []
+        self._legal_entities = legal_entities or []
+        self._contracting_resolution = contracting_resolution or []
 
     @classmethod
     def single_match(cls):
@@ -464,6 +541,39 @@ class SyntheticPack:
             ],
         )
 
+    @classmethod
+    def with_legal_entities(cls):
+        return cls(
+            [synthetic_vendor("stripe", "Stripe", ["stripe.com"])],
+            legal_entities=[
+                {
+                    "entity_id": "stripe-payments-sg",
+                    "vendor_id": "stripe",
+                    "legal_name": "Stripe Payments Singapore Pte. Ltd.",
+                    "jurisdiction": "SG",
+                    "registration_number": "202012345A",
+                    "catalog_status": "canonical",
+                    "registered_address": {
+                        "address_lines": ["Example registered address"],
+                        "country": "SG",
+                        "source_ids": ["stripe-sg-registry"],
+                    },
+                }
+            ],
+            contracting_resolution=[
+                {
+                    "vendor_id": "stripe",
+                    "jurisdiction": "SG",
+                    "resolution_status": "resolved",
+                    "resolved_entity_id": "stripe-payments-sg",
+                    "candidate_entity_ids": ["stripe-payments-sg"],
+                    "evidence_source_ids": ["stripe-dpa"],
+                    "resolution_confidence": "high",
+                    "summary": "Public source names the Singapore contracting entity.",
+                }
+            ],
+        )
+
     def vendor_search(self):
         return self._vendors
 
@@ -478,6 +588,12 @@ class SyntheticPack:
 
     def observations(self):
         return self._observations
+
+    def legal_entities(self):
+        return self._legal_entities
+
+    def contracting_entity_resolution(self):
+        return {"items": self._contracting_resolution}
 
 
 def synthetic_vendor(vendor_id: str, display_name: str, domains: list[str]) -> dict[str, object]:

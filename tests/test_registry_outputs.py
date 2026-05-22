@@ -178,5 +178,7 @@ def test_vendor_match_index_is_compact_and_non_advisory():
         }
     ]
     assert item["primary_source_by_type"]["dpa"]["source_id"] == "example-dpa"
+    assert {entity["entity_id"] for entity in item["legal_entities"]} == {"example-stub", "example-us"}
+    assert item["contracting_entity_resolution"][0]["resolved_entity_id"] == "example-us"
     assert "risk" not in str(match_index).lower()
     assert "approval" not in str(match_index).lower()

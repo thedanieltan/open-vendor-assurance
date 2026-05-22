@@ -62,6 +62,30 @@ def test_legal_entity_schema_accepts_stub_without_verification_source():
     assert schema_errors("legal-entity.schema.json", instance) == []
 
 
+def test_legal_entity_schema_accepts_source_backed_registered_address():
+    instance = valid_legal_entity()
+    instance["registered_address"] = {
+        "address_lines": ["1 Example Road"],
+        "locality": "Singapore",
+        "region": None,
+        "postal_code": "000001",
+        "country": "SG",
+        "source_ids": ["example-sg-registry"],
+    }
+
+    assert schema_errors("legal-entity.schema.json", instance) == []
+
+
+def test_legal_entity_schema_rejects_registered_address_without_source_ids():
+    instance = valid_legal_entity()
+    instance["registered_address"] = {
+        "address_lines": ["1 Example Road"],
+        "country": "SG",
+    }
+
+    assert schema_errors("legal-entity.schema.json", instance) != []
+
+
 def test_legal_entity_schema_rejects_lifecycle_event_without_source_ids():
     instance = valid_legal_entity()
     instance["lifecycle_events"] = [{"event_type": "renamed"}]

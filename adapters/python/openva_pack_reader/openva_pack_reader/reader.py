@@ -161,6 +161,9 @@ class OpenVAPack:
     def changes(self) -> list[dict[str, Any]]:
         return [annotated(item, record_class="change", canonical=False) for item in self._items("changes")]
 
+    def legal_entities(self) -> list[dict[str, Any]]:
+        return [annotated(item, record_class="legal_entity", canonical=False) for item in self._items("legal_entities")]
+
     def candidate_sources(self) -> list[dict[str, Any]]:
         return [annotated(item, record_class="candidate", canonical=False) for item in self._items("candidate_sources")]
 
@@ -173,6 +176,9 @@ class OpenVAPack:
         if isinstance(rows, list):
             coverage["vendor_coverage"] = [annotated(row, record_class="coverage", canonical=False) for row in rows]
         return coverage
+
+    def contracting_entity_resolution(self) -> dict[str, Any]:
+        return copy.deepcopy(self.indexes["contracting_entity_resolution"])
 
     def vendor_search(self) -> list[dict[str, Any]]:
         return copy.deepcopy(self._items("vendor_search"))

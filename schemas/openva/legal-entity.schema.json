@@ -20,6 +20,33 @@
     "legal_name": { "type": "string", "minLength": 1, "maxLength": 240 },
     "jurisdiction": { "type": "string", "pattern": "^[A-Z]{2}$" },
     "registration_number": { "type": ["string", "null"], "maxLength": 120 },
+    "registered_address": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": ["address_lines", "country", "source_ids"],
+          "properties": {
+            "address_lines": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1, "maxLength": 240 },
+              "minItems": 1
+            },
+            "locality": { "type": ["string", "null"], "maxLength": 120 },
+            "region": { "type": ["string", "null"], "maxLength": 120 },
+            "postal_code": { "type": ["string", "null"], "maxLength": 40 },
+            "country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+            "source_ids": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/id" },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        },
+        { "type": "null" }
+      ]
+    },
     "parent_entity_id": { "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] },
     "former_legal_names": {
       "type": "array",
