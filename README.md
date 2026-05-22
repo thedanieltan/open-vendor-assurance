@@ -198,7 +198,7 @@ openva-inventory-template.csv
 
 `openva-csv.zip` contains curated CSV exports for vendors, sources, artifacts, observations, candidate sources, unavailable sources, and source coverage. The sample and template inventory files show simple `vendor_name`, `business_entity_name`, optional `domain`, optional `jurisdiction`, optional `registration_number`, and optional `registered_address` columns for matching a vendor list against OpenVA.
 
-These files are generated from the tagged repository state. OpenVA does not operate a central hosted upload service; users keep their vendor inventories local unless they choose to run their own tooling.
+These files are generated from the tagged repository state. OpenVA does not operate a public upload service or central hosted matching service; users keep their vendor inventories local unless they choose to run their own tooling.
 
 See `docs/release-downloads.md` for a plain-language walkthrough of the release assets.
 
@@ -243,7 +243,14 @@ OpenVA is free to use under the MIT License. See [LICENSE](LICENSE).
 
 ## Project status
 
-OpenVA is in early public development. The schema, validation tooling, generated indexes, universal pack manifest, maintenance workflow, agent PR workflow, conformance fixtures, governance docs, adapters, release downloads, and initial seed catalog are available, but the dataset should not be treated as complete.
+OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
+
+The initial catalog is a seed dataset. It is useful for testing importer
+workflows, matching public vendor assurance references, and contributing
+public-source metadata, but it should not be treated as complete vendor
+assurance coverage.
+
+OpenVA is in early public development. The schema, validation tooling, generated indexes, universal pack manifest, maintenance workflow, agent PR workflow, conformance fixtures, governance docs, adapters, release downloads, optional self-hosted match service, and initial seed catalog are available, but the dataset should not be treated as complete.
 
 ## Disclaimer
 

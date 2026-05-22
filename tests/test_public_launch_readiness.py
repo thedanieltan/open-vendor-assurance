@@ -99,3 +99,25 @@ def test_disclaimer_and_readme_align_on_no_advice_boundary():
     ]:
         assert phrase in disclaimer
         assert phrase in readme
+
+
+def test_public_launch_copy_positions_v010_as_infrastructure_launch():
+    text = "\n".join(
+        read(path).lower()
+        for path in [
+            "README.md",
+            "docs/public-launch-checklist.md",
+            "docs/v0.1.0-public-launch-readiness.md",
+            "docs/roadmap.md",
+            "docs/release-downloads.md",
+        ]
+    )
+
+    for phrase in [
+        "infrastructure launch",
+        "seed dataset",
+        "not a completeness claim",
+        "does not operate a public upload service",
+        "optional self-hosted match service",
+    ]:
+        assert phrase in text

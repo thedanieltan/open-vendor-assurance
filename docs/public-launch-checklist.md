@@ -70,6 +70,22 @@ Public launch should describe OpenVA as:
 A public-source-only, metadata-first registry of vendor-published assurance references.
 ```
 
+Also state:
+
+```text
+OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
+
+The initial catalog is a seed dataset. It is useful for testing importer
+workflows, matching public vendor assurance references, and contributing
+public-source metadata, but it should not be treated as complete vendor
+assurance coverage.
+
+OpenVA does not operate a public upload service or central hosted matching
+service. HTTP access is available only through the optional self-hosted match
+service. Users should keep private vendor inventories inside their own
+environment.
+```
+
 Do not describe OpenVA as:
 
 ```text
