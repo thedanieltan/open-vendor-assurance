@@ -48,6 +48,8 @@ ENRICHMENT_COLUMNS = [
     "candidate_legal_entities_json",
     "record_class",
     "canonical",
+    "catalog_tier",
+    "review_state",
     "advisory_boundary",
 ]
 
@@ -342,6 +344,8 @@ def base_annotation() -> dict[str, str]:
     return {
         "record_class": "inventory_match",
         "canonical": "false",
+        "catalog_tier": "human_reviewed",
+        "review_state": "human_reviewed",
         "advisory_boundary": "non_advisory",
     }
 
@@ -355,18 +359,23 @@ def candidate_json(candidate: MatchCandidate) -> dict[str, Any]:
     }
 
 
-def canonical_source_json(row: dict[str, Any]) -> dict[str, str]:
+def canonical_source_json(row: dict[str, Any]) -> dict[str, Any]:
     return {
         "source_id": scalar(row.get("source_id")),
         "source_type": scalar(row.get("source_type")),
         "source_url": scalar(row.get("source_url")),
         "title_en": scalar(row.get("title_en")),
         "effective_or_published_at": scalar(row.get("effective_or_published_at")),
+        "record_class": "canonical",
+        "canonical": True,
+        "catalog_tier": "human_reviewed",
+        "review_state": "human_reviewed",
+        "advisory_boundary": "non_advisory",
     }
 
 
-def primary_source_by_type(sources: list[dict[str, str]]) -> dict[str, dict[str, str]]:
-    by_type: dict[str, list[dict[str, str]]] = defaultdict(list)
+def primary_source_by_type(sources: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    by_type: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for source in sources:
         source_type = source.get("source_type", "")
         if source_type:
@@ -388,12 +397,17 @@ def reverse_date_key(value: str) -> str:
     return "".join(chr(255 - ord(character)) for character in value)
 
 
-def candidate_source_json(row: dict[str, Any]) -> dict[str, str]:
+def candidate_source_json(row: dict[str, Any]) -> dict[str, Any]:
     return {
         "candidate_source_id": scalar(row.get("candidate_source_id")),
         "source_type_candidate": scalar(row.get("source_type_candidate")),
         "candidate_url": scalar(row.get("candidate_url")),
         "confidence": scalar(row.get("confidence")),
+        "record_class": "candidate",
+        "canonical": False,
+        "catalog_tier": "discovery",
+        "review_state": "human_review_required",
+        "advisory_boundary": "non_advisory",
     }
 
 
