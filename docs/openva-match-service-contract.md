@@ -30,6 +30,10 @@ Every response, including errors, includes:
 - `X-OpenVA-Pack-Generated-At`
 - `X-OpenVA-Advisory-Boundary: non_advisory`
 
+`X-OpenVA-Pack-Generated-At` mirrors pack metadata. When deterministic builds
+use a fixed timestamp such as `1970-01-01T00:00:00Z`, this header is not a
+catalog freshness signal.
+
 ## `GET /pack/meta`
 
 Returns pack metadata:

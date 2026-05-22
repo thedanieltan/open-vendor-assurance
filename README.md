@@ -175,6 +175,10 @@ schema_version: 0.1.0
 
 Consumers should pin the release tag or repository commit, `profileId`, `schemaVersion`, `packId`, and pack/index digests where reproducibility matters.
 
+Pack-level `generated_at` and `generatedAt` values may be fixed to preserve
+deterministic rebuilds. They are not a catalog freshness signal; use source,
+change, observation, release tag, or repository commit metadata for provenance.
+
 See:
 
 ```text

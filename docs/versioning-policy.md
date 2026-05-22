@@ -159,6 +159,23 @@ index file digests
 repository commit SHA or release tag
 ```
 
+## Deterministic pack timestamps
+
+OpenVA pack and generated index timestamps may use a fixed value such as
+`1970-01-01T00:00:00Z` to preserve deterministic rebuilds.
+
+This value is not a catalog freshness signal.
+
+Consumers that need freshness or provenance should use:
+
+- the pinned release tag or repository commit SHA;
+- source-level `provenance.collected_at`;
+- change-level `detected_at`;
+- observation-level `observed_at`, where observation records exist.
+
+Do not treat pack-level `generated_at` or `generatedAt` as evidence that
+a vendor source was collected, reviewed, updated, or observed at that time.
+
 ## Entity Resolution Boundary
 
 Entity resolution is based on public evidence observed at pack generation time or source observation time.

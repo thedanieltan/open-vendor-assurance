@@ -64,6 +64,23 @@ release-artifacts.json
 
 only if you want checksums and release artifact metadata.
 
+## Deterministic pack timestamps
+
+OpenVA pack and generated index timestamps may use a fixed value such as
+`1970-01-01T00:00:00Z` to preserve deterministic rebuilds.
+
+This value is not a catalog freshness signal.
+
+Consumers that need freshness or provenance should use:
+
+- the pinned release tag or repository commit SHA;
+- source-level `provenance.collected_at`;
+- change-level `detected_at`;
+- observation-level `observed_at`, where observation records exist.
+
+Do not treat pack-level `generated_at` or `generatedAt` as evidence that
+a vendor source was collected, reviewed, updated, or observed at that time.
+
 ## How to read the CSVs
 
 Start with `vendors.csv` to find a vendor by name or domain.
