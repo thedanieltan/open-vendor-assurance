@@ -32,74 +32,94 @@
       <section id="home-view" class="view">
         <div class="section-heading hero-panel">
           <div>
-            <p class="eyebrow">Public assurance references</p>
-            <h2>Browse vendor-published assurance metadata without uploading private inventory data.</h2>
-            <p>Use the reviewed catalog for public references, match a CSV locally in your browser, and export selected metadata for downstream review.</p>
+            <p class="eyebrow">Start here</p>
+            <h2>Check what public assurance links OpenVA has for a vendor.</h2>
+            <p>For most users, begin by browsing the reviewed catalog. Search a vendor, open its public references, then export anything useful for your own review.</p>
             <div class="hero-actions">
-              <a class="button" href="#catalog">Browse reviewed catalog</a>
-              <a class="button secondary-button" href="#matcher">Run local matcher</a>
+              <a class="button" href="#catalog">Start with the reviewed catalog</a>
+              <a class="button secondary-button" href="#matcher">I have a vendor CSV</a>
             </div>
+            <p class="helper-copy">No account required. Do not upload private agreements or confidential evidence.</p>
           </div>
-          <div class="hero-card" aria-label="OpenVA operating boundary">
+          <div class="hero-card" aria-label="Recommended first step">
             <span class="status-dot"></span>
-            <strong>OpenVA boundary</strong>
-            <p>Public-source-only. Metadata-first. Non-advisory. Browser-local matching for private CSVs.</p>
+            <strong>Recommended first step</strong>
+            <p>Click <em>Start with the reviewed catalog</em>, then search for a vendor name or domain.</p>
           </div>
         </div>
 
-        <div class="stats-grid" id="home-stats"></div>
-        <div class="snapshot-box" data-snapshot-disclosure></div>
-
-        <section class="section-card">
+        <section class="section-card start-guide">
           <div class="section-heading-lite">
-            <h3>Choose the workflow you need</h3>
-            <p>Each path keeps a clear separation between reviewed public metadata and private customer-specific assessment work.</p>
+            <p class="eyebrow">Simple path</p>
+            <h3>What should I do first?</h3>
+            <p>Use this order unless you already know you need a CSV match or export.</p>
           </div>
-          <div class="surface-grid">
+          <div class="start-steps">
             <article>
-              <span class="card-kicker">1 · Explore</span>
-              <h3>Reviewed Catalog</h3>
-              <p>Human-reviewed OpenVA public metadata from a pinned release or commit.</p>
-              <a class="button" href="#catalog">Browse reviewed catalog</a>
+              <span class="step-number">1</span>
+              <h3>Search a vendor</h3>
+              <p>Find a company by name, legal name, or domain.</p>
+              <a class="button" href="#catalog">Search vendors</a>
             </article>
             <article>
-              <span class="card-kicker">2 · Observe</span>
-              <h3>Live Observation Feed</h3>
-              <p>Machine-generated public-source observations that are kept separate from canonical records.</p>
-              <a class="button" href="#feed">View feed shell</a>
+              <span class="step-number">2</span>
+              <h3>Open public references</h3>
+              <p>Review public links such as privacy notices, security pages, subprocessors lists, and trust centers.</p>
             </article>
             <article>
-              <span class="card-kicker">3 · Match locally</span>
-              <h3>Local Matcher</h3>
-              <p>Match your own vendor CSV locally in your browser. Your CSV is not uploaded to OpenVA.</p>
-              <a class="button" href="#matcher">Match a local CSV</a>
+              <span class="step-number">3</span>
+              <h3>Export selected records</h3>
+              <p>Download selected public metadata for your own internal review workflow.</p>
+              <a class="button secondary-button" href="#export">Review export</a>
             </article>
           </div>
         </section>
 
-        <section class="section-card two-column-callout">
-          <div>
-            <h3>Need to match your private vendor inventory?</h3>
-            <p>Use the browser-local matcher, local Python matcher, or optional self-hosted match service inside your own environment. Do not upload private vendor inventories to OpenVA.</p>
+        <div class="stats-grid" id="home-stats"></div>
+        <div class="snapshot-box" data-snapshot-disclosure></div>
+
+        <section class="section-card optional-tools">
+          <div class="section-heading-lite">
+            <p class="eyebrow">Optional tools</p>
+            <h3>Only use these when you need them</h3>
+            <p>The catalog is the default starting point. These are supporting tools for specific situations.</p>
           </div>
-          <p class="resource-links">
-            <a href="../docs/release-downloads.md">Release downloads</a>
-            <a href="../docs/openva-match-service-contract.md">Self-hosted matcher docs</a>
-            <a href="../README.md#adapters">README adapter section</a>
-          </p>
+          <div class="surface-grid">
+            <article>
+              <span class="card-kicker">For bulk checks</span>
+              <h3>Local Matcher</h3>
+              <p>Use this only when you already have a vendor CSV. Your CSV is processed locally in your browser and is not uploaded to OpenVA.</p>
+              <a class="button secondary-button" href="#matcher">Match a local CSV</a>
+            </article>
+            <article>
+              <span class="card-kicker">For maintainers</span>
+              <h3>Live Observation Feed</h3>
+              <p>Machine-generated public-source observations. Most non-dev users can ignore this page.</p>
+              <a class="button secondary-button" href="#feed">View feed shell</a>
+            </article>
+            <article>
+              <span class="card-kicker">For downloads</span>
+              <h3>Release files</h3>
+              <p>Use release downloads or self-hosted matcher docs if you are integrating OpenVA into another workflow.</p>
+              <p class="resource-links">
+                <a href="../docs/release-downloads.md">Release downloads</a>
+                <a href="../docs/openva-match-service-contract.md">Self-hosted matcher docs</a>
+              </p>
+            </article>
+          </div>
         </section>
       </section>
 
       <section id="catalog-view" class="view hidden">
         <div class="section-heading">
-          <p class="eyebrow">Human-reviewed snapshot</p>
+          <p class="eyebrow">Recommended starting point</p>
           <h2>Reviewed Catalog</h2>
-          <p>Reviewed Catalog = human-reviewed OpenVA public metadata from a pinned release or commit.</p>
+          <p>Search for a vendor, open the record, and review the public assurance links OpenVA has indexed.</p>
         </div>
         <div class="snapshot-box" data-snapshot-disclosure></div>
         <div id="catalog-summary" class="summary-strip" aria-live="polite"></div>
         <form class="filters" id="catalog-filters">
-          <label>Search public vendors <input id="search-input" type="search" autocomplete="off" placeholder="Vendor, legal name, domain"></label>
+          <label>Search public vendors <input id="search-input" type="search" autocomplete="off" placeholder="Try Stripe, Microsoft, or a domain"></label>
           <label>Source type <select id="source-type-filter"></select></label>
           <label>Country <select id="country-filter"></select></label>
           <label>Category <select id="category-filter"></select></label>
@@ -114,21 +134,21 @@
           <section class="catalog-list-panel" aria-labelledby="vendor-list-heading">
             <div class="section-heading-lite section-heading-lite--inline">
               <h3 id="vendor-list-heading">Vendors</h3>
-              <p>Select records to include in export, or open a vendor to inspect source coverage.</p>
+              <p>Start here: search, then click a vendor name to open its public references.</p>
             </div>
             <div id="vendor-list" class="vendor-list"></div>
           </section>
           <section id="vendor-detail" class="detail-panel detail-panel--sticky">
             <p class="eyebrow">Vendor detail</p>
             <h3>Select a vendor</h3>
-            <p>Vendor detail records, canonical source records, candidate records, unavailable source notes, and related observation events appear here.</p>
+            <p>Click a vendor name on the left. Public source records and export options will appear here.</p>
           </section>
         </div>
       </section>
 
       <section id="feed-view" class="view hidden">
         <div class="section-heading">
-          <p class="eyebrow">Non-canonical observations</p>
+          <p class="eyebrow">Advanced / maintainer view</p>
           <h2>Live Observation Feed</h2>
           <p>This feed contains machine-generated public-source observations. It is not the human-reviewed OpenVA catalog.</p>
         </div>
@@ -148,7 +168,7 @@
 
       <section id="matcher-view" class="view hidden">
         <div class="section-heading">
-          <p class="eyebrow">Browser-local utility</p>
+          <p class="eyebrow">Use this if you have a CSV</p>
           <h2>Local Matcher</h2>
           <p>Your CSV is processed locally in your browser. It is not uploaded to OpenVA.</p>
         </div>
@@ -195,7 +215,7 @@
 
       <section id="export-view" class="view hidden">
         <div class="section-heading">
-          <p class="eyebrow">Portable public metadata</p>
+          <p class="eyebrow">After selecting records</p>
           <h2>Export Selected Public Metadata</h2>
           <p>This export contains selected OpenVA public metadata only. It does not contain a private vendor inventory and is not a risk assessment, compliance decision, procurement recommendation, legal opinion, or vendor approval.</p>
         </div>
