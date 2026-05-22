@@ -1,7 +1,10 @@
 import csv
+import json
 import sys
 import zipfile
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path("adapters/python/openva_pack_reader").resolve()))
 sys.path.insert(0, str(Path("adapters/python/openva_vendor_inventory_matcher").resolve()))
@@ -86,3 +89,42 @@ def test_release_download_manifest_has_checksums(tmp_path):
     for artifact in manifest["artifacts"]:
         assert artifact["sha256"].startswith("sha256:")
         assert artifact["size_bytes"] > 0
+
+
+def test_release_download_check_accepts_generated_assets_and_manifest(tmp_path):
+    release_downloads.build_release_downloads(".", tmp_path)
+    manifest = release_downloads.build_download_manifest(tmp_path)
+    (tmp_path / "openva-release-downloads-manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    report = release_downloads.check_release_downloads(tmp_path)
+
+    assert report["ok"] is True
+    assert report["checked_assets"] == release_downloads.DOWNLOAD_NAMES
+    assert report["manifest_checked"] is True
+
+
+def test_release_download_check_rejects_template_with_example_rows(tmp_path):
+    release_downloads.build_release_downloads(".", tmp_path)
+    (tmp_path / "openva-inventory-template.csv").write_text(
+        "vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address\n"
+        "Stripe,,stripe.com,SG,,\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="row content mismatch"):
+        release_downloads.check_release_downloads(tmp_path)
+
+
+def test_release_download_check_rejects_misaligned_inventory_rows(tmp_path):
+    release_downloads.build_release_downloads(".", tmp_path)
+    (tmp_path / "openva-sample-inventory.csv").write_text(
+        "vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address\n"
+        "Stripe,,stripe.com,SG\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="row 2 has 4 columns; expected 6"):
+        release_downloads.check_release_downloads(tmp_path)
