@@ -192,7 +192,8 @@ def test_pages_workflow_deploys_site_and_feed_workflow_uploads_feed_artifact_onl
 
     assert reviewed["permissions"] == {"contents": "read", "pages": "write", "id-token": "write"}
     assert feed["permissions"] == {"contents": "read"}
-    assert workflow_triggers(reviewed)["push"] == {"tags": ["v*"]}
+    assert workflow_triggers(reviewed)["push"] == {"branches": ["main"]}
+    assert "workflow_dispatch" in workflow_triggers(reviewed)
     assert workflow_triggers(feed)["schedule"][0]["cron"] == "0 3 * * 0"
     assert "workflow_dispatch" in workflow_triggers(feed)
 
