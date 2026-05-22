@@ -15,7 +15,8 @@
         "artifact",
         "change",
         "legal_entity",
-        "coverage"
+        "coverage",
+        "inventory_match"
       ]
     },
     "canonical": { "type": "boolean" },
@@ -54,7 +55,7 @@
       "if": {
         "properties": {
           "record_class": {
-            "enum": ["vendor", "candidate", "unavailable", "observation", "artifact", "change", "legal_entity", "coverage"]
+            "enum": ["vendor", "candidate", "unavailable", "observation", "artifact", "change", "legal_entity", "coverage", "inventory_match"]
           }
         },
         "required": ["record_class"]
