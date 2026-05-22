@@ -1,0 +1,32 @@
+# OpenVA agent auto-merge policy.
+#
+# v0.1 ships this policy in report-only mode. The eligibility checker reports
+# what would qualify for an autonomous lane, but no workflow merges PRs.
+#
+# Actual merge activation requires a separate explicit PR updating policy docs,
+# workflow permissions, and enforcement mode after calibration criteria are met.
+
+mode: report_only
+
+machine_canonical:
+  max_source_records_per_pr: 50
+
+blocked_paths:
+  - .github/workflows/
+  - schemas/
+  - docs/catalog-autonomy-policy.md
+  - SECURITY.md
+  - GOVERNANCE.md
+  - MAINTAINERS.md
+  - LICENSE
+  - .github/CODEOWNERS
+  - tools/openva/validate.py
+  - tools/openva/automation_rules.py
+
+lanes:
+  generated:
+    label: automerge:generated
+  observation:
+    label: automerge:observation
+  machine_canonical:
+    label: automerge:machine-canonical
