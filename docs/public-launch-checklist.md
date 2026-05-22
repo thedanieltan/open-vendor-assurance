@@ -41,6 +41,9 @@ Use this checklist before making OpenVA public or announcing broader contributio
 - [ ] Generated indexes are current.
 - [ ] `openva-pack.json` is current.
 - [ ] Pack integrity verification passes.
+- [ ] Deterministic timestamp semantics are documented.
+- [ ] Adapter outputs expose `catalog_tier` and `review_state`.
+- [ ] Match service responses expose tier-aware non-advisory fields.
 - [ ] Consumer conformance fixtures pass.
 - [ ] Invalid conformance fixtures fail for expected reasons.
 - [ ] No raw documents, screenshots, portal exports, SOC reports, ISO certificates, or extracted full text are committed by default.
@@ -63,6 +66,10 @@ Use this checklist before making OpenVA public or announcing broader contributio
 - [ ] Security-sensitive reports are not exposed publicly.
 
 ## Launch note
+
+- [ ] Public launch copy describes OpenVA as an infrastructure launch.
+- [ ] Public launch copy does not imply a hosted catalog, central service, vendor rating, or completeness claim.
+- [ ] Spreadsheet and local/self-hosted workflows are documented without requiring users to upload private vendor inventories to OpenVA.
 
 Public launch should describe OpenVA as:
 
