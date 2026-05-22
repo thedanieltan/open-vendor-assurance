@@ -28,6 +28,20 @@ workspace persistence.
 Selections are held in browser memory only. They are not written to
 `localStorage`, `sessionStorage`, a server, or a database.
 
+## Browser-local inventory matcher
+
+The Local Matcher page lets users choose a CSV from their own computer and match it against OpenVA public metadata in browser memory. The CSV stays in the user's browser session and match results can be downloaded as CSV or JSON.
+
+Supported input columns:
+
+```text
+vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
+```
+
+The downloaded match result preserves user-provided columns and appends OpenVA public metadata fields such as matched vendor ID, match method, confidence, source types, canonical source URLs, review state, and the non-advisory boundary.
+
+Local match results are not vendor approval, compliance findings, risk scores, procurement recommendations, legal opinions, or suitability determinations.
+
 ## Feed contract
 
 The live observation feed is generated as:
