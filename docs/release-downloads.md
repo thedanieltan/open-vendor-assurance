@@ -187,3 +187,11 @@ Submit public URLs only. Do not submit private agreements, gated portal exports,
 OpenVA records public-source metadata only.
 
 It does not approve, recommend, certify, score, or determine whether any vendor is compliant, safe, adequate, suitable, low risk, or high risk.
+## Hosted site compiled catalog distribution
+
+The hosted catalog viewer is generated as a compiled catalog distribution.
+It uses a lightweight `vendor-search.min.json` index for browsing and loads
+`data/vendors/{vendor_id}.json` detail shards on demand.
+
+This keeps the non-dev hosted site usable as OpenVA grows. GitHub Release
+assets remain the bulk-download path for CSVs, templates, and internal tooling.

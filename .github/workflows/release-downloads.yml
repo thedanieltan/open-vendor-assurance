@@ -32,6 +32,8 @@ jobs:
         run: python -m tools.openva.validate validate
       - name: Run tests
         run: pytest -q
+      - name: Build compiled site distribution
+        run: python site/build.py --out site/dist
       - name: Rebuild generated indexes
         run: python -m tools.openva.validate build-indexes
       - name: Refuse generated drift

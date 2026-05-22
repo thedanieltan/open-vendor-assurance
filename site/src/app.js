@@ -3,6 +3,8 @@ let feedData = null;
 let visibleVendors = [];
 const selectedVendors = new Set();
 const selectedSources = new Set();
+const vendorDetailsCache = new Map();
+const sourceCache = new Map();
 let localInventoryRows = [];
 let localMatchRows = [];
 
@@ -63,8 +65,33 @@ function renderHome() {
     ["Latest observation feed timestamp", feedTimestamp],
     ["Vendor count", meta.vendor_count],
     ["Source count", meta.source_count],
+    ["Site data contract", meta.site_data_contract],
     ["Non-advisory boundary", "non_advisory"],
   ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
+}
+
+async function loadVendorDetail(vendorId) {
+  if (vendorDetailsCache.has(vendorId)) {
+    return vendorDetailsCache.get(vendorId);
+  }
+  const vendor = catalogData.vendors.find((item) => item.vendor_id === vendorId);
+  if (!vendor || !vendor.detail_path) {
+    throw new Error(`Missing vendor detail path for ${vendorId}`);
+  }
+  const response = await fetch(vendor.detail_path);
+  if (!response.ok) {
+    throw new Error(`Could not load vendor detail for ${vendorId}`);
+  }
+  const detail = await response.json();
+  vendorDetailsCache.set(vendorId, detail);
+  (detail.canonical_sources || []).forEach((source) => {
+    if (source.source_id) sourceCache.set(source.source_id, source);
+  });
+  return detail;
+}
+
+async function loadSelectedVendorDetails() {
+  await Promise.all([...selectedVendors].map((vendorId) => loadVendorDetail(vendorId)));
 }
 
 function normalizeForMatch(value) {
@@ -125,10 +152,10 @@ function serializeCsv(rows, preferredColumns = []) {
   return [columns.join(","), ...rows.map((row) => columns.map((key) => csvCell(row[key])).join(","))].join("\n") + "\n";
 }
 
-function vendorSourceSummary(vendorId) {
-  const sources = catalogData.sources.filter((source) => source.vendor_id === vendorId);
-  const candidates = catalogData.candidate_sources.filter((source) => source.vendor_id === vendorId);
-  const unavailable = catalogData.unavailable_sources.filter((source) => source.vendor_id === vendorId);
+function detailSourceSummary(detail) {
+  const sources = detail.canonical_sources || [];
+  const candidates = detail.candidate_sources || [];
+  const unavailable = detail.unavailable_sources || [];
   return {
     sources,
     candidates,
@@ -136,6 +163,10 @@ function vendorSourceSummary(vendorId) {
     sourceTypes: [...new Set(sources.map((source) => source.source_type))].sort(),
     sourceUrls: sources.map((source) => source.source_url).filter(Boolean),
   };
+}
+
+async function vendorSourceSummary(vendorId) {
+  return detailSourceSummary(await loadVendorDetail(vendorId));
 }
 
 function buildLocalMatchIndexes() {
@@ -151,7 +182,7 @@ function buildLocalMatchIndexes() {
   return { domainIndex, nameIndex };
 }
 
-function matchInventoryRow(row, indexes) {
+async function matchInventoryRow(row, indexes) {
   const domain = normalizeDomain(row.domain || "");
   const vendorName = normalizeForMatch(row.vendor_name || "");
   const businessName = normalizeForMatch(row.business_entity_name || "");
@@ -191,7 +222,7 @@ function matchInventoryRow(row, indexes) {
     };
   }
 
-  const summary = vendorSourceSummary(vendor.vendor_id);
+  const summary = await vendorSourceSummary(vendor.vendor_id);
   return {
     ...row,
     matched_vendor_id: vendor.vendor_id,
@@ -254,9 +285,10 @@ function setupLocalMatcher() {
     renderLocalMatcher();
   });
 
-  document.getElementById("run-local-match").addEventListener("click", () => {
+  document.getElementById("run-local-match").addEventListener("click", async () => {
     const indexes = buildLocalMatchIndexes();
-    localMatchRows = localInventoryRows.map((row) => matchInventoryRow(row, indexes));
+    document.getElementById("matcher-status").textContent = "Matching locally against the lightweight OpenVA vendor index and loading matched vendor shards on demand...";
+    localMatchRows = await Promise.all(localInventoryRows.map((row) => matchInventoryRow(row, indexes)));
     document.getElementById("matcher-status").textContent = `${localMatchRows.length} row(s) matched locally in browser memory. No private inventory data was uploaded.`;
     renderLocalMatcher();
   });
@@ -306,7 +338,7 @@ function optionList(values, label) {
 }
 
 function setupFilters() {
-  const sourceTypes = catalogData.sources.map((source) => source.source_type);
+  const sourceTypes = catalogData.sourceTypes;
   const countries = catalogData.vendors.map((vendor) => vendor.headquarters_country);
   const categories = catalogData.vendors.flatMap((vendor) => vendor.vendor_categories || []);
   document.getElementById("source-type-filter").innerHTML = optionList(sourceTypes, "All source types");
@@ -363,15 +395,19 @@ function renderCatalog() {
     });
   });
   document.querySelectorAll("[data-open-vendor]").forEach((button) => {
-    button.addEventListener("click", () => renderVendorDetail(button.dataset.openVendor));
+    button.addEventListener("click", async () => {
+      await renderVendorDetail(button.dataset.openVendor);
+    });
   });
 }
 
-function renderVendorDetail(vendorId) {
-  const vendor = catalogData.vendors.find((item) => item.vendor_id === vendorId);
-  const sources = catalogData.sources.filter((source) => source.vendor_id === vendorId);
-  const candidates = catalogData.candidate_sources.filter((source) => source.vendor_id === vendorId);
-  const unavailable = catalogData.unavailable_sources.filter((source) => source.vendor_id === vendorId);
+async function renderVendorDetail(vendorId) {
+  const detail = await loadVendorDetail(vendorId);
+  const vendor = detail.vendor;
+  const sources = detail.canonical_sources || [];
+  const candidates = detail.candidate_sources || [];
+  const unavailable = detail.unavailable_sources || [];
+  const observations = detail.latest_observations || [];
   document.getElementById("vendor-detail").innerHTML = `
     <h3>${html(vendor.display_name)}</h3>
     <p class="meta-line">${html(vendor.legal_name)} · vendor_id: ${html(vendor.vendor_id)}</p>
@@ -389,7 +425,11 @@ function renderVendorDetail(vendorId) {
     <h4>Unavailable source notes, non-advisory</h4>
     <ul class="source-list">${unavailable.map((item) => `<li>${html(item.source_type)} · ${html(item.unavailability_status || item.status)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("") || "<li>No unavailable source notes.</li>"}</ul>
     <h4>Related observation events</h4>
-    <p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>
+    ${
+      observations.length
+        ? `<ul class="source-list">${observations.map((item) => `<li>${html(item.source_id)} · ${html(item.result)} · catalog_tier: ${html(item.catalog_tier)} · canonical: false · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("")}</ul>`
+        : "<p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>"
+    }
   `;
   document.querySelectorAll("[data-select-source]").forEach((box) => {
     box.addEventListener("change", (event) => {
@@ -453,11 +493,21 @@ function eventTemplate(event) {
   `;
 }
 
-function selectedRecords() {
+async function selectedRecords() {
+  await loadSelectedVendorDetails();
   const vendors = catalogData.vendors.filter((vendor) => selectedVendors.has(vendor.vendor_id));
-  const vendorIds = new Set(vendors.map((vendor) => vendor.vendor_id));
-  const sources = catalogData.sources.filter((source) => selectedSources.has(source.source_id) || vendorIds.has(source.vendor_id));
-  return { vendors, sources };
+  const vendorSources = [...selectedVendors].flatMap((vendorId) => {
+    const detail = vendorDetailsCache.get(vendorId);
+    return detail ? (detail.canonical_sources || []) : [];
+  });
+  const selectedSourceRows = [...selectedSources]
+    .map((sourceId) => sourceCache.get(sourceId))
+    .filter(Boolean);
+  const bySourceId = new Map();
+  [...vendorSources, ...selectedSourceRows].forEach((source) => {
+    if (source && source.source_id) bySourceId.set(source.source_id, source);
+  });
+  return { vendors, sources: [...bySourceId.values()] };
 }
 
 function exportMetadata() {
@@ -476,8 +526,8 @@ function exportMetadata() {
   };
 }
 
-function renderExport() {
-  const records = selectedRecords();
+async function renderExport() {
+  const records = await selectedRecords();
   document.getElementById("selection-summary").innerHTML = `
     <p>Selected public vendors: ${html(records.vendors.length)}</p>
     <p>Selected reviewed source records: ${html(records.sources.length)}</p>
@@ -486,20 +536,20 @@ function renderExport() {
 }
 
 function setupExport() {
-  document.getElementById("download-vendors-csv").addEventListener("click", () => {
-    const rows = selectedRecords().vendors;
+  document.getElementById("download-vendors-csv").addEventListener("click", async () => {
+    const rows = (await selectedRecords()).vendors;
     const header = ["vendor_id", "display_name", "legal_name", "catalog_status", "headquarters_country", "official_domains", "vendor_categories"];
     const csv = [header.join(","), ...rows.map((row) => header.map((key) => csvCell(row[key])).join(","))].join("\n");
     download("openva-selected-vendors.csv", csv + "\n", "text/csv");
   });
-  document.getElementById("download-sources-csv").addEventListener("click", () => {
-    const rows = selectedRecords().sources;
+  document.getElementById("download-sources-csv").addEventListener("click", async () => {
+    const rows = (await selectedRecords()).sources;
     const header = ["source_id", "vendor_id", "source_type", "title", "source_url", "catalog_tier", "review_state", "advisory_boundary"];
     const csv = [header.join(","), ...rows.map((row) => header.map((key) => csvCell(row[key])).join(","))].join("\n");
     download("openva-selected-sources.csv", csv + "\n", "text/csv");
   });
-  document.getElementById("download-json").addEventListener("click", () => {
-    const records = selectedRecords();
+  document.getElementById("download-json").addEventListener("click", async () => {
+    const records = await selectedRecords();
     download("openva-selected-records.json", JSON.stringify({ meta: exportMetadata(), ...records }, null, 2) + "\n", "application/json");
   });
 }
@@ -514,12 +564,21 @@ function route() {
 }
 
 async function init() {
-  const [catalogResponse, feedResponse] = await Promise.all([
-    fetch("data/catalog-data.json"),
+  const [metaResponse, vendorSearchResponse, sourceTypesResponse, feedResponse] = await Promise.all([
+    fetch("data/meta.json"),
+    fetch("data/vendor-search.min.json"),
+    fetch("data/source-types.json"),
     fetch("data/observation-feed.json"),
   ]);
-  catalogData = await catalogResponse.json();
+  const meta = await metaResponse.json();
+  const vendorSearch = await vendorSearchResponse.json();
+  const sourceTypes = await sourceTypesResponse.json();
   feedData = await feedResponse.json();
+  catalogData = {
+    meta,
+    vendors: vendorSearch.items || [],
+    sourceTypes: sourceTypes.items || [],
+  };
   renderSnapshotDisclosures();
   renderHome();
   setupFilters();
