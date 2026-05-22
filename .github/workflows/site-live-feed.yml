@@ -32,7 +32,7 @@ jobs:
       - name: Confirm live feed shell empty state
         run: python -c "import json; data=json.load(open('site/feed-artifact/feed/observations.json', encoding='utf-8')); assert data['events'] == []"
       - name: Upload feed artifact only
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: openva-observation-feed
           path: site/feed-artifact/feed/observations.json
