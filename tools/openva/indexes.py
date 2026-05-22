@@ -435,7 +435,7 @@ def build_indexes() -> int:
         "name": "open-vendor-assurance",
         "description": "Public-source-only vendor assurance metadata substrate. Entity resolution reflects observed public evidence, not current corporate status or legal advice.",
         "publisher": "open-vendor-assurance",
-        "license": {"metadata": "CC0-1.0", "code": "MIT", "vendor_materials": "Vendor materials remain owned by their respective owners."},
+        "license": {"metadata": "MIT", "code": "MIT", "vendor_materials": "Vendor materials remain owned by their respective owners."},
         "generated_at": GENERATED_AT,
         "indexes": index_paths,
         "registry_outputs": {"vendor_manifests": "dist/vendors/{vendor_id}.json"},
