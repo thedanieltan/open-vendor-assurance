@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -16,6 +17,7 @@ from tools.openva.paths import relative_repo_path
 from tools.openva.url_safety import validate_url_safety
 
 ROOT = Path(__file__).resolve().parents[2]
+PACK_READER_PATH = ROOT / "adapters/python/openva_pack_reader"
 
 SCHEMA_MAP = {
     "vendor": ROOT / "schemas/openva/vendor-public-profile.schema.json",
@@ -29,7 +31,6 @@ SCHEMA_MAP = {
     "unavailable_source": ROOT / "schemas/openva/unavailable-source.schema.json",
     "pack": ROOT / "schemas/openva/openva-pack.schema.json",
 }
-
 ADAPTER_NORMALIZED_RECORD_SCHEMA = ROOT / "schemas/openva/adapter-normalized-record.schema.json"
 
 FIXTURE_GLOBS = {
@@ -105,6 +106,34 @@ def validate_schema(kind: str) -> list[str]:
             location = ".".join(str(part) for part in error.path) or "<root>"
             failures.append(f"{path}: {location}: {error.message}")
 
+    return failures
+
+
+def validate_adapter_outputs() -> list[str]:
+    if str(PACK_READER_PATH) not in sys.path:
+        sys.path.insert(0, str(PACK_READER_PATH))
+
+    from openva_pack_reader import OpenVAPack  # noqa: PLC0415
+
+    pack = OpenVAPack.load(ROOT)
+    failures: list[str] = []
+    record_groups: list[tuple[str, list[dict[str, Any]]]] = [
+        ("vendors", pack.vendors()),
+        ("canonical_sources", pack.canonical_sources()),
+        ("artifacts", pack.artifacts()),
+        ("observations", pack.observations()),
+        ("changes", pack.changes()),
+        ("legal_entities", pack.legal_entities()),
+        ("candidate_sources", pack.candidate_sources()),
+        ("unavailable_sources", pack.unavailable_sources()),
+    ]
+    coverage = pack.source_coverage().get("vendor_coverage", [])
+    if isinstance(coverage, list):
+        record_groups.append(("source_coverage.vendor_coverage", [row for row in coverage if isinstance(row, dict)]))
+
+    for group_name, records in record_groups:
+        for index, record in enumerate(records):
+            failures.extend(validate_adapter_record(record, label=f"{group_name}[{index}]"))
     return failures
 
 
@@ -476,6 +505,7 @@ def validate_all() -> int:
     failures.extend(validate_cross_references())
     failures.extend(validate_quality_gates())
     failures.extend(verify_pack_integrity())
+    failures.extend(validate_adapter_outputs())
     failures.extend(check_prohibited_language())
     failures.extend(check_generated_current())
 

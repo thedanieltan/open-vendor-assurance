@@ -30,6 +30,10 @@ Every response, including errors, includes:
 - `X-OpenVA-Pack-Generated-At`
 - `X-OpenVA-Advisory-Boundary: non_advisory`
 
+`X-OpenVA-Pack-Generated-At` mirrors pack metadata. When deterministic builds
+use a fixed timestamp such as `1970-01-01T00:00:00Z`, this header is not a
+catalog freshness signal.
+
 ## `GET /pack/meta`
 
 Returns pack metadata:
@@ -90,6 +94,43 @@ Brand matching and legal entity resolution are separate. `matched_vendor_id`, `m
 For a Singapore row such as `Stripe,,stripe.com,SG,,`, OpenVA may return `legal_entity_match_method: "jurisdiction_resolution_index"` and `legal_entity_resolution_confidence: "candidate"` if the contracting-entity resolution index has a Singapore candidate. `candidate` means public metadata suggests the entity may be relevant for that jurisdiction. It is not derived from the user's signed agreement.
 
 OpenVA provides public DPA references only. Consumers should present a static reminder near DPA evidence telling users to confirm that their signed agreement names the expected contracting entity.
+
+## Tier-aware response fields
+
+Every match row includes:
+
+- `record_class`
+- `canonical`
+- `catalog_tier`
+- `review_state`
+- `advisory_boundary`
+
+These fields describe the OpenVA metadata and service response boundary only.
+They do not describe whether the user's vendor relationship is approved,
+compliant, low-risk, high-risk, suitable, contractually verified, KYC/AML
+cleared, sanctions cleared, or legally adequate.
+
+Inventory match rows are transient matching results. They are not canonical
+OpenVA source records. A match row may report `catalog_tier: human_reviewed`
+only to indicate that the underlying OpenVA metadata used for matching came
+from human-reviewed catalog records.
+
+Nested `canonical_sources` and `primary_source_by_type` entries should preserve
+their own source-level tier annotations so consumers can distinguish reviewed
+canonical records from future candidate, observation, or machine-validated
+records.
+
+## Downstream consumer guidance
+
+Consumers should preserve `catalog_tier`, `review_state`, `record_class`,
+`canonical`, and `advisory_boundary` when importing OpenVA outputs.
+
+Future observation and machine-validation records must remain visually and
+semantically distinct from human-reviewed canonical source records.
+
+Consumers must not infer vendor approval, compliance status, risk level,
+procurement suitability, contracting-entity verification, KYC/AML status,
+sanctions status, legal advice, or operational adequacy from these fields.
 
 ## Consumer Migration Notes
 

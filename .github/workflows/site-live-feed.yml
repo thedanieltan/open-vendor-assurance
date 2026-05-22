@@ -1,0 +1,39 @@
+name: site-live-feed
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-live-feed-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-feed-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Validate public metadata
+        run: python -m tools.openva.validate validate
+      - name: Build feed artifact only
+        run: |
+          python site/build.py --out site/dist
+          mkdir -p site/feed-artifact/feed
+          cp site/dist/data/observation-feed.json site/feed-artifact/feed/observations.json
+      - name: Confirm live feed shell empty state
+        run: python -c "import json; data=json.load(open('site/feed-artifact/feed/observations.json', encoding='utf-8')); assert data['events'] == []"
+      - name: Upload feed artifact only
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-observation-feed
+          path: site/feed-artifact/feed/observations.json
+          if-no-files-found: error

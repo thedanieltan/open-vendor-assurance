@@ -16,6 +16,8 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "observe-report.yml",
     "release-candidate.yml",
     "release-downloads.yml",
+    "site-live-feed.yml",
+    "site-pages.yml",
     "source-maintenance-report.yml",
     "source-refinement-queue.yml",
     "validate.yml",
@@ -117,6 +119,14 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "triggers": {"push"},
             "permissions": {"contents": "write"},
         },
+        "site-live-feed.yml": {
+            "triggers": {"workflow_dispatch", "schedule"},
+            "permissions": {"contents": "read", "pages": "write", "id-token": "write"},
+        },
+        "site-pages.yml": {
+            "triggers": {"push"},
+            "permissions": {"contents": "read", "pages": "write", "id-token": "write"},
+        },
         "agent-weighted-review.yml": {
             "triggers": {"pull_request"},
             "permissions": {"contents": "read", "pull-requests": "read", "issues": "write"},
@@ -140,6 +150,10 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         assert permissions == allowed["permissions"], f"{path}: unexpected write workflow permissions"
         if path.name == "release-downloads.yml":
             assert triggers["push"] == {"tags": ["v*"]}, f"{path}: release downloads must be tag-only"
+        if path.name == "site-pages.yml":
+            assert triggers["push"] == {"tags": ["v*"]}, f"{path}: site pages must be tag-only"
+        if path.name == "site-live-feed.yml":
+            assert triggers["schedule"][0]["cron"] == "0 3 * * 0", f"{path}: live feed cron must stay weekly Sunday 03:00 UTC"
 
 
 def test_catalog_agent_pr_workflow_is_manual_pr_only():

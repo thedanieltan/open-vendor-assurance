@@ -45,3 +45,24 @@ def test_release_tags_are_semver_like():
     assert re.search(r"v0\.1\.0", text)
     assert re.search(r"v0\.1\.1", text)
     assert re.search(r"v0\.2\.0", text)
+
+
+def test_deterministic_pack_timestamp_docs_preserve_freshness_boundary():
+    text = "\n".join(
+        [
+            open("docs/versioning-policy.md", encoding="utf-8").read(),
+            open("docs/release-downloads.md", encoding="utf-8").read(),
+            open("docs/openva-match-service-contract.md", encoding="utf-8").read(),
+            open("README.md", encoding="utf-8").read(),
+        ]
+    )
+
+    for phrase in [
+        "deterministic rebuilds",
+        "not a catalog freshness signal",
+        "provenance.collected_at",
+        "detected_at",
+        "observed_at",
+        "release tag or repository commit SHA",
+    ]:
+        assert phrase in text

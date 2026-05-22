@@ -98,29 +98,35 @@ def test_export_preserves_adapter_annotations_and_record_classes(tmp_path):
 
     with connect(db_path) as connection:
         source = connection.execute(
-            "select record_class, canonical, advisory_boundary from canonical_sources limit 1"
+            "select record_class, canonical, catalog_tier, review_state, advisory_boundary from canonical_sources limit 1"
         ).fetchone()
         assert dict(source) == {
             "record_class": "canonical",
             "canonical": 1,
+            "catalog_tier": "human_reviewed",
+            "review_state": "human_reviewed",
             "advisory_boundary": "non_advisory",
         }
 
         unavailable = connection.execute(
-            "select record_class, canonical, advisory_boundary from unavailable_sources limit 1"
+            "select record_class, canonical, catalog_tier, review_state, advisory_boundary from unavailable_sources limit 1"
         ).fetchone()
         assert dict(unavailable) == {
             "record_class": "unavailable",
             "canonical": 0,
+            "catalog_tier": "human_reviewed",
+            "review_state": "human_reviewed",
             "advisory_boundary": "non_advisory",
         }
 
         coverage = connection.execute(
-            "select record_class, canonical, advisory_boundary from source_coverage limit 1"
+            "select record_class, canonical, catalog_tier, review_state, advisory_boundary from source_coverage limit 1"
         ).fetchone()
         assert dict(coverage) == {
             "record_class": "coverage",
             "canonical": 0,
+            "catalog_tier": "human_reviewed",
+            "review_state": "human_reviewed",
             "advisory_boundary": "non_advisory",
         }
 

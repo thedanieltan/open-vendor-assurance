@@ -25,11 +25,23 @@ def fetch_result(status=200, url="https://example.com/source", content_type="tex
 
 def test_validate_adapter_record_accepts_and_rejects_records():
     assert validate_adapter_record(
-        {"record_class": "canonical", "canonical": True, "advisory_boundary": "non_advisory"}
+        {
+            "record_class": "canonical",
+            "canonical": True,
+            "catalog_tier": "human_reviewed",
+            "review_state": "human_reviewed",
+            "advisory_boundary": "non_advisory",
+        }
     ) == []
 
     failures = validate_adapter_record(
-        {"record_class": "candidate", "canonical": True, "advisory_boundary": "non_advisory"}
+        {
+            "record_class": "candidate",
+            "canonical": True,
+            "catalog_tier": "discovery",
+            "review_state": "human_review_required",
+            "advisory_boundary": "non_advisory",
+        }
     )
     assert failures
 

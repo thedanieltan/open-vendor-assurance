@@ -63,3 +63,17 @@ def test_public_launch_readiness_preserves_launch_boundaries():
         "vendor risk scoring system",
     ]:
         assert phrase in text
+
+
+def test_public_launch_readiness_records_final_prelaunch_decisions():
+    text = read("docs/public-launch-checklist.md") + "\n" + read("docs/v0.1.0-public-launch-readiness.md")
+
+    for phrase in [
+        "Deterministic timestamp semantics are documented.",
+        "Adapter outputs expose `catalog_tier` and `review_state`.",
+        "Match service responses expose tier-aware non-advisory fields.",
+        "Public launch copy describes OpenVA as an infrastructure launch.",
+        "Public launch copy does not imply a hosted catalog, central service, vendor rating, or completeness claim.",
+        "Spreadsheet and local/self-hosted workflows are documented without requiring users to upload private vendor inventories to OpenVA.",
+    ]:
+        assert phrase in text

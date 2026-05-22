@@ -175,6 +175,10 @@ schema_version: 0.1.0
 
 Consumers should pin the release tag or repository commit, `profileId`, `schemaVersion`, `packId`, and pack/index digests where reproducibility matters.
 
+Pack-level `generated_at` and `generatedAt` values may be fixed to preserve
+deterministic rebuilds. They are not a catalog freshness signal; use source,
+change, observation, release tag, or repository commit metadata for provenance.
+
 See:
 
 ```text
@@ -194,9 +198,37 @@ openva-inventory-template.csv
 
 `openva-csv.zip` contains curated CSV exports for vendors, sources, artifacts, observations, candidate sources, unavailable sources, and source coverage. The sample and template inventory files show simple `vendor_name`, `business_entity_name`, optional `domain`, optional `jurisdiction`, optional `registration_number`, and optional `registered_address` columns for matching a vendor list against OpenVA.
 
-These files are generated from the tagged repository state. OpenVA does not operate a central hosted upload service; users keep their vendor inventories local unless they choose to run their own tooling.
+These files are generated from the tagged repository state. OpenVA does not operate a public upload service or central hosted matching service; users keep their vendor inventories local unless they choose to run their own tooling.
 
 See `docs/release-downloads.md` for a plain-language walkthrough of the release assets.
+
+## Hosted catalog viewer and live observation feed
+
+OpenVA provides a hosted viewer for browsing and exporting selected public
+OpenVA metadata from a reviewed catalog snapshot.
+
+The viewer may also display a live observation feed of machine-generated
+public-source events. The live feed is non-canonical and is separate from the
+human-reviewed catalog.
+
+The live feed UI shell currently ships with an empty state. Real observation
+events require the observation ledger workflow, which is a subsequent PR.
+
+The viewer does not accept private vendor inventory uploads, private contracts,
+SOC reports, credentials, screenshots, or customer-specific evidence.
+
+The reviewed catalog is not a live monitoring feed. The page displays the
+release tag, commit SHA, and catalog snapshot date where available. For
+reproducible use, pin the GitHub release or commit.
+
+Live observation events are machine-generated public-source facts. They are not
+vendor approval, compliance findings, risk findings, procurement
+recommendations, legal opinions, or materiality determinations.
+
+The site is deployed to GitHub Pages from the static site build output.
+
+For private inventory matching, use the local matcher or optional self-hosted
+match service inside your own environment.
 
 ## Adapters
 
@@ -239,7 +271,14 @@ OpenVA is free to use under the MIT License. See [LICENSE](LICENSE).
 
 ## Project status
 
-OpenVA is in early public development. The schema, validation tooling, generated indexes, universal pack manifest, maintenance workflow, agent PR workflow, conformance fixtures, governance docs, adapters, release downloads, and initial seed catalog are available, but the dataset should not be treated as complete.
+OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
+
+The initial catalog is a seed dataset. It is useful for testing importer
+workflows, matching public vendor assurance references, and contributing
+public-source metadata, but it should not be treated as complete vendor
+assurance coverage.
+
+OpenVA is in early public development. The schema, validation tooling, generated indexes, universal pack manifest, maintenance workflow, agent PR workflow, conformance fixtures, governance docs, adapters, release downloads, optional self-hosted match service, and initial seed catalog are available, but the dataset should not be treated as complete.
 
 ## Disclaimer
 

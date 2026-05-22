@@ -4,6 +4,13 @@ OpenVA publishes spreadsheet-friendly release assets through GitHub Releases.
 
 These files are for users who want to inspect public vendor assurance metadata without installing Python, running Docker, or hosting a service.
 
+OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
+
+The initial catalog is a seed dataset. It is useful for testing importer
+workflows, matching public vendor assurance references, and contributing
+public-source metadata, but it should not be treated as complete vendor
+assurance coverage.
+
 ## Where to find the files
 
 1. Open the OpenVA repository on GitHub.
@@ -64,6 +71,23 @@ release-artifacts.json
 
 only if you want checksums and release artifact metadata.
 
+## Deterministic pack timestamps
+
+OpenVA pack and generated index timestamps may use a fixed value such as
+`1970-01-01T00:00:00Z` to preserve deterministic rebuilds.
+
+This value is not a catalog freshness signal.
+
+Consumers that need freshness or provenance should use:
+
+- the pinned release tag or repository commit SHA;
+- source-level `provenance.collected_at`;
+- change-level `detected_at`;
+- observation-level `observed_at`, where observation records exist.
+
+Do not treat pack-level `generated_at` or `generatedAt` as evidence that
+a vendor source was collected, reviewed, updated, or observed at that time.
+
 ## How to read the CSVs
 
 Start with `vendors.csv` to find a vendor by name or domain.
@@ -80,7 +104,10 @@ Use `candidate_sources.csv` and `unavailable_sources.csv` carefully:
 
 ## Matching your own vendor list
 
-OpenVA does not operate a public upload service. Do not upload private vendor inventories to OpenVA.
+OpenVA does not operate a public upload service or central hosted matching
+service. HTTP access is available only through the optional self-hosted match
+service. Users should keep private vendor inventories inside their own
+environment.
 
 If you want to match a vendor list against OpenVA today:
 
@@ -101,6 +128,34 @@ registration_number
 At least one of `vendor_name`, `business_entity_name`, `domain`, or `registration_number` is required. `jurisdiction` helps with legal entity resolution when a brand match already exists. `registered_address` and other columns, such as an internal owner, business unit, or category, are preserved in the output but are not required for matching.
 
 and writes an enriched CSV with OpenVA public metadata references.
+
+## Hosted catalog viewer and live observation feed
+
+OpenVA provides a hosted viewer for browsing and exporting selected public
+OpenVA metadata from a reviewed catalog snapshot.
+
+The viewer may also display a live observation feed of machine-generated
+public-source events. The live feed is non-canonical and is separate from the
+human-reviewed catalog.
+
+The live feed UI shell currently ships with an empty state. Real observation
+events require the observation ledger workflow, which is a subsequent PR.
+
+The viewer does not accept private vendor inventory uploads, private contracts,
+SOC reports, credentials, screenshots, or customer-specific evidence.
+
+The reviewed catalog is not a live monitoring feed. The page displays the
+release tag, commit SHA, and catalog snapshot date where available. For
+reproducible use, pin the GitHub release or commit.
+
+Live observation events are machine-generated public-source facts. They are not
+vendor approval, compliance findings, risk findings, procurement
+recommendations, legal opinions, or materiality determinations.
+
+The site is deployed to GitHub Pages from the static site build output.
+
+For private inventory matching, use the local matcher or optional self-hosted
+match service inside your own environment.
 
 ## Legal entity resolution
 

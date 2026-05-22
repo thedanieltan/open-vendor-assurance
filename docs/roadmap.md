@@ -8,6 +8,13 @@ OpenVA is a public-source-only, metadata-first vendor assurance registry. It is 
 
 OpenVA is early public infrastructure.
 
+OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
+
+The initial catalog is a seed dataset. It is useful for testing importer
+workflows, matching public vendor assurance references, and contributing
+public-source metadata, but it should not be treated as complete vendor
+assurance coverage.
+
 Current focus:
 
 - stable metadata schemas;

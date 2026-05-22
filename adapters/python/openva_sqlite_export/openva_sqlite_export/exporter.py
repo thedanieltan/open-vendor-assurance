@@ -13,6 +13,8 @@ RowProvider = Callable[[OpenVAPack], Iterable[SqlRow]]
 ANNOTATION_COLUMNS = {
     "record_class": "TEXT NOT NULL",
     "canonical": "INTEGER NOT NULL",
+    "catalog_tier": "TEXT NOT NULL",
+    "review_state": "TEXT NOT NULL",
     "advisory_boundary": "TEXT NOT NULL",
 }
 

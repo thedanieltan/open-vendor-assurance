@@ -41,6 +41,9 @@ Use this checklist before making OpenVA public or announcing broader contributio
 - [ ] Generated indexes are current.
 - [ ] `openva-pack.json` is current.
 - [ ] Pack integrity verification passes.
+- [ ] Deterministic timestamp semantics are documented.
+- [ ] Adapter outputs expose `catalog_tier` and `review_state`.
+- [ ] Match service responses expose tier-aware non-advisory fields.
 - [ ] Consumer conformance fixtures pass.
 - [ ] Invalid conformance fixtures fail for expected reasons.
 - [ ] No raw documents, screenshots, portal exports, SOC reports, ISO certificates, or extracted full text are committed by default.
@@ -64,10 +67,44 @@ Use this checklist before making OpenVA public or announcing broader contributio
 
 ## Launch note
 
+- [ ] Public launch copy describes OpenVA as an infrastructure launch.
+- [ ] Public launch copy does not imply a hosted catalog, central service, vendor rating, or completeness claim.
+- [ ] Spreadsheet and local/self-hosted workflows are documented without requiring users to upload private vendor inventories to OpenVA.
+- [ ] Hosted catalog viewer is read-only.
+- [ ] Site is deployed to GitHub Pages from static build output.
+- [ ] Site clearly separates reviewed catalog records from live observation events.
+- [ ] Site clearly displays release tag or commit SHA for reviewed catalog data.
+- [ ] Site clearly displays catalog snapshot/staleness disclosure.
+- [ ] Site clearly labels live feed events as machine-generated, non-canonical observations.
+- [ ] Live feed UI shell displays an empty state until observation ledger/feed generation ships.
+- [ ] Site deployment/update cadence is documented for both reviewed catalog and live feed.
+- [ ] Site has no upload form, account system, workspace persistence, or private inventory processing.
+- [ ] Site does not use localStorage or sessionStorage for selections.
+- [ ] Site exports selected OpenVA public metadata only.
+- [ ] Site displays non-advisory boundary text on every page.
+- [ ] Site links users to local/self-hosted matching for private inventories.
+- [ ] GitHub Pages deployment workflow includes `contents: read`, `pages: write`, and `id-token: write` permissions.
+
 Public launch should describe OpenVA as:
 
 ```text
 A public-source-only, metadata-first registry of vendor-published assurance references.
+```
+
+Also state:
+
+```text
+OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
+
+The initial catalog is a seed dataset. It is useful for testing importer
+workflows, matching public vendor assurance references, and contributing
+public-source metadata, but it should not be treated as complete vendor
+assurance coverage.
+
+OpenVA does not operate a public upload service or central hosted matching
+service. HTTP access is available only through the optional self-hosted match
+service. Users should keep private vendor inventories inside their own
+environment.
 ```
 
 Do not describe OpenVA as:

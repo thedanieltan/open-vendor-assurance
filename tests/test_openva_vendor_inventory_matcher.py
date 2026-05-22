@@ -47,6 +47,8 @@ def test_domain_exact_match_enriches_stripe(tmp_path):
     assert row["manifest_path"] == "dist/vendors/stripe.json"
     assert row["record_class"] == "inventory_match"
     assert row["canonical"] == "false"
+    assert row["catalog_tier"] == "human_reviewed"
+    assert row["review_state"] == "human_reviewed"
     assert row["advisory_boundary"] == "non_advisory"
 
 
@@ -250,10 +252,31 @@ def test_json_payloads_are_compact_and_preserve_source_semantics(tmp_path):
     assert isinstance(json.loads(row["canonical_source_types_json"]), list)
     canonical_sources = json.loads(row["canonical_sources_json"])
     assert canonical_sources
-    assert {"source_id", "source_type", "source_url", "title_en", "effective_or_published_at"} == set(canonical_sources[0])
+    assert {
+        "source_id",
+        "source_type",
+        "source_url",
+        "title_en",
+        "effective_or_published_at",
+        "record_class",
+        "canonical",
+        "catalog_tier",
+        "review_state",
+        "advisory_boundary",
+    } == set(canonical_sources[0])
+    assert canonical_sources[0]["record_class"] == "canonical"
+    assert canonical_sources[0]["canonical"] is True
+    assert canonical_sources[0]["catalog_tier"] == "human_reviewed"
+    assert canonical_sources[0]["review_state"] == "human_reviewed"
+    assert canonical_sources[0]["advisory_boundary"] == "non_advisory"
     assert any(source["source_type"] == "dpa" for source in canonical_sources)
     primary_sources = json.loads(row["primary_source_by_type_json"])
     assert primary_sources["dpa"]["source_type"] == "dpa"
+    assert primary_sources["dpa"]["record_class"] == "canonical"
+    assert primary_sources["dpa"]["canonical"] is True
+    assert primary_sources["dpa"]["catalog_tier"] == "human_reviewed"
+    assert primary_sources["dpa"]["review_state"] == "human_reviewed"
+    assert primary_sources["dpa"]["advisory_boundary"] == "non_advisory"
     assert json.loads(row["candidate_sources_json"]) == []
     assert row["canonical_sources_available"] == "true"
     assert row["candidate_sources_available"] == "false"
@@ -322,9 +345,14 @@ def test_candidate_source_payloads_use_expected_shape(monkeypatch, tmp_path):
     assert row["candidate_sources_available"] == "true"
     assert json.loads(row["candidate_sources_json"]) == [
         {
+            "advisory_boundary": "non_advisory",
+            "canonical": False,
             "candidate_source_id": "acme-candidate-dpa",
             "candidate_url": "https://acme.example/dpa",
+            "catalog_tier": "discovery",
             "confidence": "medium",
+            "record_class": "candidate",
+            "review_state": "human_review_required",
             "source_type_candidate": "dpa",
         }
     ]

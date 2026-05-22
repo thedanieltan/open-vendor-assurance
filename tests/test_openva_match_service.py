@@ -87,7 +87,11 @@ def test_match_csv_upload_matches_stripe_and_slack():
     assert [row["match_status"] for row in rows] == ["matched", "matched"]
     assert rows[0]["match_confidence"] == 0.9
     assert rows[1]["business_entity_name"] == "Slack Technologies LLC"
+    assert rows[0]["record_class"] == "inventory_match"
     assert rows[0]["canonical"] is False
+    assert rows[0]["catalog_tier"] == "human_reviewed"
+    assert rows[0]["review_state"] == "human_reviewed"
+    assert rows[0]["advisory_boundary"] == "non_advisory"
     assert rows[0]["canonical_sources_available"] is True
 
 
@@ -121,6 +125,18 @@ def test_match_response_uses_native_json_fields_and_strips_json_suffixes():
     assert row["legal_entity_match_method"] == "unresolved"
     assert row["legal_entity_resolution_confidence"] == "unresolved"
     assert "dpa" in row["primary_source_by_type"]
+    source = row["canonical_sources"][0]
+    assert source["record_class"] == "canonical"
+    assert source["canonical"] is True
+    assert source["catalog_tier"] == "human_reviewed"
+    assert source["review_state"] == "human_reviewed"
+    assert source["advisory_boundary"] == "non_advisory"
+    dpa = row["primary_source_by_type"]["dpa"]
+    assert dpa["record_class"] == "canonical"
+    assert dpa["canonical"] is True
+    assert dpa["catalog_tier"] == "human_reviewed"
+    assert dpa["review_state"] == "human_reviewed"
+    assert dpa["advisory_boundary"] == "non_advisory"
 
 
 def test_match_accepts_business_entity_name_without_domain_or_vendor_name():

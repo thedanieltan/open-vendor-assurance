@@ -42,16 +42,22 @@ def test_export_preserves_adapter_annotations_and_record_classes(tmp_path):
     source = read_csv(tmp_path / "sources.csv")[0]
     assert source["record_class"] == "canonical"
     assert source["canonical"] == "true"
+    assert source["catalog_tier"] == "human_reviewed"
+    assert source["review_state"] == "human_reviewed"
     assert source["advisory_boundary"] == "non_advisory"
 
     unavailable = read_csv(tmp_path / "unavailable_sources.csv")[0]
     assert unavailable["record_class"] == "unavailable"
     assert unavailable["canonical"] == "false"
+    assert unavailable["catalog_tier"] == "human_reviewed"
+    assert unavailable["review_state"] == "human_reviewed"
     assert unavailable["advisory_boundary"] == "non_advisory"
 
     coverage = read_csv(tmp_path / "source_coverage.csv")[0]
     assert coverage["record_class"] == "coverage"
     assert coverage["canonical"] == "false"
+    assert coverage["catalog_tier"] == "human_reviewed"
+    assert coverage["review_state"] == "human_reviewed"
     assert coverage["advisory_boundary"] == "non_advisory"
 
 

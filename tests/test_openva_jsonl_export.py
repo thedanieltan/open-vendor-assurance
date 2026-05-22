@@ -44,18 +44,20 @@ def test_export_preserves_adapter_annotations_and_record_classes(tmp_path):
     export_jsonl(".", tmp_path)
 
     cases = {
-        "openva-vendors.jsonl": ("vendor", False),
-        "openva-sources.jsonl": ("canonical", True),
-        "openva-artifacts.jsonl": ("artifact", False),
-        "openva-candidates.jsonl": ("candidate", False),
-        "openva-unavailable-sources.jsonl": ("unavailable", False),
-        "openva-source-coverage.jsonl": ("coverage", False),
+        "openva-vendors.jsonl": ("vendor", False, "human_reviewed", "human_reviewed"),
+        "openva-sources.jsonl": ("canonical", True, "human_reviewed", "human_reviewed"),
+        "openva-artifacts.jsonl": ("artifact", False, "human_reviewed", "human_reviewed"),
+        "openva-candidates.jsonl": ("candidate", False, "discovery", "human_review_required"),
+        "openva-unavailable-sources.jsonl": ("unavailable", False, "human_reviewed", "human_reviewed"),
+        "openva-source-coverage.jsonl": ("coverage", False, "human_reviewed", "human_reviewed"),
     }
-    for filename, (record_class, canonical) in cases.items():
+    for filename, (record_class, canonical, catalog_tier, review_state) in cases.items():
         rows = read_jsonl(tmp_path / filename)
         for row in rows:
             assert row["record_class"] == record_class
             assert row["canonical"] is canonical
+            assert row["catalog_tier"] == catalog_tier
+            assert row["review_state"] == review_state
             assert row["advisory_boundary"] == "non_advisory"
 
     assert read_jsonl(tmp_path / "openva-sources.jsonl")
@@ -109,6 +111,8 @@ def test_none_values_export_as_json_null(monkeypatch, tmp_path):
                 {
                     "record_class": "vendor",
                     "canonical": False,
+                    "catalog_tier": "human_reviewed",
+                    "review_state": "human_reviewed",
                     "advisory_boundary": "non_advisory",
                     "vendor_id": "null-value-vendor",
                     "display_name": None,
