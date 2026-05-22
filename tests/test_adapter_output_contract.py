@@ -42,6 +42,20 @@ def test_adapter_normalized_record_schema_accepts_observation_record():
     assert errors == []
 
 
+def test_adapter_normalized_record_schema_accepts_inventory_match_record():
+    errors = schema_errors(
+        {
+            "record_class": "inventory_match",
+            "canonical": False,
+            "catalog_tier": "human_reviewed",
+            "review_state": "human_reviewed",
+            "advisory_boundary": "non_advisory",
+        }
+    )
+
+    assert errors == []
+
+
 def test_adapter_normalized_record_schema_rejects_observation_as_canonical():
     errors = schema_errors(
         {
@@ -70,14 +84,28 @@ def test_adapter_normalized_record_schema_rejects_candidate_as_canonical():
     assert errors
 
 
-def test_adapter_normalized_record_schema_rejects_advisory_boundaries():
+def test_adapter_normalized_record_schema_rejects_inventory_match_as_canonical():
+    errors = schema_errors(
+        {
+            "record_class": "inventory_match",
+            "canonical": True,
+            "catalog_tier": "human_reviewed",
+            "review_state": "human_reviewed",
+            "advisory_boundary": "non_advisory",
+        }
+    )
+
+    assert errors
+
+
+def test_adapter_normalized_record_schema_rejects_non_boundary_value():
     errors = schema_errors(
         {
             "record_class": "canonical",
             "canonical": True,
             "catalog_tier": "human_reviewed",
             "review_state": "human_reviewed",
-            "advisory_boundary": "risk_rating",
+            "advisory_boundary": "outside_boundary",
         }
     )
 
@@ -96,3 +124,17 @@ def test_validate_adapter_record_rejects_non_canonical_record_marked_canonical()
     )
 
     assert failures
+
+
+def test_validate_adapter_record_accepts_inventory_match_output():
+    failures = validate_adapter_record(
+        {
+            "record_class": "inventory_match",
+            "canonical": False,
+            "catalog_tier": "human_reviewed",
+            "review_state": "human_reviewed",
+            "advisory_boundary": "non_advisory",
+        }
+    )
+
+    assert failures == []
