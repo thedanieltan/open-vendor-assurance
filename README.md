@@ -267,7 +267,9 @@ Adapter outputs preserve the OpenVA boundary: they expose public metadata refere
 
 ## License
 
-OpenVA is free to use under the MIT License. See [LICENSE](LICENSE).
+OpenVA is licensed under the MIT License. See [LICENSE](LICENSE).
+
+OpenVA records public metadata references to vendor-published materials. Vendor documents, web pages, marks, names, policies, trust-center materials, and other third-party materials remain the property of their respective owners. OpenVA does not relicense vendor source materials and does not mirror raw vendor documents by default.
 
 ## Project status
 
