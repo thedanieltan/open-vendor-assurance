@@ -1,0 +1,19 @@
+schema_version: 0.1.0
+
+blocked_domain_classes:
+  cdn:
+    - cloudfront.net
+    - fastly.net
+    - akamaihd.net
+    - azureedge.net
+  reseller_or_white_label:
+    - example-reseller.invalid
+    - example-whitelabel.invalid
+  gated_or_login_wall:
+    - login.salesforce.com
+    - app.onetrust.com
+    - securityscorecard.com
+
+notes:
+  - Domains in this file are escalation signals for automation, not claims about the vendor.
+  - Additions require policy-aware review because broad entries can create false escalations.

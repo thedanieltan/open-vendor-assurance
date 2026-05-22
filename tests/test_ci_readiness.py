@@ -5,6 +5,7 @@ import yaml
 WORKFLOW_DIR = Path(".github/workflows")
 EXPECTED_PUBLIC_WORKFLOWS = {
     "candidate-promotion-pr.yml",
+    "agent-weighted-review.yml",
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
     "catalog-maintenance-pr.yml",
@@ -116,6 +117,10 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "triggers": {"push"},
             "permissions": {"contents": "write"},
         },
+        "agent-weighted-review.yml": {
+            "triggers": {"pull_request"},
+            "permissions": {"contents": "read", "pull-requests": "read", "issues": "write"},
+        },
     }
 
     for path in WORKFLOW_DIR.glob("*.yml"):
@@ -148,6 +153,24 @@ def test_catalog_agent_pr_workflow_is_manual_pr_only():
     assert "branch_name must start with agent-" in text
     assert "pr_title must start with Catalog:" in text
     assert "This workflow creates a pull request only. It does not merge catalog changes." in text
+
+
+def test_agent_weighted_review_is_advisory_and_adapter_aware():
+    workflow = load_workflow("agent-weighted-review.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "agent-weighted-review.yml").read_text(encoding="utf-8")
+    automation_text = Path("tools/openva/automation_rules.py").read_text(encoding="utf-8")
+
+    assert set(triggers.keys()) == {"pull_request"}
+    assert workflow["permissions"] == {"contents": "read", "pull-requests": "read", "issues": "write"}
+    assert "schema-conformance-agent" in workflow["jobs"]
+    assert "source-accessibility-agent" in workflow["jobs"]
+    assert "advisory-wording-agent" in workflow["jobs"]
+    assert "provenance-completeness-agent" in workflow["jobs"]
+    assert "python -m tools.openva.automation_rules schema-conformance" in text
+    assert "validate_adapter_record" in automation_text
+    assert "This workflow is advisory only. It does not merge, close, or mutate catalog files." in text
+    assert "gh pr merge" not in text
 
 
 def test_catalog_reset_workflow_has_been_removed_after_one_time_reset():

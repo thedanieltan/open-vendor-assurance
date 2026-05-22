@@ -30,6 +30,8 @@ SCHEMA_MAP = {
     "pack": ROOT / "schemas/openva/openva-pack.schema.json",
 }
 
+ADAPTER_NORMALIZED_RECORD_SCHEMA = ROOT / "schemas/openva/adapter-normalized-record.schema.json"
+
 FIXTURE_GLOBS = {
     "vendor": ["examples/vendors/*/vendor.yaml", "data/vendors/*/vendor.yaml"],
     "source": ["examples/vendors/*/sources/*.yaml", "data/vendors/*/sources/*.yaml"],
@@ -65,6 +67,17 @@ def load_yaml(path: Path) -> Any:
 def load_json(path: Path) -> Any:
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+
+def validate_adapter_record(record: dict[str, Any], *, label: str = "adapter-normalized-record") -> list[str]:
+    """Validate a normalized adapter output record against the public adapter schema."""
+    schema = load_json(ADAPTER_NORMALIZED_RECORD_SCHEMA)
+    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    failures: list[str] = []
+    for error in sorted(validator.iter_errors(record), key=lambda err: list(err.path)):
+        location = ".".join(str(part) for part in error.path) or "<root>"
+        failures.append(f"{label}: {location}: {error.message}")
+    return failures
 
 
 def iter_paths(patterns: list[str]) -> list[Path]:

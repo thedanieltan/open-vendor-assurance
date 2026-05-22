@@ -1,0 +1,70 @@
+schema_version: 0.1.0
+cases:
+  - id: source-title-certified-pass
+    expected: pass
+    path: data/vendors/example/sources/example-compliance.yaml
+    payload:
+      source_id: example-compliance
+      title_native: "Example Vendor Certified Security Page"
+      source_url: "https://example.com/security"
+  - id: url-risk-score-pass
+    expected: pass
+    path: data/vendors/example/sources/example-security.yaml
+    payload:
+      source_id: example-risk-score-url
+      source_url: "https://example.com/security/risk-score"
+  - id: source-id-compliant-pass
+    expected: pass
+    path: data/vendors/example/sources/example-compliance.yaml
+    payload:
+      source_id: example-compliant-source
+      summary_en: "Vendor publishes a public compliance reference."
+  - id: negative-fixture-warning
+    expected: ambiguous
+    path: fixtures/negative/advisory-wording.yaml
+    payload:
+      summary_en: "This invalid fixture says the vendor is low risk."
+  - id: policy-negation-warning
+    expected: ambiguous
+    path: docs/non-advisory-policy.md
+    text: "OpenVA does not say a vendor is compliant, approved, or recommended."
+  - id: catalog-low-risk-fail
+    expected: fail
+    path: data/vendors/example/vendor.yaml
+    payload:
+      vendor_id: example
+      notes: "The vendor is low risk for enterprise use."
+  - id: summary-implication-fail
+    expected: fail
+    path: data/vendors/example/sources/example-privacy.yaml
+    payload:
+      summary_en: "The privacy notice demonstrates compliance."
+  - id: adapter-field-name-fail
+    expected: fail
+    path: adapters/example/output.json
+    payload:
+      record_class: canonical
+      canonical: true
+      advisory_boundary: non_advisory
+      risk_score: 10
+  - id: generated-index-value-fail
+    expected: fail
+    path: indexes/vendors.json
+    payload:
+      items:
+        - vendor_id: example
+          summary: "Verified by OpenVA."
+  - id: docs-claim-fail
+    expected: fail
+    path: docs/example.md
+    text: "This vendor is suitable for healthcare workloads."
+  - id: disclaimer-negation-warning
+    expected: ambiguous
+    path: DISCLAIMER.md
+    text: "OpenVA does not certify vendors or say they are safe to use."
+  - id: vendor-title-agreement-pass
+    expected: pass
+    path: data/vendors/example/sources/example-dpa.yaml
+    payload:
+      title_native: "Stripe Data Processing Agreement"
+      summary_en: "Vendor publishes a public DPA page."

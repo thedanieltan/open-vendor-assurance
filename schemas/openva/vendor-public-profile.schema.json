@@ -68,9 +68,9 @@
       },
       "additionalProperties": false
     },
-    "catalog_status": { "enum": ["active", "watchlist", "deprecated", "quarantined"] },
+    "catalog_status": { "enum": ["active", "watchlist", "deprecated", "quarantined", "stub", "canonical"] },
     "status": {
-      "enum": ["active", "watchlist", "deprecated", "quarantined"],
+      "enum": ["active", "watchlist", "deprecated", "quarantined", "stub", "canonical"],
       "deprecated": true,
       "description": "Deprecated v0.1.x compatibility alias for catalog_status. Remove in v0.2.0 or openva-export-pack.v2, whichever ships first."
     },

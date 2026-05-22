@@ -15,6 +15,21 @@ The observer records only what happened during a bounded, transparent, metadata-
 
 ## Result categories
 
+### Rule Set F aliases
+
+The scheduled observation agent may emit these automation-facing result values while preserving the v0.1 result taxonomy:
+
+```text
+reachable
+unreachable
+redirect_changed
+content_changed
+bot_protected
+auth_required
+```
+
+`reachable` and `content_changed` are hash-bearing public observations. `redirect_changed`, `unreachable`, `bot_protected`, and `auth_required` are escalation signals and do not invalidate the underlying source by themselves.
+
 ### `ok`
 
 The source was fetched successfully.

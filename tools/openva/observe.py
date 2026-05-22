@@ -22,7 +22,15 @@ TIMEOUT_SECONDS = 20
 PILOT_CONFIG = ROOT / "config" / "observation-pilot.yaml"
 
 BOT_PROTECTED_STATUS_CODES = {401, 403, 407, 429}
-AMBIGUOUS_RESULTS = {"bot_protected", "size_limited", "fetch_failed", "quarantined"}
+AMBIGUOUS_RESULTS = {
+    "bot_protected",
+    "size_limited",
+    "fetch_failed",
+    "quarantined",
+    "unreachable",
+    "redirect_changed",
+    "auth_required",
+}
 
 BLOCKED_HINTS = (
     "login",
@@ -49,6 +57,11 @@ RESULT_NOTES = {
     "size_limited": "Public response exceeded OpenVA's observation byte limit. Partial content is not stored or hashed.",
     "fetch_failed": "Fetch failed for a non-classified network, timeout, HTTP, or transport reason. Maintainer review required before relying on this result.",
     "quarantined": "Source URL or redirect target failed URL-safety checks. No fetch output is trusted or hashed.",
+    "reachable": "Fetched public source successfully. Raw content not stored; hashes computed from fetched response.",
+    "unreachable": "Source could not be reached during transparent public observation. Maintainer review is required if this persists.",
+    "redirect_changed": "Final URL differs from the catalog source URL. Maintainer review required before changing canonical source metadata.",
+    "content_changed": "Normalized public text hash changed from the latest recorded observation. Raw content not stored.",
+    "auth_required": "Source returned an authentication or authorization status. OpenVA does not bypass access controls.",
 }
 
 
@@ -70,6 +83,44 @@ def result_note(result: str) -> str:
         result,
         "Observation result is not recognised by the current taxonomy. Maintainer review required.",
     )
+
+
+def latest_observation_for_source(source_id: str) -> dict[str, Any] | None:
+    observations = [
+        observation
+        for observation in records_for("observation")
+        if observation.get("source_id") == source_id and not observation.get("_openva_path", "").startswith("examples/")
+    ]
+    if not observations:
+        return None
+    return sorted(observations, key=lambda item: str(item.get("observed_at") or ""))[-1]
+
+
+def classify_rule_set_f_result(
+    *,
+    base_result: str,
+    http_status: int | None,
+    source_url: str,
+    final_url: str | None,
+    normalized_text_sha256: str,
+    previous_observation: dict[str, Any] | None,
+) -> str:
+    if http_status in {401, 403, 407}:
+        return "auth_required"
+    if base_result == "bot_protected":
+        return "bot_protected"
+    if base_result in {"fetch_failed", "quarantined", "size_limited"}:
+        return "unreachable"
+    if final_url and final_url.rstrip("/") != source_url.rstrip("/"):
+        return "redirect_changed"
+    previous_hash = None
+    if previous_observation:
+        previous_hash = (previous_observation.get("hashes") or {}).get("normalized_text_sha256")
+    if previous_hash and normalized_text_sha256.startswith("sha256:") and previous_hash != normalized_text_sha256:
+        return "content_changed"
+    if base_result == "ok":
+        return "reachable"
+    return base_result
 
 
 def load_pilot_source_ids() -> set[str]:
@@ -125,7 +176,7 @@ def looks_blocked(data: bytes) -> bool:
     return any(hint in text for hint in BLOCKED_HINTS)
 
 
-def observation_for_source(source: dict[str, Any]) -> dict[str, Any]:
+def observation_for_source(source: dict[str, Any], *, rule_set_f_results: bool = False) -> dict[str, Any]:
     observed_at = now_iso()
     source_id = source["source_id"]
     result, http_status, final_url, data = fetch_public(source["source_url"])
@@ -141,6 +192,16 @@ def observation_for_source(source: dict[str, Any]) -> dict[str, Any]:
         raw_hash = "sha256:TBD"
         text_hash = "sha256:TBD"
 
+    if rule_set_f_results:
+        result = classify_rule_set_f_result(
+            base_result=result,
+            http_status=http_status,
+            source_url=source["source_url"],
+            final_url=final_url,
+            normalized_text_sha256=text_hash,
+            previous_observation=latest_observation_for_source(source_id),
+        )
+
     return {
         "schema_version": "0.1.0",
         "observation_id": safe_observation_id(source_id, observed_at),
@@ -152,6 +213,8 @@ def observation_for_source(source: dict[str, Any]) -> dict[str, Any]:
         "http_status": http_status,
         "final_url": final_url,
         "access_class": source["access_class"],
+        "catalog_tier": "observation",
+        "review_state": "auto_observed",
         "hashes": {
             "raw_sha256": raw_hash,
             "normalized_text_sha256": text_hash,
@@ -163,6 +226,7 @@ def observation_for_source(source: dict[str, Any]) -> dict[str, Any]:
             "extracted_text_stored": False,
             "screenshot_stored": False,
         },
+        "not_advice": True,
         "notes": result_note(result),
     }
 
@@ -196,8 +260,21 @@ def summarize_observations(observations: list[dict[str, Any]], *, dry_run: bool,
             )
 
 
-def observe_sources(dry_run: bool, *, pilot_only: bool, allow_ambiguous_write: bool = False, emit_yaml: bool = False) -> int:
-    observations = [observation_for_source(source) for source in select_sources(pilot_only=pilot_only)]
+def observe_sources(
+    dry_run: bool,
+    *,
+    pilot_only: bool,
+    allow_ambiguous_write: bool = False,
+    emit_yaml: bool = False,
+    rule_set_f_results: bool = False,
+) -> int:
+    if rule_set_f_results:
+        observations = [
+            observation_for_source(source, rule_set_f_results=True)
+            for source in select_sources(pilot_only=pilot_only)
+        ]
+    else:
+        observations = [observation_for_source(source) for source in select_sources(pilot_only=pilot_only)]
 
     if dry_run:
         summarize_observations(observations, dry_run=True)
@@ -236,6 +313,11 @@ def main() -> int:
         action="store_true",
         help="In dry-run mode, print raw observation YAML after the compact summary.",
     )
+    parser.add_argument(
+        "--rule-set-f-results",
+        action="store_true",
+        help="Emit Rule Set F observation result values such as reachable and content_changed.",
+    )
     args = parser.parse_args()
 
     if args.command == "observe-all":
@@ -244,6 +326,7 @@ def main() -> int:
             pilot_only=False,
             allow_ambiguous_write=args.allow_ambiguous_write,
             emit_yaml=args.emit_yaml,
+            rule_set_f_results=args.rule_set_f_results,
         )
     if args.command == "observe-pilot":
         return observe_sources(
@@ -251,6 +334,7 @@ def main() -> int:
             pilot_only=True,
             allow_ambiguous_write=args.allow_ambiguous_write,
             emit_yaml=args.emit_yaml,
+            rule_set_f_results=args.rule_set_f_results,
         )
 
     raise AssertionError("unreachable")

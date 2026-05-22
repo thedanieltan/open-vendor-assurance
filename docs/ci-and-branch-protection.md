@@ -183,6 +183,16 @@ Before public launch, protect `main` with these expectations:
 
 Catalog PRs should also be held to the catalog guard when the PR title starts with `Catalog:`.
 
+## Weighted advisory review
+
+Catalog PRs also run:
+
+```text
+agent-weighted-review
+```
+
+The workflow posts four independent validator scores and a summary comment. During the advisory rollout it does not merge, close, or mutate catalog files. Future merge behavior is governed by `docs/weighted-merge-policy.md` and remains disabled until maintainers explicitly approve the rollout change.
+
 ## Generated-file protection
 
 The validation workflow must rebuild generated outputs and fail when these files are stale:
@@ -204,7 +214,7 @@ If a future workflow requires secrets, it must be reviewed as a security-sensiti
 
 Validation, tests, pack conformance, catalog guards, and source health inventory reports should not depend on live vendor network access.
 
-The only workflows that may attempt public network fetches are observation/reporting workflows and the contribution intake agent's transparent public-source check. They must not use credentials, submit forms, solve CAPTCHAs, rotate proxies, or bypass access controls.
+The only workflows that may attempt public network fetches are observation/reporting workflows, the contribution intake agent's transparent public-source check, and the weighted-review source accessibility agent. They must not use credentials, submit forms, solve CAPTCHAs, rotate proxies, or bypass access controls.
 
 ## Release readiness
 
