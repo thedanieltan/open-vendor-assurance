@@ -125,7 +125,7 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "permissions": {"contents": "read", "pages": "write", "id-token": "write"},
         },
         "site-pages.yml": {
-            "triggers": {"push"},
+            "triggers": {"push", "workflow_dispatch"},
             "permissions": {"contents": "read", "pages": "write", "id-token": "write"},
         },
         "agent-weighted-review.yml": {
@@ -161,7 +161,8 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         if path.name == "release-downloads.yml":
             assert triggers["push"] == {"tags": ["v*"]}, f"{path}: release downloads must be tag-only"
         if path.name == "site-pages.yml":
-            assert triggers["push"] == {"tags": ["v*"]}, f"{path}: site pages must be tag-only"
+            assert triggers["push"] == {"branches": ["main"]}, f"{path}: site pages must deploy from main"
+            assert "workflow_dispatch" in triggers, f"{path}: site pages must support manual deploy"
         if path.name == "site-live-feed.yml":
             assert triggers["schedule"][0]["cron"] == "0 3 * * 0", f"{path}: live feed cron must stay weekly Sunday 03:00 UTC"
 
