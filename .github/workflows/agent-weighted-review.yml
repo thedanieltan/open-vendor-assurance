@@ -44,6 +44,7 @@ jobs:
       - name: Run schema conformance agent
         run: python -m tools.openva.automation_rules schema-conformance --changed-files changed-files.txt --output weighted-review-schema.json
       - name: Comment schema conformance result
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
@@ -94,6 +95,7 @@ jobs:
       - name: Run source accessibility agent
         run: python -m tools.openva.automation_rules source-accessibility --changed-files changed-files.txt --retry-429 --output weighted-review-source.json
       - name: Comment source accessibility result
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
@@ -144,6 +146,7 @@ jobs:
       - name: Run advisory wording agent
         run: python -m tools.openva.automation_rules advisory-wording --changed-files changed-files.txt --output weighted-review-wording.json
       - name: Comment advisory wording result
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
@@ -194,6 +197,7 @@ jobs:
       - name: Run provenance completeness agent
         run: python -m tools.openva.automation_rules provenance-completeness --changed-files changed-files.txt --output weighted-review-provenance.json
       - name: Comment provenance completeness result
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
@@ -250,6 +254,7 @@ jobs:
       - name: Build weighted review summary
         run: python -m tools.openva.automation_rules weighted-review weighted-review-results/*.json --output weighted-review-summary.json
       - name: Comment and label weighted review summary
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
