@@ -116,7 +116,31 @@ def compact_candidate(candidate: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_catalog_data() -> dict[str, Any]:
+def build_meta(pack: dict[str, Any], sources: list[dict[str, Any]], vendor_count: int) -> dict[str, Any]:
+    sha = commit_sha()
+    tag = release_tag()
+    date = commit_date() or source_date(sources) or str(pack.get("generated_at") or pack.get("generatedAt") or "")
+    return {
+        "profileId": pack.get("profileId"),
+        "schemaVersion": pack.get("schemaVersion"),
+        "packId": pack.get("packId"),
+        "schema_version": pack.get("schema_version"),
+        "release_tag": tag,
+        "commit_sha": sha,
+        "catalog_snapshot_identity": tag or sha,
+        "catalog_snapshot_date": date,
+        "pack_generated_at": pack.get("generated_at") or pack.get("generatedAt"),
+        "vendor_count": vendor_count,
+        "source_count": len(sources),
+        "github_releases_url": "https://github.com/thedanieltan/open-vendor-assurance/releases",
+        "non_advisory": True,
+        "compiled_distribution": True,
+        "site_data_contract": "openva-site-compiled-catalog.v1",
+        "built_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+    }
+
+
+def build_compiled_catalog() -> dict[str, Any]:
     pack = load_json(ROOT / "openva-pack.json")
     vendor_search = load_json(ROOT / "indexes/vendor-search.json")
     vendors_index = load_json(ROOT / "indexes/vendors.json")
@@ -124,6 +148,7 @@ def build_catalog_data() -> dict[str, Any]:
     candidate_index = load_json(ROOT / "indexes/candidate-sources.json")
     unavailable_index = load_json(ROOT / "indexes/unavailable-sources.json")
     coverage_index = load_json(ROOT / "indexes/source-coverage.json")
+    observations_index = load_json(ROOT / "indexes/observations.json")
 
     vendors_by_id = {
         row["vendor_id"]: row
@@ -136,62 +161,94 @@ def build_catalog_data() -> dict[str, Any]:
         if isinstance(row, dict) and isinstance(row.get("vendor_id"), str)
     }
 
-    vendors = []
+    sources_by_vendor: dict[str, list[dict[str, Any]]] = {}
+    compact_sources: list[dict[str, Any]] = []
+    for row in sources_index.get("items", []):
+        if not isinstance(row, dict):
+            continue
+        source = compact_source(row)
+        compact_sources.append(source)
+        vendor_id = str(source.get("vendor_id") or "")
+        if vendor_id:
+            sources_by_vendor.setdefault(vendor_id, []).append(source)
+
+    candidates_by_vendor: dict[str, list[dict[str, Any]]] = {}
+    for row in candidate_index.get("items", []):
+        if not isinstance(row, dict):
+            continue
+        candidate = compact_candidate(row)
+        vendor_id = str(candidate.get("vendor_id") or "")
+        if vendor_id:
+            candidates_by_vendor.setdefault(vendor_id, []).append(candidate)
+
+    unavailable_by_vendor: dict[str, list[dict[str, Any]]] = {}
+    for row in unavailable_index.get("items", []):
+        if not isinstance(row, dict):
+            continue
+        unavailable = {**annotation("unavailable"), **row}
+        vendor_id = str(unavailable.get("vendor_id") or "")
+        if vendor_id:
+            unavailable_by_vendor.setdefault(vendor_id, []).append(unavailable)
+
+    observations_by_vendor: dict[str, list[dict[str, Any]]] = {}
+    for row in observations_index.get("items", []):
+        if not isinstance(row, dict):
+            continue
+        observation = {**annotation("observation"), **row}
+        vendor_id = str(observation.get("vendor_id") or "")
+        if vendor_id:
+            observations_by_vendor.setdefault(vendor_id, []).append(observation)
+
+    vendor_summaries = []
+    vendor_details = {}
     for row in vendor_search.get("items", []):
+        if not isinstance(row, dict):
+            continue
         vendor_id = row.get("vendor_id")
+        if not isinstance(vendor_id, str) or not vendor_id:
+            continue
         full = vendors_by_id.get(vendor_id, {})
-        vendors.append(
-            {
-                "vendor_id": vendor_id,
-                "display_name": row.get("display_name"),
-                "legal_name": row.get("legal_name"),
-                "catalog_status": row.get("catalog_status") or row.get("status"),
-                "official_domains": row.get("official_domains", []),
-                "headquarters_country": row.get("headquarters_country"),
-                "vendor_categories": full.get("vendor_categories", []),
-                "source_types": row.get("source_types", []),
-                "candidate_source_types": row.get("candidate_source_types", []),
-                "unavailable_source_types": row.get("unavailable_source_types", []),
-                "coverage": coverage_by_id.get(vendor_id, {}),
-            }
-        )
+        coverage = coverage_by_id.get(vendor_id, {})
+        summary = {
+            "vendor_id": vendor_id,
+            "display_name": row.get("display_name"),
+            "legal_name": row.get("legal_name"),
+            "catalog_status": row.get("catalog_status") or row.get("status"),
+            "official_domains": row.get("official_domains", []),
+            "headquarters_country": row.get("headquarters_country"),
+            "vendor_categories": full.get("vendor_categories", []),
+            "source_types": row.get("source_types", []),
+            "candidate_source_types": row.get("candidate_source_types", []),
+            "unavailable_source_types": row.get("unavailable_source_types", []),
+            "coverage": coverage,
+            "detail_path": f"data/vendors/{vendor_id}.json",
+        }
+        vendor_summaries.append(summary)
+        vendor_details[vendor_id] = {
+            "vendor": summary,
+            "canonical_sources": sources_by_vendor.get(vendor_id, []),
+            "candidate_sources": candidates_by_vendor.get(vendor_id, []),
+            "unavailable_sources": unavailable_by_vendor.get(vendor_id, []),
+            "latest_observations": observations_by_vendor.get(vendor_id, []),
+        }
 
-    sources = [compact_source(row) for row in sources_index.get("items", []) if isinstance(row, dict)]
-    candidates = [
-        compact_candidate(row)
-        for row in candidate_index.get("items", [])
-        if isinstance(row, dict)
-    ]
-    unavailable = [
-        {**annotation("unavailable"), **row}
-        for row in unavailable_index.get("items", [])
-        if isinstance(row, dict)
-    ]
-    sha = commit_sha()
-    tag = release_tag()
-    date = commit_date() or source_date(sources) or str(pack.get("generated_at") or pack.get("generatedAt") or "")
+    source_types = sorted({source.get("source_type") for source in compact_sources if source.get("source_type")})
+    countries = sorted({vendor.get("headquarters_country") for vendor in vendor_summaries if vendor.get("headquarters_country")})
+    categories = sorted({category for vendor in vendor_summaries for category in vendor.get("vendor_categories", []) if category})
+    coverage_summary = {
+        "vendor_coverage": coverage_index.get("vendor_coverage", []),
+        "source_types": source_types,
+        "countries": countries,
+        "categories": categories,
+    }
 
+    meta = build_meta(pack, compact_sources, len(vendor_summaries))
     return {
-        "meta": {
-            "profileId": pack.get("profileId"),
-            "schemaVersion": pack.get("schemaVersion"),
-            "packId": pack.get("packId"),
-            "schema_version": pack.get("schema_version"),
-            "release_tag": tag,
-            "commit_sha": sha,
-            "catalog_snapshot_identity": tag or sha,
-            "catalog_snapshot_date": date,
-            "pack_generated_at": pack.get("generated_at") or pack.get("generatedAt"),
-            "vendor_count": len(vendors),
-            "source_count": len(sources),
-            "github_releases_url": "https://github.com/thedanieltan/open-vendor-assurance/releases",
-            "non_advisory": True,
-            "built_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-        },
-        "vendors": vendors,
-        "sources": sources,
-        "candidate_sources": candidates,
-        "unavailable_sources": unavailable,
+        "meta": meta,
+        "vendor_summaries": vendor_summaries,
+        "vendor_details": vendor_details,
+        "source_types": source_types,
+        "coverage_summary": coverage_summary,
     }
 
 
@@ -236,7 +293,14 @@ def build_site(output_dir: Path) -> None:
         if path.is_file():
             shutil.copy2(path, output_dir / path.name)
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
-    write_json(output_dir / "data/catalog-data.json", build_catalog_data())
+
+    compiled = build_compiled_catalog()
+    write_json(output_dir / "data/meta.json", compiled["meta"])
+    write_json(output_dir / "data/vendor-search.min.json", {"meta": compiled["meta"], "items": compiled["vendor_summaries"]})
+    write_json(output_dir / "data/source-types.json", {"meta": compiled["meta"], "items": compiled["source_types"]})
+    write_json(output_dir / "data/coverage-summary.json", {"meta": compiled["meta"], **compiled["coverage_summary"]})
+    for vendor_id, detail in compiled["vendor_details"].items():
+        write_json(output_dir / "data/vendors" / f"{vendor_id}.json", {"meta": compiled["meta"], **detail})
     write_json(output_dir / "data/observation-feed.json", build_observation_feed())
 
 

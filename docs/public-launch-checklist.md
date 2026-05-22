@@ -84,6 +84,11 @@ Use this checklist before making OpenVA public or announcing broader contributio
 - [ ] Site displays non-advisory boundary text on every page.
 - [ ] Site links users to local/self-hosted matching for private inventories.
 - [ ] GitHub Pages deployment workflow includes `contents: read`, `pages: write`, and `id-token: write` permissions.
+- [ ] Hosted site uses compiled/sharded catalog outputs instead of requiring one large `catalog-data.json`.
+- [ ] `vendor-search.min.json` excludes heavy source arrays.
+- [ ] Vendor detail records are generated as `data/vendors/{vendor_id}.json`.
+- [ ] Site export still works from loaded vendor shards.
+- [ ] Browser-local matcher still processes private inventories in memory only.
 
 Public launch should describe OpenVA as:
 

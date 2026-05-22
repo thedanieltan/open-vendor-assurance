@@ -28,6 +28,29 @@ workspace persistence.
 Selections are held in browser memory only. They are not written to
 `localStorage`, `sessionStorage`, a server, or a database.
 
+## Compiled catalog distribution
+
+The site is generated as a compiled catalog distribution rather than a single
+large runtime database.
+
+Initial page load uses:
+
+```text
+site/dist/data/meta.json
+site/dist/data/vendor-search.min.json
+site/dist/data/source-types.json
+site/dist/data/coverage-summary.json
+```
+
+Vendor details are loaded on demand from:
+
+```text
+site/dist/data/vendors/{vendor_id}.json
+```
+
+This keeps the non-dev hosted site usable as OpenVA grows, while release assets
+continue to serve bulk CSV and internal tooling use cases.
+
 ## Feed contract
 
 The live observation feed is generated as:
