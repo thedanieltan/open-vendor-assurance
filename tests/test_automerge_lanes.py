@@ -34,9 +34,13 @@ def test_observation_lane_accepts_observation_artifacts_and_generated_outputs():
     assert result.lane == AUTOMERGE_OBSERVATION
 
 
-def test_machine_canonical_lane_accepts_catalog_source_paths_and_indexes():
+def test_machine_canonical_lane_accepts_only_canonical_source_paths_and_indexes():
     result = eligible_for_lane(
-        ["data/vendors/stripe.yaml", "openva-pack.json", "indexes/sources.json"],
+        [
+            "data/vendors/stripe/sources/stripe-dpa.yaml",
+            "openva-pack.json",
+            "indexes/sources.json",
+        ],
         [AUTOMERGE_MACHINE_CANONICAL],
     )
     assert result.eligible is True
@@ -45,7 +49,7 @@ def test_machine_canonical_lane_accepts_catalog_source_paths_and_indexes():
 
 def test_machine_canonical_lane_rejects_workflow_changes():
     result = eligible_for_lane(
-        [".github/workflows/agent-automerge.yml", "data/vendors/stripe.yaml"],
+        [".github/workflows/agent-automerge.yml", "data/vendors/stripe/sources/stripe-dpa.yaml"],
         [AUTOMERGE_MACHINE_CANONICAL],
     )
     assert result.eligible is False
@@ -53,7 +57,10 @@ def test_machine_canonical_lane_rejects_workflow_changes():
 
 
 def test_machine_canonical_lane_rejects_more_than_fifty_vendor_source_records():
-    paths = [f"data/vendors/vendor-{index}.yaml" for index in range(51)]
+    paths = [
+        f"data/vendors/vendor-{index}/sources/vendor-{index}-dpa.yaml"
+        for index in range(51)
+    ]
     result = eligible_for_lane(paths, [AUTOMERGE_MACHINE_CANONICAL])
     assert result.eligible is False
     assert "machine_canonical_record_limit_exceeded:51>50" in result.reasons
@@ -82,3 +89,33 @@ def test_report_only_flag_keeps_cli_non_blocking(tmp_path):
     paths.write_text("data/vendors/stripe.yaml\n", encoding="utf-8")
 
     assert main(["--paths-file", str(paths), "--labels", "", "--report-only"]) == 0
+
+
+def test_machine_canonical_lane_rejects_vendor_profile_changes():
+    result = eligible_for_lane(
+        ["data/vendors/stripe/vendor.yaml", "indexes/vendors.json"],
+        [AUTOMERGE_MACHINE_CANONICAL],
+    )
+    assert result.eligible is False
+    assert "non_machine_canonical_path:data/vendors/stripe/vendor.yaml" in result.reasons
+
+
+def test_machine_canonical_lane_rejects_unavailable_source_changes():
+    result = eligible_for_lane(
+        ["data/vendors/stripe/unavailable_sources/stripe-dpa.yaml", "indexes/sources.json"],
+        [AUTOMERGE_MACHINE_CANONICAL],
+    )
+    assert result.eligible is False
+    assert (
+        "non_machine_canonical_path:data/vendors/stripe/unavailable_sources/stripe-dpa.yaml"
+        in result.reasons
+    )
+
+
+def test_machine_canonical_lane_rejects_catalog_batch_inputs():
+    result = eligible_for_lane(
+        ["catalog-batches/intake/batch.yaml", "indexes/sources.json"],
+        [AUTOMERGE_MACHINE_CANONICAL],
+    )
+    assert result.eligible is False
+    assert "non_machine_canonical_path:catalog-batches/intake/batch.yaml" in result.reasons

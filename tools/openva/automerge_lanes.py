@@ -48,7 +48,7 @@ OBSERVATION_PREFIXES = (
 )
 
 MACHINE_CANONICAL_EXACT = {"openva-pack.json"}
-MACHINE_CANONICAL_PREFIXES = ("data/vendors/", "indexes/", "catalog-batches/")
+MACHINE_CANONICAL_GENERATED_PREFIXES = ("indexes/",)
 
 
 @dataclass(frozen=True)
@@ -95,14 +95,28 @@ def is_observation_path(path: str) -> bool:
     return any(path.startswith(prefix) for prefix in OBSERVATION_PREFIXES)
 
 
+def is_machine_canonical_source_path(path: str) -> bool:
+    parts = path.split("/")
+    return (
+        len(parts) == 5
+        and parts[0] == "data"
+        and parts[1] == "vendors"
+        and bool(parts[2])
+        and parts[3] == "sources"
+        and parts[4].endswith(".yaml")
+    )
+
+
 def is_machine_canonical_path(path: str) -> bool:
-    return path in MACHINE_CANONICAL_EXACT or any(
-        path.startswith(prefix) for prefix in MACHINE_CANONICAL_PREFIXES
+    return (
+        path in MACHINE_CANONICAL_EXACT
+        or any(path.startswith(prefix) for prefix in MACHINE_CANONICAL_GENERATED_PREFIXES)
+        or is_machine_canonical_source_path(path)
     )
 
 
 def machine_canonical_record_count(paths: list[str]) -> int:
-    return sum(1 for path in paths if path.startswith("data/vendors/"))
+    return sum(1 for path in paths if is_machine_canonical_source_path(path))
 
 
 def eligible_for_lane(
