@@ -51,6 +51,8 @@ rights_classes:
 review_states:
   - proposed
   - validated
+  - auto_validated
+  - auto_observed
   - quarantined
   - superseded
 
@@ -62,6 +64,23 @@ catalog_change_significance:
 
 vendor_statuses:
   - active
+  - stub
+  - canonical
   - watchlist
   - deprecated
   - quarantined
+
+regulated_vendor_categories:
+  - financial_services
+  - healthcare
+  - government
+
+regulated_legal_terms:
+  - bank
+  - banking
+  - insurance
+  - insurer
+  - hospital
+  - clinic
+  - government
+  - ministry

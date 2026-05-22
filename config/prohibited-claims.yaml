@@ -3,14 +3,21 @@ schema_version: 0.1.0
 prohibited_terms:
   - compliant
   - compliance-ready
+  - certified by openva
+  - verified by openva
   - legally sufficient
   - safe
+  - safe to use
   - secure enough
   - approved
   - recommended
   - suitable
   - adequate
   - low risk
+  - high risk
+  - risk score
+  - passed openva review
+  - openva certified
   - trusted vendor
   - satisfies obligations
   - meets requirements
@@ -31,3 +38,25 @@ allowed_context_notes:
   - A public source may use words such as certified or compliant in its own title or claims, but OpenVA records must describe the public source without endorsing the claim.
   - Records may say a public source references a certification, but must not conclude that the vendor is certified for a user's workload.
   - Vendor-submitted records must remain factual metadata and must not include promotional claims.
+
+exempt_field_suffixes:
+  - _id
+  - _ids
+  - _url
+  - _urls
+
+blocked_field_name_terms:
+  - risk
+  - score
+  - rating
+  - approved
+  - compliant
+  - verified
+  - certified
+  - recommended
+
+implication_phrases:
+  - therefore
+  - means that
+  - indicates that the vendor is
+  - demonstrates compliance

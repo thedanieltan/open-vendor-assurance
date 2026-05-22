@@ -56,6 +56,7 @@
     },
     "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
     "rights_class": { "enum": ["metadata_only", "public_link_only", "snapshot_allowed", "snapshot_forbidden", "gated_excluded"] },
+    "review_state": { "enum": ["proposed", "validated", "auto_validated", "quarantined", "superseded"] },
     "summary_native": { "type": ["string", "null"], "maxLength": 1200 },
     "summary_en": { "type": ["string", "null"], "maxLength": 1200 },
     "provenance": {

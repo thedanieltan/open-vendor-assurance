@@ -6,9 +6,9 @@ The control plane defines what agents may do autonomously, what they may propose
 
 ## Operating principle
 
-Agents may discover, observe, compile, generate, validate, and propose.
+Agents may discover, observe, compile, generate, validate, score, and propose.
 
-Agents must not bypass source access controls, commit directly to `main`, auto-merge, make legal or compliance conclusions, scrape gated materials, or weaken OpenVA's public-source and non-advisory boundaries.
+Agents must not bypass source access controls, commit directly to `main`, make legal or compliance conclusions, scrape gated materials, or weaken OpenVA's public-source and non-advisory boundaries. Auto-merge remains disabled during advisory weighted-review rollout and may only be enabled under `docs/weighted-merge-policy.md`.
 
 ## Agent classes
 
@@ -38,7 +38,7 @@ python -m tools.openva.validate validate
 pytest -q
 ```
 
-Human review is required before merge.
+Human review is required before merge during advisory rollout. Future autonomous handling is limited to the weighted-review thresholds in `docs/weighted-merge-policy.md`.
 
 ### Contribution intake agent
 
@@ -146,7 +146,7 @@ Use these prompt files as the starting instruction set for autonomous or semi-au
 | Backlog curator | `prompts/backlog-curator-agent.md` | `catalog-growth-discovery` | Planning files only |
 | Release readiness | `prompts/release-readiness-agent.md` | `release-candidate`, validation workflows | Non-catalog release reports by default |
 
-Agents that produce catalog changes must use `Catalog:` pull requests and must keep human review at the source-authority boundary.
+Agents that produce catalog changes must use `Catalog:` pull requests and must keep escalation at the source-authority boundary. During advisory rollout, validator scores are comments and labels only.
 
 ## Automation levels
 
@@ -164,6 +164,7 @@ observation dry-run reports
 coverage statistics
 backlog statistics
 workflow inventory reports
+weighted-review scoring comments
 ```
 
 ### Agent-proposed
@@ -183,20 +184,20 @@ workflow review findings
 
 ### Human-gated
 
-The following require maintainer approval:
+The following require maintainer approval during advisory rollout or permanently where noted:
 
 ```text
-merging to main
-schema changes
-workflow changes
-source-policy changes
+merging to main during advisory rollout
+schema changes (permanent)
+workflow changes (permanent unless separately approved)
+source-policy changes (permanent)
 official publisher exceptions
 non-English uncertain interpretation
 writing ambiguous observations
 handling gated or bot-protected sources
-new vendor identity from public issues
-release tagging
-repository visibility changes
+regulated or conflicting new vendor identity
+release tagging (permanent)
+repository visibility changes (permanent)
 ```
 
 ## Branch naming
@@ -290,7 +291,7 @@ A low-human-intervention OpenVA loop should run as follows:
 3. Source refinement agent proposes source fixes where public alternatives exist.
 4. Catalog curator agent proposes one bounded vendor batch.
 5. CI validates generated files, guardrails, and tests.
-6. Maintainer reviews source authority and merges clean PRs.
+6. Weighted validators score clean PRs and route escalation flags.
 7. Backlog curator updates coverage gaps.
 8. Release readiness agent checks pack, fixture, workflow, and release posture.
 9. Workflow review confirms automation remains useful and non-duplicative.
