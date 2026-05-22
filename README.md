@@ -202,6 +202,34 @@ These files are generated from the tagged repository state. OpenVA does not oper
 
 See `docs/release-downloads.md` for a plain-language walkthrough of the release assets.
 
+## Hosted catalog viewer and live observation feed
+
+OpenVA provides a hosted viewer for browsing and exporting selected public
+OpenVA metadata from a reviewed catalog snapshot.
+
+The viewer may also display a live observation feed of machine-generated
+public-source events. The live feed is non-canonical and is separate from the
+human-reviewed catalog.
+
+The live feed UI shell currently ships with an empty state. Real observation
+events require the observation ledger workflow, which is a subsequent PR.
+
+The viewer does not accept private vendor inventory uploads, private contracts,
+SOC reports, credentials, screenshots, or customer-specific evidence.
+
+The reviewed catalog is not a live monitoring feed. The page displays the
+release tag, commit SHA, and catalog snapshot date where available. For
+reproducible use, pin the GitHub release or commit.
+
+Live observation events are machine-generated public-source facts. They are not
+vendor approval, compliance findings, risk findings, procurement
+recommendations, legal opinions, or materiality determinations.
+
+The site is deployed to GitHub Pages from the static site build output.
+
+For private inventory matching, use the local matcher or optional self-hosted
+match service inside your own environment.
+
 ## Adapters
 
 OpenVA ships small Python adapters for common consumption paths. Install an adapter from the repository checkout, then point it at the pack directory or `openva-pack.json`.

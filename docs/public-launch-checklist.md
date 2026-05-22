@@ -70,6 +70,20 @@ Use this checklist before making OpenVA public or announcing broader contributio
 - [ ] Public launch copy describes OpenVA as an infrastructure launch.
 - [ ] Public launch copy does not imply a hosted catalog, central service, vendor rating, or completeness claim.
 - [ ] Spreadsheet and local/self-hosted workflows are documented without requiring users to upload private vendor inventories to OpenVA.
+- [ ] Hosted catalog viewer is read-only.
+- [ ] Site is deployed to GitHub Pages from static build output.
+- [ ] Site clearly separates reviewed catalog records from live observation events.
+- [ ] Site clearly displays release tag or commit SHA for reviewed catalog data.
+- [ ] Site clearly displays catalog snapshot/staleness disclosure.
+- [ ] Site clearly labels live feed events as machine-generated, non-canonical observations.
+- [ ] Live feed UI shell displays an empty state until observation ledger/feed generation ships.
+- [ ] Site deployment/update cadence is documented for both reviewed catalog and live feed.
+- [ ] Site has no upload form, account system, workspace persistence, or private inventory processing.
+- [ ] Site does not use localStorage or sessionStorage for selections.
+- [ ] Site exports selected OpenVA public metadata only.
+- [ ] Site displays non-advisory boundary text on every page.
+- [ ] Site links users to local/self-hosted matching for private inventories.
+- [ ] GitHub Pages deployment workflow includes `contents: read`, `pages: write`, and `id-token: write` permissions.
 
 Public launch should describe OpenVA as:
 

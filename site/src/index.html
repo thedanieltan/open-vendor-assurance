@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenVA Catalog Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">OpenVA Catalog Viewer</p>
+        <h1>Read-only browser for OpenVA public metadata</h1>
+      </div>
+      <nav aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#catalog">Reviewed Catalog</a>
+        <a href="#feed">Live Observation Feed</a>
+        <a href="#export">Export</a>
+      </nav>
+    </header>
+
+    <aside class="boundary-note">
+      <strong>OpenVA Catalog Viewer is a read-only view of public OpenVA metadata.</strong>
+      OpenVA does not approve, certify, score, recommend, or determine whether any vendor is compliant, safe, suitable, low risk, high risk, or legally adequate.
+      Do not submit private vendor inventories, private agreements, SOC reports, credentials, screenshots, or customer-specific evidence to OpenVA.
+    </aside>
+
+    <main>
+      <section id="home-view" class="view">
+        <div class="section-heading">
+          <h2>OpenVA Catalog Viewer</h2>
+          <p>Read-only browser for OpenVA public metadata.</p>
+        </div>
+        <div class="stats-grid" id="home-stats"></div>
+        <div class="snapshot-box" data-snapshot-disclosure></div>
+        <div class="surface-grid">
+          <article>
+            <h3>Reviewed Catalog</h3>
+            <p>Human-reviewed OpenVA public metadata from a pinned release or commit.</p>
+            <a class="button" href="#catalog">Browse reviewed catalog</a>
+          </article>
+          <article>
+            <h3>Live Observation Feed</h3>
+            <p>Machine-generated public-source observations, not canonical records.</p>
+            <a class="button" href="#feed">View live feed shell</a>
+          </article>
+        </div>
+        <section>
+          <h3>Need to match your private vendor inventory?</h3>
+          <p>Use the local Python matcher or deploy the optional self-hosted match service inside your own environment. Do not upload private vendor inventories to OpenVA.</p>
+          <p>
+            <a href="../docs/release-downloads.md">Release downloads</a>
+            <a href="../docs/openva-match-service-contract.md">Self-hosted matcher docs</a>
+            <a href="../README.md#adapters">README adapter section</a>
+          </p>
+        </section>
+      </section>
+
+      <section id="catalog-view" class="view hidden">
+        <div class="section-heading">
+          <h2>Reviewed Catalog</h2>
+          <p>Reviewed Catalog = human-reviewed OpenVA public metadata from a pinned release or commit.</p>
+        </div>
+        <div class="snapshot-box" data-snapshot-disclosure></div>
+        <form class="filters" id="catalog-filters">
+          <label>Search public vendors <input id="search-input" type="search" autocomplete="off" placeholder="Vendor, legal name, domain"></label>
+          <label>Source type <select id="source-type-filter"></select></label>
+          <label>Country <select id="country-filter"></select></label>
+          <label>Category <select id="category-filter"></select></label>
+          <label>Coverage <select id="coverage-filter"></select></label>
+        </form>
+        <div class="actions">
+          <button type="button" id="select-visible">Select visible reviewed vendors</button>
+          <button type="button" id="clear-selection">Clear selection</button>
+          <a class="button" href="#export">Review export</a>
+        </div>
+        <div class="catalog-layout">
+          <section>
+            <h3>Vendors</h3>
+            <div id="vendor-list" class="vendor-list"></div>
+          </section>
+          <section id="vendor-detail" class="detail-panel">
+            <h3>Select a vendor</h3>
+            <p>Vendor detail records appear here.</p>
+          </section>
+        </div>
+      </section>
+
+      <section id="feed-view" class="view hidden">
+        <div class="section-heading">
+          <h2>Live Observation Feed</h2>
+          <p>This feed contains machine-generated public-source observations. It is not the human-reviewed OpenVA catalog.</p>
+        </div>
+        <div class="feed-warning">
+          Observation events may indicate that a public source was fetched, redirected, unavailable, hash-changed, bot-protected, rate-limited, or flagged for review.
+          Observation events are not vendor approval, risk findings, compliance conclusions, procurement recommendations, legal opinions, or materiality determinations.
+        </div>
+        <p class="feed-warning">Live observations are machine-generated public-source facts. They are not canonical catalog records and are not legal, compliance, procurement, security, KYC/AML, sanctions, or vendor-risk determinations.</p>
+        <div class="feed-meta" id="feed-meta"></div>
+        <form class="filters" id="feed-filters">
+          <label>Vendor ID <input id="feed-vendor-filter" type="search" autocomplete="off"></label>
+          <label>Source type <input id="feed-source-filter" type="search" autocomplete="off"></label>
+          <label>Event/result <input id="feed-event-filter" type="search" autocomplete="off"></label>
+          <label>Review state <input id="feed-review-filter" type="search" autocomplete="off"></label>
+        </form>
+        <div id="feed-list"></div>
+      </section>
+
+      <section id="export-view" class="view hidden">
+        <div class="section-heading">
+          <h2>Export Selected Public Metadata</h2>
+          <p>This export contains selected OpenVA public metadata only. It does not contain a private vendor inventory and is not a risk assessment, compliance decision, procurement recommendation, legal opinion, or vendor approval.</p>
+        </div>
+        <div class="snapshot-box" data-snapshot-disclosure></div>
+        <div id="selection-summary"></div>
+        <div class="actions">
+          <button type="button" id="download-vendors-csv">Download openva-selected-vendors.csv</button>
+          <button type="button" id="download-sources-csv">Download openva-selected-sources.csv</button>
+          <button type="button" id="download-json">Download openva-selected-records.json</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a id="github-releases-link" href="https://github.com/thedanieltan/open-vendor-assurance/releases">GitHub Releases</a>
+      <span>Non-advisory boundary: non_advisory</span>
+    </footer>
+    <script src="app.js"></script>
+  </body>
+</html>
