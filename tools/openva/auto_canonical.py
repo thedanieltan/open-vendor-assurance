@@ -135,6 +135,13 @@ def _vendor_domains(vendor: dict[str, Any]) -> list[str]:
     return [str(domain).lower().lstrip(".") for domain in domains if domain]
 
 
+def _vendor_controlled_domains(vendor: dict[str, Any]) -> list[str]:
+    domains = _vendor_domains(vendor)
+    allowlisted = vendor.get("allowlisted_source_domains") or vendor.get("vendor_controlled_domains") or []
+    domains.extend(str(domain).lower().lstrip(".") for domain in allowlisted if domain)
+    return domains
+
+
 def _safe_final_host(candidate_url: str, final_url: str, vendor: dict[str, Any]) -> bool:
     candidate_host = _host(candidate_url)
     final_host = _host(final_url)
@@ -144,15 +151,14 @@ def _safe_final_host(candidate_url: str, final_url: str, vendor: dict[str, Any])
         return True
     if _registrable_domain(candidate_host) == _registrable_domain(final_host):
         return True
-    domains = _vendor_domains(vendor)
-    allowlisted = vendor.get("allowlisted_source_domains") or vendor.get("vendor_controlled_domains") or []
-    domains.extend(str(domain).lower().lstrip(".") for domain in allowlisted if domain)
-    return any(_host_matches_domain(final_host, domain) for domain in domains)
+    return any(
+        _host_matches_domain(final_host, domain) for domain in _vendor_controlled_domains(vendor)
+    )
 
 
 def _on_vendor_domain(url: str, vendor: dict[str, Any]) -> bool:
     host = _host(url)
-    domains = _vendor_domains(vendor)
+    domains = _vendor_controlled_domains(vendor)
     return bool(host and domains and any(_host_matches_domain(host, domain) for domain in domains))
 
 
