@@ -2,34 +2,25 @@
 
 Open Vendor Assurance (OpenVA) is a public-source-only, metadata-first registry of vendor-published assurance references.
 
+**Use OpenVA in your browser:** https://thedanieltan.github.io/open-vendor-assurance/
+
+The hosted catalog viewer is the easiest path for non-dev users. It lets users browse the reviewed public catalog, use the browser-local vendor inventory matcher, and export selected public metadata without installing Python, Docker, or developer tooling.
+
 OpenVA records factual metadata about public vendor assurance materials such as data processing addenda, subprocessor lists, trust-center pages, privacy notices, security pages, certification references, public KYC/AML statements, AI/data terms, and related source references.
 
 OpenVA is not a legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice product.
 
-## Scope
-
-OpenVA is:
-
-- public-source-only;
-- metadata-first;
-- factual and non-advisory;
-- native-language-aware;
-- provenance-driven;
-- hash-friendly;
-- exportable through universal packs;
-- usable independently of any one runtime or application.
-
-OpenVA does not:
-
-- mirror raw vendor documents by default;
-- include bespoke agreements;
-- include authenticated trust-center or customer portal materials;
-- include NDA-gated content;
-- state that any vendor is compliant, approved, safe, certified, adequate, suitable, or recommended;
-- provide tenant-specific risk decisions;
-- replace professional, legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice.
-
 ## Start here
+
+For non-dev users:
+
+```text
+Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
+GitHub Releases
+docs/release-downloads.md
+openva-inventory-template.csv
+openva-sample-inventory.csv
+```
 
 For contributors and maintainers:
 
@@ -69,6 +60,29 @@ docs/first-good-issue-policy.md
 DISCLAIMER.md
 LICENSE
 ```
+
+## Scope
+
+OpenVA is:
+
+- public-source-only;
+- metadata-first;
+- factual and non-advisory;
+- native-language-aware;
+- provenance-driven;
+- hash-friendly;
+- exportable through universal packs;
+- usable independently of any one runtime or application.
+
+OpenVA does not:
+
+- mirror raw vendor documents by default;
+- include bespoke agreements;
+- include authenticated trust-center or customer portal materials;
+- include NDA-gated content;
+- state that any vendor is compliant, approved, safe, certified, adequate, suitable, or recommended;
+- provide tenant-specific risk decisions;
+- replace professional, legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice.
 
 ## Validate the repository
 
