@@ -18,6 +18,14 @@ assurance coverage.
 3. Expand **Assets**.
 4. Download the files you need.
 
+## Hosted catalog viewer
+
+Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
+
+Use the hosted catalog viewer to browse the reviewed catalog snapshot, use the browser-local matcher, and export selected public OpenVA metadata without installing tooling.
+
+The hosted viewer is static and read-only. It does not provide accounts, workspaces, server-side matching, hosted private inventory upload, vendor approval, risk scoring, legal advice, compliance advice, procurement advice, KYC/AML conclusions, sanctions conclusions, or certification-validity conclusions.
+
 ## Which file to download
 
 Use:
@@ -134,6 +142,8 @@ and writes an enriched CSV with OpenVA public metadata references.
 
 OpenVA provides a hosted viewer for browsing and exporting selected public
 OpenVA metadata from a reviewed catalog snapshot.
+
+Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
 
 The viewer may also display a live observation feed of machine-generated
 public-source events. The live feed is non-canonical and is separate from the
