@@ -46,6 +46,8 @@ jobs:
         run: python -m tools.openva.release_downloads build --out release-downloads
       - name: Build release download checksum manifest
         run: python -m tools.openva.release_downloads manifest --out release-downloads > release-downloads/openva-release-downloads-manifest.json
+      - name: Check non-technical release downloads
+        run: python -m tools.openva.release_downloads check --out release-downloads
       - name: Upload release downloads
         uses: softprops/action-gh-release@v3
         with:
