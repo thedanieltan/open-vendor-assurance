@@ -278,6 +278,18 @@ def candidate_source_payload(candidate: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def legal_entity_payload(entity: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "entity_id": entity.get("entity_id"),
+        "vendor_id": entity.get("vendor_id"),
+        "legal_name": entity.get("legal_name"),
+        "jurisdiction": entity.get("jurisdiction"),
+        "registration_number": entity.get("registration_number"),
+        "catalog_status": entity.get("catalog_status"),
+        "registered_address": entity.get("registered_address"),
+    }
+
+
 def primary_source_by_type(sources: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for source in sources:
@@ -304,6 +316,8 @@ def reverse_date_key(value: str) -> str:
 def build_vendor_match_index(record_sets: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     sources = by_vendor(record_sets["source"])
     candidates = by_vendor(record_sets["candidate_source"])
+    legal_entities = by_vendor(record_sets["legal_entity"])
+    contracting_resolution = by_vendor(build_contracting_entity_resolution(record_sets)["items"])
     coverage = {
         row["vendor_id"]: row
         for row in build_source_coverage(record_sets)["vendor_coverage"]
@@ -330,6 +344,8 @@ def build_vendor_match_index(record_sets: dict[str, list[dict[str, Any]]]) -> di
                 "canonical_sources": canonical_sources,
                 "candidate_sources": candidate_sources,
                 "primary_source_by_type": primary_source_by_type(canonical_sources),
+                "legal_entities": [legal_entity_payload(entity) for entity in legal_entities.get(vendor_id, [])],
+                "contracting_entity_resolution": contracting_resolution.get(vendor_id, []),
             }
         )
     return {

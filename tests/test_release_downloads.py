@@ -50,8 +50,22 @@ def test_release_inventory_files_are_valid_csv_and_matcher_compatible(tmp_path):
     matched_path = tmp_path / "matched.csv"
 
     assert read_csv(sample_path) == [
-        {"vendor_name": "Stripe", "business_entity_name": "", "registered_address": "", "domain": ""},
-        {"vendor_name": "", "business_entity_name": "Slack Technologies, LLC", "registered_address": "", "domain": ""},
+        {
+            "vendor_name": "Stripe",
+            "business_entity_name": "",
+            "domain": "stripe.com",
+            "jurisdiction": "SG",
+            "registration_number": "",
+            "registered_address": "",
+        },
+        {
+            "vendor_name": "",
+            "business_entity_name": "Slack Technologies, LLC",
+            "domain": "",
+            "jurisdiction": "",
+            "registration_number": "",
+            "registered_address": "",
+        },
     ]
     assert read_csv(template_path) == []
 

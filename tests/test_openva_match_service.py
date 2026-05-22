@@ -105,11 +105,21 @@ def test_match_response_uses_native_json_fields_and_strips_json_suffixes():
     assert "candidate_matches_json" not in row
     assert "canonical_sources_json" not in row
     assert "primary_source_by_type_json" not in row
+    assert "legal_entities_json" not in row
+    assert "candidate_legal_entities_json" not in row
+    assert "legal_entity_match_basis" not in row
+    assert "legal_entity_match_status" not in row
+    assert "dpa_contracting_entity_verification_status" not in row
+    assert "dpa_contracting_entity_verification_note" not in row
     assert isinstance(row["candidate_matches"], list)
     assert isinstance(row["official_domains"], list)
     assert isinstance(row["canonical_sources"], list)
     assert isinstance(row["candidate_sources"], list)
     assert isinstance(row["primary_source_by_type"], dict)
+    assert isinstance(row["legal_entities"], list)
+    assert isinstance(row["candidate_legal_entities"], list)
+    assert row["legal_entity_match_method"] == "unresolved"
+    assert row["legal_entity_resolution_confidence"] == "unresolved"
     assert "dpa" in row["primary_source_by_type"]
 
 

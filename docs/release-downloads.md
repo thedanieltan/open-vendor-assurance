@@ -42,10 +42,10 @@ openva-inventory-template.csv
 to prepare your own vendor inventory for matching with OpenVA tooling. Use whichever columns you already have:
 
 ```text
-vendor_name,business_entity_name,registered_address,domain
+vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
 ```
 
-`vendor_name` is usually enough. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `registered_address` is optional context from your own inventory and is preserved in the output. `domain` is optional but improves match confidence when available.
+`vendor_name` is usually enough to get a brand-level match. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `domain` improves brand match confidence when available. `jurisdiction` lets OpenVA use the contracting-entity resolution index when the catalog has a public record for that vendor and jurisdiction. `registration_number` is optional, but it is the strongest entity-level identifier when OpenVA has the corresponding legal entity record. In Singapore, this is the UEN. `registered_address` is optional context from your own inventory and is preserved in the output.
 
 Use:
 
@@ -88,17 +88,37 @@ If you want to match a vendor list against OpenVA today:
 - run the local Python matcher, or ask a technical teammate to run it locally;
 - keep the input vendor inventory inside your own environment.
 
-The local matcher accepts any of these columns:
+The local matcher accepts these columns:
 
 ```text
 vendor_name
 business_entity_name
 domain
+jurisdiction
+registration_number
 ```
 
-`registered_address` and other columns, such as an internal owner, business unit, or category, are preserved in the output but are not required for matching.
+At least one of `vendor_name`, `business_entity_name`, `domain`, or `registration_number` is required. `jurisdiction` helps with legal entity resolution when a brand match already exists. `registered_address` and other columns, such as an internal owner, business unit, or category, are preserved in the output but are not required for matching.
 
 and writes an enriched CSV with OpenVA public metadata references.
+
+## Legal entity resolution
+
+OpenVA separates brand matching from legal entity matching.
+
+For example, a Singapore inventory row for Stripe might produce:
+
+```text
+Vendor name: Stripe
+Domain matched: stripe.com
+Brand match: stripe, exact domain, confidence 1.00
+Legal entity match method: jurisdiction_resolution_index
+Legal entity resolution confidence: candidate
+Candidate entity: Stripe Payments Singapore Pte. Ltd.
+Registration number: populated when OpenVA has the public registry record
+```
+
+`candidate` means public metadata suggests the entity may be relevant for that jurisdiction. It is not confirmation from your signed agreement. OpenVA provides the public DPA reference only; confirm that the entity named in your signed agreement matches the entity shown in OpenVA.
 
 ## Missing or stale data
 

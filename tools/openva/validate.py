@@ -160,6 +160,14 @@ def validate_cross_references() -> list[str]:
                 failures.append(f"{path}: unknown verification_source_id {source_id}")
             elif source.get("vendor_id") != legal_entity["vendor_id"] and source.get("entity_id") != entity_id:
                 failures.append(f"{path}: verification_source_id {source_id} must match vendor_id or entity_id")
+        registered_address = legal_entity.get("registered_address")
+        if isinstance(registered_address, dict):
+            for source_id in registered_address.get("source_ids", []):
+                source = sources_by_id.get(source_id)
+                if not source:
+                    failures.append(f"{path}: unknown registered_address source_id {source_id}")
+                elif source.get("vendor_id") != legal_entity["vendor_id"] and source.get("entity_id") != entity_id:
+                    failures.append(f"{path}: registered_address source_id {source_id} must match vendor_id or entity_id")
         for former_name in legal_entity.get("former_legal_names", []):
             for source_id in former_name.get("source_ids", []):
                 source = sources_by_id.get(source_id)

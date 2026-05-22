@@ -53,12 +53,12 @@ Returns pack metadata:
 
 Version 1 accepts CSV only as multipart form field `inventory_csv`.
 
-Minimum input columns: include at least one of `vendor_name`, `business_entity_name`, or `domain`.
+Minimum input columns: include at least one of `vendor_name`, `business_entity_name`, `domain`, or `registration_number`.
 
 ```csv
-vendor_name,business_entity_name,registered_address,domain
-Stripe,,,
-,Slack Technologies LLC,,
+vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
+Stripe,,stripe.com,SG,,
+,Slack Technologies LLC,,,,
 ```
 
 Response:
@@ -84,6 +84,12 @@ Response:
 ```
 
 The service preserves original CSV fields as strings. Matcher fields are converted from CSV cells to native JSON types. `_json` suffixes from the CSV adapter are removed in service responses, including `primary_source_by_type_json` becoming `primary_source_by_type`.
+
+Brand matching and legal entity resolution are separate. `matched_vendor_id`, `matched_display_name`, `match_method`, and `match_confidence` describe the vendor or brand match. `legal_entity_match_method` and `legal_entity_resolution_confidence` describe entity-level resolution when OpenVA has source-backed legal entity metadata.
+
+For a Singapore row such as `Stripe,,stripe.com,SG,,`, OpenVA may return `legal_entity_match_method: "jurisdiction_resolution_index"` and `legal_entity_resolution_confidence: "candidate"` if the contracting-entity resolution index has a Singapore candidate. `candidate` means public metadata suggests the entity may be relevant for that jurisdiction. It is not derived from the user's signed agreement.
+
+OpenVA provides public DPA references only. Consumers should present a static reminder near DPA evidence telling users to confirm that their signed agreement names the expected contracting entity.
 
 ## Consumer Migration Notes
 

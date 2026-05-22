@@ -17,6 +17,9 @@ JSON_FIELD_RENAMES = {
     "canonical_sources_json": "canonical_sources",
     "candidate_sources_json": "candidate_sources",
     "primary_source_by_type_json": "primary_source_by_type",
+    "legal_entity_registered_address_json": "legal_entity_registered_address",
+    "legal_entities_json": "legal_entities",
+    "candidate_legal_entities_json": "candidate_legal_entities",
 }
 
 BOOLEAN_FIELDS = {
@@ -36,7 +39,7 @@ def match_csv_bytes(csv_bytes: bytes, matcher_index: MatcherIndex) -> list[dict[
     reader = csv.DictReader(io.StringIO(text, newline=""))
     fieldnames = list(reader.fieldnames or [])
     if not MATCH_INPUT_COLUMNS.intersection(fieldnames):
-        raise ValueError("input CSV must include domain, vendor_name, or business_entity_name")
+        raise ValueError("input CSV must include domain, vendor_name, business_entity_name, or registration_number")
 
     rows: list[dict[str, Any]] = []
     for input_row in reader:
