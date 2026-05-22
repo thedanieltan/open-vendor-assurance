@@ -10,7 +10,7 @@ from openva_pack_reader import OpenVAPack
 CsvRow = dict[str, Any]
 RowProvider = Callable[[OpenVAPack], Iterable[CsvRow]]
 
-ANNOTATION_COLUMNS = ["record_class", "canonical", "advisory_boundary"]
+ANNOTATION_COLUMNS = ["record_class", "canonical", "catalog_tier", "review_state", "advisory_boundary"]
 
 VENDOR_COLUMNS = [
     *ANNOTATION_COLUMNS,

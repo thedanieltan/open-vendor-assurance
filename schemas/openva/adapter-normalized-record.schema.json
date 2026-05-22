@@ -3,7 +3,7 @@
   "$id": "https://openva.dev/schemas/adapter-normalized-record.schema.json",
   "title": "OpenVA Adapter Normalized Record",
   "type": "object",
-  "required": ["record_class", "canonical", "advisory_boundary"],
+  "required": ["record_class", "canonical", "catalog_tier", "review_state", "advisory_boundary"],
   "properties": {
     "record_class": {
       "enum": [
@@ -14,10 +14,30 @@
         "observation",
         "artifact",
         "change",
+        "legal_entity",
         "coverage"
       ]
     },
     "canonical": { "type": "boolean" },
+    "catalog_tier": {
+      "enum": [
+        "discovery",
+        "observation",
+        "machine_validated",
+        "human_reviewed"
+      ]
+    },
+    "review_state": {
+      "enum": [
+        "unreviewed",
+        "auto_observed",
+        "auto_validated",
+        "human_review_required",
+        "human_reviewed",
+        "deprecated",
+        "blocked_by_scope"
+      ]
+    },
     "advisory_boundary": { "const": "non_advisory" }
   },
   "allOf": [
@@ -34,7 +54,7 @@
       "if": {
         "properties": {
           "record_class": {
-            "enum": ["vendor", "candidate", "unavailable", "observation", "artifact", "change", "coverage"]
+            "enum": ["vendor", "candidate", "unavailable", "observation", "artifact", "change", "legal_entity", "coverage"]
           }
         },
         "required": ["record_class"]

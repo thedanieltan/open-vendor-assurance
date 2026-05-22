@@ -28,6 +28,11 @@ REQUIRED_GUARANTEES = {
     "non_advisory": True,
     "raw_documents_mirrored_by_default": False,
 }
+ADAPTER_REVIEW_ANNOTATIONS = {
+    "canonical": ("human_reviewed", "human_reviewed"),
+    "candidate": ("discovery", "human_review_required"),
+    "observation": ("observation", "auto_observed"),
+}
 
 
 class PackError(ValueError):
@@ -63,6 +68,12 @@ def annotated(record: dict[str, Any], *, record_class: str, canonical: bool) -> 
     normalized = copy.deepcopy(record)
     normalized["record_class"] = record_class
     normalized["canonical"] = canonical
+    catalog_tier, review_state = ADAPTER_REVIEW_ANNOTATIONS.get(
+        record_class,
+        ("human_reviewed", "human_reviewed"),
+    )
+    normalized["catalog_tier"] = catalog_tier
+    normalized["review_state"] = review_state
     normalized["advisory_boundary"] = "non_advisory"
     if record_class == "vendor":
         catalog_status = normalized.get("catalog_status", normalized.get("status"))

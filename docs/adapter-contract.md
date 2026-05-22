@@ -27,6 +27,12 @@ Consumers should discover paths through `openva-pack.json`.
 
 `observations` and source verification reports are fetch-time facts. They are not source validity, legal, compliance, procurement, security, or risk determinations.
 
+Adapter-normalized records preserve `catalog_tier` and `review_state` so
+consumers can distinguish human-reviewed canonical metadata, candidate review
+items, observation facts, and future machine_validated records without treating
+any tier as vendor approval, compliance status, procurement suitability, or a
+risk conclusion.
+
 ## Status Mapping
 
 `source_verification.verification_status` is a maintenance diagnostic. `observation.result` is a durable observation record value. Consumers may map both into local operational states while preserving the source metadata boundary.
