@@ -2,6 +2,8 @@
 
 This directory contains the static OpenVA Catalog Viewer.
 
+Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
+
 The site is built from committed OpenVA public pack and index files:
 
 ```text
