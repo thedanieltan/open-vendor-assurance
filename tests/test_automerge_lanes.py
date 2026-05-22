@@ -11,7 +11,7 @@ from tools.openva.automerge_lanes import (
 
 def test_policy_is_report_only_and_limits_machine_canonical_records():
     policy = load_policy()
-    assert policy["mode"] == "report_only"
+    assert policy["mode"] == "enforce"
     assert policy["machine_canonical"]["max_source_records_per_pr"] == 50
 
 
@@ -19,7 +19,7 @@ def test_generated_lane_accepts_only_generated_paths():
     result = eligible_for_lane(["openva-pack.json", "indexes/vendors.json"], [AUTOMERGE_GENERATED])
     assert result.eligible is True
     assert result.lane == AUTOMERGE_GENERATED
-    assert result.report_only is True
+    assert result.report_only is False
 
 
 def test_generated_lane_rejects_source_data_change():
@@ -64,3 +64,21 @@ def test_no_automerge_label_requires_human_review():
     assert result.eligible is False
     assert result.lane == "needs-human-review"
     assert "no_automerge_label" in result.reasons
+
+
+def test_enforce_mode_cli_returns_nonzero_for_ineligible_lane(tmp_path):
+    from tools.openva.automerge_lanes import main
+
+    paths = tmp_path / "paths.txt"
+    paths.write_text("data/vendors/stripe.yaml\n", encoding="utf-8")
+
+    assert main(["--paths-file", str(paths), "--labels", ""]) == 1
+
+
+def test_report_only_flag_keeps_cli_non_blocking(tmp_path):
+    from tools.openva.automerge_lanes import main
+
+    paths = tmp_path / "paths.txt"
+    paths.write_text("data/vendors/stripe.yaml\n", encoding="utf-8")
+
+    assert main(["--paths-file", str(paths), "--labels", "", "--report-only"]) == 0
