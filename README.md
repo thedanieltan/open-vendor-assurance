@@ -206,6 +206,8 @@ See `docs/release-downloads.md` for a plain-language walkthrough of the release 
 
 OpenVA also provides a GitHub Pages catalog viewer for non-dev users.
 
+Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
+
 The hosted site is a static, read-only viewer over public OpenVA metadata. It lets users browse the reviewed catalog snapshot, view the live observation feed shell, use the browser-local matcher, and export selected public metadata.
 
 The site does not provide accounts, workspaces, server-side matching, hosted private inventory upload, vendor scoring, vendor approval, or compliance conclusions. Private vendor inventories should remain browser-local, local, or self-hosted inside the user's own environment.
@@ -257,26 +259,3 @@ python -m openva_vendor_inventory_matcher --pack . --input customer_vendors.csv 
 ```
 
 The optional match service in `services/openva_match_service/` wraps the pack reader and inventory matcher as a self-hosted HTTP service. OpenVA does not operate a central hosted service.
-
-Adapter outputs preserve the OpenVA boundary: they expose public metadata references only and do not make legal, compliance, procurement, security, KYC, AML, approval, suitability, or vendor-risk decisions.
-
-## License
-
-OpenVA is licensed under the MIT License. See [LICENSE](LICENSE).
-
-OpenVA records public metadata references to vendor-published materials. Vendor documents, web pages, marks, names, policies, trust-center materials, and other third-party materials remain the property of their respective owners. OpenVA does not relicense vendor source materials and does not mirror raw vendor documents by default.
-
-## Project status
-
-OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
-
-The initial catalog is a seed dataset. It is useful for testing importer
-workflows, matching public vendor assurance references, and contributing
-public-source metadata, but it should not be treated as complete vendor
-assurance coverage.
-
-OpenVA is in early public development. The schema, validation tooling, generated indexes, universal pack manifest, maintenance workflow, agent PR workflow, conformance fixtures, governance docs, adapters, release downloads, optional self-hosted match service, and initial seed catalog are available, but the dataset should not be treated as complete.
-
-## Disclaimer
-
-See [DISCLAIMER.md](DISCLAIMER.md).
