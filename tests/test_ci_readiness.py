@@ -5,6 +5,7 @@ import yaml
 WORKFLOW_DIR = Path(".github/workflows")
 EXPECTED_PUBLIC_WORKFLOWS = {
     "candidate-promotion-pr.yml",
+    "agent-automerge.yml",
     "agent-weighted-review.yml",
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
@@ -130,6 +131,15 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         "agent-weighted-review.yml": {
             "triggers": {"pull_request"},
             "permissions": {"contents": "read", "pull-requests": "read", "issues": "write"},
+        },
+        "agent-automerge.yml": {
+            "triggers": {"pull_request"},
+            "permissions": {
+                "contents": "write",
+                "pull-requests": "write",
+                "checks": "read",
+                "statuses": "read",
+            },
         },
     }
 

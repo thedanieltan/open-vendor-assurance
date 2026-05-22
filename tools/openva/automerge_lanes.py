@@ -193,7 +193,9 @@ def main(argv: list[str] | None = None) -> int:
     for reason in result.reasons:
         print(f"reason={reason}")
 
-    return 0
+    if args.report_only or result.report_only:
+        return 0
+    return 0 if result.eligible else 1
 
 
 if __name__ == "__main__":
