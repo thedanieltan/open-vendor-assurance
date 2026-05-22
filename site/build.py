@@ -88,8 +88,17 @@ def annotation(record_class: str) -> dict[str, Any]:
 
 
 def compact_source(source: dict[str, Any]) -> dict[str, Any]:
+    tier = source.get("catalog_tier") or (
+        "machine_validated" if source.get("review_state") == "auto_validated" else "human_reviewed"
+    )
+    review_state = source.get("review_state")
+    if review_state in (None, "", "validated"):
+        review_state = "auto_validated" if tier == "machine_validated" else "human_reviewed"
     return {
         **annotation("canonical"),
+        "catalog_tier": tier,
+        "review_state": review_state,
+        "advisory_boundary": source.get("advisory_boundary") or "non_advisory",
         "vendor_id": source.get("vendor_id"),
         "source_id": source.get("source_id"),
         "source_type": source.get("source_type"),
