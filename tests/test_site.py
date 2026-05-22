@@ -67,6 +67,6 @@ def test_pages_workflow_deploys_site_and_feed_workflow_uploads_feed_artifact_onl
     feed_text = (WORKFLOWS / "site-live-feed.yml").read_text(encoding="utf-8")
     assert "actions/deploy-pages@v4" in reviewed_text
     assert "actions/deploy-pages" not in feed_text
-    assert "actions/upload-artifact@v4" in feed_text
+    assert "actions/upload-artifact@v6" in feed_text
     assert "openva-observation-feed" in feed_text
     assert "site/feed-artifact/feed/observations.json" in feed_text
