@@ -33,8 +33,6 @@ SCHEMA_MAP = {
 }
 ADAPTER_NORMALIZED_RECORD_SCHEMA = ROOT / "schemas/openva/adapter-normalized-record.schema.json"
 
-ADAPTER_NORMALIZED_RECORD_SCHEMA = ROOT / "schemas/openva/adapter-normalized-record.schema.json"
-
 FIXTURE_GLOBS = {
     "vendor": ["examples/vendors/*/vendor.yaml", "data/vendors/*/vendor.yaml"],
     "source": ["examples/vendors/*/sources/*.yaml", "data/vendors/*/sources/*.yaml"],
@@ -111,21 +109,6 @@ def validate_schema(kind: str) -> list[str]:
     return failures
 
 
-def adapter_record_errors(record: dict[str, Any]) -> list[str]:
-    schema = load_json(ADAPTER_NORMALIZED_RECORD_SCHEMA)
-    validator = Draft202012Validator(schema, format_checker=FormatChecker())
-    errors = sorted(validator.iter_errors(record), key=lambda err: list(err.path))
-    failures: list[str] = []
-    for error in errors:
-        location = ".".join(str(part) for part in error.path) or "<root>"
-        failures.append(f"{location}: {error.message}")
-    return failures
-
-
-def validate_adapter_record(record: dict[str, Any]) -> list[str]:
-    return adapter_record_errors(record)
-
-
 def validate_adapter_outputs() -> list[str]:
     if str(PACK_READER_PATH) not in sys.path:
         sys.path.insert(0, str(PACK_READER_PATH))
@@ -150,8 +133,7 @@ def validate_adapter_outputs() -> list[str]:
 
     for group_name, records in record_groups:
         for index, record in enumerate(records):
-            for failure in adapter_record_errors(record):
-                failures.append(f"{group_name}[{index}]: {failure}")
+            failures.extend(validate_adapter_record(record, label=f"{group_name}[{index}]"))
     return failures
 
 
