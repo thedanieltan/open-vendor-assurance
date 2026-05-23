@@ -1,0 +1,228 @@
+/* Public product polish layer: hierarchy, spacing, color, and layout rooms. */
+
+:root {
+  --product-room-gap: clamp(1.25rem, 3vw, 2rem);
+  --product-max-copy: 62ch;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.site-header {
+  gap: clamp(0.8rem, 2vw, 1.4rem);
+}
+
+.brand-lockup .eyebrow {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.site-header h1 {
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  letter-spacing: -0.035em;
+}
+
+nav a {
+  font-size: 0.94rem;
+}
+
+.home-room,
+.catalog-workspace-room,
+.utility-workspace-room,
+.maintainer-room {
+  display: grid;
+  gap: var(--product-room-gap);
+}
+
+.public-hero-room {
+  margin-top: 1.35rem;
+  padding-block: clamp(2rem, 5vw, 4rem);
+}
+
+.public-hero-room h2,
+.catalog-heading-room h2 {
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+.public-hero-room p:not(.eyebrow),
+.catalog-heading-room p:not(.eyebrow) {
+  max-width: var(--product-max-copy);
+}
+
+.trust-boundary {
+  margin-top: calc(var(--product-room-gap) * -0.55);
+  margin-bottom: 0;
+  box-shadow: none;
+}
+
+.assurance-types,
+.primary-path-room,
+.catalog-snapshot-room,
+.utility-room {
+  margin: 0;
+}
+
+.assurance-types {
+  background: linear-gradient(180deg, var(--visual-surface), var(--visual-surface-soft));
+}
+
+.primary-path-room {
+  border-color: rgba(47, 125, 91, 0.28);
+}
+
+.catalog-snapshot-room,
+.utility-room {
+  background: color-mix(in srgb, var(--visual-surface) 86%, var(--visual-surface-soft));
+}
+
+.compact-surface-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.compact-surface-grid article {
+  min-height: 0;
+}
+
+.section-heading-lite h3,
+.start-steps h3,
+.surface-grid h3,
+.detail-panel h3 {
+  text-wrap: balance;
+}
+
+.section-heading-lite h3 {
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  letter-spacing: -0.04em;
+}
+
+.section-heading-lite p {
+  max-width: var(--product-max-copy);
+}
+
+.catalog-workspace-room {
+  position: relative;
+  margin-top: 1.35rem;
+  padding: clamp(1rem, 2vw, 1.35rem);
+  border: 1px solid var(--visual-border);
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--visual-surface-soft) 72%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+.catalog-workspace-room .section-heading,
+.utility-workspace-room .section-heading,
+.maintainer-room .section-heading {
+  margin: 0;
+}
+
+.catalog-workspace-room > .snapshot-box,
+.utility-workspace-room > .snapshot-box {
+  margin: 0;
+}
+
+.catalog-layout {
+  gap: clamp(1rem, 2vw, 1.35rem);
+}
+
+.catalog-list-panel,
+.detail-panel {
+  border-radius: 22px;
+}
+
+.catalog-list-panel {
+  min-width: 0;
+}
+
+.vendor-list {
+  gap: 0.8rem;
+}
+
+.vendor-card {
+  padding: 1rem;
+}
+
+.vendor-card label,
+.source-list label {
+  color: var(--visual-muted);
+  font-size: 0.88rem;
+}
+
+.vendor-card h4 button {
+  font-size: 1rem;
+}
+
+.meta-line {
+  font-size: 0.88rem;
+}
+
+.empty-detail-state {
+  display: grid;
+  align-content: center;
+  min-height: 18rem;
+  border-style: dashed;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--visual-accent) 10%, transparent), transparent 18rem),
+    var(--visual-surface);
+}
+
+.empty-detail-state h3 {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  letter-spacing: -0.035em;
+}
+
+.empty-detail-state p {
+  max-width: 52ch;
+  color: var(--visual-muted);
+}
+
+.feed-meta p {
+  color: var(--visual-muted);
+}
+
+footer {
+  align-items: center;
+}
+
+footer > div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+footer strong {
+  color: var(--visual-text);
+}
+
+footer span {
+  color: var(--visual-muted);
+}
+
+.footer-links {
+  flex: 0 1 auto;
+}
+
+@media (max-width: 900px) {
+  .catalog-workspace-room {
+    padding: 0.85rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .public-hero-room {
+    padding-block: 1.35rem;
+  }
+
+  .trust-boundary {
+    margin-top: 0;
+  }
+
+  .catalog-workspace-room {
+    border-radius: 20px;
+    padding: 0.7rem;
+  }
+
+  .empty-detail-state {
+    min-height: auto;
+  }
+}
