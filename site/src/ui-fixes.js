@@ -106,8 +106,8 @@
       const link = node.querySelector("a")?.getAttribute("href") || "https://github.com/thedanieltan/open-vendor-assurance/releases";
       node.innerHTML = `
         <details class="catalog-version">
-          <summary>Catalog version: ${date}</summary>
-          <p>This identifies the public metadata snapshot used by the page. Most users can ignore it unless they need reproducible records.</p>
+          <summary>Catalog snapshot: ${date}</summary>
+          <p>This identifies the reproducible public metadata snapshot used by the page. Most users can ignore it unless they need auditability.</p>
           <p>Snapshot: <code>${snapshot}</code></p>
           <p><a href="${link}">GitHub Releases</a></p>
         </details>
@@ -116,9 +116,50 @@
     });
   }
 
+  function improveHomeStats() {
+    const homeStats = document.getElementById("home-stats");
+    if (!homeStats || homeStats.dataset.publicLabelsApplied) return;
+    homeStats.querySelectorAll("article").forEach((card) => {
+      const label = card.querySelector("strong")?.textContent.trim();
+      const value = card.querySelector("p");
+      if (label === "Observation feed") card.remove();
+      if (label === "Site data contract") card.remove();
+      if (label === "Boundary") card.remove();
+      if (label === "Snapshot date" && value) card.querySelector("strong").textContent = "Catalog date";
+    });
+    homeStats.dataset.publicLabelsApplied = "true";
+  }
+
+  function improveMatcherEmptyState() {
+    const preview = document.getElementById("match-preview");
+    if (!preview || preview.dataset.emptyStateApplied || !preview.textContent.includes("No local match results yet")) return;
+    preview.classList.add("empty-detail-state");
+    preview.innerHTML = `
+      <p class="eyebrow">CSV match preview</p>
+      <h3>Upload a CSV to preview matches</h3>
+      <p>After you run the local matcher, this panel will show matched vendor names, match method, confidence, and available public source types. Your CSV stays in browser memory and is not uploaded to OpenVA.</p>
+    `;
+    preview.dataset.emptyStateApplied = "true";
+  }
+
+  function softenGeneratedTechnicalCopy() {
+    document.querySelectorAll("#vendor-detail li, #feed-meta p, #feed-list p").forEach((node) => {
+      if (node.dataset.copySoftened) return;
+      node.innerHTML = node.innerHTML
+        .replaceAll("advisory_boundary:", "boundary:")
+        .replaceAll("non_advisory", "public metadata only")
+        .replaceAll("catalog_tier:", "record type:")
+        .replaceAll("review_state:", "review state:");
+      node.dataset.copySoftened = "true";
+    });
+  }
+
   function refreshUiFixes() {
     compactSnapshotBlocks();
     improveCountryLabels();
+    improveHomeStats();
+    improveMatcherEmptyState();
+    softenGeneratedTechnicalCopy();
   }
 
   applyTheme(storedTheme());
