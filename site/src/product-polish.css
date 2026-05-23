@@ -126,12 +126,16 @@ nav a {
   font-size: 0.94rem;
 }
 
-.home-room,
-.catalog-workspace-room,
-.utility-workspace-room,
-.maintainer-room {
+.home-room:not(.hidden),
+.catalog-workspace-room:not(.hidden),
+.utility-workspace-room:not(.hidden),
+.maintainer-room:not(.hidden) {
   display: grid;
   gap: var(--product-room-gap);
+}
+
+.view.hidden {
+  display: none !important;
 }
 
 .public-hero-room {
