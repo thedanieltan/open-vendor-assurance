@@ -150,19 +150,19 @@ nav a[aria-current="page"] {
   color: #ffffff !important;
 }
 
-button:not(.secondary):not(.theme-toggle),
-a.button:not(.secondary-button),
-a.button:not(.secondary-button):visited {
+button:not(.secondary):not(.secondary-button):not(.theme-toggle),
+.button:not(.secondary-button),
+.button:not(.secondary-button):visited {
   background: var(--product-primary) !important;
   border: 2px solid var(--product-primary) !important;
   color: var(--product-primary-text) !important;
   box-shadow: 0 1px 2px rgba(15, 27, 61, 0.12), 0 8px 18px rgba(29, 78, 216, 0.18) !important;
 }
 
-button:not(.secondary):not(.theme-toggle):hover,
-a.button:not(.secondary-button):hover,
-button:not(.secondary):not(.theme-toggle):focus-visible,
-a.button:not(.secondary-button):focus-visible {
+button:not(.secondary):not(.secondary-button):not(.theme-toggle):hover,
+.button:not(.secondary-button):hover,
+button:not(.secondary):not(.secondary-button):not(.theme-toggle):focus-visible,
+.button:not(.secondary-button):focus-visible {
   background: var(--product-primary-hover) !important;
   border-color: var(--product-primary-hover) !important;
   color: var(--product-primary-text) !important;
@@ -170,8 +170,9 @@ a.button:not(.secondary-button):focus-visible {
 }
 
 button.secondary,
-a.secondary-button,
-a.secondary-button:visited {
+button.secondary-button,
+.secondary-button,
+.secondary-button:visited {
   background: var(--product-secondary-bg) !important;
   border: 2px solid var(--product-secondary-border) !important;
   color: var(--product-secondary-text) !important;
@@ -179,9 +180,11 @@ a.secondary-button:visited {
 }
 
 button.secondary:hover,
-a.secondary-button:hover,
+button.secondary-button:hover,
+.secondary-button:hover,
 button.secondary:focus-visible,
-a.secondary-button:focus-visible {
+button.secondary-button:focus-visible,
+.secondary-button:focus-visible {
   background: var(--product-secondary-bg-hover) !important;
   border-color: var(--product-primary) !important;
   color: var(--product-secondary-text) !important;
