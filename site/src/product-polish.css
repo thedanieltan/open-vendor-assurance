@@ -3,11 +3,85 @@
 :root {
   --product-room-gap: clamp(1.25rem, 3vw, 2rem);
   --product-max-copy: 62ch;
+  --product-primary-bg: #e1f3ea;
+  --product-primary-bg-hover: #cbe8da;
+  --product-primary-text: #083842;
+  --product-primary-border: #8ec9ae;
+  --product-secondary-bg: #ffffff;
+  --product-secondary-bg-hover: #f0f8f4;
+  --product-secondary-text: #0c4a5a;
+  --product-secondary-border: #b9d8ca;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --product-primary-bg: var(--visual-brand);
+    --product-primary-bg-hover: var(--visual-brand-strong);
+    --product-primary-text: #071311;
+    --product-primary-border: var(--visual-brand);
+    --product-secondary-bg: var(--visual-surface-soft);
+    --product-secondary-bg-hover: #183329;
+    --product-secondary-text: var(--visual-text);
+    --product-secondary-border: var(--visual-border);
+  }
+}
+
+html[data-theme="dark"] {
+  --product-primary-bg: var(--visual-brand);
+  --product-primary-bg-hover: var(--visual-brand-strong);
+  --product-primary-text: #071311;
+  --product-primary-border: var(--visual-brand);
+  --product-secondary-bg: var(--visual-surface-soft);
+  --product-secondary-bg-hover: #183329;
+  --product-secondary-text: var(--visual-text);
+  --product-secondary-border: var(--visual-border);
 }
 
 body {
   font-size: 16px;
   line-height: 1.55;
+}
+
+button:not(.secondary):not(.theme-toggle),
+.button:not(.secondary-button),
+.button:not(.secondary-button):visited {
+  background: var(--product-primary-bg);
+  border-color: var(--product-primary-border);
+  color: var(--product-primary-text);
+  box-shadow: 0 8px 18px rgba(15, 76, 92, 0.12);
+}
+
+button:not(.secondary):not(.theme-toggle):hover,
+.button:not(.secondary-button):hover {
+  background: var(--product-primary-bg-hover);
+  border-color: var(--product-primary-border);
+  color: var(--product-primary-text);
+  box-shadow: 0 10px 22px rgba(15, 76, 92, 0.16);
+}
+
+button.secondary,
+.secondary-button,
+.secondary-button:visited {
+  background: var(--product-secondary-bg);
+  border-color: var(--product-secondary-border);
+  color: var(--product-secondary-text);
+}
+
+button.secondary:hover,
+.secondary-button:hover {
+  background: var(--product-secondary-bg-hover);
+  border-color: var(--product-secondary-border);
+  color: var(--product-secondary-text);
+}
+
+button:focus-visible,
+.button:focus-visible {
+  color: var(--product-primary-text);
+}
+
+button.secondary:focus-visible,
+.secondary-button:focus-visible {
+  color: var(--product-secondary-text);
 }
 
 .site-header {
