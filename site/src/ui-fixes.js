@@ -65,31 +65,119 @@
     applyTheme(storedTheme());
   }
 
+  function selectedDomCounts() {
+    return {
+      vendors: document.querySelectorAll("[data-select-vendor]:checked").length,
+      sources: document.querySelectorAll("[data-select-source]:checked").length,
+    };
+  }
+
+  function renderExportFallbackState(mode = "ready") {
+    const summary = document.getElementById("selection-summary");
+    if (!summary) return;
+    const counts = selectedDomCounts();
+    const hasSelection = counts.vendors > 0 || counts.sources > 0;
+
+    if (mode === "loading") {
+      summary.innerHTML = `
+        <div class="summary-strip">
+          <span><strong>${counts.vendors}</strong><small>selected public vendors</small></span>
+          <span><strong>${counts.sources}</strong><small>selected reviewed sources</small></span>
+        </div>
+        <div class="detail-panel empty-detail-state">
+          <p class="eyebrow">Preparing export</p>
+          <h3>Building your selected public metadata export...</h3>
+          <p>OpenVA is loading selected records. The download buttons below will use your current selection.</p>
+        </div>
+      `;
+      return;
+    }
+
+    if (hasSelection) {
+      summary.innerHTML = `
+        <div class="summary-strip">
+          <span><strong>${counts.vendors}</strong><small>selected public vendors</small></span>
+          <span><strong>${counts.sources}</strong><small>selected reviewed sources</small></span>
+        </div>
+        <div class="detail-panel">
+          <p class="eyebrow">Ready to export</p>
+          <h3>Your selected records are ready.</h3>
+          <p>Use the download buttons below to export selected vendors, reviewed sources, or the combined JSON package.</p>
+        </div>
+      `;
+      return;
+    }
+
+    summary.innerHTML = `
+      <div class="detail-panel empty-detail-state">
+        <p class="eyebrow">No records selected</p>
+        <h3>Select vendors before exporting</h3>
+        <p>Go back to the catalog, select one or more vendors, then return here to download public metadata.</p>
+        <button type="button" class="button" data-route="catalog">Back to catalog</button>
+      </div>
+    `;
+  }
+
+  async function renderExportRouteState() {
+    renderExportFallbackState("loading");
+    if (typeof window.renderExport !== "function") {
+      renderExportFallbackState("ready");
+      return;
+    }
+
+    try {
+      await window.renderExport();
+      const summary = document.getElementById("selection-summary");
+      if (!summary || !summary.textContent.trim()) renderExportFallbackState("ready");
+    } catch (error) {
+      console.warn("OpenVA export render failed", error);
+      renderExportFallbackState("ready");
+    }
+  }
+
   function setInAppView(routeName) {
     const name = APP_ROUTES.has(routeName) ? routeName : "home";
     document.querySelectorAll(".view").forEach((view) => view.classList.add("hidden"));
     const current = document.getElementById(`${name}-view`) || document.getElementById("home-view");
     current.classList.remove("hidden");
 
-    document.querySelectorAll('.site-header nav a[href^="#"]').forEach((link) => {
-      const linkName = link.getAttribute("href").slice(1);
-      if (linkName === name) {
-        link.setAttribute("aria-current", "page");
+    document.querySelectorAll("[data-route]").forEach((control) => {
+      if (control.dataset.route === name && control.closest(".site-header")) {
+        control.setAttribute("aria-current", "page");
       } else {
-        link.removeAttribute("aria-current");
+        control.removeAttribute("aria-current");
       }
     });
 
-    if (name === "export" && typeof window.renderExport === "function") window.renderExport();
+    if (name === "export") renderExportRouteState();
     if (name === "feed" && typeof window.renderFeed === "function") window.renderFeed();
   }
 
-  function installInAppRouteLinks() {
+  function normalizeAppRouteControls() {
     document.querySelectorAll('a[href="#home"], a[href="#catalog"], a[href="#matcher"], a[href="#export"], a[href="#feed"]').forEach((link) => {
-      if (link.dataset.inAppRouteInstalled) return;
-      link.dataset.inAppRouteInstalled = "true";
-      link.addEventListener("click", (event) => {
-        const routeName = link.getAttribute("href").slice(1);
+      const routeName = link.getAttribute("href").slice(1);
+      link.dataset.route = routeName;
+      link.removeAttribute("href");
+      link.setAttribute("role", "button");
+      link.setAttribute("tabindex", "0");
+    });
+  }
+
+  function installInAppRouteControls() {
+    normalizeAppRouteControls();
+    document.querySelectorAll("[data-route]").forEach((control) => {
+      if (control.dataset.inAppRouteInstalled) return;
+      control.dataset.inAppRouteInstalled = "true";
+      control.addEventListener("click", (event) => {
+        const routeName = control.dataset.route;
+        if (!APP_ROUTES.has(routeName)) return;
+        event.preventDefault();
+        setInAppView(routeName);
+        document.getElementById("main-content")?.scrollIntoView({ block: "start" });
+      });
+      control.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        const routeName = control.dataset.route;
         if (!APP_ROUTES.has(routeName)) return;
         event.preventDefault();
         setInAppView(routeName);
@@ -195,13 +283,14 @@
     improveHomeStats();
     improveMatcherEmptyState();
     softenGeneratedTechnicalCopy();
-    installInAppRouteLinks();
+    installInAppRouteControls();
   }
 
   applyTheme(storedTheme());
   window.addEventListener("DOMContentLoaded", () => {
     installThemeToggle();
     refreshUiFixes();
+    setInAppView("home");
     const observer = new MutationObserver(refreshUiFixes);
     observer.observe(document.body, { childList: true, subtree: true });
   });
