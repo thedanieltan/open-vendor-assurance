@@ -31,6 +31,8 @@
     dark: "Night",
   };
 
+  const APP_ROUTES = new Set(["home", "catalog", "matcher", "export", "feed"]);
+
   function storedTheme() {
     const value = localStorage.getItem("openva-theme") || "system";
     return THEMES.includes(value) ? value : "system";
@@ -61,6 +63,39 @@
     });
     nav.appendChild(button);
     applyTheme(storedTheme());
+  }
+
+  function setInAppView(routeName) {
+    const name = APP_ROUTES.has(routeName) ? routeName : "home";
+    document.querySelectorAll(".view").forEach((view) => view.classList.add("hidden"));
+    const current = document.getElementById(`${name}-view`) || document.getElementById("home-view");
+    current.classList.remove("hidden");
+
+    document.querySelectorAll('.site-header nav a[href^="#"]').forEach((link) => {
+      const linkName = link.getAttribute("href").slice(1);
+      if (linkName === name) {
+        link.setAttribute("aria-current", "page");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+
+    if (name === "export" && typeof window.renderExport === "function") window.renderExport();
+    if (name === "feed" && typeof window.renderFeed === "function") window.renderFeed();
+  }
+
+  function installInAppRouteLinks() {
+    document.querySelectorAll('a[href="#home"], a[href="#catalog"], a[href="#matcher"], a[href="#export"], a[href="#feed"]').forEach((link) => {
+      if (link.dataset.inAppRouteInstalled) return;
+      link.dataset.inAppRouteInstalled = "true";
+      link.addEventListener("click", (event) => {
+        const routeName = link.getAttribute("href").slice(1);
+        if (!APP_ROUTES.has(routeName)) return;
+        event.preventDefault();
+        setInAppView(routeName);
+        document.getElementById("main-content")?.scrollIntoView({ block: "start" });
+      });
+    });
   }
 
   function countryLabel(value) {
@@ -160,6 +195,7 @@
     improveHomeStats();
     improveMatcherEmptyState();
     softenGeneratedTechnicalCopy();
+    installInAppRouteLinks();
   }
 
   applyTheme(storedTheme());
