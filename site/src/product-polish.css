@@ -3,14 +3,15 @@
 :root {
   --product-room-gap: clamp(1.25rem, 3vw, 2rem);
   --product-max-copy: 62ch;
-  --product-primary-bg: #e1f3ea;
-  --product-primary-bg-hover: #cbe8da;
-  --product-primary-text: #083842;
-  --product-primary-border: #8ec9ae;
+  --product-primary-bg: #f1fff7;
+  --product-primary-bg-hover: #d7f4e5;
+  --product-primary-text: #062f37;
+  --product-primary-border: #0c4a5a;
   --product-secondary-bg: #ffffff;
-  --product-secondary-bg-hover: #f0f8f4;
+  --product-secondary-bg-hover: #eef8f3;
   --product-secondary-text: #0c4a5a;
-  --product-secondary-border: #b9d8ca;
+  --product-secondary-border: #7eb89d;
+  --product-button-shadow: 0 8px 18px rgba(15, 76, 92, 0.14);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,10 +20,11 @@
     --product-primary-bg-hover: var(--visual-brand-strong);
     --product-primary-text: #071311;
     --product-primary-border: var(--visual-brand);
-    --product-secondary-bg: var(--visual-surface-soft);
-    --product-secondary-bg-hover: #183329;
-    --product-secondary-text: var(--visual-text);
-    --product-secondary-border: var(--visual-border);
+    --product-secondary-bg: #183329;
+    --product-secondary-bg-hover: #21483a;
+    --product-secondary-text: #edf7f1;
+    --product-secondary-border: #8ee5bd;
+    --product-button-shadow: 0 0 0 1px rgba(142, 229, 189, 0.24), 0 12px 28px rgba(0, 0, 0, 0.28);
   }
 }
 
@@ -31,10 +33,23 @@ html[data-theme="dark"] {
   --product-primary-bg-hover: var(--visual-brand-strong);
   --product-primary-text: #071311;
   --product-primary-border: var(--visual-brand);
-  --product-secondary-bg: var(--visual-surface-soft);
-  --product-secondary-bg-hover: #183329;
-  --product-secondary-text: var(--visual-text);
-  --product-secondary-border: var(--visual-border);
+  --product-secondary-bg: #183329;
+  --product-secondary-bg-hover: #21483a;
+  --product-secondary-text: #edf7f1;
+  --product-secondary-border: #8ee5bd;
+  --product-button-shadow: 0 0 0 1px rgba(142, 229, 189, 0.24), 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="light"] {
+  --product-primary-bg: #f1fff7;
+  --product-primary-bg-hover: #d7f4e5;
+  --product-primary-text: #062f37;
+  --product-primary-border: #0c4a5a;
+  --product-secondary-bg: #ffffff;
+  --product-secondary-bg-hover: #eef8f3;
+  --product-secondary-text: #0c4a5a;
+  --product-secondary-border: #7eb89d;
+  --product-button-shadow: 0 8px 18px rgba(15, 76, 92, 0.14);
 }
 
 body {
@@ -43,45 +58,55 @@ body {
 }
 
 button:not(.secondary):not(.theme-toggle),
-.button:not(.secondary-button),
-.button:not(.secondary-button):visited {
-  background: var(--product-primary-bg);
-  border-color: var(--product-primary-border);
-  color: var(--product-primary-text);
-  box-shadow: 0 8px 18px rgba(15, 76, 92, 0.12);
+a.button:not(.secondary-button),
+a.button:not(.secondary-button):visited {
+  background: var(--product-primary-bg) !important;
+  border: 2px solid var(--product-primary-border) !important;
+  color: var(--product-primary-text) !important;
+  box-shadow: var(--product-button-shadow) !important;
 }
 
 button:not(.secondary):not(.theme-toggle):hover,
-.button:not(.secondary-button):hover {
-  background: var(--product-primary-bg-hover);
-  border-color: var(--product-primary-border);
-  color: var(--product-primary-text);
-  box-shadow: 0 10px 22px rgba(15, 76, 92, 0.16);
+a.button:not(.secondary-button):hover,
+button:not(.secondary):not(.theme-toggle):focus-visible,
+a.button:not(.secondary-button):focus-visible {
+  background: var(--product-primary-bg-hover) !important;
+  border-color: var(--product-primary-border) !important;
+  color: var(--product-primary-text) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--product-primary-border) 18%, transparent), var(--product-button-shadow) !important;
 }
 
 button.secondary,
-.secondary-button,
-.secondary-button:visited {
-  background: var(--product-secondary-bg);
-  border-color: var(--product-secondary-border);
-  color: var(--product-secondary-text);
+a.secondary-button,
+a.secondary-button:visited {
+  background: var(--product-secondary-bg) !important;
+  border: 2px solid var(--product-secondary-border) !important;
+  color: var(--product-secondary-text) !important;
+  box-shadow: 0 6px 16px rgba(15, 76, 92, 0.08) !important;
 }
 
 button.secondary:hover,
-.secondary-button:hover {
-  background: var(--product-secondary-bg-hover);
-  border-color: var(--product-secondary-border);
-  color: var(--product-secondary-text);
-}
-
-button:focus-visible,
-.button:focus-visible {
-  color: var(--product-primary-text);
-}
-
+a.secondary-button:hover,
 button.secondary:focus-visible,
-.secondary-button:focus-visible {
-  color: var(--product-secondary-text);
+a.secondary-button:focus-visible {
+  background: var(--product-secondary-bg-hover) !important;
+  border-color: var(--product-secondary-border) !important;
+  color: var(--product-secondary-text) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--product-secondary-border) 22%, transparent), var(--product-button-shadow) !important;
+}
+
+html[data-theme="dark"] button.secondary,
+html[data-theme="dark"] a.secondary-button,
+html[data-theme="dark"] a.secondary-button:visited {
+  box-shadow: var(--product-button-shadow) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) button.secondary,
+  :root:not([data-theme="light"]) a.secondary-button,
+  :root:not([data-theme="light"]) a.secondary-button:visited {
+    box-shadow: var(--product-button-shadow) !important;
+  }
 }
 
 .site-header {
