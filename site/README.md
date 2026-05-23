@@ -30,6 +30,29 @@ workspace persistence.
 Selections are held in browser memory only. They are not written to
 `localStorage`, `sessionStorage`, a server, or a database.
 
+## Public route terminology
+
+The public site keeps stable product terminology even when labels are shortened
+for navigation. The primary user workspace is the Reviewed Catalog, presented in
+the navigation as Catalog. The maintainer/developer surface is the Live
+Observation Feed, linked outside the primary navigation so non-dev users can stay
+focused on the reviewed catalog workflow.
+
+Boundary phrases that must remain present across the site and documentation:
+
+```text
+Reviewed Catalog
+Live Observation Feed
+Reviewed catalog snapshot
+not a live monitoring feed
+No live observation events are available yet.
+observation ledger workflow
+Local Matcher
+Your CSV is processed locally in your browser. It is not uploaded to OpenVA.
+openva-matched-inventory.csv
+openva-matched-inventory.json
+```
+
 ## Browser-local inventory matcher
 
 The Local Matcher page lets users choose a CSV from their own computer and match it against OpenVA public metadata in browser memory. The CSV stays in the user's browser session and match results can be downloaded as CSV or JSON.
