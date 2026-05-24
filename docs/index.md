@@ -62,6 +62,7 @@ docs/vendor-public-manifest.md
 ```text
 docs/observation-pilot.md
 docs/observation-result-taxonomy.md
+docs/source-trust/observation-retention-policy.md
 config/observation-pilot.yaml
 ```
 
