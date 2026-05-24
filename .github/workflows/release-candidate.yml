@@ -14,7 +14,7 @@ on:
       source_health_policy:
         description: "Source health readiness policy"
         required: false
-        default: "report_only"
+        default: "enforce"
         type: choice
         options:
           - "report_only"
