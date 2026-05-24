@@ -55,6 +55,11 @@ jobs:
             --prior-report-run-id "${{ inputs.prior_run_id }}" \
             --fresh-report-run-id "${{ inputs.fresh_run_id }}" \
             --output confirmed-p0-repair-candidates.json
+      - name: Build P0 source repair evidence
+        run: |
+          python -m tools.openva.source_repair_evidence build \
+            --confirmed-p0-scan confirmed-p0-repair-candidates.json \
+            --output source-repair-evidence.json
       - name: Build reviewer summary
         run: |
           python - <<'PY'
@@ -62,7 +67,9 @@ jobs:
           from pathlib import Path
 
           report = json.load(open("confirmed-p0-repair-candidates.json", encoding="utf-8"))
+          evidence = json.load(open("source-repair-evidence.json", encoding="utf-8"))
           summary = report["summary"]
+          evidence_summary = evidence["summary"]
           lines = [
               "# OpenVA Confirmed P0 Source Refinement Scan",
               "",
@@ -82,9 +89,12 @@ jobs:
               f"- Prior sources: `{summary['prior_source_count']}`",
               f"- Fresh sources: `{summary['fresh_source_count']}`",
               f"- Confirmed P0 candidates: `{summary['confirmed_p0_count']}`",
+              f"- Source repair evidence rows: `{evidence_summary['repair_evidence_count']}`",
               f"- Inconclusive rows: `{summary['inconclusive_count']}`",
               f"- Excluded rows: `{summary['excluded_count']}`",
               f"- Unknown statuses: `{summary['unknown_status_count']}`",
+              f"- Contains replacement evidence: `{evidence_summary['contains_replacement_evidence']}`",
+              f"- Contains automerge recommendation: `{evidence_summary['contains_automerge_recommendation']}`",
               "",
               "## Status breakdowns",
               "",
@@ -111,4 +121,5 @@ jobs:
           path: |
             confirmed-p0-repair-candidates.json
             confirmed-p0-summary.md
+            source-repair-evidence.json
           if-no-files-found: error
