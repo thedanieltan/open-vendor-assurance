@@ -1,0 +1,44 @@
+{
+  "approved": [
+    {
+      "original_source_url": "https://www.microsoft.com/en-us/trust-center/compliance",
+      "reasons": [],
+      "replacement_access_status": "public_web",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.microsoft.com/en-us/trust-center/compliance/compliance-overview",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "microsoft-compliance",
+      "source_type": "compliance_page",
+      "vendor_id": "microsoft"
+    }
+  ],
+  "generated_at": "2026-05-24T07:17:44.320546Z",
+  "inputs": {
+    "evidence_generated_at": "2026-05-24T07:17:44.258990Z",
+    "evidence_report_type": "p0_source_repair_evidence",
+    "plan_generated_at": "2026-05-24T07:15:00Z",
+    "plan_report_type": "p0_source_repair_plan"
+  },
+  "posture": {
+    "enables_automerge": false,
+    "mutates_catalog": false,
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "opens_pull_requests": false,
+    "writes_repository_state": false
+  },
+  "rejected": [],
+  "report_type": "p0_source_repair_plan_validation",
+  "schema_version": "0.1.0",
+  "summary": {
+    "approved_count": 1,
+    "evidence_repair_count": 145,
+    "plan_repair_count": 1,
+    "rejected_count": 0,
+    "unmatched_count": 0
+  },
+  "unmatched": []
+}
