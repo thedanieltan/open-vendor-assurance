@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: release-candidate-${{ github.ref }}
@@ -45,6 +46,39 @@ jobs:
         run: pytest -q
       - name: Run release smoke test
         run: python -m tools.openva.release_smoke
+      - name: Download latest source maintenance artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p source-health-artifacts
+          RUN_ID="$(gh run list \
+            --workflow source-maintenance-report.yml \
+            --branch main \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId // ""')"
+          if [ -z "$RUN_ID" ]; then
+            echo "::warning::source health artifact unavailable: no successful source-maintenance-report run was found."
+            exit 0
+          fi
+          if ! gh run download "$RUN_ID" \
+            --name openva-source-maintenance-report \
+            --dir source-health-artifacts; then
+            echo "::warning::source health artifact unavailable: could not download openva-source-maintenance-report from run $RUN_ID."
+            exit 0
+          fi
+          if [ -f source-health-artifacts/source-verification-report.json ]; then
+            cp source-health-artifacts/source-verification-report.json source-verification-report.json
+          else
+            echo "::warning::source health artifact unavailable: source-verification-report.json was not present in run $RUN_ID."
+          fi
+          if [ -f source-health-artifacts/confirmed-p0-repair-candidates.json ]; then
+            cp source-health-artifacts/confirmed-p0-repair-candidates.json confirmed-p0-repair-candidates.json
+          else
+            echo "::warning::confirmed-p0-repair-candidates.json was not present in source-maintenance-report run $RUN_ID; readiness will warn."
+          fi
       - name: Build source health readiness
         run: |
           set +e

@@ -98,6 +98,7 @@ def test_release_source_health_warns_when_verification_artifact_is_missing():
 
     assert report["status"] == "warning"
     assert report["warnings"][0]["code"] == "missing_source_verification_report"
+    assert "source health artifact unavailable" in report["warnings"][0]["message"]
 
 
 def test_release_source_health_enforcement_fails_when_verification_artifact_is_missing():
@@ -110,6 +111,7 @@ def test_release_source_health_enforcement_fails_when_verification_artifact_is_m
 
     assert report["status"] == "blocked"
     assert report["failures"][0]["code"] == "missing_source_verification_report"
+    assert "source health artifact unavailable" in report["failures"][0]["message"]
     assert report["policy"]["mode"] == "enforce"
 
 

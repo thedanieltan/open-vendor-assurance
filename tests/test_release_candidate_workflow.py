@@ -17,7 +17,7 @@ def test_release_candidate_workflow_is_manual_only_and_read_only():
     workflow = load_workflow()
     triggers = workflow_triggers(workflow)
 
-    assert workflow["permissions"] == {"contents": "read"}
+    assert workflow["permissions"] == {"contents": "read", "actions": "read"}
     assert set(triggers.keys()) == {"workflow_dispatch"}
     assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["default"] == "report_only"
     assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["options"] == [
@@ -34,6 +34,8 @@ def test_release_candidate_workflow_wraps_existing_release_commands():
         "python -m tools.openva.validate validate",
         "pytest -q",
         "python -m tools.openva.release_smoke",
+        "gh run list",
+        "gh run download",
         "python -m tools.openva.release_source_health check",
         "python -m tools.openva.release_artifacts build",
         "python -m tools.openva.release_artifacts check",
@@ -43,6 +45,17 @@ def test_release_candidate_workflow_wraps_existing_release_commands():
     assert "--enforce" in text
     assert "SOURCE_HEALTH_EXIT_CODE" in text
     assert "Enforce source health readiness result" in text
+
+
+def test_release_candidate_downloads_latest_source_maintenance_artifact_before_readiness():
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "--workflow source-maintenance-report.yml" in text
+    assert "--name openva-source-maintenance-report" in text
+    assert "source-verification-report.json" in text
+    assert "confirmed-p0-repair-candidates.json" in text
+    assert "source health artifact unavailable" in text
+    assert text.index("Download latest source maintenance artifacts") < text.index("Build source health readiness")
 
 
 def test_release_candidate_workflow_uploads_manifest_and_source_health_readiness():
