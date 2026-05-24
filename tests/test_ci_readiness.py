@@ -20,6 +20,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "site-live-feed.yml",
     "site-pages.yml",
     "source-maintenance-report.yml",
+    "source-repair-pr.yml",
     "source-refinement-queue.yml",
     "source-refinement-scan.yml",
     "validate.yml",
@@ -109,6 +110,10 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "triggers": {"workflow_dispatch", "schedule"},
             "permissions": {"contents": "write", "pull-requests": "write"},
         },
+        "source-repair-pr.yml": {
+            "triggers": {"workflow_dispatch"},
+            "permissions": {"contents": "write", "pull-requests": "write"},
+        },
         "catalog-growth-discovery.yml": {
             "triggers": {"workflow_dispatch", "schedule"},
             "permissions": {"contents": "read", "issues": "write"},
@@ -179,6 +184,21 @@ def test_catalog_agent_pr_workflow_is_manual_pr_only():
     assert "branch_name must start with agent-" in text
     assert "pr_title must start with Catalog:" in text
     assert "This workflow creates a pull request only. It does not merge catalog changes." in text
+
+
+def test_source_repair_pr_workflow_is_manual_human_reviewed_only():
+    workflow = load_workflow("source-repair-pr.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "source-repair-pr.yml").read_text(encoding="utf-8")
+
+    assert set(triggers.keys()) == {"workflow_dispatch"}
+    assert workflow["permissions"] == {"contents": "write", "pull-requests": "write"}
+    assert "validation_report_path must be under maintenance/reviewed/" in text
+    assert "pr_branch must start with agent-" in text
+    assert "pr_title must start with Catalog: repair" in text
+    assert "python -m tools.openva.source_repair_actions apply" in text
+    assert "gh pr create" in text
+    assert "gh pr merge" not in text
 
 
 def test_agent_weighted_review_is_advisory_and_adapter_aware():
@@ -258,6 +278,12 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
         "source-refinement-scan.yml": {
             "confirmed-p0-repair-candidates.json",
             "confirmed-p0-summary.md",
+            "source-repair-evidence.json",
+            "source-repair-plan-validation.json",
+        },
+        "source-repair-pr.yml": {
+            "source-repair-action-report.json",
+            "source-repair-pr-body.md",
         },
     }
 
