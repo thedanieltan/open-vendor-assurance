@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/field-provenance.schema.json",
+  "title": "OpenVA Field Provenance",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "provenance_id",
+    "vendor_id",
+    "field_name",
+    "field_value",
+    "extracted_at",
+    "extraction_method",
+    "review_state",
+    "confidence",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "provenance_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "field_name": {
+      "enum": [
+        "legal_entity_name",
+        "homepage_url",
+        "privacy_notice_url",
+        "dpa_url",
+        "subprocessor_url",
+        "security_url",
+        "compliance_url",
+        "certification_claims",
+        "data_processing_region"
+      ]
+    },
+    "field_value": {
+      "oneOf": [
+        { "type": "string", "minLength": 1, "maxLength": 1200 },
+        {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      ]
+    },
+    "source_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "source_url": { "type": ["string", "null"], "format": "uri" },
+    "extracted_at": { "type": "string", "format": "date-time" },
+    "extraction_method": {
+      "enum": ["manual_review", "agent_extracted", "vendor_declared", "inferred"]
+    },
+    "review_state": {
+      "enum": ["unreviewed", "human_reviewed", "needs_review", "deprecated"]
+    },
+    "confidence": { "enum": ["low", "medium", "high"] },
+    "notes": { "type": ["string", "null"], "maxLength": 1200 },
+    "not_advice": { "const": true }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "extraction_method": {
+            "enum": ["manual_review", "agent_extracted", "vendor_declared"]
+          }
+        },
+        "required": ["extraction_method"]
+      },
+      "then": {
+        "required": ["source_id", "source_url"],
+        "properties": {
+          "source_id": { "type": "string" },
+          "source_url": { "type": "string", "format": "uri" }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

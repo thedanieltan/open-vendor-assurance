@@ -370,6 +370,9 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
             "reports/entity-review-summary.md",
             "reports/entity-review-queue.json",
             "reports/entity-review-queue.csv",
+            "reports/field-provenance-summary.md",
+            "reports/field-provenance-coverage.json",
+            "reports/field-provenance-coverage.csv",
         },
         "observe-report.yml": {
             "reports/observation-report.md",

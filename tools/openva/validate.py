@@ -27,6 +27,7 @@ SCHEMA_MAP = {
     "change": ROOT / "schemas/openva/change-event.schema.json",
     "legal_entity": ROOT / "schemas/openva/legal-entity.schema.json",
     "entity_mention": ROOT / "schemas/openva/entity-mention.schema.json",
+    "field_provenance": ROOT / "schemas/openva/field-provenance.schema.json",
     "candidate_source": ROOT / "schemas/openva/candidate-source.schema.json",
     "unavailable_source": ROOT / "schemas/openva/unavailable-source.schema.json",
     "pack": ROOT / "schemas/openva/openva-pack.schema.json",
@@ -41,6 +42,7 @@ FIXTURE_GLOBS = {
     "change": ["examples/vendors/*/changes/*.yaml", "data/vendors/*/changes/*.yaml"],
     "legal_entity": ["examples/vendors/*/legal_entities/*.yaml", "data/vendors/*/legal_entities/*.yaml"],
     "entity_mention": ["examples/vendors/*/entity_mentions/*.yaml", "data/vendors/*/entity_mentions/*.yaml"],
+    "field_provenance": ["examples/vendors/*/provenance/*.yaml", "data/vendors/*/provenance/*.yaml"],
     "candidate_source": ["examples/vendors/*/candidate_sources/*.yaml", "data/vendors/*/candidate_sources/*.yaml"],
     "unavailable_source": ["examples/vendors/*/unavailable_sources/*.yaml", "data/vendors/*/unavailable_sources/*.yaml"],
 }
@@ -156,6 +158,7 @@ def validate_cross_references() -> list[str]:
     artifacts = {record["artifact_id"] for record in records_for("artifact")}
     legal_entities = {record["entity_id"]: record for record in records_for("legal_entity")}
     entity_mentions = {record["mention_id"]: record for record in records_for("entity_mention")}
+    field_provenance = records_for_optional_kind("field_provenance")
 
     for source in source_records:
         if source["vendor_id"] not in vendors:
@@ -252,6 +255,19 @@ def validate_cross_references() -> list[str]:
         for source_id in resolution.get("match_source_ids", []) or []:
             if source_id not in sources:
                 failures.append(f"{path}: unknown match_source_id {source_id}")
+
+    for provenance in field_provenance:
+        path = provenance["_openva_path"]
+        if provenance["vendor_id"] not in vendors:
+            failures.append(f"{path}: unknown vendor_id {provenance['vendor_id']}")
+        source_id = provenance.get("source_id")
+        if source_id and source_id not in sources:
+            failures.append(f"{path}: unknown source_id {source_id}")
+        elif source_id and sources_by_id[source_id].get("vendor_id") != provenance["vendor_id"]:
+            failures.append(f"{path}: source_id {source_id} must match provenance vendor_id")
+        source_url = provenance.get("source_url")
+        if source_id and source_url and sources_by_id.get(source_id, {}).get("source_url") != source_url:
+            failures.append(f"{path}: source_url must match referenced source_id {source_id}")
 
     for vendor in records_for("vendor"):
         for mention_id in vendor.get("observed_entity_mention_ids", []):
@@ -466,6 +482,13 @@ def validate_quality_gates() -> list[str]:
             expected_path = f"data/vendors/{mention['vendor_id']}/entity_mentions/{mention['mention_id']}.yaml"
             if path != expected_path:
                 failures.append(f"{path}: mention_id/vendor_id do not match canonical path {expected_path}")
+
+    for provenance in records_for_optional_kind("field_provenance"):
+        path = provenance["_openva_path"]
+        if path.startswith("data/"):
+            expected_path = f"data/vendors/{provenance['vendor_id']}/provenance/{provenance['provenance_id']}.yaml"
+            if path != expected_path:
+                failures.append(f"{path}: provenance_id/vendor_id do not match canonical path {expected_path}")
 
     failures.extend(validate_optional_source_ledgers(vendors, exceptions))
 

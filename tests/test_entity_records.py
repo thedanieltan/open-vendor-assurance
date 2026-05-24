@@ -209,6 +209,7 @@ def test_cross_vendor_entity_reference_is_globally_resolved(monkeypatch):
         ],
         "candidate_source": [],
         "unavailable_source": [],
+        "field_provenance": [],
     }
 
     monkeypatch.setattr(validate, "records_for", lambda kind: records[kind])
