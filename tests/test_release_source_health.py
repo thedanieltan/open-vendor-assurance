@@ -181,11 +181,49 @@ def test_release_source_health_warns_when_confirmed_p0_scan_is_missing():
     assert any(warning["code"] == "missing_confirmed_p0_scan" for warning in report["warnings"])
 
 
+def test_release_source_health_enforcement_fails_when_confirmed_p0_scan_is_missing():
+    report = build_release_source_health_readiness(
+        loaded("source-verification-report.json", verification_report(ok=1)),
+        loaded("confirmed-p0-repair-candidates.json", None),
+        now=NOW,
+        enforce=True,
+    )
+
+    assert report["status"] == "blocked"
+    assert report["summary"]["confirmed_p0_count"] is None
+    assert report["failures"][0]["code"] == "missing_confirmed_p0_scan"
+    assert "confirmed P0 scan artifact unavailable" in report["failures"][0]["message"]
+
+
+def test_release_source_health_enforcement_fails_when_confirmed_p0_scan_is_invalid():
+    report = build_release_source_health_readiness(
+        loaded("source-verification-report.json", verification_report(ok=1)),
+        loaded("confirmed-p0-repair-candidates.json", {"report_type": "confirmed_p0_source_refinement_scan"}),
+        now=NOW,
+        enforce=True,
+    )
+
+    assert report["status"] == "blocked"
+    assert report["summary"]["confirmed_p0_count"] is None
+    assert report["failures"][0]["code"] == "invalid_confirmed_p0_scan"
+
+
 def test_load_optional_json_handles_missing_path(tmp_path: Path):
     report = load_optional_json(tmp_path / "missing.json")
 
     assert report.present is False
     assert report.data is None
+
+
+def test_load_optional_json_reports_invalid_json_without_raising(tmp_path: Path):
+    path = tmp_path / "invalid.json"
+    path.write_text("{not-json", encoding="utf-8")
+
+    report = load_optional_json(path)
+
+    assert report.present is True
+    assert report.data is None
+    assert report.error and report.error.startswith("invalid_json")
 
 
 def test_cli_writes_report_artifacts_and_report_only_returns_zero(tmp_path: Path):
@@ -247,3 +285,29 @@ def test_cli_enforce_returns_nonzero_when_confirmed_p0_count_blocks(tmp_path: Pa
     ]) == 1
     assert output.is_file()
     assert summary.is_file()
+
+
+def test_cli_enforce_returns_nonzero_and_writes_artifacts_when_confirmed_p0_scan_missing(tmp_path: Path):
+    verification = tmp_path / "source-verification-report.json"
+    output = tmp_path / "release-source-health-readiness.json"
+    summary = tmp_path / "release-source-health-summary.md"
+    verification.write_text(
+        '{"report_type":"source_verification_report","generated_at":"2026-05-24T07:00:00Z","summary":{"source_count":1},"breakdowns":{"verification_statuses":{"ok":1}}}\n',
+        encoding="utf-8",
+    )
+
+    assert main([
+        "check",
+        "--source-verification-report",
+        str(verification),
+        "--confirmed-p0-scan",
+        str(tmp_path / "missing-confirmed-p0.json"),
+        "--output-json",
+        str(output),
+        "--summary-md",
+        str(summary),
+        "--enforce",
+    ]) == 1
+    assert output.is_file()
+    assert summary.is_file()
+    assert "confirmed P0 scan artifact unavailable" in summary.read_text(encoding="utf-8")

@@ -28,15 +28,19 @@ class LoadedReport:
     report_type: str | None
     generated_at: str | None
     data: dict[str, Any] | None
+    error: str | None = None
 
 
 def load_optional_json(path: Path) -> LoadedReport:
     if not path.exists():
         return LoadedReport(path.as_posix(), False, None, None, None)
-    with path.open("r", encoding="utf-8") as handle:
-        data = json.load(handle)
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except json.JSONDecodeError as exc:
+        return LoadedReport(path.as_posix(), True, None, None, None, f"invalid_json: {exc.msg}")
     if not isinstance(data, dict):
-        raise ValueError(f"{path}: expected JSON object")
+        return LoadedReport(path.as_posix(), True, None, None, None, "expected JSON object")
     return LoadedReport(
         path.as_posix(),
         True,
@@ -116,6 +120,12 @@ def build_release_source_health_readiness(
             "code": "missing_source_verification_report",
             "message": "source health artifact unavailable: Source verification artifact is missing; release source health cannot be fully assessed.",
         })
+    elif source_verification_report.error:
+        target = failures if enforce else warnings
+        target.append({
+            "code": "invalid_source_verification_report",
+            "message": f"source health artifact unavailable: Source verification artifact is invalid ({source_verification_report.error}).",
+        })
     elif source_verification_report.report_type != "source_verification_report":
         target = failures if enforce else warnings
         target.append({
@@ -154,15 +164,34 @@ def build_release_source_health_readiness(
             })
 
     p0_count = confirmed_p0_count(confirmed_p0_scan.data)
-    if confirmed_p0_scan.present and confirmed_p0_scan.report_type != "confirmed_p0_source_refinement_scan":
-        warnings.append({
+    if not confirmed_p0_scan.present:
+        target = failures if enforce else warnings
+        target.append({
+            "code": "missing_confirmed_p0_scan",
+            "message": (
+                "confirmed P0 scan artifact unavailable: "
+                "confirmed P0 scan missing in enforce mode."
+                if enforce
+                else "confirmed P0 scan artifact unavailable; release cannot confirm repeated hard-dead source count."
+            ),
+        })
+    elif confirmed_p0_scan.error:
+        target = failures if enforce else warnings
+        target.append({
+            "code": "invalid_confirmed_p0_scan",
+            "message": f"confirmed P0 scan artifact unavailable: confirmed P0 scan is invalid ({confirmed_p0_scan.error}).",
+        })
+    elif confirmed_p0_scan.report_type != "confirmed_p0_source_refinement_scan":
+        target = failures if enforce else warnings
+        target.append({
             "code": "unexpected_confirmed_p0_scan_report_type",
             "message": f"Expected confirmed_p0_source_refinement_scan, got {confirmed_p0_scan.report_type!r}.",
         })
-    if p0_count is None:
-        warnings.append({
-            "code": "missing_confirmed_p0_scan",
-            "message": "Confirmed P0 scan artifact is missing; release cannot confirm repeated hard-dead source count.",
+    elif p0_count is None:
+        target = failures if enforce else warnings
+        target.append({
+            "code": "invalid_confirmed_p0_scan",
+            "message": "confirmed P0 scan artifact unavailable: confirmed P0 scan did not include confirmed_p0_count.",
         })
     elif p0_count > 0:
         failures.append({
@@ -198,6 +227,7 @@ def build_release_source_health_readiness(
                 "present": source_verification_report.present,
                 "report_type": source_verification_report.report_type,
                 "generated_at": source_verification_report.generated_at,
+                "error": source_verification_report.error,
                 "age_hours": age_hours,
                 "stale": stale,
             },
@@ -206,6 +236,7 @@ def build_release_source_health_readiness(
                 "present": confirmed_p0_scan.present,
                 "report_type": confirmed_p0_scan.report_type,
                 "generated_at": confirmed_p0_scan.generated_at,
+                "error": confirmed_p0_scan.error,
             },
         },
         "summary": {

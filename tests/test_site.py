@@ -385,7 +385,7 @@ def test_source_health_display_uses_non_advisory_labels_and_conditional_final_ur
         assert phrase in app
 
     label_block = app.split("const SOURCE_HEALTH_LABELS = {", 1)[1].split("};", 1)[0].lower()
-    for forbidden in ["trusted", "approved", "compliant", "safe"]:
+    for forbidden in ["trusted", "approved", "compliant", "safe", "canonical"]:
         assert forbidden not in label_block
 
 
@@ -417,6 +417,7 @@ def test_catalog_confidence_falls_back_when_reports_are_absent(tmp_path):
     assert confidence["catalog_completeness"]["label"] == "Not reviewed"
     assert confidence["entity_review"]["label"] == "Not reviewed"
     assert confidence["field_provenance"]["label"] == "Missing"
+    assert confidence["source_health_separate"] is True
 
 
 def test_catalog_confidence_ui_labels_are_separate_and_non_advisory():
@@ -432,7 +433,7 @@ def test_catalog_confidence_ui_labels_are_separate_and_non_advisory():
         assert phrase in app
 
     confidence_block = app.split("function confidenceTemplate", 1)[1].split("function renderSnapshotDisclosures", 1)[0].lower()
-    for forbidden in ["trusted", "approved", "compliant", "safe"]:
+    for forbidden in ["trusted", "approved", "compliant", "safe", "canonical"]:
         assert forbidden not in confidence_block
 
 
@@ -471,7 +472,16 @@ def test_pages_workflow_deploys_site_and_feed_workflow_uploads_feed_artifact_onl
     assert "--name openva-source-maintenance-report" in reviewed_text
     assert "public/source-health-snapshot.json" in reviewed_text
     assert "source health snapshot unavailable" in reviewed_text
+    assert "Download latest catalog confidence reports" in reviewed_text
+    assert "--workflow coverage-audit.yml" in reviewed_text
+    assert "--name openva-coverage-audit-report" in reviewed_text
+    assert "catalog-completeness-report.json entity-review-queue.json field-provenance-coverage.json" in reviewed_text
+    assert "coverage-audit-artifacts/reports/$report" in reviewed_text
+    assert "coverage-audit-artifacts/$report" in reviewed_text
+    assert "reports/$report" in reviewed_text
+    assert "catalog confidence reports unavailable" in reviewed_text
     assert reviewed_text.index("Download latest source health snapshot") < reviewed_text.index("Build reviewed catalog site")
+    assert reviewed_text.index("Download latest catalog confidence reports") < reviewed_text.index("Build reviewed catalog site")
     assert "actions/deploy-pages@v4" in reviewed_text
     assert "actions/deploy-pages" not in feed_text
     assert "actions/upload-artifact@v6" in feed_text
