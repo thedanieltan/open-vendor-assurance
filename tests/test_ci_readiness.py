@@ -367,6 +367,9 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
             "reports/catalog-completeness-summary.md",
             "reports/catalog-completeness-report.json",
             "reports/catalog-completeness-vendors.csv",
+            "reports/entity-review-summary.md",
+            "reports/entity-review-queue.json",
+            "reports/entity-review-queue.csv",
         },
         "observe-report.yml": {
             "reports/observation-report.md",
