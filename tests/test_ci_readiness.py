@@ -293,6 +293,7 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
             "source-observation-ledger.json",
             "source-observation-ledger-summary.md",
             "latest-source-health.json",
+            "public/source-health-snapshot.json",
             "source-discovery-report.json",
             "promotion-plan.json",
             "cleanup-proposal.json",
@@ -351,6 +352,19 @@ def test_source_maintenance_report_uploads_latest_health_index_artifact_only():
     assert "--output latest-source-health.json" in text
     assert "latest-source-health.json" in text
     assert "site_ui_generated" not in text
+    assert "observations/sources/" not in text
+
+
+def test_source_maintenance_report_uploads_public_health_snapshot_artifact_only():
+    text = (WORKFLOW_DIR / "source-maintenance-report.yml").read_text(encoding="utf-8")
+
+    assert "python -m tools.openva.source_health_public_snapshot build" in text
+    assert "--latest-source-health latest-source-health.json" in text
+    assert "--output public/source-health-snapshot.json" in text
+    assert "public/source-health-snapshot.json" in text
+    assert "gh pr create" not in text
+    assert "gh pr merge" not in text
+    assert "actions/deploy-pages" not in text
     assert "observations/sources/" not in text
 
 
