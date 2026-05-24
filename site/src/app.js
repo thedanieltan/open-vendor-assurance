@@ -17,6 +17,7 @@ const SOURCE_HEALTH_LABELS = {
   ambiguous: "Access ambiguous",
   missing: "Not yet verified",
 };
+const CONFIDENCE_NOTICE = "Catalog confidence labels are metadata about OpenVA review coverage, not advice.";
 
 function text(value) {
   return value === null || value === undefined || value === "" ? "Unavailable" : String(value);
@@ -68,6 +69,22 @@ function sourceHealthDisclosure() {
     Snapshot type: ${html(snapshot.snapshot_type || "missing")}<br>
     Source: ${html(snapshot.source || "latest-source-health")}<br>
     Bucket counts: verified ${html(counts.healthy || 0)} / needs review ${html(counts.warning || 0)} / unavailable ${html(counts.unavailable || 0)} / access ambiguous ${html(counts.ambiguous || 0)}
+  `;
+}
+
+function confidenceTemplate(confidence) {
+  const data = confidence || {};
+  const completeness = data.catalog_completeness || { label: "Not reviewed" };
+  const entity = data.entity_review || { label: "Not reviewed" };
+  const provenance = data.field_provenance || { label: "Missing" };
+  return `
+    <div class="confidence-grid">
+      <span><strong>Source health</strong><small>Shown per source record</small></span>
+      <span><strong>Catalog completeness</strong><small>${html(completeness.label)}</small></span>
+      <span><strong>Entity review</strong><small>${html(entity.label)}</small></span>
+      <span><strong>Field provenance</strong><small>${html(provenance.label)}</small></span>
+    </div>
+    <p class="meta-line">${html(data.notice || CONFIDENCE_NOTICE)}</p>
   `;
 }
 
@@ -421,6 +438,7 @@ function renderCatalog() {
       <h4><button class="secondary" type="button" data-open-vendor="${html(vendor.vendor_id)}">${html(vendor.display_name)}</button></h4>
       <div class="meta-line">${html(vendor.legal_name)} · ${html(vendor.headquarters_country)} · ${html(vendor.catalog_status)}</div>
       <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
+      ${confidenceTemplate(vendor.catalog_confidence)}
     </article>
   `).join("") : `<article class="event-card"><h3>No vendors match these filters.</h3><p>Try clearing one filter or searching by vendor name, legal name, vendor ID, or official domain.</p></article>`;
   document.querySelectorAll("[data-select-vendor]").forEach((box) => {
@@ -463,6 +481,7 @@ async function renderVendorDetail(vendorId) {
       <p>Vendor categories: ${(vendor.vendor_categories || []).map(html).join(", ") || "Unavailable"}</p>
       <div class="snapshot-box">${snapshotDisclosure()}</div>
       <div class="snapshot-box source-health-snapshot">${sourceHealthDisclosure()}</div>
+      <div class="snapshot-box catalog-confidence-snapshot">${confidenceTemplate(vendor.catalog_confidence)}</div>
       <h4>Source coverage summary</h4>
       <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
       <h4>Canonical source records</h4>
