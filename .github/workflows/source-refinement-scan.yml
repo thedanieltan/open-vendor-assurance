@@ -1,0 +1,114 @@
+name: source-refinement-scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      prior_run_id:
+        description: "Workflow run ID containing the prior openva-source-maintenance-report artifact"
+        required: true
+        type: string
+      fresh_run_id:
+        description: "Workflow run ID containing the fresh openva-source-maintenance-report artifact"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: source-refinement-scan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-refinement-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ github.token }}
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Download prior source maintenance artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: openva-source-maintenance-report
+          run-id: ${{ inputs.prior_run_id }}
+          github-token: ${{ github.token }}
+          path: prior-report
+      - name: Download fresh source maintenance artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: openva-source-maintenance-report
+          run-id: ${{ inputs.fresh_run_id }}
+          github-token: ${{ github.token }}
+          path: fresh-report
+      - name: Build confirmed P0 source refinement scan
+        run: |
+          python -m tools.openva.source_refinement_scan compare \
+            --prior-verification-report prior-report/source-verification-report.json \
+            --fresh-verification-report fresh-report/source-verification-report.json \
+            --prior-report-run-id "${{ inputs.prior_run_id }}" \
+            --fresh-report-run-id "${{ inputs.fresh_run_id }}" \
+            --output confirmed-p0-repair-candidates.json
+      - name: Build reviewer summary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.load(open("confirmed-p0-repair-candidates.json", encoding="utf-8"))
+          summary = report["summary"]
+          lines = [
+              "# OpenVA Confirmed P0 Source Refinement Scan",
+              "",
+              "This artifact compares two source verification reports and identifies hard-broken source candidates confirmed across both runs.",
+              "",
+              "It is operational metadata only. It does not mutate catalog records, open repair PRs, or enable automerge.",
+              "",
+              "## Inputs",
+              "",
+              f"- Prior run ID: `{report.get('prior_report_run_id')}`",
+              f"- Fresh run ID: `{report.get('fresh_report_run_id')}`",
+              f"- Prior report generated at: `{report.get('prior_report_generated_at')}`",
+              f"- Fresh report generated at: `{report.get('fresh_report_generated_at')}`",
+              "",
+              "## Summary",
+              "",
+              f"- Prior sources: `{summary['prior_source_count']}`",
+              f"- Fresh sources: `{summary['fresh_source_count']}`",
+              f"- Confirmed P0 candidates: `{summary['confirmed_p0_count']}`",
+              f"- Inconclusive rows: `{summary['inconclusive_count']}`",
+              f"- Excluded rows: `{summary['excluded_count']}`",
+              f"- Unknown statuses: `{summary['unknown_status_count']}`",
+              "",
+              "## Status breakdowns",
+              "",
+              "### Prior",
+              "",
+              "```json",
+              json.dumps(summary["prior_statuses"], indent=2, sort_keys=True),
+              "```",
+              "",
+              "### Fresh",
+              "",
+              "```json",
+              json.dumps(summary["fresh_statuses"], indent=2, sort_keys=True),
+              "```",
+              "",
+          ]
+          Path("confirmed-p0-summary.md").write_text("\n".join(lines), encoding="utf-8")
+          print(Path("confirmed-p0-summary.md").read_text(encoding="utf-8"))
+          PY
+      - name: Upload confirmed P0 scan artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-confirmed-p0-source-refinement-scan
+          path: |
+            confirmed-p0-repair-candidates.json
+            confirmed-p0-summary.md
+          if-no-files-found: error

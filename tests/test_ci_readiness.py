@@ -21,6 +21,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "site-pages.yml",
     "source-maintenance-report.yml",
     "source-refinement-queue.yml",
+    "source-refinement-scan.yml",
     "validate.yml",
 }
 
@@ -253,6 +254,10 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
             "reports/source-refinement-queue.md",
             "reports/source-refinement-queue.json",
             "reports/source-refinement-queue.csv",
+        },
+        "source-refinement-scan.yml": {
+            "confirmed-p0-repair-candidates.json",
+            "confirmed-p0-summary.md",
         },
     }
 
