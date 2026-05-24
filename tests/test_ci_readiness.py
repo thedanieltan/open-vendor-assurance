@@ -21,6 +21,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "site-pages.yml",
     "source-maintenance-report.yml",
     "source-repair-pr.yml",
+    "source-repair-pr-cleanup.yml",
     "source-refinement-queue.yml",
     "source-refinement-scan.yml",
     "validate.yml",
@@ -135,6 +136,10 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "triggers": {"workflow_dispatch"},
             "permissions": {"contents": "write", "pull-requests": "write"},
         },
+        "source-repair-pr-cleanup.yml": {
+            "triggers": {"workflow_dispatch", "schedule"},
+            "permissions": {"contents": "read", "pull-requests": "write", "issues": "write"},
+        },
         "catalog-growth-discovery.yml": {
             "triggers": {"workflow_dispatch", "schedule"},
             "permissions": {"contents": "read", "issues": "write"},
@@ -192,6 +197,8 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             assert "workflow_dispatch" in triggers, f"{path}: site pages must support manual deploy"
         if path.name == "site-live-feed.yml":
             assert triggers["schedule"][0]["cron"] == "0 3 * * 0", f"{path}: live feed cron must stay weekly Sunday 03:00 UTC"
+        if path.name == "source-repair-pr-cleanup.yml":
+            assert triggers["schedule"][0]["cron"] == "30 8 * * 3", f"{path}: stale repair cleanup must run after source refinement scan"
 
 
 def test_catalog_agent_pr_workflow_is_manual_pr_only():
@@ -221,6 +228,42 @@ def test_source_repair_pr_workflow_is_manual_human_reviewed_only():
     assert "python -m tools.openva.source_repair_actions apply" in text
     assert "gh pr create" in text
     assert "gh pr merge" not in text
+
+
+def test_source_refinement_scan_runs_weekly_and_selects_latest_maintenance_runs():
+    workflow = load_workflow("source-refinement-scan.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "source-refinement-scan.yml").read_text(encoding="utf-8")
+
+    assert set(triggers.keys()) == {"workflow_dispatch", "schedule"}
+    assert workflow["permissions"] == {"actions": "read", "contents": "read"}
+    assert triggers["schedule"][0]["cron"] == "0 8 * * 3"
+    assert "gh run list" in text
+    assert "--workflow source-maintenance-report.yml" in text
+    assert "python -m tools.openva.github_actions_artifacts select-latest-source-maintenance-runs" in text
+    assert "insufficient source maintenance history" in text
+    assert "write-skipped-source-refinement-scan" in text
+    assert "python -m tools.openva.source_refinement_scan compare" in text
+    assert "python -m tools.openva.source_repair_actions apply" not in text
+    assert "gh pr create" not in text
+    assert "gh pr merge" not in text
+
+
+def test_source_repair_pr_cleanup_targets_only_stale_generated_repair_prs():
+    workflow = load_workflow("source-repair-pr-cleanup.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "source-repair-pr-cleanup.yml").read_text(encoding="utf-8")
+
+    assert set(triggers.keys()) == {"workflow_dispatch", "schedule"}
+    assert workflow["permissions"] == {"contents": "read", "pull-requests": "write", "issues": "write"}
+    assert triggers["schedule"][0]["cron"] == "30 8 * * 3"
+    assert "python -m tools.openva.source_repair_pr_cleanup build" in text
+    assert "--stale-days 30" in text
+    assert '"gh", "pr", "close"' in text
+    assert "gh pr create" not in text
+    assert "gh pr merge" not in text
+    assert "source-repair-stale-pr-cleanup.json" in text
+    assert "source-repair-stale-pr-cleanup.md" in text
 
 
 def test_agent_automerge_has_strict_p0_source_repair_lane():
@@ -352,6 +395,7 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
             "reports/source-refinement-queue.csv",
         },
         "source-refinement-scan.yml": {
+            "source-maintenance-run-selection.json",
             "confirmed-p0-repair-candidates.json",
             "confirmed-p0-summary.md",
             "source-repair-evidence.json",
@@ -360,6 +404,10 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
         "source-repair-pr.yml": {
             "source-repair-action-report.json",
             "source-repair-pr-body.md",
+        },
+        "source-repair-pr-cleanup.yml": {
+            "source-repair-stale-pr-cleanup.json",
+            "source-repair-stale-pr-cleanup.md",
         },
         "release-candidate.yml": {
             "release-artifacts.json",

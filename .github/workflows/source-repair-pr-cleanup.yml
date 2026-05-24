@@ -1,0 +1,76 @@
+name: source-repair-pr-cleanup
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 8 * * 3"
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: source-repair-pr-cleanup-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-repair-pr-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ github.token }}
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: List open generated source repair PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh pr list \
+            --state open \
+            --limit 100 \
+            --json number,title,url,headRefName,author,createdAt,updatedAt,comments,reviews,latestReviews \
+            > source-repair-open-prs.json
+      - name: Build stale source repair PR cleanup report
+        run: |
+          python -m tools.openva.source_repair_pr_cleanup build \
+            --prs-json source-repair-open-prs.json \
+            --output source-repair-stale-pr-cleanup.json \
+            --markdown-output source-repair-stale-pr-cleanup.md \
+            --stale-days 30
+      - name: Close stale generated source repair PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import subprocess
+
+          report = json.load(open("source-repair-stale-pr-cleanup.json", encoding="utf-8"))
+          closed = report.get("closed_prs") or []
+          if not closed:
+              print("No stale generated source repair PRs selected for closure.")
+          for pr in closed:
+              number = str(pr["number"])
+              comment = (
+                  "Closing this generated source repair PR as stale after 30 days. "
+                  "Run source-repair-pr again with a current reviewed validation report if the repair is still needed."
+              )
+              subprocess.run(["gh", "pr", "close", number, "--comment", comment], check=True)
+          PY
+      - name: Upload stale source repair PR cleanup artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-repair-stale-pr-cleanup
+          path: |
+            source-repair-stale-pr-cleanup.json
+            source-repair-stale-pr-cleanup.md
+          if-no-files-found: error
