@@ -7,6 +7,11 @@ on:
         description: "Committed p0_source_repair_plan_validation JSON file"
         required: true
         type: string
+      evidence_report_path:
+        description: "Optional committed p0_source_repair_evidence JSON file for strict automerge review"
+        required: false
+        default: ""
+        type: string
       pr_branch:
         description: "Generated PR branch. Must start with agent-"
         required: false
@@ -31,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REQUESTED_VALIDATION_REPORT_PATH: "${{ inputs.validation_report_path }}"
+      REQUESTED_EVIDENCE_REPORT_PATH: "${{ inputs.evidence_report_path || '' }}"
       REQUESTED_PR_BRANCH: "${{ inputs.pr_branch || '' }}"
       REQUESTED_PR_TITLE: "${{ inputs.pr_title || 'Catalog: repair confirmed P0 sources' }}"
       DEFAULT_PR_BRANCH: "agent-source-repair-${{ github.run_id }}"
@@ -54,6 +60,7 @@ jobs:
           from pathlib import Path, PurePosixPath
 
           validation_report_path = os.environ["REQUESTED_VALIDATION_REPORT_PATH"].strip()
+          evidence_report_path = os.environ["REQUESTED_EVIDENCE_REPORT_PATH"].strip()
           pr_branch = os.environ["REQUESTED_PR_BRANCH"].strip()
           pr_title = os.environ["REQUESTED_PR_TITLE"].strip()
           if not pr_branch:
@@ -81,6 +88,28 @@ jobs:
           )
           if tracked.returncode != 0:
               raise SystemExit(f"validation report must be committed and tracked: {validation_report_path}")
+          if evidence_report_path:
+              evidence_path = PurePosixPath(evidence_report_path)
+              evidence_parts = evidence_path.parts
+              if (
+                  evidence_path.is_absolute()
+                  or ".." in evidence_parts
+                  or len(evidence_parts) < 3
+                  or evidence_parts[0] != "maintenance"
+                  or evidence_parts[1] != "reviewed"
+                  or evidence_path.suffix != ".json"
+              ):
+                  raise SystemExit("evidence_report_path must be under maintenance/reviewed/ and end with .json")
+              if not Path(evidence_report_path).is_file():
+                  raise SystemExit(f"evidence report file not found: {evidence_report_path}")
+              tracked = subprocess.run(
+                  ["git", "ls-files", "--error-unmatch", evidence_report_path],
+                  stdout=subprocess.DEVNULL,
+                  stderr=subprocess.DEVNULL,
+                  check=False,
+              )
+              if tracked.returncode != 0:
+                  raise SystemExit(f"evidence report must be committed and tracked: {evidence_report_path}")
           if not pr_branch.startswith("agent-"):
               raise SystemExit("pr_branch must start with agent-")
           if not pr_title.startswith("Catalog: repair"):
@@ -92,6 +121,8 @@ jobs:
 
           with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as handle:
               handle.write(f"VALIDATION_REPORT_PATH={validation_report_path}\n")
+              if evidence_report_path:
+                  handle.write(f"EVIDENCE_REPORT_PATH={evidence_report_path}\n")
               handle.write(f"PR_BRANCH={pr_branch}\n")
               handle.write(f"PR_TITLE={pr_title}\n")
           PY
@@ -130,6 +161,11 @@ jobs:
               "## Reviewed input",
               "",
               f"- Validation report: `{os.environ['VALIDATION_REPORT_PATH']}`",
+              *(
+                  [f"- Evidence report: `{os.environ['EVIDENCE_REPORT_PATH']}`"]
+                  if os.environ.get("EVIDENCE_REPORT_PATH")
+                  else []
+              ),
               "",
               "## Counts",
               "",

@@ -194,11 +194,25 @@ def test_source_repair_pr_workflow_is_manual_human_reviewed_only():
     assert set(triggers.keys()) == {"workflow_dispatch"}
     assert workflow["permissions"] == {"contents": "write", "pull-requests": "write"}
     assert "validation_report_path must be under maintenance/reviewed/" in text
+    assert "evidence_report_path must be under maintenance/reviewed/" in text
     assert "pr_branch must start with agent-" in text
     assert "pr_title must start with Catalog: repair" in text
     assert "python -m tools.openva.source_repair_actions apply" in text
     assert "gh pr create" in text
     assert "gh pr merge" not in text
+
+
+def test_agent_automerge_has_strict_p0_source_repair_lane():
+    workflow = load_workflow("agent-automerge.yml")
+    text = (WORKFLOW_DIR / "agent-automerge.yml").read_text(encoding="utf-8")
+
+    assert "p0-source-repair" in workflow["jobs"]
+    assert "source-refinement" in workflow["jobs"]["p0-source-repair"]["if"]
+    assert "automerge:p0-source-repair" in workflow["jobs"]["p0-source-repair"]["if"]
+    assert "python -m tools.openva.source_repair_automerge extract-inputs" in text
+    assert "python -m tools.openva.source_repair_automerge check" in text
+    assert "--evidence-report \"$EVIDENCE_REPORT_PATH\"" in text
+    assert "git diff --exit-code openva-pack.json indexes/ dist/" in text
 
 
 def test_agent_weighted_review_is_advisory_and_adapter_aware():

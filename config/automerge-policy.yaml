@@ -11,6 +11,9 @@ mode: enforce
 machine_canonical:
   max_source_records_per_pr: 50
 
+source_repair:
+  max_source_records_per_pr: 10
+
 blocked_paths:
   - .github/workflows/
   - schemas/
@@ -30,3 +33,7 @@ lanes:
     label: automerge:observation
   machine_canonical:
     label: automerge:machine-canonical
+  p0_source_repair:
+    label: automerge:p0-source-repair
+    required_labels:
+      - source-refinement

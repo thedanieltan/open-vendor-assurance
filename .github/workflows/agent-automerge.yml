@@ -69,3 +69,68 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+
+  p0-source-repair:
+    if: contains(join(github.event.pull_request.labels.*.name, ','), 'source-refinement') && contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:p0-source-repair')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Fetch base commit
+        run: git fetch origin ${{ github.event.pull_request.base.sha }}
+
+      - name: Collect changed paths
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr diff "$PR_NUMBER" --name-only > changed-files.txt
+
+      - name: Collect reviewed source repair inputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr view "$PR_NUMBER" --json body --jq .body > pr-body.md
+          python -m tools.openva.source_repair_automerge extract-inputs \
+            --body-file pr-body.md \
+            --output source-repair-inputs.env
+          cat source-repair-inputs.env >> "$GITHUB_ENV"
+
+      - name: Check P0 source repair automerge eligibility
+        run: |
+          python -m tools.openva.source_repair_automerge check \
+            --paths-file changed-files.txt \
+            --base-ref ${{ github.event.pull_request.base.sha }} \
+            --head-ref HEAD \
+            --validation-report "$VALIDATION_REPORT_PATH" \
+            --evidence-report "$EVIDENCE_REPORT_PATH" \
+            --policy config/automerge-policy.yaml
+
+      - name: Validate repository
+        run: python -m tools.openva.validate validate
+
+      - name: Rebuild generated outputs
+        run: python -m tools.openva.validate build-indexes
+
+      - name: Refuse generated drift
+        run: git diff --exit-code openva-pack.json indexes/ dist/
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Enable GitHub native auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
