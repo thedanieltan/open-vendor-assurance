@@ -34,6 +34,7 @@ MAINTAINERS.md
 docs/human-review-operations.md
 docs/source-refinement-workflow.md
 docs/observation-reporting.md
+docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md
 docs/agent-control-plane.md
 docs/agent-runbook.md
 docs/maintenance/operator-runbook.md

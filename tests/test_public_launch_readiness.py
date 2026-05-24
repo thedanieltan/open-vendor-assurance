@@ -62,6 +62,7 @@ def test_docs_index_links_launch_and_consumer_docs():
         "docs/catalog-agent-protocol.md",
         "docs/observation-result-taxonomy.md",
         "docs/source-trust/observation-retention-policy.md",
+        "docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md",
         "docs/consumer-conformance-fixtures.md",
         "docs/versioning-policy.md",
         "docs/release-policy.md",
@@ -84,6 +85,26 @@ def test_source_observation_retention_policy_documents_artifact_only_strategy():
         "The site falls back to `Not yet verified` labels",
         "Change release gate behavior.",
         "Mutate catalog data.",
+    ]:
+        assert phrase in text
+
+
+def test_source_trust_operations_runbook_documents_operating_policy():
+    text = read("docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md")
+    index = read("docs/index.md")
+
+    assert "docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md" in index
+    for phrase in [
+        "source-refinement",
+        "automerge:p0-source-repair",
+        "source-repair-pr-cleanup",
+        "Confirmed P0 repair",
+        "Layer 2C quality fixes",
+        "Quality refinement is human reviewed only",
+        "max 10 records per PR",
+        "5-10 records per batch",
+        "release-candidate",
+        "defaults to `enforce`",
     ]:
         assert phrase in text
 
