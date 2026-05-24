@@ -25,6 +25,7 @@ def test_release_candidate_workflow_wraps_existing_release_commands():
     text = WORKFLOW.read_text(encoding="utf-8")
 
     expected_commands = [
+        'pip install -e "services/openva_match_service[dev]"',
         "python -m tools.openva.validate validate",
         "pytest -q",
         "python -m tools.openva.release_smoke",
