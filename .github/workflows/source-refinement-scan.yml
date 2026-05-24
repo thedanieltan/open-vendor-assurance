@@ -16,6 +16,8 @@ on:
         required: false
         default: ""
         type: string
+  schedule:
+    - cron: "0 8 * * 3"
 
 permissions:
   actions: read
@@ -28,6 +30,8 @@ concurrency:
 jobs:
   source-refinement-scan:
     runs-on: ubuntu-latest
+    env:
+      REQUESTED_REPAIR_PLAN_PATH: ${{ inputs.repair_plan_path || '' }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -38,27 +42,95 @@ jobs:
           python-version: "3.12"
       - name: Install package
         run: pip install -e ".[dev]"
+      - name: Select latest source maintenance runs
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh run list \
+            --workflow source-maintenance-report.yml \
+            --status success \
+            --limit 20 \
+            --json databaseId,status,conclusion,createdAt,updatedAt,workflowName,event,headBranch \
+            > source-maintenance-runs.json
+          python -m tools.openva.github_actions_artifacts select-latest-source-maintenance-runs \
+            --runs-json source-maintenance-runs.json \
+            --output source-maintenance-run-selection.json \
+            --github-output "$GITHUB_OUTPUT" \
+            --github-env "$GITHUB_ENV"
+      - name: Use manual source maintenance runs
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          prior_run_id = "${{ inputs.prior_run_id }}".strip()
+          fresh_run_id = "${{ inputs.fresh_run_id }}".strip()
+          if not prior_run_id or not fresh_run_id:
+              raise SystemExit("prior_run_id and fresh_run_id are required")
+          if prior_run_id == fresh_run_id:
+              raise SystemExit("prior_run_id and fresh_run_id must be distinct")
+          report = {
+              "schema_version": "0.1.0",
+              "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+              "report_type": "source_maintenance_run_selection",
+              "status": "selected",
+              "workflow": "source-maintenance-report.yml",
+              "reason": None,
+              "prior_run_id": prior_run_id,
+              "fresh_run_id": fresh_run_id,
+              "selected_runs": {
+                  "prior": {"run_id": prior_run_id},
+                  "fresh": {"run_id": fresh_run_id},
+              },
+              "summary": {
+                  "input_run_count": 2,
+                  "successful_completed_run_count": 2,
+                  "selected_run_count": 2,
+              },
+          }
+          Path("source-maintenance-run-selection.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as handle:
+              handle.write("SOURCE_REFINEMENT_HAS_HISTORY=true\n")
+              handle.write(f"PRIOR_RUN_ID={prior_run_id}\n")
+              handle.write(f"FRESH_RUN_ID={fresh_run_id}\n")
+          PY
+      - name: Report insufficient source maintenance history
+        if: env.SOURCE_REFINEMENT_HAS_HISTORY != 'true'
+        run: |
+          echo "::notice::insufficient source maintenance history; scheduled source refinement will emit skipped artifacts and exit successfully."
+          python -m tools.openva.github_actions_artifacts write-skipped-source-refinement-scan \
+            --selection-report source-maintenance-run-selection.json \
+            --output confirmed-p0-repair-candidates.json
       - name: Download prior source maintenance artifact
+        if: env.SOURCE_REFINEMENT_HAS_HISTORY == 'true'
         uses: actions/download-artifact@v6
         with:
           name: openva-source-maintenance-report
-          run-id: ${{ inputs.prior_run_id }}
+          run-id: ${{ env.PRIOR_RUN_ID }}
           github-token: ${{ github.token }}
           path: prior-report
       - name: Download fresh source maintenance artifact
+        if: env.SOURCE_REFINEMENT_HAS_HISTORY == 'true'
         uses: actions/download-artifact@v6
         with:
           name: openva-source-maintenance-report
-          run-id: ${{ inputs.fresh_run_id }}
+          run-id: ${{ env.FRESH_RUN_ID }}
           github-token: ${{ github.token }}
           path: fresh-report
       - name: Build confirmed P0 source refinement scan
+        if: env.SOURCE_REFINEMENT_HAS_HISTORY == 'true'
         run: |
           python -m tools.openva.source_refinement_scan compare \
             --prior-verification-report prior-report/source-verification-report.json \
             --fresh-verification-report fresh-report/source-verification-report.json \
-            --prior-report-run-id "${{ inputs.prior_run_id }}" \
-            --fresh-report-run-id "${{ inputs.fresh_run_id }}" \
+            --prior-report-run-id "$PRIOR_RUN_ID" \
+            --fresh-report-run-id "$FRESH_RUN_ID" \
             --output confirmed-p0-repair-candidates.json
       - name: Build P0 source repair evidence
         run: |
@@ -67,10 +139,10 @@ jobs:
             --output source-repair-evidence.json
       - name: Validate optional P0 source repair plan
         run: |
-          if [ -n "${{ inputs.repair_plan_path }}" ]; then
+          if [ -n "$REQUESTED_REPAIR_PLAN_PATH" ]; then
             python -m tools.openva.source_repair_plan validate \
               --evidence source-repair-evidence.json \
-              --plan "${{ inputs.repair_plan_path }}" \
+              --plan "$REQUESTED_REPAIR_PLAN_PATH" \
               --output source-repair-plan-validation.json
           else
             python -c 'import json; from datetime import UTC, datetime; from pathlib import Path; report = {"schema_version": "0.1.0", "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"), "report_type": "p0_source_repair_plan_validation", "status": "skipped", "reason": "repair_plan_path_not_provided", "posture": {"network_fetch_performed": False, "writes_repository_state": False, "opens_pull_requests": False, "mutates_catalog": False, "enables_automerge": False, "non_advisory": True}, "approved": [], "rejected": [], "unmatched": [], "summary": {"evidence_repair_count": None, "plan_repair_count": 0, "approved_count": 0, "rejected_count": 0, "unmatched_count": 0}}; Path("source-repair-plan-validation.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"); print(json.dumps(report["summary"], indent=2, sort_keys=True))'
@@ -79,8 +151,10 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
 
+          selection = json.load(open("source-maintenance-run-selection.json", encoding="utf-8"))
           report = json.load(open("confirmed-p0-repair-candidates.json", encoding="utf-8"))
           evidence = json.load(open("source-repair-evidence.json", encoding="utf-8"))
           plan_validation = json.load(open("source-repair-plan-validation.json", encoding="utf-8"))
@@ -94,13 +168,18 @@ jobs:
               "",
               "It is operational metadata only. It does not mutate catalog records, open repair PRs, or enable automerge.",
               "",
+              "## Run selection",
+              "",
+              f"- Selection status: `{selection.get('status')}`",
+              f"- Selection reason: `{selection.get('reason')}`",
+              "",
               "## Inputs",
               "",
               f"- Prior run ID: `{report.get('prior_report_run_id')}`",
               f"- Fresh run ID: `{report.get('fresh_report_run_id')}`",
               f"- Prior report generated at: `{report.get('prior_report_generated_at')}`",
               f"- Fresh report generated at: `{report.get('fresh_report_generated_at')}`",
-              f"- Repair plan path: `${{ inputs.repair_plan_path }}`",
+              f"- Repair plan path: `{os.environ.get('REQUESTED_REPAIR_PLAN_PATH', '')}`",
               "",
               "## Summary",
               "",
@@ -145,6 +224,7 @@ jobs:
         with:
           name: openva-confirmed-p0-source-refinement-scan
           path: |
+            source-maintenance-run-selection.json
             confirmed-p0-repair-candidates.json
             confirmed-p0-summary.md
             source-repair-evidence.json
