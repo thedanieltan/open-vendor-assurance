@@ -168,6 +168,52 @@ def write_json(report: dict[str, Any], path: Path) -> None:
     path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def write_markdown(report: dict[str, Any], path: Path) -> None:
+    summary = report["summary"]
+    inputs = report["inputs"]
+    status_counts = summary.get("status_counts", {})
+
+    lines = [
+        "# OpenVA Source Observation Ledger",
+        "",
+        "This artifact records source verification observations from a source maintenance run.",
+        "",
+        "It is operational metadata only. It is not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+        "",
+        "## Summary",
+        "",
+        f"- Source verification rows seen: `{summary['source_verification_rows_seen']}`",
+        f"- Observation records: `{summary['observation_records']}`",
+        f"- Duplicate records deduplicated: `{summary['duplicate_records_deduplicated']}`",
+        "",
+        "## Inputs",
+        "",
+        f"- Source verification report type: `{inputs['source_verification_report_type']}`",
+        f"- Source verification generated at: `{inputs['source_verification_generated_at']}`",
+        f"- Run ID: `{inputs['run_id']}`",
+        f"- Observer: `{inputs['observer']}`",
+        "",
+        "## Status Counts",
+        "",
+    ]
+    if status_counts:
+        lines.extend(f"- `{status}`: `{count}`" for status, count in sorted(status_counts.items()))
+    else:
+        lines.append("- None")
+    lines.extend([
+        "",
+        "## Guardrails",
+        "",
+        "- Builds from an existing source-verification-report.json artifact.",
+        "- Does not perform live network fetches.",
+        "- Does not mutate catalog files.",
+        "- Does not open repair PRs.",
+        "- Does not enable automerge.",
+        "",
+    ])
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="openva-source-observation-ledger")
     parser.add_argument("command", choices={"build"})
@@ -175,6 +221,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--observer", default=DEFAULT_OBSERVER)
     parser.add_argument("--output", type=Path, default=Path("source-observation-ledger.json"))
+    parser.add_argument("--summary-md", type=Path)
     args = parser.parse_args(argv)
 
     report = build_source_observation_ledger(
@@ -183,6 +230,8 @@ def main(argv: list[str] | None = None) -> int:
         observer=args.observer,
     )
     write_json(report, args.output)
+    if args.summary_md:
+        write_markdown(report, args.summary_md)
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
     return 0
 
