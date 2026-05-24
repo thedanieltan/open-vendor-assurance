@@ -366,7 +366,7 @@ def test_pages_workflow_deploys_site_and_feed_workflow_uploads_feed_artifact_onl
     reviewed = yaml.safe_load((WORKFLOWS / "site-pages.yml").read_text(encoding="utf-8"))
     feed = yaml.safe_load((WORKFLOWS / "site-live-feed.yml").read_text(encoding="utf-8"))
 
-    assert reviewed["permissions"] == {"contents": "read", "pages": "write", "id-token": "write"}
+    assert reviewed["permissions"] == {"contents": "read", "actions": "read", "pages": "write", "id-token": "write"}
     assert feed["permissions"] == {"contents": "read"}
     assert workflow_triggers(reviewed)["push"] == {"branches": ["main"]}
     assert "workflow_dispatch" in workflow_triggers(reviewed)
@@ -375,6 +375,12 @@ def test_pages_workflow_deploys_site_and_feed_workflow_uploads_feed_artifact_onl
 
     reviewed_text = (WORKFLOWS / "site-pages.yml").read_text(encoding="utf-8")
     feed_text = (WORKFLOWS / "site-live-feed.yml").read_text(encoding="utf-8")
+    assert "Download latest source health snapshot" in reviewed_text
+    assert "--workflow source-maintenance-report.yml" in reviewed_text
+    assert "--name openva-source-maintenance-report" in reviewed_text
+    assert "public/source-health-snapshot.json" in reviewed_text
+    assert "source health snapshot unavailable" in reviewed_text
+    assert reviewed_text.index("Download latest source health snapshot") < reviewed_text.index("Build reviewed catalog site")
     assert "actions/deploy-pages@v4" in reviewed_text
     assert "actions/deploy-pages" not in feed_text
     assert "actions/upload-artifact@v6" in feed_text

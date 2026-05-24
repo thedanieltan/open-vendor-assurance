@@ -153,7 +153,7 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         },
         "site-pages.yml": {
             "triggers": {"push", "workflow_dispatch"},
-            "permissions": {"contents": "read", "pages": "write", "id-token": "write"},
+            "permissions": {"contents": "read", "actions": "read", "pages": "write", "id-token": "write"},
         },
         "agent-weighted-review.yml": {
             "triggers": {"pull_request"},
@@ -426,6 +426,24 @@ def test_source_maintenance_report_uploads_public_health_snapshot_artifact_only(
     assert "gh pr merge" not in text
     assert "actions/deploy-pages" not in text
     assert "observations/sources/" not in text
+
+
+def test_site_pages_downloads_latest_source_health_snapshot_before_build():
+    workflow = load_workflow("site-pages.yml")
+    text = (WORKFLOW_DIR / "site-pages.yml").read_text(encoding="utf-8")
+
+    assert workflow["permissions"] == {"contents": "read", "actions": "read", "pages": "write", "id-token": "write"}
+    assert "Download latest source health snapshot" in text
+    assert "gh run list" in text
+    assert "--workflow source-maintenance-report.yml" in text
+    assert "gh run download" in text
+    assert "--name openva-source-maintenance-report" in text
+    assert "source-health-artifacts/public/source-health-snapshot.json" in text
+    assert "public/source-health-snapshot.json" in text
+    assert "source health snapshot unavailable" in text
+    assert text.index("Download latest source health snapshot") < text.index("Build reviewed catalog site")
+    assert "git add public/source-health-snapshot.json" not in text
+    assert "git commit" not in text
 
 
 def test_ci_policy_documents_required_checks_and_branch_protection():
