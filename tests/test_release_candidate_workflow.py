@@ -35,12 +35,14 @@ def test_release_candidate_workflow_wraps_existing_release_commands():
         assert command in text
 
 
-def test_release_candidate_workflow_uploads_manifest_only():
+def test_release_candidate_workflow_uploads_manifest_and_source_health_readiness():
     text = WORKFLOW.read_text(encoding="utf-8")
 
     assert "actions/upload-artifact@v6" in text
     assert "name: openva-release-candidate-artifacts" in text
-    assert "path: release-artifacts.json" in text
+    assert "release-artifacts.json" in text
+    assert "release-source-health-readiness.json" in text
+    assert "release-source-health-summary.md" in text
 
 
 def test_release_candidate_workflow_does_not_tag_or_publish():

@@ -35,6 +35,16 @@ jobs:
         run: pytest -q
       - name: Run release smoke test
         run: python -m tools.openva.release_smoke
+      - name: Build report-only source health readiness
+        run: |
+          python -m tools.openva.release_source_health check \
+            --source-verification-report source-verification-report.json \
+            --confirmed-p0-scan confirmed-p0-repair-candidates.json \
+            --output-json release-source-health-readiness.json \
+            --summary-md release-source-health-summary.md \
+            --report-only
+      - name: Print source health readiness summary
+        run: cat release-source-health-summary.md
       - name: Build release artifact manifest
         run: python -m tools.openva.release_artifacts build
       - name: Check release artifact manifest
@@ -46,5 +56,8 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: openva-release-candidate-artifacts
-          path: release-artifacts.json
+          path: |
+            release-artifacts.json
+            release-source-health-readiness.json
+            release-source-health-summary.md
           if-no-files-found: error

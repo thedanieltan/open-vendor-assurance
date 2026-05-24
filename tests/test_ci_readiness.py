@@ -72,6 +72,15 @@ def test_validate_workflow_checks_generated_pack_and_indexes():
     assert "pytest -q" in text
 
 
+def test_release_candidate_builds_report_only_source_health_readiness():
+    text = (WORKFLOW_DIR / "release-candidate.yml").read_text(encoding="utf-8")
+
+    assert "python -m tools.openva.release_source_health check" in text
+    assert "--report-only" in text
+    assert "release-source-health-readiness.json" in text
+    assert "release-source-health-summary.md" in text
+
+
 def test_catalog_guard_workflow_is_read_only_and_pr_scoped():
     workflow = load_workflow("catalog-pr-guard.yml")
     triggers = workflow_triggers(workflow)
@@ -298,6 +307,11 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
         "source-repair-pr.yml": {
             "source-repair-action-report.json",
             "source-repair-pr-body.md",
+        },
+        "release-candidate.yml": {
+            "release-artifacts.json",
+            "release-source-health-readiness.json",
+            "release-source-health-summary.md",
         },
     }
 
