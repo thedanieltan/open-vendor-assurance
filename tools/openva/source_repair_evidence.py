@@ -36,6 +36,7 @@ def validate_confirmed_scan(scan: dict[str, Any]) -> list[dict[str, Any]]:
         required = (
             "vendor_id",
             "source_id",
+            "source_type",
             "source_url",
             "prior_status",
             "fresh_status",
@@ -57,6 +58,7 @@ def evidence_row(row: dict[str, Any]) -> dict[str, Any]:
     return {
         "vendor_id": row.get("vendor_id"),
         "source_id": row.get("source_id"),
+        "source_type": row.get("source_type"),
         "source_url": row.get("source_url"),
         "original": {
             "prior": {
