@@ -61,6 +61,7 @@ def test_docs_index_links_launch_and_consumer_docs():
         "docs/triage-policy.md",
         "docs/catalog-agent-protocol.md",
         "docs/observation-result-taxonomy.md",
+        "docs/source-trust/observation-retention-policy.md",
         "docs/consumer-conformance-fixtures.md",
         "docs/versioning-policy.md",
         "docs/release-policy.md",
@@ -68,6 +69,23 @@ def test_docs_index_links_launch_and_consumer_docs():
     ]
     for item in expected:
         assert item in text
+
+
+def test_source_observation_retention_policy_documents_artifact_only_strategy():
+    text = read("docs/source-trust/observation-retention-policy.md")
+
+    for phrase in [
+        "Historical observations remain artifact-only.",
+        "No append-only historical observation ledger is committed to the repository yet.",
+        "repo bloat",
+        "no compaction policy yet",
+        "latest-source-health.json",
+        "public/source-health-snapshot.json",
+        "The site falls back to `Not yet verified` labels",
+        "Change release gate behavior.",
+        "Mutate catalog data.",
+    ]:
+        assert phrase in text
 
 
 def test_launch_checklist_has_required_validation_commands():
