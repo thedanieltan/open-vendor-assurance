@@ -88,22 +88,6 @@ def validate_report(report: dict[str, Any]) -> list[dict[str, Any]]:
     return approved
 
 
-def replacement_metadata(row: dict[str, Any]) -> dict[str, Any]:
-    return {
-        "source_repair": {
-            "repaired_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-            "repair_type": "confirmed_p0_replacement",
-            "original_source_url": row["original_source_url"],
-            "replacement_verification_status": row["replacement_verification_status"],
-            "replacement_http_status": row["replacement_http_status"],
-            "replacement_semantic_status": row["replacement_semantic_status"],
-            "replacement_authority_status": row["replacement_authority_status"],
-            "replacement_access_status": row["replacement_access_status"],
-            "replacement_url_safety_status": row["replacement_url_safety_status"],
-        }
-    }
-
-
 def plan_row(row: dict[str, Any], root: Path) -> tuple[list[FileAction], list[str]]:
     reasons: list[str] = []
     vendor_id = str(row["vendor_id"])
@@ -175,7 +159,6 @@ def apply_repair_actions(validation_report: dict[str, Any], root: Path = ROOT) -
         if isinstance(provenance, dict):
             provenance["observer"] = "human"
             provenance["confidence"] = "high"
-        source.update(replacement_metadata(row))
         write_yaml(action.path, source)
         applied.append(action.as_dict(root))
     if blocked:

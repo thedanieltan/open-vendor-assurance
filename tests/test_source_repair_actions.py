@@ -92,7 +92,7 @@ def test_apply_updates_source_url_and_human_review_metadata(tmp_path, monkeypatc
     assert source["catalog_tier"] == "human_reviewed"
     assert source["provenance"]["observer"] == "human"
     assert source["provenance"]["confidence"] == "high"
-    assert source["source_repair"]["original_source_url"] == "https://example.com/old-dpa"
+    assert "source_repair" not in source
 
 
 def test_blocks_if_current_source_no_longer_matches_original_url(tmp_path):
