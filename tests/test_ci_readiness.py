@@ -364,6 +364,9 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
             "reports/coverage-audit-summary.md",
             "reports/coverage-audit-report.json",
             "reports/coverage-audit-vendors.csv",
+            "reports/catalog-completeness-summary.md",
+            "reports/catalog-completeness-report.json",
+            "reports/catalog-completeness-vendors.csv",
         },
         "observe-report.yml": {
             "reports/observation-report.md",
