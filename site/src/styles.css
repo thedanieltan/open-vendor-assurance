@@ -530,6 +530,45 @@ input[type="checkbox"] {
   font-weight: 760;
 }
 
+.source-health {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 0.35rem 0.3rem 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #edf4ef;
+  color: var(--ink);
+  padding: 0.18rem 0.55rem;
+  font-size: 0.82rem;
+  font-weight: 760;
+}
+
+.source-health--healthy {
+  border-color: rgba(47, 125, 91, 0.38);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.source-health--warning {
+  border-color: rgba(154, 91, 19, 0.32);
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.source-health--unavailable {
+  border-color: rgba(137, 44, 44, 0.3);
+  background: #fff0f0;
+  color: #8a2c2c;
+}
+
+.source-health--ambiguous,
+.source-health--missing {
+  border-color: rgba(91, 109, 101, 0.35);
+  background: #f1f5f3;
+  color: var(--muted);
+}
+
 .source-list {
   display: grid;
   gap: 0.6rem;

@@ -12,6 +12,28 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SITE_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUT = SITE_ROOT / "dist"
+DEFAULT_SOURCE_HEALTH_SNAPSHOT = ROOT / "public" / "source-health-snapshot.json"
+SOURCE_HEALTH_BUCKET_COUNTS = {
+    "healthy": 0,
+    "warning": 0,
+    "unavailable": 0,
+    "ambiguous": 0,
+}
+SOURCE_HEALTH_LABELS = {
+    "healthy": "Verified",
+    "warning": "Needs review",
+    "unavailable": "Unavailable",
+    "ambiguous": "Access ambiguous",
+    "missing": "Not yet verified",
+}
+SOURCE_HEALTH_DESCRIPTIONS = {
+    "healthy": "Verified reachable in the latest maintenance snapshot.",
+    "warning": "Needs review based on the latest maintenance snapshot.",
+    "unavailable": "Unavailable in the latest maintenance snapshot.",
+    "ambiguous": "Access ambiguous in the latest maintenance snapshot.",
+    "missing": "No source health row is available in the latest maintenance snapshot.",
+}
+SOURCE_HEALTH_NOTICE = "Source health is based on the latest maintenance snapshot and may change."
 
 
 def load_json(path: Path) -> Any:
@@ -21,6 +43,97 @@ def load_json(path: Path) -> Any:
 def write_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def empty_source_health_snapshot() -> dict[str, Any]:
+    return {
+        "schema_version": "0.1.0",
+        "generated_at": None,
+        "report_type": "source_health_public_snapshot",
+        "source": "latest-source-health",
+        "snapshot_type": "missing",
+        "metadata": {
+            "snapshot_notice": SOURCE_HEALTH_NOTICE,
+            "missing_snapshot": True,
+            "non_advisory": True,
+            "network_fetch_performed": False,
+            "catalog_mutation_performed": False,
+            "historical_ledger_committed": False,
+            "ui_generated": False,
+            "release_policy_changed": False,
+        },
+        "summary": {
+            "source_count": 0,
+            "status_bucket_counts": dict(SOURCE_HEALTH_BUCKET_COUNTS),
+        },
+        "health": [],
+    }
+
+
+def load_source_health_snapshot(path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT) -> dict[str, Any]:
+    if not path.exists():
+        print(f"Warning: source health snapshot not found at {path}; site will show Not yet verified labels.")
+        return empty_source_health_snapshot()
+    snapshot = load_json(path)
+    if not isinstance(snapshot, dict) or snapshot.get("report_type") != "source_health_public_snapshot":
+        print(f"Warning: invalid source health snapshot at {path}; site will show Not yet verified labels.")
+        return empty_source_health_snapshot()
+    if not isinstance(snapshot.get("health"), list):
+        print(f"Warning: source health snapshot at {path} has no health list; site will show Not yet verified labels.")
+        return empty_source_health_snapshot()
+    return snapshot
+
+
+def source_health_key(row: dict[str, Any]) -> tuple[str, str, str]:
+    return (
+        str(row.get("vendor_id") or ""),
+        str(row.get("source_id") or ""),
+        str(row.get("source_url") or ""),
+    )
+
+
+def source_health_index(snapshot: dict[str, Any]) -> dict[tuple[str, str, str], dict[str, Any]]:
+    rows = snapshot.get("health", [])
+    if not isinstance(rows, list):
+        return {}
+    return {
+        source_health_key(row): row
+        for row in rows
+        if isinstance(row, dict) and all(source_health_key(row))
+    }
+
+
+def source_health_for_source(source: dict[str, Any], health_index: dict[tuple[str, str, str], dict[str, Any]]) -> dict[str, Any]:
+    health = health_index.get(source_health_key(source))
+    if not health:
+        return {
+            "status_bucket": "missing",
+            "label": SOURCE_HEALTH_LABELS["missing"],
+            "description": SOURCE_HEALTH_DESCRIPTIONS["missing"],
+            "status": None,
+            "http_status": None,
+            "final_url": None,
+            "verified_at": None,
+            "run_id": None,
+            "observer": None,
+            "snapshot_notice": SOURCE_HEALTH_NOTICE,
+        }
+
+    bucket = str(health.get("status_bucket") or "ambiguous")
+    if bucket not in SOURCE_HEALTH_LABELS:
+        bucket = "ambiguous"
+    return {
+        "status_bucket": bucket,
+        "label": SOURCE_HEALTH_LABELS[bucket],
+        "description": SOURCE_HEALTH_DESCRIPTIONS[bucket],
+        "status": health.get("status"),
+        "http_status": health.get("http_status"),
+        "final_url": health.get("final_url"),
+        "verified_at": health.get("verified_at"),
+        "run_id": health.get("run_id"),
+        "observer": health.get("observer"),
+        "snapshot_notice": SOURCE_HEALTH_NOTICE,
+    }
 
 
 def git_value(*args: str) -> str:
@@ -87,7 +200,7 @@ def annotation(record_class: str) -> dict[str, Any]:
     }
 
 
-def compact_source(source: dict[str, Any]) -> dict[str, Any]:
+def compact_source(source: dict[str, Any], source_health: dict[str, Any] | None = None) -> dict[str, Any]:
     tier = source.get("catalog_tier") or (
         "machine_validated" if source.get("review_state") == "auto_validated" else "human_reviewed"
     )
@@ -109,6 +222,7 @@ def compact_source(source: dict[str, Any]) -> dict[str, Any]:
         "access_class": source.get("access_class"),
         "rights_class": source.get("rights_class"),
         "provenance": source.get("provenance") or {},
+        "source_health": source_health or source_health_for_source(source, {}),
     }
 
 
@@ -149,7 +263,7 @@ def build_meta(pack: dict[str, Any], sources: list[dict[str, Any]], vendor_count
     }
 
 
-def build_compiled_catalog() -> dict[str, Any]:
+def build_compiled_catalog(source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT) -> dict[str, Any]:
     pack = load_json(ROOT / "openva-pack.json")
     vendor_search = load_json(ROOT / "indexes/vendor-search.json")
     vendors_index = load_json(ROOT / "indexes/vendors.json")
@@ -158,6 +272,8 @@ def build_compiled_catalog() -> dict[str, Any]:
     unavailable_index = load_json(ROOT / "indexes/unavailable-sources.json")
     coverage_index = load_json(ROOT / "indexes/source-coverage.json")
     observations_index = load_json(ROOT / "indexes/observations.json")
+    source_health_snapshot = load_source_health_snapshot(source_health_snapshot_path)
+    health_index = source_health_index(source_health_snapshot)
 
     vendors_by_id = {
         row["vendor_id"]: row
@@ -175,7 +291,7 @@ def build_compiled_catalog() -> dict[str, Any]:
     for row in sources_index.get("items", []):
         if not isinstance(row, dict):
             continue
-        source = compact_source(row)
+        source = compact_source(row, source_health_for_source(row, health_index))
         compact_sources.append(source)
         vendor_id = str(source.get("vendor_id") or "")
         if vendor_id:
@@ -258,6 +374,7 @@ def build_compiled_catalog() -> dict[str, Any]:
         "vendor_details": vendor_details,
         "source_types": source_types,
         "coverage_summary": coverage_summary,
+        "source_health_snapshot": source_health_snapshot,
     }
 
 
@@ -293,7 +410,7 @@ def build_observation_feed() -> dict[str, Any]:
     }
 
 
-def build_site(output_dir: Path) -> None:
+def build_site(output_dir: Path, source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT) -> None:
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
@@ -303,11 +420,12 @@ def build_site(output_dir: Path) -> None:
             shutil.copy2(path, output_dir / path.name)
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
 
-    compiled = build_compiled_catalog()
+    compiled = build_compiled_catalog(source_health_snapshot_path)
     write_json(output_dir / "data/meta.json", compiled["meta"])
     write_json(output_dir / "data/vendor-search.min.json", {"meta": compiled["meta"], "items": compiled["vendor_summaries"]})
     write_json(output_dir / "data/source-types.json", {"meta": compiled["meta"], "items": compiled["source_types"]})
     write_json(output_dir / "data/coverage-summary.json", {"meta": compiled["meta"], **compiled["coverage_summary"]})
+    write_json(output_dir / "data/source-health-snapshot.json", compiled["source_health_snapshot"])
     for vendor_id, detail in compiled["vendor_details"].items():
         write_json(output_dir / "data/vendors" / f"{vendor_id}.json", {"meta": compiled["meta"], **detail})
     write_json(output_dir / "data/observation-feed.json", build_observation_feed())
@@ -316,8 +434,13 @@ def build_site(output_dir: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build the static OpenVA site.")
     parser.add_argument("--out", default=str(DEFAULT_OUT), help="Static output directory.")
+    parser.add_argument(
+        "--source-health-snapshot",
+        default=str(DEFAULT_SOURCE_HEALTH_SNAPSHOT),
+        help="Optional public source health snapshot JSON.",
+    )
     args = parser.parse_args()
-    build_site(Path(args.out))
+    build_site(Path(args.out), Path(args.source_health_snapshot))
     print(f"Built OpenVA site at {args.out}")
     return 0
 

@@ -1,5 +1,6 @@
 let catalogData = null;
 let feedData = null;
+let sourceHealthData = null;
 let visibleVendors = [];
 const selectedVendors = new Set();
 const selectedSources = new Set();
@@ -9,6 +10,13 @@ let localInventoryRows = [];
 let localMatchRows = [];
 
 const CORE_COVERAGE = ["dpa", "privacy_notice", "security_page", "subprocessors_list", "trust_center"];
+const SOURCE_HEALTH_LABELS = {
+  healthy: "Verified",
+  warning: "Needs review",
+  unavailable: "Unavailable",
+  ambiguous: "Access ambiguous",
+  missing: "Not yet verified",
+};
 
 function text(value) {
   return value === null || value === undefined || value === "" ? "Unavailable" : String(value);
@@ -49,6 +57,20 @@ function snapshotDisclosure() {
   `;
 }
 
+function sourceHealthDisclosure() {
+  const snapshot = sourceHealthData || {};
+  const summary = snapshot.summary || {};
+  const counts = summary.status_bucket_counts || {};
+  return `
+    <strong>Source health snapshot</strong><br>
+    Source health is based on the latest maintenance snapshot and may change.<br>
+    Generated at: ${html(snapshot.generated_at || "Unavailable")}<br>
+    Snapshot type: ${html(snapshot.snapshot_type || "missing")}<br>
+    Source: ${html(snapshot.source || "latest-source-health")}<br>
+    Bucket counts: verified ${html(counts.healthy || 0)} / needs review ${html(counts.warning || 0)} / unavailable ${html(counts.unavailable || 0)} / access ambiguous ${html(counts.ambiguous || 0)}
+  `;
+}
+
 function renderSnapshotDisclosures() {
   document.querySelectorAll("[data-snapshot-disclosure]").forEach((node) => {
     node.innerHTML = snapshotDisclosure();
@@ -59,10 +81,12 @@ function renderSnapshotDisclosures() {
 function renderHome() {
   const meta = catalogData.meta;
   const feedTimestamp = feedData.generated_at || "No live observation events are available yet";
+  const healthGeneratedAt = sourceHealthData && sourceHealthData.generated_at ? sourceHealthData.generated_at : "Not yet verified";
   document.getElementById("home-stats").innerHTML = [
     ["Reviewed vendors", meta.vendor_count],
     ["Reviewed source records", meta.source_count],
     ["Snapshot date", meta.catalog_snapshot_date],
+    ["Source health snapshot", healthGeneratedAt],
     ["Observation feed", feedTimestamp],
     ["Site data contract", meta.site_data_contract],
     ["Boundary", "non_advisory"],
@@ -438,6 +462,7 @@ async function renderVendorDetail(vendorId) {
       <p>Headquarters country: ${html(vendor.headquarters_country)}</p>
       <p>Vendor categories: ${(vendor.vendor_categories || []).map(html).join(", ") || "Unavailable"}</p>
       <div class="snapshot-box">${snapshotDisclosure()}</div>
+      <div class="snapshot-box source-health-snapshot">${sourceHealthDisclosure()}</div>
       <h4>Source coverage summary</h4>
       <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
       <h4>Canonical source records</h4>
@@ -467,8 +492,16 @@ async function renderVendorDetail(vendorId) {
 }
 
 function sourceTemplate(source) {
+  const health = source.source_health || {};
+  const bucket = health.status_bucket || "missing";
+  const label = health.label || SOURCE_HEALTH_LABELS[bucket] || SOURCE_HEALTH_LABELS.missing;
+  const finalUrl = health.final_url && health.final_url !== source.source_url
+    ? `<br>final_url: <a href="${html(health.final_url)}" target="_blank" rel="noreferrer">${html(health.final_url)}</a>`
+    : "";
   return `
     <li>
+      <span class="source-health source-health--${html(bucket)}">${html(label)}</span>
+      status: ${html(health.status || "Not yet verified")} Â· last checked: ${html(health.verified_at || "Not yet verified")} Â· ${html(health.snapshot_notice || "Source health is based on the latest maintenance snapshot and may change.")}${finalUrl}<br>
       <label><input type="checkbox" data-select-source="${html(source.source_id)}" ${selectedSources.has(source.source_id) ? "checked" : ""}> Select source</label>
       <strong>${html(source.source_type)}</strong> · <a href="${html(source.source_url)}" target="_blank" rel="noreferrer">${html(source.title)}</a><br>
       language: ${html(source.source_language)} · authority: ${html(source.source_authority_class)} · access: ${html(source.access_class)} · rights: ${html(source.rights_class)}<br>
@@ -600,16 +633,25 @@ function route() {
 }
 
 async function init() {
-  const [metaResponse, vendorSearchResponse, sourceTypesResponse, feedResponse] = await Promise.all([
+  const [metaResponse, vendorSearchResponse, sourceTypesResponse, feedResponse, healthResponse] = await Promise.all([
     fetch("data/meta.json"),
     fetch("data/vendor-search.min.json"),
     fetch("data/source-types.json"),
     fetch("data/observation-feed.json"),
+    fetch("data/source-health-snapshot.json").catch(() => null),
   ]);
   const meta = await metaResponse.json();
   const vendorSearch = await vendorSearchResponse.json();
   const sourceTypes = await sourceTypesResponse.json();
   feedData = await feedResponse.json();
+  sourceHealthData = healthResponse && healthResponse.ok
+    ? await healthResponse.json()
+    : {
+        generated_at: null,
+        source: "latest-source-health",
+        snapshot_type: "missing",
+        summary: { status_bucket_counts: { healthy: 0, warning: 0, unavailable: 0, ambiguous: 0 } },
+      };
   catalogData = {
     meta,
     vendors: vendorSearch.items || [],
