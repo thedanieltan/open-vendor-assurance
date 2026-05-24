@@ -3,10 +3,11 @@ import pytest
 from tools.openva.source_refinement_scan import compare_verification_reports
 
 
-def row(vendor, source_id, url, status, http_status=None):
+def row(vendor, source_id, url, status, http_status=None, source_type="dpa"):
     return {
         "vendor_id": vendor,
         "source_id": source_id,
+        "source_type": source_type,
         "source_url": url,
         "final_url": url,
         "http_status": http_status,
@@ -37,6 +38,7 @@ def test_confirms_exact_repeated_p0_status():
 
     assert result["summary"]["confirmed_p0_count"] == 1
     assert result["confirmed_p0"][0]["vendor_id"] == "vendor-a"
+    assert result["confirmed_p0"][0]["source_type"] == "dpa"
     assert result["summary"]["inconclusive_count"] == 1
     assert result["inconclusive"][0]["reason"] == "status_changed_between_runs"
 

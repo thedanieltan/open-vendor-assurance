@@ -19,6 +19,7 @@ def row(status="not_found", http_status=404):
     return {
         "vendor_id": "vendor-a",
         "source_id": "vendor-a-dpa",
+        "source_type": "dpa",
         "source_url": "url-a",
         "prior_status": status,
         "fresh_status": status,
@@ -44,6 +45,7 @@ def test_builds_raw_original_evidence_without_replacement_or_automerge_signal():
     assert report["posture"]["contains_automerge_recommendation"] is False
     assert "eligible" not in str(report).lower()
     repair = report["repairs"][0]
+    assert repair["source_type"] == "dpa"
     assert repair["replacement"] is None
     assert repair["proposed_change"] is None
     assert repair["original"]["prior"]["verification_status"] == "not_found"
@@ -68,7 +70,7 @@ def test_rejects_non_confirmed_status_pair():
 
 def test_rejects_missing_required_fields():
     bad = row()
-    del bad["fresh_verified_at"]
+    del bad["source_type"]
 
     with pytest.raises(ValueError, match="missing required field"):
         build_source_repair_evidence(scan([bad]))
