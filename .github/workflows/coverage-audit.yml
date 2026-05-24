@@ -28,6 +28,13 @@ jobs:
         run: |
           mkdir -p reports
           python -m tools.openva.coverage_audit build --output reports/coverage-audit-report.json
+      - name: Build catalog completeness audit
+        run: |
+          mkdir -p reports
+          python -m tools.openva.catalog_completeness build \
+            --output reports/catalog-completeness-report.json \
+            --csv-output reports/catalog-completeness-vendors.csv \
+            --markdown-output reports/catalog-completeness-summary.md
       - name: Build reviewer-friendly summary and CSV export
         run: |
           mkdir -p reports
@@ -91,4 +98,7 @@ jobs:
             reports/coverage-audit-summary.md
             reports/coverage-audit-report.json
             reports/coverage-audit-vendors.csv
+            reports/catalog-completeness-summary.md
+            reports/catalog-completeness-report.json
+            reports/catalog-completeness-vendors.csv
           if-no-files-found: error
