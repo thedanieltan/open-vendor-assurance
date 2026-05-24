@@ -290,6 +290,9 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
             "summary.md",
             "source-health-report.json",
             "source-verification-report.json",
+            "source-quality-refinement-queue.json",
+            "source-quality-refinement-queue.csv",
+            "source-quality-refinement-summary.md",
             "source-observation-ledger.json",
             "source-observation-ledger-summary.md",
             "latest-source-health.json",
@@ -342,6 +345,22 @@ def test_source_maintenance_report_uploads_observation_ledger_artifact_only():
     assert "source-observation-ledger.json" in text
     assert "source-observation-ledger-summary.md" in text
     assert "observations/sources/" not in text
+
+
+def test_source_maintenance_report_uploads_quality_refinement_queue_artifact_only():
+    text = (WORKFLOW_DIR / "source-maintenance-report.yml").read_text(encoding="utf-8")
+
+    assert "python -m tools.openva.source_quality_refinement build" in text
+    assert "--source-verification-report source-verification-report.json" in text
+    assert "--json-output source-quality-refinement-queue.json" in text
+    assert "--csv-output source-quality-refinement-queue.csv" in text
+    assert "--markdown-output source-quality-refinement-summary.md" in text
+    assert "source-quality-refinement-queue.json" in text
+    assert "source-quality-refinement-queue.csv" in text
+    assert "source-quality-refinement-summary.md" in text
+    assert "gh pr create" not in text
+    assert "gh pr merge" not in text
+    assert "agent-automerge" not in text
 
 
 def test_source_maintenance_report_uploads_latest_health_index_artifact_only():

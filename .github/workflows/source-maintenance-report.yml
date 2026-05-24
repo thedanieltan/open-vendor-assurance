@@ -46,6 +46,13 @@ jobs:
           else
             python -m tools.openva.source_verification verify --output source-verification-report.json
           fi
+      - name: Build source quality refinement queue
+        run: |
+          python -m tools.openva.source_quality_refinement build \
+            --source-verification-report source-verification-report.json \
+            --json-output source-quality-refinement-queue.json \
+            --csv-output source-quality-refinement-queue.csv \
+            --markdown-output source-quality-refinement-summary.md
       - name: Build source observation ledger artifact
         run: |
           python -m tools.openva.source_observation_ledger build \
@@ -95,6 +102,7 @@ jobs:
 
           health = json.load(open('source-health-report.json', encoding='utf-8'))
           verification = json.load(open('source-verification-report.json', encoding='utf-8'))
+          quality = json.load(open('source-quality-refinement-queue.json', encoding='utf-8'))
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
           cleanup = json.load(open('cleanup-proposal.json', encoding='utf-8'))
@@ -110,6 +118,7 @@ jobs:
               "",
               f"- Source health issues: `{health['summary']['sources_with_issues']}`",
               f"- Verification sources requiring review: `{verification['summary']['sources_requiring_review']}`",
+              f"- Source quality refinement items: `{quality['summary']['total_quality_review_count']}`",
               f"- Candidate sources reported: `{discovery['summary']['candidate_sources_written_or_reported']}`",
               f"- Unavailable sources reported: `{discovery['summary']['unavailable_sources_written_or_reported']}`",
               f"- Promotion plan actions: `{promotion['summary']['action_count']}`",
@@ -125,6 +134,7 @@ jobs:
               "- `source-observation-ledger-summary.md`: reviewer-readable source observation ledger summary.",
               "- `latest-source-health.json`: compact latest source health index for site/API consumption.",
               "- `public/source-health-snapshot.json`: public snapshot of latest source health for future site/API display.",
+              "- `source-quality-refinement-*`: human-reviewed queue for reachable source quality issues.",
               "",
           ]
           Path("summary.md").write_text("\n".join(lines), encoding="utf-8")
@@ -194,6 +204,7 @@ jobs:
           for path in [
               'source-health-report.json',
               'source-verification-report.json',
+              'source-quality-refinement-queue.json',
               'source-observation-ledger.json',
               'latest-source-health.json',
               'public/source-health-snapshot.json',
@@ -212,14 +223,17 @@ jobs:
           path: |
             summary.md
             cleanup-proposal.md
+            source-quality-refinement-summary.md
             source-health.csv
             source-verification.csv
+            source-quality-refinement-queue.csv
             source-observation-ledger-summary.md
             source-discovery-candidates.csv
             source-discovery-unavailable.csv
             promotion-plan-actions.csv
             source-health-report.json
             source-verification-report.json
+            source-quality-refinement-queue.json
             source-observation-ledger.json
             latest-source-health.json
             public/source-health-snapshot.json
