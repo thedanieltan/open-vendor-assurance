@@ -104,18 +104,21 @@ def build_release_source_health_readiness(
     *,
     now: datetime | None = None,
     max_verification_age_hours: int = DEFAULT_MAX_VERIFICATION_AGE_HOURS,
+    enforce: bool = False,
 ) -> dict[str, Any]:
     now = now or datetime.now(UTC)
     failures: list[dict[str, Any]] = []
     warnings: list[dict[str, Any]] = []
 
     if not source_verification_report.present:
-        warnings.append({
+        target = failures if enforce else warnings
+        target.append({
             "code": "missing_source_verification_report",
             "message": "Source verification artifact is missing; release source health cannot be fully assessed.",
         })
     elif source_verification_report.report_type != "source_verification_report":
-        warnings.append({
+        target = failures if enforce else warnings
+        target.append({
             "code": "unexpected_source_verification_report_type",
             "message": f"Expected source_verification_report, got {source_verification_report.report_type!r}.",
         })
@@ -183,8 +186,9 @@ def build_release_source_health_readiness(
             "non_advisory": True,
         },
         "policy": {
-            "mode": "report_only",
+            "mode": "enforce" if enforce else "report_only",
             "fail_when_confirmed_p0_count_gt": 0,
+            "fail_when_source_verification_missing_or_invalid": enforce,
             "warn_statuses": list(WARN_STATUSES),
             "max_verification_age_hours": max_verification_age_hours,
         },
@@ -277,12 +281,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--summary-md", type=Path, default=Path("release-source-health-summary.md"))
     parser.add_argument("--max-verification-age-hours", type=int, default=DEFAULT_MAX_VERIFICATION_AGE_HOURS)
     parser.add_argument("--report-only", action="store_true")
+    parser.add_argument("--enforce", action="store_true")
     args = parser.parse_args(argv)
+    if args.report_only and args.enforce:
+        parser.error("--report-only and --enforce are mutually exclusive")
 
     report = build_release_source_health_readiness(
         load_optional_json(args.source_verification_report),
         load_optional_json(args.confirmed_p0_scan),
         max_verification_age_hours=args.max_verification_age_hours,
+        enforce=args.enforce,
     )
     write_json(report, args.output_json)
     write_markdown(report, args.summary_md)

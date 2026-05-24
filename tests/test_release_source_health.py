@@ -100,6 +100,31 @@ def test_release_source_health_warns_when_verification_artifact_is_missing():
     assert report["warnings"][0]["code"] == "missing_source_verification_report"
 
 
+def test_release_source_health_enforcement_fails_when_verification_artifact_is_missing():
+    report = build_release_source_health_readiness(
+        loaded("source-verification-report.json", None),
+        loaded("confirmed-p0-repair-candidates.json", confirmed_p0_report(0)),
+        now=NOW,
+        enforce=True,
+    )
+
+    assert report["status"] == "blocked"
+    assert report["failures"][0]["code"] == "missing_source_verification_report"
+    assert report["policy"]["mode"] == "enforce"
+
+
+def test_release_source_health_enforcement_fails_when_verification_artifact_is_invalid():
+    report = build_release_source_health_readiness(
+        loaded("source-verification-report.json", {"report_type": "not_source_verification"}),
+        loaded("confirmed-p0-repair-candidates.json", confirmed_p0_report(0)),
+        now=NOW,
+        enforce=True,
+    )
+
+    assert report["status"] == "blocked"
+    assert report["failures"][0]["code"] == "unexpected_source_verification_report_type"
+
+
 def test_release_source_health_warns_on_stale_verification_artifact():
     stale = verification_report(ok=1)
     stale["generated_at"] = (NOW - timedelta(hours=200)).isoformat().replace("+00:00", "Z")
@@ -111,6 +136,35 @@ def test_release_source_health_warns_on_stale_verification_artifact():
     )
 
     assert report["status"] == "warning"
+    assert any(warning["code"] == "stale_source_verification_report" for warning in report["warnings"])
+
+
+def test_release_source_health_enforcement_keeps_ambiguous_statuses_warning_only():
+    report = build_release_source_health_readiness(
+        loaded("source-verification-report.json", verification_report(ok=1, bot_protected=2)),
+        loaded("confirmed-p0-repair-candidates.json", confirmed_p0_report(0)),
+        now=NOW,
+        enforce=True,
+    )
+
+    assert report["status"] == "warning"
+    assert report["failures"] == []
+    assert report["warnings"][0]["code"] == "source_status_warning:bot_protected"
+
+
+def test_release_source_health_enforcement_keeps_stale_verification_warning_only():
+    stale = verification_report(ok=1)
+    stale["generated_at"] = (NOW - timedelta(hours=200)).isoformat().replace("+00:00", "Z")
+
+    report = build_release_source_health_readiness(
+        loaded("source-verification-report.json", stale),
+        loaded("confirmed-p0-repair-candidates.json", confirmed_p0_report(0)),
+        now=NOW,
+        enforce=True,
+    )
+
+    assert report["status"] == "warning"
+    assert report["failures"] == []
     assert any(warning["code"] == "stale_source_verification_report" for warning in report["warnings"])
 
 
@@ -161,3 +215,33 @@ def test_cli_writes_report_artifacts_and_report_only_returns_zero(tmp_path: Path
     assert output.is_file()
     assert summary.is_file()
     assert "confirmed_p0_count" in output.read_text(encoding="utf-8")
+
+
+def test_cli_enforce_returns_nonzero_when_confirmed_p0_count_blocks(tmp_path: Path):
+    verification = tmp_path / "source-verification-report.json"
+    p0 = tmp_path / "confirmed-p0-repair-candidates.json"
+    output = tmp_path / "release-source-health-readiness.json"
+    summary = tmp_path / "release-source-health-summary.md"
+    verification.write_text(
+        '{"report_type":"source_verification_report","generated_at":"2026-05-24T07:00:00Z","summary":{"source_count":1},"breakdowns":{"verification_statuses":{"ok":1}}}\n',
+        encoding="utf-8",
+    )
+    p0.write_text(
+        '{"report_type":"confirmed_p0_source_refinement_scan","summary":{"confirmed_p0_count":1}}\n',
+        encoding="utf-8",
+    )
+
+    assert main([
+        "check",
+        "--source-verification-report",
+        str(verification),
+        "--confirmed-p0-scan",
+        str(p0),
+        "--output-json",
+        str(output),
+        "--summary-md",
+        str(summary),
+        "--enforce",
+    ]) == 1
+    assert output.is_file()
+    assert summary.is_file()

@@ -74,11 +74,16 @@ def test_validate_workflow_checks_generated_pack_and_indexes():
 
 def test_release_candidate_builds_report_only_source_health_readiness():
     text = (WORKFLOW_DIR / "release-candidate.yml").read_text(encoding="utf-8")
+    workflow = load_workflow("release-candidate.yml")
+    triggers = workflow_triggers(workflow)
 
     assert "python -m tools.openva.release_source_health check" in text
     assert "--report-only" in text
+    assert "--enforce" in text
+    assert "SOURCE_HEALTH_EXIT_CODE" in text
     assert "release-source-health-readiness.json" in text
     assert "release-source-health-summary.md" in text
+    assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["default"] == "report_only"
 
 
 def test_catalog_guard_workflow_is_read_only_and_pr_scoped():
