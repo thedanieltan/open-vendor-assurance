@@ -13,6 +13,9 @@ def test_policy_is_report_only_and_limits_machine_canonical_records():
     policy = load_policy()
     assert policy["mode"] == "enforce"
     assert policy["machine_canonical"]["max_source_records_per_pr"] == 50
+    assert policy["source_repair"]["max_source_records_per_pr"] == 10
+    assert policy["lanes"]["p0_source_repair"]["label"] == "automerge:p0-source-repair"
+    assert policy["lanes"]["p0_source_repair"]["required_labels"] == ["source-refinement"]
 
 
 def test_generated_lane_accepts_only_generated_paths():
