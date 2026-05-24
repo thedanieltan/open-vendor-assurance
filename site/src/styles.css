@@ -410,6 +410,29 @@ main {
   font-weight: 720;
 }
 
+.confidence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+}
+
+.confidence-grid span {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.72);
+  padding: 0.55rem 0.65rem;
+}
+
+.confidence-grid strong,
+.confidence-grid small {
+  display: block;
+}
+
+.confidence-grid small {
+  color: var(--muted);
+}
+
 .filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

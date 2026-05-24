@@ -13,6 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUT = SITE_ROOT / "dist"
 DEFAULT_SOURCE_HEALTH_SNAPSHOT = ROOT / "public" / "source-health-snapshot.json"
+DEFAULT_CATALOG_COMPLETENESS_REPORT = ROOT / "reports" / "catalog-completeness-report.json"
+DEFAULT_ENTITY_REVIEW_QUEUE = ROOT / "reports" / "entity-review-queue.json"
+DEFAULT_FIELD_PROVENANCE_COVERAGE = ROOT / "reports" / "field-provenance-coverage.json"
 SOURCE_HEALTH_BUCKET_COUNTS = {
     "healthy": 0,
     "warning": 0,
@@ -34,6 +37,26 @@ SOURCE_HEALTH_DESCRIPTIONS = {
     "missing": "No source health row is available in the latest maintenance snapshot.",
 }
 SOURCE_HEALTH_NOTICE = "Source health is based on the latest maintenance snapshot and may change."
+CONFIDENCE_NOTICE = "Catalog confidence labels are metadata about OpenVA review coverage, not advice."
+COMPLETENESS_LABELS = {
+    "complete_enough_for_review": "Complete enough for review",
+    "partial": "Partial",
+    "source_coverage_incomplete": "Source coverage incomplete",
+    "entity_review_needed": "Entity review needed",
+    "minimal": "Minimal",
+    "missing": "Not reviewed",
+}
+ENTITY_REVIEW_LABELS = {
+    "reviewed": "Reviewed",
+    "needs_review": "Needs review",
+    "not_reviewed": "Not reviewed",
+}
+FIELD_PROVENANCE_LABELS = {
+    "strong": "Strong",
+    "mixed": "Mixed",
+    "partial": "Mixed",
+    "missing": "Missing",
+}
 
 
 def load_json(path: Path) -> Any:
@@ -82,6 +105,91 @@ def load_source_health_snapshot(path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT) -> 
         print(f"Warning: source health snapshot at {path} has no health list; site will show Not yet verified labels.")
         return empty_source_health_snapshot()
     return snapshot
+
+
+def load_optional_report(path: Path, report_type: str) -> dict[str, Any] | None:
+    if not path.exists():
+        print(f"Warning: optional catalog confidence report not found at {path}; site will use fallback labels.")
+        return None
+    report = load_json(path)
+    if not isinstance(report, dict) or report.get("report_type") != report_type:
+        print(f"Warning: invalid catalog confidence report at {path}; site will use fallback labels.")
+        return None
+    return report
+
+
+def vendor_keyed_rows(report: dict[str, Any] | None, field: str) -> dict[str, dict[str, Any]]:
+    if not report:
+        return {}
+    rows = report.get(field) or []
+    if not isinstance(rows, list):
+        return {}
+    return {
+        str(row["vendor_id"]): row
+        for row in rows
+        if isinstance(row, dict) and row.get("vendor_id")
+    }
+
+
+def entity_review_index(report: dict[str, Any] | None) -> dict[str, list[dict[str, Any]]]:
+    if not report:
+        return {}
+    rows = report.get("items") or []
+    index: dict[str, list[dict[str, Any]]] = {}
+    if not isinstance(rows, list):
+        return index
+    for row in rows:
+        if isinstance(row, dict) and row.get("vendor_id"):
+            index.setdefault(str(row["vendor_id"]), []).append(row)
+    return index
+
+
+def catalog_confidence_for_vendor(
+    vendor_id: str,
+    completeness: dict[str, dict[str, Any]],
+    entity_reviews: dict[str, list[dict[str, Any]]],
+    provenance: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    completeness_row = completeness.get(vendor_id)
+    completeness_bucket = str(completeness_row.get("completeness_bucket") if completeness_row else "missing")
+    if completeness_bucket not in COMPLETENESS_LABELS:
+        completeness_bucket = "partial"
+
+    entity_items = entity_reviews.get(vendor_id)
+    if entity_items is None:
+        entity_status = "not_reviewed"
+    elif entity_items:
+        entity_status = "needs_review"
+    else:
+        entity_status = "reviewed"
+
+    provenance_row = provenance.get(vendor_id)
+    provenance_bucket = str(provenance_row.get("coverage_bucket") if provenance_row else "missing")
+    if provenance_bucket not in FIELD_PROVENANCE_LABELS:
+        provenance_bucket = "missing"
+
+    return {
+        "notice": CONFIDENCE_NOTICE,
+        "source_health_separate": True,
+        "catalog_completeness": {
+            "bucket": completeness_bucket,
+            "label": COMPLETENESS_LABELS[completeness_bucket],
+            "missing_expected_sources": completeness_row.get("missing_expected_sources", []) if completeness_row else [],
+            "missing_required_fields": completeness_row.get("missing_required_fields", []) if completeness_row else [],
+        },
+        "entity_review": {
+            "status": entity_status,
+            "label": ENTITY_REVIEW_LABELS[entity_status],
+            "issue_count": len(entity_items or []),
+            "issue_types": sorted({str(item.get("issue_type")) for item in entity_items or [] if item.get("issue_type")}),
+        },
+        "field_provenance": {
+            "bucket": provenance_bucket,
+            "label": FIELD_PROVENANCE_LABELS[provenance_bucket],
+            "covered_fields": provenance_row.get("covered_fields", []) if provenance_row else [],
+            "missing_fields": provenance_row.get("missing_fields", []) if provenance_row else [],
+        },
+    }
 
 
 def source_health_key(row: dict[str, Any]) -> tuple[str, str, str]:
@@ -263,7 +371,12 @@ def build_meta(pack: dict[str, Any], sources: list[dict[str, Any]], vendor_count
     }
 
 
-def build_compiled_catalog(source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT) -> dict[str, Any]:
+def build_compiled_catalog(
+    source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT,
+    catalog_completeness_path: Path = DEFAULT_CATALOG_COMPLETENESS_REPORT,
+    entity_review_path: Path = DEFAULT_ENTITY_REVIEW_QUEUE,
+    field_provenance_path: Path = DEFAULT_FIELD_PROVENANCE_COVERAGE,
+) -> dict[str, Any]:
     pack = load_json(ROOT / "openva-pack.json")
     vendor_search = load_json(ROOT / "indexes/vendor-search.json")
     vendors_index = load_json(ROOT / "indexes/vendors.json")
@@ -274,6 +387,12 @@ def build_compiled_catalog(source_health_snapshot_path: Path = DEFAULT_SOURCE_HE
     observations_index = load_json(ROOT / "indexes/observations.json")
     source_health_snapshot = load_source_health_snapshot(source_health_snapshot_path)
     health_index = source_health_index(source_health_snapshot)
+    completeness_report = load_optional_report(catalog_completeness_path, "catalog_completeness_report")
+    entity_review_report = load_optional_report(entity_review_path, "entity_review_queue")
+    provenance_report = load_optional_report(field_provenance_path, "field_provenance_coverage")
+    completeness_by_vendor = vendor_keyed_rows(completeness_report, "vendors")
+    entity_reviews_by_vendor = entity_review_index(entity_review_report)
+    provenance_by_vendor = vendor_keyed_rows(provenance_report, "vendors")
 
     vendors_by_id = {
         row["vendor_id"]: row
@@ -346,6 +465,12 @@ def build_compiled_catalog(source_health_snapshot_path: Path = DEFAULT_SOURCE_HE
             "candidate_source_types": row.get("candidate_source_types", []),
             "unavailable_source_types": row.get("unavailable_source_types", []),
             "coverage": coverage,
+            "catalog_confidence": catalog_confidence_for_vendor(
+                vendor_id,
+                completeness_by_vendor,
+                entity_reviews_by_vendor,
+                provenance_by_vendor,
+            ),
             "detail_path": f"data/vendors/{vendor_id}.json",
         }
         vendor_summaries.append(summary)
@@ -410,7 +535,13 @@ def build_observation_feed() -> dict[str, Any]:
     }
 
 
-def build_site(output_dir: Path, source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT) -> None:
+def build_site(
+    output_dir: Path,
+    source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT,
+    catalog_completeness_path: Path = DEFAULT_CATALOG_COMPLETENESS_REPORT,
+    entity_review_path: Path = DEFAULT_ENTITY_REVIEW_QUEUE,
+    field_provenance_path: Path = DEFAULT_FIELD_PROVENANCE_COVERAGE,
+) -> None:
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
@@ -420,7 +551,12 @@ def build_site(output_dir: Path, source_health_snapshot_path: Path = DEFAULT_SOU
             shutil.copy2(path, output_dir / path.name)
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
 
-    compiled = build_compiled_catalog(source_health_snapshot_path)
+    compiled = build_compiled_catalog(
+        source_health_snapshot_path,
+        catalog_completeness_path,
+        entity_review_path,
+        field_provenance_path,
+    )
     write_json(output_dir / "data/meta.json", compiled["meta"])
     write_json(output_dir / "data/vendor-search.min.json", {"meta": compiled["meta"], "items": compiled["vendor_summaries"]})
     write_json(output_dir / "data/source-types.json", {"meta": compiled["meta"], "items": compiled["source_types"]})
@@ -439,8 +575,17 @@ def main() -> int:
         default=str(DEFAULT_SOURCE_HEALTH_SNAPSHOT),
         help="Optional public source health snapshot JSON.",
     )
+    parser.add_argument("--catalog-completeness-report", default=str(DEFAULT_CATALOG_COMPLETENESS_REPORT))
+    parser.add_argument("--entity-review-queue", default=str(DEFAULT_ENTITY_REVIEW_QUEUE))
+    parser.add_argument("--field-provenance-coverage", default=str(DEFAULT_FIELD_PROVENANCE_COVERAGE))
     args = parser.parse_args()
-    build_site(Path(args.out), Path(args.source_health_snapshot))
+    build_site(
+        Path(args.out),
+        Path(args.source_health_snapshot),
+        Path(args.catalog_completeness_report),
+        Path(args.entity_review_queue),
+        Path(args.field_provenance_coverage),
+    )
     print(f"Built OpenVA site at {args.out}")
     return 0
 

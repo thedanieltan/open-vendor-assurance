@@ -10,11 +10,23 @@ SITE = ROOT / "site"
 WORKFLOWS = ROOT / ".github" / "workflows"
 
 
-def build_site(tmp_path: Path, source_health_snapshot: Path | None = None) -> Path:
+def build_site(
+    tmp_path: Path,
+    source_health_snapshot: Path | None = None,
+    catalog_completeness: Path | None = None,
+    entity_review: Path | None = None,
+    field_provenance: Path | None = None,
+) -> Path:
     out = tmp_path / "site-dist"
     args = [sys.executable, "site/build.py", "--out", str(out)]
     if source_health_snapshot:
         args.extend(["--source-health-snapshot", str(source_health_snapshot)])
+    if catalog_completeness:
+        args.extend(["--catalog-completeness-report", str(catalog_completeness)])
+    if entity_review:
+        args.extend(["--entity-review-queue", str(entity_review)])
+    if field_provenance:
+        args.extend(["--field-provenance-coverage", str(field_provenance)])
     result = subprocess.run(
         args,
         cwd=ROOT,
@@ -57,6 +69,38 @@ def write_source_health_snapshot(path: Path, rows: list[dict]) -> Path:
     }
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return path
+
+
+def write_confidence_reports(tmp_path: Path, vendor_id: str) -> tuple[Path, Path, Path]:
+    completeness = tmp_path / "catalog-completeness-report.json"
+    entity = tmp_path / "entity-review-queue.json"
+    provenance = tmp_path / "field-provenance-coverage.json"
+    completeness.write_text(json.dumps({
+        "report_type": "catalog_completeness_report",
+        "vendors": [{
+            "vendor_id": vendor_id,
+            "completeness_bucket": "source_coverage_incomplete",
+            "missing_expected_sources": ["dpa"],
+            "missing_required_fields": [],
+        }],
+    }), encoding="utf-8")
+    entity.write_text(json.dumps({
+        "report_type": "entity_review_queue",
+        "items": [{
+            "vendor_id": vendor_id,
+            "issue_type": "missing_legal_entity",
+        }],
+    }), encoding="utf-8")
+    provenance.write_text(json.dumps({
+        "report_type": "field_provenance_coverage",
+        "vendors": [{
+            "vendor_id": vendor_id,
+            "coverage_bucket": "mixed",
+            "covered_fields": ["legal_entity_name"],
+            "missing_fields": ["dpa_url"],
+        }],
+    }), encoding="utf-8")
+    return completeness, entity, provenance
 
 
 def health_row(source: dict, status: str, bucket: str, *, final_url: str | None = None) -> dict:
@@ -343,6 +387,53 @@ def test_source_health_display_uses_non_advisory_labels_and_conditional_final_ur
     label_block = app.split("const SOURCE_HEALTH_LABELS = {", 1)[1].split("};", 1)[0].lower()
     for forbidden in ["trusted", "approved", "compliant", "safe"]:
         assert forbidden not in label_block
+
+
+def test_vendor_shards_include_separate_catalog_confidence_labels(tmp_path):
+    source = source_rows(1)[0]
+    completeness, entity, provenance = write_confidence_reports(tmp_path, source["vendor_id"])
+
+    out = build_site(
+        tmp_path,
+        catalog_completeness=completeness,
+        entity_review=entity,
+        field_provenance=provenance,
+    )
+    shard = vendor_shard(out, source["vendor_id"])
+    confidence = shard["vendor"]["catalog_confidence"]
+
+    assert confidence["source_health_separate"] is True
+    assert confidence["catalog_completeness"]["label"] == "Source coverage incomplete"
+    assert confidence["entity_review"]["label"] == "Needs review"
+    assert confidence["field_provenance"]["label"] == "Mixed"
+    assert "not advice" in confidence["notice"]
+
+
+def test_catalog_confidence_falls_back_when_reports_are_absent(tmp_path):
+    out = build_site(tmp_path)
+    vendor = json.loads((out / "data/vendor-search.min.json").read_text(encoding="utf-8"))["items"][0]
+    confidence = vendor["catalog_confidence"]
+
+    assert confidence["catalog_completeness"]["label"] == "Not reviewed"
+    assert confidence["entity_review"]["label"] == "Not reviewed"
+    assert confidence["field_provenance"]["label"] == "Missing"
+
+
+def test_catalog_confidence_ui_labels_are_separate_and_non_advisory():
+    app = (SITE / "src" / "app.js").read_text(encoding="utf-8")
+
+    for phrase in [
+        "Catalog completeness",
+        "Entity review",
+        "Field provenance",
+        "Shown per source record",
+        "Catalog confidence labels are metadata about OpenVA review coverage, not advice.",
+    ]:
+        assert phrase in app
+
+    confidence_block = app.split("function confidenceTemplate", 1)[1].split("function renderSnapshotDisclosures", 1)[0].lower()
+    for forbidden in ["trusted", "approved", "compliant", "safe"]:
+        assert forbidden not in confidence_block
 
 
 def test_feed_contract_remains_empty_and_noncanonical(tmp_path):
