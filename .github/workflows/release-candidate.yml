@@ -11,6 +11,14 @@ on:
         options:
           - "true"
           - "false"
+      source_health_policy:
+        description: "Source health readiness policy"
+        required: false
+        default: "report_only"
+        type: choice
+        options:
+          - "report_only"
+          - "enforce"
 
 permissions:
   contents: read
@@ -37,14 +45,20 @@ jobs:
         run: pytest -q
       - name: Run release smoke test
         run: python -m tools.openva.release_smoke
-      - name: Build report-only source health readiness
+      - name: Build source health readiness
         run: |
+          set +e
+          MODE_FLAG="--report-only"
+          if [ "${{ inputs.source_health_policy }}" = "enforce" ]; then
+            MODE_FLAG="--enforce"
+          fi
           python -m tools.openva.release_source_health check \
             --source-verification-report source-verification-report.json \
             --confirmed-p0-scan confirmed-p0-repair-candidates.json \
             --output-json release-source-health-readiness.json \
             --summary-md release-source-health-summary.md \
-            --report-only
+            "$MODE_FLAG"
+          echo "SOURCE_HEALTH_EXIT_CODE=$?" >> "$GITHUB_ENV"
       - name: Print source health readiness summary
         run: cat release-source-health-summary.md
       - name: Build release artifact manifest
@@ -63,3 +77,6 @@ jobs:
             release-source-health-readiness.json
             release-source-health-summary.md
           if-no-files-found: error
+      - name: Enforce source health readiness result
+        if: inputs.source_health_policy == 'enforce'
+        run: exit "$SOURCE_HEALTH_EXIT_CODE"
