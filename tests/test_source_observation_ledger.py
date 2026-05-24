@@ -141,6 +141,7 @@ def test_ledger_rejects_missing_required_source_fields():
 def test_ledger_cli_writes_json_output(tmp_path: Path):
     report_path = tmp_path / "source-verification-report.json"
     output_path = tmp_path / "source-observation-ledger.json"
+    summary_path = tmp_path / "source-observation-ledger-summary.md"
     report_path.write_text(json.dumps(verification_report()) + "\n", encoding="utf-8")
 
     assert main([
@@ -151,8 +152,15 @@ def test_ledger_cli_writes_json_output(tmp_path: Path):
         "26355961230",
         "--output",
         str(output_path),
+        "--summary-md",
+        str(summary_path),
     ]) == 0
 
     output = json.loads(output_path.read_text(encoding="utf-8"))
     assert output["report_type"] == "source_observation_ledger"
     assert output["summary"]["observation_records"] == 2
+
+    summary = summary_path.read_text(encoding="utf-8")
+    assert "# OpenVA Source Observation Ledger" in summary
+    assert "- Run ID: `26355961230`" in summary
+    assert "- Does not mutate catalog files." in summary

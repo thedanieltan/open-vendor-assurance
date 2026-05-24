@@ -46,6 +46,13 @@ jobs:
           else
             python -m tools.openva.source_verification verify --output source-verification-report.json
           fi
+      - name: Build source observation ledger artifact
+        run: |
+          python -m tools.openva.source_observation_ledger build \
+            --source-verification-report source-verification-report.json \
+            --run-id "${{ github.run_id }}" \
+            --output source-observation-ledger.json \
+            --summary-md source-observation-ledger-summary.md
       - name: Build candidate source discovery report
         run: |
           LIMIT="${{ inputs.vendor_limit }}"
@@ -105,6 +112,7 @@ jobs:
               "- `*.json`: machine-readable source of truth.",
               "- `*.csv`: reviewer-friendly exports for scanning and sorting.",
               "- `cleanup-proposal.md`: detailed maintainer proposal generated from the promotion plan.",
+              "- `source-observation-ledger-summary.md`: reviewer-readable source observation ledger summary.",
               "",
           ]
           Path("summary.md").write_text("\n".join(lines), encoding="utf-8")
@@ -174,6 +182,7 @@ jobs:
           for path in [
               'source-health-report.json',
               'source-verification-report.json',
+              'source-observation-ledger.json',
               'source-discovery-report.json',
               'promotion-plan.json',
               'cleanup-proposal.json',
@@ -191,11 +200,13 @@ jobs:
             cleanup-proposal.md
             source-health.csv
             source-verification.csv
+            source-observation-ledger-summary.md
             source-discovery-candidates.csv
             source-discovery-unavailable.csv
             promotion-plan-actions.csv
             source-health-report.json
             source-verification-report.json
+            source-observation-ledger.json
             source-discovery-report.json
             promotion-plan.json
             cleanup-proposal.json

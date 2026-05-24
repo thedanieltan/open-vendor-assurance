@@ -290,6 +290,8 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
             "summary.md",
             "source-health-report.json",
             "source-verification-report.json",
+            "source-observation-ledger.json",
+            "source-observation-ledger-summary.md",
             "source-discovery-report.json",
             "promotion-plan.json",
             "cleanup-proposal.json",
@@ -325,6 +327,19 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
         assert "actions/upload-artifact@v6" in text
         for path in paths:
             assert path in text
+
+
+def test_source_maintenance_report_uploads_observation_ledger_artifact_only():
+    text = (WORKFLOW_DIR / "source-maintenance-report.yml").read_text(encoding="utf-8")
+
+    assert "python -m tools.openva.source_observation_ledger build" in text
+    assert "--source-verification-report source-verification-report.json" in text
+    assert '--run-id "${{ github.run_id }}"' in text
+    assert "--output source-observation-ledger.json" in text
+    assert "--summary-md source-observation-ledger-summary.md" in text
+    assert "source-observation-ledger.json" in text
+    assert "source-observation-ledger-summary.md" in text
+    assert "observations/sources/" not in text
 
 
 def test_ci_policy_documents_required_checks_and_branch_protection():
