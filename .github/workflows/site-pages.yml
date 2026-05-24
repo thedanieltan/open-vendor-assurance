@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -27,6 +28,34 @@ jobs:
         run: pip install -e ".[dev]"
       - name: Validate records
         run: python -m tools.openva.validate validate
+      - name: Download latest source health snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p source-health-artifacts public
+          RUN_ID="$(gh run list \
+            --workflow source-maintenance-report.yml \
+            --branch main \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId // ""')"
+          if [ -z "$RUN_ID" ]; then
+            echo "::warning::source health snapshot unavailable: no successful source-maintenance-report run was found. Site will show Not yet verified labels."
+            exit 0
+          fi
+          if ! gh run download "$RUN_ID" \
+            --name openva-source-maintenance-report \
+            --dir source-health-artifacts; then
+            echo "::warning::source health snapshot unavailable: could not download openva-source-maintenance-report from run $RUN_ID. Site will show Not yet verified labels."
+            exit 0
+          fi
+          if [ -f source-health-artifacts/public/source-health-snapshot.json ]; then
+            cp source-health-artifacts/public/source-health-snapshot.json public/source-health-snapshot.json
+          else
+            echo "::warning::source health snapshot unavailable: public/source-health-snapshot.json was not present in run $RUN_ID. Site will show Not yet verified labels."
+          fi
       - name: Build reviewed catalog site
         run: python site/build.py --out site/dist
       - name: Configure GitHub Pages
