@@ -77,6 +77,13 @@ def test_release_candidate_builds_report_only_source_health_readiness():
     workflow = load_workflow("release-candidate.yml")
     triggers = workflow_triggers(workflow)
 
+    assert workflow["permissions"] == {"contents": "read", "actions": "read"}
+    assert "Download latest source maintenance artifacts" in text
+    assert "gh run list" in text
+    assert "--workflow source-maintenance-report.yml" in text
+    assert "gh run download" in text
+    assert "--name openva-source-maintenance-report" in text
+    assert "source health artifact unavailable" in text
     assert "python -m tools.openva.release_source_health check" in text
     assert "--report-only" in text
     assert "--enforce" in text

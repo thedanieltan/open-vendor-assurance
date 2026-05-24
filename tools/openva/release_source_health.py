@@ -114,7 +114,7 @@ def build_release_source_health_readiness(
         target = failures if enforce else warnings
         target.append({
             "code": "missing_source_verification_report",
-            "message": "Source verification artifact is missing; release source health cannot be fully assessed.",
+            "message": "source health artifact unavailable: Source verification artifact is missing; release source health cannot be fully assessed.",
         })
     elif source_verification_report.report_type != "source_verification_report":
         target = failures if enforce else warnings
