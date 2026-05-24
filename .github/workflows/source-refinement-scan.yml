@@ -73,39 +73,7 @@ jobs:
               --plan "${{ inputs.repair_plan_path }}" \
               --output source-repair-plan-validation.json
           else
-            python - <<'PY'
-            import json
-            from datetime import UTC, datetime
-            from pathlib import Path
-
-            report = {
-                "schema_version": "0.1.0",
-                "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-                "report_type": "p0_source_repair_plan_validation",
-                "status": "skipped",
-                "reason": "repair_plan_path_not_provided",
-                "posture": {
-                    "network_fetch_performed": False,
-                    "writes_repository_state": False,
-                    "opens_pull_requests": False,
-                    "mutates_catalog": False,
-                    "enables_automerge": False,
-                    "non_advisory": True,
-                },
-                "approved": [],
-                "rejected": [],
-                "unmatched": [],
-                "summary": {
-                    "evidence_repair_count": None,
-                    "plan_repair_count": 0,
-                    "approved_count": 0,
-                    "rejected_count": 0,
-                    "unmatched_count": 0,
-                },
-            }
-            Path("source-repair-plan-validation.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-            print(json.dumps(report["summary"], indent=2, sort_keys=True))
-            PY
+            python -c 'import json; from datetime import UTC, datetime; from pathlib import Path; report = {"schema_version": "0.1.0", "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"), "report_type": "p0_source_repair_plan_validation", "status": "skipped", "reason": "repair_plan_path_not_provided", "posture": {"network_fetch_performed": False, "writes_repository_state": False, "opens_pull_requests": False, "mutates_catalog": False, "enables_automerge": False, "non_advisory": True}, "approved": [], "rejected": [], "unmatched": [], "summary": {"evidence_repair_count": None, "plan_repair_count": 0, "approved_count": 0, "rejected_count": 0, "unmatched_count": 0}}; Path("source-repair-plan-validation.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"); print(json.dumps(report["summary"], indent=2, sort_keys=True))'
           fi
       - name: Build reviewer summary
         run: |
