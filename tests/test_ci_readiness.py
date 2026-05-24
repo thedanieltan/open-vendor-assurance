@@ -229,6 +229,40 @@ def test_agent_automerge_has_strict_p0_source_repair_lane():
     assert "git diff --exit-code openva-pack.json indexes/ dist/" in text
 
 
+def test_agent_automerge_machine_canonical_enforces_source_preflight_before_merge():
+    workflow = load_workflow("agent-automerge.yml")
+    text = (WORKFLOW_DIR / "agent-automerge.yml").read_text(encoding="utf-8")
+
+    assert workflow["permissions"] == {
+        "contents": "write",
+        "pull-requests": "write",
+        "checks": "read",
+        "statuses": "read",
+    }
+    assert "machine-canonical" in workflow["jobs"]
+    assert "python -m tools.openva.source_preflight check-changed-sources" in text
+    assert "--paths-file changed-files.txt" in text
+    assert "--output source-preflight-report.json" in text
+    assert "openva-source-preflight-report" in text
+    assert "source-preflight-report.json" in text
+
+    preflight = text.index("Check changed source record preflight")
+    validate = text.index("Validate repository")
+    build_indexes = text.index("Rebuild generated outputs")
+    drift = text.index("Refuse generated drift")
+    tests = text.index("Run tests")
+    site = text.index("Build site")
+    merge = text.index("Enable GitHub native auto-merge")
+
+    assert preflight < merge
+    assert validate < merge
+    assert build_indexes < merge
+    assert drift < merge
+    assert tests < merge
+    assert site < merge
+    assert "gh pr merge" in text[merge:]
+
+
 def test_agent_weighted_review_is_advisory_and_adapter_aware():
     workflow = load_workflow("agent-weighted-review.yml")
     triggers = workflow_triggers(workflow)

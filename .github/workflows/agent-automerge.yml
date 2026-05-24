@@ -48,6 +48,20 @@ jobs:
             --labels "$LABELS" \
             --policy config/automerge-policy.yaml
 
+      - name: Check changed source record preflight
+        run: |
+          python -m tools.openva.source_preflight check-changed-sources \
+            --paths-file changed-files.txt \
+            --output source-preflight-report.json
+
+      - name: Upload source preflight report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-preflight-report
+          path: source-preflight-report.json
+          if-no-files-found: warn
+
       - name: Validate repository
         run: python -m tools.openva.validate validate
 
