@@ -86,6 +86,7 @@ def row_summary(source: dict[str, Any], reason: str | None = None, prefix: str =
     row: dict[str, Any] = {
         "vendor_id": source.get("vendor_id"),
         "source_id": source.get("source_id"),
+        "source_type": source.get("source_type"),
         "source_url": source.get("source_url"),
         f"{prefix}status" if prefix else "status": source.get("verification_status"),
         f"{prefix}http_status" if prefix else "http_status": source.get("http_status"),
@@ -107,6 +108,7 @@ def comparison_row(
     row: dict[str, Any] = {
         "vendor_id": source.get("vendor_id"),
         "source_id": source.get("source_id"),
+        "source_type": source.get("source_type"),
         "source_url": source.get("source_url"),
         "reason": reason,
     }
@@ -140,6 +142,7 @@ def confirmed_p0_row(
     return {
         "vendor_id": fresh.get("vendor_id"),
         "source_id": fresh.get("source_id"),
+        "source_type": fresh.get("source_type"),
         "source_url": fresh.get("source_url"),
         "prior_status": prior.get("verification_status"),
         "fresh_status": fresh.get("verification_status"),
