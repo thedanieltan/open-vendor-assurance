@@ -53,6 +53,11 @@ jobs:
             --run-id "${{ github.run_id }}" \
             --output source-observation-ledger.json \
             --summary-md source-observation-ledger-summary.md
+      - name: Build latest source health index artifact
+        run: |
+          python -m tools.openva.source_latest_health build \
+            --source-observation-ledger source-observation-ledger.json \
+            --output latest-source-health.json
       - name: Build candidate source discovery report
         run: |
           LIMIT="${{ inputs.vendor_limit }}"
@@ -113,6 +118,7 @@ jobs:
               "- `*.csv`: reviewer-friendly exports for scanning and sorting.",
               "- `cleanup-proposal.md`: detailed maintainer proposal generated from the promotion plan.",
               "- `source-observation-ledger-summary.md`: reviewer-readable source observation ledger summary.",
+              "- `latest-source-health.json`: compact latest source health index for site/API consumption.",
               "",
           ]
           Path("summary.md").write_text("\n".join(lines), encoding="utf-8")
@@ -183,6 +189,7 @@ jobs:
               'source-health-report.json',
               'source-verification-report.json',
               'source-observation-ledger.json',
+              'latest-source-health.json',
               'source-discovery-report.json',
               'promotion-plan.json',
               'cleanup-proposal.json',
@@ -207,6 +214,7 @@ jobs:
             source-health-report.json
             source-verification-report.json
             source-observation-ledger.json
+            latest-source-health.json
             source-discovery-report.json
             promotion-plan.json
             cleanup-proposal.json
