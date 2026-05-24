@@ -90,6 +90,29 @@ Before tagging a release:
 python -m tools.openva.release_smoke
 ```
 
+Release candidates default to source-health enforcement. The `release-candidate` workflow downloads the latest successful `source-maintenance-report` artifact, builds:
+
+```text
+release-source-health-readiness.json
+release-source-health-summary.md
+```
+
+and uploads those readiness artifacts before enforcing the result. Confirmed P0 source-health failures block release candidates by default. Missing, unavailable, or invalid source-health artifacts also block release candidates in enforcement mode because the release cannot prove its source-health state.
+
+Ambiguous access and source quality statuses remain warning-only:
+
+```text
+bot_protected
+forbidden_unknown
+gated_or_login_required
+homepage_or_generic_redirect
+possible_mismatch
+suspect_inferred_url
+stale verification
+```
+
+`report_only` remains available as an explicit diagnostic mode when maintainers need to inspect source-health readiness without blocking a candidate run. It should not be treated as the normal release posture.
+
 Maintainers may also run the underlying commands individually:
 
 ```bash

@@ -91,7 +91,7 @@ def test_release_candidate_builds_report_only_source_health_readiness():
     assert "SOURCE_HEALTH_EXIT_CODE" in text
     assert "release-source-health-readiness.json" in text
     assert "release-source-health-summary.md" in text
-    assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["default"] == "report_only"
+    assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["default"] == "enforce"
 
 
 def test_catalog_guard_workflow_is_read_only_and_pr_scoped():

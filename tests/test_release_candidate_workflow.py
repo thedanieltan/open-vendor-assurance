@@ -19,7 +19,7 @@ def test_release_candidate_workflow_is_manual_only_and_read_only():
 
     assert workflow["permissions"] == {"contents": "read", "actions": "read"}
     assert set(triggers.keys()) == {"workflow_dispatch"}
-    assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["default"] == "report_only"
+    assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["default"] == "enforce"
     assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["options"] == [
         "report_only",
         "enforce",
@@ -66,6 +66,20 @@ def test_release_candidate_workflow_uploads_manifest_and_source_health_readiness
     assert "release-artifacts.json" in text
     assert "release-source-health-readiness.json" in text
     assert "release-source-health-summary.md" in text
+    assert text.index("Upload release candidate artifacts") < text.index("Enforce source health readiness result")
+
+
+def test_release_candidate_policy_docs_explain_default_enforcement():
+    text = Path("docs/release-policy.md").read_text(encoding="utf-8")
+
+    for phrase in [
+        "Release candidates default to source-health enforcement.",
+        "`report_only` remains available as an explicit diagnostic mode",
+        "Confirmed P0 source-health failures block release candidates by default.",
+        "Ambiguous access and source quality statuses remain warning-only",
+        "Missing, unavailable, or invalid source-health artifacts also block release candidates",
+    ]:
+        assert phrase in text
 
 
 def test_release_candidate_workflow_does_not_tag_or_publish():
