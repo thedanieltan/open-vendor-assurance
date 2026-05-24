@@ -35,6 +35,13 @@ jobs:
             --output reports/catalog-completeness-report.json \
             --csv-output reports/catalog-completeness-vendors.csv \
             --markdown-output reports/catalog-completeness-summary.md
+      - name: Build entity correctness review queue
+        run: |
+          mkdir -p reports
+          python -m tools.openva.entity_review_queue build \
+            --output reports/entity-review-queue.json \
+            --csv-output reports/entity-review-queue.csv \
+            --markdown-output reports/entity-review-summary.md
       - name: Build reviewer-friendly summary and CSV export
         run: |
           mkdir -p reports
@@ -101,4 +108,7 @@ jobs:
             reports/catalog-completeness-summary.md
             reports/catalog-completeness-report.json
             reports/catalog-completeness-vendors.csv
+            reports/entity-review-summary.md
+            reports/entity-review-queue.json
+            reports/entity-review-queue.csv
           if-no-files-found: error
