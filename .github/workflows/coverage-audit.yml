@@ -42,6 +42,13 @@ jobs:
             --output reports/entity-review-queue.json \
             --csv-output reports/entity-review-queue.csv \
             --markdown-output reports/entity-review-summary.md
+      - name: Build field provenance coverage report
+        run: |
+          mkdir -p reports
+          python -m tools.openva.field_provenance coverage \
+            --output reports/field-provenance-coverage.json \
+            --csv-output reports/field-provenance-coverage.csv \
+            --markdown-output reports/field-provenance-summary.md
       - name: Build reviewer-friendly summary and CSV export
         run: |
           mkdir -p reports
@@ -111,4 +118,7 @@ jobs:
             reports/entity-review-summary.md
             reports/entity-review-queue.json
             reports/entity-review-queue.csv
+            reports/field-provenance-summary.md
+            reports/field-provenance-coverage.json
+            reports/field-provenance-coverage.csv
           if-no-files-found: error
