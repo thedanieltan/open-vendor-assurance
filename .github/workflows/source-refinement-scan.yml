@@ -11,6 +11,11 @@ on:
         description: "Workflow run ID containing the fresh openva-source-maintenance-report artifact"
         required: true
         type: string
+      repair_plan_path:
+        description: "Optional repo path to a maintainer-authored p0_source_repair_plan JSON file"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   actions: read
@@ -60,6 +65,48 @@ jobs:
           python -m tools.openva.source_repair_evidence build \
             --confirmed-p0-scan confirmed-p0-repair-candidates.json \
             --output source-repair-evidence.json
+      - name: Validate optional P0 source repair plan
+        run: |
+          if [ -n "${{ inputs.repair_plan_path }}" ]; then
+            python -m tools.openva.source_repair_plan validate \
+              --evidence source-repair-evidence.json \
+              --plan "${{ inputs.repair_plan_path }}" \
+              --output source-repair-plan-validation.json
+          else
+            python - <<'PY'
+            import json
+            from datetime import UTC, datetime
+            from pathlib import Path
+
+            report = {
+                "schema_version": "0.1.0",
+                "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+                "report_type": "p0_source_repair_plan_validation",
+                "status": "skipped",
+                "reason": "repair_plan_path_not_provided",
+                "posture": {
+                    "network_fetch_performed": False,
+                    "writes_repository_state": False,
+                    "opens_pull_requests": False,
+                    "mutates_catalog": False,
+                    "enables_automerge": False,
+                    "non_advisory": True,
+                },
+                "approved": [],
+                "rejected": [],
+                "unmatched": [],
+                "summary": {
+                    "evidence_repair_count": None,
+                    "plan_repair_count": 0,
+                    "approved_count": 0,
+                    "rejected_count": 0,
+                    "unmatched_count": 0,
+                },
+            }
+            Path("source-repair-plan-validation.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(json.dumps(report["summary"], indent=2, sort_keys=True))
+            PY
+          fi
       - name: Build reviewer summary
         run: |
           python - <<'PY'
@@ -68,8 +115,10 @@ jobs:
 
           report = json.load(open("confirmed-p0-repair-candidates.json", encoding="utf-8"))
           evidence = json.load(open("source-repair-evidence.json", encoding="utf-8"))
+          plan_validation = json.load(open("source-repair-plan-validation.json", encoding="utf-8"))
           summary = report["summary"]
           evidence_summary = evidence["summary"]
+          plan_summary = plan_validation["summary"]
           lines = [
               "# OpenVA Confirmed P0 Source Refinement Scan",
               "",
@@ -83,6 +132,7 @@ jobs:
               f"- Fresh run ID: `{report.get('fresh_report_run_id')}`",
               f"- Prior report generated at: `{report.get('prior_report_generated_at')}`",
               f"- Fresh report generated at: `{report.get('fresh_report_generated_at')}`",
+              f"- Repair plan path: `${{ inputs.repair_plan_path }}`",
               "",
               "## Summary",
               "",
@@ -95,6 +145,14 @@ jobs:
               f"- Unknown statuses: `{summary['unknown_status_count']}`",
               f"- Contains replacement evidence: `{evidence_summary['contains_replacement_evidence']}`",
               f"- Contains automerge recommendation: `{evidence_summary['contains_automerge_recommendation']}`",
+              "",
+              "## Optional repair plan validation",
+              "",
+              f"- Validation status: `{plan_validation.get('status', 'completed')}`",
+              f"- Plan rows: `{plan_summary['plan_repair_count']}`",
+              f"- Approved rows: `{plan_summary['approved_count']}`",
+              f"- Rejected rows: `{plan_summary['rejected_count']}`",
+              f"- Unmatched rows: `{plan_summary['unmatched_count']}`",
               "",
               "## Status breakdowns",
               "",
@@ -122,4 +180,5 @@ jobs:
             confirmed-p0-repair-candidates.json
             confirmed-p0-summary.md
             source-repair-evidence.json
+            source-repair-plan-validation.json
           if-no-files-found: error
