@@ -126,6 +126,22 @@ jobs:
               handle.write(f"PR_BRANCH={pr_branch}\n")
               handle.write(f"PR_TITLE={pr_title}\n")
           PY
+      - name: Check repair source collisions
+        run: |
+          python -m tools.openva.source_repair_collision_check check \
+            --validation "$VALIDATION_REPORT_PATH" \
+            --catalog-root data/vendors \
+            --output source-repair-collision-report.json \
+            --summary-output source-repair-collision-summary.md
+      - name: Upload source repair collision artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-repair-collision-check
+          path: |
+            source-repair-collision-report.json
+            source-repair-collision-summary.md
+          if-no-files-found: ignore
       - name: Apply reviewed P0 source repairs
         run: |
           python -m tools.openva.source_repair_actions apply \
@@ -219,4 +235,6 @@ jobs:
           path: |
             source-repair-action-report.json
             source-repair-pr-body.md
+            source-repair-collision-report.json
+            source-repair-collision-summary.md
           if-no-files-found: error
