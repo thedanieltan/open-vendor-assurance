@@ -15,20 +15,6 @@
       "vendor_id": "miro"
     },
     {
-      "original_source_url": "https://miro.com/security/",
-      "reasons": [],
-      "replacement_access_status": "public",
-      "replacement_authority_status": "vendor_controlled",
-      "replacement_http_status": 200,
-      "replacement_semantic_status": "strong",
-      "replacement_source_url": "https://trust.miro.com/",
-      "replacement_url_safety_status": "passed",
-      "replacement_verification_status": "ok",
-      "source_id": "miro-security",
-      "source_type": "security_page",
-      "vendor_id": "miro"
-    },
-    {
       "original_source_url": "https://mistral.ai/trust/",
       "reasons": [],
       "replacement_access_status": "public",
@@ -40,20 +26,6 @@
       "replacement_verification_status": "ok",
       "source_id": "mistral-ai-compliance",
       "source_type": "compliance_page",
-      "vendor_id": "mistral-ai"
-    },
-    {
-      "original_source_url": "https://mistral.ai/security/",
-      "reasons": [],
-      "replacement_access_status": "public",
-      "replacement_authority_status": "vendor_controlled",
-      "replacement_http_status": 200,
-      "replacement_semantic_status": "strong",
-      "replacement_source_url": "https://trust.mistral.ai/",
-      "replacement_url_safety_status": "passed",
-      "replacement_verification_status": "ok",
-      "source_id": "mistral-ai-security",
-      "source_type": "security_page",
       "vendor_id": "mistral-ai"
     },
     {
@@ -83,20 +55,6 @@
       "source_id": "mongodb-compliance",
       "source_type": "compliance_page",
       "vendor_id": "mongodb"
-    },
-    {
-      "original_source_url": "https://retool.com/security",
-      "reasons": [],
-      "replacement_access_status": "public",
-      "replacement_authority_status": "vendor_controlled",
-      "replacement_http_status": 200,
-      "replacement_semantic_status": "strong",
-      "replacement_source_url": "https://trust.retool.com/",
-      "replacement_url_safety_status": "passed",
-      "replacement_verification_status": "ok",
-      "source_id": "retool-security",
-      "source_type": "security_page",
-      "vendor_id": "retool"
     },
     {
       "original_source_url": "https://www.snowflake.com/en/legal/data-processing-addendum/",
@@ -141,11 +99,11 @@
       "vendor_id": "xero"
     }
   ],
-  "generated_at": "2026-05-25T15:20:13.117805Z",
+  "generated_at": "2026-05-25T15:26:48.525898Z",
   "inputs": {
     "evidence_generated_at": "2026-05-25T15:13:45.285735Z",
     "evidence_report_type": "p0_source_repair_evidence",
-    "partitioned_from_validation_generated_at": "2026-05-25T15:20:06.433564Z",
+    "partitioned_from_validation_generated_at": "2026-05-25T15:26:48.361495Z",
     "partitioned_from_validation_report_type": "p0_source_repair_plan_validation",
     "plan_generated_at": "2026-05-25T15:19:57Z",
     "plan_report_type": "p0_source_repair_plan"
@@ -162,9 +120,9 @@
   "report_type": "p0_source_repair_plan_validation",
   "schema_version": "0.1.0",
   "summary": {
-    "approved_count": 10,
-    "evidence_repair_count": 10,
-    "plan_repair_count": 10,
+    "approved_count": 7,
+    "evidence_repair_count": 7,
+    "plan_repair_count": 7,
     "rejected_count": 0,
     "unmatched_count": 0
   },
