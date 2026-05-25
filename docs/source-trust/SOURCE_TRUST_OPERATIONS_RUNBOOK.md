@@ -51,10 +51,30 @@ Use this process for sources repeatedly confirmed as hard-dead with exact `not_f
 4. Commit a reviewed repair plan under `maintenance/reviewed/`.
 5. Run source-refinement validation with the committed plan path.
 6. Commit the resulting validation report under `maintenance/reviewed/`.
-7. Run `source-repair-pr` with the committed validation report.
-8. Review the generated `Catalog: repair*` PR and confirm that changed files are bounded.
+7. When a validation report has mixed Layer 2B eligibility, run the P0 repair partitioner before PR generation.
+8. Run `source-repair-pr` with the committed validation report or with the automerge partition validation report.
+9. Review the generated `Catalog: repair*` PR and confirm that changed files are bounded.
 
 Manual repair batch policy: 5-10 records per batch. Large batches are harder to review and should be split.
+
+## P0 Repair Partitioning
+
+Mixed repair batches must be partitioned before source YAML changes are applied. Use the committed evidence and validation reports as inputs:
+
+```text
+python -m tools.openva.source_repair_partition partition \
+  --evidence maintenance/reviewed/p0-source-repair-evidence-batch-XXX.json \
+  --validation maintenance/reviewed/p0-source-repair-validation-batch-XXX.json \
+  --automerge-output maintenance/reviewed/p0-source-repair-validation-batch-XXX-automerge.json \
+  --manual-output maintenance/reviewed/p0-source-repair-validation-batch-XXX-manual.json \
+  --report-output maintenance/reviewed/p0-source-repair-partition-report-batch-XXX.json \
+  --summary-output maintenance/reviewed/p0-source-repair-partition-summary-batch-XXX.md \
+  --policy config/automerge-policy.yaml
+```
+
+The automerge partition may be used to generate a strict Layer 2B repair PR when every included row is eligible. The manual-review partition must not receive Layer 2B automerge labels. Manual and excluded rows must retain deterministic reason codes in the partition report and summary.
+
+Do not manually edit generated repair PRs to remove failing rows. If one row blocks automerge eligibility, partition the reviewed validation report first, commit the partition outputs under `maintenance/reviewed/`, and generate a separate PR from the automerge validation file.
 
 ## Layer 2B Label Discipline
 
