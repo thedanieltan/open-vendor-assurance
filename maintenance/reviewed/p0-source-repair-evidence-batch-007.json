@@ -1,0 +1,140 @@
+{
+  "evidence_type": "confirmed_p0_original_source_evidence",
+  "generated_at": "2026-05-25T16:38:36.372401Z",
+  "inputs": {
+    "fresh_report_generated_at": "2026-05-25T16:26:36.390877Z",
+    "fresh_report_run_id": "26410018301",
+    "prior_report_generated_at": "2026-05-25T15:37:49.687736Z",
+    "prior_report_run_id": "26408138725",
+    "scan_generated_at": "2026-05-25T16:38:36.310055Z",
+    "scan_report_type": "confirmed_p0_source_refinement_scan"
+  },
+  "posture": {
+    "contains_automerge_recommendation": false,
+    "contains_replacement_evidence": false,
+    "mutates_catalog": false,
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "opens_pull_requests": false,
+    "writes_repository_state": false
+  },
+  "repairs": [
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://mistral.ai/privacy/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T16:26:36.390877Z"
+        },
+        "prior": {
+          "final_url": "https://mistral.ai/privacy/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:37:49.687736Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "mistral-ai-privacy",
+      "source_type": "privacy_notice",
+      "source_url": "https://mistral.ai/privacy/",
+      "vendor_id": "mistral-ai"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://mixpanel.com/security/#compliance",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T16:26:36.390877Z"
+        },
+        "prior": {
+          "final_url": "https://mixpanel.com/security/#compliance",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:37:49.687736Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "mixpanel-compliance",
+      "source_type": "compliance_page",
+      "source_url": "https://mixpanel.com/security/#compliance",
+      "vendor_id": "mixpanel"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://monday.com/l/subprocessors/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T16:26:36.390877Z"
+        },
+        "prior": {
+          "final_url": "https://monday.com/l/subprocessors/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:37:49.687736Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "monday-subprocessors",
+      "source_type": "subprocessors_list",
+      "source_url": "https://monday.com/l/subprocessors/",
+      "vendor_id": "monday"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://retool.com/legal/privacy-policy",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T16:26:36.390877Z"
+        },
+        "prior": {
+          "final_url": "https://retool.com/legal/privacy-policy",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:37:49.687736Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "retool-privacy",
+      "source_type": "privacy_notice",
+      "source_url": "https://retool.com/legal/privacy-policy",
+      "vendor_id": "retool"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://thoropass.com/compliance",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T16:26:36.390877Z"
+        },
+        "prior": {
+          "final_url": "https://www.thoropass.com/compliance",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:37:49.687736Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "thoropass-compliance",
+      "source_type": "compliance_page",
+      "source_url": "https://thoropass.com/compliance/",
+      "vendor_id": "thoropass"
+    }
+  ],
+  "report_type": "p0_source_repair_evidence",
+  "schema_version": "0.1.0",
+  "summary": {
+    "contains_automerge_recommendation": false,
+    "contains_replacement_evidence": false,
+    "repair_evidence_count": 5
+  }
+}

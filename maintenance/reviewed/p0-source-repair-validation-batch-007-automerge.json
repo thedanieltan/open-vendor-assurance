@@ -1,0 +1,102 @@
+{
+  "approved": [
+    {
+      "original_source_url": "https://mistral.ai/privacy/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://mistral.ai/privacy-policy/",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "redirected",
+      "source_id": "mistral-ai-privacy",
+      "source_type": "privacy_notice",
+      "vendor_id": "mistral-ai"
+    },
+    {
+      "original_source_url": "https://mixpanel.com/security/#compliance",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://mixpanel.com/legal/security/#compliance",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "mixpanel-compliance",
+      "source_type": "compliance_page",
+      "vendor_id": "mixpanel"
+    },
+    {
+      "original_source_url": "https://monday.com/l/subprocessors/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://trust.monday.com/subprocessors",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "redirected",
+      "source_id": "monday-subprocessors",
+      "source_type": "subprocessors_list",
+      "vendor_id": "monday"
+    },
+    {
+      "original_source_url": "https://retool.com/legal/privacy-policy",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://retool.com/privacy",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "redirected",
+      "source_id": "retool-privacy",
+      "source_type": "privacy_notice",
+      "vendor_id": "retool"
+    },
+    {
+      "original_source_url": "https://thoropass.com/compliance/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.thoropass.com/trust-center",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "redirected",
+      "source_id": "thoropass-compliance",
+      "source_type": "compliance_page",
+      "vendor_id": "thoropass"
+    }
+  ],
+  "generated_at": "2026-05-25T16:47:11.465303Z",
+  "inputs": {
+    "evidence_generated_at": "2026-05-25T16:38:36.372401Z",
+    "evidence_report_type": "p0_source_repair_evidence",
+    "partitioned_from_validation_generated_at": "2026-05-25T16:47:11.333929Z",
+    "partitioned_from_validation_report_type": "p0_source_repair_plan_validation",
+    "plan_generated_at": "2026-05-25T16:46:59.577158Z",
+    "plan_report_type": "p0_source_repair_plan"
+  },
+  "posture": {
+    "enables_automerge": false,
+    "mutates_catalog": false,
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "opens_pull_requests": false,
+    "writes_repository_state": false
+  },
+  "rejected": [],
+  "report_type": "p0_source_repair_plan_validation",
+  "schema_version": "0.1.0",
+  "summary": {
+    "approved_count": 5,
+    "evidence_repair_count": 5,
+    "plan_repair_count": 5,
+    "rejected_count": 0,
+    "unmatched_count": 0
+  },
+  "unmatched": []
+}
