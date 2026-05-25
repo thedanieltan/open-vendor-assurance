@@ -13,7 +13,7 @@ The normal weekly cycle is:
 5. Catalog expansion pauses when source-health debt is high enough that new growth would hide repair work.
 6. Generated stale source repair PRs are cleaned up after 30 days if they remain unreviewed and stale.
 
-Healthy operation means the weekly maintenance artifact exists, confirmed P0 debt is understood, quality-risk sources are queued for review, release candidates have source-health readiness artifacts, and the public site can display the latest source-health snapshot when available.
+Healthy operation means the weekly maintenance artifact exists, confirmed P0 debt is understood, quality-risk sources are queued for review, release candidates have source-health readiness artifacts, and the public site can display the latest source-health and catalog-confidence snapshots when available.
 
 ## Automatic Operations
 
@@ -23,7 +23,7 @@ These workflows run without maintainer input:
 - `source-refinement-scan`: compares the latest two successful source-maintenance reports and emits confirmed P0 candidates, raw repair evidence, and skipped repair-plan validation when no plan is provided.
 - `source-repair-pr-cleanup`: closes stale generated repair PRs older than 30 days when they are generated repair PRs and have no detected human activity.
 - `agent-automerge`: enforces machine-canonical source preflight and the strict Layer 2B P0 repair lane when the required labels and evidence are present.
-- `site-pages`: consumes the latest public source-health snapshot artifact when available, then builds and deploys the public site.
+- `site-pages`: consumes the latest public source-health snapshot and coverage-audit catalog-confidence artifacts when available, then builds and deploys the public site.
 
 Automatic workflows do not discover replacements, author repair plans, mutate catalog source records, or create source repair PRs without committed human-reviewed validation reports.
 
@@ -91,10 +91,10 @@ These items are not confirmed-dead P0 repairs. Reviewers should verify semantic 
 
 ## Release Health Gate
 
-`release-candidate` builds release source-health readiness from source-maintenance artifacts. The policy is:
+`release-candidate` builds release source-health readiness from source-maintenance and source-refinement-scan artifacts. It consumes `source-verification-report.json` from the latest successful `source-maintenance-report` artifact and `confirmed-p0-repair-candidates.json` from the latest successful `source-refinement-scan` artifact. The policy is:
 
 - Confirmed P0 blocks release when enforcement is active.
-- Missing or invalid source-health artifacts block release when enforcement is active.
+- Missing or invalid source-health or confirmed-P0 scan artifacts block release when enforcement is active.
 - Ambiguous access and quality statuses warn only.
 - Readiness artifacts are uploaded so maintainers can see why a release candidate was blocked or warned.
 
@@ -102,7 +102,15 @@ After WP-L3D, `release-candidate` defaults to `enforce`. `report_only` remains a
 
 ## Site Snapshot Behavior
 
-The public site consumes `public/source-health-snapshot.json` from the latest source-maintenance artifact when available.
+The public site consumes `public/source-health-snapshot.json` from the latest source-maintenance artifact when available. It also consumes catalog confidence reports from the latest coverage-audit artifact when available:
+
+```text
+reports/catalog-completeness-report.json
+reports/entity-review-queue.json
+reports/field-provenance-coverage.json
+```
+
+If the coverage-audit artifact is unavailable, the site still builds and falls back to Not reviewed / Missing catalog confidence labels.
 
 Site labels are snapshot based:
 

@@ -53,9 +53,19 @@ def test_release_candidate_downloads_latest_source_maintenance_artifact_before_r
     assert "--workflow source-maintenance-report.yml" in text
     assert "--name openva-source-maintenance-report" in text
     assert "source-verification-report.json" in text
-    assert "confirmed-p0-repair-candidates.json" in text
     assert "source health artifact unavailable" in text
     assert text.index("Download latest source maintenance artifacts") < text.index("Build source health readiness")
+
+
+def test_release_candidate_downloads_latest_source_refinement_scan_before_readiness():
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "Download latest source refinement scan artifacts" in text
+    assert "--workflow source-refinement-scan.yml" in text
+    assert "--name openva-confirmed-p0-source-refinement-scan" in text
+    assert "source-refinement-artifacts/confirmed-p0-repair-candidates.json" in text
+    assert "confirmed P0 scan artifact unavailable" in text
+    assert text.index("Download latest source refinement scan artifacts") < text.index("Build source health readiness")
 
 
 def test_release_candidate_workflow_uploads_manifest_and_source_health_readiness():
@@ -67,6 +77,7 @@ def test_release_candidate_workflow_uploads_manifest_and_source_health_readiness
     assert "release-source-health-readiness.json" in text
     assert "release-source-health-summary.md" in text
     assert text.index("Upload release candidate artifacts") < text.index("Enforce source health readiness result")
+    assert text.index("Build source health readiness") < text.index("Upload release candidate artifacts")
 
 
 def test_release_candidate_policy_docs_explain_default_enforcement():

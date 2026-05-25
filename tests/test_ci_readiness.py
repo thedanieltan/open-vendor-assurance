@@ -85,6 +85,11 @@ def test_release_candidate_builds_report_only_source_health_readiness():
     assert "gh run download" in text
     assert "--name openva-source-maintenance-report" in text
     assert "source health artifact unavailable" in text
+    assert "Download latest source refinement scan artifacts" in text
+    assert "--workflow source-refinement-scan.yml" in text
+    assert "--name openva-confirmed-p0-source-refinement-scan" in text
+    assert "source-refinement-artifacts/confirmed-p0-repair-candidates.json" in text
+    assert "confirmed P0 scan artifact unavailable" in text
     assert "python -m tools.openva.release_source_health check" in text
     assert "--report-only" in text
     assert "--enforce" in text
@@ -500,6 +505,22 @@ def test_site_pages_downloads_latest_source_health_snapshot_before_build():
     assert "source health snapshot unavailable" in text
     assert text.index("Download latest source health snapshot") < text.index("Build reviewed catalog site")
     assert "git add public/source-health-snapshot.json" not in text
+    assert "git commit" not in text
+
+
+def test_site_pages_downloads_latest_catalog_confidence_reports_before_build():
+    text = (WORKFLOW_DIR / "site-pages.yml").read_text(encoding="utf-8")
+
+    assert "Download latest catalog confidence reports" in text
+    assert "--workflow coverage-audit.yml" in text
+    assert "--name openva-coverage-audit-report" in text
+    assert "coverage-audit-artifacts/reports/$report" in text
+    assert "coverage-audit-artifacts/$report" in text
+    assert "catalog-completeness-report.json entity-review-queue.json field-provenance-coverage.json" in text
+    assert "reports/$report" in text
+    assert "catalog confidence reports unavailable" in text
+    assert text.index("Download latest catalog confidence reports") < text.index("Build reviewed catalog site")
+    assert "git add reports/" not in text
     assert "git commit" not in text
 
 

@@ -90,14 +90,14 @@ Before tagging a release:
 python -m tools.openva.release_smoke
 ```
 
-Release candidates default to source-health enforcement. The `release-candidate` workflow downloads the latest successful `source-maintenance-report` artifact, builds:
+Release candidates default to source-health enforcement. The `release-candidate` workflow downloads the latest successful `source-maintenance-report` artifact for `source-verification-report.json` and the latest successful `source-refinement-scan` artifact for `confirmed-p0-repair-candidates.json`, builds:
 
 ```text
 release-source-health-readiness.json
 release-source-health-summary.md
 ```
 
-and uploads those readiness artifacts before enforcing the result. Confirmed P0 source-health failures block release candidates by default. Missing, unavailable, or invalid source-health artifacts also block release candidates in enforcement mode because the release cannot prove its source-health state.
+and uploads those readiness artifacts before enforcing the result. Confirmed P0 source-health failures block release candidates by default. Missing, unavailable, or invalid source-health artifacts also block release candidates in enforcement mode. Missing, unavailable, or invalid confirmed-P0 scan artifacts also block release candidates in enforcement mode because the release cannot prove its source-health state.
 
 Ambiguous access and source quality statuses remain warning-only:
 

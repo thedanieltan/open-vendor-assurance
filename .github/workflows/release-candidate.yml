@@ -74,10 +74,33 @@ jobs:
           else
             echo "::warning::source health artifact unavailable: source-verification-report.json was not present in run $RUN_ID."
           fi
-          if [ -f source-health-artifacts/confirmed-p0-repair-candidates.json ]; then
-            cp source-health-artifacts/confirmed-p0-repair-candidates.json confirmed-p0-repair-candidates.json
+      - name: Download latest source refinement scan artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p source-refinement-artifacts
+          RUN_ID="$(gh run list \
+            --workflow source-refinement-scan.yml \
+            --branch main \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId // ""')"
+          if [ -z "$RUN_ID" ]; then
+            echo "::warning::confirmed P0 scan artifact unavailable: no successful source-refinement-scan run was found."
+            exit 0
+          fi
+          if ! gh run download "$RUN_ID" \
+            --name openva-confirmed-p0-source-refinement-scan \
+            --dir source-refinement-artifacts; then
+            echo "::warning::confirmed P0 scan artifact unavailable: could not download openva-confirmed-p0-source-refinement-scan from run $RUN_ID."
+            exit 0
+          fi
+          if [ -f source-refinement-artifacts/confirmed-p0-repair-candidates.json ]; then
+            cp source-refinement-artifacts/confirmed-p0-repair-candidates.json confirmed-p0-repair-candidates.json
           else
-            echo "::warning::confirmed-p0-repair-candidates.json was not present in source-maintenance-report run $RUN_ID; readiness will warn."
+            echo "::warning::confirmed P0 scan artifact unavailable: confirmed-p0-repair-candidates.json was not present in source-refinement-scan run $RUN_ID."
           fi
       - name: Build source health readiness
         run: |
