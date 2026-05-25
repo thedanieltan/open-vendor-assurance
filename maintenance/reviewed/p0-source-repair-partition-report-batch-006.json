@@ -20,25 +20,6 @@
       "vendor_id": "miro"
     },
     {
-      "original_source_url": "https://miro.com/security/",
-      "reasons": [
-        "approved_validation_row",
-        "confirmed_p0",
-        "replacement_ok",
-        "http_status_2xx_or_3xx",
-        "semantic_strong",
-        "authority_allowed",
-        "public_access",
-        "url_safety_passed",
-        "source_type_unchanged",
-        "replacement_url_differs"
-      ],
-      "replacement_source_url": "https://trust.miro.com/",
-      "source_id": "miro-security",
-      "source_type": "security_page",
-      "vendor_id": "miro"
-    },
-    {
       "original_source_url": "https://mistral.ai/trust/",
       "reasons": [
         "approved_validation_row",
@@ -55,25 +36,6 @@
       "replacement_source_url": "https://trust.mistral.ai/",
       "source_id": "mistral-ai-compliance",
       "source_type": "compliance_page",
-      "vendor_id": "mistral-ai"
-    },
-    {
-      "original_source_url": "https://mistral.ai/security/",
-      "reasons": [
-        "approved_validation_row",
-        "confirmed_p0",
-        "replacement_ok",
-        "http_status_2xx_or_3xx",
-        "semantic_strong",
-        "authority_allowed",
-        "public_access",
-        "url_safety_passed",
-        "source_type_unchanged",
-        "replacement_url_differs"
-      ],
-      "replacement_source_url": "https://trust.mistral.ai/",
-      "source_id": "mistral-ai-security",
-      "source_type": "security_page",
       "vendor_id": "mistral-ai"
     },
     {
@@ -113,25 +75,6 @@
       "source_id": "mongodb-compliance",
       "source_type": "compliance_page",
       "vendor_id": "mongodb"
-    },
-    {
-      "original_source_url": "https://retool.com/security",
-      "reasons": [
-        "approved_validation_row",
-        "confirmed_p0",
-        "replacement_ok",
-        "http_status_2xx_or_3xx",
-        "semantic_strong",
-        "authority_allowed",
-        "public_access",
-        "url_safety_passed",
-        "source_type_unchanged",
-        "replacement_url_differs"
-      ],
-      "replacement_source_url": "https://trust.retool.com/",
-      "source_id": "retool-security",
-      "source_type": "security_page",
-      "vendor_id": "retool"
     },
     {
       "original_source_url": "https://www.snowflake.com/en/legal/data-processing-addendum/",
@@ -192,16 +135,16 @@
     }
   ],
   "excluded": [],
-  "generated_at": "2026-05-25T15:20:13.117784Z",
+  "generated_at": "2026-05-25T15:26:48.525879Z",
   "manual_review_required": [],
   "report_type": "p0_source_repair_partition",
   "schema_version": "0.1.0",
   "source_evidence_report": "maintenance\\reviewed\\p0-source-repair-evidence-batch-006.json",
   "source_validation_report": "maintenance\\reviewed\\p0-source-repair-validation-batch-006.json",
   "summary": {
-    "automerge_eligible_count": 10,
+    "automerge_eligible_count": 7,
     "excluded_count": 0,
     "manual_review_required_count": 0,
-    "total_rows": 10
+    "total_rows": 7
   }
 }

@@ -2,8 +2,8 @@
 
 ## Counts
 
-- Total rows: `10`
-- Automerge eligible: `10`
+- Total rows: `7`
+- Automerge eligible: `7`
 - Manual review required: `0`
 - Excluded: `0`
 
