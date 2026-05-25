@@ -1,0 +1,86 @@
+{
+  "approved": [
+    {
+      "original_source_url": "https://mistral.ai/terms/data-processing-addendum/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://legal.mistral.ai/terms/data-processing-addendum",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "mistral-ai-dpa",
+      "source_type": "dpa",
+      "vendor_id": "mistral-ai"
+    },
+    {
+      "original_source_url": "https://monday.com/l/data-processing-addendum/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://monday.com/l/privacy/dpa/",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "monday-dpa",
+      "source_type": "dpa",
+      "vendor_id": "monday"
+    },
+    {
+      "original_source_url": "https://www.zendesk.com/company/agreements-and-terms/data-processing-agreement/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.zendesk.com/in/company/data-processing-agreement/",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "zendesk-dpa",
+      "source_type": "dpa",
+      "vendor_id": "zendesk"
+    },
+    {
+      "original_source_url": "https://www.zendesk.com/company/agreements-and-terms/subprocessors/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://support.zendesk.com/hc/en-us/articles/4408883061530-Sub-processor-Policy",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "zendesk-subprocessors",
+      "source_type": "subprocessors_list",
+      "vendor_id": "zendesk"
+    }
+  ],
+  "generated_at": "2026-05-25T10:23:06.914348Z",
+  "inputs": {
+    "evidence_generated_at": "2026-05-25T09:25:32.262262Z",
+    "evidence_report_type": "p0_source_repair_evidence",
+    "plan_generated_at": "2026-05-25T10:22:41Z",
+    "plan_report_type": "p0_source_repair_plan"
+  },
+  "posture": {
+    "enables_automerge": false,
+    "mutates_catalog": false,
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "opens_pull_requests": false,
+    "writes_repository_state": false
+  },
+  "rejected": [],
+  "report_type": "p0_source_repair_plan_validation",
+  "schema_version": "0.1.0",
+  "summary": {
+    "approved_count": 4,
+    "evidence_repair_count": 132,
+    "plan_repair_count": 4,
+    "rejected_count": 0,
+    "unmatched_count": 0
+  },
+  "unmatched": []
+}
