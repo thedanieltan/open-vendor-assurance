@@ -1,0 +1,100 @@
+{
+  "approved": [
+    {
+      "original_source_url": "https://www.docusign.com/legal/data-processing-addendum",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.docusign.com/legal/terms-and-conditions/data-protection-attachment",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "docusign-dpa",
+      "source_type": "dpa",
+      "vendor_id": "docusign"
+    },
+    {
+      "original_source_url": "https://www.docusign.com/legal/subprocessors",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.docusign.com/trust/privacy/subprocessors-list",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "docusign-subprocessors",
+      "source_type": "subprocessors_list",
+      "vendor_id": "docusign"
+    },
+    {
+      "original_source_url": "https://www.mongodb.com/legal/subprocessors",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.mongodb.com/products/platform/trust/subprocessors",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "mongodb-subprocessors",
+      "source_type": "subprocessors_list",
+      "vendor_id": "mongodb"
+    },
+    {
+      "original_source_url": "https://www.pagerduty.com/legal/data-processing-addendum/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.pagerduty.com/data-processing-addendum/",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "pagerduty-dpa",
+      "source_type": "dpa",
+      "vendor_id": "pagerduty"
+    },
+    {
+      "original_source_url": "https://www.pagerduty.com/legal/subprocessors/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.pagerduty.com/subprocessors/",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "pagerduty-subprocessors",
+      "source_type": "subprocessors_list",
+      "vendor_id": "pagerduty"
+    }
+  ],
+  "generated_at": "2026-05-25T09:42:50.146518Z",
+  "inputs": {
+    "evidence_generated_at": "2026-05-25T09:25:32.262262Z",
+    "evidence_report_type": "p0_source_repair_evidence",
+    "plan_generated_at": "2026-05-25T09:42:20Z",
+    "plan_report_type": "p0_source_repair_plan"
+  },
+  "posture": {
+    "enables_automerge": false,
+    "mutates_catalog": false,
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "opens_pull_requests": false,
+    "writes_repository_state": false
+  },
+  "rejected": [],
+  "report_type": "p0_source_repair_plan_validation",
+  "schema_version": "0.1.0",
+  "summary": {
+    "approved_count": 5,
+    "evidence_repair_count": 132,
+    "plan_repair_count": 5,
+    "rejected_count": 0,
+    "unmatched_count": 0
+  },
+  "unmatched": []
+}
