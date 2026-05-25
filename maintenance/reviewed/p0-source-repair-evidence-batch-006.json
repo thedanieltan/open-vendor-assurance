@@ -1,0 +1,250 @@
+{
+  "evidence_type": "confirmed_p0_original_source_evidence",
+  "generated_at": "2026-05-25T15:13:45.285735Z",
+  "inputs": {
+    "fresh_report_generated_at": "2026-05-25T15:00:55.903923Z",
+    "fresh_report_run_id": "26406696474",
+    "prior_report_generated_at": "2026-05-25T14:25:46.503175Z",
+    "prior_report_run_id": "26405188572",
+    "scan_generated_at": "2026-05-25T15:13:45.222092Z",
+    "scan_report_type": "confirmed_p0_source_refinement_scan"
+  },
+  "posture": {
+    "contains_automerge_recommendation": false,
+    "contains_replacement_evidence": false,
+    "mutates_catalog": false,
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "opens_pull_requests": false,
+    "writes_repository_state": false
+  },
+  "repairs": [
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.mongodb.com/trust/compliance",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://www.mongodb.com/trust/compliance",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "mongodb-compliance",
+      "source_type": "compliance_page",
+      "source_url": "https://www.mongodb.com/trust/compliance",
+      "vendor_id": "mongodb"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://monday.com/trustcenter/compliance",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://monday.com/trustcenter/compliance",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "monday-compliance",
+      "source_type": "compliance_page",
+      "source_url": "https://monday.com/trustcenter/compliance",
+      "vendor_id": "monday"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://miro.com/security/compliance/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://miro.com/security/compliance/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "miro-compliance",
+      "source_type": "compliance_page",
+      "source_url": "https://miro.com/security/compliance/",
+      "vendor_id": "miro"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://miro.com/security/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://miro.com/security/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "miro-security",
+      "source_type": "security_page",
+      "source_url": "https://miro.com/security/",
+      "vendor_id": "miro"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://mistral.ai/trust/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://mistral.ai/trust/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "mistral-ai-compliance",
+      "source_type": "compliance_page",
+      "source_url": "https://mistral.ai/trust/",
+      "vendor_id": "mistral-ai"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://mistral.ai/security/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://mistral.ai/security/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "mistral-ai-security",
+      "source_type": "security_page",
+      "source_url": "https://mistral.ai/security/",
+      "vendor_id": "mistral-ai"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://retool.com/security",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://retool.com/security",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "retool-security",
+      "source_type": "security_page",
+      "source_url": "https://retool.com/security",
+      "vendor_id": "retool"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.snowflake.com/en/legal/data-processing-addendum/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://www.snowflake.com/en/legal/data-processing-addendum/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "snowflake-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.snowflake.com/en/legal/data-processing-addendum/",
+      "vendor_id": "snowflake"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.xero.com/us/about/legal/terms/data-processing-addendum/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://www.xero.com/us/about/legal/terms/data-processing-addendum/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "xero-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.xero.com/about/legal/terms/data-processing-addendum/",
+      "vendor_id": "xero"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.xero.com/us/about/legal/subprocessors/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T15:00:55.903923Z"
+        },
+        "prior": {
+          "final_url": "https://www.xero.com/us/about/legal/subprocessors/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T14:25:46.503175Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "xero-subprocessors",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.xero.com/about/legal/subprocessors/",
+      "vendor_id": "xero"
+    }
+  ],
+  "report_type": "p0_source_repair_evidence",
+  "schema_version": "0.1.0",
+  "summary": {
+    "contains_automerge_recommendation": false,
+    "contains_replacement_evidence": false,
+    "repair_evidence_count": 10
+  }
+}
