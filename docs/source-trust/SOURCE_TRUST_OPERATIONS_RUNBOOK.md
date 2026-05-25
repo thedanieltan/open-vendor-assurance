@@ -52,8 +52,9 @@ Use this process for sources repeatedly confirmed as hard-dead with exact `not_f
 5. Run source-refinement validation with the committed plan path.
 6. Commit the resulting validation report under `maintenance/reviewed/`.
 7. When a validation report has mixed Layer 2B eligibility, run the P0 repair partitioner before PR generation.
-8. Run `source-repair-pr` with the committed validation report or with the automerge partition validation report.
-9. Review the generated `Catalog: repair*` PR and confirm that changed files are bounded.
+8. Run the duplicate-source collision precheck against the validation report that will feed PR generation.
+9. Run `source-repair-pr` with the committed validation report or with the automerge partition validation report.
+10. Review the generated `Catalog: repair*` PR and confirm that changed files are bounded.
 
 Manual repair batch policy: 5-10 records per batch. Large batches are harder to review and should be split.
 
@@ -75,6 +76,22 @@ python -m tools.openva.source_repair_partition partition \
 The automerge partition may be used to generate a strict Layer 2B repair PR when every included row is eligible. The manual-review partition must not receive Layer 2B automerge labels. Manual and excluded rows must retain deterministic reason codes in the partition report and summary.
 
 Do not manually edit generated repair PRs to remove failing rows. If one row blocks automerge eligibility, partition the reviewed validation report first, commit the partition outputs under `maintenance/reviewed/`, and generate a separate PR from the automerge validation file.
+
+## P0 Repair Collision Precheck
+
+Before generating a source repair PR, run the duplicate-source collision check against the exact validation report that will be applied:
+
+```text
+python -m tools.openva.source_repair_collision_check check \
+  --validation maintenance/reviewed/p0-source-repair-validation-batch-XXX-automerge.json \
+  --catalog-root data/vendors \
+  --output maintenance/reviewed/p0-source-repair-collision-report-batch-XXX.json \
+  --summary-output maintenance/reviewed/p0-source-repair-collision-summary-batch-XXX.md
+```
+
+The precheck detects intra-batch replacement URL collisions, replacements that already exist on another source for the same vendor, post-application duplicate source URLs, same-source no-ops after URL normalization, and replacement final-URL ambiguity when available. Blocking collisions require revising the reviewed plan, validation, or partition artifacts. Do not weaken policy, bypass validation, or manually edit generated repair PRs to remove duplicate-producing rows.
+
+Duplicate-producing rows should move to manual review or be removed from the automerge partition before PR generation. The `source-repair-pr` workflow also runs this collision check before applying source changes and uploads the collision report when possible; existing catalog validation remains the final backstop.
 
 ## Layer 2B Label Discipline
 

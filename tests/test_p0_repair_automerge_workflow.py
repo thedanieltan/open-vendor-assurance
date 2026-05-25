@@ -4,6 +4,7 @@ import yaml
 
 
 WORKFLOW = Path(".github/workflows/agent-automerge.yml")
+SOURCE_REPAIR_PR_WORKFLOW = Path(".github/workflows/source-repair-pr.yml")
 
 
 def load_workflow() -> dict:
@@ -32,3 +33,16 @@ def test_p0_source_repair_automerge_still_uses_strict_label_gate_and_checker():
     assert "automerge:p0-source-repair" in job["if"]
     assert "python -m tools.openva.source_repair_automerge check" in text
     assert "gh pr merge" in text
+
+
+def test_source_repair_pr_runs_collision_check_before_apply():
+    workflow = yaml.safe_load(SOURCE_REPAIR_PR_WORKFLOW.read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["source-repair-pr"]["steps"]
+    collision_step = next(step for step in steps if step.get("name") == "Check repair source collisions")
+    apply_step = next(step for step in steps if step.get("name") == "Apply reviewed P0 source repairs")
+    upload_step = next(step for step in steps if step.get("name") == "Upload source repair collision artifacts")
+
+    assert "python -m tools.openva.source_repair_collision_check check" in collision_step["run"]
+    assert "--validation \"$VALIDATION_REPORT_PATH\"" in collision_step["run"]
+    assert steps.index(collision_step) < steps.index(apply_step)
+    assert upload_step["if"] == "always()"
