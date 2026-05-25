@@ -1,0 +1,250 @@
+{
+  "evidence_type": "confirmed_p0_original_source_evidence",
+  "generated_at": "2026-05-25T14:06:28.188336Z",
+  "inputs": {
+    "fresh_report_generated_at": "2026-05-25T13:53:44.903218Z",
+    "fresh_report_run_id": "26403848437",
+    "prior_report_generated_at": "2026-05-25T10:34:33.496544Z",
+    "prior_report_run_id": "26395917218",
+    "scan_generated_at": "2026-05-25T14:06:28.136129Z",
+    "scan_report_type": "confirmed_p0_source_refinement_scan"
+  },
+  "posture": {
+    "contains_automerge_recommendation": false,
+    "contains_replacement_evidence": false,
+    "mutates_catalog": false,
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "opens_pull_requests": false,
+    "writes_repository_state": false
+  },
+  "repairs": [
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://amplitude.com/data-processing-addendum",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://amplitude.com/data-processing-addendum",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "amplitude-dpa",
+      "source_type": "dpa",
+      "source_url": "https://amplitude.com/data-processing-addendum",
+      "vendor_id": "amplitude"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://amplitude.com/subprocessors",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://amplitude.com/subprocessors",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "amplitude-subprocessors",
+      "source_type": "subprocessors_list",
+      "source_url": "https://amplitude.com/subprocessors",
+      "vendor_id": "amplitude"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.databricks.com/legal/data-processing-addendum",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://www.databricks.com/legal/data-processing-addendum",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "databricks-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.databricks.com/legal/data-processing-addendum",
+      "vendor_id": "databricks"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.datadoghq.com/legal/dpa/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://www.datadoghq.com/legal/dpa/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "datadog-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.datadoghq.com/legal/dpa/",
+      "vendor_id": "datadog"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.digitalocean.com/legal/subprocessors",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://www.digitalocean.com/legal/subprocessors",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "digitalocean-subprocessors",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.digitalocean.com/legal/subprocessors",
+      "vendor_id": "digitalocean"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.elastic.co/legal/data-processing-addendum",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://www.elastic.co/legal/data-processing-addendum",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "elastic-dpa",
+      "source_type": "dpa",
+      "source_url": "https://www.elastic.co/legal/data-processing-addendum",
+      "vendor_id": "elastic"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.elastic.co/legal/subprocessors",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://www.elastic.co/legal/subprocessors",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "elastic-subprocessors",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.elastic.co/legal/subprocessors",
+      "vendor_id": "elastic"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.figma.com/legal/sub-processors/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://www.figma.com/legal/sub-processors/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "figma-subprocessors",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.figma.com/legal/sub-processors/",
+      "vendor_id": "figma"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://www.freshworks.com/subprocessors/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://www.freshworks.com/subprocessors/",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "freshworks-subprocessors",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.freshworks.com/subprocessors/",
+      "vendor_id": "freshworks"
+    },
+    {
+      "original": {
+        "fresh": {
+          "final_url": "https://legal.hubspot.com/subprocessors-page",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T13:53:44.903218Z"
+        },
+        "prior": {
+          "final_url": "https://legal.hubspot.com/subprocessors-page",
+          "http_status": 404,
+          "verification_status": "not_found",
+          "verified_at": "2026-05-25T10:34:33.496544Z"
+        }
+      },
+      "proposed_change": null,
+      "replacement": null,
+      "source_id": "hubspot-subprocessors",
+      "source_type": "subprocessors_list",
+      "source_url": "https://legal.hubspot.com/subprocessors-page",
+      "vendor_id": "hubspot"
+    }
+  ],
+  "report_type": "p0_source_repair_evidence",
+  "schema_version": "0.1.0",
+  "summary": {
+    "contains_automerge_recommendation": false,
+    "contains_replacement_evidence": false,
+    "repair_evidence_count": 10
+  }
+}
