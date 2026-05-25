@@ -55,6 +55,7 @@ def test_status_bucket_mapping_is_conservative():
     assert status_bucket("gone") == "unavailable"
     assert status_bucket("possible_mismatch") == "warning"
     assert status_bucket("homepage_or_generic_redirect") == "warning"
+    assert status_bucket("soft_not_found") == "warning"
     assert status_bucket("suspect_inferred_url") == "warning"
     assert status_bucket("bot_protected") == "ambiguous"
     assert status_bucket("forbidden_unknown") == "ambiguous"

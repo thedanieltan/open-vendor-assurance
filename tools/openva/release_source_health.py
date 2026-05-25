@@ -17,6 +17,7 @@ WARN_STATUSES = (
     "gated_or_login_required",
     "homepage_or_generic_redirect",
     "possible_mismatch",
+    "soft_not_found",
     "suspect_inferred_url",
 )
 

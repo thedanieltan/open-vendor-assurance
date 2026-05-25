@@ -98,6 +98,20 @@ def test_rejects_same_replacement_url():
     assert result["rejected"][0]["reasons"] == ["replacement_url_same_as_original"]
 
 
+def test_rejects_explicit_soft_404_replacement_diagnostic():
+    result = validate_source_repair_plan(
+        evidence(),
+        plan([plan_row(replacement_verification_status="soft_not_found", replacement_soft_404_detected=True)]),
+    )
+
+    assert result["summary"]["rejected_count"] == 1
+    assert set(result["rejected"][0]["reasons"]) == {
+        "replacement_verification_status_not_ok",
+        "soft_404_detected",
+    }
+    assert result["rejected"][0]["replacement_soft_404_detected"] is True
+
+
 def test_records_unmatched_plan_rows():
     result = validate_source_repair_plan(
         evidence(),

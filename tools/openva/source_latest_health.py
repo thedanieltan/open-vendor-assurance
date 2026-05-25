@@ -15,6 +15,7 @@ UNAVAILABLE_STATUSES = {"not_found", "gone"}
 WARNING_STATUSES = {
     "homepage_or_generic_redirect",
     "possible_mismatch",
+    "soft_not_found",
     "suspect_inferred_url",
 }
 AMBIGUOUS_STATUSES = {

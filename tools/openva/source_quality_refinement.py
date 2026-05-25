@@ -14,12 +14,14 @@ SCHEMA_VERSION = "0.1.0"
 QUALITY_STATUSES = {
     "homepage_or_generic_redirect",
     "possible_mismatch",
+    "soft_not_found",
     "suspect_inferred_url",
 }
 
 RECOMMENDED_REVIEW_ACTIONS = {
     "homepage_or_generic_redirect": "Find a more specific vendor-controlled source URL.",
     "possible_mismatch": "Verify semantic match against source_type before replacing.",
+    "soft_not_found": "Replace with a reachable vendor-controlled source URL or return to unresolved handling.",
     "suspect_inferred_url": "Confirm whether this inferred URL is real and authoritative.",
 }
 
@@ -72,6 +74,8 @@ def quality_reason(status: str) -> str:
         return "source_resolves_to_homepage_or_generic_redirect"
     if status == "possible_mismatch":
         return "source_content_may_not_match_source_type"
+    if status == "soft_not_found":
+        return "source_returns_soft_not_found_content"
     if status == "suspect_inferred_url":
         return "source_url_appears_inferred_and_needs_authority_review"
     return "source_quality_review_required"
@@ -139,6 +143,7 @@ def build_source_quality_refinement_queue(
             "total_quality_review_count": len(items),
             "homepage_or_generic_redirect_count": status_counts.get("homepage_or_generic_redirect", 0),
             "possible_mismatch_count": status_counts.get("possible_mismatch", 0),
+            "soft_not_found_count": status_counts.get("soft_not_found", 0),
             "suspect_inferred_url_count": status_counts.get("suspect_inferred_url", 0),
             "by_source_type": bounded_counter(items, "source_type"),
             "by_vendor_id": bounded_counter(items, "vendor_id"),
@@ -179,6 +184,7 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
         f"- Total quality review count: `{summary['total_quality_review_count']}`",
         f"- Homepage or generic redirect: `{summary['homepage_or_generic_redirect_count']}`",
         f"- Possible mismatch: `{summary['possible_mismatch_count']}`",
+        f"- Soft not found: `{summary['soft_not_found_count']}`",
         f"- Suspect inferred URL: `{summary['suspect_inferred_url_count']}`",
         "",
         "## Queue",

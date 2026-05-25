@@ -94,6 +94,24 @@ LOGIN_GATE_HINTS = (
     "credentials required",
 )
 
+SOFT_NOT_FOUND_TITLE_PREFIXES = (
+    "404",
+    "404 error",
+    "page not found",
+    "not found",
+)
+
+SOFT_NOT_FOUND_BODY_HINTS = (
+    "404 error",
+    "there's nothing here",
+    "there’s nothing here",
+    "page not found",
+    "the page you are looking for",
+    "we can't find that page",
+    "we can’t find that page",
+    "this page does not exist",
+)
+
 SUSPECT_TEMPLATE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
     re.compile(pattern)
     for pattern in (
@@ -179,6 +197,22 @@ def looks_like_bot_challenge(result: FetchResult) -> bool:
 def looks_like_login_gate(result: FetchResult) -> bool:
     sample = lower_sample(result)
     return any(hint in sample for hint in LOGIN_GATE_HINTS)
+
+
+def looks_like_soft_not_found(result: FetchResult) -> bool:
+    if result.content_type and "pdf" in result.content_type.lower():
+        return False
+    title = (title_from_sample(result.body_sample, result.content_type) or "").strip().lower()
+    normalized_title = re.sub(r"\s+", " ", title).strip(" -|:")
+    if any(
+        normalized_title == hint or normalized_title.startswith(f"{hint} ")
+        for hint in SOFT_NOT_FOUND_TITLE_PREFIXES
+    ):
+        return True
+    body_prefix = normalize_text(result.body_sample, result.content_type)[:1500]
+    if any(hint in body_prefix for hint in SOFT_NOT_FOUND_BODY_HINTS):
+        return True
+    return False
 
 
 def semantic_match(source_type: str | None, text: str, content_type: str | None) -> dict[str, Any]:
@@ -299,6 +333,8 @@ def classify_status(source: dict[str, Any], result: FetchResult, semantic: dict[
         return "server_error"
     if status >= 400:
         return "client_error"
+    if looks_like_soft_not_found(result):
+        return "soft_not_found"
     if looks_like_homepage_redirect(source, result.final_url):
         return "homepage_or_generic_redirect"
     if semantic.get("status") == "mismatch":
@@ -337,6 +373,7 @@ def verify_source(
         "title_detected": title_from_sample(result.body_sample, result.content_type),
         "fetch_error": result.error,
         "semantic_match": semantic,
+        "soft_404_detected": status == "soft_not_found",
         "verification_status": status,
         "requires_review": status not in {"ok", "redirected"},
         "non_advisory": True,

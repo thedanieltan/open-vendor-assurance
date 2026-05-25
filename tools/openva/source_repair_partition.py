@@ -8,6 +8,8 @@ from typing import Any
 
 import yaml
 
+from tools.openva.source_repair_collision_check import normalize_url
+
 VALIDATION_REPORT_TYPE = "p0_source_repair_plan_validation"
 EVIDENCE_REPORT_TYPE = "p0_source_repair_evidence"
 PARTITION_REPORT_TYPE = "p0_source_repair_partition"
@@ -48,6 +50,11 @@ NEGATIVE_REASON_ORDER = (
     "authority_not_allowed",
     "access_not_public",
     "url_safety_not_passed",
+    "soft_404_detected",
+    "redirected_replacement_not_canonical",
+    "final_url_missing",
+    "final_url_not_vendor_controlled",
+    "final_url_semantic_mismatch",
     "source_type_changed",
     "replacement_url_same_as_original",
     "self_certifying_field_present",
@@ -78,10 +85,6 @@ def load_policy(path: Path) -> dict[str, Any]:
 
 def utc_now() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
-
-
-def normalize_url(url: str) -> str:
-    return url.strip().rstrip("#").rstrip("?").rstrip("/")
 
 
 def validation_key(row: dict[str, Any]) -> tuple[str, str, str]:
@@ -170,6 +173,25 @@ def status_pair(evidence_row: dict[str, Any]) -> tuple[Any, Any]:
     return prior.get("verification_status"), fresh.get("verification_status")
 
 
+def replacement_final_url(row: dict[str, Any]) -> str:
+    for field in ("replacement_final_url", "final_url", "replacement_resolved_final_url"):
+        value = row.get(field)
+        if value:
+            return str(value)
+    return ""
+
+
+def replacement_soft_404_detected(row: dict[str, Any]) -> bool:
+    reasons = row.get("reasons")
+    reason_values = {str(reason) for reason in reasons if isinstance(reason, str)} if isinstance(reasons, list) else set()
+    return (
+        row.get("replacement_soft_404_detected") is True
+        or row.get("soft_404_detected") is True
+        or row.get("replacement_verification_status") in {"soft_not_found", "soft_404_detected"}
+        or "soft_404_detected" in reason_values
+    )
+
+
 def evaluate_row(
     row: dict[str, Any],
     evidence_by_key: dict[tuple[str, str, str], dict[str, Any]],
@@ -206,6 +228,9 @@ def evaluate_row(
     else:
         negative.add("unknown_or_unsupported_status")
 
+    if replacement_soft_404_detected(row):
+        negative.add("soft_404_detected")
+
     if is_2xx_or_3xx(row.get("replacement_http_status")):
         positive.add("http_status_2xx_or_3xx")
     else:
@@ -237,6 +262,13 @@ def evaluate_row(
         positive.add("replacement_url_differs")
     else:
         negative.add("replacement_url_same_as_original")
+
+    final_url = replacement_final_url(row)
+    if replacement_status == "redirected" or final_url:
+        if not final_url:
+            negative.add("final_url_missing")
+        elif normalize_url(replacement_url) != normalize_url(final_url):
+            negative.add("redirected_replacement_not_canonical")
 
     if find_self_certifying_fields(row) or (evidence_row is not None and find_self_certifying_fields(evidence_row)):
         negative.add("self_certifying_field_present")

@@ -39,6 +39,7 @@ def test_queues_only_layer_2c_quality_statuses():
         report([
             source("homepage_or_generic_redirect", "vendor-c"),
             source("possible_mismatch", "vendor-b"),
+            source("soft_not_found", "vendor-d"),
             source("suspect_inferred_url", "vendor-a"),
         ]),
         generated_at="2026-05-24T13:01:00Z",
@@ -47,12 +48,14 @@ def test_queues_only_layer_2c_quality_statuses():
     assert [item["verification_status"] for item in payload["items"]] == [
         "homepage_or_generic_redirect",
         "possible_mismatch",
+        "soft_not_found",
         "suspect_inferred_url",
     ]
     assert {item["requires_human_review"] for item in payload["items"]} == {True}
     assert payload["items"][0]["recommended_review_action"] == "Find a more specific vendor-controlled source URL."
     assert payload["items"][1]["recommended_review_action"] == "Verify semantic match against source_type before replacing."
-    assert payload["items"][2]["recommended_review_action"] == "Confirm whether this inferred URL is real and authoritative."
+    assert payload["items"][2]["recommended_review_action"] == "Replace with a reachable vendor-controlled source URL or return to unresolved handling."
+    assert payload["items"][3]["recommended_review_action"] == "Confirm whether this inferred URL is real and authoritative."
 
 
 def test_excludes_confirmed_p0_and_access_ambiguity_and_ok_statuses():
@@ -123,18 +126,20 @@ def test_summary_counts_are_correct():
             source("homepage_or_generic_redirect", "vendor-a", source_type="trust_center"),
             source("possible_mismatch", "vendor-a", source_type="trust_center"),
             source("possible_mismatch", "vendor-b", source_type="security_page"),
+            source("soft_not_found", "vendor-d", source_type="compliance_page"),
             source("suspect_inferred_url", "vendor-c", source_type="privacy_notice"),
         ]),
         generated_at="2026-05-24T13:01:00Z",
     )
 
     assert payload["summary"] == {
-        "total_quality_review_count": 4,
+        "total_quality_review_count": 5,
         "homepage_or_generic_redirect_count": 1,
         "possible_mismatch_count": 2,
+        "soft_not_found_count": 1,
         "suspect_inferred_url_count": 1,
-        "by_source_type": {"trust_center": 2, "privacy_notice": 1, "security_page": 1},
-        "by_vendor_id": {"vendor-a": 2, "vendor-b": 1, "vendor-c": 1},
+        "by_source_type": {"trust_center": 2, "compliance_page": 1, "privacy_notice": 1, "security_page": 1},
+        "by_vendor_id": {"vendor-a": 2, "vendor-b": 1, "vendor-c": 1, "vendor-d": 1},
     }
 
 

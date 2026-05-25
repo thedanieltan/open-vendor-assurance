@@ -52,9 +52,10 @@ Use this process for sources repeatedly confirmed as hard-dead with exact `not_f
 5. Run source-refinement validation with the committed plan path.
 6. Commit the resulting validation report under `maintenance/reviewed/`.
 7. When a validation report has mixed Layer 2B eligibility, run the P0 repair partitioner before PR generation.
-8. Run the duplicate-source collision precheck against the validation report that will feed PR generation.
-9. Run `source-repair-pr` with the committed validation report or with the automerge partition validation report.
-10. Review the generated `Catalog: repair*` PR and confirm that changed files are bounded.
+8. Confirm replacement URLs are not soft 404 pages and that redirected replacements use the final canonical URL before strict Layer 2B automerge.
+9. Run the duplicate-source collision precheck against the validation report that will feed PR generation.
+10. Run `source-repair-pr` with the committed validation report or with the automerge partition validation report.
+11. Review the generated `Catalog: repair*` PR and confirm that changed files are bounded.
 
 Manual repair batch policy: 5-10 records per batch. Large batches are harder to review and should be split.
 
@@ -76,6 +77,10 @@ python -m tools.openva.source_repair_partition partition \
 The automerge partition may be used to generate a strict Layer 2B repair PR when every included row is eligible. The manual-review partition must not receive Layer 2B automerge labels. Manual and excluded rows must retain deterministic reason codes in the partition report and summary.
 
 Do not manually edit generated repair PRs to remove failing rows. If one row blocks automerge eligibility, partition the reviewed validation report first, commit the partition outputs under `maintenance/reviewed/`, and generate a separate PR from the automerge validation file.
+
+Strict Layer 2B automerge also rejects replacement diagnostics that indicate `soft_404_detected`, `redirected_replacement_not_canonical`, or `final_url_missing`. A replacement that redirects may remain appropriate for manual review, but the automerge partition should store the final canonical URL as `replacement_source_url` and carry the verified final URL in the validation row when redirect evidence is available.
+
+Human post-merge URL review can trigger small corrective `Source:` or `Catalog:` PRs. Do not start Option C or report-only deterministic replacement candidate discovery while soft-404 or redirect-canonical gaps are unresolved.
 
 ## P0 Repair Collision Precheck
 
@@ -122,6 +127,7 @@ Layer 2C covers reachable but poor-quality source records:
 
 - `homepage_or_generic_redirect`
 - `possible_mismatch`
+- `soft_not_found`
 - `suspect_inferred_url`
 
 These items are not confirmed-dead P0 repairs. Reviewers should verify semantic match, source type, entity, and authority before changing anything. Quality refinement is human reviewed only and must not be marked automerge-eligible.

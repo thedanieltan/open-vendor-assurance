@@ -22,6 +22,7 @@ ALLOWED_VERIFICATION_STATUSES = {
     "rate_limited",
     "redirected",
     "server_error",
+    "soft_not_found",
     "suspect_inferred_url",
     "unreachable",
 }
