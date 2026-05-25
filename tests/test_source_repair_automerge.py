@@ -170,6 +170,49 @@ def test_source_repair_automerge_rejects_weak_semantic_replacement():
     assert "replacement_semantic_status_not_strong" in result.reasons
 
 
+def test_source_repair_automerge_rejects_soft_404_replacement():
+    row = validation_row(replacement_soft_404_detected=True, reasons=["soft_404_detected"])
+    result = check(validation=validation_report(row))
+
+    assert result.eligible is False
+    assert "soft_404_detected" in result.reasons
+
+
+def test_source_repair_automerge_rejects_redirected_replacement_not_canonical():
+    row = validation_row(
+        replacement_verification_status="redirected",
+        replacement_source_url="https://www.microsoft.com/compliance",
+        replacement_final_url="https://www.microsoft.com/en-us/trust-center/compliance/compliance-overview",
+    )
+    head = source(
+        "https://www.microsoft.com/compliance",
+        review_state="human_reviewed",
+        catalog_tier="human_reviewed",
+    )
+    result = check(validation=validation_report(row), head=head)
+
+    assert result.eligible is False
+    assert "redirected_replacement_not_canonical" in result.reasons
+
+
+def test_source_repair_automerge_accepts_redirected_replacement_when_stored_url_is_final():
+    row = validation_row(
+        replacement_verification_status="redirected",
+        replacement_final_url="https://www.microsoft.com/en-us/trust-center/compliance/compliance-overview/",
+    )
+    result = check(validation=validation_report(row))
+
+    assert result.eligible is True
+
+
+def test_source_repair_automerge_rejects_redirected_replacement_without_final_url():
+    row = validation_row(replacement_verification_status="redirected")
+    result = check(validation=validation_report(row))
+
+    assert result.eligible is False
+    assert "final_url_missing" in result.reasons
+
+
 def test_source_repair_automerge_rejects_self_certifying_fields():
     result = check(validation=validation_report(eligible_for_automerge=True))
 

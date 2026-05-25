@@ -10,6 +10,8 @@ from typing import Any, Callable
 
 import yaml
 
+from tools.openva.source_repair_collision_check import normalize_url
+
 P0_SOURCE_REPAIR_LABEL = "automerge:p0-source-repair"
 SOURCE_REFINEMENT_LABEL = "source-refinement"
 DEFAULT_MAX_SOURCE_REPAIRS = 10
@@ -123,10 +125,6 @@ def approved_key(row: dict[str, Any]) -> tuple[str, str, str]:
     )
 
 
-def normalize_url(url: str) -> str:
-    return url.strip().rstrip("#").rstrip("?").rstrip("/")
-
-
 def load_base_report(
     base_ref: str,
     path: str,
@@ -145,6 +143,25 @@ def load_base_report(
 def changed_top_level_keys(base: dict[str, Any], head: dict[str, Any]) -> set[str]:
     keys = set(base) | set(head)
     return {key for key in keys if base.get(key) != head.get(key)}
+
+
+def replacement_final_url(row: dict[str, Any]) -> str:
+    for field in ("replacement_final_url", "final_url", "replacement_resolved_final_url"):
+        value = row.get(field)
+        if value:
+            return str(value)
+    return ""
+
+
+def replacement_soft_404_detected(row: dict[str, Any]) -> bool:
+    reasons = row.get("reasons")
+    reason_values = {str(reason) for reason in reasons if isinstance(reason, str)} if isinstance(reasons, list) else set()
+    return (
+        row.get("replacement_soft_404_detected") is True
+        or row.get("soft_404_detected") is True
+        or row.get("replacement_verification_status") in {"soft_not_found", "soft_404_detected"}
+        or "soft_404_detected" in reason_values
+    )
 
 
 def validate_source_delta(
@@ -195,6 +212,8 @@ def validate_source_delta(
         reasons.append("evidence_source_type_mismatch")
     if row.get("replacement_verification_status") not in ALLOWED_REPLACEMENT_STATUSES:
         reasons.append("replacement_verification_status_not_ok")
+    if replacement_soft_404_detected(row):
+        reasons.append("soft_404_detected")
     http_status = row.get("replacement_http_status")
     if not isinstance(http_status, int) or http_status < 200 or http_status >= 400:
         reasons.append("replacement_http_status_not_2xx_or_3xx")
@@ -210,6 +229,12 @@ def validate_source_delta(
     replacement_url = str(row.get("replacement_source_url") or "")
     if normalize_url(replacement_url) == normalize_url(original_url):
         reasons.append("replacement_url_same_as_original")
+    final_url = replacement_final_url(row)
+    if row.get("replacement_verification_status") == "redirected" or final_url:
+        if not final_url:
+            reasons.append("final_url_missing")
+        elif normalize_url(replacement_url) != normalize_url(final_url):
+            reasons.append("redirected_replacement_not_canonical")
     if head_source.get("source_url") != replacement_url:
         reasons.append("head_source_url_not_approved_replacement")
     if head_source.get("review_state") != "human_reviewed":

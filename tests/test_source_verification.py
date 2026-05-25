@@ -69,6 +69,40 @@ def test_404_is_not_found():
     assert result["requires_review"] is True
 
 
+def test_http_200_soft_404_is_soft_not_found():
+    source = source_record("compliance_page", "https://mixpanel.com/legal/security/#compliance")
+
+    result = verify_source(
+        source,
+        Path("data/vendors/mixpanel/sources/mixpanel-compliance.yaml"),
+        fetcher=lambda url: html_fetch(
+            url,
+            "<title>404 Error</title><main><h1>404 Error</h1><p>There's nothing here.</p></main>",
+        ),
+    )
+
+    assert result["verification_status"] == "soft_not_found"
+    assert result["soft_404_detected"] is True
+    assert result["requires_review"] is True
+
+
+def test_incidental_404_text_on_valid_page_is_not_soft_not_found():
+    source = source_record("security_page", "https://example.com/security")
+
+    result = verify_source(
+        source,
+        Path("data/vendors/example/sources/example-security.yaml"),
+        fetcher=lambda url: html_fetch(
+            url,
+            "<title>Security Overview</title><main>Security encryption incident response. "
+            "Our logs may include 404 responses for missing assets.</main>",
+        ),
+    )
+
+    assert result["verification_status"] == "ok"
+    assert result["soft_404_detected"] is False
+
+
 def test_401_login_required_source_requires_review():
     source = source_record("security_page", "https://trust.example.com/security")
 

@@ -49,3 +49,13 @@ def test_rejects_unknown_status():
 
     with pytest.raises(ValueError, match="unknown verification_status"):
         compare_verification_reports(prior, fresh)
+
+
+def test_soft_not_found_is_known_but_not_confirmed_p0():
+    prior = report([row("vendor-a", "dpa", "url-a", "soft_not_found", 200)])
+    fresh = report([row("vendor-a", "dpa", "url-a", "soft_not_found", 200)])
+
+    result = compare_verification_reports(prior, fresh)
+
+    assert result["summary"]["confirmed_p0_count"] == 0
+    assert result["summary"]["excluded_count"] == 1

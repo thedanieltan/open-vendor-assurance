@@ -207,6 +207,96 @@ def test_self_certifying_field_prevents_automerge_eligibility():
     assert report["manual_review_required"][0]["reasons"] == ["self_certifying_field_present"]
 
 
+def test_soft_404_diagnostic_prevents_automerge_eligibility():
+    row = validation_row(replacement_soft_404_detected=True, reasons=["soft_404_detected"])
+
+    automerge, manual, report, _ = partition(evidence_report([evidence_row()]), validation_report(approved=[row]))
+
+    assert automerge["approved"] == []
+    assert manual["approved"] == [row]
+    assert report["manual_review_required"][0]["reasons"] == ["soft_404_detected"]
+
+
+def test_mixpanel_batch007_soft_404_shape_goes_to_manual_review_required():
+    row = validation_row(
+        vendor_id="mixpanel",
+        source_id="mixpanel-compliance",
+        source_type="compliance_page",
+        original_source_url="https://mixpanel.com/security/#compliance",
+        replacement_source_url="https://mixpanel.com/legal/security/#compliance",
+        replacement_verification_status="soft_not_found",
+        replacement_soft_404_detected=True,
+        reasons=["soft_404_detected"],
+    )
+    evidence = evidence_report([
+        evidence_row(
+            vendor_id="mixpanel",
+            source_id="mixpanel-compliance",
+            source_type="compliance_page",
+            source_url="https://mixpanel.com/security/#compliance",
+        )
+    ])
+
+    automerge, manual, report, _ = partition(evidence, validation_report(rejected=[row]))
+
+    assert automerge["approved"] == []
+    assert manual["rejected"] == [row]
+    assert report["manual_review_required"][0]["reasons"] == [
+        "validation_not_approved",
+        "soft_404_detected",
+        "unknown_or_unsupported_status",
+    ]
+
+
+def test_redirecting_replacement_not_canonical_goes_to_manual_review_required():
+    row = validation_row(
+        replacement_verification_status="redirected",
+        replacement_source_url="https://example.com/privacy",
+        replacement_final_url="https://docs.example.com/legal/privacy-policy",
+    )
+
+    automerge, manual, report, _ = partition(evidence_report([evidence_row()]), validation_report(approved=[row]))
+
+    assert automerge["approved"] == []
+    assert manual["approved"] == [row]
+    assert report["manual_review_required"][0]["reasons"] == ["redirected_replacement_not_canonical"]
+
+
+def test_redirecting_replacement_with_stored_final_url_can_be_automerge_eligible():
+    row = validation_row(
+        replacement_verification_status="redirected",
+        replacement_source_url="https://docs.example.com/legal/privacy-policy",
+        replacement_final_url="https://docs.example.com/legal/privacy-policy/",
+    )
+
+    automerge, manual, report, _ = partition(evidence_report([evidence_row()]), validation_report(approved=[row]))
+
+    assert [item["source_id"] for item in automerge["approved"]] == ["vendor-a-dpa"]
+    assert manual["approved"] == []
+    assert report["automerge_eligible"][0]["reasons"] == [
+        "approved_validation_row",
+        "confirmed_p0",
+        "replacement_redirected",
+        "http_status_2xx_or_3xx",
+        "semantic_strong",
+        "authority_allowed",
+        "public_access",
+        "url_safety_passed",
+        "source_type_unchanged",
+        "replacement_url_differs",
+    ]
+
+
+def test_redirected_replacement_without_final_url_goes_to_manual_review_required():
+    row = validation_row(replacement_verification_status="redirected")
+
+    automerge, manual, report, _ = partition(evidence_report([evidence_row()]), validation_report(approved=[row]))
+
+    assert automerge["approved"] == []
+    assert manual["approved"] == [row]
+    assert report["manual_review_required"][0]["reasons"] == ["final_url_missing"]
+
+
 def test_output_ordering_is_deterministic():
     rows = [
         validation_row(vendor_id="vendor-c", source_id="vendor-c-dpa", original_source_url="https://c.test/old", replacement_source_url="https://c.test/new"),

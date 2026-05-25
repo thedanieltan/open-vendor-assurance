@@ -17,6 +17,10 @@ ALLOWED_REPLACEMENT_STATUSES = {"ok", "redirected"}
 ALLOWED_AUTHORITY_STATUSES = {"vendor_controlled", "approved_exception"}
 ALLOWED_ACCESS_STATUSES = {"public", "public_web", "public_pdf"}
 ALLOWED_SEMANTIC_STATUSES = {"strong"}
+OPTIONAL_REPLACEMENT_FIELDS = (
+    "replacement_final_url",
+    "replacement_soft_404_detected",
+)
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -114,6 +118,14 @@ def normalize_url(url: str) -> str:
     return url.strip().rstrip("#").rstrip("?").rstrip("/")
 
 
+def replacement_soft_404_detected(row: dict[str, Any]) -> bool:
+    return (
+        row.get("replacement_soft_404_detected") is True
+        or row.get("soft_404_detected") is True
+        or row.get("replacement_verification_status") in {"soft_not_found", "soft_404_detected"}
+    )
+
+
 def validate_repair_row(plan_row: dict[str, Any], evidence_row: dict[str, Any]) -> tuple[bool, list[str]]:
     reasons: list[str] = []
     original = evidence_row["original"]
@@ -133,6 +145,8 @@ def validate_repair_row(plan_row: dict[str, Any], evidence_row: dict[str, Any]) 
         reasons.append("replacement_url_same_as_original")
     if plan_row.get("replacement_verification_status") not in ALLOWED_REPLACEMENT_STATUSES:
         reasons.append("replacement_verification_status_not_ok")
+    if replacement_soft_404_detected(plan_row):
+        reasons.append("soft_404_detected")
     http_status = plan_row.get("replacement_http_status")
     if not isinstance(http_status, int) or http_status < 200 or http_status >= 400:
         reasons.append("replacement_http_status_not_2xx_or_3xx")
@@ -176,6 +190,9 @@ def validate_source_repair_plan(evidence: dict[str, Any], plan: dict[str, Any]) 
             "replacement_url_safety_status": row.get("replacement_url_safety_status"),
             "reasons": reasons,
         }
+        for field in OPTIONAL_REPLACEMENT_FIELDS:
+            if field in row:
+                output[field] = row.get(field)
         if ok:
             approved.append(output)
         else:

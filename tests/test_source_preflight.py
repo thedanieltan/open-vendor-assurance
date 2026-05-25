@@ -98,6 +98,16 @@ def test_changed_source_with_not_found_fails(tmp_path: Path):
     assert report["failures"][0]["reason"] == "source_preflight_failed:not_found"
 
 
+def test_changed_source_with_soft_not_found_fails(tmp_path: Path):
+    path = "data/vendors/vendor-a/sources/vendor-a-security.yaml"
+    write_source(tmp_path, path)
+
+    report = check_changed_sources([path], root=tmp_path, verifier=verifier("soft_not_found"))
+
+    assert report["failed_count"] == 1
+    assert report["failures"][0]["reason"] == "source_preflight_failed:soft_not_found"
+
+
 def test_changed_source_with_possible_mismatch_fails(tmp_path: Path):
     path = "data/vendors/vendor-a/sources/vendor-a-security.yaml"
     write_source(tmp_path, path)

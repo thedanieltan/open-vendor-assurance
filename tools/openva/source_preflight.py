@@ -27,6 +27,7 @@ FAIL_STATUSES = {
     "unreachable",
     "client_error",
     "server_error",
+    "soft_not_found",
 }
 
 Verifier = Callable[[dict[str, Any], Path], dict[str, Any]]

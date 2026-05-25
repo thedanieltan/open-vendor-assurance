@@ -89,6 +89,17 @@ def test_release_source_health_warns_on_ambiguous_source_statuses():
     assert "source_status_warning:possible_mismatch" in codes
 
 
+def test_release_source_health_warns_on_soft_not_found_status():
+    report = build_release_source_health_readiness(
+        loaded("source-verification-report.json", verification_report(ok=2, soft_not_found=1)),
+        loaded("confirmed-p0-repair-candidates.json", confirmed_p0_report(0)),
+        now=NOW,
+    )
+
+    assert report["status"] == "warning"
+    assert report["warnings"][0]["code"] == "source_status_warning:soft_not_found"
+
+
 def test_release_source_health_warns_when_verification_artifact_is_missing():
     report = build_release_source_health_readiness(
         loaded("source-verification-report.json", None),
