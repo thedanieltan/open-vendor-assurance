@@ -1,0 +1,114 @@
+{
+  "approved": [
+    {
+      "original_source_url": "https://gusto.com/about/security",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://gusto.com/security",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "gusto-security",
+      "source_type": "security_page",
+      "vendor_id": "gusto"
+    },
+    {
+      "original_source_url": "https://miro.com/legal/subprocessors/",
+      "reasons": [],
+      "replacement_access_status": "public_pdf",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://miro.com/legal/documents/Miro-Current-Subprocessors-List.pdf",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "miro-subprocessors",
+      "source_type": "subprocessors_list",
+      "vendor_id": "miro"
+    },
+    {
+      "original_source_url": "https://www.snowflake.com/en/legal/privacy-notice/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.snowflake.com/en/legal/privacy/privacy-policy/",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "snowflake-privacy",
+      "source_type": "privacy_notice",
+      "vendor_id": "snowflake"
+    },
+    {
+      "original_source_url": "https://www.snowflake.com/en/legal/subprocessors/",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.snowflake.com/en/legal/privacy/snowflake-sub-processors/",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "snowflake-subprocessors",
+      "source_type": "subprocessors_list",
+      "vendor_id": "snowflake"
+    },
+    {
+      "original_source_url": "https://www.splunk.com/en_us/legal/data-processing-addendum.html",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.splunk.com/en_us/legal/splunk-dpa.html",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "splunk-dpa",
+      "source_type": "dpa",
+      "vendor_id": "splunk"
+    },
+    {
+      "original_source_url": "https://www.splunk.com/en_us/about-splunk/splunk-security.html",
+      "reasons": [],
+      "replacement_access_status": "public",
+      "replacement_authority_status": "vendor_controlled",
+      "replacement_http_status": 200,
+      "replacement_semantic_status": "strong",
+      "replacement_source_url": "https://www.splunk.com/en_us/about-splunk/splunk-data-security-and-privacy.html",
+      "replacement_url_safety_status": "passed",
+      "replacement_verification_status": "ok",
+      "source_id": "splunk-security",
+      "source_type": "security_page",
+      "vendor_id": "splunk"
+    }
+  ],
+  "generated_at": "2026-05-25T08:50:53.886657Z",
+  "inputs": {
+    "evidence_generated_at": "2026-05-25T08:10:27.446942Z",
+    "evidence_report_type": "p0_source_repair_evidence",
+    "plan_generated_at": "2026-05-25T08:50:12Z",
+    "plan_report_type": "p0_source_repair_plan"
+  },
+  "posture": {
+    "enables_automerge": false,
+    "mutates_catalog": false,
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "opens_pull_requests": false,
+    "writes_repository_state": false
+  },
+  "rejected": [],
+  "report_type": "p0_source_repair_plan_validation",
+  "schema_version": "0.1.0",
+  "summary": {
+    "approved_count": 6,
+    "evidence_repair_count": 138,
+    "plan_repair_count": 6,
+    "rejected_count": 0,
+    "unmatched_count": 0
+  },
+  "unmatched": []
+}
