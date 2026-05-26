@@ -29,6 +29,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "source-repair-pr-cleanup.yml",
     "source-refinement-queue.yml",
     "source-refinement-scan.yml",
+    "source-reviewer-inbox-dry-run.yml",
     "validate.yml",
 }
 
@@ -119,6 +120,7 @@ def test_workflow_consolidation_audit_classifies_every_public_workflow():
     assert "`catalog-maintenance.yml` | `retire_candidate`" in text
     assert "`source-refinement-queue.yml` | `retire_candidate`" in text
     assert "`observe-report.yml` | `retire_candidate`" in text
+    assert "`source-reviewer-inbox-dry-run.yml` | `keep_support`" in text
     assert "Future Action A: reviewed decision validation handoff" in text
     assert "Future Action B: reviewed no-replacement truth-state application" in text
     assert "Future Action C: workflow retirement" in text
