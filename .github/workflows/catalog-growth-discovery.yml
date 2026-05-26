@@ -62,6 +62,7 @@ jobs:
             --output promotion-plan.json
       - name: Build catalog growth eligibility report
         run: |
+          mkdir -p reports
           python -m tools.openva.catalog_growth_eligibility classify \
             --vendor-candidates vendor-candidate-discovery-report.json \
             --source-discovery source-discovery-report.json \
