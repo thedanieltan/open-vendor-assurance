@@ -38,7 +38,7 @@ This mirrors common catalog/database practices: keep source input separate from 
 
 ## For reviewers
 
-You will receive one file:
+You will receive one file from the `openva-source-reviewer-inbox` artifact:
 
 ```text
 source-review-decision-sheet.csv
@@ -79,11 +79,12 @@ The maintainer-agent flow is:
 
 ```text
 receive completed CSV
+→ retrieve the matching source-review-triage-plan.json from openva-source-maintenance-report
 → validate it against the matching source-review-triage-plan.json
 → stop if validation finds invalid rows
 → export reviewed artifacts if validation passes
 → open a PR containing only reviewed artifacts under maintenance/reviewed/
-→ let CI and policy checks decide whether the PR can merge
+→ wait until CI passes
 → run the later source repair process if repairs were approved
 ```
 
@@ -92,6 +93,12 @@ The CSV itself is not committed to the repo. The repo stores validated review ev
 A maintainer-agent may prepare and open PRs, but it should not bypass validation, branch protection, CI, or path-scope rules.
 
 A maintainer-agent verifies supplied replacement URLs; it does not invent replacement URLs during review validation. If discovery did not find a candidate and the reviewer did not supply a replacement, the maintainer-agent records a reviewed no-replacement or deferred decision instead of guessing.
+
+## Run binding
+
+The original `source-review-triage-plan.json` is required for validation. It is stored in the matching `openva-source-maintenance-report` artifact from the same `source-maintenance-report.yml` run that produced the reviewer inbox.
+
+Do not validate a completed sheet against a different triage plan. The reviewer sheet, triage plan, and reviewed artifacts must remain bound to the same `source-maintenance-report.yml` run.
 
 ## Human intervention policy
 
@@ -182,9 +189,11 @@ source-review-decision-sheet.csv
 
 ## What changes the catalog
 
-Validated review evidence does not directly change `data/vendors/**`.
+Validated review evidence does not mutate `data/vendors/**`.
 
 If a reviewer approved source repairs, a later controlled repair PR applies those changes. That PR is reviewed and checked like any other catalog change.
+
+Do not apply automerge labels to reviewed-evidence PRs. A reviewed-evidence PR must be merged only after CI passes and the reviewed artifacts stay under `maintenance/reviewed/`.
 
 ## Stop conditions
 
