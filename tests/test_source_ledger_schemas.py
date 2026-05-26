@@ -41,6 +41,31 @@ def valid_unavailable_source() -> dict:
     }
 
 
+def valid_reviewed_no_replacement_source() -> dict:
+    record = valid_unavailable_source()
+    record.update(
+        {
+            "truth_state": "reviewed_no_replacement_available",
+            "truth_state_status": "current",
+            "source_review_decision_id": "review-example-dpa",
+            "reviewed_artifact_path": "maintenance/reviewed/source-review/example-dpa.json",
+            "validation_report_path": "maintenance/reviewed/source-review/validation.json",
+            "source_maintenance_run_id": "source-maintenance-report-12345",
+            "reviewed_by": "human",
+            "original_source": {
+                "source_id": "example-dpa",
+                "source_url": "https://example.com/legal/dpa",
+                "source_type": "dpa",
+                "title": "Data Processing Addendum",
+                "access_class": "public_web",
+                "source_authority_class": "vendor_legal_terms",
+            },
+            "reviewer_note": "Reviewed public materials and no replacement was available at review time.",
+        }
+    )
+    return record
+
+
 def valid_candidate_source() -> dict:
     return {
         "schema_version": "0.1.0",
@@ -74,6 +99,42 @@ def test_unavailable_source_schema_requires_non_advisory_flag():
     instance["not_advice"] = False
 
     assert_invalid("unavailable-source.schema.json", instance)
+
+
+def test_unavailable_source_schema_accepts_reviewed_no_replacement_truth_state():
+    assert_valid("unavailable-source.schema.json", valid_reviewed_no_replacement_source())
+
+
+def test_reviewed_no_replacement_truth_state_requires_review_evidence_paths():
+    instance = valid_reviewed_no_replacement_source()
+    del instance["reviewed_artifact_path"]
+
+    assert_invalid("unavailable-source.schema.json", instance)
+
+
+def test_reviewed_no_replacement_truth_state_requires_original_source_context():
+    instance = valid_reviewed_no_replacement_source()
+    del instance["original_source"]
+
+    assert_invalid("unavailable-source.schema.json", instance)
+
+
+def test_reviewed_no_replacement_truth_state_rejects_paths_outside_reviewed_artifacts():
+    instance = valid_reviewed_no_replacement_source()
+    instance["validation_report_path"] = "data/vendors/example/unavailable_sources/example-dpa.yaml"
+
+    assert_invalid("unavailable-source.schema.json", instance)
+
+
+def test_superseded_unavailable_truth_state_requires_replacement_source_reference():
+    instance = valid_reviewed_no_replacement_source()
+    instance["truth_state_status"] = "superseded"
+    instance["superseded_at"] = "2026-08-01T00:00:00Z"
+
+    assert_invalid("unavailable-source.schema.json", instance)
+
+    instance["superseded_by_source_id"] = "example-dpa-v2"
+    assert_valid("unavailable-source.schema.json", instance)
 
 
 def test_candidate_source_schema_accepts_agent_candidate():

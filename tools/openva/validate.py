@@ -365,10 +365,52 @@ def validate_vendor_category_tags(path: str, values: list[str], allowed_tags: se
     return failures
 
 
+def validate_unavailable_truth_state(path: str, unavailable: dict[str, Any], sources_by_id: dict[str, dict[str, Any]]) -> list[str]:
+    failures: list[str] = []
+    truth_state = unavailable.get("truth_state")
+    original_source = unavailable.get("original_source")
+    truth_state_status = unavailable.get("truth_state_status")
+
+    if truth_state == "reviewed_no_replacement_available":
+        if not str(unavailable.get("reviewed_artifact_path", "")).startswith("maintenance/reviewed/"):
+            failures.append(f"{path}: reviewed_artifact_path must be under maintenance/reviewed/")
+        if not str(unavailable.get("validation_report_path", "")).startswith("maintenance/reviewed/"):
+            failures.append(f"{path}: validation_report_path must be under maintenance/reviewed/")
+        if unavailable.get("reviewed_by") == "agent":
+            failures.append(f"{path}: reviewed_no_replacement_available must be reviewed by human or hybrid, not agent")
+        if truth_state_status != "superseded" and unavailable.get("superseded_by_source_id"):
+            failures.append(f"{path}: current reviewed_no_replacement_available must not set superseded_by_source_id unless truth_state_status is superseded")
+        if isinstance(original_source, dict):
+            source_id = original_source.get("source_id")
+            source = sources_by_id.get(source_id)
+            if not source:
+                failures.append(f"{path}: original_source.source_id {source_id} must reference an existing source")
+            else:
+                if source.get("vendor_id") != unavailable.get("vendor_id"):
+                    failures.append(f"{path}: original_source.source_id {source_id} must match unavailable source vendor_id")
+                if source.get("source_type") != original_source.get("source_type"):
+                    failures.append(f"{path}: original_source.source_type must match referenced source_id {source_id}")
+                if source.get("source_url") != original_source.get("source_url"):
+                    failures.append(f"{path}: original_source.source_url must match referenced source_id {source_id}")
+        if truth_state_status in {"stale", "expired"} and not unavailable.get("reviewer_note"):
+            failures.append(f"{path}: stale or expired no-replacement state requires reviewer_note")
+
+    if truth_state_status == "superseded":
+        superseded_by = unavailable.get("superseded_by_source_id")
+        source = sources_by_id.get(superseded_by)
+        if not source:
+            failures.append(f"{path}: superseded_by_source_id {superseded_by} must reference an existing source")
+        elif source.get("vendor_id") != unavailable.get("vendor_id"):
+            failures.append(f"{path}: superseded_by_source_id {superseded_by} must match unavailable source vendor_id")
+
+    return failures
+
+
 def validate_optional_source_ledgers(vendors: dict[str, dict[str, Any]], exceptions: set[tuple[str, str]]) -> list[str]:
     failures: list[str] = []
     seen_candidates: dict[str, str] = {}
     seen_unavailable: dict[tuple[str, str], str] = {}
+    sources_by_id = {source["source_id"]: source for source in records_for("source")}
 
     for candidate in records_for_optional_kind("candidate_source"):
         path = candidate["_openva_path"]
@@ -402,6 +444,7 @@ def validate_optional_source_ledgers(vendors: dict[str, dict[str, Any]], excepti
 
         for candidate_url in unavailable.get("candidate_urls_checked", []):
             failures.extend(f"{path}: candidate_urls_checked: {failure}" for failure in validate_url_safety(candidate_url))
+        failures.extend(validate_unavailable_truth_state(path, unavailable, sources_by_id))
 
     return failures
 

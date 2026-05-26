@@ -11,12 +11,12 @@ def test_no_replacement_truth_state_design_is_design_only_and_non_mutating():
     text = NO_REPLACEMENT_DESIGN.read_text(encoding="utf-8")
 
     assert "No catalog source YAML is mutated by this design" in text
-    assert "no-replacement decisions remain reviewed maintenance evidence under `maintenance/reviewed/`" in text
-    assert "They are not catalog truth" in text
-    assert "They are not source repairs" in text
-    assert "They are not deletion instructions" in text
+    assert "Reviewed artifacts under `maintenance/reviewed/` are evidence" in text
+    assert "not durable catalog state until a later controlled application path" in text
+    assert "source records remain reserved for canonical available sources" in text
+    assert "source repairs, deletion instructions" in text
     assert "First-class unavailable-source structure" in text
-    assert "Do not implement this option until a schema PR defines exact fields and validators" in text
+    assert "Durable reviewed no-replacement state belongs under" in text
 
 
 def test_no_replacement_truth_state_design_requires_freshness_and_validators():
@@ -28,6 +28,7 @@ def test_no_replacement_truth_state_design_requires_freshness_and_validators():
     assert "Reviewed evidence is committed under `maintenance/reviewed/`" in text
     assert "Validation has zero invalid rows" in text
     assert "No source record is deleted" in text
+    assert "`truth_state_status` distinguishes `current`, `stale`, `expired`, and `superseded` state" in text
 
 
 def test_source_operations_scheduler_spec_is_non_implementation_spec():
