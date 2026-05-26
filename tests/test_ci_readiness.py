@@ -24,7 +24,6 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "source-repair-pr-cleanup.yml",
     "source-refinement-queue.yml",
     "source-refinement-scan.yml",
-    "source-reviewer-inbox-dry-run.yml",
     "validate.yml",
 }
 
@@ -205,26 +204,6 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             assert triggers["schedule"][0]["cron"] == "0 3 * * 0", f"{path}: live feed cron must stay weekly Sunday 03:00 UTC"
         if path.name == "source-repair-pr-cleanup.yml":
             assert triggers["schedule"][0]["cron"] == "30 8 * * 3", f"{path}: stale repair cleanup must run after source refinement scan"
-
-
-def test_source_reviewer_inbox_dry_run_is_manual_read_only_and_narrow():
-    workflow = load_workflow("source-reviewer-inbox-dry-run.yml")
-    triggers = workflow_triggers(workflow)
-    text = (WORKFLOW_DIR / "source-reviewer-inbox-dry-run.yml").read_text(encoding="utf-8")
-
-    assert set(triggers.keys()) == {"workflow_dispatch"}
-    assert workflow["permissions"] == {"contents": "read"}
-    assert "source_review_decisions build-sheet" in text
-    assert "source_review_decisions validate-sheet" in text
-    assert "source_review_decisions export-reviewed-artifacts" in text
-    assert "triage_plan_sha256_changed" in text
-    assert "openva-source-reviewer-inbox-dry-run" in text
-    assert "source_verification verify" not in text
-    assert "source_discovery discover" not in text
-    assert "promotion_planner plan" not in text
-    assert "source_repair_sweep build" not in text
-    assert "gh pr create" not in text
-    assert "gh pr merge" not in text
 
 
 def test_catalog_agent_pr_workflow_is_manual_pr_only():
@@ -448,18 +427,6 @@ def test_report_workflows_upload_reviewer_friendly_artifacts():
             "release-artifacts.json",
             "release-source-health-readiness.json",
             "release-source-health-summary.md",
-        },
-        "source-reviewer-inbox-dry-run.yml": {
-            "source-review-triage-plan.json",
-            "source-review-decision-sheet.csv",
-            "source-review-decision-sheet-summary.md",
-            "completed-source-review-decision-sheet.csv",
-            "source-review-decision-validation.json",
-            "source-review-decision-validation-summary.md",
-            "reviewed-artifacts/",
-            "invalid-binding-source-review-decision-sheet.csv",
-            "invalid-binding-validation.json",
-            "invalid-binding-validation-summary.md",
         },
     }
 

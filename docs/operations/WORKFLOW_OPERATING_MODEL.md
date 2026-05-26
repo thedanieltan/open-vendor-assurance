@@ -84,9 +84,9 @@ Workflows:
 
 ## Reviewed decision handoff boundary
 
-Reviewer decision handling is a controlled evidence handoff inside Lane A. It is not a mutation workflow and must not become a scheduled mutation path.
+Reviewer decision handling is a controlled evidence handoff inside Lane A. It is not a workflow by itself and must not become a scheduled mutation path.
 
-The production boundary is:
+The boundary is:
 
 ```text
 source-maintenance-report.yml
@@ -99,8 +99,6 @@ source-maintenance-report.yml
 → CI passes
 → source-repair-pr.yml may be run manually from committed reviewed repair evidence
 ```
-
-`source-reviewer-inbox-dry-run.yml` is a support smoke workflow for this boundary. It uses synthetic triage data and does not run source verification, discovery, promotion planning, repair sweep, PR creation, or catalog mutation.
 
 The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-reviewed-artifacts` writes reviewed evidence only. `source-repair-pr.yml` is the later controlled write path and must not run from an uncommitted reviewer sheet.
 
@@ -119,8 +117,6 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 9. Run `source-repair-pr.yml` only for committed and validated reviewed repair artifacts.
 10. Run `source-maintenance-report.yml` again.
 11. Run `release-candidate.yml`.
-
-Use `source-reviewer-inbox-dry-run.yml` only to test the reviewer-inbox round trip independently from the heavy source maintenance bundle.
 
 ### Lane B sequence
 
@@ -147,7 +143,6 @@ Use `source-reviewer-inbox-dry-run.yml` only to test the reviewer-inbox round tr
 | `agent-weighted-review.yml` | Advisory agent checks for schema, source accessibility, wording, and provenance. | `pull_request` | `contents: read`, `pull-requests: read`, `issues: write` | No catalog writes; comments only | No | No | Advisory comments | PR reviewers, automerge policy context | Core |
 | `agent-automerge.yml` | Controlled automerge lanes for approved agent PRs. | `pull_request` | `contents: write`, `pull-requests: write`, `checks: read`, `statuses: read` | Yes, through merge only | No | Yes | Preflight artifact, merge result | `main`, release/site loop | Core |
 | `source-maintenance-report.yml` | Source cleanup/reporting entry point. Builds source health, verification, discovery, repair sweep, triage, decision sheet, promotion, and cleanup reports. | `workflow_dispatch`, scheduled weekly | `contents: read` | No | No | No | `openva-source-maintenance-report`, `openva-source-reviewer-inbox` | Source cleanup loop, release candidate, site pages, reviewers | Core |
-| `source-reviewer-inbox-dry-run.yml` | Smoke-test the reviewer-inbox round trip with synthetic triage data and run-binding checks. | `workflow_dispatch` only | `contents: read` | No | No | No | `openva-source-reviewer-inbox-dry-run` | Maintainer-agents, reviewer handoff validation | Support |
 | `source-refinement-scan.yml` | Compare recent source maintenance runs and identify confirmed P0 repair candidates. | `workflow_dispatch`, scheduled weekly | `actions: read`, `contents: read` | No | No | No | Confirmed P0 scan and evidence artifacts | `source-repair-pr.yml`, release readiness | Core |
 | `source-repair-pr.yml` | Create repair PRs from committed and validated reviewed evidence and repair plans. | `workflow_dispatch` | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Repair action report, PR body | PR safety loop, source maintenance re-run | Core |
 | `source-repair-pr-cleanup.yml` | Close stale generated source repair PRs. | `workflow_dispatch`, scheduled weekly | `contents: read`, `pull-requests: write`, `issues: write` | PR state only | No | No | Stale PR cleanup report | Operators | Core |
@@ -173,5 +168,3 @@ Use `source-reviewer-inbox-dry-run.yml` only to test the reviewer-inbox round tr
 - `openva-source-reviewer-inbox`: reviewer-only inbox containing exactly `source-review-decision-sheet.csv`.
 
 Reviewers should download the reviewer inbox. Operators and agents should use the full source maintenance report.
-
-`source-reviewer-inbox-dry-run.yml` emits `openva-source-reviewer-inbox-dry-run` for smoke testing only. It is not a source maintenance report and should not be used as source-health evidence.
