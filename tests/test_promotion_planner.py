@@ -3,7 +3,7 @@ from pathlib import Path
 
 import yaml
 
-from tools.openva.promotion_planner import build_promotion_plan
+from tools.openva.promotion_planner import build_promotion_plan, build_strict_growth_plan
 
 
 def write_yaml(path: Path, data: dict) -> None:
@@ -85,6 +85,55 @@ def unavailable(vendor_id: str = "example", source_type: str = "subprocessors_li
         "next_review_after": "2026-08-16",
         "candidate_urls_checked": ["https://example.com/legal/subprocessors"],
         "not_advice": True,
+    }
+
+
+def strict_eligibility_report() -> dict:
+    return {
+        "schema_version": "0.1.0",
+        "report_type": "catalog_growth_eligibility_report",
+        "items": [
+            {
+                "candidate_vendor_id": "candidate-a",
+                "classification": "strict_promote_ready",
+                "reason_codes": ["strict_source_candidate_evidence_present"],
+            }
+        ],
+        "strict_promotions": [
+            {
+                "action": "strict_catalog_growth_promotion_candidate",
+                "vendor": {
+                    "candidate_vendor_id": "candidate-a",
+                    "display_name_candidate": "Candidate A",
+                    "official_domain_candidate": "candidate-a.example",
+                    "coverage_lane": "security",
+                    "cohort_id": "security-001",
+                    "vendor_category_candidates": ["security_software"],
+                    "headquarters_country_candidate": "US",
+                },
+                "source": {
+                    "candidate_source_id": "candidate-a-security-page-candidate",
+                    "vendor_id": "candidate-a",
+                    "source_type_candidate": "security_page",
+                    "candidate_url": "https://candidate-a.example/security",
+                    "confidence": "likely",
+                    "evidence": {
+                        "page_title": "Security",
+                        "matched_terms": ["security", "encryption"],
+                        "final_url": "https://candidate-a.example/security",
+                        "http_status": 200,
+                        "content_type": "text/html",
+                    },
+                },
+                "posture": {
+                    "network_fetch_performed": False,
+                    "writes_repository_state": False,
+                    "writes_canonical_sources": False,
+                    "strict_machine_candidate": True,
+                    "non_advisory": True,
+                },
+            }
+        ],
     }
 
 
@@ -206,3 +255,25 @@ def test_planner_does_not_emit_action_for_ok_existing_source(tmp_path):
 
     assert plan["summary"]["action_count"] == 0
     assert plan["actions"] == []
+
+
+def test_strict_growth_planner_uses_only_strict_promote_ready_records():
+    report = strict_eligibility_report()
+    report["items"].append({"candidate_vendor_id": "candidate-b", "classification": "reject_no_public_source"})
+    report["strict_promotions"].append(
+        {
+            "vendor": {"candidate_vendor_id": "candidate-b"},
+            "source": {"candidate_url": "https://candidate-b.example/security"},
+        }
+    )
+
+    plan = build_strict_growth_plan(report)
+
+    assert plan["report_type"] == "strict_growth_promotion_plan"
+    assert plan["summary"]["action_types"] == {"strict_catalog_growth_promotion": 1}
+    action = plan["actions"][0]
+    assert action["vendor"]["candidate_vendor_id"] == "candidate-a"
+    assert action["requires_human_review"] is False
+    assert action["writes_canonical_vendors"] is False
+    assert action["writes_canonical_sources"] is False
+    assert action["strict_machine_candidate"] is True
