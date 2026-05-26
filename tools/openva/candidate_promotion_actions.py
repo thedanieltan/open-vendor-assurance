@@ -245,20 +245,31 @@ def apply_reviewed_candidate(action: dict[str, Any], root: Path) -> list[dict[st
     ]
 
 
-def apply_strict_growth(action: dict[str, Any], root: Path) -> list[dict[str, str]]:
+def apply_strict_growth(action: dict[str, Any], root: Path, written_vendors: set[str]) -> list[dict[str, str]]:
     validate_strict_growth_action(action)
     vendor = vendor_from_strict_growth(action)
     source = source_from_strict_growth(action)
     artifact = artifact_from_source(source)
-    base = root / "data" / "vendors" / vendor["vendor_id"]
+    vendor_id = str(vendor["vendor_id"])
+    base = root / "data" / "vendors" / vendor_id
     v_path = base / "vendor.yaml"
     s_path = base / "sources" / f"{source['source_id']}.yaml"
     a_path = base / "artifacts" / f"{artifact['artifact_id']}.yaml"
     c_path = base / "changes" / f"strict-growth-{source['source_id']}.yaml"
-    for path in (v_path, s_path, a_path, c_path):
+
+    file_actions: list[dict[str, str]] = []
+    if v_path.exists():
+        if vendor_id not in written_vendors:
+            raise ValueError(f"strict growth vendor already exists: {display_path(v_path, root)}")
+    else:
+        write_yaml(v_path, vendor)
+        written_vendors.add(vendor_id)
+        file_actions.append({"action": "write", "path": display_path(v_path, root), "candidate_path": "strict_growth_plan"})
+
+    for path in (s_path, a_path, c_path):
         if path.exists():
             raise ValueError(f"strict growth target already exists: {display_path(path, root)}")
-    write_yaml(v_path, vendor)
+
     write_yaml(s_path, source)
     write_yaml(a_path, artifact)
     write_yaml(
@@ -273,12 +284,14 @@ def apply_strict_growth(action: dict[str, Any], root: Path) -> list[dict[str, st
             summary="Strict catalog growth candidate promoted to canonical public source metadata.",
         ),
     )
-    return [
-        {"action": "write", "path": display_path(v_path, root), "candidate_path": "strict_growth_plan"},
-        {"action": "write", "path": display_path(s_path, root), "candidate_path": "strict_growth_plan"},
-        {"action": "write", "path": display_path(a_path, root), "candidate_path": "strict_growth_plan"},
-        {"action": "write", "path": display_path(c_path, root), "candidate_path": "strict_growth_plan"},
-    ]
+    file_actions.extend(
+        [
+            {"action": "write", "path": display_path(s_path, root), "candidate_path": "strict_growth_plan"},
+            {"action": "write", "path": display_path(a_path, root), "candidate_path": "strict_growth_plan"},
+            {"action": "write", "path": display_path(c_path, root), "candidate_path": "strict_growth_plan"},
+        ]
+    )
+    return file_actions
 
 
 def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
@@ -288,10 +301,11 @@ def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT
     ]
     applied: list[dict[str, str]] = []
     skipped: list[dict[str, Any]] = []
+    strict_growth_written_vendors: set[str] = set()
     for action in actions:
         try:
             if action.get("action") == STRICT_GROWTH_PROMOTION_ACTION:
-                applied.extend(apply_strict_growth(action, root))
+                applied.extend(apply_strict_growth(action, root, strict_growth_written_vendors))
             else:
                 applied.extend(apply_reviewed_candidate(action, root))
         except ValueError as exc:

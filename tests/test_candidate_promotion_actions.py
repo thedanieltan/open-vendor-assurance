@@ -1,3 +1,5 @@
+import copy
+
 import yaml
 
 from tools.openva.candidate_promotion_actions import apply_candidate_promotions
@@ -145,6 +147,33 @@ def test_apply_strict_growth_writes_vendor_source_artifact_and_change(tmp_path):
     assert source["source_url"] == "https://candidate-a.example/security"
     assert artifact["source_id"] == "candidate-a-security-page"
     assert change["change_type"] == "created"
+
+
+def test_apply_strict_growth_writes_multiple_sources_for_same_new_vendor(tmp_path):
+    security = strict_growth_action()
+    privacy = copy.deepcopy(security)
+    privacy["source"]["candidate_source_id"] = "candidate-a-privacy-notice-candidate"
+    privacy["source"]["source_type_candidate"] = "privacy_notice"
+    privacy["source"]["candidate_url"] = "https://candidate-a.example/privacy"
+    privacy["source"]["evidence"] = {
+        "page_title": "Privacy Notice",
+        "matched_terms": ["privacy", "personal data"],
+        "final_url": "https://candidate-a.example/privacy",
+        "http_status": 200,
+        "content_type": "text/html",
+    }
+
+    report = apply_candidate_promotions({"actions": [security, privacy]}, root=tmp_path)
+
+    assert report["summary"]["promotion_actions_seen"] == 2
+    assert report["summary"]["canonical_vendors_written"] == 1
+    assert report["summary"]["canonical_sources_written"] == 2
+    assert report["summary"]["canonical_artifacts_written"] == 2
+    assert report["summary"]["change_events_written"] == 2
+    assert report["summary"]["skipped_actions"] == 0
+    assert (tmp_path / "data/vendors/candidate-a/vendor.yaml").exists()
+    assert (tmp_path / "data/vendors/candidate-a/sources/candidate-a-security-page.yaml").exists()
+    assert (tmp_path / "data/vendors/candidate-a/sources/candidate-a-privacy-notice.yaml").exists()
 
 
 def test_apply_strict_growth_rejects_missing_country(tmp_path):
