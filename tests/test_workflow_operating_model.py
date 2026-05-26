@@ -6,6 +6,7 @@ import yaml
 WORKFLOW_DIR = Path(".github/workflows")
 OPERATING_MODEL = Path("docs/operations/WORKFLOW_OPERATING_MODEL.md")
 CONSOLIDATION_AUDIT = Path("docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md")
+REVIEWER_DECISION_HANDOFF = Path("docs/operations/REVIEWER_DECISION_HANDOFF.md")
 
 EXPECTED_PUBLIC_WORKFLOWS = {
     "candidate-promotion-pr.yml",
@@ -151,3 +152,55 @@ def test_full_source_maintenance_artifact_remains_available_for_operators_and_ma
     assert "source-verification-report.json" in operator_paths
     assert "source-verification.csv" in operator_paths
     assert "promotion-plan-actions.csv" in operator_paths
+
+
+def test_reviewer_decision_handoff_documents_controlled_manual_boundary():
+    text = REVIEWER_DECISION_HANDOFF.read_text(encoding="utf-8")
+
+    required_fragments = {
+        "openva-source-reviewer-inbox",
+        "source-review-decision-sheet.csv",
+        "source-review-triage-plan.json",
+        "openva-source-maintenance-report",
+        "validate-sheet",
+        "export-reviewed-artifacts",
+        "maintenance/reviewed/",
+        "source-repair-pr.yml",
+        "untrusted input",
+        "does not mutate `data/vendors/**`",
+        "Do not apply automerge labels",
+        "CI passes",
+    }
+    for fragment in required_fragments:
+        assert fragment in text
+
+
+def test_reviewer_decision_handoff_requires_matching_original_triage_plan():
+    text = REVIEWER_DECISION_HANDOFF.read_text(encoding="utf-8")
+
+    assert "The original `source-review-triage-plan.json` is required for validation" in text
+    assert "Do not validate a completed sheet against a different triage plan" in text
+    assert "same `source-maintenance-report.yml` run" in text
+
+
+def test_workflow_operating_model_defines_reviewed_decision_boundary_before_source_repair():
+    text = OPERATING_MODEL.read_text(encoding="utf-8")
+
+    assert "## Reviewed decision handoff boundary" in text
+    assert "source_review_decisions validate-sheet" in text
+    assert "zero invalid rows only" in text
+    assert "source_review_decisions export-reviewed-artifacts" in text
+    assert "reviewed-artifacts PR under maintenance/reviewed/" in text
+    assert "source-repair-pr.yml may be run manually from committed reviewed repair evidence" in text
+    assert "must not run from an uncommitted reviewer sheet" in text
+
+
+def test_consolidation_audit_keeps_future_action_a_manual_without_new_workflow():
+    text = CONSOLIDATION_AUDIT.read_text(encoding="utf-8")
+
+    assert "Current status: handoff hardening is documented" in text
+    assert "Do not add a scheduled workflow for this path" in text
+    assert "Do not automatically mutate catalog records from reviewer sheets" in text
+    assert "Do not run `source-repair-pr.yml` from uncommitted reviewer input" in text
+    assert "source_review_decisions validate-sheet" in text
+    assert "source_review_decisions export-reviewed-artifacts" in text

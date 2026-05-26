@@ -11,7 +11,7 @@ Classification values:
 - `remove_now_if_safe`: safe to delete only after tests and stale references prove removal.
 - `defer`: known future need, not part of this package.
 
-No workflow is removed by this audit. Risky retirements require a migration note and CI-readiness tests before deletion.
+No workflow is removed by this audit. Risky retirements require a migration note and CI-readiness tests before deletion. Detailed evidence for retire candidates is recorded in `docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md`.
 
 ## Classification table
 
@@ -21,7 +21,7 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `catalog-pr-guard.yml` | `keep_core` | Catalog PR scope guard. | Keep. |
 | `agent-weighted-review.yml` | `keep_core` | Advisory review agents add reviewer signal without merging or mutating catalog files. | Keep. |
 | `agent-automerge.yml` | `keep_core` | Controlled automerge lane with preflight and validation before merge. | Keep without policy relaxation. |
-| `source-maintenance-report.yml` | `edit_existing` | Source cleanup/reporting entry point. It should keep the full operator artifact but expose a one-file reviewer inbox. | Edit in place to add reviewer-only artifact; do not create a new workflow. |
+| `source-maintenance-report.yml` | `edit_existing` | Source cleanup/reporting entry point. It keeps the full operator artifact and exposes a one-file reviewer inbox. | Keep in place. Maintain reviewer/operator artifact separation. |
 | `source-refinement-scan.yml` | `keep_core` | Confirms P0 source repair candidates from repeated source maintenance evidence. | Keep. |
 | `source-repair-pr.yml` | `keep_core` | Manual, reviewed, validated source repair PR creation path. | Keep manual and reviewed-only. |
 | `source-repair-pr-cleanup.yml` | `keep_core` | Cleans up stale generated source repair PRs. | Keep. |
@@ -35,9 +35,9 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `catalog-agent-pr.yml` | `keep_support` | Manual support path for agent-authored catalog PRs. | Keep as PR-only support path. |
 | `catalog-maintenance-pr.yml` | `keep_support` | Scheduled/manual support path for maintenance PRs. | Keep until overlap with promotion and repair paths is further reduced. |
 | `contribution-intake-agent.yml` | `keep_support` | Issue-to-PR intake support path. | Keep. |
-| `catalog-maintenance.yml` | `retire_candidate` | Overlaps with validation/index/test work in `validate.yml` and catalog quality/entity reporting in `coverage-audit.yml`. | Retire after confirming entity stub reporting is either no longer needed or folded into `coverage-audit.yml`. |
-| `source-refinement-queue.yml` | `retire_candidate` | Consumes older observation report paths and likely overlaps with `source-maintenance-report.yml`, source repair sweep output, source review triage, and reviewer decision sheet. | Retire only if no unique queue remains. Likely future `remove_now_if_safe` candidate after consumer search and stale-reference tests. |
-| `observe-report.yml` | `retire_candidate` | May be superseded for source observations by `source-observation-ledger`, `latest-source-health`, and `public/source-health-snapshot`. | Keep only if it tracks non-source observations still needed by the project; otherwise mark legacy or retire. |
+| `catalog-maintenance.yml` | `retire_candidate` | Overlaps with validation/index/test work in `validate.yml` and catalog quality/entity reporting in `coverage-audit.yml`; entity-stub replacement is not proven. | Keep as `retire_candidate`; see `WORKFLOW_RETIREMENT_EVIDENCE.md`. |
+| `source-refinement-queue.yml` | `retire_candidate` | Consumes older observation report paths and likely overlaps with `source-maintenance-report.yml`, source repair sweep output, source review triage, and reviewer decision sheet; stale consumers remain unproven. | Keep as `retire_candidate`; likely first future removal candidate after evidence is complete. |
+| `observe-report.yml` | `retire_candidate` | May be superseded for source observations by `source-observation-ledger`, `latest-source-health`, and `public/source-health-snapshot`; non-source observation role remains unresolved. | Keep as `retire_candidate`; see `WORKFLOW_RETIREMENT_EVIDENCE.md`. |
 
 ## Retire/consolidation candidate detail
 
@@ -47,6 +47,7 @@ Observed overlap:
 
 - Validation/index/test behavior overlaps with `validate.yml`.
 - Catalog quality and entity reporting overlap with `coverage-audit.yml`.
+- Entity stub reporting is not yet proven redundant.
 
 Recommended action:
 
@@ -58,16 +59,18 @@ Observed overlap:
 
 - It consumes an older observation report path.
 - It likely overlaps with `source-maintenance-report.yml`, source repair sweep artifacts, source review triage output, and the reviewer decision sheet.
+- `docs/source-refinement-workflow.md` must be reviewed before removal.
 
 Recommended action:
 
-Retire if no unique queue remains. This is the likely first removal candidate, but not in this package unless tests prove its outputs are fully replaced and no stale references remain.
+Retire if no unique queue remains. This is the likely first removal candidate, but not in this package because stale references and consumers are not yet proven clean.
 
 ### `observe-report.yml`
 
 Observed overlap:
 
 - Source-specific observation needs are increasingly represented by `source-observation-ledger.json`, `latest-source-health.json`, and `public/source-health-snapshot.json`.
+- `README.md` and `docs/observation-reporting.md` must be reviewed before removal.
 
 Recommended action:
 
@@ -79,11 +82,15 @@ Keep only if it tracks non-source observations still needed by the project. If n
 
 Purpose: after a reviewer returns `source-review-decision-sheet.csv`, run validation manually or through an existing controlled path.
 
-Do not add a scheduled workflow yet. Do not automatically mutate catalog records from reviewer sheets.
+Current status: handoff hardening is documented. The controlled path is `source_review_decisions validate-sheet` followed by `source_review_decisions export-reviewed-artifacts` only when validation has zero invalid rows. Reviewed artifacts must be committed under `maintenance/reviewed/` before `source-repair-pr.yml` is run.
+
+Do not add a scheduled workflow for this path. Do not automatically mutate catalog records from reviewer sheets. Do not run `source-repair-pr.yml` from uncommitted reviewer input.
 
 ### Future Action B: reviewed no-replacement truth-state application
 
 Purpose: define whether no-replacement decisions live under `maintenance/reviewed/` or in a first-class unavailable-source catalog structure.
+
+Current status: design is documented in `NO_REPLACEMENT_TRUTH_STATE_DESIGN.md`. No application code or catalog schema write is implemented in this package.
 
 Do not implement until the truth-state schema is decided.
 
@@ -91,17 +98,23 @@ Do not implement until the truth-state schema is decided.
 
 Purpose: retire `catalog-maintenance.yml`, `source-refinement-queue.yml`, and/or `observe-report.yml` only after the audit proves their outputs are fully replaced.
 
+Current status: retirement evidence is documented in `WORKFLOW_RETIREMENT_EVIDENCE.md`; no workflow is removed in this package because none is proven safe to remove.
+
 Do not delete all three in one package unless tests and docs prove no consumers remain.
 
 ### Future Action D: source operations scheduler
 
 Purpose: at catalog scale, add sharded or incremental source checking.
 
+Current status: architecture is documented in `SOURCE_OPERATIONS_SCHEDULER_SPEC.md`. No workflow, scheduler command, or schedule change is implemented in this package.
+
 Do not implement now.
 
 ### Future Action E: catalog growth gating dashboard
 
 Purpose: show when Lane B promotion is allowed based on source-health debt.
+
+Current status: dashboard contract is documented in `CATALOG_GROWTH_GATING_DASHBOARD_SPEC.md`. No UI, workflow, or automatic promotion behavior is implemented in this package.
 
 Do not implement now.
 
