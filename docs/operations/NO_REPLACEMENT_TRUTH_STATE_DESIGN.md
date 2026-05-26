@@ -1,111 +1,81 @@
 # No-Replacement Truth-State Design
 
-This document defines the design posture for reviewed no-replacement source decisions. It is intentionally a design document, not an implementation package.
+This document defines the design posture for reviewed no-replacement source decisions. It is intentionally scoped to vendor-assurance intake and evidence preparation. OpenVA provides a canonical public evidence dataset; users decide how to apply that dataset in their own vendor-assurance workflows.
 
-No catalog source YAML is mutated by this design. No no-replacement decision is applied to `data/vendors/**` yet.
+No catalog source YAML is mutated by this design. No reviewed no-replacement decision is automatically applied from reviewer sheets.
 
 ## Problem
 
-`source_review_decisions validate-sheet` can produce reviewed no-replacement evidence when a reviewer marks `mark_no_replacement_available` and validation has zero invalid rows. That evidence is useful, but the project has not yet approved where durable no-replacement truth-state belongs.
-
-Until the schema is decided, no-replacement decisions remain reviewed maintenance evidence under `maintenance/reviewed/`.
+`source_review_decisions validate-sheet` can produce reviewed no-replacement evidence when a reviewer marks `mark_no_replacement_available` and validation has zero invalid rows. That evidence is useful, but it must not become catalog truth without durable provenance, lifecycle, freshness, and validation semantics.
 
 ## Current decision
 
-For now, reviewed no-replacement decisions live under `maintenance/reviewed/` as reviewed evidence only.
+Reviewed no-replacement decisions may become durable unavailable-source state only through the first-class unavailable-source structure under `data/vendors/**/unavailable_sources/*.yaml`.
 
-They are not catalog truth. They are not source repairs. They are not deletion instructions. They are not proof that a vendor will never publish a replacement source.
+`data/vendors/**/sources/*.yaml` remains reserved for canonical available source references. No-replacement truth-state must not be written into source records.
 
-## Candidate storage locations
+Reviewed no-replacement state remains distinct from source repairs, deletion instructions, or proof that a vendor will never publish a replacement source.
 
-### Option 1: `maintenance/reviewed/`
+## Approved storage location
 
-This is the current approved holding area.
+### First-class unavailable-source structure
 
-Benefits:
+Durable reviewed no-replacement state belongs under:
 
-- Keeps reviewed evidence separate from canonical catalog records.
-- Preserves reviewer metadata and validation posture.
-- Avoids premature schema changes.
-- Avoids accidentally deleting or downgrading source records.
-
-Limitations:
-
-- Release readiness and site display must consume it explicitly if it should affect confidence.
-- Evidence may become stale without a re-check policy.
-
-### Option 2: `data/vendors/**/sources/*.yaml`
-
-This would place truth-state directly on existing source records.
-
-Benefits:
-
-- Keeps source state close to the source record.
-- Easier for validators and indexes to consume once approved.
-
-Risks:
-
-- Can blur the line between a broken source and a reviewed unavailable source.
-- Can encourage mutation from reviewer sheets.
-- Requires careful validator changes and migration rules.
-
-Do not implement this option until a schema PR defines exact fields and validators.
-
-### Option 3: First-class unavailable-source structure
-
-This would introduce a dedicated unavailable-source structure, for example under vendor records or a new catalog path.
+```text
+data/vendors/{vendor_id}/unavailable_sources/{unavailable_source_id}.yaml
+```
 
 Benefits:
 
 - Separates canonical available sources from unavailable-source truth-state.
-- Can preserve historical review evidence and re-check cadence.
+- Preserves historical review evidence and re-check cadence.
 - Avoids overloading source records.
+- Keeps unavailable-source state in generated indexes, pack outputs, and vendor manifests.
+
+## Rejected storage location
+
+### `data/vendors/**/sources/*.yaml`
+
+Do not place no-replacement truth-state inside source records.
 
 Risks:
 
-- Requires new schema, validators, indexes, and site/release semantics.
-- Requires clear migration rules from `maintenance/reviewed/` evidence.
+- Blurs the line between a broken source and a reviewed unavailable source.
+- Encourages mutation from reviewer sheets.
+- Makes available-source coverage harder to distinguish from unavailable-source evidence.
 
-This is the preferred future direction if no-replacement decisions need durable catalog representation.
+## Reviewed evidence holding area
 
-### Option 4: Derived index
+`maintenance/reviewed/` remains the controlled reviewed-evidence handoff location.
 
-This would keep evidence under `maintenance/reviewed/` and build a derived unavailable-source index.
+Reviewed artifacts under `maintenance/reviewed/` are evidence. They are not durable catalog state until a later controlled application path creates or updates unavailable-source records and passes validation.
 
-Benefits:
+## Durable fields
 
-- Avoids mutating canonical source records.
-- Allows release/site consumers to read a normalized index.
-
-Risks:
-
-- Derived state may be mistaken for canonical truth if not clearly labeled.
-- Requires freshness and provenance metadata.
-
-## Required fields for any future durable schema
-
-A future no-replacement truth-state schema must preserve:
+Durable reviewed no-replacement state must preserve:
 
 - `vendor_id`
-- `source_id`
 - `source_type`
-- original `source_url`
 - `truth_state`
+- `truth_state_status`
 - `source_review_decision_id`
 - `reviewed_by`
 - `reviewed_at`
 - `reviewer_note`
-- validation report reference
-- original triage plan reference or run identifier
-- re-check cadence
+- `reviewed_artifact_path`
+- `validation_report_path`
+- `source_maintenance_run_id`
+- `original_source`
 - `next_review_after`
-- candidate URLs checked, if available
-- reason codes
-- generated-at timestamp
+- `candidate_urls_checked`, if available
+- `superseded_by_source_id`, when superseded
+- `superseded_at`, when superseded
+- `not_advice`
 
 ## Forbidden fields and behaviors
 
-A future no-replacement structure must not include:
+A durable no-replacement structure must not include:
 
 - self-certifying `eligible` fields,
 - automerge eligibility fields,
@@ -132,7 +102,8 @@ A no-replacement decision is time-bound. It should expire or require re-check.
 
 Default design posture:
 
-- `next_review_after` is required for durable no-replacement truth-state.
+- `next_review_after` is required.
+- `truth_state_status` distinguishes `current`, `stale`, `expired`, and `superseded` state.
 - Re-check cadence should be no longer than 90 days unless the source type has a documented exception.
 - Any new candidate source found by discovery invalidates the stale no-replacement assumption and requires review.
 - Release/site consumers must distinguish current reviewed no-replacement state from stale state.
@@ -144,7 +115,7 @@ If discovery later finds a valid replacement:
 1. The no-replacement evidence remains historical evidence.
 2. The replacement must go through normal validation and reviewed repair flow.
 3. The current no-replacement state must not block repair.
-4. Any durable unavailable-source state must be superseded, not silently overwritten.
+4. Durable unavailable-source state must be superseded, not silently overwritten.
 5. The catalog must retain provenance of the change.
 
 ## Site representation
@@ -162,7 +133,7 @@ The site must not state that the vendor lacks compliance, security, privacy, or 
 
 ## Release readiness consumption
 
-Release readiness may eventually consume reviewed no-replacement state, but only after schema approval.
+Release readiness may eventually consume reviewed no-replacement state, but only after policy approval.
 
 Allowed future consumption:
 
@@ -178,7 +149,7 @@ Forbidden future consumption:
 
 ## Validators required before application
 
-Before any no-replacement decision can be applied to durable catalog truth-state, validators must enforce:
+Before any no-replacement decision can be applied to durable catalog unavailable-source state, validators must enforce:
 
 1. Reviewed evidence is committed under `maintenance/reviewed/`.
 2. Validation has zero invalid rows.
@@ -193,13 +164,17 @@ Before any no-replacement decision can be applied to durable catalog truth-state
 
 ## Implementation status
 
-This package documents the design only.
+Implemented in the schema-hardening package:
 
-Do not implement:
+- additive unavailable-source schema fields for durable truth-state,
+- required reviewed evidence/provenance fields when `truth_state` is `reviewed_no_replacement_available`,
+- validator checks for reviewed evidence paths, human/hybrid review, original source context, and supersession references.
 
-- catalog source YAML mutation,
-- unavailable-source schema writes,
-- no-replacement application code,
+Not implemented yet:
+
+- application code that converts reviewed artifacts into unavailable-source records,
+- catalog mutation from reviewer sheets,
+- source YAML mutation,
 - site UI changes,
 - release-gate changes,
 - scheduled workflows.
