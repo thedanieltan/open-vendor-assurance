@@ -17,8 +17,147 @@
   ],
   "properties": {
     "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
-    "unavailable_source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
-    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "unavailable_source_id": { "$ref": "#/$defs/id" },
+    "vendor_id": { "$ref": "#/$defs/id" },
+    "source_type": { "$ref": "#/$defs/source_type" },
+    "status": { "enum": ["not_publicly_available", "not_identified", "intentionally_omitted", "gated_excluded"] },
+    "reason": {
+      "enum": [
+        "distinct_public_url_not_identified",
+        "only_gated_or_authenticated_material_found",
+        "only_parent_or_related_entity_source_identified",
+        "source_type_not_applicable_from_public_materials",
+        "public_source_temporarily_unavailable",
+        "other"
+      ]
+    },
+    "truth_state": {
+      "enum": [
+        "discovery_absence",
+        "reviewed_no_replacement_available",
+        "gated_or_excluded",
+        "not_applicable",
+        "temporarily_unavailable",
+        "superseded_by_replacement"
+      ],
+      "description": "Optional durable unavailable-source truth-state. Absence preserves legacy unavailable-source records."
+    },
+    "truth_state_status": {
+      "enum": ["current", "stale", "expired", "superseded"],
+      "description": "Freshness/lifecycle state for durable unavailable-source truth-state."
+    },
+    "source_review_decision_id": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+      "description": "Reviewed decision identifier that produced this durable unavailable-source state."
+    },
+    "reviewed_artifact_path": {
+      "type": ["string", "null"],
+      "pattern": "^maintenance/reviewed/[A-Za-z0-9._/-]+$",
+      "description": "Repository path to reviewed evidence committed under maintenance/reviewed/."
+    },
+    "validation_report_path": {
+      "type": ["string", "null"],
+      "pattern": "^maintenance/reviewed/[A-Za-z0-9._/-]+$",
+      "description": "Repository path to the validation report for the reviewed decision evidence."
+    },
+    "source_maintenance_run_id": {
+      "type": ["string", "null"],
+      "pattern": "^[A-Za-z0-9._:-]+$",
+      "description": "Identifier for the source maintenance run that produced the reviewed handoff context."
+    },
+    "original_source": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": ["source_id", "source_url", "source_type"],
+          "properties": {
+            "source_id": { "$ref": "#/$defs/id" },
+            "source_url": { "type": "string", "format": "uri" },
+            "source_type": { "$ref": "#/$defs/source_type" },
+            "title": { "type": ["string", "null"], "maxLength": 300 },
+            "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
+            "source_authority_class": {
+              "enum": [
+                "vendor_published",
+                "public_registry",
+                "public_authority",
+                "court_or_regulatory_filing",
+                "vendor_legal_terms"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        { "type": "null" }
+      ],
+      "description": "Immutable source context that was reviewed before no-replacement state was recorded."
+    },
+    "reviewer_note": { "type": ["string", "null"], "maxLength": 1000 },
+    "superseded_by_source_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "superseded_at": { "type": ["string", "null"], "format": "date-time" },
+    "reviewed_at": { "type": "string", "format": "date-time" },
+    "reviewed_by": { "enum": ["human", "agent", "hybrid"] },
+    "next_review_after": { "type": "string", "format": "date" },
+    "related_vendor_ids": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/id" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "candidate_urls_checked": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "notes": { "type": ["string", "null"], "maxLength": 1000 },
+    "not_advice": { "const": true }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "truth_state": { "const": "reviewed_no_replacement_available" } },
+        "required": ["truth_state"]
+      },
+      "then": {
+        "required": [
+          "truth_state_status",
+          "source_review_decision_id",
+          "reviewed_artifact_path",
+          "validation_report_path",
+          "source_maintenance_run_id",
+          "original_source",
+          "reviewer_note"
+        ],
+        "properties": {
+          "truth_state_status": { "enum": ["current", "stale", "expired", "superseded"] },
+          "source_review_decision_id": { "type": "string" },
+          "reviewed_artifact_path": { "type": "string" },
+          "validation_report_path": { "type": "string" },
+          "source_maintenance_run_id": { "type": "string" },
+          "original_source": { "type": "object" },
+          "reviewer_note": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "truth_state_status": { "const": "superseded" } },
+        "required": ["truth_state_status"]
+      },
+      "then": {
+        "required": ["superseded_by_source_id", "superseded_at"],
+        "properties": {
+          "superseded_by_source_id": { "type": "string" },
+          "superseded_at": { "type": "string" }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "source_type": {
       "enum": [
         "dpa",
@@ -36,35 +175,6 @@
         "transparency_report",
         "other_public_source"
       ]
-    },
-    "status": { "enum": ["not_publicly_available", "not_identified", "intentionally_omitted", "gated_excluded"] },
-    "reason": {
-      "enum": [
-        "distinct_public_url_not_identified",
-        "only_gated_or_authenticated_material_found",
-        "only_parent_or_related_entity_source_identified",
-        "source_type_not_applicable_from_public_materials",
-        "public_source_temporarily_unavailable",
-        "other"
-      ]
-    },
-    "reviewed_at": { "type": "string", "format": "date-time" },
-    "reviewed_by": { "enum": ["human", "agent", "hybrid"] },
-    "next_review_after": { "type": "string", "format": "date" },
-    "related_vendor_ids": {
-      "type": "array",
-      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
-      "uniqueItems": true,
-      "default": []
-    },
-    "candidate_urls_checked": {
-      "type": "array",
-      "items": { "type": "string", "format": "uri" },
-      "uniqueItems": true,
-      "default": []
-    },
-    "notes": { "type": ["string", "null"], "maxLength": 1000 },
-    "not_advice": { "const": true }
-  },
-  "additionalProperties": false
+    }
+  }
 }
