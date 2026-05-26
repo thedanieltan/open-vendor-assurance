@@ -6,12 +6,15 @@ from pathlib import Path
 from typing import Any
 
 from tools.openva.source_review_decisions import (
+    BINDING_COLUMNS,
     CSV_FIELDS,
     build_decision_sheet,
     build_sheet_markdown,
     build_validation_markdown,
+    export_reviewed_artifacts,
     main,
     review_item_id_for,
+    stable_json_sha256,
     validate_decision_sheet,
     write_sheet_csv,
 )
@@ -39,6 +42,7 @@ def triage_plan(items: list[dict[str, Any]]) -> dict[str, Any]:
         "schema_version": "0.1.0",
         "generated_at": "2026-05-26T00:00:00Z",
         "report_type": "source_review_triage_plan",
+        "source_maintenance_run_id": "source-maintenance-report-12345",
         "items": items,
         "summary": {"triage_rows": len(items)},
     }
@@ -128,6 +132,19 @@ def test_build_sheet_creates_expected_reviewer_columns():
         assert field in report["rows"][0]
 
 
+def test_build_sheet_embeds_run_binding_columns():
+    plan = triage_plan([triage_item()])
+    report = build_decision_sheet(plan, generated_at="2026-05-26T00:01:00Z")
+    row = report["rows"][0]
+
+    assert CSV_FIELDS[: len(BINDING_COLUMNS)] == BINDING_COLUMNS
+    assert row["source_maintenance_run_id"] == "source-maintenance-report-12345"
+    assert row["triage_plan_sha256"] == stable_json_sha256(plan)
+    assert row["decision_sheet_generated_at"] == "2026-05-26T00:01:00Z"
+    assert report["source_maintenance_run_id"] == "source-maintenance-report-12345"
+    assert report["triage_plan_sha256"] == stable_json_sha256(plan)
+
+
 def test_build_sheet_leaves_review_decision_blank():
     report = build_decision_sheet(triage_plan([triage_item()]))
 
@@ -156,6 +173,67 @@ def test_validate_sheet_accepts_valid_no_replacement_decision(tmp_path: Path):
     assert report["summary"]["invalid_rows_count"] == 0
     assert report["summary"]["no_replacement_decisions_count"] == 1
     assert report["no_replacement_decisions"][0]["requires_catalog_truth_state_followup"] is True
+
+
+def test_validate_sheet_rejects_wrong_triage_plan_sha256(tmp_path: Path):
+    plan = triage_plan([triage_item()])
+    row = completed_row(plan, "mark_no_replacement_available")
+    row["triage_plan_sha256"] = "0" * 64
+    path = tmp_path / "sheet.csv"
+    write_rows(path, [row])
+
+    report = validate(plan, path)
+
+    assert "triage_plan_sha256_changed" in reason_codes(report)
+
+
+def test_validate_sheet_rejects_wrong_source_maintenance_run_id(tmp_path: Path):
+    plan = triage_plan([triage_item()])
+    row = completed_row(plan, "mark_no_replacement_available")
+    row["source_maintenance_run_id"] = "source-maintenance-report-99999"
+    path = tmp_path / "sheet.csv"
+    write_rows(path, [row])
+
+    report = validate(plan, path)
+
+    assert "source_maintenance_run_id_changed" in reason_codes(report)
+
+
+def test_validate_sheet_rejects_missing_decision_sheet_generated_at(tmp_path: Path):
+    plan = triage_plan([triage_item()])
+    row = completed_row(plan, "mark_no_replacement_available")
+    row["decision_sheet_generated_at"] = ""
+    path = tmp_path / "sheet.csv"
+    write_rows(path, [row])
+
+    report = validate(plan, path)
+
+    assert "decision_sheet_generated_at_missing" in reason_codes(report)
+
+
+def test_validate_sheet_rejects_mixed_decision_sheet_generated_at(tmp_path: Path):
+    items = [
+        triage_item(vendor_id="vendor-a", source_id="vendor-a-security", source_url="https://vendor-a.example/security"),
+        triage_item(vendor_id="vendor-b", source_id="vendor-b-security", source_url="https://vendor-b.example/security"),
+    ]
+    plan = triage_plan(items)
+    rows = sheet_rows(plan)
+    for row in rows:
+        row.update(
+            {
+                "review_decision": "mark_no_replacement_available",
+                "reviewer_note": "Reviewed public source context.",
+                "reviewed_by": "reviewer@example.com",
+                "reviewed_at": "2026-05-26T00:00:00Z",
+            }
+        )
+    rows[1]["decision_sheet_generated_at"] = "2026-05-26T00:02:00Z"
+    path = tmp_path / "sheet.csv"
+    write_rows(path, rows)
+
+    report = validate(plan, path)
+
+    assert "mixed_decision_sheet_generated_at" in reason_codes(report)
 
 
 def test_validate_sheet_accepts_valid_defer_decision(tmp_path: Path):
@@ -362,6 +440,8 @@ def test_validate_sheet_emits_approved_repairs_only_for_fully_verified_replaceme
     assert report["summary"]["invalid_rows_count"] == 0
     assert report["summary"]["approved_repairs_count"] == 1
     assert report["approved_repairs"][0]["replacement_semantic_status"] == "strong"
+    assert report["approved_repairs"][0]["source_maintenance_run_id"] == "source-maintenance-report-12345"
+    assert report["approved_repairs"][0]["triage_plan_sha256"] == stable_json_sha256(plan)
 
 
 def test_validation_output_has_reviewer_input_trusted_false(tmp_path: Path):
@@ -372,6 +452,8 @@ def test_validation_output_has_reviewer_input_trusted_false(tmp_path: Path):
     report = validate(plan, path)
 
     assert report["posture"]["reviewer_input_trusted"] is False
+    assert report["source_maintenance_run_id"] == "source-maintenance-report-12345"
+    assert report["triage_plan_sha256"] == stable_json_sha256(plan)
 
 
 def test_validation_output_never_contains_self_certifying_fields(tmp_path: Path):
@@ -382,6 +464,23 @@ def test_validation_output_never_contains_self_certifying_fields(tmp_path: Path)
     report = validate(plan, path)
 
     assert not {"eligible", "eligible_for_automerge", "tool_recommendation"} & recursive_keys(report)
+
+
+def test_export_reviewed_artifacts_preserves_run_binding(tmp_path: Path):
+    plan = triage_plan([triage_item()])
+    path = tmp_path / "sheet.csv"
+    output_dir = tmp_path / "reviewed"
+    write_rows(path, [completed_row(plan, "mark_no_replacement_available")])
+    report = validate(plan, path)
+
+    written = export_reviewed_artifacts(report, output_dir)
+
+    assert len(written) == 1
+    exported = json.loads(written[0].read_text(encoding="utf-8"))
+    assert exported["source_maintenance_run_id"] == "source-maintenance-report-12345"
+    assert exported["triage_plan_sha256"] == stable_json_sha256(plan)
+    assert exported["no_replacement_decisions"][0]["source_maintenance_run_id"] == "source-maintenance-report-12345"
+    assert exported["no_replacement_decisions"][0]["triage_plan_sha256"] == stable_json_sha256(plan)
 
 
 def test_markdown_summaries_include_invalid_row_counts_and_next_actions(tmp_path: Path):
@@ -395,8 +494,10 @@ def test_markdown_summaries_include_invalid_row_counts_and_next_actions(tmp_path
     validation_markdown = build_validation_markdown(validation)
 
     assert "Reviewer decisions are not trusted until independently validated." in sheet_markdown
+    assert "Triage plan SHA-256" in sheet_markdown
     assert "Invalid rows: `1`" in validation_markdown
     assert "Fix invalid rows and re-run validation" in validation_markdown
+    assert "must be bound to the supplied triage plan SHA-256" in validation_markdown
 
 
 def test_deterministic_stable_ordering(tmp_path: Path):
@@ -405,12 +506,22 @@ def test_deterministic_stable_ordering(tmp_path: Path):
         triage_item(vendor_id="vendor-a", source_id="vendor-a-security", source_url="https://vendor-a.example/security"),
     ]
     plan = triage_plan(items)
-    rows = [
-        completed_row(triage_plan([items[1]]), "mark_no_replacement_available"),
-        completed_row(triage_plan([items[0]]), "mark_no_replacement_available"),
-    ]
+    rows = sheet_rows(plan)
+    rows_by_id = {row["review_item_id"]: row for row in rows}
+    completed_rows = []
+    for item in [items[1], items[0]]:
+        row = dict(rows_by_id[review_item_id_for(item)])
+        row.update(
+            {
+                "review_decision": "mark_no_replacement_available",
+                "reviewer_note": "Reviewed public source context.",
+                "reviewed_by": "reviewer@example.com",
+                "reviewed_at": "2026-05-26T00:00:00Z",
+            }
+        )
+        completed_rows.append(row)
     path = tmp_path / "sheet.csv"
-    write_rows(path, rows)
+    write_rows(path, completed_rows)
 
     report = validate(plan, path)
 
@@ -463,4 +574,7 @@ def test_cli_build_and_validate_write_outputs(tmp_path: Path):
             str(validation_md),
         ]
     ) == 0
-    assert json.loads(validation_json.read_text(encoding="utf-8"))["summary"]["invalid_rows_count"] == 0
+    validation = json.loads(validation_json.read_text(encoding="utf-8"))
+    assert validation["summary"]["invalid_rows_count"] == 0
+    assert validation["source_maintenance_run_id"] == "source-maintenance-report-12345"
+    assert validation["triage_plan_sha256"] == stable_json_sha256(plan)
