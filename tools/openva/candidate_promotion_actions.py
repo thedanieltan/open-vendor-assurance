@@ -19,6 +19,14 @@ CONFIDENCE_MAP = {
     "possible": "medium",
     "candidate": "low",
 }
+SOURCE_TITLE_MAP = {
+    "dpa": "Data Processing Addendum",
+    "subprocessors_list": "Subprocessors List",
+    "privacy_notice": "Privacy Notice",
+    "security_page": "Security Page",
+    "compliance_page": "Compliance Page",
+    "other_public_source": "Public Source",
+}
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -48,6 +56,10 @@ def artifact_type(source_type: str) -> str:
     if source_type == "other_public_source":
         return "other_public_artifact"
     return source_type
+
+
+def source_title(source_type: str) -> str:
+    return SOURCE_TITLE_MAP.get(source_type, source_type.replace("_", " ").title())
 
 
 def candidate_path(action: dict[str, Any], root: Path) -> Path:
@@ -120,7 +132,6 @@ def validate_candidate(candidate: dict[str, Any], action: dict[str, Any]) -> Non
 def source_from_candidate(candidate: dict[str, Any]) -> dict[str, Any]:
     vendor_id = str(candidate["vendor_id"])
     source_type = str(candidate["source_type_candidate"])
-    evidence = candidate.get("evidence", {}) or {}
     confidence = CONFIDENCE_MAP.get(str(candidate.get("confidence", "candidate")), "low")
     return {
         "schema_version": "0.1.0",
@@ -128,7 +139,7 @@ def source_from_candidate(candidate: dict[str, Any]) -> dict[str, Any]:
         "vendor_id": vendor_id,
         "source_type": source_type,
         "source_authority_class": "vendor_published",
-        "title_native": str(evidence.get("page_title") or source_type.replace("_", " ").title()),
+        "title_native": source_title(source_type),
         "source_url": str(candidate["candidate_url"]),
         "source_language": "en",
         "access_class": "public_web",
