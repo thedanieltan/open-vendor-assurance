@@ -1,6 +1,6 @@
 # Source Operations Scheduler Spec
 
-This document defines the future source operations scheduler architecture. It is a spec only. It does not create a workflow, change a schedule, mutate catalog records, or alter source-health gates.
+This document defines the future source operations scheduler architecture. It is a spec only. It does not create a workflow, change a schedule, does not mutate catalog records, or alter source-health gates.
 
 ## Purpose
 
