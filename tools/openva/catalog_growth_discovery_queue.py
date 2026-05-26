@@ -120,6 +120,10 @@ def validate_queue(path: Path = QUEUE_PATH, root: Path = ROOT) -> dict[str, Any]
         "cohort_count": len(cohorts),
         "queued_cohort_count": sum(1 for cohort in cohorts if cohort.get("status") == "queued"),
         "target_vendor_candidates": sum(int(cohort["target_vendor_candidates"]) for cohort in cohorts),
+        "max_vendors_per_discovery_run": limits["max_vendors_per_discovery_run"],
+        "max_candidate_sources_per_report": limits["max_candidate_sources_per_report"],
+        "max_reviewed_actions_per_plan": limits["max_reviewed_actions_per_plan"],
+        "source_types": source_types,
         "coverage_lane_counts": dict(sorted(lane_counts.items())),
     }
 

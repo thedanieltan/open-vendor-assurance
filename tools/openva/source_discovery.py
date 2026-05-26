@@ -91,6 +91,25 @@ def load_json(path: Path) -> dict[str, Any]:
     return data
 
 
+def parse_source_types(value: str | None) -> tuple[str, ...]:
+    if value is None or not value.strip():
+        return DEFAULT_SOURCE_TYPES
+    source_types = tuple(item.strip() for item in value.split(",") if item.strip())
+    if not source_types:
+        raise ValueError("source types must not be empty")
+    unknown = sorted(set(source_types) - set(DEFAULT_SOURCE_TYPES))
+    if unknown:
+        raise ValueError(f"unsupported source types: {', '.join(unknown)}")
+    return source_types
+
+
+def fetcher_with_timeout(timeout: float) -> Callable[[str], FetchResult]:
+    def fetch(url: str) -> FetchResult:
+        return fetch_url(url, timeout=timeout)
+
+    return fetch
+
+
 def write_yaml(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
@@ -297,6 +316,8 @@ def build_discovery_report(
     fetcher: Callable[[str], FetchResult] = fetch_url,
     vendor_limit: int | None = None,
     write: bool = False,
+    source_types: tuple[str, ...] = DEFAULT_SOURCE_TYPES,
+    max_urls_per_type: int = 20,
 ) -> dict[str, Any]:
     paths = vendor_paths(root)
     if vendor_limit is not None:
@@ -305,7 +326,13 @@ def build_discovery_report(
     vendor_results: list[dict[str, Any]] = []
     for path in paths:
         vendor = load_yaml(path)
-        result = discover_for_vendor(vendor, root=root, fetcher=fetcher)
+        result = discover_for_vendor(
+            vendor,
+            root=root,
+            fetcher=fetcher,
+            source_types=source_types,
+            max_urls_per_type=max_urls_per_type,
+        )
         if write:
             write_discovery_outputs(result, root=root)
         vendor_results.append(result)
@@ -394,11 +421,16 @@ def main() -> int:
     discover = subparsers.add_parser("discover")
     discover.add_argument("--vendor-limit", type=int)
     discover.add_argument("--write", action="store_true")
+    discover.add_argument("--source-types", help="Comma-separated source types to discover")
+    discover.add_argument("--max-urls-per-type", type=int, default=20)
+    discover.add_argument("--fetch-timeout", type=float, default=10.0)
     discover.add_argument("--output", type=Path, default=ROOT / "source-discovery-report.json")
     candidate_discover = subparsers.add_parser("discover-vendor-candidates")
     candidate_discover.add_argument("--vendor-candidates", type=Path, required=True)
     candidate_discover.add_argument("--vendor-limit", type=int)
+    candidate_discover.add_argument("--source-types", help="Comma-separated source types to discover")
     candidate_discover.add_argument("--max-urls-per-type", type=int, default=20)
+    candidate_discover.add_argument("--fetch-timeout", type=float, default=10.0)
     candidate_discover.add_argument("--output", type=Path, default=ROOT / "vendor-candidate-source-discovery-report.json")
     args = parser.parse_args()
 
@@ -406,10 +438,18 @@ def main() -> int:
         report = build_vendor_candidate_discovery_report(
             load_json(args.vendor_candidates),
             vendor_limit=args.vendor_limit,
+            fetcher=fetcher_with_timeout(args.fetch_timeout),
+            source_types=parse_source_types(args.source_types),
             max_urls_per_type=args.max_urls_per_type,
         )
     else:
-        report = build_discovery_report(vendor_limit=args.vendor_limit, write=args.write)
+        report = build_discovery_report(
+            vendor_limit=args.vendor_limit,
+            write=args.write,
+            fetcher=fetcher_with_timeout(args.fetch_timeout),
+            source_types=parse_source_types(args.source_types),
+            max_urls_per_type=args.max_urls_per_type,
+        )
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
     return 0
