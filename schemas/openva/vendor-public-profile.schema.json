@@ -25,6 +25,24 @@
       "uniqueItems": true,
       "default": []
     },
+    "identity_status": {
+      "enum": [
+        "brand_only",
+        "entity_unresolved",
+        "entity_verified",
+        "contracting_entity_verified"
+      ],
+      "description": "Public evidence maturity for vendor identity. This is factual catalog posture, not an assurance conclusion."
+    },
+    "assurance_profile_status": {
+      "enum": [
+        "brand_source_stub",
+        "partial_public_evidence",
+        "entity_verified_public_evidence",
+        "contracting_source_verified_public_evidence"
+      ],
+      "description": "Completeness level of the public evidence bundle available for downstream assessment."
+    },
     "entity_family": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "entity_surface": { "type": ["string", "null"], "pattern": "^[a-z][a-z0-9_]{1,39}$" },
     "related_vendor_ids": {
