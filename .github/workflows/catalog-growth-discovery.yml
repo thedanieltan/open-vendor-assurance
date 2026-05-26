@@ -7,6 +7,16 @@ on:
         description: "Optional number of vendors/candidates to discover against"
         required: false
         type: string
+      max_urls_per_type:
+        description: "Maximum candidate URLs to probe per source type"
+        required: false
+        type: string
+        default: "4"
+      fetch_timeout:
+        description: "Per-URL source discovery timeout in seconds"
+        required: false
+        type: string
+        default: "3"
       max_actions_per_plan:
         description: "Maximum candidate promotion actions per generated plan proposal"
         required: false
@@ -28,6 +38,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VENDOR_LIMIT: "${{ inputs.vendor_limit || '' }}"
+      MAX_URLS_PER_TYPE: "${{ inputs.max_urls_per_type || '4' }}"
+      FETCH_TIMEOUT: "${{ inputs.fetch_timeout || '3' }}"
       MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '50' }}"
     steps:
       - uses: actions/checkout@v5
@@ -42,6 +54,17 @@ jobs:
         run: |
           python -m tools.openva.catalog_growth_discovery_queue validate \
             --output catalog-growth-discovery-queue-summary.json
+      - name: Configure bounded source discovery
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_ENV"
+          import json
+
+          queue = json.load(open('catalog-growth-discovery-queue-summary.json', encoding='utf-8'))
+          source_types = ','.join(queue.get('source_types', []))
+          print(f"QUEUE_VENDOR_LIMIT={queue['max_vendors_per_discovery_run']}")
+          print(f"QUEUE_SOURCE_TYPES={source_types}")
+          PY
       - name: Build vendor candidate discovery report
         run: |
           python -m tools.openva.vendor_candidate_discovery discover \
@@ -50,25 +73,29 @@ jobs:
         run: |
           set -euo pipefail
           LIMIT="$(printf '%s' "$VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          if [ -n "$LIMIT" ]; then
-            python -m tools.openva.source_discovery discover-vendor-candidates \
-              --vendor-candidates vendor-candidate-discovery-report.json \
-              --vendor-limit "$LIMIT" \
-              --output vendor-candidate-source-discovery-report.json
-          else
-            python -m tools.openva.source_discovery discover-vendor-candidates \
-              --vendor-candidates vendor-candidate-discovery-report.json \
-              --output vendor-candidate-source-discovery-report.json
+          if [ -z "$LIMIT" ]; then
+            LIMIT="$QUEUE_VENDOR_LIMIT"
           fi
+          python -m tools.openva.source_discovery discover-vendor-candidates \
+            --vendor-candidates vendor-candidate-discovery-report.json \
+            --vendor-limit "$LIMIT" \
+            --source-types "$QUEUE_SOURCE_TYPES" \
+            --max-urls-per-type "$MAX_URLS_PER_TYPE" \
+            --fetch-timeout "$FETCH_TIMEOUT" \
+            --output vendor-candidate-source-discovery-report.json
       - name: Build existing vendor source discovery report
         run: |
           set -euo pipefail
           LIMIT="$(printf '%s' "$VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          if [ -n "$LIMIT" ]; then
-            python -m tools.openva.source_discovery discover --vendor-limit "$LIMIT" --output source-discovery-report.json
-          else
-            python -m tools.openva.source_discovery discover --output source-discovery-report.json
+          if [ -z "$LIMIT" ]; then
+            LIMIT="$QUEUE_VENDOR_LIMIT"
           fi
+          python -m tools.openva.source_discovery discover \
+            --vendor-limit "$LIMIT" \
+            --source-types "$QUEUE_SOURCE_TYPES" \
+            --max-urls-per-type "$MAX_URLS_PER_TYPE" \
+            --fetch-timeout "$FETCH_TIMEOUT" \
+            --output source-discovery-report.json
       - name: Build promotion plan from existing vendor discovery report
         run: |
           python -m tools.openva.promotion_planner plan \
