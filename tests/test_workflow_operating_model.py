@@ -126,6 +126,16 @@ def test_workflow_consolidation_audit_classifies_every_public_workflow():
     assert "Future Action E: catalog growth gating dashboard" in text
 
 
+def test_workflow_operating_model_uses_exact_retire_candidate_metadata():
+    text = OPERATING_MODEL.read_text(encoding="utf-8")
+
+    assert "Varies by workflow" not in text
+    assert "varies by workflow" not in text
+    assert "| `catalog-maintenance.yml` | Legacy catalog maintenance report for validation, index rebuild, drift check, tests, and entity stub reporting. | `workflow_dispatch`, scheduled weekly (`17 2 * * 1`) | `contents: read`, `actions: read` | No | No | No | `catalog-maintenance-report` | Operators | Consolidation candidate |" in text
+    assert "| `source-refinement-queue.yml` | Legacy source refinement queue generated from an observation report path. | `workflow_dispatch` only | `contents: read` | No | No | No | `openva-source-refinement-queue` | Operators | Consolidation candidate |" in text
+    assert "| `observe-report.yml` | Observation report path for full public-source observation dry-run output and review queue export. | `workflow_dispatch`, scheduled weekly (`0 2 * * 1`) | `contents: read` | No | No | No | `openva-observation-report` | Operators | Consolidation candidate |" in text
+
+
 def test_source_maintenance_report_uploads_reviewer_only_inbox_artifact():
     artifacts = artifact_upload_steps("source-maintenance-report.yml")
 

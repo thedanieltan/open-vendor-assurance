@@ -156,9 +156,9 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 | `catalog-agent-pr.yml` | Manual support path for agent-authored catalog PRs. | `workflow_dispatch` | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | PR branch and PR body | PR safety loop | Support |
 | `catalog-maintenance-pr.yml` | Support path for scheduled/manual catalog maintenance PRs. | `workflow_dispatch`, scheduled | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Maintenance PR artifacts | PR safety loop | Support |
 | `contribution-intake-agent.yml` | Convert issue-based contribution intake into controlled PRs. | `issues`, `workflow_dispatch` | `contents: write`, `pull-requests: write`, `issues: write` | Yes, in PR branch | Yes | No | Intake PR artifacts | PR safety loop | Support |
-| `catalog-maintenance.yml` | Legacy/catalog maintenance reporting path overlapping validation and coverage audit. | `workflow_dispatch`, scheduled | Varies by workflow | No intended catalog truth writes | No | No | Validation/index/entity reports | Operators | Consolidation candidate |
-| `source-refinement-queue.yml` | Legacy source refinement queue from older observation paths. | `workflow_dispatch`, scheduled | Varies by workflow | No | No | No | Source refinement queue artifacts | Operators | Consolidation candidate |
-| `observe-report.yml` | Observation report path; keep only for non-source observations still needed. | `workflow_dispatch`, scheduled | `contents: read` | No | No | No | Observation report and queue | Operators | Consolidation candidate |
+| `catalog-maintenance.yml` | Legacy catalog maintenance report for validation, index rebuild, drift check, tests, and entity stub reporting. | `workflow_dispatch`, scheduled weekly (`17 2 * * 1`) | `contents: read`, `actions: read` | No | No | No | `catalog-maintenance-report` | Operators | Consolidation candidate |
+| `source-refinement-queue.yml` | Legacy source refinement queue generated from an observation report path. | `workflow_dispatch` only | `contents: read` | No | No | No | `openva-source-refinement-queue` | Operators | Consolidation candidate |
+| `observe-report.yml` | Observation report path for full public-source observation dry-run output and review queue export. | `workflow_dispatch`, scheduled weekly (`0 2 * * 1`) | `contents: read` | No | No | No | `openva-observation-report` | Operators | Consolidation candidate |
 
 ## Reviewer versus operator artifacts
 
