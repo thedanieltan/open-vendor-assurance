@@ -84,6 +84,13 @@ def load_yaml(path: Path) -> dict[str, Any]:
     return data
 
 
+def load_json(path: Path) -> dict[str, Any]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"{path}: expected JSON object")
+    return data
+
+
 def write_yaml(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
@@ -273,6 +280,18 @@ def write_discovery_outputs(discovery: dict[str, Any], root: Path = ROOT) -> Non
         write_yaml(base / "unavailable_sources" / f"{unavailable['unavailable_source_id']}.yaml", unavailable)
 
 
+def candidate_to_vendor(candidate: dict[str, Any]) -> dict[str, Any]:
+    vendor_id = str(candidate.get("candidate_vendor_id") or "")
+    domain = str(candidate.get("official_domain_candidate") or "").strip().lower().removeprefix("www.")
+    entrypoint = str(candidate.get("source_index_url") or f"https://{domain}")
+    return {
+        "vendor_id": vendor_id,
+        "display_name": candidate.get("display_name_candidate"),
+        "official_domains": [domain] if domain else [],
+        "public_entrypoints": [entrypoint] if entrypoint else [],
+    }
+
+
 def build_discovery_report(
     root: Path = ROOT,
     fetcher: Callable[[str], FetchResult] = fetch_url,
@@ -312,15 +331,85 @@ def build_discovery_report(
     }
 
 
+def build_vendor_candidate_discovery_report(
+    vendor_candidate_report: dict[str, Any],
+    root: Path = ROOT,
+    fetcher: Callable[[str], FetchResult] = fetch_url,
+    vendor_limit: int | None = None,
+    source_types: tuple[str, ...] = DEFAULT_SOURCE_TYPES,
+    max_urls_per_type: int = 20,
+) -> dict[str, Any]:
+    if vendor_candidate_report.get("report_type") != "vendor_candidate_discovery_report":
+        raise ValueError("expected vendor_candidate_discovery_report")
+    candidates = [item for item in vendor_candidate_report.get("vendor_candidates", []) or [] if isinstance(item, dict)]
+    if vendor_limit is not None:
+        candidates = candidates[:vendor_limit]
+    vendor_results: list[dict[str, Any]] = []
+    for candidate in candidates:
+        if not candidate.get("candidate_vendor_id") or not candidate.get("official_domain_candidate"):
+            continue
+        result = discover_for_vendor(
+            candidate_to_vendor(candidate),
+            root=root,
+            fetcher=fetcher,
+            source_types=source_types,
+            max_urls_per_type=max_urls_per_type,
+        )
+        result.update(
+            {
+                "candidate_vendor_id": candidate.get("candidate_vendor_id"),
+                "display_name_candidate": candidate.get("display_name_candidate"),
+                "official_domain_candidate": candidate.get("official_domain_candidate"),
+                "coverage_lane": candidate.get("coverage_lane"),
+                "cohort_id": candidate.get("cohort_id"),
+            }
+        )
+        vendor_results.append(result)
+    return {
+        "schema_version": "0.1.0",
+        "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "report_type": "source_discovery_report",
+        "discovery_context": "vendor_candidate_source_discovery",
+        "posture": {
+            "network_fetch_performed": True,
+            "writes_repository_state": False,
+            "writes_canonical_sources": False,
+            "opens_pull_requests": False,
+            "public_sources_only": True,
+            "non_advisory": True,
+        },
+        "summary": {
+            "vendors_checked": len(vendor_results),
+            "vendor_candidates_checked": len(vendor_results),
+            "candidate_sources_written_or_reported": sum(len(item["candidates"]) for item in vendor_results),
+            "unavailable_sources_written_or_reported": sum(len(item["unavailable_sources"]) for item in vendor_results),
+        },
+        "vendors": vendor_results,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="openva-source-discovery")
-    parser.add_argument("command", choices={"discover"})
-    parser.add_argument("--vendor-limit", type=int)
-    parser.add_argument("--write", action="store_true")
-    parser.add_argument("--output", type=Path, default=ROOT / "source-discovery-report.json")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    discover = subparsers.add_parser("discover")
+    discover.add_argument("--vendor-limit", type=int)
+    discover.add_argument("--write", action="store_true")
+    discover.add_argument("--output", type=Path, default=ROOT / "source-discovery-report.json")
+    candidate_discover = subparsers.add_parser("discover-vendor-candidates")
+    candidate_discover.add_argument("--vendor-candidates", type=Path, required=True)
+    candidate_discover.add_argument("--vendor-limit", type=int)
+    candidate_discover.add_argument("--max-urls-per-type", type=int, default=20)
+    candidate_discover.add_argument("--output", type=Path, default=ROOT / "vendor-candidate-source-discovery-report.json")
     args = parser.parse_args()
 
-    report = build_discovery_report(vendor_limit=args.vendor_limit, write=args.write)
+    if args.command == "discover-vendor-candidates":
+        report = build_vendor_candidate_discovery_report(
+            load_json(args.vendor_candidates),
+            vendor_limit=args.vendor_limit,
+            max_urls_per_type=args.max_urls_per_type,
+        )
+    else:
+        report = build_discovery_report(vendor_limit=args.vendor_limit, write=args.write)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
     return 0
