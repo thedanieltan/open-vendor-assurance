@@ -16,6 +16,26 @@ Reviewers do **not** need to understand GitHub Actions, JSON artifacts, or catal
 
 OpenVA is designed so a maintainer-agent can handle routine validation and PR preparation. A human maintainer is needed only for exceptions, policy changes, ambiguous cases, or repository administration.
 
+## Catalog operation model
+
+OpenVA follows a curated catalog pattern:
+
+```text
+staging input
+→ validation
+→ reviewed evidence
+→ controlled promotion
+→ curated catalog
+```
+
+The reviewer spreadsheet is staging input. It is useful, but it is not catalog truth.
+
+Validated JSON under `maintenance/reviewed/` is reviewed evidence. It records what was checked and why a later action is allowed or blocked.
+
+Catalog files under `data/vendors/**` are curated catalog records. They change only through controlled PRs, validators, and CI.
+
+This mirrors common catalog/database practices: keep source input separate from curated records, preserve lineage and provenance, validate before promotion, and keep an audit trail for downstream users.
+
 ## For reviewers
 
 You will receive one file:
@@ -70,6 +90,8 @@ receive completed CSV
 The CSV itself is not committed to the repo. The repo stores validated review evidence, not the raw spreadsheet.
 
 A maintainer-agent may prepare and open PRs, but it should not bypass validation, branch protection, CI, or path-scope rules.
+
+A maintainer-agent verifies supplied replacement URLs; it does not invent replacement URLs during review validation. If discovery did not find a candidate and the reviewer did not supply a replacement, the maintainer-agent records a reviewed no-replacement or deferred decision instead of guessing.
 
 ## Human intervention policy
 
