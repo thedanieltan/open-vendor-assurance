@@ -10,7 +10,7 @@ import yaml
 
 from tools.openva.catalog_lifecycle import change_event
 from tools.openva.indexes import build_indexes
-from tools.openva.promotion_planner import REVIEWED_CANDIDATE_PROMOTION_ACTION
+from tools.openva.promotion_planner import REVIEWED_CANDIDATE_PROMOTION_ACTION, STRICT_GROWTH_PROMOTION_ACTION
 from tools.openva.source_verification import ROOT, display_path
 
 HASH_TBD = "sha256:TBD"
@@ -70,6 +70,32 @@ def validate_action(action: dict[str, Any]) -> None:
             raise ValueError(f"candidate promotion action missing {field}")
 
 
+def validate_strict_growth_action(action: dict[str, Any]) -> None:
+    if action.get("action") != STRICT_GROWTH_PROMOTION_ACTION:
+        raise ValueError("unsupported strict growth action")
+    if action.get("requires_human_review") is not False:
+        raise ValueError("strict growth action must be machine-strict, not human-review gated")
+    if action.get("writes_canonical_vendors") is not False or action.get("writes_canonical_sources") is not False:
+        raise ValueError("strict growth plan must be non-mutating until apply")
+    if action.get("strict_machine_candidate") is not True or action.get("non_advisory") is not True:
+        raise ValueError("strict growth action must be strict machine non-advisory")
+    vendor = action.get("vendor", {}) or {}
+    source = action.get("source", {}) or {}
+    for field in ["candidate_vendor_id", "display_name_candidate", "official_domain_candidate", "headquarters_country_candidate"]:
+        if not vendor.get(field):
+            raise ValueError(f"strict growth vendor missing {field}")
+    for field in ["source_type_candidate", "candidate_url", "evidence"]:
+        if not source.get(field):
+            raise ValueError(f"strict growth source missing {field}")
+    evidence = source.get("evidence", {}) or {}
+    if evidence.get("http_status") != 200:
+        raise ValueError("strict growth source requires HTTP 200 evidence")
+    if not evidence.get("matched_terms"):
+        raise ValueError("strict growth source requires matched terms")
+    if not evidence.get("final_url"):
+        raise ValueError("strict growth source requires final URL evidence")
+
+
 def validate_candidate(candidate: dict[str, Any], action: dict[str, Any]) -> None:
     expected = {
         "vendor_id": action["vendor_id"],
@@ -117,6 +143,44 @@ def source_from_candidate(candidate: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def vendor_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
+    vendor = action["vendor"]
+    domain = str(vendor["official_domain_candidate"]).lower().removeprefix("www.")
+    return {
+        "schema_version": "0.1.0",
+        "vendor_id": str(vendor["candidate_vendor_id"]),
+        "display_name": str(vendor["display_name_candidate"]),
+        "legal_name": None,
+        "headquarters_country": str(vendor["headquarters_country_candidate"]),
+        "regions_served": ["global"],
+        "official_domains": [domain],
+        "public_entrypoints": [f"https://{domain}"],
+        "vendor_categories": vendor.get("vendor_category_candidates") or [],
+        "source_policy": {
+            "public_sources_only": True,
+            "gated_materials_excluded": True,
+            "raw_documents_mirrored_by_default": False,
+        },
+        "catalog_status": "active",
+        "notes": "Machine-strict catalog growth candidate promoted from public source discovery evidence. Metadata-only; not advisory.",
+        "entity_surface": "global_brand",
+        "source_authority_language": "en",
+    }
+
+
+def source_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
+    vendor = action["vendor"]
+    source = action["source"]
+    candidate = {
+        "vendor_id": vendor["candidate_vendor_id"],
+        "source_type_candidate": source["source_type_candidate"],
+        "candidate_url": source["candidate_url"],
+        "confidence": source.get("confidence", "likely"),
+        "evidence": source.get("evidence", {}),
+    }
+    return source_from_candidate(candidate)
+
+
 def artifact_from_source(source: dict[str, Any]) -> dict[str, Any]:
     return {
         "schema_version": "0.1.0",
@@ -146,49 +210,90 @@ def artifact_from_source(source: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def apply_reviewed_candidate(action: dict[str, Any], root: Path) -> list[dict[str, str]]:
+    validate_action(action)
+    c_path = candidate_path(action, root)
+    candidate = load_yaml(c_path)
+    validate_candidate(candidate, action)
+    record = source_from_candidate(candidate)
+    s_path = root / "data" / "vendors" / record["vendor_id"] / "sources" / f"{record['source_id']}.yaml"
+    a_path = root / "data" / "vendors" / record["vendor_id"] / "artifacts" / f"{record['source_id']}.yaml"
+    c_path_out = root / "data" / "vendors" / record["vendor_id"] / "changes" / f"candidate-promotion-{record['source_id']}.yaml"
+    if s_path.exists():
+        raise ValueError("canonical source already exists")
+    if a_path.exists():
+        raise ValueError("canonical artifact already exists")
+    write_yaml(s_path, record)
+    artifact = artifact_from_source(record)
+    write_yaml(a_path, artifact)
+    write_yaml(
+        c_path_out,
+        change_event(
+            change_id=f"candidate-promotion-{record['source_id']}",
+            vendor_id=str(record["vendor_id"]),
+            source_id=str(record["source_id"]),
+            artifact_id=str(artifact["artifact_id"]),
+            change_type="created",
+            detected_at=str(record["provenance"]["collected_at"]),
+            summary="Reviewed candidate source promoted to canonical public source metadata.",
+        ),
+    )
+    return [
+        {"action": "write", "path": display_path(s_path, root), "candidate_path": display_path(c_path, root)},
+        {"action": "write", "path": display_path(a_path, root), "candidate_path": display_path(c_path, root)},
+        {"action": "write", "path": display_path(c_path_out, root), "candidate_path": display_path(c_path, root)},
+    ]
+
+
+def apply_strict_growth(action: dict[str, Any], root: Path) -> list[dict[str, str]]:
+    validate_strict_growth_action(action)
+    vendor = vendor_from_strict_growth(action)
+    source = source_from_strict_growth(action)
+    artifact = artifact_from_source(source)
+    base = root / "data" / "vendors" / vendor["vendor_id"]
+    v_path = base / "vendor.yaml"
+    s_path = base / "sources" / f"{source['source_id']}.yaml"
+    a_path = base / "artifacts" / f"{artifact['artifact_id']}.yaml"
+    c_path = base / "changes" / f"strict-growth-{source['source_id']}.yaml"
+    for path in (v_path, s_path, a_path, c_path):
+        if path.exists():
+            raise ValueError(f"strict growth target already exists: {display_path(path, root)}")
+    write_yaml(v_path, vendor)
+    write_yaml(s_path, source)
+    write_yaml(a_path, artifact)
+    write_yaml(
+        c_path,
+        change_event(
+            change_id=f"strict-growth-{source['source_id']}",
+            vendor_id=str(source["vendor_id"]),
+            source_id=str(source["source_id"]),
+            artifact_id=str(artifact["artifact_id"]),
+            change_type="created",
+            detected_at=str(source["provenance"]["collected_at"]),
+            summary="Strict catalog growth candidate promoted to canonical public source metadata.",
+        ),
+    )
+    return [
+        {"action": "write", "path": display_path(v_path, root), "candidate_path": "strict_growth_plan"},
+        {"action": "write", "path": display_path(s_path, root), "candidate_path": "strict_growth_plan"},
+        {"action": "write", "path": display_path(a_path, root), "candidate_path": "strict_growth_plan"},
+        {"action": "write", "path": display_path(c_path, root), "candidate_path": "strict_growth_plan"},
+    ]
+
+
 def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
     actions = [
         action for action in promotion_plan.get("actions", []) or []
-        if action.get("action") == REVIEWED_CANDIDATE_PROMOTION_ACTION
+        if action.get("action") in {REVIEWED_CANDIDATE_PROMOTION_ACTION, STRICT_GROWTH_PROMOTION_ACTION}
     ]
     applied: list[dict[str, str]] = []
     skipped: list[dict[str, Any]] = []
     for action in actions:
         try:
-            validate_action(action)
-            c_path = candidate_path(action, root)
-            candidate = load_yaml(c_path)
-            validate_candidate(candidate, action)
-            record = source_from_candidate(candidate)
-            s_path = root / "data" / "vendors" / record["vendor_id"] / "sources" / f"{record['source_id']}.yaml"
-            a_path = root / "data" / "vendors" / record["vendor_id"] / "artifacts" / f"{record['source_id']}.yaml"
-            c_path_out = root / "data" / "vendors" / record["vendor_id"] / "changes" / f"candidate-promotion-{record['source_id']}.yaml"
-            if s_path.exists():
-                raise ValueError("canonical source already exists")
-            if a_path.exists():
-                raise ValueError("canonical artifact already exists")
-            write_yaml(s_path, record)
-            artifact = artifact_from_source(record)
-            write_yaml(a_path, artifact)
-            write_yaml(
-                c_path_out,
-                change_event(
-                    change_id=f"candidate-promotion-{record['source_id']}",
-                    vendor_id=str(record["vendor_id"]),
-                    source_id=str(record["source_id"]),
-                    artifact_id=str(artifact["artifact_id"]),
-                    change_type="created",
-                    detected_at=str(record["provenance"]["collected_at"]),
-                    summary="Reviewed candidate source promoted to canonical public source metadata.",
-                ),
-            )
-            applied.extend(
-                [
-                    {"action": "write", "path": display_path(s_path, root), "candidate_path": display_path(c_path, root)},
-                    {"action": "write", "path": display_path(a_path, root), "candidate_path": display_path(c_path, root)},
-                    {"action": "write", "path": display_path(c_path_out, root), "candidate_path": display_path(c_path, root)},
-                ]
-            )
+            if action.get("action") == STRICT_GROWTH_PROMOTION_ACTION:
+                applied.extend(apply_strict_growth(action, root))
+            else:
+                applied.extend(apply_reviewed_candidate(action, root))
         except ValueError as exc:
             skipped.append({"action": action, "reason": str(exc)})
 
@@ -201,11 +306,13 @@ def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT
         "posture": {
             "network_fetch_performed": False,
             "writes_repository_state": True,
+            "writes_canonical_vendors": True,
             "writes_canonical_sources": True,
             "non_advisory": True,
         },
         "summary": {
             "promotion_actions_seen": len(actions),
+            "canonical_vendors_written": sum(1 for item in applied if item["path"].endswith("/vendor.yaml")),
             "canonical_sources_written": sum(1 for item in applied if "/sources/" in item["path"]),
             "canonical_artifacts_written": sum(1 for item in applied if "/artifacts/" in item["path"]),
             "change_events_written": sum(1 for item in applied if "/changes/" in item["path"]),
