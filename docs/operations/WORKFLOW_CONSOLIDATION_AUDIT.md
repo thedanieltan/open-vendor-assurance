@@ -21,7 +21,8 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `catalog-pr-guard.yml` | `keep_core` | Catalog PR scope guard. | Keep. |
 | `agent-weighted-review.yml` | `keep_core` | Advisory review agents add reviewer signal without merging or mutating catalog files. | Keep. |
 | `agent-automerge.yml` | `keep_core` | Controlled automerge lane with preflight and validation before merge. | Keep without policy relaxation. |
-| `source-maintenance-report.yml` | `edit_existing` | Source cleanup/reporting entry point. It keeps the full operator artifact and exposes a one-file reviewer inbox. | Keep in place. Maintain reviewer/operator artifact separation. |
+| `source-maintenance-report.yml` | `edit_existing` | Source cleanup/reporting entry point. It keeps the full operator artifact and exposes a one-file reviewer inbox, but is a heavy source-ops bundle. | Keep in place until sharded/scoped source operations replace it safely. |
+| `source-reviewer-inbox-dry-run.yml` | `keep_support` | Manual smoke workflow for the reviewer inbox round trip. It uses synthetic triage data and avoids network verification, discovery, promotion planning, repair sweep, PR creation, and catalog mutation. | Keep as narrow support workflow until the full source-ops scheduler exists. |
 | `source-refinement-scan.yml` | `keep_core` | Confirms P0 source repair candidates from repeated source maintenance evidence. | Keep. |
 | `source-repair-pr.yml` | `keep_core` | Manual, reviewed, validated source repair PR creation path. | Keep manual and reviewed-only. |
 | `source-repair-pr-cleanup.yml` | `keep_core` | Cleans up stale generated source repair PRs. | Keep. |
@@ -82,9 +83,9 @@ Keep only if it tracks non-source observations still needed by the project. If n
 
 Purpose: after a reviewer returns `source-review-decision-sheet.csv`, run validation manually or through an existing controlled path.
 
-Current status: handoff hardening is documented. The controlled path is `source_review_decisions validate-sheet` followed by `source_review_decisions export-reviewed-artifacts` only when validation has zero invalid rows. Reviewed artifacts must be committed under `maintenance/reviewed/` before `source-repair-pr.yml` is run.
+Current status: handoff hardening is documented. `source-reviewer-inbox-dry-run.yml` provides a narrow smoke test for the reviewer inbox round trip using synthetic triage data. The production controlled path remains `source_review_decisions validate-sheet` followed by `source_review_decisions export-reviewed-artifacts` only when validation has zero invalid rows. Reviewed artifacts must be committed under `maintenance/reviewed/` before `source-repair-pr.yml` is run.
 
-Do not add a scheduled workflow for this path. Do not automatically mutate catalog records from reviewer sheets. Do not run `source-repair-pr.yml` from uncommitted reviewer input.
+Do not automatically mutate catalog records from reviewer sheets. Do not run `source-repair-pr.yml` from uncommitted reviewer input.
 
 ### Future Action B: reviewed no-replacement truth-state application
 
@@ -106,7 +107,7 @@ Do not delete all three in one package unless tests and docs prove no consumers 
 
 Purpose: at catalog scale, add sharded or incremental source checking.
 
-Current status: architecture is documented in `SOURCE_OPERATIONS_SCHEDULER_SPEC.md`. No workflow, scheduler command, or schedule change is implemented in this package.
+Current status: architecture is documented in `SOURCE_OPERATIONS_SCHEDULER_SPEC.md`. No scheduler command or schedule change is implemented in this package. The reviewer inbox dry run is a narrow smoke workflow, not the source operations scheduler.
 
 Do not implement now.
 
