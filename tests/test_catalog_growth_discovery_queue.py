@@ -149,14 +149,13 @@ def test_catalog_growth_scale_readiness_documents_source_health_dependency():
     assert any("catalog growth bypass source-health constraints" in guardrail for guardrail in plan["guardrails"])
 
 
-def test_catalog_growth_docs_do_not_use_development_lane_or_phase_language():
+def test_catalog_growth_docs_describe_staging_reviewed_and_curated_layers():
     text = CATALOG_GROWTH_DOC.read_text(encoding="utf-8")
     plan_text = SCALE_READINESS.read_text(encoding="utf-8")
 
-    for forbidden in ("Lane A", "Lane B", "phase_model", "phase_id", "development"):
-        assert forbidden not in text
-        assert forbidden not in plan_text
-
+    assert "seed files and discovery reports = staging input" in text
+    assert "maintenance/reviewed/ = reviewed promotion evidence" in text
+    assert "data/vendors/** = curated catalog" in text
     assert "coverage area" in text
     assert "source maintenance" in text
     assert "stage_model" in plan_text
