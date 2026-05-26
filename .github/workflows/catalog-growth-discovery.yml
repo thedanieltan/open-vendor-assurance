@@ -60,6 +60,16 @@ jobs:
           python -m tools.openva.promotion_planner plan \
             --discovery-report source-discovery-report.json \
             --output promotion-plan.json
+      - name: Build catalog growth eligibility report
+        run: |
+          python -m tools.openva.catalog_growth_eligibility classify \
+            --vendor-candidates vendor-candidate-discovery-report.json \
+            --source-discovery source-discovery-report.json \
+            --output-json catalog-growth-eligibility-report.json \
+            --output-strict catalog-growth-strict-promotions.json \
+            --output-review-csv reports/catalog-growth-review-required.csv \
+            --output-rejected-csv reports/catalog-growth-rejected.csv \
+            --output-md reports/catalog-growth-eligibility-summary.md
       - name: Build batched candidate promotion plan proposals
         run: |
           set -euo pipefail
@@ -84,6 +94,7 @@ jobs:
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
           batches = json.load(open('promotion-plan-batch-summary.json', encoding='utf-8'))
+          eligibility = json.load(open('catalog-growth-eligibility-report.json', encoding='utf-8'))
           lines = [
               '<!-- openva-catalog-growth-discovery -->',
               '',
@@ -110,6 +121,13 @@ jobs:
               f"- Candidate sources reported: `{discovery['summary']['candidate_sources_written_or_reported']}`",
               f"- Unavailable sources reported: `{discovery['summary']['unavailable_sources_written_or_reported']}`",
               '',
+              '## Growth eligibility summary',
+              '',
+              f"- Candidate vendors classified: `{eligibility['summary']['candidate_count']}`",
+              f"- Strict promote ready: `{eligibility['summary']['strict_promote_ready_count']}`",
+              f"- Review required: `{eligibility['summary']['review_required_count']}`",
+              f"- Rejected or deferred: `{eligibility['summary']['rejected_or_deferred_count']}`",
+              '',
               '## Promotion planning summary',
               '',
               f"- Plan actions: `{promotion['summary']['action_count']}`",
@@ -118,7 +136,7 @@ jobs:
               '',
               '## Next step',
               '',
-              'Review vendor-candidate and candidate-promotion artifacts before copying approved plans into `maintenance/reviewed/`.',
+              'Review strict growth eligibility artifacts before enabling automated strict-promotion PR generation.',
               '',
           ]
           Path('catalog-growth-discovery-issue.md').write_text('\n'.join(lines), encoding='utf-8')
@@ -200,6 +218,9 @@ jobs:
           name: openva-catalog-growth-discovery-artifacts
           path: |
             reports/catalog-growth-discovery-summary.md
+            reports/catalog-growth-eligibility-summary.md
+            reports/catalog-growth-review-required.csv
+            reports/catalog-growth-rejected.csv
             reports/vendor-candidates.csv
             reports/source-discovery-candidates.csv
             reports/source-discovery-unavailable.csv
@@ -209,6 +230,8 @@ jobs:
             source-discovery-report.json
             promotion-plan.json
             promotion-plan-batch-summary.json
+            catalog-growth-eligibility-report.json
+            catalog-growth-strict-promotions.json
             catalog-growth-discovery-issue.md
             maintenance/generated/*.json
           if-no-files-found: warn
