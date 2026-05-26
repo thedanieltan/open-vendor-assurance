@@ -98,6 +98,16 @@ jobs:
             --output-csv source-repair-batch-plan.csv \
             --output-md source-repair-batch-summary.md \
             --max-records 10
+      - name: Build source review triage plan
+        run: |
+          python -m tools.openva.source_review_triage build \
+            --sweep-report source-repair-sweep-report.json \
+            --human-review-csv source-repair-sweep-human-review.csv \
+            --no-replacement-csv source-repair-sweep-no-replacement.csv \
+            --sweep-summary-md source-repair-sweep-summary.md \
+            --output-json source-review-triage-plan.json \
+            --output-csv source-review-triage-plan.csv \
+            --output-md source-review-triage-summary.md
       - name: Build promotion plan from maintenance reports
         run: |
           python -m tools.openva.promotion_planner plan \
@@ -126,6 +136,7 @@ jobs:
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
           sweep = json.load(open('source-repair-sweep-report.json', encoding='utf-8'))
           batch = json.load(open('source-repair-batch-plan.json', encoding='utf-8'))
+          triage = json.load(open('source-review-triage-plan.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
           cleanup = json.load(open('cleanup-proposal.json', encoding='utf-8'))
 
@@ -147,6 +158,7 @@ jobs:
               f"- Source repair rows requiring human review: `{sweep['summary']['human_review_required_count']}`",
               f"- Source repair rows with no replacement found: `{sweep['summary']['no_replacement_found_count']}`",
               f"- Strict source repair batch plan rows: `{batch['summary']['repair_count']}`",
+              f"- Source review triage rows: `{triage['summary']['triage_rows']}`",
               f"- Promotion plan actions: `{promotion['summary']['action_count']}`",
               f"- Cleanup proposal actions: `{cleanup['summary']['action_count']}`",
               f"- Blocking cleanup actions: `{cleanup['summary']['blocking_cleanup_actions']}`",
@@ -163,6 +175,7 @@ jobs:
               "- `source-quality-refinement-*`: human-reviewed queue for reachable source quality issues.",
               "- `source-repair-sweep-*`: report-only partition of strict repair-ready, human-review, and no-replacement source rows.",
               "- `source-repair-batch-*`: report-only strict repair batch plan capped at 10 records.",
+              "- `source-review-triage-*`: reviewer handoff for non-strict source repair sweep rows.",
               "",
           ]
           Path("summary.md").write_text("\n".join(lines), encoding="utf-8")
@@ -239,6 +252,7 @@ jobs:
               'source-discovery-report.json',
               'source-repair-sweep-report.json',
               'source-repair-batch-plan.json',
+              'source-review-triage-plan.json',
               'promotion-plan.json',
               'cleanup-proposal.json',
           ]:
@@ -260,12 +274,14 @@ jobs:
             source-observation-ledger-summary.md
             source-repair-sweep-summary.md
             source-repair-batch-summary.md
+            source-review-triage-summary.md
             source-discovery-candidates.csv
             source-discovery-unavailable.csv
             source-repair-sweep-strict-candidates.csv
             source-repair-sweep-human-review.csv
             source-repair-sweep-no-replacement.csv
             source-repair-batch-plan.csv
+            source-review-triage-plan.csv
             promotion-plan-actions.csv
             source-health-report.json
             source-verification-report.json
@@ -276,6 +292,7 @@ jobs:
             source-discovery-report.json
             source-repair-sweep-report.json
             source-repair-batch-plan.json
+            source-review-triage-plan.json
             promotion-plan.json
             cleanup-proposal.json
           if-no-files-found: error
