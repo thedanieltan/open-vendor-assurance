@@ -24,6 +24,8 @@
     "entity_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "source_type": {
       "enum": [
+        "business_registry_record",
+        "company_registry_profile",
         "dpa",
         "subprocessors_list",
         "privacy_notice",
@@ -32,6 +34,11 @@
         "compliance_page",
         "certification_reference",
         "terms_of_service",
+        "data_transfer_terms",
+        "data_retention_terms",
+        "security_measures_terms",
+        "vulnerability_disclosure_policy",
+        "status_page",
         "kyc_statement",
         "aml_statement",
         "ai_terms",
