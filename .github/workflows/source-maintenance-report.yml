@@ -78,6 +78,18 @@ jobs:
           else
             python -m tools.openva.source_discovery discover --output source-discovery-report.json
           fi
+      - name: Build source repair sweep report
+        run: |
+          python -m tools.openva.source_repair_sweep build \
+            --source-verification-report source-verification-report.json \
+            --source-discovery-report source-discovery-report.json \
+            --source-quality-refinement-queue source-quality-refinement-queue.json \
+            --latest-source-health latest-source-health.json \
+            --json-output source-repair-sweep-report.json \
+            --strict-csv-output source-repair-sweep-strict-candidates.csv \
+            --human-review-csv-output source-repair-sweep-human-review.csv \
+            --no-replacement-csv-output source-repair-sweep-no-replacement.csv \
+            --markdown-output source-repair-sweep-summary.md
       - name: Build promotion plan from maintenance reports
         run: |
           python -m tools.openva.promotion_planner plan \
@@ -104,6 +116,7 @@ jobs:
           verification = json.load(open('source-verification-report.json', encoding='utf-8'))
           quality = json.load(open('source-quality-refinement-queue.json', encoding='utf-8'))
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
+          sweep = json.load(open('source-repair-sweep-report.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
           cleanup = json.load(open('cleanup-proposal.json', encoding='utf-8'))
 
@@ -121,6 +134,9 @@ jobs:
               f"- Source quality refinement items: `{quality['summary']['total_quality_review_count']}`",
               f"- Candidate sources reported: `{discovery['summary']['candidate_sources_written_or_reported']}`",
               f"- Unavailable sources reported: `{discovery['summary']['unavailable_sources_written_or_reported']}`",
+              f"- Strict repair-ready rows: `{sweep['summary']['strict_repair_ready_count']}`",
+              f"- Source repair rows requiring human review: `{sweep['summary']['human_review_required_count']}`",
+              f"- Source repair rows with no replacement found: `{sweep['summary']['no_replacement_found_count']}`",
               f"- Promotion plan actions: `{promotion['summary']['action_count']}`",
               f"- Cleanup proposal actions: `{cleanup['summary']['action_count']}`",
               f"- Blocking cleanup actions: `{cleanup['summary']['blocking_cleanup_actions']}`",
@@ -135,6 +151,7 @@ jobs:
               "- `latest-source-health.json`: compact latest source health index for site/API consumption.",
               "- `public/source-health-snapshot.json`: public snapshot of latest source health for future site/API display.",
               "- `source-quality-refinement-*`: human-reviewed queue for reachable source quality issues.",
+              "- `source-repair-sweep-*`: report-only partition of strict repair-ready, human-review, and no-replacement source rows.",
               "",
           ]
           Path("summary.md").write_text("\n".join(lines), encoding="utf-8")
@@ -209,6 +226,7 @@ jobs:
               'latest-source-health.json',
               'public/source-health-snapshot.json',
               'source-discovery-report.json',
+              'source-repair-sweep-report.json',
               'promotion-plan.json',
               'cleanup-proposal.json',
           ]:
@@ -228,8 +246,12 @@ jobs:
             source-verification.csv
             source-quality-refinement-queue.csv
             source-observation-ledger-summary.md
+            source-repair-sweep-summary.md
             source-discovery-candidates.csv
             source-discovery-unavailable.csv
+            source-repair-sweep-strict-candidates.csv
+            source-repair-sweep-human-review.csv
+            source-repair-sweep-no-replacement.csv
             promotion-plan-actions.csv
             source-health-report.json
             source-verification-report.json
@@ -238,6 +260,7 @@ jobs:
             latest-source-health.json
             public/source-health-snapshot.json
             source-discovery-report.json
+            source-repair-sweep-report.json
             promotion-plan.json
             cleanup-proposal.json
           if-no-files-found: error
