@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       vendor_limit:
-        description: "Optional number of existing vendors to discover against"
+        description: "Optional number of vendors/candidates to discover against"
         required: false
         type: string
       max_actions_per_plan:
@@ -46,21 +46,21 @@ jobs:
         run: |
           python -m tools.openva.vendor_candidate_discovery discover \
             --output vendor-candidate-discovery-report.json
-      - name: Enrich vendor candidates with source candidates
+      - name: Discover sources for vendor candidates
         run: |
           set -euo pipefail
           LIMIT="$(printf '%s' "$VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           if [ -n "$LIMIT" ]; then
-            python -m tools.openva.vendor_candidate_source_enrichment enrich \
+            python -m tools.openva.source_discovery discover-vendor-candidates \
               --vendor-candidates vendor-candidate-discovery-report.json \
               --vendor-limit "$LIMIT" \
-              --output vendor-candidate-source-enrichment-report.json
+              --output vendor-candidate-source-discovery-report.json
           else
-            python -m tools.openva.vendor_candidate_source_enrichment enrich \
+            python -m tools.openva.source_discovery discover-vendor-candidates \
               --vendor-candidates vendor-candidate-discovery-report.json \
-              --output vendor-candidate-source-enrichment-report.json
+              --output vendor-candidate-source-discovery-report.json
           fi
-      - name: Build source discovery report
+      - name: Build existing vendor source discovery report
         run: |
           set -euo pipefail
           LIMIT="$(printf '%s' "$VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
@@ -69,7 +69,7 @@ jobs:
           else
             python -m tools.openva.source_discovery discover --output source-discovery-report.json
           fi
-      - name: Build promotion plan from discovery report
+      - name: Build promotion plan from existing vendor discovery report
         run: |
           python -m tools.openva.promotion_planner plan \
             --discovery-report source-discovery-report.json \
@@ -79,12 +79,17 @@ jobs:
           mkdir -p reports
           python -m tools.openva.catalog_growth_eligibility classify \
             --vendor-candidates vendor-candidate-discovery-report.json \
-            --source-discovery vendor-candidate-source-enrichment-report.json \
+            --source-discovery vendor-candidate-source-discovery-report.json \
             --output-json catalog-growth-eligibility-report.json \
             --output-strict catalog-growth-strict-promotions.json \
             --output-review-csv reports/catalog-growth-review-required.csv \
             --output-rejected-csv reports/catalog-growth-rejected.csv \
             --output-md reports/catalog-growth-eligibility-summary.md
+      - name: Build strict growth promotion plan
+        run: |
+          python -m tools.openva.promotion_planner plan-strict-growth \
+            --eligibility-report catalog-growth-eligibility-report.json \
+            --output strict-growth-promotion-plan.json
       - name: Build batched candidate promotion plan proposals
         run: |
           set -euo pipefail
@@ -106,9 +111,10 @@ jobs:
           Path('reports').mkdir(exist_ok=True)
           queue = json.load(open('catalog-growth-discovery-queue-summary.json', encoding='utf-8'))
           vendors = json.load(open('vendor-candidate-discovery-report.json', encoding='utf-8'))
-          enrichment = json.load(open('vendor-candidate-source-enrichment-report.json', encoding='utf-8'))
+          enrichment = json.load(open('vendor-candidate-source-discovery-report.json', encoding='utf-8'))
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
+          strict_growth = json.load(open('strict-growth-promotion-plan.json', encoding='utf-8'))
           batches = json.load(open('promotion-plan-batch-summary.json', encoding='utf-8'))
           eligibility = json.load(open('catalog-growth-eligibility-report.json', encoding='utf-8'))
           lines = [
@@ -131,7 +137,7 @@ jobs:
               f"- New vendor candidates reported: `{vendors['summary']['candidate_vendor_count']}`",
               f"- Known vendors skipped from candidate report: `{vendors['summary']['known_vendor_count']}`",
               '',
-              '## Vendor candidate source enrichment',
+              '## Vendor candidate source discovery',
               '',
               f"- Vendor candidates checked: `{enrichment['summary']['vendor_candidates_checked']}`",
               f"- Candidate sources reported: `{enrichment['summary']['candidate_sources_written_or_reported']}`",
@@ -150,7 +156,11 @@ jobs:
               f"- Review required: `{eligibility['summary']['review_required_count']}`",
               f"- Rejected or deferred: `{eligibility['summary']['rejected_or_deferred_count']}`",
               '',
-              '## Promotion planning summary',
+              '## Strict growth planning summary',
+              '',
+              f"- Strict growth actions: `{strict_growth['summary']['action_count']}`",
+              '',
+              '## Existing vendor promotion planning summary',
               '',
               f"- Plan actions: `{promotion['summary']['action_count']}`",
               f"- Candidate promotion batches: `{batches['summary']['batch_count']}`",
@@ -158,7 +168,7 @@ jobs:
               '',
               '## Next step',
               '',
-              'Use enriched strict growth eligibility artifacts before enabling automated strict-promotion PR generation.',
+              'Use strict growth promotion plans through the existing candidate-promotion apply path; do not bypass validation or source preflight.',
               '',
           ]
           Path('catalog-growth-discovery-issue.md').write_text('\n'.join(lines), encoding='utf-8')
@@ -254,9 +264,10 @@ jobs:
             reports/promotion-plan-actions.csv
             catalog-growth-discovery-queue-summary.json
             vendor-candidate-discovery-report.json
-            vendor-candidate-source-enrichment-report.json
+            vendor-candidate-source-discovery-report.json
             source-discovery-report.json
             promotion-plan.json
+            strict-growth-promotion-plan.json
             promotion-plan-batch-summary.json
             catalog-growth-eligibility-report.json
             catalog-growth-strict-promotions.json
