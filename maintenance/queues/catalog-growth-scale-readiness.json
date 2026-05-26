@@ -1,0 +1,139 @@
+{
+  "schema_version": "0.1.0",
+  "queue_type": "catalog_growth_scale_readiness",
+  "purpose": "Define how OpenVA moves from bootstrap seed identity discovery to queue-driven, evidence-scored catalog growth without treating discovered vendors or sources as canonical truth.",
+  "non_advisory": true,
+  "posture": {
+    "network_fetch_performed": false,
+    "writes_repository_state": false,
+    "writes_canonical_vendors": false,
+    "writes_canonical_sources": false,
+    "creates_candidate_sources": false,
+    "creates_pull_requests": false,
+    "runs_promotion": false
+  },
+  "phase_model": [
+    {
+      "phase_id": "bootstrap_seed_identity",
+      "status": "active",
+      "purpose": "Use reviewed seed files to provide initial vendor identities and official domains for priority coverage lanes.",
+      "entry_condition": "Coverage lane has insufficient reviewed vendor identities.",
+      "exit_condition": "Seed files validate and produce enough reviewed vendor candidates for bounded source discovery.",
+      "canonical_write_allowed": false
+    },
+    {
+      "phase_id": "queue_driven_discovery",
+      "status": "next",
+      "purpose": "Use taxonomy coverage gaps, source-health debt, and candidate backlog state to decide which cohorts should be discovered next.",
+      "entry_condition": "Bootstrap seeds are no longer the primary candidate source for a lane.",
+      "exit_condition": "Candidate backlog has deduplicated, source-discovered, review-ready candidates.",
+      "canonical_write_allowed": false
+    },
+    {
+      "phase_id": "evidence_scored_promotion",
+      "status": "next",
+      "purpose": "Promote only candidates with clear official-domain authority, core public-source evidence, and reviewed promotion plans.",
+      "entry_condition": "Candidate has source-discovery evidence and no blocking duplication or authority issues.",
+      "exit_condition": "Reviewed promotion plan is committed under maintenance/reviewed/ and applied by candidate-promotion-pr.yml.",
+      "canonical_write_allowed": true,
+      "write_path": "candidate-promotion-pr.yml"
+    },
+    {
+      "phase_id": "continuous_refresh",
+      "status": "future",
+      "purpose": "Use source-health and observation outputs to keep the expanded catalog fresh after promotion.",
+      "entry_condition": "Candidate has become a canonical catalog record.",
+      "exit_condition": "Source debt is repaired or truth-stated through Lane A.",
+      "canonical_write_allowed": false
+    }
+  ],
+  "candidate_lifecycle": [
+    "seeded",
+    "discovered",
+    "deduplicated",
+    "source_discovered",
+    "review_ready",
+    "approved_for_promotion",
+    "promoted",
+    "observed",
+    "maintenance_required"
+  ],
+  "core_source_types": [
+    "dpa",
+    "subprocessors_list",
+    "privacy_notice",
+    "security_page"
+  ],
+  "extended_source_types_deferred": [
+    "trust_center",
+    "security_whitepaper",
+    "compliance_page",
+    "certification_reference",
+    "product_terms",
+    "ai_terms",
+    "data_transfer_terms"
+  ],
+  "promotion_readiness_dimensions": [
+    {
+      "dimension": "personal_data_relevance",
+      "description": "Candidate is likely to process personal data, support cross-border transfer, act as a subprocessor, or otherwise appear in vendor assurance workflows.",
+      "required_for_auto_queue": true
+    },
+    {
+      "dimension": "official_domain_authority",
+      "description": "Candidate has a clear official domain and source URLs can be evaluated against that authority.",
+      "required_for_auto_queue": true
+    },
+    {
+      "dimension": "core_source_coverage",
+      "description": "Candidate has at least one public source candidate from the core source type set and should trend toward DPA, subprocessors, privacy, and security coverage.",
+      "required_for_auto_queue": true
+    },
+    {
+      "dimension": "coverage_gap_fit",
+      "description": "Candidate fills a priority taxonomy lane, regional gap, or underrepresented regulated-industry segment.",
+      "required_for_auto_queue": true
+    },
+    {
+      "dimension": "dedupe_confidence",
+      "description": "Candidate does not duplicate an existing canonical vendor, product surface, entity family, or reviewed candidate.",
+      "required_for_auto_queue": true
+    },
+    {
+      "dimension": "source_health_budget",
+      "description": "Lane B promotion should slow down when Lane A source debt exceeds the configured source-health budget.",
+      "required_for_auto_queue": false
+    }
+  ],
+  "promotion_blocks": [
+    "official_domain_unknown",
+    "duplicate_vendor_or_entity_family",
+    "no_public_source_candidates",
+    "source_type_mismatch",
+    "gated_only_materials",
+    "raw_document_mirroring_required",
+    "source_health_budget_exceeded",
+    "review_plan_not_committed_under_maintenance_reviewed"
+  ],
+  "batching_policy": {
+    "max_reviewed_actions_per_plan": 50,
+    "preferred_initial_batch_size": 25,
+    "rationale": "Keep candidate-promotion PRs reviewable as the catalog grows beyond the bootstrap corpus."
+  },
+  "handoff_contract": {
+    "bootstrap_input": "maintenance/seeds/vendors/*.yaml",
+    "discovery_queue": "maintenance/queues/catalog-growth-discovery.json",
+    "scale_readiness_queue": "maintenance/queues/catalog-growth-scale-readiness.json",
+    "reviewed_plan_path": "maintenance/reviewed/",
+    "controlled_write_path": "candidate-promotion-pr.yml",
+    "post_promotion_maintenance": "Lane A source cleanup loop"
+  },
+  "guardrails": [
+    "Do not scrape broad company registries as a substitute for coverage-lane strategy.",
+    "Do not turn seed files into canonical vendor records.",
+    "Do not promote discovered candidates automatically.",
+    "Do not write data/vendors/** outside candidate-promotion-pr.yml.",
+    "Do not expand source types beyond the core set until discovery and promotion quality are proven.",
+    "Do not let Lane B growth bypass Lane A source-health constraints."
+  ]
+}
