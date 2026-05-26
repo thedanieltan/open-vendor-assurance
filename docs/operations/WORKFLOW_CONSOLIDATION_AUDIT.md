@@ -11,7 +11,7 @@ Classification values:
 - `remove_now_if_safe`: safe to delete only after tests and stale references prove removal.
 - `defer`: known future need, not part of this package.
 
-No workflow is removed by this audit. Risky retirements require a migration note and CI-readiness tests before deletion.
+No workflow is removed by this audit. Risky retirements require a migration note and CI-readiness tests before deletion. Detailed evidence for retire candidates is recorded in `docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md`.
 
 ## Classification table
 
@@ -35,9 +35,9 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `catalog-agent-pr.yml` | `keep_support` | Manual support path for agent-authored catalog PRs. | Keep as PR-only support path. |
 | `catalog-maintenance-pr.yml` | `keep_support` | Scheduled/manual support path for maintenance PRs. | Keep until overlap with promotion and repair paths is further reduced. |
 | `contribution-intake-agent.yml` | `keep_support` | Issue-to-PR intake support path. | Keep. |
-| `catalog-maintenance.yml` | `retire_candidate` | Overlaps with validation/index/test work in `validate.yml` and catalog quality/entity reporting in `coverage-audit.yml`. | Retire after confirming entity stub reporting is either no longer needed or folded into `coverage-audit.yml`. |
-| `source-refinement-queue.yml` | `retire_candidate` | Consumes older observation report paths and likely overlaps with `source-maintenance-report.yml`, source repair sweep output, source review triage, and reviewer decision sheet. | Retire only if no unique queue remains. Likely future `remove_now_if_safe` candidate after consumer search and stale-reference tests. |
-| `observe-report.yml` | `retire_candidate` | May be superseded for source observations by `source-observation-ledger`, `latest-source-health`, and `public/source-health-snapshot`. | Keep only if it tracks non-source observations still needed by the project; otherwise mark legacy or retire. |
+| `catalog-maintenance.yml` | `retire_candidate` | Overlaps with validation/index/test work in `validate.yml` and catalog quality/entity reporting in `coverage-audit.yml`; entity-stub replacement is not proven. | Keep as `retire_candidate`; see `WORKFLOW_RETIREMENT_EVIDENCE.md`. |
+| `source-refinement-queue.yml` | `retire_candidate` | Consumes older observation report paths and likely overlaps with `source-maintenance-report.yml`, source repair sweep output, source review triage, and reviewer decision sheet; stale consumers remain unproven. | Keep as `retire_candidate`; likely first future removal candidate after evidence is complete. |
+| `observe-report.yml` | `retire_candidate` | May be superseded for source observations by `source-observation-ledger`, `latest-source-health`, and `public/source-health-snapshot`; non-source observation role remains unresolved. | Keep as `retire_candidate`; see `WORKFLOW_RETIREMENT_EVIDENCE.md`. |
 
 ## Retire/consolidation candidate detail
 
@@ -47,6 +47,7 @@ Observed overlap:
 
 - Validation/index/test behavior overlaps with `validate.yml`.
 - Catalog quality and entity reporting overlap with `coverage-audit.yml`.
+- Entity stub reporting is not yet proven redundant.
 
 Recommended action:
 
@@ -58,16 +59,18 @@ Observed overlap:
 
 - It consumes an older observation report path.
 - It likely overlaps with `source-maintenance-report.yml`, source repair sweep artifacts, source review triage output, and the reviewer decision sheet.
+- `docs/source-refinement-workflow.md` must be reviewed before removal.
 
 Recommended action:
 
-Retire if no unique queue remains. This is the likely first removal candidate, but not in this package unless tests prove its outputs are fully replaced and no stale references remain.
+Retire if no unique queue remains. This is the likely first removal candidate, but not in this package because stale references and consumers are not yet proven clean.
 
 ### `observe-report.yml`
 
 Observed overlap:
 
 - Source-specific observation needs are increasingly represented by `source-observation-ledger.json`, `latest-source-health.json`, and `public/source-health-snapshot.json`.
+- `README.md` and `docs/observation-reporting.md` must be reviewed before removal.
 
 Recommended action:
 
@@ -92,6 +95,8 @@ Do not implement until the truth-state schema is decided.
 ### Future Action C: workflow retirement
 
 Purpose: retire `catalog-maintenance.yml`, `source-refinement-queue.yml`, and/or `observe-report.yml` only after the audit proves their outputs are fully replaced.
+
+Current status: retirement evidence is documented in `WORKFLOW_RETIREMENT_EVIDENCE.md`; no workflow is removed in this package because none is proven safe to remove.
 
 Do not delete all three in one package unless tests and docs prove no consumers remain.
 
