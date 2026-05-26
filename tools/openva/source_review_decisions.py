@@ -773,14 +773,16 @@ def validate_decision_sheet(
         )
 
     seen: set[str] = set()
+    sheet_generated_at: str | None = None
     decisions: Counter[str] = Counter()
     network_fetch_performed = False
 
     for row_number, row in rows:
         review_item_id = str(row.get("review_item_id") or "")
+        row_generated_at = str(row.get("decision_sheet_generated_at") or "")
         row_binding_context = {
             **binding_context,
-            "decision_sheet_generated_at": str(row.get("decision_sheet_generated_at") or ""),
+            "decision_sheet_generated_at": row_generated_at,
         }
         if row.get("__extra_values__"):
             report["invalid_rows"].append(
@@ -799,9 +801,16 @@ def validate_decision_sheet(
                 invalid_row(row_number, review_item_id, ["review_item_id_not_found"], "review_item_id does not exist in original triage plan")
             )
             continue
-        if blank(row.get("decision_sheet_generated_at")):
+        if blank(row_generated_at):
             report["invalid_rows"].append(
                 invalid_row(row_number, review_item_id, ["decision_sheet_generated_at_missing"], "decision sheet generated timestamp is required")
+            )
+            continue
+        if sheet_generated_at is None:
+            sheet_generated_at = row_generated_at
+        elif row_generated_at != sheet_generated_at:
+            report["invalid_rows"].append(
+                invalid_row(row_number, review_item_id, ["mixed_decision_sheet_generated_at"], "decision sheet rows must share one generated timestamp")
             )
             continue
         decision = str(row.get("review_decision") or "").strip()
