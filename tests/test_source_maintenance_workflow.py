@@ -27,6 +27,7 @@ def test_source_maintenance_workflow_runs_full_non_mutating_pipeline():
     assert "python -m tools.openva.source_repair_sweep build" in text
     assert "python -m tools.openva.source_repair_batch build" in text
     assert "python -m tools.openva.source_review_triage build" in text
+    assert "python -m tools.openva.source_review_decisions build-sheet" in text
     assert "python -m tools.openva.promotion_planner plan" in text
     assert "python -m tools.openva.cleanup_proposals build" in text
     assert "--verification-report source-verification-report.json" in text
@@ -48,6 +49,8 @@ def test_source_maintenance_workflow_runs_full_non_mutating_pipeline():
     assert "source-review-triage-plan.json" in text
     assert "source-review-triage-plan.csv" in text
     assert "source-review-triage-summary.md" in text
+    assert "source-review-decision-sheet.csv" in text
+    assert "source-review-decision-sheet-summary.md" in text
     assert "promotion-plan-actions.csv" in text
     assert "cleanup-proposal.md" in text
     assert "actions/upload-artifact@v6" in text
