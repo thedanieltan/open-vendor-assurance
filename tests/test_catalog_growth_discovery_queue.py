@@ -7,6 +7,7 @@ from tools.openva.catalog_growth_discovery_queue import validate_queue
 
 
 QUEUE = Path("maintenance/queues/catalog-growth-discovery.json")
+SCALE_READINESS = Path("maintenance/queues/catalog-growth-scale-readiness.json")
 
 
 def test_catalog_growth_discovery_queue_is_taxonomy_driven_and_bounded():
@@ -53,3 +54,93 @@ def test_catalog_growth_discovery_queue_rejects_unknown_source_type(tmp_path):
 
     with pytest.raises(ValueError, match="unknown source type"):
         validate_queue(bad_queue)
+
+
+def test_catalog_growth_scale_readiness_is_non_canonical_and_non_executing():
+    plan = json.loads(SCALE_READINESS.read_text(encoding="utf-8"))
+
+    assert plan["queue_type"] == "catalog_growth_scale_readiness"
+    assert plan["non_advisory"] is True
+    assert plan["posture"] == {
+        "network_fetch_performed": False,
+        "writes_repository_state": False,
+        "writes_canonical_vendors": False,
+        "writes_canonical_sources": False,
+        "creates_candidate_sources": False,
+        "creates_pull_requests": False,
+        "runs_promotion": False,
+    }
+
+
+def test_catalog_growth_scale_readiness_defines_ordered_phase_model():
+    plan = json.loads(SCALE_READINESS.read_text(encoding="utf-8"))
+    phases = plan["phase_model"]
+
+    assert [phase["phase_id"] for phase in phases] == [
+        "bootstrap_seed_identity",
+        "queue_driven_discovery",
+        "evidence_scored_promotion",
+        "continuous_refresh",
+    ]
+    assert phases[0]["canonical_write_allowed"] is False
+    assert phases[1]["canonical_write_allowed"] is False
+    assert phases[2]["canonical_write_allowed"] is True
+    assert phases[2]["write_path"] == "candidate-promotion-pr.yml"
+    assert phases[3]["canonical_write_allowed"] is False
+
+
+def test_catalog_growth_scale_readiness_lifecycle_and_source_scope_are_bounded():
+    plan = json.loads(SCALE_READINESS.read_text(encoding="utf-8"))
+
+    assert plan["candidate_lifecycle"] == [
+        "seeded",
+        "discovered",
+        "deduplicated",
+        "source_discovered",
+        "review_ready",
+        "approved_for_promotion",
+        "promoted",
+        "observed",
+        "maintenance_required",
+    ]
+    assert plan["core_source_types"] == [
+        "dpa",
+        "subprocessors_list",
+        "privacy_notice",
+        "security_page",
+    ]
+    assert "trust_center" in plan["extended_source_types_deferred"]
+    assert "ai_terms" in plan["extended_source_types_deferred"]
+
+
+def test_catalog_growth_scale_readiness_requires_promotion_blocks_and_handoff_contract():
+    plan = json.loads(SCALE_READINESS.read_text(encoding="utf-8"))
+
+    required_blocks = {
+        "official_domain_unknown",
+        "duplicate_vendor_or_entity_family",
+        "no_public_source_candidates",
+        "source_type_mismatch",
+        "gated_only_materials",
+        "raw_document_mirroring_required",
+        "source_health_budget_exceeded",
+        "review_plan_not_committed_under_maintenance_reviewed",
+    }
+    assert required_blocks <= set(plan["promotion_blocks"])
+    assert plan["handoff_contract"] == {
+        "bootstrap_input": "maintenance/seeds/vendors/*.yaml",
+        "discovery_queue": "maintenance/queues/catalog-growth-discovery.json",
+        "scale_readiness_queue": "maintenance/queues/catalog-growth-scale-readiness.json",
+        "reviewed_plan_path": "maintenance/reviewed/",
+        "controlled_write_path": "candidate-promotion-pr.yml",
+        "post_promotion_maintenance": "Lane A source cleanup loop",
+    }
+
+
+def test_catalog_growth_scale_readiness_documents_source_health_dependency():
+    plan = json.loads(SCALE_READINESS.read_text(encoding="utf-8"))
+    dimensions = {item["dimension"]: item for item in plan["promotion_readiness_dimensions"]}
+
+    assert "source_health_budget" in dimensions
+    assert dimensions["source_health_budget"]["required_for_auto_queue"] is False
+    assert any("Lane B growth must not bypass Lane A" in guardrail for guardrail in plan["guardrails"])
