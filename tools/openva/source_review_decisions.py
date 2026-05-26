@@ -16,6 +16,7 @@ from tools.openva.url_safety import validate_url_safety
 SCHEMA_VERSION = "0.1.0"
 SHEET_REPORT_TYPE = "source_review_decision_sheet"
 VALIDATION_REPORT_TYPE = "source_review_decision_validation"
+UNKNOWN_SOURCE_MAINTENANCE_RUN_ID = "unknown-source-maintenance-run"
 
 ALLOWED_DECISIONS = {
     "replace_with_url",
@@ -39,7 +40,12 @@ TRACKING_PARAMS = {
     "yclid",
 }
 
-CONTEXT_COLUMNS = [
+BINDING_COLUMNS = [
+    "source_maintenance_run_id",
+    "triage_plan_sha256",
+    "decision_sheet_generated_at",
+]
+CONTEXT_COLUMNS = BINDING_COLUMNS + [
     "review_item_id",
     "vendor_id",
     "source_id",
@@ -64,6 +70,9 @@ EDITABLE_COLUMNS = [
 CSV_FIELDS = CONTEXT_COLUMNS + EDITABLE_COLUMNS
 
 IMMUTABLE_COLUMNS = [
+    "source_maintenance_run_id",
+    "triage_plan_sha256",
+    "decision_sheet_generated_at",
     "review_item_id",
     "vendor_id",
     "source_id",
@@ -92,6 +101,33 @@ def load_json(path: Path) -> dict[str, Any]:
 def write_json(data: dict[str, Any], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def stable_json_sha256(data: dict[str, Any]) -> str:
+    encoded = json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def source_maintenance_run_id_for(triage_plan: dict[str, Any]) -> str:
+    for field in ("source_maintenance_run_id", "run_id", "github_run_id"):
+        value = triage_plan.get(field)
+        if value:
+            return str(value)
+    metadata = triage_plan.get("metadata")
+    if isinstance(metadata, dict):
+        for field in ("source_maintenance_run_id", "run_id", "github_run_id"):
+            value = metadata.get(field)
+            if value:
+                return str(value)
+    return UNKNOWN_SOURCE_MAINTENANCE_RUN_ID
+
+
+def binding_context_for(triage_plan: dict[str, Any], *, generated_at: str) -> dict[str, str]:
+    return {
+        "source_maintenance_run_id": source_maintenance_run_id_for(triage_plan),
+        "triage_plan_sha256": stable_json_sha256(triage_plan),
+        "decision_sheet_generated_at": generated_at,
+    }
 
 
 def csv_safe(value: Any) -> str:
@@ -187,8 +223,9 @@ def candidate_final_url_from(item: dict[str, Any]) -> str:
     return ""
 
 
-def sheet_row_from_item(item: dict[str, Any]) -> dict[str, str]:
+def sheet_row_from_item(item: dict[str, Any], binding_context: dict[str, str]) -> dict[str, str]:
     row = {
+        **binding_context,
         "review_item_id": review_item_id_for(item),
         "vendor_id": item.get("vendor_id"),
         "source_id": item.get("source_id"),
@@ -212,13 +249,17 @@ def sheet_row_from_item(item: dict[str, Any]) -> dict[str, str]:
 
 
 def build_decision_sheet(triage_plan: dict[str, Any], *, generated_at: str | None = None) -> dict[str, Any]:
+    generated_at = generated_at or now_iso()
     items = triage_items(triage_plan)
-    rows = [sheet_row_from_item(item) for item in items]
+    binding_context = binding_context_for(triage_plan, generated_at=generated_at)
+    rows = [sheet_row_from_item(item, binding_context) for item in items]
     bucket_counts = Counter(str(item.get("bucket") or "unknown") for item in items)
     return {
         "schema_version": SCHEMA_VERSION,
-        "generated_at": generated_at or now_iso(),
+        "generated_at": generated_at,
         "report_type": SHEET_REPORT_TYPE,
+        "source_maintenance_run_id": binding_context["source_maintenance_run_id"],
+        "triage_plan_sha256": binding_context["triage_plan_sha256"],
         "summary": {
             "review_rows": len(rows),
             "bucket_counts": dict(sorted(bucket_counts.items())),
@@ -261,6 +302,8 @@ def build_sheet_markdown(report: dict[str, Any]) -> str:
             "# OpenVA Source Review Decision Sheet",
             "",
             f"Generated: {report['generated_at']}",
+            f"Source maintenance run: `{report['source_maintenance_run_id']}`",
+            f"Triage plan SHA-256: `{report['triage_plan_sha256']}`",
             "",
             "This decision sheet is a reviewer-friendly handoff for source triage rows.",
             "",
@@ -279,6 +322,7 @@ def build_sheet_markdown(report: dict[str, Any]) -> str:
             "- Reviewer decisions are not trusted until independently validated.",
             "- Approved replacements still require source verification.",
             "- No-replacement decisions do not invent URLs.",
+            "- The sheet must validate against the triage plan with the matching SHA-256.",
             "- Repair PRs are generated only from validated reviewed artifacts in a later workflow.",
             "",
             "## Allowed Decisions",
@@ -303,7 +347,9 @@ def invalid_row(row_number: int, review_item_id: str | None, reason_codes: list[
     }
 
 
-def expected_csv_value(item: dict[str, Any], field: str) -> str:
+def expected_csv_value(item: dict[str, Any], field: str, binding_context: dict[str, str]) -> str:
+    if field in binding_context:
+        return csv_safe(binding_context[field])
     if field == "review_item_id":
         return csv_safe(review_item_id_for(item))
     if field == "reason_codes":
@@ -450,6 +496,9 @@ def approved_repair_record(
         "replacement_url_safety_status": verification.get("replacement_url_safety_status"),
         "soft_404_detected": False,
         "redirect_canonical_drift": False,
+        "source_maintenance_run_id": row.get("source_maintenance_run_id"),
+        "triage_plan_sha256": row.get("triage_plan_sha256"),
+        "decision_sheet_generated_at": row.get("decision_sheet_generated_at"),
         "reviewer_note": row.get("reviewer_note"),
         "reviewed_by": row.get("reviewed_by"),
         "reviewed_at": row.get("reviewed_at"),
@@ -464,6 +513,9 @@ def no_replacement_record(item: dict[str, Any], row: dict[str, Any]) -> dict[str
         "source_type": item.get("source_type"),
         "source_url": item.get("source_url"),
         "truth_state": "no_public_vendor_source_found",
+        "source_maintenance_run_id": row.get("source_maintenance_run_id"),
+        "triage_plan_sha256": row.get("triage_plan_sha256"),
+        "decision_sheet_generated_at": row.get("decision_sheet_generated_at"),
         "reviewer_note": row.get("reviewer_note"),
         "reviewed_by": row.get("reviewed_by"),
         "reviewed_at": row.get("reviewed_at"),
@@ -479,6 +531,9 @@ def deferred_record(item: dict[str, Any], row: dict[str, Any], truth_state: str)
         "source_type": item.get("source_type"),
         "source_url": item.get("source_url"),
         "truth_state": truth_state,
+        "source_maintenance_run_id": row.get("source_maintenance_run_id"),
+        "triage_plan_sha256": row.get("triage_plan_sha256"),
+        "decision_sheet_generated_at": row.get("decision_sheet_generated_at"),
         "reviewer_note": row.get("reviewer_note"),
         "reviewed_by": row.get("reviewed_by"),
         "reviewed_at": row.get("reviewed_at"),
@@ -494,6 +549,9 @@ def rejected_record(item: dict[str, Any], row: dict[str, Any], reason: str) -> d
         "source_type": item.get("source_type"),
         "source_url": item.get("source_url"),
         "rejection_reason": reason,
+        "source_maintenance_run_id": row.get("source_maintenance_run_id"),
+        "triage_plan_sha256": row.get("triage_plan_sha256"),
+        "decision_sheet_generated_at": row.get("decision_sheet_generated_at"),
         "reviewer_note": row.get("reviewer_note"),
         "reviewed_by": row.get("reviewed_by"),
         "reviewed_at": row.get("reviewed_at"),
@@ -506,6 +564,7 @@ def validate_row(
     row: dict[str, Any],
     row_number: int,
     item: dict[str, Any],
+    binding_context: dict[str, str],
     verifier: Callable[[dict[str, Any], str], dict[str, Any]],
 ) -> tuple[str | None, dict[str, Any] | None, dict[str, Any] | None]:
     review_item_id = str(row.get("review_item_id") or "")
@@ -514,7 +573,7 @@ def validate_row(
     for field in CSV_FIELDS:
         if field in EDITABLE_COLUMNS:
             continue
-        if str(row.get(field) or "") != expected_csv_value(item, field):
+        if str(row.get(field) or "") != expected_csv_value(item, field, binding_context):
             reasons.append(f"{field}_changed")
 
     source_url = str(item.get("source_url") or "")
@@ -593,13 +652,13 @@ def validate_row(
     raise AssertionError(f"unhandled decision: {decision}")
 
 
-def replace_row_reaches_verifier(row: dict[str, Any], item: dict[str, Any]) -> bool:
+def replace_row_reaches_verifier(row: dict[str, Any], item: dict[str, Any], binding_context: dict[str, str]) -> bool:
     if str(row.get("review_decision") or "").strip() != "replace_with_url":
         return False
     for field in CSV_FIELDS:
         if field in EDITABLE_COLUMNS:
             continue
-        if str(row.get(field) or "") != expected_csv_value(item, field):
+        if str(row.get(field) or "") != expected_csv_value(item, field, binding_context):
             return False
     source_url = str(item.get("source_url") or "")
     row_source_url = str(row.get("source_url") or "")
@@ -626,6 +685,8 @@ def empty_validation_report(
     *,
     triage_source: str,
     decision_sheet_source: str,
+    source_maintenance_run_id: str,
+    triage_plan_sha256: str,
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     return {
@@ -634,6 +695,8 @@ def empty_validation_report(
         "report_type": VALIDATION_REPORT_TYPE,
         "triage_source": triage_source,
         "decision_sheet_source": decision_sheet_source,
+        "source_maintenance_run_id": source_maintenance_run_id,
+        "triage_plan_sha256": triage_plan_sha256,
         "approved_repairs": [],
         "no_replacement_decisions": [],
         "deferred_decisions": [],
@@ -680,10 +743,14 @@ def validate_decision_sheet(
     verifier: Callable[[dict[str, Any], str], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     items = triage_items(triage_plan)
+    binding_context = binding_context_for(triage_plan, generated_at="")
+    binding_context.pop("decision_sheet_generated_at")
     index = build_triage_index(items)
     report = empty_validation_report(
         triage_source=triage_source,
         decision_sheet_source=str(decision_sheet_path),
+        source_maintenance_run_id=binding_context["source_maintenance_run_id"],
+        triage_plan_sha256=binding_context["triage_plan_sha256"],
         generated_at=generated_at,
     )
     fieldnames, rows = read_decision_sheet(decision_sheet_path)
@@ -711,6 +778,10 @@ def validate_decision_sheet(
 
     for row_number, row in rows:
         review_item_id = str(row.get("review_item_id") or "")
+        row_binding_context = {
+            **binding_context,
+            "decision_sheet_generated_at": str(row.get("decision_sheet_generated_at") or ""),
+        }
         if row.get("__extra_values__"):
             report["invalid_rows"].append(
                 invalid_row(row_number, review_item_id, ["unexpected_extra_values"], "row contains values beyond declared columns")
@@ -728,6 +799,11 @@ def validate_decision_sheet(
                 invalid_row(row_number, review_item_id, ["review_item_id_not_found"], "review_item_id does not exist in original triage plan")
             )
             continue
+        if blank(row.get("decision_sheet_generated_at")):
+            report["invalid_rows"].append(
+                invalid_row(row_number, review_item_id, ["decision_sheet_generated_at_missing"], "decision sheet generated timestamp is required")
+            )
+            continue
         decision = str(row.get("review_decision") or "").strip()
         if decision in ALLOWED_DECISIONS:
             decisions[decision] += 1
@@ -735,9 +811,10 @@ def validate_decision_sheet(
             row=row,
             row_number=row_number,
             item=item,
+            binding_context=row_binding_context,
             verifier=verifier,
         )
-        if replace_row_reaches_verifier(row, item):
+        if replace_row_reaches_verifier(row, item, row_binding_context):
             network_fetch_performed = True
         if invalid:
             report["invalid_rows"].append(invalid)
@@ -764,6 +841,8 @@ def build_validation_markdown(report: dict[str, Any]) -> str:
         "# OpenVA Source Review Decision Validation",
         "",
         f"Generated: {report['generated_at']}",
+        f"Source maintenance run: `{report['source_maintenance_run_id']}`",
+        f"Triage plan SHA-256: `{report['triage_plan_sha256']}`",
         "",
         "Reviewer input is untrusted. This report is the independent validation result.",
         "",
@@ -803,6 +882,7 @@ def build_validation_markdown(report: dict[str, Any]) -> str:
             "## Guardrails",
             "",
             "- This report does not mutate catalog source YAML.",
+            "- The decision sheet must be bound to the supplied triage plan SHA-256.",
             "- Approved replacements are only emitted after independent verification.",
             "- No-replacement and defer decisions are not source repairs.",
             "- Repair PR generation remains a separate later workflow.",
@@ -835,6 +915,8 @@ def export_reviewed_artifacts(validation: dict[str, Any], output_dir: Path) -> l
                 "schema_version": SCHEMA_VERSION,
                 "generated_at": now_iso(),
                 "report_type": report_type,
+                "source_maintenance_run_id": validation.get("source_maintenance_run_id"),
+                "triage_plan_sha256": validation.get("triage_plan_sha256"),
                 field: rows,
                 "summary": {"count": len(rows)},
                 "posture": validation.get("posture", {}),
