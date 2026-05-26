@@ -108,6 +108,12 @@ jobs:
             --output-json source-review-triage-plan.json \
             --output-csv source-review-triage-plan.csv \
             --output-md source-review-triage-summary.md
+      - name: Build source review decision sheet
+        run: |
+          python -m tools.openva.source_review_decisions build-sheet \
+            --triage-plan source-review-triage-plan.json \
+            --output-csv source-review-decision-sheet.csv \
+            --output-md source-review-decision-sheet-summary.md
       - name: Build promotion plan from maintenance reports
         run: |
           python -m tools.openva.promotion_planner plan \
@@ -176,6 +182,7 @@ jobs:
               "- `source-repair-sweep-*`: report-only partition of strict repair-ready, human-review, and no-replacement source rows.",
               "- `source-repair-batch-*`: report-only strict repair batch plan capped at 10 records.",
               "- `source-review-triage-*`: reviewer handoff for non-strict source repair sweep rows.",
+              "- `source-review-decision-sheet.csv`: blank reviewer decision sheet; editing it does not mutate catalog sources.",
               "",
           ]
           Path("summary.md").write_text("\n".join(lines), encoding="utf-8")
@@ -275,6 +282,7 @@ jobs:
             source-repair-sweep-summary.md
             source-repair-batch-summary.md
             source-review-triage-summary.md
+            source-review-decision-sheet-summary.md
             source-discovery-candidates.csv
             source-discovery-unavailable.csv
             source-repair-sweep-strict-candidates.csv
@@ -282,6 +290,7 @@ jobs:
             source-repair-sweep-no-replacement.csv
             source-repair-batch-plan.csv
             source-review-triage-plan.csv
+            source-review-decision-sheet.csv
             promotion-plan-actions.csv
             source-health-report.json
             source-verification-report.json
