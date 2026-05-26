@@ -25,6 +25,13 @@ SOURCE_TITLE_MAP = {
     "privacy_notice": "Privacy Notice",
     "security_page": "Security Page",
     "compliance_page": "Compliance Page",
+    "business_registry_record": "Business Registry Record",
+    "company_registry_profile": "Company Registry Profile",
+    "data_transfer_terms": "Data Transfer Terms",
+    "data_retention_terms": "Data Retention Terms",
+    "security_measures_terms": "Security Measures Terms",
+    "vulnerability_disclosure_policy": "Vulnerability Disclosure Policy",
+    "status_page": "Status Page",
     "other_public_source": "Public Source",
 }
 
@@ -164,6 +171,8 @@ def vendor_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
         "legal_name": None,
         "headquarters_country": str(vendor["headquarters_country_candidate"]),
         "regions_served": ["global"],
+        "identity_status": "brand_only",
+        "assurance_profile_status": "brand_source_stub",
         "official_domains": [domain],
         "public_entrypoints": [f"https://{domain}"],
         "vendor_categories": vendor.get("vendor_category_candidates") or [],
@@ -172,9 +181,9 @@ def vendor_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
             "gated_materials_excluded": True,
             "raw_documents_mirrored_by_default": False,
         },
-        "catalog_status": "active",
-        "notes": "Machine-strict catalog growth candidate promoted from public source discovery evidence. Metadata-only; not advisory.",
-        "entity_surface": "global_brand",
+        "catalog_status": "stub",
+        "notes": "Machine-strict catalog growth candidate promoted as a brand/source stub. Legal entity identity and registration details are unresolved until public registry evidence is added.",
+        "entity_surface": "brand_surface",
         "source_authority_language": "en",
     }
 
