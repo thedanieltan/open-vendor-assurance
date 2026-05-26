@@ -90,6 +90,8 @@ Do not add a scheduled workflow for this path. Do not automatically mutate catal
 
 Purpose: define whether no-replacement decisions live under `maintenance/reviewed/` or in a first-class unavailable-source catalog structure.
 
+Current status: design is documented in `NO_REPLACEMENT_TRUTH_STATE_DESIGN.md`. No application code or catalog schema write is implemented in this package.
+
 Do not implement until the truth-state schema is decided.
 
 ### Future Action C: workflow retirement
@@ -104,11 +106,15 @@ Do not delete all three in one package unless tests and docs prove no consumers 
 
 Purpose: at catalog scale, add sharded or incremental source checking.
 
+Current status: architecture is documented in `SOURCE_OPERATIONS_SCHEDULER_SPEC.md`. No workflow, scheduler command, or schedule change is implemented in this package.
+
 Do not implement now.
 
 ### Future Action E: catalog growth gating dashboard
 
 Purpose: show when Lane B promotion is allowed based on source-health debt.
+
+Current status: dashboard contract is documented in `CATALOG_GROWTH_GATING_DASHBOARD_SPEC.md`. No UI, workflow, or automatic promotion behavior is implemented in this package.
 
 Do not implement now.
 
