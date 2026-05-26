@@ -4,10 +4,10 @@
   "schema_version": "0.1.0",
   "source_type_counts": {
     "compliance_page": 94,
-    "dpa": 96,
+    "dpa": 100,
     "other_public_source": 2,
-    "privacy_notice": 139,
-    "security_page": 135,
+    "privacy_notice": 147,
+    "security_page": 137,
     "subprocessors_list": 105,
     "terms_of_service": 7,
     "trust_center": 4
@@ -296,6 +296,19 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "bigcommerce"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
         "security_page",
@@ -319,6 +332,19 @@
       "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "box"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa"
+      ],
+      "missing_core_source_types": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "braze"
     },
     {
       "candidate_source_types": [],
@@ -397,6 +423,19 @@
       "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "cohere"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa"
+      ],
+      "missing_core_source_types": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "commercetools"
     },
     {
       "candidate_source_types": [],
@@ -531,6 +570,19 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "dotdigital"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
         "security_page",
@@ -586,6 +638,19 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "emarsys"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page"
       ],
@@ -595,6 +660,19 @@
       ],
       "unavailable_source_types": [],
       "vendor_id": "employment-hero"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa"
+      ],
+      "missing_core_source_types": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "exoscale"
     },
     {
       "candidate_source_types": [],
@@ -622,6 +700,19 @@
       "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "freshworks"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "getresponse"
     },
     {
       "candidate_source_types": [],
@@ -763,6 +854,19 @@
       "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "help-scout"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "hetzner"
     },
     {
       "candidate_source_types": [],
@@ -959,6 +1063,19 @@
       "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "microsoft"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "security_page"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "microsoft-azure"
     },
     {
       "candidate_source_types": [],
@@ -1279,6 +1396,19 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "prismic"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "dpa",
         "privacy_notice",
         "security_page",
@@ -1584,6 +1714,32 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "dpa"
+      ],
+      "missing_core_source_types": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "storyblok"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "strapi"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -1765,6 +1921,19 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "security_page"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "vtex"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
         "security_page",
@@ -1814,6 +1983,19 @@
       "missing_core_source_types": [],
       "unavailable_source_types": [],
       "vendor_id": "wix"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "unavailable_source_types": [],
+      "vendor_id": "woocommerce"
     },
     {
       "candidate_source_types": [],
