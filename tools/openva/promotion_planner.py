@@ -14,6 +14,7 @@ from tools.openva.source_verification import ROOT, display_path
 PROMOTABLE_VERIFICATION_STATUSES = {"ok", "redirected"}
 PROMOTABLE_SEMANTIC_STATUSES = {"strong", "not_evaluated_pdf_sample"}
 REVIEWED_CANDIDATE_PROMOTION_ACTION = "promote_candidate_source_for_review"
+STRICT_GROWTH_PROMOTION_ACTION = "strict_catalog_growth_promotion"
 REVIEWABLE_VERIFICATION_STATUSES = {
     "suspect_inferred_url",
     "possible_mismatch",
@@ -43,6 +44,13 @@ def load_json_if_exists(path: Path | None) -> dict[str, Any] | None:
         return None
     with path.open("r", encoding="utf-8") as handle:
         data = json.load(handle)
+    if not isinstance(data, dict):
+        raise ValueError(f"{display_path(path)}: expected JSON object")
+    return data
+
+
+def load_json(path: Path) -> dict[str, Any]:
+    data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
         raise ValueError(f"{display_path(path)}: expected JSON object")
     return data
@@ -262,20 +270,80 @@ def build_promotion_plan(
     }
 
 
+def strict_growth_action(item: dict[str, Any], action: dict[str, Any]) -> dict[str, Any]:
+    vendor = action["vendor"]
+    source = action["source"]
+    return {
+        "action": STRICT_GROWTH_PROMOTION_ACTION,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "vendor": vendor,
+        "source": source,
+        "classification": item.get("classification"),
+        "reason_codes": item.get("reason_codes", []),
+        "requires_human_review": False,
+        "writes_canonical_vendors": False,
+        "writes_canonical_sources": False,
+        "strict_machine_candidate": True,
+        "non_advisory": True,
+    }
+
+
+def build_strict_growth_plan(eligibility_report: dict[str, Any]) -> dict[str, Any]:
+    if eligibility_report.get("report_type") != "catalog_growth_eligibility_report":
+        raise ValueError("expected catalog_growth_eligibility_report")
+    strict_by_vendor = {
+        str(item.get("candidate_vendor_id")): item
+        for item in eligibility_report.get("items", []) or []
+        if item.get("classification") == "strict_promote_ready"
+    }
+    actions = [
+        strict_growth_action(strict_by_vendor[str(action["vendor"]["candidate_vendor_id"])], action)
+        for action in eligibility_report.get("strict_promotions", []) or []
+        if str(action.get("vendor", {}).get("candidate_vendor_id")) in strict_by_vendor
+    ]
+    counts = Counter(action["action"] for action in actions)
+    return {
+        "schema_version": "0.1.0",
+        "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "report_type": "strict_growth_promotion_plan",
+        "posture": {
+            "network_fetch_performed": False,
+            "writes_repository_state": False,
+            "opens_pull_requests": False,
+            "writes_canonical_vendors": False,
+            "writes_canonical_sources": False,
+            "non_advisory": True,
+        },
+        "summary": {
+            "action_count": len(actions),
+            "actions_requiring_human_review": 0,
+            "action_types": dict(sorted(counts.items())),
+        },
+        "actions": actions,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="openva-promotion-planner")
-    parser.add_argument("command", choices={"plan"})
-    parser.add_argument("--verification-report", type=Path)
-    parser.add_argument("--discovery-report", type=Path)
-    parser.add_argument("--output", type=Path, default=ROOT / "promotion-plan.json")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    plan = subparsers.add_parser("plan")
+    plan.add_argument("--verification-report", type=Path)
+    plan.add_argument("--discovery-report", type=Path)
+    plan.add_argument("--output", type=Path, default=ROOT / "promotion-plan.json")
+    strict = subparsers.add_parser("plan-strict-growth")
+    strict.add_argument("--eligibility-report", type=Path, required=True)
+    strict.add_argument("--output", type=Path, default=ROOT / "strict-growth-promotion-plan.json")
     args = parser.parse_args()
 
-    plan = build_promotion_plan(
-        verification_report_path=args.verification_report,
-        discovery_report_path=args.discovery_report,
-    )
-    args.output.write_text(json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps(plan["summary"], indent=2, sort_keys=True))
+    if args.command == "plan-strict-growth":
+        result = build_strict_growth_plan(load_json(args.eligibility_report))
+    else:
+        result = build_promotion_plan(
+            verification_report_path=args.verification_report,
+            discovery_report_path=args.discovery_report,
+        )
+    args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(json.dumps(result["summary"], indent=2, sort_keys=True))
     return 0
 
 
