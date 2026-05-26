@@ -1,18 +1,18 @@
 # Catalog Growth Discovery
 
-OpenVA uses taxonomy-driven discovery to grow the launch corpus without treating discovered vendors or sources as canonical truth.
+OpenVA grows the catalog through staged discovery. Discovery output is not catalog truth.
 
 ## Control split
 
-`config/category-taxonomy.yaml` is the semantic authority. It defines coverage lanes, vendor category tags, artifact categories, and launch coverage expectations.
+`config/category-taxonomy.yaml` is the semantic control file. It defines coverage areas, vendor category tags, artifact categories, and coverage targets.
 
-`maintenance/queues/catalog-growth-discovery.json` is the operational queue. It selects which taxonomy lanes are active for launch discovery and sets bounded run limits.
+`maintenance/queues/catalog-growth-discovery.json` is the run queue. It selects active coverage areas and bounded run limits.
 
-`maintenance/queues/catalog-growth-scale-readiness.json` is the scale-readiness contract. It defines how OpenVA moves from bootstrap seed files to queue-driven discovery, evidence-scored promotion, and continuous refresh without weakening catalog write controls.
+`maintenance/queues/catalog-growth-scale-readiness.json` is the scale contract. It defines the move from bootstrap seed files to queue-driven discovery, reviewed promotion, and post-promotion maintenance.
 
 ## Discovery boundary
 
-The queue drives discovery reports and generated candidate-promotion plan proposals. It does not write canonical vendor or source records.
+The discovery queue produces reports and candidate-promotion plan proposals. It does not write canonical vendor or source records.
 
 Required queue posture:
 
@@ -24,7 +24,7 @@ creates_candidate_sources: false
 non_advisory: true
 ```
 
-The scale-readiness contract must also remain non-canonical:
+The scale contract is also non-executing:
 
 ```text
 writes_canonical_vendors: false
@@ -33,36 +33,33 @@ creates_pull_requests: false
 runs_promotion: false
 ```
 
-## Launch corpus goal
+## Launch corpus target
 
-The launch corpus target is a sizable starter registry, not every vendor in the world.
+The launch target is a starter vendor registry with useful coverage across major assurance areas. It is not a scrape of every company registry.
 
-The seed corpus favors global and regulated-industry spread over raw count. It should cover
-major lanes such as cloud platforms, CRM, payments, security, data and AI, developer tools,
-productivity, HR, healthcare, insurance, public sector and defense, commerce, GRC, KYC/risk,
-logistics, and APAC-focused discovery.
+Priority areas include cloud, CRM, payments, security, data and AI, developer tooling, productivity, HR, healthcare, insurance, public sector, commerce, GRC, KYC/risk, logistics, and APAC.
 
-APAC discovery is a regional lane, not a vendor category shortcut. Vendors in that lane must
-still carry functional `vendor_category_candidates` such as payments, cloud infrastructure,
-HR software, collaboration software, or ecommerce.
+APAC is a regional coverage area, not a substitute category. APAC candidates still need functional tags such as `payments`, `cloud_infrastructure`, `hr_software`, `collaboration_software`, or `ecommerce_platform`.
 
-## Staged identity-to-source pipeline
+## Pipeline
 
-The catalog growth path is intentionally staged:
+Catalog growth is staged:
 
 ```text
 seed vendor identities
--> validate IDs, domains, category tags, coverage lanes, and country-code shape
--> generate reviewed vendor-candidate reports
--> run official-domain source discovery for approved/materialized vendors
--> write candidate_sources or unavailable_sources
--> human or maintainer-agent review candidate promotions
--> promote approved sources into canonical records
--> use observation workflows to maintain freshness
+-> validate IDs, domains, tags, coverage areas, and country codes
+-> generate vendor-candidate reports
+-> run official-domain source discovery
+-> produce candidate_sources or unavailable_sources
+-> review candidate promotions
+-> commit reviewed plans under maintenance/reviewed/
+-> run candidate-promotion-pr.yml
+-> observe and maintain promoted records
 ```
 
-Seed identities live under `maintenance/seeds/vendors/`. They are not canonical vendor
-records and must keep:
+Seed identities live under `maintenance/seeds/vendors/`. They are staging records, not catalog records.
+
+Seed files must keep:
 
 ```text
 requires_review: true
@@ -76,11 +73,11 @@ Validate seed identity shape with:
 python -m tools.openva.vendor_candidate_discovery validate-seeds
 ```
 
-## Scale model after bootstrap seeds
+## Scale model after bootstrap
 
-Initial seed files are a bootstrap mechanism, not the permanent growth engine.
+Seed files bootstrap coverage. They are not the long-term growth mechanism.
 
-When a lane has enough seed identity coverage, growth should shift from manual seed expansion to queue-driven backlog selection:
+After a coverage area has enough seed coverage, candidate selection should come from:
 
 ```text
 coverage gaps
@@ -88,10 +85,10 @@ coverage gaps
 + candidate backlog state
 + official-domain authority
 + core source availability
--> next review-ready candidates
+-> review-ready candidates
 ```
 
-The durable lifecycle is:
+Candidate lifecycle:
 
 ```text
 seeded
@@ -105,35 +102,41 @@ seeded
 -> maintenance_required
 ```
 
-This keeps raw discovery and curated catalog records separate. Seed files and discovery reports are staging inputs. Reviewed plans under `maintenance/reviewed/` are promotion evidence. `data/vendors/**` remains the curated catalog.
+Keep the layers separate:
+
+```text
+seed files and discovery reports = staging input
+maintenance/reviewed/ = reviewed promotion evidence
+data/vendors/** = curated catalog
+```
 
 ## Promotion readiness
 
-A candidate should not become promotion-ready merely because it exists or has a website.
+A candidate is not promotion-ready just because it has a website.
 
-Promotion readiness requires evidence across these dimensions:
+A promotion-ready candidate needs:
 
-- personal-data relevance: the vendor is likely to process personal data, support cross-border transfer, act as a subprocessor, or appear in vendor assurance workflows
-- official-domain authority: the vendor has a clear official domain and source URLs can be evaluated against that domain
-- core source coverage: discovery found at least one source candidate from the core source set
-- coverage-gap fit: the candidate fills a taxonomy lane, region, or regulated-industry gap
-- dedupe confidence: the candidate does not duplicate an existing canonical vendor, product surface, entity family, or reviewed candidate
-- source-health budget: Lane B should slow down if Lane A source debt exceeds the allowed budget
+- personal-data relevance: processes personal data, supports cross-border transfer, acts as a subprocessor, or commonly appears in assurance reviews
+- official-domain authority: official domain is clear enough to evaluate source URLs
+- core source coverage: discovery found at least one core source candidate
+- coverage-gap fit: candidate fills a priority coverage area, region, or regulated-industry gap
+- dedupe confidence: candidate does not duplicate an existing vendor, product surface, entity family, or reviewed candidate
+- source-health budget: catalog growth does not outpace source-maintenance capacity
 
-Promotion is blocked when any of the following applies:
+Block promotion when:
 
 - official domain is unknown
 - candidate duplicates an existing vendor or entity family
 - no public source candidates are available
-- source type appears mismatched
+- source type is mismatched
 - only gated materials are available
 - promotion would require raw document mirroring
 - source-health budget is exceeded
 - reviewed plan is not committed under `maintenance/reviewed/`
 
-## Core and extended source types
+## Source type scope
 
-The current growth queue intentionally starts with the core vendor-assurance source set:
+Start with the core vendor-assurance source set:
 
 ```text
 dpa
@@ -142,9 +145,9 @@ privacy_notice
 security_page
 ```
 
-These are the minimum useful source families for vendor assurance intake and evidence preparation.
+These are sufficient for vendor assurance intake and evidence preparation.
 
-Extended source types are deferred until the core discovery and promotion loop proves reliable:
+Defer extended source types until the core loop is stable:
 
 ```text
 trust_center
@@ -156,32 +159,32 @@ ai_terms
 data_transfer_terms
 ```
 
-Do not expand the automated target source set until core-source discovery quality, promotion batching, and Lane A source maintenance are stable.
+Do not expand the automated source target set until core-source discovery, promotion batching, and source maintenance are stable.
 
 ## Automated workflow
 
-`catalog-growth-discovery` runs on schedule and by manual dispatch.
+`catalog-growth-discovery.yml` runs on schedule and by manual dispatch.
 
-It performs this path:
+Workflow path:
 
 ```text
 catalog-growth-discovery queue
 -> validate taxonomy-linked queue
--> discover new vendor candidates from public index surfaces
--> run source discovery against bounded existing vendor scope
+-> discover vendor candidates
+-> run source discovery against bounded vendor scope
 -> build promotion plan
--> split candidate promotion actions into generated plan proposals
+-> split promotion actions into plan proposals
 -> update catalog growth discovery issue
--> upload workflow artifacts
+-> upload artifacts
 ```
 
-The workflow writes no canonical records and opens no Catalog PR directly.
+The workflow writes no canonical records and opens no Catalog PR.
 
 ## Vendor candidates
 
-Vendor candidates are launch-corpus discovery outputs. They are not catalog vendor records.
+Vendor candidates are staging outputs. They are not catalog records.
 
-A vendor candidate may identify:
+A vendor candidate may include:
 
 ```text
 candidate_vendor_id
@@ -194,11 +197,11 @@ cohort_id
 source_index_url
 ```
 
-A maintainer or maintainer-agent must review vendor candidates before any canonical vendor record is created.
+A maintainer or maintainer-agent must review vendor candidates before any catalog record is created.
 
 ## Source candidates
 
-Generated candidate-promotion plan proposals are review inputs. Maintainers or maintainer-agents may copy approved proposals into `maintenance/reviewed/` before using `candidate-promotion-pr`.
+Generated candidate-promotion plan proposals are review inputs. Approved proposals may be copied into `maintenance/reviewed/` before running `candidate-promotion-pr.yml`.
 
 ## Batching
 
@@ -210,23 +213,23 @@ Default batch size:
 50 candidate-promotion actions per generated plan proposal
 ```
 
-Preferred initial batch size while the loop is still being proven:
+Preferred initial reviewed batch size:
 
 ```text
 25 candidate-promotion actions per reviewed plan
 ```
 
-This keeps later Catalog PRs reviewable as the repository grows to thousands of vendors.
+Keep batches small enough for review.
 
 ## Guardrails
 
-- taxonomy lanes must exist in `config/category-taxonomy.yaml`
+- taxonomy coverage areas must exist in `config/category-taxonomy.yaml`
 - source types must map through taxonomy artifact categories
-- no canonical writes from the queue or discovery workflow
+- no canonical writes from queue or discovery workflows
 - no candidate auto-promotion
 - no raw vendor document mirroring
 - no vendor approval or suitability conclusion
-- batch limits must stay small enough for reviewable PRs
-- seed files must not become canonical vendor records
+- batch limits must stay reviewable
+- seed files must not become catalog records
 - `candidate-promotion-pr.yml` remains the controlled catalog write path
-- Lane B growth must not bypass Lane A source-health constraints
+- catalog growth must not bypass source-health constraints
