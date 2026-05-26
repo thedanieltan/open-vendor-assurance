@@ -8,7 +8,7 @@ from tools.openva.catalog_growth_eligibility import (
     REJECT_WEAK_SEMANTIC_MATCH,
     STRICT_PROMOTE_READY,
     build_catalog_growth_eligibility,
-    main,
+    write_outputs,
 )
 
 
@@ -120,27 +120,20 @@ def test_existing_vendor_is_rejected(tmp_path: Path):
     assert report["summary"]["strict_promote_ready_count"] == 0
 
 
-def test_cli_writes_report_csv_and_markdown_outputs(tmp_path: Path):
-    vendor_path = tmp_path / "vendor-candidates.json"
-    source_path = tmp_path / "source-discovery.json"
+def test_writer_outputs_report_csv_and_markdown(tmp_path: Path):
+    report = build_catalog_growth_eligibility(
+        vendor_report([vendor(), vendor("vendor-b", "vendor-b.example")]),
+        source_report([{"vendor_id": "vendor-a", "candidates": [source()], "observations": []}]),
+        root=tmp_path,
+        generated_at="2026-05-26T00:00:00Z",
+    )
     output_json = tmp_path / "catalog-growth-eligibility-report.json"
     output_strict = tmp_path / "catalog-growth-strict-promotions.json"
     output_review = tmp_path / "catalog-growth-review-required.csv"
     output_rejected = tmp_path / "catalog-growth-rejected.csv"
     output_md = tmp_path / "catalog-growth-eligibility-summary.md"
-    vendor_path.write_text(json.dumps(vendor_report([vendor(), vendor("vendor-b", "vendor-b.example")])), encoding="utf-8")
-    source_path.write_text(json.dumps(source_report([{"vendor_id": "vendor-a", "candidates": [source()], "observations": []}])), encoding="utf-8")
 
-    assert main([
-        "classify",
-        "--vendor-candidates", str(vendor_path),
-        "--source-discovery", str(source_path),
-        "--output-json", str(output_json),
-        "--output-strict", str(output_strict),
-        "--output-review-csv", str(output_review),
-        "--output-rejected-csv", str(output_rejected),
-        "--output-md", str(output_md),
-    ]) == 0
+    write_outputs(report, output_json, output_strict, output_review, output_rejected, output_md)
 
     assert json.loads(output_json.read_text(encoding="utf-8"))["summary"]["candidate_count"] == 2
     assert json.loads(output_strict.read_text(encoding="utf-8"))["summary"]["action_count"] == 1
