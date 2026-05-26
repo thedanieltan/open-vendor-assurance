@@ -21,7 +21,7 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `catalog-pr-guard.yml` | `keep_core` | Catalog PR scope guard. | Keep. |
 | `agent-weighted-review.yml` | `keep_core` | Advisory review agents add reviewer signal without merging or mutating catalog files. | Keep. |
 | `agent-automerge.yml` | `keep_core` | Controlled automerge lane with preflight and validation before merge. | Keep without policy relaxation. |
-| `source-maintenance-report.yml` | `edit_existing` | Source cleanup/reporting entry point. It should keep the full operator artifact but expose a one-file reviewer inbox. | Edit in place to add reviewer-only artifact; do not create a new workflow. |
+| `source-maintenance-report.yml` | `edit_existing` | Source cleanup/reporting entry point. It keeps the full operator artifact and exposes a one-file reviewer inbox. | Keep in place. Maintain reviewer/operator artifact separation. |
 | `source-refinement-scan.yml` | `keep_core` | Confirms P0 source repair candidates from repeated source maintenance evidence. | Keep. |
 | `source-repair-pr.yml` | `keep_core` | Manual, reviewed, validated source repair PR creation path. | Keep manual and reviewed-only. |
 | `source-repair-pr-cleanup.yml` | `keep_core` | Cleans up stale generated source repair PRs. | Keep. |
@@ -79,7 +79,9 @@ Keep only if it tracks non-source observations still needed by the project. If n
 
 Purpose: after a reviewer returns `source-review-decision-sheet.csv`, run validation manually or through an existing controlled path.
 
-Do not add a scheduled workflow yet. Do not automatically mutate catalog records from reviewer sheets.
+Current status: handoff hardening is documented. The controlled path is `source_review_decisions validate-sheet` followed by `source_review_decisions export-reviewed-artifacts` only when validation has zero invalid rows. Reviewed artifacts must be committed under `maintenance/reviewed/` before `source-repair-pr.yml` is run.
+
+Do not add a scheduled workflow for this path. Do not automatically mutate catalog records from reviewer sheets. Do not run `source-repair-pr.yml` from uncommitted reviewer input.
 
 ### Future Action B: reviewed no-replacement truth-state application
 
