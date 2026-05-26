@@ -6,12 +6,15 @@ The short version:
 
 ```text
 Reviewer fills the spreadsheet
-→ Maintainer checks it
-→ Maintainer commits validated review evidence
+→ Maintainer-agent checks it
+→ Maintainer-agent opens a reviewed-evidence PR
+→ CI and policy checks decide whether it can merge
 → A later repair PR changes the catalog if needed
 ```
 
 Reviewers do **not** need to understand GitHub Actions, JSON artifacts, or catalog internals. Their job is to review the rows in the spreadsheet and fill only the reviewer columns.
+
+OpenVA is designed so a maintainer-agent can handle routine validation and PR preparation. A human maintainer is needed only for exceptions, policy changes, ambiguous cases, or repository administration.
 
 ## For reviewers
 
@@ -46,24 +49,42 @@ Allowed `review_decision` values:
 | `reject_candidate_mismatch` | The proposed replacement does not match the source type or vendor. |
 | `keep_existing_source` | The current source should remain for now. |
 
-Then return the completed CSV to the maintainer. Do not open a PR with the CSV.
+Then return the completed CSV through the project’s review channel. Do not open a PR with the CSV.
 
-## For maintainers
+## For maintainer-agents
 
 The completed CSV is reviewer input. It is checked before anything is committed.
 
-The maintainer flow is:
+The maintainer-agent flow is:
 
 ```text
 receive completed CSV
 → validate it against the matching source-review-triage-plan.json
 → stop if validation finds invalid rows
 → export reviewed artifacts if validation passes
-→ commit only reviewed artifacts under maintenance/reviewed/
+→ open a PR containing only reviewed artifacts under maintenance/reviewed/
+→ let CI and policy checks decide whether the PR can merge
 → run the later source repair process if repairs were approved
 ```
 
 The CSV itself is not committed to the repo. The repo stores validated review evidence, not the raw spreadsheet.
+
+A maintainer-agent may prepare and open PRs, but it should not bypass validation, branch protection, CI, or path-scope rules.
+
+## Human intervention policy
+
+Routine cases should not require a human maintainer.
+
+A human maintainer is needed only when:
+
+- validation fails and the failure needs judgment,
+- the reviewer changed non-reviewer columns,
+- a replacement URL is ambiguous,
+- a source type or schema rule needs policy interpretation,
+- exported files would fall outside the approved path,
+- a workflow, validator, release gate, or automerge policy must change.
+
+This keeps maintenance mostly autonomous while preserving a human escape hatch for policy and ambiguity.
 
 ## Why the CSV is not committed
 
@@ -81,7 +102,7 @@ The reviewer sheet contains hidden-in-plain-sight binding columns:
 
 Reviewers should not edit these columns.
 
-When the maintainer validates the sheet, OpenVA checks that:
+When the maintainer-agent validates the sheet, OpenVA checks that:
 
 - the sheet belongs to the matching source report,
 - the sheet matches the original triage plan,
@@ -92,7 +113,7 @@ When the maintainer validates the sheet, OpenVA checks that:
 
 These checks let contributors use a simple spreadsheet while keeping catalog updates controlled.
 
-## Commands for maintainers
+## Commands for maintainer-agents
 
 Build a blank reviewer sheet from the triage plan:
 
@@ -145,20 +166,21 @@ If a reviewer approved source repairs, a later controlled repair PR applies thos
 
 ## Stop conditions
 
-Stop and ask for maintainer review if:
+Stop and request human maintainer review only when automated validation cannot safely resolve the case:
 
 - the completed CSV does not validate,
 - the sheet was mixed with rows from another run,
 - a replacement URL fails verification,
 - a reviewer changed non-reviewer columns,
-- exported files would be written outside `maintenance/reviewed/`.
+- exported files would be written outside `maintenance/reviewed/`,
+- a policy decision is required.
 
 ## Non-goals
 
 This handoff does not:
 
 - let reviewers directly edit catalog files,
-- automatically mutate source records,
+- automatically mutate source records from the CSV,
 - automatically apply no-replacement truth-state,
 - generate repair PRs directly from the CSV,
 - relax validation, source-health, PR safety, release, or automerge gates.
