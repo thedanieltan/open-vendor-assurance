@@ -2,7 +2,11 @@ from pathlib import Path
 
 import yaml
 
-from tools.openva.source_discovery import build_discovery_report, discover_for_vendor
+from tools.openva.source_discovery import (
+    build_discovery_report,
+    build_vendor_candidate_discovery_report,
+    discover_for_vendor,
+)
 from tools.openva.source_verification import FetchResult
 
 
@@ -39,6 +43,28 @@ def vendor_record() -> dict:
             "raw_documents_mirrored_by_default": False,
         },
         "status": "active",
+    }
+
+
+def vendor_candidate_report(rows: list[dict]) -> dict:
+    return {
+        "schema_version": "0.1.0",
+        "report_type": "vendor_candidate_discovery_report",
+        "vendor_candidates": rows,
+    }
+
+
+def vendor_candidate(vendor_id="candidate-a", domain="candidate-a.example") -> dict:
+    return {
+        "candidate_vendor_id": vendor_id,
+        "display_name_candidate": "Candidate A",
+        "official_domain_candidate": domain,
+        "coverage_lane": "security",
+        "cohort_id": "security-001",
+        "source_index_url": f"https://{domain}",
+        "requires_review": True,
+        "writes_canonical_vendors": False,
+        "non_advisory": True,
     }
 
 
@@ -141,3 +167,38 @@ def test_discovery_write_mode_writes_only_candidate_and_unavailable_records(tmp_
     assert list((tmp_path / "data/vendors/example/sources").glob("*.yaml")) == []
     assert list((tmp_path / "data/vendors/example/candidate_sources").glob("*.yaml"))
     assert list((tmp_path / "data/vendors/example/unavailable_sources").glob("*.yaml"))
+
+
+def test_vendor_candidate_mode_discovers_sources_without_writing_catalog(tmp_path):
+    url = "https://candidate-a.example/security"
+    report = build_vendor_candidate_discovery_report(
+        vendor_candidate_report([vendor_candidate()]),
+        root=tmp_path,
+        fetcher=fetcher_for({url: "Security encryption SOC 2 compliance"}),
+        source_types=("security_page",),
+    )
+
+    assert report["discovery_context"] == "vendor_candidate_source_discovery"
+    assert report["posture"]["writes_repository_state"] is False
+    assert report["summary"]["vendor_candidates_checked"] == 1
+    assert report["summary"]["candidate_sources_written_or_reported"] == 1
+    candidate = report["vendors"][0]["candidates"][0]
+    assert candidate["vendor_id"] == "candidate-a"
+    assert candidate["candidate_url"] == url
+    assert candidate["confidence"] == "likely"
+
+
+def test_vendor_candidate_mode_respects_vendor_limit(tmp_path):
+    report = build_vendor_candidate_discovery_report(
+        vendor_candidate_report([
+            vendor_candidate("candidate-a", "candidate-a.example"),
+            vendor_candidate("candidate-b", "candidate-b.example"),
+        ]),
+        root=tmp_path,
+        fetcher=fetcher_for({}),
+        vendor_limit=1,
+        source_types=("security_page",),
+    )
+
+    assert report["summary"]["vendor_candidates_checked"] == 1
+    assert report["vendors"][0]["vendor_id"] == "candidate-a"

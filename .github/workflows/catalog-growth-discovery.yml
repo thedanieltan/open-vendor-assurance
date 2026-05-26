@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       vendor_limit:
-        description: "Optional number of existing vendors to discover against"
+        description: "Optional number of vendors/candidates to discover against"
         required: false
         type: string
       max_actions_per_plan:
@@ -46,7 +46,21 @@ jobs:
         run: |
           python -m tools.openva.vendor_candidate_discovery discover \
             --output vendor-candidate-discovery-report.json
-      - name: Build source discovery report
+      - name: Discover sources for vendor candidates
+        run: |
+          set -euo pipefail
+          LIMIT="$(printf '%s' "$VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          if [ -n "$LIMIT" ]; then
+            python -m tools.openva.source_discovery discover-vendor-candidates \
+              --vendor-candidates vendor-candidate-discovery-report.json \
+              --vendor-limit "$LIMIT" \
+              --output vendor-candidate-source-discovery-report.json
+          else
+            python -m tools.openva.source_discovery discover-vendor-candidates \
+              --vendor-candidates vendor-candidate-discovery-report.json \
+              --output vendor-candidate-source-discovery-report.json
+          fi
+      - name: Build existing vendor source discovery report
         run: |
           set -euo pipefail
           LIMIT="$(printf '%s' "$VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
@@ -55,7 +69,7 @@ jobs:
           else
             python -m tools.openva.source_discovery discover --output source-discovery-report.json
           fi
-      - name: Build promotion plan from discovery report
+      - name: Build promotion plan from existing vendor discovery report
         run: |
           python -m tools.openva.promotion_planner plan \
             --discovery-report source-discovery-report.json \
@@ -65,12 +79,17 @@ jobs:
           mkdir -p reports
           python -m tools.openva.catalog_growth_eligibility classify \
             --vendor-candidates vendor-candidate-discovery-report.json \
-            --source-discovery source-discovery-report.json \
+            --source-discovery vendor-candidate-source-discovery-report.json \
             --output-json catalog-growth-eligibility-report.json \
             --output-strict catalog-growth-strict-promotions.json \
             --output-review-csv reports/catalog-growth-review-required.csv \
             --output-rejected-csv reports/catalog-growth-rejected.csv \
             --output-md reports/catalog-growth-eligibility-summary.md
+      - name: Build strict growth promotion plan
+        run: |
+          python -m tools.openva.promotion_planner plan-strict-growth \
+            --eligibility-report catalog-growth-eligibility-report.json \
+            --output strict-growth-promotion-plan.json
       - name: Build batched candidate promotion plan proposals
         run: |
           set -euo pipefail
@@ -92,8 +111,10 @@ jobs:
           Path('reports').mkdir(exist_ok=True)
           queue = json.load(open('catalog-growth-discovery-queue-summary.json', encoding='utf-8'))
           vendors = json.load(open('vendor-candidate-discovery-report.json', encoding='utf-8'))
+          enrichment = json.load(open('vendor-candidate-source-discovery-report.json', encoding='utf-8'))
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
+          strict_growth = json.load(open('strict-growth-promotion-plan.json', encoding='utf-8'))
           batches = json.load(open('promotion-plan-batch-summary.json', encoding='utf-8'))
           eligibility = json.load(open('catalog-growth-eligibility-report.json', encoding='utf-8'))
           lines = [
@@ -116,7 +137,13 @@ jobs:
               f"- New vendor candidates reported: `{vendors['summary']['candidate_vendor_count']}`",
               f"- Known vendors skipped from candidate report: `{vendors['summary']['known_vendor_count']}`",
               '',
-              '## Source discovery summary',
+              '## Vendor candidate source discovery',
+              '',
+              f"- Vendor candidates checked: `{enrichment['summary']['vendor_candidates_checked']}`",
+              f"- Candidate sources reported: `{enrichment['summary']['candidate_sources_written_or_reported']}`",
+              f"- Unavailable sources reported: `{enrichment['summary']['unavailable_sources_written_or_reported']}`",
+              '',
+              '## Existing vendor source discovery summary',
               '',
               f"- Existing vendors checked: `{discovery['summary']['vendors_checked']}`",
               f"- Candidate sources reported: `{discovery['summary']['candidate_sources_written_or_reported']}`",
@@ -129,7 +156,11 @@ jobs:
               f"- Review required: `{eligibility['summary']['review_required_count']}`",
               f"- Rejected or deferred: `{eligibility['summary']['rejected_or_deferred_count']}`",
               '',
-              '## Promotion planning summary',
+              '## Strict growth planning summary',
+              '',
+              f"- Strict growth actions: `{strict_growth['summary']['action_count']}`",
+              '',
+              '## Existing vendor promotion planning summary',
               '',
               f"- Plan actions: `{promotion['summary']['action_count']}`",
               f"- Candidate promotion batches: `{batches['summary']['batch_count']}`",
@@ -137,62 +168,65 @@ jobs:
               '',
               '## Next step',
               '',
-              'Review strict growth eligibility artifacts before enabling automated strict-promotion PR generation.',
+              'Use strict growth promotion plans through the existing candidate-promotion apply path; do not bypass validation or source preflight.',
               '',
           ]
           Path('catalog-growth-discovery-issue.md').write_text('\n'.join(lines), encoding='utf-8')
           Path('reports/catalog-growth-discovery-summary.md').write_text('\n'.join(lines), encoding='utf-8')
 
           with open('reports/vendor-candidates.csv', 'w', encoding='utf-8', newline='') as handle:
-              fields = [
-                  'candidate_vendor_id',
-                  'display_name_candidate',
-                  'official_domain_candidate',
-                  'coverage_lane',
-                  'cohort_id',
-                  'source_index_url',
-              ]
+              fields = ['candidate_vendor_id', 'display_name_candidate', 'official_domain_candidate', 'coverage_lane', 'cohort_id', 'source_index_url']
               writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
               writer.writeheader()
               for candidate in vendors.get('vendor_candidates', []):
                   writer.writerow(candidate)
 
-          candidate_rows = []
-          unavailable_rows = []
-          for vendor in discovery.get('vendors', []):
-              for candidate in vendor.get('candidates', []):
-                  evidence = candidate.get('evidence', {})
-                  candidate_rows.append({
-                      'vendor_id': candidate.get('vendor_id'),
-                      'candidate_source_id': candidate.get('candidate_source_id'),
-                      'source_type_candidate': candidate.get('source_type_candidate'),
-                      'candidate_url': candidate.get('candidate_url'),
-                      'confidence': candidate.get('confidence'),
-                      'http_status': evidence.get('http_status'),
-                      'final_url': evidence.get('final_url'),
-                      'matched_terms': ';'.join(evidence.get('matched_terms', [])),
-                  })
-              for unavailable in vendor.get('unavailable_sources', []):
-                  unavailable_rows.append({
-                      'vendor_id': unavailable.get('vendor_id'),
-                      'unavailable_source_id': unavailable.get('unavailable_source_id'),
-                      'source_type': unavailable.get('source_type'),
-                      'status': unavailable.get('status'),
-                      'reason': unavailable.get('reason'),
-                      'next_review_after': unavailable.get('next_review_after'),
-                  })
-          with open('reports/source-discovery-candidates.csv', 'w', encoding='utf-8', newline='') as handle:
-              fields = ['vendor_id', 'candidate_source_id', 'source_type_candidate', 'candidate_url', 'confidence', 'http_status', 'final_url', 'matched_terms']
-              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
-              writer.writeheader()
-              for row in candidate_rows:
-                  writer.writerow(row)
-          with open('reports/source-discovery-unavailable.csv', 'w', encoding='utf-8', newline='') as handle:
-              fields = ['vendor_id', 'unavailable_source_id', 'source_type', 'status', 'reason', 'next_review_after']
-              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
-              writer.writeheader()
-              for row in unavailable_rows:
-                  writer.writerow(row)
+          def write_candidate_rows(report, path):
+              rows = []
+              for vendor in report.get('vendors', []):
+                  for candidate in vendor.get('candidates', []):
+                      evidence = candidate.get('evidence', {})
+                      rows.append({
+                          'vendor_id': candidate.get('vendor_id'),
+                          'candidate_source_id': candidate.get('candidate_source_id'),
+                          'source_type_candidate': candidate.get('source_type_candidate'),
+                          'candidate_url': candidate.get('candidate_url'),
+                          'confidence': candidate.get('confidence'),
+                          'http_status': evidence.get('http_status'),
+                          'final_url': evidence.get('final_url'),
+                          'matched_terms': ';'.join(evidence.get('matched_terms', [])),
+                      })
+              with open(path, 'w', encoding='utf-8', newline='') as handle:
+                  fields = ['vendor_id', 'candidate_source_id', 'source_type_candidate', 'candidate_url', 'confidence', 'http_status', 'final_url', 'matched_terms']
+                  writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+                  writer.writeheader()
+                  for row in rows:
+                      writer.writerow(row)
+
+          def write_unavailable_rows(report, path):
+              rows = []
+              for vendor in report.get('vendors', []):
+                  for unavailable in vendor.get('unavailable_sources', []):
+                      rows.append({
+                          'vendor_id': unavailable.get('vendor_id'),
+                          'unavailable_source_id': unavailable.get('unavailable_source_id'),
+                          'source_type': unavailable.get('source_type'),
+                          'status': unavailable.get('status'),
+                          'reason': unavailable.get('reason'),
+                          'next_review_after': unavailable.get('next_review_after'),
+                      })
+              with open(path, 'w', encoding='utf-8', newline='') as handle:
+                  fields = ['vendor_id', 'unavailable_source_id', 'source_type', 'status', 'reason', 'next_review_after']
+                  writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+                  writer.writeheader()
+                  for row in rows:
+                      writer.writerow(row)
+
+          write_candidate_rows(enrichment, 'reports/vendor-candidate-source-candidates.csv')
+          write_unavailable_rows(enrichment, 'reports/vendor-candidate-source-unavailable.csv')
+          write_candidate_rows(discovery, 'reports/source-discovery-candidates.csv')
+          write_unavailable_rows(discovery, 'reports/source-discovery-unavailable.csv')
+
           with open('reports/promotion-plan-actions.csv', 'w', encoding='utf-8', newline='') as handle:
               fields = ['action', 'vendor_id', 'source_type', 'source_id', 'candidate_source_id', 'unavailable_source_id', 'reason']
               writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
@@ -223,13 +257,17 @@ jobs:
             reports/catalog-growth-review-required.csv
             reports/catalog-growth-rejected.csv
             reports/vendor-candidates.csv
+            reports/vendor-candidate-source-candidates.csv
+            reports/vendor-candidate-source-unavailable.csv
             reports/source-discovery-candidates.csv
             reports/source-discovery-unavailable.csv
             reports/promotion-plan-actions.csv
             catalog-growth-discovery-queue-summary.json
             vendor-candidate-discovery-report.json
+            vendor-candidate-source-discovery-report.json
             source-discovery-report.json
             promotion-plan.json
+            strict-growth-promotion-plan.json
             promotion-plan-batch-summary.json
             catalog-growth-eligibility-report.json
             catalog-growth-strict-promotions.json
