@@ -124,7 +124,7 @@ def test_apply_reviewed_candidate_promotion_skips_duplicate_source(tmp_path):
     assert report["summary"]["skipped_actions"] == 1
 
 
-def test_apply_strict_growth_writes_vendor_source_artifact_and_change(tmp_path):
+def test_apply_strict_growth_writes_brand_stub_vendor_source_artifact_and_change(tmp_path):
     report = apply_candidate_promotions({"actions": [strict_growth_action()]}, root=tmp_path)
     vendor_path = tmp_path / "data/vendors/candidate-a/vendor.yaml"
     source_path = tmp_path / "data/vendors/candidate-a/sources/candidate-a-security-page.yaml"
@@ -141,7 +141,9 @@ def test_apply_strict_growth_writes_vendor_source_artifact_and_change(tmp_path):
     assert report["summary"]["canonical_artifacts_written"] == 1
     assert report["summary"]["change_events_written"] == 1
     assert vendor["vendor_id"] == "candidate-a"
-    assert vendor["catalog_status"] == "active"
+    assert vendor["catalog_status"] == "stub"
+    assert vendor["identity_status"] == "brand_only"
+    assert vendor["assurance_profile_status"] == "brand_source_stub"
     assert vendor["source_policy"]["public_sources_only"] is True
     assert source["source_id"] == "candidate-a-security-page"
     assert source["source_url"] == "https://candidate-a.example/security"
@@ -171,7 +173,9 @@ def test_apply_strict_growth_writes_multiple_sources_for_same_new_vendor(tmp_pat
     assert report["summary"]["canonical_artifacts_written"] == 2
     assert report["summary"]["change_events_written"] == 2
     assert report["summary"]["skipped_actions"] == 0
-    assert (tmp_path / "data/vendors/candidate-a/vendor.yaml").exists()
+    vendor = yaml.safe_load((tmp_path / "data/vendors/candidate-a/vendor.yaml").read_text(encoding="utf-8"))
+    assert vendor["catalog_status"] == "stub"
+    assert vendor["identity_status"] == "brand_only"
     assert (tmp_path / "data/vendors/candidate-a/sources/candidate-a-security-page.yaml").exists()
     assert (tmp_path / "data/vendors/candidate-a/sources/candidate-a-privacy-notice.yaml").exists()
 
