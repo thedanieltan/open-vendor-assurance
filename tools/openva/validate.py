@@ -369,6 +369,7 @@ def validate_unavailable_truth_state(path: str, unavailable: dict[str, Any], sou
     failures: list[str] = []
     truth_state = unavailable.get("truth_state")
     original_source = unavailable.get("original_source")
+    truth_state_status = unavailable.get("truth_state_status")
 
     if truth_state == "reviewed_no_replacement_available":
         if not str(unavailable.get("reviewed_artifact_path", "")).startswith("maintenance/reviewed/"):
@@ -377,7 +378,7 @@ def validate_unavailable_truth_state(path: str, unavailable: dict[str, Any], sou
             failures.append(f"{path}: validation_report_path must be under maintenance/reviewed/")
         if unavailable.get("reviewed_by") == "agent":
             failures.append(f"{path}: reviewed_no_replacement_available must be reviewed by human or hybrid, not agent")
-        if unavailable.get("superseded_by_source_id"):
+        if truth_state_status != "superseded" and unavailable.get("superseded_by_source_id"):
             failures.append(f"{path}: current reviewed_no_replacement_available must not set superseded_by_source_id unless truth_state_status is superseded")
         if isinstance(original_source, dict):
             source_id = original_source.get("source_id")
@@ -391,10 +392,10 @@ def validate_unavailable_truth_state(path: str, unavailable: dict[str, Any], sou
                     failures.append(f"{path}: original_source.source_type must match referenced source_id {source_id}")
                 if source.get("source_url") != original_source.get("source_url"):
                     failures.append(f"{path}: original_source.source_url must match referenced source_id {source_id}")
-        if unavailable.get("truth_state_status") in {"stale", "expired"} and not unavailable.get("reviewer_note"):
+        if truth_state_status in {"stale", "expired"} and not unavailable.get("reviewer_note"):
             failures.append(f"{path}: stale or expired no-replacement state requires reviewer_note")
 
-    if unavailable.get("truth_state_status") == "superseded":
+    if truth_state_status == "superseded":
         superseded_by = unavailable.get("superseded_by_source_id")
         source = sources_by_id.get(superseded_by)
         if not source:
