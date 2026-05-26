@@ -103,6 +103,14 @@ def types(records: list[dict[str, Any]], key: str) -> list[str]:
     return sorted({str(record[key]) for record in records if record.get(key)})
 
 
+def has_registration_number(entities: list[dict[str, Any]]) -> bool:
+    return any(bool(entity.get("registration_number")) for entity in entities)
+
+
+def has_canonical_entity(entities: list[dict[str, Any]]) -> bool:
+    return any(entity.get("catalog_status") == "canonical" for entity in entities)
+
+
 def vendor_manifest(
     vendor: dict[str, Any],
     sources: list[dict[str, Any]],
@@ -133,6 +141,10 @@ def vendor_manifest(
             "unavailable_source_count": len(unavailable),
             "legal_entity_count": len(legal_entities),
             "entity_mention_count": len(entity_mentions),
+            "has_canonical_legal_entity": has_canonical_entity(legal_entities),
+            "has_registration_number": has_registration_number(legal_entities),
+            "identity_status": vendor.get("identity_status"),
+            "assurance_profile_status": vendor.get("assurance_profile_status"),
             "source_types": types(sources, "source_type"),
             "candidate_source_types": types(candidates, "source_type_candidate"),
             "unavailable_source_types": types(unavailable, "source_type"),
@@ -145,9 +157,11 @@ def build_search_index(record_sets: dict[str, list[dict[str, Any]]]) -> dict[str
     sources = by_vendor(record_sets["source"])
     candidates = by_vendor(record_sets["candidate_source"])
     unavailable = by_vendor(record_sets["unavailable_source"])
+    legal_entities = by_vendor(record_sets["legal_entity"])
     items = []
     for vendor in record_sets["vendor"]:
         vendor_id = str(vendor["vendor_id"])
+        vendor_entities = legal_entities.get(vendor_id, [])
         items.append({
             "vendor_id": vendor_id,
             "display_name": vendor.get("display_name"),
@@ -156,6 +170,10 @@ def build_search_index(record_sets: dict[str, list[dict[str, Any]]]) -> dict[str
             "headquarters_country": vendor.get("headquarters_country"),
             "catalog_status": vendor.get("catalog_status", vendor.get("status")),
             "status": vendor.get("status", vendor.get("catalog_status")),
+            "identity_status": vendor.get("identity_status"),
+            "assurance_profile_status": vendor.get("assurance_profile_status"),
+            "has_canonical_legal_entity": has_canonical_entity(vendor_entities),
+            "has_registration_number": has_registration_number(vendor_entities),
             "source_types": types(sources.get(vendor_id, []), "source_type"),
             "candidate_source_types": types(candidates.get(vendor_id, []), "source_type_candidate"),
             "unavailable_source_types": types(unavailable.get(vendor_id, []), "source_type"),
@@ -168,17 +186,24 @@ def build_source_coverage(record_sets: dict[str, list[dict[str, Any]]]) -> dict[
     sources = by_vendor(record_sets["source"])
     candidates = by_vendor(record_sets["candidate_source"])
     unavailable = by_vendor(record_sets["unavailable_source"])
+    legal_entities = by_vendor(record_sets["legal_entity"])
     vendor_coverage = []
-    core_source_types = {"dpa", "privacy_notice", "security_page", "subprocessors_list"}
+    core_source_types = {"business_registry_record", "dpa", "privacy_notice", "security_page", "subprocessors_list"}
     for vendor in record_sets["vendor"]:
         vendor_id = str(vendor["vendor_id"])
         canonical_types = types(sources.get(vendor_id, []), "source_type")
         candidate_types = types(candidates.get(vendor_id, []), "source_type_candidate")
         unavailable_types = types(unavailable.get(vendor_id, []), "source_type")
         covered_types = set(canonical_types) | set(candidate_types) | set(unavailable_types)
+        vendor_entities = legal_entities.get(vendor_id, [])
         vendor_coverage.append(
             {
                 "vendor_id": vendor_id,
+                "catalog_status": vendor.get("catalog_status", vendor.get("status")),
+                "identity_status": vendor.get("identity_status"),
+                "assurance_profile_status": vendor.get("assurance_profile_status"),
+                "has_canonical_legal_entity": has_canonical_entity(vendor_entities),
+                "has_registration_number": has_registration_number(vendor_entities),
                 "canonical_source_types": canonical_types,
                 "candidate_source_types": candidate_types,
                 "unavailable_source_types": unavailable_types,
@@ -284,7 +309,12 @@ def legal_entity_payload(entity: dict[str, Any]) -> dict[str, Any]:
         "vendor_id": entity.get("vendor_id"),
         "legal_name": entity.get("legal_name"),
         "jurisdiction": entity.get("jurisdiction"),
+        "entity_type": entity.get("entity_type"),
+        "registration_authority": entity.get("registration_authority"),
         "registration_number": entity.get("registration_number"),
+        "registration_status": entity.get("registration_status"),
+        "incorporation_date": entity.get("incorporation_date"),
+        "registry_url": entity.get("registry_url"),
         "catalog_status": entity.get("catalog_status"),
         "registered_address": entity.get("registered_address"),
     }
@@ -335,6 +365,10 @@ def build_vendor_match_index(record_sets: dict[str, list[dict[str, Any]]]) -> di
                 "display_name": vendor.get("display_name"),
                 "legal_name": vendor.get("legal_name"),
                 "catalog_status": vendor.get("catalog_status", vendor.get("status")),
+                "identity_status": vendor.get("identity_status"),
+                "assurance_profile_status": vendor.get("assurance_profile_status"),
+                "has_canonical_legal_entity": coverage_row.get("has_canonical_legal_entity", False),
+                "has_registration_number": coverage_row.get("has_registration_number", False),
                 "official_domains": vendor.get("official_domains", []),
                 "manifest_path": f"dist/vendors/{vendor_id}.json",
                 "canonical_source_types": coverage_row.get("canonical_source_types", []),
