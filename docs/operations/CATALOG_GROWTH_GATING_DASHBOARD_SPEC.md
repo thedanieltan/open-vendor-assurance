@@ -6,7 +6,7 @@ This document defines the future catalog growth gating dashboard. It is a spec o
 
 Lane B catalog growth should not proceed blindly when source-health debt or catalog-quality issues are high. A future dashboard should help operators decide whether candidate promotion is allowed, allowed with warnings, or blocked pending cleanup.
 
-The dashboard is an operator decision aid. It is not catalog truth and must not automatically promote candidates.
+The dashboard is an operator decision aid. It is not catalog truth, must not become a source of catalog truth, and must not automatically promote candidates.
 
 ## Non-goals
 
