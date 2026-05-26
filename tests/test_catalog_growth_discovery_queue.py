@@ -8,6 +8,7 @@ from tools.openva.catalog_growth_discovery_queue import validate_queue
 
 QUEUE = Path("maintenance/queues/catalog-growth-discovery.json")
 SCALE_READINESS = Path("maintenance/queues/catalog-growth-scale-readiness.json")
+CATALOG_GROWTH_DOC = Path("docs/maintenance/catalog-growth-discovery.md")
 
 
 def test_catalog_growth_discovery_queue_is_taxonomy_driven_and_bounded():
@@ -72,21 +73,23 @@ def test_catalog_growth_scale_readiness_is_non_canonical_and_non_executing():
     }
 
 
-def test_catalog_growth_scale_readiness_defines_ordered_phase_model():
+def test_catalog_growth_scale_readiness_defines_ordered_stage_model():
     plan = json.loads(SCALE_READINESS.read_text(encoding="utf-8"))
-    phases = plan["phase_model"]
+    stages = plan["stage_model"]
 
-    assert [phase["phase_id"] for phase in phases] == [
+    assert [stage["stage_id"] for stage in stages] == [
         "bootstrap_seed_identity",
         "queue_driven_discovery",
         "evidence_scored_promotion",
         "continuous_refresh",
     ]
-    assert phases[0]["canonical_write_allowed"] is False
-    assert phases[1]["canonical_write_allowed"] is False
-    assert phases[2]["canonical_write_allowed"] is True
-    assert phases[2]["write_path"] == "candidate-promotion-pr.yml"
-    assert phases[3]["canonical_write_allowed"] is False
+    assert stages[0]["canonical_write_allowed"] is False
+    assert stages[1]["canonical_write_allowed"] is False
+    assert stages[2]["canonical_write_allowed"] is True
+    assert stages[2]["write_path"] == "candidate-promotion-pr.yml"
+    assert stages[3]["canonical_write_allowed"] is False
+    assert "phase_model" not in plan
+    assert all("phase_id" not in stage for stage in stages)
 
 
 def test_catalog_growth_scale_readiness_lifecycle_and_source_scope_are_bounded():
@@ -133,7 +136,7 @@ def test_catalog_growth_scale_readiness_requires_promotion_blocks_and_handoff_co
         "scale_readiness_queue": "maintenance/queues/catalog-growth-scale-readiness.json",
         "reviewed_plan_path": "maintenance/reviewed/",
         "controlled_write_path": "candidate-promotion-pr.yml",
-        "post_promotion_maintenance": "Lane A source cleanup loop",
+        "post_promotion_maintenance": "source maintenance loop",
     }
 
 
@@ -143,4 +146,17 @@ def test_catalog_growth_scale_readiness_documents_source_health_dependency():
 
     assert "source_health_budget" in dimensions
     assert dimensions["source_health_budget"]["required_for_auto_queue"] is False
-    assert any("Lane B growth must not bypass Lane A" in guardrail for guardrail in plan["guardrails"])
+    assert any("catalog growth bypass source-health constraints" in guardrail for guardrail in plan["guardrails"])
+
+
+def test_catalog_growth_docs_do_not_use_development_lane_or_phase_language():
+    text = CATALOG_GROWTH_DOC.read_text(encoding="utf-8")
+    plan_text = SCALE_READINESS.read_text(encoding="utf-8")
+
+    for forbidden in ("Lane A", "Lane B", "phase_model", "phase_id", "development"):
+        assert forbidden not in text
+        assert forbidden not in plan_text
+
+    assert "coverage area" in text
+    assert "source maintenance" in text
+    assert "stage_model" in plan_text
