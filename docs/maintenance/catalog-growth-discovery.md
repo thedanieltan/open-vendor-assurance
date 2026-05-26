@@ -8,6 +8,8 @@ OpenVA uses taxonomy-driven discovery to grow the launch corpus without treating
 
 `maintenance/queues/catalog-growth-discovery.json` is the operational queue. It selects which taxonomy lanes are active for launch discovery and sets bounded run limits.
 
+`maintenance/queues/catalog-growth-scale-readiness.json` is the scale-readiness contract. It defines how OpenVA moves from bootstrap seed files to queue-driven discovery, evidence-scored promotion, and continuous refresh without weakening catalog write controls.
+
 ## Discovery boundary
 
 The queue drives discovery reports and generated candidate-promotion plan proposals. It does not write canonical vendor or source records.
@@ -20,6 +22,15 @@ writes_repository_state: false
 writes_canonical_sources: false
 creates_candidate_sources: false
 non_advisory: true
+```
+
+The scale-readiness contract must also remain non-canonical:
+
+```text
+writes_canonical_vendors: false
+writes_canonical_sources: false
+creates_pull_requests: false
+runs_promotion: false
 ```
 
 ## Launch corpus goal
@@ -45,7 +56,7 @@ seed vendor identities
 -> generate reviewed vendor-candidate reports
 -> run official-domain source discovery for approved/materialized vendors
 -> write candidate_sources or unavailable_sources
--> human review candidate promotions
+-> human or maintainer-agent review candidate promotions
 -> promote approved sources into canonical records
 -> use observation workflows to maintain freshness
 ```
@@ -64,6 +75,88 @@ Validate seed identity shape with:
 ```text
 python -m tools.openva.vendor_candidate_discovery validate-seeds
 ```
+
+## Scale model after bootstrap seeds
+
+Initial seed files are a bootstrap mechanism, not the permanent growth engine.
+
+When a lane has enough seed identity coverage, growth should shift from manual seed expansion to queue-driven backlog selection:
+
+```text
+coverage gaps
++ source-health budget
++ candidate backlog state
++ official-domain authority
++ core source availability
+-> next review-ready candidates
+```
+
+The durable lifecycle is:
+
+```text
+seeded
+-> discovered
+-> deduplicated
+-> source_discovered
+-> review_ready
+-> approved_for_promotion
+-> promoted
+-> observed
+-> maintenance_required
+```
+
+This keeps raw discovery and curated catalog records separate. Seed files and discovery reports are staging inputs. Reviewed plans under `maintenance/reviewed/` are promotion evidence. `data/vendors/**` remains the curated catalog.
+
+## Promotion readiness
+
+A candidate should not become promotion-ready merely because it exists or has a website.
+
+Promotion readiness requires evidence across these dimensions:
+
+- personal-data relevance: the vendor is likely to process personal data, support cross-border transfer, act as a subprocessor, or appear in vendor assurance workflows
+- official-domain authority: the vendor has a clear official domain and source URLs can be evaluated against that domain
+- core source coverage: discovery found at least one source candidate from the core source set
+- coverage-gap fit: the candidate fills a taxonomy lane, region, or regulated-industry gap
+- dedupe confidence: the candidate does not duplicate an existing canonical vendor, product surface, entity family, or reviewed candidate
+- source-health budget: Lane B should slow down if Lane A source debt exceeds the allowed budget
+
+Promotion is blocked when any of the following applies:
+
+- official domain is unknown
+- candidate duplicates an existing vendor or entity family
+- no public source candidates are available
+- source type appears mismatched
+- only gated materials are available
+- promotion would require raw document mirroring
+- source-health budget is exceeded
+- reviewed plan is not committed under `maintenance/reviewed/`
+
+## Core and extended source types
+
+The current growth queue intentionally starts with the core vendor-assurance source set:
+
+```text
+dpa
+subprocessors_list
+privacy_notice
+security_page
+```
+
+These are the minimum useful source families for vendor assurance intake and evidence preparation.
+
+Extended source types are deferred until the core discovery and promotion loop proves reliable:
+
+```text
+trust_center
+security_whitepaper
+compliance_page
+certification_reference
+product_terms
+ai_terms
+data_transfer_terms
+```
+
+Do not expand the automated target source set until core-source discovery quality, promotion batching, and Lane A source maintenance are stable.
 
 ## Automated workflow
 
@@ -101,11 +194,11 @@ cohort_id
 source_index_url
 ```
 
-A maintainer must review vendor candidates before any canonical vendor record is created.
+A maintainer or maintainer-agent must review vendor candidates before any canonical vendor record is created.
 
 ## Source candidates
 
-Generated candidate-promotion plan proposals are review inputs. Maintainers may copy approved proposals into `maintenance/reviewed/` before using `candidate-promotion-pr`.
+Generated candidate-promotion plan proposals are review inputs. Maintainers or maintainer-agents may copy approved proposals into `maintenance/reviewed/` before using `candidate-promotion-pr`.
 
 ## Batching
 
@@ -115,6 +208,12 @@ Default batch size:
 
 ```text
 50 candidate-promotion actions per generated plan proposal
+```
+
+Preferred initial batch size while the loop is still being proven:
+
+```text
+25 candidate-promotion actions per reviewed plan
 ```
 
 This keeps later Catalog PRs reviewable as the repository grows to thousands of vendors.
@@ -128,3 +227,6 @@ This keeps later Catalog PRs reviewable as the repository grows to thousands of 
 - no raw vendor document mirroring
 - no vendor approval or suitability conclusion
 - batch limits must stay small enough for reviewable PRs
+- seed files must not become canonical vendor records
+- `candidate-promotion-pr.yml` remains the controlled catalog write path
+- Lane B growth must not bypass Lane A source-health constraints
