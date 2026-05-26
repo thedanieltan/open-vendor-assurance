@@ -12,7 +12,7 @@ No catalog source YAML is mutated by this design. No reviewed no-replacement dec
 
 Reviewed no-replacement decisions may become durable unavailable-source state only through the first-class unavailable-source structure under `data/vendors/**/unavailable_sources/*.yaml`.
 
-`data/vendors/**/sources/*.yaml` remains reserved for canonical available source references. No-replacement truth-state must not be written into source records.
+`data/vendors/**/sources/*.yaml` remains reserved for canonical available source references. No-replacement truth-state must not be written into source records; source records remain reserved for canonical available sources.
 
 Reviewed no-replacement state remains distinct from source repairs, deletion instructions, or proof that a vendor will never publish a replacement source.
 
