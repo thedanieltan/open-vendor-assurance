@@ -1,94 +1,98 @@
 # Reviewer Decision Handoff
 
-Reviewer decision sheets are untrusted input. A human reviewer can be mistaken, and a submitted sheet can be malicious or malformed. Editing a sheet never mutates `data/vendors/**`, never proves a source is valid, and never creates a repair PR by itself.
+This page explains how a reviewer helps clean up source records without needing direct catalog access.
 
-This handoff is part of Lane A source cleanup. It is a controlled evidence path between `source-maintenance-report.yml` and `source-repair-pr.yml`; it is not a scheduled workflow, not an automerge lane, and not a catalog truth generator.
-
-## Handoff Boundary
-
-The required operating path is:
+The short version:
 
 ```text
-source-maintenance-report.yml
-→ download openva-source-reviewer-inbox
-→ reviewer edits only source-review-decision-sheet.csv
-→ operator retrieves matching source-review-triage-plan.json from openva-source-maintenance-report
-→ run validate-sheet against the original triage plan
-→ validate-sheet recomputes triage_plan_sha256 and checks source_maintenance_run_id
-→ invalid rows stop the process
-→ zero invalid rows allow reviewed artifact export
-→ reviewed artifacts are committed under maintenance/reviewed/
-→ CI passes on the reviewed-artifacts PR
-→ source-repair-pr.yml may be run manually from committed reviewed repair evidence
+Reviewer fills the spreadsheet
+→ Maintainer checks it
+→ Maintainer commits validated review evidence
+→ A later repair PR changes the catalog if needed
 ```
 
-The reviewer inbox artifact is `openva-source-reviewer-inbox`. It contains exactly one reviewer-editable file: `source-review-decision-sheet.csv`.
+Reviewers do **not** need to understand GitHub Actions, JSON artifacts, or catalog internals. Their job is to review the rows in the spreadsheet and fill only the reviewer columns.
 
-The original `source-review-triage-plan.json` is required for validation. It comes from the full `openva-source-maintenance-report` artifact produced by the same `source-maintenance-report.yml` run. Do not validate a completed sheet against a different triage plan.
+## For reviewers
 
-## Machine-Enforced Run Binding
+You will receive one file:
 
-The reviewer sheet contains immutable binding columns:
+```text
+source-review-decision-sheet.csv
+```
+
+Open it in a spreadsheet editor and review the rows assigned to you.
+
+Only edit these columns:
+
+| Column | What to enter |
+|---|---|
+| `review_decision` | The decision you are making. |
+| `approved_replacement_url` | A replacement URL, only if you are approving a replacement. Otherwise leave blank. |
+| `reviewer_note` | A short note explaining your decision. |
+| `reviewed_by` | Your name, handle, or email. |
+| `reviewed_at` | Review date/time, preferably ISO format such as `2026-05-26T00:00:00Z`. |
+
+Do not edit the other columns. They identify the row and bind the sheet back to the source report that generated it.
+
+Allowed `review_decision` values:
+
+| Decision | Use when |
+|---|---|
+| `replace_with_url` | You found and approve a replacement public URL. |
+| `mark_no_replacement_available` | You reviewed the source context and did not find a public replacement. |
+| `defer_access_ambiguous` | The source may exist, but access or public availability is unclear. |
+| `defer_needs_vendor_confirmation` | The row needs confirmation from the vendor or another reviewer. |
+| `reject_candidate_mismatch` | The proposed replacement does not match the source type or vendor. |
+| `keep_existing_source` | The current source should remain for now. |
+
+Then return the completed CSV to the maintainer. Do not open a PR with the CSV.
+
+## For maintainers
+
+The completed CSV is reviewer input. It is checked before anything is committed.
+
+The maintainer flow is:
+
+```text
+receive completed CSV
+→ validate it against the matching source-review-triage-plan.json
+→ stop if validation finds invalid rows
+→ export reviewed artifacts if validation passes
+→ commit only reviewed artifacts under maintenance/reviewed/
+→ run the later source repair process if repairs were approved
+```
+
+The CSV itself is not committed to the repo. The repo stores validated review evidence, not the raw spreadsheet.
+
+## Why the CSV is not committed
+
+The spreadsheet is easy for humans to edit, but it is not catalog truth. Keeping it out of the repo prevents accidental catalog changes from typos, stale rows, copied sheets, or edited source context.
+
+The repo records the reviewed result only after validation. Actual catalog changes happen later through a separate repair PR.
+
+## Safety checks
+
+The reviewer sheet contains hidden-in-plain-sight binding columns:
 
 - `source_maintenance_run_id`
 - `triage_plan_sha256`
 - `decision_sheet_generated_at`
 
-`validate-sheet` recomputes `triage_plan_sha256` from the supplied `source-review-triage-plan.json` and compares it to every row. It also checks that `source_maintenance_run_id` matches the triage plan metadata and that all rows share one `decision_sheet_generated_at` value.
+Reviewers should not edit these columns.
 
-Rows fail validation if binding fields are missing, changed, mixed across rows, or inconsistent with the supplied triage plan. This turns the same-run requirement from a procedural instruction into a machine-checked guardrail.
+When the maintainer validates the sheet, OpenVA checks that:
 
-## Required Agent Steps
+- the sheet belongs to the matching source report,
+- the sheet matches the original triage plan,
+- all rows come from the same generated sheet,
+- row identity and source context were not changed,
+- replacement URLs are independently verified,
+- invalid rows stop the process.
 
-After a reviewer submits a completed decision sheet, the agent must:
+These checks let contributors use a simple spreadsheet while keeping catalog updates controlled.
 
-1. Treat the submitted sheet as untrusted input.
-2. Validate it against the original `source-review-triage-plan.json` from the matching `openva-source-maintenance-report` artifact.
-3. Reject rows where immutable context changed, including run-binding columns.
-4. Reject rows with invalid enum decisions.
-5. Reject rows with unsafe URLs, duplicate IDs, unexpected columns, or self-certifying fields.
-6. Reject rows whose `triage_plan_sha256` or `source_maintenance_run_id` does not match the supplied triage plan.
-7. Reject sheets that mix multiple `decision_sheet_generated_at` values.
-8. For `replace_with_url` rows, independently verify the replacement URL.
-9. Reject replacement rows that fail source verification, semantic match, authority, access, safety, soft-404, or canonical-final checks.
-10. Produce `source-review-decision-validation.json` and `source-review-decision-validation-summary.md`.
-11. Stop if `source-review-decision-validation.json` contains any invalid rows.
-12. If validation has zero invalid rows and approved repairs exist, export reviewed repair plan artifacts.
-13. If validation has zero invalid rows and no-replacement decisions exist, export no-replacement reviewed decision artifacts.
-14. If validation has zero invalid rows and defer/reject decisions exist, export defer/rejection artifacts.
-15. Open a PR containing only reviewed artifacts under `maintenance/reviewed/` if and only if the validation output has zero invalid rows.
-16. Do not mutate `data/vendors/**` directly from a reviewer sheet.
-17. Do not run `source-repair-pr.yml` until reviewed repair artifacts are committed under `maintenance/reviewed/` and CI passes.
-18. Do not apply automerge labels to any PR created from a reviewer decision sheet.
-19. Do not treat no-replacement or defer decisions as source repairs.
-20. After reviewed repair artifacts are merged, run `source-repair-pr.yml` manually or through an existing reviewed path.
-21. Inspect the generated repair PR before merge.
-22. Re-run `source-maintenance-report.yml` after repair PRs merge.
-23. Confirm public source health reflects the updated state.
-
-## Explicit Warnings
-
-- `approved_replacement_url` is not truth until independently verified.
-- No-replacement decisions are truth-state candidates, not deletion instructions.
-- Access-ambiguous decisions are not proof the source is valid.
-- Repair PRs remain separate from decision validation.
-- `validate-sheet` is report-only; it does not mutate `data/vendors/**` and does not mutate catalog source YAML.
-- `export-reviewed-artifacts` writes reviewed evidence only; it does not apply source repairs.
-- `source-repair-pr.yml` is the later controlled write path for reviewed repair evidence.
-
-## Artifact Roles
-
-| Artifact or file | Producer | Operator role | May be edited by reviewer? | Mutates catalog? |
-|---|---|---|---:|---:|
-| `openva-source-reviewer-inbox` | `source-maintenance-report.yml` | Reviewer inbox artifact. | No, artifact itself is downloaded only. | No |
-| `source-review-decision-sheet.csv` | `source-maintenance-report.yml` | Single reviewer-editable CSV with immutable run-binding columns. | Yes, but only editable decision fields should change. | No |
-| `openva-source-maintenance-report` | `source-maintenance-report.yml` | Full operator and machine artifact package. | No | No |
-| `source-review-triage-plan.json` | `source-maintenance-report.yml` | Required original context for validation and SHA-256 binding. | No | No |
-| `source-review-decision-validation.json` | `validate-sheet` | Independent validation evidence including source maintenance run and triage SHA-256. | No | No |
-| `maintenance/reviewed/**` | Reviewed-artifacts PR | Committed reviewed evidence consumed by later controlled paths. | No | No |
-| `source-repair-pr.yml` output PR | `source-repair-pr.yml` | Later repair PR generated only from committed reviewed repair evidence. | No | Yes, in PR branch only |
-
-## Commands
+## Commands for maintainers
 
 Build a blank reviewer sheet from the triage plan:
 
@@ -117,25 +121,44 @@ python -m tools.openva.source_review_decisions export-reviewed-artifacts \
   --output-dir maintenance/reviewed/generated
 ```
 
-## Stop Conditions
+## What gets committed
 
-Stop and do not export reviewed artifacts if any of the following are true:
+Commit reviewed artifacts such as:
 
-- The original `source-review-triage-plan.json` is missing.
-- The decision sheet came from a different source maintenance run than the triage plan.
-- The sheet `triage_plan_sha256` does not match the supplied triage plan.
-- Rows have mixed `decision_sheet_generated_at` values.
-- `validate-sheet` returns a non-zero exit code.
-- `source-review-decision-validation.json` reports one or more invalid rows.
-- A replacement URL fails independent verification.
-- The proposed reviewed-artifacts PR contains files outside `maintenance/reviewed/`.
+```text
+maintenance/reviewed/<batch-name>/reviewed-repair-plan.json
+maintenance/reviewed/<batch-name>/reviewed-no-replacement-decisions.json
+maintenance/reviewed/<batch-name>/reviewed-deferred-decisions.json
+```
+
+Do not commit:
+
+```text
+source-review-decision-sheet.csv
+```
+
+## What changes the catalog
+
+Validated review evidence does not directly change `data/vendors/**`.
+
+If a reviewer approved source repairs, a later controlled repair PR applies those changes. That PR is reviewed and checked like any other catalog change.
+
+## Stop conditions
+
+Stop and ask for maintainer review if:
+
+- the completed CSV does not validate,
+- the sheet was mixed with rows from another run,
+- a replacement URL fails verification,
+- a reviewer changed non-reviewer columns,
+- exported files would be written outside `maintenance/reviewed/`.
 
 ## Non-goals
 
 This handoff does not:
 
-- create a new scheduled workflow,
-- automatically mutate catalog source records,
-- apply no-replacement truth-state to catalog records,
-- generate source repair PRs directly from reviewer sheets,
-- relax source-health, validation, PR safety, release, or automerge gates.
+- let reviewers directly edit catalog files,
+- automatically mutate source records,
+- automatically apply no-replacement truth-state,
+- generate repair PRs directly from the CSV,
+- relax validation, source-health, PR safety, release, or automerge gates.
