@@ -1,0 +1,153 @@
+from pathlib import Path
+
+import yaml
+
+
+WORKFLOW_DIR = Path(".github/workflows")
+OPERATING_MODEL = Path("docs/operations/WORKFLOW_OPERATING_MODEL.md")
+CONSOLIDATION_AUDIT = Path("docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md")
+
+EXPECTED_PUBLIC_WORKFLOWS = {
+    "candidate-promotion-pr.yml",
+    "agent-automerge.yml",
+    "agent-weighted-review.yml",
+    "catalog-agent-pr.yml",
+    "catalog-growth-discovery.yml",
+    "catalog-maintenance-pr.yml",
+    "catalog-maintenance.yml",
+    "catalog-pr-guard.yml",
+    "contribution-intake-agent.yml",
+    "coverage-audit.yml",
+    "observe-report.yml",
+    "release-candidate.yml",
+    "release-downloads.yml",
+    "site-live-feed.yml",
+    "site-pages.yml",
+    "source-maintenance-report.yml",
+    "source-repair-pr.yml",
+    "source-repair-pr-cleanup.yml",
+    "source-refinement-queue.yml",
+    "source-refinement-scan.yml",
+    "validate.yml",
+}
+
+CORE_LOOP_HEADINGS = {
+    "PR safety loop",
+    "Source cleanup loop",
+    "Catalog quality loop",
+    "Catalog growth loop",
+    "Release/site loop",
+}
+
+REVIEWER_INBOX_ALLOWED_PATHS = {"source-review-decision-sheet.csv"}
+REVIEWER_INBOX_FORBIDDEN_PATHS = {
+    "summary.md",
+    "source-review-decision-sheet-summary.md",
+    "source-health-report.json",
+    "source-verification-report.json",
+    "source-quality-refinement-queue.json",
+    "source-observation-ledger.json",
+    "latest-source-health.json",
+    "public/source-health-snapshot.json",
+    "source-discovery-report.json",
+    "source-repair-sweep-report.json",
+    "source-repair-batch-plan.json",
+    "source-review-triage-plan.json",
+    "promotion-plan.json",
+    "cleanup-proposal.json",
+    "source-verification.csv",
+    "source-repair-sweep-human-review.csv",
+    "source-repair-sweep-no-replacement.csv",
+    "source-review-triage-plan.csv",
+    "promotion-plan-actions.csv",
+}
+
+
+def load_workflow(name: str) -> dict:
+    return yaml.safe_load((WORKFLOW_DIR / name).read_text(encoding="utf-8"))
+
+
+def artifact_upload_steps(workflow_name: str) -> dict[str, set[str]]:
+    workflow = load_workflow(workflow_name)
+    steps = workflow["jobs"][workflow_name.removesuffix(".yml")]["steps"]
+    artifacts: dict[str, set[str]] = {}
+    for step in steps:
+        if step.get("uses") != "actions/upload-artifact@v6":
+            continue
+        with_block = step.get("with", {})
+        name = with_block.get("name")
+        raw_path = with_block.get("path", "")
+        paths = {line.strip() for line in str(raw_path).splitlines() if line.strip()}
+        artifacts[name] = paths
+    return artifacts
+
+
+def test_public_workflows_are_intentional_and_allowlisted():
+    assert {path.name for path in WORKFLOW_DIR.glob("*.yml")} == EXPECTED_PUBLIC_WORKFLOWS
+
+
+def test_workflow_operating_model_documents_every_core_loop():
+    text = OPERATING_MODEL.read_text(encoding="utf-8")
+
+    assert "Lane A: Source debt cleanup" in text
+    assert "Lane B: Catalog growth discovery and controlled promotion" in text
+    assert "Lane C: Workflow loop refinement" in text
+    for heading in CORE_LOOP_HEADINGS:
+        assert heading in text
+
+    assert "`source-maintenance-report.yml` is the source cleanup and reporting entry point" in text
+    assert "`catalog-growth-discovery.yml` is the catalog expansion proposal entry point" in text
+    assert "`candidate-promotion-pr.yml` is the controlled write path for reviewed promotions" in text
+    assert "`coverage-audit.yml` is the catalog quality entry point" in text
+    assert "They must not become catalog truth generators" in text
+
+
+def test_workflow_operating_model_lists_every_public_workflow():
+    text = OPERATING_MODEL.read_text(encoding="utf-8")
+
+    for workflow_name in EXPECTED_PUBLIC_WORKFLOWS:
+        assert f"`{workflow_name}`" in text
+
+
+def test_workflow_consolidation_audit_classifies_every_public_workflow():
+    text = CONSOLIDATION_AUDIT.read_text(encoding="utf-8")
+
+    for workflow_name in EXPECTED_PUBLIC_WORKFLOWS:
+        assert f"`{workflow_name}`" in text
+
+    assert "`catalog-maintenance.yml` | `retire_candidate`" in text
+    assert "`source-refinement-queue.yml` | `retire_candidate`" in text
+    assert "`observe-report.yml` | `retire_candidate`" in text
+    assert "Future Action A: reviewed decision validation handoff" in text
+    assert "Future Action B: reviewed no-replacement truth-state application" in text
+    assert "Future Action C: workflow retirement" in text
+    assert "Future Action D: source operations scheduler" in text
+    assert "Future Action E: catalog growth gating dashboard" in text
+
+
+def test_source_maintenance_report_uploads_reviewer_only_inbox_artifact():
+    artifacts = artifact_upload_steps("source-maintenance-report.yml")
+
+    assert "openva-source-maintenance-report" in artifacts
+    assert "openva-source-reviewer-inbox" in artifacts
+    assert artifacts["openva-source-reviewer-inbox"] == REVIEWER_INBOX_ALLOWED_PATHS
+
+
+def test_reviewer_only_inbox_contains_no_machine_or_secondary_reviewer_files():
+    reviewer_paths = artifact_upload_steps("source-maintenance-report.yml")["openva-source-reviewer-inbox"]
+
+    assert reviewer_paths == {"source-review-decision-sheet.csv"}
+    assert not (reviewer_paths & REVIEWER_INBOX_FORBIDDEN_PATHS)
+    assert not any(path.endswith(".json") for path in reviewer_paths)
+    assert not any(path.endswith(".md") for path in reviewer_paths)
+    assert len([path for path in reviewer_paths if path.endswith(".csv")]) == 1
+
+
+def test_full_source_maintenance_artifact_remains_available_for_operators_and_machines():
+    operator_paths = artifact_upload_steps("source-maintenance-report.yml")["openva-source-maintenance-report"]
+
+    assert "source-review-decision-sheet.csv" in operator_paths
+    assert "summary.md" in operator_paths
+    assert "source-verification-report.json" in operator_paths
+    assert "source-verification.csv" in operator_paths
+    assert "promotion-plan-actions.csv" in operator_paths

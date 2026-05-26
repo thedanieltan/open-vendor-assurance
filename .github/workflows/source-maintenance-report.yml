@@ -305,3 +305,9 @@ jobs:
             promotion-plan.json
             cleanup-proposal.json
           if-no-files-found: error
+      - name: Upload source reviewer inbox artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-reviewer-inbox
+          path: source-review-decision-sheet.csv
+          if-no-files-found: error
