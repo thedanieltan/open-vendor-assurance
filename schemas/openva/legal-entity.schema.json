@@ -19,7 +19,12 @@
     "vendor_id": { "$ref": "#/$defs/id" },
     "legal_name": { "type": "string", "minLength": 1, "maxLength": 240 },
     "jurisdiction": { "type": "string", "pattern": "^[A-Z]{2}$" },
+    "entity_type": { "type": ["string", "null"], "maxLength": 120 },
+    "registration_authority": { "type": ["string", "null"], "maxLength": 240 },
     "registration_number": { "type": ["string", "null"], "maxLength": 120 },
+    "registration_status": { "type": ["string", "null"], "maxLength": 120 },
+    "incorporation_date": { "type": ["string", "null"], "format": "date" },
+    "registry_url": { "type": ["string", "null"], "format": "uri" },
     "registered_address": {
       "anyOf": [
         {
