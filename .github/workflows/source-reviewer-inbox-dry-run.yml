@@ -1,6 +1,10 @@
 name: source-reviewer-inbox-dry-run
 
 on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
