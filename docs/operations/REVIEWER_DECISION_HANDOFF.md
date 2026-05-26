@@ -57,7 +57,7 @@ After a reviewer submits a completed decision sheet, the agent must:
 - No-replacement decisions are truth-state candidates, not deletion instructions.
 - Access-ambiguous decisions are not proof the source is valid.
 - Repair PRs remain separate from decision validation.
-- `validate-sheet` is report-only; it does not mutate catalog source YAML.
+- `validate-sheet` is report-only; it does not mutate `data/vendors/**` and does not mutate catalog source YAML.
 - `export-reviewed-artifacts` writes reviewed evidence only; it does not apply source repairs.
 - `source-repair-pr.yml` is the later controlled write path for reviewed repair evidence.
 
