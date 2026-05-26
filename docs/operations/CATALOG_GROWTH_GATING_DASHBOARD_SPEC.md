@@ -13,7 +13,7 @@ The dashboard is an operator decision aid. It is not catalog truth and must not 
 The dashboard must not:
 
 - automatically promote candidates,
-- automatically mutate `data/vendors/**`,
+- must not automatically mutate `data/vendors/**`,
 - replace `catalog-growth-discovery.yml`,
 - replace `candidate-promotion-pr.yml`,
 - replace `source-maintenance-report.yml`,
