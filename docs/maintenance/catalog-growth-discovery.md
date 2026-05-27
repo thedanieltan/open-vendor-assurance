@@ -8,6 +8,8 @@ OpenVA uses taxonomy-driven discovery to grow the launch corpus without treating
 
 `maintenance/queues/catalog-growth-discovery.json` is the operational queue. It selects which taxonomy lanes are active for launch discovery and sets bounded run limits.
 
+`maintenance/queues/catalog-growth-scale-readiness.json` is the scale-readiness contract. It explains how catalog growth moves from bootstrap seed identities to queue-based discovery, reviewed promotion, and source maintenance.
+
 ## Discovery boundary
 
 The queue drives discovery reports and generated candidate-promotion plan proposals. It does not write canonical vendor or source records.
@@ -21,6 +23,8 @@ writes_canonical_sources: false
 creates_candidate_sources: false
 non_advisory: true
 ```
+
+The scale-readiness contract is also non-executing. It does not fetch network sources, create pull requests, run promotion, or write canonical vendor/source records.
 
 ## Launch corpus goal
 
@@ -63,6 +67,83 @@ Validate seed identity shape with:
 
 ```text
 python -m tools.openva.vendor_candidate_discovery validate-seeds
+```
+
+## After bootstrap seeds
+
+Seed files are the bootstrap layer. They are not the permanent growth mechanism.
+
+After a coverage lane has enough seed identity coverage, new candidates should come from the operational queue and candidate backlog. Candidate selection should account for:
+
+- coverage gaps,
+- source-health budget,
+- candidate backlog state,
+- official-domain authority,
+- core source availability,
+- duplicate or entity-family risk.
+
+The durable lifecycle is:
+
+```text
+seeded
+-> discovered
+-> deduplicated
+-> source_discovered
+-> review_ready
+-> approved_for_promotion
+-> promoted
+-> observed
+-> maintenance_required
+```
+
+Keep the layers separate:
+
+```text
+seed files and discovery reports = staging input
+maintenance/reviewed/ = reviewed promotion evidence
+data/vendors/** = curated catalog
+```
+
+## Promotion readiness
+
+A candidate is not promotion-ready just because it has a website.
+
+Promotion requires reviewed evidence that the candidate has personal-data relevance, clear official-domain authority, useful public source coverage, coverage-gap fit, and enough dedupe confidence.
+
+Promotion is blocked when:
+
+- the official domain is unknown,
+- the candidate duplicates an existing vendor or entity family,
+- no public source candidates are available,
+- source type appears mismatched,
+- only gated materials are available,
+- promotion would require raw document mirroring,
+- source-health debt exceeds the agreed budget,
+- the reviewed plan is not committed under `maintenance/reviewed/`.
+
+## Source type scope
+
+Start with the core vendor-assurance source set:
+
+```text
+dpa
+subprocessors_list
+privacy_notice
+security_page
+```
+
+These are sufficient for vendor assurance intake and evidence preparation.
+
+Defer extended source types until the core loop is stable:
+
+```text
+trust_center
+security_whitepaper
+compliance_page
+certification_reference
+product_terms
+ai_terms
+data_transfer_terms
 ```
 
 ## Automated workflow
@@ -117,6 +198,12 @@ Default batch size:
 50 candidate-promotion actions per generated plan proposal
 ```
 
+Preferred initial reviewed batch size:
+
+```text
+25 candidate-promotion actions per reviewed plan
+```
+
 This keeps later Catalog PRs reviewable as the repository grows to thousands of vendors.
 
 ## Guardrails
@@ -128,3 +215,6 @@ This keeps later Catalog PRs reviewable as the repository grows to thousands of 
 - no raw vendor document mirroring
 - no vendor approval or suitability conclusion
 - batch limits must stay small enough for reviewable PRs
+- seed files must not become catalog records
+- `candidate-promotion-pr.yml` remains the controlled catalog write path
+- catalog growth must not bypass source-health constraints
