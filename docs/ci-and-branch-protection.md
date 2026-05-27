@@ -26,8 +26,6 @@ validate / release-site
 validate / full-suite
 ```
 
-Historical note: the previous single-job required context was `validate / validate`. After partitioning, do not keep that old status context as a required branch-protection check because it is no longer emitted by the validation workflow.
-
 The ownership contract is:
 
 ```text
