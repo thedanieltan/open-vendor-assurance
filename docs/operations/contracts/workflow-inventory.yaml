@@ -1,0 +1,172 @@
+version: 1
+contract: workflow-inventory
+source_document: docs/operations/WORKFLOW_OPERATING_MODEL.md
+public_workflows:
+  - name: validate.yml
+    loop: pr_safety
+    status: core
+    triggers: [pull_request, push]
+    permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: catalog-pr-guard.yml
+    loop: pr_safety
+    status: core
+    triggers: [pull_request]
+    permissions: {contents: read, pull-requests: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: agent-weighted-review.yml
+    loop: pr_safety
+    status: core
+    triggers: [pull_request]
+    permissions: {contents: read, pull-requests: read, issues: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: agent-automerge.yml
+    loop: pr_safety
+    status: core
+    triggers: [pull_request]
+    permissions: {contents: write, pull-requests: write, checks: read, statuses: read}
+    writes_repository_state: true
+    creates_prs: false
+    merges_prs: true
+  - name: source-maintenance-report.yml
+    loop: source_maintenance
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: source-refinement-scan.yml
+    loop: source_maintenance
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {actions: read, contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: source-repair-pr.yml
+    loop: source_maintenance
+    status: core
+    triggers: [workflow_dispatch]
+    permissions: {contents: write, pull-requests: write}
+    writes_repository_state: true
+    creates_prs: true
+    merges_prs: false
+  - name: source-repair-pr-cleanup.yml
+    loop: source_maintenance
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read, pull-requests: write, issues: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: coverage-audit.yml
+    loop: catalog_quality
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: catalog-growth-discovery.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read, issues: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: candidate-promotion-pr.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: write, pull-requests: write}
+    writes_repository_state: true
+    creates_prs: true
+    merges_prs: false
+  - name: release-candidate.yml
+    loop: publication
+    status: core
+    triggers: [workflow_dispatch]
+    permissions: {contents: read, actions: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: site-pages.yml
+    loop: publication
+    status: core
+    triggers: [push, workflow_dispatch]
+    permissions: {contents: read, actions: read, pages: write, id-token: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: release-downloads.yml
+    loop: publication
+    status: core
+    triggers: [push]
+    permissions: {contents: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: site-live-feed.yml
+    loop: publication
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read, pages: write, id-token: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: catalog-agent-pr.yml
+    loop: support
+    status: support
+    triggers: [workflow_dispatch]
+    permissions: {contents: write, pull-requests: write}
+    writes_repository_state: true
+    creates_prs: true
+    merges_prs: false
+  - name: catalog-maintenance-pr.yml
+    loop: support
+    status: support
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: write, pull-requests: write}
+    writes_repository_state: true
+    creates_prs: true
+    merges_prs: false
+  - name: contribution-intake-agent.yml
+    loop: support
+    status: support
+    triggers: [issues, workflow_dispatch]
+    permissions: {contents: write, pull-requests: write, issues: write}
+    writes_repository_state: true
+    creates_prs: true
+    merges_prs: false
+  - name: catalog-maintenance.yml
+    loop: legacy_report
+    status: consolidation_candidate
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read, actions: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: source-refinement-queue.yml
+    loop: legacy_report
+    status: consolidation_candidate
+    triggers: [workflow_dispatch]
+    permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: observe-report.yml
+    loop: legacy_report
+    status: consolidation_candidate
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
