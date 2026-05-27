@@ -229,10 +229,8 @@ def build_promotion_plan(
         action = plan_for_existing_source(path, source, verification, root=root)
         if action:
             actions.append(action)
-
     for path, candidate in iter_records(root, "candidate_sources"):
         actions.append(plan_for_candidate(path, candidate, existing_types, discovery_candidates, root=root))
-
     for path, unavailable in iter_records(root, "unavailable_sources"):
         actions.append(plan_for_unavailable(path, unavailable, existing_types, root=root))
 
@@ -288,7 +286,12 @@ def strict_growth_action(item: dict[str, Any], action: dict[str, Any]) -> dict[s
     }
 
 
-def build_strict_growth_plan(eligibility_report: dict[str, Any]) -> dict[str, Any]:
+def build_strict_growth_plan(
+    eligibility_report: dict[str, Any],
+    *,
+    head_sha: str | None = None,
+    base_sha: str | None = None,
+) -> dict[str, Any]:
     if eligibility_report.get("report_type") != "catalog_growth_eligibility_report":
         raise ValueError("expected catalog_growth_eligibility_report")
     strict_by_vendor = {
@@ -302,7 +305,7 @@ def build_strict_growth_plan(eligibility_report: dict[str, Any]) -> dict[str, An
         if str(action.get("vendor", {}).get("candidate_vendor_id")) in strict_by_vendor
     ]
     counts = Counter(action["action"] for action in actions)
-    return {
+    plan = {
         "schema_version": "0.1.0",
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "report_type": "strict_growth_promotion_plan",
@@ -321,6 +324,13 @@ def build_strict_growth_plan(eligibility_report: dict[str, Any]) -> dict[str, An
         },
         "actions": actions,
     }
+    effective_head_sha = head_sha or eligibility_report.get("head_sha")
+    effective_base_sha = base_sha or eligibility_report.get("base_sha")
+    if effective_head_sha:
+        plan["head_sha"] = effective_head_sha
+    if effective_base_sha:
+        plan["base_sha"] = effective_base_sha
+    return plan
 
 
 def main() -> int:
@@ -333,17 +343,22 @@ def main() -> int:
     strict = subparsers.add_parser("plan-strict-growth")
     strict.add_argument("--eligibility-report", type=Path, required=True)
     strict.add_argument("--output", type=Path, default=ROOT / "strict-growth-promotion-plan.json")
+    strict.add_argument("--head-sha")
+    strict.add_argument("--base-sha")
     args = parser.parse_args()
-
     if args.command == "plan-strict-growth":
-        result = build_strict_growth_plan(load_json(args.eligibility_report))
+        report = build_strict_growth_plan(
+            load_json(args.eligibility_report),
+            head_sha=args.head_sha,
+            base_sha=args.base_sha,
+        )
     else:
-        result = build_promotion_plan(
+        report = build_promotion_plan(
             verification_report_path=args.verification_report,
             discovery_report_path=args.discovery_report,
         )
-    args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps(result["summary"], indent=2, sort_keys=True))
+    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(json.dumps(report["summary"], indent=2, sort_keys=True))
     return 0
 
 
