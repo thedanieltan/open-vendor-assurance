@@ -1,8 +1,11 @@
 from pathlib import Path
 
+import pytest
+
 from tools.openva.source_verification import (
     FetchResult,
     build_source_verification_report,
+    select_source_shard,
     verify_source,
 )
 
@@ -245,5 +248,98 @@ def test_report_is_network_aware_and_non_mutating(tmp_path):
         "public_sources_only": True,
         "non_advisory": True,
     }
+    assert report["scope"] == {
+        "total_source_paths": 1,
+        "candidate_source_paths": 1,
+        "verified_source_paths": 1,
+        "source_path_file": None,
+        "limit": None,
+        "shard_count": None,
+        "shard_index": None,
+        "is_partial": False,
+    }
     assert report["summary"]["source_count"] == 1
     assert report["summary"]["sources_requiring_review"] == 0
+
+
+def test_select_source_shard_is_stable_and_non_overlapping():
+    paths = [Path(f"source-{index}.yaml") for index in range(10)]
+
+    shards = [select_source_shard(paths, 3, index) for index in range(3)]
+
+    assert shards == [
+        [Path("source-0.yaml"), Path("source-3.yaml"), Path("source-6.yaml"), Path("source-9.yaml")],
+        [Path("source-1.yaml"), Path("source-4.yaml"), Path("source-7.yaml")],
+        [Path("source-2.yaml"), Path("source-5.yaml"), Path("source-8.yaml")],
+    ]
+    assert sorted(path for shard in shards for path in shard) == paths
+
+
+@pytest.mark.parametrize(
+    ("shard_count", "shard_index"),
+    [(None, 0), (2, None), (0, 0), (2, -1), (2, 2)],
+)
+def test_select_source_shard_rejects_invalid_bounds(shard_count, shard_index):
+    with pytest.raises(ValueError):
+        select_source_shard([Path("source.yaml")], shard_count, shard_index)
+
+
+def test_report_can_verify_only_one_source_shard(tmp_path):
+    for vendor in ["alpha", "bravo", "charlie", "delta"]:
+        vendor_dir = tmp_path / f"data/vendors/{vendor}/sources"
+        vendor_dir.mkdir(parents=True)
+        (vendor_dir / f"{vendor}-privacy.yaml").write_text(
+            f"vendor_id: {vendor}\n"
+            f"source_id: {vendor}-privacy\n"
+            "source_type: privacy_notice\n"
+            f"source_url: https://example.com/{vendor}/privacy\n",
+            encoding="utf-8",
+        )
+
+    fetched_urls: list[str] = []
+    report = build_source_verification_report(
+        root=tmp_path,
+        fetcher=lambda url: fetched_urls.append(url) or html_fetch(url, "Privacy policy personal data"),
+        shard_count=2,
+        shard_index=1,
+    )
+
+    assert report["scope"]["total_source_paths"] == 4
+    assert report["scope"]["candidate_source_paths"] == 4
+    assert report["scope"]["verified_source_paths"] == 2
+    assert report["scope"]["shard_count"] == 2
+    assert report["scope"]["shard_index"] == 1
+    assert report["scope"]["is_partial"] is True
+    assert report["summary"]["source_count"] == 2
+    assert fetched_urls == [
+        "https://example.com/bravo/privacy",
+        "https://example.com/delta/privacy",
+    ]
+
+
+def test_report_can_use_source_path_file_scope(tmp_path):
+    for vendor in ["alpha", "bravo"]:
+        vendor_dir = tmp_path / f"data/vendors/{vendor}/sources"
+        vendor_dir.mkdir(parents=True)
+        (vendor_dir / f"{vendor}-privacy.yaml").write_text(
+            f"vendor_id: {vendor}\n"
+            f"source_id: {vendor}-privacy\n"
+            "source_type: privacy_notice\n"
+            f"source_url: https://example.com/{vendor}/privacy\n",
+            encoding="utf-8",
+        )
+    scope_file = tmp_path / "source-paths.txt"
+    scope_file.write_text("data/vendors/bravo/sources/bravo-privacy.yaml\n", encoding="utf-8")
+
+    report = build_source_verification_report(
+        root=tmp_path,
+        fetcher=lambda url: html_fetch(url, "Privacy policy personal data"),
+        source_path_file=scope_file,
+    )
+
+    assert report["scope"]["total_source_paths"] == 2
+    assert report["scope"]["candidate_source_paths"] == 1
+    assert report["scope"]["verified_source_paths"] == 1
+    assert report["scope"]["source_path_file"] == "source-paths.txt"
+    assert report["scope"]["is_partial"] is True
+    assert [source["vendor_id"] for source in report["sources"]] == ["bravo"]
