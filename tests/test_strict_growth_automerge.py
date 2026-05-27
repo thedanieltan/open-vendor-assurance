@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 
 from tools.openva.automerge_lanes import load_policy
 from tools.openva.strict_growth_automerge import check_strict_growth_eligibility
@@ -55,9 +55,9 @@ def eligible_result(**overrides):
         "eligibility_report": eligibility_report(),
         "labels": ["catalog-growth", "automerge:strict-growth"],
         "current_head_sha": HEAD,
-        "recorded_head_sha": HEAD,
+        "recorded_head_sha": None,
         "current_base_sha": BASE,
-        "recorded_base_sha": BASE,
+        "recorded_base_sha": None,
         "now": NOW,
         "policy": load_policy(),
     }
@@ -82,10 +82,27 @@ def test_head_sha_mismatch_hard_fails():
 
 
 def test_missing_recorded_head_sha_hard_fails_without_key_error():
-    result = eligible_result(recorded_head_sha="")
+    plan = promotion_plan(strict_action())
+    plan.pop("head_sha")
+    report = eligibility_report()
+    report.pop("head_sha")
+
+    result = eligible_result(promotion_plan=plan, eligibility_report=report)
 
     assert result.eligible is False
     assert "recorded_head_sha_missing" in result.reasons
+
+
+def test_missing_recorded_base_sha_hard_fails_without_key_error():
+    plan = promotion_plan(strict_action())
+    plan.pop("base_sha")
+    report = eligibility_report()
+    report.pop("base_sha")
+
+    result = eligible_result(promotion_plan=plan, eligibility_report=report)
+
+    assert result.eligible is False
+    assert "recorded_base_sha_missing" in result.reasons
 
 
 def test_expired_evidence_hard_fails_after_four_hours():
