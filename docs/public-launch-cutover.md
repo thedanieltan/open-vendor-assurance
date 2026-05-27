@@ -1,8 +1,6 @@
 # Public Launch Cutover Guide
 
-This guide describes the maintainer steps for moving OpenVA from private development to public contribution posture.
-
-It does not change repository visibility by itself and does not tag a release. It is an operational guide for maintainers.
+This guide describes maintainer steps for moving OpenVA from private development to public contribution posture. It does not change repository visibility by itself and does not tag a release.
 
 ## Launch positioning
 
@@ -32,10 +30,8 @@ Confirm:
 - [ ] `docs/v0.1.0-release-candidate.md` is complete.
 - [ ] `docs/public-launch-checklist.md` is complete or remaining gaps are intentionally documented.
 - [ ] `docs/ci-and-branch-protection.md` branch-protection expectations are applied or tracked.
-- [ ] `validate / validate` passes on `main`.
-- [ ] `openva-pack.json` and `indexes/` are current.
-- [ ] No raw documents, screenshots, private portal exports, SOC reports, ISO certificates, or extracted full text are committed by default.
-- [ ] No public issue contains credentials, gated material, or private customer content.
+- [ ] All required `validate / ...` checks pass on `main`.
+- [ ] `openva-pack.json`, `indexes/`, and `dist/` are current.
 - [ ] Issue templates are enabled and blank issues are disabled.
 - [ ] CODEOWNERS is current.
 - [ ] SECURITY.md is current.
@@ -48,7 +44,7 @@ When maintainers are ready, change repository visibility through GitHub reposito
 Recommended sequence:
 
 1. Confirm branch protection on `main`.
-2. Confirm required check `validate / validate`.
+2. Confirm the required partitioned validation checks from `docs/ci-and-branch-protection.md`.
 3. Confirm CODEOWNERS review expectations.
 4. Confirm issue templates render correctly.
 5. Confirm SECURITY.md private reporting guidance.
@@ -66,7 +62,7 @@ OpenVA is a public-source-only, metadata-first registry of vendor-published assu
 
 It records factual metadata about public vendor sources such as DPAs, subprocessor pages, trust-center pages, privacy notices, security pages, certification references, AI/data terms, and other public assurance references.
 
-OpenVA does not provide legal, compliance, procurement, audit, security, privacy, KYC, AML, sanctions, regulatory, or vendor-risk advice. It does not include private, gated, customer-specific, NDA, portal, SOC report, ISO certificate, or bespoke agreement materials.
+OpenVA does not provide legal, compliance, procurement, audit, security, privacy, KYC, AML, sanctions, regulatory, or vendor-risk advice.
 
 Start here:
 
@@ -101,7 +97,7 @@ docs/triage-policy.md
 Recommended maintainer actions:
 
 - review new issues daily for scope violations;
-- close or redirect private/gated material requests quickly;
+- close or redirect gated material requests quickly;
 - let the contribution intake agent turn catalog update issues into either a clear reviewed `Catalog:` PR or a human-review decision;
 - label catalog update and scope question issues consistently;
 - avoid merging large catalog batches until public contribution behavior is understood;
@@ -111,13 +107,13 @@ Recommended maintainer actions:
 
 ## Emergency rollback posture
 
-If public launch exposes private material, credentials, or serious workflow issues:
+If public launch exposes serious workflow issues:
 
 1. stop merging non-critical PRs;
-2. remove or redact sensitive public content where possible;
-3. move sensitive discussion to private reporting channels;
+2. review the affected public content;
+3. move sensitive discussion to the appropriate reporting channel;
 4. review SECURITY.md and workflow permissions;
-5. document the incident as a governance issue without repeating sensitive content.
+5. document the incident as a governance issue.
 
 ## Non-advisory boundary
 
