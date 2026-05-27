@@ -6,20 +6,57 @@ OpenVA is a public-source-only, metadata-first registry. Its CI must protect sou
 
 ## Required CI checks
 
-The primary required check should be:
+The primary validation workflow is still one workflow:
 
 ```text
-validate / validate
+validate
 ```
 
-This check runs on pull requests and pushes to `main`.
+It runs on pull requests and pushes to `main`, but it is partitioned into named ownership jobs so unrelated failures do not appear as one generic failure.
 
-It must verify:
+Required status contexts should be:
+
+```text
+validate / repository-integrity
+validate / workflow-operating-model
+validate / catalog-growth
+validate / source-maintenance
+validate / catalog-quality
+validate / release-site
+validate / full-suite
+```
+
+Historical note: the previous single-job required context was `validate / validate`. After partitioning, do not keep that old status context as a required branch-protection check because it is no longer emitted by the validation workflow.
+
+The ownership contract is:
+
+```text
+.github/validation-ownership.yaml
+```
+
+The jobs preserve the old protection strength while improving failure ownership:
+
+| Job | Owns | Core checks |
+|---|---|---|
+| `repository-integrity` | Canonical records and generated outputs. | Validator, index rebuild, generated drift check. |
+| `workflow-operating-model` | Workflow inventory, operating-model docs, and machine-readable contracts. | CI readiness, workflow model, future operation specs, contract tests. |
+| `catalog-growth` | Discovery queue, seed/candidate posture, reviewed promotion. | Catalog growth and promotion tests. |
+| `source-maintenance` | Source health, source review, source repair, and source preflight. | Source maintenance and repair tests. |
+| `catalog-quality` | Catalog guardrails and advisory automation checks. | Catalog-facing tests and automation rules. |
+| `release-site` | Release assets, site output, and consumer adapter contract. | Release, site, and adapter tests. |
+| `full-suite` | Global regression signal. | Full `pytest -q`. |
+
+Repository integrity must verify:
 
 ```bash
 python -m tools.openva.validate validate
 python -m tools.openva.validate build-indexes
-git diff --exit-code openva-pack.json indexes/
+git diff --exit-code openva-pack.json indexes/ dist/
+```
+
+The full-suite job must still run:
+
+```bash
 pytest -q
 ```
 
@@ -39,7 +76,7 @@ catalog-pr-guard / catalog-pr-guard
 
 The catalog guard enforces the catalog-agent file boundary and then runs validation and tests.
 
-Catalog PRs should not modify substrate, governance, workflow, schema, validator, observation, release, or security files unless explicitly moved into the core lane.
+Catalog PRs should not modify substrate, governance, workflow, schema, validator, observation, release, or security files unless explicitly moved into the core operating loop.
 
 ## Catalog agent PR workflow
 
@@ -124,7 +161,7 @@ permissions:
   pull-requests: read
 ```
 
-Workflows must not request write permissions unless a maintainer explicitly approves a core-lane workflow change and the workflow has a narrow, documented output.
+Workflows must not request write permissions unless a maintainer explicitly approves a core operating-loop workflow change and the workflow has a narrow, documented output.
 
 Disallowed by default:
 
@@ -139,7 +176,8 @@ id-token: write
 Approved write scopes are limited to:
 
 - proposal PR workflows that create human-reviewed pull requests;
-- issue handoff or queue workflows that create or update maintainer-facing issues or comments.
+- issue handoff or queue workflows that create or update maintainer-facing issues or comments;
+- publication workflows that deploy Pages or release assets without mutating catalog truth.
 
 Proposal PR workflows may use:
 
@@ -172,13 +210,13 @@ solely to create or update issue comments or maintainer queue issues. They must 
 Before public launch, protect `main` with these expectations:
 
 - require pull requests before merging;
-- require the `validate / validate` status check;
+- require the seven `validate / ...` status checks listed above;
 - require branches to be up to date before merge where practical;
 - require conversation resolution before merge;
 - restrict force pushes;
 - restrict branch deletion;
 - require CODEOWNERS review for owned paths where available;
-- do not allow automation to merge directly to `main`;
+- do not allow automation to merge directly to `main` outside explicitly approved automerge policy;
 - keep admin bypass exceptional and documented.
 
 Catalog PRs should also be held to the catalog guard when the PR title starts with `Catalog:`.
@@ -200,15 +238,16 @@ The validation workflow must rebuild generated outputs and fail when these files
 ```text
 openva-pack.json
 indexes/
+dist/
 ```
 
-This prevents catalog changes from merging without regenerated pack/index outputs.
+This prevents catalog changes from merging without regenerated pack/index/site-consumable outputs.
 
 ## Secrets and credentials
 
 OpenVA CI should not require vendor credentials, customer-portal credentials, private trust-center access, tokens for public-source collection, or secrets for observation.
 
-If a future workflow requires secrets, it must be reviewed as a security-sensitive core-lane change.
+If a future workflow requires secrets, it must be reviewed as a security-sensitive core operating-loop change.
 
 ## Network posture
 

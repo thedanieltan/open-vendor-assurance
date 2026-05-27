@@ -13,7 +13,106 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
+  repository-integrity:
+    name: repository-integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Run OpenVA validator
+        run: python -m tools.openva.validate validate
+      - name: Rebuild generated indexes
+        run: python -m tools.openva.validate build-indexes
+      - name: Check generated files are committed
+        run: git diff --exit-code openva-pack.json indexes/ dist/
+
+  workflow-operating-model:
+    name: workflow-operating-model
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Run workflow operating model tests
+        run: >-
+          pytest -q
+          tests/test_ci_readiness.py
+          tests/test_workflow_operating_model.py
+          tests/test_workflow_retirement_evidence.py
+          tests/test_future_operations_specs.py
+          tests/test_workflow_contracts.py
+
+  catalog-growth:
+    name: catalog-growth
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Run catalog growth tests
+        run: >-
+          pytest -q
+          tests/test_catalog_growth_discovery_queue.py
+          tests/test_vendor_candidate_discovery.py
+          tests/test_reviewed_candidate_promotion_doc.py
+          tests/test_candidate_promotion_actions.py
+          tests/test_promotion_planner.py
+
+  source-maintenance:
+    name: source-maintenance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Run source maintenance tests
+        run: >-
+          pytest -q
+          tests/test_source_*.py
+          tests/test_p0_repair_automerge_workflow.py
+          tests/test_release_candidate_workflow.py
+
+  catalog-quality:
+    name: catalog-quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Run catalog quality tests
+        run: pytest -q tests/test_catalog*.py tests/test_automation_rules.py
+
+  release-site:
+    name: release-site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Run release and site tests
+        run: pytest -q tests/test_release_*.py tests/test_site.py tests/test_adapter_contract.py
+
+  full-suite:
+    name: full-suite
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -24,11 +123,5 @@ jobs:
         run: pip install -e ".[dev]"
       - name: Install match service test dependencies
         run: pip install -e "services/openva_match_service[dev]"
-      - name: Run OpenVA validator
-        run: python -m tools.openva.validate validate
-      - name: Rebuild generated indexes
-        run: python -m tools.openva.validate build-indexes
-      - name: Check generated files are committed
-        run: git diff --exit-code openva-pack.json indexes/
       - name: Run tests
         run: pytest -q

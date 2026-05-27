@@ -1,0 +1,46 @@
+version: 1
+contract: catalog-growth-scale-readiness
+owner_loop: catalog_growth
+source_document: docs/maintenance/catalog-growth-discovery.md
+canonical_catalog_root: data/vendors/**
+reviewed_evidence_root: maintenance/reviewed/
+staging_roots:
+  - maintenance/seeds/vendors/**
+  - maintenance/queues/**
+  - catalog-batches/**
+  - generated discovery reports
+posture:
+  network_fetch_performed: false
+  writes_repository_state: false
+  writes_canonical_sources: false
+  creates_candidate_sources: false
+  non_advisory: true
+promotion_boundary:
+  discovery_writes_catalog_truth: false
+  queue_writes_catalog_truth: false
+  reviewed_plan_required: true
+  reviewed_plan_root: maintenance/reviewed/
+  controlled_write_workflow: candidate-promotion-pr.yml
+  promotion_pr_review_required: true
+flow:
+  - taxonomy_coverage_model
+  - seed_identities
+  - discovery_queue
+  - candidate_backlog
+  - candidate_source_discovery
+  - reviewed_promotion_evidence
+  - candidate_promotion_pr
+  - pr_safety_checks
+  - canonical_catalog
+  - generated_outputs
+  - source_maintenance_loop
+guardrails:
+  - taxonomy_lanes_must_exist
+  - source_types_must_map_through_taxonomy_artifact_categories
+  - no_canonical_writes_from_queue_or_discovery_workflow
+  - no_candidate_auto_promotion
+  - no_raw_vendor_document_mirroring
+  - no_vendor_approval_or_suitability_conclusion
+  - reviewed_batches_must_stay_reviewable
+  - seed_files_must_not_become_catalog_records
+  - source_health_constraints_must_not_be_bypassed

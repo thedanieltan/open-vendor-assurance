@@ -14,6 +14,17 @@ CONTRIBUTING.md
 SECURITY.md
 ```
 
+## Architecture and control plane
+
+```text
+docs/architecture/OPENVA_SYSTEM_DESIGN.md
+docs/ci-and-branch-protection.md
+.github/validation-ownership.yaml
+docs/operations/contracts/workflow-inventory.yaml
+docs/operations/contracts/reviewer-decision-handoff.yaml
+docs/maintenance/contracts/catalog-growth-scale-readiness.yaml
+```
+
 ## Public launch and governance
 
 ```text

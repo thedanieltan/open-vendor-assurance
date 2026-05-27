@@ -1,0 +1,85 @@
+version: 1
+workflow: .github/workflows/validate.yml
+required_status_contexts:
+  - validate / repository-integrity
+  - validate / workflow-operating-model
+  - validate / catalog-growth
+  - validate / source-maintenance
+  - validate / catalog-quality
+  - validate / release-site
+  - validate / full-suite
+jobs:
+  repository-integrity:
+    owner_loop: repository_integrity
+    purpose: Validate canonical records and deterministic generated outputs.
+    commands:
+      - python -m tools.openva.validate validate
+      - python -m tools.openva.validate build-indexes
+      - git diff --exit-code openva-pack.json indexes/ dist/
+    protects:
+      - schemas/openva/**
+      - data/vendors/**
+      - openva-pack.json
+      - indexes/**
+      - dist/**
+  workflow-operating-model:
+    owner_loop: workflow_control_plane
+    purpose: Validate workflow inventory, operating model, future-operation specs, and structured contracts.
+    commands:
+      - pytest -q tests/test_ci_readiness.py tests/test_workflow_operating_model.py tests/test_workflow_retirement_evidence.py tests/test_future_operations_specs.py tests/test_workflow_contracts.py
+    protects:
+      - .github/workflows/**
+      - .github/validation-ownership.yaml
+      - docs/operations/**
+      - docs/architecture/**
+  catalog-growth:
+    owner_loop: catalog_growth
+    purpose: Validate taxonomy-driven discovery, seed/candidate posture, and reviewed promotion handoff.
+    commands:
+      - pytest -q tests/test_catalog_growth_discovery_queue.py tests/test_vendor_candidate_discovery.py tests/test_reviewed_candidate_promotion_doc.py tests/test_candidate_promotion_actions.py tests/test_promotion_planner.py
+    protects:
+      - maintenance/seeds/vendors/**
+      - maintenance/queues/catalog-growth-discovery.json
+      - docs/maintenance/catalog-growth-discovery.md
+      - docs/maintenance/reviewed-candidate-promotion.md
+  source-maintenance:
+    owner_loop: source_maintenance
+    purpose: Validate source health, reviewer handoff, source repair, source preflight, and release source-health readiness.
+    commands:
+      - pytest -q tests/test_source_*.py tests/test_p0_repair_automerge_workflow.py tests/test_release_candidate_workflow.py
+    protects:
+      - .github/workflows/source-maintenance-report.yml
+      - .github/workflows/source-refinement-scan.yml
+      - .github/workflows/source-repair-pr.yml
+      - .github/workflows/source-repair-pr-cleanup.yml
+      - tools/openva/source_*.py
+  catalog-quality:
+    owner_loop: catalog_quality
+    purpose: Validate catalog guardrails, catalog-facing tests, and advisory automation rules.
+    commands:
+      - pytest -q tests/test_catalog*.py tests/test_automation_rules.py
+    protects:
+      - config/category-taxonomy.yaml
+      - config/controlled-vocabulary.yaml
+      - tests/test_catalog*.py
+      - tools/openva/automation_rules.py
+  release-site:
+    owner_loop: publication
+    purpose: Validate release assets, site build expectations, and consumer adapter contract tests.
+    commands:
+      - pytest -q tests/test_release_*.py tests/test_site.py tests/test_adapter_contract.py
+    protects:
+      - docs/release-downloads.md
+      - docs/adapter-contract.md
+      - public/**
+      - site/**
+      - tools/openva/release_*.py
+  full-suite:
+    owner_loop: regression
+    purpose: Preserve the old full-suite safety signal after ownership-specific jobs run.
+    commands:
+      - pytest -q
+    protects:
+      - tests/**
+      - tools/**
+      - services/**

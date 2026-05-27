@@ -1,0 +1,45 @@
+version: 1
+contract: reviewer-decision-handoff
+owner_loop: source_maintenance
+source_document: docs/operations/REVIEWER_DECISION_HANDOFF.md
+boundary:
+  raw_reviewer_input_is_catalog_truth: false
+  raw_reviewer_input_committed_to_repo: false
+  reviewed_artifacts_are_promotion_evidence: true
+  catalog_mutation_from_raw_sheet_allowed: false
+reviewer_inbox:
+  artifact_name: openva-source-reviewer-inbox
+  allowed_files:
+    - source-review-decision-sheet.csv
+  forbidden_file_extensions:
+    - .json
+    - .md
+  reviewer_editable_columns:
+    - review_decision
+    - approved_replacement_url
+    - reviewer_note
+    - reviewed_by
+    - reviewed_at
+required_operator_inputs:
+  matching_triage_plan:
+    artifact_name: openva-source-maintenance-report
+    file: source-review-triage-plan.json
+    same_workflow_run_required: true
+validation:
+  command: python -m tools.openva.source_review_decisions validate-sheet
+  invalid_rows_allowed: 0
+  stop_on_invalid_rows: true
+export:
+  command: python -m tools.openva.source_review_decisions export-reviewed-artifacts
+  output_root: maintenance/reviewed/
+  requires_validation_success: true
+controlled_write_path:
+  workflow: source-repair-pr.yml
+  requires_committed_reviewed_evidence: true
+  may_run_from_uncommitted_reviewer_sheet: false
+forbidden:
+  - commit_completed_reviewer_csv
+  - mutate_data_vendors_from_csv
+  - apply_automerge_label_to_reviewed_evidence_pr
+  - validate_against_different_triage_plan
+  - write_exported_files_outside_maintenance_reviewed
