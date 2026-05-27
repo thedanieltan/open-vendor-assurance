@@ -179,7 +179,14 @@ def classify(vendor: dict[str, Any], sources: list[dict[str, Any]], statuses: se
     return REVIEW_REQUIRED, reasons or ["source_candidate_requires_review"], []
 
 
-def build_catalog_growth_eligibility(vendor_report: dict[str, Any], source_report: dict[str, Any], root: Path = ROOT, generated_at: str | None = None) -> dict[str, Any]:
+def build_catalog_growth_eligibility(
+    vendor_report: dict[str, Any],
+    source_report: dict[str, Any],
+    root: Path = ROOT,
+    generated_at: str | None = None,
+    head_sha: str | None = None,
+    base_sha: str | None = None,
+) -> dict[str, Any]:
     if vendor_report.get("report_type") != "vendor_candidate_discovery_report":
         raise ValueError("expected vendor_candidate_discovery_report")
     if source_report.get("report_type") != "source_discovery_report":
@@ -199,7 +206,12 @@ def build_catalog_growth_eligibility(vendor_report: dict[str, Any], source_repor
         strict_promotions.extend(strict_action(vendor, source) for source in strict_sources)
         items.append({"candidate_vendor_id": vendor_id, "display_name_candidate": vendor.get("display_name_candidate"), "official_domain_candidate": vendor.get("official_domain_candidate"), "coverage_lane": vendor.get("coverage_lane"), "cohort_id": vendor.get("cohort_id"), "classification": classification, "reason_codes": reasons, "source_candidate_count": len(vendor_sources), "strict_source_count": len(strict_sources), "promotable_now": classification == STRICT_PROMOTE_READY})
     counts = Counter(item["classification"] for item in items)
-    return {"schema_version": SCHEMA_VERSION, "generated_at": generated_at or now_iso(), "report_type": REPORT_TYPE, "posture": {"network_fetch_performed": False, "writes_repository_state": False, "writes_canonical_vendors": False, "writes_canonical_sources": False, "opens_pull_requests": False, "non_advisory": True}, "summary": {"candidate_count": len(items), "strict_promote_ready_count": counts.get(STRICT_PROMOTE_READY, 0), "review_required_count": counts.get(REVIEW_REQUIRED, 0), "rejected_or_deferred_count": len(items) - counts.get(STRICT_PROMOTE_READY, 0) - counts.get(REVIEW_REQUIRED, 0), "classification_counts": dict(sorted(counts.items())), "strict_promotion_action_count": len(strict_promotions)}, "items": sorted(items, key=lambda item: (item["classification"], item["candidate_vendor_id"])), "strict_promotions": strict_promotions}
+    report = {"schema_version": SCHEMA_VERSION, "generated_at": generated_at or now_iso(), "report_type": REPORT_TYPE, "posture": {"network_fetch_performed": False, "writes_repository_state": False, "writes_canonical_vendors": False, "writes_canonical_sources": False, "opens_pull_requests": False, "non_advisory": True}, "summary": {"candidate_count": len(items), "strict_promote_ready_count": counts.get(STRICT_PROMOTE_READY, 0), "review_required_count": counts.get(REVIEW_REQUIRED, 0), "rejected_or_deferred_count": len(items) - counts.get(STRICT_PROMOTE_READY, 0) - counts.get(REVIEW_REQUIRED, 0), "classification_counts": dict(sorted(counts.items())), "strict_promotion_action_count": len(strict_promotions)}, "items": sorted(items, key=lambda item: (item["classification"], item["candidate_vendor_id"])), "strict_promotions": strict_promotions}
+    if head_sha:
+        report["head_sha"] = head_sha
+    if base_sha:
+        report["base_sha"] = base_sha
+    return report
 
 
 def write_outputs(report: dict[str, Any], output_json: Path, output_strict: Path, output_review_csv: Path, output_rejected_csv: Path, output_md: Path) -> None:
@@ -228,8 +240,15 @@ def main() -> int:
     parser.add_argument("--output-review-csv", type=Path, default=ROOT / "catalog-growth-review-required.csv")
     parser.add_argument("--output-rejected-csv", type=Path, default=ROOT / "catalog-growth-rejected.csv")
     parser.add_argument("--output-md", type=Path, default=ROOT / "catalog-growth-eligibility-summary.md")
+    parser.add_argument("--head-sha")
+    parser.add_argument("--base-sha")
     args = parser.parse_args()
-    report = build_catalog_growth_eligibility(load_json(args.vendor_candidates), load_json(args.source_discovery))
+    report = build_catalog_growth_eligibility(
+        load_json(args.vendor_candidates),
+        load_json(args.source_discovery),
+        head_sha=args.head_sha,
+        base_sha=args.base_sha,
+    )
     write_outputs(report, args.output_json, args.output_strict, args.output_review_csv, args.output_rejected_csv, args.output_md)
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
     return 0
