@@ -1,18 +1,82 @@
 # OpenVA agent auto-merge policy.
 #
-# v0.1 ships this policy in report-only mode. The eligibility checker reports
-# what would qualify for an autonomous lane, but no workflow merges PRs.
-#
-# Actual merge activation requires a separate explicit PR updating policy docs,
-# workflow permissions, and enforcement mode after calibration criteria are met.
+# Auto-merge is a separate authority tier. A bot opening a PR does not imply
+# that the PR is eligible for auto-merge.
 
 mode: enforce
+
+freshness:
+  # Strict growth creates new catalog vendors and has higher blast radius.
+  # The checker evaluates the evidence bundle timestamp, not the PR event time.
+  strict_growth_hours: 4
+  # Generated-output sync is deterministic and derived from canonical inputs,
+  # so it can tolerate a longer window while still preventing stale green ticks.
+  generated_hours: 24
 
 machine_canonical:
   max_source_records_per_pr: 50
 
+strict_growth:
+  label: automerge:strict-growth
+  required_labels:
+    - catalog-growth
+  execution_wired: false
+  max_new_vendors_per_pr: 5
+  max_sources_per_new_vendor: 2
+  freshness_hours: 4
+  required_action_field: strict_machine_candidate
+  required_action_field_value: true
+  report_only_is_merge_authority: false
+  head_sha_mismatch: hard_fail
+  base_sha_mismatch: warning
+  evidence_timestamp_source:
+    primary: eligibility_report.generated_at
+    fallback: promotion_plan.generated_at
+  core_source_types:
+    - dpa
+    - subprocessors_list
+    - privacy_notice
+    - security_page
+  allowed_attestation_modes:
+    - source_attested
+    - registry_attested
+  allowed_inference_modes:
+    - none
+    - explicit_source_statement
+  blocked_inference_modes:
+    - domain_similarity
+    - name_similarity
+    - group_affiliation_inferred
+    - third_party_assertion
+    - model_inferred
+    - unknown
+  relationship_type_prefixes:
+    - vendor_stated_
+    - registry_stated_
+  source_attested_required_fields:
+    - evidence_url
+    - source_id
+  registry_attested_required_fields:
+    - registry_source_url
+    - registry_authority
+
 source_repair:
   max_source_records_per_pr: 10
+
+backlog:
+  cadence: weekly
+  strict_pr_candidate:
+    expires_after_days: 21
+    expires_after_cycles: 3
+  human_review_required:
+    refresh_after_days: 42
+    refresh_after_cycles: 6
+  deferred:
+    refresh_after_days: 84
+    refresh_after_cycles: 12
+  rejected:
+    suppress_rediscovery_days: 90
+  evidence_hash_controls_reclassification: true
 
 blocked_paths:
   - .github/workflows/
@@ -33,6 +97,11 @@ lanes:
     label: automerge:observation
   machine_canonical:
     label: automerge:machine-canonical
+  strict_growth:
+    label: automerge:strict-growth
+    required_labels:
+      - catalog-growth
+    execution_wired: false
   p0_source_repair:
     label: automerge:p0-source-repair
     required_labels:
