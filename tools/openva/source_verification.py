@@ -160,6 +160,31 @@ def source_paths(root: Path = ROOT) -> list[Path]:
     return sorted((root / "data" / "vendors").glob("*/sources/*.yaml"))
 
 
+def load_source_path_file(path: Path, root: Path = ROOT) -> list[Path]:
+    rows = [line.strip() for line in path.read_text(encoding="utf-8").splitlines()]
+    selected: list[Path] = []
+    for row in rows:
+        if not row or row.startswith("#"):
+            continue
+        candidate = Path(row)
+        if not candidate.is_absolute():
+            candidate = root / candidate
+        selected.append(candidate)
+    return sorted(selected)
+
+
+def select_source_shard(paths: list[Path], shard_count: int | None, shard_index: int | None) -> list[Path]:
+    if shard_count is None and shard_index is None:
+        return paths
+    if shard_count is None or shard_index is None:
+        raise ValueError("--shard-count and --shard-index must be provided together")
+    if shard_count <= 0:
+        raise ValueError("--shard-count must be positive")
+    if shard_index < 0 or shard_index >= shard_count:
+        raise ValueError("--shard-index must be >= 0 and < --shard-count")
+    return [path for offset, path in enumerate(paths) if offset % shard_count == shard_index]
+
+
 def normalize_text(data: bytes, content_type: str | None) -> str:
     if not data:
         return ""
@@ -384,10 +409,15 @@ def build_source_verification_report(
     root: Path = ROOT,
     fetcher: Callable[[str], FetchResult] = fetch_url,
     limit: int | None = None,
+    shard_count: int | None = None,
+    shard_index: int | None = None,
+    source_path_file: Path | None = None,
 ) -> dict[str, Any]:
     verifications: list[dict[str, Any]] = []
     failures: list[str] = []
-    paths = source_paths(root)
+    all_paths = source_paths(root)
+    paths = load_source_path_file(source_path_file, root=root) if source_path_file else all_paths
+    paths = select_source_shard(paths, shard_count, shard_index)
     if limit is not None:
         paths = paths[:limit]
 
@@ -417,6 +447,16 @@ def build_source_verification_report(
             "public_sources_only": True,
             "non_advisory": True,
         },
+        "scope": {
+            "total_source_paths": len(all_paths),
+            "candidate_source_paths": len(load_source_path_file(source_path_file, root=root)) if source_path_file else len(all_paths),
+            "verified_source_paths": len(paths),
+            "source_path_file": display_path(source_path_file, root) if source_path_file else None,
+            "limit": limit,
+            "shard_count": shard_count,
+            "shard_index": shard_index,
+            "is_partial": len(paths) != len(all_paths) or source_path_file is not None,
+        },
         "summary": {
             "source_count": len(verifications),
             "sources_requiring_review": sum(1 for item in verifications if item["requires_review"]),
@@ -443,11 +483,20 @@ def main() -> int:
     parser.add_argument("command", choices={"verify"})
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--shard-count", type=int)
+    parser.add_argument("--shard-index", type=int)
+    parser.add_argument("--source-path-file", type=Path)
     parser.add_argument("--fail-on-review", action="store_true")
     args = parser.parse_args()
 
-    report = build_source_verification_report(limit=args.limit)
+    report = build_source_verification_report(
+        limit=args.limit,
+        shard_count=args.shard_count,
+        shard_index=args.shard_index,
+        source_path_file=args.source_path_file,
+    )
     write_report(report, args.output)
+    print(json.dumps(report["scope"], indent=2, sort_keys=True))
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
     print(json.dumps(report["breakdowns"].get("verification_statuses", {}), indent=2, sort_keys=True))
 

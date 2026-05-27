@@ -7,13 +7,59 @@ This runbook explains how maintainers operate OpenVA source trust after the Laye
 The normal weekly cycle is:
 
 1. `source-maintenance-report` runs weekly and produces source verification, quality queue, observation ledger, latest health, and public source-health snapshot artifacts.
-2. `source-refinement-scan` runs weekly after source maintenance and compares the latest two successful source-maintenance runs.
-3. Maintainers inspect confirmed P0 evidence and the Layer 2C source quality queue.
-4. Confirmed P0 repair is batched into small human-reviewed plans.
-5. Catalog expansion pauses when source-health debt is high enough that new growth would hide repair work.
-6. Generated stale source repair PRs are cleaned up after 30 days if they remain unreviewed and stale.
+2. Scheduled source verification runs as an incremental shard by default, not as an always-full catalog verification.
+3. `source-refinement-scan` runs weekly after source maintenance and compares the latest two successful source-maintenance runs.
+4. Maintainers inspect confirmed P0 evidence and the Layer 2C source quality queue.
+5. Confirmed P0 repair is batched into small human-reviewed plans.
+6. Catalog expansion pauses when source-health debt is high enough that new growth would hide repair work.
+7. Generated stale source repair PRs are cleaned up after 30 days if they remain unreviewed and stale.
 
 Healthy operation means the weekly maintenance artifact exists, confirmed P0 debt is understood, quality-risk sources are queued for review, release candidates have source-health readiness artifacts, and the public site can display the latest source-health and catalog-confidence snapshots when available.
+
+## Source Verification Scheduler
+
+`source-maintenance-report` remains the single source maintenance workflow. Sharding is an internal scope selector, not a new workflow.
+
+The workflow supports these verification scopes:
+
+```text
+scheduled_shard
+full
+custom_shard
+```
+
+Scheduled runs default to `scheduled_shard` with a 4-way shard count. The shard index is derived from the GitHub Actions run number, so weekly runs rotate through the catalog over time while keeping each run smaller.
+
+Manual use:
+
+```text
+verification_scope: full
+```
+
+runs full source verification for release investigation or broad health checks.
+
+Manual shard use:
+
+```text
+verification_scope: custom_shard
+source_shard_count: 4
+source_shard_index: 2
+```
+
+runs a specific shard for diagnosis or catch-up.
+
+The source verification report records scope metadata:
+
+```text
+scope.total_source_paths
+scope.candidate_source_paths
+scope.verified_source_paths
+scope.shard_count
+scope.shard_index
+scope.is_partial
+```
+
+Downstream workflows must treat partial source-maintenance artifacts as maintenance snapshots. They are evidence for the sources actually verified in that run, not proof that the entire catalog was freshly checked.
 
 ## Automatic Operations
 

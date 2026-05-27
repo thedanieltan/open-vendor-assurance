@@ -3,8 +3,26 @@ name: source-maintenance-report
 on:
   workflow_dispatch:
     inputs:
+      verification_scope:
+        description: "Source verification scope: scheduled_shard, full, or custom_shard"
+        required: false
+        default: "scheduled_shard"
+        type: choice
+        options:
+          - scheduled_shard
+          - full
+          - custom_shard
+      source_shard_count:
+        description: "Shard count for scheduled_shard/custom_shard verification"
+        required: false
+        default: "4"
+        type: string
+      source_shard_index:
+        description: "Shard index for custom_shard verification; scheduled_shard derives this from run number"
+        required: false
+        type: string
       source_limit:
-        description: "Optional number of sources to verify"
+        description: "Optional number of sources to verify after shard selection"
         required: false
         type: string
       vendor_limit:
@@ -40,12 +58,42 @@ jobs:
         run: python -m tools.openva.source_health build --output source-health-report.json
       - name: Build network source verification report
         run: |
+          SCOPE="${{ inputs.verification_scope }}"
+          SHARD_COUNT="${{ inputs.source_shard_count }}"
+          SHARD_INDEX="${{ inputs.source_shard_index }}"
           LIMIT="${{ inputs.source_limit }}"
-          if [ -n "$LIMIT" ]; then
-            python -m tools.openva.source_verification verify --limit "$LIMIT" --output source-verification-report.json
-          else
-            python -m tools.openva.source_verification verify --output source-verification-report.json
+
+          if [ -z "$SCOPE" ]; then
+            SCOPE="scheduled_shard"
           fi
+          if [ -z "$SHARD_COUNT" ]; then
+            SHARD_COUNT="4"
+          fi
+
+          VERIFY_ARGS=()
+          if [ -n "$LIMIT" ]; then
+            VERIFY_ARGS+=(--limit "$LIMIT")
+          fi
+
+          if [ "$SCOPE" = "full" ]; then
+            echo "Running full source verification."
+          elif [ "$SCOPE" = "scheduled_shard" ]; then
+            SHARD_INDEX=$(( ${{ github.run_number }} % SHARD_COUNT ))
+            echo "Running scheduled source verification shard ${SHARD_INDEX}/${SHARD_COUNT}."
+            VERIFY_ARGS+=(--shard-count "$SHARD_COUNT" --shard-index "$SHARD_INDEX")
+          elif [ "$SCOPE" = "custom_shard" ]; then
+            if [ -z "$SHARD_INDEX" ]; then
+              echo "source_shard_index is required when verification_scope=custom_shard" >&2
+              exit 2
+            fi
+            echo "Running custom source verification shard ${SHARD_INDEX}/${SHARD_COUNT}."
+            VERIFY_ARGS+=(--shard-count "$SHARD_COUNT" --shard-index "$SHARD_INDEX")
+          else
+            echo "Unknown verification_scope: $SCOPE" >&2
+            exit 2
+          fi
+
+          python -m tools.openva.source_verification verify "${VERIFY_ARGS[@]}" --output source-verification-report.json
       - name: Build source quality refinement queue
         run: |
           python -m tools.openva.source_quality_refinement build \
@@ -145,6 +193,7 @@ jobs:
           triage = json.load(open('source-review-triage-plan.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
           cleanup = json.load(open('cleanup-proposal.json', encoding='utf-8'))
+          verification_scope = verification.get('scope', {})
 
           lines = [
               "# OpenVA Source Maintenance Report",
@@ -157,6 +206,7 @@ jobs:
               "",
               f"- Source health issues: `{health['summary']['sources_with_issues']}`",
               f"- Verification sources requiring review: `{verification['summary']['sources_requiring_review']}`",
+              f"- Source verification scope: `{verification_scope.get('verified_source_paths')}` of `{verification_scope.get('total_source_paths')}` source paths verified; shard `{verification_scope.get('shard_index')}` of `{verification_scope.get('shard_count')}`; partial `{verification_scope.get('is_partial')}`.",
               f"- Source quality refinement items: `{quality['summary']['total_quality_review_count']}`",
               f"- Candidate sources reported: `{discovery['summary']['candidate_sources_written_or_reported']}`",
               f"- Unavailable sources reported: `{discovery['summary']['unavailable_sources_written_or_reported']}`",
@@ -265,7 +315,7 @@ jobs:
           ]:
               report = json.load(open(path, encoding='utf-8'))
               print(f'## {path}')
-              print(json.dumps(report['summary'], indent=2, sort_keys=True))
+              print(json.dumps(report.get('summary', {}), indent=2, sort_keys=True))
           PY
       - name: Upload source maintenance artifacts
         uses: actions/upload-artifact@v6
