@@ -61,6 +61,31 @@ config/automerge-policy.yaml
 
 Automerge eligibility checks may run in report-only mode for diagnostics, but report-only output is never merge authority. An automerge workflow may treat a lane as merge-eligible only when the relevant checker runs in enforce mode and returns eligible.
 
+## Checker input interface
+
+Strict-growth eligibility has two interfaces:
+
+```text
+Python API: parsed dictionaries plus SHA/label context
+CLI: file paths that are loaded into the same parsed-dictionary checker
+```
+
+The Python checker should receive:
+
+```text
+promotion_plan: dict
+eligibility_report: dict | None
+labels: list[str]
+current_head_sha: str
+recorded_head_sha: str
+current_base_sha: str
+recorded_base_sha: str | None
+now: datetime
+policy: dict
+```
+
+The CLI may accept file paths, but it must load them and call the parsed-dictionary checker. This keeps tests stable and avoids one-off file-path logic in the eligibility rules.
+
 ## Freshness policy
 
 Automerge eligibility is time-sensitive.
@@ -256,6 +281,22 @@ core_source_types_only: dpa, subprocessors_list, privacy_notice, security_page
 ```
 
 Strict-growth eligibility is batch-level: if any action in the batch fails a strict-growth gate, the entire PR is ineligible for `automerge:strict-growth`.
+
+Strict-growth action identifiers are stable semantic IDs, not positional indexes. The configured action identifier fields are:
+
+```text
+vendor.candidate_vendor_id
+source.source_type_candidate
+source.candidate_source_id
+```
+
+Reason codes should use this format:
+
+```text
+<reason_code>:<candidate_vendor_id>:<source_type_candidate>:<candidate_source_id>
+```
+
+If one of those fields is missing, the checker should use `missing` for that segment and also emit the relevant missing-field reason.
 
 Strict-growth eligibility requires all of these:
 
