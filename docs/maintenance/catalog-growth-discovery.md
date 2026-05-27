@@ -8,7 +8,7 @@ OpenVA uses taxonomy-driven discovery to grow the launch corpus without treating
 
 `maintenance/queues/catalog-growth-discovery.json` is the operational queue. It selects which taxonomy lanes are active for launch discovery and sets bounded run limits.
 
-`maintenance/queues/catalog-growth-scale-readiness.json` is the scale-readiness contract. It explains how catalog growth moves from bootstrap seed identities to queue-based discovery, reviewed promotion, and source maintenance.
+`docs/maintenance/catalog-growth-scale-readiness.md` explains how catalog growth moves from bootstrap seed identities to queue-based discovery, reviewed promotion, and source maintenance.
 
 ## Discovery boundary
 
@@ -24,7 +24,7 @@ creates_candidate_sources: false
 non_advisory: true
 ```
 
-The scale-readiness contract is also non-executing. It does not fetch network sources, create pull requests, run promotion, or write canonical vendor/source records.
+The scale-readiness guide is non-executing. It does not fetch network sources, create pull requests, run promotion, or write canonical vendor/source records.
 
 ## Launch corpus goal
 
