@@ -1,8 +1,6 @@
 # Public Launch Cutover Guide
 
-This guide describes the maintainer steps for moving OpenVA from private development to public contribution posture.
-
-It does not change repository visibility by itself and does not tag a release. It is an operational guide for maintainers.
+This guide describes maintainer steps for moving OpenVA from private development to public contribution posture. It does not change repository visibility by itself and does not tag a release.
 
 ## Launch positioning
 
@@ -32,10 +30,8 @@ Confirm:
 - [ ] `docs/v0.1.0-release-candidate.md` is complete.
 - [ ] `docs/public-launch-checklist.md` is complete or remaining gaps are intentionally documented.
 - [ ] `docs/ci-and-branch-protection.md` branch-protection expectations are applied or tracked.
-- [ ] `validate / validate` passes on `main`.
-- [ ] `openva-pack.json` and `indexes/` are current.
-- [ ] No raw documents, screenshots, private portal exports, SOC reports, ISO certificates, or extracted full text are committed by default.
-- [ ] No public issue contains credentials, gated material, or private customer content.
+- [ ] All required `validate / ...` checks pass on `main`.
+- [ ] `openva-pack.json`, `indexes/`, and `dist/` are current.
 - [ ] Issue templates are enabled and blank issues are disabled.
 - [ ] CODEOWNERS is current.
 - [ ] SECURITY.md is current.
@@ -48,7 +44,7 @@ When maintainers are ready, change repository visibility through GitHub reposito
 Recommended sequence:
 
 1. Confirm branch protection on `main`.
-2. Confirm required check `validate / validate`.
+2. Confirm the required partitioned validation checks from `docs/ci-and-branch-protection.md`.
 3. Confirm CODEOWNERS review expectations.
 4. Confirm issue templates render correctly.
 5. Confirm SECURITY.md private reporting guidance.
