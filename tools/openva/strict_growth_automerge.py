@@ -63,6 +63,18 @@ def append_reason(
         reasons.append(reason)
 
 
+def evidence_value(
+    key: str,
+    promotion_plan: dict[str, Any],
+    eligibility_report: dict[str, Any] | None,
+) -> str | None:
+    if eligibility_report is not None and eligibility_report.get(key):
+        return str(eligibility_report[key])
+    if promotion_plan.get(key):
+        return str(promotion_plan[key])
+    return None
+
+
 def evidence_timestamp(
     promotion_plan: dict[str, Any],
     eligibility_report: dict[str, Any] | None,
@@ -172,9 +184,9 @@ def check_strict_growth_eligibility(
     eligibility_report: dict[str, Any] | None,
     labels: list[str],
     current_head_sha: str,
-    recorded_head_sha: str,
-    current_base_sha: str,
-    recorded_base_sha: str | None,
+    recorded_head_sha: str | None = None,
+    current_base_sha: str = "",
+    recorded_base_sha: str | None = None,
     now: datetime,
     policy: dict[str, Any] | None = None,
 ) -> EligibilityResult:
@@ -194,12 +206,17 @@ def check_strict_growth_eligibility(
         if required_label not in labels_set:
             reasons.append(f"required_label_missing:{required_label}")
 
-    if not recorded_head_sha:
+    effective_recorded_head_sha = recorded_head_sha or evidence_value("head_sha", promotion_plan, eligibility_report)
+    effective_recorded_base_sha = recorded_base_sha or evidence_value("base_sha", promotion_plan, eligibility_report)
+
+    if not effective_recorded_head_sha:
         reasons.append("recorded_head_sha_missing")
-    elif current_head_sha != recorded_head_sha:
+    elif current_head_sha != effective_recorded_head_sha:
         reasons.append("head_sha_mismatch")
 
-    if recorded_base_sha and current_base_sha != recorded_base_sha:
+    if not effective_recorded_base_sha:
+        reasons.append("recorded_base_sha_missing")
+    elif current_base_sha and current_base_sha != effective_recorded_base_sha:
         reasons.append("base_sha_mismatch_warning")
 
     timestamp, _source = evidence_timestamp(promotion_plan, eligibility_report, reasons)
@@ -249,7 +266,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--eligibility-report", type=Path)
     parser.add_argument("--labels", default="")
     parser.add_argument("--current-head-sha", required=True)
-    parser.add_argument("--recorded-head-sha", required=True)
+    parser.add_argument("--recorded-head-sha", default="")
     parser.add_argument("--current-base-sha", required=True)
     parser.add_argument("--recorded-base-sha", default="")
     parser.add_argument("--policy", default="config/automerge-policy.yaml")
@@ -271,7 +288,7 @@ def main(argv: list[str] | None = None) -> int:
         eligibility_report=eligibility_report,
         labels=[label for label in args.labels.split(",") if label],
         current_head_sha=args.current_head_sha,
-        recorded_head_sha=args.recorded_head_sha,
+        recorded_head_sha=args.recorded_head_sha or None,
         current_base_sha=args.current_base_sha,
         recorded_base_sha=args.recorded_base_sha or None,
         now=now,
