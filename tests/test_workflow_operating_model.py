@@ -176,7 +176,7 @@ def test_reviewer_decision_handoff_documents_controlled_manual_boundary():
         "export-reviewed-artifacts",
         "maintenance/reviewed/",
         "source-repair-pr.yml",
-        "untrusted input",
+        "reviewer input",
         "does not mutate `data/vendors/**`",
         "Do not apply automerge labels",
         "CI passes",
