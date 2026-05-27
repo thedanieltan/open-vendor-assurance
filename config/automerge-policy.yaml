@@ -26,6 +26,10 @@ strict_growth:
   freshness_hours: 4
   required_action_field: strict_machine_candidate
   required_action_field_value: true
+  action_id_fields:
+    - vendor.candidate_vendor_id
+    - source.source_type_candidate
+    - source.candidate_source_id
   report_only_is_merge_authority: false
   head_sha_mismatch: hard_fail
   base_sha_mismatch: warning
