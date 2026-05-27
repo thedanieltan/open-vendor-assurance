@@ -4,6 +4,8 @@ This guide explains how catalog growth should scale after the initial seed files
 
 It is documentation only. It does not create a queue, run discovery, create pull requests, run promotion, or write canonical vendor/source records.
 
+It complements the discovery queue; it is not input to the queue validator.
+
 ## Operating model
 
 Catalog growth uses this path:
