@@ -69,6 +69,24 @@ Strict growth has a 4-hour freshness window because it can create new vendor/sou
 
 Generated output sync has a 24-hour freshness window because generated outputs are deterministic artifacts derived from canonical inputs.
 
+Freshness clock source:
+
+```text
+strict-growth freshness uses the strict-growth evidence bundle timestamp, not the PR event timestamp
+generated-output freshness uses the generated artifact manifest timestamp, not the PR event timestamp
+```
+
+For strict growth, the evidence bundle timestamp is:
+
+```text
+primary: strict-growth eligibility report generated_at
+fallback: strict-growth promotion plan generated_at, only when no eligibility report is supplied
+```
+
+If both an eligibility report and a promotion plan are supplied, the eligibility report timestamp is authoritative. The promotion plan timestamp must not be later than the eligibility report timestamp. A later promotion plan timestamp indicates a mismatched or regenerated plan and fails strict-growth eligibility.
+
+The PR event timestamp is only the time the checker runs. It does not refresh evidence.
+
 Freshness checks distinguish head and base movement:
 
 ```text
@@ -237,20 +255,23 @@ freshness_window: 4 hours
 core_source_types_only: dpa, subprocessors_list, privacy_notice, security_page
 ```
 
+Strict-growth eligibility is batch-level: if any action in the batch fails a strict-growth gate, the entire PR is ineligible for `automerge:strict-growth`.
+
 Strict-growth eligibility requires all of these:
 
-1. Every action has `strict_machine_candidate: true`.
+1. Every action has `strict_machine_candidate: true` at the action level.
 2. `strict_machine_candidate: true` is necessary but never sufficient by itself.
-3. No action is `review_required`, `deferred`, `rejected`, or ambiguous.
-4. Source types are limited to the approved core source types.
-5. New-vendor and per-vendor source caps are not exceeded.
-6. Candidate IDs and official domains do not conflict with existing catalog records.
-7. Source preflight passes.
-8. Repository validation passes.
-9. Generated outputs are rebuilt and drift-free.
-10. Freshness check passes.
-11. Report-only mode is not used as merge authority.
-12. Entity or relationship records, if present, are source-attested or registry-attested and inference-free.
+3. A missing, false, null, or non-boolean `strict_machine_candidate` on any action fails the entire strict-growth PR.
+4. No action is `review_required`, `deferred`, `rejected`, or ambiguous.
+5. Source types are limited to the approved core source types.
+6. New-vendor and per-vendor source caps are not exceeded.
+7. Candidate IDs and official domains do not conflict with existing catalog records.
+8. Source preflight passes.
+9. Repository validation passes.
+10. Generated outputs are rebuilt and drift-free.
+11. Freshness check passes.
+12. Report-only mode is not used as merge authority.
+13. Entity or relationship records, if present, are source-attested or registry-attested and inference-free.
 
 ## Deny-first inference policy
 
@@ -282,6 +303,8 @@ inference_mode: third_party_assertion
 inference_mode: model_inferred
 inference_mode: unknown
 ```
+
+For strict-growth entity or relationship records, `attestation_mode` and `inference_mode` are mandatory. An absent `inference_mode` fails strict-growth eligibility. An absent `attestation_mode` fails strict-growth eligibility. Absence is not treated as `none`.
 
 If both allowed and blocked inference signals are present, the blocked signal wins.
 
