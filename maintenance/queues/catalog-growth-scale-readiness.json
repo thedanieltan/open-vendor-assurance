@@ -1,0 +1,101 @@
+{
+  "schema_version": "0.1.0",
+  "contract_type": "catalog_growth_scale_readiness",
+  "purpose": "Define how catalog growth moves from bootstrap seed identities to queue-based discovery, reviewed promotion, and source maintenance without treating discovery output as catalog truth.",
+  "non_advisory": true,
+  "posture": {
+    "network_fetch_performed": false,
+    "writes_repository_state": false,
+    "writes_canonical_vendors": false,
+    "writes_canonical_sources": false,
+    "creates_candidate_sources": false,
+    "creates_pull_requests": false,
+    "runs_promotion": false
+  },
+  "operating_stages": [
+    {
+      "stage_id": "bootstrap_seed_identity",
+      "purpose": "Use reviewed seed files to provide initial vendor identities and official domains for priority coverage areas.",
+      "canonical_write_allowed": false
+    },
+    {
+      "stage_id": "queue_based_discovery",
+      "purpose": "Use coverage gaps, candidate backlog state, source-health budget, and domain authority to choose the next discovery targets.",
+      "canonical_write_allowed": false
+    },
+    {
+      "stage_id": "reviewed_promotion",
+      "purpose": "Promote only candidates with reviewed evidence through the controlled promotion workflow.",
+      "canonical_write_allowed": true,
+      "write_path": "candidate-promotion-pr.yml"
+    },
+    {
+      "stage_id": "source_maintenance",
+      "purpose": "Keep promoted catalog records fresh through source-health checks, repair evidence, and unavailable-source truth-state.",
+      "canonical_write_allowed": false
+    }
+  ],
+  "candidate_lifecycle": [
+    "seeded",
+    "discovered",
+    "deduplicated",
+    "source_discovered",
+    "review_ready",
+    "approved_for_promotion",
+    "promoted",
+    "observed",
+    "maintenance_required"
+  ],
+  "core_source_types": [
+    "dpa",
+    "subprocessors_list",
+    "privacy_notice",
+    "security_page"
+  ],
+  "deferred_source_types": [
+    "trust_center",
+    "security_whitepaper",
+    "compliance_page",
+    "certification_reference",
+    "product_terms",
+    "ai_terms",
+    "data_transfer_terms"
+  ],
+  "promotion_readiness": [
+    "personal_data_relevance",
+    "official_domain_authority",
+    "core_source_coverage",
+    "coverage_gap_fit",
+    "dedupe_confidence",
+    "source_health_budget"
+  ],
+  "promotion_blocks": [
+    "official_domain_unknown",
+    "duplicate_vendor_or_entity_family",
+    "no_public_source_candidates",
+    "source_type_mismatch",
+    "gated_only_materials",
+    "raw_document_mirroring_required",
+    "source_health_budget_exceeded",
+    "review_plan_not_committed_under_maintenance_reviewed"
+  ],
+  "batching_policy": {
+    "max_reviewed_actions_per_plan": 50,
+    "preferred_initial_reviewed_batch_size": 25
+  },
+  "handoff": {
+    "bootstrap_input": "maintenance/seeds/vendors/*.yaml",
+    "discovery_queue": "maintenance/queues/catalog-growth-discovery.json",
+    "scale_readiness_contract": "maintenance/queues/catalog-growth-scale-readiness.json",
+    "reviewed_plan_path": "maintenance/reviewed/",
+    "controlled_write_path": "candidate-promotion-pr.yml",
+    "post_promotion_maintenance": "source maintenance loop"
+  },
+  "guardrails": [
+    "Seed files are staging records, not catalog records.",
+    "Discovery output is staging evidence, not catalog truth.",
+    "Candidate promotion requires reviewed plans under maintenance/reviewed/.",
+    "candidate-promotion-pr.yml is the controlled catalog write path.",
+    "Catalog growth should slow down when source-health debt exceeds the agreed budget."
+  ]
+}
