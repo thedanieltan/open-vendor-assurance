@@ -1,22 +1,97 @@
 # Catalog Autonomy Policy
 
-OpenVA separates source-location facts from assurance conclusions.
+OpenVA separates public-source metadata from assurance conclusions.
 
-Agents may autonomously maintain verified public source-location facts. Agents must not make legal, compliance, procurement, security, KYC, AML, sanctions, approval, suitability, vendor-risk, or certification-validity conclusions.
+Agents may autonomously maintain verified public source-location facts, registry-backed entity facts, and vendor-source-attested relationship facts when the evidence is explicit, bounded, and machine-verifiable. Agents must not make legal, compliance, procurement, security, KYC, AML, sanctions, approval, suitability, vendor-risk, or certification-validity conclusions.
+
+## Current state and target state
+
+This policy describes both the current operating state and the approved target design for catalog growth autonomy.
+
+Current state:
+
+```text
+strict-growth-latest may generate a Catalog PR
+strict-growth-latest must not imply automerge eligibility
+machine-canonical and P0 source repair are the only implemented automerge jobs
+strict-growth automerge execution is not wired yet
+```
+
+Target state after calibration:
+
+```text
+strict-growth-latest may generate bounded Catalog PRs
+strict-growth PRs may become eligible only through a dedicated automerge:strict-growth lane
+strict-growth must not inherit automerge:machine-canonical authority
+strict-growth merge execution requires a separate calibration/activation PR
+```
+
+## Authority ladder
+
+OpenVA uses this authority ladder:
+
+```text
+Discovery Intake Loop
+  discovers, classifies, queues, and reports candidates
+  does not write canonical catalog records
+
+Strict Autonomous PR Lane
+  generates bounded Catalog PRs for strict source-attested or registry-attested facts
+  does not merge by default
+
+Human Review Lane
+  handles ambiguous, inferred, conflicting, high-impact, or policy-exception cases
+
+Automerge Lanes
+  merge only explicitly labeled, policy-gated, machine-verifiable PR classes
+
+PR Safety Loop
+  enforces validators, source preflight, generated drift checks, tests, and branch protection
+```
+
+A bot opening a PR does not imply that the PR is eligible for automerge.
 
 ## Enforcement mode
 
-The auto-merge workflow ships in report-only mode for v0.1.
-
-The eligibility checker may report that a PR would qualify for an autonomous lane, but it does not merge PRs. Actual merge activation requires a separate PR updating the merge policy, workflow permissions, and enforcement mode after calibration criteria are met.
-
-The current machine-canonical blast-radius limit is:
+The repository automerge policy is configured in:
 
 ```text
-maximum 50 source records per PR
+config/automerge-policy.yaml
 ```
 
-This value is configured in `config/automerge-policy.yaml`.
+Automerge eligibility checks may run in report-only mode for diagnostics, but report-only output is never merge authority. An automerge workflow may treat a lane as merge-eligible only when the relevant checker runs in enforce mode and returns eligible.
+
+## Freshness policy
+
+Automerge eligibility is time-sensitive.
+
+Strict growth has a 4-hour freshness window because it can create new vendor/source/entity catalog state and has higher blast radius.
+
+Generated output sync has a 24-hour freshness window because generated outputs are deterministic artifacts derived from canonical inputs.
+
+Freshness checks distinguish head and base movement:
+
+```text
+head SHA mismatch = hard failure
+base SHA mismatch = warning unless current validation has already evaluated the latest base
+expired evidence = hard failure for automerge eligibility
+```
+
+Head SHA movement means the PR diff changed and strict-growth eligibility must be recomputed. Base SHA movement can be benign when another PR merged to `main`, so it is not automatically equivalent to a changed strict-growth diff.
+
+Rerun triggers:
+
+```text
+pull_request opened
+pull_request synchronize
+pull_request reopened
+pull_request labeled
+pull_request ready_for_review
+manual workflow rerun
+branch update from main
+```
+
+If a strict-growth PR goes stale only because time elapsed, maintainers may rerun the relevant workflow, update the branch from `main`, push a no-op commit, or remove the automerge label.
 
 ## Catalog layers
 
@@ -39,12 +114,12 @@ advisory_boundary: non_advisory
 
 Autonomous discovery is allowed.
 
-Candidate source records are not canonical until they pass the machine-canonical gates in this policy.
+Candidate source records are not canonical until they pass the relevant promotion gates.
 
 ```text
 canonical: false
 catalog_tier: discovery
-review_state: human_review_required
+review_state: human_review_required or strict_pr_candidate
 advisory_boundary: non_advisory
 ```
 
@@ -64,9 +139,48 @@ review_state: auto_validated
 advisory_boundary: non_advisory
 ```
 
-### 4. Human-reviewed canonical source layer
+### 4. Registry-backed legal entity layer
 
-Human review remains required for meaning-level, ambiguous, legal-entity, authority, jurisdictional, certification, security, KYC/AML, sanctions, or high-impact changes.
+Autonomous promotion is allowed only when the legal entity fact is backed by a public statutory registry or equivalent official registry source.
+
+Allowed registry-backed facts include:
+
+```text
+legal name
+registration number
+registry jurisdiction
+registry authority
+registry source URL
+```
+
+Registry-backed legal entity records do not determine legal sufficiency, contracting outcome, vendor suitability, or customer-specific agreement status.
+
+### 5. Source-attested relationship layer
+
+Autonomous promotion is allowed only when the relationship is explicitly stated by a vendor public source or statutory registry source.
+
+Allowed strict-growth relationship records must use source-attested naming:
+
+```text
+vendor_stated_*
+registry_stated_*
+```
+
+Examples:
+
+```text
+vendor_stated_terms_publisher
+vendor_stated_website_operator
+vendor_stated_regional_operator
+vendor_stated_contracting_entity
+registry_stated_registered_entity
+```
+
+OpenVA records that the public source states the relationship. OpenVA does not independently infer the legal meaning or customer-specific consequence of that relationship.
+
+### 6. Human-reviewed canonical layer
+
+Human review remains required for ambiguous, inferred, conflicting, high-impact, or policy-exception cases.
 
 ```text
 record_class: canonical
@@ -76,15 +190,11 @@ review_state: human_reviewed
 advisory_boundary: non_advisory
 ```
 
-## Legacy canonical default
-
-Existing canonical source records without explicit `catalog_tier` are treated as `human_reviewed` by default. This reflects the review posture at v0.1.0. A future migration may make these fields explicit.
-
 ## Machine-canonical gates
 
 A candidate source may become machine-validated canonical only if all are true:
 
-1. Vendor exists in OpenVA.
+1. Vendor exists in OpenVA, unless the candidate is going through the dedicated strict-growth lane.
 2. Candidate URL uses HTTPS.
 3. Candidate URL is public.
 4. Candidate URL does not require login, NDA, customer status, sales approval, private portal access, support-ticket access, form submission, CAPTCHA, anti-bot bypass, or credentialed access.
@@ -100,11 +210,146 @@ A candidate source may become machine-validated canonical only if all are true:
 14. Generated indexes and pack are rebuilt.
 15. Validation and tests pass.
 
+## Strict-growth gates
+
+`strict-growth-latest` is an autonomous PR-generation lane, not an automerge lane by itself.
+
+Strict-growth automerge, when later activated, must use a dedicated label:
+
+```text
+automerge:strict-growth
+```
+
+and must also require:
+
+```text
+catalog-growth
+```
+
+Strict-growth must not use `automerge:machine-canonical`.
+
+Strict-growth limits:
+
+```text
+max_new_vendors_per_pr: 5
+max_sources_per_new_vendor: 2
+freshness_window: 4 hours
+core_source_types_only: dpa, subprocessors_list, privacy_notice, security_page
+```
+
+Strict-growth eligibility requires all of these:
+
+1. Every action has `strict_machine_candidate: true`.
+2. `strict_machine_candidate: true` is necessary but never sufficient by itself.
+3. No action is `review_required`, `deferred`, `rejected`, or ambiguous.
+4. Source types are limited to the approved core source types.
+5. New-vendor and per-vendor source caps are not exceeded.
+6. Candidate IDs and official domains do not conflict with existing catalog records.
+7. Source preflight passes.
+8. Repository validation passes.
+9. Generated outputs are rebuilt and drift-free.
+10. Freshness check passes.
+11. Report-only mode is not used as merge authority.
+12. Entity or relationship records, if present, are source-attested or registry-attested and inference-free.
+
+## Deny-first inference policy
+
+Strict-growth uses a deny-first inference rule.
+
+Any blocked inference signal fails strict-growth eligibility, even if another field claims source or registry attestation.
+
+Allowed strict-growth attestation values:
+
+```text
+attestation_mode: source_attested
+attestation_mode: registry_attested
+```
+
+Allowed strict-growth inference values:
+
+```text
+inference_mode: none
+inference_mode: explicit_source_statement
+```
+
+Blocked strict-growth inference values include:
+
+```text
+inference_mode: domain_similarity
+inference_mode: name_similarity
+inference_mode: group_affiliation_inferred
+inference_mode: third_party_assertion
+inference_mode: model_inferred
+inference_mode: unknown
+```
+
+If both allowed and blocked inference signals are present, the blocked signal wins.
+
+Evidence requirements:
+
+```text
+source_attested requires evidence_url and source_id
+registry_attested requires registry_source_url and registry_authority
+```
+
 ## Human-review-only cases
 
-Human review is required for cross-domain redirects unless explicitly allowlisted, legal entity mapping, contracting entity resolution, authority classification ambiguity, new source type creation, gated sources, jurisdiction-specific assertions, conflicting candidates, security, certification, KYC, AML, or sanctions interpretation, vendor deletion, source authority class changes, and any advisory or meaning-level claim.
+Human review is required for:
 
-## Auto-merge lanes, report-only
+```text
+cross-domain redirects unless explicitly allowlisted
+relationship inference
+legal-effect interpretation not directly stated by source
+ambiguous legal entity mapping
+contracting entity ambiguity
+authority classification ambiguity
+new source type creation
+gated sources
+jurisdiction-specific assertions not directly source-attested
+conflicting candidates
+security, certification, KYC, AML, or sanctions interpretation
+vendor deletion
+source authority class changes
+advisory or meaning-level claims
+large promotion batches outside strict caps
+```
+
+## Backlog policy
+
+Catalog-growth backlog artifacts are operational memory, not promotion prerequisites and not catalog truth.
+
+Backlog states:
+
+```text
+strict_pr_candidate
+human_review_required
+deferred
+rejected
+expired
+```
+
+Discovery cadence is weekly. Expiry policy is therefore expressed in days and discovery cycles:
+
+```text
+strict_pr_candidate: expires after 21 days or 3 discovery cycles
+human_review_required: refresh required after 42 days or 6 discovery cycles
+deferred: refresh required after 84 days or 12 discovery cycles
+rejected: suppress rediscovery for 90 days unless source evidence changes
+```
+
+The expiry clock resets only when new discovery evidence is generated for the same candidate.
+
+A workflow rerun with identical evidence refreshes `generated_at` but must retain the same `evidence_hash`. If `evidence_hash` is unchanged, the backlog item is refreshed but not upgraded. If `evidence_hash` changes, the item is reclassified.
+
+Backlog review cadence:
+
+```text
+catalog-growth-discovery runs weekly
+maintainers review backlog during weekly maintenance or release preparation
+expired strict candidates must be refreshed before strict PR generation
+```
+
+## Auto-merge lanes
 
 OpenVA recognizes these lanes:
 
@@ -112,20 +357,68 @@ OpenVA recognizes these lanes:
 automerge:generated
 automerge:observation
 automerge:machine-canonical
+automerge:p0-source-repair
+automerge:strict-growth
 needs-human-review
 blocked-by-scope
 ```
-
-The lanes are report-only in v0.1.
 
 `automerge:generated` is allowed only for deterministic generated artifacts.
 
 `automerge:observation` is allowed only for non-canonical observation artifacts.
 
-`automerge:machine-canonical` is allowed only for candidate-to-machine-canonical source reference promotions that pass all machine-canonical gates and stay within the configured diff threshold.
+`automerge:machine-canonical` is allowed only for bounded machine-verifiable catalog metadata changes that pass all machine-canonical gates and stay within the configured diff threshold.
 
-Anything outside the report-only auto-merge lanes requires `needs-human-review`.
+`automerge:p0-source-repair` is allowed only for confirmed source repair evidence, requires `source-refinement`, and remains capped at 10 source records per PR.
+
+`automerge:strict-growth` is a target dedicated lane for strict catalog growth. It is policy-defined and testable, but merge execution must not be wired into `agent-automerge.yml` until calibration succeeds.
+
+Anything outside the approved automerge lanes requires `needs-human-review`.
+
+## Strict-growth calibration gate
+
+Strict-growth merge execution requires a separate calibration/activation PR.
+
+The calibration PR must include this explicit maintainer decision surface:
+
+```md
+## Strict-growth calibration decision
+
+Maintainer: @<github-username>
+Decision: approve activation / reject activation / extend calibration
+Date: YYYY-MM-DD
+Calibration PR: #<number>
+Evidence reviewed:
+- strict-growth eligibility report
+- generated Catalog PR diff
+- source preflight report
+- validation result
+- generated drift check
+- full test result
+Policy changes required before activation:
+- none / list required changes
+```
+
+A normal GitHub approval is not enough. The calibration decision must be recorded in the PR body or as a top-level PR comment using the template above.
+
+Calibration success criteria:
+
+1. `strict-growth-latest` opens a bounded Catalog PR without human-authored reviewed plan input.
+2. The generated PR changes only allowed catalog/generated paths.
+3. The PR contains no more than 5 new vendors.
+4. No vendor has more than 2 promoted sources.
+5. Every promoted action has `strict_machine_candidate: true`.
+6. `strict_machine_candidate: true` alone is rejected when labels, evidence, or freshness are missing.
+7. All promoted sources are core source types only.
+8. No `review_required`, `deferred`, `rejected`, or ambiguous candidates are applied.
+9. Entity/relationship records, if any, are source-attested or registry-attested with allowed inference mode.
+10. Head SHA mismatch fails strict-growth eligibility.
+11. Expired evidence older than 4 hours fails strict-growth eligibility.
+12. Base SHA mismatch produces the documented warning behavior, not a noisy hard failure.
+13. Report-only output cannot enable merge authority.
+14. The PR passes validation, source preflight, generated drift checks, and full tests.
+15. A maintainer records the explicit calibration decision using the decision template above.
 
 ## Launch posture
 
-OpenVA agents may autonomously verify and canonicalize public source references under strict gates. OpenVA does not autonomously make assurance, risk, legal, procurement, or compliance conclusions.
+OpenVA agents may autonomously verify and canonicalize public source references, registry-backed entity facts, and vendor-source-attested relationship facts under strict gates. OpenVA does not autonomously make assurance, risk, legal, procurement, or compliance conclusions.
