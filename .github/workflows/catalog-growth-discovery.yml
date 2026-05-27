@@ -111,12 +111,23 @@ jobs:
             --output-strict catalog-growth-strict-promotions.json \
             --output-review-csv reports/catalog-growth-review-required.csv \
             --output-rejected-csv reports/catalog-growth-rejected.csv \
-            --output-md reports/catalog-growth-eligibility-summary.md
+            --output-md reports/catalog-growth-eligibility-summary.md \
+            --head-sha "${{ github.sha }}" \
+            --base-sha "${{ github.sha }}"
+      - name: Build catalog growth backlog report
+        run: |
+          python -m tools.openva.catalog_growth_backlog build \
+            --eligibility-report catalog-growth-eligibility-report.json \
+            --output-json catalog-growth-backlog-report.json \
+            --output-csv reports/catalog-growth-backlog.csv \
+            --output-md reports/catalog-growth-backlog-summary.md
       - name: Build strict growth promotion plan
         run: |
           python -m tools.openva.promotion_planner plan-strict-growth \
             --eligibility-report catalog-growth-eligibility-report.json \
-            --output strict-growth-promotion-plan.json
+            --output strict-growth-promotion-plan.json \
+            --head-sha "${{ github.sha }}" \
+            --base-sha "${{ github.sha }}"
       - name: Build batched candidate promotion plan proposals
         run: |
           set -euo pipefail
@@ -142,6 +153,7 @@ jobs:
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
           strict_growth = json.load(open('strict-growth-promotion-plan.json', encoding='utf-8'))
+          backlog = json.load(open('catalog-growth-backlog-report.json', encoding='utf-8'))
           batches = json.load(open('promotion-plan-batch-summary.json', encoding='utf-8'))
           eligibility = json.load(open('catalog-growth-eligibility-report.json', encoding='utf-8'))
           lines = [
@@ -182,6 +194,13 @@ jobs:
               f"- Strict promote ready: `{eligibility['summary']['strict_promote_ready_count']}`",
               f"- Review required: `{eligibility['summary']['review_required_count']}`",
               f"- Rejected or deferred: `{eligibility['summary']['rejected_or_deferred_count']}`",
+              '',
+              '## Catalog growth backlog summary',
+              '',
+              f"- Backlog candidates: `{backlog['summary']['candidate_count']}`",
+              f"- Strict PR candidates: `{backlog['summary']['strict_pr_candidate_count']}`",
+              f"- Human review required: `{backlog['summary']['human_review_required_count']}`",
+              f"- Rejected: `{backlog['summary']['rejected_count']}`",
               '',
               '## Strict growth planning summary',
               '',
@@ -281,8 +300,10 @@ jobs:
           path: |
             reports/catalog-growth-discovery-summary.md
             reports/catalog-growth-eligibility-summary.md
+            reports/catalog-growth-backlog-summary.md
             reports/catalog-growth-review-required.csv
             reports/catalog-growth-rejected.csv
+            reports/catalog-growth-backlog.csv
             reports/vendor-candidates.csv
             reports/vendor-candidate-source-candidates.csv
             reports/vendor-candidate-source-unavailable.csv
@@ -298,6 +319,7 @@ jobs:
             promotion-plan-batch-summary.json
             catalog-growth-eligibility-report.json
             catalog-growth-strict-promotions.json
+            catalog-growth-backlog-report.json
             catalog-growth-discovery-issue.md
             maintenance/generated/*.json
           if-no-files-found: warn
