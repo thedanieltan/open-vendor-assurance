@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -10,6 +10,10 @@ from typing import Any
 from tools.openva.automerge_lanes import EligibilityResult, load_policy
 
 LANE = "automerge:strict-growth"
+INFORMATIONAL_REASONS = {
+    "base_sha_mismatch_warning",
+    "eligibility_report_missing_used_promotion_plan_timestamp",
+}
 
 
 def parse_timestamp(value: str | None) -> datetime | None:
@@ -47,7 +51,12 @@ def action_id(action: dict[str, Any], policy: dict[str, Any]) -> str:
     return ":".join(parts)
 
 
-def append_reason(reasons: list[str], reason: str, action: dict[str, Any] | None = None, policy: dict[str, Any] | None = None) -> None:
+def append_reason(
+    reasons: list[str],
+    reason: str,
+    action: dict[str, Any] | None = None,
+    policy: dict[str, Any] | None = None,
+) -> None:
     if action is not None and policy is not None:
         reasons.append(f"{reason}:{action_id(action, policy)}")
     else:
@@ -229,7 +238,7 @@ def check_strict_growth_eligibility(
         if count > max_sources:
             reasons.append(f"vendor_source_limit_exceeded:{vendor_id}:{count}>{max_sources}")
 
-    hard_failure_reasons = tuple(reason for reason in reasons if reason != "base_sha_mismatch_warning")
+    hard_failure_reasons = tuple(reason for reason in reasons if reason not in INFORMATIONAL_REASONS)
     eligible = not report_only and not hard_failure_reasons
     return EligibilityResult(eligible, label, tuple(reasons), report_only)
 
