@@ -47,3 +47,11 @@ def test_strict_growth_plan_preflight_runs_before_candidate_apply():
     assert "--eligibility-report catalog-growth-eligibility-report.json \\" in block
     assert "--current-head-sha" in block
     assert "--current-base-sha" in block
+
+
+def test_candidate_promotion_commits_rebuilt_dist_outputs():
+    text = workflow_text()
+
+    assert "python -m tools.openva.validate build-indexes" in text
+    assert "git diff --quiet -- data indexes dist openva-pack.json" in text
+    assert "git add data indexes dist openva-pack.json" in text
