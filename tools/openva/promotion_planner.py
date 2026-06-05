@@ -339,10 +339,13 @@ def build_strict_growth_plan(
     *,
     head_sha: str | None = None,
     base_sha: str | None = None,
+    max_actions_per_plan: int | None = None,
     policy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if eligibility_report.get("report_type") != "catalog_growth_eligibility_report":
         raise ValueError("expected catalog_growth_eligibility_report")
+    if max_actions_per_plan is not None and max_actions_per_plan < 0:
+        raise ValueError("max_actions_per_plan must be non-negative")
     policy = policy or load_policy()
     strict_by_vendor = {
         str(item.get("candidate_vendor_id")): item
@@ -354,7 +357,19 @@ def build_strict_growth_plan(
         for action in eligibility_report.get("strict_promotions", []) or []
         if str(action.get("vendor", {}).get("candidate_vendor_id")) in strict_by_vendor
     ]
-    actions, deferred_actions = cap_strict_growth_actions(uncapped_actions, policy)
+    policy_capped_actions, deferred_actions = cap_strict_growth_actions(uncapped_actions, policy)
+    actions = policy_capped_actions
+    batch_deferred_actions: list[dict[str, Any]] = []
+    if max_actions_per_plan and len(policy_capped_actions) > max_actions_per_plan:
+        actions = policy_capped_actions[:max_actions_per_plan]
+        batch_deferred_actions = [
+            {
+                "action": action,
+                "reason_codes": ["workflow_max_actions_per_plan_exceeded"],
+            }
+            for action in policy_capped_actions[max_actions_per_plan:]
+        ]
+        deferred_actions = [*deferred_actions, *batch_deferred_actions]
     counts = Counter(action["action"] for action in actions)
     plan = {
         "schema_version": "0.1.0",
@@ -370,9 +385,13 @@ def build_strict_growth_plan(
         },
         "summary": {
             "action_count": len(actions),
+            "uncapped_action_count": len(uncapped_actions),
+            "policy_capped_action_count": len(policy_capped_actions),
             "actions_requiring_human_review": 0,
             "action_types": dict(sorted(counts.items())),
             "deferred_action_count": len(deferred_actions),
+            "batch_deferred_action_count": len(batch_deferred_actions),
+            "max_actions_per_plan": max_actions_per_plan,
         },
         "actions": actions,
     }
@@ -399,12 +418,14 @@ def main() -> int:
     strict.add_argument("--output", type=Path, default=ROOT / "strict-growth-promotion-plan.json")
     strict.add_argument("--head-sha")
     strict.add_argument("--base-sha")
+    strict.add_argument("--max-actions-per-plan", type=int)
     args = parser.parse_args()
     if args.command == "plan-strict-growth":
         report = build_strict_growth_plan(
             load_json(args.eligibility_report),
             head_sha=args.head_sha,
             base_sha=args.base_sha,
+            max_actions_per_plan=None if args.max_actions_per_plan in {None, 0} else args.max_actions_per_plan,
         )
     else:
         report = build_promotion_plan(

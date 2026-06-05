@@ -96,6 +96,11 @@ def test_changed_source_with_not_found_fails(tmp_path: Path):
     assert report["passed_count"] == 0
     assert report["failed_count"] == 1
     assert report["failures"][0]["reason"] == "source_preflight_failed:not_found"
+    assert report["failures"][0]["path"] == path
+    assert report["failures"][0]["vendor_id"] == "vendor-a"
+    assert report["failures"][0]["source_id"] == "vendor-a-security"
+    assert report["failures"][0]["source_type"] == "security_page"
+    assert report["failures"][0]["source_url"] == "https://vendor.example/security"
 
 
 def test_changed_source_with_soft_not_found_fails(tmp_path: Path):
@@ -176,7 +181,7 @@ def test_output_contains_no_self_certifying_fields(tmp_path: Path):
     assert "tool_recommendation" not in text
 
 
-def test_cli_writes_report_and_returns_failure_for_failed_source(tmp_path: Path, monkeypatch):
+def test_cli_writes_report_logs_identity_and_returns_failure_for_failed_source(tmp_path: Path, monkeypatch, capsys):
     path = "data/vendors/vendor-a/sources/vendor-a-security.yaml"
     write_source(tmp_path, path)
     paths_file = tmp_path / "changed-files.txt"
@@ -199,3 +204,24 @@ def test_cli_writes_report_and_returns_failure_for_failed_source(tmp_path: Path,
     ]) == 1
     report = json.loads(output.read_text(encoding="utf-8"))
     assert report["failed_count"] == 1
+    assert report["failures"][0]["vendor_id"] == "vendor-a"
+    assert report["failures"][0]["source_id"] == "vendor-a-security"
+    assert report["failures"][0]["source_type"] == "security_page"
+    assert report["failures"][0]["reason"] == "source_preflight_failed:not_found"
+    stdout = capsys.readouterr().out
+    assert '"failures"' in stdout
+    assert '"vendor_id": "vendor-a"' in stdout
+    assert '"source_id": "vendor-a-security"' in stdout
+    assert '"reason": "source_preflight_failed:not_found"' in stdout
+
+
+def test_missing_source_failure_includes_path_identity(tmp_path: Path):
+    path = "data/vendors/vendor-a/sources/vendor-a-security.yaml"
+
+    report = check_changed_sources([path], root=tmp_path, verifier=verifier("ok"))
+
+    assert report["failed_count"] == 1
+    assert report["failures"][0]["path"] == path
+    assert report["failures"][0]["vendor_id"] == "vendor-a"
+    assert report["failures"][0]["source_id"] == "vendor-a-security"
+    assert report["failures"][0]["reason"] == "changed_source_file_missing"

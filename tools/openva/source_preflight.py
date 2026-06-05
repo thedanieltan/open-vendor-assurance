@@ -82,6 +82,27 @@ def checked_row(path: str, verification: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def source_identity_from_path(path: str) -> dict[str, Any]:
+    parts = normalize_repo_path(path).split("/")
+    source_id = Path(parts[4]).stem if len(parts) >= 5 else None
+    return {
+        "vendor_id": parts[2] if len(parts) >= 3 else None,
+        "source_id": source_id,
+        "source_type": None,
+        "source_url": None,
+    }
+
+
+def source_identity_from_record(source: dict[str, Any], path: str) -> dict[str, Any]:
+    fallback = source_identity_from_path(path)
+    return {
+        "vendor_id": source.get("vendor_id") or fallback["vendor_id"],
+        "source_id": source.get("source_id") or fallback["source_id"],
+        "source_type": source.get("source_type") or fallback["source_type"],
+        "source_url": source.get("source_url") or fallback["source_url"],
+    }
+
+
 def check_changed_sources(
     paths: list[str],
     *,
@@ -103,6 +124,7 @@ def check_changed_sources(
             failures.append(
                 {
                     "path": relative_path,
+                    **source_identity_from_path(relative_path),
                     "reason": "changed_source_file_missing",
                     "verification_status": "missing_file",
                 }
@@ -110,12 +132,24 @@ def check_changed_sources(
             continue
         try:
             source = load_yaml(full_path)
+        except Exception as exc:  # noqa: BLE001 - preflight should fail closed per source.
+            failures.append(
+                {
+                    "path": relative_path,
+                    **source_identity_from_path(relative_path),
+                    "reason": f"source_preflight_exception:{type(exc).__name__}",
+                    "message": str(exc),
+                }
+            )
+            continue
+        try:
             verification_ran = True
             verification = verifier(source, full_path)
         except Exception as exc:  # noqa: BLE001 - preflight should fail closed per source.
             failures.append(
                 {
                     "path": relative_path,
+                    **source_identity_from_record(source, relative_path),
                     "reason": f"source_preflight_exception:{type(exc).__name__}",
                     "message": str(exc),
                 }
@@ -183,6 +217,8 @@ def main(argv: list[str] | None = None) -> int:
         "skipped_count": report["skipped_count"],
         "message": report["message"],
     }, indent=2, sort_keys=True))
+    if report["failures"]:
+        print(json.dumps({"failures": report["failures"]}, indent=2, sort_keys=True))
     return 0 if report["failed_count"] == 0 else 1
 
 

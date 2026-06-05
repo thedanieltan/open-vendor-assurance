@@ -3,6 +3,7 @@ import copy
 import yaml
 
 from tools.openva.candidate_promotion_actions import apply_candidate_promotions
+from tools.openva.promotion_planner import build_strict_growth_plan
 
 
 def write_yaml(path, data):
@@ -198,3 +199,45 @@ def test_apply_strict_growth_rejects_advisory_page_title_before_writes(tmp_path)
     assert report["summary"]["skipped_actions"] == 1
     assert "strict growth advisory wording detected: safe" in report["skipped"][0]["reason"]
     assert not (tmp_path / "data/vendors/candidate-a/vendor.yaml").exists()
+
+
+def test_strict_growth_batch_cap_prevents_applying_five_actions(tmp_path):
+    strict_promotions = []
+    items = []
+    for index in range(5):
+        action = strict_growth_action()
+        vendor_id = f"candidate-{index}"
+        action["vendor"]["candidate_vendor_id"] = vendor_id
+        action["vendor"]["display_name_candidate"] = f"Candidate {index}"
+        action["vendor"]["official_domain_candidate"] = f"{vendor_id}.example"
+        action["source"]["vendor_id"] = vendor_id
+        action["source"]["candidate_source_id"] = f"{vendor_id}-dpa-candidate"
+        action["source"]["source_type_candidate"] = "dpa"
+        action["source"]["candidate_url"] = f"https://{vendor_id}.example/dpa"
+        action["source"]["evidence"]["page_title"] = "Data Processing Addendum"
+        strict_promotions.append(action)
+        items.append(
+            {
+                "candidate_vendor_id": vendor_id,
+                "classification": "strict_promote_ready",
+                "reason_codes": ["strict_source_candidate_evidence_present"],
+            }
+        )
+    plan = build_strict_growth_plan(
+        {
+            "report_type": "catalog_growth_eligibility_report",
+            "items": items,
+            "strict_promotions": strict_promotions,
+        },
+        max_actions_per_plan=2,
+    )
+
+    report = apply_candidate_promotions(plan, root=tmp_path)
+
+    assert plan["summary"]["uncapped_action_count"] == 5
+    assert plan["summary"]["action_count"] == 2
+    assert plan["summary"]["batch_deferred_action_count"] == 3
+    assert report["summary"]["promotion_actions_seen"] == 2
+    assert report["summary"]["canonical_vendors_written"] == 2
+    assert report["summary"]["canonical_sources_written"] == 2
+    assert report["summary"]["skipped_actions"] == 0
