@@ -108,7 +108,7 @@ primary: strict-growth eligibility report generated_at
 fallback: strict-growth promotion plan generated_at, only when no eligibility report is supplied
 ```
 
-If both an eligibility report and a promotion plan are supplied, the eligibility report timestamp is authoritative. The promotion plan timestamp must not be later than the eligibility report timestamp. A later promotion plan timestamp indicates a mismatched or regenerated plan and fails strict-growth eligibility.
+If both an eligibility report and a promotion plan are supplied, the eligibility report timestamp is authoritative. A promotion plan timestamp may be later when the plan is regenerated from the eligibility report in the same SHA-bound workflow run; freshness still uses the eligibility report timestamp.
 
 The PR event timestamp is only the time the checker runs. It does not refresh evidence.
 
