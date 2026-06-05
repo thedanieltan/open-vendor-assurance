@@ -205,6 +205,16 @@ jobs:
             Catalog:*) ;;
             *) echo "pr_title must start with Catalog:" >&2; exit 1 ;;
           esac
+      - name: Preflight strict growth promotion plan
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && env.PROMOTION_PLAN_MODE == 'strict-growth-latest'
+        run: |
+          python -m tools.openva.strict_growth_automerge check-plan \
+            --promotion-plan strict-growth-promotion-plan.json \
+            --eligibility-report catalog-growth-eligibility-report.json \
+            --labels catalog-growth,automerge:strict-growth \
+            --current-head-sha "${{ github.sha }}" \
+            --current-base-sha "${{ github.sha }}" \
+            --now "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
       - name: Validate current records
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: python -m tools.openva.validate validate

@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import yaml
@@ -277,3 +278,35 @@ def test_strict_growth_planner_uses_only_strict_promote_ready_records():
     assert action["writes_canonical_vendors"] is False
     assert action["writes_canonical_sources"] is False
     assert action["strict_machine_candidate"] is True
+
+
+def test_strict_growth_planner_caps_sources_by_deterministic_priority():
+    report = strict_eligibility_report()
+    base_action = report["strict_promotions"][0]
+    dpa = deepcopy(base_action)
+    dpa["source"]["candidate_source_id"] = "candidate-a-dpa-candidate"
+    dpa["source"]["source_type_candidate"] = "dpa"
+    dpa["source"]["candidate_url"] = "https://candidate-a.example/dpa"
+    dpa["source"]["evidence"]["page_title"] = "Data Processing Addendum"
+    privacy = deepcopy(base_action)
+    privacy["source"]["candidate_source_id"] = "candidate-a-privacy-notice-candidate"
+    privacy["source"]["source_type_candidate"] = "privacy_notice"
+    privacy["source"]["candidate_url"] = "https://candidate-a.example/privacy"
+    privacy["source"]["evidence"]["page_title"] = "Privacy Notice"
+    security = deepcopy(base_action)
+    security["source"]["candidate_source_id"] = "candidate-a-security-page-candidate"
+    security["source"]["source_type_candidate"] = "security_page"
+    security["source"]["candidate_url"] = "https://candidate-a.example/security"
+    security["source"]["evidence"]["page_title"] = "Security"
+    report["strict_promotions"] = [security, privacy, dpa]
+
+    plan = build_strict_growth_plan(report)
+
+    assert [action["source"]["source_type_candidate"] for action in plan["actions"]] == [
+        "dpa",
+        "privacy_notice",
+    ]
+    assert plan["summary"]["action_count"] == 2
+    assert plan["summary"]["deferred_action_count"] == 1
+    assert plan["deferred_actions"][0]["reason_codes"] == ["strict_growth_vendor_source_cap_exceeded"]
+    assert plan["deferred_actions"][0]["action"]["source"]["source_type_candidate"] == "security_page"

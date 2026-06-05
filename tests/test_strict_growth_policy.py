@@ -27,6 +27,12 @@ def test_strict_growth_policy_limits_are_configured_not_hardcoded():
         "privacy_notice",
         "security_page",
     ]
+    assert policy["source_type_priority"] == [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "security_page",
+    ]
 
 
 def test_strict_growth_policy_inference_sets_are_disjoint_and_explicit():

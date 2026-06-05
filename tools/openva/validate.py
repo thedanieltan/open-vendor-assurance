@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -11,6 +10,8 @@ from urllib.parse import urlparse
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
+from tools.openva.advisory_wording import load_prohibited_terms as load_shared_prohibited_terms
+from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.indexes import build_indexes, check_generated_current, records_for
 from tools.openva.pack import verify_pack_integrity
 from tools.openva.paths import relative_repo_path
@@ -543,8 +544,7 @@ def validate_quality_gates() -> list[str]:
 
 
 def load_prohibited_terms() -> list[str]:
-    config = load_yaml(ROOT / "config/prohibited-claims.yaml")
-    return [str(term).lower() for term in config.get("prohibited_terms", [])]
+    return load_shared_prohibited_terms(ROOT / "config/prohibited-claims.yaml")
 
 
 def check_prohibited_language() -> list[str]:
@@ -556,10 +556,8 @@ def check_prohibited_language() -> list[str]:
         lower = text.lower()
         if any(context in lower for context in ALLOWED_PROHIBITED_CONTEXTS):
             continue
-        for term in terms:
-            pattern = r"(?<![a-z0-9-])" + re.escape(term) + r"(?![a-z0-9-])"
-            if re.search(pattern, lower):
-                failures.append(f"{path}: prohibited advisory wording detected: {term}")
+        for term in prohibited_terms_in_text(lower, terms):
+            failures.append(f"{path}: prohibited advisory wording detected: {term}")
 
     return failures
 

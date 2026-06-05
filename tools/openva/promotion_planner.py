@@ -9,6 +9,8 @@ from typing import Any
 
 import yaml
 
+from tools.openva.automerge_lanes import load_policy
+from tools.openva.catalog_growth_eligibility import DEFAULT_SOURCE_TYPE_PRIORITY
 from tools.openva.source_verification import ROOT, display_path
 
 PROMOTABLE_VERIFICATION_STATUSES = {"ok", "redirected"}
@@ -29,6 +31,15 @@ REVIEWABLE_VERIFICATION_STATUSES = {
     "client_error",
     "unreachable",
 }
+
+
+def strict_growth_source_priority(policy: dict[str, Any]) -> list[str]:
+    configured = policy.get("strict_growth", {}).get("source_type_priority", DEFAULT_SOURCE_TYPE_PRIORITY)
+    priority = [str(source_type) for source_type in configured if str(source_type)]
+    for source_type in DEFAULT_SOURCE_TYPE_PRIORITY:
+        if source_type not in priority:
+            priority.append(source_type)
+    return priority
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -286,24 +297,64 @@ def strict_growth_action(item: dict[str, Any], action: dict[str, Any]) -> dict[s
     }
 
 
+def strict_growth_action_sort_key(action: dict[str, Any], policy: dict[str, Any]) -> tuple[int, str, str, str]:
+    priority = {source_type: index for index, source_type in enumerate(strict_growth_source_priority(policy))}
+    source = action.get("source", {}) or {}
+    source_type = str(source.get("source_type_candidate") or "")
+    return (
+        priority.get(source_type, len(priority)),
+        source_type,
+        str(source.get("candidate_source_id") or ""),
+        str(source.get("candidate_url") or ""),
+    )
+
+
+def cap_strict_growth_actions(
+    actions: list[dict[str, Any]],
+    policy: dict[str, Any],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    max_sources = int(policy.get("strict_growth", {}).get("max_sources_per_new_vendor", 2))
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for action in actions:
+        vendor_id = str(action.get("vendor", {}).get("candidate_vendor_id") or "")
+        grouped[vendor_id].append(action)
+
+    selected: list[dict[str, Any]] = []
+    deferred: list[dict[str, Any]] = []
+    for vendor_id in sorted(grouped):
+        ordered = sorted(grouped[vendor_id], key=lambda action: strict_growth_action_sort_key(action, policy))
+        selected.extend(ordered[:max_sources])
+        for action in ordered[max_sources:]:
+            deferred.append(
+                {
+                    "action": action,
+                    "reason_codes": ["strict_growth_vendor_source_cap_exceeded"],
+                }
+            )
+    return selected, deferred
+
+
 def build_strict_growth_plan(
     eligibility_report: dict[str, Any],
     *,
     head_sha: str | None = None,
     base_sha: str | None = None,
+    policy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if eligibility_report.get("report_type") != "catalog_growth_eligibility_report":
         raise ValueError("expected catalog_growth_eligibility_report")
+    policy = policy or load_policy()
     strict_by_vendor = {
         str(item.get("candidate_vendor_id")): item
         for item in eligibility_report.get("items", []) or []
         if item.get("classification") == "strict_promote_ready"
     }
-    actions = [
+    uncapped_actions = [
         strict_growth_action(strict_by_vendor[str(action["vendor"]["candidate_vendor_id"])], action)
         for action in eligibility_report.get("strict_promotions", []) or []
         if str(action.get("vendor", {}).get("candidate_vendor_id")) in strict_by_vendor
     ]
+    actions, deferred_actions = cap_strict_growth_actions(uncapped_actions, policy)
     counts = Counter(action["action"] for action in actions)
     plan = {
         "schema_version": "0.1.0",
@@ -321,9 +372,12 @@ def build_strict_growth_plan(
             "action_count": len(actions),
             "actions_requiring_human_review": 0,
             "action_types": dict(sorted(counts.items())),
+            "deferred_action_count": len(deferred_actions),
         },
         "actions": actions,
     }
+    if deferred_actions:
+        plan["deferred_actions"] = deferred_actions
     effective_head_sha = head_sha or eligibility_report.get("head_sha")
     effective_base_sha = base_sha or eligibility_report.get("base_sha")
     if effective_head_sha:
