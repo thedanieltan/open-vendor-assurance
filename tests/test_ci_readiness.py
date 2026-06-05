@@ -102,10 +102,12 @@ def test_release_candidate_builds_report_only_source_health_readiness():
 def test_catalog_guard_workflow_is_read_only_and_pr_scoped():
     workflow = load_workflow("catalog-pr-guard.yml")
     triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "catalog-pr-guard.yml").read_text(encoding="utf-8")
 
     assert workflow["permissions"] == {"contents": "read", "pull-requests": "read"}
     assert "pull_request" in triggers
     assert workflow["jobs"]["catalog-pr-guard"]["if"] == "startsWith(github.event.pull_request.title, 'Catalog:')"
+    assert 'pip install -e "services/openva_match_service[dev]"' in text
 
 
 def test_observation_report_is_single_read_only_observation_workflow():
