@@ -33,5 +33,7 @@ jobs:
         run: python -m tools.openva.catalog_guard $(cat /tmp/catalog-pr-files.txt)
       - name: Validate current records
         run: python -m tools.openva.validate validate
+      - name: Install match service test dependencies
+        run: pip install -e "services/openva_match_service[dev]"
       - name: Run tests
         run: pytest -q
