@@ -32,6 +32,20 @@ def test_strict_growth_latest_regenerates_sha_bound_evidence():
         assert '--head-sha "${{ github.sha }}"' in command
         assert '--base-sha "${{ github.sha }}"' in command
 
+    assert '--max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN"' in planner
+
+
+def test_strict_growth_latest_uses_workflow_batch_cap_before_apply():
+    text = workflow_text()
+
+    plan = text.index("python -m tools.openva.promotion_planner plan-strict-growth \\")
+    select = text.index("- name: Select candidate promotion plan")
+    apply = text.index("- name: Apply candidate promotions")
+
+    assert plan < select < apply
+    assert '--max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN"' in text[plan:select]
+    assert "PROMOTION_PLAN_ACTION_COUNT=$SELECTED_PLAN_ACTION_COUNT" in text[select:apply]
+
 
 def test_strict_growth_plan_preflight_runs_before_candidate_apply():
     text = workflow_text()
@@ -74,3 +88,36 @@ def test_strict_growth_latest_commits_sha_bound_evidence_files():
     assert "Head SHA: \\`$HEAD_SHA\\`" in text
     assert "candidate-promotion-pr-body-final.md" in text
     assert "Upload strict growth evidence artifacts" in text
+    assert "Strict-growth uncapped actions:" in text
+    assert "Strict-growth policy-capped actions:" in text
+    assert "Strict-growth batch-deferred actions:" in text
+
+
+def test_source_preflight_report_uploads_before_fail_closed():
+    text = workflow_text()
+
+    preflight = text.index("- name: Run source preflight for changed sources")
+    upload = text.index("- name: Upload source preflight report")
+    fail = text.index("- name: Fail if source preflight failed")
+    body = text.index("- name: Prepare compact PR body")
+
+    assert preflight < upload < fail < body
+    block = text[preflight:upload]
+    assert "id: source_preflight" in block
+    assert "continue-on-error: true" in block
+    upload_block = text[upload:fail]
+    assert "if: always()" in upload_block
+    assert "name: openva-candidate-promotion-source-preflight-report" in upload_block
+    assert "path: source-preflight-report.json" in upload_block
+    fail_block = text[fail:body]
+    assert "if: steps.source_preflight.outcome == 'failure'" in fail_block
+    assert "run: exit 1" in fail_block
+
+
+def test_candidate_promotion_workflow_does_not_add_automerge_labels():
+    text = workflow_text()
+
+    assert "gh pr edit" in text
+    assert "--add-label" not in text
+    assert "automerge:machine-canonical" not in text
+    assert "automerge:p0-source-repair" not in text

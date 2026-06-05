@@ -310,3 +310,50 @@ def test_strict_growth_planner_caps_sources_by_deterministic_priority():
     assert plan["summary"]["deferred_action_count"] == 1
     assert plan["deferred_actions"][0]["reason_codes"] == ["strict_growth_vendor_source_cap_exceeded"]
     assert plan["deferred_actions"][0]["action"]["source"]["source_type_candidate"] == "security_page"
+
+
+def test_strict_growth_planner_honors_workflow_max_actions_per_plan_deterministically():
+    report = strict_eligibility_report()
+    base_action = report["strict_promotions"][0]
+    privacy = deepcopy(base_action)
+    privacy["source"]["candidate_source_id"] = "candidate-a-privacy-notice-candidate"
+    privacy["source"]["source_type_candidate"] = "privacy_notice"
+    privacy["source"]["candidate_url"] = "https://candidate-a.example/privacy"
+    privacy["source"]["evidence"]["page_title"] = "Privacy Notice"
+    vendor_b = deepcopy(base_action)
+    vendor_b["vendor"]["candidate_vendor_id"] = "candidate-b"
+    vendor_b["vendor"]["display_name_candidate"] = "Candidate B"
+    vendor_b["vendor"]["official_domain_candidate"] = "candidate-b.example"
+    vendor_b["source"]["vendor_id"] = "candidate-b"
+    vendor_b["source"]["candidate_source_id"] = "candidate-b-dpa-candidate"
+    vendor_b["source"]["source_type_candidate"] = "dpa"
+    vendor_b["source"]["candidate_url"] = "https://candidate-b.example/dpa"
+    vendor_b["source"]["evidence"]["page_title"] = "Data Processing Addendum"
+    report["items"].append(
+        {
+            "candidate_vendor_id": "candidate-b",
+            "classification": "strict_promote_ready",
+            "reason_codes": ["strict_source_candidate_evidence_present"],
+        }
+    )
+    report["strict_promotions"] = [vendor_b, privacy, base_action]
+
+    plan = build_strict_growth_plan(report, max_actions_per_plan=2)
+
+    assert plan["summary"]["action_count"] == 2
+    assert plan["summary"]["uncapped_action_count"] == 3
+    assert plan["summary"]["policy_capped_action_count"] == 3
+    assert plan["summary"]["max_actions_per_plan"] == 2
+    assert plan["summary"]["batch_deferred_action_count"] == 1
+    assert plan["deferred_actions"][-1]["reason_codes"] == ["workflow_max_actions_per_plan_exceeded"]
+    assert [
+        (
+            action["vendor"]["candidate_vendor_id"],
+            action["source"]["source_type_candidate"],
+            action["source"]["candidate_source_id"],
+        )
+        for action in plan["actions"]
+    ] == [
+        ("candidate-a", "privacy_notice", "candidate-a-privacy-notice-candidate"),
+        ("candidate-a", "security_page", "candidate-a-security-page-candidate"),
+    ]

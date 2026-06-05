@@ -117,7 +117,8 @@ jobs:
             --eligibility-report catalog-growth-eligibility-report.json \
             --output strict-growth-promotion-plan.json \
             --head-sha "${{ github.sha }}" \
-            --base-sha "${{ github.sha }}"
+            --base-sha "${{ github.sha }}" \
+            --max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN"
       - name: Select candidate promotion plan
         id: reviewed_plan
         run: |
@@ -253,6 +254,8 @@ jobs:
           fi
       - name: Run source preflight for changed sources
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        id: source_preflight
+        continue-on-error: true
         run: |
           {
             git diff --name-only HEAD -- data/vendors
@@ -261,6 +264,16 @@ jobs:
           python -m tools.openva.source_preflight check-changed-sources \
             --paths-file changed-paths.txt \
             --output source-preflight-report.json
+      - name: Upload source preflight report
+        if: always() && steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-candidate-promotion-source-preflight-report
+          path: source-preflight-report.json
+          if-no-files-found: warn
+      - name: Fail if source preflight failed
+        if: steps.source_preflight.outcome == 'failure'
+        run: exit 1
       - name: Prepare compact PR body
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         run: |
@@ -271,6 +284,8 @@ jobs:
 
           report = json.load(open('candidate-promotion-report.json', encoding='utf-8'))
           preflight = json.load(open('source-preflight-report.json', encoding='utf-8'))
+          promotion_plan = json.load(open(os.environ['PROMOTION_PLAN_PATH'], encoding='utf-8'))
+          plan_summary = promotion_plan.get('summary', {})
           lines = [
               '## Summary',
               '',
@@ -304,6 +319,12 @@ jobs:
               lines[insert_at:insert_at] = [
                   f"- Strict-growth eligibility report: `{os.environ['ELIGIBILITY_REPORT_PATH']}`",
                   f"- Base SHA: `{os.environ['GITHUB_SHA']}`",
+              ]
+              counts_at = lines.index('## Counts') + 2
+              lines[counts_at:counts_at] = [
+                  f"- Strict-growth uncapped actions: `{plan_summary.get('uncapped_action_count', report['summary']['promotion_actions_seen'])}`",
+                  f"- Strict-growth policy-capped actions: `{plan_summary.get('policy_capped_action_count', report['summary']['promotion_actions_seen'])}`",
+                  f"- Strict-growth batch-deferred actions: `{plan_summary.get('batch_deferred_action_count', 0)}`",
               ]
           Path('candidate-promotion-pr-body.md').write_text('\n'.join(lines), encoding='utf-8')
           PY
