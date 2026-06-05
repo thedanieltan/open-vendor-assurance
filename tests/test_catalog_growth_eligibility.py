@@ -6,6 +6,7 @@ from tools.openva.catalog_growth_eligibility import (
     REJECT_EXISTING_VENDOR,
     REJECT_NO_PUBLIC_SOURCE,
     REJECT_WEAK_SEMANTIC_MATCH,
+    REVIEW_REQUIRED,
     STRICT_PROMOTE_READY,
     build_catalog_growth_eligibility,
     write_outputs,
@@ -99,6 +100,63 @@ def test_weak_source_candidate_is_not_promoted(tmp_path: Path):
 
     assert report["items"][0]["classification"] == REJECT_WEAK_SEMANTIC_MATCH
     assert report["summary"]["strict_promotion_action_count"] == 0
+
+
+def test_advisory_wording_candidate_is_deferred_before_promotion(tmp_path: Path):
+    advisory_source = source()
+    advisory_source["evidence"]["page_title"] = "Cloud Security | How Example Keeps Your Data Safe"
+
+    report = build_catalog_growth_eligibility(
+        vendor_report([vendor()]),
+        source_report([{"vendor_id": "vendor-a", "candidates": [advisory_source], "observations": []}]),
+        root=tmp_path,
+        generated_at="2026-05-26T00:00:00Z",
+    )
+
+    assert report["items"][0]["classification"] == REVIEW_REQUIRED
+    assert "strict_growth_advisory_wording_detected:safe" in report["items"][0]["reason_codes"]
+    assert report["summary"]["strict_promotion_action_count"] == 0
+    assert report["strict_promotions"] == []
+
+
+def test_strict_sources_are_capped_and_deferred_deterministically(tmp_path: Path):
+    dpa = source()
+    dpa["candidate_source_id"] = "vendor-a-dpa-candidate"
+    dpa["source_type_candidate"] = "dpa"
+    dpa["candidate_url"] = "https://vendor-a.example/dpa"
+    dpa["evidence"]["page_title"] = "Data Processing Addendum"
+    privacy = source()
+    privacy["candidate_source_id"] = "vendor-a-privacy-notice-candidate"
+    privacy["source_type_candidate"] = "privacy_notice"
+    privacy["candidate_url"] = "https://vendor-a.example/privacy"
+    privacy["evidence"]["page_title"] = "Privacy Notice"
+    security = source()
+    security["candidate_source_id"] = "vendor-a-security-page-candidate"
+    security["source_type_candidate"] = "security_page"
+    security["candidate_url"] = "https://vendor-a.example/security"
+
+    report = build_catalog_growth_eligibility(
+        vendor_report([vendor()]),
+        source_report([{"vendor_id": "vendor-a", "candidates": [security, privacy, dpa], "observations": []}]),
+        root=tmp_path,
+        generated_at="2026-05-26T00:00:00Z",
+    )
+
+    item = report["items"][0]
+    promoted_types = [action["source"]["source_type_candidate"] for action in report["strict_promotions"]]
+
+    assert item["classification"] == STRICT_PROMOTE_READY
+    assert promoted_types == ["dpa", "privacy_notice"]
+    assert item["strict_source_count"] == 2
+    assert "strict_growth_vendor_source_cap_exceeded" in item["reason_codes"]
+    assert item["deferred_strict_sources"] == [
+        {
+            "candidate_source_id": "vendor-a-security-page-candidate",
+            "source_type_candidate": "security_page",
+            "candidate_url": "https://vendor-a.example/security",
+            "reason_codes": ["strict_growth_vendor_source_cap_exceeded"],
+        }
+    ]
 
 
 def test_existing_vendor_is_rejected(tmp_path: Path):

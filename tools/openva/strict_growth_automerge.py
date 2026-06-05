@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import Counter
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.automerge_lanes import EligibilityResult, load_policy
 
 LANE = "automerge:strict-growth"
@@ -174,6 +176,15 @@ def check_action(action: dict[str, Any], policy: dict[str, Any], reasons: list[s
     if source_type not in core_source_types:
         append_reason(reasons, f"non_core_source_type:{source_type}", action, policy)
 
+    advisory_values = [
+        action_value(action, "source.title"),
+        action_value(action, "source.description"),
+        action_value(action, "source.evidence.page_title"),
+    ]
+    for value in advisory_values:
+        for term in prohibited_terms_in_text(value):
+            append_reason(reasons, f"strict_growth_advisory_wording_detected:{term}", action, policy)
+
     for record in relationship_records(action):
         check_relationship_record(record, action, policy, reasons)
 
@@ -261,6 +272,12 @@ def check_strict_growth_eligibility(
 
 
 def main(argv: list[str] | None = None) -> int:
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    command = "check"
+    if raw_argv and raw_argv[0] == "check-plan":
+        command = "check-plan"
+        raw_argv = raw_argv[1:]
+
     parser = argparse.ArgumentParser(description="Check strict catalog growth automerge eligibility.")
     parser.add_argument("--promotion-plan", type=Path, required=True)
     parser.add_argument("--eligibility-report", type=Path)
@@ -271,7 +288,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--recorded-base-sha", default="")
     parser.add_argument("--policy", default="config/automerge-policy.yaml")
     parser.add_argument("--now")
-    args = parser.parse_args(argv)
+    args = parser.parse_args(raw_argv)
 
     promotion_plan = json.loads(args.promotion_plan.read_text(encoding="utf-8"))
     eligibility_report = (
@@ -295,7 +312,10 @@ def main(argv: list[str] | None = None) -> int:
         policy=load_policy(args.policy),
     )
 
-    print(f"eligible={str(result.eligible).lower()}")
+    if command == "check-plan":
+        print(f"plan_valid={str(result.eligible).lower()}")
+    else:
+        print(f"eligible={str(result.eligible).lower()}")
     print(f"lane={result.lane}")
     print(f"report_only={str(result.report_only).lower()}")
     for reason in result.reasons:

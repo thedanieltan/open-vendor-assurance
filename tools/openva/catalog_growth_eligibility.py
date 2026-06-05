@@ -11,6 +11,8 @@ from urllib.parse import urlparse
 
 import yaml
 
+from tools.openva.advisory_wording import prohibited_terms_in_text
+from tools.openva.automerge_lanes import load_policy
 from tools.openva.source_discovery import DEFAULT_SOURCE_TYPES
 from tools.openva.source_verification import ROOT, display_path
 
@@ -29,6 +31,7 @@ STRICT_SOURCE_TYPES = set(DEFAULT_SOURCE_TYPES)
 ACCESS_AMBIGUOUS = {"bot_protected", "forbidden_unknown", "gated_or_login_required", "rate_limited", "unreachable"}
 HEALTH_FAILURE = {"not_found", "gone", "server_error", "client_error", "homepage_or_generic_redirect", "possible_mismatch", "suspect_inferred_url", "soft_not_found", "soft_404_detected"}
 CSV_FIELDS = ["candidate_vendor_id", "display_name_candidate", "official_domain_candidate", "coverage_lane", "cohort_id", "classification", "reason_codes", "source_candidate_count", "strict_source_count", "promotable_now"]
+DEFAULT_SOURCE_TYPE_PRIORITY = ["dpa", "privacy_notice", "subprocessors_list", "security_page"]
 
 
 def now_iso() -> str:
@@ -143,6 +146,9 @@ def source_reasons(source: dict[str, Any]) -> list[str]:
         reasons.append("requires_review_not_true")
     if source.get("not_advice") is not True:
         reasons.append("not_advice_not_true")
+    for field in (source.get("title"), source.get("description"), evidence.get("page_title")):
+        for term in prohibited_terms_in_text(field):
+            reasons.append(f"strict_growth_advisory_wording_detected:{term}")
     return reasons
 
 
@@ -168,15 +174,68 @@ def classify(vendor: dict[str, Any], sources: list[dict[str, Any]], statuses: se
         return REJECT_SOURCE_HEALTH_FAILURE, sorted(statuses & HEALTH_FAILURE), []
     if not sources:
         return REJECT_NO_PUBLIC_SOURCE, ["no_source_candidates_for_vendor"], []
-    strict_sources = [source for source in sources if not source_reasons(source)]
+    source_reason_rows = [(source, source_reasons(source)) for source in sources]
+    strict_sources = [source for source, reasons in source_reason_rows if not reasons]
     if strict_sources:
-        return STRICT_PROMOTE_READY, ["strict_source_candidate_evidence_present"], strict_sources
-    reasons = sorted({reason for source in sources for reason in source_reasons(source)})
+        extra_reasons = sorted(
+            {
+                reason
+                for _source, reasons in source_reason_rows
+                for reason in reasons
+                if reason.startswith("strict_growth_")
+            }
+        )
+        return STRICT_PROMOTE_READY, ["strict_source_candidate_evidence_present", *extra_reasons], strict_sources
+    reasons = sorted({reason for _source, source_reasons_ in source_reason_rows for reason in source_reasons_})
     if {"http_status_not_200", "final_url_missing"} & set(reasons):
         return REJECT_SOURCE_HEALTH_FAILURE, reasons, []
     if {"confidence_not_likely", "matched_terms_missing"} & set(reasons):
         return REJECT_WEAK_SEMANTIC_MATCH, reasons, []
     return REVIEW_REQUIRED, reasons or ["source_candidate_requires_review"], []
+
+
+def source_priority(policy: dict[str, Any]) -> list[str]:
+    configured = policy.get("strict_growth", {}).get("source_type_priority", DEFAULT_SOURCE_TYPE_PRIORITY)
+    priority = [str(source_type) for source_type in configured if str(source_type)]
+    for source_type in DEFAULT_SOURCE_TYPE_PRIORITY:
+        if source_type not in priority:
+            priority.append(source_type)
+    return priority
+
+
+def sort_strict_sources(sources: list[dict[str, Any]], policy: dict[str, Any]) -> list[dict[str, Any]]:
+    priority_index = {source_type: index for index, source_type in enumerate(source_priority(policy))}
+    fallback = len(priority_index)
+    return sorted(
+        sources,
+        key=lambda source: (
+            priority_index.get(str(source.get("source_type_candidate") or ""), fallback),
+            str(source.get("source_type_candidate") or ""),
+            str(source.get("candidate_source_id") or ""),
+            str(source.get("candidate_url") or ""),
+        ),
+    )
+
+
+def cap_strict_sources(
+    strict_sources: list[dict[str, Any]],
+    policy: dict[str, Any],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
+    max_sources = int(policy.get("strict_growth", {}).get("max_sources_per_new_vendor", 2))
+    ordered = sort_strict_sources(strict_sources, policy)
+    selected = ordered[:max_sources]
+    deferred = ordered[max_sources:]
+    reasons = ["strict_growth_vendor_source_cap_exceeded"] if deferred else []
+    deferred_rows = [
+        {
+            "candidate_source_id": source.get("candidate_source_id"),
+            "source_type_candidate": source.get("source_type_candidate"),
+            "candidate_url": source.get("candidate_url"),
+            "reason_codes": ["strict_growth_vendor_source_cap_exceeded"],
+        }
+        for source in deferred
+    ]
+    return selected, deferred_rows, reasons
 
 
 def build_catalog_growth_eligibility(
@@ -186,6 +245,7 @@ def build_catalog_growth_eligibility(
     generated_at: str | None = None,
     head_sha: str | None = None,
     base_sha: str | None = None,
+    policy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if vendor_report.get("report_type") != "vendor_candidate_discovery_report":
         raise ValueError("expected vendor_candidate_discovery_report")
@@ -195,6 +255,7 @@ def build_catalog_growth_eligibility(
     dup_ids = duplicate_values(candidates, "candidate_vendor_id", lambda value: str(value or ""))
     dup_domains = duplicate_values(candidates, "official_domain_candidate", normalize_domain)
     known_ids, known_domains = current_vendor_identity(root)
+    policy = policy or load_policy()
     source_map = sources_by_vendor(source_report)
     status_map = observation_statuses(source_report)
     items: list[dict[str, Any]] = []
@@ -203,8 +264,15 @@ def build_catalog_growth_eligibility(
         vendor_id = str(vendor.get("candidate_vendor_id") or "")
         vendor_sources = source_map.get(vendor_id, [])
         classification, reasons, strict_sources = classify(vendor, vendor_sources, status_map.get(vendor_id, set()), identity_reasons(vendor, dup_ids, dup_domains, known_ids, known_domains))
+        deferred_strict_sources: list[dict[str, Any]] = []
+        if classification == STRICT_PROMOTE_READY:
+            strict_sources, deferred_strict_sources, cap_reasons = cap_strict_sources(strict_sources, policy)
+            reasons = [*reasons, *[reason for reason in cap_reasons if reason not in reasons]]
         strict_promotions.extend(strict_action(vendor, source) for source in strict_sources)
-        items.append({"candidate_vendor_id": vendor_id, "display_name_candidate": vendor.get("display_name_candidate"), "official_domain_candidate": vendor.get("official_domain_candidate"), "coverage_lane": vendor.get("coverage_lane"), "cohort_id": vendor.get("cohort_id"), "classification": classification, "reason_codes": reasons, "source_candidate_count": len(vendor_sources), "strict_source_count": len(strict_sources), "promotable_now": classification == STRICT_PROMOTE_READY})
+        item = {"candidate_vendor_id": vendor_id, "display_name_candidate": vendor.get("display_name_candidate"), "official_domain_candidate": vendor.get("official_domain_candidate"), "coverage_lane": vendor.get("coverage_lane"), "cohort_id": vendor.get("cohort_id"), "classification": classification, "reason_codes": reasons, "source_candidate_count": len(vendor_sources), "strict_source_count": len(strict_sources), "promotable_now": classification == STRICT_PROMOTE_READY}
+        if deferred_strict_sources:
+            item["deferred_strict_sources"] = deferred_strict_sources
+        items.append(item)
     counts = Counter(item["classification"] for item in items)
     report = {"schema_version": SCHEMA_VERSION, "generated_at": generated_at or now_iso(), "report_type": REPORT_TYPE, "posture": {"network_fetch_performed": False, "writes_repository_state": False, "writes_canonical_vendors": False, "writes_canonical_sources": False, "opens_pull_requests": False, "non_advisory": True}, "summary": {"candidate_count": len(items), "strict_promote_ready_count": counts.get(STRICT_PROMOTE_READY, 0), "review_required_count": counts.get(REVIEW_REQUIRED, 0), "rejected_or_deferred_count": len(items) - counts.get(STRICT_PROMOTE_READY, 0) - counts.get(REVIEW_REQUIRED, 0), "classification_counts": dict(sorted(counts.items())), "strict_promotion_action_count": len(strict_promotions)}, "items": sorted(items, key=lambda item: (item["classification"], item["candidate_vendor_id"])), "strict_promotions": strict_promotions}
     if head_sha:

@@ -8,6 +8,7 @@ from typing import Any
 
 import yaml
 
+from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.catalog_lifecycle import change_event
 from tools.openva.indexes import build_indexes
 from tools.openva.promotion_planner import REVIEWED_CANDIDATE_PROMOTION_ACTION, STRICT_GROWTH_PROMOTION_ACTION
@@ -94,6 +95,10 @@ def validate_strict_growth_action(action: dict[str, Any]) -> None:
         raise ValueError("strict growth source requires matched terms")
     if not evidence.get("final_url"):
         raise ValueError("strict growth source requires final URL evidence")
+    for value in (source.get("title"), source.get("description"), evidence.get("page_title")):
+        terms = prohibited_terms_in_text(value)
+        if terms:
+            raise ValueError(f"strict growth advisory wording detected: {', '.join(terms)}")
 
 
 def validate_candidate(candidate: dict[str, Any], action: dict[str, Any]) -> None:

@@ -185,3 +185,16 @@ def test_apply_strict_growth_rejects_missing_country(tmp_path):
     assert report["summary"]["canonical_vendors_written"] == 0
     assert report["summary"]["skipped_actions"] == 1
     assert "headquarters_country_candidate" in report["skipped"][0]["reason"]
+
+
+def test_apply_strict_growth_rejects_advisory_page_title_before_writes(tmp_path):
+    action = strict_growth_action()
+    action["source"]["evidence"]["page_title"] = "Cloud Security | How Candidate A Keeps Your Data Safe"
+
+    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
+
+    assert report["summary"]["canonical_vendors_written"] == 0
+    assert report["summary"]["canonical_sources_written"] == 0
+    assert report["summary"]["skipped_actions"] == 1
+    assert "strict growth advisory wording detected: safe" in report["skipped"][0]["reason"]
+    assert not (tmp_path / "data/vendors/candidate-a/vendor.yaml").exists()

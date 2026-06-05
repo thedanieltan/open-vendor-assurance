@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import json
 from copy import deepcopy
 from datetime import UTC, datetime
+from pathlib import Path
 
 from tools.openva.automerge_lanes import load_policy
-from tools.openva.strict_growth_automerge import check_strict_growth_eligibility
+from tools.openva.strict_growth_automerge import check_strict_growth_eligibility, main
 
 NOW = datetime(2026, 5, 27, 8, 0, tzinfo=UTC)
 HEAD = "head-sha"
@@ -23,6 +25,12 @@ def strict_action(candidate_vendor_id: str = "candidate-a", source_type: str = "
             "candidate_source_id": f"{candidate_vendor_id}-{source_type}-candidate",
             "source_type_candidate": source_type,
             "candidate_url": f"https://{candidate_vendor_id}.example/security",
+            "evidence": {
+                "page_title": source_type.replace("_", " ").title(),
+                "matched_terms": [source_type],
+                "final_url": f"https://{candidate_vendor_id}.example/security",
+                "http_status": 200,
+            },
         },
         "requires_human_review": False,
         "strict_machine_candidate": True,
@@ -47,6 +55,11 @@ def eligibility_report(generated_at: str = "2026-05-27T07:00:00Z") -> dict:
         "head_sha": HEAD,
         "base_sha": BASE,
     }
+
+
+def write_json(path: Path, data: dict) -> Path:
+    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
 
 
 def eligible_result(**overrides):
@@ -228,6 +241,19 @@ def test_non_core_source_type_fails():
     assert "non_core_source_type:ai_terms:candidate-a:ai_terms:candidate-a-ai_terms-candidate" in result.reasons
 
 
+def test_advisory_wording_in_strict_growth_plan_fails_preflight():
+    action = strict_action()
+    action["source"]["evidence"]["page_title"] = "Cloud Security | How Candidate A Keeps Your Data Safe"
+
+    result = eligible_result(promotion_plan=promotion_plan(action))
+
+    assert result.eligible is False
+    assert (
+        "strict_growth_advisory_wording_detected:safe:candidate-a:security_page:candidate-a-security_page-candidate"
+        in result.reasons
+    )
+
+
 def test_more_than_five_new_vendors_fails():
     actions = [strict_action(candidate_vendor_id=f"candidate-{index}") for index in range(6)]
 
@@ -246,6 +272,61 @@ def test_more_than_two_sources_for_one_vendor_fails():
 
     assert result.eligible is False
     assert "vendor_source_limit_exceeded:candidate-a:3>2" in result.reasons
+
+
+def test_check_plan_cli_rejects_over_cap_plan(tmp_path):
+    plan_path = write_json(
+        tmp_path / "strict-growth-promotion-plan.json",
+        promotion_plan(
+            strict_action(source_type="security_page"),
+            strict_action(source_type="privacy_notice"),
+            strict_action(source_type="dpa"),
+        ),
+    )
+    eligibility_path = write_json(tmp_path / "eligibility-report.json", eligibility_report())
+
+    assert main(
+        [
+            "check-plan",
+            "--promotion-plan",
+            str(plan_path),
+            "--eligibility-report",
+            str(eligibility_path),
+            "--labels",
+            "catalog-growth,automerge:strict-growth",
+            "--current-head-sha",
+            HEAD,
+            "--current-base-sha",
+            BASE,
+            "--now",
+            "2026-05-27T08:00:00Z",
+        ]
+    ) == 1
+
+
+def test_check_plan_cli_rejects_advisory_wording_plan(tmp_path):
+    action = strict_action()
+    action["source"]["evidence"]["page_title"] = "Cloud Security | How Candidate A Keeps Your Data Safe"
+    plan_path = write_json(tmp_path / "strict-growth-promotion-plan.json", promotion_plan(action))
+    eligibility_path = write_json(tmp_path / "eligibility-report.json", eligibility_report())
+
+    assert main(
+        [
+            "check-plan",
+            "--promotion-plan",
+            str(plan_path),
+            "--eligibility-report",
+            str(eligibility_path),
+            "--labels",
+            "catalog-growth,automerge:strict-growth",
+            "--current-head-sha",
+            HEAD,
+            "--current-base-sha",
+            BASE,
+            "--now",
+            "2026-05-27T08:00:00Z",
+        ]
+    ) == 1
 
 
 def test_promotion_plan_timestamp_after_eligibility_report_hard_fails():
