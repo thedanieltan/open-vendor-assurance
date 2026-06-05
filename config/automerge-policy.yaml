@@ -20,7 +20,7 @@ strict_growth:
   label: automerge:strict-growth
   required_labels:
     - catalog-growth
-  execution_wired: false
+  execution_wired: true
   max_new_vendors_per_pr: 5
   max_sources_per_new_vendor: 2
   freshness_hours: 4
@@ -110,7 +110,7 @@ lanes:
     label: automerge:strict-growth
     required_labels:
       - catalog-growth
-    execution_wired: false
+    execution_wired: true
   p0_source_repair:
     label: automerge:p0-source-repair
     required_labels:

@@ -13,8 +13,8 @@ Current state:
 ```text
 strict-growth-latest may generate a Catalog PR
 strict-growth-latest must not imply automerge eligibility
-machine-canonical and P0 source repair are the only implemented automerge jobs
-strict-growth automerge execution is not wired yet
+machine-canonical, P0 source repair, and strict-growth are implemented automerge jobs
+strict-growth automerge execution is wired through its dedicated lane
 ```
 
 Target state after calibration:
@@ -23,7 +23,7 @@ Target state after calibration:
 strict-growth-latest may generate bounded Catalog PRs
 strict-growth PRs may become eligible only through a dedicated automerge:strict-growth lane
 strict-growth must not inherit automerge:machine-canonical authority
-strict-growth merge execution requires a separate calibration/activation PR
+strict-growth merge execution is activated only after a separate calibration/activation PR
 ```
 
 ## Authority ladder
@@ -257,7 +257,7 @@ A candidate source may become machine-validated canonical only if all are true:
 
 `strict-growth-latest` is an autonomous PR-generation lane, not an automerge lane by itself.
 
-Strict-growth automerge, when later activated, must use a dedicated label:
+Strict-growth automerge must use a dedicated label:
 
 ```text
 automerge:strict-growth
@@ -435,13 +435,13 @@ blocked-by-scope
 
 `automerge:p0-source-repair` is allowed only for confirmed source repair evidence, requires `source-refinement`, and remains capped at 10 source records per PR.
 
-`automerge:strict-growth` is a target dedicated lane for strict catalog growth. It is policy-defined and testable, but merge execution must not be wired into `agent-automerge.yml` until calibration succeeds.
+`automerge:strict-growth` is a dedicated lane for strict catalog growth. It is policy-defined, testable, and wired through `agent-automerge.yml` after successful calibration. It must not inherit `automerge:machine-canonical` authority.
 
 Anything outside the approved automerge lanes requires `needs-human-review`.
 
 ## Strict-growth calibration gate
 
-Strict-growth merge execution requires a separate calibration/activation PR.
+Strict-growth merge execution was activated only after a separate calibration/activation PR.
 
 The calibration PR must include this explicit maintainer decision surface:
 

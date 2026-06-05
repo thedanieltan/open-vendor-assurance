@@ -48,7 +48,14 @@ def normalize_path(path: str) -> str:
 
 def is_allowed_catalog_path(path: str) -> bool:
     normalized = normalize_path(path)
-    return normalized in ALLOWED_FILES or any(normalized.startswith(prefix) for prefix in ALLOWED_PREFIXES)
+    return (
+        normalized in ALLOWED_FILES
+        or any(normalized.startswith(prefix) for prefix in ALLOWED_PREFIXES)
+        or (
+            normalized.startswith("maintenance/generated/strict-growth-")
+            and normalized.endswith(".json")
+        )
+    )
 
 
 def is_explicitly_prohibited_path(path: str) -> bool:

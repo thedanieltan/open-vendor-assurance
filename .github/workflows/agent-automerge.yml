@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   machine-canonical:
-    if: contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:machine-canonical')
+    if: contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:machine-canonical') && !contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:strict-growth')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -70,6 +70,90 @@ jobs:
 
       - name: Refuse generated drift
         run: git diff --exit-code openva-pack.json indexes/
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Build site
+        run: python site/build.py --out site/dist
+
+      - name: Enable GitHub native auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+
+  strict-growth:
+    if: contains(join(github.event.pull_request.labels.*.name, ','), 'catalog-growth') && contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:strict-growth') && !contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:machine-canonical')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install packages
+        run: |
+          pip install -e ".[dev]"
+          pip install -e "services/openva_match_service[dev]"
+
+      - name: Collect changed paths
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr diff "$PR_NUMBER" --name-only > changed-files.txt
+
+      - name: Collect strict growth inputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr view "$PR_NUMBER" --json body --jq .body > pr-body.md
+          python -m tools.openva.strict_growth_automerge extract-inputs \
+            --body-file pr-body.md \
+            --output strict-growth-inputs.env
+          cat strict-growth-inputs.env >> "$GITHUB_ENV"
+
+      - name: Check strict growth automerge eligibility
+        env:
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          python -m tools.openva.strict_growth_automerge check-plan \
+            --promotion-plan "$PROMOTION_PLAN_PATH" \
+            --eligibility-report "$ELIGIBILITY_REPORT_PATH" \
+            --labels "$LABELS" \
+            --current-head-sha "${{ github.event.pull_request.head.sha }}" \
+            --recorded-head-sha "$STRICT_GROWTH_HEAD_SHA" \
+            --current-base-sha "${{ github.event.pull_request.base.sha }}" \
+            --policy config/automerge-policy.yaml
+
+      - name: Check changed source record preflight
+        run: |
+          python -m tools.openva.source_preflight check-changed-sources \
+            --paths-file changed-files.txt \
+            --output source-preflight-report.json
+
+      - name: Upload source preflight report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-preflight-report
+          path: source-preflight-report.json
+          if-no-files-found: warn
+
+      - name: Validate repository
+        run: python -m tools.openva.validate validate
+
+      - name: Rebuild generated outputs
+        run: python -m tools.openva.validate build-indexes
+
+      - name: Refuse generated drift
+        run: git diff --exit-code openva-pack.json indexes/ dist/
 
       - name: Run tests
         run: pytest -q
