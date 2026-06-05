@@ -5,6 +5,7 @@ from pathlib import Path
 from tools.openva.catalog_growth_eligibility import (
     REJECT_EXISTING_VENDOR,
     REJECT_NO_PUBLIC_SOURCE,
+    REJECT_SOURCE_HEALTH_FAILURE,
     REJECT_WEAK_SEMANTIC_MATCH,
     REVIEW_REQUIRED,
     STRICT_PROMOTE_READY,
@@ -100,6 +101,64 @@ def test_weak_source_candidate_is_not_promoted(tmp_path: Path):
 
     assert report["items"][0]["classification"] == REJECT_WEAK_SEMANTIC_MATCH
     assert report["summary"]["strict_promotion_action_count"] == 0
+
+
+def test_homepage_redirect_candidate_is_rejected_before_strict_promotion(tmp_path: Path):
+    bad_source = source()
+    bad_source["evidence"]["verification_status"] = "homepage_or_generic_redirect"
+
+    report = build_catalog_growth_eligibility(
+        vendor_report([vendor()]),
+        source_report([{"vendor_id": "vendor-a", "candidates": [bad_source], "observations": []}]),
+        root=tmp_path,
+        generated_at="2026-05-26T00:00:00Z",
+    )
+
+    item = report["items"][0]
+    assert item["classification"] == REJECT_SOURCE_HEALTH_FAILURE
+    assert item["promotable_now"] is False
+    assert "source_preflight_risk:homepage_or_generic_redirect" in item["reason_codes"]
+    assert item["source_health_rejections"] == [
+        {
+            "candidate_source_id": "vendor-a-security-page-candidate",
+            "vendor_id": "vendor-a",
+            "source_type_candidate": "security_page",
+            "candidate_url": "https://vendor-a.example/security",
+            "classification": REJECT_SOURCE_HEALTH_FAILURE,
+            "reason_codes": ["source_preflight_risk:homepage_or_generic_redirect"],
+        }
+    ]
+    assert report["summary"]["strict_promote_ready_count"] == 0
+    assert report["summary"]["strict_promotion_action_count"] == 0
+    assert report["strict_promotions"] == []
+
+
+def test_strict_growth_keeps_safe_source_when_another_source_has_preflight_risk(tmp_path: Path):
+    safe_source = source()
+    safe_source["candidate_source_id"] = "vendor-a-privacy-notice-candidate"
+    safe_source["source_type_candidate"] = "privacy_notice"
+    safe_source["candidate_url"] = "https://vendor-a.example/privacy"
+    safe_source["evidence"]["page_title"] = "Privacy Notice"
+    risky_source = source()
+    risky_source["evidence"]["verification_status"] = "homepage_or_generic_redirect"
+
+    report = build_catalog_growth_eligibility(
+        vendor_report([vendor()]),
+        source_report([{"vendor_id": "vendor-a", "candidates": [risky_source, safe_source], "observations": []}]),
+        root=tmp_path,
+        generated_at="2026-05-26T00:00:00Z",
+    )
+
+    item = report["items"][0]
+    assert item["classification"] == STRICT_PROMOTE_READY
+    assert item["strict_source_count"] == 1
+    assert item["source_health_rejections"][0]["candidate_source_id"] == "vendor-a-security-page-candidate"
+    assert item["source_health_rejections"][0]["reason_codes"] == [
+        "source_preflight_risk:homepage_or_generic_redirect"
+    ]
+    assert [action["source"]["candidate_source_id"] for action in report["strict_promotions"]] == [
+        "vendor-a-privacy-notice-candidate"
+    ]
 
 
 def test_advisory_wording_candidate_is_deferred_before_promotion(tmp_path: Path):

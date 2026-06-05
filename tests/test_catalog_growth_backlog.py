@@ -39,6 +39,16 @@ def eligibility_report():
                 "reason_codes": ["duplicate_candidate_domain"],
                 "source_candidate_count": 1,
                 "strict_source_count": 0,
+                "source_health_rejections": [
+                    {
+                        "candidate_source_id": "candidate-c-security-page-candidate",
+                        "vendor_id": "candidate-c",
+                        "source_type_candidate": "security_page",
+                        "candidate_url": "https://candidate-c.example/security",
+                        "classification": "reject_source_health_failure",
+                        "reason_codes": ["source_preflight_risk:homepage_or_generic_redirect"],
+                    }
+                ],
             },
         ],
     }
@@ -84,6 +94,22 @@ def test_catalog_growth_backlog_evidence_hash_changes_when_evidence_changes():
     changed["reason_codes"] = ["different_reason"]
 
     assert evidence_hash_for(item) != evidence_hash_for(changed)
+
+
+def test_catalog_growth_backlog_preserves_source_health_rejections():
+    report = build_catalog_growth_backlog(eligibility_report(), generated_at="2026-05-27T08:00:00Z")
+    by_candidate = {item["candidate_vendor_id"]: item for item in report["items"]}
+
+    assert by_candidate["candidate-c"]["source_health_rejections"] == [
+        {
+            "candidate_source_id": "candidate-c-security-page-candidate",
+            "vendor_id": "candidate-c",
+            "source_type_candidate": "security_page",
+            "candidate_url": "https://candidate-c.example/security",
+            "classification": "reject_source_health_failure",
+            "reason_codes": ["source_preflight_risk:homepage_or_generic_redirect"],
+        }
+    ]
 
 
 def test_catalog_growth_backlog_rejects_wrong_report_type():

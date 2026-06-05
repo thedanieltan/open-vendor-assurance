@@ -30,6 +30,7 @@ REJECT_IDENTITY_UNCLEAR = "reject_identity_unclear"
 STRICT_SOURCE_TYPES = set(DEFAULT_SOURCE_TYPES)
 ACCESS_AMBIGUOUS = {"bot_protected", "forbidden_unknown", "gated_or_login_required", "rate_limited", "unreachable"}
 HEALTH_FAILURE = {"not_found", "gone", "server_error", "client_error", "homepage_or_generic_redirect", "possible_mismatch", "suspect_inferred_url", "soft_not_found", "soft_404_detected"}
+SOURCE_PREFLIGHT_RISK = ACCESS_AMBIGUOUS | HEALTH_FAILURE
 CSV_FIELDS = ["candidate_vendor_id", "display_name_candidate", "official_domain_candidate", "coverage_lane", "cohort_id", "classification", "reason_codes", "source_candidate_count", "strict_source_count", "promotable_now"]
 DEFAULT_SOURCE_TYPE_PRIORITY = ["dpa", "privacy_notice", "subprocessors_list", "security_page"]
 
@@ -132,6 +133,11 @@ def identity_reasons(row: dict[str, Any], dup_ids: set[str], dup_domains: set[st
 def source_reasons(source: dict[str, Any]) -> list[str]:
     evidence = source.get("evidence", {}) or {}
     reasons: list[str] = []
+    verification_status = str(evidence.get("verification_status") or source.get("verification_status") or "")
+    if verification_status in SOURCE_PREFLIGHT_RISK:
+        reasons.append(f"source_preflight_risk:{verification_status}")
+    if evidence.get("soft_404_detected") is True or source.get("soft_404_detected") is True:
+        reasons.append("source_preflight_risk:soft_404_detected")
     if source.get("source_type_candidate") not in STRICT_SOURCE_TYPES:
         reasons.append("source_type_not_supported")
     if source.get("confidence") != "likely":
@@ -152,6 +158,18 @@ def source_reasons(source: dict[str, Any]) -> list[str]:
     return reasons
 
 
+def source_rejection(source: dict[str, Any], reasons: list[str], classification: str) -> dict[str, Any]:
+    preflight_reasons = sorted(reason for reason in reasons if reason.startswith("source_preflight_risk:"))
+    return {
+        "candidate_source_id": source.get("candidate_source_id"),
+        "vendor_id": source.get("vendor_id"),
+        "source_type_candidate": source.get("source_type_candidate"),
+        "candidate_url": source.get("candidate_url"),
+        "classification": classification,
+        "reason_codes": preflight_reasons or sorted(reasons),
+    }
+
+
 def strict_action(vendor: dict[str, Any], source: dict[str, Any]) -> dict[str, Any]:
     return {
         "action": "strict_catalog_growth_promotion_candidate",
@@ -161,21 +179,26 @@ def strict_action(vendor: dict[str, Any], source: dict[str, Any]) -> dict[str, A
     }
 
 
-def classify(vendor: dict[str, Any], sources: list[dict[str, Any]], statuses: set[str], id_reasons: list[str]) -> tuple[str, list[str], list[dict[str, Any]]]:
+def classify(vendor: dict[str, Any], sources: list[dict[str, Any]], statuses: set[str], id_reasons: list[str]) -> tuple[str, list[str], list[dict[str, Any]], list[dict[str, Any]]]:
     if "candidate_already_in_catalog" in id_reasons:
-        return REJECT_EXISTING_VENDOR, id_reasons, []
+        return REJECT_EXISTING_VENDOR, id_reasons, [], []
     if any(reason.startswith("duplicate_candidate") for reason in id_reasons):
-        return REJECT_DUPLICATE, id_reasons, []
+        return REJECT_DUPLICATE, id_reasons, [], []
     if id_reasons:
-        return REJECT_IDENTITY_UNCLEAR, id_reasons, []
+        return REJECT_IDENTITY_UNCLEAR, id_reasons, [], []
     if statuses & ACCESS_AMBIGUOUS:
-        return REJECT_ACCESS_AMBIGUOUS, sorted(statuses & ACCESS_AMBIGUOUS), []
+        return REJECT_ACCESS_AMBIGUOUS, sorted(statuses & ACCESS_AMBIGUOUS), [], []
     if statuses & HEALTH_FAILURE:
-        return REJECT_SOURCE_HEALTH_FAILURE, sorted(statuses & HEALTH_FAILURE), []
+        return REJECT_SOURCE_HEALTH_FAILURE, sorted(statuses & HEALTH_FAILURE), [], []
     if not sources:
-        return REJECT_NO_PUBLIC_SOURCE, ["no_source_candidates_for_vendor"], []
+        return REJECT_NO_PUBLIC_SOURCE, ["no_source_candidates_for_vendor"], [], []
     source_reason_rows = [(source, source_reasons(source)) for source in sources]
     strict_sources = [source for source, reasons in source_reason_rows if not reasons]
+    source_health_rejections = [
+        source_rejection(source, reasons, REJECT_SOURCE_HEALTH_FAILURE)
+        for source, reasons in source_reason_rows
+        if any(reason.startswith("source_preflight_risk:") for reason in reasons)
+    ]
     if strict_sources:
         extra_reasons = sorted(
             {
@@ -185,13 +208,15 @@ def classify(vendor: dict[str, Any], sources: list[dict[str, Any]], statuses: se
                 if reason.startswith("strict_growth_")
             }
         )
-        return STRICT_PROMOTE_READY, ["strict_source_candidate_evidence_present", *extra_reasons], strict_sources
+        return STRICT_PROMOTE_READY, ["strict_source_candidate_evidence_present", *extra_reasons], strict_sources, source_health_rejections
     reasons = sorted({reason for _source, source_reasons_ in source_reason_rows for reason in source_reasons_})
+    if any(reason.startswith("source_preflight_risk:") for reason in reasons):
+        return REJECT_SOURCE_HEALTH_FAILURE, reasons, [], source_health_rejections
     if {"http_status_not_200", "final_url_missing"} & set(reasons):
-        return REJECT_SOURCE_HEALTH_FAILURE, reasons, []
+        return REJECT_SOURCE_HEALTH_FAILURE, reasons, [], []
     if {"confidence_not_likely", "matched_terms_missing"} & set(reasons):
-        return REJECT_WEAK_SEMANTIC_MATCH, reasons, []
-    return REVIEW_REQUIRED, reasons or ["source_candidate_requires_review"], []
+        return REJECT_WEAK_SEMANTIC_MATCH, reasons, [], []
+    return REVIEW_REQUIRED, reasons or ["source_candidate_requires_review"], [], []
 
 
 def source_priority(policy: dict[str, Any]) -> list[str]:
@@ -263,7 +288,7 @@ def build_catalog_growth_eligibility(
     for vendor in candidates:
         vendor_id = str(vendor.get("candidate_vendor_id") or "")
         vendor_sources = source_map.get(vendor_id, [])
-        classification, reasons, strict_sources = classify(vendor, vendor_sources, status_map.get(vendor_id, set()), identity_reasons(vendor, dup_ids, dup_domains, known_ids, known_domains))
+        classification, reasons, strict_sources, source_health_rejections = classify(vendor, vendor_sources, status_map.get(vendor_id, set()), identity_reasons(vendor, dup_ids, dup_domains, known_ids, known_domains))
         deferred_strict_sources: list[dict[str, Any]] = []
         if classification == STRICT_PROMOTE_READY:
             strict_sources, deferred_strict_sources, cap_reasons = cap_strict_sources(strict_sources, policy)
@@ -272,6 +297,8 @@ def build_catalog_growth_eligibility(
         item = {"candidate_vendor_id": vendor_id, "display_name_candidate": vendor.get("display_name_candidate"), "official_domain_candidate": vendor.get("official_domain_candidate"), "coverage_lane": vendor.get("coverage_lane"), "cohort_id": vendor.get("cohort_id"), "classification": classification, "reason_codes": reasons, "source_candidate_count": len(vendor_sources), "strict_source_count": len(strict_sources), "promotable_now": classification == STRICT_PROMOTE_READY}
         if deferred_strict_sources:
             item["deferred_strict_sources"] = deferred_strict_sources
+        if source_health_rejections:
+            item["source_health_rejections"] = source_health_rejections
         items.append(item)
     counts = Counter(item["classification"] for item in items)
     report = {"schema_version": SCHEMA_VERSION, "generated_at": generated_at or now_iso(), "report_type": REPORT_TYPE, "posture": {"network_fetch_performed": False, "writes_repository_state": False, "writes_canonical_vendors": False, "writes_canonical_sources": False, "opens_pull_requests": False, "non_advisory": True}, "summary": {"candidate_count": len(items), "strict_promote_ready_count": counts.get(STRICT_PROMOTE_READY, 0), "review_required_count": counts.get(REVIEW_REQUIRED, 0), "rejected_or_deferred_count": len(items) - counts.get(STRICT_PROMOTE_READY, 0) - counts.get(REVIEW_REQUIRED, 0), "classification_counts": dict(sorted(counts.items())), "strict_promotion_action_count": len(strict_promotions)}, "items": sorted(items, key=lambda item: (item["classification"], item["candidate_vendor_id"])), "strict_promotions": strict_promotions}

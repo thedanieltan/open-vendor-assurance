@@ -47,6 +47,7 @@ def evidence_hash_for(item: dict[str, Any]) -> str:
         "official_domain_candidate": item.get("official_domain_candidate"),
         "classification": item.get("classification"),
         "reason_codes": item.get("reason_codes", []),
+        "source_health_rejections": item.get("source_health_rejections", []),
         "source_candidate_count": item.get("source_candidate_count", 0),
         "strict_source_count": item.get("strict_source_count", 0),
     }
@@ -107,6 +108,7 @@ def build_catalog_growth_backlog(
                 "source_candidate_count": item.get("source_candidate_count", 0),
                 "strict_source_count": item.get("strict_source_count", 0),
                 "reason_codes": reason_codes,
+                "source_health_rejections": item.get("source_health_rejections", []) or [],
                 "non_advisory": True,
             }
         )

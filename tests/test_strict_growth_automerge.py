@@ -254,6 +254,19 @@ def test_advisory_wording_in_strict_growth_plan_fails_preflight():
     )
 
 
+def test_source_preflight_risk_evidence_fails_strict_growth_preflight():
+    action = strict_action()
+    action["source"]["evidence"]["verification_status"] = "homepage_or_generic_redirect"
+
+    result = eligible_result(promotion_plan=promotion_plan(action))
+
+    assert result.eligible is False
+    assert (
+        "source_preflight_risk:homepage_or_generic_redirect:candidate-a:security_page:candidate-a-security_page-candidate"
+        in result.reasons
+    )
+
+
 def test_more_than_five_new_vendors_fails():
     actions = [strict_action(candidate_vendor_id=f"candidate-{index}") for index in range(6)]
 
