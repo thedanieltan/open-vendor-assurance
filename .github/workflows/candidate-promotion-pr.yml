@@ -110,10 +110,14 @@ jobs:
             --vendor-candidates vendor-candidate-discovery-report.json \
             --source-discovery vendor-candidate-source-discovery-report.json \
             --output-json catalog-growth-eligibility-report.json \
-            --output-strict catalog-growth-strict-promotions.json
+            --output-strict catalog-growth-strict-promotions.json \
+            --head-sha "${{ github.sha }}" \
+            --base-sha "${{ github.sha }}"
           python -m tools.openva.promotion_planner plan-strict-growth \
             --eligibility-report catalog-growth-eligibility-report.json \
-            --output strict-growth-promotion-plan.json
+            --output strict-growth-promotion-plan.json \
+            --head-sha "${{ github.sha }}" \
+            --base-sha "${{ github.sha }}"
       - name: Select candidate promotion plan
         id: reviewed_plan
         run: |
