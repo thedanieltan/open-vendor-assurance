@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 import sys
 from collections import Counter
 from datetime import UTC, datetime, timedelta
@@ -16,6 +18,9 @@ INFORMATIONAL_REASONS = {
     "base_sha_mismatch_warning",
     "eligibility_report_missing_used_promotion_plan_timestamp",
 }
+STRICT_GROWTH_ROOT_PLAN = "strict-growth-promotion-plan.json"
+STRICT_GROWTH_ROOT_ELIGIBILITY_REPORT = "catalog-growth-eligibility-report.json"
+STRICT_GROWTH_GENERATED_PREFIX = "maintenance/generated/strict-growth-"
 
 
 def parse_timestamp(value: str | None) -> datetime | None:
@@ -26,6 +31,120 @@ def parse_timestamp(value: str | None) -> datetime | None:
     if parsed.tzinfo is None:
         return parsed.replace(tzinfo=UTC)
     return parsed.astimezone(UTC)
+
+
+def normalize_body_path(value: str) -> str:
+    return value.strip().replace("\\", "/")
+
+
+def is_allowed_strict_growth_plan_path(path: str) -> bool:
+    normalized = normalize_body_path(path)
+    return normalized == STRICT_GROWTH_ROOT_PLAN or (
+        normalized.startswith(STRICT_GROWTH_GENERATED_PREFIX) and normalized.endswith(".json")
+    )
+
+
+def is_allowed_strict_growth_eligibility_path(path: str) -> bool:
+    normalized = normalize_body_path(path)
+    return normalized == STRICT_GROWTH_ROOT_ELIGIBILITY_REPORT or (
+        normalized.startswith(STRICT_GROWTH_GENERATED_PREFIX) and normalized.endswith(".json")
+    )
+
+
+def body_value(body: str, label: str) -> str | None:
+    pattern = re.compile(rf"^\s*-\s*{re.escape(label)}:\s*`([^`]+)`\s*$", re.MULTILINE)
+    match = pattern.search(body)
+    if match:
+        return match.group(1).strip()
+    return None
+
+
+def sha256_for(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return f"sha256:{digest.hexdigest()}"
+
+
+def action_count_for(path: Path) -> int:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    actions = data.get("actions", []) if isinstance(data, dict) else []
+    if not isinstance(actions, list):
+        raise ValueError(f"{path}: actions must be a list")
+    return len(actions)
+
+
+def env_escape(value: str) -> str:
+    if "\n" in value or "\r" in value:
+        raise ValueError("environment value must be single-line")
+    return value
+
+
+def extract_inputs_from_body(body: str, *, repo_root: Path = Path(".")) -> dict[str, str]:
+    plan_path = body_value(body, "Promotion plan")
+    plan_sha = body_value(body, "Promotion plan SHA-256")
+    action_count = body_value(body, "Action count")
+    eligibility_path = body_value(body, "Strict-growth eligibility report") or body_value(
+        body, "Eligibility report"
+    )
+    head_sha = body_value(body, "Head SHA")
+    base_sha = body_value(body, "Base SHA")
+
+    if not plan_path:
+        raise ValueError("promotion_plan_path_missing")
+    if not plan_sha:
+        raise ValueError("promotion_plan_sha256_missing")
+    if not action_count:
+        raise ValueError("promotion_plan_action_count_missing")
+    if not eligibility_path:
+        raise ValueError("eligibility_report_path_missing")
+    if not head_sha:
+        raise ValueError("head_sha_missing")
+
+    plan_path = normalize_body_path(plan_path)
+    eligibility_path = normalize_body_path(eligibility_path)
+    if not is_allowed_strict_growth_plan_path(plan_path):
+        raise ValueError(f"promotion_plan_path_not_allowed:{plan_path}")
+    if not is_allowed_strict_growth_eligibility_path(eligibility_path):
+        raise ValueError(f"eligibility_report_path_not_allowed:{eligibility_path}")
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", plan_sha):
+        raise ValueError("promotion_plan_sha256_invalid")
+    if not re.fullmatch(r"[0-9]+", action_count):
+        raise ValueError("promotion_plan_action_count_invalid")
+    if not re.fullmatch(r"[0-9a-f]{40}", head_sha):
+        raise ValueError("head_sha_invalid")
+    if base_sha and not re.fullmatch(r"[0-9a-f]{40}", base_sha):
+        raise ValueError("base_sha_invalid")
+
+    plan_file = repo_root / plan_path
+    eligibility_file = repo_root / eligibility_path
+    if not plan_file.is_file():
+        raise ValueError(f"promotion_plan_file_missing:{plan_path}")
+    if not eligibility_file.is_file():
+        raise ValueError(f"eligibility_report_file_missing:{eligibility_path}")
+    actual_sha = sha256_for(plan_file)
+    if actual_sha != plan_sha:
+        raise ValueError(f"promotion_plan_sha256_mismatch:{actual_sha}!={plan_sha}")
+    actual_action_count = str(action_count_for(plan_file))
+    if actual_action_count != action_count:
+        raise ValueError(f"promotion_plan_action_count_mismatch:{actual_action_count}!={action_count}")
+
+    result = {
+        "PROMOTION_PLAN_PATH": plan_path,
+        "PROMOTION_PLAN_SHA256": plan_sha,
+        "PROMOTION_PLAN_ACTION_COUNT": action_count,
+        "ELIGIBILITY_REPORT_PATH": eligibility_path,
+        "STRICT_GROWTH_HEAD_SHA": head_sha,
+    }
+    if base_sha:
+        result["STRICT_GROWTH_BASE_SHA"] = base_sha
+    return result
+
+
+def write_env(path: Path, values: dict[str, str]) -> None:
+    lines = [f"{key}={env_escape(value)}" for key, value in values.items()]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def strict_growth_policy(policy: dict[str, Any]) -> dict[str, Any]:
@@ -272,6 +391,28 @@ def check_strict_growth_eligibility(
 def main(argv: list[str] | None = None) -> int:
     raw_argv = list(sys.argv[1:] if argv is None else argv)
     command = "check"
+    if raw_argv and raw_argv[0] == "extract-inputs":
+        parser = argparse.ArgumentParser(description="Extract strict-growth automerge inputs from a PR body.")
+        parser.add_argument("command", nargs="?")
+        parser.add_argument("--body-file", type=Path, required=True)
+        parser.add_argument("--output", type=Path, required=True)
+        parser.add_argument("--repo-root", type=Path, default=Path("."))
+        args = parser.parse_args(raw_argv)
+        try:
+            values = extract_inputs_from_body(
+                args.body_file.read_text(encoding="utf-8"),
+                repo_root=args.repo_root,
+            )
+        except ValueError as exc:
+            print(f"input_valid=false")
+            print(f"reason={exc}", file=sys.stderr)
+            return 1
+        write_env(args.output, values)
+        print("input_valid=true")
+        for key in sorted(values):
+            print(f"{key}={values[key]}")
+        return 0
+
     if raw_argv and raw_argv[0] == "check-plan":
         command = "check-plan"
         raw_argv = raw_argv[1:]

@@ -215,6 +215,15 @@ jobs:
             --current-head-sha "${{ github.sha }}" \
             --current-base-sha "${{ github.sha }}" \
             --now "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+      - name: Prepare strict growth evidence files
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && env.PROMOTION_PLAN_MODE == 'strict-growth-latest'
+        run: |
+          set -euo pipefail
+          mkdir -p maintenance/generated
+          cp strict-growth-promotion-plan.json maintenance/generated/strict-growth-promotion-plan.json
+          cp catalog-growth-eligibility-report.json maintenance/generated/strict-growth-eligibility-report.json
+          echo "PROMOTION_PLAN_PATH=maintenance/generated/strict-growth-promotion-plan.json" >> "$GITHUB_ENV"
+          echo "ELIGIBILITY_REPORT_PATH=maintenance/generated/strict-growth-eligibility-report.json" >> "$GITHUB_ENV"
       - name: Validate current records
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: python -m tools.openva.validate validate
@@ -235,7 +244,7 @@ jobs:
         id: catalog_changes
         run: |
           set -euo pipefail
-          if git diff --quiet -- data indexes dist openva-pack.json; then
+          if git diff --quiet -- data indexes dist maintenance/generated openva-pack.json; then
             echo "No candidate promotion changes produced."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
@@ -290,6 +299,12 @@ jobs:
               '- Does not merge automatically.',
               '',
           ]
+          if os.environ.get('ELIGIBILITY_REPORT_PATH'):
+              insert_at = lines.index('## Counts') - 1
+              lines[insert_at:insert_at] = [
+                  f"- Strict-growth eligibility report: `{os.environ['ELIGIBILITY_REPORT_PATH']}`",
+                  f"- Base SHA: `{os.environ['GITHUB_SHA']}`",
+              ]
           Path('candidate-promotion-pr-body.md').write_text('\n'.join(lines), encoding='utf-8')
           PY
       - name: Commit and push promotion branch
@@ -300,6 +315,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$PR_BRANCH"
           git add data indexes dist openva-pack.json
+          if [ -d maintenance/generated ]; then
+            git add maintenance/generated
+          fi
           git commit -m "$PR_TITLE"
           git push --force-with-lease origin "$PR_BRANCH"
       - name: Create or update pull request
@@ -308,16 +326,22 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          HEAD_SHA=$(git rev-parse HEAD)
+          cp candidate-promotion-pr-body.md candidate-promotion-pr-body-final.md
+          {
+            echo ""
+            echo "- Head SHA: \`$HEAD_SHA\`"
+          } >> candidate-promotion-pr-body-final.md
           EXISTING=$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')
           if [ -n "$EXISTING" ]; then
-            gh pr edit "$EXISTING" --title "$PR_TITLE" --body-file candidate-promotion-pr-body.md
+            gh pr edit "$EXISTING" --title "$PR_TITLE" --body-file candidate-promotion-pr-body-final.md
             echo "Updated PR #$EXISTING"
           else
             gh pr create \
               --base main \
               --head "$PR_BRANCH" \
               --title "$PR_TITLE" \
-              --body-file candidate-promotion-pr-body.md
+              --body-file candidate-promotion-pr-body-final.md
           fi
       - name: Upload promotion artifacts
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
@@ -329,4 +353,15 @@ jobs:
             candidate-promotion-report.json
             source-preflight-report.json
             candidate-promotion-pr-body.md
+            candidate-promotion-pr-body-final.md
+          if-no-files-found: error
+      - name: Upload strict growth evidence artifacts
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && env.PROMOTION_PLAN_MODE == 'strict-growth-latest'
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-candidate-promotion-pr-strict-growth-evidence
+          path: |
+            ${{ env.ELIGIBILITY_REPORT_PATH }}
+            maintenance/generated/strict-growth-promotion-plan.json
+            maintenance/generated/strict-growth-eligibility-report.json
           if-no-files-found: error

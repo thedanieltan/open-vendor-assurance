@@ -5,14 +5,14 @@ def strict_growth_policy():
     return load_policy()["strict_growth"]
 
 
-def test_strict_growth_policy_defines_separate_unwired_lane():
+def test_strict_growth_policy_defines_separate_wired_lane():
     policy = load_policy()
 
     assert policy["lanes"]["strict_growth"]["label"] == "automerge:strict-growth"
     assert policy["lanes"]["strict_growth"]["required_labels"] == ["catalog-growth"]
-    assert policy["lanes"]["strict_growth"]["execution_wired"] is False
+    assert policy["lanes"]["strict_growth"]["execution_wired"] is True
     assert policy["strict_growth"]["label"] == "automerge:strict-growth"
-    assert policy["strict_growth"]["execution_wired"] is False
+    assert policy["strict_growth"]["execution_wired"] is True
 
 
 def test_strict_growth_policy_limits_are_configured_not_hardcoded():
