@@ -88,8 +88,6 @@ def evidence_timestamp(
         if eligibility_generated_at is None:
             reasons.append("eligibility_report_timestamp_missing")
             return None, None
-        if promotion_generated_at and promotion_generated_at > eligibility_generated_at:
-            reasons.append("promotion_plan_timestamp_after_eligibility_report")
         return eligibility_generated_at, "eligibility_report.generated_at"
     if promotion_generated_at is None:
         reasons.append("evidence_timestamp_missing")

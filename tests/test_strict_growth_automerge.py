@@ -329,14 +329,14 @@ def test_check_plan_cli_rejects_advisory_wording_plan(tmp_path):
     ) == 1
 
 
-def test_promotion_plan_timestamp_after_eligibility_report_hard_fails():
+def test_promotion_plan_timestamp_after_eligibility_report_matches_regeneration_order():
     result = eligible_result(
         promotion_plan=promotion_plan(strict_action(), generated_at="2026-05-27T07:10:00Z"),
         eligibility_report=eligibility_report(generated_at="2026-05-27T07:00:00Z"),
     )
 
-    assert result.eligible is False
-    assert "promotion_plan_timestamp_after_eligibility_report" in result.reasons
+    assert result.eligible is True
+    assert result.reasons == ()
 
 
 def test_fallback_to_promotion_plan_timestamp_is_reported_when_eligibility_report_absent():
