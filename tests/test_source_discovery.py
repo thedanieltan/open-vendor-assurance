@@ -90,7 +90,37 @@ def test_discovery_finds_candidate_from_official_domain():
     assert result["candidates"][0]["source_type_candidate"] == "dpa"
     assert result["candidates"][0]["requires_review"] is True
     assert result["candidates"][0]["confidence"] == "likely"
+    assert result["candidates"][0]["evidence"]["verification_status"] == "ok"
     assert result["unavailable_sources"] == []
+
+
+def test_discovery_records_homepage_redirect_verification_status():
+    vendor = vendor_record()
+    url = "https://www.example.com/security"
+
+    def fetch(_url: str) -> FetchResult:
+        body = "Security encryption availability vulnerability"
+        return FetchResult(
+            requested_url=url,
+            final_url="https://www.example.com/",
+            http_status=200,
+            content_type="text/html; charset=utf-8",
+            content_length=len(body),
+            etag=None,
+            last_modified=None,
+            body_sample=body.encode("utf-8"),
+        )
+
+    result = discover_for_vendor(
+        vendor,
+        root=Path("/tmp/nonexistent-openva-root"),
+        fetcher=fetch,
+        source_types=("security_page",),
+    )
+
+    assert len(result["candidates"]) == 1
+    assert result["candidates"][0]["evidence"]["verification_status"] == "homepage_or_generic_redirect"
+    assert result["observations"][0]["verification_status"] == "homepage_or_generic_redirect"
 
 
 def test_discovery_records_unavailable_when_no_candidate_matches():

@@ -280,6 +280,32 @@ def test_strict_growth_planner_uses_only_strict_promote_ready_records():
     assert action["strict_machine_candidate"] is True
 
 
+def test_strict_growth_planner_defers_source_preflight_risk_actions():
+    report = strict_eligibility_report()
+    risky = deepcopy(report["strict_promotions"][0])
+    risky["source"]["evidence"]["verification_status"] = "homepage_or_generic_redirect"
+    safe = deepcopy(report["strict_promotions"][0])
+    safe["source"]["candidate_source_id"] = "candidate-a-privacy-notice-candidate"
+    safe["source"]["source_type_candidate"] = "privacy_notice"
+    safe["source"]["candidate_url"] = "https://candidate-a.example/privacy"
+    report["strict_promotions"] = [risky, safe]
+
+    plan = build_strict_growth_plan(report)
+
+    assert plan["summary"]["uncapped_action_count"] == 2
+    assert plan["summary"]["source_health_screened_action_count"] == 1
+    assert plan["summary"]["source_health_deferred_action_count"] == 1
+    assert [action["source"]["candidate_source_id"] for action in plan["actions"]] == [
+        "candidate-a-privacy-notice-candidate"
+    ]
+    assert plan["deferred_actions"][0]["action"]["source"]["candidate_source_id"] == (
+        "candidate-a-security-page-candidate"
+    )
+    assert plan["deferred_actions"][0]["reason_codes"] == [
+        "source_preflight_risk:homepage_or_generic_redirect"
+    ]
+
+
 def test_strict_growth_planner_caps_sources_by_deterministic_priority():
     report = strict_eligibility_report()
     base_action = report["strict_promotions"][0]

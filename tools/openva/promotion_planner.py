@@ -31,6 +31,7 @@ REVIEWABLE_VERIFICATION_STATUSES = {
     "client_error",
     "unreachable",
 }
+SOURCE_PREFLIGHT_FAIL_STATUSES = REVIEWABLE_VERIFICATION_STATUSES | {"soft_not_found", "soft_404_detected"}
 
 
 def strict_growth_source_priority(policy: dict[str, Any]) -> list[str]:
@@ -334,6 +335,31 @@ def cap_strict_growth_actions(
     return selected, deferred
 
 
+def strict_growth_source_preflight_reasons(action: dict[str, Any]) -> list[str]:
+    evidence = action.get("source", {}).get("evidence", {}) or {}
+    status = str(evidence.get("verification_status") or "")
+    reasons: list[str] = []
+    if status in SOURCE_PREFLIGHT_FAIL_STATUSES:
+        reasons.append(f"source_preflight_risk:{status}")
+    if evidence.get("soft_404_detected") is True:
+        reasons.append("source_preflight_risk:soft_404_detected")
+    return reasons
+
+
+def screen_strict_growth_actions_for_source_health(
+    actions: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    selected: list[dict[str, Any]] = []
+    deferred: list[dict[str, Any]] = []
+    for action in actions:
+        reasons = strict_growth_source_preflight_reasons(action)
+        if reasons:
+            deferred.append({"action": action, "reason_codes": reasons})
+        else:
+            selected.append(action)
+    return selected, deferred
+
+
 def build_strict_growth_plan(
     eligibility_report: dict[str, Any],
     *,
@@ -357,7 +383,9 @@ def build_strict_growth_plan(
         for action in eligibility_report.get("strict_promotions", []) or []
         if str(action.get("vendor", {}).get("candidate_vendor_id")) in strict_by_vendor
     ]
-    policy_capped_actions, deferred_actions = cap_strict_growth_actions(uncapped_actions, policy)
+    source_health_screened_actions, source_health_deferred_actions = screen_strict_growth_actions_for_source_health(uncapped_actions)
+    policy_capped_actions, deferred_actions = cap_strict_growth_actions(source_health_screened_actions, policy)
+    deferred_actions = [*source_health_deferred_actions, *deferred_actions]
     actions = policy_capped_actions
     batch_deferred_actions: list[dict[str, Any]] = []
     if max_actions_per_plan and len(policy_capped_actions) > max_actions_per_plan:
@@ -386,6 +414,8 @@ def build_strict_growth_plan(
         "summary": {
             "action_count": len(actions),
             "uncapped_action_count": len(uncapped_actions),
+            "source_health_screened_action_count": len(source_health_screened_actions),
+            "source_health_deferred_action_count": len(source_health_deferred_actions),
             "policy_capped_action_count": len(policy_capped_actions),
             "actions_requiring_human_review": 0,
             "action_types": dict(sorted(counts.items())),

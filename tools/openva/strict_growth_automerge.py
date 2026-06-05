@@ -18,6 +18,22 @@ INFORMATIONAL_REASONS = {
     "base_sha_mismatch_warning",
     "eligibility_report_missing_used_promotion_plan_timestamp",
 }
+SOURCE_PREFLIGHT_FAIL_STATUSES = {
+    "not_found",
+    "gone",
+    "bot_protected",
+    "forbidden_unknown",
+    "gated_or_login_required",
+    "homepage_or_generic_redirect",
+    "possible_mismatch",
+    "rate_limited",
+    "suspect_inferred_url",
+    "unreachable",
+    "client_error",
+    "server_error",
+    "soft_not_found",
+    "soft_404_detected",
+}
 STRICT_GROWTH_ROOT_PLAN = "strict-growth-promotion-plan.json"
 STRICT_GROWTH_ROOT_ELIGIBILITY_REPORT = "catalog-growth-eligibility-report.json"
 STRICT_GROWTH_GENERATED_PREFIX = "maintenance/generated/strict-growth-"
@@ -301,6 +317,12 @@ def check_action(action: dict[str, Any], policy: dict[str, Any], reasons: list[s
     for value in advisory_values:
         for term in prohibited_terms_in_text(value):
             append_reason(reasons, f"strict_growth_advisory_wording_detected:{term}", action, policy)
+
+    verification_status = action_value(action, "source.evidence.verification_status")
+    if verification_status in SOURCE_PREFLIGHT_FAIL_STATUSES:
+        append_reason(reasons, f"source_preflight_risk:{verification_status}", action, policy)
+    if action_value(action, "source.evidence.soft_404_detected") is True:
+        append_reason(reasons, "source_preflight_risk:soft_404_detected", action, policy)
 
     for record in relationship_records(action):
         check_relationship_record(record, action, policy, reasons)

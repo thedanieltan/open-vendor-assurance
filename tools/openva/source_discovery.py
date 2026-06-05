@@ -12,6 +12,7 @@ import yaml
 from tools.openva.source_verification import (
     FetchResult,
     ROOT,
+    classify_status,
     fetch_url,
     normalize_text,
     semantic_match,
@@ -185,6 +186,8 @@ def candidate_record(
     semantic: dict[str, Any],
     discovered_at: str,
 ) -> dict[str, Any]:
+    verification_source = {"source_url": url, "source_type": source_type}
+    verification_status = classify_status(verification_source, result, semantic)
     return {
         "schema_version": "0.1.0",
         "candidate_source_id": candidate_source_id(vendor_id, source_type),
@@ -202,6 +205,9 @@ def candidate_record(
             "final_url": result.final_url,
             "http_status": result.http_status,
             "content_type": result.content_type,
+            "semantic_status": semantic.get("status"),
+            "verification_status": verification_status,
+            "soft_404_detected": verification_status == "soft_not_found",
         },
         "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
         "not_advice": True,
@@ -263,6 +269,11 @@ def discover_for_vendor(
                     "final_url": result.final_url,
                     "content_type": result.content_type,
                     "semantic_status": semantic.get("status"),
+                    "verification_status": classify_status(
+                        {"source_url": url, "source_type": source_type},
+                        result,
+                        semantic,
+                    ),
                     "matched_terms": semantic.get("matched_terms", []),
                 }
             )
