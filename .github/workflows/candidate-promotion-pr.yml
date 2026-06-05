@@ -235,7 +235,7 @@ jobs:
         id: catalog_changes
         run: |
           set -euo pipefail
-          if git diff --quiet -- data indexes openva-pack.json; then
+          if git diff --quiet -- data indexes dist openva-pack.json; then
             echo "No candidate promotion changes produced."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
@@ -299,7 +299,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$PR_BRANCH"
-          git add data indexes openva-pack.json
+          git add data indexes dist openva-pack.json
           git commit -m "$PR_TITLE"
           git push --force-with-lease origin "$PR_BRANCH"
       - name: Create or update pull request
