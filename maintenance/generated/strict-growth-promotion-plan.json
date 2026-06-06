@@ -1,0 +1,124 @@
+{
+  "actions": [
+    {
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+      "reason_codes": [
+        "strict_source_candidate_evidence_present",
+        "strict_growth_vendor_source_cap_exceeded"
+      ],
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "commercetools-dpa-candidate",
+        "candidate_url": "https://commercetools.com/dpa",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://commercetools.com/dpa",
+          "http_status": 200,
+          "matched_terms": [
+            "data processing",
+            "data processing agreement",
+            "dpa",
+            "processor",
+            "controller"
+          ],
+          "page_title": "Data Processing Agreement",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "ok"
+        },
+        "source_type_candidate": "dpa",
+        "vendor_id": "commercetools"
+      },
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "commercetools",
+        "cohort_id": "commerce-content-docs-launch",
+        "coverage_lane": "commerce_content_docs",
+        "display_name_candidate": "commercetools",
+        "headquarters_country_candidate": "DE",
+        "official_domain_candidate": "commercetools.com",
+        "vendor_category_candidates": [
+          "ecommerce_platform"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
+    },
+    {
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+      "reason_codes": [
+        "strict_source_candidate_evidence_present"
+      ],
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "bigcommerce-privacy-notice-candidate",
+        "candidate_url": "https://bigcommerce.com/privacy",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://www.commerce.com/privacy/",
+          "http_status": 200,
+          "matched_terms": [
+            "privacy",
+            "privacy policy"
+          ],
+          "page_title": "Privacy Policy | Commerce",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "redirected"
+        },
+        "source_type_candidate": "privacy_notice",
+        "vendor_id": "bigcommerce"
+      },
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "bigcommerce",
+        "cohort_id": "commerce-content-docs-launch",
+        "coverage_lane": "commerce_content_docs",
+        "display_name_candidate": "BigCommerce",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "bigcommerce.com",
+        "vendor_category_candidates": [
+          "ecommerce_platform"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
+    }
+  ],
+  "base_sha": "f0240b481fa92074162d8f29df31a320936fa69a",
+  "generated_at": "2026-06-06T02:58:57Z",
+  "head_sha": "f0240b481fa92074162d8f29df31a320936fa69a",
+  "posture": {
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "opens_pull_requests": false,
+    "writes_canonical_sources": false,
+    "writes_canonical_vendors": false,
+    "writes_repository_state": false
+  },
+  "report_type": "strict_growth_promotion_plan",
+  "schema_version": "0.1.0",
+  "summary": {
+    "action_count": 2,
+    "action_types": {
+      "strict_catalog_growth_promotion": 2
+    },
+    "actions_requiring_human_review": 0,
+    "batch_deferred_action_count": 0,
+    "deferred_action_count": 0,
+    "max_actions_per_plan": 2,
+    "policy_capped_action_count": 2,
+    "shortlist_action_count": 2,
+    "source_health_deferred_action_count": 0,
+    "source_health_screened_action_count": 2,
+    "uncapped_action_count": 2
+  }
+}
