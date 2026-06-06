@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 159,
+  "count": 164,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -5128,6 +5128,65 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "security_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grafana-labs-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://grafana.com/legal/privacy-policy",
+          "title": "Grafana Labs Privacy Policy | Grafana Labs"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grafana-labs-security-page",
+          "source_type": "security_page",
+          "source_url": "https://grafana.com/security",
+          "title": "Security Advisories | Grafana Labs"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Grafana Labs",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/grafana-labs.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "grafana.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grafana-labs-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://grafana.com/legal/privacy-policy",
+          "title": "Grafana Labs Privacy Policy | Grafana Labs"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grafana-labs-security-page",
+          "source_type": "security_page",
+          "source_url": "https://grafana.com/security",
+          "title": "Security Advisories | Grafana Labs"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "grafana-labs"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "privacy_notice"
       ],
       "canonical_sources": [
@@ -9751,6 +9810,49 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "redis-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://redis.io/legal/privacy-policy/",
+          "title": "Privacy Policy"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Redis",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/redis.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "redis.io"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "redis-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://redis.io/legal/privacy-policy/",
+          "title": "Privacy Policy"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "redis"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page"
       ],
@@ -11701,6 +11803,108 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "starburst-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.starburst.io/privacy-policy/",
+          "title": "Privacy Policy | Starburst"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Starburst",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/starburst.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "starburst.io"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "starburst-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.starburst.io/privacy-policy/",
+          "title": "Privacy Policy | Starburst"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "starburst"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "storyblok-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.storyblok.com/legal/dpa",
+          "title": "Data Processing Agreement | Storyblok"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "storyblok-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.storyblok.com/legal/privacy-policy",
+          "title": "Privacy Policy | Storyblok"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Storyblok",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/storyblok.json",
+      "missing_core_source_types": [
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "storyblok.com"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "storyblok-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.storyblok.com/legal/dpa",
+          "title": "Data Processing Agreement | Storyblok"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "storyblok-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.storyblok.com/legal/privacy-policy",
+          "title": "Privacy Policy | Storyblok"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "storyblok"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -12978,6 +13182,65 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "vertafore"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "vtex-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
+          "title": "VTEX Trust Center - Security, Privacy &amp; Compliance"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "vtex-security-page",
+          "source_type": "security_page",
+          "source_url": "https://www.vtex.com/en-us/trust/",
+          "title": "VTEX Trust Center - Security, Privacy &amp; Compliance"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "VTEX",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/vtex.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "vtex.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "vtex-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
+          "title": "VTEX Trust Center - Security, Privacy &amp; Compliance"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "vtex-security-page",
+          "source_type": "security_page",
+          "source_url": "https://www.vtex.com/en-us/trust/",
+          "title": "VTEX Trust Center - Security, Privacy &amp; Compliance"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "vtex"
     },
     {
       "candidate_source_types": [],
