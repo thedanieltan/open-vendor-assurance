@@ -113,6 +113,49 @@ def test_source_coverage_counts_canonical_candidate_and_unavailable_types():
     assert coverage["unavailable_source_type_counts"] == {"subprocessors_list": 1}
 
 
+def test_source_coverage_counts_unique_locations_and_claim_roles():
+    records = record_sets()
+    records["source"] = [
+        {
+            "vendor_id": "example",
+            "source_id": "fixture-legal",
+            "source_type": "terms_of_service",
+            "source_url": "https://fixture.example/legal",
+            "coverage_claims": [
+                {
+                    "role": "terms_of_service",
+                    "coverage_type": "contains",
+                    "evidence": "The page publishes general service terms.",
+                },
+                {
+                    "role": "dpa",
+                    "coverage_type": "contains",
+                    "evidence": "The page includes a data processing addendum section.",
+                },
+                {
+                    "role": "ai_terms",
+                    "coverage_type": "contains",
+                    "evidence": "The page includes AI-specific terms.",
+                },
+                {
+                    "role": "security_page",
+                    "coverage_type": "references",
+                    "evidence": "The page references security information.",
+                },
+            ],
+        }
+    ]
+
+    coverage = build_source_coverage(records)
+    row = coverage["vendor_coverage"][0]
+
+    assert row["unique_source_locations"] == 1
+    assert row["covered_roles"] == ["ai_terms", "dpa", "terms_of_service"]
+    assert row["roles_covered_via_claims"] == 3
+    assert row["duplicate_source_url_count"] == 0
+    assert coverage["coverage_claim_role_counts"] == {"ai_terms": 1, "dpa": 1, "terms_of_service": 1}
+
+
 def test_vendor_manifest_semantics_are_adapter_safe():
     manifest = vendor_manifest(
         record_sets()["vendor"][0],
@@ -182,3 +225,18 @@ def test_vendor_match_index_is_compact_and_non_advisory():
     assert item["contracting_entity_resolution"][0]["resolved_entity_id"] == "example-us"
     assert "risk" not in str(match_index).lower()
     assert "approval" not in str(match_index).lower()
+
+
+def test_vendor_match_index_preserves_coverage_claims_on_sources():
+    records = record_sets()
+    records["source"][0]["coverage_claims"] = [
+        {
+            "role": "dpa",
+            "coverage_type": "contains",
+            "evidence": "The page includes a data processing addendum section.",
+        }
+    ]
+
+    match_index = build_vendor_match_index(records)
+
+    assert match_index["items"][0]["canonical_sources"][0]["coverage_claims"] == records["source"][0]["coverage_claims"]

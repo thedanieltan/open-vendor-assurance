@@ -44,6 +44,61 @@ def test_coverage_audit_tracks_core_artifact_depth():
         assert "core_artifacts_missing" in vendor
 
 
+def test_coverage_audit_counts_source_role_claim_metrics(tmp_path: Path):
+    vendor_dir = tmp_path / "data/vendors/fixture-vendor"
+    (vendor_dir / "sources").mkdir(parents=True)
+    (vendor_dir / "vendor.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "vendor_id": "fixture-vendor",
+                "display_name": "Fixture Vendor",
+                "regions_served": [],
+                "vendor_categories": [],
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+    (vendor_dir / "sources/fixture-legal.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "source_id": "fixture-legal",
+                "vendor_id": "fixture-vendor",
+                "source_type": "terms_of_service",
+                "source_url": "https://fixture.example/legal",
+                "coverage_claims": [
+                    {
+                        "role": "terms_of_service",
+                        "coverage_type": "contains",
+                        "evidence": "The page publishes general service terms.",
+                    },
+                    {
+                        "role": "dpa",
+                        "coverage_type": "contains",
+                        "evidence": "The page includes a data processing addendum section.",
+                    },
+                    {
+                        "role": "ai_terms",
+                        "coverage_type": "contains",
+                        "evidence": "The page includes AI-specific terms.",
+                    },
+                ],
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+    report = build_coverage_audit(tmp_path)
+    vendor = report["vendors"][0]
+
+    assert report["summary"]["unique_source_locations"] == 1
+    assert report["summary"]["roles_covered_via_claims"] == 3
+    assert report["summary"]["duplicate_source_url_count"] == 0
+    assert vendor["covered_roles"] == ["ai_terms", "dpa", "terms_of_service"]
+    assert vendor["roles_covered_via_claims"] == 3
+
+
 def test_coverage_audit_workflow_is_read_only_scheduled_and_manual():
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
     triggers = workflow_triggers(workflow)

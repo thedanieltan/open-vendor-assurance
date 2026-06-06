@@ -122,12 +122,20 @@ def validate_candidate(candidate: dict[str, Any], action: dict[str, Any]) -> Non
         raise ValueError("candidate promotion requires matched terms")
 
 
-def source_from_candidate(candidate: dict[str, Any]) -> dict[str, Any]:
+def coverage_claims_from(*records: dict[str, Any]) -> list[dict[str, Any]]:
+    for record in records:
+        claims = record.get("coverage_claims")
+        if isinstance(claims, list) and claims:
+            return claims
+    return []
+
+
+def source_from_candidate(candidate: dict[str, Any], action: dict[str, Any] | None = None) -> dict[str, Any]:
     vendor_id = str(candidate["vendor_id"])
     source_type = str(candidate["source_type_candidate"])
     evidence = candidate.get("evidence", {}) or {}
     confidence = CONFIDENCE_MAP.get(str(candidate.get("confidence", "candidate")), "low")
-    return {
+    record = {
         "schema_version": "0.1.0",
         "source_id": source_id(vendor_id, source_type),
         "vendor_id": vendor_id,
@@ -146,6 +154,10 @@ def source_from_candidate(candidate: dict[str, Any]) -> dict[str, Any]:
         },
         "not_advice": True,
     }
+    claims = coverage_claims_from(action or {}, candidate)
+    if claims:
+        record["coverage_claims"] = claims
+    return record
 
 
 def vendor_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
@@ -182,8 +194,9 @@ def source_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
         "candidate_url": source["candidate_url"],
         "confidence": source.get("confidence", "likely"),
         "evidence": source.get("evidence", {}),
+        "coverage_claims": source.get("coverage_claims", []),
     }
-    return source_from_candidate(candidate)
+    return source_from_candidate(candidate, source)
 
 
 def artifact_from_source(source: dict[str, Any]) -> dict[str, Any]:
@@ -220,7 +233,7 @@ def apply_reviewed_candidate(action: dict[str, Any], root: Path) -> list[dict[st
     c_path = candidate_path(action, root)
     candidate = load_yaml(c_path)
     validate_candidate(candidate, action)
-    record = source_from_candidate(candidate)
+    record = source_from_candidate(candidate, action)
     s_path = root / "data" / "vendors" / record["vendor_id"] / "sources" / f"{record['source_id']}.yaml"
     a_path = root / "data" / "vendors" / record["vendor_id"] / "artifacts" / f"{record['source_id']}.yaml"
     c_path_out = root / "data" / "vendors" / record["vendor_id"] / "changes" / f"candidate-promotion-{record['source_id']}.yaml"

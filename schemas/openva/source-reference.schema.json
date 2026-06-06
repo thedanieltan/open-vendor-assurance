@@ -43,6 +43,52 @@
     "title_native": { "type": "string", "minLength": 1, "maxLength": 300 },
     "title_en": { "type": ["string", "null"], "maxLength": 300 },
     "source_url": { "type": "string", "format": "uri" },
+    "coverage_claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "coverage_type", "evidence"],
+        "properties": {
+          "role": {
+            "enum": [
+              "dpa",
+              "subprocessors_list",
+              "privacy_notice",
+              "trust_center",
+              "security_page",
+              "compliance_page",
+              "certification_reference",
+              "terms_of_service",
+              "kyc_statement",
+              "aml_statement",
+              "ai_terms",
+              "government_request_policy",
+              "transparency_report",
+              "other_public_source"
+            ]
+          },
+          "coverage_type": {
+            "enum": ["contains", "links_to", "references"]
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "target_url": {
+            "type": ["string", "null"],
+            "format": "uri"
+          },
+          "target_source_id": {
+            "type": ["string", "null"],
+            "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "source_language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Za-z0-9]+)?$" },
     "effective_or_published_at": { "type": ["string", "null"], "format": "date" },
     "source_authority_class": {

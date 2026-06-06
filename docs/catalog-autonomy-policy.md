@@ -280,6 +280,8 @@ freshness_window: 4 hours
 core_source_types_only: dpa, subprocessors_list, privacy_notice, security_page
 ```
 
+Strict-growth remains source-location-first for source-role coverage. It must not infer `coverage_claims` from broad page titles such as trust center, security, legal, or compliance. A strict-growth plan may carry `coverage_claims` only when the role evidence is explicit, non-advisory, machine-supported, and already present in the reviewed plan data passed to the promotion path.
+
 Strict-growth eligibility is batch-level: if any action in the batch fails a strict-growth gate, the entire PR is ineligible for `automerge:strict-growth`.
 
 Strict-growth action identifiers are stable semantic IDs, not positional indexes. The configured action identifier fields are:

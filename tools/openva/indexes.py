@@ -103,6 +103,31 @@ def types(records: list[dict[str, Any]], key: str) -> list[str]:
     return sorted({str(record[key]) for record in records if record.get(key)})
 
 
+def full_coverage_claims(source: dict[str, Any]) -> list[dict[str, Any]]:
+    claims = source.get("coverage_claims", []) or []
+    if not isinstance(claims, list):
+        return []
+    return [
+        claim
+        for claim in claims
+        if isinstance(claim, dict)
+        and claim.get("coverage_type") in {"contains", "links_to"}
+        and isinstance(claim.get("role"), str)
+        and claim.get("role")
+    ]
+
+
+def source_roles(source: dict[str, Any]) -> set[str]:
+    roles = {str(source["source_type"])} if source.get("source_type") else set()
+    roles.update(str(claim["role"]) for claim in full_coverage_claims(source))
+    return roles
+
+
+def duplicate_url_count(sources: list[dict[str, Any]]) -> int:
+    counts = Counter(str(source.get("source_url", "")).rstrip("/") for source in sources if source.get("source_url"))
+    return sum(count - 1 for count in counts.values() if count > 1)
+
+
 def vendor_manifest(
     vendor: dict[str, Any],
     sources: list[dict[str, Any]],
@@ -172,23 +197,53 @@ def build_source_coverage(record_sets: dict[str, list[dict[str, Any]]]) -> dict[
     core_source_types = {"dpa", "privacy_notice", "security_page", "subprocessors_list"}
     for vendor in record_sets["vendor"]:
         vendor_id = str(vendor["vendor_id"])
-        canonical_types = types(sources.get(vendor_id, []), "source_type")
+        vendor_sources = sources.get(vendor_id, [])
+        canonical_types = types(vendor_sources, "source_type")
+        claim_roles = sorted({str(claim["role"]) for source in vendor_sources for claim in full_coverage_claims(source)})
+        covered_roles = sorted({role for source in vendor_sources for role in source_roles(source)})
+        unique_source_locations = len({str(source.get("source_url", "")).rstrip("/") for source in vendor_sources if source.get("source_url")})
         candidate_types = types(candidates.get(vendor_id, []), "source_type_candidate")
         unavailable_types = types(unavailable.get(vendor_id, []), "source_type")
-        covered_types = set(canonical_types) | set(candidate_types) | set(unavailable_types)
+        covered_types = set(covered_roles) | set(candidate_types) | set(unavailable_types)
+        roles_by_url: dict[str, set[str]] = defaultdict(set)
+        for source in vendor_sources:
+            source_url = str(source.get("source_url", "")).rstrip("/")
+            if source_url:
+                roles_by_url[source_url].update(source_roles(source))
         vendor_coverage.append(
             {
                 "vendor_id": vendor_id,
                 "canonical_source_types": canonical_types,
+                "primary_source_type_coverage": canonical_types,
+                "coverage_claim_role_coverage": claim_roles,
+                "covered_roles": covered_roles,
+                "unique_source_locations": unique_source_locations,
+                "roles_covered_via_claims": sum(len(full_coverage_claims(source)) for source in vendor_sources),
+                "roles_covered_via_same_source_url": sorted({role for roles in roles_by_url.values() if len(roles) > 1 for role in roles}),
+                "duplicate_source_url_count": duplicate_url_count(vendor_sources),
                 "candidate_source_types": candidate_types,
                 "unavailable_source_types": unavailable_types,
                 "missing_core_source_types": sorted(core_source_types - covered_types),
             }
         )
+    all_claim_roles = [
+        str(claim["role"])
+        for source in record_sets["source"]
+        for claim in full_coverage_claims(source)
+    ]
+    all_covered_roles = [
+        role
+        for source in record_sets["source"]
+        for role in source_roles(source)
+    ]
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": GENERATED_AT,
         "source_type_counts": dict(sorted(Counter(str(item["source_type"]) for item in record_sets["source"] if item.get("source_type")).items())),
+        "coverage_claim_role_counts": dict(sorted(Counter(all_claim_roles).items())),
+        "covered_role_counts": dict(sorted(Counter(all_covered_roles).items())),
+        "unique_source_location_count": sum(item["unique_source_locations"] for item in vendor_coverage),
+        "duplicate_source_url_count": sum(item["duplicate_source_url_count"] for item in vendor_coverage),
         "candidate_source_type_counts": dict(sorted(Counter(str(item["source_type_candidate"]) for item in record_sets["candidate_source"] if item.get("source_type_candidate")).items())),
         "unavailable_source_type_counts": dict(sorted(Counter(str(item["source_type"]) for item in record_sets["unavailable_source"] if item.get("source_type")).items())),
         "vendor_coverage": sorted(vendor_coverage, key=lambda item: item["vendor_id"]),
@@ -258,7 +313,7 @@ def build_contracting_entity_resolution(record_sets: dict[str, list[dict[str, An
 
 
 def source_payload(source: dict[str, Any]) -> dict[str, Any]:
-    return {
+    payload = {
         "source_id": source.get("source_id"),
         "source_type": source.get("source_type"),
         "source_url": source.get("source_url"),
@@ -266,6 +321,9 @@ def source_payload(source: dict[str, Any]) -> dict[str, Any]:
         "confidence": source.get("confidence"),
         "effective_or_published_at": source.get("effective_or_published_at"),
     }
+    if source.get("coverage_claims"):
+        payload["coverage_claims"] = source.get("coverage_claims")
+    return payload
 
 
 def candidate_source_payload(candidate: dict[str, Any]) -> dict[str, Any]:

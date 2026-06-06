@@ -167,6 +167,16 @@ def validate_cross_references() -> list[str]:
         entity_id = source.get("entity_id")
         if entity_id and entity_id not in legal_entities:
             failures.append(f"{source['_openva_path']}: unknown entity_id {entity_id}")
+        for index, claim in enumerate(source.get("coverage_claims", []) or []):
+            if not isinstance(claim, dict):
+                continue
+            target_source_id = claim.get("target_source_id")
+            if target_source_id:
+                target = sources_by_id.get(str(target_source_id))
+                if not target:
+                    failures.append(f"{source['_openva_path']}: coverage_claims[{index}].target_source_id {target_source_id} must reference an existing source")
+                elif target.get("vendor_id") != source.get("vendor_id"):
+                    failures.append(f"{source['_openva_path']}: coverage_claims[{index}].target_source_id {target_source_id} must match source vendor_id")
 
     for artifact in records_for("artifact"):
         if artifact["vendor_id"] not in vendors:
@@ -346,6 +356,45 @@ def validate_access_rights(path: str, record: dict[str, Any]) -> list[str]:
     return []
 
 
+def validate_coverage_claims(
+    path: str,
+    source: dict[str, Any],
+    sources_by_id: dict[str, dict[str, Any]],
+    prohibited_terms: list[str],
+) -> list[str]:
+    failures: list[str] = []
+    seen_roles: set[str] = set()
+    claims = source.get("coverage_claims", []) or []
+    if not isinstance(claims, list):
+        return failures
+
+    for index, claim in enumerate(claims):
+        if not isinstance(claim, dict):
+            continue
+        role = str(claim.get("role") or "")
+        if role in seen_roles:
+            failures.append(f"{path}: duplicate coverage_claims role {role}")
+        if role:
+            seen_roles.add(role)
+
+        for term in prohibited_terms_in_text(claim.get("evidence"), prohibited_terms):
+            failures.append(f"{path}: coverage_claims[{index}].evidence prohibited advisory wording detected: {term}")
+
+        coverage_type = claim.get("coverage_type")
+        target_url = claim.get("target_url")
+        target_source_id = claim.get("target_source_id")
+        if coverage_type == "links_to" and not (target_url or target_source_id):
+            failures.append(f"{path}: coverage_claims[{index}] links_to requires target_url or target_source_id")
+        if target_source_id:
+            target = sources_by_id.get(str(target_source_id))
+            if not target:
+                failures.append(f"{path}: coverage_claims[{index}].target_source_id {target_source_id} must reference an existing source")
+            elif target.get("vendor_id") != source.get("vendor_id"):
+                failures.append(f"{path}: coverage_claims[{index}].target_source_id {target_source_id} must match source vendor_id")
+
+    return failures
+
+
 def validate_region_tags(path: str, field: str, values: list[str], allowed_tags: set[str]) -> list[str]:
     failures: list[str] = []
     for value in values:
@@ -454,10 +503,13 @@ def validate_quality_gates() -> list[str]:
     failures: list[str] = []
     vendors = {record["vendor_id"]: record for record in records_for("vendor")}
     legal_entities = {record["entity_id"]: record for record in records_for("legal_entity")}
-    seen_urls: dict[str, str] = {}
+    source_records = records_for("source")
+    sources_by_id = {source["source_id"]: source for source in source_records}
+    seen_urls: dict[tuple[str, str], str] = {}
     exceptions = load_official_publisher_exceptions()
     region_tags = load_region_tags()
     vendor_category_tags = load_vendor_category_tags()
+    prohibited_terms = load_prohibited_terms()
 
     for vendor_id, vendor in vendors.items():
         expected_path = f"data/vendors/{vendor_id}/vendor.yaml"
@@ -472,10 +524,11 @@ def validate_quality_gates() -> list[str]:
             )
         )
 
-    for source in records_for("source"):
+    for source in source_records:
         path = source["_openva_path"]
         failures.extend(validate_access_rights(path, source))
         failures.extend(f"{path}: source_url: {failure}" for failure in validate_url_safety(source["source_url"]))
+        failures.extend(validate_coverage_claims(path, source, sources_by_id, prohibited_terms))
         if source.get("source_authority_class") in ENTITY_ANCHORED_AUTHORITY_CLASSES and not source.get("entity_id"):
             failures.append(f"{path}: entity_id is required for {source['source_authority_class']} sources")
         if path.startswith("data/"):
@@ -484,9 +537,10 @@ def validate_quality_gates() -> list[str]:
                 failures.append(f"{path}: source_id/vendor_id do not match canonical path {expected_path}")
 
         url = source["source_url"].rstrip("/")
-        if url in seen_urls:
-            failures.append(f"{path}: duplicate source_url also used by {seen_urls[url]}")
-        seen_urls[url] = path
+        key = (str(source["vendor_id"]), url)
+        if key in seen_urls:
+            failures.append(f"{path}: duplicate source_url for vendor {source['vendor_id']}: {url}")
+        seen_urls[key] = path
 
         parsed = urlparse(source["source_url"])
         vendor = vendors.get(source["vendor_id"])
