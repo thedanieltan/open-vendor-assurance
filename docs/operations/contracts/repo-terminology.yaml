@@ -1,0 +1,41 @@
+schema_version: 0.1.0
+preferred_terms:
+  max_promotion_actions_per_pr:
+    meaning: Maximum selected promotion actions applied by one generated Catalog PR.
+    deprecated_aliases:
+      - max_actions_per_plan
+  selected_promotion_actions:
+    meaning: Promotion actions selected to be applied by this generated PR.
+  deferred_actions:
+    meaning: Eligible or discovered actions not applied by this generated PR.
+  batch_deferred_actions:
+    meaning: Actions deferred only because the generated-PR promotion-action cap was reached.
+  source_record:
+    meaning: Public page or document location recorded as metadata.
+  source_location:
+    meaning: Public URL location represented by source_url.
+  coverage_claim:
+    meaning: Explicit source-role coverage evidenced by a source record.
+  source_verification:
+    meaning: Network/source observation and classification.
+  source_preflight:
+    meaning: Blocking check over changed canonical source records.
+  source_health:
+    meaning: Broader longitudinal operating posture over source availability and quality.
+  strict_growth_latest:
+    meaning: Candidate-promotion generation mode that selects latest strict-growth eligible promotions.
+  automerge_strict_growth:
+    meaning: Explicit automerge lane/label, represented as automerge:strict-growth.
+  machine_canonical:
+    meaning: Automerge lane for machine-canonical catalog changes that pass policy and guards.
+  p0_source_repair:
+    meaning: Automerge lane for confirmed P0 source repair changes.
+deprecated_terms:
+  max_actions_per_plan:
+    replacement: max_promotion_actions_per_pr
+    allowed_contexts:
+      - compatibility input
+      - compatibility resolver
+      - compatibility test
+      - deprecated alias documentation
+      - legacy fixture
