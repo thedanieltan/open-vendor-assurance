@@ -144,7 +144,9 @@ def select_command(args: argparse.Namespace) -> int:
         max_promotion_actions_per_pr=args.max_promotion_actions_per_pr,
         max_actions_per_plan=args.max_actions_per_plan,
     )
-    max_actions = None if resolved_max_actions is None or resolved_max_actions <= 0 else resolved_max_actions
+    if resolved_max_actions is None:
+        resolved_max_actions = DEFAULT_MAX_PROMOTION_ACTIONS_PER_PR
+    max_actions = None if resolved_max_actions <= 0 else resolved_max_actions
     requested = str(args.promotion_plan or "").strip()
     if requested:
         path = ROOT / requested
@@ -171,7 +173,7 @@ def main() -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
     select_parser = subparsers.add_parser("select")
     select_parser.add_argument("--promotion-plan", type=str, default="")
-    select_parser.add_argument("--max-promotion-actions-per-pr", type=int, default=DEFAULT_MAX_PROMOTION_ACTIONS_PER_PR)
+    select_parser.add_argument("--max-promotion-actions-per-pr", type=int)
     select_parser.add_argument("--max-actions-per-plan", type=int, help="Deprecated alias for --max-promotion-actions-per-pr")
     select_parser.add_argument("--output", type=Path, required=True)
     select_parser.set_defaults(func=select_command)
