@@ -3,9 +3,9 @@
   "coverage_claim_role_counts": {},
   "covered_role_counts": {
     "compliance_page": 94,
-    "dpa": 98,
+    "dpa": 99,
     "other_public_source": 2,
-    "privacy_notice": 142,
+    "privacy_notice": 146,
     "security_page": 135,
     "subprocessors_list": 105,
     "terms_of_service": 7,
@@ -16,9 +16,9 @@
   "schema_version": "0.1.0",
   "source_type_counts": {
     "compliance_page": 94,
-    "dpa": 98,
+    "dpa": 99,
     "other_public_source": 2,
-    "privacy_notice": 142,
+    "privacy_notice": 146,
     "security_page": 135,
     "subprocessors_list": 105,
     "terms_of_service": 7,
@@ -27,7 +27,7 @@
   "unavailable_source_type_counts": {
     "dpa": 16
   },
-  "unique_source_location_count": 587,
+  "unique_source_location_count": 592,
   "vendor_coverage": [
     {
       "candidate_source_types": [],
@@ -756,6 +756,32 @@
       "candidate_source_types": [],
       "canonical_source_types": [
         "dpa",
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "braze"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
         "privacy_notice",
         "security_page"
       ],
@@ -1259,6 +1285,30 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "dotdigital"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
         "security_page",
@@ -1384,6 +1434,30 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "emarsys"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page"
       ],
@@ -1495,6 +1569,30 @@
       "unavailable_source_types": [],
       "unique_source_locations": 5,
       "vendor_id": "freshworks"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "getresponse"
     },
     {
       "candidate_source_types": [],
