@@ -111,6 +111,12 @@ def test_strict_growth_latest_commits_sha_bound_evidence_files():
     assert "Strict-growth shortlist actions:" in text
     assert "Strict-growth policy-capped actions:" in text
     assert "Strict-growth batch-deferred actions:" in text
+    assert "Redirects detected:" in text
+    assert "Redirects canonicalized:" in text
+    assert "Redirects deferred:" in text
+    assert "Cross-authority redirects:" in text
+    assert "Generic redirects rejected:" in text
+    assert "Unresolved redirects:" in text
     assert "cp strict-growth-shortlist.json maintenance/generated/strict-growth-shortlist.json" in text
 
 

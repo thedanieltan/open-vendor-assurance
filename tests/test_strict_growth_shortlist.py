@@ -122,9 +122,11 @@ def test_shortlist_excludes_source_preflight_risk_candidates():
 
     assert report["summary"]["shortlisted_action_count"] == 0
     assert report["excluded"][0]["reason_codes"] == [
+        "redirect_generic_or_homepage_rejected",
         "source_preflight_risk:homepage_or_generic_redirect",
         "verification_status_not_strict_safe:homepage_or_generic_redirect",
     ]
+    assert report["summary"]["generic_redirect_rejected_count"] == 1
 
 
 def test_shortlist_preserves_eligibility_source_health_rejections():

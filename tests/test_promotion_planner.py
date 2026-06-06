@@ -302,8 +302,44 @@ def test_strict_growth_planner_defers_source_preflight_risk_actions():
         "candidate-a-security-page-candidate"
     )
     assert plan["deferred_actions"][0]["reason_codes"] == [
-        "source_preflight_risk:homepage_or_generic_redirect"
+        "source_preflight_risk:homepage_or_generic_redirect",
+        "redirect_generic_or_homepage_rejected",
     ]
+
+
+def test_strict_growth_planner_defers_unresolved_redirected_source_url():
+    report = strict_eligibility_report()
+    action = report["strict_promotions"][0]
+    action["source"]["evidence"]["verification_status"] = "redirected"
+    action["source"]["evidence"]["final_url"] = "https://candidate-a.example/security/current"
+
+    plan = build_strict_growth_plan(report)
+
+    assert plan["summary"]["action_count"] == 0
+    assert plan["summary"]["source_health_deferred_action_count"] == 1
+    assert plan["summary"]["redirect_count"] == 1
+    assert plan["summary"]["redirect_deferred_count"] == 1
+    assert plan["summary"]["unresolved_redirect_count"] == 1
+    assert plan["deferred_actions"][0]["reason_codes"] == ["redirect_canonicalization_required"]
+
+
+def test_strict_growth_planner_reports_canonicalized_redirect_metrics():
+    report = strict_eligibility_report()
+    action = report["strict_promotions"][0]
+    action["source"]["candidate_url"] = "https://candidate-a.example/security/current"
+    action["source"]["evidence"]["verification_status"] = "redirected"
+    action["source"]["evidence"]["final_url"] = "https://candidate-a.example/security/current"
+    action["source"]["evidence"]["original_candidate_url"] = "https://candidate-a.example/security"
+    action["source"]["evidence"]["redirect_status"] = "canonicalized"
+    action["source"]["evidence"]["redirect_decision"] = "canonicalize"
+    action["source"]["evidence"]["redirect_reason"] = "redirect_canonicalized"
+
+    plan = build_strict_growth_plan(report)
+
+    assert plan["summary"]["action_count"] == 1
+    assert plan["summary"]["redirect_count"] == 1
+    assert plan["summary"]["redirect_canonicalized_count"] == 1
+    assert plan["summary"]["unresolved_redirect_count"] == 0
 
 
 def test_strict_growth_planner_caps_sources_by_deterministic_priority():

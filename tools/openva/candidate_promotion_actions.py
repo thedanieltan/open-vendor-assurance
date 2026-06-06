@@ -13,6 +13,7 @@ from tools.openva.catalog_lifecycle import change_event
 from tools.openva.indexes import build_indexes
 from tools.openva.promotion_planner import REVIEWED_CANDIDATE_PROMOTION_ACTION, STRICT_GROWTH_PROMOTION_ACTION
 from tools.openva.source_verification import ROOT, display_path
+from tools.openva.strict_growth_redirects import canonical_clean_reasons, redirect_metrics_for_actions
 
 HASH_TBD = "sha256:TBD"
 CONFIDENCE_MAP = {
@@ -95,6 +96,9 @@ def validate_strict_growth_action(action: dict[str, Any]) -> None:
         raise ValueError("strict growth source requires matched terms")
     if not evidence.get("final_url"):
         raise ValueError("strict growth source requires final URL evidence")
+    canonical_reasons = canonical_clean_reasons(action)
+    if canonical_reasons:
+        raise ValueError(f"strict growth source is not redirect canonical-clean: {', '.join(canonical_reasons)}")
     for value in (source.get("title"), source.get("description"), evidence.get("page_title")):
         terms = prohibited_terms_in_text(value)
         if terms:
@@ -188,12 +192,13 @@ def vendor_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
 def source_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
     vendor = action["vendor"]
     source = action["source"]
+    evidence = source.get("evidence", {}) or {}
     candidate = {
         "vendor_id": vendor["candidate_vendor_id"],
         "source_type_candidate": source["source_type_candidate"],
-        "candidate_url": source["candidate_url"],
+        "candidate_url": evidence.get("final_url") if evidence.get("redirect_reason") == "redirect_canonicalized" else source["candidate_url"],
         "confidence": source.get("confidence", "likely"),
-        "evidence": source.get("evidence", {}),
+        "evidence": evidence,
         "coverage_claims": source.get("coverage_claims", []),
     }
     return source_from_candidate(candidate, source)
@@ -331,6 +336,7 @@ def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT
 
     if root.resolve() == ROOT.resolve():
         build_indexes()
+    redirect_metrics = redirect_metrics_for_actions(actions)
     return {
         "schema_version": "0.1.0",
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
@@ -349,6 +355,7 @@ def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT
             "canonical_artifacts_written": sum(1 for item in applied if "/artifacts/" in item["path"]),
             "change_events_written": sum(1 for item in applied if "/changes/" in item["path"]),
             "skipped_actions": len(skipped),
+            **redirect_metrics,
         },
         "file_actions": applied,
         "skipped": skipped,

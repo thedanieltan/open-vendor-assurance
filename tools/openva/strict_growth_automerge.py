@@ -12,6 +12,7 @@ from typing import Any
 
 from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.automerge_lanes import EligibilityResult, load_policy
+from tools.openva.strict_growth_redirects import canonical_clean_reasons
 
 LANE = "automerge:strict-growth"
 INFORMATIONAL_REASONS = {
@@ -323,6 +324,8 @@ def check_action(action: dict[str, Any], policy: dict[str, Any], reasons: list[s
         append_reason(reasons, f"source_preflight_risk:{verification_status}", action, policy)
     if action_value(action, "source.evidence.soft_404_detected") is True:
         append_reason(reasons, "source_preflight_risk:soft_404_detected", action, policy)
+    for reason in canonical_clean_reasons(action):
+        append_reason(reasons, reason, action, policy)
 
     for record in relationship_records(action):
         check_relationship_record(record, action, policy, reasons)

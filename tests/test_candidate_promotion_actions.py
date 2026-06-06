@@ -182,6 +182,43 @@ def test_apply_strict_growth_writes_vendor_source_artifact_and_change(tmp_path):
     assert change["change_type"] == "created"
 
 
+def test_apply_strict_growth_preserves_canonicalized_final_url(tmp_path):
+    action = strict_growth_action()
+    action["source"]["candidate_url"] = "https://candidate-a.example/company/security"
+    action["source"]["evidence"]["verification_status"] = "redirected"
+    action["source"]["evidence"]["final_url"] = "https://candidate-a.example/company/security"
+    action["source"]["evidence"]["original_candidate_url"] = "https://candidate-a.example/security"
+    action["source"]["evidence"]["redirect_status"] = "canonicalized"
+    action["source"]["evidence"]["redirect_decision"] = "canonicalize"
+    action["source"]["evidence"]["redirect_reason"] = "redirect_canonicalized"
+
+    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
+    source = yaml.safe_load(
+        (tmp_path / "data/vendors/candidate-a/sources/candidate-a-security-page.yaml").read_text(encoding="utf-8")
+    )
+    artifact = yaml.safe_load(
+        (tmp_path / "data/vendors/candidate-a/artifacts/candidate-a-security-page.yaml").read_text(encoding="utf-8")
+    )
+
+    assert report["summary"]["canonical_sources_written"] == 1
+    assert report["summary"]["redirect_canonicalized_count"] == 1
+    assert source["source_url"] == "https://candidate-a.example/company/security"
+    assert artifact["canonical_url"] == "https://candidate-a.example/company/security"
+
+
+def test_apply_strict_growth_rejects_unresolved_redirect_before_writes(tmp_path):
+    action = strict_growth_action()
+    action["source"]["evidence"]["verification_status"] = "redirected"
+    action["source"]["evidence"]["final_url"] = "https://candidate-a.example/company/security"
+
+    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
+
+    assert report["summary"]["canonical_sources_written"] == 0
+    assert report["summary"]["skipped_actions"] == 1
+    assert "redirect_canonicalization_required" in report["skipped"][0]["reason"]
+    assert not (tmp_path / "data/vendors/candidate-a/vendor.yaml").exists()
+
+
 def test_apply_strict_growth_writes_multiple_sources_for_same_new_vendor(tmp_path):
     security = strict_growth_action()
     privacy = copy.deepcopy(security)

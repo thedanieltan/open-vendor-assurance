@@ -12,6 +12,14 @@ from typing import Any
 from tools.openva.automerge_lanes import load_policy
 from tools.openva.promotion_planner import strict_growth_action
 from tools.openva.source_verification import ROOT, display_path
+from tools.openva.strict_growth_redirects import (
+    REDIRECT_CANONICALIZATION_REQUIRED,
+    REDIRECT_CROSS_AUTHORITY_REVIEW_REQUIRED,
+    REDIRECT_GENERIC_OR_HOMEPAGE_REJECTED,
+    REDIRECT_METRIC_KEYS,
+    canonical_clean_reasons,
+    redirect_metrics_for_actions,
+)
 
 SCHEMA_VERSION = "0.1.0"
 REPORT_TYPE = "strict_growth_shortlist"
@@ -150,6 +158,10 @@ def action_exclusion(action: dict[str, Any], reason_codes: list[str]) -> dict[st
         "candidate_source_id": source.get("candidate_source_id"),
         "source_type_candidate": source.get("source_type_candidate"),
         "candidate_url": source.get("candidate_url"),
+        "final_url": evidence.get("final_url"),
+        "redirect_status": evidence.get("redirect_status"),
+        "redirect_decision": evidence.get("redirect_decision"),
+        "redirect_reason": evidence.get("redirect_reason"),
         "verification_status": evidence.get("verification_status"),
         "classification": action.get("classification"),
         "reason_codes": reason_codes,
@@ -169,6 +181,7 @@ def action_exclusion_reasons(action: dict[str, Any], policy: dict[str, Any]) -> 
         reasons.append(f"source_preflight_risk:{verification_status}")
     if verification_status not in STRICT_SAFE_VERIFICATION_STATUSES:
         reasons.append(f"verification_status_not_strict_safe:{verification_status or 'missing'}")
+    reasons.extend(canonical_clean_reasons(action))
     for reason in action.get("reason_codes", []) or []:
         if reason.startswith("source_preflight_risk:") or reason.startswith("strict_growth_advisory_wording_detected:"):
             reasons.append(reason)
@@ -272,6 +285,30 @@ def build_strict_growth_shortlist(
 
     items = [shortlist_item(action, rank) for rank, action in enumerate(selected, start=1)]
     reason_counts = Counter(reason for row in excluded for reason in row.get("reason_codes", []))
+    selected_redirect_metrics = redirect_metrics_for_actions(selected)
+    redirect_reasons = {
+        REDIRECT_CANONICALIZATION_REQUIRED,
+        REDIRECT_CROSS_AUTHORITY_REVIEW_REQUIRED,
+        REDIRECT_GENERIC_OR_HOMEPAGE_REJECTED,
+    }
+    excluded_redirect_count = sum(
+        1
+        for row in excluded
+        if set(row.get("reason_codes", []) or []) & redirect_reasons
+        or row.get("verification_status") == "redirected"
+    )
+    redirect_summary = {
+        **selected_redirect_metrics,
+        "redirect_count": selected_redirect_metrics["redirect_count"] + excluded_redirect_count,
+        "redirect_deferred_count": selected_redirect_metrics["redirect_deferred_count"] + excluded_redirect_count,
+        "cross_authority_redirect_count": selected_redirect_metrics["cross_authority_redirect_count"]
+        + reason_counts.get(REDIRECT_CROSS_AUTHORITY_REVIEW_REQUIRED, 0),
+        "generic_redirect_rejected_count": selected_redirect_metrics["generic_redirect_rejected_count"]
+        + reason_counts.get(REDIRECT_GENERIC_OR_HOMEPAGE_REJECTED, 0),
+        "unresolved_redirect_count": selected_redirect_metrics["unresolved_redirect_count"]
+        + reason_counts.get(REDIRECT_CANONICALIZATION_REQUIRED, 0)
+        + reason_counts.get(REDIRECT_CROSS_AUTHORITY_REVIEW_REQUIRED, 0),
+    }
     report = {
         "schema_version": SCHEMA_VERSION,
         "report_type": REPORT_TYPE,
@@ -291,6 +328,7 @@ def build_strict_growth_shortlist(
             "excluded_by_reason": dict(sorted(reason_counts.items())),
             "max_vendors": max_vendors,
             "max_actions": max_actions,
+            **{key: redirect_summary.get(key, 0) for key in REDIRECT_METRIC_KEYS},
         },
         "items": items,
         "excluded": sorted(
@@ -330,6 +368,16 @@ def promotion_plan_from_shortlist(
     deferred = items[len(selected) :]
     actions = [item["promotion_action_preview"] for item in selected]
     counts = Counter(action.get("action") for action in actions)
+    redirect_metrics = redirect_metrics_for_actions(
+        actions,
+        [
+            {
+                "action": item["promotion_action_preview"],
+                "reason_codes": ["workflow_max_actions_per_plan_exceeded"],
+            }
+            for item in deferred
+        ],
+    )
     plan = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": generated_at or now_iso(),
@@ -354,6 +402,7 @@ def promotion_plan_from_shortlist(
             "batch_deferred_action_count": len(deferred),
             "max_actions_per_plan": max_actions,
             "shortlist_action_count": len(shortlist.get("items", []) or []),
+            **redirect_metrics,
         },
         "actions": actions,
     }
@@ -395,6 +444,12 @@ def write_outputs(report: dict[str, Any], output_json: Path, output_csv: Path, o
         f"- Shortlisted vendors: `{report['summary']['shortlisted_vendor_count']}`",
         f"- Shortlisted actions: `{report['summary']['shortlisted_action_count']}`",
         f"- Excluded candidates/actions: `{report['summary']['excluded_count']}`",
+        f"- Redirects detected: `{report['summary'].get('redirect_count', 0)}`",
+        f"- Redirects canonicalized: `{report['summary'].get('redirect_canonicalized_count', 0)}`",
+        f"- Redirects deferred: `{report['summary'].get('redirect_deferred_count', 0)}`",
+        f"- Cross-authority redirects: `{report['summary'].get('cross_authority_redirect_count', 0)}`",
+        f"- Generic redirects rejected: `{report['summary'].get('generic_redirect_rejected_count', 0)}`",
+        f"- Unresolved redirects: `{report['summary'].get('unresolved_redirect_count', 0)}`",
         "",
         "## Excluded By Reason",
         "",

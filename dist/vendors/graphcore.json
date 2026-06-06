@@ -5,7 +5,7 @@
       "access_class": "public_web",
       "artifact_id": "graphcore-privacy-notice",
       "artifact_type": "privacy_notice",
-      "canonical_url": "https://graphcore.ai/privacy",
+      "canonical_url": "https://www.graphcore.ai/privacy",
       "effective_or_published_at": null,
       "entity_scope": {
         "entity_ids": [],
@@ -49,12 +49,29 @@
       "source_id": "graphcore-privacy-notice",
       "source_language": "en",
       "source_type": "privacy_notice",
-      "source_url": "https://graphcore.ai/privacy",
+      "source_url": "https://www.graphcore.ai/privacy",
       "title_native": "Privacy Policy",
       "vendor_id": "graphcore"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/graphcore/changes/redirect-canonicalization-graphcore-privacy-notice.yaml",
+      "artifact_id": "graphcore-privacy-notice",
+      "catalog_change_significance": "low",
+      "change_id": "redirect-canonicalization-graphcore-privacy-notice",
+      "change_type": "updated",
+      "detected_at": "2026-06-06T08:12:47Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "low",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "graphcore-privacy-notice",
+      "summary": "Canonicalized same-vendor redirect from discovered source URL to final public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "graphcore"
+    },
     {
       "_openva_path": "data/vendors/graphcore/changes/strict-growth-graphcore-privacy-notice.yaml",
       "artifact_id": "graphcore-privacy-notice",
