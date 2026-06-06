@@ -1,7 +1,7 @@
 {
-  "base_sha": "2f3886647982329aa6f48c1d93b7830138d9c229",
-  "generated_at": "2026-06-06T07:28:03Z",
-  "head_sha": "2f3886647982329aa6f48c1d93b7830138d9c229",
+  "base_sha": "74eea25342467316b0eeced5fac15a927d03def0",
+  "generated_at": "2026-06-06T09:37:26Z",
+  "head_sha": "74eea25342467316b0eeced5fac15a927d03def0",
   "items": [
     {
       "candidate_vendor_id": "adobe-experience-cloud",
@@ -1040,20 +1040,6 @@
       "strict_source_count": 0
     },
     {
-      "candidate_vendor_id": "mindsdb",
-      "classification": "reject_no_public_source",
-      "cohort_id": "data-ai-launch",
-      "coverage_lane": "data_ai",
-      "display_name_candidate": "MindsDB",
-      "official_domain_candidate": "mindsdb.com",
-      "promotable_now": false,
-      "reason_codes": [
-        "no_source_candidates_for_vendor"
-      ],
-      "source_candidate_count": 0,
-      "strict_source_count": 0
-    },
-    {
       "candidate_vendor_id": "money-forward",
       "classification": "reject_no_public_source",
       "cohort_id": "regional-apac-launch",
@@ -1074,20 +1060,6 @@
       "coverage_lane": "regional_apac",
       "display_name_candidate": "NAVER Cloud",
       "official_domain_candidate": "ncloud.com",
-      "promotable_now": false,
-      "reason_codes": [
-        "no_source_candidates_for_vendor"
-      ],
-      "source_candidate_count": 0,
-      "strict_source_count": 0
-    },
-    {
-      "candidate_vendor_id": "neo4j",
-      "classification": "reject_no_public_source",
-      "cohort_id": "data-ai-launch",
-      "coverage_lane": "data_ai",
-      "display_name_candidate": "Neo4j",
-      "official_domain_candidate": "neo4j.com",
       "promotable_now": false,
       "reason_codes": [
         "no_source_candidates_for_vendor"
@@ -1326,20 +1298,6 @@
       "coverage_lane": "devtools_ops",
       "display_name_candidate": "Red Hat",
       "official_domain_candidate": "redhat.com",
-      "promotable_now": false,
-      "reason_codes": [
-        "no_source_candidates_for_vendor"
-      ],
-      "source_candidate_count": 0,
-      "strict_source_count": 0
-    },
-    {
-      "candidate_vendor_id": "redis",
-      "classification": "reject_no_public_source",
-      "cohort_id": "data-ai-launch",
-      "coverage_lane": "data_ai",
-      "display_name_candidate": "Redis",
-      "official_domain_candidate": "redis.io",
       "promotable_now": false,
       "reason_codes": [
         "no_source_candidates_for_vendor"
@@ -1642,20 +1600,6 @@
       "strict_source_count": 0
     },
     {
-      "candidate_vendor_id": "starburst",
-      "classification": "reject_no_public_source",
-      "cohort_id": "data-ai-launch",
-      "coverage_lane": "data_ai",
-      "display_name_candidate": "Starburst",
-      "official_domain_candidate": "starburst.io",
-      "promotable_now": false,
-      "reason_codes": [
-        "no_source_candidates_for_vendor"
-      ],
-      "source_candidate_count": 0,
-      "strict_source_count": 0
-    },
-    {
       "candidate_vendor_id": "stord",
       "classification": "reject_no_public_source",
       "cohort_id": "logistics-manufacturing-launch",
@@ -1950,6 +1894,44 @@
       "strict_source_count": 0
     },
     {
+      "candidate_vendor_id": "mindsdb",
+      "classification": "reject_source_health_failure",
+      "cohort_id": "data-ai-launch",
+      "coverage_lane": "data_ai",
+      "display_name_candidate": "MindsDB",
+      "official_domain_candidate": "mindsdb.com",
+      "promotable_now": false,
+      "reason_codes": [
+        "confidence_not_likely",
+        "redirect_generic_or_homepage_rejected",
+        "source_preflight_risk:homepage_or_generic_redirect"
+      ],
+      "source_candidate_count": 2,
+      "source_health_rejections": [
+        {
+          "candidate_source_id": "mindsdb-privacy-notice-candidate",
+          "candidate_url": "https://mindsdb.com/privacy",
+          "classification": "reject_source_health_failure",
+          "reason_codes": [
+            "source_preflight_risk:homepage_or_generic_redirect"
+          ],
+          "source_type_candidate": "privacy_notice",
+          "vendor_id": "mindsdb"
+        },
+        {
+          "candidate_source_id": "mindsdb-security-page-candidate",
+          "candidate_url": "https://mindsdb.com/security",
+          "classification": "reject_source_health_failure",
+          "reason_codes": [
+            "source_preflight_risk:homepage_or_generic_redirect"
+          ],
+          "source_type_candidate": "security_page",
+          "vendor_id": "mindsdb"
+        }
+      ],
+      "strict_source_count": 0
+    },
+    {
       "candidate_vendor_id": "brevo",
       "classification": "reject_weak_semantic_match",
       "cohort_id": "crm-customer-marketing-launch",
@@ -1964,74 +1946,32 @@
       "strict_source_count": 0
     },
     {
-      "candidate_vendor_id": "confluent",
+      "candidate_vendor_id": "woocommerce",
+      "classification": "review_required",
+      "cohort_id": "commerce-content-docs-launch",
+      "coverage_lane": "commerce_content_docs",
+      "display_name_candidate": "WooCommerce",
+      "official_domain_candidate": "woocommerce.com",
+      "promotable_now": false,
+      "reason_codes": [
+        "redirect_cross_authority_review_required"
+      ],
+      "source_candidate_count": 2,
+      "strict_source_count": 0
+    },
+    {
+      "candidate_vendor_id": "neo4j",
       "classification": "strict_promote_ready",
       "cohort_id": "data-ai-launch",
       "coverage_lane": "data_ai",
-      "display_name_candidate": "Confluent",
-      "official_domain_candidate": "confluent.io",
+      "display_name_candidate": "Neo4j",
+      "official_domain_candidate": "neo4j.com",
       "promotable_now": true,
       "reason_codes": [
         "strict_source_candidate_evidence_present"
       ],
       "source_candidate_count": 2,
-      "strict_source_count": 1
-    },
-    {
-      "candidate_vendor_id": "deepl",
-      "classification": "strict_promote_ready",
-      "cohort_id": "data-ai-launch",
-      "coverage_lane": "data_ai",
-      "display_name_candidate": "DeepL",
-      "official_domain_candidate": "deepl.com",
-      "promotable_now": true,
-      "reason_codes": [
-        "strict_source_candidate_evidence_present"
-      ],
-      "source_candidate_count": 1,
-      "strict_source_count": 1
-    },
-    {
-      "candidate_vendor_id": "graphcore",
-      "classification": "strict_promote_ready",
-      "cohort_id": "data-ai-launch",
-      "coverage_lane": "data_ai",
-      "display_name_candidate": "Graphcore",
-      "official_domain_candidate": "graphcore.ai",
-      "promotable_now": true,
-      "reason_codes": [
-        "strict_source_candidate_evidence_present"
-      ],
-      "source_candidate_count": 1,
-      "strict_source_count": 1
-    },
-    {
-      "candidate_vendor_id": "insider",
-      "classification": "strict_promote_ready",
-      "cohort_id": "crm-customer-marketing-launch",
-      "coverage_lane": "crm_customer_marketing",
-      "display_name_candidate": "Insider",
-      "official_domain_candidate": "insider.com",
-      "promotable_now": true,
-      "reason_codes": [
-        "strict_source_candidate_evidence_present"
-      ],
-      "source_candidate_count": 1,
-      "strict_source_count": 1
-    },
-    {
-      "candidate_vendor_id": "microsoft-azure",
-      "classification": "strict_promote_ready",
-      "cohort_id": "cloud-platforms-launch",
-      "coverage_lane": "cloud_platforms",
-      "display_name_candidate": "Microsoft Azure",
-      "official_domain_candidate": "azure.microsoft.com",
-      "promotable_now": true,
-      "reason_codes": [
-        "strict_source_candidate_evidence_present"
-      ],
-      "source_candidate_count": 2,
-      "strict_source_count": 1
+      "strict_source_count": 2
     },
     {
       "candidate_vendor_id": "pipedrive",
@@ -2042,7 +1982,8 @@
       "official_domain_candidate": "pipedrive.com",
       "promotable_now": true,
       "reason_codes": [
-        "strict_source_candidate_evidence_present"
+        "strict_source_candidate_evidence_present",
+        "redirect_generic_or_homepage_rejected"
       ],
       "source_candidate_count": 3,
       "source_health_rejections": [
@@ -2072,6 +2013,57 @@
       ],
       "source_candidate_count": 2,
       "strict_source_count": 2
+    },
+    {
+      "candidate_vendor_id": "redis",
+      "classification": "strict_promote_ready",
+      "cohort_id": "data-ai-launch",
+      "coverage_lane": "data_ai",
+      "display_name_candidate": "Redis",
+      "official_domain_candidate": "redis.io",
+      "promotable_now": true,
+      "reason_codes": [
+        "strict_source_candidate_evidence_present",
+        "redirect_generic_or_homepage_rejected"
+      ],
+      "source_candidate_count": 3,
+      "source_health_rejections": [
+        {
+          "candidate_source_id": "redis-subprocessors-list-candidate",
+          "candidate_url": "https://redis.io/legal/subprocessors",
+          "classification": "reject_source_health_failure",
+          "reason_codes": [
+            "source_preflight_risk:suspect_inferred_url"
+          ],
+          "source_type_candidate": "subprocessors_list",
+          "vendor_id": "redis"
+        },
+        {
+          "candidate_source_id": "redis-security-page-candidate",
+          "candidate_url": "https://redis.io/trust",
+          "classification": "reject_source_health_failure",
+          "reason_codes": [
+            "source_preflight_risk:homepage_or_generic_redirect"
+          ],
+          "source_type_candidate": "security_page",
+          "vendor_id": "redis"
+        }
+      ],
+      "strict_source_count": 1
+    },
+    {
+      "candidate_vendor_id": "starburst",
+      "classification": "strict_promote_ready",
+      "cohort_id": "data-ai-launch",
+      "coverage_lane": "data_ai",
+      "display_name_candidate": "Starburst",
+      "official_domain_candidate": "starburst.io",
+      "promotable_now": true,
+      "reason_codes": [
+        "strict_source_candidate_evidence_present"
+      ],
+      "source_candidate_count": 1,
+      "strict_source_count": 1
     },
     {
       "candidate_vendor_id": "storyblok",
@@ -2137,20 +2129,6 @@
       ],
       "source_candidate_count": 2,
       "strict_source_count": 2
-    },
-    {
-      "candidate_vendor_id": "woocommerce",
-      "classification": "strict_promote_ready",
-      "cohort_id": "commerce-content-docs-launch",
-      "coverage_lane": "commerce_content_docs",
-      "display_name_candidate": "WooCommerce",
-      "official_domain_candidate": "woocommerce.com",
-      "promotable_now": true,
-      "reason_codes": [
-        "strict_source_candidate_evidence_present"
-      ],
-      "source_candidate_count": 2,
-      "strict_source_count": 2
     }
   ],
   "posture": {
@@ -2173,46 +2151,13 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
-      "source": {
-        "candidate_source_id": "microsoft-azure-security-page-candidate",
-        "candidate_url": "https://azure.microsoft.com/security",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://www.microsoft.com/en-us/security",
-          "http_status": 200,
-          "matched_terms": [
-            "security",
-            "trust"
-          ],
-          "page_title": "Cloud Security Solutions | Microsoft Security",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "redirected"
-        },
-        "source_type_candidate": "security_page",
-        "vendor_id": "microsoft-azure"
-      },
-      "vendor": {
-        "candidate_vendor_id": "microsoft-azure",
-        "cohort_id": "cloud-platforms-launch",
-        "coverage_lane": "cloud_platforms",
-        "display_name_candidate": "Microsoft Azure",
-        "headquarters_country_candidate": "US",
-        "official_domain_candidate": "azure.microsoft.com",
-        "vendor_category_candidates": [
-          "cloud_infrastructure"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
+      "reason_codes": [],
+      "redirect": {
+        "candidate_url": "https://prismic.io/legal/privacy",
+        "decision": "keep",
+        "final_url": "https://prismic.io/legal/privacy",
+        "reason": null,
+        "redirect_status": "not_redirected"
       },
       "source": {
         "candidate_source_id": "prismic-privacy-notice-candidate",
@@ -2228,6 +2173,9 @@
             "privacy policy"
           ],
           "page_title": "Prismic Privacy Policy",
+          "redirect_decision": "keep",
+          "redirect_reason": null,
+          "redirect_status": "not_redirected",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "ok"
@@ -2256,9 +2204,19 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://prismic.io/security",
+        "decision": "canonicalize",
+        "final_url": "https://prismic.io/legal/security",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
       "source": {
         "candidate_source_id": "prismic-security-page-candidate",
-        "candidate_url": "https://prismic.io/security",
+        "candidate_url": "https://prismic.io/legal/security",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=utf-8",
@@ -2271,7 +2229,11 @@
             "vulnerability",
             "incident"
           ],
+          "original_candidate_url": "https://prismic.io/security",
           "page_title": "Prismic Security",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
@@ -2300,9 +2262,19 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://storyblok.com/legal/dpa",
+        "decision": "canonicalize",
+        "final_url": "https://www.storyblok.com/legal/dpa",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
       "source": {
         "candidate_source_id": "storyblok-dpa-candidate",
-        "candidate_url": "https://storyblok.com/legal/dpa",
+        "candidate_url": "https://www.storyblok.com/legal/dpa",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=UTF-8",
@@ -2315,7 +2287,11 @@
             "processor",
             "controller"
           ],
+          "original_candidate_url": "https://storyblok.com/legal/dpa",
           "page_title": "Data Processing Agreement | Storyblok",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
@@ -2344,9 +2320,19 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://storyblok.com/privacy-policy",
+        "decision": "canonicalize",
+        "final_url": "https://www.storyblok.com/legal/privacy-policy",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
       "source": {
         "candidate_source_id": "storyblok-privacy-notice-candidate",
-        "candidate_url": "https://storyblok.com/privacy-policy",
+        "candidate_url": "https://www.storyblok.com/legal/privacy-policy",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=UTF-8",
@@ -2359,7 +2345,11 @@
             "privacy policy",
             "privacy notice"
           ],
+          "original_candidate_url": "https://storyblok.com/privacy-policy",
           "page_title": "Privacy Policy | Storyblok",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
@@ -2388,6 +2378,14 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [],
+      "redirect": {
+        "candidate_url": "https://strapi.io/privacy",
+        "decision": "keep",
+        "final_url": "https://strapi.io/privacy",
+        "reason": null,
+        "redirect_status": "not_redirected"
+      },
       "source": {
         "candidate_source_id": "strapi-privacy-notice-candidate",
         "candidate_url": "https://strapi.io/privacy",
@@ -2401,6 +2399,9 @@
             "privacy policy"
           ],
           "page_title": "Privacy policy | Strapi open-source headless CMS",
+          "redirect_decision": "keep",
+          "redirect_reason": null,
+          "redirect_status": "not_redirected",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "ok"
@@ -2428,6 +2429,14 @@
         "strict_machine_candidate": true,
         "writes_canonical_sources": false,
         "writes_repository_state": false
+      },
+      "reason_codes": [],
+      "redirect": {
+        "candidate_url": "https://strapi.io/security",
+        "decision": "keep",
+        "final_url": "https://strapi.io/security",
+        "reason": null,
+        "redirect_status": "not_redirected"
       },
       "source": {
         "candidate_source_id": "strapi-security-page-candidate",
@@ -2442,6 +2451,9 @@
             "trust"
           ],
           "page_title": "Security | Strapi Capabilities",
+          "redirect_decision": "keep",
+          "redirect_reason": null,
+          "redirect_status": "not_redirected",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "ok"
@@ -2470,9 +2482,19 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://vtex.com/privacy-policy",
+        "decision": "canonicalize",
+        "final_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
       "source": {
         "candidate_source_id": "vtex-privacy-notice-candidate",
-        "candidate_url": "https://vtex.com/privacy-policy",
+        "candidate_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=utf-8",
@@ -2484,7 +2506,11 @@
             "privacy policy",
             "privacy notice"
           ],
+          "original_candidate_url": "https://vtex.com/privacy-policy",
           "page_title": "VTEX Trust Center - Security, Privacy &amp; Compliance",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
@@ -2513,9 +2539,19 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://vtex.com/trust",
+        "decision": "canonicalize",
+        "final_url": "https://www.vtex.com/en-us/trust/",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
       "source": {
         "candidate_source_id": "vtex-security-page-candidate",
-        "candidate_url": "https://vtex.com/trust",
+        "candidate_url": "https://www.vtex.com/en-us/trust/",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=utf-8",
@@ -2527,7 +2563,11 @@
             "incident",
             "trust"
           ],
+          "original_candidate_url": "https://vtex.com/trust",
           "page_title": "VTEX Trust Center - Security, Privacy &amp; Compliance",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
@@ -2556,137 +2596,19 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
-      "source": {
-        "candidate_source_id": "woocommerce-privacy-notice-candidate",
-        "candidate_url": "https://woocommerce.com/privacy",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://automattic.com/privacy/",
-          "http_status": 200,
-          "matched_terms": [
-            "privacy",
-            "personal data",
-            "personal information",
-            "privacy policy"
-          ],
-          "page_title": "Privacy Policy &#8211; Automattic",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "redirected"
-        },
-        "source_type_candidate": "privacy_notice",
-        "vendor_id": "woocommerce"
-      },
-      "vendor": {
-        "candidate_vendor_id": "woocommerce",
-        "cohort_id": "commerce-content-docs-launch",
-        "coverage_lane": "commerce_content_docs",
-        "display_name_candidate": "WooCommerce",
-        "headquarters_country_candidate": "US",
-        "official_domain_candidate": "woocommerce.com",
-        "vendor_category_candidates": [
-          "ecommerce_platform"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "source": {
-        "candidate_source_id": "woocommerce-security-page-candidate",
-        "candidate_url": "https://woocommerce.com/security",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://automattic.com/security/",
-          "http_status": 200,
-          "matched_terms": [
-            "security",
-            "vulnerability"
-          ],
-          "page_title": "Security &#8211; Automattic",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "redirected"
-        },
-        "source_type_candidate": "security_page",
-        "vendor_id": "woocommerce"
-      },
-      "vendor": {
-        "candidate_vendor_id": "woocommerce",
-        "cohort_id": "commerce-content-docs-launch",
-        "coverage_lane": "commerce_content_docs",
-        "display_name_candidate": "WooCommerce",
-        "headquarters_country_candidate": "US",
-        "official_domain_candidate": "woocommerce.com",
-        "vendor_category_candidates": [
-          "ecommerce_platform"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "source": {
-        "candidate_source_id": "insider-privacy-notice-candidate",
-        "candidate_url": "https://insider.com/privacy-policy",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://www.businessinsider.com/privacy-policy",
-          "http_status": 200,
-          "matched_terms": [
-            "privacy",
-            "personal data",
-            "personal information",
-            "privacy policy"
-          ],
-          "page_title": null,
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "redirected"
-        },
-        "source_type_candidate": "privacy_notice",
-        "vendor_id": "insider"
-      },
-      "vendor": {
-        "candidate_vendor_id": "insider",
-        "cohort_id": "crm-customer-marketing-launch",
-        "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "Insider",
-        "headquarters_country_candidate": "GB",
-        "official_domain_candidate": "insider.com",
-        "vendor_category_candidates": [
-          "marketing_technology",
-          "customer_engagement"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://pipedrive.com/privacy",
+        "decision": "canonicalize",
+        "final_url": "https://www.pipedrive.com/en/privacy",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
       },
       "source": {
         "candidate_source_id": "pipedrive-privacy-notice-candidate",
-        "candidate_url": "https://pipedrive.com/privacy",
+        "candidate_url": "https://www.pipedrive.com/en/privacy",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=utf-8",
@@ -2698,7 +2620,11 @@
             "personal information",
             "privacy notice"
           ],
+          "original_candidate_url": "https://pipedrive.com/privacy",
           "page_title": "Privacy Notice | Pipedrive",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
@@ -2727,9 +2653,19 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://pipedrive.com/subprocessors",
+        "decision": "canonicalize",
+        "final_url": "https://www.pipedrive.com/en/subprocessors",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
       "source": {
         "candidate_source_id": "pipedrive-subprocessors-list-candidate",
-        "candidate_url": "https://pipedrive.com/subprocessors",
+        "candidate_url": "https://www.pipedrive.com/en/subprocessors",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=utf-8",
@@ -2740,7 +2676,11 @@
             "sub-processors",
             "sub-processor"
           ],
+          "original_candidate_url": "https://pipedrive.com/subprocessors",
           "page_title": "Sub-processors | Pipedrive",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
@@ -2769,34 +2709,49 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://neo4j.com/privacy-policy",
+        "decision": "canonicalize",
+        "final_url": "https://neo4j.com/legal-terms/privacy-notice/",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
       "source": {
-        "candidate_source_id": "confluent-privacy-notice-candidate",
-        "candidate_url": "https://confluent.io/privacy",
+        "candidate_source_id": "neo4j-privacy-notice-candidate",
+        "candidate_url": "https://neo4j.com/legal-terms/privacy-notice/",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://www.confluent.io/legal/confluent-privacy-notice/",
+          "final_url": "https://neo4j.com/legal-terms/privacy-notice/",
           "http_status": 200,
           "matched_terms": [
             "privacy",
             "privacy notice"
           ],
-          "page_title": "Confluent Privacy Notice",
+          "original_candidate_url": "https://neo4j.com/privacy-policy",
+          "page_title": "Neo4j Privacy Notice",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
         },
         "source_type_candidate": "privacy_notice",
-        "vendor_id": "confluent"
+        "vendor_id": "neo4j"
       },
       "vendor": {
-        "candidate_vendor_id": "confluent",
+        "candidate_vendor_id": "neo4j",
         "cohort_id": "data-ai-launch",
         "coverage_lane": "data_ai",
-        "display_name_candidate": "Confluent",
+        "display_name_candidate": "Neo4j",
         "headquarters_country_candidate": "US",
-        "official_domain_candidate": "confluent.io",
+        "official_domain_candidate": "neo4j.com",
         "vendor_category_candidates": [
+          "database",
           "data_platform"
         ]
       }
@@ -2810,36 +2765,47 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [],
+      "redirect": {
+        "candidate_url": "https://neo4j.com/security",
+        "decision": "keep",
+        "final_url": "https://neo4j.com/security/",
+        "reason": null,
+        "redirect_status": "not_redirected"
+      },
       "source": {
-        "candidate_source_id": "deepl-privacy-notice-candidate",
-        "candidate_url": "https://deepl.com/privacy",
+        "candidate_source_id": "neo4j-security-page-candidate",
+        "candidate_url": "https://neo4j.com/security",
         "confidence": "likely",
         "evidence": {
-          "content_type": "text/html",
-          "final_url": "https://www.deepl.com/en/privacy",
+          "content_type": "text/html; charset=UTF-8",
+          "final_url": "https://neo4j.com/security/",
           "http_status": 200,
           "matched_terms": [
-            "privacy",
-            "personal data",
-            "privacy policy"
+            "security",
+            "trust"
           ],
-          "page_title": "DeepL Privacy Policy | Protecting Your Privacy Is Important To Us",
+          "page_title": "Information Security Management at Neo4j",
+          "redirect_decision": "keep",
+          "redirect_reason": null,
+          "redirect_status": "not_redirected",
           "semantic_status": "strong",
           "soft_404_detected": false,
-          "verification_status": "redirected"
+          "verification_status": "ok"
         },
-        "source_type_candidate": "privacy_notice",
-        "vendor_id": "deepl"
+        "source_type_candidate": "security_page",
+        "vendor_id": "neo4j"
       },
       "vendor": {
-        "candidate_vendor_id": "deepl",
+        "candidate_vendor_id": "neo4j",
         "cohort_id": "data-ai-launch",
         "coverage_lane": "data_ai",
-        "display_name_candidate": "DeepL",
-        "headquarters_country_candidate": "DE",
-        "official_domain_candidate": "deepl.com",
+        "display_name_candidate": "Neo4j",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "neo4j.com",
         "vendor_category_candidates": [
-          "ai_platform"
+          "database",
+          "data_platform"
         ]
       }
     },
@@ -2852,13 +2818,79 @@
         "writes_canonical_sources": false,
         "writes_repository_state": false
       },
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://redis.io/privacy",
+        "decision": "canonicalize",
+        "final_url": "https://redis.io/legal/privacy-policy/",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
       "source": {
-        "candidate_source_id": "graphcore-privacy-notice-candidate",
-        "candidate_url": "https://graphcore.ai/privacy",
+        "candidate_source_id": "redis-privacy-notice-candidate",
+        "candidate_url": "https://redis.io/legal/privacy-policy/",
         "confidence": "likely",
         "evidence": {
-          "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://www.graphcore.ai/privacy",
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://redis.io/legal/privacy-policy/",
+          "http_status": 200,
+          "matched_terms": [
+            "privacy",
+            "privacy policy"
+          ],
+          "original_candidate_url": "https://redis.io/privacy",
+          "page_title": "Privacy Policy",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "redirected"
+        },
+        "source_type_candidate": "privacy_notice",
+        "vendor_id": "redis"
+      },
+      "vendor": {
+        "candidate_vendor_id": "redis",
+        "cohort_id": "data-ai-launch",
+        "coverage_lane": "data_ai",
+        "display_name_candidate": "Redis",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "redis.io",
+        "vendor_category_candidates": [
+          "database",
+          "data_platform"
+        ]
+      }
+    },
+    {
+      "action": "strict_catalog_growth_promotion_candidate",
+      "posture": {
+        "network_fetch_performed": false,
+        "non_advisory": true,
+        "strict_machine_candidate": true,
+        "writes_canonical_sources": false,
+        "writes_repository_state": false
+      },
+      "reason_codes": [
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://starburst.io/privacy-policy",
+        "decision": "canonicalize",
+        "final_url": "https://www.starburst.io/privacy-policy/",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
+      "source": {
+        "candidate_source_id": "starburst-privacy-notice-candidate",
+        "candidate_url": "https://www.starburst.io/privacy-policy/",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://www.starburst.io/privacy-policy/",
           "http_status": 200,
           "matched_terms": [
             "privacy",
@@ -2867,38 +2899,51 @@
             "privacy policy",
             "privacy notice"
           ],
-          "page_title": "Privacy Policy",
+          "original_candidate_url": "https://starburst.io/privacy-policy",
+          "page_title": "Privacy Policy | Starburst",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
         },
         "source_type_candidate": "privacy_notice",
-        "vendor_id": "graphcore"
+        "vendor_id": "starburst"
       },
       "vendor": {
-        "candidate_vendor_id": "graphcore",
+        "candidate_vendor_id": "starburst",
         "cohort_id": "data-ai-launch",
         "coverage_lane": "data_ai",
-        "display_name_candidate": "Graphcore",
-        "headquarters_country_candidate": "GB",
-        "official_domain_candidate": "graphcore.ai",
+        "display_name_candidate": "Starburst",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "starburst.io",
         "vendor_category_candidates": [
-          "ai_platform"
+          "data_platform",
+          "analytics_bi"
         ]
       }
     }
   ],
   "summary": {
-    "candidate_count": 151,
+    "candidate_count": 146,
     "classification_counts": {
       "reject_existing_vendor": 9,
-      "reject_no_public_source": 130,
+      "reject_no_public_source": 126,
+      "reject_source_health_failure": 1,
       "reject_weak_semantic_match": 1,
-      "strict_promote_ready": 11
+      "review_required": 1,
+      "strict_promote_ready": 8
     },
-    "rejected_or_deferred_count": 140,
-    "review_required_count": 0,
-    "strict_promote_ready_count": 11,
-    "strict_promotion_action_count": 17
+    "cross_authority_redirect_count": 1,
+    "generic_redirect_rejected_count": 3,
+    "redirect_canonicalized_count": 10,
+    "redirect_count": 14,
+    "redirect_deferred_count": 4,
+    "rejected_or_deferred_count": 137,
+    "review_required_count": 1,
+    "strict_promote_ready_count": 8,
+    "strict_promotion_action_count": 14,
+    "unresolved_redirect_count": 1
   }
 }
