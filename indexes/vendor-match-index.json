@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 156,
+  "count": 159,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -7796,6 +7796,65 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "security_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "neo4j-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://neo4j.com/legal-terms/privacy-notice/",
+          "title": "Neo4j Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "neo4j-security-page",
+          "source_type": "security_page",
+          "source_url": "https://neo4j.com/security",
+          "title": "Information Security Management at Neo4j"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Neo4j",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/neo4j.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "neo4j.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "neo4j-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://neo4j.com/legal-terms/privacy-notice/",
+          "title": "Neo4j Privacy Notice"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "neo4j-security-page",
+          "source_type": "security_page",
+          "source_url": "https://neo4j.com/security",
+          "title": "Information Security Management at Neo4j"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "neo4j"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "security_page"
       ],
@@ -9074,6 +9133,65 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pipedrive-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.pipedrive.com/en/privacy",
+          "title": "Privacy Notice | Pipedrive"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pipedrive-subprocessors-list",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.pipedrive.com/en/subprocessors",
+          "title": "Sub-processors | Pipedrive"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Pipedrive",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/pipedrive.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "official_domains": [
+        "pipedrive.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pipedrive-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.pipedrive.com/en/privacy",
+          "title": "Privacy Notice | Pipedrive"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pipedrive-subprocessors-list",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.pipedrive.com/en/subprocessors",
+          "title": "Sub-processors | Pipedrive"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "pipedrive"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "privacy_notice"
       ],
       "canonical_sources": [
@@ -9387,6 +9505,49 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "posthog"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "prismic-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://prismic.io/legal/privacy",
+          "title": "Prismic Privacy Policy"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Prismic",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/prismic.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "prismic.io"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "prismic-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://prismic.io/legal/privacy",
+          "title": "Prismic Privacy Policy"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "prismic"
     },
     {
       "candidate_source_types": [],

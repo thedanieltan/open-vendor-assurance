@@ -5,9 +5,9 @@
     "compliance_page": 94,
     "dpa": 99,
     "other_public_source": 2,
-    "privacy_notice": 150,
-    "security_page": 136,
-    "subprocessors_list": 105,
+    "privacy_notice": 153,
+    "security_page": 137,
+    "subprocessors_list": 106,
     "terms_of_service": 7,
     "trust_center": 4
   },
@@ -18,16 +18,16 @@
     "compliance_page": 94,
     "dpa": 99,
     "other_public_source": 2,
-    "privacy_notice": 150,
-    "security_page": 136,
-    "subprocessors_list": 105,
+    "privacy_notice": 153,
+    "security_page": 137,
+    "subprocessors_list": 106,
     "terms_of_service": 7,
     "trust_center": 4
   },
   "unavailable_source_type_counts": {
     "dpa": 16
   },
-  "unique_source_location_count": 597,
+  "unique_source_location_count": 602,
   "vendor_coverage": [
     {
       "candidate_source_types": [],
@@ -2689,6 +2689,32 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "security_page"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "security_page"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "security_page"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "neo4j"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "security_page"
       ],
@@ -3128,6 +3154,32 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "pipedrive"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "privacy_notice"
       ],
       "coverage_claim_role_coverage": [],
@@ -3240,6 +3292,30 @@
       "unavailable_source_types": [],
       "unique_source_locations": 5,
       "vendor_id": "posthog"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "prismic"
     },
     {
       "candidate_source_types": [],

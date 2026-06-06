@@ -1,0 +1,200 @@
+{
+  "artifacts": [
+    {
+      "_openva_path": "data/vendors/neo4j/artifacts/neo4j-privacy-notice.yaml",
+      "access_class": "public_web",
+      "artifact_id": "neo4j-privacy-notice",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://neo4j.com/legal-terms/privacy-notice/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "neo4j-privacy-notice",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "neo4j"
+    },
+    {
+      "_openva_path": "data/vendors/neo4j/artifacts/neo4j-security-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "neo4j-security-page",
+      "artifact_type": "security_page",
+      "canonical_url": "https://neo4j.com/security",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "neo4j-security-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "neo4j"
+    }
+  ],
+  "candidate_sources": [],
+  "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/neo4j/sources/neo4j-privacy-notice.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-06-06T09:37:38.232470Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "neo4j-privacy-notice",
+      "source_language": "en",
+      "source_type": "privacy_notice",
+      "source_url": "https://neo4j.com/legal-terms/privacy-notice/",
+      "title_native": "Neo4j Privacy Notice",
+      "vendor_id": "neo4j"
+    },
+    {
+      "_openva_path": "data/vendors/neo4j/sources/neo4j-security-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-06-06T09:37:38.243278Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "neo4j-security-page",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://neo4j.com/security",
+      "title_native": "Information Security Management at Neo4j",
+      "vendor_id": "neo4j"
+    }
+  ],
+  "changes": [
+    {
+      "_openva_path": "data/vendors/neo4j/changes/strict-growth-neo4j-privacy-notice.yaml",
+      "artifact_id": "neo4j-privacy-notice",
+      "catalog_change_significance": "unknown",
+      "change_id": "strict-growth-neo4j-privacy-notice",
+      "change_type": "created",
+      "detected_at": "2026-06-06T09:37:38.232470Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "neo4j-privacy-notice",
+      "summary": "Strict catalog growth candidate promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "neo4j"
+    },
+    {
+      "_openva_path": "data/vendors/neo4j/changes/strict-growth-neo4j-security-page.yaml",
+      "artifact_id": "neo4j-security-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "strict-growth-neo4j-security-page",
+      "change_type": "created",
+      "detected_at": "2026-06-06T09:37:38.243278Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "neo4j-security-page",
+      "summary": "Strict catalog growth candidate promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "neo4j"
+    }
+  ],
+  "entity_mentions": [],
+  "generated_at": "1970-01-01T00:00:00Z",
+  "guarantees": {
+    "metadata_first": true,
+    "non_advisory": true,
+    "public_sources_only": true,
+    "raw_documents_mirrored_by_default": false
+  },
+  "legal_entities": [],
+  "observations": [],
+  "schema_version": "0.1.0",
+  "summary": {
+    "artifact_count": 2,
+    "candidate_source_count": 0,
+    "candidate_source_types": [],
+    "canonical_source_count": 2,
+    "entity_mention_count": 0,
+    "legal_entity_count": 0,
+    "source_types": [
+      "privacy_notice",
+      "security_page"
+    ],
+    "unavailable_source_count": 0,
+    "unavailable_source_types": []
+  },
+  "unavailable_sources": [],
+  "vendor": {
+    "_openva_path": "data/vendors/neo4j/vendor.yaml",
+    "catalog_status": "active",
+    "display_name": "Neo4j",
+    "entity_surface": "global_brand",
+    "headquarters_country": "US",
+    "legal_name": null,
+    "notes": "Machine-strict catalog growth candidate promoted from public source discovery evidence. Metadata-only; not advisory.",
+    "official_domains": [
+      "neo4j.com"
+    ],
+    "public_entrypoints": [
+      "https://neo4j.com"
+    ],
+    "regions_served": [
+      "global"
+    ],
+    "schema_version": "0.1.0",
+    "source_authority_language": "en",
+    "source_policy": {
+      "gated_materials_excluded": true,
+      "public_sources_only": true,
+      "raw_documents_mirrored_by_default": false
+    },
+    "status": "active",
+    "vendor_categories": [
+      "database",
+      "data_platform"
+    ],
+    "vendor_id": "neo4j"
+  }
+}
