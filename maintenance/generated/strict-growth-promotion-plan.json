@@ -6,89 +6,39 @@
       "non_advisory": true,
       "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
       "reason_codes": [
-        "strict_source_candidate_evidence_present",
-        "strict_growth_vendor_source_cap_exceeded"
+        "strict_source_candidate_evidence_present"
       ],
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "braze-dpa-candidate",
-        "candidate_url": "https://braze.com/dpa",
+        "candidate_source_id": "confluent-privacy-notice-candidate",
+        "candidate_url": "https://confluent.io/privacy",
         "confidence": "likely",
         "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://www.braze.com/company/legal/dpa",
-          "http_status": 200,
-          "matched_terms": [
-            "data processing",
-            "data processing addendum"
-          ],
-          "page_title": "Data Processing Addendum | Braze",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "redirected"
-        },
-        "source_type_candidate": "dpa",
-        "vendor_id": "braze"
-      },
-      "strict_machine_candidate": true,
-      "vendor": {
-        "candidate_vendor_id": "braze",
-        "cohort_id": "crm-customer-marketing-launch",
-        "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "Braze",
-        "headquarters_country_candidate": "US",
-        "official_domain_candidate": "braze.com",
-        "vendor_category_candidates": [
-          "customer_engagement",
-          "marketing_technology"
-        ]
-      },
-      "writes_canonical_sources": false,
-      "writes_canonical_vendors": false
-    },
-    {
-      "action": "strict_catalog_growth_promotion",
-      "classification": "strict_promote_ready",
-      "non_advisory": true,
-      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-      "reason_codes": [
-        "strict_source_candidate_evidence_present",
-        "strict_growth_vendor_source_cap_exceeded"
-      ],
-      "requires_human_review": false,
-      "source": {
-        "candidate_source_id": "braze-privacy-notice-candidate",
-        "candidate_url": "https://braze.com/privacy",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://www.braze.com/company/legal/privacy",
+          "content_type": "text/html; charset=UTF-8",
+          "final_url": "https://www.confluent.io/legal/confluent-privacy-notice/",
           "http_status": 200,
           "matched_terms": [
             "privacy",
-            "personal data",
-            "personal information",
-            "privacy policy"
+            "privacy notice"
           ],
-          "page_title": "Privacy Policy | Braze",
+          "page_title": "Confluent Privacy Notice",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
         },
         "source_type_candidate": "privacy_notice",
-        "vendor_id": "braze"
+        "vendor_id": "confluent"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "braze",
-        "cohort_id": "crm-customer-marketing-launch",
-        "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "Braze",
+        "candidate_vendor_id": "confluent",
+        "cohort_id": "data-ai-launch",
+        "coverage_lane": "data_ai",
+        "display_name_candidate": "Confluent",
         "headquarters_country_candidate": "US",
-        "official_domain_candidate": "braze.com",
+        "official_domain_candidate": "confluent.io",
         "vendor_category_candidates": [
-          "customer_engagement",
-          "marketing_technology"
+          "data_platform"
         ]
       },
       "writes_canonical_sources": false,
@@ -104,12 +54,57 @@
       ],
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "dotdigital-privacy-notice-candidate",
-        "candidate_url": "https://dotdigital.com/privacy-policy",
+        "candidate_source_id": "deepl-privacy-notice-candidate",
+        "candidate_url": "https://deepl.com/privacy",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html",
+          "final_url": "https://www.deepl.com/en/privacy",
+          "http_status": 200,
+          "matched_terms": [
+            "privacy",
+            "personal data",
+            "privacy policy"
+          ],
+          "page_title": "DeepL Privacy Policy | Protecting Your Privacy Is Important To Us",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "redirected"
+        },
+        "source_type_candidate": "privacy_notice",
+        "vendor_id": "deepl"
+      },
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "deepl",
+        "cohort_id": "data-ai-launch",
+        "coverage_lane": "data_ai",
+        "display_name_candidate": "DeepL",
+        "headquarters_country_candidate": "DE",
+        "official_domain_candidate": "deepl.com",
+        "vendor_category_candidates": [
+          "ai_platform"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
+    },
+    {
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+      "reason_codes": [
+        "strict_source_candidate_evidence_present"
+      ],
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "graphcore-privacy-notice-candidate",
+        "candidate_url": "https://graphcore.ai/privacy",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://dotdigital.com/terms/privacy-policy/",
+          "final_url": "https://www.graphcore.ai/privacy",
           "http_status": 200,
           "matched_terms": [
             "privacy",
@@ -118,25 +113,24 @@
             "privacy policy",
             "privacy notice"
           ],
-          "page_title": "Dotdigital privacy policy",
+          "page_title": "Privacy Policy",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
         },
         "source_type_candidate": "privacy_notice",
-        "vendor_id": "dotdigital"
+        "vendor_id": "graphcore"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "dotdigital",
-        "cohort_id": "crm-customer-marketing-launch",
-        "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "Dotdigital",
+        "candidate_vendor_id": "graphcore",
+        "cohort_id": "data-ai-launch",
+        "coverage_lane": "data_ai",
+        "display_name_candidate": "Graphcore",
         "headquarters_country_candidate": "GB",
-        "official_domain_candidate": "dotdigital.com",
+        "official_domain_candidate": "graphcore.ai",
         "vendor_category_candidates": [
-          "marketing_technology",
-          "customer_engagement"
+          "ai_platform"
         ]
       },
       "writes_canonical_sources": false,
@@ -152,242 +146,90 @@
       ],
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "emarsys-privacy-notice-candidate",
-        "candidate_url": "https://emarsys.com/privacy-policy",
+        "candidate_source_id": "insider-privacy-notice-candidate",
+        "candidate_url": "https://insider.com/privacy-policy",
         "confidence": "likely",
         "evidence": {
-          "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://emarsys.com/privacy-policy/",
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://www.businessinsider.com/privacy-policy",
           "http_status": 200,
           "matched_terms": [
             "privacy",
+            "personal data",
+            "personal information",
             "privacy policy"
           ],
-          "page_title": "Privacy Policy - SAP Engagement Cloud",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "ok"
-        },
-        "source_type_candidate": "privacy_notice",
-        "vendor_id": "emarsys"
-      },
-      "strict_machine_candidate": true,
-      "vendor": {
-        "candidate_vendor_id": "emarsys",
-        "cohort_id": "crm-customer-marketing-launch",
-        "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "Emarsys",
-        "headquarters_country_candidate": "AT",
-        "official_domain_candidate": "emarsys.com",
-        "vendor_category_candidates": [
-          "marketing_technology",
-          "customer_engagement"
-        ]
-      },
-      "writes_canonical_sources": false,
-      "writes_canonical_vendors": false
-    },
-    {
-      "action": "strict_catalog_growth_promotion",
-      "classification": "strict_promote_ready",
-      "non_advisory": true,
-      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-      "reason_codes": [
-        "strict_source_candidate_evidence_present"
-      ],
-      "requires_human_review": false,
-      "source": {
-        "candidate_source_id": "getresponse-privacy-notice-candidate",
-        "candidate_url": "https://getresponse.com/privacy",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://www.getresponse.com/legal/privacy",
-          "http_status": 200,
-          "matched_terms": [
-            "privacy",
-            "privacy policy"
-          ],
-          "page_title": "GetResponse Privacy Policy",
+          "page_title": null,
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
         },
         "source_type_candidate": "privacy_notice",
-        "vendor_id": "getresponse"
+        "vendor_id": "insider"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "getresponse",
+        "candidate_vendor_id": "insider",
         "cohort_id": "crm-customer-marketing-launch",
         "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "GetResponse",
-        "headquarters_country_candidate": "PL",
-        "official_domain_candidate": "getresponse.com",
+        "display_name_candidate": "Insider",
+        "headquarters_country_candidate": "GB",
+        "official_domain_candidate": "insider.com",
         "vendor_category_candidates": [
-          "marketing_technology"
+          "marketing_technology",
+          "customer_engagement"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
+    },
+    {
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+      "reason_codes": [
+        "strict_source_candidate_evidence_present"
+      ],
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "microsoft-azure-security-page-candidate",
+        "candidate_url": "https://azure.microsoft.com/security",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://www.microsoft.com/en-us/security",
+          "http_status": 200,
+          "matched_terms": [
+            "security",
+            "trust"
+          ],
+          "page_title": "Cloud Security Solutions | Microsoft Security",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "redirected"
+        },
+        "source_type_candidate": "security_page",
+        "vendor_id": "microsoft-azure"
+      },
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "microsoft-azure",
+        "cohort_id": "cloud-platforms-launch",
+        "coverage_lane": "cloud_platforms",
+        "display_name_candidate": "Microsoft Azure",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "azure.microsoft.com",
+        "vendor_category_candidates": [
+          "cloud_infrastructure"
         ]
       },
       "writes_canonical_sources": false,
       "writes_canonical_vendors": false
     }
   ],
-  "base_sha": "6fd1e02c767d1e5e52a448f725172dfb489352a6",
+  "base_sha": "2f3886647982329aa6f48c1d93b7830138d9c229",
   "deferred_actions": [
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present"
-        ],
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "getresponse-security-page-candidate",
-          "candidate_url": "https://getresponse.com/security",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://www.getresponse.com/security",
-            "http_status": 200,
-            "matched_terms": [
-              "security",
-              "encryption",
-              "availability",
-              "vulnerability",
-              "incident",
-              "trust"
-            ],
-            "page_title": "GetResponse Security Focus",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "security_page",
-          "vendor_id": "getresponse"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "getresponse",
-          "cohort_id": "crm-customer-marketing-launch",
-          "coverage_lane": "crm_customer_marketing",
-          "display_name_candidate": "GetResponse",
-          "headquarters_country_candidate": "PL",
-          "official_domain_candidate": "getresponse.com",
-          "vendor_category_candidates": [
-            "marketing_technology"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
-    },
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present"
-        ],
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "insider-privacy-notice-candidate",
-          "candidate_url": "https://insider.com/privacy-policy",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://www.businessinsider.com/privacy-policy",
-            "http_status": 200,
-            "matched_terms": [
-              "privacy",
-              "personal data",
-              "personal information",
-              "privacy policy"
-            ],
-            "page_title": null,
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "privacy_notice",
-          "vendor_id": "insider"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "insider",
-          "cohort_id": "crm-customer-marketing-launch",
-          "coverage_lane": "crm_customer_marketing",
-          "display_name_candidate": "Insider",
-          "headquarters_country_candidate": "GB",
-          "official_domain_candidate": "insider.com",
-          "vendor_category_candidates": [
-            "marketing_technology",
-            "customer_engagement"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
-    },
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present"
-        ],
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "microsoft-azure-security-page-candidate",
-          "candidate_url": "https://azure.microsoft.com/security",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://www.microsoft.com/en-us/security",
-            "http_status": 200,
-            "matched_terms": [
-              "security",
-              "trust"
-            ],
-            "page_title": "Cloud Security Solutions | Microsoft Security",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "security_page",
-          "vendor_id": "microsoft-azure"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "microsoft-azure",
-          "cohort_id": "cloud-platforms-launch",
-          "coverage_lane": "cloud_platforms",
-          "display_name_candidate": "Microsoft Azure",
-          "headquarters_country_candidate": "US",
-          "official_domain_candidate": "azure.microsoft.com",
-          "vendor_category_candidates": [
-            "cloud_infrastructure"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
-    },
     {
       "action": {
         "action": "strict_catalog_growth_promotion",
@@ -998,8 +840,8 @@
       ]
     }
   ],
-  "generated_at": "2026-06-06T06:23:58.059384Z",
-  "head_sha": "6fd1e02c767d1e5e52a448f725172dfb489352a6",
+  "generated_at": "2026-06-06T07:28:03.776727Z",
+  "head_sha": "2f3886647982329aa6f48c1d93b7830138d9c229",
   "posture": {
     "network_fetch_performed": false,
     "non_advisory": true,
@@ -1016,12 +858,12 @@
       "strict_catalog_growth_promotion": 5
     },
     "actions_requiring_human_review": 0,
-    "batch_deferred_action_count": 15,
-    "deferred_action_count": 15,
+    "batch_deferred_action_count": 12,
+    "deferred_action_count": 12,
     "max_actions_per_plan": 5,
-    "policy_capped_action_count": 20,
+    "policy_capped_action_count": 17,
     "source_health_deferred_action_count": 0,
-    "source_health_screened_action_count": 20,
-    "uncapped_action_count": 20
+    "source_health_screened_action_count": 17,
+    "uncapped_action_count": 17
   }
 }
