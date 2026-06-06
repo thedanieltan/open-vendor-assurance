@@ -121,6 +121,16 @@ jobs:
             --output-json catalog-growth-backlog-report.json \
             --output-csv reports/catalog-growth-backlog.csv \
             --output-md reports/catalog-growth-backlog-summary.md
+      - name: Build strict growth shortlist
+        run: |
+          python -m tools.openva.strict_growth_shortlist build \
+            --eligibility-report catalog-growth-eligibility-report.json \
+            --backlog-report catalog-growth-backlog-report.json \
+            --output-json strict-growth-shortlist.json \
+            --output-csv reports/strict-growth-shortlist.csv \
+            --output-md reports/strict-growth-shortlist-summary.md \
+            --max-vendors 5 \
+            --max-actions "$MAX_ACTIONS_PER_PLAN"
       - name: Build strict growth promotion plan
         run: |
           python -m tools.openva.promotion_planner plan-strict-growth \
@@ -153,6 +163,7 @@ jobs:
           discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
           promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
           strict_growth = json.load(open('strict-growth-promotion-plan.json', encoding='utf-8'))
+          shortlist = json.load(open('strict-growth-shortlist.json', encoding='utf-8'))
           backlog = json.load(open('catalog-growth-backlog-report.json', encoding='utf-8'))
           batches = json.load(open('promotion-plan-batch-summary.json', encoding='utf-8'))
           eligibility = json.load(open('catalog-growth-eligibility-report.json', encoding='utf-8'))
@@ -201,6 +212,32 @@ jobs:
               f"- Strict PR candidates: `{backlog['summary']['strict_pr_candidate_count']}`",
               f"- Human review required: `{backlog['summary']['human_review_required_count']}`",
               f"- Rejected: `{backlog['summary']['rejected_count']}`",
+              '',
+              '## Strict growth shortlist summary',
+              '',
+              f"- Strict-growth shortlist count: `{shortlist['summary']['shortlisted_action_count']}`",
+              f"- Shortlisted vendors: `{shortlist['summary']['shortlisted_vendor_count']}`",
+              f"- Excluded candidates/actions: `{shortlist['summary']['excluded_count']}`",
+              '',
+              '### Shortlisted vendors',
+              '',
+              *(
+                  [
+                      f"- `{item['candidate_vendor_id']}` / `{item['source_type_candidate']}` / `{item['candidate_source_id']}`"
+                      for item in shortlist.get('items', [])[:10]
+                  ]
+                  or ['- none']
+              ),
+              '',
+              '### Excluded candidates by reason',
+              '',
+              *(
+                  [
+                      f"- `{reason}`: `{count}`"
+                      for reason, count in sorted(shortlist['summary'].get('excluded_by_reason', {}).items())
+                  ]
+                  or ['- none']
+              ),
               '',
               '## Strict growth planning summary',
               '',
@@ -301,9 +338,11 @@ jobs:
             reports/catalog-growth-discovery-summary.md
             reports/catalog-growth-eligibility-summary.md
             reports/catalog-growth-backlog-summary.md
+            reports/strict-growth-shortlist-summary.md
             reports/catalog-growth-review-required.csv
             reports/catalog-growth-rejected.csv
             reports/catalog-growth-backlog.csv
+            reports/strict-growth-shortlist.csv
             reports/vendor-candidates.csv
             reports/vendor-candidate-source-candidates.csv
             reports/vendor-candidate-source-unavailable.csv
@@ -316,6 +355,7 @@ jobs:
             source-discovery-report.json
             promotion-plan.json
             strict-growth-promotion-plan.json
+            strict-growth-shortlist.json
             promotion-plan-batch-summary.json
             catalog-growth-eligibility-report.json
             catalog-growth-strict-promotions.json

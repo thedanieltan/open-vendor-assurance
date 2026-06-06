@@ -18,7 +18,8 @@ def workflow_text() -> str:
 def test_strict_growth_latest_regenerates_sha_bound_evidence():
     block = strict_growth_regeneration_block()
 
-    assert "if: env.PROMOTION_PLAN_MODE == 'strict-growth-latest'" in block
+    assert "env.PROMOTION_PLAN_MODE == 'strict-growth-latest'" in block
+    assert "env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist'" in block
     assert "python -m tools.openva.catalog_growth_eligibility classify \\" in block
     assert "python -m tools.openva.promotion_planner plan-strict-growth \\" in block
 
@@ -33,6 +34,23 @@ def test_strict_growth_latest_regenerates_sha_bound_evidence():
         assert '--base-sha "${{ github.sha }}"' in command
 
     assert '--max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN"' in planner
+
+
+def test_strict_growth_shortlist_mode_builds_shortlist_before_plan():
+    text = workflow_text()
+
+    assert "- strict-growth-shortlist" in text
+    assert "reviewed-path|strict-growth-latest|strict-growth-shortlist" in text
+    shortlist = text.index("python -m tools.openva.strict_growth_shortlist build \\")
+    plan = text.index("python -m tools.openva.strict_growth_shortlist plan \\")
+    apply = text.index("- name: Apply candidate promotions")
+
+    assert shortlist < plan < apply
+    block = text[shortlist:plan]
+    assert "--eligibility-report catalog-growth-eligibility-report.json" in block
+    assert "--backlog-report catalog-growth-backlog-report.json" in block
+    assert "--max-actions \"$REQUESTED_MAX_ACTIONS_PER_PLAN\"" in block
+    assert "--output-json strict-growth-shortlist.json" in block
 
 
 def test_strict_growth_latest_uses_workflow_batch_cap_before_apply():
@@ -55,7 +73,8 @@ def test_strict_growth_plan_preflight_runs_before_candidate_apply():
     assert preflight < apply
 
     block = text[preflight:apply]
-    assert "if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && env.PROMOTION_PLAN_MODE == 'strict-growth-latest'" in block
+    assert "env.PROMOTION_PLAN_MODE == 'strict-growth-latest'" in block
+    assert "env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist'" in block
     assert "python -m tools.openva.strict_growth_automerge check-plan \\" in block
     assert "--promotion-plan strict-growth-promotion-plan.json \\" in block
     assert "--eligibility-report catalog-growth-eligibility-report.json \\" in block
@@ -89,8 +108,10 @@ def test_strict_growth_latest_commits_sha_bound_evidence_files():
     assert "candidate-promotion-pr-body-final.md" in text
     assert "Upload strict growth evidence artifacts" in text
     assert "Strict-growth uncapped actions:" in text
+    assert "Strict-growth shortlist actions:" in text
     assert "Strict-growth policy-capped actions:" in text
     assert "Strict-growth batch-deferred actions:" in text
+    assert "cp strict-growth-shortlist.json maintenance/generated/strict-growth-shortlist.json" in text
 
 
 def test_source_preflight_report_uploads_before_fail_closed():
