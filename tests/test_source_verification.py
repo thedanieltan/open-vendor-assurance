@@ -188,6 +188,24 @@ def test_homepage_redirect_requires_review():
     assert result["requires_review"] is True
 
 
+def test_braze_like_specific_redirect_is_alive_but_not_canonical_clean():
+    source = source_record("dpa", "https://braze.com/dpa")
+
+    result = verify_source(
+        source,
+        Path("data/vendors/braze/sources/braze-dpa.yaml"),
+        fetcher=lambda url: html_fetch(
+            url,
+            "Data Processing Addendum processor controller",
+            final_url="https://www.braze.com/company/legal/dpa",
+        ),
+    )
+
+    assert result["verification_status"] == "redirected"
+    assert result["final_url"] == "https://www.braze.com/company/legal/dpa"
+    assert result["requires_review"] is False
+
+
 def test_semantic_mismatch_requires_review():
     source = source_record("subprocessors_list", "https://example.com/legal/subprocessors")
 

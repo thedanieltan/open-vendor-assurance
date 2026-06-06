@@ -5,7 +5,7 @@
       "access_class": "public_web",
       "artifact_id": "dotdigital-privacy-notice",
       "artifact_type": "privacy_notice",
-      "canonical_url": "https://dotdigital.com/privacy-policy",
+      "canonical_url": "https://dotdigital.com/terms/privacy-policy/",
       "effective_or_published_at": null,
       "entity_scope": {
         "entity_ids": [],
@@ -49,12 +49,29 @@
       "source_id": "dotdigital-privacy-notice",
       "source_language": "en",
       "source_type": "privacy_notice",
-      "source_url": "https://dotdigital.com/privacy-policy",
+      "source_url": "https://dotdigital.com/terms/privacy-policy/",
       "title_native": "Dotdigital privacy policy",
       "vendor_id": "dotdigital"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/dotdigital/changes/redirect-canonicalization-dotdigital-privacy-notice.yaml",
+      "artifact_id": "dotdigital-privacy-notice",
+      "catalog_change_significance": "low",
+      "change_id": "redirect-canonicalization-dotdigital-privacy-notice",
+      "change_type": "updated",
+      "detected_at": "2026-06-06T08:12:47Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "low",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "dotdigital-privacy-notice",
+      "summary": "Canonicalized same-vendor redirect from discovered source URL to final public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "dotdigital"
+    },
     {
       "_openva_path": "data/vendors/dotdigital/changes/strict-growth-dotdigital-privacy-notice.yaml",
       "artifact_id": "dotdigital-privacy-notice",

@@ -12,6 +12,7 @@ import yaml
 from tools.openva.automerge_lanes import load_policy
 from tools.openva.catalog_growth_eligibility import DEFAULT_SOURCE_TYPE_PRIORITY
 from tools.openva.source_verification import ROOT, display_path
+from tools.openva.strict_growth_redirects import canonical_clean_reasons, redirect_metrics_for_actions
 
 PROMOTABLE_VERIFICATION_STATUSES = {"ok", "redirected"}
 PROMOTABLE_SEMANTIC_STATUSES = {"strong", "not_evaluated_pdf_sample"}
@@ -289,7 +290,8 @@ def strict_growth_action(item: dict[str, Any], action: dict[str, Any]) -> dict[s
         "vendor": vendor,
         "source": source,
         "classification": item.get("classification"),
-        "reason_codes": item.get("reason_codes", []),
+        "reason_codes": [*item.get("reason_codes", []), *action.get("reason_codes", [])],
+        "redirect": action.get("redirect"),
         "requires_human_review": False,
         "writes_canonical_vendors": False,
         "writes_canonical_sources": False,
@@ -343,6 +345,7 @@ def strict_growth_source_preflight_reasons(action: dict[str, Any]) -> list[str]:
         reasons.append(f"source_preflight_risk:{status}")
     if evidence.get("soft_404_detected") is True:
         reasons.append("source_preflight_risk:soft_404_detected")
+    reasons.extend(canonical_clean_reasons(action))
     return reasons
 
 
@@ -399,6 +402,7 @@ def build_strict_growth_plan(
         ]
         deferred_actions = [*deferred_actions, *batch_deferred_actions]
     counts = Counter(action["action"] for action in actions)
+    redirect_metrics = redirect_metrics_for_actions(actions, deferred_actions)
     plan = {
         "schema_version": "0.1.0",
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
@@ -422,6 +426,7 @@ def build_strict_growth_plan(
             "deferred_action_count": len(deferred_actions),
             "batch_deferred_action_count": len(batch_deferred_actions),
             "max_actions_per_plan": max_actions_per_plan,
+            **redirect_metrics,
         },
         "actions": actions,
     }

@@ -267,6 +267,36 @@ def test_source_preflight_risk_evidence_fails_strict_growth_preflight():
     )
 
 
+def test_unresolved_redirected_source_url_fails_strict_growth_preflight():
+    action = strict_action()
+    action["source"]["evidence"]["verification_status"] = "redirected"
+    action["source"]["evidence"]["final_url"] = "https://candidate-a.example/company/security"
+
+    result = eligible_result(promotion_plan=promotion_plan(action))
+
+    assert result.eligible is False
+    assert (
+        "redirect_canonicalization_required:candidate-a:security_page:candidate-a-security_page-candidate"
+        in result.reasons
+    )
+
+
+def test_canonicalized_redirected_source_url_passes_strict_growth_preflight():
+    action = strict_action()
+    action["source"]["candidate_url"] = "https://candidate-a.example/company/security"
+    action["source"]["evidence"]["verification_status"] = "redirected"
+    action["source"]["evidence"]["final_url"] = "https://candidate-a.example/company/security"
+    action["source"]["evidence"]["original_candidate_url"] = "https://candidate-a.example/security"
+    action["source"]["evidence"]["redirect_status"] = "canonicalized"
+    action["source"]["evidence"]["redirect_decision"] = "canonicalize"
+    action["source"]["evidence"]["redirect_reason"] = "redirect_canonicalized"
+
+    result = eligible_result(promotion_plan=promotion_plan(action))
+
+    assert result.eligible is True
+    assert result.reasons == ()
+
+
 def test_more_than_five_new_vendors_fails():
     actions = [strict_action(candidate_vendor_id=f"candidate-{index}") for index in range(6)]
 

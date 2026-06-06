@@ -133,6 +133,68 @@ def test_homepage_redirect_candidate_is_rejected_before_strict_promotion(tmp_pat
     assert report["strict_promotions"] == []
 
 
+def test_safe_same_vendor_redirect_is_canonicalized_before_strict_promotion(tmp_path: Path):
+    redirected = source()
+    redirected["candidate_url"] = "https://vendor-a.example/dpa"
+    redirected["source_type_candidate"] = "dpa"
+    redirected["evidence"]["verification_status"] = "redirected"
+    redirected["evidence"]["final_url"] = "https://www.vendor-a.example/company/legal/dpa"
+    redirected["evidence"]["page_title"] = "Data Processing Addendum"
+    redirected["evidence"]["matched_terms"] = ["data processing", "processor"]
+
+    report = build_catalog_growth_eligibility(
+        vendor_report([vendor()]),
+        source_report([{"vendor_id": "vendor-a", "candidates": [redirected], "observations": []}]),
+        root=tmp_path,
+        generated_at="2026-05-26T00:00:00Z",
+    )
+
+    action = report["strict_promotions"][0]
+    assert action["source"]["candidate_url"] == "https://www.vendor-a.example/company/legal/dpa"
+    assert action["source"]["evidence"]["original_candidate_url"] == "https://vendor-a.example/dpa"
+    assert action["source"]["evidence"]["redirect_reason"] == "redirect_canonicalized"
+    assert report["summary"]["redirect_count"] == 1
+    assert report["summary"]["redirect_canonicalized_count"] == 1
+    assert report["summary"]["unresolved_redirect_count"] == 0
+
+
+def test_cross_authority_redirect_is_deferred_before_strict_promotion(tmp_path: Path):
+    redirected = source()
+    redirected["evidence"]["verification_status"] = "redirected"
+    redirected["evidence"]["final_url"] = "https://other.example/security"
+
+    report = build_catalog_growth_eligibility(
+        vendor_report([vendor()]),
+        source_report([{"vendor_id": "vendor-a", "candidates": [redirected], "observations": []}]),
+        root=tmp_path,
+        generated_at="2026-05-26T00:00:00Z",
+    )
+
+    assert report["items"][0]["classification"] == REVIEW_REQUIRED
+    assert "redirect_cross_authority_review_required" in report["items"][0]["reason_codes"]
+    assert report["summary"]["strict_promotion_action_count"] == 0
+    assert report["summary"]["cross_authority_redirect_count"] == 1
+    assert report["summary"]["unresolved_redirect_count"] == 1
+
+
+def test_semantic_mismatch_after_redirect_is_deferred(tmp_path: Path):
+    redirected = source()
+    redirected["evidence"]["verification_status"] = "redirected"
+    redirected["evidence"]["semantic_status"] = "mismatch"
+    redirected["evidence"]["final_url"] = "https://www.vendor-a.example/careers"
+
+    report = build_catalog_growth_eligibility(
+        vendor_report([vendor()]),
+        source_report([{"vendor_id": "vendor-a", "candidates": [redirected], "observations": []}]),
+        root=tmp_path,
+        generated_at="2026-05-26T00:00:00Z",
+    )
+
+    assert report["items"][0]["classification"] == REVIEW_REQUIRED
+    assert "redirect_semantic_mismatch" in report["items"][0]["reason_codes"]
+    assert report["strict_promotions"] == []
+
+
 def test_strict_growth_keeps_safe_source_when_another_source_has_preflight_risk(tmp_path: Path):
     safe_source = source()
     safe_source["candidate_source_id"] = "vendor-a-privacy-notice-candidate"

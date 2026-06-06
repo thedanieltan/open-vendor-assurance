@@ -15,6 +15,14 @@ from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.automerge_lanes import load_policy
 from tools.openva.source_discovery import DEFAULT_SOURCE_TYPES
 from tools.openva.source_verification import ROOT, display_path
+from tools.openva.strict_growth_redirects import (
+    REDIRECT_CANONICALIZED,
+    REDIRECT_CROSS_AUTHORITY_REVIEW_REQUIRED,
+    REDIRECT_GENERIC_OR_HOMEPAGE_REJECTED,
+    REDIRECT_SEMANTIC_MISMATCH,
+    materialize_redirect_for_strict_growth,
+    redirect_decision,
+)
 
 SCHEMA_VERSION = "0.1.0"
 REPORT_TYPE = "catalog_growth_eligibility_report"
@@ -130,7 +138,7 @@ def identity_reasons(row: dict[str, Any], dup_ids: set[str], dup_domains: set[st
     return reasons
 
 
-def source_reasons(source: dict[str, Any]) -> list[str]:
+def source_reasons(vendor: dict[str, Any], source: dict[str, Any]) -> list[str]:
     evidence = source.get("evidence", {}) or {}
     reasons: list[str] = []
     verification_status = str(evidence.get("verification_status") or source.get("verification_status") or "")
@@ -148,6 +156,13 @@ def source_reasons(source: dict[str, Any]) -> list[str]:
         reasons.append("matched_terms_missing")
     if not evidence.get("final_url"):
         reasons.append("final_url_missing")
+    redirect = redirect_decision(vendor, source)
+    if redirect["reason"] in {
+        REDIRECT_CROSS_AUTHORITY_REVIEW_REQUIRED,
+        REDIRECT_GENERIC_OR_HOMEPAGE_REJECTED,
+        REDIRECT_SEMANTIC_MISMATCH,
+    }:
+        reasons.append(str(redirect["reason"]))
     if source.get("requires_review") is not True:
         reasons.append("requires_review_not_true")
     if source.get("not_advice") is not True:
@@ -171,10 +186,20 @@ def source_rejection(source: dict[str, Any], reasons: list[str], classification:
 
 
 def strict_action(vendor: dict[str, Any], source: dict[str, Any]) -> dict[str, Any]:
+    materialized_source, redirect = materialize_redirect_for_strict_growth(vendor, source)
+    reason_codes = [REDIRECT_CANONICALIZED] if redirect["reason"] == REDIRECT_CANONICALIZED else []
     return {
         "action": "strict_catalog_growth_promotion_candidate",
         "vendor": {key: vendor.get(key) for key in ["candidate_vendor_id", "display_name_candidate", "official_domain_candidate", "coverage_lane", "cohort_id", "vendor_category_candidates", "headquarters_country_candidate"]},
-        "source": {key: source.get(key) for key in ["candidate_source_id", "vendor_id", "source_type_candidate", "candidate_url", "confidence", "evidence"]},
+        "source": {key: materialized_source.get(key) for key in ["candidate_source_id", "vendor_id", "source_type_candidate", "candidate_url", "confidence", "evidence"]},
+        "redirect": {
+            "candidate_url": redirect["candidate_url"],
+            "final_url": redirect["final_url"],
+            "redirect_status": redirect["redirect_status"],
+            "decision": redirect["decision"],
+            "reason": redirect["reason"],
+        },
+        "reason_codes": reason_codes,
         "posture": {"network_fetch_performed": False, "writes_repository_state": False, "writes_canonical_sources": False, "strict_machine_candidate": True, "non_advisory": True},
     }
 
@@ -192,7 +217,7 @@ def classify(vendor: dict[str, Any], sources: list[dict[str, Any]], statuses: se
         return REJECT_SOURCE_HEALTH_FAILURE, sorted(statuses & HEALTH_FAILURE), [], []
     if not sources:
         return REJECT_NO_PUBLIC_SOURCE, ["no_source_candidates_for_vendor"], [], []
-    source_reason_rows = [(source, source_reasons(source)) for source in sources]
+    source_reason_rows = [(source, source_reasons(vendor, source)) for source in sources]
     strict_sources = [source for source, reasons in source_reason_rows if not reasons]
     source_health_rejections = [
         source_rejection(source, reasons, REJECT_SOURCE_HEALTH_FAILURE)
@@ -205,7 +230,7 @@ def classify(vendor: dict[str, Any], sources: list[dict[str, Any]], statuses: se
                 reason
                 for _source, reasons in source_reason_rows
                 for reason in reasons
-                if reason.startswith("strict_growth_")
+                if reason.startswith("strict_growth_") or reason.startswith("redirect_")
             }
         )
         return STRICT_PROMOTE_READY, ["strict_source_candidate_evidence_present", *extra_reasons], strict_sources, source_health_rejections
@@ -301,7 +326,18 @@ def build_catalog_growth_eligibility(
             item["source_health_rejections"] = source_health_rejections
         items.append(item)
     counts = Counter(item["classification"] for item in items)
-    report = {"schema_version": SCHEMA_VERSION, "generated_at": generated_at or now_iso(), "report_type": REPORT_TYPE, "posture": {"network_fetch_performed": False, "writes_repository_state": False, "writes_canonical_vendors": False, "writes_canonical_sources": False, "opens_pull_requests": False, "non_advisory": True}, "summary": {"candidate_count": len(items), "strict_promote_ready_count": counts.get(STRICT_PROMOTE_READY, 0), "review_required_count": counts.get(REVIEW_REQUIRED, 0), "rejected_or_deferred_count": len(items) - counts.get(STRICT_PROMOTE_READY, 0) - counts.get(REVIEW_REQUIRED, 0), "classification_counts": dict(sorted(counts.items())), "strict_promotion_action_count": len(strict_promotions)}, "items": sorted(items, key=lambda item: (item["classification"], item["candidate_vendor_id"])), "strict_promotions": strict_promotions}
+    redirect_counts = Counter(
+        str(action.get("redirect", {}).get("reason") or "not_redirected")
+        for action in strict_promotions
+        if action.get("redirect", {}).get("redirect_status") in {"canonicalized", "cross_authority_review_required", "unresolved"}
+    )
+    rejected_redirect_reasons = Counter(
+        reason
+        for item in items
+        for reason in item.get("reason_codes", [])
+        if str(reason).startswith("redirect_")
+    )
+    report = {"schema_version": SCHEMA_VERSION, "generated_at": generated_at or now_iso(), "report_type": REPORT_TYPE, "posture": {"network_fetch_performed": False, "writes_repository_state": False, "writes_canonical_vendors": False, "writes_canonical_sources": False, "opens_pull_requests": False, "non_advisory": True}, "summary": {"candidate_count": len(items), "strict_promote_ready_count": counts.get(STRICT_PROMOTE_READY, 0), "review_required_count": counts.get(REVIEW_REQUIRED, 0), "rejected_or_deferred_count": len(items) - counts.get(STRICT_PROMOTE_READY, 0) - counts.get(REVIEW_REQUIRED, 0), "classification_counts": dict(sorted(counts.items())), "strict_promotion_action_count": len(strict_promotions), "redirect_count": sum(redirect_counts.values()) + sum(rejected_redirect_reasons.values()), "redirect_canonicalized_count": redirect_counts.get(REDIRECT_CANONICALIZED, 0), "redirect_deferred_count": sum(rejected_redirect_reasons.values()), "cross_authority_redirect_count": rejected_redirect_reasons.get(REDIRECT_CROSS_AUTHORITY_REVIEW_REQUIRED, 0), "generic_redirect_rejected_count": rejected_redirect_reasons.get(REDIRECT_GENERIC_OR_HOMEPAGE_REJECTED, 0), "unresolved_redirect_count": rejected_redirect_reasons.get(REDIRECT_CROSS_AUTHORITY_REVIEW_REQUIRED, 0)}, "items": sorted(items, key=lambda item: (item["classification"], item["candidate_vendor_id"])), "strict_promotions": strict_promotions}
     if head_sha:
         report["head_sha"] = head_sha
     if base_sha:
@@ -320,7 +356,7 @@ def write_outputs(report: dict[str, Any], output_json: Path, output_strict: Path
                 csv_row = dict(row)
                 csv_row["reason_codes"] = ";".join(csv_row.get("reason_codes", []))
                 writer.writerow(csv_row)
-    lines = ["# Catalog Growth Eligibility Summary", "", "This report classifies Lane B discovery outputs without mutating canonical records.", "", "## Summary", "", f"- Candidate vendors: `{report['summary']['candidate_count']}`", f"- Strict promote ready: `{report['summary']['strict_promote_ready_count']}`", f"- Review required: `{report['summary']['review_required_count']}`", f"- Rejected or deferred: `{report['summary']['rejected_or_deferred_count']}`", "", "## Classification Counts", ""]
+    lines = ["# Catalog Growth Eligibility Summary", "", "This report classifies Lane B discovery outputs without mutating canonical records.", "", "## Summary", "", f"- Candidate vendors: `{report['summary']['candidate_count']}`", f"- Strict promote ready: `{report['summary']['strict_promote_ready_count']}`", f"- Review required: `{report['summary']['review_required_count']}`", f"- Rejected or deferred: `{report['summary']['rejected_or_deferred_count']}`", f"- Redirects detected: `{report['summary'].get('redirect_count', 0)}`", f"- Redirects canonicalized: `{report['summary'].get('redirect_canonicalized_count', 0)}`", f"- Redirects deferred: `{report['summary'].get('redirect_deferred_count', 0)}`", f"- Cross-authority redirects: `{report['summary'].get('cross_authority_redirect_count', 0)}`", f"- Generic redirects rejected: `{report['summary'].get('generic_redirect_rejected_count', 0)}`", f"- Unresolved redirects: `{report['summary'].get('unresolved_redirect_count', 0)}`", "", "## Classification Counts", ""]
     lines.extend(f"- `{name}`: `{count}`" for name, count in report["summary"]["classification_counts"].items())
     output_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
 

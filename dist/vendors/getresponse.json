@@ -5,7 +5,7 @@
       "access_class": "public_web",
       "artifact_id": "getresponse-privacy-notice",
       "artifact_type": "privacy_notice",
-      "canonical_url": "https://getresponse.com/privacy",
+      "canonical_url": "https://www.getresponse.com/legal/privacy",
       "effective_or_published_at": null,
       "entity_scope": {
         "entity_ids": [],
@@ -49,12 +49,29 @@
       "source_id": "getresponse-privacy-notice",
       "source_language": "en",
       "source_type": "privacy_notice",
-      "source_url": "https://getresponse.com/privacy",
+      "source_url": "https://www.getresponse.com/legal/privacy",
       "title_native": "GetResponse Privacy Policy",
       "vendor_id": "getresponse"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/getresponse/changes/redirect-canonicalization-getresponse-privacy-notice.yaml",
+      "artifact_id": "getresponse-privacy-notice",
+      "catalog_change_significance": "low",
+      "change_id": "redirect-canonicalization-getresponse-privacy-notice",
+      "change_type": "updated",
+      "detected_at": "2026-06-06T08:12:47Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "low",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "getresponse-privacy-notice",
+      "summary": "Canonicalized same-vendor redirect from discovered source URL to final public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "getresponse"
+    },
     {
       "_openva_path": "data/vendors/getresponse/changes/strict-growth-getresponse-privacy-notice.yaml",
       "artifact_id": "getresponse-privacy-notice",

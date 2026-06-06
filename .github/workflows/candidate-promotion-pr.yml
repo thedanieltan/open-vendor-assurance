@@ -353,6 +353,12 @@ jobs:
                   f"- Strict-growth shortlist actions: `{plan_summary.get('shortlist_action_count', plan_summary.get('source_health_screened_action_count', report['summary']['promotion_actions_seen']))}`",
                   f"- Strict-growth policy-capped actions: `{plan_summary.get('policy_capped_action_count', report['summary']['promotion_actions_seen'])}`",
                   f"- Strict-growth batch-deferred actions: `{plan_summary.get('batch_deferred_action_count', 0)}`",
+                  f"- Redirects detected: `{plan_summary.get('redirect_count', 0)}`",
+                  f"- Redirects canonicalized: `{plan_summary.get('redirect_canonicalized_count', 0)}`",
+                  f"- Redirects deferred: `{plan_summary.get('redirect_deferred_count', 0)}`",
+                  f"- Cross-authority redirects: `{plan_summary.get('cross_authority_redirect_count', 0)}`",
+                  f"- Generic redirects rejected: `{plan_summary.get('generic_redirect_rejected_count', 0)}`",
+                  f"- Unresolved redirects: `{plan_summary.get('unresolved_redirect_count', 0)}`",
               ]
           Path('candidate-promotion-pr-body.md').write_text('\n'.join(lines), encoding='utf-8')
           PY
