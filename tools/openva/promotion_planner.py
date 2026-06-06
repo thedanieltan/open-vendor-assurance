@@ -33,6 +33,8 @@ REVIEWABLE_VERIFICATION_STATUSES = {
     "unreachable",
 }
 SOURCE_PREFLIGHT_FAIL_STATUSES = REVIEWABLE_VERIFICATION_STATUSES | {"soft_not_found", "soft_404_detected"}
+BATCH_DEFERRED_REASON_CODE = "max_promotion_actions_per_pr_exceeded"
+LEGACY_BATCH_DEFERRED_REASON_CODE = "workflow_max_actions_per_plan_exceeded"
 
 
 def strict_growth_source_priority(policy: dict[str, Any]) -> list[str]:
@@ -67,6 +69,24 @@ def load_json(path: Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise ValueError(f"{display_path(path)}: expected JSON object")
     return data
+
+
+def resolve_max_promotion_actions_per_pr(
+    *,
+    max_promotion_actions_per_pr: int | None = None,
+    max_actions_per_plan: int | None = None,
+) -> int | None:
+    """Resolve the preferred generated-PR cap with legacy alias compatibility."""
+    if max_promotion_actions_per_pr is not None and max_promotion_actions_per_pr < 0:
+        raise ValueError("max_promotion_actions_per_pr must be non-negative")
+    if max_actions_per_plan is not None and max_actions_per_plan < 0:
+        raise ValueError("max_actions_per_plan is deprecated; use max_promotion_actions_per_pr. Value must be non-negative")
+    if max_promotion_actions_per_pr is not None and max_actions_per_plan is not None:
+        if max_promotion_actions_per_pr != max_actions_per_plan:
+            raise ValueError(
+                "max_promotion_actions_per_pr and deprecated max_actions_per_plan were both provided with different values"
+            )
+    return max_promotion_actions_per_pr if max_promotion_actions_per_pr is not None else max_actions_per_plan
 
 
 def iter_records(root: Path, record_dir: str) -> list[tuple[Path, dict[str, Any]]]:
@@ -125,13 +145,13 @@ def plan_for_candidate(
 
     if key in existing_types:
         action = "no_action_existing_source_type"
-        reason = "A canonical source already exists for this vendor/source_type."
+        reason = "A canonical source record already exists for this vendor/source_type."
     elif confidence == "likely" and http_status == 200 and semantic_terms:
         action = REVIEWED_CANDIDATE_PROMOTION_ACTION
-        reason = "Candidate has public HTTP 200 evidence and matched terms, but still requires review before canonical promotion."
+        reason = "Candidate source has public HTTP 200 evidence and matched terms, but still requires review before canonical promotion."
     else:
         action = "manual_review_required"
-        reason = "Candidate exists but evidence is not strong enough for promotion planning."
+        reason = "Candidate source exists but evidence is not strong enough for promotion planning."
 
     return {
         "action": action,
@@ -159,10 +179,10 @@ def plan_for_unavailable(path: Path, unavailable: dict[str, Any], existing_types
     key = (vendor_id, source_type)
     if key in existing_types:
         action = "review_unavailable_conflict"
-        reason = "Unavailable-source ledger entry conflicts with an existing canonical source type."
+        reason = "Unavailable-source ledger entry conflicts with an existing canonical source record."
     else:
         action = "keep_unavailable_until_next_review"
-        reason = "No canonical source exists and this absence has been recorded for review cadence."
+        reason = "No canonical source record exists and this absence has been recorded for review cadence."
 
     return {
         "action": action,
@@ -196,13 +216,13 @@ def plan_for_existing_source(
 
     if status in {"not_found", "gone"}:
         action = "retire_or_replace_source_for_review"
-        reason = "Existing canonical source is unavailable according to verification report."
+        reason = "Existing canonical source record is unavailable according to source verification report."
     elif status in {"suspect_inferred_url", "possible_mismatch", "homepage_or_generic_redirect"}:
         action = "cleanup_source_for_review"
-        reason = "Existing canonical source appears mismatched, generic, or likely inferred."
+        reason = "Existing canonical source record appears mismatched, generic, or likely inferred."
     else:
         action = "manual_review_required"
-        reason = "Existing canonical source requires review based on verification status."
+        reason = "Existing canonical source record requires review based on source verification status."
 
     return {
         "action": action,
@@ -286,7 +306,7 @@ def strict_growth_action(item: dict[str, Any], action: dict[str, Any]) -> dict[s
     source = action["source"]
     return {
         "action": STRICT_GROWTH_PROMOTION_ACTION,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason": "Candidate passed strict-growth eligibility and may be applied through the candidate promotion apply path.",
         "vendor": vendor,
         "source": source,
         "classification": item.get("classification"),
@@ -368,13 +388,16 @@ def build_strict_growth_plan(
     *,
     head_sha: str | None = None,
     base_sha: str | None = None,
+    max_promotion_actions_per_pr: int | None = None,
     max_actions_per_plan: int | None = None,
     policy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if eligibility_report.get("report_type") != "catalog_growth_eligibility_report":
         raise ValueError("expected catalog_growth_eligibility_report")
-    if max_actions_per_plan is not None and max_actions_per_plan < 0:
-        raise ValueError("max_actions_per_plan must be non-negative")
+    max_selected_actions = resolve_max_promotion_actions_per_pr(
+        max_promotion_actions_per_pr=max_promotion_actions_per_pr,
+        max_actions_per_plan=max_actions_per_plan,
+    )
     policy = policy or load_policy()
     strict_by_vendor = {
         str(item.get("candidate_vendor_id")): item
@@ -391,14 +414,14 @@ def build_strict_growth_plan(
     deferred_actions = [*source_health_deferred_actions, *deferred_actions]
     actions = policy_capped_actions
     batch_deferred_actions: list[dict[str, Any]] = []
-    if max_actions_per_plan and len(policy_capped_actions) > max_actions_per_plan:
-        actions = policy_capped_actions[:max_actions_per_plan]
+    if max_selected_actions and len(policy_capped_actions) > max_selected_actions:
+        actions = policy_capped_actions[:max_selected_actions]
         batch_deferred_actions = [
             {
                 "action": action,
-                "reason_codes": ["workflow_max_actions_per_plan_exceeded"],
+                "reason_codes": [BATCH_DEFERRED_REASON_CODE],
             }
-            for action in policy_capped_actions[max_actions_per_plan:]
+            for action in policy_capped_actions[max_selected_actions:]
         ]
         deferred_actions = [*deferred_actions, *batch_deferred_actions]
     counts = Counter(action["action"] for action in actions)
@@ -417,6 +440,7 @@ def build_strict_growth_plan(
         },
         "summary": {
             "action_count": len(actions),
+            "selected_promotion_action_count": len(actions),
             "uncapped_action_count": len(uncapped_actions),
             "source_health_screened_action_count": len(source_health_screened_actions),
             "source_health_deferred_action_count": len(source_health_deferred_actions),
@@ -425,7 +449,8 @@ def build_strict_growth_plan(
             "action_types": dict(sorted(counts.items())),
             "deferred_action_count": len(deferred_actions),
             "batch_deferred_action_count": len(batch_deferred_actions),
-            "max_actions_per_plan": max_actions_per_plan,
+            "max_promotion_actions_per_pr": max_selected_actions,
+            "max_actions_per_plan": max_selected_actions,
             **redirect_metrics,
         },
         "actions": actions,
@@ -453,13 +478,15 @@ def main() -> int:
     strict.add_argument("--output", type=Path, default=ROOT / "strict-growth-promotion-plan.json")
     strict.add_argument("--head-sha")
     strict.add_argument("--base-sha")
-    strict.add_argument("--max-actions-per-plan", type=int)
+    strict.add_argument("--max-promotion-actions-per-pr", type=int)
+    strict.add_argument("--max-actions-per-plan", type=int, help="Deprecated alias for --max-promotion-actions-per-pr")
     args = parser.parse_args()
     if args.command == "plan-strict-growth":
         report = build_strict_growth_plan(
             load_json(args.eligibility_report),
             head_sha=args.head_sha,
             base_sha=args.base_sha,
+            max_promotion_actions_per_pr=None if args.max_promotion_actions_per_pr in {None, 0} else args.max_promotion_actions_per_pr,
             max_actions_per_plan=None if args.max_actions_per_plan in {None, 0} else args.max_actions_per_plan,
         )
     else:
