@@ -9,13 +9,14 @@ on:
         type: string
         default: ""
       promotion_plan_mode:
-        description: "reviewed-path or strict-growth-latest"
+        description: "reviewed-path, strict-growth-latest, or strict-growth-shortlist"
         required: false
         type: choice
         default: "reviewed-path"
         options:
           - reviewed-path
           - strict-growth-latest
+          - strict-growth-shortlist
       vendor_limit:
         description: "Optional number of vendors/candidates to discover when regenerating strict growth"
         required: false
@@ -78,9 +79,10 @@ jobs:
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Regenerate strict growth promotion plan
-        if: env.PROMOTION_PLAN_MODE == 'strict-growth-latest'
+        if: env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist'
         run: |
           set -euo pipefail
+          mkdir -p reports
           python -m tools.openva.catalog_growth_discovery_queue validate \
             --output catalog-growth-discovery-queue-summary.json
           python - <<'PY' > strict-growth-discovery.env
@@ -113,12 +115,34 @@ jobs:
             --output-strict catalog-growth-strict-promotions.json \
             --head-sha "${{ github.sha }}" \
             --base-sha "${{ github.sha }}"
-          python -m tools.openva.promotion_planner plan-strict-growth \
-            --eligibility-report catalog-growth-eligibility-report.json \
-            --output strict-growth-promotion-plan.json \
-            --head-sha "${{ github.sha }}" \
-            --base-sha "${{ github.sha }}" \
-            --max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN"
+          if [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ]; then
+            python -m tools.openva.catalog_growth_backlog build \
+              --eligibility-report catalog-growth-eligibility-report.json \
+              --output-json catalog-growth-backlog-report.json \
+              --output-csv reports/catalog-growth-backlog.csv \
+              --output-md reports/catalog-growth-backlog-summary.md
+            python -m tools.openva.strict_growth_shortlist build \
+              --eligibility-report catalog-growth-eligibility-report.json \
+              --backlog-report catalog-growth-backlog-report.json \
+              --output-json strict-growth-shortlist.json \
+              --output-csv reports/strict-growth-shortlist.csv \
+              --output-md reports/strict-growth-shortlist-summary.md \
+              --max-vendors 5 \
+              --max-actions "$REQUESTED_MAX_ACTIONS_PER_PLAN"
+            python -m tools.openva.strict_growth_shortlist plan \
+              --shortlist strict-growth-shortlist.json \
+              --output strict-growth-promotion-plan.json \
+              --head-sha "${{ github.sha }}" \
+              --base-sha "${{ github.sha }}" \
+              --max-actions "$REQUESTED_MAX_ACTIONS_PER_PLAN"
+          else
+            python -m tools.openva.promotion_planner plan-strict-growth \
+              --eligibility-report catalog-growth-eligibility-report.json \
+              --output strict-growth-promotion-plan.json \
+              --head-sha "${{ github.sha }}" \
+              --base-sha "${{ github.sha }}" \
+              --max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN"
+          fi
       - name: Select candidate promotion plan
         id: reviewed_plan
         run: |
@@ -129,10 +153,10 @@ jobs:
             ''|*[!0-9]*) echo "max_actions_per_plan must be a non-negative integer" >&2; exit 1 ;;
           esac
           case "$PROMOTION_PLAN_MODE" in
-            reviewed-path|strict-growth-latest) ;;
-            *) echo "promotion_plan_mode must be reviewed-path or strict-growth-latest" >&2; exit 1 ;;
+            reviewed-path|strict-growth-latest|strict-growth-shortlist) ;;
+            *) echo "promotion_plan_mode must be reviewed-path, strict-growth-latest, or strict-growth-shortlist" >&2; exit 1 ;;
           esac
-          if [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ]; then
+          if [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] || [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ]; then
             REQUESTED_PROMOTION_PLAN_PATH="strict-growth-promotion-plan.json"
           fi
           if [ -n "$REQUESTED_PROMOTION_PLAN_PATH" ]; then
@@ -142,7 +166,7 @@ jobs:
             fi
             PLAN_SHA256=$(sha256sum "$REQUESTED_PROMOTION_PLAN_PATH" | awk '{print $1}')
             PLAN_ACTION_COUNT=$(python -c "import json, sys; data = json.load(open(sys.argv[1], encoding='utf-8')); print(len(data.get('actions', []) or []))" "$REQUESTED_PROMOTION_PLAN_PATH")
-            if [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] && [ "$PLAN_ACTION_COUNT" = "0" ]; then
+            if { [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] || [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ]; } && [ "$PLAN_ACTION_COUNT" = "0" ]; then
               echo "HAS_REVIEWED_PLAN=false" >> "$GITHUB_ENV"
               echo "STRICT_GROWTH_NO_ACTIONS=true" >> "$GITHUB_ENV"
               echo "HAS_REVIEWED_PLAN=false" >> "$GITHUB_OUTPUT"
@@ -207,7 +231,7 @@ jobs:
             *) echo "pr_title must start with Catalog:" >&2; exit 1 ;;
           esac
       - name: Preflight strict growth promotion plan
-        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && env.PROMOTION_PLAN_MODE == 'strict-growth-latest'
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist')
         run: |
           python -m tools.openva.strict_growth_automerge check-plan \
             --promotion-plan strict-growth-promotion-plan.json \
@@ -217,12 +241,15 @@ jobs:
             --current-base-sha "${{ github.sha }}" \
             --now "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
       - name: Prepare strict growth evidence files
-        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && env.PROMOTION_PLAN_MODE == 'strict-growth-latest'
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist')
         run: |
           set -euo pipefail
           mkdir -p maintenance/generated
           cp strict-growth-promotion-plan.json maintenance/generated/strict-growth-promotion-plan.json
           cp catalog-growth-eligibility-report.json maintenance/generated/strict-growth-eligibility-report.json
+          if [ -f strict-growth-shortlist.json ]; then
+            cp strict-growth-shortlist.json maintenance/generated/strict-growth-shortlist.json
+          fi
           echo "PROMOTION_PLAN_PATH=maintenance/generated/strict-growth-promotion-plan.json" >> "$GITHUB_ENV"
           echo "ELIGIBILITY_REPORT_PATH=maintenance/generated/strict-growth-eligibility-report.json" >> "$GITHUB_ENV"
       - name: Validate current records
@@ -323,6 +350,7 @@ jobs:
               counts_at = lines.index('## Counts') + 2
               lines[counts_at:counts_at] = [
                   f"- Strict-growth uncapped actions: `{plan_summary.get('uncapped_action_count', report['summary']['promotion_actions_seen'])}`",
+                  f"- Strict-growth shortlist actions: `{plan_summary.get('shortlist_action_count', plan_summary.get('source_health_screened_action_count', report['summary']['promotion_actions_seen']))}`",
                   f"- Strict-growth policy-capped actions: `{plan_summary.get('policy_capped_action_count', report['summary']['promotion_actions_seen'])}`",
                   f"- Strict-growth batch-deferred actions: `{plan_summary.get('batch_deferred_action_count', 0)}`",
               ]
@@ -377,7 +405,7 @@ jobs:
             candidate-promotion-pr-body-final.md
           if-no-files-found: error
       - name: Upload strict growth evidence artifacts
-        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && env.PROMOTION_PLAN_MODE == 'strict-growth-latest'
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist')
         uses: actions/upload-artifact@v6
         with:
           name: openva-candidate-promotion-pr-strict-growth-evidence
@@ -385,4 +413,5 @@ jobs:
             ${{ env.ELIGIBILITY_REPORT_PATH }}
             maintenance/generated/strict-growth-promotion-plan.json
             maintenance/generated/strict-growth-eligibility-report.json
+            maintenance/generated/strict-growth-shortlist.json
           if-no-files-found: error
