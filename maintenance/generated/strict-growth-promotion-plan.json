@@ -11,38 +11,84 @@
       ],
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "commercetools-dpa-candidate",
-        "candidate_url": "https://commercetools.com/dpa",
+        "candidate_source_id": "braze-dpa-candidate",
+        "candidate_url": "https://braze.com/dpa",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=utf-8",
-          "final_url": "https://commercetools.com/dpa",
+          "final_url": "https://www.braze.com/company/legal/dpa",
           "http_status": 200,
           "matched_terms": [
             "data processing",
-            "data processing agreement",
-            "dpa",
-            "processor",
-            "controller"
+            "data processing addendum"
           ],
-          "page_title": "Data Processing Agreement",
+          "page_title": "Data Processing Addendum | Braze",
           "semantic_status": "strong",
           "soft_404_detected": false,
-          "verification_status": "ok"
+          "verification_status": "redirected"
         },
         "source_type_candidate": "dpa",
-        "vendor_id": "commercetools"
+        "vendor_id": "braze"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "commercetools",
-        "cohort_id": "commerce-content-docs-launch",
-        "coverage_lane": "commerce_content_docs",
-        "display_name_candidate": "commercetools",
-        "headquarters_country_candidate": "DE",
-        "official_domain_candidate": "commercetools.com",
+        "candidate_vendor_id": "braze",
+        "cohort_id": "crm-customer-marketing-launch",
+        "coverage_lane": "crm_customer_marketing",
+        "display_name_candidate": "Braze",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "braze.com",
         "vendor_category_candidates": [
-          "ecommerce_platform"
+          "customer_engagement",
+          "marketing_technology"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
+    },
+    {
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+      "reason_codes": [
+        "strict_source_candidate_evidence_present",
+        "strict_growth_vendor_source_cap_exceeded"
+      ],
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "braze-privacy-notice-candidate",
+        "candidate_url": "https://braze.com/privacy",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://www.braze.com/company/legal/privacy",
+          "http_status": 200,
+          "matched_terms": [
+            "privacy",
+            "personal data",
+            "personal information",
+            "privacy policy"
+          ],
+          "page_title": "Privacy Policy | Braze",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "redirected"
+        },
+        "source_type_candidate": "privacy_notice",
+        "vendor_id": "braze"
+      },
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "braze",
+        "cohort_id": "crm-customer-marketing-launch",
+        "coverage_lane": "crm_customer_marketing",
+        "display_name_candidate": "Braze",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "braze.com",
+        "vendor_category_candidates": [
+          "customer_engagement",
+          "marketing_technology"
         ]
       },
       "writes_canonical_sources": false,
@@ -58,44 +104,902 @@
       ],
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "bigcommerce-privacy-notice-candidate",
-        "candidate_url": "https://bigcommerce.com/privacy",
+        "candidate_source_id": "dotdigital-privacy-notice-candidate",
+        "candidate_url": "https://dotdigital.com/privacy-policy",
         "confidence": "likely",
         "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://www.commerce.com/privacy/",
+          "content_type": "text/html; charset=UTF-8",
+          "final_url": "https://dotdigital.com/terms/privacy-policy/",
           "http_status": 200,
           "matched_terms": [
             "privacy",
-            "privacy policy"
+            "personal data",
+            "personal information",
+            "privacy policy",
+            "privacy notice"
           ],
-          "page_title": "Privacy Policy | Commerce",
+          "page_title": "Dotdigital privacy policy",
           "semantic_status": "strong",
           "soft_404_detected": false,
           "verification_status": "redirected"
         },
         "source_type_candidate": "privacy_notice",
-        "vendor_id": "bigcommerce"
+        "vendor_id": "dotdigital"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "bigcommerce",
-        "cohort_id": "commerce-content-docs-launch",
-        "coverage_lane": "commerce_content_docs",
-        "display_name_candidate": "BigCommerce",
-        "headquarters_country_candidate": "US",
-        "official_domain_candidate": "bigcommerce.com",
+        "candidate_vendor_id": "dotdigital",
+        "cohort_id": "crm-customer-marketing-launch",
+        "coverage_lane": "crm_customer_marketing",
+        "display_name_candidate": "Dotdigital",
+        "headquarters_country_candidate": "GB",
+        "official_domain_candidate": "dotdigital.com",
         "vendor_category_candidates": [
-          "ecommerce_platform"
+          "marketing_technology",
+          "customer_engagement"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
+    },
+    {
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+      "reason_codes": [
+        "strict_source_candidate_evidence_present"
+      ],
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "emarsys-privacy-notice-candidate",
+        "candidate_url": "https://emarsys.com/privacy-policy",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=UTF-8",
+          "final_url": "https://emarsys.com/privacy-policy/",
+          "http_status": 200,
+          "matched_terms": [
+            "privacy",
+            "privacy policy"
+          ],
+          "page_title": "Privacy Policy - SAP Engagement Cloud",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "ok"
+        },
+        "source_type_candidate": "privacy_notice",
+        "vendor_id": "emarsys"
+      },
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "emarsys",
+        "cohort_id": "crm-customer-marketing-launch",
+        "coverage_lane": "crm_customer_marketing",
+        "display_name_candidate": "Emarsys",
+        "headquarters_country_candidate": "AT",
+        "official_domain_candidate": "emarsys.com",
+        "vendor_category_candidates": [
+          "marketing_technology",
+          "customer_engagement"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
+    },
+    {
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+      "reason_codes": [
+        "strict_source_candidate_evidence_present"
+      ],
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "getresponse-privacy-notice-candidate",
+        "candidate_url": "https://getresponse.com/privacy",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=UTF-8",
+          "final_url": "https://www.getresponse.com/legal/privacy",
+          "http_status": 200,
+          "matched_terms": [
+            "privacy",
+            "privacy policy"
+          ],
+          "page_title": "GetResponse Privacy Policy",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "redirected"
+        },
+        "source_type_candidate": "privacy_notice",
+        "vendor_id": "getresponse"
+      },
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "getresponse",
+        "cohort_id": "crm-customer-marketing-launch",
+        "coverage_lane": "crm_customer_marketing",
+        "display_name_candidate": "GetResponse",
+        "headquarters_country_candidate": "PL",
+        "official_domain_candidate": "getresponse.com",
+        "vendor_category_candidates": [
+          "marketing_technology"
         ]
       },
       "writes_canonical_sources": false,
       "writes_canonical_vendors": false
     }
   ],
-  "base_sha": "f0240b481fa92074162d8f29df31a320936fa69a",
-  "generated_at": "2026-06-06T02:58:57Z",
-  "head_sha": "f0240b481fa92074162d8f29df31a320936fa69a",
+  "base_sha": "6fd1e02c767d1e5e52a448f725172dfb489352a6",
+  "deferred_actions": [
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "getresponse-security-page-candidate",
+          "candidate_url": "https://getresponse.com/security",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://www.getresponse.com/security",
+            "http_status": 200,
+            "matched_terms": [
+              "security",
+              "encryption",
+              "availability",
+              "vulnerability",
+              "incident",
+              "trust"
+            ],
+            "page_title": "GetResponse Security Focus",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "security_page",
+          "vendor_id": "getresponse"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "getresponse",
+          "cohort_id": "crm-customer-marketing-launch",
+          "coverage_lane": "crm_customer_marketing",
+          "display_name_candidate": "GetResponse",
+          "headquarters_country_candidate": "PL",
+          "official_domain_candidate": "getresponse.com",
+          "vendor_category_candidates": [
+            "marketing_technology"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "insider-privacy-notice-candidate",
+          "candidate_url": "https://insider.com/privacy-policy",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://www.businessinsider.com/privacy-policy",
+            "http_status": 200,
+            "matched_terms": [
+              "privacy",
+              "personal data",
+              "personal information",
+              "privacy policy"
+            ],
+            "page_title": null,
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "privacy_notice",
+          "vendor_id": "insider"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "insider",
+          "cohort_id": "crm-customer-marketing-launch",
+          "coverage_lane": "crm_customer_marketing",
+          "display_name_candidate": "Insider",
+          "headquarters_country_candidate": "GB",
+          "official_domain_candidate": "insider.com",
+          "vendor_category_candidates": [
+            "marketing_technology",
+            "customer_engagement"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "microsoft-azure-security-page-candidate",
+          "candidate_url": "https://azure.microsoft.com/security",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://www.microsoft.com/en-us/security",
+            "http_status": 200,
+            "matched_terms": [
+              "security",
+              "trust"
+            ],
+            "page_title": "Cloud Security Solutions | Microsoft Security",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "security_page",
+          "vendor_id": "microsoft-azure"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "microsoft-azure",
+          "cohort_id": "cloud-platforms-launch",
+          "coverage_lane": "cloud_platforms",
+          "display_name_candidate": "Microsoft Azure",
+          "headquarters_country_candidate": "US",
+          "official_domain_candidate": "azure.microsoft.com",
+          "vendor_category_candidates": [
+            "cloud_infrastructure"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "pipedrive-privacy-notice-candidate",
+          "candidate_url": "https://pipedrive.com/privacy",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://www.pipedrive.com/en/privacy",
+            "http_status": 200,
+            "matched_terms": [
+              "privacy",
+              "personal data",
+              "personal information",
+              "privacy notice"
+            ],
+            "page_title": "Privacy Notice | Pipedrive",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "privacy_notice",
+          "vendor_id": "pipedrive"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "pipedrive",
+          "cohort_id": "crm-customer-marketing-launch",
+          "coverage_lane": "crm_customer_marketing",
+          "display_name_candidate": "Pipedrive",
+          "headquarters_country_candidate": "EE",
+          "official_domain_candidate": "pipedrive.com",
+          "vendor_category_candidates": [
+            "crm"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "pipedrive-subprocessors-list-candidate",
+          "candidate_url": "https://pipedrive.com/subprocessors",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://www.pipedrive.com/en/subprocessors",
+            "http_status": 200,
+            "matched_terms": [
+              "subprocessor",
+              "sub-processors",
+              "sub-processor"
+            ],
+            "page_title": "Sub-processors | Pipedrive",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "subprocessors_list",
+          "vendor_id": "pipedrive"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "pipedrive",
+          "cohort_id": "crm-customer-marketing-launch",
+          "coverage_lane": "crm_customer_marketing",
+          "display_name_candidate": "Pipedrive",
+          "headquarters_country_candidate": "EE",
+          "official_domain_candidate": "pipedrive.com",
+          "vendor_category_candidates": [
+            "crm"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "prismic-privacy-notice-candidate",
+          "candidate_url": "https://prismic.io/legal/privacy",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://prismic.io/legal/privacy",
+            "http_status": 200,
+            "matched_terms": [
+              "privacy",
+              "personal data",
+              "privacy policy"
+            ],
+            "page_title": "Prismic Privacy Policy",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "ok"
+          },
+          "source_type_candidate": "privacy_notice",
+          "vendor_id": "prismic"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "prismic",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "Prismic",
+          "headquarters_country_candidate": "FR",
+          "official_domain_candidate": "prismic.io",
+          "vendor_category_candidates": [
+            "content_management"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "prismic-security-page-candidate",
+          "candidate_url": "https://prismic.io/security",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://prismic.io/legal/security",
+            "http_status": 200,
+            "matched_terms": [
+              "security",
+              "encryption",
+              "availability",
+              "vulnerability",
+              "incident"
+            ],
+            "page_title": "Prismic Security",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "security_page",
+          "vendor_id": "prismic"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "prismic",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "Prismic",
+          "headquarters_country_candidate": "FR",
+          "official_domain_candidate": "prismic.io",
+          "vendor_category_candidates": [
+            "content_management"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present",
+          "strict_growth_vendor_source_cap_exceeded"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "storyblok-dpa-candidate",
+          "candidate_url": "https://storyblok.com/legal/dpa",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=UTF-8",
+            "final_url": "https://www.storyblok.com/legal/dpa",
+            "http_status": 200,
+            "matched_terms": [
+              "data processing",
+              "data processing agreement",
+              "dpa",
+              "processor",
+              "controller"
+            ],
+            "page_title": "Data Processing Agreement | Storyblok",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "dpa",
+          "vendor_id": "storyblok"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "storyblok",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "Storyblok",
+          "headquarters_country_candidate": "AT",
+          "official_domain_candidate": "storyblok.com",
+          "vendor_category_candidates": [
+            "content_management"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present",
+          "strict_growth_vendor_source_cap_exceeded"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "storyblok-privacy-notice-candidate",
+          "candidate_url": "https://storyblok.com/privacy-policy",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=UTF-8",
+            "final_url": "https://www.storyblok.com/legal/privacy-policy",
+            "http_status": 200,
+            "matched_terms": [
+              "privacy",
+              "personal data",
+              "personal information",
+              "privacy policy",
+              "privacy notice"
+            ],
+            "page_title": "Privacy Policy | Storyblok",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "privacy_notice",
+          "vendor_id": "storyblok"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "storyblok",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "Storyblok",
+          "headquarters_country_candidate": "AT",
+          "official_domain_candidate": "storyblok.com",
+          "vendor_category_candidates": [
+            "content_management"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "strapi-privacy-notice-candidate",
+          "candidate_url": "https://strapi.io/privacy",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://strapi.io/privacy",
+            "http_status": 200,
+            "matched_terms": [
+              "privacy",
+              "privacy policy"
+            ],
+            "page_title": "Privacy policy | Strapi open-source headless CMS",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "ok"
+          },
+          "source_type_candidate": "privacy_notice",
+          "vendor_id": "strapi"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "strapi",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "Strapi",
+          "headquarters_country_candidate": "FR",
+          "official_domain_candidate": "strapi.io",
+          "vendor_category_candidates": [
+            "content_management"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "strapi-security-page-candidate",
+          "candidate_url": "https://strapi.io/security",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://strapi.io/security",
+            "http_status": 200,
+            "matched_terms": [
+              "security",
+              "trust"
+            ],
+            "page_title": "Security | Strapi Capabilities",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "ok"
+          },
+          "source_type_candidate": "security_page",
+          "vendor_id": "strapi"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "strapi",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "Strapi",
+          "headquarters_country_candidate": "FR",
+          "official_domain_candidate": "strapi.io",
+          "vendor_category_candidates": [
+            "content_management"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "vtex-privacy-notice-candidate",
+          "candidate_url": "https://vtex.com/privacy-policy",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
+            "http_status": 200,
+            "matched_terms": [
+              "privacy",
+              "personal data",
+              "privacy policy",
+              "privacy notice"
+            ],
+            "page_title": "VTEX Trust Center - Security, Privacy &amp; Compliance",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "privacy_notice",
+          "vendor_id": "vtex"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "vtex",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "VTEX",
+          "headquarters_country_candidate": "BR",
+          "official_domain_candidate": "vtex.com",
+          "vendor_category_candidates": [
+            "ecommerce_platform"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "vtex-security-page-candidate",
+          "candidate_url": "https://vtex.com/trust",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=utf-8",
+            "final_url": "https://www.vtex.com/en-us/trust/",
+            "http_status": 200,
+            "matched_terms": [
+              "security",
+              "availability",
+              "incident",
+              "trust"
+            ],
+            "page_title": "VTEX Trust Center - Security, Privacy &amp; Compliance",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "security_page",
+          "vendor_id": "vtex"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "vtex",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "VTEX",
+          "headquarters_country_candidate": "BR",
+          "official_domain_candidate": "vtex.com",
+          "vendor_category_candidates": [
+            "ecommerce_platform"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "woocommerce-privacy-notice-candidate",
+          "candidate_url": "https://woocommerce.com/privacy",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=UTF-8",
+            "final_url": "https://automattic.com/privacy/",
+            "http_status": 200,
+            "matched_terms": [
+              "privacy",
+              "personal data",
+              "personal information",
+              "privacy policy"
+            ],
+            "page_title": "Privacy Policy &#8211; Automattic",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "privacy_notice",
+          "vendor_id": "woocommerce"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "woocommerce",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "WooCommerce",
+          "headquarters_country_candidate": "US",
+          "official_domain_candidate": "woocommerce.com",
+          "vendor_category_candidates": [
+            "ecommerce_platform"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    },
+    {
+      "action": {
+        "action": "strict_catalog_growth_promotion",
+        "classification": "strict_promote_ready",
+        "non_advisory": true,
+        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+        "reason_codes": [
+          "strict_source_candidate_evidence_present"
+        ],
+        "requires_human_review": false,
+        "source": {
+          "candidate_source_id": "woocommerce-security-page-candidate",
+          "candidate_url": "https://woocommerce.com/security",
+          "confidence": "likely",
+          "evidence": {
+            "content_type": "text/html; charset=UTF-8",
+            "final_url": "https://automattic.com/security/",
+            "http_status": 200,
+            "matched_terms": [
+              "security",
+              "vulnerability"
+            ],
+            "page_title": "Security &#8211; Automattic",
+            "semantic_status": "strong",
+            "soft_404_detected": false,
+            "verification_status": "redirected"
+          },
+          "source_type_candidate": "security_page",
+          "vendor_id": "woocommerce"
+        },
+        "strict_machine_candidate": true,
+        "vendor": {
+          "candidate_vendor_id": "woocommerce",
+          "cohort_id": "commerce-content-docs-launch",
+          "coverage_lane": "commerce_content_docs",
+          "display_name_candidate": "WooCommerce",
+          "headquarters_country_candidate": "US",
+          "official_domain_candidate": "woocommerce.com",
+          "vendor_category_candidates": [
+            "ecommerce_platform"
+          ]
+        },
+        "writes_canonical_sources": false,
+        "writes_canonical_vendors": false
+      },
+      "reason_codes": [
+        "workflow_max_actions_per_plan_exceeded"
+      ]
+    }
+  ],
+  "generated_at": "2026-06-06T06:23:58.059384Z",
+  "head_sha": "6fd1e02c767d1e5e52a448f725172dfb489352a6",
   "posture": {
     "network_fetch_performed": false,
     "non_advisory": true,
@@ -107,18 +1011,17 @@
   "report_type": "strict_growth_promotion_plan",
   "schema_version": "0.1.0",
   "summary": {
-    "action_count": 2,
+    "action_count": 5,
     "action_types": {
-      "strict_catalog_growth_promotion": 2
+      "strict_catalog_growth_promotion": 5
     },
     "actions_requiring_human_review": 0,
-    "batch_deferred_action_count": 0,
-    "deferred_action_count": 0,
-    "max_actions_per_plan": 2,
-    "policy_capped_action_count": 2,
-    "shortlist_action_count": 2,
+    "batch_deferred_action_count": 15,
+    "deferred_action_count": 15,
+    "max_actions_per_plan": 5,
+    "policy_capped_action_count": 20,
     "source_health_deferred_action_count": 0,
-    "source_health_screened_action_count": 2,
-    "uncapped_action_count": 2
+    "source_health_screened_action_count": 20,
+    "uncapped_action_count": 20
   }
 }
