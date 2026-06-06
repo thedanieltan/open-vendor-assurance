@@ -6,52 +6,50 @@
       "non_advisory": true,
       "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
       "reason_codes": [
-        "strict_source_candidate_evidence_present",
-        "redirect_canonicalized"
+        "strict_source_candidate_evidence_present"
       ],
       "redirect": {
-        "candidate_url": "https://neo4j.com/privacy-policy",
-        "decision": "canonicalize",
-        "final_url": "https://neo4j.com/legal-terms/privacy-notice/",
-        "reason": "redirect_canonicalized",
-        "redirect_status": "canonicalized"
+        "candidate_url": "https://grafana.com/legal/privacy-policy",
+        "decision": "keep",
+        "final_url": "https://grafana.com/legal/privacy-policy/",
+        "reason": null,
+        "redirect_status": "not_redirected"
       },
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "neo4j-privacy-notice-candidate",
-        "candidate_url": "https://neo4j.com/legal-terms/privacy-notice/",
+        "candidate_source_id": "grafana-labs-privacy-notice-candidate",
+        "candidate_url": "https://grafana.com/legal/privacy-policy",
         "confidence": "likely",
         "evidence": {
-          "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://neo4j.com/legal-terms/privacy-notice/",
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://grafana.com/legal/privacy-policy/",
           "http_status": 200,
           "matched_terms": [
             "privacy",
-            "privacy notice"
+            "personal information",
+            "privacy policy"
           ],
-          "original_candidate_url": "https://neo4j.com/privacy-policy",
-          "page_title": "Neo4j Privacy Notice",
-          "redirect_decision": "canonicalize",
-          "redirect_reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized",
+          "page_title": "Grafana Labs Privacy Policy | Grafana Labs",
+          "redirect_decision": "keep",
+          "redirect_reason": null,
+          "redirect_status": "not_redirected",
           "semantic_status": "strong",
           "soft_404_detected": false,
-          "verification_status": "redirected"
+          "verification_status": "ok"
         },
         "source_type_candidate": "privacy_notice",
-        "vendor_id": "neo4j"
+        "vendor_id": "grafana-labs"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "neo4j",
-        "cohort_id": "data-ai-launch",
-        "coverage_lane": "data_ai",
-        "display_name_candidate": "Neo4j",
+        "candidate_vendor_id": "grafana-labs",
+        "cohort_id": "devtools-ops-launch",
+        "coverage_lane": "devtools_ops",
+        "display_name_candidate": "Grafana Labs",
         "headquarters_country_candidate": "US",
-        "official_domain_candidate": "neo4j.com",
+        "official_domain_candidate": "grafana.com",
         "vendor_category_candidates": [
-          "database",
-          "data_platform"
+          "observability"
         ]
       },
       "writes_canonical_sources": false,
@@ -66,26 +64,26 @@
         "strict_source_candidate_evidence_present"
       ],
       "redirect": {
-        "candidate_url": "https://neo4j.com/security",
+        "candidate_url": "https://grafana.com/security",
         "decision": "keep",
-        "final_url": "https://neo4j.com/security/",
+        "final_url": "https://grafana.com/security/",
         "reason": null,
         "redirect_status": "not_redirected"
       },
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "neo4j-security-page-candidate",
-        "candidate_url": "https://neo4j.com/security",
+        "candidate_source_id": "grafana-labs-security-page-candidate",
+        "candidate_url": "https://grafana.com/security",
         "confidence": "likely",
         "evidence": {
-          "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://neo4j.com/security/",
+          "content_type": "text/html",
+          "final_url": "https://grafana.com/security/",
           "http_status": 200,
           "matched_terms": [
             "security",
-            "trust"
+            "incident"
           ],
-          "page_title": "Information Security Management at Neo4j",
+          "page_title": "Security Advisories | Grafana Labs",
           "redirect_decision": "keep",
           "redirect_reason": null,
           "redirect_status": "not_redirected",
@@ -94,16 +92,73 @@
           "verification_status": "ok"
         },
         "source_type_candidate": "security_page",
-        "vendor_id": "neo4j"
+        "vendor_id": "grafana-labs"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "neo4j",
+        "candidate_vendor_id": "grafana-labs",
+        "cohort_id": "devtools-ops-launch",
+        "coverage_lane": "devtools_ops",
+        "display_name_candidate": "Grafana Labs",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "grafana.com",
+        "vendor_category_candidates": [
+          "observability"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
+    },
+    {
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
+      "reason_codes": [
+        "strict_source_candidate_evidence_present",
+        "redirect_generic_or_homepage_rejected",
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://redis.io/privacy",
+        "decision": "canonicalize",
+        "final_url": "https://redis.io/legal/privacy-policy/",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "redis-privacy-notice-candidate",
+        "candidate_url": "https://redis.io/legal/privacy-policy/",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://redis.io/legal/privacy-policy/",
+          "http_status": 200,
+          "matched_terms": [
+            "privacy",
+            "privacy policy"
+          ],
+          "original_candidate_url": "https://redis.io/privacy",
+          "page_title": "Privacy Policy",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "redirected"
+        },
+        "source_type_candidate": "privacy_notice",
+        "vendor_id": "redis"
+      },
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "redis",
         "cohort_id": "data-ai-launch",
         "coverage_lane": "data_ai",
-        "display_name_candidate": "Neo4j",
+        "display_name_candidate": "Redis",
         "headquarters_country_candidate": "US",
-        "official_domain_candidate": "neo4j.com",
+        "official_domain_candidate": "redis.io",
         "vendor_category_candidates": [
           "database",
           "data_platform"
@@ -119,33 +174,33 @@
       "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
       "reason_codes": [
         "strict_source_candidate_evidence_present",
-        "redirect_generic_or_homepage_rejected",
         "redirect_canonicalized"
       ],
       "redirect": {
-        "candidate_url": "https://pipedrive.com/privacy",
+        "candidate_url": "https://starburst.io/privacy-policy",
         "decision": "canonicalize",
-        "final_url": "https://www.pipedrive.com/en/privacy",
+        "final_url": "https://www.starburst.io/privacy-policy/",
         "reason": "redirect_canonicalized",
         "redirect_status": "canonicalized"
       },
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "pipedrive-privacy-notice-candidate",
-        "candidate_url": "https://www.pipedrive.com/en/privacy",
+        "candidate_source_id": "starburst-privacy-notice-candidate",
+        "candidate_url": "https://www.starburst.io/privacy-policy/",
         "confidence": "likely",
         "evidence": {
           "content_type": "text/html; charset=utf-8",
-          "final_url": "https://www.pipedrive.com/en/privacy",
+          "final_url": "https://www.starburst.io/privacy-policy/",
           "http_status": 200,
           "matched_terms": [
             "privacy",
             "personal data",
             "personal information",
+            "privacy policy",
             "privacy notice"
           ],
-          "original_candidate_url": "https://pipedrive.com/privacy",
-          "page_title": "Privacy Notice | Pipedrive",
+          "original_candidate_url": "https://starburst.io/privacy-policy",
+          "page_title": "Privacy Policy | Starburst",
           "redirect_decision": "canonicalize",
           "redirect_reason": "redirect_canonicalized",
           "redirect_status": "canonicalized",
@@ -154,18 +209,19 @@
           "verification_status": "redirected"
         },
         "source_type_candidate": "privacy_notice",
-        "vendor_id": "pipedrive"
+        "vendor_id": "starburst"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "pipedrive",
-        "cohort_id": "crm-customer-marketing-launch",
-        "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "Pipedrive",
-        "headquarters_country_candidate": "EE",
-        "official_domain_candidate": "pipedrive.com",
+        "candidate_vendor_id": "starburst",
+        "cohort_id": "data-ai-launch",
+        "coverage_lane": "data_ai",
+        "display_name_candidate": "Starburst",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "starburst.io",
         "vendor_category_candidates": [
-          "crm"
+          "data_platform",
+          "analytics_bi"
         ]
       },
       "writes_canonical_sources": false,
@@ -178,32 +234,34 @@
       "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
       "reason_codes": [
         "strict_source_candidate_evidence_present",
-        "redirect_generic_or_homepage_rejected",
+        "strict_growth_vendor_source_cap_exceeded",
         "redirect_canonicalized"
       ],
       "redirect": {
-        "candidate_url": "https://pipedrive.com/subprocessors",
+        "candidate_url": "https://storyblok.com/legal/dpa",
         "decision": "canonicalize",
-        "final_url": "https://www.pipedrive.com/en/subprocessors",
+        "final_url": "https://www.storyblok.com/legal/dpa",
         "reason": "redirect_canonicalized",
         "redirect_status": "canonicalized"
       },
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "pipedrive-subprocessors-list-candidate",
-        "candidate_url": "https://www.pipedrive.com/en/subprocessors",
+        "candidate_source_id": "storyblok-dpa-candidate",
+        "candidate_url": "https://www.storyblok.com/legal/dpa",
         "confidence": "likely",
         "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://www.pipedrive.com/en/subprocessors",
+          "content_type": "text/html; charset=UTF-8",
+          "final_url": "https://www.storyblok.com/legal/dpa",
           "http_status": 200,
           "matched_terms": [
-            "subprocessor",
-            "sub-processors",
-            "sub-processor"
+            "data processing",
+            "data processing agreement",
+            "dpa",
+            "processor",
+            "controller"
           ],
-          "original_candidate_url": "https://pipedrive.com/subprocessors",
-          "page_title": "Sub-processors | Pipedrive",
+          "original_candidate_url": "https://storyblok.com/legal/dpa",
+          "page_title": "Data Processing Agreement | Storyblok",
           "redirect_decision": "canonicalize",
           "redirect_reason": "redirect_canonicalized",
           "redirect_status": "canonicalized",
@@ -211,19 +269,19 @@
           "soft_404_detected": false,
           "verification_status": "redirected"
         },
-        "source_type_candidate": "subprocessors_list",
-        "vendor_id": "pipedrive"
+        "source_type_candidate": "dpa",
+        "vendor_id": "storyblok"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "pipedrive",
-        "cohort_id": "crm-customer-marketing-launch",
-        "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "Pipedrive",
-        "headquarters_country_candidate": "EE",
-        "official_domain_candidate": "pipedrive.com",
+        "candidate_vendor_id": "storyblok",
+        "cohort_id": "commerce-content-docs-launch",
+        "coverage_lane": "commerce_content_docs",
+        "display_name_candidate": "Storyblok",
+        "headquarters_country_candidate": "AT",
+        "official_domain_candidate": "storyblok.com",
         "vendor_category_candidates": [
-          "crm"
+          "content_management"
         ]
       },
       "writes_canonical_sources": false,
@@ -235,627 +293,180 @@
       "non_advisory": true,
       "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
       "reason_codes": [
-        "strict_source_candidate_evidence_present"
+        "strict_source_candidate_evidence_present",
+        "strict_growth_vendor_source_cap_exceeded",
+        "redirect_canonicalized"
       ],
       "redirect": {
-        "candidate_url": "https://prismic.io/legal/privacy",
-        "decision": "keep",
-        "final_url": "https://prismic.io/legal/privacy",
-        "reason": null,
-        "redirect_status": "not_redirected"
+        "candidate_url": "https://storyblok.com/privacy-policy",
+        "decision": "canonicalize",
+        "final_url": "https://www.storyblok.com/legal/privacy-policy",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
       },
       "requires_human_review": false,
       "source": {
-        "candidate_source_id": "prismic-privacy-notice-candidate",
-        "candidate_url": "https://prismic.io/legal/privacy",
+        "candidate_source_id": "storyblok-privacy-notice-candidate",
+        "candidate_url": "https://www.storyblok.com/legal/privacy-policy",
         "confidence": "likely",
         "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://prismic.io/legal/privacy",
+          "content_type": "text/html; charset=UTF-8",
+          "final_url": "https://www.storyblok.com/legal/privacy-policy",
           "http_status": 200,
           "matched_terms": [
             "privacy",
             "personal data",
-            "privacy policy"
+            "personal information",
+            "privacy policy",
+            "privacy notice"
           ],
-          "page_title": "Prismic Privacy Policy",
-          "redirect_decision": "keep",
-          "redirect_reason": null,
-          "redirect_status": "not_redirected",
+          "original_candidate_url": "https://storyblok.com/privacy-policy",
+          "page_title": "Privacy Policy | Storyblok",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
           "semantic_status": "strong",
           "soft_404_detected": false,
-          "verification_status": "ok"
+          "verification_status": "redirected"
         },
         "source_type_candidate": "privacy_notice",
-        "vendor_id": "prismic"
+        "vendor_id": "storyblok"
       },
       "strict_machine_candidate": true,
       "vendor": {
-        "candidate_vendor_id": "prismic",
+        "candidate_vendor_id": "storyblok",
         "cohort_id": "commerce-content-docs-launch",
         "coverage_lane": "commerce_content_docs",
-        "display_name_candidate": "Prismic",
-        "headquarters_country_candidate": "FR",
-        "official_domain_candidate": "prismic.io",
+        "display_name_candidate": "Storyblok",
+        "headquarters_country_candidate": "AT",
+        "official_domain_candidate": "storyblok.com",
         "vendor_category_candidates": [
           "content_management"
         ]
       },
       "writes_canonical_sources": false,
       "writes_canonical_vendors": false
-    }
-  ],
-  "base_sha": "74eea25342467316b0eeced5fac15a927d03def0",
-  "deferred_actions": [
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present",
-          "redirect_canonicalized"
-        ],
-        "redirect": {
-          "candidate_url": "https://prismic.io/security",
-          "decision": "canonicalize",
-          "final_url": "https://prismic.io/legal/security",
-          "reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized"
-        },
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "prismic-security-page-candidate",
-          "candidate_url": "https://prismic.io/legal/security",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://prismic.io/legal/security",
-            "http_status": 200,
-            "matched_terms": [
-              "security",
-              "encryption",
-              "availability",
-              "vulnerability",
-              "incident"
-            ],
-            "original_candidate_url": "https://prismic.io/security",
-            "page_title": "Prismic Security",
-            "redirect_decision": "canonicalize",
-            "redirect_reason": "redirect_canonicalized",
-            "redirect_status": "canonicalized",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "security_page",
-          "vendor_id": "prismic"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "prismic",
-          "cohort_id": "commerce-content-docs-launch",
-          "coverage_lane": "commerce_content_docs",
-          "display_name_candidate": "Prismic",
-          "headquarters_country_candidate": "FR",
-          "official_domain_candidate": "prismic.io",
-          "vendor_category_candidates": [
-            "content_management"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
     },
     {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present",
-          "redirect_generic_or_homepage_rejected",
-          "redirect_canonicalized"
-        ],
-        "redirect": {
-          "candidate_url": "https://redis.io/privacy",
-          "decision": "canonicalize",
-          "final_url": "https://redis.io/legal/privacy-policy/",
-          "reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized"
-        },
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "redis-privacy-notice-candidate",
-          "candidate_url": "https://redis.io/legal/privacy-policy/",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://redis.io/legal/privacy-policy/",
-            "http_status": 200,
-            "matched_terms": [
-              "privacy",
-              "privacy policy"
-            ],
-            "original_candidate_url": "https://redis.io/privacy",
-            "page_title": "Privacy Policy",
-            "redirect_decision": "canonicalize",
-            "redirect_reason": "redirect_canonicalized",
-            "redirect_status": "canonicalized",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "privacy_notice",
-          "vendor_id": "redis"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "redis",
-          "cohort_id": "data-ai-launch",
-          "coverage_lane": "data_ai",
-          "display_name_candidate": "Redis",
-          "headquarters_country_candidate": "US",
-          "official_domain_candidate": "redis.io",
-          "vendor_category_candidates": [
-            "database",
-            "data_platform"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
       "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
-    },
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present",
-          "redirect_canonicalized"
-        ],
-        "redirect": {
-          "candidate_url": "https://starburst.io/privacy-policy",
-          "decision": "canonicalize",
-          "final_url": "https://www.starburst.io/privacy-policy/",
-          "reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized"
-        },
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "starburst-privacy-notice-candidate",
-          "candidate_url": "https://www.starburst.io/privacy-policy/",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://www.starburst.io/privacy-policy/",
-            "http_status": 200,
-            "matched_terms": [
-              "privacy",
-              "personal data",
-              "personal information",
-              "privacy policy",
-              "privacy notice"
-            ],
-            "original_candidate_url": "https://starburst.io/privacy-policy",
-            "page_title": "Privacy Policy | Starburst",
-            "redirect_decision": "canonicalize",
-            "redirect_reason": "redirect_canonicalized",
-            "redirect_status": "canonicalized",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "privacy_notice",
-          "vendor_id": "starburst"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "starburst",
-          "cohort_id": "data-ai-launch",
-          "coverage_lane": "data_ai",
-          "display_name_candidate": "Starburst",
-          "headquarters_country_candidate": "US",
-          "official_domain_candidate": "starburst.io",
-          "vendor_category_candidates": [
-            "data_platform",
-            "analytics_bi"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
+        "strict_source_candidate_evidence_present",
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://vtex.com/privacy-policy",
+        "decision": "canonicalize",
+        "final_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
       },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
-    },
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present",
-          "strict_growth_vendor_source_cap_exceeded",
-          "redirect_canonicalized"
-        ],
-        "redirect": {
-          "candidate_url": "https://storyblok.com/legal/dpa",
-          "decision": "canonicalize",
-          "final_url": "https://www.storyblok.com/legal/dpa",
-          "reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized"
-        },
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "storyblok-dpa-candidate",
-          "candidate_url": "https://www.storyblok.com/legal/dpa",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=UTF-8",
-            "final_url": "https://www.storyblok.com/legal/dpa",
-            "http_status": 200,
-            "matched_terms": [
-              "data processing",
-              "data processing agreement",
-              "dpa",
-              "processor",
-              "controller"
-            ],
-            "original_candidate_url": "https://storyblok.com/legal/dpa",
-            "page_title": "Data Processing Agreement | Storyblok",
-            "redirect_decision": "canonicalize",
-            "redirect_reason": "redirect_canonicalized",
-            "redirect_status": "canonicalized",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "dpa",
-          "vendor_id": "storyblok"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "storyblok",
-          "cohort_id": "commerce-content-docs-launch",
-          "coverage_lane": "commerce_content_docs",
-          "display_name_candidate": "Storyblok",
-          "headquarters_country_candidate": "AT",
-          "official_domain_candidate": "storyblok.com",
-          "vendor_category_candidates": [
-            "content_management"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
-    },
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present",
-          "strict_growth_vendor_source_cap_exceeded",
-          "redirect_canonicalized"
-        ],
-        "redirect": {
-          "candidate_url": "https://storyblok.com/privacy-policy",
-          "decision": "canonicalize",
-          "final_url": "https://www.storyblok.com/legal/privacy-policy",
-          "reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized"
-        },
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "storyblok-privacy-notice-candidate",
-          "candidate_url": "https://www.storyblok.com/legal/privacy-policy",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=UTF-8",
-            "final_url": "https://www.storyblok.com/legal/privacy-policy",
-            "http_status": 200,
-            "matched_terms": [
-              "privacy",
-              "personal data",
-              "personal information",
-              "privacy policy",
-              "privacy notice"
-            ],
-            "original_candidate_url": "https://storyblok.com/privacy-policy",
-            "page_title": "Privacy Policy | Storyblok",
-            "redirect_decision": "canonicalize",
-            "redirect_reason": "redirect_canonicalized",
-            "redirect_status": "canonicalized",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "privacy_notice",
-          "vendor_id": "storyblok"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "storyblok",
-          "cohort_id": "commerce-content-docs-launch",
-          "coverage_lane": "commerce_content_docs",
-          "display_name_candidate": "Storyblok",
-          "headquarters_country_candidate": "AT",
-          "official_domain_candidate": "storyblok.com",
-          "vendor_category_candidates": [
-            "content_management"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
-    },
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present"
-        ],
-        "redirect": {
-          "candidate_url": "https://strapi.io/privacy",
-          "decision": "keep",
-          "final_url": "https://strapi.io/privacy",
-          "reason": null,
-          "redirect_status": "not_redirected"
-        },
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "strapi-privacy-notice-candidate",
-          "candidate_url": "https://strapi.io/privacy",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://strapi.io/privacy",
-            "http_status": 200,
-            "matched_terms": [
-              "privacy",
-              "privacy policy"
-            ],
-            "page_title": "Privacy policy | Strapi open-source headless CMS",
-            "redirect_decision": "keep",
-            "redirect_reason": null,
-            "redirect_status": "not_redirected",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "ok"
-          },
-          "source_type_candidate": "privacy_notice",
-          "vendor_id": "strapi"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "strapi",
-          "cohort_id": "commerce-content-docs-launch",
-          "coverage_lane": "commerce_content_docs",
-          "display_name_candidate": "Strapi",
-          "headquarters_country_candidate": "FR",
-          "official_domain_candidate": "strapi.io",
-          "vendor_category_candidates": [
-            "content_management"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
-    },
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present"
-        ],
-        "redirect": {
-          "candidate_url": "https://strapi.io/security",
-          "decision": "keep",
-          "final_url": "https://strapi.io/security",
-          "reason": null,
-          "redirect_status": "not_redirected"
-        },
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "strapi-security-page-candidate",
-          "candidate_url": "https://strapi.io/security",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://strapi.io/security",
-            "http_status": 200,
-            "matched_terms": [
-              "security",
-              "trust"
-            ],
-            "page_title": "Security | Strapi Capabilities",
-            "redirect_decision": "keep",
-            "redirect_reason": null,
-            "redirect_status": "not_redirected",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "ok"
-          },
-          "source_type_candidate": "security_page",
-          "vendor_id": "strapi"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "strapi",
-          "cohort_id": "commerce-content-docs-launch",
-          "coverage_lane": "commerce_content_docs",
-          "display_name_candidate": "Strapi",
-          "headquarters_country_candidate": "FR",
-          "official_domain_candidate": "strapi.io",
-          "vendor_category_candidates": [
-            "content_management"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
-    },
-    {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present",
-          "redirect_canonicalized"
-        ],
-        "redirect": {
-          "candidate_url": "https://vtex.com/privacy-policy",
-          "decision": "canonicalize",
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "vtex-privacy-notice-candidate",
+        "candidate_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=utf-8",
           "final_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
-          "reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized"
+          "http_status": 200,
+          "matched_terms": [
+            "privacy",
+            "personal data",
+            "privacy policy",
+            "privacy notice"
+          ],
+          "original_candidate_url": "https://vtex.com/privacy-policy",
+          "page_title": "VTEX Trust Center - Security, Privacy &amp; Compliance",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "redirected"
         },
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "vtex-privacy-notice-candidate",
-          "candidate_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://www.vtex.com/en-us/trust/general-external-privacy-notice/",
-            "http_status": 200,
-            "matched_terms": [
-              "privacy",
-              "personal data",
-              "privacy policy",
-              "privacy notice"
-            ],
-            "original_candidate_url": "https://vtex.com/privacy-policy",
-            "page_title": "VTEX Trust Center - Security, Privacy &amp; Compliance",
-            "redirect_decision": "canonicalize",
-            "redirect_reason": "redirect_canonicalized",
-            "redirect_status": "canonicalized",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "privacy_notice",
-          "vendor_id": "vtex"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "vtex",
-          "cohort_id": "commerce-content-docs-launch",
-          "coverage_lane": "commerce_content_docs",
-          "display_name_candidate": "VTEX",
-          "headquarters_country_candidate": "BR",
-          "official_domain_candidate": "vtex.com",
-          "vendor_category_candidates": [
-            "ecommerce_platform"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
+        "source_type_candidate": "privacy_notice",
+        "vendor_id": "vtex"
       },
-      "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "vtex",
+        "cohort_id": "commerce-content-docs-launch",
+        "coverage_lane": "commerce_content_docs",
+        "display_name_candidate": "VTEX",
+        "headquarters_country_candidate": "BR",
+        "official_domain_candidate": "vtex.com",
+        "vendor_category_candidates": [
+          "ecommerce_platform"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
     },
     {
-      "action": {
-        "action": "strict_catalog_growth_promotion",
-        "classification": "strict_promote_ready",
-        "non_advisory": true,
-        "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
-        "reason_codes": [
-          "strict_source_candidate_evidence_present",
-          "redirect_canonicalized"
-        ],
-        "redirect": {
-          "candidate_url": "https://vtex.com/trust",
-          "decision": "canonicalize",
-          "final_url": "https://www.vtex.com/en-us/trust/",
-          "reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized"
-        },
-        "requires_human_review": false,
-        "source": {
-          "candidate_source_id": "vtex-security-page-candidate",
-          "candidate_url": "https://www.vtex.com/en-us/trust/",
-          "confidence": "likely",
-          "evidence": {
-            "content_type": "text/html; charset=utf-8",
-            "final_url": "https://www.vtex.com/en-us/trust/",
-            "http_status": 200,
-            "matched_terms": [
-              "security",
-              "availability",
-              "incident",
-              "trust"
-            ],
-            "original_candidate_url": "https://vtex.com/trust",
-            "page_title": "VTEX Trust Center - Security, Privacy &amp; Compliance",
-            "redirect_decision": "canonicalize",
-            "redirect_reason": "redirect_canonicalized",
-            "redirect_status": "canonicalized",
-            "semantic_status": "strong",
-            "soft_404_detected": false,
-            "verification_status": "redirected"
-          },
-          "source_type_candidate": "security_page",
-          "vendor_id": "vtex"
-        },
-        "strict_machine_candidate": true,
-        "vendor": {
-          "candidate_vendor_id": "vtex",
-          "cohort_id": "commerce-content-docs-launch",
-          "coverage_lane": "commerce_content_docs",
-          "display_name_candidate": "VTEX",
-          "headquarters_country_candidate": "BR",
-          "official_domain_candidate": "vtex.com",
-          "vendor_category_candidates": [
-            "ecommerce_platform"
-          ]
-        },
-        "writes_canonical_sources": false,
-        "writes_canonical_vendors": false
-      },
+      "action": "strict_catalog_growth_promotion",
+      "classification": "strict_promote_ready",
+      "non_advisory": true,
+      "reason": "Candidate passed strict catalog growth eligibility and may be applied through the candidate promotion apply path.",
       "reason_codes": [
-        "workflow_max_actions_per_plan_exceeded"
-      ]
+        "strict_source_candidate_evidence_present",
+        "redirect_canonicalized"
+      ],
+      "redirect": {
+        "candidate_url": "https://vtex.com/trust",
+        "decision": "canonicalize",
+        "final_url": "https://www.vtex.com/en-us/trust/",
+        "reason": "redirect_canonicalized",
+        "redirect_status": "canonicalized"
+      },
+      "requires_human_review": false,
+      "source": {
+        "candidate_source_id": "vtex-security-page-candidate",
+        "candidate_url": "https://www.vtex.com/en-us/trust/",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://www.vtex.com/en-us/trust/",
+          "http_status": 200,
+          "matched_terms": [
+            "security",
+            "availability",
+            "incident",
+            "trust"
+          ],
+          "original_candidate_url": "https://vtex.com/trust",
+          "page_title": "VTEX Trust Center - Security, Privacy &amp; Compliance",
+          "redirect_decision": "canonicalize",
+          "redirect_reason": "redirect_canonicalized",
+          "redirect_status": "canonicalized",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "redirected"
+        },
+        "source_type_candidate": "security_page",
+        "vendor_id": "vtex"
+      },
+      "strict_machine_candidate": true,
+      "vendor": {
+        "candidate_vendor_id": "vtex",
+        "cohort_id": "commerce-content-docs-launch",
+        "coverage_lane": "commerce_content_docs",
+        "display_name_candidate": "VTEX",
+        "headquarters_country_candidate": "BR",
+        "official_domain_candidate": "vtex.com",
+        "vendor_category_candidates": [
+          "ecommerce_platform"
+        ]
+      },
+      "writes_canonical_sources": false,
+      "writes_canonical_vendors": false
     }
   ],
-  "generated_at": "2026-06-06T09:37:26.450220Z",
-  "head_sha": "74eea25342467316b0eeced5fac15a927d03def0",
+  "base_sha": "7a73fb1fed04200e41ca489c57b93256b24a1eec",
+  "generated_at": "2026-06-06T11:13:04.658550Z",
+  "head_sha": "7a73fb1fed04200e41ca489c57b93256b24a1eec",
   "posture": {
     "network_fetch_performed": false,
     "non_advisory": true,
@@ -867,23 +478,23 @@
   "report_type": "strict_growth_promotion_plan",
   "schema_version": "0.1.0",
   "summary": {
-    "action_count": 5,
+    "action_count": 8,
     "action_types": {
-      "strict_catalog_growth_promotion": 5
+      "strict_catalog_growth_promotion": 8
     },
     "actions_requiring_human_review": 0,
-    "batch_deferred_action_count": 9,
+    "batch_deferred_action_count": 0,
     "cross_authority_redirect_count": 0,
-    "deferred_action_count": 9,
+    "deferred_action_count": 0,
     "generic_redirect_rejected_count": 0,
-    "max_actions_per_plan": 5,
-    "policy_capped_action_count": 14,
-    "redirect_canonicalized_count": 3,
-    "redirect_count": 10,
-    "redirect_deferred_count": 7,
+    "max_actions_per_plan": 10,
+    "policy_capped_action_count": 8,
+    "redirect_canonicalized_count": 6,
+    "redirect_count": 6,
+    "redirect_deferred_count": 0,
     "source_health_deferred_action_count": 0,
-    "source_health_screened_action_count": 14,
-    "uncapped_action_count": 14,
+    "source_health_screened_action_count": 8,
+    "uncapped_action_count": 8,
     "unresolved_redirect_count": 0
   }
 }

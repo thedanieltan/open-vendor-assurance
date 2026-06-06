@@ -1,7 +1,7 @@
 {
-  "base_sha": "74eea25342467316b0eeced5fac15a927d03def0",
-  "generated_at": "2026-06-06T09:37:26Z",
-  "head_sha": "74eea25342467316b0eeced5fac15a927d03def0",
+  "base_sha": "7a73fb1fed04200e41ca489c57b93256b24a1eec",
+  "generated_at": "2026-06-06T11:13:04Z",
+  "head_sha": "7a73fb1fed04200e41ca489c57b93256b24a1eec",
   "items": [
     {
       "candidate_vendor_id": "adobe-experience-cloud",
@@ -732,40 +732,12 @@
       "strict_source_count": 0
     },
     {
-      "candidate_vendor_id": "gitlab",
-      "classification": "reject_no_public_source",
-      "cohort_id": "devtools-ops-launch",
-      "coverage_lane": "devtools_ops",
-      "display_name_candidate": "GitLab",
-      "official_domain_candidate": "gitlab.com",
-      "promotable_now": false,
-      "reason_codes": [
-        "no_source_candidates_for_vendor"
-      ],
-      "source_candidate_count": 0,
-      "strict_source_count": 0
-    },
-    {
       "candidate_vendor_id": "global-payments",
       "classification": "reject_no_public_source",
       "cohort_id": "payments-fintech-launch",
       "coverage_lane": "payments_fintech",
       "display_name_candidate": "Global Payments",
       "official_domain_candidate": "globalpayments.com",
-      "promotable_now": false,
-      "reason_codes": [
-        "no_source_candidates_for_vendor"
-      ],
-      "source_candidate_count": 0,
-      "strict_source_count": 0
-    },
-    {
-      "candidate_vendor_id": "grafana-labs",
-      "classification": "reject_no_public_source",
-      "cohort_id": "devtools-ops-launch",
-      "coverage_lane": "devtools_ops",
-      "display_name_candidate": "Grafana Labs",
-      "official_domain_candidate": "grafana.com",
       "promotable_now": false,
       "reason_codes": [
         "no_source_candidates_for_vendor"
@@ -1614,6 +1586,20 @@
       "strict_source_count": 0
     },
     {
+      "candidate_vendor_id": "strapi",
+      "classification": "reject_no_public_source",
+      "cohort_id": "commerce-content-docs-launch",
+      "coverage_lane": "commerce_content_docs",
+      "display_name_candidate": "Strapi",
+      "official_domain_candidate": "strapi.io",
+      "promotable_now": false,
+      "reason_codes": [
+        "no_source_candidates_for_vendor"
+      ],
+      "source_candidate_count": 0,
+      "strict_source_count": 0
+    },
+    {
       "candidate_vendor_id": "system-c",
       "classification": "reject_no_public_source",
       "cohort_id": "healthcare-launch",
@@ -1894,6 +1880,33 @@
       "strict_source_count": 0
     },
     {
+      "candidate_vendor_id": "gitlab",
+      "classification": "reject_source_health_failure",
+      "cohort_id": "devtools-ops-launch",
+      "coverage_lane": "devtools_ops",
+      "display_name_candidate": "GitLab",
+      "official_domain_candidate": "gitlab.com",
+      "promotable_now": false,
+      "reason_codes": [
+        "confidence_not_likely",
+        "source_preflight_risk:suspect_inferred_url"
+      ],
+      "source_candidate_count": 3,
+      "source_health_rejections": [
+        {
+          "candidate_source_id": "gitlab-dpa-candidate",
+          "candidate_url": "https://gitlab.com/dpa",
+          "classification": "reject_source_health_failure",
+          "reason_codes": [
+            "source_preflight_risk:suspect_inferred_url"
+          ],
+          "source_type_candidate": "dpa",
+          "vendor_id": "gitlab"
+        }
+      ],
+      "strict_source_count": 0
+    },
+    {
       "candidate_vendor_id": "mindsdb",
       "classification": "reject_source_health_failure",
       "cohort_id": "data-ai-launch",
@@ -1960,53 +1973,12 @@
       "strict_source_count": 0
     },
     {
-      "candidate_vendor_id": "neo4j",
+      "candidate_vendor_id": "grafana-labs",
       "classification": "strict_promote_ready",
-      "cohort_id": "data-ai-launch",
-      "coverage_lane": "data_ai",
-      "display_name_candidate": "Neo4j",
-      "official_domain_candidate": "neo4j.com",
-      "promotable_now": true,
-      "reason_codes": [
-        "strict_source_candidate_evidence_present"
-      ],
-      "source_candidate_count": 2,
-      "strict_source_count": 2
-    },
-    {
-      "candidate_vendor_id": "pipedrive",
-      "classification": "strict_promote_ready",
-      "cohort_id": "crm-customer-marketing-launch",
-      "coverage_lane": "crm_customer_marketing",
-      "display_name_candidate": "Pipedrive",
-      "official_domain_candidate": "pipedrive.com",
-      "promotable_now": true,
-      "reason_codes": [
-        "strict_source_candidate_evidence_present",
-        "redirect_generic_or_homepage_rejected"
-      ],
-      "source_candidate_count": 3,
-      "source_health_rejections": [
-        {
-          "candidate_source_id": "pipedrive-security-page-candidate",
-          "candidate_url": "https://pipedrive.com/trust-center",
-          "classification": "reject_source_health_failure",
-          "reason_codes": [
-            "source_preflight_risk:homepage_or_generic_redirect"
-          ],
-          "source_type_candidate": "security_page",
-          "vendor_id": "pipedrive"
-        }
-      ],
-      "strict_source_count": 2
-    },
-    {
-      "candidate_vendor_id": "prismic",
-      "classification": "strict_promote_ready",
-      "cohort_id": "commerce-content-docs-launch",
-      "coverage_lane": "commerce_content_docs",
-      "display_name_candidate": "Prismic",
-      "official_domain_candidate": "prismic.io",
+      "cohort_id": "devtools-ops-launch",
+      "coverage_lane": "devtools_ops",
+      "display_name_candidate": "Grafana Labs",
+      "official_domain_candidate": "grafana.com",
       "promotable_now": true,
       "reason_codes": [
         "strict_source_candidate_evidence_present"
@@ -2103,20 +2075,6 @@
       "strict_source_count": 2
     },
     {
-      "candidate_vendor_id": "strapi",
-      "classification": "strict_promote_ready",
-      "cohort_id": "commerce-content-docs-launch",
-      "coverage_lane": "commerce_content_docs",
-      "display_name_candidate": "Strapi",
-      "official_domain_candidate": "strapi.io",
-      "promotable_now": true,
-      "reason_codes": [
-        "strict_source_candidate_evidence_present"
-      ],
-      "source_candidate_count": 2,
-      "strict_source_count": 2
-    },
-    {
       "candidate_vendor_id": "vtex",
       "classification": "strict_promote_ready",
       "cohort_id": "commerce-content-docs-launch",
@@ -2142,117 +2100,6 @@
   "report_type": "catalog_growth_eligibility_report",
   "schema_version": "0.1.0",
   "strict_promotions": [
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "reason_codes": [],
-      "redirect": {
-        "candidate_url": "https://prismic.io/legal/privacy",
-        "decision": "keep",
-        "final_url": "https://prismic.io/legal/privacy",
-        "reason": null,
-        "redirect_status": "not_redirected"
-      },
-      "source": {
-        "candidate_source_id": "prismic-privacy-notice-candidate",
-        "candidate_url": "https://prismic.io/legal/privacy",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://prismic.io/legal/privacy",
-          "http_status": 200,
-          "matched_terms": [
-            "privacy",
-            "personal data",
-            "privacy policy"
-          ],
-          "page_title": "Prismic Privacy Policy",
-          "redirect_decision": "keep",
-          "redirect_reason": null,
-          "redirect_status": "not_redirected",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "ok"
-        },
-        "source_type_candidate": "privacy_notice",
-        "vendor_id": "prismic"
-      },
-      "vendor": {
-        "candidate_vendor_id": "prismic",
-        "cohort_id": "commerce-content-docs-launch",
-        "coverage_lane": "commerce_content_docs",
-        "display_name_candidate": "Prismic",
-        "headquarters_country_candidate": "FR",
-        "official_domain_candidate": "prismic.io",
-        "vendor_category_candidates": [
-          "content_management"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "reason_codes": [
-        "redirect_canonicalized"
-      ],
-      "redirect": {
-        "candidate_url": "https://prismic.io/security",
-        "decision": "canonicalize",
-        "final_url": "https://prismic.io/legal/security",
-        "reason": "redirect_canonicalized",
-        "redirect_status": "canonicalized"
-      },
-      "source": {
-        "candidate_source_id": "prismic-security-page-candidate",
-        "candidate_url": "https://prismic.io/legal/security",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://prismic.io/legal/security",
-          "http_status": 200,
-          "matched_terms": [
-            "security",
-            "encryption",
-            "availability",
-            "vulnerability",
-            "incident"
-          ],
-          "original_candidate_url": "https://prismic.io/security",
-          "page_title": "Prismic Security",
-          "redirect_decision": "canonicalize",
-          "redirect_reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "redirected"
-        },
-        "source_type_candidate": "security_page",
-        "vendor_id": "prismic"
-      },
-      "vendor": {
-        "candidate_vendor_id": "prismic",
-        "cohort_id": "commerce-content-docs-launch",
-        "coverage_lane": "commerce_content_docs",
-        "display_name_candidate": "Prismic",
-        "headquarters_country_candidate": "FR",
-        "official_domain_candidate": "prismic.io",
-        "vendor_category_candidates": [
-          "content_management"
-        ]
-      }
-    },
     {
       "action": "strict_catalog_growth_promotion_candidate",
       "posture": {
@@ -2364,110 +2211,6 @@
         "display_name_candidate": "Storyblok",
         "headquarters_country_candidate": "AT",
         "official_domain_candidate": "storyblok.com",
-        "vendor_category_candidates": [
-          "content_management"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "reason_codes": [],
-      "redirect": {
-        "candidate_url": "https://strapi.io/privacy",
-        "decision": "keep",
-        "final_url": "https://strapi.io/privacy",
-        "reason": null,
-        "redirect_status": "not_redirected"
-      },
-      "source": {
-        "candidate_source_id": "strapi-privacy-notice-candidate",
-        "candidate_url": "https://strapi.io/privacy",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://strapi.io/privacy",
-          "http_status": 200,
-          "matched_terms": [
-            "privacy",
-            "privacy policy"
-          ],
-          "page_title": "Privacy policy | Strapi open-source headless CMS",
-          "redirect_decision": "keep",
-          "redirect_reason": null,
-          "redirect_status": "not_redirected",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "ok"
-        },
-        "source_type_candidate": "privacy_notice",
-        "vendor_id": "strapi"
-      },
-      "vendor": {
-        "candidate_vendor_id": "strapi",
-        "cohort_id": "commerce-content-docs-launch",
-        "coverage_lane": "commerce_content_docs",
-        "display_name_candidate": "Strapi",
-        "headquarters_country_candidate": "FR",
-        "official_domain_candidate": "strapi.io",
-        "vendor_category_candidates": [
-          "content_management"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "reason_codes": [],
-      "redirect": {
-        "candidate_url": "https://strapi.io/security",
-        "decision": "keep",
-        "final_url": "https://strapi.io/security",
-        "reason": null,
-        "redirect_status": "not_redirected"
-      },
-      "source": {
-        "candidate_source_id": "strapi-security-page-candidate",
-        "candidate_url": "https://strapi.io/security",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://strapi.io/security",
-          "http_status": 200,
-          "matched_terms": [
-            "security",
-            "trust"
-          ],
-          "page_title": "Security | Strapi Capabilities",
-          "redirect_decision": "keep",
-          "redirect_reason": null,
-          "redirect_status": "not_redirected",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "ok"
-        },
-        "source_type_candidate": "security_page",
-        "vendor_id": "strapi"
-      },
-      "vendor": {
-        "candidate_vendor_id": "strapi",
-        "cohort_id": "commerce-content-docs-launch",
-        "coverage_lane": "commerce_content_docs",
-        "display_name_candidate": "Strapi",
-        "headquarters_country_candidate": "FR",
-        "official_domain_candidate": "strapi.io",
         "vendor_category_candidates": [
           "content_management"
         ]
@@ -2600,228 +2343,6 @@
         "redirect_canonicalized"
       ],
       "redirect": {
-        "candidate_url": "https://pipedrive.com/privacy",
-        "decision": "canonicalize",
-        "final_url": "https://www.pipedrive.com/en/privacy",
-        "reason": "redirect_canonicalized",
-        "redirect_status": "canonicalized"
-      },
-      "source": {
-        "candidate_source_id": "pipedrive-privacy-notice-candidate",
-        "candidate_url": "https://www.pipedrive.com/en/privacy",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://www.pipedrive.com/en/privacy",
-          "http_status": 200,
-          "matched_terms": [
-            "privacy",
-            "personal data",
-            "personal information",
-            "privacy notice"
-          ],
-          "original_candidate_url": "https://pipedrive.com/privacy",
-          "page_title": "Privacy Notice | Pipedrive",
-          "redirect_decision": "canonicalize",
-          "redirect_reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "redirected"
-        },
-        "source_type_candidate": "privacy_notice",
-        "vendor_id": "pipedrive"
-      },
-      "vendor": {
-        "candidate_vendor_id": "pipedrive",
-        "cohort_id": "crm-customer-marketing-launch",
-        "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "Pipedrive",
-        "headquarters_country_candidate": "EE",
-        "official_domain_candidate": "pipedrive.com",
-        "vendor_category_candidates": [
-          "crm"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "reason_codes": [
-        "redirect_canonicalized"
-      ],
-      "redirect": {
-        "candidate_url": "https://pipedrive.com/subprocessors",
-        "decision": "canonicalize",
-        "final_url": "https://www.pipedrive.com/en/subprocessors",
-        "reason": "redirect_canonicalized",
-        "redirect_status": "canonicalized"
-      },
-      "source": {
-        "candidate_source_id": "pipedrive-subprocessors-list-candidate",
-        "candidate_url": "https://www.pipedrive.com/en/subprocessors",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=utf-8",
-          "final_url": "https://www.pipedrive.com/en/subprocessors",
-          "http_status": 200,
-          "matched_terms": [
-            "subprocessor",
-            "sub-processors",
-            "sub-processor"
-          ],
-          "original_candidate_url": "https://pipedrive.com/subprocessors",
-          "page_title": "Sub-processors | Pipedrive",
-          "redirect_decision": "canonicalize",
-          "redirect_reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "redirected"
-        },
-        "source_type_candidate": "subprocessors_list",
-        "vendor_id": "pipedrive"
-      },
-      "vendor": {
-        "candidate_vendor_id": "pipedrive",
-        "cohort_id": "crm-customer-marketing-launch",
-        "coverage_lane": "crm_customer_marketing",
-        "display_name_candidate": "Pipedrive",
-        "headquarters_country_candidate": "EE",
-        "official_domain_candidate": "pipedrive.com",
-        "vendor_category_candidates": [
-          "crm"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "reason_codes": [
-        "redirect_canonicalized"
-      ],
-      "redirect": {
-        "candidate_url": "https://neo4j.com/privacy-policy",
-        "decision": "canonicalize",
-        "final_url": "https://neo4j.com/legal-terms/privacy-notice/",
-        "reason": "redirect_canonicalized",
-        "redirect_status": "canonicalized"
-      },
-      "source": {
-        "candidate_source_id": "neo4j-privacy-notice-candidate",
-        "candidate_url": "https://neo4j.com/legal-terms/privacy-notice/",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://neo4j.com/legal-terms/privacy-notice/",
-          "http_status": 200,
-          "matched_terms": [
-            "privacy",
-            "privacy notice"
-          ],
-          "original_candidate_url": "https://neo4j.com/privacy-policy",
-          "page_title": "Neo4j Privacy Notice",
-          "redirect_decision": "canonicalize",
-          "redirect_reason": "redirect_canonicalized",
-          "redirect_status": "canonicalized",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "redirected"
-        },
-        "source_type_candidate": "privacy_notice",
-        "vendor_id": "neo4j"
-      },
-      "vendor": {
-        "candidate_vendor_id": "neo4j",
-        "cohort_id": "data-ai-launch",
-        "coverage_lane": "data_ai",
-        "display_name_candidate": "Neo4j",
-        "headquarters_country_candidate": "US",
-        "official_domain_candidate": "neo4j.com",
-        "vendor_category_candidates": [
-          "database",
-          "data_platform"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "reason_codes": [],
-      "redirect": {
-        "candidate_url": "https://neo4j.com/security",
-        "decision": "keep",
-        "final_url": "https://neo4j.com/security/",
-        "reason": null,
-        "redirect_status": "not_redirected"
-      },
-      "source": {
-        "candidate_source_id": "neo4j-security-page-candidate",
-        "candidate_url": "https://neo4j.com/security",
-        "confidence": "likely",
-        "evidence": {
-          "content_type": "text/html; charset=UTF-8",
-          "final_url": "https://neo4j.com/security/",
-          "http_status": 200,
-          "matched_terms": [
-            "security",
-            "trust"
-          ],
-          "page_title": "Information Security Management at Neo4j",
-          "redirect_decision": "keep",
-          "redirect_reason": null,
-          "redirect_status": "not_redirected",
-          "semantic_status": "strong",
-          "soft_404_detected": false,
-          "verification_status": "ok"
-        },
-        "source_type_candidate": "security_page",
-        "vendor_id": "neo4j"
-      },
-      "vendor": {
-        "candidate_vendor_id": "neo4j",
-        "cohort_id": "data-ai-launch",
-        "coverage_lane": "data_ai",
-        "display_name_candidate": "Neo4j",
-        "headquarters_country_candidate": "US",
-        "official_domain_candidate": "neo4j.com",
-        "vendor_category_candidates": [
-          "database",
-          "data_platform"
-        ]
-      }
-    },
-    {
-      "action": "strict_catalog_growth_promotion_candidate",
-      "posture": {
-        "network_fetch_performed": false,
-        "non_advisory": true,
-        "strict_machine_candidate": true,
-        "writes_canonical_sources": false,
-        "writes_repository_state": false
-      },
-      "reason_codes": [
-        "redirect_canonicalized"
-      ],
-      "redirect": {
         "candidate_url": "https://redis.io/privacy",
         "decision": "canonicalize",
         "final_url": "https://redis.io/legal/privacy-policy/",
@@ -2923,27 +2444,132 @@
           "analytics_bi"
         ]
       }
+    },
+    {
+      "action": "strict_catalog_growth_promotion_candidate",
+      "posture": {
+        "network_fetch_performed": false,
+        "non_advisory": true,
+        "strict_machine_candidate": true,
+        "writes_canonical_sources": false,
+        "writes_repository_state": false
+      },
+      "reason_codes": [],
+      "redirect": {
+        "candidate_url": "https://grafana.com/legal/privacy-policy",
+        "decision": "keep",
+        "final_url": "https://grafana.com/legal/privacy-policy/",
+        "reason": null,
+        "redirect_status": "not_redirected"
+      },
+      "source": {
+        "candidate_source_id": "grafana-labs-privacy-notice-candidate",
+        "candidate_url": "https://grafana.com/legal/privacy-policy",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://grafana.com/legal/privacy-policy/",
+          "http_status": 200,
+          "matched_terms": [
+            "privacy",
+            "personal information",
+            "privacy policy"
+          ],
+          "page_title": "Grafana Labs Privacy Policy | Grafana Labs",
+          "redirect_decision": "keep",
+          "redirect_reason": null,
+          "redirect_status": "not_redirected",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "ok"
+        },
+        "source_type_candidate": "privacy_notice",
+        "vendor_id": "grafana-labs"
+      },
+      "vendor": {
+        "candidate_vendor_id": "grafana-labs",
+        "cohort_id": "devtools-ops-launch",
+        "coverage_lane": "devtools_ops",
+        "display_name_candidate": "Grafana Labs",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "grafana.com",
+        "vendor_category_candidates": [
+          "observability"
+        ]
+      }
+    },
+    {
+      "action": "strict_catalog_growth_promotion_candidate",
+      "posture": {
+        "network_fetch_performed": false,
+        "non_advisory": true,
+        "strict_machine_candidate": true,
+        "writes_canonical_sources": false,
+        "writes_repository_state": false
+      },
+      "reason_codes": [],
+      "redirect": {
+        "candidate_url": "https://grafana.com/security",
+        "decision": "keep",
+        "final_url": "https://grafana.com/security/",
+        "reason": null,
+        "redirect_status": "not_redirected"
+      },
+      "source": {
+        "candidate_source_id": "grafana-labs-security-page-candidate",
+        "candidate_url": "https://grafana.com/security",
+        "confidence": "likely",
+        "evidence": {
+          "content_type": "text/html",
+          "final_url": "https://grafana.com/security/",
+          "http_status": 200,
+          "matched_terms": [
+            "security",
+            "incident"
+          ],
+          "page_title": "Security Advisories | Grafana Labs",
+          "redirect_decision": "keep",
+          "redirect_reason": null,
+          "redirect_status": "not_redirected",
+          "semantic_status": "strong",
+          "soft_404_detected": false,
+          "verification_status": "ok"
+        },
+        "source_type_candidate": "security_page",
+        "vendor_id": "grafana-labs"
+      },
+      "vendor": {
+        "candidate_vendor_id": "grafana-labs",
+        "cohort_id": "devtools-ops-launch",
+        "coverage_lane": "devtools_ops",
+        "display_name_candidate": "Grafana Labs",
+        "headquarters_country_candidate": "US",
+        "official_domain_candidate": "grafana.com",
+        "vendor_category_candidates": [
+          "observability"
+        ]
+      }
     }
   ],
   "summary": {
-    "candidate_count": 146,
+    "candidate_count": 143,
     "classification_counts": {
       "reject_existing_vendor": 9,
-      "reject_no_public_source": 126,
-      "reject_source_health_failure": 1,
+      "reject_no_public_source": 125,
+      "reject_source_health_failure": 2,
       "reject_weak_semantic_match": 1,
       "review_required": 1,
-      "strict_promote_ready": 8
+      "strict_promote_ready": 5
     },
     "cross_authority_redirect_count": 1,
-    "generic_redirect_rejected_count": 3,
-    "redirect_canonicalized_count": 10,
-    "redirect_count": 14,
-    "redirect_deferred_count": 4,
+    "generic_redirect_rejected_count": 2,
+    "redirect_canonicalized_count": 6,
+    "redirect_count": 9,
+    "redirect_deferred_count": 3,
     "rejected_or_deferred_count": 137,
     "review_required_count": 1,
-    "strict_promote_ready_count": 8,
-    "strict_promotion_action_count": 14,
+    "strict_promote_ready_count": 5,
+    "strict_promotion_action_count": 8,
     "unresolved_redirect_count": 1
   }
 }

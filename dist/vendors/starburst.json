@@ -1,0 +1,132 @@
+{
+  "artifacts": [
+    {
+      "_openva_path": "data/vendors/starburst/artifacts/starburst-privacy-notice.yaml",
+      "access_class": "public_web",
+      "artifact_id": "starburst-privacy-notice",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://www.starburst.io/privacy-policy/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "starburst-privacy-notice",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "starburst"
+    }
+  ],
+  "candidate_sources": [],
+  "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/starburst/sources/starburst-privacy-notice.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-06-06T11:13:12.060539Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "starburst-privacy-notice",
+      "source_language": "en",
+      "source_type": "privacy_notice",
+      "source_url": "https://www.starburst.io/privacy-policy/",
+      "title_native": "Privacy Policy | Starburst",
+      "vendor_id": "starburst"
+    }
+  ],
+  "changes": [
+    {
+      "_openva_path": "data/vendors/starburst/changes/strict-growth-starburst-privacy-notice.yaml",
+      "artifact_id": "starburst-privacy-notice",
+      "catalog_change_significance": "unknown",
+      "change_id": "strict-growth-starburst-privacy-notice",
+      "change_type": "created",
+      "detected_at": "2026-06-06T11:13:12.060539Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "starburst-privacy-notice",
+      "summary": "Strict catalog growth candidate promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "starburst"
+    }
+  ],
+  "entity_mentions": [],
+  "generated_at": "1970-01-01T00:00:00Z",
+  "guarantees": {
+    "metadata_first": true,
+    "non_advisory": true,
+    "public_sources_only": true,
+    "raw_documents_mirrored_by_default": false
+  },
+  "legal_entities": [],
+  "observations": [],
+  "schema_version": "0.1.0",
+  "summary": {
+    "artifact_count": 1,
+    "candidate_source_count": 0,
+    "candidate_source_types": [],
+    "canonical_source_count": 1,
+    "entity_mention_count": 0,
+    "legal_entity_count": 0,
+    "source_types": [
+      "privacy_notice"
+    ],
+    "unavailable_source_count": 0,
+    "unavailable_source_types": []
+  },
+  "unavailable_sources": [],
+  "vendor": {
+    "_openva_path": "data/vendors/starburst/vendor.yaml",
+    "catalog_status": "active",
+    "display_name": "Starburst",
+    "entity_surface": "global_brand",
+    "headquarters_country": "US",
+    "legal_name": null,
+    "notes": "Machine-strict catalog growth candidate promoted from public source discovery evidence. Metadata-only; not advisory.",
+    "official_domains": [
+      "starburst.io"
+    ],
+    "public_entrypoints": [
+      "https://starburst.io"
+    ],
+    "regions_served": [
+      "global"
+    ],
+    "schema_version": "0.1.0",
+    "source_authority_language": "en",
+    "source_policy": {
+      "gated_materials_excluded": true,
+      "public_sources_only": true,
+      "raw_documents_mirrored_by_default": false
+    },
+    "status": "active",
+    "vendor_categories": [
+      "data_platform",
+      "analytics_bi"
+    ],
+    "vendor_id": "starburst"
+  }
+}
