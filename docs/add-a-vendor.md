@@ -53,6 +53,45 @@ Each source must include:
 - provenance
 - `not_advice: true`
 
+### Source role coverage claims
+
+`source_type` is the primary classification of the public location.
+
+`coverage_claims` records additional explicit source roles evidenced by that same location.
+
+Rules:
+
+1. One public URL should normally have one source record.
+2. Do not duplicate `source_url` just to represent multiple roles.
+3. Use `coverage_claims` when one source explicitly contains, links to, or references multiple source roles.
+4. Do not infer coverage from broad page titles such as trust center, security, legal, or compliance.
+5. If the page links to a distinct public stable URL, prefer adding that linked URL as a separate source record when appropriate.
+6. `coverage_claims` must stay factual and non-advisory.
+
+Example for a clumped legal page:
+
+```yaml
+source_type: terms_of_service
+coverage_claims:
+  - role: dpa
+    coverage_type: contains
+    evidence: "The same page includes a data processing addendum section."
+  - role: ai_terms
+    coverage_type: contains
+    evidence: "The same page includes AI-specific terms."
+```
+
+Example for a trust center that links to a distinct public certification page:
+
+```yaml
+source_type: trust_center
+coverage_claims:
+  - role: certification_reference
+    coverage_type: links_to
+    evidence: "The trust center links to public certification information."
+    target_url: https://vendor.example/trust/certifications
+```
+
 ## 5. Add artifact records
 
 An artifact record points to the assurance artifact represented by the source.

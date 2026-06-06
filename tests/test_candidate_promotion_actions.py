@@ -100,6 +100,38 @@ def test_apply_reviewed_candidate_promotion_writes_canonical_source(tmp_path):
     assert change["not_advice"] is True
 
 
+def test_apply_reviewed_candidate_promotion_preserves_plan_coverage_claims(tmp_path):
+    write_yaml(
+        tmp_path / "data/vendors/example/candidate_sources/example-dpa-candidate.yaml",
+        {
+            "schema_version": "0.1.0",
+            "candidate_source_id": "example-dpa-candidate",
+            "vendor_id": "example",
+            "source_type_candidate": "dpa",
+            "candidate_url": "https://example.test/legal",
+            "confidence": "likely",
+            "requires_review": True,
+            "evidence": {"http_status": 200, "matched_terms": ["data processing"]},
+            "not_advice": True,
+        },
+    )
+    action = reviewed_action()
+    action["candidate_url"] = "https://example.test/legal"
+    action["coverage_claims"] = [
+        {
+            "role": "ai_terms",
+            "coverage_type": "contains",
+            "evidence": "The same page includes AI-specific terms.",
+        }
+    ]
+
+    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
+    source = yaml.safe_load((tmp_path / "data/vendors/example/sources/example-dpa.yaml").read_text(encoding="utf-8"))
+
+    assert report["summary"]["canonical_sources_written"] == 1
+    assert source["coverage_claims"] == action["coverage_claims"]
+
+
 def test_apply_reviewed_candidate_promotion_skips_duplicate_source(tmp_path):
     write_yaml(
         tmp_path / "data/vendors/example/candidate_sources/example-dpa-candidate.yaml",
@@ -199,6 +231,19 @@ def test_apply_strict_growth_rejects_advisory_page_title_before_writes(tmp_path)
     assert report["summary"]["skipped_actions"] == 1
     assert "strict growth advisory wording detected: safe" in report["skipped"][0]["reason"]
     assert not (tmp_path / "data/vendors/candidate-a/vendor.yaml").exists()
+
+
+def test_apply_strict_growth_does_not_infer_coverage_claims_from_broad_title(tmp_path):
+    action = strict_growth_action()
+    action["source"]["evidence"]["page_title"] = "Security and Trust Center"
+
+    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
+    source = yaml.safe_load(
+        (tmp_path / "data/vendors/candidate-a/sources/candidate-a-security-page.yaml").read_text(encoding="utf-8")
+    )
+
+    assert report["summary"]["canonical_sources_written"] == 1
+    assert "coverage_claims" not in source
 
 
 def test_strict_growth_batch_cap_prevents_applying_five_actions(tmp_path):

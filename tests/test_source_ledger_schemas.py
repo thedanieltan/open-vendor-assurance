@@ -90,6 +90,28 @@ def valid_candidate_source() -> dict:
     }
 
 
+def valid_source_reference() -> dict:
+    return {
+        "schema_version": "0.1.0",
+        "source_id": "example-legal",
+        "vendor_id": "example",
+        "source_type": "terms_of_service",
+        "title_native": "Example Legal Terms",
+        "source_url": "https://example.com/legal",
+        "source_language": "en",
+        "source_authority_class": "vendor_legal_terms",
+        "access_class": "public_web",
+        "rights_class": "metadata_only",
+        "provenance": {
+            "publisher": "vendor",
+            "collected_at": "2026-06-01T00:00:00Z",
+            "observer": "human",
+            "confidence": "high",
+        },
+        "not_advice": True,
+    }
+
+
 def test_unavailable_source_schema_accepts_reviewed_absence():
     assert_valid("unavailable-source.schema.json", valid_unavailable_source())
 
@@ -146,3 +168,59 @@ def test_candidate_source_schema_requires_review_gate():
     instance["requires_review"] = False
 
     assert_invalid("candidate-source.schema.json", instance)
+
+
+def test_source_reference_schema_accepts_without_coverage_claims():
+    assert_valid("source-reference.schema.json", valid_source_reference())
+
+
+def test_source_reference_schema_accepts_coverage_claims():
+    instance = valid_source_reference()
+    instance["coverage_claims"] = [
+        {
+            "role": "dpa",
+            "coverage_type": "contains",
+            "evidence": "The same page includes a data processing addendum section.",
+        },
+        {
+            "role": "certification_reference",
+            "coverage_type": "links_to",
+            "evidence": "The page links to public certification information.",
+            "target_url": "https://example.com/legal/certifications",
+        },
+    ]
+
+    assert_valid("source-reference.schema.json", instance)
+
+
+def test_source_reference_schema_rejects_unknown_coverage_role():
+    instance = valid_source_reference()
+    instance["coverage_claims"] = [
+        {
+            "role": "everything",
+            "coverage_type": "contains",
+            "evidence": "The same page includes another public source section.",
+        }
+    ]
+
+    assert_invalid("source-reference.schema.json", instance)
+
+
+def test_source_reference_schema_rejects_unknown_coverage_type():
+    instance = valid_source_reference()
+    instance["coverage_claims"] = [
+        {
+            "role": "dpa",
+            "coverage_type": "proves",
+            "evidence": "The same page includes a data processing addendum section.",
+        }
+    ]
+
+    assert_invalid("source-reference.schema.json", instance)
+
+
+def test_source_reference_schema_requires_coverage_evidence():
+    instance = valid_source_reference()
+    instance["coverage_claims"] = [{"role": "dpa", "coverage_type": "contains"}]
+
+    assert_invalid("source-reference.schema.json", instance)

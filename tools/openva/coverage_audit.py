@@ -42,9 +42,39 @@ def artifact_paths(root: Path = ROOT) -> list[Path]:
     return sorted((root / "data" / "vendors").glob("*/artifacts/*.yaml"))
 
 
+def source_paths(root: Path = ROOT) -> list[Path]:
+    return sorted((root / "data" / "vendors").glob("*/sources/*.yaml"))
+
+
+def full_coverage_claims(source: dict[str, Any]) -> list[dict[str, Any]]:
+    claims = source.get("coverage_claims", []) or []
+    if not isinstance(claims, list):
+        return []
+    return [
+        claim
+        for claim in claims
+        if isinstance(claim, dict)
+        and claim.get("coverage_type") in {"contains", "links_to"}
+        and isinstance(claim.get("role"), str)
+        and claim.get("role")
+    ]
+
+
+def source_roles(source: dict[str, Any]) -> set[str]:
+    roles = {str(source["source_type"])} if source.get("source_type") else set()
+    roles.update(str(claim["role"]) for claim in full_coverage_claims(source))
+    return roles
+
+
+def duplicate_source_url_count(sources: list[dict[str, Any]]) -> int:
+    counts = Counter(str(source.get("source_url", "")).rstrip("/") for source in sources if source.get("source_url"))
+    return sum(count - 1 for count in counts.values() if count > 1)
+
+
 def build_coverage_audit(root: Path = ROOT) -> dict[str, Any]:
     vendors: dict[str, dict[str, Any]] = {}
     artifacts_by_vendor: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    sources_by_vendor: dict[str, list[dict[str, Any]]] = defaultdict(list)
     failures: list[str] = []
 
     for path in vendor_paths(root):
@@ -80,6 +110,23 @@ def build_coverage_audit(root: Path = ROOT) -> dict[str, Any]:
             }
         )
 
+    for path in source_paths(root):
+        try:
+            source = load_yaml(path)
+        except ValueError as exc:
+            failures.append(str(exc))
+            continue
+        vendor_id = str(source.get("vendor_id") or path.parents[1].name)
+        sources_by_vendor[vendor_id].append(
+            {
+                "source_id": source.get("source_id"),
+                "source_type": source.get("source_type"),
+                "source_url": source.get("source_url"),
+                "coverage_claims": source.get("coverage_claims", []),
+                "path": relative_repo_path(path, root),
+            }
+        )
+
     vendor_reports: list[dict[str, Any]] = []
     artifact_type_counter: Counter[str] = Counter()
     category_counter: Counter[str] = Counter()
@@ -87,9 +134,19 @@ def build_coverage_audit(root: Path = ROOT) -> dict[str, Any]:
 
     for vendor_id, vendor in sorted(vendors.items()):
         artifacts = artifacts_by_vendor.get(vendor_id, [])
+        sources = sources_by_vendor.get(vendor_id, [])
         artifact_types = sorted(
             {str(artifact.get("artifact_type")) for artifact in artifacts if artifact.get("artifact_type")}
         )
+        primary_source_types = sorted({str(source.get("source_type")) for source in sources if source.get("source_type")})
+        claim_roles = sorted({str(claim["role"]) for source in sources for claim in full_coverage_claims(source)})
+        covered_roles = sorted({role for source in sources for role in source_roles(source)})
+        unique_source_locations = len({str(source.get("source_url", "")).rstrip("/") for source in sources if source.get("source_url")})
+        roles_by_url: dict[str, set[str]] = defaultdict(set)
+        for source in sources:
+            source_url = str(source.get("source_url", "")).rstrip("/")
+            if source_url:
+                roles_by_url[source_url].update(source_roles(source))
         artifact_type_set = set(artifact_types)
         missing_core = [artifact_type for artifact_type in CORE_ARTIFACT_TYPES if artifact_type not in artifact_type_set]
         present_core = [artifact_type for artifact_type in CORE_ARTIFACT_TYPES if artifact_type in artifact_type_set]
@@ -107,6 +164,13 @@ def build_coverage_audit(root: Path = ROOT) -> dict[str, Any]:
                 **vendor,
                 "artifact_count": len(artifacts),
                 "artifact_types": artifact_types,
+                "unique_source_locations": unique_source_locations,
+                "primary_source_type_coverage": primary_source_types,
+                "coverage_claim_role_coverage": claim_roles,
+                "covered_roles": covered_roles,
+                "roles_covered_via_claims": sum(len(full_coverage_claims(source)) for source in sources),
+                "roles_covered_via_same_source_url": sorted({role for roles in roles_by_url.values() if len(roles) > 1 for role in roles}),
+                "duplicate_source_url_count": duplicate_source_url_count(sources),
                 "core_artifacts_present": present_core,
                 "core_artifacts_missing": missing_core,
                 "depth_score": depth_score,
@@ -122,6 +186,8 @@ def build_coverage_audit(root: Path = ROOT) -> dict[str, Any]:
     vendors_with_at_least_three_core = sum(
         1 for report in vendor_reports if len(report["core_artifacts_present"]) >= 3
     )
+    source_role_counter = Counter(role for report in vendor_reports for role in report["covered_roles"])
+    coverage_claim_role_counter = Counter(role for report in vendor_reports for role in report["coverage_claim_role_coverage"])
 
     return {
         "schema_version": "0.1.0",
@@ -145,6 +211,11 @@ def build_coverage_audit(root: Path = ROOT) -> dict[str, Any]:
         "summary": {
             "vendor_count": len(vendors),
             "artifact_count": sum(len(items) for items in artifacts_by_vendor.values()),
+            "unique_source_locations": sum(report["unique_source_locations"] for report in vendor_reports),
+            "primary_source_type_coverage_count": sum(len(report["primary_source_type_coverage"]) for report in vendor_reports),
+            "coverage_claim_role_coverage_count": sum(len(report["coverage_claim_role_coverage"]) for report in vendor_reports),
+            "roles_covered_via_claims": sum(report["roles_covered_via_claims"] for report in vendor_reports),
+            "duplicate_source_url_count": sum(report["duplicate_source_url_count"] for report in vendor_reports),
             "vendors_with_dpa": vendors_with_dpa,
             "vendors_with_subprocessors_list": vendors_with_subprocessors,
             "vendors_with_at_least_three_core_artifacts": vendors_with_at_least_three_core,
@@ -152,6 +223,8 @@ def build_coverage_audit(root: Path = ROOT) -> dict[str, Any]:
         },
         "breakdowns": {
             "artifact_types": dict(sorted(artifact_type_counter.items())),
+            "covered_roles": dict(sorted(source_role_counter.items())),
+            "coverage_claim_roles": dict(sorted(coverage_claim_role_counter.items())),
             "depth_tiers": dict(sorted(depth_counter.items())),
             "vendor_categories": dict(category_counter.most_common()),
             "regions_served": dict(region_counter.most_common()),

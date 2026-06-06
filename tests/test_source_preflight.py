@@ -76,6 +76,26 @@ def test_changed_source_with_ok_passes(tmp_path: Path):
     assert report["posture"]["network_fetch_performed"] is True
 
 
+def test_changed_source_with_coverage_claims_preflights_same_location(tmp_path: Path):
+    path = "data/vendors/vendor-a/sources/vendor-a-security.yaml"
+    source_path = write_source(tmp_path, path)
+    source = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    source["coverage_claims"] = [
+        {
+            "role": "compliance_page",
+            "coverage_type": "links_to",
+            "evidence": "The page links to compliance information.",
+            "target_url": "https://vendor.example/compliance",
+        }
+    ]
+    source_path.write_text(yaml.safe_dump(source, sort_keys=False), encoding="utf-8")
+
+    report = check_changed_sources([path], root=tmp_path, verifier=verifier("ok"))
+
+    assert report["passed_count"] == 1
+    assert report["checked_sources"][0]["source_url"] == "https://vendor.example/security"
+
+
 def test_changed_source_with_redirected_passes(tmp_path: Path):
     path = "data/vendors/vendor-a/sources/vendor-a-security.yaml"
     write_source(tmp_path, path)
