@@ -1,0 +1,136 @@
+version: 1
+contract: bot-dashboard
+source_document: docs/operations/BOT_DASHBOARD.md
+output_path: maintenance/bot-dashboard.md
+dashboard_issue:
+  title: OpenVA Bot Dashboard / Control Issue
+  create_or_update_enabled: false
+expected_sections:
+  - id: current_bot_posture
+    title: Current Bot Posture
+  - id: pause_switch_status_model
+    title: Pause Switch Status Model
+  - id: strict_growth_ready_candidates
+    title: Strict-Growth Ready Candidates
+  - id: deferred_candidates
+    title: Deferred Candidates
+  - id: review_required_candidates
+    title: Review-Required Candidates
+  - id: source_health_failures
+    title: Source-Health Failures
+  - id: redirect_deferrals
+    title: Redirect Deferrals
+  - id: coverage_gaps
+    title: Coverage Gaps
+  - id: stale_backlog_items
+    title: Stale Backlog Items
+  - id: last_successful_catalog_growth_run
+    title: Last Successful Catalog-Growth Run
+  - id: last_failed_run
+    title: Last Failed Run
+  - id: next_safe_action
+    title: Next Safe Action
+  - id: queue_policy_summary
+    title: Queue Policy Summary
+  - id: authority_summary_by_lane
+    title: Authority Summary By Lane
+  - id: failure_taxonomy_summary
+    title: Failure Taxonomy Summary
+  - id: stale_evidence_thresholds
+    title: Stale Evidence Thresholds
+  - id: missing_local_artifacts
+    title: Missing Local Artifacts
+  - id: operator_checklist
+    title: Operator Checklist
+input_artifacts:
+  - id: catalog_growth_discovery_queue
+    path: maintenance/queues/catalog-growth-discovery.json
+    required: false
+    section: strict_growth_ready_candidates
+    artifact_type: catalog_growth_queue
+    stale_after_hours: 168
+  - id: strict_growth_eligibility_report
+    path: maintenance/generated/strict-growth-eligibility-report.json
+    required: false
+    section: strict_growth_ready_candidates
+    artifact_type: strict_growth_eligibility
+    stale_after_hours: 4
+  - id: strict_growth_promotion_plan
+    path: maintenance/generated/strict-growth-promotion-plan.json
+    required: false
+    section: strict_growth_ready_candidates
+    artifact_type: promotion_plan
+    stale_after_hours: 4
+  - id: strict_growth_shortlist
+    path: maintenance/generated/strict-growth-shortlist.json
+    required: false
+    section: strict_growth_ready_candidates
+    artifact_type: strict_growth_shortlist
+    stale_after_hours: 4
+  - id: source_health_snapshot
+    path: public/source-health-snapshot.json
+    required: false
+    section: source_health_failures
+    artifact_type: source_health
+    stale_after_hours: 24
+  - id: source_health_report
+    path: reports/source-health-report.json
+    required: false
+    section: source_health_failures
+    artifact_type: source_health
+    stale_after_hours: 24
+  - id: coverage_audit_report
+    path: reports/coverage-audit-report.json
+    required: false
+    section: coverage_gaps
+    artifact_type: coverage_audit
+    stale_after_hours: 24
+  - id: catalog_completeness_report
+    path: reports/catalog-completeness-report.json
+    required: false
+    section: coverage_gaps
+    artifact_type: catalog_completeness
+    stale_after_hours: 24
+  - id: entity_review_queue
+    path: reports/entity-review-queue.json
+    required: false
+    section: review_required_candidates
+    artifact_type: entity_review
+    stale_after_hours: 24
+  - id: field_provenance_coverage
+    path: reports/field-provenance-coverage.json
+    required: false
+    section: coverage_gaps
+    artifact_type: field_provenance
+    stale_after_hours: 24
+missing_artifact_behavior:
+  tolerate_missing_optional_artifacts: true
+  render_missing_local_artifacts_section: true
+  missing_artifact_status: not_available_in_local_checkout
+  missing_artifact_must_not_fail_render: true
+stale_artifact_behavior:
+  render_stale_thresholds: true
+  stale_evidence_blocks_write_recommendation: true
+  stale_strict_growth_evidence_failure_code: stale_evidence_failure
+summarized_authority_lanes:
+  - pr_safety
+  - source_maintenance_report
+  - source_repair
+  - catalog_quality
+  - catalog_growth_discovery
+  - catalog_growth_promotion
+  - publication
+  - support_agent_pr
+  - legacy_report
+summarized_failure_classes:
+  - source_preflight_failure
+  - redirect_canonicalization_failure
+  - duplicate_url_failure
+  - terminology_contract_failure
+  - schema_validation_failure
+  - generated_drift_failure
+  - workflow_input_compatibility_failure
+  - automerge_lane_mismatch
+  - external_fetch_instability
+  - stale_evidence_failure
+  - permission_policy_denial
