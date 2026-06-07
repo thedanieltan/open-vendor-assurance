@@ -1,0 +1,95 @@
+{
+  "base_change": {
+    "base_changed": false,
+    "blocked": false,
+    "placeholder": true,
+    "policy": "regenerate_or_rebase_before_merge",
+    "policy_satisfied": true
+  },
+  "cooldown": {
+    "active": false,
+    "age_hours": null,
+    "failure_code": null,
+    "known_failure_code": null,
+    "occurred_at": null,
+    "threshold_hours": 24
+  },
+  "decision": "allow",
+  "duplicate_pr": {
+    "duplicate_found": false,
+    "duplicate_open_pr_numbers": [],
+    "policy": "do_not_create_duplicate_expansion_prs",
+    "requested_duplicate_key": "wp11-local-report"
+  },
+  "lane_id": "catalog_growth_promotion",
+  "next_safe_action": "catalog_growth_promotion may proceed in report-only queue terms; caller must still satisfy reviewed evidence and workflow checks.",
+  "open_pr_evaluation": {
+    "max_open_prs": 1,
+    "open_pr_count": 0,
+    "open_pr_numbers": []
+  },
+  "reasons": [
+    "queue_policy_satisfied"
+  ],
+  "recent_bot_pr_evaluation": {
+    "day_count": 0,
+    "max_bot_prs_per_day": 3,
+    "max_bot_prs_per_week": 10,
+    "week_count": 0
+  },
+  "referenced_authority_values": {
+    "deny_by_default": true,
+    "id": "catalog_growth_promotion",
+    "may_enable_auto_merge": false,
+    "may_label_prs": false,
+    "may_merge_prs": false,
+    "may_open_prs": true,
+    "may_write_branches": true,
+    "may_write_catalog_truth": true,
+    "status": "active"
+  },
+  "referenced_queue_policy_values": {
+    "global": {
+      "cooldown_after_failure_hours": 24,
+      "max_bot_prs_per_day": 3,
+      "max_bot_prs_per_week": 10,
+      "pause_switch_label": "openva-bot-paused"
+    },
+    "lane": {
+      "base_change_policy": "regenerate_or_rebase_before_merge",
+      "duplicate_pr_policy": "do_not_create_duplicate_expansion_prs",
+      "lane_id": "catalog_growth_promotion",
+      "max_actions_per_pr": 10,
+      "max_open_prs": 1,
+      "schedule_window": "weekly_or_manual",
+      "source_host_rate_limit": "conservative",
+      "stale_evidence_max_age_hours": 4,
+      "vendor_domain_concurrency_limit": 1
+    }
+  },
+  "report_type": "bot_queue_decision",
+  "source_host_rate_limit": {
+    "active_count": 0,
+    "limited": false,
+    "placeholder": true,
+    "policy": "conservative",
+    "source_host": "example.com"
+  },
+  "stale_evidence": {
+    "age_hours": 1.0,
+    "generated_at": "2026-06-07T11:00:00Z",
+    "missing": false,
+    "stale": false,
+    "threshold_hours": 4
+  },
+  "state_lane_id": "catalog_growth_promotion",
+  "vendor_domain_concurrency": {
+    "active_count": 0,
+    "limit": 1,
+    "limited": false,
+    "placeholder": true,
+    "vendor_domain": "example.com"
+  },
+  "version": 1,
+  "violated_policies": []
+}

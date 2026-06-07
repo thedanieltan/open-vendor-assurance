@@ -1,0 +1,80 @@
+version: 1
+contract: bot-queue-state-schema
+source_document: docs/operations/BOT_QUEUE_ENFORCER.md
+output_report_path: maintenance/bot-queue-report.json
+decisions:
+  - allow
+  - defer
+  - deny
+  - pause
+required_fields:
+  - version
+  - lane_id
+optional_fields:
+  - open_prs
+  - recent_bot_prs
+  - last_failure
+  - evidence
+  - pause
+  - requested_action
+  - source_host_activity
+  - vendor_domain_activity
+  - base_change
+state_shape:
+  version: integer
+  lane_id: string
+  open_prs:
+    type: list
+    item_fields:
+      number: integer
+      title: string
+      lane_id: string
+      created_at: iso8601
+      duplicate_key: string
+      vendor_domain: string
+      source_host: string
+  recent_bot_prs:
+    day_count: integer
+    week_count: integer
+  last_failure:
+    code: string
+    occurred_at: iso8601
+  evidence:
+    generated_at: iso8601
+  pause:
+    active: boolean
+    reason: string
+  requested_action:
+    duplicate_key: string
+    vendor_domain: string
+    source_host: string
+    base_sha: string
+    head_sha: string
+  source_host_activity:
+    active_count: integer
+  vendor_domain_activity:
+    active_count: integer
+  base_change:
+    base_changed: boolean
+    policy_satisfied: boolean
+missing_state_defaults:
+  open_prs: []
+  recent_bot_prs:
+    day_count: 0
+    week_count: 0
+  pause:
+    active: false
+report_shape:
+  lane_id: string
+  decision: enum
+  reasons: list
+  violated_policies: list
+  referenced_queue_policy_values: object
+  referenced_authority_values: object
+  stale_evidence: object
+  cooldown: object
+  duplicate_pr: object
+  source_host_rate_limit: object
+  vendor_domain_concurrency: object
+  base_change: object
+  next_safe_action: string
