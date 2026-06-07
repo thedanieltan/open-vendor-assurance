@@ -1,0 +1,46 @@
+version: 1
+contract: bot-queue-policy
+source_document: docs/operations/BOT_OPERATING_MODEL.md
+global:
+  pause_switch_label: openva-bot-paused
+  max_open_catalog_growth_prs: 1
+  max_open_source_repair_prs: 1
+  max_bot_prs_per_day: 3
+  max_bot_prs_per_week: 10
+  cooldown_after_failure_hours: 24
+  stale_evidence_max_age_hours:
+    strict_growth: 4
+    deterministic_outputs: 24
+    source_repair: 24
+  source_host_rate_limit: conservative
+  vendor_domain_concurrency_limit: 1
+lanes:
+  - lane_id: source_repair
+    max_open_prs: 1
+    max_actions_per_pr: 10
+    schedule_window: weekly_or_manual
+    duplicate_pr_policy: do_not_create_duplicate_source_repair_prs
+    base_change_policy: regenerate_or_rebase_before_merge
+    source_host_rate_limit: conservative
+    vendor_domain_concurrency_limit: 1
+    stale_evidence_max_age_hours: 24
+
+  - lane_id: catalog_growth_promotion
+    max_open_prs: 1
+    max_actions_per_pr: 10
+    schedule_window: weekly_or_manual
+    duplicate_pr_policy: do_not_create_duplicate_expansion_prs
+    base_change_policy: regenerate_or_rebase_before_merge
+    source_host_rate_limit: conservative
+    vendor_domain_concurrency_limit: 1
+    stale_evidence_max_age_hours: 4
+
+  - lane_id: support_agent_pr
+    max_open_prs: 2
+    max_actions_per_pr: 5
+    schedule_window: manual_only
+    duplicate_pr_policy: do_not_create_duplicate_support_prs
+    base_change_policy: rebase_before_merge
+    source_host_rate_limit: conservative
+    vendor_domain_concurrency_limit: 1
+    stale_evidence_max_age_hours: 24

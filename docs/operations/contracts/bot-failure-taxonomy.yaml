@@ -1,0 +1,102 @@
+version: 1
+contract: bot-failure-taxonomy
+source_document: docs/operations/BOT_OPERATING_MODEL.md
+failure_classes:
+  - code: source_preflight_failure
+    summary: Source preflight could not validate source accessibility, source role, or source certainty.
+    retry_eligible: true
+    retry_policy: retry after fresh source-health run or manual source recheck
+    escalation_target: source-maintainer
+    open_or_update_hardening_issue: false
+    defer_candidate: true
+    stop_lane: false
+
+  - code: redirect_canonicalization_failure
+    summary: Redirect target, final URL, or canonical source authority could not be proven.
+    retry_eligible: true
+    retry_policy: retry after final URL recheck and redirect evidence refresh
+    escalation_target: source-maintainer
+    open_or_update_hardening_issue: false
+    defer_candidate: true
+    stop_lane: false
+
+  - code: duplicate_url_failure
+    summary: Candidate URL duplicates an existing catalog source, queued candidate, or reviewed evidence item.
+    retry_eligible: false
+    retry_policy: resolve duplicate manually before reconsidering candidate
+    escalation_target: catalog-maintainer
+    open_or_update_hardening_issue: false
+    defer_candidate: true
+    stop_lane: false
+
+  - code: terminology_contract_failure
+    summary: Output used deprecated or non-OpenVA terminology for catalog growth, promotion actions, strict-growth, source repair, reviewed evidence, or controlled promotion.
+    retry_eligible: true
+    retry_policy: regenerate after terminology contract update or prompt correction
+    escalation_target: operations-maintainer
+    open_or_update_hardening_issue: true
+    defer_candidate: false
+    stop_lane: true
+
+  - code: schema_validation_failure
+    summary: Catalog, contract, queue, or generated artifact schema validation failed.
+    retry_eligible: true
+    retry_policy: fix schema or contract drift and rerun validation
+    escalation_target: operations-maintainer
+    open_or_update_hardening_issue: true
+    defer_candidate: false
+    stop_lane: true
+
+  - code: generated_drift_failure
+    summary: Deterministic generated outputs do not match source files or expected indexes.
+    retry_eligible: true
+    retry_policy: rebuild deterministic outputs and rerun validation
+    escalation_target: operations-maintainer
+    open_or_update_hardening_issue: true
+    defer_candidate: false
+    stop_lane: true
+
+  - code: workflow_input_compatibility_failure
+    summary: Workflow inputs are incompatible with current contract names, defaults, or compatibility expectations.
+    retry_eligible: true
+    retry_policy: align workflow inputs or compatibility shim before rerun
+    escalation_target: workflow-maintainer
+    open_or_update_hardening_issue: true
+    defer_candidate: false
+    stop_lane: true
+
+  - code: automerge_lane_mismatch
+    summary: PR labels, changed paths, checks, or lane evidence do not match strict-growth automerge authority.
+    retry_eligible: true
+    retry_policy: fix labels, paths, evidence, or PR scope and rerun automerge preflight
+    escalation_target: maintainer
+    open_or_update_hardening_issue: false
+    defer_candidate: false
+    stop_lane: true
+
+  - code: external_fetch_instability
+    summary: External source fetches are blocked, rate-limited, inconsistent, or temporarily unavailable.
+    retry_eligible: true
+    retry_policy: retry after cooldown with source-host rate limits applied
+    escalation_target: source-maintainer
+    open_or_update_hardening_issue: false
+    defer_candidate: true
+    stop_lane: false
+
+  - code: stale_evidence_failure
+    summary: Required source, redirect, or deterministic evidence is older than the lane stale-evidence limit.
+    retry_eligible: true
+    retry_policy: refresh evidence before promotion, repair, or merge
+    escalation_target: maintainer
+    open_or_update_hardening_issue: false
+    defer_candidate: true
+    stop_lane: false
+
+  - code: permission_policy_denial
+    summary: Requested bot action exceeds declared lane authority, path authority, label authority, or token permission posture.
+    retry_eligible: false
+    retry_policy: update policy through reviewed contract PR before rerun
+    escalation_target: maintainer
+    open_or_update_hardening_issue: true
+    defer_candidate: false
+    stop_lane: true
