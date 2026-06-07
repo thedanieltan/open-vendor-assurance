@@ -2,6 +2,28 @@
 
 OpenVA is a GitOps evidence registry: a public-source-only, metadata-first, consumer-neutral registry of vendor-published assurance references. It records source locations and evidence metadata; it is not a risk scoring product, compliance advice product, or SaaS compliance platform.
 
+This document is the repository terminology guide for AI agents and maintainers. It is derived from `docs/architecture/OPENVA_SYSTEM_DESIGN.md`, which remains the architecture authority. The purpose of this guide is to prevent semantic drift when natural-language prompts, issues, reviews, and operator comments use informal or imprecise wording.
+
+Humans may provide context in non-canonical language. Agents must normalize that context into the terms below before changing code, schemas, workflows, tests, generated PR bodies, operator-facing docs, or machine-readable contracts. Do not copy informal prompt wording into repository artifacts when a canonical term exists.
+
+## Agent normalization rule
+
+Before implementation, translate human-provided phrasing into repo-authoritative terminology. If the phrase is ambiguous, infer the safest term from the file being changed and the write path involved. Preserve deprecated terms only at explicit compatibility boundaries.
+
+| Human may say | Agent should implement as |
+|---|---|
+| plan cap | `max_promotion_actions_per_pr` when referring to the generated Catalog PR selected-action cap |
+| max actions per plan | deprecated alias only; prefer `max_promotion_actions_per_pr` |
+| auto-merge strict-growth-latest | `strict-growth-latest` generation plus the separate `automerge:strict-growth` lane |
+| strict-growth auto-applies | candidate-promotion opens a PR; `agent-automerge` may enable native GitHub auto-merge after guards pass |
+| source count / source depth | source-role coverage or `coverage_claims`, unless literally counting canonical source records |
+| candidate queue | candidate backlog, candidate source discovery queue, or discovery queue depending on context |
+| catalog truth | canonical catalog state |
+| source health preflight | source preflight if blocking changed canonical source records; source health if reporting longitudinal posture |
+| agent pipeline | workflow, controlled write path, or automerge lane depending on context |
+| scraped database | public-source-only metadata registry |
+| vendor-risk record | canonical vendor/source metadata or downstream consumer risk record, depending on repo boundary |
+
 ## Product identity
 
 - **GitOps evidence registry**: repository-governed registry where catalog changes, evidence, generated outputs, and publication outputs are reviewable through Git history and workflows.
