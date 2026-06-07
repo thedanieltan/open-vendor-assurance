@@ -9,7 +9,7 @@ on:
         type: string
         default: ""
       promotion_plan_mode:
-        description: "reviewed-path, strict-growth-latest, or strict-growth-shortlist"
+        description: "reviewed-path, strict-growth-latest generation, or strict-growth-shortlist generation"
         required: false
         type: choice
         default: "reviewed-path"
@@ -18,24 +18,29 @@ on:
           - strict-growth-latest
           - strict-growth-shortlist
       vendor_limit:
-        description: "Optional number of vendors/candidates to discover when regenerating strict growth"
+        description: "Optional number of candidate vendors to discover when regenerating strict-growth candidate evidence"
         required: false
         type: string
       max_urls_per_type:
-        description: "Maximum candidate URLs to probe per source type when regenerating strict growth"
+        description: "Maximum candidate URLs to probe per source type when regenerating strict-growth candidate evidence"
         required: false
         type: string
         default: "4"
       fetch_timeout:
-        description: "Per-URL source discovery timeout in seconds when regenerating strict growth"
+        description: "Per-URL source discovery timeout in seconds when regenerating strict-growth candidate evidence"
         required: false
         type: string
         default: "3"
-      max_actions_per_plan:
-        description: "Maximum reviewed candidate promotion actions to apply in one generated Catalog PR."
+      max_promotion_actions_per_pr:
+        description: "Maximum selected promotion actions to apply in one generated Catalog PR."
         required: false
         type: string
-        default: "50"
+        default: ""
+      max_actions_per_plan:
+        description: "Deprecated compatibility alias for max_promotion_actions_per_pr. Leave blank for new runs."
+        required: false
+        type: string
+        default: ""
       pr_branch:
         description: "Optional branch for generated Catalog PR. Must start with agent-. If blank, derived from selected plan."
         required: false
@@ -66,7 +71,8 @@ jobs:
       VENDOR_LIMIT: "${{ inputs.vendor_limit || '' }}"
       MAX_URLS_PER_TYPE: "${{ inputs.max_urls_per_type || '4' }}"
       FETCH_TIMEOUT: "${{ inputs.fetch_timeout || '3' }}"
-      REQUESTED_MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '50' }}"
+      REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR: "${{ inputs.max_promotion_actions_per_pr || '' }}"
+      REQUESTED_MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '' }}"
       REQUESTED_PR_BRANCH: "${{ inputs.pr_branch || '' }}"
       PR_TITLE: "${{ inputs.pr_title || 'Catalog: apply reviewed candidate source promotion' }}"
     steps:
@@ -78,7 +84,28 @@ jobs:
           python-version: "3.12"
       - name: Install package
         run: pip install -e ".[dev]"
-      - name: Regenerate strict growth promotion plan
+      - name: Resolve promotion action cap
+        run: |
+          set -euo pipefail
+          PREFERRED="$(printf '%s' "$REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          LEGACY="$(printf '%s' "$REQUESTED_MAX_ACTIONS_PER_PLAN" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          if [ -z "$PREFERRED" ] && [ -z "$LEGACY" ]; then
+            PREFERRED="50"
+          fi
+          for VALUE in "$PREFERRED" "$LEGACY"; do
+            if [ -n "$VALUE" ]; then
+              case "$VALUE" in
+                *[!0-9]*) echo "max_promotion_actions_per_pr must be a non-negative integer" >&2; exit 1 ;;
+              esac
+            fi
+          done
+          if [ -n "$PREFERRED" ] && [ -n "$LEGACY" ] && [ "$PREFERRED" != "$LEGACY" ]; then
+            echo "max_promotion_actions_per_pr and deprecated max_actions_per_plan differ" >&2
+            exit 1
+          fi
+          RESOLVED="${PREFERRED:-$LEGACY}"
+          echo "MAX_PROMOTION_ACTIONS_PER_PR=$RESOLVED" >> "$GITHUB_ENV"
+      - name: Regenerate strict-growth promotion plan
         if: env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist'
         run: |
           set -euo pipefail
@@ -128,30 +155,26 @@ jobs:
               --output-csv reports/strict-growth-shortlist.csv \
               --output-md reports/strict-growth-shortlist-summary.md \
               --max-vendors 5 \
-              --max-actions "$REQUESTED_MAX_ACTIONS_PER_PLAN"
+              --max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"
             python -m tools.openva.strict_growth_shortlist plan \
               --shortlist strict-growth-shortlist.json \
               --output strict-growth-promotion-plan.json \
               --head-sha "${{ github.sha }}" \
               --base-sha "${{ github.sha }}" \
-              --max-actions "$REQUESTED_MAX_ACTIONS_PER_PLAN"
+              --max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"
           else
             python -m tools.openva.promotion_planner plan-strict-growth \
               --eligibility-report catalog-growth-eligibility-report.json \
               --output strict-growth-promotion-plan.json \
               --head-sha "${{ github.sha }}" \
               --base-sha "${{ github.sha }}" \
-              --max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN"
+              --max-promotion-actions-per-pr "$MAX_PROMOTION_ACTIONS_PER_PR"
           fi
       - name: Select candidate promotion plan
         id: reviewed_plan
         run: |
           set -euo pipefail
           REQUESTED_PROMOTION_PLAN_PATH="$(printf '%s' "$REQUESTED_PROMOTION_PLAN_PATH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          REQUESTED_MAX_ACTIONS_PER_PLAN="$(printf '%s' "$REQUESTED_MAX_ACTIONS_PER_PLAN" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          case "$REQUESTED_MAX_ACTIONS_PER_PLAN" in
-            ''|*[!0-9]*) echo "max_actions_per_plan must be a non-negative integer" >&2; exit 1 ;;
-          esac
           case "$PROMOTION_PLAN_MODE" in
             reviewed-path|strict-growth-latest|strict-growth-shortlist) ;;
             *) echo "promotion_plan_mode must be reviewed-path, strict-growth-latest, or strict-growth-shortlist" >&2; exit 1 ;;
@@ -186,7 +209,7 @@ jobs:
           else
             python -m tools.openva.candidate_promotion_lifecycle select \
               --promotion-plan "$REQUESTED_PROMOTION_PLAN_PATH" \
-              --max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN" \
+              --max-promotion-actions-per-pr "$MAX_PROMOTION_ACTIONS_PER_PR" \
               --output reviewed-candidate-promotion.env
             cat reviewed-candidate-promotion.env >> "$GITHUB_ENV"
             cat reviewed-candidate-promotion.env >> "$GITHUB_OUTPUT"
@@ -196,7 +219,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ "${{ steps.reviewed_plan.outputs.STRICT_GROWTH_NO_ACTIONS }}" = "true" ]; then
-            echo "Strict growth plan regenerated successfully with zero promotion actions."
+            echo "Strict-growth generation completed with zero selected promotion actions."
           elif [ "${{ steps.reviewed_plan.outputs.REVIEWED_PLAN_ALREADY_APPLIED }}" = "true" ]; then
             echo "Reviewed candidate promotion plan already applied."
           else
@@ -214,7 +237,7 @@ jobs:
           echo "PROMOTION_PLAN_PATH=$SELECTED_PLAN_PATH" >> "$GITHUB_ENV"
           echo "PROMOTION_PLAN_SHA256=$SELECTED_PLAN_SHA256" >> "$GITHUB_ENV"
           echo "PROMOTION_PLAN_ACTION_COUNT=$SELECTED_PLAN_ACTION_COUNT" >> "$GITHUB_ENV"
-          echo "MAX_ACTIONS_PER_PLAN=$REQUESTED_MAX_ACTIONS_PER_PLAN" >> "$GITHUB_ENV"
+          echo "MAX_PROMOTION_ACTIONS_PER_PR=$MAX_PROMOTION_ACTIONS_PER_PR" >> "$GITHUB_ENV"
           echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
           echo "PR_TITLE=$PR_TITLE" >> "$GITHUB_ENV"
           case "$SELECTED_PLAN_PATH" in
@@ -230,7 +253,7 @@ jobs:
             Catalog:*) ;;
             *) echo "pr_title must start with Catalog:" >&2; exit 1 ;;
           esac
-      - name: Preflight strict growth promotion plan
+      - name: Preflight strict-growth promotion plan
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist')
         run: |
           python -m tools.openva.strict_growth_automerge check-plan \
@@ -240,7 +263,7 @@ jobs:
             --current-head-sha "${{ github.sha }}" \
             --current-base-sha "${{ github.sha }}" \
             --now "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-      - name: Prepare strict growth evidence files
+      - name: Prepare strict-growth evidence files
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist')
         run: |
           set -euo pipefail
@@ -313,6 +336,7 @@ jobs:
           preflight = json.load(open('source-preflight-report.json', encoding='utf-8'))
           promotion_plan = json.load(open(os.environ['PROMOTION_PLAN_PATH'], encoding='utf-8'))
           plan_summary = promotion_plan.get('summary', {})
+          selected_actions = plan_summary.get('selected_promotion_action_count', os.environ['PROMOTION_PLAN_ACTION_COUNT'])
           lines = [
               '## Summary',
               '',
@@ -322,8 +346,8 @@ jobs:
               '',
               f"- Promotion plan: `{os.environ['PROMOTION_PLAN_PATH']}`",
               f"- Promotion plan SHA-256: `{os.environ['PROMOTION_PLAN_SHA256']}`",
-              f"- Action count: `{os.environ['PROMOTION_PLAN_ACTION_COUNT']}`",
-              f"- Max actions per generated PR: `{os.environ['MAX_ACTIONS_PER_PLAN']}`",
+              f"- Promotion actions selected for this PR: `{selected_actions}`",
+              f"- Max promotion actions per generated PR: `{os.environ['MAX_PROMOTION_ACTIONS_PER_PR']}`",
               '',
               '## Counts',
               '',
@@ -349,10 +373,11 @@ jobs:
               ]
               counts_at = lines.index('## Counts') + 2
               lines[counts_at:counts_at] = [
-                  f"- Strict-growth uncapped actions: `{plan_summary.get('uncapped_action_count', report['summary']['promotion_actions_seen'])}`",
-                  f"- Strict-growth shortlist actions: `{plan_summary.get('shortlist_action_count', plan_summary.get('source_health_screened_action_count', report['summary']['promotion_actions_seen']))}`",
-                  f"- Strict-growth policy-capped actions: `{plan_summary.get('policy_capped_action_count', report['summary']['promotion_actions_seen'])}`",
-                  f"- Strict-growth batch-deferred actions: `{plan_summary.get('batch_deferred_action_count', 0)}`",
+                  f"- Strict-growth uncapped promotion actions: `{plan_summary.get('uncapped_action_count', report['summary']['promotion_actions_seen'])}`",
+                  f"- Strict-growth source-health screened promotion actions: `{plan_summary.get('source_health_screened_action_count', report['summary']['promotion_actions_seen'])}`",
+                  f"- Strict-growth policy-capped promotion actions: `{plan_summary.get('policy_capped_action_count', report['summary']['promotion_actions_seen'])}`",
+                  f"- Strict-growth batch-deferred promotion actions: `{plan_summary.get('batch_deferred_action_count', 0)}`",
+                  f"- Deferred actions: `{plan_summary.get('deferred_action_count', 0)}`",
                   f"- Redirects detected: `{plan_summary.get('redirect_count', 0)}`",
                   f"- Redirects canonicalized: `{plan_summary.get('redirect_canonicalized_count', 0)}`",
                   f"- Redirects deferred: `{plan_summary.get('redirect_deferred_count', 0)}`",
@@ -410,7 +435,7 @@ jobs:
             candidate-promotion-pr-body.md
             candidate-promotion-pr-body-final.md
           if-no-files-found: error
-      - name: Upload strict growth evidence artifacts
+      - name: Upload strict-growth evidence artifacts
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist')
         uses: actions/upload-artifact@v6
         with:

@@ -2,9 +2,14 @@ import json
 from copy import deepcopy
 from pathlib import Path
 
+import pytest
 import yaml
 
-from tools.openva.promotion_planner import build_promotion_plan, build_strict_growth_plan
+from tools.openva.promotion_planner import (
+    build_promotion_plan,
+    build_strict_growth_plan,
+    resolve_max_promotion_actions_per_pr,
+)
 
 
 def write_yaml(path: Path, data: dict) -> None:
@@ -258,6 +263,54 @@ def test_planner_does_not_emit_action_for_ok_existing_source(tmp_path):
     assert plan["actions"] == []
 
 
+def test_resolve_max_promotion_actions_per_pr_accepts_preferred_and_legacy_compatibility():
+    assert resolve_max_promotion_actions_per_pr(max_promotion_actions_per_pr=10) == 10
+    assert resolve_max_promotion_actions_per_pr(max_actions_per_plan=10) == 10
+    assert resolve_max_promotion_actions_per_pr() is None
+    assert (
+        resolve_max_promotion_actions_per_pr(
+            max_promotion_actions_per_pr=10,
+            max_actions_per_plan=10,
+        )
+        == 10
+    )
+
+
+def test_resolve_max_promotion_actions_per_pr_rejects_conflicting_compatibility_values():
+    with pytest.raises(ValueError, match="both provided with different values"):
+        resolve_max_promotion_actions_per_pr(
+            max_promotion_actions_per_pr=50,
+            max_actions_per_plan=10,
+        )
+
+
+@pytest.mark.parametrize(
+    ("preferred", "legacy", "message"),
+    [
+        (-1, None, "max_promotion_actions_per_pr must be non-negative"),
+        (None, -1, "max_actions_per_plan is deprecated"),
+    ],
+)
+def test_resolve_max_promotion_actions_per_pr_rejects_negative_values(preferred, legacy, message):
+    with pytest.raises(ValueError, match=message):
+        resolve_max_promotion_actions_per_pr(
+            max_promotion_actions_per_pr=preferred,
+            max_actions_per_plan=legacy,
+        )
+
+
+def test_resolve_max_promotion_actions_per_pr_preserves_zero_semantics():
+    assert resolve_max_promotion_actions_per_pr(max_promotion_actions_per_pr=0) == 0
+    assert resolve_max_promotion_actions_per_pr(max_actions_per_plan=0) == 0
+    assert (
+        resolve_max_promotion_actions_per_pr(
+            max_promotion_actions_per_pr=0,
+            max_actions_per_plan=0,
+        )
+        == 0
+    )
+
+
 def test_strict_growth_planner_uses_only_strict_promote_ready_records():
     report = strict_eligibility_report()
     report["items"].append({"candidate_vendor_id": "candidate-b", "classification": "reject_no_public_source"})
@@ -407,7 +460,7 @@ def test_strict_growth_planner_honors_workflow_max_actions_per_plan_deterministi
     assert plan["summary"]["policy_capped_action_count"] == 3
     assert plan["summary"]["max_actions_per_plan"] == 2
     assert plan["summary"]["batch_deferred_action_count"] == 1
-    assert plan["deferred_actions"][-1]["reason_codes"] == ["workflow_max_actions_per_plan_exceeded"]
+    assert plan["deferred_actions"][-1]["reason_codes"] == ["max_promotion_actions_per_pr_exceeded"]
     assert [
         (
             action["vendor"]["candidate_vendor_id"],

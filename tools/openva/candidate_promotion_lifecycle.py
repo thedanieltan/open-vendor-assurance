@@ -7,11 +7,12 @@ import re
 from pathlib import Path
 from typing import Any
 
-from tools.openva.promotion_planner import REVIEWED_CANDIDATE_PROMOTION_ACTION
+from tools.openva.promotion_planner import REVIEWED_CANDIDATE_PROMOTION_ACTION, resolve_max_promotion_actions_per_pr
 from tools.openva.source_verification import ROOT, display_path
 
 APPLIED_PLANS = ROOT / "maintenance" / "applied" / "applied-plans.json"
-DEFAULT_MAX_ACTIONS_PER_PLAN = 50
+DEFAULT_MAX_PROMOTION_ACTIONS_PER_PR = 50
+DEFAULT_MAX_ACTIONS_PER_PLAN = DEFAULT_MAX_PROMOTION_ACTIONS_PER_PR
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -70,7 +71,11 @@ def assert_reviewed_path(path: Path, root: Path = ROOT) -> None:
         raise ValueError(f"promotion plan file not found: {display_path(path, root)}")
 
 
-def validate_candidate_promotion_plan(path: Path, root: Path = ROOT, max_actions: int | None = DEFAULT_MAX_ACTIONS_PER_PLAN) -> dict[str, Any]:
+def validate_candidate_promotion_plan(
+    path: Path,
+    root: Path = ROOT,
+    max_actions: int | None = DEFAULT_MAX_PROMOTION_ACTIONS_PER_PR,
+) -> dict[str, Any]:
     assert_reviewed_path(path, root)
     plan = load_json(path)
     posture = plan.get("posture", {}) or {}
@@ -87,7 +92,7 @@ def validate_candidate_promotion_plan(path: Path, root: Path = ROOT, max_actions
     if not isinstance(actions, list):
         raise ValueError(f"{display_path(path, root)}: actions must be a list")
     if max_actions is not None and len(actions) > max_actions:
-        raise ValueError(f"{display_path(path, root)}: reviewed plan exceeds max_actions_per_plan={max_actions}")
+        raise ValueError(f"{display_path(path, root)}: reviewed plan exceeds max_promotion_actions_per_pr={max_actions}")
     if not actions:
         raise ValueError(f"{display_path(path, root)}: candidate promotion plan must contain actions")
     for index, action in enumerate(actions):
@@ -104,7 +109,7 @@ def validate_candidate_promotion_plan(path: Path, root: Path = ROOT, max_actions
     return plan
 
 
-def select_unapplied(root: Path = ROOT, max_actions: int | None = DEFAULT_MAX_ACTIONS_PER_PLAN) -> Path | None:
+def select_unapplied(root: Path = ROOT, max_actions: int | None = DEFAULT_MAX_PROMOTION_ACTIONS_PER_PR) -> Path | None:
     paths, names, digests = applied_keys(root)
     for path in reviewed_plan_paths(root):
         relative = display_path(path, root)
@@ -135,7 +140,13 @@ def write_env(path: Path, values: dict[str, str | bool | int]) -> None:
 
 
 def select_command(args: argparse.Namespace) -> int:
-    max_actions = None if args.max_actions_per_plan <= 0 else args.max_actions_per_plan
+    resolved_max_actions = resolve_max_promotion_actions_per_pr(
+        max_promotion_actions_per_pr=args.max_promotion_actions_per_pr,
+        max_actions_per_plan=args.max_actions_per_plan,
+    )
+    if resolved_max_actions is None:
+        resolved_max_actions = DEFAULT_MAX_PROMOTION_ACTIONS_PER_PR
+    max_actions = None if resolved_max_actions <= 0 else resolved_max_actions
     requested = str(args.promotion_plan or "").strip()
     if requested:
         path = ROOT / requested
@@ -162,7 +173,8 @@ def main() -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
     select_parser = subparsers.add_parser("select")
     select_parser.add_argument("--promotion-plan", type=str, default="")
-    select_parser.add_argument("--max-actions-per-plan", type=int, default=DEFAULT_MAX_ACTIONS_PER_PLAN)
+    select_parser.add_argument("--max-promotion-actions-per-pr", type=int)
+    select_parser.add_argument("--max-actions-per-plan", type=int, help="Deprecated alias for --max-promotion-actions-per-pr")
     select_parser.add_argument("--output", type=Path, required=True)
     select_parser.set_defaults(func=select_command)
     args = parser.parse_args()

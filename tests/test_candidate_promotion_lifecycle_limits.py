@@ -5,7 +5,7 @@ import pytest
 from tools.openva import candidate_promotion_lifecycle
 
 
-def test_candidate_promotion_lifecycle_rejects_oversized_plan(tmp_path):
+def write_candidate_promotion_plan(tmp_path, action_count: int):
     plan = tmp_path / "maintenance/reviewed/candidate-promotion-plan-large.json"
     plan.parent.mkdir(parents=True, exist_ok=True)
     plan.write_text(
@@ -28,12 +28,24 @@ def test_candidate_promotion_lifecycle_rejects_oversized_plan(tmp_path):
                         "writes_canonical_sources": False,
                         "non_advisory": True,
                     }
-                    for index in range(3)
+                    for index in range(action_count)
                 ],
             }
         ),
         encoding="utf-8",
     )
+    return plan
 
-    with pytest.raises(ValueError, match="max_actions_per_plan=2"):
+
+def test_candidate_promotion_lifecycle_rejects_oversized_plan(tmp_path):
+    plan = write_candidate_promotion_plan(tmp_path, 3)
+
+    with pytest.raises(ValueError, match="max_promotion_actions_per_pr=2"):
         candidate_promotion_lifecycle.validate_candidate_promotion_plan(plan, tmp_path, max_actions=2)
+
+
+def test_candidate_promotion_lifecycle_defaults_omitted_cap_to_50(tmp_path):
+    plan = write_candidate_promotion_plan(tmp_path, 51)
+
+    with pytest.raises(ValueError, match="max_promotion_actions_per_pr=50"):
+        candidate_promotion_lifecycle.validate_candidate_promotion_plan(plan, tmp_path)
