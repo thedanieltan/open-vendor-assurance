@@ -8,6 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 TERMINOLOGY_DOC = ROOT / "docs" / "architecture" / "OPENVA_TERMINOLOGY.md"
 TERMINOLOGY_CONTRACT = ROOT / "docs" / "operations" / "contracts" / "repo-terminology.yaml"
 CANDIDATE_PROMOTION_WORKFLOW = ROOT / ".github" / "workflows" / "candidate-promotion-pr.yml"
+CATALOG_GROWTH_DISCOVERY_WORKFLOW = ROOT / ".github" / "workflows" / "catalog-growth-discovery.yml"
+CATALOG_MAINTENANCE_WORKFLOW = ROOT / ".github" / "workflows" / "catalog-maintenance-pr.yml"
 
 
 def read(path: Path) -> str:
@@ -99,6 +101,16 @@ def test_candidate_promotion_workflow_exposes_preferred_batch_limit_input():
     assert "MAX_PROMOTION_ACTIONS_PER_PR" in workflow
 
 
+def test_catalog_growth_discovery_workflow_exposes_preferred_batch_limit_input():
+    workflow = read(CATALOG_GROWTH_DISCOVERY_WORKFLOW)
+
+    assert "max_promotion_actions_per_pr:" in workflow
+    assert "Preferred. Maximum selected promotion actions applied by one generated Catalog PR." in workflow
+    assert "Deprecated alias. Prefer max_promotion_actions_per_pr." in workflow
+    assert "REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR" in workflow
+    assert "MAX_PROMOTION_ACTIONS_PER_PR" in workflow
+
+
 def test_preferred_batch_limit_input_defaults_blank_at_dispatch_layer():
     workflow = read(CANDIDATE_PROMOTION_WORKFLOW)
     preferred = workflow[
@@ -113,6 +125,48 @@ def test_preferred_batch_limit_input_defaults_blank_at_dispatch_layer():
     assert "inputs.max_promotion_actions_per_pr || ''" in env
     assert "inputs.max_promotion_actions_per_pr || '50'" not in env
     assert 'PREFERRED="50"' in resolver
+
+
+def test_catalog_growth_preferred_batch_limit_input_defaults_blank_at_dispatch_layer():
+    workflow = read(CATALOG_GROWTH_DISCOVERY_WORKFLOW)
+    preferred = workflow[
+        workflow.index("      max_promotion_actions_per_pr:") : workflow.index("      max_actions_per_plan:")
+    ]
+    legacy = workflow[workflow.index("      max_actions_per_plan:") : workflow.index("  schedule:")]
+    env = workflow[workflow.index("    env:") : workflow.index("    steps:")]
+    resolver = workflow[workflow.index("- name: Resolve promotion action cap") : workflow.index("- name: Validate current records")]
+
+    assert 'default: ""' in preferred
+    assert 'default: ""' in legacy
+    assert "inputs.max_promotion_actions_per_pr || ''" in env
+    assert "inputs.max_actions_per_plan || ''" in env
+    assert "inputs.max_promotion_actions_per_pr || '50'" not in env
+    assert "inputs.max_actions_per_plan || '50'" not in env
+    assert 'PREFERRED="50"' in resolver
+    assert "max_promotion_actions_per_pr and deprecated max_actions_per_plan differ" in resolver
+
+
+def test_catalog_growth_discovery_uses_resolved_preferred_cap_name():
+    workflow = read(CATALOG_GROWTH_DISCOVERY_WORKFLOW)
+    resolver = workflow[workflow.index("- name: Resolve promotion action cap") : workflow.index("- name: Validate current records")]
+    shortlist = workflow[workflow.index("- name: Build strict growth shortlist") : workflow.index("- name: Build strict growth promotion plan")]
+    batches = workflow[
+        workflow.index("- name: Build batched candidate promotion plan proposals") : workflow.index("- name: Prepare discovery issue body")
+    ]
+
+    assert "MAX_PROMOTION_ACTIONS_PER_PR=$RESOLVED" in resolver
+    assert '--max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"' in shortlist
+    assert '--max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"' in batches
+    assert "MAX_ACTIONS_PER_PLAN" not in shortlist
+    assert "MAX_ACTIONS_PER_PLAN" not in batches
+
+
+def test_catalog_maintenance_batch_limit_is_not_promotion_action_cap_input():
+    workflow = read(CATALOG_MAINTENANCE_WORKFLOW)
+
+    assert "max_promotion_actions_per_pr" not in workflow
+    assert "Maximum reviewed actions to apply in one generated Catalog PR." in workflow
+    assert "Reviewed action count" in workflow
 
 
 def test_generated_pr_body_uses_selected_and_deferred_promotion_action_language():

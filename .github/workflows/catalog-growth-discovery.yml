@@ -17,11 +17,16 @@ on:
         required: false
         type: string
         default: "3"
-      max_actions_per_plan:
-        description: "Maximum candidate promotion actions per generated plan proposal"
+      max_promotion_actions_per_pr:
+        description: "Preferred. Maximum selected promotion actions applied by one generated Catalog PR."
         required: false
         type: string
-        default: "50"
+        default: ""
+      max_actions_per_plan:
+        description: "Deprecated alias. Prefer max_promotion_actions_per_pr."
+        required: false
+        type: string
+        default: ""
   schedule:
     - cron: "17 8 * * 3"
 
@@ -40,7 +45,8 @@ jobs:
       VENDOR_LIMIT: "${{ inputs.vendor_limit || '' }}"
       MAX_URLS_PER_TYPE: "${{ inputs.max_urls_per_type || '4' }}"
       FETCH_TIMEOUT: "${{ inputs.fetch_timeout || '3' }}"
-      MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '50' }}"
+      REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR: "${{ inputs.max_promotion_actions_per_pr || '' }}"
+      REQUESTED_MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '' }}"
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -48,6 +54,27 @@ jobs:
           python-version: "3.12"
       - name: Install package
         run: pip install -e ".[dev]"
+      - name: Resolve promotion action cap
+        run: |
+          set -euo pipefail
+          PREFERRED="$(printf '%s' "$REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          LEGACY="$(printf '%s' "$REQUESTED_MAX_ACTIONS_PER_PLAN" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          if [ -z "$PREFERRED" ] && [ -z "$LEGACY" ]; then
+            PREFERRED="50"
+          fi
+          for VALUE in "$PREFERRED" "$LEGACY"; do
+            if [ -n "$VALUE" ]; then
+              case "$VALUE" in
+                *[!0-9]*) echo "max_promotion_actions_per_pr must be a non-negative integer" >&2; exit 1 ;;
+              esac
+            fi
+          done
+          if [ -n "$PREFERRED" ] && [ -n "$LEGACY" ] && [ "$PREFERRED" != "$LEGACY" ]; then
+            echo "max_promotion_actions_per_pr and deprecated max_actions_per_plan differ" >&2
+            exit 1
+          fi
+          RESOLVED="${PREFERRED:-$LEGACY}"
+          echo "MAX_PROMOTION_ACTIONS_PER_PR=$RESOLVED" >> "$GITHUB_ENV"
       - name: Validate current records
         run: python -m tools.openva.validate validate
       - name: Validate catalog growth discovery queue
@@ -130,7 +157,7 @@ jobs:
             --output-csv reports/strict-growth-shortlist.csv \
             --output-md reports/strict-growth-shortlist-summary.md \
             --max-vendors 5 \
-            --max-actions "$MAX_ACTIONS_PER_PLAN"
+            --max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"
       - name: Build strict growth promotion plan
         run: |
           python -m tools.openva.promotion_planner plan-strict-growth \
@@ -141,14 +168,11 @@ jobs:
       - name: Build batched candidate promotion plan proposals
         run: |
           set -euo pipefail
-          case "$MAX_ACTIONS_PER_PLAN" in
-            ''|*[!0-9]*) echo "max_actions_per_plan must be a non-negative integer" >&2; exit 1 ;;
-          esac
           python -m tools.openva.promotion_plan_batcher batch \
             --promotion-plan promotion-plan.json \
             --output-dir maintenance/generated \
             --summary-output promotion-plan-batch-summary.json \
-            --max-actions "$MAX_ACTIONS_PER_PLAN"
+            --max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"
       - name: Prepare discovery issue body
         run: |
           python - <<'PY'
