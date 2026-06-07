@@ -35,7 +35,7 @@ on:
         description: "Maximum selected promotion actions to apply in one generated Catalog PR."
         required: false
         type: string
-        default: "50"
+        default: ""
       max_actions_per_plan:
         description: "Deprecated compatibility alias for max_promotion_actions_per_pr. Leave blank for new runs."
         required: false
@@ -71,7 +71,7 @@ jobs:
       VENDOR_LIMIT: "${{ inputs.vendor_limit || '' }}"
       MAX_URLS_PER_TYPE: "${{ inputs.max_urls_per_type || '4' }}"
       FETCH_TIMEOUT: "${{ inputs.fetch_timeout || '3' }}"
-      REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR: "${{ inputs.max_promotion_actions_per_pr || '50' }}"
+      REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR: "${{ inputs.max_promotion_actions_per_pr || '' }}"
       REQUESTED_MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '' }}"
       REQUESTED_PR_BRANCH: "${{ inputs.pr_branch || '' }}"
       PR_TITLE: "${{ inputs.pr_title || 'Catalog: apply reviewed candidate source promotion' }}"

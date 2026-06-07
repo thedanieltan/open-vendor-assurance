@@ -17,6 +17,7 @@ def read(path: Path) -> str:
 def test_canonical_terminology_doc_exists_and_defines_core_terms():
     assert TERMINOLOGY_DOC.exists()
     text = read(TERMINOLOGY_DOC)
+    normalized = text.casefold()
 
     for term in [
         "canonical catalog",
@@ -41,7 +42,7 @@ def test_canonical_terminology_doc_exists_and_defines_core_terms():
         "machine-canonical",
         "P0 source repair",
     ]:
-        assert term in text
+        assert term.casefold() in normalized
 
 
 def test_terminology_doc_guides_agent_normalization_without_replacing_architecture_authority():
@@ -96,6 +97,22 @@ def test_candidate_promotion_workflow_exposes_preferred_batch_limit_input():
     assert "Deprecated compatibility alias for max_promotion_actions_per_pr" in workflow
     assert "REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR" in workflow
     assert "MAX_PROMOTION_ACTIONS_PER_PR" in workflow
+
+
+def test_preferred_batch_limit_input_defaults_blank_at_dispatch_layer():
+    workflow = read(CANDIDATE_PROMOTION_WORKFLOW)
+    preferred = workflow[
+        workflow.index("      max_promotion_actions_per_pr:") : workflow.index("      max_actions_per_plan:")
+    ]
+    env = workflow[workflow.index("    env:") : workflow.index("    steps:")]
+    resolver = workflow[
+        workflow.index("- name: Resolve promotion action cap") : workflow.index("- name: Regenerate strict-growth")
+    ]
+
+    assert 'default: ""' in preferred
+    assert "inputs.max_promotion_actions_per_pr || ''" in env
+    assert "inputs.max_promotion_actions_per_pr || '50'" not in env
+    assert 'PREFERRED="50"' in resolver
 
 
 def test_generated_pr_body_uses_selected_and_deferred_promotion_action_language():

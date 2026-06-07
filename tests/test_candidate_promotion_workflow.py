@@ -6,7 +6,7 @@ WORKFLOW = Path(".github/workflows/candidate-promotion-pr.yml")
 
 def strict_growth_regeneration_block() -> str:
     text = WORKFLOW.read_text(encoding="utf-8")
-    start = text.index("- name: Regenerate strict growth promotion plan")
+    start = text.index("- name: Regenerate strict-growth promotion plan")
     end = text.index("- name: Select candidate promotion plan")
     return text[start:end]
 
@@ -33,7 +33,7 @@ def test_strict_growth_latest_regenerates_sha_bound_evidence():
         assert '--head-sha "${{ github.sha }}"' in command
         assert '--base-sha "${{ github.sha }}"' in command
 
-    assert '--max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN"' in planner
+    assert '--max-promotion-actions-per-pr "$MAX_PROMOTION_ACTIONS_PER_PR"' in planner
 
 
 def test_strict_growth_shortlist_mode_builds_shortlist_before_plan():
@@ -49,7 +49,7 @@ def test_strict_growth_shortlist_mode_builds_shortlist_before_plan():
     block = text[shortlist:plan]
     assert "--eligibility-report catalog-growth-eligibility-report.json" in block
     assert "--backlog-report catalog-growth-backlog-report.json" in block
-    assert "--max-actions \"$REQUESTED_MAX_ACTIONS_PER_PLAN\"" in block
+    assert '--max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"' in block
     assert "--output-json strict-growth-shortlist.json" in block
 
 
@@ -61,14 +61,14 @@ def test_strict_growth_latest_uses_workflow_batch_cap_before_apply():
     apply = text.index("- name: Apply candidate promotions")
 
     assert plan < select < apply
-    assert '--max-actions-per-plan "$REQUESTED_MAX_ACTIONS_PER_PLAN"' in text[plan:select]
+    assert '--max-promotion-actions-per-pr "$MAX_PROMOTION_ACTIONS_PER_PR"' in text[plan:select]
     assert "PROMOTION_PLAN_ACTION_COUNT=$SELECTED_PLAN_ACTION_COUNT" in text[select:apply]
 
 
 def test_strict_growth_plan_preflight_runs_before_candidate_apply():
     text = workflow_text()
 
-    preflight = text.index("- name: Preflight strict growth promotion plan")
+    preflight = text.index("- name: Preflight strict-growth promotion plan")
     apply = text.index("- name: Apply candidate promotions")
     assert preflight < apply
 
@@ -95,7 +95,7 @@ def test_candidate_promotion_commits_rebuilt_dist_outputs():
 def test_strict_growth_latest_commits_sha_bound_evidence_files():
     text = workflow_text()
 
-    assert "- name: Prepare strict growth evidence files" in text
+    assert "- name: Prepare strict-growth evidence files" in text
     assert "cp strict-growth-promotion-plan.json maintenance/generated/strict-growth-promotion-plan.json" in text
     assert (
         "cp catalog-growth-eligibility-report.json maintenance/generated/strict-growth-eligibility-report.json"
@@ -106,11 +106,11 @@ def test_strict_growth_latest_commits_sha_bound_evidence_files():
     assert "Strict-growth eligibility report: `{os.environ['ELIGIBILITY_REPORT_PATH']}`" in text
     assert "Head SHA: \\`$HEAD_SHA\\`" in text
     assert "candidate-promotion-pr-body-final.md" in text
-    assert "Upload strict growth evidence artifacts" in text
-    assert "Strict-growth uncapped actions:" in text
-    assert "Strict-growth shortlist actions:" in text
-    assert "Strict-growth policy-capped actions:" in text
-    assert "Strict-growth batch-deferred actions:" in text
+    assert "Upload strict-growth evidence artifacts" in text
+    assert "Strict-growth uncapped promotion actions:" in text
+    assert "Strict-growth source-health screened promotion actions:" in text
+    assert "Strict-growth policy-capped promotion actions:" in text
+    assert "Strict-growth batch-deferred promotion actions:" in text
     assert "Redirects detected:" in text
     assert "Redirects canonicalized:" in text
     assert "Redirects deferred:" in text
