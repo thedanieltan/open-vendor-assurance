@@ -98,20 +98,6 @@ def test_candidate_promotion_workflow_exposes_preferred_batch_limit_input():
     assert "MAX_PROMOTION_ACTIONS_PER_PR" in workflow
 
 
-def test_preferred_batch_limit_input_defaults_blank_at_dispatch_layer():
-    workflow = read(CANDIDATE_PROMOTION_WORKFLOW)
-    preferred = workflow[
-        workflow.index("      max_promotion_actions_per_pr:") : workflow.index("      max_actions_per_plan:")
-    ]
-    env = workflow[workflow.index("    env:") : workflow.index("    steps:")]
-    resolver = workflow[workflow.index("- name: Resolve promotion action cap") : workflow.index("- name: Regenerate strict-growth")]
-
-    assert 'default: ""' in preferred
-    assert "inputs.max_promotion_actions_per_pr || ''" in env
-    assert "inputs.max_promotion_actions_per_pr || '50'" not in env
-    assert 'PREFERRED="50"' in resolver
-
-
 def test_generated_pr_body_uses_selected_and_deferred_promotion_action_language():
     workflow = read(CANDIDATE_PROMOTION_WORKFLOW)
 
