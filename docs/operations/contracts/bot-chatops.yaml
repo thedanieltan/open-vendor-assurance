@@ -1,0 +1,173 @@
+version: 1
+contract: bot-chatops
+source_document: docs/operations/BOT_CHATOPS.md
+prefix: /openva
+default_posture:
+  unknown_commands_are_denied: true
+  commands_are_report_only_until_explicitly_enabled: true
+  maintainer_authorization_required: true
+  multiple_commands_are_denied: true
+allowed_actor_model:
+  roles:
+    - maintainer
+  non_maintainers_are_denied: true
+aliases: []
+forbidden_commands:
+  - /openva merge
+  - /openva approve
+  - /openva label
+  - /openva dispatch-workflow
+unknown_command_behavior:
+  decision: denied
+  reason: unknown_openva_command
+deny_by_default: true
+commands:
+  - command: retry-source-preflight
+    full_command: /openva retry-source-preflight
+    status: planned_report_only
+    lane_id: source_repair
+    queue_lane_id: source_repair
+    allowed_actors:
+      - maintainer
+    side_effect_class: report_only
+    executable: false
+    report_only: true
+    audit_required: true
+    audit_artifacts:
+      - chatops decision report
+    requires_queue_check: true
+    requires_failure_router: true
+    failure_router_codes:
+      - source_preflight_failure
+      - external_fetch_instability
+
+  - command: defer-candidate
+    full_command: /openva defer-candidate
+    status: planned_report_only
+    lane_id: catalog_growth_promotion
+    queue_lane_id: catalog_growth_promotion
+    allowed_actors:
+      - maintainer
+    side_effect_class: report_only
+    executable: false
+    report_only: true
+    audit_required: true
+    audit_artifacts:
+      - chatops decision report
+    requires_queue_check: true
+    requires_failure_router: true
+    failure_router_codes:
+      - duplicate_url_failure
+      - stale_evidence_failure
+
+  - command: promote-reviewed-plan
+    full_command: /openva promote-reviewed-plan
+    status: planned_report_only
+    lane_id: catalog_growth_promotion
+    queue_lane_id: catalog_growth_promotion
+    allowed_actors:
+      - maintainer
+    side_effect_class: report_only
+    executable: false
+    report_only: true
+    audit_required: true
+    audit_artifacts:
+      - chatops decision report
+    requires_queue_check: true
+    requires_failure_router: false
+    failure_router_codes: []
+
+  - command: explain-strict-growth
+    full_command: /openva explain-strict-growth
+    status: planned_report_only
+    lane_id: pr_safety
+    queue_lane_id: null
+    allowed_actors:
+      - maintainer
+    side_effect_class: report_only
+    executable: false
+    report_only: true
+    audit_required: true
+    audit_artifacts:
+      - chatops decision report
+    requires_queue_check: false
+    requires_failure_router: true
+    failure_router_codes:
+      - automerge_lane_mismatch
+      - permission_policy_denial
+
+  - command: quarantine-source
+    full_command: /openva quarantine-source
+    status: planned_report_only
+    lane_id: source_repair
+    queue_lane_id: source_repair
+    allowed_actors:
+      - maintainer
+    side_effect_class: report_only
+    executable: false
+    report_only: true
+    audit_required: true
+    audit_artifacts:
+      - chatops decision report
+    requires_queue_check: true
+    requires_failure_router: true
+    failure_router_codes:
+      - source_preflight_failure
+      - external_fetch_instability
+
+  - command: recheck-final-url
+    full_command: /openva recheck-final-url
+    status: planned_report_only
+    lane_id: catalog_growth_promotion
+    queue_lane_id: catalog_growth_promotion
+    allowed_actors:
+      - maintainer
+    side_effect_class: report_only
+    executable: false
+    report_only: true
+    audit_required: true
+    audit_artifacts:
+      - chatops decision report
+    requires_queue_check: true
+    requires_failure_router: true
+    failure_router_codes:
+      - redirect_canonicalization_failure
+      - stale_evidence_failure
+
+  - command: hold
+    full_command: /openva hold
+    status: planned_report_only
+    lane_id: support_agent_pr
+    queue_lane_id: support_agent_pr
+    allowed_actors:
+      - maintainer
+    side_effect_class: report_only
+    executable: false
+    report_only: true
+    audit_required: true
+    audit_artifacts:
+      - chatops decision report
+    requires_queue_check: true
+    requires_failure_router: true
+    failure_router_codes:
+      - permission_policy_denial
+      - stale_evidence_failure
+
+  - command: unhold
+    full_command: /openva unhold
+    status: planned_report_only
+    lane_id: support_agent_pr
+    queue_lane_id: support_agent_pr
+    allowed_actors:
+      - maintainer
+    side_effect_class: report_only
+    executable: false
+    report_only: true
+    audit_required: true
+    audit_artifacts:
+      - chatops decision report
+    requires_queue_check: true
+    requires_failure_router: true
+    failure_router_codes:
+      - permission_policy_denial
+      - stale_evidence_failure
