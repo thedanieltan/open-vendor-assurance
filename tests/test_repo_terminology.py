@@ -44,6 +44,20 @@ def test_canonical_terminology_doc_exists_and_defines_core_terms():
         assert term in text
 
 
+def test_terminology_doc_guides_agent_normalization_without_replacing_architecture_authority():
+    text = read(TERMINOLOGY_DOC)
+
+    assert "repository terminology guide for AI agents and maintainers" in text
+    assert "OPENVA_SYSTEM_DESIGN.md`, which remains the architecture authority" in text
+    assert "prevent semantic drift" in text
+    assert "Humans may provide context in non-canonical language" in text
+    assert "Agents must normalize that context" in text
+    assert "Do not copy informal prompt wording into repository artifacts" in text
+    assert "## Agent normalization rule" in text
+    assert "Human may say" in text
+    assert "Agent should implement as" in text
+
+
 def test_machine_readable_terminology_contract_exists_and_validates():
     assert TERMINOLOGY_CONTRACT.exists()
     data = yaml.safe_load(read(TERMINOLOGY_CONTRACT))
