@@ -1,0 +1,23 @@
+{
+  "classification": "taxonomy_match",
+  "defer_candidate": true,
+  "escalation_target": "maintainer",
+  "explanation": "Required source, redirect, or deterministic evidence is older than the lane stale-evidence limit.",
+  "lane_id": "catalog_growth_promotion",
+  "match_basis": "failure.code",
+  "match_confidence": "explicit",
+  "matched_failure_code": "stale_evidence_failure",
+  "next_safe_action": "Refresh evidence before retrying the lane.",
+  "open_or_update_hardening_issue": false,
+  "report_type": "bot_failure_routing",
+  "retry_eligible": true,
+  "retry_policy": "refresh evidence before promotion, repair, or merge",
+  "source": {
+    "artifact": "promotion-plan.json",
+    "message": "Evidence is older than strict-growth stale evidence limit.",
+    "queue_decision": null,
+    "queue_reasons": []
+  },
+  "stop_lane": false,
+  "version": 1
+}
