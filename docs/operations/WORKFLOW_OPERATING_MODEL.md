@@ -10,13 +10,13 @@ This document is the canonical map for current GitHub Actions workflows. It does
 
 Source cleanup is a versioning gate. The lane exists to eliminate source debt or truth-state it before release confidence is claimed.
 
-Lane A starts with `source-maintenance-report.yml`, routes reviewer work through triage and reviewed decision artifacts, uses `source-repair-pr.yml` only for committed and validated reviewed repairs, and then re-runs source maintenance before release readiness is evaluated.
+Lane A starts with `source-maintenance-report.yml`, routes reviewer work through triage and reviewed decision artifacts, uses `source-repair-pr.yml` only for committed and validated reviewed repairs, and then re-runs source maintenance before release readiness is evaluated. `source-repair-pr.yml` evaluates the `source_repair` queue gate before pushing a generated repair branch or creating/updating a PR.
 
 ### Lane B: Catalog growth discovery and controlled promotion
 
 Catalog discovery is a proposal pipeline. Discovery may identify candidate vendors and sources, but catalog writes happen only through controlled promotion.
 
-Lane B starts with `catalog-growth-discovery.yml`. Reviewed and approved plans are copied into `maintenance/reviewed/`, then applied through `candidate-promotion-pr.yml`. Candidate promotion creates reviewable PRs and remains subject to the PR safety loop.
+Lane B starts with `catalog-growth-discovery.yml`. Reviewed and approved plans are copied into `maintenance/reviewed/`, then applied through `candidate-promotion-pr.yml`. Candidate promotion creates reviewable PRs, evaluates the `catalog_growth_promotion` queue gate before pushing a generated branch or creating/updating a PR, and remains subject to the PR safety loop.
 
 ### Lane C: Workflow loop refinement
 
@@ -124,7 +124,7 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 6. Export reviewed artifacts only after validation has zero invalid rows.
 7. Commit reviewed artifacts under `maintenance/reviewed/` in a reviewed-artifacts PR.
 8. Wait for CI to pass on the reviewed-artifacts PR.
-9. Run `source-repair-pr.yml` only for committed and validated reviewed repair artifacts.
+9. Run `source-repair-pr.yml` only for committed and validated reviewed repair artifacts; the workflow writes a queue gate report before branch push or PR creation.
 10. Run `source-maintenance-report.yml` again.
 11. Run `release-candidate.yml`.
 
@@ -133,7 +133,7 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 1. Run `catalog-growth-discovery.yml`.
 2. Review generated plans.
 3. Copy the approved plan to `maintenance/reviewed/`.
-4. Run `candidate-promotion-pr.yml`.
+4. Run `candidate-promotion-pr.yml`; the workflow writes a queue gate report before branch push or PR creation.
 5. Let the PR safety loop run.
 6. Continue into the site/release loop after approval and merge.
 
@@ -154,11 +154,11 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 | `agent-automerge.yml` | Controlled automerge lanes for approved agent PRs. | `pull_request` | `contents: write`, `pull-requests: write`, `checks: read`, `statuses: read` | Yes, through merge only | No | Yes | Preflight artifact, merge result | `main`, release/site loop | Core |
 | `source-maintenance-report.yml` | Source cleanup/reporting entry point. Builds source health, verification, discovery, repair sweep, triage, decision sheet, promotion, and cleanup reports. | `workflow_dispatch`, scheduled weekly | `contents: read` | No | No | No | `openva-source-maintenance-report`, `openva-source-reviewer-inbox` | Source cleanup loop, release candidate, site pages, reviewers | Core |
 | `source-refinement-scan.yml` | Compare recent source maintenance runs and identify confirmed P0 repair candidates. | `workflow_dispatch`, scheduled weekly | `actions: read`, `contents: read` | No | No | No | Confirmed P0 scan and evidence artifacts | `source-repair-pr.yml`, release readiness | Core |
-| `source-repair-pr.yml` | Create repair PRs from committed and validated reviewed evidence and repair plans. | `workflow_dispatch` | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Repair action report, PR body | PR safety loop, source maintenance re-run | Core |
+| `source-repair-pr.yml` | Create repair PRs from committed and validated reviewed evidence and repair plans. | `workflow_dispatch` | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Repair action report, queue gate report, PR body | PR safety loop, source maintenance re-run | Core |
 | `source-repair-pr-cleanup.yml` | Close stale generated source repair PRs. | `workflow_dispatch`, scheduled weekly | `contents: read`, `pull-requests: write`, `issues: write` | PR state only | No | No | Stale PR cleanup report | Operators | Core |
 | `coverage-audit.yml` | Catalog quality entry point for completeness, entity review, and provenance coverage. | `workflow_dispatch`, scheduled | `contents: read` | No | No | No | Coverage, completeness, entity, and provenance reports | Site pages, operators | Core |
 | `catalog-growth-discovery.yml` | Catalog expansion proposal entry point. Discovers candidate vendors and sources without writing catalog truth. | `workflow_dispatch`, scheduled | `contents: read`, `issues: write` | No catalog writes; may create/update issues | No | No | Candidate discovery reports and proposal plans | Reviewers, candidate promotion | Core |
-| `candidate-promotion-pr.yml` | Controlled write path for reviewed catalog growth promotions. | `workflow_dispatch`, scheduled | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Promotion application report and PR | PR safety loop, site/release loop | Core |
+| `candidate-promotion-pr.yml` | Controlled write path for reviewed catalog growth promotions. | `workflow_dispatch`, scheduled | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Promotion application report, queue gate report, and PR | PR safety loop, site/release loop | Core |
 | `release-candidate.yml` | Build release candidate with source-health readiness awareness. | `workflow_dispatch` | `contents: read`, `actions: read` | No | No | No | Release artifacts, source-health readiness report | Release operators | Core |
 | `site-pages.yml` | Build and deploy the reviewed catalog site with downloaded source-health and catalog-confidence artifacts. | `push` to `main`, `workflow_dispatch` | `contents: read`, `actions: read`, `pages: write`, `id-token: write` | Pages deployment only | No | No | Pages artifact | Public site | Core |
 | `release-downloads.yml` | Publish release downloads for version tags. | tag `push` | `contents: write` | GitHub release assets only | No | No | Release download assets | Release consumers | Core |
