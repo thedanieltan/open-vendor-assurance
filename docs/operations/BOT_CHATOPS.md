@@ -1,8 +1,8 @@
 # OpenVA Bot Chat-Ops
 
-OpenVA chat-ops gives maintainers a common command vocabulary for asking the bot to explain, check, or prepare future actions. WP13 defines the command surface and a deterministic local parser, but it does not execute commands.
+OpenVA chat-ops gives maintainers a common command vocabulary for asking the bot to explain, check, or prepare future actions. WP13 defined the command surface and a deterministic local parser. WP21 adds limited local execution for the lowest-risk commands only.
 
-This work package is report-only because OpenVA bot authority, queue enforcement, failure routing, and dashboard reporting should be observable before any GitHub comment listener can mutate repository state. The parser emits command decisions that future GitHub automation may consume after a separate authority-expansion PR.
+The parser still emits command decisions that future automation may consume. The execution boundary is documented in `docs/operations/BOT_CHATOPS_EXECUTION.md`.
 
 ## Command Syntax
 
@@ -23,7 +23,7 @@ Aliases are not enabled in WP13. Unknown `/openva` commands are denied. Non-Open
 
 ## Command Lifecycle
 
-The WP13 lifecycle is:
+The parser lifecycle is:
 
 1. Read a maintainer comment.
 2. Detect whether it contains one `/openva` command.
@@ -32,9 +32,9 @@ The WP13 lifecycle is:
 5. Validate the command contract entry.
 6. Validate lane authority.
 7. Record whether a queue check or failure-router check is required later.
-8. Emit a report-only command decision.
+8. Emit a command decision.
 
-Every command remains `executable: false`. Hold and unhold are parsed, but they are not applied.
+WP21 sets only `/openva explain-strict-growth`, `/openva hold`, and `/openva unhold` to `executable: true`. Higher-risk commands remain non-executable.
 
 ## Actor Authorization
 
@@ -46,21 +46,21 @@ Commands from any other actor role are denied. The parser does not call GitHub A
 
 Each command maps to a WP9 lane in `docs/operations/contracts/bot-authority.yaml`. The parser verifies that the lane exists and that the command is declared in `docs/operations/contracts/bot-chatops.yaml`.
 
-Report-only commands must not mutate catalog truth. Commands that would eventually write branches, open PRs, apply labels, dispatch workflows, update issues, or change hold state remain planned and non-executable in WP13.
+Report-only commands must not mutate catalog truth. Commands that would eventually write branches, open PRs, dispatch workflows, update issues, or change catalog truth remain planned and non-executable. Hold and unhold produce local hold-state audit reports only; they do not mutate labels in WP21.
 
 ## Queue Checks
 
 Commands that may lead to source repair, controlled promotion, or support PR work can require a later WP11 queue check. The chat-ops decision records the queue lane that future automation must evaluate before taking any write-capable action.
 
-The parser does not run the queue enforcer by itself and does not enforce queue limits.
+The parser does not run the queue enforcer by itself and does not enforce queue limits. The WP21 execution layer runs queue evaluation for queue-gated executable commands when local queue state is supplied.
 
 ## Failure-Router Integration
 
-Commands that retry, explain, recheck, quarantine, hold, or unhold failure-related state can require WP12 failure-router context. The chat-ops decision records that requirement, but the parser does not classify failures by itself.
+Commands that retry, explain, recheck, quarantine, hold, or unhold failure-related state can require WP12 failure-router context. The chat-ops decision records that requirement. The WP21 execution layer routes denied or queue-blocked execution reports through the failure router.
 
 ## Audit Output
 
-Every accepted command requires a chat-ops decision report. The report includes the raw comment, normalized command, actor role, authorization result, lane ID, side-effect class, executable flag, report-only flag, queue/failure-router requirements, decision, reasons, next safe action, and audit artifacts.
+Every accepted command requires a chat-ops decision report. Executed commands also require a chat-ops execution report. Reports include the raw comment, normalized command, actor role, authorization result, lane ID, side-effect class, executable flag, report-only flag, queue/failure-router requirements, decision, reasons, next safe action, and audit artifacts.
 
 ## Unknown Command Behavior
 
@@ -68,8 +68,8 @@ Unknown `/openva` commands are denied by default. The parser does not infer inte
 
 ## Hold And Unhold
 
-`/openva hold` and `/openva unhold` are planned control commands. WP13 only parses them and records a report-only decision. It does not apply labels, change dashboard issue state, pause queues, resume queues, or update GitHub issues.
+`/openva hold` and `/openva unhold` are limited local execution commands in WP21. They produce deterministic hold-state reports for the `openva-hold` label, but they do not apply labels, change dashboard issue state, pause queues, resume queues, or update issues.
 
 ## Future GitHub Integration
 
-A later implementation may listen to GitHub comments, call this parser, publish the decision report, and then call the queue enforcer or failure router. That future implementation must still obey WP9 bot authority, WP10 dashboard posture, WP11 queue decisions, and WP12 failure routing. WP13 itself performs no GitHub API calls.
+A later implementation may listen to comments, call this parser, publish the decision report, and then call the queue enforcer or failure router. That future implementation must still obey WP9 bot authority, WP10 dashboard posture, WP11 queue decisions, and WP12 failure routing. The parser and WP21 local executor perform no remote API calls.

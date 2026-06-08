@@ -102,11 +102,12 @@ def test_explicit_failure_routes_to_expected_taxonomy_code():
     assert failure["classification"] == "taxonomy_match"
 
 
-def test_allowed_chatops_command_is_report_only():
+def test_allowed_chatops_command_is_limited_executable():
     chatops = subsystem_by_name(run_smoke())["chatops"]["details"]
 
-    assert chatops["allowed_decision"] == "accepted_report_only"
-    assert chatops["allowed_report_only"] is True
+    assert chatops["allowed_decision"] == "accepted_executable"
+    assert chatops["allowed_report_only"] is False
+    assert chatops["allowed_executable"] is True
 
 
 def test_denied_chatops_command_is_denied():
