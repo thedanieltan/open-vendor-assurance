@@ -29,6 +29,43 @@ signal_rendering:
   missing_optional_inputs_are_not_blocking: true
   blocking_signals_sort_before_informational: true
   next_safe_action_uses_highest_ranked_signal: true
+priority_model:
+  ordering:
+    - id: queue_pause_or_denial
+      rank: 0
+      class: blocking
+      meaning: Pause switches, queue denials, and policy stops render before queue deferrals.
+    - id: failure_router_stop_lane
+      rank: 1
+      class: blocking
+      meaning: Failure-router stop-lane results render before retryable failures.
+    - id: unsafe_chatops_denial
+      rank: 2
+      class: blocking
+      meaning: Denied or unsafe chat-ops commands render before ignored comments.
+    - id: workflow_retirement_blocker
+      rank: 3
+      class: action_required
+      meaning: Workflow-retirement blockers render before future retirement candidates.
+    - id: queue_deferral
+      rank: 4
+      class: watch
+      meaning: Queue deferrals render after denials and pauses.
+    - id: retryable_failure
+      rank: 5
+      class: watch
+      meaning: Retryable failures render after stop-lane failures.
+    - id: ignored_chatops_comment
+      rank: 6
+      class: informational
+      meaning: Ignored chat-ops comments remain informational.
+    - id: future_retirement_candidate
+      rank: 7
+      class: informational
+      meaning: Future workflow-retirement candidates remain advisory until evidence gates are satisfied.
+  missing_optional_input_class: missing_optional_input
+  required_input_missing_class: blocking
+  unknown_signal_class: unknown
 expected_sections:
   - id: current_bot_posture
     title: Current Bot Posture
