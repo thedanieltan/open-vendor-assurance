@@ -172,8 +172,8 @@ public_workflows:
     merges_prs: false
   - name: observe-report.yml
     loop: legacy_report
-    status: consolidation_candidate
-    triggers: [workflow_dispatch, schedule]
+    status: quarantined
+    triggers: [workflow_dispatch]
     permissions: {contents: read}
     writes_repository_state: false
     creates_prs: false
