@@ -4,11 +4,14 @@ The OpenVA Bot Dashboard is the durable local control surface for bot posture, q
 
 WP10 does not create or update a GitHub issue. It defines the dashboard contract and provides a deterministic local renderer. A later work package may copy the generated dashboard into a durable GitHub control issue.
 
+WP24 adds a signal-quality layer so maintainers can distinguish blocking issues from action-required signals, watch items, informational telemetry, and missing optional local artifacts.
+
 ## Purpose
 
 The dashboard gives maintainers one place to inspect:
 
 - Current Bot Posture
+- Signal Quality Summary
 - Pause Switch Status Model
 - Strict-Growth Ready Candidates
 - Deferred Candidates
@@ -41,6 +44,21 @@ Generated content comes from local contracts and optional local artifacts:
 
 Manual review is still required for any action that would change catalog truth, source repair state, promotion actions, PR labels, auto-merge state, or workflow posture. Discovery may propose; controlled promotion writes.
 
+## Signal Quality Summary
+
+The `Signal Quality Summary` section ranks the most important dashboard signals before the detailed operational sections.
+
+Signal classes are defined in `docs/operations/contracts/bot-dashboard.yaml`:
+
+- `blocking`
+- `action_required`
+- `watch`
+- `informational`
+- `missing_optional_input`
+- `unknown`
+
+Blocking signals appear before informational telemetry. Missing optional artifacts are explicitly separated from actionable failures so the dashboard does not create false critical posture when local generated reports are absent.
+
 ## Missing Artifact Fallback
 
 The renderer must tolerate missing optional artifacts. When an artifact is absent, the dashboard renders a `Missing Local Artifacts` section and keeps the affected operational section in an advisory fallback state.
@@ -72,8 +90,9 @@ That future implementation must remain under WP9 authority, queue, failure taxon
 Operators should read the dashboard in this order:
 
 1. Confirm the current bot posture and pause switch model.
-2. Check strict-growth ready candidates and review-required candidates.
-3. Check source-health failures, redirect deferrals, coverage gaps, and stale backlog items.
-4. Confirm queue policy limits and stale evidence thresholds.
-5. Use the next safe action only if it is consistent with bot authority and reviewed evidence.
-6. Avoid any catalog mutation from report-only lanes or missing evidence.
+2. Read the Signal Quality Summary.
+3. Check strict-growth ready candidates and review-required candidates.
+4. Check source-health failures, redirect deferrals, coverage gaps, and stale backlog items.
+5. Confirm queue policy limits and stale evidence thresholds.
+6. Use the next safe action only if it is consistent with bot authority and reviewed evidence.
+7. Avoid any catalog mutation from report-only lanes or missing evidence.
