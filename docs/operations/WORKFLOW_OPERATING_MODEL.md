@@ -110,14 +110,14 @@ The boundary is:
 
 ```text
 source-maintenance-report.yml
-→ openva-source-reviewer-inbox / source-review-decision-sheet.csv
-→ matching source-review-triage-plan.json from openva-source-maintenance-report
-→ source_review_decisions validate-sheet
-→ zero invalid rows only
-→ source_review_decisions export-reviewed-artifacts
-→ reviewed-artifacts PR under maintenance/reviewed/
-→ CI passes
-→ source-repair-pr.yml may be run manually from committed reviewed repair evidence
+-> openva-source-reviewer-inbox / source-review-decision-sheet.csv
+-> matching source-review-triage-plan.json from openva-source-maintenance-report
+-> source_review_decisions validate-sheet
+-> zero invalid rows only
+-> source_review_decisions export-reviewed-artifacts
+-> reviewed-artifacts PR under maintenance/reviewed/
+-> CI passes
+-> source-repair-pr.yml may be run manually from committed reviewed repair evidence
 ```
 
 The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-reviewed-artifacts` writes reviewed evidence only. `source-repair-pr.yml` is the later controlled write path and must not run from an uncommitted reviewer sheet.
@@ -179,7 +179,7 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 | `contribution-intake-agent.yml` | Convert issue-based contribution intake into controlled PRs. | `issues`, `workflow_dispatch` | `contents: write`, `pull-requests: write`, `issues: write` | Yes, in PR branch | Yes | No | Intake PR artifacts | PR safety loop | Support |
 | `catalog-maintenance.yml` | Legacy catalog maintenance report for validation, index rebuild, drift check, tests, and entity stub reporting. | `workflow_dispatch`, scheduled weekly (`17 2 * * 1`) | `contents: read`, `actions: read` | No | No | No | `catalog-maintenance-report` | Operators | Consolidation candidate |
 | `source-refinement-queue.yml` | Quarantined legacy source refinement queue generated from an observation report path. | `workflow_dispatch` only | `contents: read` | No | No | No | `openva-source-refinement-queue` | Legacy operators; replacement owner is `source-refinement-scan.yml` plus `source-maintenance-report.yml` | Quarantined |
-| `observe-report.yml` | Observation report path for full public-source observation dry-run output and review queue export. | `workflow_dispatch`, scheduled weekly (`0 2 * * 1`) | `contents: read` | No | No | No | `openva-observation-report` | Operators | Consolidation candidate |
+| `observe-report.yml` | Quarantined legacy observation report path for full public-source observation dry-run output and review queue export. | `workflow_dispatch` only | `contents: read` | No | No | No | `openva-observation-report` | Legacy operators; replacement owner is `source-maintenance-report.yml`, `catalog-growth-discovery.yml`, and bot dashboard reports | Quarantined |
 
 ## Reviewer versus operator artifacts
 

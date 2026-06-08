@@ -2,8 +2,6 @@ name: observe-report
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 2 * * 1"
 
 permissions:
   contents: read

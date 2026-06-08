@@ -1,26 +1,26 @@
 # Workflow Retirement Plan
 
-This document defines the WP14 workflow retirement and sunset plan for OpenVA. It applies the Bot Operating Model retirement statuses to the current public workflow inventory without deleting, disabling, renaming, or changing any workflow.
+This document defines the workflow retirement and sunset plan for OpenVA. It applies the Bot Operating Model retirement statuses to the current public workflow inventory.
 
-Workflow retirement is separate from deletion. Retirement is the evidence-backed decision that a workflow no longer owns an operating function. Deletion is a later destructive change that must happen in a follow-up PR after this plan, the inventory contract, and validation tests agree.
+Workflow retirement is separate from deletion. Retirement is the evidence-backed decision that a workflow no longer owns a primary operating function. Deletion is a later destructive change that must happen in a follow-up PR after this plan, the inventory contract, and validation tests agree.
 
 The machine-readable contract is `docs/operations/contracts/workflow-retirement.yaml`.
 
 ## Purpose
 
-OpenVA has mature strict-growth and controlled promotion lanes, plus newer bot operating contracts for dashboard state, queue checks, failure routing, and report-only chat-ops. The remaining risk is workflow sprawl: legacy report workflows and support workflows can stay callable longer than their authority model justifies.
+OpenVA has mature strict-growth and controlled promotion lanes, plus bot operating contracts for dashboard state, queue checks, failure routing, report-only chat-ops, calibration, and dashboard signal quality. The remaining risk is workflow sprawl: legacy report workflows and support workflows can stay callable longer than their authority model justifies.
 
-WP14 classifies every public workflow listed in `docs/operations/contracts/workflow-inventory.yaml` so future cleanup is deliberate. The plan answers which workflows are active, shadow/report-only, deprecated but callable, quarantined, retired, or blocked from retirement.
+The plan answers which workflows are active, shadow/report-only, deprecated but callable, quarantined, retired, or blocked from retirement.
 
 ## Status Definitions
 
-| Status | Meaning | Current use in WP14 |
+| Status | Meaning | Current use |
 |---|---|---|
-| `active` | Current workflow with declared operating ownership. | Core PR safety, source maintenance, catalog quality, catalog growth, and publication workflows. |
+| `active` | Current workflow with declared operating ownership. | Core PR safety, source maintenance, catalog quality, catalog growth, bot operations, and publication workflows. |
 | `shadow_report_only` | Report-only comparison or migration workflow. | Legacy reporting workflows that do not write repository state. |
 | `deprecated_callable` | Callable for compatibility while replacement evidence is gathered. | Support PR workflows that must not expand strict-growth authority. |
-| `quarantined` | Temporarily blocked from scheduled or primary operation while replacement evidence is finalized. | `source-refinement-queue.yml` is quarantined in WP22 as the first legacy report workflow. |
-| `retired` | Removed from active operation after evidence and follow-up destructive PR. | No current public workflow is retired in WP14. |
+| `quarantined` | Temporarily blocked from scheduled or primary operation while replacement evidence is finalized. | `source-refinement-queue.yml` and `observe-report.yml` are manual-only quarantined legacy report workflows. |
+| `retired` | Removed from active operation after evidence and follow-up destructive PR. | No current public workflow is retired. |
 
 Unknown or unclassified workflows block retirement by default. A destructive retirement PR must prove that the workflow has a valid classification, replacement owner, evidence trail, passing tests, and no remaining dashboard, release, or operator dependency.
 
@@ -43,6 +43,7 @@ Core workflows remain `active` and must not be retired yet:
 - `site-pages.yml`
 - `release-downloads.yml`
 - `site-live-feed.yml`
+- `bot-dashboard-issue.yml`
 
 Support workflows are `deprecated_callable`. They remain callable during compatibility review, but they are not strict-growth authority and are candidates for later consolidation:
 
@@ -50,12 +51,13 @@ Support workflows are `deprecated_callable`. They remain callable during compati
 - `catalog-maintenance-pr.yml`
 - `contribution-intake-agent.yml`
 
-Legacy report workflows are `shadow_report_only` unless a later evidence PR quarantines one of them. They may keep their current manual or scheduled triggers while OpenVA proves that the dashboard, queue, failure router, source maintenance, coverage audit, and catalog growth loops cover their outputs:
+Legacy report workflows now have split posture:
 
-- `catalog-maintenance.yml`
-- `observe-report.yml`
+- `catalog-maintenance.yml` remains `shadow_report_only` while legacy catalog-maintenance artifact dependencies are checked.
+- `source-refinement-queue.yml` is quarantined by WP22 as the first legacy report workflow.
+- `observe-report.yml` is quarantined by WP26 as the second legacy report workflow.
 
-`source-refinement-queue.yml` is quarantined by WP22. The file remains present and manual-only; no schedule, permission, trigger, catalog data, or workflow-file mutation is introduced by the quarantine classification. It is not retirement-ready and must not be deleted until its remaining operator-doc and artifact-consumer blockers are resolved.
+Both quarantined workflows remain present and manual-only. They are not deleted, disabled, renamed, or granted new permissions. Quarantine removes scheduled primary operation while leaving a rollback/manual evidence path.
 
 No workflow is marked `retired` in this work package.
 
@@ -83,9 +85,9 @@ A future destructive retirement PR must prove all of the following:
 7. `tests/test_workflow_retirement.py` and `tests/test_workflow_contracts.py` pass.
 8. Workflow inventory is updated in the same destructive PR if a workflow file is removed.
 
-WP22 quarantine is not destructive retirement. It is a contract classification that confirms `source-refinement-queue.yml` is no longer a primary operating path while keeping the manual workflow available for rollback or legacy artifact inspection.
+WP22 and WP26 quarantine actions are not destructive retirement. They are contract classifications that confirm selected legacy report workflows are no longer primary scheduled operating paths while keeping manual workflows available for rollback or legacy artifact inspection.
 
-Deletion, disabling, trigger changes, permission changes, and workflow renames are out of scope for WP14.
+Deletion, disabling, permission changes, and workflow renames remain out of scope unless a later destructive retirement PR satisfies the gates. WP26 makes only one trigger posture change: `observe-report.yml` becomes manual-only.
 
 ## Evidence Requirements
 
@@ -129,6 +131,11 @@ The publication loop must not be retired while it owns release, site, download, 
 - `site-live-feed.yml`
 
 Support workflows must not be deleted until maintainers decide whether their function is replaced by reviewed evidence, controlled promotion, source repair, dashboard/chat-ops reporting, or a smaller explicit support lane.
+
+Quarantined legacy report workflows must not be deleted until their artifact-consumer and operator-doc blockers are cleared:
+
+- `source-refinement-queue.yml`
+- `observe-report.yml`
 
 ## Future Destructive PR Checklist
 
