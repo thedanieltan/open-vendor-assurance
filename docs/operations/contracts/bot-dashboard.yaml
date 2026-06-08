@@ -5,9 +5,35 @@ output_path: maintenance/bot-dashboard.md
 dashboard_issue:
   title: OpenVA Bot Dashboard / Control Issue
   create_or_update_enabled: false
+signal_classes:
+  - id: blocking
+    rank: 0
+    meaning: Must be resolved before write-capable bot actions continue.
+  - id: action_required
+    rank: 1
+    meaning: Maintainer action is required before the next controlled operation.
+  - id: watch
+    rank: 2
+    meaning: Monitor or refresh evidence before relying on the signal.
+  - id: informational
+    rank: 3
+    meaning: Useful context that does not require immediate action.
+  - id: missing_optional_input
+    rank: 4
+    meaning: Optional local evidence is unavailable and must not be treated as a critical failure.
+  - id: unknown
+    rank: 5
+    meaning: Signal could not be classified and should remain advisory.
+signal_rendering:
+  ranked_summary_section: Signal Quality Summary
+  missing_optional_inputs_are_not_blocking: true
+  blocking_signals_sort_before_informational: true
+  next_safe_action_uses_highest_ranked_signal: true
 expected_sections:
   - id: current_bot_posture
     title: Current Bot Posture
+  - id: signal_quality_summary
+    title: Signal Quality Summary
   - id: pause_switch_status_model
     title: Pause Switch Status Model
   - id: strict_growth_ready_candidates
