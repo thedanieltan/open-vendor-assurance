@@ -39,9 +39,11 @@ def test_retirement_evidence_keeps_candidates_until_replacements_are_proven():
     text = RETIREMENT_EVIDENCE.read_text(encoding="utf-8")
 
     assert "No workflow is removed by this package." in text
+    assert "WP22 quarantines `source-refinement-queue.yml`" in text
     assert "Keep as `retire_candidate`" in text
+    assert "Keep as `quarantined`" in text
     assert "entity stub report is not proven to be fully folded into `coverage-audit.yml`" in text
-    assert "`docs/source-refinement-workflow.md` must be reviewed and migrated before removal" in text
+    assert "`docs/source-refinement-workflow.md` is now marked legacy/quarantined" in text
     assert "`README.md` and `docs/observation-reporting.md` must be reviewed before removal" in text
 
 
@@ -62,6 +64,7 @@ def test_consolidation_audit_links_retirement_evidence_without_remove_now_classi
     evidence = RETIREMENT_EVIDENCE.read_text(encoding="utf-8")
 
     assert "WORKFLOW_RETIREMENT_EVIDENCE.md" in audit
+    assert "`source-refinement-queue.yml` is quarantined by contract" in audit
     assert "Current result: no workflow is classified as `remove_now_if_safe` in this package." in audit
     assert "Current result" in evidence
     assert "No workflow is removed by this package." in evidence

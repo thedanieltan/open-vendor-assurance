@@ -12,6 +12,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "candidate-promotion-pr.yml",
     "agent-automerge.yml",
     "agent-weighted-review.yml",
+    "bot-dashboard-issue.yml",
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
     "catalog-maintenance-pr.yml",
@@ -38,6 +39,7 @@ CORE_LOOP_HEADINGS = {
     "Catalog quality loop",
     "Catalog growth loop",
     "Release/site loop",
+    "Bot operations visibility loop",
 }
 
 REVIEWER_INBOX_ALLOWED_PATHS = {"source-review-decision-sheet.csv"}
@@ -132,7 +134,7 @@ def test_workflow_operating_model_uses_exact_retire_candidate_metadata():
     assert "Varies by workflow" not in text
     assert "varies by workflow" not in text
     assert "| `catalog-maintenance.yml` | Legacy catalog maintenance report for validation, index rebuild, drift check, tests, and entity stub reporting. | `workflow_dispatch`, scheduled weekly (`17 2 * * 1`) | `contents: read`, `actions: read` | No | No | No | `catalog-maintenance-report` | Operators | Consolidation candidate |" in text
-    assert "| `source-refinement-queue.yml` | Legacy source refinement queue generated from an observation report path. | `workflow_dispatch` only | `contents: read` | No | No | No | `openva-source-refinement-queue` | Operators | Consolidation candidate |" in text
+    assert "| `source-refinement-queue.yml` | Quarantined legacy source refinement queue generated from an observation report path. | `workflow_dispatch` only | `contents: read` | No | No | No | `openva-source-refinement-queue` | Legacy operators; replacement owner is `source-refinement-scan.yml` plus `source-maintenance-report.yml` | Quarantined |" in text
     assert "| `observe-report.yml` | Observation report path for full public-source observation dry-run output and review queue export. | `workflow_dispatch`, scheduled weekly (`0 2 * * 1`) | `contents: read` | No | No | No | `openva-observation-report` | Operators | Consolidation candidate |" in text
 
 

@@ -76,7 +76,17 @@ jobs:
           RESOLVED="${PREFERRED:-$LEGACY}"
           echo "MAX_PROMOTION_ACTIONS_PER_PR=$RESOLVED" >> "$GITHUB_ENV"
       - name: Validate current records
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow catalog-growth-discovery.yml \
+              --lane catalog_growth_discovery \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed before catalog growth discovery" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/catalog-growth-discovery-failure-input.json
+            exit 1
+          }
       - name: Validate catalog growth discovery queue
         run: |
           python -m tools.openva.catalog_growth_discovery_queue validate \
@@ -387,3 +397,29 @@ jobs:
             catalog-growth-discovery-issue.md
             maintenance/generated/*.json
           if-no-files-found: warn
+      - name: Build catalog growth discovery failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow catalog-growth-discovery.yml \
+            --lane catalog_growth_discovery \
+            --message "catalog growth discovery workflow failed; inspect logs for external fetch instability, schema validation, redirect canonicalization, or discovery context" \
+            --out reports/openva-failure-routing/catalog-growth-discovery-failure-input.json \
+            --preserve-existing
+      - name: Route catalog growth discovery failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/catalog-growth-discovery-failure-input.json \
+            --out reports/openva-failure-routing/catalog-growth-discovery-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/catalog-growth-discovery-failure-routing-report.md
+      - name: Upload catalog growth discovery failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-catalog-growth-discovery-failure-routing
+          path: |
+            reports/openva-failure-routing/catalog-growth-discovery-failure-input.json
+            reports/openva-failure-routing/catalog-growth-discovery-failure-routing-report.json
+            reports/openva-failure-routing/catalog-growth-discovery-failure-routing-report.md
+          if-no-files-found: ignore

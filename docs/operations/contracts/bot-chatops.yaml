@@ -79,22 +79,33 @@ commands:
 
   - command: explain-strict-growth
     full_command: /openva explain-strict-growth
-    status: planned_report_only
+    status: enabled_executable
     lane_id: pr_safety
     queue_lane_id: null
     allowed_actors:
       - maintainer
-    side_effect_class: report_only
-    executable: false
-    report_only: true
+    side_effect_class: informational_report
+    executable: true
+    report_only: false
     audit_required: true
     audit_artifacts:
       - chatops decision report
+      - chatops execution report
+      - strict-growth explanation markdown
     requires_queue_check: false
     requires_failure_router: true
     failure_router_codes:
       - automerge_lane_mismatch
       - permission_policy_denial
+    execution:
+      mode: local_audit_only
+      may_post_comment: false
+      may_mutate_labels: false
+      may_dispatch_workflows: false
+      may_mutate_catalog: false
+      allowed_outputs:
+        - strict-growth explanation markdown
+        - chatops execution report
 
   - command: quarantine-source
     full_command: /openva quarantine-source
@@ -136,38 +147,62 @@ commands:
 
   - command: hold
     full_command: /openva hold
-    status: planned_report_only
+    status: enabled_executable
     lane_id: support_agent_pr
     queue_lane_id: support_agent_pr
     allowed_actors:
       - maintainer
-    side_effect_class: report_only
-    executable: false
-    report_only: true
+    side_effect_class: hold_state_report
+    executable: true
+    report_only: false
     audit_required: true
     audit_artifacts:
       - chatops decision report
+      - chatops execution report
+      - hold state report
     requires_queue_check: true
     requires_failure_router: true
     failure_router_codes:
       - permission_policy_denial
       - stale_evidence_failure
+    execution:
+      mode: local_audit_only
+      hold_label: openva-hold
+      may_post_comment: false
+      may_mutate_labels: false
+      may_dispatch_workflows: false
+      may_mutate_catalog: false
+      allowed_outputs:
+        - hold state report
+        - chatops execution report
 
   - command: unhold
     full_command: /openva unhold
-    status: planned_report_only
+    status: enabled_executable
     lane_id: support_agent_pr
     queue_lane_id: support_agent_pr
     allowed_actors:
       - maintainer
-    side_effect_class: report_only
-    executable: false
-    report_only: true
+    side_effect_class: hold_state_report
+    executable: true
+    report_only: false
     audit_required: true
     audit_artifacts:
       - chatops decision report
+      - chatops execution report
+      - unhold state report
     requires_queue_check: true
     requires_failure_router: true
     failure_router_codes:
       - permission_policy_denial
       - stale_evidence_failure
+    execution:
+      mode: local_audit_only
+      hold_label: openva-hold
+      may_post_comment: false
+      may_mutate_labels: false
+      may_dispatch_workflows: false
+      may_mutate_catalog: false
+      allowed_outputs:
+        - unhold state report
+        - chatops execution report

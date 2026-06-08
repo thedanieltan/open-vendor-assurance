@@ -53,6 +53,7 @@ QUEUE_REASON_RULES: dict[str, str] = {
     "stale_evidence": "stale_evidence_failure",
     "missing_evidence": "stale_evidence_failure",
     "duplicate_pr_policy": "duplicate_url_failure",
+    "pause_switch_active": "permission_policy_denial",
     "unknown_lane": "permission_policy_denial",
     "lane_missing_queue_policy": "permission_policy_denial",
     "lane_not_write_capable": "permission_policy_denial",
@@ -80,6 +81,45 @@ def load_input(path: Path) -> dict[str, Any]:
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def write_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+
+
+def render_markdown(report: dict[str, Any]) -> str:
+    source = report.get("source") or {}
+    lines = [
+        "# OpenVA Bot Failure Routing",
+        "",
+        "## Classification",
+        "",
+        f"- Lane: `{report.get('lane_id')}`",
+        f"- Matched failure code: `{report.get('matched_failure_code')}`",
+        f"- Classification: `{report.get('classification')}`",
+        f"- Match confidence: `{report.get('match_confidence')}`",
+        f"- Match basis: `{report.get('match_basis')}`",
+        "",
+        "## Behavior",
+        "",
+        f"- Retry eligible: `{report.get('retry_eligible')}`",
+        f"- Retry policy: {report.get('retry_policy')}",
+        f"- Escalation target: `{report.get('escalation_target')}`",
+        f"- Open or update hardening issue later: `{report.get('open_or_update_hardening_issue')}`",
+        f"- Defer candidate: `{report.get('defer_candidate')}`",
+        f"- Stop lane: `{report.get('stop_lane')}`",
+        f"- Next safe action: {report.get('next_safe_action')}",
+        "",
+        "## Source",
+        "",
+        f"- Message: `{source.get('message')}`",
+        f"- Artifact: `{source.get('artifact')}`",
+        f"- Queue decision: `{source.get('queue_decision')}`",
+        f"- Queue reasons: `{', '.join(source.get('queue_reasons') or [])}`",
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def load_taxonomy(root: Path = ROOT) -> dict[str, Any]:
@@ -224,12 +264,16 @@ def main(argv: list[str] | None = None) -> int:
     classify_parser = subparsers.add_parser("classify")
     classify_parser.add_argument("--input", type=Path, required=True)
     classify_parser.add_argument("--out", type=Path, default=ROOT / DEFAULT_REPORT)
+    classify_parser.add_argument("--out-md", type=Path, help="Optional markdown failure routing report.")
     args = parser.parse_args(argv)
 
     if args.command == "classify":
         report = route_failure(load_input(args.input))
         output = args.out if args.out.is_absolute() else ROOT / args.out
         write_json(output, report)
+        if args.out_md:
+            output_md = args.out_md if args.out_md.is_absolute() else ROOT / args.out_md
+            write_text(output_md, render_markdown(report))
         print(json.dumps({"matched_failure_code": report["matched_failure_code"]}, sort_keys=True))
         return 0
     raise AssertionError(f"Unhandled command: {args.command}")

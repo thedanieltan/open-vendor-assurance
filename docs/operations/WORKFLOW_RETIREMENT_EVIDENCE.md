@@ -6,12 +6,12 @@ A workflow may move from `retire_candidate` to `remove_now_if_safe` only when it
 
 ## Current result
 
-No workflow is removed by this package.
+No workflow is removed by this package. WP22 quarantines `source-refinement-queue.yml` by contract because it is already manual-only, read-only, and has active replacement owners, but stale docs and operator artifact consumers still block deletion.
 
 | Workflow | Current classification | Evidence result | Replacement status | Recommendation |
 |---|---|---|---|---|
 | `catalog-maintenance.yml` | `retire_candidate` | Not safe to remove yet. | Partial replacement only. | Keep as `retire_candidate`. |
-| `source-refinement-queue.yml` | `retire_candidate` | Likely first removal candidate, but not proven safe. | Likely replaced for source cleanup by `source-maintenance-report.yml`, but stale consumers and docs still need proof. | Keep as `retire_candidate`. |
+| `source-refinement-queue.yml` | `quarantined` | First legacy report workflow quarantined; not safe to delete. | Replaced for current source cleanup by `source-maintenance-report.yml` and `source-refinement-scan.yml`, but stale consumers and docs still need proof. | Keep manual-only and blocked from destructive retirement. |
 | `observe-report.yml` | `retire_candidate` | Not safe to remove yet. | Source-observation replacement exists, but non-source observation role is unresolved. | Keep as `retire_candidate`. |
 
 ## Evidence requirements
@@ -81,7 +81,7 @@ Keep as `retire_candidate`. Do not move to `remove_now_if_safe` until entity stu
 
 ### Current purpose
 
-`source-refinement-queue.yml` is a manual workflow that reads an observation report JSON path, generates a source refinement queue in Markdown and JSON, exports a CSV, and uploads `openva-source-refinement-queue`.
+`source-refinement-queue.yml` is a manual workflow that reads an observation report JSON path, generates a source refinement queue in Markdown and JSON, exports a CSV, and uploads `openva-source-refinement-queue`. WP22 quarantines it by contract as the first legacy report workflow.
 
 ### Current trigger
 
@@ -100,7 +100,7 @@ Keep as `retire_candidate`. Do not move to `remove_now_if_safe` until entity stu
 
 ### Current documented consumers
 
-- Operators using the older observation-report-derived queue.
+- Legacy operators using the older observation-report-derived queue.
 - CI-readiness tests that intentionally allowlist the workflow and assert uploaded artifacts.
 - `docs/source-refinement-workflow.md` references this path and must be reviewed before removal.
 
@@ -111,22 +111,22 @@ Keep as `retire_candidate`. Do not move to `remove_now_if_safe` until entity stu
 
 ### Replacement workflow
 
-Likely replacement:
+Replacement owner:
 
 - `source-maintenance-report.yml` now produces source quality refinement artifacts, source repair sweep artifacts, source review triage artifacts, and the reviewer decision sheet.
 - `source-refinement-scan.yml` handles confirmed P0 refinement from repeated source maintenance runs.
 
 ### Replacement artifact equivalence
 
-Likely but not proven. `source-maintenance-report.yml` produces more current source cleanup artifacts, but the older observation-report-derived queue may still have doc references or operator expectations.
+Sufficient for quarantine, but not for deletion. `source-maintenance-report.yml` produces more current source cleanup artifacts, and `source-refinement-scan.yml` owns confirmed P0 refinement evidence. The older observation-report-derived queue may still have doc references or operator expectations.
 
 ### Stale-reference status
 
-Not clean yet. `docs/source-refinement-workflow.md` must be reviewed and migrated before removal.
+Not clean yet. `docs/source-refinement-workflow.md` is now marked legacy/quarantined, but human review and agent-control-plane references still need a later cleanup before deletion.
 
 ### Recommendation
 
-Keep as `retire_candidate`. It is the most plausible future `remove_now_if_safe` candidate, but only after stale references are migrated and tests prove no unique queue remains.
+Keep as `quarantined`. Do not delete until stale references are migrated, two clean replacement runs are recorded, and tests prove no unique queue remains.
 
 ## Candidate: `observe-report.yml`
 

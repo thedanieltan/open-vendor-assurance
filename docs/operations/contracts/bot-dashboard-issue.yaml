@@ -2,6 +2,15 @@ version: 1
 contract: bot-dashboard-issue
 source_document: docs/operations/BOT_DASHBOARD_ISSUE_SYNC.md
 dashboard_source: maintenance/bot-dashboard.md
+workflow:
+  name: bot-dashboard-issue.yml
+  dispatch_enabled: true
+  scheduled_enabled: true
+  default_mode: dry_run_report_only
+  dry_run_input: dry_run
+  dry_run_default: "true"
+  dashboard_issue_number_input: dashboard_issue_number
+  real_issue_update_requires_explicit_input: true
 issue:
   title: OpenVA Bot Dashboard
   labels:
@@ -29,8 +38,11 @@ safety:
   duplicate_issue_creation_allowed: false
   pull_request_labels_allowed: false
   workflow_dispatch_allowed: false
+  workflow_default_dry_run: true
+  workflow_default_report_only: true
 report:
   default_output: maintenance/bot-dashboard-issue-sync-report.json
+  default_markdown_output: maintenance/bot-dashboard-issue-sync-report.md
   decisions:
     - would_create
     - would_update

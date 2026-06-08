@@ -277,7 +277,17 @@ jobs:
           echo "ELIGIBILITY_REPORT_PATH=maintenance/generated/strict-growth-eligibility-report.json" >> "$GITHUB_ENV"
       - name: Validate current records
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow candidate-promotion-pr.yml \
+              --lane catalog_growth_promotion \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed before catalog promotion actions" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/catalog-promotion-failure-input.json
+            exit 1
+          }
       - name: Apply candidate promotions
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: |
@@ -286,7 +296,17 @@ jobs:
             --output candidate-promotion-report.json
       - name: Validate generated catalog promotion
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow candidate-promotion-pr.yml \
+              --lane catalog_growth_promotion \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed after catalog promotion actions" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/catalog-promotion-failure-input.json
+            exit 1
+          }
       - name: Rebuild generated outputs
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: python -m tools.openva.validate build-indexes
@@ -302,6 +322,107 @@ jobs:
             echo "Candidate promotion changes produced."
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
+      - name: Build catalog promotion queue state
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p reports/openva-queue
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          plan_path = Path(os.environ["PROMOTION_PLAN_PATH"])
+          generated_at = datetime.fromtimestamp(plan_path.stat().st_mtime, UTC).replace(microsecond=0)
+          plan_digest = hashlib.sha256(plan_path.read_bytes()).hexdigest()
+          state = {
+              "version": 1,
+              "lane_id": "catalog_growth_promotion",
+              "state_source": "workflow_local_fallback",
+              "fallback_state": True,
+              "live_state_checks_report_only": [
+                  "max_open_prs",
+                  "recent_bot_prs_per_day",
+                  "recent_bot_prs_per_week",
+                  "duplicate_pr_policy",
+                  "source_host_rate_limit",
+                  "vendor_domain_concurrency_limit",
+              ],
+              "open_prs": [],
+              "recent_bot_prs": {"day_count": 0, "week_count": 0},
+              "pause": {"active": False, "source": "workflow fallback; maintainer pause label not fetched"},
+              "evidence": {
+                  "generated_at": generated_at.isoformat().replace("+00:00", "Z"),
+                  "source": plan_path.as_posix(),
+              },
+              "requested_action": {
+                  "duplicate_key": f"{plan_path.as_posix()}:{plan_digest}",
+                  "vendor_domain": "",
+                  "source_host": "",
+                  "base_sha": os.environ["GITHUB_SHA"],
+                  "head_sha": os.environ["GITHUB_SHA"],
+              },
+          }
+          Path("reports/openva-queue/catalog-promotion-queue-state.json").write_text(
+              json.dumps(state, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+      - name: Evaluate catalog promotion queue gate
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        run: |
+          python -m tools.openva.bot_queue evaluate \
+            --lane catalog_growth_promotion \
+            --state reports/openva-queue/catalog-promotion-queue-state.json \
+            --out reports/openva-queue/catalog-promotion-queue-report.json \
+            --out-md reports/openva-queue/catalog-promotion-queue-report.md
+      - name: Enforce catalog promotion queue gate
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+
+          report = json.load(open("reports/openva-queue/catalog-promotion-queue-report.json", encoding="utf-8"))
+          state = json.load(open("reports/openva-queue/catalog-promotion-queue-state.json", encoding="utf-8"))
+          reasons = set(report.get("reasons", []))
+          hard_stop_reasons = {
+              "unknown_lane",
+              "lane_missing_queue_policy",
+              "lane_not_deny_by_default",
+              "lane_not_write_capable",
+              "missing_evidence",
+              "stale_evidence",
+              "pause_switch_active",
+          }
+          if state.get("state_source") != "workflow_local_fallback":
+              hard_stop_reasons.update(
+                  {
+                      "max_open_prs_exceeded",
+                      "max_bot_prs_per_day_exceeded",
+                      "max_bot_prs_per_week_exceeded",
+                  }
+              )
+          blocked = report.get("decision") in {"deny", "pause"} or bool(reasons & hard_stop_reasons)
+          if blocked:
+              raise SystemExit(
+                  "catalog_growth_promotion queue gate blocked PR creation: "
+                  + ", ".join(report.get("reasons", []))
+              )
+          print("catalog_growth_promotion queue gate passed; fallback live-state checks remain report-only.")
+          PY
+      - name: Upload catalog promotion queue gate artifacts
+        if: always() && steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-catalog-promotion-queue-report
+          path: |
+            reports/openva-queue/catalog-promotion-queue-state.json
+            reports/openva-queue/catalog-promotion-queue-report.json
+            reports/openva-queue/catalog-promotion-queue-report.md
+          if-no-files-found: warn
       - name: Run source preflight for changed sources
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         id: source_preflight
@@ -446,3 +567,31 @@ jobs:
             maintenance/generated/strict-growth-eligibility-report.json
             maintenance/generated/strict-growth-shortlist.json
           if-no-files-found: error
+      - name: Build catalog promotion failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow candidate-promotion-pr.yml \
+            --lane catalog_growth_promotion \
+            --message "catalog growth controlled promotion workflow failed; inspect logs for workflow input compatibility, schema validation, queue denial, source preflight, redirect, or promotion action context" \
+            --queue-report reports/openva-queue/catalog-promotion-queue-report.json \
+            --source-preflight-report source-preflight-report.json \
+            --out reports/openva-failure-routing/catalog-promotion-failure-input.json \
+            --preserve-existing
+      - name: Route catalog promotion failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/catalog-promotion-failure-input.json \
+            --out reports/openva-failure-routing/catalog-promotion-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/catalog-promotion-failure-routing-report.md
+      - name: Upload catalog promotion failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-catalog-promotion-failure-routing
+          path: |
+            reports/openva-failure-routing/catalog-promotion-failure-input.json
+            reports/openva-failure-routing/catalog-promotion-failure-routing-report.json
+            reports/openva-failure-routing/catalog-promotion-failure-routing-report.md
+          if-no-files-found: ignore
