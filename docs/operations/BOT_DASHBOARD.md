@@ -12,6 +12,7 @@ The dashboard gives maintainers one place to inspect:
 
 - Current Bot Posture
 - Signal Quality Summary
+- Priority Model
 - Pause Switch Status Model
 - Strict-Growth Ready Candidates
 - Deferred Candidates
@@ -59,6 +60,20 @@ Signal classes are defined in `docs/operations/contracts/bot-dashboard.yaml`:
 
 Blocking signals appear before informational telemetry. Missing optional artifacts are explicitly separated from actionable failures so the dashboard does not create false critical posture when local generated reports are absent.
 
+## Priority Model
+
+The dashboard contract declares a deterministic priority model for noisy operational signals. The priority model keeps urgent blockers above lower-priority telemetry without giving the dashboard any write authority.
+
+The required order is:
+
+1. Queue pauses, queue denials, and policy stops before queue deferrals.
+2. Failure-router stop-lane results before retryable failures.
+3. Denied or unsafe chat-ops commands before ignored comments.
+4. Workflow-retirement blockers before future retirement candidates.
+5. Missing optional local artifacts outside the blocker lane unless the contract marks the artifact required.
+
+This is a presentation and triage rule only. It does not activate labels, mutate issues, dispatch workflows, change queue enforcement, execute chat-ops commands, or retire workflows.
+
 ## Missing Artifact Fallback
 
 The renderer must tolerate missing optional artifacts. When an artifact is absent, the dashboard renders a `Missing Local Artifacts` section and keeps the affected operational section in an advisory fallback state.
@@ -91,8 +106,9 @@ Operators should read the dashboard in this order:
 
 1. Confirm the current bot posture and pause switch model.
 2. Read the Signal Quality Summary.
-3. Check strict-growth ready candidates and review-required candidates.
-4. Check source-health failures, redirect deferrals, coverage gaps, and stale backlog items.
-5. Confirm queue policy limits and stale evidence thresholds.
-6. Use the next safe action only if it is consistent with bot authority and reviewed evidence.
-7. Avoid any catalog mutation from report-only lanes or missing evidence.
+3. Apply the Priority Model: blockers and unsafe/denied states before deferrals, retries, ignored comments, or future candidates.
+4. Check strict-growth ready candidates and review-required candidates.
+5. Check source-health failures, redirect deferrals, coverage gaps, and stale backlog items.
+6. Confirm queue policy limits and stale evidence thresholds.
+7. Use the next safe action only if it is consistent with bot authority and reviewed evidence.
+8. Avoid any catalog mutation from report-only lanes or missing evidence.
