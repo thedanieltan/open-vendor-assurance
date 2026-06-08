@@ -160,6 +160,111 @@ jobs:
             echo "Source repair changes produced."
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
+      - name: Build source repair queue state
+        if: steps.catalog_changes.outputs.has_changes == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p reports/openva-queue
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          validation_path = Path(os.environ["VALIDATION_REPORT_PATH"])
+          evidence_path = Path(os.environ.get("EVIDENCE_REPORT_PATH", ""))
+          evidence_source = evidence_path if evidence_path.is_file() else validation_path
+          generated_at = datetime.fromtimestamp(evidence_source.stat().st_mtime, UTC).replace(microsecond=0)
+          duplicate_key = hashlib.sha256(
+              f"{validation_path.as_posix()}:{validation_path.read_bytes().hex()}".encode("utf-8")
+          ).hexdigest()
+          state = {
+              "version": 1,
+              "lane_id": "source_repair",
+              "state_source": "workflow_local_fallback",
+              "fallback_state": True,
+              "live_state_checks_report_only": [
+                  "max_open_prs",
+                  "recent_bot_prs_per_day",
+                  "recent_bot_prs_per_week",
+                  "duplicate_pr_policy",
+                  "source_host_rate_limit",
+                  "vendor_domain_concurrency_limit",
+              ],
+              "open_prs": [],
+              "recent_bot_prs": {"day_count": 0, "week_count": 0},
+              "pause": {"active": False, "source": "workflow fallback; maintainer pause label not fetched"},
+              "evidence": {
+                  "generated_at": generated_at.isoformat().replace("+00:00", "Z"),
+                  "source": evidence_source.as_posix(),
+              },
+              "requested_action": {
+                  "duplicate_key": duplicate_key,
+                  "vendor_domain": "",
+                  "source_host": "",
+                  "base_sha": os.environ["GITHUB_SHA"],
+                  "head_sha": os.environ["GITHUB_SHA"],
+              },
+          }
+          Path("reports/openva-queue/source-repair-queue-state.json").write_text(
+              json.dumps(state, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+      - name: Evaluate source repair queue gate
+        if: steps.catalog_changes.outputs.has_changes == 'true'
+        run: |
+          python -m tools.openva.bot_queue evaluate \
+            --lane source_repair \
+            --state reports/openva-queue/source-repair-queue-state.json \
+            --out reports/openva-queue/source-repair-queue-report.json \
+            --out-md reports/openva-queue/source-repair-queue-report.md
+      - name: Enforce source repair queue gate
+        if: steps.catalog_changes.outputs.has_changes == 'true'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+
+          report = json.load(open("reports/openva-queue/source-repair-queue-report.json", encoding="utf-8"))
+          state = json.load(open("reports/openva-queue/source-repair-queue-state.json", encoding="utf-8"))
+          reasons = set(report.get("reasons", []))
+          hard_stop_reasons = {
+              "unknown_lane",
+              "lane_missing_queue_policy",
+              "lane_not_deny_by_default",
+              "lane_not_write_capable",
+              "missing_evidence",
+              "stale_evidence",
+              "pause_switch_active",
+          }
+          if state.get("state_source") != "workflow_local_fallback":
+              hard_stop_reasons.update(
+                  {
+                      "max_open_prs_exceeded",
+                      "max_bot_prs_per_day_exceeded",
+                      "max_bot_prs_per_week_exceeded",
+                  }
+              )
+          blocked = report.get("decision") in {"deny", "pause"} or bool(reasons & hard_stop_reasons)
+          if blocked:
+              raise SystemExit(
+                  "source_repair queue gate blocked PR creation: "
+                  + ", ".join(report.get("reasons", []))
+              )
+          print("source_repair queue gate passed; fallback live-state checks remain report-only.")
+          PY
+      - name: Upload source repair queue gate artifacts
+        if: always() && steps.catalog_changes.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-repair-queue-report
+          path: |
+            reports/openva-queue/source-repair-queue-state.json
+            reports/openva-queue/source-repair-queue-report.json
+            reports/openva-queue/source-repair-queue-report.md
+          if-no-files-found: warn
       - name: Prepare compact PR body
         run: |
           python - <<'PY'
@@ -192,6 +297,7 @@ jobs:
               "## Guardrails",
               "",
               "- Uses only committed validation reports under maintenance/reviewed/",
+              "- Uses reviewed evidence freshness for the source_repair queue gate",
               "- Applies only rows approved by source_repair_plan validator",
               "- Re-checks current source YAML before applying each replacement",
               "- Does not run live discovery",

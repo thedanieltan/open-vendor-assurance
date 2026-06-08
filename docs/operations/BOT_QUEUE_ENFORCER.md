@@ -1,8 +1,8 @@
 # OpenVA Bot Queue Enforcer
 
-The OpenVA Bot Queue Enforcer is a local, report-only decision layer for write-capable bot lanes. It converts the WP9 bot authority and queue policy contracts into deterministic `allow`, `defer`, `deny`, or `pause` decisions before a bot lane opens a PR or takes another write-capable action.
+The OpenVA Bot Queue Enforcer is a local decision layer for write-capable bot lanes. It converts the WP9 bot authority and queue policy contracts into deterministic `allow`, `defer`, `deny`, or `pause` decisions before a bot lane opens a PR or takes another write-capable action.
 
-WP11 does not enforce queue policy inside production workflows. It does not create, close, label, or update PRs. It does not call GitHub APIs, run workflows, update the bot dashboard issue, implement slash commands, retire workflows, change catalog data, change automerge policy, or widen workflow permissions.
+WP11 introduced the local report-only enforcer. WP19 wires that enforcer into the two existing controlled PR creation workflows, without changing their permissions or adding new catalog mutation paths. The enforcer still does not create, close, label, or update PRs. It does not call GitHub APIs, run workflows, update the bot dashboard issue, implement slash commands, retire workflows, change catalog data, change automerge policy, or widen workflow permissions.
 
 ## Inputs
 
@@ -14,6 +14,8 @@ The enforcer reads:
 - a local queue state file supplied by the caller
 
 The local queue state file represents the GitHub and artifact state that the enforcer needs but does not fetch itself. It may include open PRs, recent bot PR counts, the last failure, evidence timestamps, duplicate keys, source host, vendor domain, base-change posture, and pause state.
+
+When a workflow cannot supply live GitHub state, it must say so in the queue state with `state_source: workflow_local_fallback`. Fallback state is allowed only when the report clearly identifies live PR capacity, duplicate PR, recent PR count, source-host, and vendor-domain checks as report-only. Authority, queue-policy, pause, and stale-evidence checks remain hard gates.
 
 ## Decisions
 
@@ -48,10 +50,14 @@ The source-host, vendor-domain, and base-change checks are intentionally local p
 
 ## Reports
 
-The CLI writes deterministic JSON reports:
+The CLI writes deterministic JSON reports and can also write markdown summaries:
 
 ```bash
-python -m tools.openva.bot_queue evaluate --lane catalog_growth_promotion --state path/to/state.yaml --out maintenance/bot-queue-report.json
+python -m tools.openva.bot_queue evaluate \
+  --lane catalog_growth_promotion \
+  --state path/to/state.yaml \
+  --out maintenance/bot-queue-report.json \
+  --out-md maintenance/bot-queue-report.md
 ```
 
 Each report includes:
@@ -67,11 +73,29 @@ Each report includes:
 - duplicate PR evaluation
 - next safe action
 
-Reports are safe for WP10 dashboard ingestion. They are advisory until a later workflow integration makes them part of a report-only check.
+Reports are safe for WP10 dashboard ingestion. The markdown report is intended for workflow artifacts and operator review.
 
-## Future Workflow Use
+## Workflow Integration
 
-Future write-capable workflows should call the enforcer before creating branches, opening PRs, applying labels, enabling auto-merge, merging, or mutating catalog truth. A future workflow should supply queue state from GitHub context or API output, write the report as an artifact, and stop or continue based on the decision only after that behavior is explicitly approved.
+`source-repair-pr.yml` and `candidate-promotion-pr.yml` now call the enforcer before pushing a generated branch or creating/updating a PR. Each workflow writes and uploads:
+
+- fallback queue state JSON
+- queue decision JSON
+- queue decision markdown
+
+The integrated gate stops on:
+
+- `deny` decisions
+- `pause` decisions
+- unknown lanes
+- missing queue policy
+- missing deny-by-default authority
+- missing write authority
+- missing or stale evidence
+
+When future workflows supply live GitHub state instead of `workflow_local_fallback`, the same gate may also stop on max open PR, daily PR, and weekly PR capacity decisions. Until then, those capacity checks remain explicitly report-only inside the workflow artifacts.
+
+Future write-capable workflows should call the enforcer before creating branches, opening PRs, applying labels, enabling auto-merge, merging, or mutating catalog truth. They should supply queue state from GitHub context or API output, write the report as an artifact, and stop or continue based on the decision only after that behavior is explicitly approved.
 
 The enforcer must remain subordinate to WP9:
 

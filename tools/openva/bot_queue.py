@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -27,6 +27,48 @@ def load_yaml(path: Path) -> dict[str, Any]:
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def write_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+
+
+def render_markdown(report: dict[str, Any]) -> str:
+    reasons = report.get("reasons") or []
+    violated = report.get("violated_policies") or []
+    stale = report.get("stale_evidence") or {}
+    open_prs = report.get("open_pr_evaluation") or {}
+    recent = report.get("recent_bot_pr_evaluation") or {}
+    lines = [
+        "# OpenVA Bot Queue Decision",
+        "",
+        "## Decision",
+        "",
+        f"- Lane: `{report.get('lane_id')}`",
+        f"- Decision: `{report.get('decision')}`",
+        f"- Next safe action: {report.get('next_safe_action')}",
+        "",
+        "## Reasons",
+        "",
+        *[f"- `{reason}`" for reason in reasons],
+        "",
+        "## Violated Policies",
+        "",
+        *([f"- `{policy}`" for policy in violated] if violated else ["- None"]),
+        "",
+        "## Queue Evidence",
+        "",
+        f"- Open PR count: `{open_prs.get('open_pr_count')}`",
+        f"- Max open PRs: `{open_prs.get('max_open_prs')}`",
+        f"- Recent bot PRs today: `{recent.get('day_count')}`",
+        f"- Recent bot PRs this week: `{recent.get('week_count')}`",
+        f"- Evidence generated at: `{stale.get('generated_at')}`",
+        f"- Evidence stale: `{stale.get('stale')}`",
+        f"- Evidence missing: `{stale.get('missing')}`",
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def parse_time(value: Any) -> datetime | None:
@@ -385,6 +427,7 @@ def main(argv: list[str] | None = None) -> int:
     evaluate_parser.add_argument("--lane", required=True)
     evaluate_parser.add_argument("--state", type=Path, required=True)
     evaluate_parser.add_argument("--out", type=Path, default=ROOT / DEFAULT_REPORT)
+    evaluate_parser.add_argument("--out-md", type=Path, help="Optional markdown queue decision report.")
     evaluate_parser.add_argument("--now", help="Evaluation time as ISO-8601, for deterministic local reports.")
     args = parser.parse_args(argv)
 
@@ -393,6 +436,9 @@ def main(argv: list[str] | None = None) -> int:
         report = evaluate(args.lane, load_state(args.state), now=now)
         out = args.out if args.out.is_absolute() else ROOT / args.out
         write_json(out, report)
+        if args.out_md:
+            out_md = args.out_md if args.out_md.is_absolute() else ROOT / args.out_md
+            write_text(out_md, render_markdown(report))
         print(json.dumps({"decision": report["decision"], "reasons": report["reasons"]}, sort_keys=True))
         return 0
     raise AssertionError(f"Unhandled command: {args.command}")
