@@ -38,6 +38,25 @@ def count_by(items: list[dict[str, Any]], key: str) -> dict[str, int]:
     return dict(sorted(Counter(str(item.get(key) or "unknown") for item in items).items()))
 
 
+def signal_class_ranks(dashboard_contract: dict[str, Any]) -> dict[str, int]:
+    return {str(item["id"]): int(item["rank"]) for item in dashboard_contract.get("signal_classes", [])}
+
+
+def make_signal(signal_class: str, title: str, summary: str, next_action: str, evidence: dict[str, Any] | None = None) -> dict[str, Any]:
+    return {
+        "class": signal_class,
+        "title": title,
+        "summary": summary,
+        "next_action": next_action,
+        "evidence": evidence or {},
+    }
+
+
+def sort_signals(signals: list[dict[str, Any]], dashboard_contract: dict[str, Any]) -> list[dict[str, Any]]:
+    ranks = signal_class_ranks(dashboard_contract)
+    return sorted(signals, key=lambda item: (ranks.get(str(item["class"]), ranks.get("unknown", 999)), str(item["title"])))
+
+
 def list_items(data: Any, *keys: str) -> list[dict[str, Any]]:
     if isinstance(data, list):
         return [item for item in data if isinstance(item, dict)]
@@ -176,13 +195,154 @@ def summarize_source_health(artifacts: dict[str, dict[str, Any]]) -> dict[str, A
     return {"rows": rows, "status_counts": status_counts, "failure_rows": failure_rows}
 
 
+def build_signals(
+    *,
+    authority: dict[str, Any],
+    dashboard_contract: dict[str, Any],
+    eligibility: dict[str, Any],
+    promotion_plan: dict[str, Any],
+    coverage: dict[str, Any],
+    source_health: dict[str, Any],
+    artifacts: dict[str, dict[str, Any]],
+    errored_artifacts: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    signals: list[dict[str, Any]] = []
+    missing_artifacts = [artifact for artifact in artifacts.values() if not artifact["exists"]]
+    required_missing = [artifact for artifact in missing_artifacts if artifact["required"]]
+
+    if required_missing:
+        signals.append(
+            make_signal(
+                "blocking",
+                "Required dashboard input missing",
+                f"{len(required_missing)} required dashboard input(s) are unavailable.",
+                "Regenerate required evidence before relying on write-capable bot recommendations.",
+                {"artifacts": [artifact["id"] for artifact in required_missing]},
+            )
+        )
+    if errored_artifacts:
+        signals.append(
+            make_signal(
+                "blocking",
+                "Dashboard artifact parse failure",
+                f"{len(errored_artifacts)} local artifact(s) could not be parsed.",
+                "Fix malformed local artifacts before using dashboard recommendations.",
+                {"artifacts": [artifact["id"] for artifact in errored_artifacts]},
+            )
+        )
+
+    if eligibility["strict_ready"] or promotion_plan["actions"]:
+        signals.append(
+            make_signal(
+                "action_required",
+                "Strict-growth evidence available",
+                "Local strict-growth evidence exists for controlled promotion review.",
+                "Review freshness, queue limits, and source-health evidence before controlled promotion.",
+                {"strict_ready": len(eligibility["strict_ready"]), "promotion_actions": len(promotion_plan["actions"])},
+            )
+        )
+    review_count = len(eligibility["review_required"]) + len(promotion_plan["review_required"])
+    if review_count:
+        signals.append(
+            make_signal(
+                "action_required",
+                "Review-required candidates present",
+                f"{review_count} candidate(s) or action(s) require manual review.",
+                "Resolve review-required items before source repair or controlled promotion.",
+                {"review_required": review_count},
+            )
+        )
+    if source_health["failure_rows"]:
+        signals.append(
+            make_signal(
+                "action_required",
+                "Source-health failures present",
+                f"{len(source_health['failure_rows'])} source-health row(s) show failure or ambiguity.",
+                "Classify source-health failures before relying on related source records.",
+                {"failure_rows": len(source_health["failure_rows"])},
+            )
+        )
+    if promotion_plan["redirect_deferrals"]:
+        signals.append(
+            make_signal(
+                "action_required",
+                "Redirect deferrals present",
+                f"{len(promotion_plan['redirect_deferrals'])} redirect deferral(s) require reviewed evidence.",
+                "Resolve redirect canonicalization before promotion.",
+                {"redirect_deferrals": len(promotion_plan["redirect_deferrals"])},
+            )
+        )
+
+    if eligibility["deferred"]:
+        signals.append(
+            make_signal(
+                "watch",
+                "Deferred candidates present",
+                f"{len(eligibility['deferred'])} candidate(s) are deferred.",
+                "Track deferred backlog age before scheduling future promotion review.",
+                {"deferred": len(eligibility["deferred"])},
+            )
+        )
+    if coverage["gap_counts"]:
+        signals.append(
+            make_signal(
+                "watch",
+                "Coverage gaps present",
+                "Local coverage artifact reports one or more gaps.",
+                "Use coverage gaps to prioritize discovery, not direct catalog mutation.",
+                {"gap_counts": coverage["gap_counts"]},
+            )
+        )
+
+    if missing_artifacts:
+        signals.append(
+            make_signal(
+                "missing_optional_input",
+                "Optional local artifacts missing",
+                f"{len(missing_artifacts)} optional local artifact(s) are unavailable in this checkout.",
+                "Treat missing optional artifacts as evidence gaps, not workflow failures.",
+                {"artifacts": [artifact["id"] for artifact in missing_artifacts]},
+            )
+        )
+
+    if not signals:
+        signals.append(
+            make_signal(
+                "informational",
+                "No actionable local bot signals",
+                "No blocking, action-required, watch, or missing optional signals were detected locally.",
+                "Keep bot actions report-only until reviewed evidence supports a controlled operation.",
+            )
+        )
+
+    if not authority["default_posture"].get("undeclared_lanes_are_denied"):
+        signals.append(
+            make_signal(
+                "blocking",
+                "Authority posture is not deny-by-default",
+                "Undeclared lanes are not denied by default.",
+                "Restore deny-by-default bot authority before enabling any write-capable lane.",
+            )
+        )
+
+    return sort_signals(signals, dashboard_contract)
+
+
+def highest_priority_next_action(signals: list[dict[str, Any]], fallback: str) -> str:
+    if signals:
+        return str(signals[0]["next_action"])
+    return fallback
+
+
 def next_safe_action(
     *,
     eligibility: dict[str, Any],
     promotion_plan: dict[str, Any],
     queue_policy: dict[str, Any],
     artifacts: dict[str, dict[str, Any]],
+    signals: list[dict[str, Any]] | None = None,
 ) -> str:
+    fallback: str
     strict_ready = len(eligibility["strict_ready"]) or len(promotion_plan["actions"])
     missing_strict = [
         artifact_id
@@ -193,14 +353,16 @@ def next_safe_action(
         if not artifacts.get(artifact_id, {}).get("exists")
     ]
     if missing_strict:
-        return "Refresh local strict-growth evidence before recommending controlled promotion."
-    if strict_ready:
+        fallback = "Refresh local strict-growth evidence before recommending controlled promotion."
+    elif strict_ready:
         max_open = queue_policy["global"]["max_open_catalog_growth_prs"]
-        return (
+        fallback = (
             "Review the strict-growth promotion plan, confirm stale evidence thresholds, "
             f"and use controlled promotion only if fewer than {max_open} catalog-growth PRs are open."
         )
-    return "Keep discovery/report-only lanes advisory and wait for reviewed evidence before controlled promotion."
+    else:
+        fallback = "Keep discovery/report-only lanes advisory and wait for reviewed evidence before controlled promotion."
+    return highest_priority_next_action(signals or [], fallback)
 
 
 def render_dashboard(root: Path = ROOT) -> str:
@@ -217,11 +379,22 @@ def render_dashboard(root: Path = ROOT) -> str:
     source_health = summarize_source_health(artifacts)
     missing_artifacts = [artifact for artifact in artifacts.values() if not artifact["exists"]]
     errored_artifacts = [artifact for artifact in artifacts.values() if artifact["error"]]
+    signals = build_signals(
+        authority=authority,
+        dashboard_contract=dashboard_contract,
+        eligibility=eligibility,
+        promotion_plan=promotion_plan,
+        coverage=coverage,
+        source_health=source_health,
+        artifacts=artifacts,
+        errored_artifacts=errored_artifacts,
+    )
     next_action = next_safe_action(
         eligibility=eligibility,
         promotion_plan=promotion_plan,
         queue_policy=queue_policy,
         artifacts=artifacts,
+        signals=signals,
     )
 
     lines: list[str] = [
@@ -237,15 +410,26 @@ def render_dashboard(root: Path = ROOT) -> str:
         f"- Discovery lanes may write catalog truth: `{authority['default_posture']['discovery_lanes_may_write_catalog_truth']}`",
         f"- Dashboard issue update enabled: `{dashboard_contract['dashboard_issue']['create_or_update_enabled']}`",
         "",
-        "## Pause Switch Status Model",
+        "## Signal Quality Summary",
         "",
-        f"- Global pause switch label: `{queue_policy['global']['pause_switch_label']}`",
-        "- Local renderer status: `not_evaluated_without_github_issue_state`",
-        "- If the pause switch is active, all write-capable bot actions should stop before branch, PR, label, or merge changes.",
-        "",
-        "## Strict-Growth Ready Candidates",
-        "",
+        "| Class | Signal | Summary | Next safe action |",
+        "|---|---|---|---|",
     ]
+    for signal in signals:
+        lines.append(markdown_row([f"`{signal['class']}`", signal["title"], signal["summary"], signal["next_action"]]))
+    lines.extend(
+        [
+            "",
+            "## Pause Switch Status Model",
+            "",
+            f"- Global pause switch label: `{queue_policy['global']['pause_switch_label']}`",
+            "- Local renderer status: `not_evaluated_without_github_issue_state`",
+            "- If the pause switch is active, all write-capable bot actions should stop before branch, PR, label, or merge changes.",
+            "",
+            "## Strict-Growth Ready Candidates",
+            "",
+        ]
+    )
     strict_ready_count = len(eligibility["strict_ready"])
     action_count = len(promotion_plan["actions"])
     lines.extend(
@@ -365,9 +549,9 @@ def render_dashboard(root: Path = ROOT) -> str:
         lines.append(f"- `{artifact['id']}`: `{artifact['stale_after_hours']}` hours")
     lines.extend(["", "## Missing Local Artifacts", ""])
     if missing_artifacts:
-        lines.extend(["| Artifact | Path | Section |", "|---|---|---|"])
+        lines.extend(["| Artifact | Path | Section | Signal class |", "|---|---|---|---|"])
         for artifact in missing_artifacts:
-            lines.append(markdown_row([f"`{artifact['id']}`", f"`{artifact['path']}`", artifact["section"]]))
+            lines.append(markdown_row([f"`{artifact['id']}`", f"`{artifact['path']}`", artifact["section"], "`missing_optional_input`"] ))
     else:
         lines.append("- No optional local artifacts are missing.")
     lines.extend(
@@ -377,6 +561,8 @@ def render_dashboard(root: Path = ROOT) -> str:
             "",
             "- Confirm the pause switch is not active before any write-capable action.",
             "- Treat missing local artifacts as unavailable evidence, not as successful runs.",
+            "- Resolve `blocking` signals before write-capable bot actions continue.",
+            "- Handle `action_required` signals before controlled promotion or source repair.",
             "- Refresh stale strict-growth evidence before controlled promotion.",
             "- Keep discovery and report-only lanes from mutating catalog truth.",
             "- Use reviewed evidence for source repair and controlled promotion.",
