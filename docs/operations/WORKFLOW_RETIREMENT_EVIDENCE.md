@@ -2,17 +2,17 @@
 
 This document records the evidence needed before retiring current consolidation candidates. It supports `WORKFLOW_CONSOLIDATION_AUDIT.md` and intentionally does not delete any workflow.
 
-A workflow may move from `retire_candidate` to `remove_now_if_safe` only when its replacement is documented, its current artifacts are fully replaced, its consumers are migrated, stale references are removed or marked legacy, and CI-readiness tests prove the public workflow surface is intentional.
+A workflow may move from `retire_candidate` or `quarantined` to `remove_now_if_safe` only when its replacement is documented, its current artifacts are fully replaced, its consumers are migrated, stale references are removed or marked legacy, and CI-readiness tests prove the public workflow surface is intentional.
 
 ## Current result
 
-No workflow is removed by this package. WP22 quarantines `source-refinement-queue.yml` by contract because it is already manual-only, read-only, and has active replacement owners, but stale docs and operator artifact consumers still block deletion.
+No workflow is removed by this package. WP22 quarantines `source-refinement-queue.yml` by contract because it is already manual-only, read-only, and has active replacement owners, but stale docs and operator artifact consumers still block deletion. WP26 quarantines `observe-report.yml` by removing scheduled operation and keeping manual dispatch while replacement evidence is completed.
 
 | Workflow | Current classification | Evidence result | Replacement status | Recommendation |
 |---|---|---|---|---|
 | `catalog-maintenance.yml` | `retire_candidate` | Not safe to remove yet. | Partial replacement only. | Keep as `retire_candidate`. |
 | `source-refinement-queue.yml` | `quarantined` | First legacy report workflow quarantined; not safe to delete. | Replaced for current source cleanup by `source-maintenance-report.yml` and `source-refinement-scan.yml`, but stale consumers and docs still need proof. | Keep manual-only and blocked from destructive retirement. |
-| `observe-report.yml` | `retire_candidate` | Not safe to remove yet. | Source-observation replacement exists, but non-source observation role is unresolved. | Keep as `retire_candidate`. |
+| `observe-report.yml` | `quarantined` | Second legacy report workflow quarantined; not safe to delete. | Source-observation replacement exists through source maintenance, catalog growth, and dashboard reporting, but non-source observation role is unresolved. | Keep manual-only and blocked from destructive retirement. |
 
 ## Evidence requirements
 
@@ -132,12 +132,12 @@ Keep as `quarantined`. Do not delete until stale references are migrated, two cl
 
 ### Current purpose
 
-`observe-report.yml` runs a full public-source observation dry run, generates an observation report, exports an observation review queue CSV, and uploads `openva-observation-report`.
+`observe-report.yml` runs a full public-source observation dry run, generates an observation report, exports an observation review queue CSV, and uploads `openva-observation-report`. WP26 quarantines it by contract as the second legacy report workflow.
 
 ### Current trigger
 
-- Scheduled weekly.
-- Manual `workflow_dispatch`.
+- Manual `workflow_dispatch` only.
+- Scheduled operation was removed by WP26.
 
 ### Current permissions
 
@@ -152,7 +152,7 @@ Keep as `quarantined`. Do not delete until stale references are migrated, two cl
 
 ### Current documented consumers
 
-- Operators reviewing observation output.
+- Legacy operators reviewing observation output.
 - CI-readiness tests that intentionally allowlist the workflow and assert uploaded artifacts.
 - `README.md` and `docs/observation-reporting.md` may still reference this as a current observation report.
 
@@ -169,10 +169,12 @@ Partial replacement for source-specific observation:
 - `source-maintenance-report.yml` produces `source-observation-ledger.json`.
 - `source-maintenance-report.yml` produces `latest-source-health.json`.
 - `source-maintenance-report.yml` produces `public/source-health-snapshot.json`.
+- `catalog-growth-discovery.yml` proposes catalog-growth candidates through report-only discovery.
+- Bot dashboard reports expose source-health, coverage, stale evidence, and failure-router posture.
 
 ### Replacement artifact equivalence
 
-Not fully equivalent. Source-health outputs cover source-specific observation needs, but a non-source observation role is not yet ruled out.
+Sufficient for quarantine, but not for deletion. Source-health outputs cover source-specific observation needs, but a non-source observation role is not yet ruled out.
 
 ### Stale-reference status
 
@@ -180,7 +182,7 @@ Not clean yet. `README.md` and `docs/observation-reporting.md` must be reviewed 
 
 ### Recommendation
 
-Keep as `retire_candidate`. Remove only after the project decides that non-source observations are not needed or migrates that role to another documented workflow.
+Keep as `quarantined`. Do not delete until the project decides that non-source observations are not needed or migrates that role to another documented workflow.
 
 ## Future removal checklist
 
