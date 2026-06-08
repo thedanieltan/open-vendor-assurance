@@ -35,6 +35,18 @@ lanes:
     vendor_domain_concurrency_limit: 1
     stale_evidence_max_age_hours: 4
 
+  - lane_id: bot_chatops_hold
+    max_open_prs: 0
+    max_actions_per_pr: 1
+    schedule_window: issue_comment_only
+    duplicate_pr_policy: not_applicable
+    base_change_policy: not_applicable
+    source_host_rate_limit: not_applicable
+    vendor_domain_concurrency_limit: 1
+    stale_evidence_max_age_hours: 24
+    allowed_label: openva-hold
+    allowed_actions: [add, remove]
+
   - lane_id: support_agent_pr
     max_open_prs: 2
     max_actions_per_pr: 5
