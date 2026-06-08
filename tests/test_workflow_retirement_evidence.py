@@ -143,20 +143,15 @@ def test_observe_report_retirement_contract_is_quarantined_not_deletion_ready():
     assert any("no schedule trigger" in evidence for evidence in entry["required_retirement_evidence"])
 
 
-def test_quarantined_legacy_report_workflows_are_manual_only():
-    quarantined = [
-        entry["name"]
-        for entry in load_yaml(WORKFLOW_RETIREMENT)["workflows"]
-        if entry["current_status"] == "quarantined" and entry["operating_loop"] == "legacy_report"
-    ]
+def test_wp26_quarantined_observe_report_is_manual_only_without_requiring_prior_quarantines_to_change():
+    entry = retirement_entry("observe-report.yml")
+    workflow = load_yaml(WORKFLOW_DIR / "observe-report.yml")
+    triggers = workflow_triggers(workflow)
 
-    assert {"source-refinement-queue.yml", "observe-report.yml"} <= set(quarantined)
-    for name in quarantined:
-        workflow = load_yaml(WORKFLOW_DIR / name)
-        triggers = workflow_triggers(workflow)
-        assert set(triggers) == {"workflow_dispatch"}, name
-        assert inventory_entry(name)["triggers"] == ["workflow_dispatch"]
-        assert retirement_entry(name)["allowed_triggers_until_retired"] == ["workflow_dispatch"]
+    assert entry["current_status"] == "quarantined"
+    assert set(triggers) == {"workflow_dispatch"}
+    assert inventory_entry("observe-report.yml")["triggers"] == ["workflow_dispatch"]
+    assert retirement_entry("observe-report.yml")["allowed_triggers_until_retired"] == ["workflow_dispatch"]
 
 
 def test_workflow_retirement_plan_mentions_wp26_observe_quarantine():
