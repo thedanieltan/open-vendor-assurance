@@ -16,6 +16,12 @@ RETIRE_CANDIDATE_WORKFLOWS = {
     "observe-report.yml",
 }
 
+EXPECTED_AUDIT_CLASSIFICATIONS = {
+    "catalog-maintenance.yml": "retire_candidate",
+    "source-refinement-queue.yml": "retire_candidate",
+    "observe-report.yml": "quarantined",
+}
+
 REQUIRED_SECTIONS = {
     "### Current purpose",
     "### Current trigger",
@@ -62,6 +68,7 @@ def test_retirement_evidence_keeps_candidates_until_replacements_are_proven():
 
     assert "No workflow is removed by this package." in text
     assert "WP22 quarantines `source-refinement-queue.yml`" in text
+    assert "WP26 quarantines `observe-report.yml`" in text
     assert "Keep as `retire_candidate`" in text
     assert "Keep as `quarantined`" in text
     assert "entity stub report is not proven to be fully folded into `coverage-audit.yml`" in text
@@ -79,6 +86,7 @@ def test_retirement_evidence_names_replacements_and_stale_reference_gaps():
     assert "`source-observation-ledger.json`" in text
     assert "`latest-source-health.json`" in text
     assert "`public/source-health-snapshot.json`" in text
+    assert "`catalog-growth-discovery.yml` proposes catalog-growth candidates" in text
 
 
 def test_consolidation_audit_links_retirement_evidence_without_remove_now_classification():
@@ -87,6 +95,7 @@ def test_consolidation_audit_links_retirement_evidence_without_remove_now_classi
 
     assert "WORKFLOW_RETIREMENT_EVIDENCE.md" in audit
     assert "`source-refinement-queue.yml` is quarantined by contract" in audit
+    assert "`observe-report.yml` is quarantined by WP26" in audit
     assert "Current result: no workflow is classified as `remove_now_if_safe` in this package." in audit
     assert "Current result" in evidence
     assert "No workflow is removed by this package." in evidence
@@ -95,8 +104,8 @@ def test_consolidation_audit_links_retirement_evidence_without_remove_now_classi
 def test_no_retire_candidate_is_marked_remove_now_if_safe():
     audit = CONSOLIDATION_AUDIT.read_text(encoding="utf-8")
 
-    for workflow_name in RETIRE_CANDIDATE_WORKFLOWS:
-        table_row_prefix = f"| `{workflow_name}` | `retire_candidate` |"
+    for workflow_name, classification in EXPECTED_AUDIT_CLASSIFICATIONS.items():
+        table_row_prefix = f"| `{workflow_name}` | `{classification}` |"
         assert table_row_prefix in audit
         assert f"| `{workflow_name}` | `remove_now_if_safe` |" not in audit
 
