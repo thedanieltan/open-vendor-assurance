@@ -99,6 +99,18 @@ def test_consolidation_candidates_have_replacement_owners_or_explicit_blockers()
         assert entry["write_permissions_allowed_until_retired"] is False
 
 
+def test_quarantined_source_refinement_queue_is_not_retirement_ready():
+    entry = next(entry for entry in retirement_entries() if entry["name"] == "source-refinement-queue.yml")
+
+    assert entry["current_status"] == "quarantined"
+    assert entry["inventory_status"] == "quarantined"
+    assert entry["retirement_candidate"] is True
+    assert entry["retirement_ready"] is False
+    assert entry["must_not_retire_yet"] is True
+    assert entry["allowed_triggers_until_retired"] == ["workflow_dispatch"]
+    assert entry["write_permissions_allowed_until_retired"] is False
+
+
 def test_active_workflows_are_not_marked_retirement_ready():
     for entry in retirement_entries():
         if entry["current_status"] == "active":
