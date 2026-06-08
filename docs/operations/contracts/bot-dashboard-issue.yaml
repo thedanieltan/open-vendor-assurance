@@ -1,0 +1,49 @@
+version: 1
+contract: bot-dashboard-issue
+source_document: docs/operations/BOT_DASHBOARD_ISSUE_SYNC.md
+dashboard_source: maintenance/bot-dashboard.md
+issue:
+  title: OpenVA Bot Dashboard
+  labels:
+    - bot-dashboard
+    - operations
+  create_if_missing: true
+  update_if_present: true
+  duplicate_policy: fail_if_multiple_open_matching_issues
+defaults:
+  dry_run: true
+  report_only: true
+permissions:
+  contents: read
+  issues: write
+forbidden_side_effects:
+  - catalog mutation
+  - workflow dispatch
+  - pull request mutation
+  - automerge mutation
+  - slash-command execution
+  - queue enforcement
+safety:
+  target_one_persistent_issue: true
+  arbitrary_issue_updates_allowed: false
+  duplicate_issue_creation_allowed: false
+  pull_request_labels_allowed: false
+  workflow_dispatch_allowed: false
+report:
+  default_output: maintenance/bot-dashboard-issue-sync-report.json
+  decisions:
+    - would_create
+    - would_update
+    - updated
+    - created
+    - denied
+    - failed
+  required_fields:
+    - decision
+    - target_issue_title
+    - target_issue_number
+    - duplicate_issue_status
+    - dry_run
+    - report_only
+    - body_hash
+    - next_safe_action
