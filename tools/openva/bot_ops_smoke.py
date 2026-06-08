@@ -155,8 +155,8 @@ def run_smoke(root: Path = ROOT) -> dict[str, Any]:
     denied_chatops = bot_chatops.build_decision("/openva frobnicate", "maintainer")
     chatops_status = (
         "pass"
-        if allowed_chatops["decision"] == "accepted_report_only"
-        and allowed_chatops["report_only"] is True
+        if allowed_chatops["decision"] == "accepted_executable"
+        and allowed_chatops["executable"] is True
         and denied_chatops["decision"] == "denied"
         else "fail"
     )
@@ -167,6 +167,7 @@ def run_smoke(root: Path = ROOT) -> dict[str, Any]:
             {
                 "allowed_decision": allowed_chatops["decision"],
                 "allowed_report_only": allowed_chatops["report_only"],
+                "allowed_executable": allowed_chatops["executable"],
                 "denied_decision": denied_chatops["decision"],
                 "denied_reasons": denied_chatops["reasons"],
             },
@@ -297,6 +298,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         [
             f"- Allowed command decision: `{chatops['allowed_decision']}`",
             f"- Allowed command report-only: `{chatops['allowed_report_only']}`",
+            f"- Allowed command executable: `{chatops['allowed_executable']}`",
             f"- Denied command decision: `{chatops['denied_decision']}`",
             "",
             "## Next Safe Action",

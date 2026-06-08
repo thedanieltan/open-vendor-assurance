@@ -122,6 +122,8 @@ def next_safe_action(decision: str, reasons: list[str], command_entry: dict[str,
         return "Deny the command until the lane is declared in bot-authority.yaml."
     if "queue_lane_not_declared" in reasons:
         return "Deny the command until the queue lane is declared in bot-queue-policy.yaml."
+    if decision == "accepted_executable" and command_entry:
+        return "Execute only the contract-approved safe side effect and record the chatops execution audit report."
     if decision == "accepted_report_only" and command_entry:
         return "Record the chatops decision report; do not execute the command until a future authority PR enables it."
     return "Deny the command and require maintainer review."
@@ -163,15 +165,19 @@ def build_decision(
                 ]
                 if unknown_failure_codes:
                     reasons.append("failure_router_code_not_declared")
-            if command_entry.get("executable") is not False:
-                reasons.append("command_unexpectedly_executable")
-            if command_entry.get("report_only") is not True:
-                reasons.append("command_not_report_only")
             if not reasons:
-                decision = "accepted_report_only"
-                reasons.append("command_accepted_report_only")
+                if command_entry.get("executable") is True:
+                    decision = "accepted_executable"
+                    reasons.append("command_accepted_executable")
+                else:
+                    decision = "accepted_report_only"
+                    reasons.append("command_accepted_report_only")
 
-    authorized = bool(command_entry and actor_role in command_entry.get("allowed_actors", []) and decision == "accepted_report_only")
+    authorized = bool(
+        command_entry
+        and actor_role in command_entry.get("allowed_actors", [])
+        and decision in {"accepted_report_only", "accepted_executable"}
+    )
     lane_id = command_entry.get("lane_id") if command_entry else None
     side_effect_class = command_entry.get("side_effect_class") if command_entry else None
     executable = bool(command_entry.get("executable")) if command_entry else False

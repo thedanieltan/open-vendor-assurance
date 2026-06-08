@@ -26,6 +26,11 @@ REQUIRED_COMMANDS = {
     "/openva hold",
     "/openva unhold",
 }
+EXECUTABLE_COMMANDS = {
+    "/openva explain-strict-growth",
+    "/openva hold",
+    "/openva unhold",
+}
 
 
 def load_yaml(path: Path) -> dict:
@@ -88,14 +93,24 @@ def test_non_maintainer_commands_are_denied():
     assert "actor_not_authorized" in report["reasons"]
 
 
-def test_maintainer_commands_are_accepted_as_report_only():
-    for command in REQUIRED_COMMANDS:
+def test_maintainer_report_only_commands_are_accepted_as_report_only():
+    for command in REQUIRED_COMMANDS - EXECUTABLE_COMMANDS:
         report = build_decision(command, "maintainer")
         assert report["decision"] == "accepted_report_only", command
         assert report["authorized"] is True
         assert report["executable"] is False
         assert report["report_only"] is True
         assert report["side_effect_class"] == "report_only"
+        assert "chatops decision report" in report["audit_artifacts"]
+
+
+def test_maintainer_executable_commands_are_accepted_as_executable():
+    for command in EXECUTABLE_COMMANDS:
+        report = build_decision(command, "maintainer")
+        assert report["decision"] == "accepted_executable", command
+        assert report["authorized"] is True
+        assert report["executable"] is True
+        assert report["report_only"] is False
         assert "chatops decision report" in report["audit_artifacts"]
 
 
