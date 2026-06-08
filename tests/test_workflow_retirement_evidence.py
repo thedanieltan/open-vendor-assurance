@@ -1,8 +1,14 @@
 from pathlib import Path
 
+import yaml
+
 
 CONSOLIDATION_AUDIT = Path("docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md")
 RETIREMENT_EVIDENCE = Path("docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md")
+WORKFLOW_DIR = Path(".github/workflows")
+WORKFLOW_INVENTORY = Path("docs/operations/contracts/workflow-inventory.yaml")
+WORKFLOW_RETIREMENT = Path("docs/operations/contracts/workflow-retirement.yaml")
+WORKFLOW_RETIREMENT_PLAN = Path("docs/operations/WORKFLOW_RETIREMENT_PLAN.md")
 
 RETIRE_CANDIDATE_WORKFLOWS = {
     "catalog-maintenance.yml",
@@ -22,6 +28,22 @@ REQUIRED_SECTIONS = {
     "### Stale-reference status",
     "### Recommendation",
 }
+
+
+def load_yaml(path: Path) -> dict:
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def workflow_triggers(workflow: dict) -> dict:
+    return workflow.get("on") or workflow.get(True) or {}
+
+
+def inventory_entry(name: str) -> dict:
+    return next(entry for entry in load_yaml(WORKFLOW_INVENTORY)["public_workflows"] if entry["name"] == name)
+
+
+def retirement_entry(name: str) -> dict:
+    return next(entry for entry in load_yaml(WORKFLOW_RETIREMENT)["workflows"] if entry["name"] == name)
 
 
 def test_workflow_retirement_evidence_lists_every_retire_candidate():
@@ -77,3 +99,69 @@ def test_no_retire_candidate_is_marked_remove_now_if_safe():
         table_row_prefix = f"| `{workflow_name}` | `retire_candidate` |"
         assert table_row_prefix in audit
         assert f"| `{workflow_name}` | `remove_now_if_safe` |" not in audit
+
+
+def test_observe_report_workflow_is_present_manual_only_and_read_only():
+    workflow_path = WORKFLOW_DIR / "observe-report.yml"
+    assert workflow_path.exists()
+
+    workflow = load_yaml(workflow_path)
+    triggers = workflow_triggers(workflow)
+
+    assert set(triggers) == {"workflow_dispatch"}
+    assert "schedule" not in triggers
+    assert workflow["permissions"] == {"contents": "read"}
+
+
+def test_observe_report_inventory_is_quarantined_manual_only():
+    entry = inventory_entry("observe-report.yml")
+
+    assert entry["loop"] == "legacy_report"
+    assert entry["status"] == "quarantined"
+    assert entry["triggers"] == ["workflow_dispatch"]
+    assert entry["permissions"] == {"contents": "read"}
+    assert entry["writes_repository_state"] is False
+    assert entry["creates_prs"] is False
+    assert entry["merges_prs"] is False
+
+
+def test_observe_report_retirement_contract_is_quarantined_not_deletion_ready():
+    entry = retirement_entry("observe-report.yml")
+
+    assert entry["current_status"] == "quarantined"
+    assert entry["inventory_status"] == "quarantined"
+    assert entry["operating_loop"] == "legacy_report"
+    assert "source-maintenance-report.yml" in entry["replacement_owner"]
+    assert "catalog-growth-discovery.yml" in entry["replacement_owner"]
+    assert "bot dashboard" in entry["replacement_owner"]
+    assert entry["retirement_candidate"] is True
+    assert entry["retirement_ready"] is False
+    assert entry["must_not_retire_yet"] is True
+    assert entry["allowed_triggers_until_retired"] == ["workflow_dispatch"]
+    assert entry["write_permissions_allowed_until_retired"] is False
+    assert any("WP26" in blocker for blocker in entry["retirement_blockers"])
+    assert any("no schedule trigger" in evidence for evidence in entry["required_retirement_evidence"])
+
+
+def test_quarantined_legacy_report_workflows_are_manual_only():
+    quarantined = [
+        entry["name"]
+        for entry in load_yaml(WORKFLOW_RETIREMENT)["workflows"]
+        if entry["current_status"] == "quarantined" and entry["operating_loop"] == "legacy_report"
+    ]
+
+    assert {"source-refinement-queue.yml", "observe-report.yml"} <= set(quarantined)
+    for name in quarantined:
+        workflow = load_yaml(WORKFLOW_DIR / name)
+        triggers = workflow_triggers(workflow)
+        assert set(triggers) == {"workflow_dispatch"}, name
+        assert inventory_entry(name)["triggers"] == ["workflow_dispatch"]
+        assert retirement_entry(name)["allowed_triggers_until_retired"] == ["workflow_dispatch"]
+
+
+def test_workflow_retirement_plan_mentions_wp26_observe_quarantine():
+    text = WORKFLOW_RETIREMENT_PLAN.read_text(encoding="utf-8")
+
+    assert "observe-report.yml` is quarantined by WP26" in text
+    assert "manual-only" in text
+    assert "not destructive retirement" in text
