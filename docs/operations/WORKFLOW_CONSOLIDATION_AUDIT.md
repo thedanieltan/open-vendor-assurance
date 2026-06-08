@@ -8,6 +8,7 @@ Classification values:
 - `keep_support`: useful controlled support workflow outside a core loop.
 - `edit_existing`: keep the workflow but simplify or clarify it in place.
 - `retire_candidate`: likely redundant, but do not delete until consumers and artifacts are proven replaced.
+- `quarantined`: manual-only legacy workflow; scheduled/primary operation has been removed while deletion evidence is gathered.
 - `remove_now_if_safe`: safe to delete only after tests and stale references prove removal.
 - `defer`: known future need, not part of this package.
 
@@ -38,7 +39,7 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `contribution-intake-agent.yml` | `keep_support` | Issue-to-PR intake support path. | Keep. |
 | `catalog-maintenance.yml` | `retire_candidate` | Overlaps with validation/index/test work in `validate.yml` and catalog quality/entity reporting in `coverage-audit.yml`; entity-stub replacement is not proven. | Keep as `retire_candidate`; see `WORKFLOW_RETIREMENT_EVIDENCE.md`. |
 | `source-refinement-queue.yml` | `retire_candidate` | Consumes older observation report paths and overlaps with `source-maintenance-report.yml`, source repair sweep output, source review triage, and reviewer decision sheet; stale consumers remain unproven. | Quarantined by WP22; keep manual-only until deletion evidence is complete. |
-| `observe-report.yml` | `retire_candidate` | May be superseded for source observations by `source-observation-ledger`, `latest-source-health`, and `public/source-health-snapshot`; non-source observation role remains unresolved. | Keep as `retire_candidate`; see `WORKFLOW_RETIREMENT_EVIDENCE.md`. |
+| `observe-report.yml` | `quarantined` | Source observation is increasingly covered by `source-observation-ledger`, `latest-source-health`, `public/source-health-snapshot`, catalog growth discovery, and bot dashboard reporting; non-source observation role remains unresolved. | Quarantined by WP26; keep manual-only until deletion evidence is complete. |
 
 ## Retire/consolidation candidate detail
 
@@ -71,11 +72,12 @@ WP22 quarantines this workflow because it is already manual-only and read-only. 
 Observed overlap:
 
 - Source-specific observation needs are increasingly represented by `source-observation-ledger.json`, `latest-source-health.json`, and `public/source-health-snapshot.json`.
+- `catalog-growth-discovery.yml`, bot dashboard reporting, and failure-router outputs now cover more of the operating surface that previously required a scheduled observation report.
 - `README.md` and `docs/observation-reporting.md` must be reviewed before removal.
 
 Recommended action:
 
-Keep only if it tracks non-source observations still needed by the project. If not, mark legacy and retire after consumers are migrated.
+WP26 quarantines this workflow by removing its schedule and keeping manual dispatch. Do not delete it until the project decides that non-source observations are not needed or migrates that role to another documented workflow.
 
 ## Future actions not implemented here
 
@@ -99,7 +101,7 @@ Do not implement until the truth-state schema is decided.
 
 Purpose: retire `catalog-maintenance.yml`, `source-refinement-queue.yml`, and/or `observe-report.yml` only after the audit proves their outputs are fully replaced.
 
-Current status: retirement evidence is documented in `WORKFLOW_RETIREMENT_EVIDENCE.md`; `source-refinement-queue.yml` is quarantined by contract, and no workflow is removed because none is proven safe to delete.
+Current status: retirement evidence is documented in `WORKFLOW_RETIREMENT_EVIDENCE.md`; `source-refinement-queue.yml` is quarantined by contract, `observe-report.yml` is quarantined by WP26, and no workflow is removed because none is proven safe to delete.
 
 Do not delete all three in one package unless tests and docs prove no consumers remain.
 
