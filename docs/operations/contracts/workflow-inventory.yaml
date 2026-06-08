@@ -122,6 +122,14 @@ public_workflows:
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
+  - name: bot-dashboard-issue.yml
+    loop: bot_operations
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read, issues: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
   - name: catalog-agent-pr.yml
     loop: support
     status: support

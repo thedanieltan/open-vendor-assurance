@@ -28,6 +28,11 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
 def body_hash(body: str) -> str:
     return "sha256:" + hashlib.sha256(body.encode("utf-8")).hexdigest()
 
@@ -120,6 +125,8 @@ def next_safe_action(decision: str, reasons: list[str]) -> str:
         return "Keep report-only mode or explicitly enable issue update in a reviewed operator run."
     if "token_missing" in reasons:
         return "Provide a GitHub token only when a reviewed non-dry-run issue update is intended."
+    if "explicit_issue_title_mismatch" in reasons:
+        return "Do not update the explicit issue number until maintainers confirm it is the persistent dashboard issue."
     if decision == "would_create":
         return "Review the dry-run report, then create one dashboard issue only if maintainers approve."
     if decision == "would_update":
@@ -127,6 +134,27 @@ def next_safe_action(decision: str, reasons: list[str]) -> str:
     if decision in {"created", "updated"}:
         return "Use the persistent dashboard issue as the single bot control issue."
     return "Do not mutate GitHub issue state until the reported blocker is resolved."
+
+
+def render_markdown(report: dict[str, Any]) -> str:
+    lines = [
+        "# OpenVA Bot Dashboard Issue Sync Report",
+        "",
+        f"- Decision: `{report['decision']}`",
+        f"- Dry-run: `{report['dry_run']}`",
+        f"- Report-only: `{report['report_only']}`",
+        f"- Target issue title: `{report['target_issue_title']}`",
+        f"- Target issue number: `{report['target_issue_number']}`",
+        f"- Duplicate issue status: `{report['duplicate_issue_status']}`",
+        f"- Body hash: `{report['body_hash']}`",
+        "",
+        "## Reasons",
+        "",
+    ]
+    for reason in report["reasons"]:
+        lines.append(f"- `{reason}`")
+    lines.extend(["", "## Next Safe Action", "", f"- {report['next_safe_action']}", ""])
+    return "\n".join(lines)
 
 
 def matching_issues_by_title(issues: list[dict[str, Any]], title: str) -> list[dict[str, Any]]:
@@ -237,9 +265,19 @@ def sync_dashboard_issue(
                 reasons.append("target_issue_number_missing")
                 decision = "failed"
             else:
-                client.update_issue(target_number, body)
-                decision = "updated"
-                reasons.append("issue_updated")
+                if issue_number is not None:
+                    target_issue = client.get_issue(target_number)
+                    if target_issue.get("title") != issue["title"] or "pull_request" in target_issue:
+                        reasons.append("explicit_issue_title_mismatch")
+                        decision = "denied"
+                    else:
+                        client.update_issue(target_number, body)
+                        decision = "updated"
+                        reasons.append("issue_updated")
+                else:
+                    client.update_issue(target_number, body)
+                    decision = "updated"
+                    reasons.append("issue_updated")
 
     if not reasons:
         reasons.append("decision_recorded")
@@ -266,6 +304,7 @@ def main(argv: list[str] | None = None) -> int:
     sync_parser.add_argument("--dashboard", type=Path, default=None)
     sync_parser.add_argument("--repo", required=True)
     sync_parser.add_argument("--out", type=Path, default=ROOT / DEFAULT_REPORT)
+    sync_parser.add_argument("--out-md", type=Path, default=None)
     sync_parser.add_argument("--issue-number", type=int, default=None)
     sync_parser.add_argument("--dry-run", action="store_true", help="Force dry-run mode.")
     sync_parser.add_argument("--apply", action="store_true", help="Allow non-dry-run issue sync when report-only is disabled.")
@@ -290,6 +329,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         out = args.out if args.out.is_absolute() else ROOT / args.out
         write_json(out, result)
+        if args.out_md is not None:
+            out_md = args.out_md if args.out_md.is_absolute() else ROOT / args.out_md
+            write_text(out_md, render_markdown(result))
         print(json.dumps({"decision": result["decision"], "reasons": result["reasons"]}, sort_keys=True))
         return 1 if result["decision"] in {"denied", "failed"} else 0
     raise AssertionError(f"Unhandled command: {args.command}")

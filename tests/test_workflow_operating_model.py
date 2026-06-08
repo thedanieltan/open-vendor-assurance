@@ -12,6 +12,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "candidate-promotion-pr.yml",
     "agent-automerge.yml",
     "agent-weighted-review.yml",
+    "bot-dashboard-issue.yml",
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
     "catalog-maintenance-pr.yml",
@@ -38,6 +39,7 @@ CORE_LOOP_HEADINGS = {
     "Catalog quality loop",
     "Catalog growth loop",
     "Release/site loop",
+    "Bot operations visibility loop",
 }
 
 REVIEWER_INBOX_ALLOWED_PATHS = {"source-review-decision-sheet.csv"}

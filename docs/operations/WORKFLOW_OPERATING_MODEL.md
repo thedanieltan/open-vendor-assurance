@@ -82,6 +82,16 @@ Workflows:
 
 `release-candidate.yml` and `site-pages.yml` consume artifacts. They must not become catalog truth generators.
 
+### Loop 6: Bot operations visibility loop
+
+Purpose: make bot operating posture visible without strengthening bot authority.
+
+Workflow:
+
+- `bot-dashboard-issue.yml`
+
+`bot-dashboard-issue.yml` renders the local bot dashboard and runs dashboard issue sync. It defaults to dry-run/report-only behavior. Scheduled runs must not create or update issues, mutate catalog data, mutate PRs, dispatch workflows, or change automerge state.
+
 ## Reviewed decision handoff boundary
 
 Reviewer decision handling is a controlled evidence handoff inside Lane A. It is not a workflow by itself and must not become a scheduled mutation path.
@@ -153,6 +163,7 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 | `site-pages.yml` | Build and deploy the reviewed catalog site with downloaded source-health and catalog-confidence artifacts. | `push` to `main`, `workflow_dispatch` | `contents: read`, `actions: read`, `pages: write`, `id-token: write` | Pages deployment only | No | No | Pages artifact | Public site | Core |
 | `release-downloads.yml` | Publish release downloads for version tags. | tag `push` | `contents: write` | GitHub release assets only | No | No | Release download assets | Release consumers | Core |
 | `site-live-feed.yml` | Refresh live site feed on a controlled cadence. | `workflow_dispatch`, scheduled weekly | `contents: read`, `pages: write`, `id-token: write` | Pages deployment only | No | No | Live feed deployment artifact | Public site | Core |
+| `bot-dashboard-issue.yml` | Render the bot dashboard and run dashboard issue sync in dry-run/report-only mode by default. | `workflow_dispatch`, scheduled weekly | `contents: read`, `issues: write` | Issue update only when manually requested with explicit input; scheduled runs are dry-run/report-only | No | No | Bot dashboard and issue-sync report | Maintainers | Core |
 | `catalog-agent-pr.yml` | Manual support path for agent-authored catalog PRs. | `workflow_dispatch` | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | PR branch and PR body | PR safety loop | Support |
 | `catalog-maintenance-pr.yml` | Support path for scheduled/manual catalog maintenance PRs. | `workflow_dispatch`, scheduled | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Maintenance PR artifacts | PR safety loop | Support |
 | `contribution-intake-agent.yml` | Convert issue-based contribution intake into controlled PRs. | `issues`, `workflow_dispatch` | `contents: write`, `pull-requests: write`, `issues: write` | Yes, in PR branch | Yes | No | Intake PR artifacts | PR safety loop | Support |

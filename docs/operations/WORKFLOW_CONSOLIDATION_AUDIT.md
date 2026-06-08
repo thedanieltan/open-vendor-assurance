@@ -32,6 +32,7 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `site-pages.yml` | `keep_core` | Site publication consumer of source-health and catalog-confidence artifacts. | Keep; do not make it a catalog truth generator. |
 | `release-downloads.yml` | `keep_core` | Release download publishing for tags. | Keep. |
 | `site-live-feed.yml` | `keep_core` | Controlled live feed publication path. | Keep. |
+| `bot-dashboard-issue.yml` | `keep_core` | Report-only bot dashboard issue visibility path. | Keep dry-run/report-only by default; real issue update requires explicit maintainer input. |
 | `catalog-agent-pr.yml` | `keep_support` | Manual support path for agent-authored catalog PRs. | Keep as PR-only support path. |
 | `catalog-maintenance-pr.yml` | `keep_support` | Scheduled/manual support path for maintenance PRs. | Keep until overlap with promotion and repair paths is further reduced. |
 | `contribution-intake-agent.yml` | `keep_support` | Issue-to-PR intake support path. | Keep. |

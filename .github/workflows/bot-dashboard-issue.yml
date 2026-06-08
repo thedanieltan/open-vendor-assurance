@@ -1,0 +1,78 @@
+name: bot-dashboard-issue
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run without creating or updating the dashboard issue"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+      dashboard_issue_number:
+        description: "Optional explicit dashboard issue number"
+        required: false
+        default: ""
+  schedule:
+    - cron: "41 6 * * 1"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: bot-dashboard-issue-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bot-dashboard-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Render bot dashboard
+        run: python -m tools.openva.bot_dashboard render --out maintenance/bot-dashboard.md
+      - name: Sync dashboard issue
+        env:
+          DRY_RUN: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'false' }}
+          DASHBOARD_ISSUE_NUMBER: ${{ inputs.dashboard_issue_number || '' }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ARGS=(
+            sync
+            --dashboard maintenance/bot-dashboard.md
+            --repo "${{ github.repository }}"
+            --out maintenance/bot-dashboard-issue-sync-report.json
+            --out-md maintenance/bot-dashboard-issue-sync-report.md
+          )
+          if [ -n "$DASHBOARD_ISSUE_NUMBER" ]; then
+            ARGS+=(--issue-number "$DASHBOARD_ISSUE_NUMBER")
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS+=(--dry-run --report-only)
+          else
+            ARGS+=(--apply --allow-issue-update)
+          fi
+          python -m tools.openva.bot_dashboard_issue "${ARGS[@]}"
+      - name: Upload dashboard issue sync report
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-bot-dashboard
+          path: |
+            maintenance/bot-dashboard.md
+      - name: Upload dashboard issue sync decision
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-bot-dashboard-issue-sync-report
+          path: |
+            maintenance/bot-dashboard-issue-sync-report.json
+            maintenance/bot-dashboard-issue-sync-report.md
