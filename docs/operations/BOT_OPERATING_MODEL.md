@@ -34,6 +34,8 @@ The default posture is deny-by-default:
 
 The strict-growth lane remains narrow: catalog growth discovery proposes candidates and promotion actions, while `candidate-promotion-pr.yml` is the controlled promotion path for reviewed evidence. Source repair uses committed reviewed evidence and remains separate from catalog growth.
 
+The `bot_dashboard_issue_sync` lane is visibility-only authority. It may render the bot dashboard and, after explicit maintainer input, create or update only the persistent OpenVA Bot Dashboard issue. It must not write catalog truth, mutate PRs, dispatch workflows, label PRs, change automerge state, or grant authority to any catalog growth, promotion actions, source repair, reviewed evidence, strict-growth, or controlled promotion path.
+
 ## Command Surface
 
 OpenVA commands are planned maintainer-facing controls. WP9 defines vocabulary, authority, and audit expectations only. It does not implement slash-command parsing or execution.
@@ -69,6 +71,8 @@ The dashboard should show:
 - next safe action
 
 Each dashboard item should include the lane id, candidate or PR id, current failure code when blocked, owner, next action, and stale-evidence deadline. The dashboard is advisory until a later implementation creates automation for it. Report-only dashboard updates do not mutate catalog truth.
+
+Dashboard issue sync publishes the dashboard as a durable control issue. Scheduled dashboard issue workflow runs remain dry-run/report-only; real issue updates require explicit maintainer input and are limited to the persistent dashboard issue.
 
 The next safe action must be derived from lane authority and failure taxonomy. For example, a candidate with `source_preflight_failure` may be retried after fresh source-health evidence, while a PR with `permission_policy_denial` must stop the lane until a maintainer resolves the authority mismatch.
 

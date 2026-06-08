@@ -7,6 +7,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "candidate-promotion-pr.yml",
     "agent-automerge.yml",
     "agent-weighted-review.yml",
+    "bot-dashboard-issue.yml",
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
     "catalog-maintenance-pr.yml",
@@ -171,6 +172,10 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             "triggers": {"pull_request"},
             "permissions": {"contents": "read", "pull-requests": "read", "issues": "write"},
         },
+        "bot-dashboard-issue.yml": {
+            "triggers": {"workflow_dispatch", "schedule"},
+            "permissions": {"contents": "read", "issues": "write"},
+        },
         "agent-automerge.yml": {
             "triggers": {"pull_request"},
             "permissions": {
@@ -206,6 +211,10 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
             assert triggers["schedule"][0]["cron"] == "0 3 * * 0", f"{path}: live feed cron must stay weekly Sunday 03:00 UTC"
         if path.name == "source-repair-pr-cleanup.yml":
             assert triggers["schedule"][0]["cron"] == "30 8 * * 3", f"{path}: stale repair cleanup must run after source refinement scan"
+        if path.name == "bot-dashboard-issue.yml":
+            assert triggers["workflow_dispatch"]["inputs"]["dry_run"]["default"] == "true", f"{path}: dashboard issue sync must default to dry-run"
+            assert "pull-requests" not in permissions, f"{path}: dashboard issue sync must not mutate PRs"
+            assert permissions["contents"] == "read", f"{path}: dashboard issue sync must not request contents write"
 
 
 def test_catalog_agent_pr_workflow_is_manual_pr_only():

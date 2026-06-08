@@ -172,6 +172,27 @@ lanes:
       - release download assets
     deny_by_default: true
 
+  - id: bot_dashboard_issue_sync
+    status: active
+    workflows:
+      - bot-dashboard-issue.yml
+    may_write_branches: false
+    may_open_prs: false
+    may_label_prs: false
+    may_enable_auto_merge: false
+    may_merge_prs: false
+    may_write_catalog_truth: false
+    allowed_paths: []
+    write_authority_explanation: May create or update only the persistent OpenVA Bot Dashboard issue when a maintainer explicitly disables dry-run/report-only mode.
+    required_labels_for_write_authority: []
+    token_permissions:
+      contents: read
+      issues: write
+    audit_artifacts:
+      - maintenance/bot-dashboard.md
+      - maintenance/bot-dashboard-issue-sync-report.json
+    deny_by_default: true
+
   - id: support_agent_pr
     status: active
     workflows:
