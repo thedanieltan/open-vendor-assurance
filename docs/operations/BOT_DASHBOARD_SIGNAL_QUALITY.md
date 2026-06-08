@@ -30,6 +30,20 @@ This section is intended to answer:
 - Are missing artifacts merely unavailable local evidence?
 - What is the highest-priority next safe action?
 
+## Priority model
+
+The dashboard contract also declares a deterministic priority model for signals that can otherwise create noise.
+
+The required order is:
+
+1. Queue pause switches, queue denials, and policy stops before queue deferrals.
+2. Failure-router stop-lane results before retryable failures.
+3. Denied or unsafe chat-ops commands before ignored comments.
+4. Workflow-retirement blockers before future retirement candidates.
+5. Missing optional inputs outside the blocker lane unless the contract marks the input required.
+
+This model is deliberately presentational. It does not enforce queues, execute chat-ops commands, mutate labels, open PRs, merge PRs, dispatch workflows, retire workflows, or write catalog truth.
+
 ## Missing optional artifacts
 
 Missing optional artifacts must not create false critical posture. They indicate that a local checkout does not have a generated report, not that the corresponding workflow failed.
