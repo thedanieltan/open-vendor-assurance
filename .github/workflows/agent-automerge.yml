@@ -63,13 +63,43 @@ jobs:
           if-no-files-found: warn
 
       - name: Validate repository
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow agent-automerge.yml \
+              --lane pr_safety \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed during machine-canonical automerge preflight" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/machine-canonical-failure-input.json
+            exit 1
+          }
 
       - name: Rebuild generated outputs
-        run: python -m tools.openva.validate build-indexes
+        run: |
+          python -m tools.openva.validate build-indexes || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow agent-automerge.yml \
+              --lane pr_safety \
+              --failure-code generated_drift_failure \
+              --message "generated drift detected while rebuilding machine-canonical outputs" \
+              --artifact openva-build-indexes \
+              --out reports/openva-failure-routing/machine-canonical-failure-input.json
+            exit 1
+          }
 
       - name: Refuse generated drift
-        run: git diff --exit-code openva-pack.json indexes/
+        run: |
+          git diff --exit-code openva-pack.json indexes/ || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow agent-automerge.yml \
+              --lane pr_safety \
+              --failure-code generated_drift_failure \
+              --message "generated files are stale after machine-canonical rebuild" \
+              --artifact git-diff-generated-outputs \
+              --out reports/openva-failure-routing/machine-canonical-failure-input.json
+            exit 1
+          }
 
       - name: Run tests
         run: pytest -q
@@ -83,6 +113,35 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+
+      - name: Build machine-canonical failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow agent-automerge.yml \
+            --lane pr_safety \
+            --failure-code automerge_lane_mismatch \
+            --message "automerge lane mismatch in machine-canonical lane; inspect labels, paths, source preflight, generated outputs, and required checks" \
+            --source-preflight-report source-preflight-report.json \
+            --out reports/openva-failure-routing/machine-canonical-failure-input.json \
+            --preserve-existing
+      - name: Route machine-canonical failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/machine-canonical-failure-input.json \
+            --out reports/openva-failure-routing/machine-canonical-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/machine-canonical-failure-routing-report.md
+      - name: Upload machine-canonical failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-automerge-machine-canonical-failure-routing
+          path: |
+            reports/openva-failure-routing/machine-canonical-failure-input.json
+            reports/openva-failure-routing/machine-canonical-failure-routing-report.json
+            reports/openva-failure-routing/machine-canonical-failure-routing-report.md
+          if-no-files-found: ignore
 
   strict-growth:
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'catalog-growth') && contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:strict-growth') && !contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:machine-canonical')
@@ -168,6 +227,35 @@ jobs:
         run: |
           gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
 
+      - name: Build strict-growth failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow agent-automerge.yml \
+            --lane pr_safety \
+            --failure-code automerge_lane_mismatch \
+            --message "automerge lane mismatch in strict-growth lane; inspect labels, paths, source preflight, strict-growth evidence, generated outputs, and required checks" \
+            --source-preflight-report source-preflight-report.json \
+            --out reports/openva-failure-routing/strict-growth-failure-input.json \
+            --preserve-existing
+      - name: Route strict-growth failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/strict-growth-failure-input.json \
+            --out reports/openva-failure-routing/strict-growth-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/strict-growth-failure-routing-report.md
+      - name: Upload strict-growth failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-automerge-strict-growth-failure-routing
+          path: |
+            reports/openva-failure-routing/strict-growth-failure-input.json
+            reports/openva-failure-routing/strict-growth-failure-routing-report.json
+            reports/openva-failure-routing/strict-growth-failure-routing-report.md
+          if-no-files-found: ignore
+
   p0-source-repair:
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'source-refinement') && contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:p0-source-repair')
     runs-on: ubuntu-latest
@@ -217,13 +305,43 @@ jobs:
             --policy config/automerge-policy.yaml
 
       - name: Validate repository
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow agent-automerge.yml \
+              --lane pr_safety \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed during P0 source repair automerge preflight" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/p0-source-repair-failure-input.json
+            exit 1
+          }
 
       - name: Rebuild generated outputs
-        run: python -m tools.openva.validate build-indexes
+        run: |
+          python -m tools.openva.validate build-indexes || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow agent-automerge.yml \
+              --lane pr_safety \
+              --failure-code generated_drift_failure \
+              --message "generated drift detected while rebuilding P0 source repair outputs" \
+              --artifact openva-build-indexes \
+              --out reports/openva-failure-routing/p0-source-repair-failure-input.json
+            exit 1
+          }
 
       - name: Refuse generated drift
-        run: git diff --exit-code openva-pack.json indexes/ dist/
+        run: |
+          git diff --exit-code openva-pack.json indexes/ dist/ || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow agent-automerge.yml \
+              --lane pr_safety \
+              --failure-code generated_drift_failure \
+              --message "generated files are stale after P0 source repair rebuild" \
+              --artifact git-diff-generated-outputs \
+              --out reports/openva-failure-routing/p0-source-repair-failure-input.json
+            exit 1
+          }
 
       - name: Run tests
         run: pytest -q
@@ -234,3 +352,31 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+
+      - name: Build P0 source repair failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow agent-automerge.yml \
+            --lane pr_safety \
+            --failure-code automerge_lane_mismatch \
+            --message "automerge lane mismatch in P0 source repair lane; inspect labels, paths, reviewed evidence, generated outputs, and required checks" \
+            --out reports/openva-failure-routing/p0-source-repair-failure-input.json \
+            --preserve-existing
+      - name: Route P0 source repair failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/p0-source-repair-failure-input.json \
+            --out reports/openva-failure-routing/p0-source-repair-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/p0-source-repair-failure-routing-report.md
+      - name: Upload P0 source repair failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-automerge-p0-source-repair-failure-routing
+          path: |
+            reports/openva-failure-routing/p0-source-repair-failure-input.json
+            reports/openva-failure-routing/p0-source-repair-failure-routing-report.json
+            reports/openva-failure-routing/p0-source-repair-failure-routing-report.md
+          if-no-files-found: ignore

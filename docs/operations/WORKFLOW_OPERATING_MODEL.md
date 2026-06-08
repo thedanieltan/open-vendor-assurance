@@ -35,6 +35,8 @@ Workflows:
 - `agent-weighted-review.yml`
 - `agent-automerge.yml`
 
+Failed automerge lane runs emit failure routing artifacts for machine-canonical, strict-growth, and P0 source repair lanes without changing merge authority or retrying the workflow.
+
 ### Loop 2: Source cleanup loop
 
 Purpose: eliminate or truth-state source debt.
@@ -47,6 +49,8 @@ Workflows:
 - `source-repair-pr-cleanup.yml`
 
 `source-maintenance-report.yml` is the source cleanup and reporting entry point.
+
+Failed source cleanup runs emit failure routing artifacts so operators can distinguish schema validation, external fetch instability, workflow input compatibility, and source repair evidence failures.
 
 ### Loop 3: Catalog quality loop
 
@@ -68,6 +72,8 @@ Workflows:
 - `candidate-promotion-pr.yml`
 
 `catalog-growth-discovery.yml` is the catalog expansion proposal entry point. `candidate-promotion-pr.yml` is the controlled write path for reviewed promotions.
+
+Failed catalog growth discovery and controlled promotion runs emit failure routing artifacts. Queue stops and stale evidence remain visible in the queue report and are classified by the failure router when they block a write-capable path.
 
 ### Loop 5: Release/site loop
 
@@ -91,6 +97,10 @@ Workflow:
 - `bot-dashboard-issue.yml`
 
 `bot-dashboard-issue.yml` renders the local bot dashboard and runs dashboard issue sync. It defaults to dry-run/report-only behavior. Scheduled runs must not create or update issues, mutate catalog data, mutate PRs, dispatch workflows, or change automerge state.
+
+## Failure Routing Boundary
+
+Failure routing is an artifact layer. It classifies failed or safely stopped bot workflow runs under the WP9 failure taxonomy and gives operators a `next_safe_action`. It does not retry workflows, open or update issues, defer candidates, label PRs, close PRs, execute chat-ops commands, retire workflows, mutate catalog data, change automerge policy, or widen workflow permissions.
 
 ## Reviewed decision handoff boundary
 
@@ -151,14 +161,14 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 | `validate.yml` | Validate records, generated pack/indexes, and tests. | `pull_request`, `push` to `main` | `contents: read` | No | No | No | Validation logs | PR safety loop, branch protection | Core |
 | `catalog-pr-guard.yml` | Enforce catalog PR scope and title expectations. | `pull_request` | `contents: read`, `pull-requests: read` | No | No | No | Guard logs | PR safety loop | Core |
 | `agent-weighted-review.yml` | Advisory agent checks for schema, source accessibility, wording, and provenance. | `pull_request` | `contents: read`, `pull-requests: read`, `issues: write` | No catalog writes; comments only | No | No | Advisory comments | PR reviewers, automerge policy context | Core |
-| `agent-automerge.yml` | Controlled automerge lanes for approved agent PRs. | `pull_request` | `contents: write`, `pull-requests: write`, `checks: read`, `statuses: read` | Yes, through merge only | No | Yes | Preflight artifact, merge result | `main`, release/site loop | Core |
-| `source-maintenance-report.yml` | Source cleanup/reporting entry point. Builds source health, verification, discovery, repair sweep, triage, decision sheet, promotion, and cleanup reports. | `workflow_dispatch`, scheduled weekly | `contents: read` | No | No | No | `openva-source-maintenance-report`, `openva-source-reviewer-inbox` | Source cleanup loop, release candidate, site pages, reviewers | Core |
-| `source-refinement-scan.yml` | Compare recent source maintenance runs and identify confirmed P0 repair candidates. | `workflow_dispatch`, scheduled weekly | `actions: read`, `contents: read` | No | No | No | Confirmed P0 scan and evidence artifacts | `source-repair-pr.yml`, release readiness | Core |
-| `source-repair-pr.yml` | Create repair PRs from committed and validated reviewed evidence and repair plans. | `workflow_dispatch` | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Repair action report, queue gate report, PR body | PR safety loop, source maintenance re-run | Core |
+| `agent-automerge.yml` | Controlled automerge lanes for approved agent PRs. | `pull_request` | `contents: write`, `pull-requests: write`, `checks: read`, `statuses: read` | Yes, through merge only | No | Yes | Preflight artifact, failure routing report, merge result | `main`, release/site loop | Core |
+| `source-maintenance-report.yml` | Source cleanup/reporting entry point. Builds source health, verification, discovery, repair sweep, triage, decision sheet, promotion, and cleanup reports. | `workflow_dispatch`, scheduled weekly | `contents: read` | No | No | No | `openva-source-maintenance-report`, `openva-source-reviewer-inbox`, failure routing report | Source cleanup loop, release candidate, site pages, reviewers | Core |
+| `source-refinement-scan.yml` | Compare recent source maintenance runs and identify confirmed P0 repair candidates. | `workflow_dispatch`, scheduled weekly | `actions: read`, `contents: read` | No | No | No | Confirmed P0 scan, evidence artifacts, failure routing report | `source-repair-pr.yml`, release readiness | Core |
+| `source-repair-pr.yml` | Create repair PRs from committed and validated reviewed evidence and repair plans. | `workflow_dispatch` | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Repair action report, queue gate report, failure routing report, PR body | PR safety loop, source maintenance re-run | Core |
 | `source-repair-pr-cleanup.yml` | Close stale generated source repair PRs. | `workflow_dispatch`, scheduled weekly | `contents: read`, `pull-requests: write`, `issues: write` | PR state only | No | No | Stale PR cleanup report | Operators | Core |
 | `coverage-audit.yml` | Catalog quality entry point for completeness, entity review, and provenance coverage. | `workflow_dispatch`, scheduled | `contents: read` | No | No | No | Coverage, completeness, entity, and provenance reports | Site pages, operators | Core |
-| `catalog-growth-discovery.yml` | Catalog expansion proposal entry point. Discovers candidate vendors and sources without writing catalog truth. | `workflow_dispatch`, scheduled | `contents: read`, `issues: write` | No catalog writes; may create/update issues | No | No | Candidate discovery reports and proposal plans | Reviewers, candidate promotion | Core |
-| `candidate-promotion-pr.yml` | Controlled write path for reviewed catalog growth promotions. | `workflow_dispatch`, scheduled | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Promotion application report, queue gate report, and PR | PR safety loop, site/release loop | Core |
+| `catalog-growth-discovery.yml` | Catalog expansion proposal entry point. Discovers candidate vendors and sources without writing catalog truth. | `workflow_dispatch`, scheduled | `contents: read`, `issues: write` | No catalog writes; may create/update issues | No | No | Candidate discovery reports, proposal plans, failure routing report | Reviewers, candidate promotion | Core |
+| `candidate-promotion-pr.yml` | Controlled write path for reviewed catalog growth promotions. | `workflow_dispatch`, scheduled | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Promotion application report, queue gate report, failure routing report, and PR | PR safety loop, site/release loop | Core |
 | `release-candidate.yml` | Build release candidate with source-health readiness awareness. | `workflow_dispatch` | `contents: read`, `actions: read` | No | No | No | Release artifacts, source-health readiness report | Release operators | Core |
 | `site-pages.yml` | Build and deploy the reviewed catalog site with downloaded source-health and catalog-confidence artifacts. | `push` to `main`, `workflow_dispatch` | `contents: read`, `actions: read`, `pages: write`, `id-token: write` | Pages deployment only | No | No | Pages artifact | Public site | Core |
 | `release-downloads.yml` | Publish release downloads for version tags. | tag `push` | `contents: write` | GitHub release assets only | No | No | Release download assets | Release consumers | Core |

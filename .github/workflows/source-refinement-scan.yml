@@ -230,3 +230,29 @@ jobs:
             source-repair-evidence.json
             source-repair-plan-validation.json
           if-no-files-found: error
+      - name: Build source refinement failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow source-refinement-scan.yml \
+            --lane source_maintenance_report \
+            --message "source refinement scan workflow failed; inspect logs for workflow input compatibility, external artifact fetch, or source repair evidence context" \
+            --out reports/openva-failure-routing/source-refinement-failure-input.json \
+            --preserve-existing
+      - name: Route source refinement failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/source-refinement-failure-input.json \
+            --out reports/openva-failure-routing/source-refinement-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/source-refinement-failure-routing-report.md
+      - name: Upload source refinement failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-refinement-failure-routing
+          path: |
+            reports/openva-failure-routing/source-refinement-failure-input.json
+            reports/openva-failure-routing/source-refinement-failure-routing-report.json
+            reports/openva-failure-routing/source-refinement-failure-routing-report.md
+          if-no-files-found: ignore

@@ -53,7 +53,17 @@ jobs:
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Validate current records
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow source-maintenance-report.yml \
+              --lane source_maintenance_report \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed before source maintenance reporting" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/source-maintenance-failure-input.json
+            exit 1
+          }
       - name: Build source health inventory report
         run: python -m tools.openva.source_health build --output source-health-report.json
       - name: Build network source verification report
@@ -361,3 +371,29 @@ jobs:
           name: openva-source-reviewer-inbox
           path: source-review-decision-sheet.csv
           if-no-files-found: error
+      - name: Build source maintenance failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow source-maintenance-report.yml \
+            --lane source_maintenance_report \
+            --message "source maintenance report workflow failed; inspect logs for external fetch instability, schema validation, or source-health reporting context" \
+            --out reports/openva-failure-routing/source-maintenance-failure-input.json \
+            --preserve-existing
+      - name: Route source maintenance failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/source-maintenance-failure-input.json \
+            --out reports/openva-failure-routing/source-maintenance-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/source-maintenance-failure-routing-report.md
+      - name: Upload source maintenance failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-maintenance-failure-routing
+          path: |
+            reports/openva-failure-routing/source-maintenance-failure-input.json
+            reports/openva-failure-routing/source-maintenance-failure-routing-report.json
+            reports/openva-failure-routing/source-maintenance-failure-routing-report.md
+          if-no-files-found: ignore

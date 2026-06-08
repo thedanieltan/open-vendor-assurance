@@ -277,7 +277,17 @@ jobs:
           echo "ELIGIBILITY_REPORT_PATH=maintenance/generated/strict-growth-eligibility-report.json" >> "$GITHUB_ENV"
       - name: Validate current records
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow candidate-promotion-pr.yml \
+              --lane catalog_growth_promotion \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed before catalog promotion actions" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/catalog-promotion-failure-input.json
+            exit 1
+          }
       - name: Apply candidate promotions
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: |
@@ -286,7 +296,17 @@ jobs:
             --output candidate-promotion-report.json
       - name: Validate generated catalog promotion
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow candidate-promotion-pr.yml \
+              --lane catalog_growth_promotion \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed after catalog promotion actions" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/catalog-promotion-failure-input.json
+            exit 1
+          }
       - name: Rebuild generated outputs
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: python -m tools.openva.validate build-indexes
@@ -547,3 +567,31 @@ jobs:
             maintenance/generated/strict-growth-eligibility-report.json
             maintenance/generated/strict-growth-shortlist.json
           if-no-files-found: error
+      - name: Build catalog promotion failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow candidate-promotion-pr.yml \
+            --lane catalog_growth_promotion \
+            --message "catalog growth controlled promotion workflow failed; inspect logs for workflow input compatibility, schema validation, queue denial, source preflight, redirect, or promotion action context" \
+            --queue-report reports/openva-queue/catalog-promotion-queue-report.json \
+            --source-preflight-report source-preflight-report.json \
+            --out reports/openva-failure-routing/catalog-promotion-failure-input.json \
+            --preserve-existing
+      - name: Route catalog promotion failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/catalog-promotion-failure-input.json \
+            --out reports/openva-failure-routing/catalog-promotion-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/catalog-promotion-failure-routing-report.md
+      - name: Upload catalog promotion failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-catalog-promotion-failure-routing
+          path: |
+            reports/openva-failure-routing/catalog-promotion-failure-input.json
+            reports/openva-failure-routing/catalog-promotion-failure-routing-report.json
+            reports/openva-failure-routing/catalog-promotion-failure-routing-report.md
+          if-no-files-found: ignore

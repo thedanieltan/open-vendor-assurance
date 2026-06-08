@@ -67,6 +67,10 @@ def test_message_based_classification_for_known_examples():
         "schema validation failed for bot contract": "schema_validation_failure",
         "generated files are stale after build-indexes": "generated_drift_failure",
         "permission denied by bot authority for write action": "permission_policy_denial",
+        "source preflight failed for changed source records": "source_preflight_failure",
+        "redirect canonicalization failure for final URL": "redirect_canonicalization_failure",
+        "external fetch instability while probing source host": "external_fetch_instability",
+        "automerge lane mismatch for strict-growth PR": "automerge_lane_mismatch",
     }
 
     for message, expected_code in examples.items():
@@ -188,9 +192,26 @@ def test_router_integrates_with_queue_output_for_permission_denial():
     assert report["stop_lane"] is True
 
 
-def test_cli_writes_routing_report(tmp_path):
+def test_router_integrates_with_queue_pause_for_permission_denial():
+    report = route_failure(
+        {
+            "version": 1,
+            "lane_id": "source_repair",
+            "queue_report": {
+                "decision": "pause",
+                "reasons": ["pause_switch_active"],
+            },
+        }
+    )
+
+    assert report["matched_failure_code"] == "permission_policy_denial"
+    assert report["match_confidence"] == "queue_report"
+
+
+def test_cli_writes_routing_report_and_markdown(tmp_path):
     input_path = tmp_path / "failure.yaml"
     out_path = tmp_path / "routing.json"
+    out_md = tmp_path / "routing.md"
     input_path.write_text(
         yaml.safe_dump(
             {
@@ -207,9 +228,20 @@ def test_cli_writes_routing_report(tmp_path):
         encoding="utf-8",
     )
 
-    result = main(["classify", "--input", str(input_path), "--out", str(out_path)])
+    result = main(
+        [
+            "classify",
+            "--input",
+            str(input_path),
+            "--out",
+            str(out_path),
+            "--out-md",
+            str(out_md),
+        ]
+    )
 
     assert result == 0
     report = json.loads(out_path.read_text(encoding="utf-8"))
     assert report["matched_failure_code"] == "stale_evidence_failure"
     assert report["next_safe_action"]
+    assert "# OpenVA Bot Failure Routing" in out_md.read_text(encoding="utf-8")
