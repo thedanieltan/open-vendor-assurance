@@ -1,5 +1,7 @@
 # Source Refinement Workflow
 
+WP22 quarantine notice: `.github/workflows/source-refinement-queue.yml` is a legacy manual-only report workflow. Do not use it as the primary source cleanup path. Use `source-maintenance-report.yml` for current source maintenance artifacts and `source-refinement-scan.yml` for confirmed P0 source repair evidence.
+
 The source refinement queue turns an OpenVA observation report JSON file into a maintainer review queue.
 
 It does not mutate catalog records, write observation records, create issues, or bypass access controls.
@@ -29,15 +31,15 @@ python -m tools.openva.source_refinement_queue reports/observation-report.json \
   --json-out reports/source-refinement-queue.json
 ```
 
-## Workflow
+## Legacy Workflow
 
-The manual workflow is:
+The quarantined manual workflow is:
 
 ```text
 .github/workflows/source-refinement-queue.yml
 ```
 
-It expects an observation report JSON file to be available in the checked-out repository path provided by the `observation_report_json` input.
+It expects an observation report JSON file to be available in the checked-out repository path provided by the `observation_report_json` input. This path remains available only for legacy artifact inspection while replacement evidence is finalized.
 
 Default input:
 
@@ -110,6 +112,6 @@ Do not use this workflow to:
 - make compliance, risk, security, audit, KYC, AML, procurement, or vendor approval conclusions;
 - automatically replace canonical source URLs without PR review.
 
-## Future enhancement
+## Future retirement
 
-A later phase may download the latest `observe-report` workflow artifact automatically and feed it into this queue. This PR intentionally keeps the workflow manual and read-only so maintainers can inspect the observation report before producing a refinement queue.
+A later phase may remove this workflow after stale references are migrated, replacement-owner evidence is complete, and tests prove no unique legacy queue remains. Do not add a schedule or automatic artifact download to this quarantined workflow.

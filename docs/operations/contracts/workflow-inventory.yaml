@@ -164,7 +164,7 @@ public_workflows:
     merges_prs: false
   - name: source-refinement-queue.yml
     loop: legacy_report
-    status: consolidation_candidate
+    status: quarantined
     triggers: [workflow_dispatch]
     permissions: {contents: read}
     writes_repository_state: false

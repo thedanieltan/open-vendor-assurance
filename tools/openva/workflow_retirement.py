@@ -80,6 +80,7 @@ def safe_for_future_consideration(entry: dict[str, Any]) -> bool:
     return bool(entry.get("retirement_candidate")) and entry.get("current_status") in {
         "shadow_report_only",
         "deprecated_callable",
+        "quarantined",
     }
 
 

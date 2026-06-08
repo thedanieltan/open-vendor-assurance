@@ -37,7 +37,7 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `catalog-maintenance-pr.yml` | `keep_support` | Scheduled/manual support path for maintenance PRs. | Keep until overlap with promotion and repair paths is further reduced. |
 | `contribution-intake-agent.yml` | `keep_support` | Issue-to-PR intake support path. | Keep. |
 | `catalog-maintenance.yml` | `retire_candidate` | Overlaps with validation/index/test work in `validate.yml` and catalog quality/entity reporting in `coverage-audit.yml`; entity-stub replacement is not proven. | Keep as `retire_candidate`; see `WORKFLOW_RETIREMENT_EVIDENCE.md`. |
-| `source-refinement-queue.yml` | `retire_candidate` | Consumes older observation report paths and likely overlaps with `source-maintenance-report.yml`, source repair sweep output, source review triage, and reviewer decision sheet; stale consumers remain unproven. | Keep as `retire_candidate`; likely first future removal candidate after evidence is complete. |
+| `source-refinement-queue.yml` | `retire_candidate` | Consumes older observation report paths and overlaps with `source-maintenance-report.yml`, source repair sweep output, source review triage, and reviewer decision sheet; stale consumers remain unproven. | Quarantined by WP22; keep manual-only until deletion evidence is complete. |
 | `observe-report.yml` | `retire_candidate` | May be superseded for source observations by `source-observation-ledger`, `latest-source-health`, and `public/source-health-snapshot`; non-source observation role remains unresolved. | Keep as `retire_candidate`; see `WORKFLOW_RETIREMENT_EVIDENCE.md`. |
 
 ## Retire/consolidation candidate detail
@@ -64,7 +64,7 @@ Observed overlap:
 
 Recommended action:
 
-Retire if no unique queue remains. This is the likely first removal candidate, but not in this package because stale references and consumers are not yet proven clean.
+WP22 quarantines this workflow because it is already manual-only and read-only. Do not delete it until no unique queue remains and stale references and consumers are proven clean.
 
 ### `observe-report.yml`
 
@@ -99,7 +99,7 @@ Do not implement until the truth-state schema is decided.
 
 Purpose: retire `catalog-maintenance.yml`, `source-refinement-queue.yml`, and/or `observe-report.yml` only after the audit proves their outputs are fully replaced.
 
-Current status: retirement evidence is documented in `WORKFLOW_RETIREMENT_EVIDENCE.md`; no workflow is removed in this package because none is proven safe to remove.
+Current status: retirement evidence is documented in `WORKFLOW_RETIREMENT_EVIDENCE.md`; `source-refinement-queue.yml` is quarantined by contract, and no workflow is removed because none is proven safe to delete.
 
 Do not delete all three in one package unless tests and docs prove no consumers remain.
 
