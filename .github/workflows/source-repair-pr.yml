@@ -50,7 +50,17 @@ jobs:
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Validate current records
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow source-repair-pr.yml \
+              --lane source_repair \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed before source repair" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/source-repair-failure-input.json
+            exit 1
+          }
       - name: Validate workflow inputs
         run: |
           set -euo pipefail
@@ -148,7 +158,17 @@ jobs:
             --validation-report "$VALIDATION_REPORT_PATH" \
             --output source-repair-action-report.json
       - name: Validate generated catalog repair
-        run: python -m tools.openva.validate validate
+        run: |
+          python -m tools.openva.validate validate || {
+            python -m tools.openva.bot_workflow_failure build \
+              --workflow source-repair-pr.yml \
+              --lane source_repair \
+              --failure-code schema_validation_failure \
+              --message "schema validation failed after source repair actions" \
+              --artifact openva-validate \
+              --out reports/openva-failure-routing/source-repair-failure-input.json
+            exit 1
+          }
       - name: Check whether catalog changes were produced
         id: catalog_changes
         run: |
@@ -344,3 +364,30 @@ jobs:
             source-repair-collision-report.json
             source-repair-collision-summary.md
           if-no-files-found: error
+      - name: Build source repair failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow source-repair-pr.yml \
+            --lane source_repair \
+            --message "source repair workflow failed; inspect logs for workflow input compatibility, schema validation, queue denial, or source repair failure context" \
+            --queue-report reports/openva-queue/source-repair-queue-report.json \
+            --out reports/openva-failure-routing/source-repair-failure-input.json \
+            --preserve-existing
+      - name: Route source repair failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/source-repair-failure-input.json \
+            --out reports/openva-failure-routing/source-repair-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/source-repair-failure-routing-report.md
+      - name: Upload source repair failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-repair-failure-routing
+          path: |
+            reports/openva-failure-routing/source-repair-failure-input.json
+            reports/openva-failure-routing/source-repair-failure-routing-report.json
+            reports/openva-failure-routing/source-repair-failure-routing-report.md
+          if-no-files-found: ignore
