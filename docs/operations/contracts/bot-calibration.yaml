@@ -1,0 +1,72 @@
+version: 1
+contract: bot-calibration
+source_document: docs/operations/BOT_OPS_CALIBRATION.md
+outputs:
+  json: maintenance/bot-calibration-report.json
+  markdown: maintenance/bot-calibration-report.md
+default_posture:
+  local_only: true
+  report_only: true
+  github_api_calls_allowed: false
+  workflow_dispatch_allowed: false
+  catalog_mutation_allowed: false
+  authority_expansion_allowed: false
+allowed_recommendations:
+  - hold_current_authority
+  - tune_dashboard_signals
+  - tune_queue_policy
+  - tune_failure_taxonomy
+  - allow_limited_label_activation
+  - block_authority_expansion
+required_sections:
+  - id: baseline_repo_posture
+    title: Baseline repo posture
+  - id: dashboard_usefulness_review
+    title: Dashboard usefulness review
+  - id: queue_decision_quality
+    title: Queue decision quality
+  - id: failure_router_classification_quality
+    title: Failure-router classification quality
+  - id: chatops_safety_review
+    title: Chat-ops safety review
+  - id: workflow_retirement_posture
+    title: Workflow retirement posture
+  - id: observability_completeness
+    title: Observability completeness
+  - id: smoke_harness_coverage
+    title: Smoke harness coverage
+  - id: missing_artifact_inventory
+    title: Missing artifact inventory
+  - id: noise_false_positive_inventory
+    title: Noise / false-positive inventory
+  - id: automation_authority_recommendation
+    title: Automation authority recommendation
+  - id: next_safe_action
+    title: Next safe action
+input_sources:
+  - id: smoke_harness
+    report_type: bot_ops_smoke
+    required: true
+    generator: tools.openva.bot_ops_smoke
+  - id: dashboard
+    report_type: bot_dashboard
+    required: true
+    generator: tools.openva.bot_dashboard
+  - id: observability
+    report_type: bot_observability_scorecard
+    required: true
+    generator: tools.openva.bot_observability
+  - id: workflow_retirement
+    report_type: workflow_retirement_report
+    required: true
+    generator: tools.openva.workflow_retirement
+  - id: chatops_local_audit
+    report_type: bot_chatops_decision
+    required: true
+    generator: tools.openva.bot_chatops
+signal_rules:
+  missing_optional_inputs_are_noise: true
+  failed_smoke_subsystems_block_authority_expansion: true
+  chatops_local_audit_pass_allows_limited_label_consideration: true
+  workflow_retirement_errors_block_further_retirement: true
+  queue_denials_require_review_before_authority_expansion: true
