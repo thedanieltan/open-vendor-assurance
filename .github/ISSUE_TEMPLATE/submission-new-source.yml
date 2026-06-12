@@ -1,0 +1,146 @@
+name: New assurance source
+
+description: Use this when submitting a public assurance source URL for a vendor, such as a trust center, DPA page, subprocessors list, privacy notice, or security page. Do not use this for broken or moved existing sources, vendor renames, or update feeds. If unsure, use this form.
+title: "Source candidate: "
+labels: ["status:needs-triage", "submission:new-source"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This submission is a claim, not a catalog change. It enters verification before any catalog update. OpenVA records public source metadata and provenance, not legal conclusions.
+
+        Submit public sources only. Do not upload confidential reports. Do not paste SOC reports, DPA contents, customer portal content, screenshots, copied document text, credentials, or any non-public document. If a source is gated, mark it as gated below; OpenVA records that a gated source exists, never its contents.
+  - type: input
+    id: vendor_name
+    attributes:
+      label: Vendor name
+      description: The vendor's current public name.
+      placeholder: Example Vendor
+    validations:
+      required: true
+  - type: input
+    id: vendor_domain
+    attributes:
+      label: Vendor domain
+      description: The vendor's primary official domain.
+      placeholder: vendor.example
+    validations:
+      required: true
+  - type: input
+    id: openva_vendor_id
+    attributes:
+      label: OpenVA vendor ID
+      description: Optional. The existing OpenVA vendor ID, if you know it.
+      placeholder: example-vendor
+    validations:
+      required: false
+  - type: input
+    id: source_url
+    attributes:
+      label: Source URL
+      description: The public source URL being submitted.
+      placeholder: https://vendor.example/trust/subprocessors
+    validations:
+      required: true
+  - type: dropdown
+    id: source_type
+    attributes:
+      label: Source type
+      description: The kind of assurance source this URL is.
+      options:
+        - dpa
+        - subprocessors_list
+        - privacy_notice
+        - trust_center
+        - security_page
+        - compliance_page
+        - certification_reference
+        - terms_of_service
+        - kyc_statement
+        - aml_statement
+        - ai_terms
+        - government_request_policy
+        - transparency_report
+        - other_public_source
+    validations:
+      required: true
+  - type: dropdown
+    id: canonical_location_belief
+    attributes:
+      label: Canonical location belief
+      description: Where you believe this URL sits in the vendor's own URL space.
+      options:
+        - This is the vendor's canonical page for this source type
+        - Likely the canonical page
+        - A mirror of another vendor page
+        - Reached via redirect from another URL
+        - Unsure
+    validations:
+      required: true
+  - type: textarea
+    id: why_this_is_authoritative
+    attributes:
+      label: Why this is authoritative
+      description: Why this URL is the vendor's official public location for this source type.
+    validations:
+      required: true
+  - type: dropdown
+    id: public_access_confirmed
+    attributes:
+      label: Public access confirmed
+      description: Is the source URL publicly reachable?
+      options:
+        - Yes - public, no login, paywall, or bot-wall
+        - No - gated or restricted (mark as gated)
+    validations:
+      required: true
+  - type: dropdown
+    id: machine_readable_surface
+    attributes:
+      label: Machine-readable surface
+      description: Does this source expose a machine-readable surface? Contributor-facing shorthand; verification classifies the exact retrieval method later.
+      options:
+        - none
+        - rss
+        - sitemap
+        - llms_txt
+        - openapi
+        - mcp
+        - api
+      default: 0
+    validations:
+      required: true
+  - type: checkboxes
+    id: public_source_checks
+    attributes:
+      label: Public-source checks
+      options:
+        - label: I am not submitting private customer agreements, bespoke terms, customer portal exports, private trust-center documents, private reports, private certificates, screenshots, copied full text, or login-only documents.
+          required: true
+        - label: If the source requires login, credentials, NDA, customer status, sales approval, support ticket access, private portal access, form submission, or anti-bot bypass, I have marked it as gated in the public access field above.
+          required: true
+  - type: checkboxes
+    id: non_advisory_checks
+    attributes:
+      label: Non-advisory checks
+      options:
+        - label: This submission does not claim the vendor is approved, recommended, compliant, suitable, safe, adequate, trusted, best-in-class, audit-ready, certified for a user's use case, low risk, or high risk.
+          required: true
+        - label: This submission is factual public metadata only.
+          required: true
+  - type: checkboxes
+    id: claim_checks
+    attributes:
+      label: Claim checks
+      options:
+        - label: I checked the existing catalog and open submissions for a duplicate.
+          required: true
+        - label: I understand this is a claim that enters verification, not a direct catalog change.
+          required: true
+  - type: textarea
+    id: submitter_notes
+    attributes:
+      label: Submitter notes
+      description: Optional factual context for maintainers. Do not paste private, gated, customer-specific, or copied document text.
+    validations:
+      required: false

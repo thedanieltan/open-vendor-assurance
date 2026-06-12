@@ -1,0 +1,132 @@
+name: Machine-readable source surface
+
+description: Use this when a vendor exposes a machine-readable surface (RSS, sitemap, llms.txt, OpenAPI, MCP, API) for assurance content. Do not use this for ordinary web pages. If unsure, use New assurance source.
+title: "Machine-readable surface: "
+labels: ["status:needs-triage", "submission:machine-readable"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This submission is a claim, not a catalog change. It enters verification before any catalog update. OpenVA records public source metadata and provenance, not legal conclusions.
+
+        Submit public sources only. Do not upload confidential reports. Do not paste SOC reports, DPA contents, customer portal content, screenshots, copied document text, credentials, or any non-public document. If a source is gated, mark it as gated below; OpenVA records that a gated source exists, never its contents.
+  - type: input
+    id: vendor_name
+    attributes:
+      label: Vendor name
+      description: The vendor's current public name.
+      placeholder: Example Vendor
+    validations:
+      required: true
+  - type: input
+    id: vendor_domain
+    attributes:
+      label: Vendor domain
+      description: The vendor's primary official domain.
+      placeholder: vendor.example
+    validations:
+      required: true
+  - type: input
+    id: source_url
+    attributes:
+      label: Surface URL
+      description: The public URL of the machine-readable surface.
+      placeholder: https://vendor.example/llms.txt
+    validations:
+      required: true
+  - type: dropdown
+    id: machine_readable_surface
+    attributes:
+      label: Machine-readable surface
+      description: The surface type. Contributor-facing shorthand; verification classifies the exact retrieval method later.
+      options:
+        - none
+        - rss
+        - sitemap
+        - llms_txt
+        - openapi
+        - mcp
+        - api
+    validations:
+      required: true
+  - type: input
+    id: related_source_url
+    attributes:
+      label: Related source URL
+      description: Optional. The cataloged or public assurance page this surface covers.
+      placeholder: https://vendor.example/trust
+    validations:
+      required: false
+  - type: dropdown
+    id: source_type
+    attributes:
+      label: Source type
+      description: Optional. The kind of assurance content the surface exposes, if you know it.
+      options:
+        - dpa
+        - subprocessors_list
+        - privacy_notice
+        - trust_center
+        - security_page
+        - compliance_page
+        - certification_reference
+        - terms_of_service
+        - kyc_statement
+        - aml_statement
+        - ai_terms
+        - government_request_policy
+        - transparency_report
+        - other_public_source
+    validations:
+      required: false
+  - type: textarea
+    id: why_this_is_authoritative
+    attributes:
+      label: Why this is authoritative
+      description: Why this surface is vendor-published and official for the assurance content it exposes.
+    validations:
+      required: true
+  - type: dropdown
+    id: public_access_confirmed
+    attributes:
+      label: Public access confirmed
+      description: Is the surface URL publicly reachable?
+      options:
+        - Yes - public, no login, paywall, or bot-wall
+        - No - gated or restricted (mark as gated)
+    validations:
+      required: true
+  - type: checkboxes
+    id: public_source_checks
+    attributes:
+      label: Public-source checks
+      options:
+        - label: I am not submitting private customer agreements, bespoke terms, customer portal exports, private trust-center documents, private reports, private certificates, screenshots, copied full text, or login-only documents.
+          required: true
+        - label: If the surface requires login, credentials, NDA, customer status, sales approval, support ticket access, private portal access, form submission, or anti-bot bypass, I have marked it as gated in the public access field above.
+          required: true
+  - type: checkboxes
+    id: non_advisory_checks
+    attributes:
+      label: Non-advisory checks
+      options:
+        - label: This submission does not claim the vendor is approved, recommended, compliant, suitable, safe, adequate, trusted, best-in-class, audit-ready, certified for a user's use case, low risk, or high risk.
+          required: true
+        - label: This submission is factual public metadata only.
+          required: true
+  - type: checkboxes
+    id: claim_checks
+    attributes:
+      label: Claim checks
+      options:
+        - label: I checked the existing catalog and open submissions for a duplicate.
+          required: true
+        - label: I understand this is a claim that enters verification, not a direct catalog change.
+          required: true
+  - type: textarea
+    id: submitter_notes
+    attributes:
+      label: Submitter notes
+      description: Optional factual context for maintainers. Do not paste private, gated, customer-specific, or copied document text.
+    validations:
+      required: false

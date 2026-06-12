@@ -1,0 +1,103 @@
+name: Vendor rename or domain change
+
+description: Use this when a vendor changed its public name or moved to a new official domain. Do not use this for broken source URLs - use Broken or moved source. If unsure, use New assurance source.
+title: "Vendor identity: "
+labels: ["status:needs-triage", "submission:vendor-identity"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This submission is a claim, not a catalog change. It enters verification before any catalog update. OpenVA records public source metadata and provenance, not legal conclusions.
+
+        Submit public sources only. Do not upload confidential reports. Do not paste SOC reports, DPA contents, customer portal content, screenshots, copied document text, credentials, or any non-public document. If a source is gated, mark it as gated below; OpenVA records that a gated source exists, never its contents.
+  - type: input
+    id: vendor_name
+    attributes:
+      label: Vendor name
+      description: The vendor's current or new public name.
+      placeholder: Example Vendor
+    validations:
+      required: true
+  - type: input
+    id: vendor_domain
+    attributes:
+      label: Vendor domain
+      description: The vendor's current or new official domain.
+      placeholder: vendor.example
+    validations:
+      required: true
+  - type: input
+    id: previous_vendor_name
+    attributes:
+      label: Previous vendor name
+      description: The vendor's prior public name, if the name changed.
+      placeholder: Old Vendor Name
+    validations:
+      required: false
+  - type: input
+    id: previous_vendor_domain
+    attributes:
+      label: Previous vendor domain
+      description: The vendor's prior official domain, if the domain changed.
+      placeholder: old-vendor.example
+    validations:
+      required: false
+  - type: input
+    id: announcement_url
+    attributes:
+      label: Public announcement URL
+      description: A public vendor-controlled or otherwise authoritative URL describing the rename or domain change.
+      placeholder: https://vendor.example/blog/rename-announcement
+    validations:
+      required: true
+  - type: textarea
+    id: why_this_is_authoritative
+    attributes:
+      label: Why this is authoritative
+      description: Why the announcement URL is an official public statement of the identity change.
+    validations:
+      required: true
+  - type: dropdown
+    id: public_access_confirmed
+    attributes:
+      label: Public access confirmed
+      description: Is the announcement URL publicly reachable?
+      options:
+        - Yes - public, no login, paywall, or bot-wall
+        - No - gated or restricted (mark as gated)
+    validations:
+      required: true
+  - type: checkboxes
+    id: public_source_checks
+    attributes:
+      label: Public-source checks
+      options:
+        - label: I am not submitting private customer agreements, bespoke terms, customer portal exports, private trust-center documents, private reports, private certificates, screenshots, copied full text, or login-only documents.
+          required: true
+        - label: If a listed source requires login, credentials, NDA, customer status, sales approval, support ticket access, private portal access, form submission, or anti-bot bypass, I have marked it as gated in the public access field above.
+          required: true
+  - type: checkboxes
+    id: non_advisory_checks
+    attributes:
+      label: Non-advisory checks
+      options:
+        - label: This submission does not claim the vendor is approved, recommended, compliant, suitable, safe, adequate, trusted, best-in-class, audit-ready, certified for a user's use case, low risk, or high risk.
+          required: true
+        - label: This submission is factual public metadata only.
+          required: true
+  - type: checkboxes
+    id: claim_checks
+    attributes:
+      label: Claim checks
+      options:
+        - label: I checked the existing catalog and open submissions for a duplicate.
+          required: true
+        - label: I understand this is a claim that enters verification, not a direct catalog change.
+          required: true
+  - type: textarea
+    id: submitter_notes
+    attributes:
+      label: Submitter notes
+      description: Optional factual context for maintainers. Do not paste private, gated, customer-specific, or copied document text.
+    validations:
+      required: false
