@@ -23,3 +23,7 @@ coverage-audit-artifacts/
 # Local workflow-style transient outputs
 .openva-submission/
 .openva-observation-ledger/
+
+# Local scratch worktrees and test temp dirs from external tooling
+.tmp/
+.pytest-tmp/
