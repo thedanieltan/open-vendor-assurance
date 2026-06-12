@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/agent-export.schema.json",
+  "title": "OpenVA Agent Export Contract",
+  "description": "Static, deterministic, agent-facing JSON exports. Versioned by schema_version plus snapshot commit/digest, never by a catalog-wide semantic version. No API server, no MCP server, no risk scoring, no private or gated content.",
+  "oneOf": [
+    { "$ref": "#/$defs/agent_index" },
+    { "$ref": "#/$defs/vendors_index" },
+    { "$ref": "#/$defs/vendor_export" },
+    { "$ref": "#/$defs/sources_index" },
+    { "$ref": "#/$defs/observations_latest" },
+    { "$ref": "#/$defs/changes_latest" }
+  ],
+  "$defs": {
+    "snapshot": {
+      "type": "object",
+      "required": ["commit_sha", "generated_at", "digest"],
+      "properties": {
+        "commit_sha": { "type": "string", "minLength": 4, "maxLength": 64 },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "source_health": {
+      "anyOf": [
+        { "enum": ["reachable", "unreachable", "gated", "bot_protected", "redirected", "quarantined"] },
+        { "type": "null" }
+      ]
+    },
+    "source_row": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "source_type",
+        "source_url",
+        "canonical_confidence",
+        "retrieval_method",
+        "machine_readable",
+        "source_health",
+        "last_observed_at",
+        "material_change_since_baseline"
+      ],
+      "properties": {
+        "source_id": { "type": "string" },
+        "source_type": { "type": "string" },
+        "source_url": { "type": "string", "format": "uri" },
+        "canonical_confidence": {
+          "anyOf": [
+            { "enum": ["canonical", "likely_canonical", "mirror", "redirected_entrypoint", "ambiguous"] },
+            { "type": "null" }
+          ]
+        },
+        "retrieval_method": {
+          "anyOf": [
+            { "enum": ["html_page", "pdf_document", "rss_feed", "atom_feed", "json_api", "llms_txt", "mcp_server", "sitemap", "csv_download", "other"] },
+            { "type": "null" }
+          ]
+        },
+        "machine_readable": { "type": ["boolean", "null"] },
+        "source_health": { "$ref": "#/$defs/source_health" },
+        "last_observed_at": { "type": ["string", "null"] },
+        "material_change_since_baseline": { "type": ["boolean", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "vendor_export": {
+      "type": "object",
+      "required": ["schema_version", "snapshot", "vendor_id", "canonical_name", "domains", "sources", "not_advice"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "snapshot": { "$ref": "#/$defs/snapshot" },
+        "vendor_id": { "type": "string" },
+        "canonical_name": { "type": "string" },
+        "domains": { "type": "array", "items": { "type": "string" } },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/source_row" } },
+        "not_advice": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "vendors_index": {
+      "type": "object",
+      "required": ["schema_version", "snapshot", "doctrine", "count", "vendors", "not_advice"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "snapshot": { "$ref": "#/$defs/snapshot" },
+        "doctrine": { "type": "string" },
+        "count": { "type": "integer", "minimum": 0 },
+        "vendors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["vendor_id", "canonical_name", "domains", "source_count", "export_path"],
+            "properties": {
+              "vendor_id": { "type": "string" },
+              "canonical_name": { "type": "string" },
+              "domains": { "type": "array", "items": { "type": "string" } },
+              "source_count": { "type": "integer", "minimum": 0 },
+              "export_path": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "not_advice": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "sources_index": {
+      "type": "object",
+      "required": ["schema_version", "snapshot", "doctrine", "count", "sources", "not_advice"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "snapshot": { "$ref": "#/$defs/snapshot" },
+        "doctrine": { "type": "string" },
+        "count": { "type": "integer", "minimum": 0 },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["vendor_id"],
+            "properties": {
+              "vendor_id": { "type": "string" },
+              "source_id": { "type": "string" },
+              "source_type": { "type": "string" },
+              "source_url": { "type": "string", "format": "uri" },
+              "canonical_confidence": { "type": ["string", "null"] },
+              "retrieval_method": { "type": ["string", "null"] },
+              "machine_readable": { "type": ["boolean", "null"] },
+              "source_health": { "$ref": "#/$defs/source_health" },
+              "last_observed_at": { "type": ["string", "null"] },
+              "material_change_since_baseline": { "type": ["boolean", "null"] }
+            },
+            "additionalProperties": false
+          }
+        },
+        "not_advice": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "review_signal": {
+      "type": ["object", "null"],
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "reason": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "observations_latest": {
+      "type": "object",
+      "required": ["schema_version", "snapshot", "doctrine", "observation_input", "count", "sources", "not_advice"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "snapshot": { "$ref": "#/$defs/snapshot" },
+        "doctrine": { "type": "string" },
+        "observation_input": { "enum": ["run_artifact", "committed_events_fallback", "none"] },
+        "count": { "type": "integer", "minimum": 0 },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["vendor_id", "source_id", "observed_at", "source_health"],
+            "properties": {
+              "vendor_id": { "type": ["string", "null"] },
+              "source_id": { "type": "string" },
+              "source_url": { "type": ["string", "null"] },
+              "observed_at": { "type": ["string", "null"] },
+              "observation_id": { "type": ["string", "null"] },
+              "final_url": { "type": ["string", "null"] },
+              "http_status": { "type": ["integer", "null"] },
+              "source_health": { "$ref": "#/$defs/source_health" },
+              "change_class": { "type": ["string", "null"] },
+              "retrieval_method": { "type": ["string", "null"] },
+              "raw_sample_sha256": { "type": ["string", "null"] },
+              "normalized_text_sample_sha256": { "type": ["string", "null"] },
+              "review_signal": { "$ref": "#/$defs/review_signal" },
+              "freshness": { "type": ["object", "null"] }
+            },
+            "additionalProperties": false
+          }
+        },
+        "not_advice": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "changes_latest": {
+      "type": "object",
+      "required": ["schema_version", "snapshot", "doctrine", "count", "by_event_type", "sources", "not_advice"],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "snapshot": { "$ref": "#/$defs/snapshot" },
+        "doctrine": { "type": "string" },
+        "count": { "type": "integer", "minimum": 0 },
+        "by_event_type": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["vendor_id", "source_id", "observed_at", "event_type", "change_class"],
+            "properties": {
+              "vendor_id": { "type": ["string", "null"] },
+              "source_id": { "type": "string" },
+              "source_url": { "type": ["string", "null"] },
+              "observed_at": { "type": ["string", "null"] },
+              "observation_id": { "type": ["string", "null"] },
+              "event_type": { "type": "string" },
+              "change_class": { "type": "string" },
+              "final_url": { "type": ["string", "null"] },
+              "http_status": { "type": ["integer", "null"] },
+              "source_health": { "$ref": "#/$defs/source_health" },
+              "review_signal": { "$ref": "#/$defs/review_signal" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "not_advice": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "agent_index": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "snapshot",
+        "doctrine",
+        "observation_input",
+        "guarantees",
+        "counts",
+        "exports",
+        "vendor_export_template",
+        "vendor_exports",
+        "not_advice"
+      ],
+      "properties": {
+        "schema_version": { "const": "0.1.0" },
+        "snapshot": { "$ref": "#/$defs/snapshot" },
+        "doctrine": { "type": "string" },
+        "observation_input": { "enum": ["run_artifact", "committed_events_fallback", "none"] },
+        "guarantees": {
+          "type": "object",
+          "required": ["public_sources_only", "metadata_first", "non_advisory", "raw_documents_mirrored_by_default"],
+          "properties": {
+            "public_sources_only": { "const": true },
+            "metadata_first": { "const": true },
+            "non_advisory": { "const": true },
+            "raw_documents_mirrored_by_default": { "const": false }
+          },
+          "additionalProperties": false
+        },
+        "counts": {
+          "type": "object",
+          "required": ["vendors", "sources"],
+          "properties": {
+            "vendors": { "type": "integer", "minimum": 0 },
+            "sources": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "exports": {
+          "type": "object",
+          "required": ["vendors_index", "sources_index", "observations_latest", "changes_latest"],
+          "properties": {
+            "vendors_index": { "$ref": "#/$defs/export_pointer" },
+            "sources_index": { "$ref": "#/$defs/export_pointer" },
+            "observations_latest": { "$ref": "#/$defs/export_pointer" },
+            "changes_latest": { "$ref": "#/$defs/export_pointer" }
+          },
+          "additionalProperties": false
+        },
+        "vendor_export_template": { "const": "vendors/{vendor_id}.json" },
+        "vendor_exports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["vendor_id", "path", "digest"],
+            "properties": {
+              "vendor_id": { "type": "string" },
+              "path": { "type": "string" },
+              "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "not_advice": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "export_pointer": {
+      "type": "object",
+      "required": ["path", "digest"],
+      "properties": {
+        "path": { "type": "string" },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
