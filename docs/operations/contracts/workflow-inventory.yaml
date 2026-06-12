@@ -165,6 +165,14 @@ public_workflows:
     writes_repository_state: true
     creates_prs: true
     merges_prs: false
+  - name: submitted-source-verification.yml
+    loop: support
+    status: support
+    triggers: [issues, workflow_dispatch]
+    permissions: {contents: read, issues: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
   - name: catalog-maintenance.yml
     loop: legacy_report
     status: consolidation_candidate

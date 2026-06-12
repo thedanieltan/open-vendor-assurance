@@ -26,6 +26,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "source-repair-pr-cleanup.yml",
     "source-refinement-queue.yml",
     "source-refinement-scan.yml",
+    "submitted-source-verification.yml",
     "validate.yml",
 }
 
@@ -139,6 +140,7 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         "source-repair-pr-cleanup.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "pull-requests": "write", "issues": "write"}},
         "catalog-growth-discovery.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "issues": "write"}},
         "contribution-intake-agent.yml": {"triggers": {"issues", "workflow_dispatch"}, "permissions": {"contents": "write", "pull-requests": "write", "issues": "write"}},
+        "submitted-source-verification.yml": {"triggers": {"issues", "workflow_dispatch"}, "permissions": {"contents": "read", "issues": "write"}},
         "release-downloads.yml": {"triggers": {"push"}, "permissions": {"contents": "write"}},
         "site-live-feed.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "pages": "write", "id-token": "write"}},
         "site-pages.yml": {"triggers": {"push", "workflow_dispatch"}, "permissions": {"contents": "read", "actions": "read", "pages": "write", "id-token": "write"}},
