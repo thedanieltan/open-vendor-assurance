@@ -76,6 +76,7 @@ SUBMISSION_SOURCE_TYPE_KEYWORDS: dict[str, tuple[str, ...]] = {
     "ai_terms": ("artificial intelligence", "machine learning", "ai terms", "model", "training data"),
     "government_request_policy": ("government request", "law enforcement", "legal process", "subpoena", "warrant"),
     "transparency_report": ("transparency report", "transparency", "requests received", "disclosure"),
+    "status_page": ("status", "uptime", "service status", "incident history", "operational"),
     "other_public_source": (),
 }
 

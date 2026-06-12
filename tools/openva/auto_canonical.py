@@ -19,6 +19,7 @@ RECOGNIZED_SOURCE_TYPES = {
     "ai_terms",
     "government_request_policy",
     "transparency_report",
+    "status_page",
     "other_public_source",
 }
 
@@ -36,6 +37,7 @@ SOURCE_TYPE_TERMS = {
     "ai_terms": ["ai", "artificial intelligence", "model"],
     "government_request_policy": ["government request", "law enforcement"],
     "transparency_report": ["transparency", "transparency report"],
+    "status_page": ["status", "uptime", "service status", "incident history"],
     "other_public_source": [],
 }
 

@@ -61,8 +61,8 @@ lanes:
     may_write_catalog_truth: false
     allowed_paths: []
     required_labels_for_write_authority: []
-    token_permissions: {contents: read}
-    audit_artifacts: [coverage audit report]
+    token_permissions: {contents: read, actions: read}
+    audit_artifacts: [coverage audit report, coverage growth report]
     deny_by_default: true
   - id: catalog_growth_discovery
     status: active

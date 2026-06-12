@@ -67,6 +67,8 @@ config/category-taxonomy.yaml
 config/region-taxonomy.yaml
 docs/region-taxonomy.md
 docs/coverage-map.md
+docs/coverage-growth.md
+config/coverage-targets.yaml
 docs/vendor-expansion-backlog.md
 docs/public-update-pathway.md
 docs/vendor-public-manifest.md
