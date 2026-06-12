@@ -78,6 +78,12 @@ The issue is an intake request, not canonical catalog data. You do not need to c
 
 Use the `Scope or boundary question` issue form first when you are unsure whether a source or request is in scope.
 
+## Submitting source claims
+
+To submit a candidate vendor, a candidate assurance source, a broken or moved URL, a vendor rename or domain change, a subprocessor update feed, or a machine-readable source surface, use the `submission` issue forms. These submissions are claims: they enter verification and do not change catalog data directly.
+
+See `docs/submission-intake.md` for which form to use and what happens after you submit.
+
 ## Language rules
 
 The native-language source remains authoritative.
