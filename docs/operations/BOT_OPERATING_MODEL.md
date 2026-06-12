@@ -4,6 +4,8 @@ This document defines the OpenVA Bot Operating Model as the automation governanc
 
 WP9 does not implement chat-ops execution, dashboard automation, Prow/Tide-style merge automation, or workflow retirement. It defines the command surface and machine-readable contracts that later implementation work must follow.
 
+Status: Bot Automation v1 (WP9 through WP27) is complete and this operating model is active. The first live chat-ops mutation surface is `/openva hold` and `/openva unhold`, constrained to the `openva-hold` label on the current issue or pull request (see `docs/operations/BOT_CHATOPS_EXECUTION.md`). All other commands remain report-only, local-audit-only, or denied. The closeout record is `docs/operations/BOT_AUTOMATION_V1_CLOSEOUT.md`.
+
 OpenVA bot power is proportional to source certainty. Discovery may propose; controlled promotion writes. Report-only lanes must not mutate catalog truth. Unknown or undeclared bot lanes are deny-by-default, and unknown or undeclared write paths are deny-by-default. Write-capable lanes require explicit authority contract entries.
 
 Workflow retirement must happen only after classification under this bot operating model.
@@ -45,11 +47,11 @@ OpenVA commands are planned maintainer-facing controls. WP9 defines vocabulary, 
 | `/openva retry-source-preflight` | Re-run source accessibility and source-role checks for a blocked candidate. | maintainer or source-maintainer | `catalog_growth_promotion`, `source_repair` | report or PR comment update only until implemented lane authority exists | link to source-health run, candidate id, and previous failure code | planned |
 | `/openva defer-candidate` | Move a candidate out of immediate promotion consideration. | maintainer or reviewer | `catalog_growth_discovery`, `catalog_growth_promotion` | dashboard/control issue state update | candidate id, reason, expiry or recheck date | planned |
 | `/openva promote-reviewed-plan` | Request controlled promotion for a reviewed plan already committed under `maintenance/reviewed/`. | maintainer | `catalog_growth_promotion` | controlled PR branch and PR creation | reviewed plan path, source-health evidence, promotion action count, preflight result | planned |
-| `/openva explain-strict-growth` | Explain why a PR or candidate is or is not eligible for strict-growth automation. | maintainer, reviewer, contributor | `pr_safety`, `catalog_growth_promotion` | report/comment only | PR or candidate id, labels, changed paths, failed gate if any | planned |
+| `/openva explain-strict-growth` | Explain why a PR or candidate is or is not eligible for strict-growth automation. | maintainer, reviewer, contributor | `pr_safety`, `catalog_growth_promotion` | report/comment only | PR or candidate id, labels, changed paths, failed gate if any | local-audit-only (WP21) |
 | `/openva quarantine-source` | Mark a source as unsafe for automated use until reviewed. | maintainer or source-maintainer | `source_maintenance_report`, `source_repair` | dashboard/control issue state update; no catalog truth mutation | source URL, vendor id when known, reason, owner, expiry | planned |
 | `/openva recheck-final-url` | Recheck redirect target and canonical final URL evidence. | maintainer or source-maintainer | `catalog_growth_promotion`, `source_repair` | report/comment update only until controlled repair/promotion is approved | original URL, final URL, source-health run, redirect evidence | planned |
-| `/openva hold` | Pause bot action for a PR, candidate, lane, or global queue. | maintainer | all declared lanes | PR label, dashboard/control issue state, or global pause switch | scope, reason, owner, recheck date | planned |
-| `/openva unhold` | Remove a prior hold after the blocking condition is resolved. | maintainer | all declared lanes | PR label or dashboard/control issue state | scope, resolving evidence, owner approval | planned |
+| `/openva hold` | Pause bot action for a PR, candidate, lane, or global queue. | maintainer | all declared lanes | PR label, dashboard/control issue state, or global pause switch | scope, reason, owner, recheck date | live (WP27, `openva-hold` label on current issue/PR only) |
+| `/openva unhold` | Remove a prior hold after the blocking condition is resolved. | maintainer | all declared lanes | PR label or dashboard/control issue state | scope, resolving evidence, owner approval | live (WP27, `openva-hold` label on current issue/PR only) |
 
 Commands that would create PRs, write branches, mutate catalog truth, or affect auto-merge require an explicit lane entry in `bot-authority.yaml`. Report-only commands must not mutate catalog truth.
 

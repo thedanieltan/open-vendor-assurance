@@ -122,6 +122,16 @@ Common failure outcomes include:
 - target or label argument supplied -> denied
 - GitHub label API failure -> workflow failure requiring maintainer review
 
+## Post-Merge Smoke Evidence
+
+WP28 records that live hold/unhold passed post-merge smoke after PR #345 merged to `main`:
+
+- On issue #346, `/openva hold` added the `openva-hold` label and posted an audit comment.
+- On the same issue, `/openva unhold` removed the `openva-hold` label and posted an audit comment.
+- Issue #346 was closed as completed with no labels remaining.
+
+Live hold/unhold is active, not experimental. The closeout record for Bot Automation v1 is `docs/operations/BOT_AUTOMATION_V1_CLOSEOUT.md`.
+
 ## Rollback And Disable Plan
 
 Rollback options, from least to most disruptive:
