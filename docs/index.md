@@ -18,6 +18,7 @@ SECURITY.md
 
 ```text
 docs/architecture/OPENVA_SYSTEM_DESIGN.md
+docs/architecture/SOURCE_REGISTRY_SCHEMA_V1.md
 docs/ci-and-branch-protection.md
 .github/validation-ownership.yaml
 docs/operations/contracts/workflow-inventory.yaml
