@@ -29,6 +29,8 @@ docs/maintenance/contracts/catalog-growth-scale-readiness.yaml
 ## Public launch and governance
 
 ```text
+docs/reviews/openva-system-review-2026-06.md
+docs/reviews/openva-roadmap-decision-2026-06.md
 docs/v0.1.0-public-launch-readiness.md
 docs/public-launch-checklist.md
 docs/public-launch-cutover.md
