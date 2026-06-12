@@ -244,8 +244,11 @@ def select_target_url(form_kind: str, fields: dict[str, str]) -> str | None:
 
 
 def declared_gated(fields: dict[str, str]) -> bool:
+    # Match only the "No - gated or restricted" option. A bare "no" prefix
+    # would also match the broken-source option "Not applicable - reporting
+    # breakage only", which must proceed to fetch.
     value = (fields.get("public_access_confirmed") or "").strip().lower()
-    return value.startswith("no")
+    return value.startswith("no -")
 
 
 def find_duplicate(url: str, final_url: str | None, root: Path) -> dict[str, Any] | None:
@@ -382,6 +385,19 @@ def verify_submission(
 
     result = fetcher(target_url)
     check("fetch", "completed" if result.http_status is not None else "failed", result.error or "")
+
+    if result.final_url and result.final_url != target_url:
+        redirect_failures = validate_url_safety(result.final_url)
+        if redirect_failures:
+            check("redirect_target_safety", "failed", "; ".join(redirect_failures))
+            return report(
+                "unsafe_url",
+                "redirect_target_failed_url_safety",
+                submitted_url=target_url,
+                final_url=result.final_url,
+                http_status=result.http_status,
+            )
+        check("redirect_target_safety", "passed")
 
     text = normalize_text(result.body_sample, result.content_type)
     semantic = submission_semantic_match(source_type, text, result.content_type)
