@@ -72,14 +72,20 @@ def test_docs_index_links_launch_and_consumer_docs():
         assert item in text
 
 
-def test_source_observation_retention_policy_documents_artifact_only_strategy():
+def test_source_observation_retention_policy_documents_retention_strategy():
+    # WP32 amended the earlier full-deferral posture: full per-run
+    # observations stay artifact-only; only a compact change-event ledger is
+    # committed, via reviewed PRs.
     text = read("docs/source-trust/observation-retention-policy.md")
 
     for phrase in [
-        "Historical observations remain artifact-only.",
-        "No append-only historical observation ledger is committed to the repository yet.",
-        "repo bloat",
-        "no compaction policy yet",
+        "Full per-run observation records remain artifact-only.",
+        "compact, append-only",
+        "Only **events** are committed",
+        "bounded by the\n  actual change rate",
+        "maintenance/source-observations/events/YYYY-MM.ndjson",
+        "only through reviewed pull requests",
+        "Workflows never commit\n  ledger files",
         "latest-source-health.json",
         "public/source-health-snapshot.json",
         "The site falls back to `Not yet verified` labels",
