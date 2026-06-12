@@ -167,14 +167,18 @@ def test_queue_policy_has_global_limits_and_stale_evidence_controls():
     assert global_policy["stale_evidence_max_age_hours"]["deterministic_outputs"] > 0
 
 
-def test_queue_lane_ids_exist_in_authority_contract_and_have_positive_open_pr_limits():
-    authority_lane_ids = {lane["id"] for lane in authority_lanes()}
+def test_queue_lane_ids_exist_in_authority_contract_and_have_pr_limits_matching_lane_type():
+    authority_by_id = {lane["id"]: lane for lane in authority_lanes()}
     queue_lanes = load_yaml(BOT_QUEUE_POLICY)["lanes"]
 
     for lane in queue_lanes:
-        assert lane["lane_id"] in authority_lane_ids
+        authority = authority_by_id[lane["lane_id"]]
         assert isinstance(lane["max_open_prs"], int)
-        assert lane["max_open_prs"] > 0
+        if lane["schedule_window"] == "issue_comment_only":
+            assert authority["may_open_prs"] is False
+            assert lane["max_open_prs"] == 0
+        else:
+            assert lane["max_open_prs"] > 0
 
 
 def test_write_capable_lanes_are_explicitly_declared_and_deny_by_default():
@@ -198,8 +202,14 @@ def test_bot_operating_model_mentions_all_failure_codes_and_commands():
 
 def test_bot_authority_workflows_exist_in_workflow_inventory():
     inventory = load_yaml(WORKFLOW_INVENTORY)
-    inventory_names = {entry["name"] for entry in inventory["public_workflows"]}
+    inventory_by_name = {entry["name"]: entry for entry in inventory["public_workflows"]}
 
     for lane in authority_lanes():
         for workflow_name in lane["workflows"]:
-            assert workflow_name in inventory_names, (lane["id"], workflow_name)
+            assert workflow_name in inventory_by_name, (lane["id"], workflow_name)
+
+    chatops_inventory = inventory_by_name["bot-chatops.yml"]
+    assert chatops_inventory["status"] == "active"
+    assert chatops_inventory["category"] == "bot_chatops"
+    assert chatops_inventory["authority_lane"] == "bot_chatops_hold"
+    assert chatops_inventory["trigger"] == "issue_comment"

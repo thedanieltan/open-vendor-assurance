@@ -179,6 +179,19 @@ def test_clean_state_allows():
     assert report["reasons"] == ["queue_policy_satisfied"]
 
 
+def test_issue_comment_only_lane_allows_with_zero_open_pr_limit():
+    state = clean_state("bot_chatops_hold")
+    state["requested_action"]["duplicate_key"] = "bot-chatops-hold-123"
+    state["requested_action"]["vendor_domain"] = ""
+    state["requested_action"]["source_host"] = ""
+
+    report = evaluate("bot_chatops_hold", state, now=NOW)
+
+    assert report["decision"] == "allow"
+    assert report["reasons"] == ["queue_policy_satisfied"]
+    assert report["open_pr_evaluation"]["max_open_prs"] == 0
+
+
 def test_decision_report_is_deterministic_and_includes_next_safe_action():
     first = evaluate("catalog_growth_promotion", clean_state(), now=NOW)
     second = evaluate("catalog_growth_promotion", clean_state(), now=NOW)
