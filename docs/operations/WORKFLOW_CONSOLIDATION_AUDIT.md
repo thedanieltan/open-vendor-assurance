@@ -34,6 +34,7 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `release-downloads.yml` | `keep_core` | Release download publishing for tags. | Keep. |
 | `site-live-feed.yml` | `keep_core` | Controlled live feed publication path. | Keep. |
 | `bot-dashboard-issue.yml` | `keep_core` | Report-only bot dashboard issue visibility path. | Keep dry-run/report-only by default; real issue update requires explicit maintainer input. |
+| `bot-chatops.yml` | `keep_core` | Limited live chat-ops workflow for adding/removing only `openva-hold` on the current issue or pull request. | Keep narrowly scoped to issue comments and the `bot_chatops_hold` lane. |
 | `catalog-agent-pr.yml` | `keep_support` | Manual support path for agent-authored catalog PRs. | Keep as PR-only support path. |
 | `catalog-maintenance-pr.yml` | `keep_support` | Scheduled/manual support path for maintenance PRs. | Keep until overlap with promotion and repair paths is further reduced. |
 | `contribution-intake-agent.yml` | `keep_support` | Issue-to-PR intake support path. | Keep. |

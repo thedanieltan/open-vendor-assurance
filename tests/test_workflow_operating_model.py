@@ -11,6 +11,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "candidate-promotion-pr.yml",
     "agent-automerge.yml",
     "agent-weighted-review.yml",
+    "bot-chatops.yml",
     "bot-dashboard-issue.yml",
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
@@ -88,6 +89,7 @@ def test_workflow_consolidation_audit_classifies_current_legacy_posture():
     assert "`catalog-maintenance.yml` | `retire_candidate`" in text
     assert "`source-refinement-queue.yml` | `retire_candidate`" in text
     assert "`observe-report.yml` | `quarantined`" in text
+    assert "`bot-chatops.yml` | `keep_core`" in text
     assert "Current result: no workflow is classified as `remove_now_if_safe` in this package." in text
 
 

@@ -130,6 +130,17 @@ public_workflows:
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
+  - name: bot-chatops.yml
+    loop: bot_operations
+    status: active
+    category: bot_chatops
+    authority_lane: bot_chatops_hold
+    trigger: issue_comment
+    triggers: [issue_comment]
+    permissions: {contents: read, issues: write, pull-requests: read}
+    writes_repository_state: true
+    creates_prs: false
+    merges_prs: false
   - name: catalog-agent-pr.yml
     loop: support
     status: support

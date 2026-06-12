@@ -1,0 +1,90 @@
+name: bot-chatops
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: bot-chatops-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  hold-label:
+    if: startsWith(github.event.comment.body, '/openva')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute limited hold chat-ops
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const HOLD_LABEL = 'openva-hold';
+            const body = (context.payload.comment.body || '').trim();
+            const actor = context.payload.comment.user.login;
+            const association = context.payload.comment.author_association;
+            const issue = context.payload.issue;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = issue.number;
+            const allowedAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+
+            function audit(status, summary, details) {
+              const lines = [
+                '### OpenVA chat-ops audit',
+                '',
+                `- Status: \`${status}\``,
+                `- Command: \`${body.replace(/`/g, '')}\``,
+                `- Actor: \`${actor}\``,
+                `- Actor association: \`${association}\``,
+                `- Target: \`#${issue_number}\``,
+                `- Summary: ${summary}`,
+              ];
+              for (const detail of details || []) {
+                lines.push(`- ${detail}`);
+              }
+              return github.rest.issues.createComment({ owner, repo, issue_number, body: lines.join('\n') });
+            }
+
+            const lines = body.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+            const openvaLines = lines.filter((line) => line.startsWith('/openva'));
+            if (openvaLines.length !== 1) {
+              await audit('denied', 'Multiple OpenVA commands are not allowed in one comment.', ['Reason: `multiple_openva_commands`']);
+              return;
+            }
+
+            if (!allowedAssociations.has(association)) {
+              await audit('denied', 'Only repository maintainers may execute live hold chat-ops.', ['Reason: `actor_not_authorized`']);
+              return;
+            }
+
+            const command = openvaLines[0];
+            if (command !== '/openva hold' && command !== '/openva unhold') {
+              await audit('denied', 'Only `/openva hold` and `/openva unhold` are live-enabled.', ['Reason: `unsupported_live_command`']);
+              return;
+            }
+
+            if (body !== command) {
+              await audit('denied', 'Live hold chat-ops must contain exactly one command and no target or label arguments.', ['Reason: `workflow_input_compatibility_failure`']);
+              return;
+            }
+
+            if (command === '/openva hold') {
+              await github.rest.issues.addLabels({ owner, repo, issue_number, labels: [HOLD_LABEL] });
+              await audit('executed', '`openva-hold` label added.', ['Mutation: `add openva-hold`', 'Scope: current issue or pull request only']);
+              return;
+            }
+
+            await github.rest.issues.removeLabel({ owner, repo, issue_number, name: HOLD_LABEL }).catch(async (error) => {
+              if (error.status === 404) {
+                await audit('executed', '`openva-hold` label was already absent.', ['Mutation: `remove openva-hold`', 'Result: `already_absent`']);
+                return null;
+              }
+              throw error;
+            });
+            if (command === '/openva unhold') {
+              await audit('executed', '`openva-hold` label removed.', ['Mutation: `remove openva-hold`', 'Scope: current issue or pull request only']);
+            }

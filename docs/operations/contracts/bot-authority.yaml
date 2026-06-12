@@ -9,11 +9,7 @@ default_posture:
 lanes:
   - id: pr_safety
     status: active
-    workflows:
-      - validate.yml
-      - catalog-pr-guard.yml
-      - agent-weighted-review.yml
-      - agent-automerge.yml
+    workflows: [validate.yml, catalog-pr-guard.yml, agent-weighted-review.yml, agent-automerge.yml]
     may_write_branches: false
     may_open_prs: false
     may_label_prs: true
@@ -22,22 +18,13 @@ lanes:
     may_write_catalog_truth: false
     allowed_paths: []
     write_authority_explanation: Merges only already-reviewable PR state after strict-growth labels, path checks, and required checks pass.
-    required_labels_for_write_authority:
-      - agent-automerge
-    token_permissions:
-      contents: write
-      pull-requests: write
-      checks: read
-      statuses: read
-    audit_artifacts:
-      - automerge preflight output
+    required_labels_for_write_authority: [agent-automerge]
+    token_permissions: {contents: write, pull-requests: write, checks: read, statuses: read}
+    audit_artifacts: [automerge preflight output]
     deny_by_default: true
-
   - id: source_maintenance_report
     status: active
-    workflows:
-      - source-maintenance-report.yml
-      - source-refinement-scan.yml
+    workflows: [source-maintenance-report.yml, source-refinement-scan.yml]
     may_write_branches: false
     may_open_prs: false
     may_label_prs: false
@@ -46,45 +33,26 @@ lanes:
     may_write_catalog_truth: false
     allowed_paths: []
     required_labels_for_write_authority: []
-    token_permissions:
-      actions: read
-      contents: read
-    audit_artifacts:
-      - openva-source-maintenance-report
-      - openva-source-reviewer-inbox
-      - confirmed P0 scan artifacts
+    token_permissions: {actions: read, contents: read}
+    audit_artifacts: [openva-source-maintenance-report, openva-source-reviewer-inbox, confirmed P0 scan artifacts]
     deny_by_default: true
-
   - id: source_repair
     status: active
-    workflows:
-      - source-repair-pr.yml
-      - source-repair-pr-cleanup.yml
+    workflows: [source-repair-pr.yml, source-repair-pr-cleanup.yml]
     may_write_branches: true
     may_open_prs: true
     may_label_prs: false
     may_enable_auto_merge: false
     may_merge_prs: false
     may_write_catalog_truth: true
-    allowed_paths:
-      - data/vendors/**
-      - maintenance/reviewed/**
-    required_labels_for_write_authority:
-      - reviewed-source-repair
-    token_permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-    audit_artifacts:
-      - reviewed repair evidence
-      - repair action report
-      - stale PR cleanup report
+    allowed_paths: [data/vendors/**, maintenance/reviewed/**]
+    required_labels_for_write_authority: [reviewed-source-repair]
+    token_permissions: {contents: write, pull-requests: write, issues: write}
+    audit_artifacts: [reviewed repair evidence, repair action report, stale PR cleanup report]
     deny_by_default: true
-
   - id: catalog_quality
     status: active
-    workflows:
-      - coverage-audit.yml
+    workflows: [coverage-audit.yml]
     may_write_branches: false
     may_open_prs: false
     may_label_prs: false
@@ -93,16 +61,12 @@ lanes:
     may_write_catalog_truth: false
     allowed_paths: []
     required_labels_for_write_authority: []
-    token_permissions:
-      contents: read
-    audit_artifacts:
-      - coverage audit report
+    token_permissions: {contents: read}
+    audit_artifacts: [coverage audit report]
     deny_by_default: true
-
   - id: catalog_growth_discovery
     status: active
-    workflows:
-      - catalog-growth-discovery.yml
+    workflows: [catalog-growth-discovery.yml]
     may_write_branches: false
     may_open_prs: false
     may_label_prs: false
@@ -112,45 +76,26 @@ lanes:
     allowed_paths: []
     write_authority_explanation: May create or update issues for reporting only; discovery may propose but controlled promotion writes.
     required_labels_for_write_authority: []
-    token_permissions:
-      contents: read
-      issues: write
-    audit_artifacts:
-      - candidate discovery reports
-      - proposal plans
+    token_permissions: {contents: read, issues: write}
+    audit_artifacts: [candidate discovery reports, proposal plans]
     deny_by_default: true
-
   - id: catalog_growth_promotion
     status: active
-    workflows:
-      - candidate-promotion-pr.yml
+    workflows: [candidate-promotion-pr.yml]
     may_write_branches: true
     may_open_prs: true
     may_label_prs: false
     may_enable_auto_merge: false
     may_merge_prs: false
     may_write_catalog_truth: true
-    allowed_paths:
-      - data/vendors/**
-      - maintenance/reviewed/**
-    required_labels_for_write_authority:
-      - reviewed-evidence
-    token_permissions:
-      contents: write
-      pull-requests: write
-    audit_artifacts:
-      - reviewed promotion plan
-      - promotion application report
-      - PR body
+    allowed_paths: [data/vendors/**, maintenance/reviewed/**]
+    required_labels_for_write_authority: [reviewed-evidence]
+    token_permissions: {contents: write, pull-requests: write}
+    audit_artifacts: [reviewed promotion plan, promotion application report, PR body]
     deny_by_default: true
-
   - id: publication
     status: active
-    workflows:
-      - release-candidate.yml
-      - site-pages.yml
-      - release-downloads.yml
-      - site-live-feed.yml
+    workflows: [release-candidate.yml, site-pages.yml, release-downloads.yml, site-live-feed.yml]
     may_write_branches: false
     may_open_prs: false
     may_label_prs: false
@@ -160,22 +105,12 @@ lanes:
     allowed_paths: []
     write_authority_explanation: Writes only Pages deployments or GitHub release assets; it must not generate catalog truth.
     required_labels_for_write_authority: []
-    token_permissions:
-      actions: read
-      contents: write
-      pages: write
-      id-token: write
-    audit_artifacts:
-      - release artifacts
-      - source-health readiness report
-      - Pages deployment artifact
-      - release download assets
+    token_permissions: {actions: read, contents: write, pages: write, id-token: write}
+    audit_artifacts: [release artifacts, source-health readiness report, Pages deployment artifact, release download assets]
     deny_by_default: true
-
   - id: bot_dashboard_issue_sync
     status: active
-    workflows:
-      - bot-dashboard-issue.yml
+    workflows: [bot-dashboard-issue.yml]
     may_write_branches: false
     may_open_prs: false
     may_label_prs: false
@@ -185,20 +120,29 @@ lanes:
     allowed_paths: []
     write_authority_explanation: May create or update only the persistent OpenVA Bot Dashboard issue when a maintainer explicitly disables dry-run/report-only mode.
     required_labels_for_write_authority: []
-    token_permissions:
-      contents: read
-      issues: write
-    audit_artifacts:
-      - maintenance/bot-dashboard.md
-      - maintenance/bot-dashboard-issue-sync-report.json
+    token_permissions: {contents: read, issues: write}
+    audit_artifacts: [maintenance/bot-dashboard.md, maintenance/bot-dashboard-issue-sync-report.json]
     deny_by_default: true
-
+  - id: bot_chatops_hold
+    status: active
+    workflows: [bot-chatops.yml]
+    may_write_branches: false
+    may_open_prs: false
+    may_label_prs: true
+    may_enable_auto_merge: false
+    may_merge_prs: false
+    may_write_catalog_truth: false
+    allowed_paths: []
+    write_authority_explanation: May add or remove only the openva-hold label on the current issue or pull request after maintainer authorization and command validation.
+    required_labels_for_write_authority: []
+    allowed_labels: [openva-hold]
+    allowed_label_actions: [add, remove]
+    token_permissions: {contents: read, issues: write, pull-requests: read}
+    audit_artifacts: [chatops decision comment]
+    deny_by_default: true
   - id: support_agent_pr
     status: active
-    workflows:
-      - catalog-agent-pr.yml
-      - catalog-maintenance-pr.yml
-      - contribution-intake-agent.yml
+    workflows: [catalog-agent-pr.yml, catalog-maintenance-pr.yml, contribution-intake-agent.yml]
     may_write_branches: true
     may_open_prs: true
     may_label_prs: false
@@ -206,30 +150,14 @@ lanes:
     may_merge_prs: false
     may_write_catalog_truth: true
     strict_growth_authority: false
-    allowed_paths:
-      - data/vendors/**
-      - docs/**
-      - maintenance/**
-      - tools/**
-      - tests/**
-    required_labels_for_write_authority:
-      - maintainer-approved
-    token_permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-    audit_artifacts:
-      - support PR branch
-      - support PR body
-      - intake issue link
+    allowed_paths: [data/vendors/**, docs/**, maintenance/**, tools/**, tests/**]
+    required_labels_for_write_authority: [maintainer-approved]
+    token_permissions: {contents: write, pull-requests: write, issues: write}
+    audit_artifacts: [support PR branch, support PR body, intake issue link]
     deny_by_default: true
-
   - id: legacy_report
     status: shadow_report_only
-    workflows:
-      - catalog-maintenance.yml
-      - source-refinement-queue.yml
-      - observe-report.yml
+    workflows: [catalog-maintenance.yml, source-refinement-queue.yml, observe-report.yml]
     may_write_branches: false
     may_open_prs: false
     may_label_prs: false
@@ -238,11 +166,6 @@ lanes:
     may_write_catalog_truth: false
     allowed_paths: []
     required_labels_for_write_authority: []
-    token_permissions:
-      actions: read
-      contents: read
-    audit_artifacts:
-      - catalog maintenance report
-      - source refinement queue
-      - observation report
+    token_permissions: {actions: read, contents: read}
+    audit_artifacts: [catalog maintenance report, source refinement queue, observation report]
     deny_by_default: true

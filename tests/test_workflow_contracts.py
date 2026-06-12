@@ -62,10 +62,22 @@ def test_validation_ownership_contract_matches_validate_workflow_jobs_and_comman
 
 def test_workflow_inventory_contract_matches_public_workflow_surface():
     contract = load_yaml(WORKFLOW_INVENTORY)
-    contract_names = {entry["name"] for entry in contract["public_workflows"]}
+    entries_by_name = {entry["name"]: entry for entry in contract["public_workflows"]}
+    contract_names = set(entries_by_name)
     actual_names = {path.name for path in WORKFLOW_DIR.glob("*.yml")}
 
     assert actual_names == contract_names
+
+    chatops = entries_by_name["bot-chatops.yml"]
+    assert chatops["status"] == "active"
+    assert chatops["category"] == "bot_chatops"
+    assert chatops["authority_lane"] == "bot_chatops_hold"
+    assert chatops["trigger"] == "issue_comment"
+    assert chatops["permissions"] == {
+        "contents": "read",
+        "issues": "write",
+        "pull-requests": "read",
+    }
 
     for entry in contract["public_workflows"]:
         workflow = load_yaml(WORKFLOW_DIR / entry["name"])

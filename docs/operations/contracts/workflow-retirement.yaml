@@ -209,6 +209,18 @@ workflows:
     required_retirement_evidence: [replacement durable bot dashboard visibility path, validation suite pass, maintainer approval that dashboard issue sync is no longer needed]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: true
+  - name: bot-chatops.yml
+    current_status: active
+    inventory_status: active
+    operating_loop: bot_chatops_hold
+    replacement_owner: bot-chatops.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns live hold/unhold chat-ops label control]
+    required_retirement_evidence: [replacement live hold control path, validation suite pass, maintainer approval that live hold chat-ops is no longer needed]
+    allowed_triggers_until_retired: [issue_comment]
+    write_permissions_allowed_until_retired: true
   - name: catalog-agent-pr.yml
     current_status: deprecated_callable
     inventory_status: support

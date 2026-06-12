@@ -1,16 +1,16 @@
 # OpenVA Bot Chat-Ops Execution
 
-WP21 enables a narrow execution layer for low-risk OpenVA chat-ops commands. It builds on the WP13 parser, WP11 queue policy, WP12 failure routing, and WP9 bot authority contracts.
+WP27 enables the first live chat-ops mutation surface for OpenVA: `/openva hold` and `/openva unhold` may add or remove only the `openva-hold` label on the current issue or pull request.
 
-This is not full chat-ops. It does not listen to comments by itself, dispatch workflows, open PRs, close PRs, merge PRs, mutate catalog data, change automerge policy, or retire workflows.
+This is not full chat-ops. It does not dispatch workflows, open PRs, close PRs, merge PRs, mutate catalog data, change automerge policy, retire workflows, or allow arbitrary labels or targets.
 
 ## Enabled Commands
 
 | Command | Execution | Side effect |
 |---|---|---|
-| `/openva explain-strict-growth` | Enabled | Generates deterministic strict-growth explanation markdown and an execution audit report. |
-| `/openva hold` | Enabled | Generates a hold-state audit report for the `openva-hold` label; label mutation is not enabled in WP21. |
-| `/openva unhold` | Enabled | Generates an unhold-state audit report for the `openva-hold` label; label mutation is not enabled in WP21. |
+| `/openva explain-strict-growth` | Local/audit enabled | Generates deterministic strict-growth explanation markdown and an execution audit report. |
+| `/openva hold` | Live label mutation | Adds only the `openva-hold` label to the current issue or pull request. |
+| `/openva unhold` | Live label mutation | Removes only the `openva-hold` label from the current issue or pull request. |
 
 ## Disabled Commands
 
@@ -26,23 +26,56 @@ These commands require stronger runtime authority, fresher queue state, and more
 
 ## Actor Authorization
 
-Execution requires the actor role `maintainer`. Non-maintainer commands are denied even when the command is otherwise supported.
+Live hold/unhold execution is allowed only when GitHub reports the comment actor as one of:
 
-The local executor does not discover actor roles. A future comment-listener workflow must supply the role from a safe authorization source.
+- `OWNER`
+- `MEMBER`
+- `COLLABORATOR`
+
+The local executor still uses the simplified `maintainer` actor role for deterministic tests and local audit reports. The live workflow uses GitHub `author_association` from the `issue_comment` event.
+
+## Live Workflow Boundary
+
+The live workflow is `.github/workflows/bot-chatops.yml`.
+
+It is triggered only by:
+
+```yaml
+on:
+  issue_comment:
+    types: [created]
+```
+
+It requests only:
+
+```yaml
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+```
+
+It may mutate only one label:
+
+```text
+openva-hold
+```
+
+It must not write branches, open PRs, merge PRs, dispatch workflows, mutate catalog data, or change automerge state.
 
 ## Audit Trail
 
-Every execution report includes:
+Every accepted or denied live command posts an audit comment with:
 
-- raw command input
-- parsed command decision
-- authorization decision
-- queue decision, when required
-- failure routing report, when denied or blocked
-- execution report
-- next safe action
+- status
+- raw command
+- actor
+- actor association
+- target issue or pull request number
+- summary
+- reason or mutation performed
 
-The CLI can write JSON and markdown reports:
+The local CLI can still write JSON and markdown reports:
 
 ```bash
 python -m tools.openva.bot_chatops_execute execute \
@@ -54,22 +87,29 @@ python -m tools.openva.bot_chatops_execute execute \
 
 ## Hold And Unhold Semantics
 
-`/openva hold` and `/openva unhold` are intentionally conservative in WP21. They name only one allowed label: `openva-hold`.
+`/openva hold` and `/openva unhold` name only one allowed label: `openva-hold`.
 
-The executor reports what would happen to that label on the current comment thread, but it does not apply or remove labels. A future workflow may enable live label mutation only if the contract continues to restrict the operation to:
+The following remain denied:
 
-- `openva-hold`
-- the issue or PR where the command appears
-- authorized maintainers
-- no arbitrary issue numbers
-- no catalog data
-- no workflow files
+- `/openva hold #123`
+- `/openva unhold #123`
+- `/openva hold all`
+- `/openva hold urgent`
+- multiple `/openva` commands in one comment
+- non-maintainer actors
+
+The command body cannot select a label or another target.
 
 ## Queue And Failure Router Integration
 
-`/openva hold` and `/openva unhold` require queue state because they are support-lane controls. If queue state is missing or the queue decision is not `allow`, execution is denied and the failure router classifies the blocked command.
+Hold/unhold now use the dedicated `bot_chatops_hold` authority and queue lane. This lane is not PR-based:
 
-`/openva explain-strict-growth` does not require a queue check because it is informational only.
+- `max_open_prs: 0`
+- `schedule_window: issue_comment_only`
+- `allowed_label: openva-hold`
+- `allowed_actions: [add, remove]`
+
+The local executor remains audit-only and does not call GitHub APIs. Live mutation is confined to the GitHub workflow.
 
 ## Failure Modes
 
@@ -79,18 +119,14 @@ Common failure outcomes include:
 - unknown command -> denied
 - multiple commands in one comment -> denied
 - high-risk command -> report-only, not executed
-- missing queue state for hold/unhold -> denied
-- stale or paused queue state -> denied and routed through the failure router
+- target or label argument supplied -> denied
+- GitHub label API failure -> workflow failure requiring maintainer review
 
 ## Rollback And Disable Plan
 
-The safest rollback is to set the three executable commands in `docs/operations/contracts/bot-chatops.yaml` back to:
+Rollback options, from least to most disruptive:
 
-```yaml
-status: planned_report_only
-executable: false
-report_only: true
-side_effect_class: report_only
-```
-
-If a future workflow is added, disabling that workflow or removing its `issue_comment` trigger must stop live chat-ops ingestion without changing the local parser.
+1. Remove or disable `.github/workflows/bot-chatops.yml`.
+2. Remove the `issue_comment` trigger.
+3. Set `/openva hold` and `/openva unhold` back to `mode: local_audit_only` and `may_mutate_labels: false`.
+4. Remove the `bot_chatops_hold` authority and queue lane after no workflow references it.

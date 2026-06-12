@@ -320,7 +320,8 @@ def evaluate(
     base_change = evaluate_base_change(state, queue_lane)
 
     if queue_lane is not None:
-        if len(open_prs) >= int(queue_lane["max_open_prs"]):
+        max_open_prs = int(queue_lane["max_open_prs"])
+        if max_open_prs > 0 and len(open_prs) >= max_open_prs:
             decision = choose_decision(decision, "defer")
             reasons.append("max_open_prs_exceeded")
             violated.append("queue.lanes.max_open_prs")

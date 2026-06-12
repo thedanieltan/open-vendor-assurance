@@ -56,6 +56,7 @@ def test_dashboard_lane_and_failure_summaries_match_wp9_contracts():
     authority_lane_ids = {lane["id"] for lane in load_yaml(BOT_AUTHORITY)["lanes"]}
     failure_codes = {entry["code"] for entry in load_yaml(BOT_FAILURE_TAXONOMY)["failure_classes"]}
 
+    assert "bot_chatops_hold" in dashboard["summarized_authority_lanes"]
     assert set(dashboard["summarized_authority_lanes"]) == authority_lane_ids
     assert set(dashboard["summarized_failure_classes"]) == failure_codes
 
