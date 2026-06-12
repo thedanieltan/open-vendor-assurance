@@ -157,6 +157,14 @@ submission:vendor-identity
 submission:machine-readable
 submission:needs-triage
 
+candidate:verified
+candidate:needs-review
+candidate:duplicate
+candidate:gated
+candidate:ambiguous
+candidate:rejected
+candidate:fetch-failed
+
 priority:p0
 priority:p1
 priority:p2

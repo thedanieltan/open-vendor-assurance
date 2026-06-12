@@ -32,7 +32,7 @@ The `Vendor catalog update` form is the existing correction lane handled by the 
 
 1. The form applies `status:needs-triage` plus a `submission:` routing label.
 2. A maintainer triages the claim. Submissions that are misfiled or cannot be classified into a type are labeled `submission:needs-triage`.
-3. The claim awaits verification. Verification checks the submitted URL, access posture, and classification before any catalog change is proposed.
+3. The submission verification bot checks the submitted URL, access posture, and classification, comments a verification summary on the issue, and applies one `candidate:` triage label (for example `candidate:verified`, `candidate:gated`, `candidate:duplicate`). See `docs/submission-verification.md`. Verification does not change catalog data.
 4. Catalog data changes only through a reviewed pull request. No submission mutates catalog truth directly.
 
 Submitted issues are non-authoritative until verified.

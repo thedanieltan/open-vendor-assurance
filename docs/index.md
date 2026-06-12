@@ -56,6 +56,7 @@ docs/maintenance/operator-runbook.md
 
 ```text
 docs/submission-intake.md
+docs/submission-verification.md
 docs/catalog-agent-protocol.md
 docs/catalog-batch-generator.md
 docs/catalog-reset-2026-05-15.md
