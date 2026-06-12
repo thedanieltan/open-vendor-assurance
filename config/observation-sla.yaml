@@ -1,0 +1,11 @@
+schema_version: "0.1.0"
+# Freshness SLA for the observation ledger. Freshness is computed per source
+# at report time; it is not a property of an observation. A source with no
+# observation history reads as unknown.
+default:
+  stale_after_days: 30
+  expired_after_days: 90
+source_type_overrides:
+  subprocessors_list:
+    stale_after_days: 14
+    expired_after_days: 45

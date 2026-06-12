@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/observation-ledger-record.schema.json",
+  "title": "OpenVA Observation Ledger Record",
+  "description": "One committed event row in the append-only observation change ledger. The ledger stores events, not vendor content: event_type records why the row exists, change_class records the content/access change signal. OpenVA does not version vendor truth.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "ledger_record_id",
+    "vendor_id",
+    "source_id",
+    "source_url",
+    "observed_at",
+    "run_id",
+    "event_type",
+    "change_class",
+    "observation_id",
+    "source_health_status",
+    "review_signal",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "ledger_record_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "source_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "source_url": { "type": "string", "format": "uri" },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "run_id": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "event_type": {
+      "enum": [
+        "first_observed",
+        "access_changed",
+        "redirect_changed",
+        "material_confirmed",
+        "material_possible",
+        "non_material_change",
+        "health_changed"
+      ]
+    },
+    "change_class": {
+      "enum": [
+        "none",
+        "non_material",
+        "material_possible",
+        "material_confirmed",
+        "access_changed",
+        "redirect_changed"
+      ]
+    },
+    "previous_observation_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "observation_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "final_url": { "type": ["string", "null"], "format": "uri" },
+    "http_status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+    "source_health_status": {
+      "enum": ["reachable", "unreachable", "gated", "bot_protected", "redirected", "quarantined"]
+    },
+    "raw_sample_sha256": { "type": ["string", "null"], "pattern": "^(sha256:[a-fA-F0-9]{64}|sha256:TBD)$" },
+    "normalized_text_sample_sha256": { "type": ["string", "null"], "pattern": "^(sha256:[a-fA-F0-9]{64}|sha256:TBD)$" },
+    "review_signal": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "reason": { "type": ["string", "null"], "maxLength": 300 }
+      },
+      "additionalProperties": false
+    },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false
+}

@@ -75,10 +75,12 @@ docs/vendor-public-manifest.md
 ## Observation workflow
 
 ```text
+docs/observation-ledger.md
 docs/observation-pilot.md
 docs/observation-result-taxonomy.md
 docs/source-trust/observation-retention-policy.md
 config/observation-pilot.yaml
+config/observation-sla.yaml
 ```
 
 ## Consumer and importer workflow

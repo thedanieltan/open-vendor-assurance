@@ -46,6 +46,44 @@ def test_dpa_with_matching_terms_is_ok():
     assert result["semantic_match"]["status"] == "strong"
 
 
+def test_verification_rows_carry_sample_scoped_hashes():
+    source = source_record("dpa", "https://example.com/legal/dpa")
+    body = "Data Processing Addendum processor controller"
+
+    result = verify_source(
+        source,
+        Path("data/vendors/example/sources/example-dpa.yaml"),
+        fetcher=lambda url: html_fetch(url, body),
+    )
+    repeat = verify_source(
+        source,
+        Path("data/vendors/example/sources/example-dpa.yaml"),
+        fetcher=lambda url: html_fetch(url, body),
+    )
+
+    # Hashes are of the 128KB fetch sample, not the full document; field
+    # names carry the sample scope.
+    assert result["raw_sample_sha256"].startswith("sha256:")
+    assert result["raw_sample_sha256"] != "sha256:TBD"
+    assert result["normalized_text_sample_sha256"].startswith("sha256:")
+    assert result["normalized_text_sample_sha256"] != "sha256:TBD"
+    assert result["raw_sample_sha256"] == repeat["raw_sample_sha256"]
+    assert result["normalized_text_sample_sha256"] == repeat["normalized_text_sample_sha256"]
+
+
+def test_empty_body_yields_tbd_sample_hashes():
+    source = source_record("dpa", "https://example.com/legal/dpa")
+
+    result = verify_source(
+        source,
+        Path("data/vendors/example/sources/example-dpa.yaml"),
+        fetcher=lambda url: html_fetch(url, "", status=404),
+    )
+
+    assert result["raw_sample_sha256"] == "sha256:TBD"
+    assert result["normalized_text_sample_sha256"] == "sha256:TBD"
+
+
 def test_template_url_with_weak_semantic_match_is_suspect():
     source = source_record("dpa", "https://example.com/legal/data-processing-addendum")
 

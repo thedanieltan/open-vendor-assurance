@@ -16,29 +16,41 @@ Those artifacts are not committed to the repository. They are uploaded as GitHub
 
 `latest-source-health.json` and `public/source-health-snapshot.json` are artifact-derived views. They summarize the latest known source-health state from the latest available maintenance run. They are snapshots, not permanent guarantees that a source remains reachable or suitable.
 
-## Deferred Append-Only History
+## Committed Event Ledger (WP32)
 
-OpenVA does not commit append-only historical source observation ledgers yet.
+WP32 amends the earlier deferral. OpenVA now commits a **compact, append-only
+observation event ledger**, with growth controls that answer the original
+deferral concerns:
 
-Durable committed history is deferred because:
+- Only **events** are committed (first observation, access change, redirect
+  change, material/non-material content change, health transition). Unchanged
+  observations never produce committed rows, so growth is bounded by the
+  actual change rate, not by run frequency.
+- Events are stored as **monthly NDJSON files** under
+  `maintenance/source-observations/events/YYYY-MM.ndjson` — one event per
+  line, minimal reviewable diffs, and a natural compaction unit later.
+- Rows enter the committed ledger **only through reviewed pull requests** via
+  `python -m tools.openva.observation_ledger append`. Workflows never commit
+  ledger files; they upload a proposed delta as an artifact.
+- Existing lines are never rewritten or reordered; out-of-order appends are
+  refused.
 
-- Full observation history can create repo bloat as source count and run frequency grow.
-- Large generated history files create noisy diffs that obscure meaningful catalog review.
-- The correct retention horizon is not decided.
-- There is no compaction policy yet.
-- Public site/API requirements currently need a latest snapshot more than a complete run history.
+Full per-run observation records remain artifact-only.
+
+See `docs/observation-ledger.md` for the ledger model, field semantics, and
+the reviewed-PR append procedure.
 
 ## Near-Term Strategy
 
-The approved near-term strategy is:
+The approved strategy is:
 
-- Historical observations remain artifact-only.
+- Full per-run observation records remain artifact-only.
+- The committed ledger stores compact change events only (see above).
 - `latest-source-health.json` is regenerated from the latest source observation ledger artifact.
 - `public/source-health-snapshot.json` is regenerated from `latest-source-health.json`.
 - The site consumes the latest available public source-health snapshot artifact.
 - The site falls back to `Not yet verified` labels when no snapshot artifact is available.
 - Release readiness consumes source-health artifacts rather than running full-catalog live verification inside the release workflow.
-- No append-only historical observation ledger is committed to the repository yet.
 
 ## Future Options
 
