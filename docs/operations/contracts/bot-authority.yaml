@@ -140,6 +140,23 @@ lanes:
     token_permissions: {contents: read, issues: write, pull-requests: read}
     audit_artifacts: [chatops decision comment]
     deny_by_default: true
+  - id: submission_verification
+    status: active
+    workflows: [submitted-source-verification.yml]
+    may_write_branches: false
+    may_open_prs: false
+    may_label_prs: true
+    may_enable_auto_merge: false
+    may_merge_prs: false
+    may_write_catalog_truth: false
+    allowed_paths: []
+    write_authority_explanation: May post or update one verification comment and apply or remove only candidate triage labels on submission issues (issue-state mutation only, no Git or catalog state); never writes catalog truth, never opens branches or PRs, never probes declared-gated sources, and respects the openva-hold label on all trigger paths including manual dispatch.
+    required_labels_for_write_authority: []
+    allowed_labels: ["candidate:verified", "candidate:needs-review", "candidate:duplicate", "candidate:gated", "candidate:ambiguous", "candidate:rejected", "candidate:fetch-failed"]
+    allowed_label_actions: [add, remove]
+    token_permissions: {contents: read, issues: write}
+    audit_artifacts: [submission verification report, verification comment]
+    deny_by_default: true
   - id: support_agent_pr
     status: active
     workflows: [catalog-agent-pr.yml, catalog-maintenance-pr.yml, contribution-intake-agent.yml]

@@ -30,6 +30,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "source-repair-pr-cleanup.yml",
     "source-refinement-queue.yml",
     "source-refinement-scan.yml",
+    "submitted-source-verification.yml",
     "validate.yml",
 }
 

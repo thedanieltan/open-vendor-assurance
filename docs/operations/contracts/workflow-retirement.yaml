@@ -221,6 +221,18 @@ workflows:
     required_retirement_evidence: [replacement live hold control path, validation suite pass, maintainer approval that live hold chat-ops is no longer needed]
     allowed_triggers_until_retired: [issue_comment]
     write_permissions_allowed_until_retired: true
+  - name: submitted-source-verification.yml
+    current_status: active
+    inventory_status: support
+    operating_loop: submission_verification
+    replacement_owner: submitted-source-verification.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns verification-only triage of submission claims before any controlled promotion path exists]
+    required_retirement_evidence: [replacement submission verification path, maintainer approval that submission claims no longer need automated first-pass verification, validation suite pass]
+    allowed_triggers_until_retired: [issues, workflow_dispatch]
+    write_permissions_allowed_until_retired: true
   - name: catalog-agent-pr.yml
     current_status: deprecated_callable
     inventory_status: support
