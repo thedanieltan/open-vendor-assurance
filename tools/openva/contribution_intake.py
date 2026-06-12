@@ -40,6 +40,7 @@ HUMAN_REVIEW_SOURCE_TYPES = {
     "kyc_statement",
     "terms_of_service",
     "transparency_report",
+    "status_page",
     "other_public_source",
 }
 
@@ -52,6 +53,7 @@ SOURCE_TYPE_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("ai_terms", ("ai", "artificial-intelligence")),
     ("government_request_policy", ("government-request", "law-enforcement")),
     ("transparency_report", ("transparency",)),
+    ("status_page", ("status", "uptime", "status-page", "statuspage")),
     ("compliance_page", ("compliance", "soc", "iso", "audit")),
     ("certification_reference", ("certification", "certificate", "certifications")),
     ("kyc_statement", ("kyc", "know-your-customer")),
