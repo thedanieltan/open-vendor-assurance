@@ -56,6 +56,39 @@
       "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
       "description": "Prior observation for the same source, forming a traversable history chain."
     },
+    "retrieval_method": {
+      "anyOf": [
+        { "enum": ["html_page", "pdf_document", "rss_feed", "atom_feed", "json_api", "llms_txt", "mcp_server", "sitemap", "csv_download", "other"] },
+        { "type": "null" }
+      ],
+      "description": "How the source was retrieved for this observation; aligns with the source-record retrieval.method vocabulary."
+    },
+    "change_class": {
+      "anyOf": [
+        { "enum": ["none", "non_material", "material_possible", "material_confirmed", "access_changed", "redirect_changed"] },
+        { "type": "null" }
+      ],
+      "description": "Change signal for this observation relative to the previous observation and the curated change-detection baseline. Null means not evaluated."
+    },
+    "source_health": {
+      "type": ["object", "null"],
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["reachable", "unreachable", "gated", "bot_protected", "redirected", "quarantined"] }
+      },
+      "additionalProperties": false,
+      "description": "Reachability and access posture only. Content variation is a change signal (change_class), never a health status."
+    },
+    "review_signal": {
+      "type": ["object", "null"],
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "reason": { "type": ["string", "null"], "maxLength": 300 }
+      },
+      "additionalProperties": false,
+      "description": "Whether a maintainer should review this observation, and why."
+    },
     "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
     "catalog_tier": { "enum": ["observation"] },
     "review_state": { "enum": ["auto_observed"] },

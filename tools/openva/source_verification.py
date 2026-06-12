@@ -15,6 +15,7 @@ from urllib.request import Request, urlopen
 
 import yaml
 
+from tools.openva.hash import sha256_bytes, sha256_normalized_text
 from tools.openva.paths import display_path as normalized_display_path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -371,6 +372,25 @@ def classify_status(source: dict[str, Any], result: FetchResult, semantic: dict[
     return "ok"
 
 
+def sample_hashes(result: FetchResult) -> dict[str, str]:
+    # Hashes of the fetched 128KB sample, not the full document. Field names
+    # carry the "sample" scope so downstream consumers cannot misread them.
+    if not result.body_sample:
+        return {
+            "raw_sample_sha256": "sha256:TBD",
+            "normalized_text_sample_sha256": "sha256:TBD",
+        }
+    raw = sha256_bytes(result.body_sample)
+    if result.content_type and "pdf" in result.content_type.lower():
+        normalized = "sha256:TBD"
+    else:
+        normalized = sha256_normalized_text(result.body_sample, result.content_type)
+    return {
+        "raw_sample_sha256": raw,
+        "normalized_text_sample_sha256": normalized,
+    }
+
+
 def verify_source(
     source: dict[str, Any],
     path: Path,
@@ -382,6 +402,7 @@ def verify_source(
     text = normalize_text(result.body_sample, result.content_type)
     semantic = semantic_match(str(source.get("source_type") or ""), text, result.content_type)
     status = classify_status(source, result, semantic)
+    hashes = sample_hashes(result)
 
     return {
         "path": display_path(path, root),
@@ -397,6 +418,8 @@ def verify_source(
         "last_modified": result.last_modified,
         "title_detected": title_from_sample(result.body_sample, result.content_type),
         "fetch_error": result.error,
+        "raw_sample_sha256": hashes["raw_sample_sha256"],
+        "normalized_text_sample_sha256": hashes["normalized_text_sample_sha256"],
         "semantic_match": semantic,
         "soft_404_detected": status == "soft_not_found",
         "verification_status": status,
