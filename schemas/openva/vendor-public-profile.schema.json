@@ -17,6 +17,13 @@
     "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
     "vendor_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "display_name": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "display_aliases": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 160 },
+      "uniqueItems": true,
+      "default": [],
+      "description": "Former or alternate public names for the vendor (renames, prior brands, common abbreviations)."
+    },
     "legal_name": { "type": ["string", "null"], "maxLength": 240 },
     "headquarters_country": { "type": "string", "pattern": "^[A-Z]{2}$" },
     "regions_served": {
@@ -45,6 +52,13 @@
       "items": { "type": "string", "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$" },
       "minItems": 1,
       "uniqueItems": true
+    },
+    "previous_domains": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$" },
+      "uniqueItems": true,
+      "default": [],
+      "description": "Domains previously official for this vendor; preserves identity continuity across renames and domain migrations."
     },
     "public_entrypoints": {
       "type": "array",

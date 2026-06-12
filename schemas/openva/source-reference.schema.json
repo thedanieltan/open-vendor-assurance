@@ -107,6 +107,78 @@
     "advisory_boundary": { "const": "non_advisory" },
     "summary_native": { "type": ["string", "null"], "maxLength": 1200 },
     "summary_en": { "type": ["string", "null"], "maxLength": 1200 },
+    "canonical_confidence": {
+      "type": "object",
+      "description": "Confidence that this URL is the vendor's canonical location for this source type. Not a vendor risk or compliance signal.",
+      "required": ["class"],
+      "properties": {
+        "class": {
+          "enum": ["canonical", "likely_canonical", "mirror", "redirected_entrypoint", "ambiguous"]
+        },
+        "basis": { "type": ["string", "null"], "maxLength": 500 },
+        "assessed_at": { "type": ["string", "null"], "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "retrieval": {
+      "type": "object",
+      "description": "How the source can be retrieved, including machine-readable hints for agent consumers.",
+      "required": ["method", "machine_readable"],
+      "properties": {
+        "method": {
+          "enum": [
+            "html_page",
+            "pdf_document",
+            "rss_feed",
+            "atom_feed",
+            "json_api",
+            "llms_txt",
+            "mcp_server",
+            "sitemap",
+            "csv_download",
+            "other"
+          ]
+        },
+        "machine_readable": { "type": "boolean" },
+        "hints": {
+          "type": ["object", "null"],
+          "properties": {
+            "feed_url": { "type": ["string", "null"], "format": "uri" },
+            "api_endpoint": { "type": ["string", "null"], "format": "uri" },
+            "llms_txt_url": { "type": ["string", "null"], "format": "uri" },
+            "content_selector": { "type": ["string", "null"], "maxLength": 200 },
+            "notes": { "type": ["string", "null"], "maxLength": 500 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_health": {
+      "type": "object",
+      "description": "Curated, slowly-changing registry health summary. Per-run measurement stays in observation records and source-health reports.",
+      "required": ["status", "as_of"],
+      "properties": {
+        "status": {
+          "enum": ["ok", "stale", "moved", "gated", "broken", "retired", "unknown"]
+        },
+        "as_of": { "type": "string", "format": "date-time" },
+        "basis": { "type": ["string", "null"], "maxLength": 500 }
+      },
+      "additionalProperties": false
+    },
+    "change_detection": {
+      "type": "object",
+      "description": "Reviewed baseline that future observations are compared against for material-change detection.",
+      "required": ["baseline_observed_at"],
+      "properties": {
+        "baseline_observed_at": { "type": "string", "format": "date-time" },
+        "baseline_observation_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+        "baseline_raw_sha256": { "type": ["string", "null"], "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+        "baseline_normalized_text_sha256": { "type": ["string", "null"], "pattern": "^sha256:[a-fA-F0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
     "provenance": {
       "type": "object",
       "required": ["publisher", "collected_at", "observer", "confidence"],
