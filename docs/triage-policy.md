@@ -33,6 +33,21 @@ Examples:
 
 The contribution intake agent comments automated checks on catalog update issues and may open a reviewed `Catalog:` PR for low-risk existing-vendor source updates. That comment is a handoff aid only; catalog data changes still require a reviewed `Catalog:` PR.
 
+### Source claim submission
+
+Use for structured claims filed through the `submission` issue forms: new vendor candidates, new assurance sources, broken or moved sources, vendor renames or domain changes, subprocessor update feeds, and machine-readable source surfaces.
+
+Submissions are claims, not catalog changes. They are non-authoritative until verified, and catalog data changes only through reviewed pull requests. The forms collect the triage basics up front (vendor, domain, URL, source type, public access posture), so maintainers should not need to ask for missing basics.
+
+Routing:
+
+- forms apply `status:needs-triage` plus a `submission:` label;
+- submission issues stay out of the catalog-agent lane: they do not carry `area:catalog` or `lane:` labels and do not use the `Catalog update:` title prefix;
+- apply `submission:needs-triage` manually to submissions that are misfiled or cannot be classified into a type;
+- gated submissions keep only the fact that a gated source exists; never ask the reporter to paste gated contents.
+
+See `docs/submission-intake.md` for contributor guidance.
+
 ### Scope or boundary question
 
 Use for questions about whether a source, request, or contribution is public, gated, private, vendor-controlled, advisory, out of scope, or otherwise suitable for OpenVA.
@@ -134,6 +149,13 @@ scope:gated-material
 scope:metadata-only
 scope:non-advisory
 scope:blocked
+
+submission:new-vendor
+submission:new-source
+submission:broken-source
+submission:vendor-identity
+submission:machine-readable
+submission:needs-triage
 
 priority:p0
 priority:p1

@@ -20,12 +20,20 @@ def workflow_triggers(workflow: dict) -> dict:
 def test_public_issue_template_list_is_consolidated_for_non_devs():
     templates = sorted(path.name for path in ISSUE_TEMPLATE_DIR.glob("*.yml"))
 
+    # WP30 deliberately adds a separate source-claim intake lane. These forms
+    # are contributor-facing but do not enter the catalog-agent lane.
     assert templates == [
         "boundary-question.yml",
         "bug-report.yml",
         "catalog-update.yml",
         "config.yml",
         "docs-improvement.yml",
+        "submission-broken-source.yml",
+        "submission-machine-readable.yml",
+        "submission-new-source.yml",
+        "submission-new-vendor.yml",
+        "submission-subprocessor-feed.yml",
+        "submission-vendor-identity.yml",
     ]
 
 
