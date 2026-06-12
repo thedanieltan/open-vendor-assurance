@@ -275,6 +275,89 @@ def test_declared_gated_short_circuits_without_fetch():
     assert report["verification_reason"] == "declared_gated_by_submitter"
 
 
+def broken_source_body(*, public_access: str) -> str:
+    return "\n".join(
+        [
+            "### Vendor name",
+            "",
+            "Example Vendor",
+            "",
+            "### Vendor domain",
+            "",
+            "vendor.example",
+            "",
+            "### Existing source URL or OpenVA source ID",
+            "",
+            "https://vendor.example/legal/dpa",
+            "",
+            "### Observed state",
+            "",
+            "Broken - unreachable or page removed",
+            "",
+            "### Replacement URL",
+            "",
+            "_No response_",
+            "",
+            "### Source type",
+            "",
+            "dpa",
+            "",
+            "### Public access confirmed",
+            "",
+            public_access,
+            "",
+        ]
+    )
+
+
+def test_broken_source_not_applicable_option_is_fetched_not_gated():
+    # Regression: "Not applicable - reporting breakage only" starts with "no"
+    # when lowercased; it must NOT be treated as a declared-gated claim.
+    seen: list[str] = []
+
+    def fetcher(url: str) -> FetchResult:
+        seen.append(url)
+        return failing_fetch(url)
+
+    report = verify_submission(
+        "Broken source: Example Vendor DPA gone",
+        broken_source_body(public_access="Not applicable - reporting breakage only"),
+        ["status:needs-triage", "submission:broken-source"],
+        issue_number=998,
+        fetcher=fetcher,
+        root=Path("."),
+        observed_at=OBSERVED_AT,
+    )
+    assert seen == ["https://vendor.example/legal/dpa"]
+    assert report["verification_result"] == "fetch_failed"
+
+
+def test_broken_source_gated_option_still_short_circuits():
+    report = verify_submission(
+        "Broken source: Example Vendor DPA now gated",
+        broken_source_body(public_access="No - gated or restricted (mark as gated)"),
+        ["status:needs-triage", "submission:broken-source"],
+        issue_number=998,
+        fetcher=forbidden_fetcher,
+        root=Path("."),
+        observed_at=OBSERVED_AT,
+    )
+    assert report["verification_result"] == "gated_or_auth_required"
+    assert report["verification_reason"] == "declared_gated_by_submitter"
+
+
+def test_redirect_to_blocked_host_is_unsafe_url():
+    report = verify(
+        new_source_body(),
+        fetcher=lambda url: html_fetch(
+            url, DPA_BODY_TEXT, final_url="http://127.0.0.1/internal"
+        ),
+    )
+    assert report["verification_result"] == "unsafe_url"
+    assert report["verification_reason"] == "redirect_target_failed_url_safety"
+    assert RESULT_LABELS[report["verification_result"]] == "candidate:rejected"
+
+
 def test_duplicate_detection_against_existing_catalog(tmp_path):
     source_dir = tmp_path / "data" / "vendors" / "example-vendor" / "sources"
     source_dir.mkdir(parents=True)
