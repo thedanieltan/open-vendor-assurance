@@ -4,6 +4,8 @@ This backlog guides future OpenVA catalog expansion.
 
 It is not a commitment that every listed vendor will be added. A vendor should be added only when there is a suitable public vendor-controlled source and the record can remain metadata-only, public-source-only, and non-advisory.
 
+> The machine-readable form of these priorities lives in `config/coverage-targets.yaml` (per-category `priority_vendors` wishlists consumed by the coverage growth engine — see `docs/coverage-growth.md`). When updating priorities here, update the wishlists in the same PR so the two do not drift. Several earlier batches below are already materialized; the weekly coverage-growth report shows the live wishlist-minus-materialized diff.
+
 ## Batch rules
 
 Future expansion batches should:
