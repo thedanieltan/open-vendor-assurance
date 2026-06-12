@@ -24,7 +24,20 @@ Current focus:
 - scheduled maintenance reports;
 - catalog-agent guardrails;
 - consumer conformance fixtures;
-- public governance readiness.
+- public governance readiness;
+- operating the source-intelligence layer (submission intake, claim verification, observation ledger, agent exports, coverage growth reporting).
+
+## Source-intelligence layer (live, June 2026)
+
+The source-intelligence layer is now operating end to end:
+
+- structured source-claim submission forms (`docs/submission-intake.md`);
+- deterministic claim verification with comment-and-label-only authority (`docs/submission-verification.md`);
+- an append-only observation/change ledger with reviewed-PR commits (`docs/observation-ledger.md`);
+- digest-verifiable public agent exports on the hosted site (`docs/agent-export-contract.md`);
+- coverage growth reporting and prioritization through the candidate model (`docs/coverage-growth.md`).
+
+Current posture, per `docs/reviews/openva-roadmap-decision-2026-06.md`: run the weekly cycles to accumulate operational evidence; deepen identity and security coverage and begin decorating tier-1 source records with registry-intelligence fields through reviewed PRs; plan source-intelligence release gates after several cycles of real data. The full assessment is in `docs/reviews/openva-system-review-2026-06.md`.
 
 ## Active workstreams
 
@@ -168,7 +181,7 @@ For public operation, maintainers should continue to confirm:
 - SECURITY is current;
 - LICENSE reflects the intended free-use posture;
 - CODEOWNERS covers governance-sensitive paths;
-- issue templates route users through a small catalog update, scope question, bug, and docs set;
+- issue templates route users through a small catalog update, structured source-claim submission, scope question, bug, and docs set;
 - PR templates communicate source and non-advisory checks;
 - validation workflow is green;
 - scheduled maintenance workflow is enabled;

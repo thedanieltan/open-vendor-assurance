@@ -26,6 +26,8 @@ For contributors and maintainers:
 
 ```text
 CONTRIBUTING.md
+docs/submission-intake.md
+docs/submission-verification.md
 docs/catalog-agent-protocol.md
 docs/agent-control-plane.md
 docs/human-review-operations.md
@@ -39,6 +41,7 @@ For consumers and downstream importers:
 ```text
 GitHub Releases
 docs/release-downloads.md
+docs/agent-export-contract.md
 docs/adapter-contract.md
 docs/adapter-output-contract.md
 docs/consumer-conformance-fixtures.md
@@ -114,8 +117,9 @@ validate.yml                         validates PRs and pushes to main
 catalog-pr-guard.yml                 enforces Catalog PR boundaries
 catalog-growth-discovery.yml         proposes catalog candidates (reports and issues only)
 candidate-promotion-pr.yml           controlled promotion PRs from reviewed evidence
-source-maintenance-report.yml        scheduled source health and discovery report
-coverage-audit.yml                   catalog breadth/depth audit
+source-maintenance-report.yml        scheduled source health, observation ledger, and discovery report
+submitted-source-verification.yml    verifies submitted source claims (comment and label only)
+coverage-audit.yml                   catalog breadth/depth audit and coverage growth report
 bot-dashboard-issue.yml              bot dashboard render and issue sync (dry-run default)
 bot-chatops.yml                      live /openva hold and /openva unhold label commands
 release-candidate.yml                release artifact smoke workflow
@@ -204,6 +208,18 @@ docs/versioning-policy.md
 docs/release-policy.md
 ```
 
+## Agent exports
+
+For AI agents, OpenVA publishes static, deterministic, digest-verifiable JSON exports on the hosted site. Start at:
+
+```text
+https://thedanieltan.github.io/open-vendor-assurance/public/openva-agent-index.json
+```
+
+The agent index lists every export (vendor index, per-vendor source maps, flat source index, latest observations, latest change events) with its content digest, and every file carries a snapshot block (`commit_sha`, `generated_at`, `digest`) for verification. Exports record public source metadata, observed health, and change signals only — no risk scores, no legal conclusions, no gated content.
+
+See `docs/agent-export-contract.md` for shapes, field semantics, and the digest verification recipe.
+
 ## Release Downloads
 
 For spreadsheet-first users, OpenVA publishes non-technical download assets through GitHub Releases:
@@ -241,7 +257,7 @@ data/vendors/{vendor_id}.json
 data/observation-feed.json
 ```
 
-The reviewed catalog is a release snapshot, not a live monitoring feed. The live observation feed shell is non-canonical and remains empty until the observation ledger workflow ships.
+The reviewed catalog is a release snapshot, not a live monitoring feed. The live observation feed shell is non-canonical; durable observation and change state lives in the observation ledger (see `docs/observation-ledger.md`) and in the agent exports under `/public/`.
 
 For details, see `docs/release-downloads.md` and `site/README.md`.
 

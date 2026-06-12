@@ -1,5 +1,7 @@
 # Observation Pilot
 
+> Historical: this pilot validated observation behavior before broader automation. Production observation now runs through the source-maintenance pipeline and the observation ledger — see `docs/observation-ledger.md`. This document is retained for the pilot-era write rules it established.
+
 P17 introduced a narrow observation pilot for selected public sources. P18 hardens the pilot output and write behavior before broader automation.
 
 The goal is to validate observation behavior before running automated observation across the catalog or using observations in export-pack trust signals.

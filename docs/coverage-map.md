@@ -1,128 +1,34 @@
 # Coverage Map
 
-This document tracks OpenVA coverage so future catalog expansion remains intentional.
+This document explains where OpenVA coverage state lives, so catalog expansion remains intentional.
 
-The current catalog snapshot contains 17 vendor records, 17 source records, and 17 artifact records.
+This page no longer carries a hand-maintained snapshot. Static vendor and source counts written here went stale as the catalog grew (an earlier revision of this file described a 17-vendor seed catalog); coverage state is now generated, not transcribed.
 
-## Current vendor coverage
+## Where coverage state lives
 
-### Cloud infrastructure
+```text
+config/coverage-targets.yaml        the coverage target model: priority categories,
+                                    required source types, weights, and per-category
+                                    priority-vendor wishlists
+docs/coverage-growth.md             the coverage growth model, priority formula, and
+                                    queue-class definitions
+coverage-growth-report.json         the live coverage snapshot: vendor count by
+                                    category, source completeness, named gap reports,
+                                    stale high-priority sources, top missing vendors,
+                                    machine-readable coverage, and the prioritized
+                                    growth queue — generated weekly by
+                                    coverage-audit.yml as a read-only artifact
+indexes/source-coverage.json        generated per-vendor source-type coverage index
+docs/vendor-expansion-backlog.md    narrative expansion priorities and batch rules
+```
 
-- Alibaba Cloud
-- Amazon Web Services
-- Google Cloud
-- Microsoft
-- Oracle Cloud
-- Tencent Cloud
+To see current coverage, download the `openva-coverage-audit-report` artifact from the latest `coverage-audit` workflow run, or run locally:
 
-### Enterprise SaaS and business platforms
-
-- Atlassian
-- Salesforce
-- SAP
-- ServiceNow
-- Workday
-- Zoom
-
-### Security, network, and observability
-
-- Cloudflare
-- Datadog
-
-### Data platforms and databases
-
-- MongoDB
-- Snowflake
-
-### Fixtures
-
-- Example Cloud
-
-The fixture exists for schema validation only and should not be treated as catalog coverage.
-
-## Regional coverage
-
-### United States / global-headquartered vendors
-
-- Amazon Web Services
-- Atlassian is not US-headquartered but serves global markets
-- Cloudflare
-- Datadog
-- Google Cloud
-- Microsoft
-- MongoDB
-- Oracle Cloud
-- Salesforce
-- ServiceNow
-- Snowflake
-- Workday
-- Zoom
-
-### Mainland China vendors
-
-- Alibaba Cloud
-- Tencent Cloud
-
-### Europe-headquartered vendors
-
-- SAP
-
-### APAC-headquartered vendors outside mainland China
-
-- Atlassian
-
-## Source-type coverage
-
-### Current strength
-
-The catalog is currently strong in conservative public entrypoints:
-
-- trust center pages;
-- security pages;
-- subprocessor pages for the initial cloud providers;
-- DPA/legal entrypoints for selected large cloud providers.
-
-### Current weakness
-
-The catalog is still thin in:
-
-- direct DPA records;
-- dedicated subprocessor records outside the cloud-provider seed set;
-- privacy notice records;
-- AI/data-use terms;
-- product-specific security pages;
-- regional legal pages;
-- formal observation records;
-- change-event records.
-
-## Coverage gaps
-
-### Vendor categories needing expansion
-
-- developer platforms;
-- identity and access management;
-- password and secrets management;
-- payments and financial infrastructure;
-- communications APIs;
-- customer support platforms;
-- marketing automation platforms;
-- productivity and collaboration platforms;
-- APAC SaaS vendors;
-- mainland China SaaS vendors beyond cloud infrastructure;
-- Japan and Korea enterprise SaaS vendors;
-- EU enterprise SaaS and infrastructure vendors.
-
-### Evidence types needing expansion
-
-- subprocessor lists;
-- DPAs and data processing terms;
-- privacy notices;
-- security pages;
-- trust centers;
-- AI product terms;
-- regional data residency pages;
-- subprocessors by product or region;
-- public changelogs for assurance materials.
+```bash
+python -m tools.openva.coverage_growth build \
+  --output coverage-growth-report.json \
+  --markdown-output coverage-growth-summary.md
+```
 
 ## Expansion rule
 
@@ -136,4 +42,8 @@ Each batch should state:
 - whether the batch adds new edge cases;
 - whether generated indexes and pack integrity checks pass.
 
-Do not add vendors merely to increase count.
+Do not add vendors merely to increase count. Growth is measured by completeness and freshness, not raw URL count, and new vendors enter as candidates through the submission and verification model.
+
+## Non-advisory reminder
+
+Coverage counts and completeness ratios describe the state of OpenVA's public-source catalog. They never mean a vendor is approved, recommended, certified, compliant, safe, adequate, suitable, low risk, or high risk.
