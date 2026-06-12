@@ -102,6 +102,7 @@ docs/release-downloads.md
 For developers and downstream importers, use:
 
 ```text
+docs/agent-export-contract.md
 docs/consumer-conformance-fixtures.md
 docs/adapter-contract.md
 docs/versioning-policy.md

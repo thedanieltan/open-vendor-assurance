@@ -9,3 +9,17 @@ release-artifacts.json
 release-downloads/
 reports/
 site/dist/
+
+# Local publish-time/site artifact inputs
+public/
+source-health-artifacts/
+coverage-audit-artifacts/
+
+# Local agent export smoke/test output
+.tmp-public/
+.tmp-agent-exports/
+.tmp-openva/
+
+# Local workflow-style transient outputs
+.openva-submission/
+.openva-observation-ledger/
