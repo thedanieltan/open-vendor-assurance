@@ -96,6 +96,20 @@ jobs:
           fi
       - name: Build reviewed catalog site
         run: python site/build.py --out site/dist
+      - name: Build agent exports (publish-time, read-only)
+        run: |
+          set -euo pipefail
+          ARGS=(
+            --out site/dist/public
+            --commit-sha "${{ github.sha }}"
+          )
+          if [ -f source-health-artifacts/observation-ledger/latest-observations.json ]; then
+            ARGS+=(--latest-observations source-health-artifacts/observation-ledger/latest-observations.json)
+          fi
+          if [ -f source-health-artifacts/observation-ledger/source-freshness-report.json ]; then
+            ARGS+=(--freshness-report source-health-artifacts/observation-ledger/source-freshness-report.json)
+          fi
+          python -m tools.openva.agent_export build "${ARGS[@]}"
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload GitHub Pages artifact
