@@ -128,6 +128,12 @@ jobs:
           python -m tools.openva.source_health_public_snapshot build \
             --latest-source-health latest-source-health.json \
             --output public/source-health-snapshot.json
+      - name: Build observation ledger v2 reports (read-only artifacts)
+        run: |
+          python -m tools.openva.observation_ledger build \
+            --verification-report source-verification-report.json \
+            --run-id "${{ github.run_id }}" \
+            --output-dir observation-ledger
       - name: Build candidate source discovery report
         run: |
           LIMIT="${{ inputs.vendor_limit }}"
@@ -358,6 +364,12 @@ jobs:
             source-observation-ledger.json
             latest-source-health.json
             public/source-health-snapshot.json
+            observation-ledger/observation-records.json
+            observation-ledger/latest-observations.json
+            observation-ledger/source-freshness-report.json
+            observation-ledger/changed-since-last-observation.json
+            observation-ledger/sources-requiring-review.json
+            observation-ledger/observation-ledger-delta.ndjson
             source-discovery-report.json
             source-repair-sweep-report.json
             source-repair-batch-plan.json
