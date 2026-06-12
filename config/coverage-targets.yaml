@@ -1,0 +1,115 @@
+schema_version: "0.1.0"
+# WP34 coverage growth target model. This is a growth-reporting overlay over
+# the controlled vendor-category taxonomy (config/category-taxonomy.yaml);
+# it never changes vendor records. Growth is measured by completeness and
+# freshness, not raw URL count. Weights are editorial, maintainer-tunable
+# via reviewed PRs, and every report row records its additive breakdown.
+#
+# priority = category weight
+#          + missing source criticality
+#          + business prevalence (wishlist membership)
+#          + staleness component
+
+required_source_types:
+  - trust_center
+  - dpa
+  - subprocessors_list
+  - privacy_notice
+  - security_page
+  - status_page
+
+source_type_criticality:
+  dpa: 3
+  subprocessors_list: 3
+  trust_center: 2
+  privacy_notice: 2
+  security_page: 1
+  status_page: 1
+
+staleness_weights:
+  fresh: 0
+  unknown: 1
+  stale: 2
+  expired: 3
+
+prevalence_weight: 2
+
+# priority_vendors are maintainer-curated wishlists (public vendor names
+# only), seeded from docs/vendor-expansion-backlog.md. Entries are matched
+# to the catalog by vendor_id; top-missing-vendors = wishlist entries with
+# no materialized vendor record. New vendors enter as candidates through
+# the submission/verification model, never as direct writes.
+categories:
+  cloud:
+    weight: 5
+    taxonomy_tags: [cloud_infrastructure]
+    priority_vendors:
+      - {vendor_id: ovhcloud, name: OVHcloud}
+      - {vendor_id: scaleway, name: Scaleway}
+      - {vendor_id: hetzner, name: Hetzner}
+      - {vendor_id: huawei-cloud, name: Huawei Cloud}
+      - {vendor_id: kingsoft-cloud, name: Kingsoft Cloud}
+      - {vendor_id: naver-cloud, name: NAVER Cloud}
+  security:
+    weight: 5
+    taxonomy_tags: [security]
+    priority_vendors:
+      - {vendor_id: 1password, name: 1Password}
+      - {vendor_id: keeper, name: Keeper}
+      - {vendor_id: bitwarden, name: Bitwarden}
+  identity:
+    weight: 5
+    taxonomy_tags: [identity_access]
+    priority_vendors:
+      - {vendor_id: okta, name: Okta}
+      - {vendor_id: auth0, name: Auth0}
+  finance_payments:
+    weight: 5
+    taxonomy_tags: [payments, financial_infrastructure]
+    priority_vendors:
+      - {vendor_id: stripe, name: Stripe}
+      - {vendor_id: adyen, name: Adyen}
+      - {vendor_id: paypal, name: PayPal}
+      - {vendor_id: airwallex, name: Airwallex}
+      - {vendor_id: plaid, name: Plaid}
+      - {vendor_id: wise, name: Wise}
+  hr_payroll:
+    weight: 4
+    taxonomy_tags: [hr_software]
+    priority_vendors:
+      - {vendor_id: personio, name: Personio}
+      - {vendor_id: smarthr, name: SmartHR}
+  crm_sales:
+    weight: 4
+    taxonomy_tags: [crm, customer_engagement, customer_support]
+    priority_vendors:
+      - {vendor_id: hubspot, name: HubSpot}
+      - {vendor_id: intercom, name: Intercom}
+      - {vendor_id: zendesk, name: Zendesk}
+      - {vendor_id: braze, name: Braze}
+      - {vendor_id: mailchimp, name: Mailchimp}
+  ai:
+    weight: 4
+    taxonomy_tags: [ai_platform]
+    priority_vendors:
+      - {vendor_id: mistral-ai, name: Mistral AI}
+  developer_tools:
+    weight: 4
+    taxonomy_tags: [developer_platform, observability]
+    priority_vendors:
+      - {vendor_id: github, name: GitHub}
+      - {vendor_id: gitlab, name: GitLab}
+      - {vendor_id: vercel, name: Vercel}
+      - {vendor_id: netlify, name: Netlify}
+      - {vendor_id: docker, name: Docker}
+  sme_common_tools:
+    weight: 3
+    taxonomy_tags: [productivity_software, collaboration_software, project_management]
+    priority_vendors:
+      - {vendor_id: slack, name: Slack}
+      - {vendor_id: notion, name: Notion}
+      - {vendor_id: asana, name: Asana}
+      - {vendor_id: monday, name: Monday.com}
+      - {vendor_id: miro, name: Miro}
+      - {vendor_id: lark, name: Lark}
+      - {vendor_id: cybozu, name: Cybozu}
