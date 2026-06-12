@@ -107,21 +107,25 @@ python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observatio
 
 OpenVA uses automation for repeatable checks and catalog expansion assistance, but catalog changes remain review-gated.
 
-The full workflow inventory lives in `.github/workflows/`. Current public-facing workflow groups are:
+The full workflow inventory lives in `.github/workflows/`, with classification and retirement status tracked in `docs/operations/`. Representative public-facing workflow groups are:
 
 ```text
 validate.yml                         validates PRs and pushes to main
 catalog-pr-guard.yml                 enforces Catalog PR boundaries
-catalog-agent-pr.yml                 manual agent-generated Catalog PRs for human review
-contribution-intake-agent.yml        issue-to-PR intake for bounded catalog updates
-catalog-maintenance.yml              scheduled non-mutating maintenance report
+catalog-growth-discovery.yml         proposes catalog candidates (reports and issues only)
+candidate-promotion-pr.yml           controlled promotion PRs from reviewed evidence
 source-maintenance-report.yml        scheduled source health and discovery report
-observe-report.yml                   read-only observation report
 coverage-audit.yml                   catalog breadth/depth audit
+bot-dashboard-issue.yml              bot dashboard render and issue sync (dry-run default)
+bot-chatops.yml                      live /openva hold and /openva unhold label commands
 release-candidate.yml                release artifact smoke workflow
 ```
 
 Scheduled maintenance should detect drift and produce artifacts. It should not silently change `main`.
+
+Quarantined legacy report workflows remain manual-only pending retirement evidence; see `docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md`.
+
+Live chat-ops is limited to `/openva hold` and `/openva unhold`, which add or remove only the `openva-hold` label on the current issue or pull request, are maintainer-gated, and are smoke-tested. All other `/openva` commands remain report-only, local-audit-only, or denied; see `docs/operations/BOT_CHATOPS_EXECUTION.md`.
 
 Agent-generated catalog work should enter through pull requests. Human review remains required for source authority, public accessibility, metadata-only compliance, non-advisory wording, and generated pack/index correctness.
 
