@@ -116,7 +116,12 @@ jobs:
       - name: Open or update the append PR
         if: steps.plan.outputs.new_row_count != '0'
         env:
-          GH_TOKEN: ${{ github.token }}
+          # A PR opened with the default GITHUB_TOKEN does not trigger
+          # downstream workflows, so the automerge lane never
+          # runs. Use a workflow-triggering token when available (a GitHub App
+          # installation token or PAT in OPENVA_AUTOMERGE_TOKEN); fall back to
+          # github.token, which keeps current behaviour until the secret is set.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
         run: |
           set -euo pipefail

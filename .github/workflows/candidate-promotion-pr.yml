@@ -524,7 +524,9 @@ jobs:
       - name: Create or update pull request
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          # Workflow-triggering token so the opened PR can trigger the automerge
+          # lane; falls back to github.token (current behaviour) until set.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
         run: |
           set -euo pipefail
           HEAD_SHA=$(git rev-parse HEAD)
