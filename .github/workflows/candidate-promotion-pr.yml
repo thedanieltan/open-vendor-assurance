@@ -563,7 +563,7 @@ jobs:
               --body-file candidate-promotion-pr-body-final.md
           fi
       - name: Label machine-provisional materialization PR
-        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist' || env.PROMOTION_PLAN_MODE == 'machine-provisional-from-queue')
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && env.PROMOTION_PLAN_MODE == 'machine-provisional-from-queue'
         env:
           # WP36b: mark the PR as a machine-provisional materialization. The
           # not_before controller applies automerge:machine-provisional later,
