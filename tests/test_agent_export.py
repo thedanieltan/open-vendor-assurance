@@ -191,6 +191,7 @@ def test_vendor_export_matches_spec_shape(tmp_path):
         "vendor_id",
         "canonical_name",
         "domains",
+        "catalog_status",
         "sources",
         "not_advice",
     }

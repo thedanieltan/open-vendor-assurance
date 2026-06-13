@@ -66,13 +66,14 @@
     },
     "vendor_export": {
       "type": "object",
-      "required": ["schema_version", "snapshot", "vendor_id", "canonical_name", "domains", "sources", "not_advice"],
+      "required": ["schema_version", "snapshot", "vendor_id", "canonical_name", "domains", "catalog_status", "sources", "not_advice"],
       "properties": {
         "schema_version": { "const": "0.1.0" },
         "snapshot": { "$ref": "#/$defs/snapshot" },
         "vendor_id": { "type": "string" },
         "canonical_name": { "type": "string" },
         "domains": { "type": "array", "items": { "type": "string" } },
+        "catalog_status": { "type": ["string", "null"] },
         "sources": { "type": "array", "items": { "$ref": "#/$defs/source_row" } },
         "not_advice": { "const": true }
       },
@@ -90,11 +91,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["vendor_id", "canonical_name", "domains", "source_count", "export_path"],
+            "required": ["vendor_id", "canonical_name", "domains", "catalog_status", "source_count", "export_path"],
             "properties": {
               "vendor_id": { "type": "string" },
               "canonical_name": { "type": "string" },
               "domains": { "type": "array", "items": { "type": "string" } },
+              "catalog_status": { "type": ["string", "null"] },
               "source_count": { "type": "integer", "minimum": 0 },
               "export_path": { "type": "string" }
             },

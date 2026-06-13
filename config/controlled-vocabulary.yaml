@@ -71,6 +71,10 @@ vendor_statuses:
   - watchlist
   - deprecated
   - quarantined
+  # WP36: machine-materialized vendor not yet promoted to active. Carries
+  # machine-decision provenance and a reversal reference; promoted to active
+  # only through WP37 quorum after a stable observation window.
+  - machine_provisional
 
 regulated_vendor_categories:
   - financial_services
