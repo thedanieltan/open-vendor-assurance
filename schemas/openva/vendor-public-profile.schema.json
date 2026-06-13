@@ -82,11 +82,30 @@
       },
       "additionalProperties": false
     },
-    "catalog_status": { "enum": ["active", "watchlist", "deprecated", "quarantined", "stub", "canonical"] },
+    "catalog_status": { "enum": ["active", "watchlist", "deprecated", "quarantined", "stub", "canonical", "machine_provisional"] },
     "status": {
-      "enum": ["active", "watchlist", "deprecated", "quarantined", "stub", "canonical"],
+      "enum": ["active", "watchlist", "deprecated", "quarantined", "stub", "canonical", "machine_provisional"],
       "deprecated": true,
       "description": "Deprecated v0.1.x compatibility alias for catalog_status. Remove in v0.2.0 or openva-export-pack.v2, whichever ships first."
+    },
+    "machine_generated": {
+      "type": "boolean",
+      "description": "WP36: true if this vendor was materialized by autonomous growth rather than human/reviewed contribution."
+    },
+    "machine_decision_id": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+      "description": "WP36: id of the machine decision record that materialized this vendor (maintenance/machine-decisions/)."
+    },
+    "reversal": {
+      "type": ["object", "null"],
+      "description": "WP36: how to reverse this machine-created vendor through a PR (quarantine or removal). Required on machine-generated records by the release-gate reversibility check.",
+      "properties": {
+        "reversal_decision_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+        "method": { "type": ["string", "null"], "enum": ["quarantine", "remove", null] },
+        "reference": { "type": ["string", "null"], "maxLength": 300 }
+      },
+      "additionalProperties": false
     },
     "notes": { "type": ["string", "null"], "maxLength": 1000 }
   },

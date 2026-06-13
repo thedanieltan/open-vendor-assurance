@@ -1,0 +1,47 @@
+schema_version: "0.1.0"
+# WP36 machine-evidence thresholds for machine-provisional vendor
+# materialization. Thresholds live in config, never hard-coded in Python. The
+# WP36b queue-bound materializer requires ALL of these before writing a
+# machine_provisional vendor; ambiguous or failing evidence fails closed.
+#
+# Operational metadata only. Not legal, compliance, procurement, security,
+# KYC, AML, audit, or vendor-risk advice.
+
+materialization:
+  # Identity: the candidate must not collide with an existing vendor on id,
+  # official domain, alias, or a stronger existing-entity match.
+  require_no_vendor_id_collision: true
+  require_no_official_domain_collision: true
+  require_no_stronger_alias_or_entity_match: true
+
+  # Public surface and vendor-controlled assurance evidence.
+  require_public_vendor_entrypoint: true
+  require_name_supported_by_official_domain_metadata: true
+  min_vendor_controlled_assurance_sources: 1
+  # A source host must be same-domain, a subdomain, or separately proven
+  # vendor-controlled.
+  require_vendor_controlled_source_host: true
+
+  # Retrieval agreement and duplicate detection.
+  min_agreeing_retrieval_attempts: 2
+  max_duplicate_collision_score: 0.0
+
+  # URL safety / redirect authority.
+  require_redirect_url_safety_pass: true
+  require_redirect_authority_pass: true
+
+  # Adversarial review and leakage controls.
+  require_adversarial_review_clean: true
+  forbid_gated_or_private_leakage: true
+  emit_public_source_metadata_only: true
+  forbid_prohibited_advisory_language: true
+
+  # Evidence freshness window: all evidence must remain fresh through the
+  # decision window.
+  evidence_freshness_hours: 72
+
+  # Delay window before a materialized provisional PR may merge.
+  not_before_delay_hours: 48
+
+  # Scoring: actual_score must reach required_score for materialization.
+  required_score: 1.0

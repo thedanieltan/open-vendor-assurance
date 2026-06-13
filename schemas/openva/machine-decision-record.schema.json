@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/machine-decision-record.schema.json",
+  "title": "OpenVA Machine Decision Record",
+  "description": "One committed, append-only record of an autonomous machine decision (WP36+). Every machine-created catalog claim is reproducible from its candidate, evidence, and decision records, and is reversible. Operational metadata only; not legal, compliance, procurement, security, or vendor-risk advice. The deciding bot must differ from the discovery bot (separation of duties).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "decision_id",
+    "decision_type",
+    "subject_type",
+    "subject_id",
+    "decision",
+    "deciding_bot",
+    "discovery_bot",
+    "evidence",
+    "thresholds",
+    "source_queue_reference",
+    "candidate_digest",
+    "created_at",
+    "not_before",
+    "reversal",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "decision_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "decision_type": {
+      "enum": ["vendor_materialization", "promotion", "repair", "quarantine", "rollback"]
+    },
+    "subject_type": { "enum": ["vendor", "source"] },
+    "subject_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "decision": {
+      "enum": ["materialize_provisional", "promote", "quarantine", "rollback", "reject", "defer"]
+    },
+    "deciding_bot": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "supporting_bots": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 100 }, "default": [] },
+    "discovery_bot": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "evidence": { "type": "object" },
+    "counter_evidence": { "type": "array", "items": { "type": "object" }, "default": [] },
+    "thresholds": {
+      "type": "object",
+      "required": ["required_score", "actual_score", "results"],
+      "properties": {
+        "required_score": { "type": "number" },
+        "actual_score": { "type": "number" },
+        "results": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "source_queue_reference": { "type": "string", "minLength": 1, "maxLength": 300 },
+    "candidate_digest": { "type": "string", "pattern": "^(sha256:[a-fA-F0-9]{64}|sha256:TBD)$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "not_before": { "type": "string", "format": "date-time" },
+    "reversal": {
+      "type": "object",
+      "required": ["method"],
+      "properties": {
+        "method": { "enum": ["quarantine", "remove", "revert_promotion"] },
+        "reference": { "type": ["string", "null"], "maxLength": 300 },
+        "reversal_decision_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" }
+      },
+      "additionalProperties": false
+    },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false
+}
