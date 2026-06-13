@@ -45,3 +45,44 @@ materialization:
 
   # Scoring: actual_score must reach required_score for materialization.
   required_score: 1.0
+
+# WP37 promotion thresholds: machine_provisional -> active. Promotion is only
+# reached through an independent machine quorum (tools/openva/bot_quorum.py)
+# over committed catalog + observation state, with separation of duty and a
+# committed promotion decision record. The quorum requires ALL of these before
+# a promotion decision is written; ambiguous or failing evidence fails closed.
+#
+# Observation semantics note: the committed observation ledger appends an event
+# only when something is observed/changes, so these counts and the stable age
+# are measured over committed observation EVENTS for the vendor's sources, not
+# over silent re-observations.
+promotion:
+  # Minimum age since the vendor's earliest committed observation before it may
+  # be considered stable enough to promote.
+  min_stable_observation_age_hours: 168  # 7 days
+
+  # Minimum number of committed, healthy (non-material-challenge) observation
+  # events across the vendor's sources.
+  min_successful_observations: 2
+
+  # No open duplicate, adversarial, or domain-drift challenge may be outstanding
+  # (the latest committed event per source must not be a material change, and no
+  # source health challenge may be open).
+  require_no_open_challenge: true
+
+  # At least this many distinct useful source roles (source types) must be
+  # present among the vendor's canonical sources. A generic homepage does not
+  # count as a useful source role.
+  min_useful_source_roles: 2
+
+  # Minimum number of INDEPENDENT supporting reviewer modules behind a promotion
+  # decision. Two reviewers built from the same module count as one; the
+  # deciding bot may never be the sole supporter, and the deciding bot may never
+  # be the discovery bot (separation of duties).
+  min_independent_supporting_modules: 2
+
+  # Delay window before a promotion PR may merge (mirrors materialization).
+  promotion_not_before_delay_hours: 48
+
+  # Scoring: actual_score must reach required_score for promotion.
+  required_score: 1.0

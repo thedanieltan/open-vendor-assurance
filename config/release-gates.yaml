@@ -83,6 +83,15 @@ exports:
   # Forbid self-certifying fields leaking into any export payload.
   forbid_self_certifying_fields: true
 
+# WP37 quorum-promotion independence gate. Every committed promotion decision
+# (machine_provisional -> active) must carry an independent quorum: the deciding
+# bot is never the discovery bot, never its own sole supporter, and at least
+# this many independent supporting bots back the decision. No single bot may
+# create canonical truth by itself. With no promotion decisions committed yet,
+# this gate passes vacuously.
+quorum_promotion:
+  min_independent_supporting_bots: 2
+
 # Reversibility gate. Any record carrying a machine-generation marker must
 # carry a reversal reference, so every machine-created claim is reversible.
 # No machine-claim types exist at WP35; this gate activates as WP36 introduces

@@ -203,6 +203,35 @@ def find_raw_content_dirs(root: Path) -> list[str]:
     return findings
 
 
+def find_single_bot_canonicalizations(root: Path, min_independent_supporters: int) -> list[str]:
+    """WP37: every committed promotion (machine_provisional -> active) decision
+    must carry an independent quorum. A `promote` decision is a violation if the
+    deciding bot is the discovery bot, the deciding bot is its sole supporter, or
+    fewer than the configured number of independent supporters back it. No single
+    bot may create canonical truth by itself."""
+    decisions_dir = root / "maintenance" / "machine-decisions"
+    from tools.openva.machine_decisions import load_decisions
+
+    findings: list[str] = []
+    for record in load_decisions(decisions_dir):
+        if record.get("decision") != "promote":
+            continue
+        decision_id = str(record.get("decision_id") or "(missing)")
+        deciding = str(record.get("deciding_bot") or "")
+        discovery = str(record.get("discovery_bot") or "")
+        supporting = [str(bot) for bot in record.get("supporting_bots") or []]
+        independent = sorted({bot for bot in supporting if bot != deciding})
+        if deciding and discovery and deciding == discovery:
+            findings.append(f"{decision_id}: deciding_bot == discovery_bot")
+        if not independent:
+            findings.append(f"{decision_id}: deciding_bot is the sole supporter")
+        elif len(independent) < min_independent_supporters:
+            findings.append(
+                f"{decision_id}: only {len(independent)} independent supporter(s) (< {min_independent_supporters})"
+            )
+    return findings
+
+
 def find_irreversible_machine_records(
     root: Path,
     marker_fields: list[str],
@@ -381,6 +410,24 @@ def gate_reversible_provenance(ctx: GateContext) -> GateResult:
     if findings:
         return GateResult("reversible_provenance", CAT_CONSTITUTION, STATUS_FAIL, "machine-created records without reversal", findings[:25])
     return GateResult("reversible_provenance", CAT_CONSTITUTION, STATUS_PASS, "all machine-created claims carry a reversal path")
+
+
+def gate_quorum_promotion_independence(ctx: GateContext) -> GateResult:
+    """Machine-enforced: no single bot may create canonical truth. Every
+    committed promotion decision must carry an independent quorum with
+    separation of duties."""
+    cfg = ctx.config.get("quorum_promotion") or {}
+    min_supporters = int(cfg.get("min_independent_supporting_bots", 2))
+    findings = find_single_bot_canonicalizations(ctx.root, min_supporters)
+    if findings:
+        return GateResult(
+            "quorum_promotion_independence", CAT_CONSTITUTION, STATUS_FAIL,
+            "promotion decision(s) lack an independent quorum", findings[:25],
+        )
+    return GateResult(
+        "quorum_promotion_independence", CAT_CONSTITUTION, STATUS_PASS,
+        "every promotion decision carries an independent quorum (separation of duties)",
+    )
 
 
 def gate_artifact_manifest(ctx: GateContext) -> GateResult:
@@ -629,6 +676,7 @@ def run_gates(ctx: GateContext) -> list[GateResult]:
 
     results.append(gate_no_raw_mirroring(ctx))
     results.append(gate_reversible_provenance(ctx))
+    results.append(gate_quorum_promotion_independence(ctx))
     results.append(gate_artifact_manifest(ctx))
 
     freshness = compute_freshness(ctx)

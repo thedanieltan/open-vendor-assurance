@@ -38,9 +38,22 @@ The strict-growth lane remains narrow: catalog growth discovery proposes candida
 
 The `bot_dashboard_issue_sync` lane is visibility-only authority. It may render the bot dashboard and, after explicit maintainer input, create or update only the persistent OpenVA Bot Dashboard issue. It must not write catalog truth, mutate PRs, dispatch workflows, label PRs, change automerge state, or grant authority to any catalog growth, promotion actions, source repair, reviewed evidence, strict-growth, or controlled promotion path.
 
+### Authority Levels (WP37)
+
+`bot-authority.yaml` declares explicit authority levels 0–5, and every lane declares the highest level it may exercise. A level is a role ceiling, not a lane: several reviewer roles share level 2 inside one workflow step, and level 5 is reserved for a later work package.
+
+- Level 0 — report-only: reports, issues, comments, or operational labels; no catalog-truth, decision, or merge authority.
+- Level 1 — evidence authorship: may open a PR proposing catalog or publication state from linked evidence; cannot record an autonomous decision and cannot merge.
+- Level 2 — independent reviewer: an identity, domain-authority, source, duplicate/fuzzy-match, adversarial, or release-gate reviewer that casts a clear/challenge verdict over committed evidence; holds no write, decision, or merge authority on its own, and two reviewers built from the same module are not independent.
+- Level 3 — deciding: records an append-only machine decision (`materialize_provisional` or `promote`) once an independent quorum supports it; never the discovery bot for the same subject and never the sole supporter of its own decision.
+- Level 4 — merge authority: enables native auto-merge after gates and required checks pass; never discovers, decides, or authors catalog truth.
+- Level 5 — reversal authority: reserved for WP38 rollback/quarantine; may revert recent machine-created state through a PR, never rewrites the ledger or decision history, and must not be the component that authored the state it reverts.
+
+No single bot holds discovery + decision + merge. The `catalog_growth_quorum_promotion` lane (level 3) records the promotion decision and authors a status-only `machine_provisional → active` PR; the separate `pr_safety` lane (level 4) merges it after the promotion delay. Promotion is reached only through an independent quorum with separation of duties, a minimum stable-observation age and observation count, no open duplicate/adversarial/domain-drift challenge, the release gate, a committed promotion decision record, and a promotion delay.
+
 ## Bot Constitution And Release Gates
 
-`config/bot-constitution.yaml` holds the deny-first, higher-order invariants that every lane and work package must respect. It complements the per-lane authority contract: `bot-authority.yaml` owns write/label/merge permissions, while the constitution owns the boundary invariants (public-source-only, no advisory/scoring/ranking output, SHA-256-only OpenVA digests, no raw-document mirroring, every machine-created claim reversible, no automation writing directly to `main`, and the separation-of-duty rules deferred to WP36/WP37).
+`config/bot-constitution.yaml` holds the deny-first, higher-order invariants that every lane and work package must respect. It complements the per-lane authority contract: `bot-authority.yaml` owns write/label/merge permissions, while the constitution owns the boundary invariants (public-source-only, no advisory/scoring/ranking output, SHA-256-only OpenVA digests, no raw-document mirroring, every machine-created claim reversible, no automation writing directly to `main`, and the separation-of-duty rules). As of WP37, the no-single-bot-canonicalization rule is machine-enforced through the `quorum_promotion_independence` release gate, and the no-self-approval and identity-resolution rules are contract-enforced by the quorum's separation-of-duty logic and tests; the remaining deferred rules are owned by WP36.
 
 Each constitution rule carries an explicit `enforcement` classification:
 

@@ -50,10 +50,16 @@ def decisions_at_ref(
     return records
 
 
-def ready_for_automerge(decisions: list[dict[str, Any]], now: datetime) -> bool:
-    """True iff there is at least one materialize_provisional decision and every
-    such decision's not_before has passed."""
-    materializations = [d for d in decisions if d.get("decision") == "materialize_provisional"]
+def ready_for_automerge(
+    decisions: list[dict[str, Any]],
+    now: datetime,
+    decision_kind: str = "materialize_provisional",
+) -> bool:
+    """True iff there is at least one decision of the given kind and every such
+    decision's not_before has passed. The default kind keeps the WP36b
+    materialization behaviour; the WP37 quorum lane passes decision_kind=promote
+    to release promotion PRs once their delay has elapsed."""
+    materializations = [d for d in decisions if d.get("decision") == decision_kind]
     if not materializations:
         return False
     for decision in materializations:
@@ -74,6 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("command", choices=["ready"])
     parser.add_argument("--ref", required=True)
     parser.add_argument("--now", default=None)
+    parser.add_argument("--decision", default="materialize_provisional", choices=["materialize_provisional", "promote"])
     args = parser.parse_args(argv)
 
     now = datetime.fromisoformat(args.now.replace("Z", "+00:00")) if args.now else datetime.now(UTC)
@@ -81,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
         decisions = decisions_at_ref(args.ref)
     except subprocess.CalledProcessError:
         decisions = []
-    print("true" if ready_for_automerge(decisions, now) else "false")
+    print("true" if ready_for_automerge(decisions, now, args.decision) else "false")
     return 0
 
 

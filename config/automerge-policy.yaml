@@ -131,3 +131,8 @@ lanes:
     required_labels:
       - machine-provisional
     execution_wired: true
+  quorum_promotion:
+    label: automerge:quorum-promotion
+    required_labels:
+      - quorum-promotion
+    execution_wired: true
