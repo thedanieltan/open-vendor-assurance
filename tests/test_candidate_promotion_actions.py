@@ -174,12 +174,32 @@ def test_apply_strict_growth_writes_vendor_source_artifact_and_change(tmp_path):
     assert report["summary"]["canonical_artifacts_written"] == 1
     assert report["summary"]["change_events_written"] == 1
     assert vendor["vendor_id"] == "candidate-a"
-    assert vendor["catalog_status"] == "active"
+    # WP36: machine materialization writes machine_provisional, never active.
+    assert vendor["catalog_status"] == "machine_provisional"
+    assert vendor["machine_generated"] is True
+    assert vendor["machine_decision_id"] == "candidate-a-vendor-materialization"
+    assert vendor["reversal"]["method"] == "remove"
     assert vendor["source_policy"]["public_sources_only"] is True
     assert source["source_id"] == "candidate-a-security-page"
     assert source["source_url"] == "https://candidate-a.example/security"
     assert artifact["source_id"] == "candidate-a-security-page"
     assert change["change_type"] == "created"
+
+    # A linked, append-only machine decision record is emitted with separation
+    # of duties (deciding bot != discovery bot) and a not_before delay window.
+    import json as _json
+
+    decision_files = sorted((tmp_path / "maintenance/machine-decisions").glob("*.ndjson"))
+    assert len(decision_files) == 1
+    decisions = [_json.loads(line) for line in decision_files[0].read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert len(decisions) == 1
+    decision = decisions[0]
+    assert decision["decision_id"] == "candidate-a-vendor-materialization"
+    assert decision["decision"] == "materialize_provisional"
+    assert decision["subject_id"] == "candidate-a"
+    assert decision["deciding_bot"] != decision["discovery_bot"]
+    assert decision["not_before"] > decision["created_at"]
+    assert decision["not_advice"] is True
 
 
 def test_apply_strict_growth_preserves_canonicalized_final_url(tmp_path):

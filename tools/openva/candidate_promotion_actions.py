@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -11,11 +11,78 @@ import yaml
 from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.catalog_lifecycle import change_event
 from tools.openva.indexes import build_indexes
+from tools.openva.machine_decisions import append_decisions
+from tools.openva.pack import canonical_json, sha256_bytes
 from tools.openva.promotion_planner import REVIEWED_CANDIDATE_PROMOTION_ACTION, STRICT_GROWTH_PROMOTION_ACTION
 from tools.openva.source_verification import ROOT, display_path
 from tools.openva.strict_growth_redirects import canonical_clean_reasons, redirect_metrics_for_actions
 
 HASH_TBD = "sha256:TBD"
+
+# WP36: machine materialization writes machine_provisional vendors (not active),
+# each backed by a machine decision record with separation of duties.
+DISCOVERY_BOT = "catalog-growth-discovery"
+DECIDING_BOT = "strict-growth-materializer"
+DEFAULT_NOT_BEFORE_DELAY_HOURS = 48
+
+
+def not_before_delay_hours() -> int:
+    path = ROOT / "config" / "machine-evidence-thresholds.yaml"
+    try:
+        config = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except FileNotFoundError:
+        return DEFAULT_NOT_BEFORE_DELAY_HOURS
+    return int((config.get("materialization") or {}).get("not_before_delay_hours", DEFAULT_NOT_BEFORE_DELAY_HOURS))
+
+
+def materialization_decision(action: dict[str, Any], vendor_id: str, decision_id: str, now: datetime) -> dict[str, Any]:
+    """Build the append-only machine decision record for a provisional vendor.
+
+    Separation of duties: the deciding bot differs from the discovery bot.
+    """
+    not_before = now + timedelta(hours=not_before_delay_hours())
+    source = action.get("source", {}) or {}
+    evidence = source.get("evidence", {}) or {}
+    candidate_digest = sha256_bytes(canonical_json(action))
+    return {
+        "schema_version": "0.1.0",
+        "decision_id": decision_id,
+        "decision_type": "vendor_materialization",
+        "subject_type": "vendor",
+        "subject_id": vendor_id,
+        "decision": "materialize_provisional",
+        "deciding_bot": DECIDING_BOT,
+        "supporting_bots": [],
+        "discovery_bot": DISCOVERY_BOT,
+        "evidence": {
+            "official_domain": str((action.get("vendor", {}) or {}).get("official_domain_candidate") or ""),
+            "source_type": str(source.get("source_type_candidate") or ""),
+            "candidate_url": str(source.get("candidate_url") or ""),
+            "http_status": evidence.get("http_status"),
+            "matched_terms": evidence.get("matched_terms") or [],
+            "final_url": evidence.get("final_url"),
+        },
+        "counter_evidence": [],
+        "thresholds": {
+            "required_score": 1.0,
+            "actual_score": 1.0,
+            "results": {"strict_growth_validated": True},
+        },
+        "source_queue_reference": str(
+            (action.get("vendor", {}) or {}).get("cohort_id")
+            or (action.get("vendor", {}) or {}).get("coverage_lane")
+            or "strict_growth"
+        ),
+        "candidate_digest": candidate_digest,
+        "created_at": now.isoformat().replace("+00:00", "Z"),
+        "not_before": not_before.isoformat().replace("+00:00", "Z"),
+        "reversal": {
+            "method": "remove",
+            "reference": f"Revert the materialization PR for {vendor_id}; see decision {decision_id}.",
+            "reversal_decision_id": None,
+        },
+        "not_advice": True,
+    }
 CONFIDENCE_MAP = {
     "likely": "high",
     "possible": "medium",
@@ -164,7 +231,7 @@ def source_from_candidate(candidate: dict[str, Any], action: dict[str, Any] | No
     return record
 
 
-def vendor_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
+def vendor_from_strict_growth(action: dict[str, Any], decision_id: str) -> dict[str, Any]:
     vendor = action["vendor"]
     domain = str(vendor["official_domain_candidate"]).lower().removeprefix("www.")
     return {
@@ -182,8 +249,17 @@ def vendor_from_strict_growth(action: dict[str, Any]) -> dict[str, Any]:
             "gated_materials_excluded": True,
             "raw_documents_mirrored_by_default": False,
         },
-        "catalog_status": "active",
-        "notes": "Machine-strict catalog growth candidate promoted from public source discovery evidence. Metadata-only; not advisory.",
+        # WP36: machine-materialized vendors enter as machine_provisional, never
+        # directly active. Promotion to active is WP37 quorum after observation.
+        "catalog_status": "machine_provisional",
+        "machine_generated": True,
+        "machine_decision_id": decision_id,
+        "reversal": {
+            "method": "remove",
+            "reference": f"Revert the materialization PR; see decision {decision_id}.",
+            "reversal_decision_id": None,
+        },
+        "notes": "Machine-provisional catalog growth vendor materialized from public source discovery evidence. Metadata-only; not advisory; reversible.",
         "entity_surface": "global_brand",
         "source_authority_language": "en",
     }
@@ -270,10 +346,11 @@ def apply_reviewed_candidate(action: dict[str, Any], root: Path) -> list[dict[st
 
 def apply_strict_growth(action: dict[str, Any], root: Path, written_vendors: set[str]) -> list[dict[str, str]]:
     validate_strict_growth_action(action)
-    vendor = vendor_from_strict_growth(action)
+    vendor_id = str(action["vendor"]["candidate_vendor_id"])
+    decision_id = f"{vendor_id}-vendor-materialization"
+    vendor = vendor_from_strict_growth(action, decision_id)
     source = source_from_strict_growth(action)
     artifact = artifact_from_source(source)
-    vendor_id = str(vendor["vendor_id"])
     base = root / "data" / "vendors" / vendor_id
     v_path = base / "vendor.yaml"
     s_path = base / "sources" / f"{source['source_id']}.yaml"
@@ -285,9 +362,16 @@ def apply_strict_growth(action: dict[str, Any], root: Path, written_vendors: set
         if vendor_id not in written_vendors:
             raise ValueError(f"strict growth vendor already exists: {display_path(v_path, root)}")
     else:
+        # Emit the append-only machine decision record before writing the
+        # provisional vendor, so the vendor links a real, committed decision.
+        decisions_dir = root / "maintenance" / "machine-decisions"
+        decision = materialization_decision(action, vendor_id, decision_id, datetime.now(UTC))
+        decision_files = append_decisions([decision], decisions_dir)
         write_yaml(v_path, vendor)
         written_vendors.add(vendor_id)
         file_actions.append({"action": "write", "path": display_path(v_path, root), "candidate_path": "strict_growth_plan"})
+        for decision_file in decision_files:
+            file_actions.append({"action": "append", "path": display_path(decision_file, root), "candidate_path": "machine_decision_record"})
 
     for path in (s_path, a_path, c_path):
         if path.exists():
