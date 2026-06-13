@@ -18,6 +18,7 @@ on:
           - strict-growth-latest
           - strict-growth-shortlist
           - machine-provisional-from-queue
+          - quorum-promotion
       vendor_limit:
         description: "Optional number of candidate vendors to discover when regenerating strict-growth candidate evidence"
         required: false
@@ -648,3 +649,180 @@ jobs:
             reports/openva-failure-routing/catalog-promotion-failure-routing-report.json
             reports/openva-failure-routing/catalog-promotion-failure-routing-report.md
           if-no-files-found: ignore
+
+  quorum-promotion:
+    # WP37: autonomous promotion of a machine_provisional vendor to active
+    # through an independent quorum. Runs on the weekly schedule and on explicit
+    # dispatch with promotion_plan_mode=quorum-promotion. Status-only,
+    # one-vendor-per-PR; the PR is merged later by the pr_safety lane after the
+    # promotion delay.
+    if: github.event_name == 'schedule' || inputs.promotion_plan_mode == 'quorum-promotion'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Ensure quorum-promotion labels exist
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          gh label create quorum-promotion \
+            --color BFD4F2 \
+            --description "WP37 quorum promotion marker (machine_provisional -> active)" \
+            --force || true
+          gh label create automerge:quorum-promotion \
+            --color 0E8A16 \
+            --description "WP37 quorum promotion merge lane (released after the promotion delay)" \
+            --force || true
+      - name: Run source-intelligence release gate (pr profile)
+        id: release_gate
+        run: |
+          set -uo pipefail
+          if python -m tools.openva.release_gates check --profile pr \
+              --out-json release-gates.json --out-md release-gates-summary.md; then
+            echo "decision=pass" >> "$GITHUB_OUTPUT"
+          else
+            echo "decision=blocked" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Select promotable provisional vendor
+        id: select
+        run: |
+          set -euo pipefail
+          python -m tools.openva.quorum_promotion select \
+            --release-gate-decision "${{ steps.release_gate.outputs.decision }}" \
+            --output select.env
+          cat select.env >> "$GITHUB_ENV"
+          cat select.env >> "$GITHUB_OUTPUT"
+      - name: Report when no promotable provisional vendor
+        if: steps.select.outputs.PROMOTABLE_VENDOR_ID == ''
+        run: echo "No promotable machine_provisional vendor at this time."
+      - name: Apply quorum promotion (status-only)
+        if: steps.select.outputs.PROMOTABLE_VENDOR_ID != ''
+        run: |
+          python -m tools.openva.quorum_promotion promote \
+            --vendor-id "$PROMOTABLE_VENDOR_ID" \
+            --release-gate-decision "${{ steps.release_gate.outputs.decision }}" \
+            --output quorum-promotion-report.json
+      - name: Validate promoted catalog
+        if: steps.select.outputs.PROMOTABLE_VENDOR_ID != ''
+        run: python -m tools.openva.validate validate
+      - name: Rebuild generated outputs
+        if: steps.select.outputs.PROMOTABLE_VENDOR_ID != ''
+        run: python -m tools.openva.validate build-indexes
+      - name: Prepare PR body
+        if: steps.select.outputs.PROMOTABLE_VENDOR_ID != ''
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = json.load(open("quorum-promotion-report.json", encoding="utf-8"))
+          vendor_id = report["vendor_id"]
+          lines = [
+              "## Summary",
+              "",
+              f"Status-only promotion of `{vendor_id}` from machine_provisional to active",
+              "through an independent machine quorum.",
+              "",
+              "## Decision",
+              "",
+              f"- Promotion decision: `{report['decision_id']}`",
+              f"- Deciding bot: `{report['deciding_bot']}`",
+              f"- Discovery bot: `{report['discovery_bot']}`",
+              f"- Independent supporting modules: `{', '.join(report['independent_supporting_modules'])}`",
+              f"- Supporting bots: `{', '.join(report['supporting_bots'])}`",
+              f"- Promotion not-before: `{report['not_before']}`",
+              "",
+              "## Guardrails",
+              "",
+              "- Status-only: changes only the vendor lifecycle/provenance fields and the promotion decision record.",
+              "- Independent quorum with separation of duties; the deciding bot is neither the discovery bot nor the sole supporter.",
+              "- Does not merge automatically; the merge lane enables auto-merge only after the promotion delay.",
+              "- Operational metadata only; not legal, compliance, procurement, security, or vendor-risk advice.",
+              "",
+          ]
+          Path("quorum-promotion-pr-body.md").write_text("\n".join(lines), encoding="utf-8")
+          PY
+      - name: Commit and push promotion branch
+        if: steps.select.outputs.PROMOTABLE_VENDOR_ID != ''
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          PR_BRANCH="agent-quorum-promotion-${PROMOTABLE_VENDOR_ID}-${GITHUB_RUN_ID}"
+          echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
+          git switch -c "$PR_BRANCH"
+          git add data indexes dist openva-pack.json maintenance/machine-decisions
+          git commit -m "Catalog: quorum-promote ${PROMOTABLE_VENDOR_ID} to active"
+          git push --force-with-lease origin "$PR_BRANCH"
+      - name: Create pull request
+        if: steps.select.outputs.PROMOTABLE_VENDOR_ID != ''
+        env:
+          # Workflow-triggering token so the opened PR can trigger the merge
+          # lane; falls back to github.token until the secret is set.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA=$(git rev-parse HEAD)
+          cp quorum-promotion-pr-body.md quorum-promotion-pr-body-final.md
+          {
+            echo ""
+            echo "- Head SHA: \`$HEAD_SHA\`"
+          } >> quorum-promotion-pr-body-final.md
+          gh pr create \
+            --base main \
+            --head "$PR_BRANCH" \
+            --title "Catalog: quorum-promote ${PROMOTABLE_VENDOR_ID} to active" \
+            --body-file quorum-promotion-pr-body-final.md
+      - name: Label quorum-promotion PR
+        if: steps.select.outputs.PROMOTABLE_VENDOR_ID != ''
+        env:
+          # WP37: the marker label is applied now; the merge label is applied by
+          # the controller below once the promotion delay has passed.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          PR_NUMBER=$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr edit "$PR_NUMBER" --add-label quorum-promotion
+          fi
+      - name: Release quorum-promotion PRs past not_before
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          # Controller: open promotion PRs not yet cleared for the merge lane.
+          gh pr list --state open --label quorum-promotion \
+            --json number,headRefName,labels \
+            --jq '.[] | select([.labels[].name] | index("automerge:quorum-promotion") | not) | [.number, .headRefName] | @tsv' \
+            > quorum-promotion-prs.tsv || true
+          while IFS=$'\t' read -r PR_NUMBER HEAD_REF; do
+            [ -z "${PR_NUMBER:-}" ] && continue
+            git fetch origin "$HEAD_REF" --quiet || continue
+            if [ "$(python -m tools.openva.machine_provisional_controller ready --ref "origin/$HEAD_REF" --now "$NOW" --decision promote)" = "true" ]; then
+              gh pr edit "$PR_NUMBER" --add-label automerge:quorum-promotion
+              echo "Released PR #$PR_NUMBER (promotion not_before passed)."
+            else
+              echo "PR #$PR_NUMBER still within promotion not_before delay; leaving for a later run."
+            fi
+          done < quorum-promotion-prs.tsv
+      - name: Upload quorum-promotion artifacts
+        if: always() && steps.select.outputs.PROMOTABLE_VENDOR_ID != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-quorum-promotion-artifacts
+          path: |
+            quorum-promotion-report.json
+            release-gates.json
+            release-gates-summary.md
+            quorum-promotion-pr-body.md
+          if-no-files-found: warn

@@ -6,9 +6,77 @@ default_posture:
   undeclared_write_paths_are_denied: true
   report_only_lanes_may_write_catalog_truth: false
   discovery_lanes_may_write_catalog_truth: false
+  # WP37: no single bot may hold discovery + decision + merge. Authority is
+  # tiered (see authority_levels); separation of duty is enforced across tiers,
+  # not by trusting any one bot.
+  no_single_bot_holds_discovery_decision_and_merge: true
+# WP37 explicit authority levels 0-5. A level is a ROLE ceiling, not a lane:
+# several reviewer roles share level 2 inside one workflow step, and some
+# levels (5) are reserved for a later work package. Every lane declares the
+# highest level it may exercise; a lane may never act above its declared level.
+authority_levels:
+  - level: 0
+    name: report_only
+    description: >-
+      Observation, discovery, quality, dashboards, chatops, and submission
+      verification. May produce reports, issues, comments, or operational
+      labels. Holds no catalog-truth, decision, or merge authority.
+    may_write_catalog_truth: false
+    may_record_decision: false
+    may_merge: false
+  - level: 1
+    name: evidence_authorship
+    description: >-
+      May open a pull request that proposes catalog or publication state from
+      linked evidence. Cannot record an autonomous promotion/materialization
+      decision, and cannot merge.
+    may_write_catalog_truth: true
+    may_record_decision: false
+    may_merge: false
+  - level: 2
+    name: independent_reviewer
+    description: >-
+      An independent quorum reviewer (identity, domain-authority, source,
+      duplicate/fuzzy-match, adversarial, release-gate). Casts a clear/challenge
+      verdict over committed evidence. Holds no write, decision, or merge
+      authority on its own; two reviewers built from the same module are not
+      independent.
+    may_write_catalog_truth: false
+    may_record_decision: false
+    may_merge: false
+  - level: 3
+    name: deciding
+    description: >-
+      Records an append-only machine decision (materialize_provisional /
+      promote) once an independent quorum supports it. May never be the
+      discovery bot for the same subject and may never be the sole supporter of
+      its own decision.
+    may_write_catalog_truth: true
+    may_record_decision: true
+    may_merge: false
+  - level: 4
+    name: merge_authority
+    description: >-
+      May enable native auto-merge and apply merge labels after path checks,
+      gates, and required checks pass. Merges only already-reviewable PR state;
+      never discovers, decides, or authors catalog truth.
+    may_write_catalog_truth: false
+    may_record_decision: false
+    may_merge: true
+  - level: 5
+    name: reversal_authority
+    description: >-
+      Rollback / quarantine reversal (reserved for WP38). May revert recent
+      machine-created state through a pull request; never rewrites the ledger or
+      decision history, and must not be the component that authored the state it
+      reverts. No active lane operates at this level yet.
+    may_write_catalog_truth: true
+    may_record_decision: true
+    may_merge: false
 lanes:
   - id: pr_safety
     status: active
+    authority_level: 4
     workflows: [validate.yml, catalog-pr-guard.yml, agent-weighted-review.yml, agent-automerge.yml]
     may_write_branches: false
     may_open_prs: false
@@ -24,6 +92,7 @@ lanes:
     deny_by_default: true
   - id: source_maintenance_report
     status: active
+    authority_level: 0
     workflows: [source-maintenance-report.yml, source-refinement-scan.yml]
     may_write_branches: false
     may_open_prs: false
@@ -38,6 +107,7 @@ lanes:
     deny_by_default: true
   - id: source_repair
     status: active
+    authority_level: 1
     workflows: [source-repair-pr.yml, source-repair-pr-cleanup.yml]
     may_write_branches: true
     may_open_prs: true
@@ -52,6 +122,7 @@ lanes:
     deny_by_default: true
   - id: observation_ledger_append
     status: active
+    authority_level: 1
     workflows: [observation-ledger-append-pr.yml]
     may_write_branches: true
     may_open_prs: true
@@ -76,6 +147,7 @@ lanes:
     deny_by_default: true
   - id: catalog_quality
     status: active
+    authority_level: 0
     workflows: [coverage-audit.yml]
     may_write_branches: false
     may_open_prs: false
@@ -90,6 +162,7 @@ lanes:
     deny_by_default: true
   - id: catalog_growth_discovery
     status: active
+    authority_level: 0
     workflows: [catalog-growth-discovery.yml]
     may_write_branches: false
     may_open_prs: false
@@ -103,8 +176,41 @@ lanes:
     token_permissions: {contents: read, issues: write}
     audit_artifacts: [candidate discovery reports, proposal plans]
     deny_by_default: true
+  - id: catalog_growth_quorum_promotion
+    status: active
+    authority_level: 3
+    workflows: [candidate-promotion-pr.yml, agent-automerge.yml]
+    may_write_branches: true
+    may_open_prs: true
+    may_label_prs: true
+    allowed_labels: [quorum-promotion, automerge:quorum-promotion]
+    allowed_label_actions: [add]
+    may_enable_auto_merge: false
+    may_merge_prs: false
+    may_write_catalog_truth: true
+    write_authority_explanation: >-
+      WP37 quorum promotion writes ONLY the lifecycle/provenance fields of a
+      SINGLE existing machine_provisional vendor (catalog_status -> active, the
+      promotion machine_decision_id, and the reversal reference -> revert_promotion)
+      plus its linked append-only promotion decision record under
+      maintenance/machine-decisions/** and the deterministic generated outputs.
+      It is status-only: it may not add, remove, or edit any source, artifact, or
+      change record, and may not touch any other vendor. Promotion requires an
+      independent machine quorum (separate identity, domain-authority, source,
+      duplicate, and adversarial reviewers plus the release gate), separation of
+      duties (the deciding bot is never the discovery bot and never the sole
+      supporter), a minimum stable-observation age and observation count, no open
+      duplicate/adversarial/domain-drift challenge, and a promotion delay. The
+      autonomy boundary is enforced by the quorum, the decision record, the
+      status-only automerge gate, and the WP35 release gate, not by a human label.
+    allowed_paths: [data/vendors/**, maintenance/machine-decisions/**]
+    required_labels_for_write_authority: [reviewed-evidence]
+    token_permissions: {contents: write, pull-requests: write}
+    audit_artifacts: [quorum review report, promotion decision record, promotion application report, PR body]
+    deny_by_default: true
   - id: catalog_growth_promotion
     status: active
+    authority_level: 3
     workflows: [candidate-promotion-pr.yml]
     may_write_branches: true
     may_open_prs: true
@@ -132,6 +238,7 @@ lanes:
     deny_by_default: true
   - id: publication
     status: active
+    authority_level: 1
     workflows: [release-candidate.yml, site-pages.yml, release-downloads.yml, site-live-feed.yml]
     may_write_branches: false
     may_open_prs: false
@@ -147,6 +254,7 @@ lanes:
     deny_by_default: true
   - id: bot_dashboard_issue_sync
     status: active
+    authority_level: 0
     workflows: [bot-dashboard-issue.yml]
     may_write_branches: false
     may_open_prs: false
@@ -162,6 +270,7 @@ lanes:
     deny_by_default: true
   - id: bot_chatops_hold
     status: active
+    authority_level: 0
     workflows: [bot-chatops.yml]
     may_write_branches: false
     may_open_prs: false
@@ -179,6 +288,7 @@ lanes:
     deny_by_default: true
   - id: submission_verification
     status: active
+    authority_level: 0
     workflows: [submitted-source-verification.yml]
     may_write_branches: false
     may_open_prs: false
@@ -196,6 +306,7 @@ lanes:
     deny_by_default: true
   - id: support_agent_pr
     status: active
+    authority_level: 1
     workflows: [catalog-agent-pr.yml, catalog-maintenance-pr.yml, contribution-intake-agent.yml]
     may_write_branches: true
     may_open_prs: true
@@ -211,6 +322,7 @@ lanes:
     deny_by_default: true
   - id: legacy_report
     status: shadow_report_only
+    authority_level: 0
     workflows: [catalog-maintenance.yml, source-refinement-queue.yml, observe-report.yml]
     may_write_branches: false
     may_open_prs: false

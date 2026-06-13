@@ -137,29 +137,37 @@ rules:
   # --- deferred: not yet authoritative; named owning work package
   - id: no_single_bot_canonicalization
     statement: >-
-      No single bot may create canonical truth by itself; canonicalization
-      requires an independent quorum.
+      No single bot may create canonical truth by itself; promotion of a
+      machine_provisional vendor to active requires an independent quorum with
+      separation of duties (the deciding bot is never the discovery bot and
+      never the sole supporter; independence is counted by distinct reviewer
+      module).
     enforcement:
-      state: deferred
-      owner: wp37
-    authoritative: false
+      state: machine_enforced
+      owner: release_gates
+      gate_id: quorum_promotion_independence
+    authoritative: true
 
   - id: no_bot_approves_its_own_discovery
     statement: >-
       A discovery component may not approve its own discovery; the deciding bot
       must differ from the discovery bot (separation of duties).
     enforcement:
-      state: deferred
+      state: contract_enforced
       owner: wp37
-    authoritative: false
+      evidence: tools/openva/bot_quorum.py separation-of-duty enforcement; tests/test_bot_quorum.py prohibited self-approval combinations
+    authoritative: true
 
   - id: no_identity_merge_without_resolution_evidence
     statement: >-
-      No identity merge without duplicate and entity-resolution evidence.
+      No identity merge without duplicate and entity-resolution evidence; the
+      identity resolver and duplicate/fuzzy-match reviewers must clear before a
+      promotion decision is recorded.
     enforcement:
-      state: deferred
+      state: contract_enforced
       owner: wp37
-    authoritative: false
+      evidence: tools/openva/bot_quorum.py identity and duplicate reviewers; tests/test_bot_quorum.py
+    authoritative: true
 
   - id: no_source_mutation_without_linked_evidence
     statement: >-

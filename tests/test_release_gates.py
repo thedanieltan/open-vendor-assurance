@@ -154,6 +154,40 @@ def test_machine_rule_every_machine_created_claim_reversible(tmp_path):
     assert rg.find_irreversible_machine_records(tmp_path, markers, reversals) == []
 
 
+def test_machine_rule_no_single_bot_canonicalization(tmp_path):
+    decisions_dir = tmp_path / "maintenance" / "machine-decisions"
+    decisions_dir.mkdir(parents=True)
+    ledger = decisions_dir / "2026-06.ndjson"
+
+    def promote(**overrides) -> dict:
+        record = {
+            "decision_id": "x-promotion",
+            "decision": "promote",
+            "subject_id": "x",
+            "deciding_bot": "quorum-promotion-decider",
+            "discovery_bot": "catalog-growth-discovery",
+            "supporting_bots": ["quorum-identity-resolver", "quorum-source-verifier"],
+        }
+        record.update(overrides)
+        return record
+
+    # An independent quorum -> clean.
+    ledger.write_text(json.dumps(promote()) + "\n", encoding="utf-8")
+    assert rg.find_single_bot_canonicalizations(tmp_path, 2) == []
+
+    # discovery == deciding -> violation.
+    ledger.write_text(json.dumps(promote(discovery_bot="quorum-promotion-decider")) + "\n", encoding="utf-8")
+    assert rg.find_single_bot_canonicalizations(tmp_path, 2), "discovery==deciding must be detected"
+
+    # deciding bot is the sole supporter -> violation.
+    ledger.write_text(json.dumps(promote(supporting_bots=["quorum-promotion-decider"])) + "\n", encoding="utf-8")
+    assert rg.find_single_bot_canonicalizations(tmp_path, 2), "sole self-support must be detected"
+
+    # only one independent supporter (< 2) -> violation.
+    ledger.write_text(json.dumps(promote(supporting_bots=["quorum-identity-resolver"])) + "\n", encoding="utf-8")
+    assert rg.find_single_bot_canonicalizations(tmp_path, 2), "insufficient independence must be detected"
+
+
 # --------------------------------------------------------------------------- #
 # material_change_surfaced: latest-per-source, not all-events (regression for
 # the false-fail exposed when an autonomous append superseded older material
@@ -268,6 +302,7 @@ def test_machine_enforced_rules_have_negative_fixtures():
         "exports_digest_integrity",
         "no_raw_mirroring",
         "reversible_provenance",
+        "quorum_promotion_independence",
     }
     declared = {r["enforcement"]["gate_id"] for r in _rules_by_state("machine_enforced")}
     assert declared == tested_gate_ids, "every machine_enforced gate must have a negative fixture here"
