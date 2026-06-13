@@ -616,6 +616,14 @@ def check_prohibited_language() -> list[str]:
     return failures
 
 
+def validate_machine_decisions() -> list[str]:
+    # WP36: committed machine decision records (append-only NDJSON, validated
+    # outside SCHEMA_MAP because the store is NDJSON, not per-record YAML).
+    from tools.openva.machine_decisions import validate_committed
+
+    return [f"machine-decision: {reason}" for reason in validate_committed()]
+
+
 def validate_all() -> int:
     failures: list[str] = []
     for kind in SCHEMA_MAP:
@@ -625,6 +633,7 @@ def validate_all() -> int:
     failures.extend(verify_pack_integrity())
     failures.extend(validate_adapter_outputs())
     failures.extend(check_prohibited_language())
+    failures.extend(validate_machine_decisions())
     failures.extend(check_generated_current())
 
     if failures:

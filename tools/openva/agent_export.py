@@ -162,6 +162,9 @@ def vendor_export_payload(
         "vendor_id": vendor.get("vendor_id"),
         "canonical_name": vendor.get("display_name"),
         "domains": list(vendor.get("official_domains") or []),
+        # WP36: expose lifecycle state so provisional/promoted/quarantined
+        # vendors are visible to consumers rather than silently dropped.
+        "catalog_status": vendor.get("catalog_status"),
         "sources": rows,
         "not_advice": True,
     }
@@ -254,6 +257,7 @@ def build_agent_exports(
                 "vendor_id": vendor_id,
                 "canonical_name": vendor.get("display_name"),
                 "domains": list(vendor.get("official_domains") or []),
+                "catalog_status": vendor.get("catalog_status"),
                 "source_count": len(sources_by_vendor.get(vendor_id, [])),
                 "export_path": rel_path,
             }

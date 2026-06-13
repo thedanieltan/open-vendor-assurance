@@ -69,6 +69,7 @@ One URL should normally produce one canonical source record. One canonical sourc
 - **Deferred action**: eligible or discovered action not applied by the generated Catalog PR.
 - **Batch-deferred action**: action deferred only because the generated-PR promotion-action cap was reached.
 - **max_promotion_actions_per_pr**: maximum selected promotion actions applied by one generated Catalog PR.
+- **machine_provisional** (WP36): a vendor lifecycle `catalog_status`. A vendor identity materialized by autonomous growth from the coverage-growth `missing_vendor` queue, carrying a `machine_decision_id`, machine-decision provenance, and a `reversal` reference. It is **not** `active`: it is promoted to `active` (the terminal live vendor state) only through WP37 independent quorum after a stable observation window, or quarantined if challenged. Distinct from **machine-canonical** (an automerge lane, below) and from source/legal-entity **canonical** (a record-class term, not a vendor status). Every machine_provisional record is reversible by reverting its materialization PR.
 
 Discovery proposes. Promotion writes. Canonical catalog changes happen only through controlled write paths.
 
