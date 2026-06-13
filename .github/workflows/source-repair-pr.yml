@@ -340,8 +340,8 @@ jobs:
       - name: Create or update pull request
         if: steps.catalog_changes.outputs.has_changes == 'true'
         env:
-          # Workflow-triggering token so the opened PR can trigger agent-automerge;
-          # falls back to github.token (current behaviour) until the secret is set.
+          # Workflow-triggering token so the opened PR can trigger the automerge
+          # lane; falls back to github.token (current behaviour) until set.
           GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
         run: |
           set -euo pipefail
