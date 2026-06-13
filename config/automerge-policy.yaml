@@ -72,6 +72,14 @@ strict_growth:
 source_repair:
   max_source_records_per_pr: 10
 
+observation:
+  # WP35.5 autonomous observation-ledger append lane. Append-only operational
+  # observation events under the committed ledger events path only; never
+  # catalog truth. The observation_automerge checker enforces append-only
+  # behaviour and schema validity on top of this path restriction.
+  allowed_path_prefix: maintenance/source-observations/events/
+  max_appended_rows: 5000
+
 backlog:
   cadence: weekly
   strict_pr_candidate:
@@ -104,6 +112,9 @@ lanes:
     label: automerge:generated
   observation:
     label: automerge:observation
+    required_labels:
+      - observation-ledger
+    execution_wired: true
   machine_canonical:
     label: automerge:machine-canonical
   strict_growth:

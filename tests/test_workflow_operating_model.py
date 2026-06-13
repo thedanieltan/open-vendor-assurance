@@ -20,6 +20,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "catalog-pr-guard.yml",
     "contribution-intake-agent.yml",
     "coverage-audit.yml",
+    "observation-ledger-append-pr.yml",
     "observe-report.yml",
     "release-candidate.yml",
     "release-downloads.yml",

@@ -26,6 +26,7 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `source-refinement-scan.yml` | `keep_core` | Confirms P0 source repair candidates from repeated source maintenance evidence. | Keep. |
 | `source-repair-pr.yml` | `keep_core` | Manual, reviewed, validated source repair PR creation path. | Keep manual and reviewed-only. |
 | `source-repair-pr-cleanup.yml` | `keep_core` | Cleans up stale generated source repair PRs. | Keep. |
+| `observation-ledger-append-pr.yml` | `keep_core` | Autonomous append-only observation-ledger continuity path that writes only `maintenance/source-observations/events/**` and is release-gated at merge. | Keep narrowly scoped to the `observation_ledger_append` lane; never widen beyond the ledger events path. |
 | `coverage-audit.yml` | `keep_core` | Catalog quality entry point for completeness, entity correctness, and provenance. | Keep. |
 | `catalog-growth-discovery.yml` | `keep_core` | Catalog expansion proposal entry point. | Keep as report/proposal path only. |
 | `candidate-promotion-pr.yml` | `keep_core` | Controlled write path for reviewed promotions. | Keep. |

@@ -84,6 +84,24 @@ Append rules:
 - a row whose `observed_at` predates the last committed row for the same source is refused;
 - rows validate against `schemas/openva/observation-ledger-record.schema.json`.
 
+### Autonomous append loop (WP35.5)
+
+Recurring appends are authored autonomously — no human author. After a successful
+`source-maintenance-report` run, `observation-ledger-append-pr.yml` downloads that
+exact run's artifact, filters the delta to genuinely-new rows
+(`observation_automerge plan`, idempotent on re-trigger), appends them, and opens a
+PR labelled `observation-ledger` + `automerge:observation`. The append still goes
+through a pull request — no workflow commits directly to `main`.
+
+Human review is replaced by independent machine review, not by unchecked
+automation. The `observation-ledger` job in `agent-automerge.yml` enables native
+auto-merge only after the `observation_automerge check` (path-restricted to
+`maintenance/source-observations/events/**`, append-only verified against the base
+revision, every new row schema-valid, both labels present) and the WP35 release
+gate (`release_gates check --profile pr`) pass. This lane writes only append-only
+observation events; it never writes catalog truth, and every appended event is
+reversible by reverting the commit.
+
 ## Freshness
 
 Freshness is computed per source at report time from `config/observation-sla.yaml`; it is not a property of an observation. Defaults: fresh within 30 days, stale after 30, expired after 90; `subprocessors_list` overrides to 14/45. A source with no observation history reads `unknown`. `observed_within_sla` is true while the latest observation is within the stale threshold.

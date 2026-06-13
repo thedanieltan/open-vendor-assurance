@@ -31,10 +31,18 @@ def test_generated_lane_rejects_source_data_change():
     assert "non_generated_path:data/vendors/stripe.yaml" in result.reasons
 
 
-def test_observation_lane_accepts_observation_artifacts_and_generated_outputs():
-    result = eligible_for_lane(["observations/stripe.json", "indexes/observations.json"], [AUTOMERGE_OBSERVATION])
+def test_observation_lane_accepts_committed_ledger_events_and_generated_outputs():
+    result = eligible_for_lane(
+        ["maintenance/source-observations/events/2026-06.ndjson", "indexes/observations.json"],
+        [AUTOMERGE_OBSERVATION],
+    )
     assert result.eligible is True
     assert result.lane == AUTOMERGE_OBSERVATION
+
+
+def test_observation_lane_rejects_non_ledger_path():
+    result = eligible_for_lane(["observations/stripe.json"], [AUTOMERGE_OBSERVATION])
+    assert result.eligible is False
 
 
 def test_machine_canonical_lane_accepts_only_canonical_source_paths_and_indexes():

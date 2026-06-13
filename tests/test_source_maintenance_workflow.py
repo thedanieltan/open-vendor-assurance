@@ -15,7 +15,8 @@ def test_source_maintenance_workflow_is_read_only_scheduled_and_manual():
 
     assert workflow["permissions"] == {"contents": "read"}
     assert set(triggers.keys()) == {"workflow_dispatch", "schedule"}
-    assert triggers["schedule"][0]["cron"] == "29 5 * * 3"
+    # WP35.5: twice weekly (Wed + Sun).
+    assert [entry["cron"] for entry in triggers["schedule"]] == ["29 5 * * 3", "29 5 * * 0"]
 
 
 def test_source_maintenance_workflow_runs_full_non_mutating_pipeline():

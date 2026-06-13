@@ -41,10 +41,12 @@ GENERATED_PREFIXES = (
     "release-downloads/",
 )
 
+# WP35.5: the observation automerge lane is scoped to the committed
+# observation-ledger events path only. Earlier prefixes did not match the
+# actual ledger location; the dedicated observation_automerge checker enforces
+# append-only behaviour on top of this path restriction.
 OBSERVATION_PREFIXES = (
-    "observations/",
-    "reports/observations/",
-    "site/dist/data/feed/",
+    "maintenance/source-observations/events/",
 )
 
 MACHINE_CANONICAL_EXACT = {"openva-pack.json"}
