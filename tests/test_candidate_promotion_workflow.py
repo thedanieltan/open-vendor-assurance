@@ -86,10 +86,12 @@ def test_candidate_promotion_commits_rebuilt_dist_outputs():
     text = workflow_text()
 
     assert "python -m tools.openva.validate build-indexes" in text
-    assert "git diff --quiet -- data indexes dist maintenance/generated openva-pack.json" in text
+    assert "git diff --quiet -- data indexes dist maintenance/generated maintenance/machine-decisions openva-pack.json" in text
     assert "git add data indexes dist openva-pack.json" in text
     assert "if [ -d maintenance/generated ]; then" in text
     assert "git add maintenance/generated" in text
+    # WP36b: the linked machine decision record is committed too.
+    assert "git add maintenance/machine-decisions" in text
 
 
 def test_strict_growth_latest_commits_sha_bound_evidence_files():
@@ -141,10 +143,17 @@ def test_source_preflight_report_uploads_before_fail_closed():
     assert "run: exit 1" in fail_block
 
 
-def test_candidate_promotion_workflow_does_not_add_automerge_labels():
+def test_candidate_promotion_applies_only_machine_provisional_labels():
+    # WP36b: candidate-promotion may apply the machine-provisional lane labels
+    # (the marker at materialization, and automerge:machine-provisional via the
+    # not_before controller). It must never apply any OTHER lane's automerge
+    # label.
     text = workflow_text()
 
     assert "gh pr edit" in text
-    assert "--add-label" not in text
-    assert "automerge:machine-canonical" not in text
-    assert "automerge:p0-source-repair" not in text
+    assert "--add-label machine-provisional" in text
+    assert "--add-label automerge:machine-provisional" in text
+    assert "--add-label automerge:machine-canonical" not in text
+    assert "--add-label automerge:p0-source-repair" not in text
+    assert "--add-label automerge:strict-growth" not in text
+    assert "--add-label automerge:observation" not in text
