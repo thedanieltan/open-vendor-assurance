@@ -68,19 +68,37 @@ def normalize_domain(value: Any) -> str:
     return raw.split("/", 1)[0].removeprefix("www.")
 
 
+def normalize_name(value: Any) -> str:
+    return " ".join(str(value or "").strip().lower().split())
+
+
 def current_vendor_identity(root: Path = ROOT) -> tuple[set[str], set[str]]:
     ids: set[str] = set()
     domains: set[str] = set()
     for path in sorted((root / "data" / "vendors").glob("*/vendor.yaml")):
         vendor = load_yaml(path)
         ids.add(str(vendor.get("vendor_id") or path.parent.name))
-        for domain in vendor.get("official_domains", []) or []:
-            if normalize_domain(domain):
-                domains.add(normalize_domain(domain))
-        for entrypoint in vendor.get("public_entrypoints", []) or []:
-            if normalize_domain(entrypoint):
-                domains.add(normalize_domain(entrypoint))
+        # WP36: fold in previous_domains so a renamed vendor's old domain still
+        # counts as a collision against a new candidate.
+        for key in ("official_domains", "public_entrypoints", "previous_domains"):
+            for value in vendor.get(key, []) or []:
+                if normalize_domain(value):
+                    domains.add(normalize_domain(value))
     return ids, domains
+
+
+def known_vendor_names(root: Path = ROOT) -> set[str]:
+    """Normalized display names and aliases, for WP36 candidate name-collision
+    checks (catches renames/prior brands a vendor_id/domain check would miss)."""
+    names: set[str] = set()
+    for path in sorted((root / "data" / "vendors").glob("*/vendor.yaml")):
+        vendor = load_yaml(path)
+        if normalize_name(vendor.get("display_name")):
+            names.add(normalize_name(vendor.get("display_name")))
+        for alias in vendor.get("display_aliases", []) or []:
+            if normalize_name(alias):
+                names.add(normalize_name(alias))
+    return names
 
 
 def duplicate_values(rows: list[dict[str, Any]], field: str, normalizer=str) -> set[str]:
