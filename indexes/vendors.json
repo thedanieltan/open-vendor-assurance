@@ -1,5 +1,5 @@
 {
-  "count": 164,
+  "count": 166,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -770,6 +770,43 @@
         "payments"
       ],
       "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bitwarden/vendor.yaml",
+      "catalog_status": "machine_provisional",
+      "display_name": "Bitwarden",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": null,
+      "machine_decision_id": "bitwarden-vendor-materialization",
+      "machine_generated": true,
+      "notes": "Machine-provisional catalog growth vendor materialized from public source discovery evidence. Metadata-only; not advisory; reversible.",
+      "official_domains": [
+        "bitwarden.com"
+      ],
+      "public_entrypoints": [
+        "https://bitwarden.com"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "reversal": {
+        "method": "remove",
+        "reference": "Revert the materialization PR; see decision bitwarden-vendor-materialization.",
+        "reversal_decision_id": null
+      },
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "machine_provisional",
+      "vendor_categories": [
+        "security"
+      ],
+      "vendor_id": "bitwarden"
     },
     {
       "_openva_path": "data/vendors/box/vendor.yaml",
@@ -2560,6 +2597,43 @@
         "ai_platform"
       ],
       "vendor_id": "intercom"
+    },
+    {
+      "_openva_path": "data/vendors/keeper/vendor.yaml",
+      "catalog_status": "machine_provisional",
+      "display_name": "Keeper",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": null,
+      "machine_decision_id": "keeper-vendor-materialization",
+      "machine_generated": true,
+      "notes": "Machine-provisional catalog growth vendor materialized from public source discovery evidence. Metadata-only; not advisory; reversible.",
+      "official_domains": [
+        "keepersecurity.com"
+      ],
+      "public_entrypoints": [
+        "https://keepersecurity.com"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "reversal": {
+        "method": "remove",
+        "reference": "Revert the materialization PR; see decision keeper-vendor-materialization.",
+        "reversal_decision_id": null
+      },
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "machine_provisional",
+      "vendor_categories": [
+        "security"
+      ],
+      "vendor_id": "keeper"
     },
     {
       "_openva_path": "data/vendors/klaviyo/vendor.yaml",

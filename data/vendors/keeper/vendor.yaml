@@ -1,0 +1,28 @@
+schema_version: 0.1.0
+vendor_id: keeper
+display_name: Keeper
+legal_name: null
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- keepersecurity.com
+public_entrypoints:
+- https://keepersecurity.com
+vendor_categories:
+- security
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+catalog_status: machine_provisional
+machine_generated: true
+machine_decision_id: keeper-vendor-materialization
+reversal:
+  method: remove
+  reference: Revert the materialization PR; see decision keeper-vendor-materialization.
+  reversal_decision_id: null
+notes: Machine-provisional catalog growth vendor materialized from public source discovery
+  evidence. Metadata-only; not advisory; reversible.
+entity_surface: global_brand
+source_authority_language: en
