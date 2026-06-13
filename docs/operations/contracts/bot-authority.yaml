@@ -50,6 +50,30 @@ lanes:
     token_permissions: {contents: write, pull-requests: write, issues: write}
     audit_artifacts: [reviewed repair evidence, repair action report, stale PR cleanup report]
     deny_by_default: true
+  - id: observation_ledger_append
+    status: active
+    workflows: [observation-ledger-append-pr.yml]
+    may_write_branches: true
+    may_open_prs: true
+    may_label_prs: true
+    allowed_labels: [observation-ledger, automerge:observation]
+    allowed_label_actions: [add]
+    may_enable_auto_merge: false
+    may_merge_prs: false
+    may_write_catalog_truth: false
+    write_authority_explanation: >-
+      May open a PR that appends append-only observation events under
+      maintenance/source-observations/events/** and apply only the two
+      observation automerge labels. Never rewrites existing ledger lines and
+      never writes catalog truth. The autonomy boundary is enforced by path
+      restriction, append-only verification, and the WP35 release gate rather
+      than by a human label; merge is enabled by the agent-automerge
+      observation job after that gate passes.
+    allowed_paths: [maintenance/source-observations/events/**]
+    required_labels_for_write_authority: []
+    token_permissions: {actions: read, contents: write, pull-requests: write}
+    audit_artifacts: [observation ledger append plan summary, observation-ledger-delta.ndjson, append PR body]
+    deny_by_default: true
   - id: catalog_quality
     status: active
     workflows: [coverage-audit.yml]

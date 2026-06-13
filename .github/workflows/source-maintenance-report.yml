@@ -30,7 +30,10 @@ on:
         required: false
         type: string
   schedule:
+    # WP35.5: twice weekly (Wed + Sun) so sharded observation coverage cycles
+    # in ~2 weeks and the autonomous append loop keeps the ledger fresh.
     - cron: "29 5 * * 3"
+    - cron: "29 5 * * 0"
 
 permissions:
   contents: read

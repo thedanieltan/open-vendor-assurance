@@ -1,0 +1,175 @@
+name: observation-ledger-append-pr
+
+# WP35.5 autonomous observation-ledger continuity.
+#
+# After a successful source-maintenance-report run, this workflow downloads that
+# exact run's artifact, filters its observation-ledger delta to genuinely-new
+# rows, appends them to the committed monthly ledger, and opens (or updates) a
+# path-restricted, append-only, release-gated PR labelled for the observation
+# automerge lane. It never pushes to main and never merges; the agent-automerge
+# observation job enables native auto-merge after the release gate passes.
+#
+# Authority: lane `observation_ledger_append` (docs/operations/contracts/
+# bot-authority.yaml) — may open PRs and apply ONLY the two observation labels;
+# writes only maintenance/source-observations/events/**; no catalog truth.
+
+on:
+  workflow_run:
+    workflows: ["source-maintenance-report"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: "Exact source-maintenance-report run id to append from"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+
+concurrency:
+  group: observation-ledger-append-pr
+  cancel-in-progress: false
+
+jobs:
+  observation-ledger-append:
+    # Only proceed for a successful upstream run, or an explicit manual dispatch.
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Resolve source run id
+        id: resolve
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RUN_ID="${{ inputs.source_run_id }}"
+          else
+            RUN_ID="${{ github.event.workflow_run.id }}"
+          fi
+          if [ -z "$RUN_ID" ]; then
+            echo "::error::no source-maintenance-report run id resolved"
+            exit 1
+          fi
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Download source maintenance artifact from the exact run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/smr"
+          gh run download "${{ steps.resolve.outputs.run_id }}" \
+            --name openva-source-maintenance-report \
+            --dir "$RUNNER_TEMP/smr"
+          test -f "$RUNNER_TEMP/smr/observation-ledger/observation-ledger-delta.ndjson"
+
+      - name: Plan new ledger rows
+        id: plan
+        run: |
+          set -euo pipefail
+          python -m tools.openva.observation_automerge plan \
+            --delta "$RUNNER_TEMP/smr/observation-ledger/observation-ledger-delta.ndjson" \
+            --out-delta "$RUNNER_TEMP/filtered-delta.ndjson" \
+            --out-summary "$RUNNER_TEMP/plan-summary.json"
+          NEW=$(python -c "import json;print(json.load(open(r'$RUNNER_TEMP/plan-summary.json'))['new_row_count'])")
+          echo "new_row_count=$NEW" >> "$GITHUB_OUTPUT"
+
+      - name: Exit without PR when there are no new rows
+        if: steps.plan.outputs.new_row_count == '0'
+        run: echo "No new observation events to append; exiting without a PR."
+
+      - name: Append new rows to the committed ledger
+        if: steps.plan.outputs.new_row_count != '0'
+        run: |
+          set -euo pipefail
+          python -m tools.openva.observation_ledger append \
+            --delta "$RUNNER_TEMP/filtered-delta.ndjson"
+
+      - name: Verify diff is confined to the ledger events path
+        if: steps.plan.outputs.new_row_count != '0'
+        run: |
+          set -euo pipefail
+          git add maintenance/source-observations/events
+          CHANGED=$(git diff --cached --name-only)
+          if [ -z "$CHANGED" ]; then
+            echo "::error::append produced no committed diff"
+            exit 1
+          fi
+          while IFS= read -r f; do
+            case "$f" in
+              maintenance/source-observations/events/*) : ;;
+              *) echo "::error::diff outside ledger events path: $f"; exit 1 ;;
+            esac
+          done <<< "$CHANGED"
+
+      - name: Open or update the append PR
+        if: steps.plan.outputs.new_row_count != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.resolve.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          PR_BRANCH="agent-observation-ledger-append-${RUN_ID}"
+          PR_TITLE="Observation ledger: append ${{ steps.plan.outputs.new_row_count }} events from run ${RUN_ID}"
+          python - "$RUNNER_TEMP/plan-summary.json" "$RUN_ID" > "$RUNNER_TEMP/pr-body.md" <<'PY'
+          import json, sys
+          summary = json.load(open(sys.argv[1]))
+          run_id = sys.argv[2]
+          months = ", ".join(summary.get("affected_months", [])) or "(none)"
+          by_type = summary.get("by_event_type", {})
+          lines = [
+              "## Observation ledger append (autonomous)",
+              "",
+              "Append-only operational observation events appended to the committed ledger.",
+              "Operational metadata only; not legal, compliance, procurement, security, audit, or vendor-risk advice.",
+              "",
+              "### Provenance",
+              f"- Source workflow run: `{run_id}` (source-maintenance-report)",
+              "- Artifact: `openva-source-maintenance-report`",
+              "- Delta file: `observation-ledger/observation-ledger-delta.ndjson`",
+              f"- Filtered delta digest: `{summary.get('filtered_delta_digest')}`",
+              f"- New rows: {summary.get('new_row_count')}",
+              f"- Affected monthly shard(s): {months}",
+              "",
+              "### Event composition",
+          ]
+          for event_type, count in sorted(by_type.items()):
+              lines.append(f"- `{event_type}`: {count}")
+          lines += [
+              "",
+              "### Authority and boundary",
+              "- Lane: `observation_ledger_append` (Level-0/1 operational events).",
+              "- Writes only `maintenance/source-observations/events/**`; never catalog truth.",
+              "- Append-only: existing ledger lines are never rewritten or removed.",
+              "- Labels applied: `observation-ledger`, `automerge:observation`.",
+              "- Merge is enabled by the agent-automerge observation job after the WP35 release gate passes.",
+              "",
+              "### Reversal",
+              "Reversible by reverting the append commit; the source delta is reproducible from the named run.",
+          ]
+          print("\n".join(lines))
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$PR_BRANCH" 2>/dev/null || git switch "$PR_BRANCH"
+          git commit -m "$PR_TITLE"
+          git push --force-with-lease origin "$PR_BRANCH"
+          EXISTING=$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh pr edit "$EXISTING" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/pr-body.md"
+            PR_NUMBER="$EXISTING"
+          else
+            PR_NUMBER=$(gh pr create --base main --head "$PR_BRANCH" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/pr-body.md")
+          fi
+          gh pr edit "$PR_NUMBER" --add-label "observation-ledger" --add-label "automerge:observation"
