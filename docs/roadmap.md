@@ -37,7 +37,7 @@ The source-intelligence layer is now operating end to end:
 - digest-verifiable public agent exports on the hosted site (`docs/agent-export-contract.md`);
 - coverage growth reporting and prioritization through the candidate model (`docs/coverage-growth.md`).
 
-Current posture, per `docs/reviews/openva-roadmap-decision-2026-06.md`: run the weekly cycles to accumulate operational evidence; deepen identity and security coverage and begin decorating tier-1 source records with registry-intelligence fields through reviewed PRs; plan source-intelligence release gates after several cycles of real data. The full assessment is in `docs/reviews/openva-system-review-2026-06.md`.
+Current posture, per the WP34.6 corrective decision in `docs/reviews/openva-roadmap-decision-2026-06.md`: the earlier "run 3–4 weekly cycles before starting release gates" posture is **superseded**. P0 work begins immediately — consolidated source-intelligence release gates (WP35) and autonomous observation-ledger continuity (WP35.5) — followed in strict order by machine-provisional vendor materialization (WP36) and independent bot-quorum promotion (WP37). Machine autonomy is permitted only through independent review, evidence-bearing decision records, delay windows, and PR-based merge paths; no single bot discovers, approves, and merges the same claim, and ambiguous cases fail closed. Freshness gates run warn-only until a complete observation baseline is committed, then enforce. The full assessment remains in `docs/reviews/openva-system-review-2026-06.md`; operational measurements are regenerated before each step rather than copied from that snapshot.
 
 ## Active workstreams
 
