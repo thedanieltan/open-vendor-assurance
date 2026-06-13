@@ -86,3 +86,30 @@ promotion:
 
   # Scoring: actual_score must reach required_score for promotion.
   required_score: 1.0
+
+# WP38a source quarantine thresholds. A source is autonomously quarantined only
+# when it is persistently not-found/gone in the committed observation ledger and
+# no safe replacement has been applied (the repair lane is the path that would
+# have replaced it). Fail-closed and reversible. Gated/bot-protected sources are
+# RECORD-ONLY: they are never quarantined by fetch and never bypassed.
+#
+# Observation semantics note: counts are measured over committed observation
+# EVENTS for the source, mirroring the promotion thresholds.
+quarantine:
+  # Minimum number of committed observation events showing a not-found/gone HTTP
+  # status before a source may be quarantined.
+  min_failed_observations: 3
+
+  # HTTP statuses that count as a persistent not-found/gone failure.
+  failed_http_statuses: [404, 410]
+
+  # Source health statuses that are RECORD-ONLY: never quarantined (and never
+  # bypassed). A gated or bot-protected source is recorded as a fact, not
+  # quarantined.
+  record_only_health: [gated, bot_protected]
+
+  # Delay window before a quarantine PR may merge.
+  quarantine_not_before_delay_hours: 48
+
+  # Scoring: actual_score must reach required_score for quarantine.
+  required_score: 1.0
