@@ -1,5 +1,55 @@
 # OpenVA Roadmap Decision — June 2026
 
+> **SUPERSEDED 2026-06-13 by the WP34.6 corrective decision below.** The original June decision (Option A — run 3–4 weekly cycles before starting WP35) is retained unchanged beneath the corrective decision as the auditable superseded record. Merged history is not rewritten; this file is moved forward in a new commit.
+
+## Corrective Decision — WP34.6 (2026-06-13)
+
+**Status:** accepted. **Supersedes:** the June 2026 decision below (Option A — run 3–4 weekly cycles before starting WP35).
+
+### Context
+
+The June system review (`docs/reviews/openva-system-review-2026-06.md`) remains the valid historical input and is **unchanged**. Its measurements are a historical snapshot, not live planning inputs. The decision it fed — defer WP35 release gates until after 3–4 weekly maintenance cycles (target mid-July 2026), with only a narrow catalog-growth slice running meanwhile — is now superseded.
+
+### Decision
+
+P0 work begins **immediately**, not after several weekly cycles:
+
+1. **WP35 — consolidated source-intelligence release gates**: a machine-readable, test-pinned bot constitution plus a reusable release-gate CLI wired into the existing validation and release-candidate workflows.
+2. **WP35.5 — autonomous observation-ledger continuity**: recurring ledger-append PRs authored and merged through a path-restricted, append-only, release-gated automerge lane — with no human author or approver.
+
+These are sequenced ahead of, not behind, operational cycles. The earlier concern that gates over one-shard cold-start data would institutionalize noise is addressed structurally rather than by waiting: freshness and continuity gates ship **warn-only** until a complete first observation baseline is committed, then flip to enforce. That baseline is seeded as a Day-0 operational step instead of being waited for.
+
+After P0, the program proceeds in strict order: **WP36** (machine-provisional vendor materialization with append-only decision records), **WP37** (independent bot quorum and autonomous promotion), then stretch **WP38** (autonomous repair, quarantine, rollback) and **WP39** (self-auditing and regression benchmark).
+
+### Autonomy doctrine (binding on all subsequent packages)
+
+Strict machine autonomy is permitted **only** through:
+
+- independent machine review — separate identity, domain-authority, source, duplicate, and adversarial reviewers, replacing human review with independent machine review, not with unchecked automation;
+- evidence-bearing, append-only machine decision records;
+- delay and observation windows before promotion;
+- PR-based merge paths only — no workflow pushes directly to `main`.
+
+Hard invariants: **no single bot may discover, approve, and merge the same claim**; a discovery component may not approve its own discovery; **ambiguous, conflicting, gated, private, or meaning-level cases fail closed** (reject, defer, or quarantine — the system must not manufacture certainty merely to avoid review); every machine-created claim is reversible.
+
+### Measurement discipline
+
+Operational measurements must be **regenerated** before each planning step, never copied from the June snapshot. Regenerated baseline (main @ `6d091f0`, 2026-06-13): 164 vendors · 610 sources · **0** sources carry any WP29 registry field · **0** `status_page` sources · 153/610 sources observed (one shard) · 1,037-row coverage queue (13 `missing_vendor`) · `identity_access` depth 4 · `security` depth 12.
+
+**Correction to the June "missing vendor" list:** of the nine vendors the review named missing, six now exist in the catalog (Okta, Auth0, 1Password [as `onepassword`], Hetzner, Personio, Mistral AI). Only **OVHcloud, Keeper, Bitwarden** are genuinely absent. The growth queue still lists `1password` as missing because of an id↔alias mismatch (catalog id `onepassword`, domain `1password.com`) — a false positive that the WP36 identity-resolution stage must catch before materialization. This is exactly why measurements are regenerated rather than copied.
+
+### What this corrective decision does not change
+
+The trust boundary is unchanged: public-source-only, metadata-first; no compliance, legal, procurement, security, suitability, approval, or vendor-risk advice; no scoring or ranking; no anti-bot bypass; declared-gated sources are never fetched; provenance-first. Bots detect and route material change; they never interpret its legal or compliance meaning.
+
+### Non-advisory reminder
+
+This corrective decision concerns OpenVA's own catalog operations. Nothing in it is a statement about any vendor's compliance, safety, suitability, or risk.
+
+---
+
+## Original decision — June 2026 (superseded; retained for audit)
+
 Input: `docs/reviews/openva-system-review-2026-06.md` (WP29–WP34 system review).
 
 Options considered:
