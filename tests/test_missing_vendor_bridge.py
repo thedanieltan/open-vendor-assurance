@@ -67,6 +67,33 @@ def test_bridge_materializes_genuinely_missing_wishlist_vendor(tmp_path):
     assert report["summary"]["candidate_vendor_count"] == 1
 
 
+def test_bridge_caps_to_one_vendor_per_pr_by_priority(tmp_path):
+    (tmp_path / "data" / "vendors").mkdir(parents=True)
+    targets = {
+        "categories": {
+            "security": {
+                "weight": 5,
+                "taxonomy_tags": ["security"],
+                "priority_vendors": [
+                    {"vendor_id": "keeper", "name": "Keeper", "domain": "keepersecurity.com", "country": "US"},
+                    {"vendor_id": "bitwarden", "name": "Bitwarden", "domain": "bitwarden.com", "country": "US"},
+                ],
+            }
+        }
+    }
+    coverage = {
+        "growth_queue": [
+            {"queue_class": "missing_vendor", "vendor_id": "keeper", "category": "security", "priority": 7},
+            {"queue_class": "missing_vendor", "vendor_id": "bitwarden", "category": "security", "priority": 9},
+        ]
+    }
+    report = bridge.build_bridge_report(coverage, targets, root=tmp_path, generated_at="2026-06-13T00:00:00Z", max_vendors=1)
+    ids = [c["candidate_vendor_id"] for c in report["vendor_candidates"]]
+    assert ids == ["bitwarden"]  # highest priority wins the single slot
+    deferred = [s for s in report["bridge_skipped"] if s["reason"] == "deferred_one_vendor_per_pr"]
+    assert [s["vendor_id"] for s in deferred] == ["keeper"]
+
+
 def test_bridge_detects_vendor_id_and_name_collisions(tmp_path):
     (tmp_path / "data" / "vendors").mkdir(parents=True)
     write_vendor(tmp_path, "ovhcloud", domains=["other.com"], name="OVHcloud")  # id + name collide

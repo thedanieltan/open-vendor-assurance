@@ -75,13 +75,18 @@ def build_bridge_report(
     root: Path = ROOT,
     *,
     generated_at: str | None = None,
+    max_vendors: int = 1,
 ) -> dict[str, Any]:
     generated_at = generated_at or datetime.now(UTC).isoformat().replace("+00:00", "Z")
     wishlist = wishlist_map(targets)
     known_ids, known_domains = current_vendor_identity(root)
     known_names = known_vendor_names(root)
 
-    candidates: list[dict[str, Any]] = []
+    # WP36: each machine-provisional materialization PR creates exactly ONE new
+    # vendor directory (roadmap + machine_provisional_automerge gate). The bridge
+    # therefore emits at most max_vendors (default 1) candidates, highest queue
+    # priority first; the rest remain in the queue for later runs.
+    scored: list[tuple[float, dict[str, Any]]] = []
     skipped: list[dict[str, Any]] = []
     seen: set[str] = set()
 
@@ -115,20 +120,28 @@ def build_bridge_report(
             continue
 
         clean_domain = domain.lower().removeprefix("www.")
-        candidates.append({
-            "candidate_vendor_id": vendor_id,
-            "display_name_candidate": str(entry.get("name") or vendor_id)[:120],
-            "official_domain_candidate": clean_domain,
-            "coverage_lane": str(entry["category"]),
-            "cohort_id": f"{entry['category']}-missing-vendor",
-            "discovery_method": "coverage_growth_missing_vendor_bridge",
-            "source_index_url": f"https://{clean_domain}",
-            "requires_review": True,
-            "writes_canonical_vendors": False,
-            "non_advisory": True,
-            "vendor_category_candidates": list(entry.get("taxonomy_tags") or []),
-            "headquarters_country_candidate": country,
-        })
+        scored.append((
+            float(row.get("priority", 0) or 0),
+            {
+                "candidate_vendor_id": vendor_id,
+                "display_name_candidate": str(entry.get("name") or vendor_id)[:120],
+                "official_domain_candidate": clean_domain,
+                "coverage_lane": str(entry["category"]),
+                "cohort_id": f"{entry['category']}-missing-vendor",
+                "discovery_method": "coverage_growth_missing_vendor_bridge",
+                "source_index_url": f"https://{clean_domain}",
+                "requires_review": True,
+                "writes_canonical_vendors": False,
+                "non_advisory": True,
+                "vendor_category_candidates": list(entry.get("taxonomy_tags") or []),
+                "headquarters_country_candidate": country,
+            },
+        ))
+
+    ranked = [candidate for _, candidate in sorted(scored, key=lambda item: (-item[0], item[1]["candidate_vendor_id"]))]
+    candidates = ranked[:max_vendors]
+    for candidate in ranked[max_vendors:]:
+        skipped.append({"vendor_id": candidate["candidate_vendor_id"], "reason": "deferred_one_vendor_per_pr"})
 
     return {
         "schema_version": "0.1.0",
@@ -157,9 +170,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--coverage-report", type=Path, required=True)
     parser.add_argument("--targets", type=Path, default=DEFAULT_TARGETS)
     parser.add_argument("--output", type=Path, default=ROOT / "missing-vendor-bridge-report.json")
+    parser.add_argument("--max-vendors", type=int, default=1, help="max new vendors per PR (one-vendor-per-PR gate)")
     args = parser.parse_args(argv)
 
-    report = build_bridge_report(load_json(args.coverage_report), load_targets(args.targets))
+    report = build_bridge_report(load_json(args.coverage_report), load_targets(args.targets), max_vendors=args.max_vendors)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
     return 0
