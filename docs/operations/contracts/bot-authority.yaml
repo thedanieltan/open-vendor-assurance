@@ -108,14 +108,27 @@ lanes:
     workflows: [candidate-promotion-pr.yml]
     may_write_branches: true
     may_open_prs: true
-    may_label_prs: false
+    may_label_prs: true
+    allowed_labels: [machine-provisional, automerge:machine-provisional]
+    allowed_label_actions: [add]
     may_enable_auto_merge: false
     may_merge_prs: false
     may_write_catalog_truth: true
-    allowed_paths: [data/vendors/**, maintenance/reviewed/**]
+    write_authority_explanation: >-
+      Reviewed-path promotion writes reviewed source evidence. WP36 machine
+      materialization (strict-growth path) writes only a NEW vendor directory as
+      catalog_status: machine_provisional plus its linked append-only machine
+      decision record under maintenance/machine-decisions/**; it may not modify
+      an existing vendor directory and may not promote provisional to a terminal
+      status (that is WP37 quorum). It may apply only the machine-provisional
+      marker and, after the not_before delay, the automerge:machine-provisional
+      label. The autonomy boundary is enforced by the decision record,
+      separation of duties, the not_before delay, and the WP35 release gate, not
+      by a human label.
+    allowed_paths: [data/vendors/**, maintenance/reviewed/**, maintenance/machine-decisions/**]
     required_labels_for_write_authority: [reviewed-evidence]
     token_permissions: {contents: write, pull-requests: write}
-    audit_artifacts: [reviewed promotion plan, promotion application report, PR body]
+    audit_artifacts: [reviewed promotion plan, promotion application report, machine decision record, PR body]
     deny_by_default: true
   - id: publication
     status: active

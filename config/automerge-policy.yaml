@@ -126,3 +126,8 @@ lanes:
     label: automerge:p0-source-repair
     required_labels:
       - source-refinement
+  machine_provisional:
+    label: automerge:machine-provisional
+    required_labels:
+      - machine-provisional
+    execution_wired: true
