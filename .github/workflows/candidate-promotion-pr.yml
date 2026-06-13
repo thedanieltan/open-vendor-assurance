@@ -20,6 +20,12 @@ on:
           - machine-provisional-from-queue
           - quorum-promotion
           - quarantine
+          - rollback
+      rollback_decision_id:
+        description: "Target machine decision id to roll back (required for rollback mode)"
+        required: false
+        type: string
+        default: ""
       vendor_limit:
         description: "Optional number of candidate vendors to discover when regenerating strict-growth candidate evidence"
         required: false
@@ -981,4 +987,149 @@ jobs:
           path: |
             source-quarantine-report.json
             source-quarantine-pr-body.md
+          if-no-files-found: warn
+
+  source-rollback:
+    # WP38b Level-5 rollback. Deliberate, dispatch-only (never scheduled): a
+    # maintainer supplies the target decision id to revert. Status-only restore
+    # or whole-vendor removal, one target per PR; merged later by the pr_safety
+    # lane after the rollback delay.
+    if: github.event_name == 'workflow_dispatch' && inputs.promotion_plan_mode == 'rollback'
+    runs-on: ubuntu-latest
+    env:
+      ROLLBACK_DECISION_ID: "${{ inputs.rollback_decision_id || '' }}"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Validate rollback input
+        run: |
+          set -euo pipefail
+          if [ -z "$ROLLBACK_DECISION_ID" ]; then
+            echo "rollback_decision_id is required for rollback mode" >&2
+            exit 1
+          fi
+      - name: Ensure rollback labels exist
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          gh label create rollback \
+            --color 5319E7 \
+            --description "WP38b Level-5 rollback marker" \
+            --force || true
+          gh label create automerge:rollback \
+            --color 0E8A16 \
+            --description "WP38b Level-5 rollback merge lane (released after the rollback delay)" \
+            --force || true
+      - name: Apply rollback
+        run: |
+          python -m tools.openva.rollback rollback \
+            --decision-id "$ROLLBACK_DECISION_ID" \
+            --output rollback-report.json
+      - name: Validate rolled-back catalog
+        run: python -m tools.openva.validate validate
+      - name: Rebuild generated outputs
+        run: python -m tools.openva.validate build-indexes
+      - name: Prepare PR body
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.load(open("rollback-report.json", encoding="utf-8"))
+          lines = [
+              "## Summary",
+              "",
+              f"Level-5 rollback of decision `{report['rolled_back_decision_id']}`",
+              f"(subject `{report['subject_id']}`).",
+              "",
+              "## Decision",
+              "",
+              f"- Rollback decision: `{report['rollback_decision_id']}`",
+              f"- Reverser (deciding bot): `{report['deciding_bot']}`",
+              f"- Original author: `{report['original_author']}`",
+              f"- Rollback not-before: `{report['not_before']}`",
+              "",
+              "## Guardrails",
+              "",
+              "- Appends a rollback decision linking the original; never rewrites the ledger or decision history.",
+              "- Reverser is never the bot that authored the reverted state (separation of duties).",
+              "- Reversible by re-running the forward lane (reapply).",
+              "- Does not merge automatically; the merge lane enables auto-merge only after the rollback delay.",
+              "- Operational metadata only; not legal, compliance, procurement, security, or vendor-risk advice.",
+              "",
+          ]
+          Path("rollback-pr-body.md").write_text("\n".join(lines), encoding="utf-8")
+          PY
+      - name: Commit and push rollback branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          PR_BRANCH="agent-rollback-${ROLLBACK_DECISION_ID}-${GITHUB_RUN_ID}"
+          echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
+          git switch -c "$PR_BRANCH"
+          git add data indexes dist openva-pack.json maintenance/machine-decisions
+          git commit -m "Catalog: rollback ${ROLLBACK_DECISION_ID}"
+          git push --force-with-lease origin "$PR_BRANCH"
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA=$(git rev-parse HEAD)
+          cp rollback-pr-body.md rollback-pr-body-final.md
+          {
+            echo ""
+            echo "- Head SHA: \`$HEAD_SHA\`"
+          } >> rollback-pr-body-final.md
+          gh pr create \
+            --base main \
+            --head "$PR_BRANCH" \
+            --title "Catalog: rollback ${ROLLBACK_DECISION_ID}" \
+            --body-file rollback-pr-body-final.md
+      - name: Label rollback PR
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          PR_NUMBER=$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr edit "$PR_NUMBER" --add-label rollback
+          fi
+      - name: Release rollback PRs past not_before
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gh pr list --state open --label rollback \
+            --json number,headRefName,labels \
+            --jq '.[] | select([.labels[].name] | index("automerge:rollback") | not) | [.number, .headRefName] | @tsv' \
+            > rollback-prs.tsv || true
+          while IFS=$'\t' read -r PR_NUMBER HEAD_REF; do
+            [ -z "${PR_NUMBER:-}" ] && continue
+            git fetch origin "$HEAD_REF" --quiet || continue
+            if [ "$(python -m tools.openva.machine_provisional_controller ready --ref "origin/$HEAD_REF" --now "$NOW" --decision rollback)" = "true" ]; then
+              gh pr edit "$PR_NUMBER" --add-label automerge:rollback
+              echo "Released PR #$PR_NUMBER (rollback not_before passed)."
+            else
+              echo "PR #$PR_NUMBER still within rollback not_before delay; leaving for a later run."
+            fi
+          done < rollback-prs.tsv
+      - name: Upload rollback artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-rollback-artifacts
+          path: |
+            rollback-report.json
+            rollback-pr-body.md
           if-no-files-found: warn

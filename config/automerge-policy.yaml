@@ -141,3 +141,8 @@ lanes:
     required_labels:
       - quarantine
     execution_wired: true
+  rollback:
+    label: automerge:rollback
+    required_labels:
+      - rollback
+    execution_wired: true

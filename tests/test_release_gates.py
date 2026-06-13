@@ -188,6 +188,31 @@ def test_machine_rule_no_single_bot_canonicalization(tmp_path):
     assert rg.find_single_bot_canonicalizations(tmp_path, 2), "insufficient independence must be detected"
 
 
+def test_machine_rule_no_rollback_by_authoring_bot(tmp_path):
+    decisions_dir = tmp_path / "maintenance" / "machine-decisions"
+    decisions_dir.mkdir(parents=True)
+    ledger = decisions_dir / "2026-06.ndjson"
+
+    def rollback(**overrides) -> dict:
+        record = {
+            "decision_id": "x-promotion-rollback",
+            "decision": "rollback",
+            "subject_id": "x",
+            "deciding_bot": "rollback-controller",
+            "discovery_bot": "quorum-promotion-decider",  # the original author
+        }
+        record.update(overrides)
+        return record
+
+    # reverser != author -> clean.
+    ledger.write_text(json.dumps(rollback()) + "\n", encoding="utf-8")
+    assert rg.find_rollback_author_violations(tmp_path) == []
+
+    # reverser == author -> violation.
+    ledger.write_text(json.dumps(rollback(discovery_bot="rollback-controller")) + "\n", encoding="utf-8")
+    assert rg.find_rollback_author_violations(tmp_path), "rollback authored by original author must be detected"
+
+
 # --------------------------------------------------------------------------- #
 # material_change_surfaced: latest-per-source, not all-events (regression for
 # the false-fail exposed when an autonomous append superseded older material
@@ -303,6 +328,7 @@ def test_machine_enforced_rules_have_negative_fixtures():
         "no_raw_mirroring",
         "reversible_provenance",
         "quorum_promotion_independence",
+        "rollback_reverser_not_author",
     }
     declared = {r["enforcement"]["gate_id"] for r in _rules_by_state("machine_enforced")}
     assert declared == tested_gate_ids, "every machine_enforced gate must have a negative fixture here"

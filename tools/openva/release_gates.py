@@ -232,6 +232,25 @@ def find_single_bot_canonicalizations(root: Path, min_independent_supporters: in
     return findings
 
 
+def find_rollback_author_violations(root: Path) -> list[str]:
+    """WP38b: a Level-5 rollback may never be authored by the bot that created
+    the state it reverts. Every committed rollback decision must have a deciding
+    bot (reverser) different from its discovery bot (the original author)."""
+    decisions_dir = root / "maintenance" / "machine-decisions"
+    from tools.openva.machine_decisions import load_decisions
+
+    findings: list[str] = []
+    for record in load_decisions(decisions_dir):
+        if record.get("decision") != "rollback":
+            continue
+        decision_id = str(record.get("decision_id") or "(missing)")
+        reverser = str(record.get("deciding_bot") or "")
+        author = str(record.get("discovery_bot") or "")
+        if reverser and author and reverser == author:
+            findings.append(f"{decision_id}: rollback reverser == author ({reverser})")
+    return findings
+
+
 def find_irreversible_machine_records(
     root: Path,
     marker_fields: list[str],
@@ -427,6 +446,21 @@ def gate_quorum_promotion_independence(ctx: GateContext) -> GateResult:
     return GateResult(
         "quorum_promotion_independence", CAT_CONSTITUTION, STATUS_PASS,
         "every promotion decision carries an independent quorum (separation of duties)",
+    )
+
+
+def gate_rollback_reverser_not_author(ctx: GateContext) -> GateResult:
+    """Machine-enforced: a Level-5 rollback may never be authored by the bot that
+    created the state it reverts (reverser != author)."""
+    findings = find_rollback_author_violations(ctx.root)
+    if findings:
+        return GateResult(
+            "rollback_reverser_not_author", CAT_CONSTITUTION, STATUS_FAIL,
+            "rollback decision(s) authored by the original state's author", findings[:25],
+        )
+    return GateResult(
+        "rollback_reverser_not_author", CAT_CONSTITUTION, STATUS_PASS,
+        "every rollback decision is authored by a bot other than the original author",
     )
 
 
@@ -677,6 +711,7 @@ def run_gates(ctx: GateContext) -> list[GateResult]:
     results.append(gate_no_raw_mirroring(ctx))
     results.append(gate_reversible_provenance(ctx))
     results.append(gate_quorum_promotion_independence(ctx))
+    results.append(gate_rollback_reverser_not_author(ctx))
     results.append(gate_artifact_manifest(ctx))
 
     freshness = compute_freshness(ctx)

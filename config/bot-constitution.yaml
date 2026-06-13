@@ -134,6 +134,27 @@ rules:
       evidence: docs/operations/contracts/bot-authority.yaml deny_by_default lanes; tests/test_release_gates.py
     authoritative: true
 
+  - id: no_rollback_by_authoring_bot
+    statement: >-
+      A Level-5 rollback may never be authored by the bot that created the state
+      it reverts; every committed rollback decision's deciding bot (reverser)
+      differs from its discovery bot (the original author).
+    enforcement:
+      state: machine_enforced
+      owner: release_gates
+      gate_id: rollback_reverser_not_author
+    authoritative: true
+
+  - id: rollback_never_rewrites_decision_history
+    statement: >-
+      A rollback appends a rollback decision linking the original and never
+      rewrites or deletes committed decision-history or observation-ledger lines.
+    enforcement:
+      state: contract_enforced
+      owner: wp38
+      evidence: tools/openva/rollback_automerge.py append-only decision check; tests/test_rollback_automerge.py
+    authoritative: true
+
   - id: no_fabricated_source_replacement_and_quarantine_reversible
     statement: >-
       Autonomous repair and quarantine never fabricate a source replacement and

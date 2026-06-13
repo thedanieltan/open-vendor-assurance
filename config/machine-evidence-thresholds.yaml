@@ -113,3 +113,15 @@ quarantine:
 
   # Scoring: actual_score must reach required_score for quarantine.
   required_score: 1.0
+
+# WP38b Level-5 rollback thresholds. A rollback reverts recent machine-created
+# state (promotion, materialization, quarantine) through a pull request. It
+# never rewrites the ledger or decision history (it appends a rollback decision
+# linking the original), and the rollback bot must NOT be the bot that authored
+# the state it reverts (separation of duty: reverser != author).
+rollback:
+  # Decision kinds that may be rolled back.
+  reversible_decisions: [promote, materialize_provisional, quarantine]
+
+  # Delay window before a rollback PR may merge.
+  rollback_not_before_delay_hours: 48

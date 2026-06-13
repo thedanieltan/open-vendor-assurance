@@ -149,6 +149,33 @@ lanes:
     token_permissions: {contents: write, pull-requests: write}
     audit_artifacts: [quarantine eligibility report, quarantine decision record, quarantine application report, PR body]
     deny_by_default: true
+  - id: source_rollback
+    status: active
+    authority_level: 5
+    workflows: [candidate-promotion-pr.yml, agent-automerge.yml]
+    may_write_branches: true
+    may_open_prs: true
+    may_label_prs: true
+    allowed_labels: [rollback, automerge:rollback]
+    allowed_label_actions: [add]
+    may_enable_auto_merge: false
+    may_merge_prs: false
+    may_write_catalog_truth: true
+    write_authority_explanation: >-
+      WP38b Level-5 rollback reverts recent machine-created state for a SINGLE
+      target decision: a promotion (restore catalog_status machine_provisional),
+      a materialization (remove the machine-created vendor), or a quarantine
+      (restore the prior review_state). It APPENDS a rollback decision record
+      under maintenance/machine-decisions/** linking the original and never
+      rewrites the committed observation ledger or decision history. The rollback
+      bot must NOT be the bot that authored the state it reverts (reverser !=
+      author), enforced by the append-time separation-of-duty check and the
+      release gate. Reversible by re-running the forward lane (reapply).
+    allowed_paths: [data/vendors/**, maintenance/machine-decisions/**]
+    required_labels_for_write_authority: [reviewed-evidence]
+    token_permissions: {contents: write, pull-requests: write}
+    audit_artifacts: [rollback plan, rollback decision record, rollback application report, PR body]
+    deny_by_default: true
   - id: observation_ledger_append
     status: active
     authority_level: 1

@@ -193,6 +193,9 @@ def apply_status_only_quarantine(
         "reason": quarantine_reason,
         "quarantined_by": DECIDING_BOT,
         "quarantined_at": now.isoformat().replace("+00:00", "Z"),
+        # WP38b: capture the prior review_state so a Level-5 rollback restores it
+        # faithfully rather than guessing.
+        "prior_review_state": source.get("review_state"),
         "decision_id": decision_id,
         "reversal": {
             "method": "revert_quarantine",
