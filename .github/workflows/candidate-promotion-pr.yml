@@ -17,6 +17,7 @@ on:
           - reviewed-path
           - strict-growth-latest
           - strict-growth-shortlist
+          - machine-provisional-from-queue
       vendor_limit:
         description: "Optional number of candidate vendors to discover when regenerating strict-growth candidate evidence"
         required: false
@@ -106,7 +107,7 @@ jobs:
           RESOLVED="${PREFERRED:-$LEGACY}"
           echo "MAX_PROMOTION_ACTIONS_PER_PR=$RESOLVED" >> "$GITHUB_ENV"
       - name: Regenerate strict-growth promotion plan
-        if: env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist'
+        if: env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist' || env.PROMOTION_PLAN_MODE == 'machine-provisional-from-queue'
         run: |
           set -euo pipefail
           mkdir -p reports
@@ -122,8 +123,18 @@ jobs:
           PY
           cat strict-growth-discovery.env >> "$GITHUB_ENV"
           source strict-growth-discovery.env
-          python -m tools.openva.vendor_candidate_discovery discover \
-            --output vendor-candidate-discovery-report.json
+          if [ "$PROMOTION_PLAN_MODE" = "machine-provisional-from-queue" ]; then
+            # WP36b queue-bound entry: derive candidates from the coverage-growth
+            # missing_vendor queue via the bridge instead of seed-cohort discovery.
+            python -m tools.openva.coverage_growth build \
+              --output coverage-growth-report.json
+            python -m tools.openva.missing_vendor_bridge build \
+              --coverage-report coverage-growth-report.json \
+              --output vendor-candidate-discovery-report.json
+          else
+            python -m tools.openva.vendor_candidate_discovery discover \
+              --output vendor-candidate-discovery-report.json
+          fi
           LIMIT="$(printf '%s' "$VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           if [ -z "$LIMIT" ]; then
             LIMIT="$QUEUE_VENDOR_LIMIT"
@@ -176,10 +187,10 @@ jobs:
           set -euo pipefail
           REQUESTED_PROMOTION_PLAN_PATH="$(printf '%s' "$REQUESTED_PROMOTION_PLAN_PATH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           case "$PROMOTION_PLAN_MODE" in
-            reviewed-path|strict-growth-latest|strict-growth-shortlist) ;;
-            *) echo "promotion_plan_mode must be reviewed-path, strict-growth-latest, or strict-growth-shortlist" >&2; exit 1 ;;
+            reviewed-path|strict-growth-latest|strict-growth-shortlist|machine-provisional-from-queue) ;;
+            *) echo "promotion_plan_mode must be reviewed-path, strict-growth-latest, strict-growth-shortlist, or machine-provisional-from-queue" >&2; exit 1 ;;
           esac
-          if [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] || [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ]; then
+          if [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] || [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ] || [ "$PROMOTION_PLAN_MODE" = "machine-provisional-from-queue" ]; then
             REQUESTED_PROMOTION_PLAN_PATH="strict-growth-promotion-plan.json"
           fi
           if [ -n "$REQUESTED_PROMOTION_PLAN_PATH" ]; then
@@ -189,7 +200,7 @@ jobs:
             fi
             PLAN_SHA256=$(sha256sum "$REQUESTED_PROMOTION_PLAN_PATH" | awk '{print $1}')
             PLAN_ACTION_COUNT=$(python -c "import json, sys; data = json.load(open(sys.argv[1], encoding='utf-8')); print(len(data.get('actions', []) or []))" "$REQUESTED_PROMOTION_PLAN_PATH")
-            if { [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] || [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ]; } && [ "$PLAN_ACTION_COUNT" = "0" ]; then
+            if { [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] || [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ] || [ "$PROMOTION_PLAN_MODE" = "machine-provisional-from-queue" ]; } && [ "$PLAN_ACTION_COUNT" = "0" ]; then
               echo "HAS_REVIEWED_PLAN=false" >> "$GITHUB_ENV"
               echo "STRICT_GROWTH_NO_ACTIONS=true" >> "$GITHUB_ENV"
               echo "HAS_REVIEWED_PLAN=false" >> "$GITHUB_OUTPUT"
@@ -315,7 +326,7 @@ jobs:
         id: catalog_changes
         run: |
           set -euo pipefail
-          if git diff --quiet -- data indexes dist maintenance/generated openva-pack.json; then
+          if git diff --quiet -- data indexes dist maintenance/generated maintenance/machine-decisions openva-pack.json; then
             echo "No candidate promotion changes produced."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
@@ -519,6 +530,11 @@ jobs:
           if [ -d maintenance/generated ]; then
             git add maintenance/generated
           fi
+          # WP36b: the machine decision record must be committed so the
+          # machine-provisional automerge gate can verify the linked decision.
+          if [ -d maintenance/machine-decisions ]; then
+            git add maintenance/machine-decisions
+          fi
           git commit -m "$PR_TITLE"
           git push --force-with-lease origin "$PR_BRANCH"
       - name: Create or update pull request
@@ -546,6 +562,41 @@ jobs:
               --title "$PR_TITLE" \
               --body-file candidate-promotion-pr-body-final.md
           fi
+      - name: Label machine-provisional materialization PR
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist' || env.PROMOTION_PLAN_MODE == 'machine-provisional-from-queue')
+        env:
+          # WP36b: mark the PR as a machine-provisional materialization. The
+          # not_before controller applies automerge:machine-provisional later,
+          # once the decision's delay window has passed.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          PR_NUMBER=$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr edit "$PR_NUMBER" --add-label machine-provisional
+          fi
+      - name: Release machine-provisional PRs past not_before
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          # Controller: open machine-provisional PRs not yet cleared for automerge.
+          gh pr list --state open --label machine-provisional \
+            --json number,headRefName,labels \
+            --jq '.[] | select([.labels[].name] | index("automerge:machine-provisional") | not) | [.number, .headRefName] | @tsv' \
+            > provisional-prs.tsv || true
+          while IFS=$'\t' read -r PR_NUMBER HEAD_REF; do
+            [ -z "${PR_NUMBER:-}" ] && continue
+            git fetch origin "$HEAD_REF" --quiet || continue
+            if [ "$(python -m tools.openva.machine_provisional_controller ready --ref "origin/$HEAD_REF" --now "$NOW")" = "true" ]; then
+              gh pr edit "$PR_NUMBER" --add-label automerge:machine-provisional
+              echo "Released PR #$PR_NUMBER (not_before passed)."
+            else
+              echo "PR #$PR_NUMBER still within not_before delay; leaving for a later run."
+            fi
+          done < provisional-prs.tsv
       - name: Upload promotion artifacts
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         uses: actions/upload-artifact@v6
