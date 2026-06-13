@@ -44,7 +44,10 @@ categories:
     weight: 5
     taxonomy_tags: [cloud_infrastructure]
     priority_vendors:
-      - {vendor_id: ovhcloud, name: OVHcloud}
+      # WP36: optional domain + country let the missing_vendor bridge materialize
+      # a candidate. Entries without both are skipped (fail closed); discovery
+      # still verifies the domain serves a public assurance source.
+      - {vendor_id: ovhcloud, name: OVHcloud, domain: ovhcloud.com, country: FR}
       - {vendor_id: scaleway, name: Scaleway}
       - {vendor_id: hetzner, name: Hetzner}
       - {vendor_id: huawei-cloud, name: Huawei Cloud}
@@ -55,8 +58,8 @@ categories:
     taxonomy_tags: [security]
     priority_vendors:
       - {vendor_id: 1password, name: 1Password}
-      - {vendor_id: keeper, name: Keeper}
-      - {vendor_id: bitwarden, name: Bitwarden}
+      - {vendor_id: keeper, name: Keeper, domain: keepersecurity.com, country: US}
+      - {vendor_id: bitwarden, name: Bitwarden, domain: bitwarden.com, country: US}
   identity:
     weight: 5
     taxonomy_tags: [identity_access]
