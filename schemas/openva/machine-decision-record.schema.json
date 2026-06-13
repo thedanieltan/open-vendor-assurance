@@ -56,7 +56,7 @@
       "type": "object",
       "required": ["method"],
       "properties": {
-        "method": { "enum": ["quarantine", "remove", "revert_promotion"] },
+        "method": { "enum": ["quarantine", "remove", "revert_promotion", "revert_quarantine"] },
         "reference": { "type": ["string", "null"], "maxLength": 300 },
         "reversal_decision_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" }
       },

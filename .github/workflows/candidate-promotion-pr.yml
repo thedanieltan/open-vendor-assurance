@@ -19,6 +19,7 @@ on:
           - strict-growth-shortlist
           - machine-provisional-from-queue
           - quorum-promotion
+          - quarantine
       vendor_limit:
         description: "Optional number of candidate vendors to discover when regenerating strict-growth candidate evidence"
         required: false
@@ -825,4 +826,159 @@ jobs:
             release-gates.json
             release-gates-summary.md
             quorum-promotion-pr-body.md
+          if-no-files-found: warn
+
+  source-quarantine:
+    # WP38a: autonomous status-only quarantine of a persistently not-found/gone
+    # source with no safe replacement. Runs on the weekly schedule and on
+    # explicit dispatch with promotion_plan_mode=quarantine. One source per PR;
+    # merged later by the pr_safety lane after the quarantine delay.
+    if: github.event_name == 'schedule' || inputs.promotion_plan_mode == 'quarantine'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Ensure quarantine labels exist
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          gh label create quarantine \
+            --color D93F0B \
+            --description "WP38a source quarantine marker (status-only)" \
+            --force || true
+          gh label create automerge:quarantine \
+            --color 0E8A16 \
+            --description "WP38a source quarantine merge lane (released after the quarantine delay)" \
+            --force || true
+      - name: Select quarantinable source
+        id: select
+        run: |
+          set -euo pipefail
+          python -m tools.openva.source_quarantine select --output select.env
+          cat select.env >> "$GITHUB_ENV"
+          cat select.env >> "$GITHUB_OUTPUT"
+      - name: Report when no quarantinable source
+        if: steps.select.outputs.QUARANTINABLE_SOURCE_ID == ''
+        run: echo "No quarantinable source at this time."
+      - name: Apply quarantine (status-only)
+        if: steps.select.outputs.QUARANTINABLE_SOURCE_ID != ''
+        run: |
+          python -m tools.openva.source_quarantine quarantine \
+            --source-id "$QUARANTINABLE_SOURCE_ID" \
+            --output source-quarantine-report.json
+      - name: Validate quarantined catalog
+        if: steps.select.outputs.QUARANTINABLE_SOURCE_ID != ''
+        run: python -m tools.openva.validate validate
+      - name: Rebuild generated outputs
+        if: steps.select.outputs.QUARANTINABLE_SOURCE_ID != ''
+        run: python -m tools.openva.validate build-indexes
+      - name: Prepare PR body
+        if: steps.select.outputs.QUARANTINABLE_SOURCE_ID != ''
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.load(open("source-quarantine-report.json", encoding="utf-8"))
+          source_id = report["source_id"]
+          lines = [
+              "## Summary",
+              "",
+              f"Status-only quarantine of source `{source_id}` (persistently not-found/gone",
+              "in the committed observation ledger with no safe replacement applied).",
+              "",
+              "## Decision",
+              "",
+              f"- Quarantine decision: `{report['decision_id']}`",
+              f"- Reason: `{report['quarantine_reason']}`",
+              f"- Deciding bot: `{report['deciding_bot']}`",
+              f"- Discovery bot: `{report['discovery_bot']}`",
+              f"- Quarantine not-before: `{report['not_before']}`",
+              "",
+              "## Guardrails",
+              "",
+              "- Status-only: changes only the source review_state and quarantine block plus the decision record.",
+              "- Never fabricates a replacement; never quarantines or bypasses a gated/bot-protected source.",
+              "- Reversible via revert_quarantine; separation of duties (deciding bot != observation bot).",
+              "- Does not merge automatically; the merge lane enables auto-merge only after the quarantine delay.",
+              "- Operational metadata only; not legal, compliance, procurement, security, or vendor-risk advice.",
+              "",
+          ]
+          Path("source-quarantine-pr-body.md").write_text("\n".join(lines), encoding="utf-8")
+          PY
+      - name: Commit and push quarantine branch
+        if: steps.select.outputs.QUARANTINABLE_SOURCE_ID != ''
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          PR_BRANCH="agent-source-quarantine-${QUARANTINABLE_SOURCE_ID}-${GITHUB_RUN_ID}"
+          echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
+          git switch -c "$PR_BRANCH"
+          git add data indexes dist openva-pack.json maintenance/machine-decisions
+          git commit -m "Catalog: quarantine ${QUARANTINABLE_SOURCE_ID}"
+          git push --force-with-lease origin "$PR_BRANCH"
+      - name: Create pull request
+        if: steps.select.outputs.QUARANTINABLE_SOURCE_ID != ''
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA=$(git rev-parse HEAD)
+          cp source-quarantine-pr-body.md source-quarantine-pr-body-final.md
+          {
+            echo ""
+            echo "- Head SHA: \`$HEAD_SHA\`"
+          } >> source-quarantine-pr-body-final.md
+          gh pr create \
+            --base main \
+            --head "$PR_BRANCH" \
+            --title "Catalog: quarantine ${QUARANTINABLE_SOURCE_ID}" \
+            --body-file source-quarantine-pr-body-final.md
+      - name: Label quarantine PR
+        if: steps.select.outputs.QUARANTINABLE_SOURCE_ID != ''
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          PR_NUMBER=$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr edit "$PR_NUMBER" --add-label quarantine
+          fi
+      - name: Release quarantine PRs past not_before
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gh pr list --state open --label quarantine \
+            --json number,headRefName,labels \
+            --jq '.[] | select([.labels[].name] | index("automerge:quarantine") | not) | [.number, .headRefName] | @tsv' \
+            > quarantine-prs.tsv || true
+          while IFS=$'\t' read -r PR_NUMBER HEAD_REF; do
+            [ -z "${PR_NUMBER:-}" ] && continue
+            git fetch origin "$HEAD_REF" --quiet || continue
+            if [ "$(python -m tools.openva.machine_provisional_controller ready --ref "origin/$HEAD_REF" --now "$NOW" --decision quarantine)" = "true" ]; then
+              gh pr edit "$PR_NUMBER" --add-label automerge:quarantine
+              echo "Released PR #$PR_NUMBER (quarantine not_before passed)."
+            else
+              echo "PR #$PR_NUMBER still within quarantine not_before delay; leaving for a later run."
+            fi
+          done < quarantine-prs.tsv
+      - name: Upload quarantine artifacts
+        if: always() && steps.select.outputs.QUARANTINABLE_SOURCE_ID != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-quarantine-artifacts
+          path: |
+            source-quarantine-report.json
+            source-quarantine-pr-body.md
           if-no-files-found: warn

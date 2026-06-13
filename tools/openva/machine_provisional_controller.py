@@ -80,7 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("command", choices=["ready"])
     parser.add_argument("--ref", required=True)
     parser.add_argument("--now", default=None)
-    parser.add_argument("--decision", default="materialize_provisional", choices=["materialize_provisional", "promote"])
+    parser.add_argument("--decision", default="materialize_provisional", choices=["materialize_provisional", "promote", "quarantine"])
     args = parser.parse_args(argv)
 
     now = datetime.fromisoformat(args.now.replace("Z", "+00:00")) if args.now else datetime.now(UTC)

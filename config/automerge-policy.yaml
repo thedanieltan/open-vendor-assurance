@@ -136,3 +136,8 @@ lanes:
     required_labels:
       - quorum-promotion
     execution_wired: true
+  quarantine:
+    label: automerge:quarantine
+    required_labels:
+      - quarantine
+    execution_wired: true

@@ -120,6 +120,35 @@ lanes:
     token_permissions: {contents: write, pull-requests: write, issues: write}
     audit_artifacts: [reviewed repair evidence, repair action report, stale PR cleanup report]
     deny_by_default: true
+  - id: source_quarantine
+    status: active
+    authority_level: 3
+    workflows: [candidate-promotion-pr.yml, agent-automerge.yml]
+    may_write_branches: true
+    may_open_prs: true
+    may_label_prs: true
+    allowed_labels: [quarantine, automerge:quarantine]
+    allowed_label_actions: [add]
+    may_enable_auto_merge: false
+    may_merge_prs: false
+    may_write_catalog_truth: true
+    write_authority_explanation: >-
+      WP38a quarantine writes ONLY the status-only fields of a SINGLE existing
+      source (review_state -> quarantined plus the quarantine block: reason,
+      quarantined_by, quarantined_at, the linked decision id, and a
+      revert_quarantine reversal) plus its linked append-only quarantine decision
+      record under maintenance/machine-decisions/** and the deterministic
+      generated outputs. It quarantines a source only when it is persistently
+      not-found/gone in the committed observation ledger and no safe replacement
+      has been applied; it never fabricates a replacement, never quarantines or
+      bypasses a gated/bot-protected source, and never interprets the meaning of
+      a material change. Separation of duties: the deciding bot differs from the
+      observation/discovery bot. Reversible through a pull request.
+    allowed_paths: [data/vendors/**, maintenance/machine-decisions/**]
+    required_labels_for_write_authority: [reviewed-evidence]
+    token_permissions: {contents: write, pull-requests: write}
+    audit_artifacts: [quarantine eligibility report, quarantine decision record, quarantine application report, PR body]
+    deny_by_default: true
   - id: observation_ledger_append
     status: active
     authority_level: 1

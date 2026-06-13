@@ -134,6 +134,20 @@ rules:
       evidence: docs/operations/contracts/bot-authority.yaml deny_by_default lanes; tests/test_release_gates.py
     authoritative: true
 
+  - id: no_fabricated_source_replacement_and_quarantine_reversible
+    statement: >-
+      Autonomous repair and quarantine never fabricate a source replacement and
+      never quarantine or bypass a declared-gated/bot-protected source; a source
+      is quarantined only when persistently not-found/gone with no safe
+      replacement applied, and every quarantine is a reversible, status-only
+      transition carrying a revert_quarantine reference and a committed
+      quarantine decision record.
+    enforcement:
+      state: contract_enforced
+      owner: wp38
+      evidence: tools/openva/source_quarantine.py eligibility and status-only transition; schemas/openva/source-reference.schema.json required quarantine.reversal; tests/test_source_quarantine.py and tests/test_quarantine_automerge.py
+    authoritative: true
+
   # --- deferred: not yet authoritative; named owning work package
   - id: no_single_bot_canonicalization
     statement: >-

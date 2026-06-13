@@ -106,6 +106,28 @@
     "rights_class": { "enum": ["metadata_only", "public_link_only", "snapshot_allowed", "snapshot_forbidden", "gated_excluded"] },
     "catalog_tier": { "enum": ["machine_validated", "human_reviewed"] },
     "review_state": { "enum": ["proposed", "validated", "auto_validated", "human_reviewed", "human_review_required", "quarantined", "superseded"] },
+    "quarantine": {
+      "type": "object",
+      "description": "Set when a source is autonomously quarantined (e.g. persistently not-found with no safe replacement). Reversible: reason, actor, timestamp, the linked quarantine decision, and a reversal reference. Operational metadata only; not a vendor risk, compliance, suitability, or approval signal.",
+      "required": ["reason", "quarantined_by", "quarantined_at", "decision_id", "reversal"],
+      "properties": {
+        "reason": { "enum": ["persistent_not_found", "persistent_gone"] },
+        "quarantined_by": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "quarantined_at": { "type": "string", "format": "date-time" },
+        "decision_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+        "reversal": {
+          "type": "object",
+          "required": ["method"],
+          "properties": {
+            "method": { "const": "revert_quarantine" },
+            "reference": { "type": ["string", "null"], "maxLength": 300 },
+            "reversal_decision_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
     "advisory_boundary": { "const": "non_advisory" },
     "summary_native": { "type": ["string", "null"], "maxLength": 1200 },
     "summary_en": { "type": ["string", "null"], "maxLength": 1200 },
