@@ -134,6 +134,18 @@ rules:
       evidence: docs/operations/contracts/bot-authority.yaml deny_by_default lanes; tests/test_release_gates.py
     authoritative: true
 
+  - id: machine_claims_reproducible_and_consistent
+    statement: >-
+      Every machine-created catalog claim reconstructs from its committed
+      decision record(s) and is reversible; no machine claim is missing its
+      decision, orphaned from its subject, contradictory with its lifecycle
+      state, or non-reversible.
+    enforcement:
+      state: machine_enforced
+      owner: release_gates
+      gate_id: catalog_reproducibility
+    authoritative: true
+
   - id: no_rollback_by_authoring_bot
     statement: >-
       A Level-5 rollback may never be authored by the bot that created the state
