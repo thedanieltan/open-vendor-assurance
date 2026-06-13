@@ -155,6 +155,41 @@ def test_machine_rule_every_machine_created_claim_reversible(tmp_path):
 
 
 # --------------------------------------------------------------------------- #
+# material_change_surfaced: latest-per-source, not all-events (regression for
+# the false-fail exposed when an autonomous append superseded older material
+# events).
+# --------------------------------------------------------------------------- #
+def _write_ledger(tmp_path, events):
+    events_dir = tmp_path / "events"
+    events_dir.mkdir()
+    (events_dir / "2026-06.ndjson").write_text(
+        "".join(json.dumps(e, sort_keys=True) + "\n" for e in events), encoding="utf-8"
+    )
+    return events_dir
+
+
+def test_material_change_surfaced_ignores_superseded_events(tmp_path):
+    # A material event followed by a newer non-material observation for the same
+    # source must NOT fail the gate: the latest state is non-material.
+    ledger = _write_ledger(tmp_path, [
+        {"source_id": "a", "observed_at": "2026-06-01T00:00:00Z", "change_class": "material_possible", "observation_id": "obs-a-1"},
+        {"source_id": "a", "observed_at": "2026-06-10T00:00:00Z", "change_class": "none", "observation_id": "obs-a-2"},
+    ])
+    ctx = make_ctx(ledger_dir=ledger)
+    docs = {"changes/latest.json": {"sources": [{"source_id": "a", "observation_id": "obs-a-2"}]}}
+    assert rg.gate_material_change_surfaced(ctx, docs).status == "pass"
+
+
+def test_material_change_surfaced_fails_when_latest_material_dropped(tmp_path):
+    ledger = _write_ledger(tmp_path, [
+        {"source_id": "b", "observed_at": "2026-06-10T00:00:00Z", "change_class": "material_confirmed", "observation_id": "obs-b-1"},
+    ])
+    ctx = make_ctx(ledger_dir=ledger)
+    docs = {"changes/latest.json": {"sources": []}}  # export dropped the latest material change
+    assert rg.gate_material_change_surfaced(ctx, docs).status == "fail"
+
+
+# --------------------------------------------------------------------------- #
 # Freshness gates (negative fixtures via synthetic freshness state)
 # --------------------------------------------------------------------------- #
 def _freshness(sources, all_ids, baseline_ids):

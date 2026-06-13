@@ -467,25 +467,37 @@ def gate_agent_export_observation_state(ctx: GateContext, freshness: dict[str, A
 
 
 def gate_material_change_surfaced(ctx: GateContext, documents: dict[str, dict[str, Any]]) -> GateResult:
-    """Material change events from the committed ledger are surfaced into the
-    generated changes export."""
-    from tools.openva.observation_ledger import load_ledger_events
+    """The latest material change per source is surfaced into the generated
+    changes export.
 
-    events = load_ledger_events(ctx.ledger_dir)
-    material = [e for e in events if e.get("change_class") in {"material_possible", "material_confirmed"}]
+    The changes export (changes/latest.json) is a latest-event-per-source
+    projection (built from the ledger baseline), not an all-events log. So the
+    gate verifies the latest committed event for each source — when it is a
+    material change — is present in the export. Superseded historical material
+    events remain in the committed append-only ledger (the durable record of
+    change); they are not expected in the latest-state export, and a newer
+    non-material observation legitimately supersedes them.
+    """
+    from tools.openva.observation_ledger import load_ledger_baseline
+
+    baseline = load_ledger_baseline(ctx.ledger_dir)  # latest committed event per source
+    material = [
+        event for event in baseline.values()
+        if event.get("change_class") in {"material_possible", "material_confirmed"}
+    ]
     changes = documents.get("changes/latest.json", {})
     surfaced_ids = {(row.get("source_id"), row.get("observation_id")) for row in changes.get("sources", [])}
     missing = [
-        e for e in material
-        if (e.get("source_id"), e.get("observation_id")) not in surfaced_ids
+        event for event in material
+        if (event.get("source_id"), event.get("observation_id")) not in surfaced_ids
     ]
     if missing:
         return GateResult(
             "material_change_surfaced", CAT_CORE, STATUS_FAIL,
-            f"{len(missing)} material change event(s) not surfaced into changes export",
-            [f"{e.get('source_id')} / {e.get('observation_id')}" for e in missing[:25]],
+            f"{len(missing)} latest material change(s) not surfaced into changes export",
+            [f"{event.get('source_id')} / {event.get('observation_id')}" for event in missing[:25]],
         )
-    return GateResult("material_change_surfaced", CAT_CORE, STATUS_PASS, f"all {len(material)} material change events surfaced")
+    return GateResult("material_change_surfaced", CAT_CORE, STATUS_PASS, f"all {len(material)} latest material changes surfaced")
 
 
 def gate_source_posture(ctx: GateContext, freshness: dict[str, Any]) -> GateResult:
