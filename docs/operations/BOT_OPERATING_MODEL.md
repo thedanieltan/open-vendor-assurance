@@ -198,6 +198,7 @@ Deprecated callable workflows must not become new authority expansion paths. Qua
 OpenVA bot security follows least privilege by lane:
 
 - Use `GITHUB_TOKEN` unless a future contract explicitly authorizes a bot/app token.
+- **Autonomous-merge token:** a PR opened with the default `GITHUB_TOKEN` does not trigger downstream workflows (the `agent-automerge` lanes), so an autonomous PR never self-merges. The PR-opening workflows (`observation-ledger-append-pr.yml`, `candidate-promotion-pr.yml`, `source-repair-pr.yml`) therefore create PRs with `${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}`. `OPENVA_AUTOMERGE_TOKEN` must be a least-privilege workflow-triggering token (a GitHub App installation token or a fine-scoped PAT with `contents:write` + `pull-requests:write` on this repo); until it is set, the workflows fall back to `github.token` and the opened PR waits for a maintainer to enable its automerge run. This token only authorizes PR creation/labeling; merge still requires the lane's checks and the release gate to pass.
 - Do not add write scopes that are not required by the lane.
 - Discovery and report-only lanes use read permissions except for issue/comment reporting when declared.
 - Controlled promotion and source repair may write PR branches and open PRs only through declared workflows.
