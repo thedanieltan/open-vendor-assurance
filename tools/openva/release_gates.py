@@ -449,6 +449,25 @@ def gate_quorum_promotion_independence(ctx: GateContext) -> GateResult:
     )
 
 
+def gate_catalog_reproducibility(ctx: GateContext) -> GateResult:
+    """Machine-enforced: every machine-created catalog claim must reconstruct
+    from its committed decision record(s) and be reversible. Reports missing,
+    orphan, contradictory, and non-reversible defects."""
+    from tools.openva.catalog_audit import audit_catalog
+
+    report = audit_catalog(root=ctx.root)
+    if report.findings:
+        details = [f"{f['defect']}: {f['subject_type']} {f['subject_id']} — {f['detail']}" for f in report.findings]
+        return GateResult(
+            "catalog_reproducibility", CAT_CONSTITUTION, STATUS_FAIL,
+            f"{len(report.findings)} machine-claim reproducibility defect(s)", details[:25],
+        )
+    return GateResult(
+        "catalog_reproducibility", CAT_CONSTITUTION, STATUS_PASS,
+        f"all machine claims reproducible ({report.machine_vendors} vendor(s), {report.machine_sources} source(s))",
+    )
+
+
 def gate_rollback_reverser_not_author(ctx: GateContext) -> GateResult:
     """Machine-enforced: a Level-5 rollback may never be authored by the bot that
     created the state it reverts (reverser != author)."""
@@ -712,6 +731,7 @@ def run_gates(ctx: GateContext) -> list[GateResult]:
     results.append(gate_reversible_provenance(ctx))
     results.append(gate_quorum_promotion_independence(ctx))
     results.append(gate_rollback_reverser_not_author(ctx))
+    results.append(gate_catalog_reproducibility(ctx))
     results.append(gate_artifact_manifest(ctx))
 
     freshness = compute_freshness(ctx)

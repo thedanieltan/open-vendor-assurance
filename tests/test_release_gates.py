@@ -213,6 +213,34 @@ def test_machine_rule_no_rollback_by_authoring_bot(tmp_path):
     assert rg.find_rollback_author_violations(tmp_path), "rollback authored by original author must be detected"
 
 
+def test_machine_rule_catalog_reproducibility(tmp_path):
+    from tools.openva.catalog_audit import audit_catalog
+
+    # A machine vendor whose linked decision is absent -> missing defect.
+    vendor_dir = tmp_path / "data" / "vendors" / "ghost"
+    vendor_dir.mkdir(parents=True)
+    (vendor_dir / "vendor.yaml").write_text(
+        "vendor_id: ghost\ncatalog_status: machine_provisional\nmachine_generated: true\n"
+        "machine_decision_id: ghost-vendor-materialization\n"
+        "reversal:\n  method: remove\n  reference: revert\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "maintenance" / "machine-decisions").mkdir(parents=True)
+    report = audit_catalog(root=tmp_path, decisions_dir=tmp_path / "maintenance" / "machine-decisions")
+    assert any(f["defect"] == "missing" for f in report.findings), "missing decision must be detected"
+
+    # Add the decision -> reproducible (clean).
+    (tmp_path / "maintenance" / "machine-decisions" / "2026-06.ndjson").write_text(
+        json.dumps({
+            "decision_id": "ghost-vendor-materialization", "decision": "materialize_provisional",
+            "subject_type": "vendor", "subject_id": "ghost", "deciding_bot": "m", "discovery_bot": "d",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    report2 = audit_catalog(root=tmp_path, decisions_dir=tmp_path / "maintenance" / "machine-decisions")
+    assert report2.clean, report2.findings
+
+
 # --------------------------------------------------------------------------- #
 # material_change_surfaced: latest-per-source, not all-events (regression for
 # the false-fail exposed when an autonomous append superseded older material
@@ -329,6 +357,7 @@ def test_machine_enforced_rules_have_negative_fixtures():
         "reversible_provenance",
         "quorum_promotion_independence",
         "rollback_reverser_not_author",
+        "catalog_reproducibility",
     }
     declared = {r["enforcement"]["gate_id"] for r in _rules_by_state("machine_enforced")}
     assert declared == tested_gate_ids, "every machine_enforced gate must have a negative fixture here"
