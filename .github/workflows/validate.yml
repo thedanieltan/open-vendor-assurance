@@ -29,6 +29,11 @@ jobs:
         run: python -m tools.openva.validate build-indexes
       - name: Check generated files are committed
         run: git diff --exit-code openva-pack.json indexes/ dist/
+      - name: Run source-intelligence release gates (pr profile)
+        run: >-
+          python -m tools.openva.release_gates check --profile pr
+          --out-json "$RUNNER_TEMP/release-gates.json"
+          --out-md "$RUNNER_TEMP/release-gates-summary.md"
 
   workflow-operating-model:
     name: workflow-operating-model

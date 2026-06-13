@@ -86,9 +86,13 @@ def test_release_candidate_builds_report_only_source_health_readiness():
     assert "python -m tools.openva.release_source_health check" in text
     assert "--report-only" in text
     assert "--enforce" in text
-    assert "SOURCE_HEALTH_EXIT_CODE" in text
+    # WP35: source health is the producer; the aggregate release gate is the
+    # authoritative final enforcer.
+    assert "python -m tools.openva.release_gates check" in text
+    assert "RELEASE_GATES_EXIT_CODE" in text
     assert "release-source-health-readiness.json" in text
     assert "release-source-health-summary.md" in text
+    assert "release-gates.json" in text
     assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["default"] == "enforce"
 
 

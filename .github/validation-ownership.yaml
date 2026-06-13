@@ -11,17 +11,21 @@ required_status_contexts:
 jobs:
   repository-integrity:
     owner_loop: repository_integrity
-    purpose: Validate canonical records and deterministic generated outputs.
+    purpose: Validate canonical records, deterministic generated outputs, and the source-intelligence release gates.
     commands:
       - python -m tools.openva.validate validate
       - python -m tools.openva.validate build-indexes
       - git diff --exit-code openva-pack.json indexes/ dist/
+      - python -m tools.openva.release_gates check --profile pr
     protects:
       - schemas/openva/**
       - data/vendors/**
       - openva-pack.json
       - indexes/**
       - dist/**
+      - config/bot-constitution.yaml
+      - config/release-gates.yaml
+      - tools/openva/release_gates.py
   workflow-operating-model:
     owner_loop: workflow_control_plane
     purpose: Validate workflow inventory, operating model, future-operation specs, and structured contracts.
