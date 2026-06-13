@@ -38,6 +38,18 @@ The strict-growth lane remains narrow: catalog growth discovery proposes candida
 
 The `bot_dashboard_issue_sync` lane is visibility-only authority. It may render the bot dashboard and, after explicit maintainer input, create or update only the persistent OpenVA Bot Dashboard issue. It must not write catalog truth, mutate PRs, dispatch workflows, label PRs, change automerge state, or grant authority to any catalog growth, promotion actions, source repair, reviewed evidence, strict-growth, or controlled promotion path.
 
+## Bot Constitution And Release Gates
+
+`config/bot-constitution.yaml` holds the deny-first, higher-order invariants that every lane and work package must respect. It complements the per-lane authority contract: `bot-authority.yaml` owns write/label/merge permissions, while the constitution owns the boundary invariants (public-source-only, no advisory/scoring/ranking output, SHA-256-only OpenVA digests, no raw-document mirroring, every machine-created claim reversible, no automation writing directly to `main`, and the separation-of-duty rules deferred to WP36/WP37).
+
+Each constitution rule carries an explicit `enforcement` classification:
+
+- `machine_enforced` — a named gate in `tools/openva/release_gates.py` rejects a real violation, proven by a negative fixture in `tests/test_release_gates.py`;
+- `contract_enforced` — enforced by a workflow/authority contract and its existing test;
+- `deferred` — not yet authoritative; the named owning work package (WP36/WP37) will implement enforcement. A deferred rule is never relied on as if enforced.
+
+The consolidated release gate (`python -m tools.openva.release_gates check`) is the single authority gate that composes existing validators and the machine-enforced constitution rules. It runs in two explicit profiles: `pr` (deterministic committed-repository checks only, wired into `validate.yml`) and `release` (adds runtime-evidence gates and fails closed on missing, malformed, or stale required evidence, wired into `release-candidate.yml`). Thresholds live in `config/release-gates.yaml`, never in code. Later automerge jobs call the same gate so every merge path enforces the same authority boundary.
+
 ## Command Surface
 
 OpenVA commands are planned maintainer-facing controls. WP9 defines vocabulary, authority, and audit expectations only. It does not implement slash-command parsing or execution.

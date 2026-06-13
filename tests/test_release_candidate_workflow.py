@@ -37,14 +37,31 @@ def test_release_candidate_workflow_wraps_existing_release_commands():
         "gh run list",
         "gh run download",
         "python -m tools.openva.release_source_health check",
+        "python -m tools.openva.release_gates check",
+        "--profile release",
         "python -m tools.openva.release_artifacts build",
         "python -m tools.openva.release_artifacts check",
     ]
     for command in expected_commands:
         assert command in text
     assert "--enforce" in text
-    assert "SOURCE_HEALTH_EXIT_CODE" in text
-    assert "Enforce source health readiness result" in text
+
+
+def test_release_candidate_enforces_aggregate_release_gate_not_source_health_alone():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    # Source health is the producer of readiness evidence; the aggregate release
+    # gate consumes it and is the authoritative final enforcer.
+    assert "RELEASE_GATES_EXIT_CODE" in text
+    assert "Enforce release gate result" in text
+    assert "SOURCE_HEALTH_EXIT_CODE" not in text
+    assert "Enforce source health readiness result" not in text
+    # The source-health policy is passed into the aggregate, and the aggregate
+    # consumes the readiness artifact rather than recomputing source health.
+    assert "--source-health-policy" in text
+    assert "--source-health-readiness release-source-health-readiness.json" in text
+    # The aggregate report is generated before evidence upload and final enforcement.
+    assert text.index("Build aggregate release gate report") < text.index("Upload release candidate artifacts")
+    assert text.index("Upload release candidate artifacts") < text.index("Enforce release gate result")
 
 
 def test_release_candidate_downloads_latest_source_maintenance_artifact_before_readiness():
@@ -76,7 +93,9 @@ def test_release_candidate_workflow_uploads_manifest_and_source_health_readiness
     assert "release-artifacts.json" in text
     assert "release-source-health-readiness.json" in text
     assert "release-source-health-summary.md" in text
-    assert text.index("Upload release candidate artifacts") < text.index("Enforce source health readiness result")
+    assert "release-gates.json" in text
+    assert "release-gates-summary.md" in text
+    assert text.index("Upload release candidate artifacts") < text.index("Enforce release gate result")
     assert text.index("Build source health readiness") < text.index("Upload release candidate artifacts")
 
 
@@ -89,6 +108,9 @@ def test_release_candidate_policy_docs_explain_default_enforcement():
         "Confirmed P0 source-health failures block release candidates by default.",
         "Ambiguous access and source quality statuses remain warning-only",
         "Missing, unavailable, or invalid source-health artifacts also block release candidates",
+        # WP35: source health is now one constituent of the aggregate gate.
+        "Source-health readiness is one constituent of the aggregate release-gate decision.",
+        "The aggregate release-gate result blocks the release candidate.",
     ]:
         assert phrase in text
 

@@ -102,6 +102,10 @@ jobs:
           else
             echo "::warning::confirmed P0 scan artifact unavailable: confirmed-p0-repair-candidates.json was not present in source-refinement-scan run $RUN_ID."
           fi
+      # Source health is one constituent of the aggregate release gate. This
+      # step is the PRODUCER of the readiness evidence; the aggregate gate below
+      # consumes it. The producer never recomputes source health twice and never
+      # enforces on its own; final enforcement is the aggregate exit code.
       - name: Build source health readiness
         run: |
           set +e
@@ -115,9 +119,26 @@ jobs:
             --output-json release-source-health-readiness.json \
             --summary-md release-source-health-summary.md \
             "$MODE_FLAG"
-          echo "SOURCE_HEALTH_EXIT_CODE=$?" >> "$GITHUB_ENV"
+          set -e
       - name: Print source health readiness summary
         run: cat release-source-health-summary.md
+      # Aggregate release-gate decision. Consumes the readiness artifact as one
+      # gate, plus exports/digests/advisory/leakage/freshness/constitution gates.
+      # This is the authoritative release blocker; its exit code is enforced last.
+      - name: Build aggregate release gate report
+        run: |
+          set +e
+          python -m tools.openva.release_gates check \
+            --profile release \
+            --source-health-readiness release-source-health-readiness.json \
+            --source-health-policy "${{ inputs.source_health_policy }}" \
+            --out-json release-gates.json \
+            --out-md release-gates-summary.md \
+            --enforce
+          echo "RELEASE_GATES_EXIT_CODE=$?" >> "$GITHUB_ENV"
+          set -e
+      - name: Print release gate summary
+        run: cat release-gates-summary.md
       - name: Build release artifact manifest
         run: python -m tools.openva.release_artifacts build
       - name: Check release artifact manifest
@@ -133,7 +154,8 @@ jobs:
             release-artifacts.json
             release-source-health-readiness.json
             release-source-health-summary.md
+            release-gates.json
+            release-gates-summary.md
           if-no-files-found: error
-      - name: Enforce source health readiness result
-        if: inputs.source_health_policy == 'enforce'
-        run: exit "$SOURCE_HEALTH_EXIT_CODE"
+      - name: Enforce release gate result
+        run: exit "$RELEASE_GATES_EXIT_CODE"

@@ -113,6 +113,20 @@ stale verification
 
 `report_only` remains available as an explicit diagnostic mode when maintainers need to inspect source-health readiness without blocking a candidate run. It should not be treated as the normal release posture.
 
+### Aggregate source-intelligence release gate (WP35)
+
+Source-health readiness is one constituent of the aggregate release-gate decision. The `release-candidate` workflow first builds the source-health readiness artifact (the producer), then runs the consolidated release gate:
+
+```bash
+python -m tools.openva.release_gates check --profile release \
+  --source-health-readiness release-source-health-readiness.json \
+  --source-health-policy "$SOURCE_HEALTH_POLICY" --enforce
+```
+
+The aggregate gate consumes the readiness artifact as one gate and adds export-build, schema, digest-recomputation, advisory-wording, private/gated-leakage, observation-freshness, material-change-surfacing, reversibility, and bot-constitution gates (see `config/release-gates.yaml` and `config/bot-constitution.yaml`). It writes `release-gates.json` and `release-gates-summary.md`, which are uploaded alongside the source-health readiness artifacts. The aggregate release-gate result blocks the release candidate. The `--source-health-policy` flag carries the existing `enforce`/`report_only` choice into the aggregate, so source health can be made diagnostic without disabling the other gates.
+
+The same gate runs in deterministic `--profile pr` form inside the `validate` workflow's `repository-integrity` job: committed-repository checks only, with no network and no dependency on Actions artifacts. The `release` profile additionally requires runtime evidence (the source-health readiness artifact); missing, malformed, or stale required evidence fails closed.
+
 Maintainers may also run the underlying commands individually:
 
 ```bash

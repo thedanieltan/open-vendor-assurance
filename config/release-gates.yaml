@@ -1,0 +1,97 @@
+schema_version: "0.1.0"
+# WP35 consolidated source-intelligence release gates.
+#
+# This config drives `python -m tools.openva.release_gates check`. Thresholds
+# live here, never hard-coded in Python. The CLI composes existing validators
+# (validate, agent_export, release_artifacts, release_source_health,
+# advisory_wording, observation_ledger); it does not reimplement them.
+#
+# Two execution profiles (selected with --profile, never inferred from whether
+# an artifact happens to exist):
+#   pr      - deterministic committed-repository checks only. No network, no
+#             dependency on Actions artifacts. May read the committed
+#             observation ledger and compute coverage/freshness against the SLA.
+#   release - pr checks PLUS runtime-evidence gates. Required runtime evidence
+#             must be supplied explicitly; missing, malformed, or stale required
+#             evidence fails closed. Artifact absence never silently downgrades
+#             a release check to warning-only.
+#
+# Operational metadata only. Not legal, compliance, procurement, security,
+# KYC, AML, audit, or vendor-risk advice.
+
+# Aggregate enforcement mode. `enforce` => blocking gate failures set a
+# non-zero aggregate exit code. `warn` => failures are reported but never
+# block (diagnostic only).
+mode: enforce
+
+# Freshness/continuity gates. Set to `enforce` now that the full first-pass
+# observation baseline (610/610 sources) is committed (PR #361). Until that
+# baseline existed these gates were warn-only; with a complete committed
+# baseline there is no value in carrying a temporary warning state.
+freshness_gates: enforce
+
+# Constitution enforcement mode for machine-enforced rules surfaced through the
+# `constitution` gate. `enforce` => violations block.
+constitution_enforcement: enforce
+
+# Path to the machine-readable bot constitution consumed by the constitution
+# gate.
+constitution_path: config/bot-constitution.yaml
+
+# Release-profile source-health gate. The gate CONSUMES the
+# release-source-health-readiness.json produced by release_source_health
+# (the single producer); it never recomputes source health.
+source_health:
+  # Required evidence in the release profile. If the readiness artifact is
+  # missing, malformed, or its report_type is wrong, the gate fails closed.
+  required_in_release: true
+  # Maximum age of the readiness artifact before it is treated as stale and
+  # fails closed in the release profile.
+  max_readiness_age_hours: 168
+
+# Committed-ledger source posture (PR profile, informational). A single
+# committed unreachable observation is not a confirmed-broken source; the
+# authoritative broken-source hard fail is confirmed-P0 in the release-profile
+# source-health gate. Here we only surface the committed count as a warning.
+source_posture:
+  broken_health_statuses:
+    - unreachable
+  warn_only: true
+
+# Freshness gates computed from the committed observation ledger against
+# config/observation-sla.yaml. Freshness is observation AGE, independent of
+# reachability.
+freshness:
+  # Every catalog source must carry at least one committed observation.
+  require_full_baseline: true
+  # No source may be past its expired_after_days SLA.
+  forbid_expired: true
+  # Sources of these types must be within their stale_after_days SLA
+  # (observed_within_sla). These carry the highest growth criticality
+  # (config/coverage-targets.yaml source_type_criticality).
+  high_priority_source_types:
+    - dpa
+    - subprocessors_list
+    - trust_center
+  # Newest committed observation must be no older than this, else the agent
+  # exports advertise stale observation state.
+  agent_export_max_observation_age_days: 120
+
+# Export integrity gates (committed-state, both profiles).
+exports:
+  schema_path: schemas/openva/agent-export.schema.json
+  # Forbid self-certifying fields leaking into any export payload.
+  forbid_self_certifying_fields: true
+
+# Reversibility gate. Any record carrying a machine-generation marker must
+# carry a reversal reference, so every machine-created claim is reversible.
+# No machine-claim types exist at WP35; this gate activates as WP36 introduces
+# machine_provisional records.
+reversibility:
+  machine_marker_fields:
+    - machine_decision_id
+    - machine_generated
+  reversal_fields:
+    - reversal
+    - reversal_reference
+    - reversal_decision_id

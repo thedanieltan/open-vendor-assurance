@@ -1,0 +1,178 @@
+schema_version: "0.1.0"
+# WP35 OpenVA Bot Constitution.
+#
+# Machine-readable, versioned, deny-first higher-order invariants for all
+# OpenVA automation. This file COMPLEMENTS docs/operations/contracts/
+# bot-authority.yaml (which owns per-lane write/label/merge permissions); it
+# does not restate lane permissions. The constitution holds the boundary and
+# authority invariants every lane and work package must respect.
+#
+# Operational metadata only. Not legal, compliance, procurement, security,
+# KYC, AML, audit, or vendor-risk advice. Bots detect and route material
+# change; they never interpret its legal, security, compliance, or
+# procurement meaning.
+#
+# Enforcement classification (per rule):
+#   state: machine_enforced  -> the named gate in tools/openva/release_gates.py
+#                               rejects a real violation; proven by a negative
+#                               fixture in tests/test_release_gates.py.
+#          contract_enforced -> enforced by a workflow/authority contract and
+#                               its existing test (named in `evidence`).
+#          deferred          -> not yet authoritative; the named owner work
+#                               package will implement enforcement. `authoritative`
+#                               is false until then. A deferred rule must never
+#                               be relied on as if enforced.
+#   owner:  release_gates | workflow_contracts | validate | wp36 | wp37
+#   gate_id: the release_gates gate that enforces a machine_enforced rule.
+#
+# A rule's presence in this file is descriptive, not enforcement. Tests that
+# merely assert a phrase exists in YAML do NOT count as enforcement.
+
+default_posture:
+  undeclared_action_is_denied: true
+  ambiguous_conflicting_gated_or_meaning_level_cases_fail_closed: true
+  llms_may_draft_not_decide: true
+
+rules:
+  # --- machine_enforced: proven by negative fixtures in test_release_gates.py
+  - id: no_private_or_gated_content_leakage
+    statement: >-
+      No private, gated, NDA, customer-portal, credentialed, or paid-source
+      content or self-certifying fields may leak into public agent exports.
+      Public sources only; metadata first.
+    enforcement:
+      state: machine_enforced
+      owner: release_gates
+      gate_id: exports_leakage_clean
+    authoritative: true
+
+  - id: no_advisory_scoring_or_ranking_language
+    statement: >-
+      Exports and records carry no compliance scoring, legal advice, vendor
+      recommendation, ranking, approval, suitability, procurement, security, or
+      vendor-risk signal. Prohibited advisory vocabulary is swept with the
+      single shared contract (config/prohibited-claims.yaml).
+    enforcement:
+      state: machine_enforced
+      owner: release_gates
+      gate_id: exports_advisory_clean
+    authoritative: true
+
+  - id: non_advisory_doctrine_present_in_exports
+    statement: >-
+      Every public agent export asserts its non-advisory, public-source-only,
+      metadata-first doctrine (not_advice / guarantees).
+    enforcement:
+      state: machine_enforced
+      owner: release_gates
+      gate_id: exports_non_advisory_doctrine
+    authoritative: true
+
+  - id: openva_content_digests_sha256_only
+    statement: >-
+      OpenVA content, evidence, observation, and release-artifact digests use
+      SHA-256 only. This rule governs OpenVA-produced digests; it does not
+      reject Git object identifiers or external references merely because they
+      are not SHA-256.
+    enforcement:
+      state: machine_enforced
+      owner: release_gates
+      gate_id: exports_digest_integrity
+    authoritative: true
+
+  - id: no_raw_document_mirroring_by_default
+    statement: >-
+      Raw documents are not mirrored by default; no raw-content directories
+      (raw, raw-documents, snapshots, screenshots, extracted-text) are
+      committed.
+    enforcement:
+      state: machine_enforced
+      owner: release_gates
+      gate_id: no_raw_mirroring
+    authoritative: true
+
+  - id: every_machine_created_claim_reversible
+    statement: >-
+      Every machine-generated catalog claim carries a reversal reference so it
+      can be quarantined or removed through a pull request. Provenance first.
+    enforcement:
+      state: machine_enforced
+      owner: release_gates
+      gate_id: reversible_provenance
+    authoritative: true
+
+  # --- contract_enforced: enforced by a workflow/authority contract + its test
+  - id: openva_automation_no_direct_write_to_main
+    statement: >-
+      OpenVA automation may not directly mutate `main`; all repository state
+      changes pass through pull requests. (Human branch-protection governance
+      is outside what this CLI can prove.)
+    enforcement:
+      state: contract_enforced
+      owner: workflow_contracts
+      evidence: tests/test_ci_readiness.py::test_no_workflow_requests_write_permissions_except_approved_handoffs
+    authoritative: true
+
+  - id: declared_gated_sources_excluded_and_not_fetched
+    statement: >-
+      Declared-gated sources are recorded as facts with excluded rights and are
+      never fetched, authenticated against, or scraped around.
+    enforcement:
+      state: contract_enforced
+      owner: validate
+      evidence: tools/openva/validate.py access/rights matrix; tests/test_validate.py
+    authoritative: true
+
+  - id: observation_and_discovery_lanes_deny_catalog_writes
+    statement: >-
+      Observation and discovery lanes hold no catalog-write authority and do
+      not crawl uncontrolled; discovery is queue-bound. Bots route change; they
+      do not interpret its meaning.
+    enforcement:
+      state: contract_enforced
+      owner: workflow_contracts
+      evidence: docs/operations/contracts/bot-authority.yaml deny_by_default lanes; tests/test_release_gates.py
+    authoritative: true
+
+  # --- deferred: not yet authoritative; named owning work package
+  - id: no_single_bot_canonicalization
+    statement: >-
+      No single bot may create canonical truth by itself; canonicalization
+      requires an independent quorum.
+    enforcement:
+      state: deferred
+      owner: wp37
+    authoritative: false
+
+  - id: no_bot_approves_its_own_discovery
+    statement: >-
+      A discovery component may not approve its own discovery; the deciding bot
+      must differ from the discovery bot (separation of duties).
+    enforcement:
+      state: deferred
+      owner: wp37
+    authoritative: false
+
+  - id: no_identity_merge_without_resolution_evidence
+    statement: >-
+      No identity merge without duplicate and entity-resolution evidence.
+    enforcement:
+      state: deferred
+      owner: wp37
+    authoritative: false
+
+  - id: no_source_mutation_without_linked_evidence
+    statement: >-
+      No source mutation without linked evidence.
+    enforcement:
+      state: deferred
+      owner: wp36
+    authoritative: false
+
+  - id: machine_writes_carry_provenance_and_decision_path
+    statement: >-
+      Every machine write has provenance and an auditable decision path.
+    enforcement:
+      state: deferred
+      owner: wp36
+    authoritative: false
