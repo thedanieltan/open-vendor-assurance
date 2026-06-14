@@ -55,6 +55,14 @@ def is_allowed_catalog_path(path: str) -> bool:
             normalized.startswith("maintenance/generated/strict-growth-")
             and normalized.endswith(".json")
         )
+        # Append-only machine decision records are a first-class artifact of the
+        # autonomous catalog lanes (machine-provisional materialization, quorum
+        # promotion, quarantine, rollback). They are listed in those lanes'
+        # allowed_paths in docs/operations/contracts/bot-authority.yaml.
+        or (
+            normalized.startswith("maintenance/machine-decisions/")
+            and normalized.endswith(".ndjson")
+        )
     )
 
 
