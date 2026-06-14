@@ -1,0 +1,70 @@
+version: 1
+contract: bot-work-priority
+source_document: docs/operations/WORKFLOW_OPERATING_MODEL.md
+# WP40C global work priority.
+#
+# When several lanes are eligible at once, OpenVA needs one deterministic
+# ordering. Lower `rank` = higher priority. Integrity and maintenance always
+# outrank catalog growth: under resource pressure the registry protects what it
+# already published before it adds anything new.
+#
+# This contract is consumed by tools/openva/work_priority.py. It declares
+# priority and the capacity that growth/discovery lanes may never consume, so
+# rollback, quarantine, and repair always retain a path to run.
+#
+# Operational metadata only. Not legal, compliance, procurement, security, KYC,
+# AML, audit, or vendor-risk advice.
+priority:
+  - rank: 1
+    work_class: observation_continuity
+    description: Keep the committed observation ledger flowing; it underpins every later decision.
+  - rank: 2
+    work_class: release_repository_safety
+    description: Release gates, PR safety, and reproducibility audit must pass before anything merges.
+  - rank: 3
+    work_class: rollback
+    description: Revert invalid machine-created state first.
+  - rank: 4
+    work_class: quarantine
+    description: Isolate persistently unavailable sources.
+  - rank: 5
+    work_class: source_repair
+    description: Repair or replace failing sources with fresh evidence.
+  - rank: 6
+    work_class: quorum_promotion
+    description: Promote stable machine_provisional vendors via independent quorum.
+  - rank: 7
+    work_class: machine_provisional_growth
+    description: Materialise one new machine_provisional vendor per cycle.
+  - rank: 8
+    work_class: discovery
+    description: Discover new candidates (report-only; opens no catalog PR).
+  - rank: 9
+    work_class: optional_reports
+    description: Dashboards, telemetry, and non-blocking reports.
+
+# Integrity/maintenance classes that always retain capacity. Growth and
+# discovery may not consume the slots reserved here.
+reserved_for_integrity:
+  - rollback
+  - quarantine
+  - source_repair
+
+# Lanes that may not start unless reserved integrity capacity remains free.
+yields_to_reserved_capacity:
+  - quorum_promotion
+  - machine_provisional_growth
+  - discovery
+
+# Workflow / lane id -> work class, so a scheduler can rank concrete lanes.
+lane_to_work_class:
+  observation_ledger_append: observation_continuity
+  pr_safety: release_repository_safety
+  source_rollback: rollback
+  source_quarantine: quarantine
+  source_repair: source_repair
+  catalog_growth_quorum_promotion: quorum_promotion
+  catalog_growth_promotion: machine_provisional_growth
+  catalog_growth_discovery: discovery
+  catalog_quality: optional_reports
+  bot_dashboard_issue_sync: optional_reports
