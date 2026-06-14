@@ -5,7 +5,7 @@
     "compliance_page": 94,
     "dpa": 100,
     "other_public_source": 2,
-    "privacy_notice": 158,
+    "privacy_notice": 159,
     "security_page": 139,
     "subprocessors_list": 106,
     "terms_of_service": 7,
@@ -18,7 +18,7 @@
     "compliance_page": 94,
     "dpa": 100,
     "other_public_source": 2,
-    "privacy_notice": 158,
+    "privacy_notice": 159,
     "security_page": 139,
     "subprocessors_list": 106,
     "terms_of_service": 7,
@@ -27,7 +27,7 @@
   "unavailable_source_type_counts": {
     "dpa": 16
   },
-  "unique_source_location_count": 610,
+  "unique_source_location_count": 611,
   "vendor_coverage": [
     {
       "candidate_source_types": [],
@@ -719,6 +719,30 @@
       ],
       "unique_source_locations": 4,
       "vendor_id": "bill-com"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "bitwarden"
     },
     {
       "candidate_source_types": [],
