@@ -4,6 +4,7 @@ import yaml
 
 WORKFLOW_DIR = Path(".github/workflows")
 EXPECTED_PUBLIC_WORKFLOWS = {
+    "autonomous-catalog-growth.yml",
     "candidate-promotion-pr.yml",
     "agent-automerge.yml",
     "agent-weighted-review.yml",
@@ -145,6 +146,7 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         "source-repair-pr-cleanup.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "pull-requests": "write", "issues": "write"}},
         "observation-ledger-append-pr.yml": {"triggers": {"workflow_dispatch", "workflow_run"}, "permissions": {"contents": "write", "pull-requests": "write", "actions": "read"}},
         "catalog-growth-discovery.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "issues": "write"}},
+        "autonomous-catalog-growth.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "actions": "write"}},
         "contribution-intake-agent.yml": {"triggers": {"issues", "workflow_dispatch"}, "permissions": {"contents": "write", "pull-requests": "write", "issues": "write"}},
         "submitted-source-verification.yml": {"triggers": {"issues", "workflow_dispatch"}, "permissions": {"contents": "read", "issues": "write"}},
         "release-downloads.yml": {"triggers": {"push"}, "permissions": {"contents": "write"}},

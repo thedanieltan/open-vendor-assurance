@@ -90,6 +90,14 @@ public_workflows:
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
+  - name: autonomous-catalog-growth.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read, actions: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
   - name: candidate-promotion-pr.yml
     loop: catalog_growth
     status: core

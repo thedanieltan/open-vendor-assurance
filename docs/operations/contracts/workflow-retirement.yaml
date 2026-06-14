@@ -149,6 +149,18 @@ workflows:
     required_retirement_evidence: [replacement discovery proposal report, proof that discovery does not write catalog truth]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: true
+  - name: autonomous-catalog-growth.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: catalog_growth
+    replacement_owner: autonomous-catalog-growth.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [scheduled autonomous growth gate that dispatches the single machine-provisional mutation lane]
+    required_retirement_evidence: [replacement growth controller, proof that the controller does not write catalog truth and dispatches only candidate-promotion-pr.yml]
+    allowed_triggers_until_retired: [workflow_dispatch, schedule]
+    write_permissions_allowed_until_retired: true
   - name: candidate-promotion-pr.yml
     current_status: active
     inventory_status: core
