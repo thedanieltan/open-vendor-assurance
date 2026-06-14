@@ -298,6 +298,25 @@ def build_export_documents(ctx: GateContext) -> dict[str, dict[str, Any]]:
 # --------------------------------------------------------------------------- #
 # Freshness / coverage from the committed ledger
 # --------------------------------------------------------------------------- #
+def machine_provisional_vendor_ids(root: Path) -> set[str]:
+    """Vendor ids whose catalog_status is machine_provisional.
+
+    Their sources are observed between materialization and quorum promotion, so
+    they are not yet part of the active-catalog observation baseline.
+    """
+    import yaml
+
+    provisional: set[str] = set()
+    for path in (root / "data" / "vendors").glob("*/vendor.yaml"):
+        try:
+            data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        except yaml.YAMLError:
+            continue
+        if isinstance(data, dict) and data.get("catalog_status") == "machine_provisional":
+            provisional.add(str(data.get("vendor_id") or path.parent.name))
+    return provisional
+
+
 def compute_freshness(ctx: GateContext) -> dict[str, Any]:
     from tools.openva.observation_ledger import (
         build_freshness_report,
@@ -312,10 +331,15 @@ def compute_freshness(ctx: GateContext) -> dict[str, Any]:
     source_records = source_records_by_id(ctx.root)
     sla = load_sla_config()
     report = build_freshness_report(latest, sla, now=ctx.now, source_records=source_records)
+    provisional_vendors = machine_provisional_vendor_ids(ctx.root)
+    provisional_source_ids = {
+        sid for sid, rec in source_records.items() if str(rec.get("vendor_id")) in provisional_vendors
+    }
     return {
         "report": report,
         "baseline_source_ids": set(baseline),
         "all_source_ids": set(source_records),
+        "provisional_source_ids": provisional_source_ids,
         "source_types": {sid: rec.get("source_type") for sid, rec in source_records.items()},
     }
 
@@ -502,16 +526,23 @@ def gate_artifact_manifest(ctx: GateContext) -> GateResult:
 def gate_full_baseline(ctx: GateContext, freshness: dict[str, Any]) -> GateResult:
     if not (ctx.config.get("freshness") or {}).get("require_full_baseline", True):
         return GateResult("full_baseline_readiness", CAT_FRESHNESS, STATUS_SKIP, "full-baseline gate disabled in config")
-    missing = sorted(freshness["all_source_ids"] - freshness["baseline_source_ids"])
-    total = len(freshness["all_source_ids"])
-    observed = len(freshness["all_source_ids"] & freshness["baseline_source_ids"])
+    # machine_provisional sources are observed between materialization and
+    # quorum promotion, so they are exempt from the active-catalog baseline
+    # until they are promoted. Without this, a machine-provisional growth PR
+    # could never merge (its new source has no observation yet).
+    provisional = freshness.get("provisional_source_ids", set())
+    required = freshness["all_source_ids"] - provisional
+    missing = sorted(required - freshness["baseline_source_ids"])
+    total = len(required)
+    observed = len(required & freshness["baseline_source_ids"])
     if missing:
         return GateResult(
             "full_baseline_readiness", CAT_FRESHNESS, STATUS_FAIL,
             f"observation baseline incomplete: {observed}/{total} sources observed",
             [f"no committed observation: {sid}" for sid in missing[:25]],
         )
-    return GateResult("full_baseline_readiness", CAT_FRESHNESS, STATUS_PASS, f"full baseline: {observed}/{total} sources observed")
+    suffix = f" ({len(provisional)} machine_provisional exempt)" if provisional else ""
+    return GateResult("full_baseline_readiness", CAT_FRESHNESS, STATUS_PASS, f"full baseline: {observed}/{total} sources observed{suffix}")
 
 
 def gate_observation_freshness(ctx: GateContext, freshness: dict[str, Any]) -> GateResult:
