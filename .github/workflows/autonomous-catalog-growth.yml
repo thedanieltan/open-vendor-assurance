@@ -1,0 +1,126 @@
+name: autonomous-catalog-growth
+
+# WP40A Issue 3: scheduled autonomous machine-provisional growth controller.
+#
+# This workflow is the continuously-operating growth lane. It does NOT mutate
+# the catalog itself: it evaluates the live queue, the reserved integrity
+# capacity, holds, and cooldowns, selects exactly ONE eligible candidate, and —
+# only when every gate passes — dispatches the single existing catalog-mutation
+# workflow (candidate-promotion-pr.yml) in machine-provisional-from-queue mode
+# capped at one vendor. There is no second mutation path; this workflow only
+# gates and dispatches.
+#
+# Operational metadata only. Not legal, compliance, procurement, security, KYC,
+# AML, audit, or vendor-risk advice.
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "23 9 * * *"
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: autonomous-catalog-growth
+  cancel-in-progress: false
+
+jobs:
+  autonomous-catalog-growth:
+    runs-on: ubuntu-latest
+    env:
+      GROWTH_LANE: catalog_growth_promotion
+      MUTATION_WORKFLOW: candidate-promotion-pr.yml
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Build live queue state and eligible candidates
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          # Live open bot PRs for the growth lane (head branches that start with agent-).
+          OPEN_PRS_JSON="$(gh pr list --state open --json number,headRefName --limit 100 \
+            --jq '[.[] | select(.headRefName | startswith("agent-")) | {number: .number, lane_id: env.GROWTH_LANE}]' || echo '[]')"
+          OPEN_COUNT="$(printf '%s' "$OPEN_PRS_JSON" | python -c 'import json,sys; print(len(json.load(sys.stdin)))')"
+          # Recent bot PR counts (last day / week) for budget enforcement.
+          DAY_COUNT="$(gh pr list --state all --search "created:>=$(date -u -d '1 day ago' +%Y-%m-%d)" --json number --jq 'length' || echo 0)"
+          WEEK_COUNT="$(gh pr list --state all --search "created:>=$(date -u -d '7 days ago' +%Y-%m-%d)" --json number --jq 'length' || echo 0)"
+          # Global hold (pause) state.
+          PAUSE="false"
+          if gh label list --json name --jq '.[].name' | grep -qx "openva-bot-paused"; then
+            if [ "$(gh issue list --label openva-bot-paused --state open --json number --jq 'length')" != "0" ]; then PAUSE="true"; fi
+          fi
+          python - "$OPEN_PRS_JSON" "$DAY_COUNT" "$WEEK_COUNT" "$PAUSE" <<'PY'
+          import json, sys
+          open_prs = json.loads(sys.argv[1] or "[]")
+          state = {
+              "lane_id": "catalog_growth_promotion",
+              "state_source": "github_live",
+              "open_prs": open_prs,
+              "recent_bot_prs": {"day_count": int(sys.argv[2] or 0), "week_count": int(sys.argv[3] or 0)},
+              "pause": {"active": sys.argv[4] == "true"},
+              "evidence": {"generated_at": __import__("datetime").datetime.now(__import__("datetime").UTC).strftime("%Y-%m-%dT%H:%M:%SZ")},
+          }
+          json.dump(state, open("reports/queue-state.json", "w"), indent=2)
+          PY
+          # Eligible candidate records committed under maintenance/candidates/.
+          python - <<'PY'
+          import glob, json
+          eligible = []
+          for path in sorted(glob.glob("maintenance/candidates/*.json")):
+              try:
+                  rec = json.load(open(path, encoding="utf-8"))
+              except json.JSONDecodeError:
+                  continue
+              if isinstance(rec, dict) and rec.get("eligibility_state") == "eligible":
+                  eligible.append(rec)
+          json.dump(eligible, open("reports/eligible-candidates.json", "w"), indent=2)
+          print(f"eligible candidates: {len(eligible)}")
+          PY
+          echo "OPEN_COUNT=$OPEN_COUNT" >> "$GITHUB_ENV"
+
+      - name: Run autonomous growth controller (gate)
+        run: |
+          set -euo pipefail
+          python -m tools.openva.autonomous_growth_controller \
+            --queue-state reports/queue-state.json \
+            --candidates reports/eligible-candidates.json \
+            --open-prs-total "${OPEN_COUNT:-0}" \
+            --output reports/growth-cycle-decision.json
+          PROCEED="$(python -c 'import json; print(str(json.load(open("reports/growth-cycle-decision.json"))["proceed"]).lower())')"
+          echo "GROWTH_PROCEED=$PROCEED" >> "$GITHUB_ENV"
+          {
+            echo "### Autonomous catalog growth decision";
+            echo '```json';
+            cat reports/growth-cycle-decision.json;
+            echo '```';
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Dispatch single machine-provisional generation
+        if: env.GROWTH_PROCEED == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          # Hand the single authorised cycle to the one existing mutation
+          # workflow; this controller never writes catalog state itself.
+          gh workflow run "$MUTATION_WORKFLOW" \
+            -f promotion_plan_mode=machine-provisional-from-queue \
+            -f max_promotion_actions_per_pr=1
+
+      - name: Upload growth controller artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: autonomous-catalog-growth
+          path: reports/
+          if-no-files-found: warn

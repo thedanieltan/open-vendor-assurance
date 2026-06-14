@@ -39,20 +39,40 @@ docs/triage-policy.md
 docs/public-launch-checklist.md
 ```
 
+## Autonomous catalog operation
+
+Routine catalog growth and maintenance run **autonomously** through pull
+requests and do **not** require human approval. This includes routine new
+vendors, new sources, source repair, quarantine, machine-provisional
+materialisation, quorum promotion, and rollback of machine-created state. Each
+runs through the standard path — branch → pull request → authority checks →
+path checks → validation → release gate → delay where required → controlled
+automerge — and every machine-created claim links to a committed machine
+decision and a reversal reference (see
+`docs/catalog-autonomy-policy.md` and `config/bot-constitution.yaml`).
+
+When evidence is insufficient, conflicting, gated, or ambiguous, the system
+**fails closed** to `deferred`, `rejected`, `quarantined`, or `rolled_back`. It
+never converts a routine catalog record into a human-review queue.
+
 ## Human review required
 
-Human review is required for:
+Humans govern the *rules*, not routine records. Human review is required for:
 
-- new vendors;
-- new official domains;
-- new artifact types;
-- rights classification changes;
-- public access classification changes;
-- non-English summaries;
-- KYC, AML, sanctions, or regulated-finance records;
-- workflow changes;
+- code changes;
 - schema changes;
-- export compatibility profiles.
+- workflow changes;
+- machine-readable authority and bot-constitution changes;
+- policy thresholds;
+- permissions and credentials;
+- export compatibility profiles;
+- the emergency hold.
+
+Human review also remains required for the genuinely non-routine catalog cases
+that the autonomous lanes deliberately defer rather than decide: KYC, AML,
+sanctions, or regulated-finance records; legal-effect or authority
+interpretation; non-English summary interpretation flagged as uncertain; and
+vendor deletion. These are deferred by the machine, not silently auto-approved.
 
 ## Pull request lanes
 
@@ -80,17 +100,22 @@ They should remain metadata-only and small, normally three to five vendors per P
 
 ## Automation rule
 
-Automation may discover sources, compute hashes, detect changes, and open pull requests.
+Automation discovers sources, computes hashes, detects changes, materialises and
+promotes routine catalog records, repairs or quarantines failing sources, rolls
+back invalid machine-created state, and opens pull requests. Routine catalog
+mutation is autonomous; it is governed by machine decisions, separation of
+duties, release gates, and controlled automerge — not by a human approval step.
 
 Automation must not:
 
-- merge directly to main;
+- merge directly to main (all mutation flows through pull requests);
 - classify legal sufficiency;
 - score vendor risk;
-- approve vendors;
+- approve, recommend, or rank vendors;
 - summarize private or gated materials;
-- bypass access controls;
-- rewrite project doctrine.
+- bypass access controls, CAPTCHA, WAF, or bot protection;
+- rewrite project doctrine, schemas, workflows, authority, or policy thresholds
+  without human review.
 
 ## Dataset maturity
 

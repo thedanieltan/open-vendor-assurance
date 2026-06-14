@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/candidate-record.schema.json",
+  "title": "OpenVA Candidate Record",
+  "description": "WP40 unified candidate record. One canonical, machine-readable description of a vendor candidate, regardless of origin (human submission, catalog discovery, coverage gap, source replacement, or machine-readable surface). Every origin feeds the same eligibility and materialisation planner; candidate origin never reduces verification requirements. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "candidate_origin",
+    "origin_reference",
+    "vendor_identity_candidate",
+    "source_candidates",
+    "evidence_references",
+    "evidence_digest",
+    "discovery_component",
+    "created_at",
+    "eligibility_state",
+    "decision_reasons",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "candidate_id": { "type": "string", "pattern": "^cand-[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "candidate_origin": {
+      "enum": [
+        "human_submission",
+        "catalog_discovery",
+        "coverage_gap",
+        "source_replacement",
+        "machine_readable_surface"
+      ]
+    },
+    "origin_reference": { "type": "string", "minLength": 1, "maxLength": 300 },
+    "vendor_identity_candidate": {
+      "type": "object",
+      "required": ["vendor_id_candidate", "official_domain"],
+      "properties": {
+        "vendor_id_candidate": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+        "vendor_name": { "type": ["string", "null"], "maxLength": 200 },
+        "official_domain": { "type": "string", "minLength": 1, "maxLength": 253 },
+        "legal_name": { "type": ["string", "null"], "maxLength": 300 },
+        "headquarters_country": { "type": ["string", "null"], "maxLength": 100 },
+        "matches_existing_vendor_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" }
+      },
+      "additionalProperties": false
+    },
+    "source_candidates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source_candidate" },
+      "default": []
+    },
+    "evidence_references": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence_record" },
+      "default": []
+    },
+    "evidence_digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "discovery_component": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "eligibility_state": {
+      "enum": [
+        "pending",
+        "eligible",
+        "deferred_insufficient_evidence",
+        "deferred_cross_authority",
+        "deferred_language_uncertainty",
+        "rejected_duplicate",
+        "rejected_identity_collision",
+        "rejected_unsafe_url",
+        "rejected_source_type_conflict",
+        "rejected_gated"
+      ]
+    },
+    "decision_reasons": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 200 },
+      "default": []
+    },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "source_candidate": {
+      "type": "object",
+      "required": [
+        "candidate_url",
+        "source_type_candidate",
+        "access_state",
+        "source_role"
+      ],
+      "properties": {
+        "candidate_url": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "final_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "redirect_chain": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 2048 },
+          "default": []
+        },
+        "http_status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+        "content_type": { "type": ["string", "null"], "maxLength": 160 },
+        "source_type_candidate": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "retrieval_method_candidate": { "type": ["string", "null"], "maxLength": 60 },
+        "access_state": {
+          "enum": [
+            "public_reachable",
+            "declared_gated",
+            "bot_protected",
+            "gated_or_auth_required",
+            "fetch_failed",
+            "unsafe_url",
+            "not_fetched"
+          ]
+        },
+        "source_role": {
+          "enum": ["primary_assurance", "supporting_assurance", "identity_anchor", "rejected"]
+        },
+        "on_vendor_domain": { "type": ["boolean", "null"] },
+        "duplicate_of": { "type": ["string", "null"], "maxLength": 200 },
+        "evidence_digest": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+        "verification_result": { "type": ["string", "null"], "maxLength": 60 },
+        "reasons": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "default": []
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence_record": {
+      "type": "object",
+      "required": ["candidate_url", "verification_result", "observed_at"],
+      "properties": {
+        "candidate_url": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "final_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "http_status": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+        "content_type": { "type": ["string", "null"], "maxLength": 160 },
+        "redirect_chain": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 2048 },
+          "default": []
+        },
+        "source_type_candidate": { "type": ["string", "null"], "maxLength": 60 },
+        "retrieval_method_candidate": { "type": ["string", "null"], "maxLength": 60 },
+        "verification_result": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "evidence_digest": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+        "observed_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -228,13 +228,16 @@ def test_submission_guide_states_intake_doctrine():
     assert SUBMISSION_GUIDE.exists()
     text = SUBMISSION_GUIDE.read_text(encoding="utf-8")
 
-    assert "A submission is a claim. It does not change catalog data." in text
+    assert "A submission is a claim. It does not change catalog data directly." in text
+    # WP40A: reconciled to the shared autonomous lifecycle
+    assert "same autonomous lifecycle" in text
+    assert "machine_provisional" in text
     assert "Submit public sources only" in text
     assert "Do not upload confidential reports" in text
     assert "Do not paste SOC reports, DPA contents, customer portal content" in text
     assert "Gated sources must be marked as gated" in text
     assert "OpenVA records public source metadata and provenance, not legal conclusions" in text
-    assert "non-authoritative until verified" in text
+    assert "non-authoritative until the catalog pull request merges" in text
     assert "contributor-facing shorthand" in text
     assert "Which form to use" in text
 

@@ -27,8 +27,36 @@ import yaml
 from tools.openva.catalog_audit import audit_catalog
 from tools.openva.indexes import ROOT
 from tools.openva.machine_decisions import DEFAULT_DECISIONS_DIR, load_decisions, validate_committed
+from tools.openva import work_priority
 
 LEDGER_DIR = ROOT / "maintenance" / "source-observations" / "events"
+CANDIDATES_DIR = ROOT / "maintenance" / "candidates"
+QUEUE_POLICY_PATH = ROOT / "docs" / "operations" / "contracts" / "bot-queue-policy.yaml"
+
+
+def load_candidates(candidates_dir: Path) -> list[dict[str, Any]]:
+    if not candidates_dir.exists():
+        return []
+    records: list[dict[str, Any]] = []
+    for path in sorted(candidates_dir.glob("*.json")):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, dict) and data.get("candidate_id"):
+            records.append(data)
+    return records
+
+
+def _pr_budget() -> dict[str, int]:
+    if not QUEUE_POLICY_PATH.exists():
+        return {"daily": 0, "weekly": 0}
+    policy = yaml.safe_load(QUEUE_POLICY_PATH.read_text(encoding="utf-8")) or {}
+    glob = policy.get("global", {}) if isinstance(policy, dict) else {}
+    return {
+        "daily": int(glob.get("max_bot_prs_per_day", 0)),
+        "weekly": int(glob.get("max_bot_prs_per_week", 0)),
+    }
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -46,9 +74,13 @@ def build_telemetry(
     root: Path = ROOT,
     decisions_dir: Path = DEFAULT_DECISIONS_DIR,
     ledger_dir: Path = LEDGER_DIR,
+    candidates_dir: Path | None = None,
+    live_state: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    candidates_dir = candidates_dir if candidates_dir is not None else (root / "maintenance" / "candidates")
     decisions = load_decisions(decisions_dir)
     by_decision = Counter(str(r.get("decision")) for r in decisions)
+    by_decision_type = Counter(str(r.get("decision_type")) for r in decisions if r.get("decision_type"))
     by_bot = Counter(str(r.get("deciding_bot")) for r in decisions if r.get("deciding_bot"))
 
     provisional = promoted = 0
@@ -73,6 +105,32 @@ def build_telemetry(
     sod_failures = sum(1 for reason in validate_committed(decisions_dir) if "separation_of_duty" in reason)
     audit = audit_catalog(root=root, decisions_dir=decisions_dir)
 
+    # --- candidate buckets (committed candidate records) ---
+    candidates = load_candidates(candidates_dir)
+    eligible = [c for c in candidates if c.get("eligibility_state") == "eligible"]
+    deferred = [c for c in candidates if str(c.get("eligibility_state", "")).startswith("deferred_")]
+    rejected = [c for c in candidates if str(c.get("eligibility_state", "")).startswith("rejected_")]
+    oldest_deferred = min(
+        (c for c in deferred if c.get("created_at")),
+        key=lambda c: str(c.get("created_at")),
+        default=None,
+    )
+
+    # --- next eligible action: highest-priority work class with pending work ---
+    eligible_classes: list[str] = []
+    if challenged:
+        eligible_classes.append("observation_continuity")
+    if audit.findings:
+        eligible_classes.append("rollback")
+    if challenged:
+        eligible_classes.append("quarantine")
+    if eligible:
+        eligible_classes.append("machine_provisional_growth")
+    next_eligible_action = work_priority.select_next(eligible_classes)
+
+    budget = _pr_budget()
+    live = live_state or {}
+
     return {
         "schema_version": "0.1.0",
         "report_type": "bot_operational_telemetry",
@@ -80,9 +138,14 @@ def build_telemetry(
         "non_advisory": True,
         "carries_scores_or_rankings": False,
         "counts": {
+            "candidate_total": len(candidates),
+            "eligible_candidates": len(eligible),
+            "deferred_candidates": len(deferred),
+            "rejected_candidates": len(rejected),
             "provisional_vendors": provisional,
             "promoted_vendors": promoted,
             "quarantined_sources": quarantined_sources,
+            "autonomous_repair_decisions": by_decision_type.get("repair", 0),
             "open_challenged_sources": challenged,
             "rollback_decisions": by_decision.get("rollback", 0),
             "deferred_or_rejected_decisions": by_decision.get("defer", 0) + by_decision.get("reject", 0),
@@ -91,7 +154,22 @@ def build_telemetry(
             "decisions_total": len(decisions),
         },
         "decisions_by_type": dict(sorted(by_decision.items())),
+        "decisions_by_decision_type": dict(sorted(by_decision_type.items())),
         "decisions_by_deciding_bot": dict(sorted(by_bot.items())),
+        "pr_budget": budget,
+        "oldest_deferred_candidate": (oldest_deferred or {}).get("candidate_id"),
+        "next_eligible_action": next_eligible_action,
+        "live": {
+            # Live operational surface; supplied by the workflow from authoritative
+            # GitHub state. Absent fields are reported as null, never fabricated.
+            "available": bool(live),
+            "open_bot_prs_by_lane": live.get("open_bot_prs_by_lane"),
+            "daily_prs_used": live.get("daily_prs_used"),
+            "weekly_prs_used": live.get("weekly_prs_used"),
+            "latest_success_by_lane": live.get("latest_success_by_lane"),
+            "latest_failure_by_lane": live.get("latest_failure_by_lane"),
+            "next_scheduled_action": live.get("next_scheduled_action"),
+        },
         "not_advice": True,
     }
 

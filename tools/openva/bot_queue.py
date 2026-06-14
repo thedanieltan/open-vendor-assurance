@@ -16,6 +16,24 @@ DEFAULT_REPORT = Path("maintenance/bot-queue-report.json")
 
 DECISION_ORDER = {"allow": 0, "defer": 1, "deny": 2, "pause": 3}
 
+# State whose provenance is not authoritative live GitHub state. Fallback state
+# may exercise the evaluator in tests, but a write-capable production lane must
+# never be authorised from it (WP40C, Issue 7).
+FALLBACK_STATE_SOURCES = {"workflow_local_fallback", "fallback", "test", "fixture", ""}
+
+
+def state_is_authoritative(state: dict[str, Any]) -> bool:
+    """True only when the queue state came from authoritative live GitHub state.
+
+    A state is non-authoritative when it is explicitly marked fallback, or when
+    it carries no ``state_source`` provenance, or its provenance is a known
+    fallback marker. Non-authoritative state can never authorise a production
+    mutation.
+    """
+    if state.get("fallback_state") is True:
+        return False
+    return str(state.get("state_source") or "") not in FALLBACK_STATE_SOURCES
+
 
 def load_yaml(path: Path) -> dict[str, Any]:
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -272,6 +290,7 @@ def evaluate(
     *,
     policies: dict[str, Any] | None = None,
     now: datetime | None = None,
+    enforce_live_state: bool = False,
 ) -> dict[str, Any]:
     policies = policies or load_policy()
     now = now or datetime.now(UTC).replace(microsecond=0)
@@ -364,6 +383,16 @@ def evaluate(
         reasons.append("cooldown_after_failure_active")
         violated.append("queue.global.cooldown_after_failure_hours")
 
+    # Live-state authorization guard (Issue 7): a write-capable production lane
+    # may never be authorised from non-authoritative fallback state. When
+    # enforcement is on, fallback state can defer/deny but never allow.
+    authoritative = state_is_authoritative(state)
+    write_capable = authority_lane is not None and lane_is_write_capable(authority_lane)
+    if enforce_live_state and write_capable and not authoritative:
+        decision = choose_decision(decision, "defer")
+        reasons.append("non_authoritative_state_cannot_authorize_write")
+        violated.append("queue.state.live_state_required")
+
     if not reasons:
         reasons.append("queue_policy_satisfied")
 
@@ -397,6 +426,8 @@ def evaluate(
         "state_lane_id": state.get("lane_id"),
         "decision": decision,
         "reasons": reasons,
+        "state_authoritative": authoritative,
+        "live_state_enforced": enforce_live_state,
         "violated_policies": sorted(set(violated)),
         "referenced_queue_policy_values": referenced_queue_policy_values,
         "referenced_authority_values": referenced_authority_values,
@@ -430,11 +461,18 @@ def main(argv: list[str] | None = None) -> int:
     evaluate_parser.add_argument("--out", type=Path, default=ROOT / DEFAULT_REPORT)
     evaluate_parser.add_argument("--out-md", type=Path, help="Optional markdown queue decision report.")
     evaluate_parser.add_argument("--now", help="Evaluation time as ISO-8601, for deterministic local reports.")
+    evaluate_parser.add_argument(
+        "--enforce-live-state",
+        action="store_true",
+        help="Refuse to authorise a write-capable lane from non-authoritative fallback state (production lanes).",
+    )
     args = parser.parse_args(argv)
 
     if args.command == "evaluate":
         now = parse_time(args.now) if args.now else None
-        report = evaluate(args.lane, load_state(args.state), now=now)
+        report = evaluate(
+            args.lane, load_state(args.state), now=now, enforce_live_state=args.enforce_live_state
+        )
         out = args.out if args.out.is_absolute() else ROOT / args.out
         write_json(out, report)
         if args.out_md:
