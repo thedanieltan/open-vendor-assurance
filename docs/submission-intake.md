@@ -2,7 +2,17 @@
 
 This guide explains how to submit vendor and source claims to OpenVA through GitHub issue forms, and what happens to a submission after it is filed.
 
-A submission is a claim. It does not change catalog data. Claims enter verification before any catalog update, and catalog data changes only through reviewed pull requests. OpenVA records public source metadata and provenance, not legal conclusions.
+A submission is a claim. It does not change catalog data directly. Claims enter
+verification, then the **same autonomous lifecycle** the bot-discovered
+candidates use: a verified submission becomes a normalised candidate record
+(`schemas/openva/candidate-record.schema.json`, origin `human_submission`),
+its eligibility is decided by the shared evaluator, and an eligible vendor is
+materialised as `machine_provisional` through a one-vendor pull request, observed,
+and promoted by an independent machine quorum. No human approval is required for
+a routine catalog record; when evidence is insufficient the submission fails
+closed to `deferred` or `rejected`.
+
+OpenVA records public source metadata and provenance, not legal conclusions.
 
 ## Submission rules
 
@@ -31,11 +41,12 @@ The `Vendor catalog update` form is the existing correction lane handled by the 
 ## What happens to a submission
 
 1. The form applies `status:needs-triage` plus a `submission:` routing label.
-2. A maintainer triages the claim. Submissions that are misfiled or cannot be classified into a type are labeled `submission:needs-triage`.
-3. The submission verification bot checks the submitted URL, access posture, and classification, comments a verification summary on the issue, and applies one `candidate:` triage label (for example `candidate:verified`, `candidate:gated`, `candidate:duplicate`). See `docs/submission-verification.md`. Verification does not change catalog data.
-4. Catalog data changes only through a reviewed pull request. No submission mutates catalog truth directly.
+2. Routing is automatic from the form labels; misfiled or unclassifiable submissions are labeled `submission:needs-triage`. Maintainers do not gate routine submissions.
+3. The submission verification bot checks the submitted URL(s), access posture, and classification, comments a verification summary on the issue, and applies one `candidate:` triage label (for example `candidate:verified`, `candidate:gated`, `candidate:duplicate`). See `docs/submission-verification.md`. Verification does not change catalog data.
+4. For a new-vendor submission the bridge (`tools/openva/submission_bridge.py`) verifies **every** supplied assurance URL individually and emits one candidate record. An eligible candidate enters the machine-provisional lane autonomously; a `deferred_*` or `rejected_*` candidate fails closed. A single idempotent lifecycle comment (`tools/openva/submission_lifecycle.py`) tracks the issue and closes it automatically at a terminal state.
+5. Catalog data still changes only through a pull request — but that pull request is opened, gated, and merged autonomously, not by a human approval step.
 
-Submitted issues are non-authoritative until verified.
+Submitted issues are non-authoritative until the catalog pull request merges.
 
 ## How form fields map to source-registry fields
 

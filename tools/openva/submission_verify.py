@@ -530,8 +530,12 @@ def render_comment(report: dict[str, Any]) -> str:
         "",
         "</details>",
         "",
-        "This submission remains a claim until a maintainer reviews it. "
-        "Catalog data changes only through reviewed pull requests.",
+        "This submission is a non-authoritative claim until a catalog pull "
+        "request merges. From here it advances autonomously through the shared "
+        "candidate lifecycle (verify -> eligibility -> machine_provisional -> "
+        "observe -> quorum -> active) and fails closed (deferred / rejected) "
+        "when evidence is insufficient; no maintainer approval is required for a "
+        "routine catalog record.",
     ]
     return "\n".join(lines) + "\n"
 

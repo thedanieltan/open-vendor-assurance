@@ -108,7 +108,14 @@ python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observatio
 
 ## Automation posture
 
-OpenVA uses automation for repeatable checks and catalog expansion assistance, but catalog changes remain review-gated.
+OpenVA operates an **autonomous** catalog: routine catalog growth and
+maintenance run through pull requests without human approval, gated by machine
+decisions, separation of duties, release gates, and controlled automerge. Humans
+govern the rules (code, schemas, workflows, authority, policy thresholds,
+permissions, the emergency hold), not routine records. When evidence is
+insufficient the system fails closed (`deferred` / `rejected` / `quarantined` /
+`rolled_back`) rather than queueing a human. See `AGENTS.md` and
+`docs/catalog-autonomy-policy.md`.
 
 The full workflow inventory lives in `.github/workflows/`, with classification and retirement status tracked in `docs/operations/`. Representative public-facing workflow groups are:
 
@@ -125,13 +132,25 @@ bot-chatops.yml                      live /openva hold and /openva unhold label 
 release-candidate.yml                release artifact smoke workflow
 ```
 
-Scheduled maintenance should detect drift and produce artifacts. It should not silently change `main`.
+Scheduled maintenance detects drift, materialises routine catalog records, and
+produces artifacts. No automation changes `main` directly; every mutation flows
+through a pull request, the release gate, and a controlled automerge lane.
 
 Quarantined legacy report workflows remain manual-only pending retirement evidence; see `docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md`.
 
 Live chat-ops is limited to `/openva hold` and `/openva unhold`, which add or remove only the `openva-hold` label on the current issue or pull request, are maintainer-gated, and are smoke-tested. All other `/openva` commands remain report-only, local-audit-only, or denied; see `docs/operations/BOT_CHATOPS_EXECUTION.md`.
 
-Agent-generated catalog work should enter through pull requests. Human review remains required for source authority, public accessibility, metadata-only compliance, non-advisory wording, and generated pack/index correctness.
+Agent-generated catalog work enters through pull requests and is decided
+autonomously by the machine quorum and release gates. The catalog lifecycle is:
+
+```text
+submitted claim -> candidate -> machine_provisional -> active
+                             \-> deferred | rejected | quarantined | rolled_back
+```
+
+Human review remains required for changes to code, schemas, workflows, policy
+thresholds, authority contracts, permissions, and governance — not for routine
+catalog records.
 
 ## Architecture stance
 
