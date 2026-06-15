@@ -6,9 +6,22 @@ import pytest
 from tools.openva.catalog_growth_discovery_queue import (
     MODE_CAPABILITIES,
     SITEMAP_DISCOVERY_MODE,
+    _normalize_reason,
     expected_posture,
     validate_queue,
 )
+
+
+def test_rejection_reason_codes_cannot_leak_raw_text():
+    # Bounded codes pass through; the ParseError tail is dropped; anything with
+    # whitespace/markup/free text (a page or robots snippet) maps to a generic code.
+    assert _normalize_reason("off_authority_sitemap") == "off_authority_sitemap"
+    assert _normalize_reason("sitemap_http_503") == "sitemap_http_503"
+    assert _normalize_reason("discovery_suppressed:robots_transport_error") == "discovery_suppressed:robots_transport_error"
+    assert _normalize_reason("malformed_sitemap_xml:not well-formed: line 1, column 5") == "malformed_sitemap_xml"
+    assert _normalize_reason("<title>Secret internal page</title>") == "rejected_other"
+    assert _normalize_reason("User-agent: * Disallow: /secret raw robots body") == "rejected_other"
+    assert _normalize_reason("x" * 200) == "rejected_other"
 
 
 QUEUE = Path("maintenance/queues/catalog-growth-discovery.json")

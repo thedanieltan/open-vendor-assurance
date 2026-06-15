@@ -212,12 +212,12 @@ jobs:
           sitemap = json.load(open('sitemap-source-discovery-events.json', encoding='utf-8'))
           sitemap_rotation = sitemap.get('rotation', {}) or {}
           sitemap_verification = sitemap.get('verification', {}) or {}
-          sitemap_outcomes = sitemap_verification.get('eligibility_outcomes', {}) or {}
+          sitemap_outcomes = sitemap_verification.get('provisional_eligibility_outcomes', {}) or {}
           sitemap_vendor_lines = [
               f"- `{pv['vendor_id']}` ({pv['official_domain']}): robots `{pv['robots_state']}`"
               f" via `{pv['robots_parser']}`, sitemaps attempted `{pv['sitemaps_attempted']}`,"
               f" locators `{pv['candidate_count']}`, verified `{pv['verified_candidate_count']}`,"
-              f" outcome `{pv.get('eligibility_outcome')}`, rejected `{pv['rejected_count']}`"
+              f" provisional `{pv.get('provisional_eligibility')}`, rejected `{pv['rejected_count']}`"
               for pv in sitemap.get('per_vendor', [])[:10]
           ] or ['- none']
           lines = [
@@ -261,7 +261,7 @@ jobs:
               f"- Vendors inspected this cycle: `{len(sitemap.get('per_vendor', []))}`",
               f"- Zero-weight locator events: `{sitemap.get('event_count')}`",
               f"- Verified candidate sources: `{sitemap_verification.get('verified_candidate_count')}`",
-              f"- Eligibility outcomes: `{sitemap_outcomes}`",
+              f"- Provisional eligibility (source-quality only; identity/materialization gates apply downstream): `{sitemap_outcomes}`",
               '',
               '### Per-vendor sitemap execution',
               '',

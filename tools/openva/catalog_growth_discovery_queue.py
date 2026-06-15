@@ -3,8 +3,9 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -226,12 +227,22 @@ def sitemap_discovery_enabled(queue: dict[str, Any]) -> bool:
     return SITEMAP_DISCOVERY_MODE in (queue.get("discovery_modes", []) or [])
 
 
+# A bounded rejection reason code: a lowercase token, optionally one ``:``
+# followed by a bounded token (status int, exception class, robots reason, or
+# resolved address). Anything with whitespace, punctuation or free text — i.e.
+# any raw page/robots snippet — fails this and is mapped to a generic code, so
+# the no-leak property is structural rather than incidental.
+_SAFE_REASON_RE = re.compile(r"^[a-z][a-z0-9_]*(?::[A-Za-z0-9_.]+)?$")
+
+
 def _normalize_reason(reason: str) -> str:
     """A bounded rejection reason code with no raw page/parse detail."""
     reason = str(reason or "")
     if reason.startswith("malformed_sitemap_xml"):
-        return "malformed_sitemap_xml"
-    return reason[:60]
+        return "malformed_sitemap_xml"  # drop the ParseError positional/detail tail
+    if len(reason) <= 80 and _SAFE_REASON_RE.match(reason):
+        return reason
+    return "rejected_other"
 
 
 def _bounded_reason_codes(rejected: list[dict[str, Any]], *, limit: int = 20) -> list[str]:
@@ -319,6 +330,12 @@ def _parse_discovered_at(discovered_at: str) -> datetime:
     raise ValueError(f"unrecognized discovered_at: {discovered_at!r}")
 
 
+# A fixed Monday reference (ISO week 1 of 2024 begins Mon 2024-01-01). The cursor
+# counts whole weeks from this epoch, which is CONTIGUOUS across year boundaries —
+# unlike isocalendar()[1], whose W52/W53 -> W01 wrap would re-run or skip a shard.
+_ROTATION_EPOCH = date(2024, 1, 1)
+
+
 def rotation_shard_count(vendor_count: int, max_vendors: int) -> int:
     """How many cycles a full rotation takes: ceil(vendors / per-run bound)."""
     if vendor_count <= 0 or max_vendors <= 0:
@@ -326,37 +343,52 @@ def rotation_shard_count(vendor_count: int, max_vendors: int) -> int:
     return max(1, math.ceil(vendor_count / max_vendors))
 
 
-def iso_week_shard_index(discovered_at: str, shard_count: int) -> int:
-    """Derived rotation cursor: ISO week of ``discovered_at`` modulo shard_count.
+def epoch_week_index(discovered_at: str) -> int:
+    """Contiguous week counter from the fixed Monday epoch (no year-seam gap)."""
+    dt = _parse_discovered_at(discovered_at)
+    iso_year, iso_week, _iso_day = dt.isocalendar()
+    monday = date.fromisocalendar(iso_year, iso_week, 1)
+    return (monday - _ROTATION_EPOCH).days // 7
+
+
+def rotation_cursor_index(discovered_at: str, shard_count: int) -> int:
+    """Derived rotation cursor: contiguous epoch week modulo shard_count.
 
     Derived (not committed) so the scheduled lane mutates no repository state
     (PR-only posture) and a rerun of the same logical cycle selects the same
-    vendors — the key is the ISO week, never the run id, which changes on rerun.
+    vendors — the key is the calendar week, never the run id (which changes on
+    rerun). Using a contiguous epoch-week counter guarantees that exactly
+    ``shard_count`` consecutive cycles cover every shard with no year-seam
+    discontinuity (no shard runs twice in a row and none is skipped at New Year).
     """
     if shard_count <= 0:
         raise ValueError("shard_count must be positive")
-    return _parse_discovered_at(discovered_at).isocalendar()[1] % shard_count
+    return epoch_week_index(discovered_at) % shard_count
 
 
 def select_rotation_vendors(
     vendors: list[dict[str, Any]], *, max_vendors: int, discovered_at: str
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    """Bounded deterministic ISO-week stride rotation over the sorted catalog.
+    """Bounded deterministic epoch-week stride rotation over the sorted catalog.
 
     Each scheduled cycle selects one stride of the (already path-sorted) vendor
     list; over ``shard_count`` consecutive cycles every vendor is covered, while
     any single run stays bounded by ``max_vendors``. Stride membership
-    (``offset % shard_count``) keeps each vendor's assignment stable except at the
-    modulo seam, so adding one vendor does not reshuffle the whole schedule.
+    (``offset % shard_count``) keeps each vendor's assignment stable except when
+    ``shard_count`` itself changes (the catalog grows past a ``max_vendors``
+    multiple), so adding one vendor within a band does not reshuffle the schedule;
+    ``shard_count`` is recorded so a consumer can detect a band transition.
     """
     shard_count = rotation_shard_count(len(vendors), max_vendors)
-    shard_index = iso_week_shard_index(discovered_at, shard_count)
+    shard_index = rotation_cursor_index(discovered_at, shard_count)
     sharded = [vendor for offset, vendor in enumerate(vendors) if offset % shard_count == shard_index]
     selected = sharded[:max_vendors]
+    parsed = _parse_discovered_at(discovered_at)
     meta = {
         "shard_index": shard_index,
         "shard_count": shard_count,
-        "iso_week": _parse_discovered_at(discovered_at).isocalendar()[1],
+        "cursor_week": epoch_week_index(discovered_at),
+        "iso_week": parsed.isocalendar()[1],
         "eligible_vendor_count": len(vendors),
         "selected_vendor_ids": [str(vendor.get("vendor_id") or "") for vendor in selected],
     }
@@ -411,20 +443,24 @@ def _production_verify_fetcher_factory() -> Any:
     return factory
 
 
-def _eligibility_outcome(vendor: dict[str, Any], verification: dict[str, Any]) -> str:
+def _provisional_eligibility(vendor: dict[str, Any], verification: dict[str, Any]) -> str:
     """Run the EXISTING eligibility classifier on verified locator candidates.
 
-    Returns the outcome label (strict_promote_ready / review_required /
-    reject_*). A verified locator can reach an eligibility outcome but still
-    cannot be promoted: materialization independence (distinct runs/modes) and
-    the reviewed quorum remain required, so a single-run sitemap locator carries
-    zero promotion weight.
+    Returns a PROVISIONAL outcome label (strict_promote_ready / review_required /
+    reject_*) describing source quality only. It is report-only: the full
+    pipeline additionally applies catalog-identity gates (these are existing
+    vendors) and, before any catalog write, materialization independence
+    (distinct runs/modes) and the reviewed quorum. A single-run sitemap locator
+    therefore carries zero promotion weight regardless of this label. Statuses
+    are derived from ALL observations (not just matched candidates), so an
+    access-ambiguous/unreachable probe still surfaces here.
     """
     from tools.openva.catalog_growth_eligibility import classify
 
     sources = verification.get("candidates", []) or []
     statuses = {
-        str((source.get("evidence") or {}).get("verification_status") or "") for source in sources
+        str(observation.get("verification_status") or "")
+        for observation in verification.get("observations", []) or []
     }
     classification, _reasons, _strict, _rejections = classify(vendor, sources, statuses, [])
     return classification
@@ -468,6 +504,7 @@ def run_sitemap_discovery_command(
     rotation: dict[str, Any] = {
         "shard_index": None,
         "shard_count": None,
+        "cursor_week": None,
         "iso_week": None,
         "eligible_vendor_count": 0,
         "selected_vendor_ids": [],
@@ -500,7 +537,7 @@ def run_sitemap_discovery_command(
             events.extend(record["events"])
             robots_parser = robots_parser or record["robots_parser"]
             verified_count = 0
-            eligibility_outcome: str | None = None
+            provisional_eligibility: str | None = None
             if record["locators"]:
                 vendor = {
                     "vendor_id": record["vendor_id"],
@@ -516,14 +553,16 @@ def run_sitemap_discovery_command(
                     discovery_run_id=f"{discovery_run_id}-{record['vendor_id']}",
                 )
                 verified_count = len(verification["candidates"])
-                eligibility_outcome = _eligibility_outcome(vendor, verification)
-                outcome_counts[eligibility_outcome] += 1
+                provisional_eligibility = _provisional_eligibility(vendor, verification)
+                outcome_counts[provisional_eligibility] += 1
                 verified_vendor_results.append(
                     {
                         "vendor_id": record["vendor_id"],
                         "candidates": verification["candidates"],
                         "unavailable_sources": [],
                         "observations": verification["observations"],
+                        # These verification events are report-only provenance and
+                        # are NOT appended to the committed discovery-ledger lane.
                         "discovery_events": verification["discovery_events"],
                     }
                 )
@@ -541,7 +580,7 @@ def run_sitemap_discovery_command(
                     "rejected_count": record["rejected_count"],
                     "rejection_reason_codes": record["rejection_reason_codes"],
                     "verified_candidate_count": verified_count,
-                    "eligibility_outcome": eligibility_outcome,
+                    "provisional_eligibility": provisional_eligibility,
                 }
             )
 
@@ -560,7 +599,10 @@ def run_sitemap_discovery_command(
         "per_vendor": per_vendor,
         "verification": {
             "verified_candidate_count": sum(v["verified_candidate_count"] for v in per_vendor),
-            "eligibility_outcomes": dict(sorted(outcome_counts.items())),
+            # Provisional: source-quality only. Catalog-identity gates and (before
+            # any catalog write) materialization independence + the reviewed
+            # quorum are applied downstream, not here.
+            "provisional_eligibility_outcomes": dict(sorted(outcome_counts.items())),
             "vendors": verified_vendor_results,
         },
     }

@@ -17,18 +17,28 @@ from tools.openva.safe_fetch import (
 
 
 class _Resp:
+    """A fake in-flight response read in caller-sized chunks (RawResponse)."""
+
     def __init__(self, status, headers=None, body=b"", *, chunks=None, raise_mid=None):
         self.status = status
         self.headers = {k.lower(): v for k, v in (headers or {}).items()}
-        self._chunks = chunks if chunks is not None else ([body] if body else [])
-        self._raise_mid = raise_mid
+        self._body = b"".join(chunks) if chunks is not None else body
+        self._pos = 0
+        self._raise_mid = raise_mid  # raise socket.timeout on the Nth read (0-based)
+        self._reads = 0
         self.closed = False
+        self.timeouts = []  # records every set_timeout (proves per-read clamping)
 
-    def stream(self, chunk_size):
-        for i, chunk in enumerate(self._chunks):
-            if self._raise_mid is not None and i == self._raise_mid:
-                raise socket.timeout("read timed out")
-            yield chunk
+    def set_timeout(self, seconds):
+        self.timeouts.append(seconds)
+
+    def read(self, size):
+        if self._raise_mid is not None and self._reads == self._raise_mid:
+            raise socket.timeout("read timed out")
+        self._reads += 1
+        chunk = self._body[self._pos : self._pos + size]
+        self._pos += len(chunk)
+        return chunk
 
     def close(self):
         self.closed = True
@@ -298,20 +308,24 @@ def test_oversized_streamed_sitemap_without_content_length_is_refused():
 
 
 def test_slow_trickle_aborts_on_the_whole_exchange_deadline():
-    # Every chunk is tiny (well under the byte cap) and no single read times out,
-    # but total elapsed time exceeds the deadline mid-stream. The injected clock
-    # stays within budget through resolution/open, then jumps past the deadline
-    # on the first streaming check.
-    served = _Resp(200, chunks=[b"x" * 16] * 50)
+    # Every read is tiny (well under the byte cap) and no single read times out,
+    # but total elapsed time exceeds the deadline mid-stream. The small compressed
+    # cap forces multiple small reads; the injected clock stays within budget
+    # through resolution/open and the first two reads, then jumps past the deadline.
+    served = _Resp(200, chunks=[b"x" * 16] * 50)  # 800 bytes total
     t = FakeTransport(
         dns={"vendor.example": ["93.184.216.34"]},
         responses={"https://vendor.example/sitemap.xml": served},
     )
-    clock = _Clock([0, 0, 0, 0, 100])  # deadline=0+10; pre-stream checks at 0; stream at 100
+    # Calls: deadline, loop-top, resolve, after-resolve, after-open, then per read.
+    clock = _Clock([0, 0, 0, 0, 0, 0, 0, 100])
     with pytest.raises(SafeFetchError) as exc:
-        _fetcher(t, timeout_seconds=10, clock=clock).fetch("https://vendor.example/sitemap.xml")
+        _fetcher(
+            t, timeout_seconds=10, clock=clock, max_compressed_bytes=100, max_decompressed_bytes=10_000_000
+        ).fetch("https://vendor.example/sitemap.xml")
     assert "request_deadline_exceeded" in str(exc.value)
     assert served.closed is True  # closed on the deadline failure
+    assert len(served.timeouts) >= 2  # the read timeout was re-clamped per read
 
 
 def test_redirects_consume_the_shared_overall_deadline():
@@ -325,7 +339,8 @@ def test_redirects_consume_the_shared_overall_deadline():
             "https://vendor.example/c": _Resp(200, body=b"final"),
         },
     )
-    clock = _Clock([0, 1, 1, 1, 2, 2, 2, 100])  # deadline=10; hops a,b ok; hop c loop-top trips
+    # 4 deadline checks per hop (loop-top, resolve, after-resolve, after-open).
+    clock = _Clock([0, 0, 0, 0, 0, 0, 0, 0, 0, 100])  # hops a,b ok; hop c loop-top trips
     with pytest.raises(SafeFetchError) as exc:
         _fetcher(t, same_authority=["vendor.example"], timeout_seconds=10, clock=clock).fetch(
             "https://vendor.example/a"
@@ -333,6 +348,47 @@ def test_redirects_consume_the_shared_overall_deadline():
     assert "request_deadline_exceeded" in str(exc.value)
     # Hops a and b were fetched; c was never connected (deadline tripped first).
     assert [u for u, _ in t.connected] == ["https://vendor.example/a", "https://vendor.example/b"]
+
+
+def test_hung_resolver_is_bounded_by_the_deadline():
+    # DNS resolution is part of the whole-exchange budget: a resolver that blocks
+    # past the deadline fails closed instead of hanging unbounded.
+    import threading as _threading
+
+    release = _threading.Event()
+
+    class HangingTransport:
+        def resolve(self, host):
+            release.wait(5)  # blocks well past the (tiny) deadline
+            return ["93.184.216.34"]
+
+        def open(self, **kwargs):
+            raise AssertionError("must never connect when resolution overruns")
+
+    clock = _Clock([0.0, 0.0, 0.001])  # deadline 0.05s; ~0.049s left at resolve
+    fetcher = SafeFetcher(HangingTransport(), FetchPolicy(timeout_seconds=0.05), clock=clock)
+    try:
+        with pytest.raises(SafeFetchError) as exc:
+            fetcher.fetch("https://vendor.example/robots.txt")
+        assert "request_deadline_exceeded" in str(exc.value)
+    finally:
+        release.set()  # let the daemon resolver thread exit
+
+
+def test_compressed_cap_below_one_chunk_is_honored():
+    # A gzip body (via magic, no header) with a sub-default-chunk compressed cap:
+    # reads are sized to the cap so buffering never exceeds it by more than a read.
+    body = b"\x1f\x8b" + b"x" * 9998  # 10 KiB, gzip magic, far over a 4 KiB cap
+    served = _Resp(200, body=body)
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={"https://vendor.example/sitemap.xml": served},
+    )
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t, max_compressed_bytes=4096, max_decompressed_bytes=10_000_000).fetch(
+            "https://vendor.example/sitemap.xml"
+        )
+    assert "response_too_large" in str(exc.value)
 
 
 def test_open_timeout_fails_closed():

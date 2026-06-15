@@ -323,6 +323,10 @@ def discover_sitemap_candidates(
     outcome.robots_state = access.state
     outcome.robots_reason = access.reason_code
     robots = access.policy
+    if robots is not None:
+        # Witness the parser id from the instance that actually evaluated the
+        # rules, not just the module constant (states with no parse keep the default).
+        outcome.robots_parser = robots.parser_id
 
     if access.suppress_all:
         # 5xx / DNS / connection / TLS / timeout / redirect-overflow / unparseable

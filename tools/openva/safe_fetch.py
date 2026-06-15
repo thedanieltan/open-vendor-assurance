@@ -44,9 +44,10 @@ import http.client
 import ipaddress
 import socket
 import ssl
+import threading
 import time
 from dataclasses import dataclass
-from typing import Callable, Iterator, Mapping, Protocol
+from typing import Callable, Mapping, Protocol
 from urllib.parse import urljoin, urlsplit
 
 from tools.openva.sitemap_discovery import FetchResult, SitemapDiscoveryError
@@ -74,12 +75,16 @@ class SafeFetchError(SitemapDiscoveryError):
 
 
 class RawResponse(Protocol):
-    """One in-flight HTTP response, streamed and closeable."""
+    """One in-flight HTTP response, read in caller-controlled chunks."""
 
     status: int
     headers: Mapping[str, str]  # header names lower-cased
 
-    def stream(self, chunk_size: int) -> Iterator[bytes]: ...
+    def read(self, size: int) -> bytes:
+        """Read up to ``size`` bytes; an empty result signals EOF."""
+
+    def set_timeout(self, seconds: float) -> None:
+        """Clamp the next read to at most ``seconds`` (the remaining deadline)."""
 
     def close(self) -> None: ...
 
@@ -136,7 +141,7 @@ class SafeFetcher:
         while True:
             self._remaining(deadline)  # abort if the budget is already spent
             self._validate_request_url(current)
-            ip = self._resolve_and_pin(current)
+            ip = self._resolve_and_pin(current, deadline)
             remaining = self._remaining(deadline)
             host = normalize_host(urlsplit(current).hostname) or ""
             try:
@@ -213,7 +218,34 @@ class SafeFetcher:
         ):
             raise SafeFetchError("off_authority")
 
-    def _resolve_and_pin(self, url: str) -> str:
+    def _resolve_bounded(self, host: str, deadline: float) -> list[str]:
+        """Resolve ``host`` within the remaining deadline.
+
+        DNS resolution is part of the whole-exchange budget. ``getaddrinfo`` is a
+        blocking C call that ignores socket timeouts, so it is run on a worker
+        thread joined for at most the remaining budget; a hung resolver fails
+        closed with ``request_deadline_exceeded`` instead of blocking unbounded.
+        """
+        remaining = self._remaining(deadline)
+        result: dict[str, object] = {}
+
+        def run() -> None:
+            try:
+                result["addrs"] = self.transport.resolve(host)
+            except Exception as exc:  # pragma: no cover - exercised via fake transport
+                result["error"] = exc
+
+        thread = threading.Thread(target=run, daemon=True)
+        thread.start()
+        thread.join(timeout=remaining)
+        if thread.is_alive():
+            raise SafeFetchError("request_deadline_exceeded")  # resolver overran the budget
+        if "error" in result:
+            raise SafeFetchError(f"dns_resolution_failed:{host}") from result["error"]  # type: ignore[arg-type]
+        addrs = result.get("addrs") or []
+        return [str(a) for a in addrs]  # type: ignore[union-attr]
+
+    def _resolve_and_pin(self, url: str, deadline: float) -> str:
         """Resolve the host, refuse if any address is blocked, pin the first."""
         host = normalize_host(urlsplit(url).hostname) or ""
         if is_ip_literal(host):
@@ -221,10 +253,7 @@ class SafeFetcher:
             if is_blocked_ip(ip):
                 raise SafeFetchError("blocked_ip_literal")
             return str(ip)
-        try:
-            addresses = self.transport.resolve(host)
-        except Exception as exc:  # DNS failure is fail-closed, never a soft pass
-            raise SafeFetchError(f"dns_resolution_failed:{host}") from exc
+        addresses = self._resolve_bounded(host, deadline)
         if not addresses:
             raise SafeFetchError(f"dns_no_addresses:{host}")
         pinned: str | None = None
@@ -251,10 +280,11 @@ class SafeFetcher:
 
     def _read_capped(self, response: RawResponse, *, is_gzip: bool, deadline: float) -> tuple[bytes, str | None]:
         # gzip wire bytes are bounded by the compressed cap; identity bytes by
-        # the (larger) decompressed cap. A gzip body that lacks Content-Encoding
-        # but starts with the gzip magic is detected on the first chunk and the
-        # compressed cap is applied retroactively (the first 64 KiB is far below
-        # either cap, so nothing oversized is buffered before the switch).
+        # the (larger) decompressed cap. A gzip body lacking Content-Encoding but
+        # starting with the gzip magic is detected on the first read and the
+        # compressed cap is applied. Reads are sized to the compressed cap (the
+        # smaller of the two) so buffering can never exceed the active cap by more
+        # than one read, even when the cap is below the default chunk size.
         gzip_body = is_gzip
         cap = self.policy.max_compressed_bytes if gzip_body else self.policy.max_decompressed_bytes
         declared = response.headers.get("content-length")
@@ -263,7 +293,19 @@ class SafeFetcher:
         buffer = bytearray()
         first = True
         try:
-            for chunk in response.stream(_CHUNK):
+            while True:
+                # The whole-exchange deadline covers the streaming read loop, and
+                # the next read is clamped to the remaining budget so no single
+                # read can outlive the deadline (slow-trickle protection).
+                remaining = self._remaining(deadline)
+                response.set_timeout(remaining)
+                # Size each read to the smallest cap that could apply (the
+                # compressed cap guards the not-yet-known gzip case), so buffering
+                # never exceeds the eventual cap by more than one read.
+                read_size = max(1, min(_CHUNK, min(cap, self.policy.max_compressed_bytes) + 1))
+                chunk = response.read(read_size)
+                if not chunk:
+                    break
                 if first:
                     first = False
                     if not gzip_body and chunk[:2] == _GZIP_MAGIC:
@@ -275,9 +317,6 @@ class SafeFetcher:
                     # at the compressed bound, identity bytes at the decompressed
                     # bound. decode_sitemap_bytes re-checks decompressed expansion.
                     raise SafeFetchError("response_too_large")
-                # Whole-exchange deadline also covers the streaming read loop, so a
-                # slow trickle whose chunks each beat the socket timeout still aborts.
-                self._remaining(deadline)
         except OSError as exc:  # mid-body timeout / reset fails closed
             raise SafeFetchError(f"transport_error:{type(exc).__name__}") from exc
         encoding = response.headers.get("content-encoding")
@@ -296,12 +335,14 @@ class _HttpRawResponse:
         self.status = response.status
         self.headers = {k.lower(): v for k, v in response.getheaders()}
 
-    def stream(self, chunk_size: int) -> Iterator[bytes]:
-        while True:
-            chunk = self._response.read(chunk_size)
-            if not chunk:
-                return
-            yield chunk
+    def read(self, size: int) -> bytes:
+        return self._response.read(size)
+
+    def set_timeout(self, seconds: float) -> None:
+        # Clamp the underlying socket so the next read cannot outlive the budget.
+        sock = getattr(self._connection, "sock", None)
+        if sock is not None:
+            sock.settimeout(max(0.0, seconds))
 
     def close(self) -> None:
         try:
@@ -349,8 +390,14 @@ class SocketTransport:
             path = f"{path}?{parts.query}"
         request_headers = dict(headers)
         request_headers.setdefault("Host", host)
-        connection.request("GET", path, headers=request_headers)
-        response = connection.getresponse()
+        try:
+            connection.request("GET", path, headers=request_headers)
+            response = connection.getresponse()
+        except Exception:
+            # Connect/TLS succeeded but the request/response failed: close the
+            # socket and connection so the descriptor is not leaked.
+            connection.close()
+            raise
         return _HttpRawResponse(response, connection)
 
 

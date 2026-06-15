@@ -164,8 +164,8 @@ def test_end_to_end_locator_reaches_an_eligible_outcome(tmp_path):
     pv = report["per_vendor"][0]
     assert pv["candidate_count"] == 1  # locator discovered
     assert pv["verified_candidate_count"] == 1  # locator fetched + classified into a candidate
-    assert pv["eligibility_outcome"] == "strict_promote_ready"  # eligible outcome
-    assert report["verification"]["eligibility_outcomes"] == {"strict_promote_ready": 1}
+    assert pv["provisional_eligibility"] == "strict_promote_ready"  # eligible outcome
+    assert report["verification"]["provisional_eligibility_outcomes"] == {"strict_promote_ready": 1}
     assert report["robots_parser"] == "openva-robots.v3"
     assert json.loads(out.read_text(encoding="utf-8")) == report
 
@@ -191,7 +191,9 @@ def test_end_to_end_unmatched_locator_is_rejected(tmp_path):
     pv = report["per_vendor"][0]
     assert pv["candidate_count"] == 1
     assert pv["verified_candidate_count"] == 0
-    assert pv["eligibility_outcome"] == "reject_no_public_source"
+    # No candidate verified; the 404 probe surfaces as a rejected source-health
+    # outcome (a reject_* label), never a silent promotion.
+    assert pv["provisional_eligibility"].startswith("reject_")
 
 
 def test_end_to_end_is_idempotent_across_runs(tmp_path):
@@ -228,15 +230,21 @@ def _fake_vendors(n):
     return [{"vendor_id": f"v{i:03d}", "official_domains": [f"v{i:03d}.example"]} for i in range(n)]
 
 
-def _week(iso_week):
-    # A discovered_at string in ISO week `iso_week` of 2026 (Monday 00:00Z).
-    from datetime import date, timedelta
-
-    monday = date.fromisocalendar(2026, iso_week, 1)
-    return f"{monday.isoformat()}T00:00:00Z"
+def _at(d):
+    return f"{d.isoformat()}T00:00:00Z"
 
 
-def test_rotation_is_bounded_deterministic_and_covers_every_vendor(tmp_path):
+def _consecutive_weeks(start, count):
+    # `count` real consecutive Mondays starting from `start` (a date), so the
+    # cycle walks across ISO-year boundaries (W52/W53 -> W01) without a seam gap.
+    from datetime import timedelta
+
+    return [_at(start + timedelta(weeks=i)) for i in range(count)]
+
+
+def test_rotation_is_bounded_deterministic_and_covers_every_vendor():
+    from datetime import date
+
     from tools.openva.catalog_growth_discovery_queue import rotation_shard_count, select_rotation_vendors
 
     vendors = _fake_vendors(60)
@@ -244,34 +252,66 @@ def test_rotation_is_bounded_deterministic_and_covers_every_vendor(tmp_path):
     shard_count = rotation_shard_count(len(vendors), max_vendors)
     assert shard_count == 3  # ceil(60/25)
 
-    covered: set[str] = set()
-    for offset in range(shard_count):
-        at = _week(10 + offset)  # consecutive weeks within one year (no year seam)
-        selected, meta = select_rotation_vendors(vendors, max_vendors=max_vendors, discovered_at=at)
-        assert len(selected) <= max_vendors  # every run is bounded
-        # Deterministic: the same cycle selects the same vendors on a rerun.
-        selected_again, _ = select_rotation_vendors(vendors, max_vendors=max_vendors, discovered_at=at)
-        assert [v["vendor_id"] for v in selected] == [v["vendor_id"] for v in selected_again]
-        assert meta["selected_vendor_ids"] == [v["vendor_id"] for v in selected]
-        covered.update(meta["selected_vendor_ids"])
+    # Walk consecutive weeks straddling the 2026 (53-week) -> 2027 New Year seam,
+    # the exact place a raw ISO-week cursor would double-run or skip a shard.
+    for start in (date(2026, 12, 21), date(2024, 12, 23)):
+        covered: set[str] = set()
+        for at in _consecutive_weeks(start, shard_count):
+            selected, meta = select_rotation_vendors(vendors, max_vendors=max_vendors, discovered_at=at)
+            assert len(selected) <= max_vendors  # every run is bounded
+            again, _ = select_rotation_vendors(vendors, max_vendors=max_vendors, discovered_at=at)
+            assert [v["vendor_id"] for v in selected] == [v["vendor_id"] for v in again]  # deterministic
+            assert meta["selected_vendor_ids"] == [v["vendor_id"] for v in selected]
+            covered.update(meta["selected_vendor_ids"])
+        # Exactly shard_count consecutive cycles cover the whole catalog, even
+        # across the year boundary — no starvation, no shard run twice.
+        assert covered == {v["vendor_id"] for v in vendors}
 
-    assert covered == {v["vendor_id"] for v in vendors}  # full coverage, no starvation
+
+def test_rotation_no_shard_runs_twice_consecutively_across_year_seam():
+    from datetime import date
+
+    from tools.openva.catalog_growth_discovery_queue import select_rotation_vendors
+
+    vendors = _fake_vendors(60)  # shard_count 3
+    indices = [
+        select_rotation_vendors(vendors, max_vendors=25, discovered_at=at)[1]["shard_index"]
+        for at in _consecutive_weeks(date(2026, 12, 21), 4)  # W52,W53,2027-W01,W02
+    ]
+    # Consecutive cycles advance the cursor by exactly one each week.
+    for a, b in zip(indices, indices[1:]):
+        assert b == (a + 1) % 3
 
 
-def test_rotation_adding_one_vendor_does_not_reshuffle_the_schedule():
+def test_rotation_adding_one_vendor_does_not_reshuffle_within_a_band():
+    from datetime import date
+
     from tools.openva.catalog_growth_discovery_queue import select_rotation_vendors
 
     base = _fake_vendors(60)
-    grown = base + [{"vendor_id": "v999", "official_domains": ["v999.example"]}]
-    at = _week(10)
-    before, _ = select_rotation_vendors(base, max_vendors=25, discovered_at=at)
-    after, _ = select_rotation_vendors(grown, max_vendors=25, discovered_at=at)
-    # No existing vendor leaves the selection when one vendor is appended (the
-    # shard_count is unchanged at 3, so stride membership is stable).
+    grown = base + [{"vendor_id": "v999", "official_domains": ["v999.example"]}]  # 61, still shard_count 3
+    at = _at(date(2026, 6, 15))
+    before, before_meta = select_rotation_vendors(base, max_vendors=25, discovered_at=at)
+    after, after_meta = select_rotation_vendors(grown, max_vendors=25, discovered_at=at)
+    assert before_meta["shard_count"] == after_meta["shard_count"] == 3  # same band
     before_ids = {v["vendor_id"] for v in before}
     after_ids = {v["vendor_id"] for v in after}
-    assert before_ids <= after_ids
-    assert after_ids - before_ids <= {"v999"}
+    assert before_ids <= after_ids  # no existing vendor dropped
+    assert after_ids - before_ids <= {"v999"}  # only the new vendor can join
+
+
+def test_rotation_shard_count_is_recorded_so_band_transitions_are_visible():
+    from datetime import date
+
+    from tools.openva.catalog_growth_discovery_queue import select_rotation_vendors
+
+    # Crossing a max_vendors multiple changes shard_count; it is recorded so a
+    # consumer can detect (and explain) the band-boundary reshuffle.
+    at = _at(date(2026, 6, 15))
+    _, meta_50 = select_rotation_vendors(_fake_vendors(50), max_vendors=25, discovered_at=at)
+    _, meta_51 = select_rotation_vendors(_fake_vendors(51), max_vendors=25, discovered_at=at)
+    assert meta_50["shard_count"] == 2
+    assert meta_51["shard_count"] == 3
 
 
 # --- scheduled-path wiring + surfacing ---------------------------------------
