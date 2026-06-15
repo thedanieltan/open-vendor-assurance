@@ -104,6 +104,14 @@
     },
     "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
     "rights_class": { "enum": ["metadata_only", "public_link_only", "snapshot_allowed", "snapshot_forbidden", "gated_excluded"] },
+    "verified_scope": {
+      "description": "Tier A: how far content verification reached. landing_page_only means only the public landing page was content-verified; its gated child documents were not (and must not be) inspected.",
+      "enum": ["full_content", "landing_page_only"]
+    },
+    "gated_child_content_observed": {
+      "description": "Tier A doctrine guarantee: OpenVA never observes gated child documents, so this may only ever be false. Any true is a schema violation.",
+      "const": false
+    },
     "catalog_tier": { "enum": ["machine_validated", "human_reviewed"] },
     "review_state": { "enum": ["proposed", "validated", "auto_validated", "human_reviewed", "human_review_required", "quarantined", "superseded"] },
     "quarantine": {

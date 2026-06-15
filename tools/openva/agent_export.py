@@ -132,6 +132,22 @@ def material_change_since_baseline(
     return None
 
 
+def verified_scope(source_record: dict[str, Any]) -> str:
+    """How far content verification reached for this source.
+
+    A public_landing_gated_docs source is, by classification, only
+    landing-page-content-verified — its gated child documents are never
+    inspected. An explicit record value wins; otherwise non-gated public
+    sources are full_content.
+    """
+    explicit = source_record.get("verified_scope")
+    if explicit in ("full_content", "landing_page_only"):
+        return explicit
+    if source_record.get("access_class") == "public_landing_gated_docs":
+        return "landing_page_only"
+    return "full_content"
+
+
 def source_row(source_record: dict[str, Any], observation: dict[str, Any] | None) -> dict[str, Any]:
     canonical_confidence = (source_record.get("canonical_confidence") or {}).get("class")
     retrieval = source_record.get("retrieval") or {}
@@ -145,6 +161,9 @@ def source_row(source_record: dict[str, Any], observation: dict[str, Any] | None
         "source_health": (observation or {}).get("source_health_status"),
         "last_observed_at": (observation or {}).get("observed_at"),
         "material_change_since_baseline": material_change_since_baseline(source_record, observation),
+        "verified_scope": verified_scope(source_record),
+        # Doctrine guarantee: OpenVA never observes gated child documents.
+        "gated_child_content_observed": False,
     }
 
 
