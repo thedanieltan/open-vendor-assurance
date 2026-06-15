@@ -17,7 +17,11 @@ ALLOWED_STATUSES = {"queued", "paused", "done"}
 ALLOWED_DISCOVERY_MODES = {
     "seed_file_vendor_discovery",
     "official_domain_source_discovery",
+    # Tier A: bounded, report-only robots/sitemap inspection on a vendor's own
+    # official domain. Produces zero-weight discovery-event candidates only.
+    "sitemap_source_discovery",
 }
+SITEMAP_DISCOVERY_MODE = "sitemap_source_discovery"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -126,6 +130,51 @@ def validate_queue(path: Path = QUEUE_PATH, root: Path = ROOT) -> dict[str, Any]
         "source_types": source_types,
         "coverage_lane_counts": dict(sorted(lane_counts.items())),
     }
+
+
+def sitemap_discovery_enabled(queue: dict[str, Any]) -> bool:
+    return SITEMAP_DISCOVERY_MODE in (queue.get("discovery_modes", []) or [])
+
+
+def run_sitemap_source_discovery(
+    queue: dict[str, Any],
+    vendors: list[dict[str, Any]],
+    fetcher: Any,
+    *,
+    discovery_run_id: str,
+    discovered_at: str,
+) -> list[dict[str, Any]]:
+    """Invoke bounded sitemap discovery for queued vendors when the mode is on.
+
+    Returns normalized discovery events (each valid under the existing
+    discovery-event ledger) ready for the append-only discovery lane. The events
+    carry zero promotion weight; they are candidates, not evidence. A disabled
+    mode yields nothing.
+    """
+    from tools.openva.discovery_ledger import validate_event
+    from tools.openva.sitemap_discovery import discover_sitemap_candidates
+
+    if not sitemap_discovery_enabled(queue):
+        return []
+    max_vendors = int((queue.get("limits", {}) or {}).get("max_vendors_per_discovery_run", len(vendors)))
+    events: list[dict[str, Any]] = []
+    for vendor in vendors[:max_vendors]:
+        official_domains = [str(d) for d in (vendor.get("official_domains") or []) if d]
+        if not official_domains:
+            continue
+        outcome = discover_sitemap_candidates(
+            official_domains,
+            fetcher,
+            discovery_run_id=discovery_run_id,
+            discovered_at=discovered_at,
+            vendor_id=str(vendor.get("vendor_id") or "") or None,
+        )
+        for event in outcome.events:
+            failures = validate_event(event)
+            if failures:
+                raise ValueError(f"sitemap discovery emitted an invalid event: {failures}")
+            events.append(event)
+    return events
 
 
 def main() -> int:
