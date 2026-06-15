@@ -18,7 +18,10 @@ Security boundary (sitemaps are untrusted XML/data):
   sitemaps and URLs are recorded as rejected discovery metadata, never
   candidates, without strong delegation proof.
 - robots.txt is operating policy, not evidence: a disallow suppresses fetching
-  through this lane; it never implies private/invalid/gated/absent.
+  through this lane; it never implies private/invalid/gated/absent. Crawl
+  decisions use a deterministic, versioned RFC-9309-style evaluator
+  (tools/openva/robots_policy.py), not urllib.robotparser, whose longest-match
+  precedence is not guaranteed. The parser id is recorded in discovery metadata.
 
 The whole candidate set is bounded BEFORE any candidate page is fetched.
 """
@@ -31,13 +34,14 @@ import zlib
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable
-from urllib import robotparser
 from urllib.parse import urljoin, urlsplit
 
 import yaml
 
 from tools.openva.indexes import ROOT
 from tools.openva.pack import canonical_json, sha256_bytes
+from tools.openva.robots_policy import PARSER_ID as ROBOTS_PARSER_ID
+from tools.openva.robots_policy import RobotsPolicy
 from tools.openva.source_authority import is_on_official_domain
 from tools.openva.url_safety import validate_url_safety
 
@@ -88,6 +92,8 @@ class DiscoveryOutcome:
     candidates: list[dict[str, str]] = field(default_factory=list)
     rejected: list[dict[str, str]] = field(default_factory=list)
     robots_state: str = "unavailable"
+    # Versioned so a robots-evaluator change is a visible policy change.
+    robots_parser: str = ROBOTS_PARSER_ID
     events: list[dict[str, Any]] = field(default_factory=list)
 
 
@@ -338,7 +344,7 @@ def discover_sitemap_candidates(
     return outcome
 
 
-def _read_robots(base: str, fetcher: Fetcher) -> tuple[str, list[str], robotparser.RobotFileParser | None]:
+def _read_robots(base: str, fetcher: Fetcher) -> tuple[str, list[str], RobotsPolicy | None]:
     url = urljoin(base, "/robots.txt")
     try:
         result = fetcher(url)
@@ -346,12 +352,10 @@ def _read_robots(base: str, fetcher: Fetcher) -> tuple[str, list[str], robotpars
         return "unavailable", [], None
     if result.status != 200 or not result.body:
         return "unavailable", [], None
-    robots = robotparser.RobotFileParser()
-    robots.parse(result.body.decode("utf-8", "replace").splitlines())
-    sitemaps = list(robots.site_maps() or [])
+    robots = RobotsPolicy.parse(result.body.decode("utf-8", "replace"))
     # "restrictive" if it disallows the root for our agent; still operating policy.
     state = "restrictive" if not robots.can_fetch(USER_AGENT, base) else "found"
-    return state, sitemaps, robots
+    return state, list(robots.sitemaps), robots
 
 
 def _discovery_event(
