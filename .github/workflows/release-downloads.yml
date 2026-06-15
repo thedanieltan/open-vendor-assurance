@@ -123,6 +123,14 @@ jobs:
             --find-links "$RUNNER_TEMP/wh-extract" openva-mcp==0.1.0
           "$RUNNER_TEMP/openva-mcp-test2/bin/openva-mcp" \
             --snapshot "$RUNNER_TEMP/agent-exports" --verify
+      # Authoritative check on the actual downloadable artifact: extract the
+      # published ZIP and verify it with the wheelhouse-installed command.
+      - name: Verify the extracted agent-export bundle ZIP
+        run: |
+          mkdir -p "$RUNNER_TEMP/agent-bundle-extract"
+          (cd "$RUNNER_TEMP/agent-bundle-extract" && unzip -q "$GITHUB_WORKSPACE/release-downloads/openva-agent-exports.zip")
+          "$RUNNER_TEMP/openva-mcp-test2/bin/openva-mcp" \
+            --snapshot "$RUNNER_TEMP/agent-bundle-extract" --verify
       - name: Stage MCP Registry metadata
         run: cp integrations/mcp/openva_mcp/manifest/server.json release-downloads/
       - name: Build release coherence manifest from root-level assets
