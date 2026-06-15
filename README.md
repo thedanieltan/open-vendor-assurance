@@ -239,6 +239,8 @@ The agent index lists every export (vendor index, per-vendor source maps, flat s
 
 See `docs/agent-export-contract.md` for shapes, field semantics, and the digest verification recipe.
 
+The hosted site also publishes a static discovery surface over these exports: a static page per vendor at `/vendors/{vendor_id}/`, an agent integration guide at `/agents/`, a typed discovery manifest at `/.well-known/openva.json`, plus `sitemap.xml`, `robots.txt`, and `llms.txt`. All OpenVA-owned public URLs derive from `config/publication.yaml`.
+
 ## Release Downloads
 
 For spreadsheet-first users, OpenVA publishes non-technical download assets through GitHub Releases:

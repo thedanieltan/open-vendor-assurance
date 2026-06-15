@@ -23,6 +23,40 @@
         "operatingSystem": "Web"
       }
     </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Open Vendor Assurance",
+        "alternateName": "OpenVA",
+        "url": "https://thedanieltan.github.io/open-vendor-assurance/",
+        "description": "Public-source-only registry of vendor-published assurance source references. Metadata only; not advice."
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "DataCatalog",
+        "name": "Open Vendor Assurance",
+        "url": "https://thedanieltan.github.io/open-vendor-assurance/",
+        "description": "Catalogue of public, vendor-published assurance source references such as privacy notices, DPAs, subprocessor lists, trust centers, security pages, and certification references.",
+        "isAccessibleForFree": true,
+        "license": "https://opensource.org/license/mit",
+        "dataset": {
+          "@type": "Dataset",
+          "name": "OpenVA public assurance sources",
+          "description": "Factual metadata about public vendor assurance sources: source type, original vendor-published URL, observed source health, and snapshot identity. OpenVA does not endorse, certify, score, or rank listed vendors.",
+          "isAccessibleForFree": true,
+          "license": "https://opensource.org/license/mit",
+          "creator": { "@type": "Organization", "name": "Open Vendor Assurance" },
+          "distribution": {
+            "@type": "DataDownload",
+            "encodingFormat": "application/json",
+            "contentUrl": "https://thedanieltan.github.io/open-vendor-assurance/public/openva-agent-index.json"
+          }
+        }
+      }
+    </script>
     <link rel="stylesheet" href="styles.css?v=20260523-ui6">
     <link rel="stylesheet" href="visual.css?v=20260523-ui6">
     <link rel="stylesheet" href="theme.css?v=20260523-ui6">
