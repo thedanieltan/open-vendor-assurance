@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "name": "io.github.thedanieltan/openva",
+  "description": "Read-only MCP server over the OpenVA public vendor-assurance export contract.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/thedanieltan/open-vendor-assurance",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "openva-mcp",
+      "version": "0.1.0",
+      "transport": { "type": "stdio" }
+    }
+  ]
+}
