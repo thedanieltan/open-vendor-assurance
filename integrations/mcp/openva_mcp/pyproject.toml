@@ -11,7 +11,10 @@ requires-python = ">=3.11"
 license = "MIT"
 keywords = ["openva", "mcp", "vendor-assurance", "model-context-protocol"]
 dependencies = [
-  "mcp>=1.2.0",
+  # v1 FastMCP/low-level API. Hold below 2 until the server is tested against it.
+  "mcp>=1.27,<2",
+  # Shared vendor-identity matching authority (also the CSV adapter's core).
+  "openva-vendor-inventory-matcher>=0.1.0",
 ]
 
 [project.optional-dependencies]

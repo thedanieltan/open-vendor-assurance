@@ -132,7 +132,7 @@ def get_vendor_changes(snapshot: Snapshot, vendor_id: str) -> dict[str, Any]:
 def match_inventory(snapshot: Snapshot, rows: list[dict[str, Any]]) -> dict[str, Any]:
     vendors = snapshot.vendors_index().get("vendors", [])
     results = [match_row(vendors, row or {}) for row in rows]
-    summary = {"matched": 0, "ambiguous": 0, "unmatched": 0}
+    summary = {"matched": 0, "ambiguous": 0, "no_match": 0}
     for result in results:
         summary[result["match_status"]] += 1
     return _envelope(snapshot, count=len(results), summary=summary, results=results)

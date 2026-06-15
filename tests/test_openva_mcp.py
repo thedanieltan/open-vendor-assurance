@@ -14,8 +14,11 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 MCP_SRC = ROOT / "integrations" / "mcp" / "openva_mcp"
-if str(MCP_SRC) not in sys.path:
-    sys.path.insert(0, str(MCP_SRC))
+MATCHER_SRC = ROOT / "adapters" / "python" / "openva_vendor_inventory_matcher"
+PACK_READER_SRC = ROOT / "adapters" / "python" / "openva_pack_reader"
+for _src in (MCP_SRC, MATCHER_SRC, PACK_READER_SRC):
+    if str(_src) not in sys.path:
+        sys.path.insert(0, str(_src))
 
 from openva_mcp import tools  # noqa: E402
 from openva_mcp.snapshot import (  # noqa: E402
@@ -121,7 +124,7 @@ def test_match_inventory_matched_ambiguous_unmatched(snapshot):
     by_status = [r["match_status"] for r in result["results"]]
     assert by_status[0] == "matched"
     assert result["results"][0]["matched_vendor_id"] == "example-vendor"
-    assert by_status[2] == "unmatched"
+    assert by_status[2] == "no_match"
     assert result["results"][2]["matched_vendor_id"] is None
     assert result["summary"]["matched"] >= 1
 

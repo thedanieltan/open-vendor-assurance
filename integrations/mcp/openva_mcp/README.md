@@ -1,3 +1,5 @@
+<!-- mcp-name: io.github.thedanieltan/openva -->
+
 # openva-mcp
 
 Local-first, read-only [MCP](https://modelcontextprotocol.io) server over the
@@ -7,10 +9,18 @@ catalog authority, a hosted service, a risk engine, or a write path.
 
 ## Install
 
+This package is not yet published to PyPI. Install from the repository:
+
 ```bash
-pipx install openva-mcp
+pipx install ./integrations/mcp/openva_mcp
 # or
-pip install openva-mcp
+pip install ./integrations/mcp/openva_mcp
+```
+
+After publication (not yet available), the command will be:
+
+```bash
+# pipx install openva-mcp
 ```
 
 ## Run
@@ -21,10 +31,11 @@ Pinned local snapshot (an OpenVA export or release directory):
 openva-mcp --snapshot /path/to/openva-export
 ```
 
-Hosted static snapshot (the public export tree):
+Hosted static snapshot (the public export tree; the base URL is the
+`canonical_base_url` from `config/publication.yaml` plus `/public`):
 
 ```bash
-openva-mcp --base-url https://thedanieltan.github.io/open-vendor-assurance/public
+openva-mcp --base-url <canonical_base_url>/public
 ```
 
 Verify a snapshot and exit:

@@ -25,7 +25,7 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Protocol
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 from urllib.request import urlopen
 
 SUPPORTED_SCHEMA_VERSION = "0.1.0"
@@ -101,15 +101,36 @@ class LocalSnapshotSource:
             raise SnapshotError(f"{root}: no {AGENT_INDEX_FILE} found (looked in ./ and ./public/)")
 
     def read_bytes(self, rel_path: str) -> bytes:
+        # resolve() follows symlinks, so a symlink escaping the snapshot root
+        # resolves outside it and is rejected by the containment check.
         path = (self.root / _safe_rel(rel_path)).resolve()
-        if not str(path).startswith(str(self.root.resolve())):
-            raise SnapshotError(f"unsafe export path: {rel_path}")
+        if not path.is_relative_to(self.root.resolve()):
+            raise SnapshotError(f"export path escapes snapshot root: {rel_path}")
         if not path.is_file():
             raise SnapshotError(f"missing export file: {rel_path}")
         return path.read_bytes()
 
     def identity(self) -> str:
         return str(self.root)
+
+
+def _validate_base_url(base_url: str) -> str:
+    """Validate a hosted-mode base URL and normalize its trailing slash.
+
+    Only http/https are accepted; `file:` access is confined to pinned-local
+    mode (LocalSnapshotSource). Embedded credentials and fragments are rejected
+    so the base URL stays plain operator configuration.
+    """
+    parts = urlsplit(base_url)
+    if parts.scheme not in ("http", "https"):
+        raise SnapshotError(f"hosted base URL must be http(s): {base_url!r}")
+    if parts.username or parts.password:
+        raise SnapshotError("hosted base URL must not embed credentials")
+    if parts.fragment:
+        raise SnapshotError("hosted base URL must not contain a fragment")
+    if not parts.netloc:
+        raise SnapshotError(f"hosted base URL has no host: {base_url!r}")
+    return base_url if base_url.endswith("/") else base_url + "/"
 
 
 def _http_fetch(url: str, *, timeout: float = 30.0) -> bytes:
@@ -134,14 +155,18 @@ class RemoteSnapshotSource:
         fetch: Callable[[str], bytes] = _http_fetch,
         cache_dir: str | Path | None = None,
     ):
-        self.base_url = base_url if base_url.endswith("/") else base_url + "/"
+        self.base_url = _validate_base_url(base_url)
         self._fetch = fetch
         self.cache_dir = Path(cache_dir) if cache_dir else None
+        # Per-read flag (reset on every read) plus the set of paths ever served
+        # from cache, so a result can disclose any cache use precisely.
         self.last_read_from_cache = False
+        self.cached_paths: set[str] = set()
 
     def read_bytes(self, rel_path: str) -> bytes:
         rel_path = _safe_rel(rel_path)
         url = urljoin(self.base_url, rel_path)
+        self.last_read_from_cache = False
         try:
             data = self._fetch(url)
         except Exception as exc:  # network/HTTP failure: try the disclosed cache
@@ -149,6 +174,7 @@ class RemoteSnapshotSource:
             if cached is None:
                 raise SnapshotError(f"remote fetch failed for {rel_path}: {exc}") from exc
             self.last_read_from_cache = True
+            self.cached_paths.add(rel_path)
             return cached
         self._write_cache(rel_path, data)
         return data
@@ -291,10 +317,17 @@ class Snapshot:
         }
 
     def verify(self) -> dict[str, Any]:
-        """Recompute and cross-check the digest of every export in the tree."""
+        """Recompute, schema-check, and cross-check every export in the tree.
+
+        Schema enforcement is part of verification, not just digest comparison:
+        an unsupported schema_version raises ``SnapshotUnsupportedSchemaError``
+        (which the CLI turns into a non-zero exit) rather than reporting ok.
+        """
         results: list[FileVerification] = [self._verify_one(AGENT_INDEX_FILE, self.agent_index, self.digest)]
         for rel_path in list(INDEX_EXPORTS.values()) + list(self.vendor_export_paths().values()):
             document = _load_json(self.source, rel_path)
+            _require_supported_schema(document, rel_path)
+            self.from_cache = self.from_cache or bool(getattr(self.source, "last_read_from_cache", False))
             results.append(self._verify_one(rel_path, document, self._expected_digest(rel_path)))
         ok = all(item.match for item in results)
         return {

@@ -1,13 +1,15 @@
 """MCP server wiring and CLI.
 
 The tool registry (``TOOL_SPECS``) is declared independently of the MCP SDK so
-the tool surface can be tested without it. ``build_server`` imports the SDK
-lazily and registers each spec; ``main`` resolves the data mode (pinned local
-directory or hosted base URL), loads and integrity-checks the snapshot once at
-startup, and serves over stdio.
+the tool surface can be tested without it. ``build_server`` registers each spec
+on a low-level ``mcp.server.Server`` so the exact ``input_schema`` declared here
+is what a real ``tools/list`` request publishes, and each handler returns a
+plain dict that the SDK surfaces as ``structuredContent``.
 
-The server is read-only by construction: it exposes only the functions in
-``TOOL_SPECS`` and never accepts a GitHub token or any write path.
+``main`` resolves the data mode (pinned local directory or hosted base URL),
+loads and integrity-checks the snapshot once at startup, and serves over stdio.
+The server is read-only by construction of its tool surface: it exposes only the
+functions in ``TOOL_SPECS`` and never accepts a GitHub token or any write path.
 """
 
 from __future__ import annotations
@@ -32,7 +34,7 @@ class ToolSpec:
     name: str
     description: str
     input_schema: dict[str, Any]
-    func: Callable[..., dict[str, Any]]
+    func: Callable[[Snapshot, dict[str, Any]], dict[str, Any]]
 
 
 def _obj(properties: dict[str, Any], required: list[str] | None = None) -> dict[str, Any]:
@@ -83,16 +85,10 @@ TOOL_SPECS: list[ToolSpec] = [
     ),
     ToolSpec(
         "match_inventory",
-        "Match inventory rows (domain / vendor_name / business_entity_name) to vendors; "
-        "ambiguous and unmatched rows stay explicitly so.",
+        "Match inventory rows (domain / vendor_name / business_entity_name / registration_number) "
+        "to vendors; ambiguous and unmatched rows stay explicitly so.",
         _obj(
-            {
-                "rows": {
-                    "type": "array",
-                    "items": {"type": "object"},
-                    "maxItems": 5000,
-                }
-            },
+            {"rows": {"type": "array", "items": {"type": "object"}, "maxItems": 5000}},
             ["rows"],
         ),
         lambda snapshot, args: tools.match_inventory(snapshot, list(args["rows"])),
@@ -105,41 +101,45 @@ TOOL_SPECS: list[ToolSpec] = [
     ),
     ToolSpec(
         "verify_snapshot",
-        "Recompute and cross-check the content digest of every export in the snapshot.",
+        "Recompute and cross-check the content digest and schema of every export in the snapshot.",
         _obj({}),
         lambda snapshot, args: tools.verify_snapshot(snapshot),
     ),
 ]
+
+SPEC_BY_NAME = {spec.name: spec for spec in TOOL_SPECS}
 
 
 def resolve_snapshot(args: argparse.Namespace) -> Snapshot:
     if args.snapshot:
         return Snapshot.load(LocalSnapshotSource(args.snapshot))
     if args.base_url:
-        source = RemoteSnapshotSource(args.base_url, cache_dir=args.cache_dir)
-        return Snapshot.load(source)
+        return Snapshot.load(RemoteSnapshotSource(args.base_url, cache_dir=args.cache_dir))
     raise SystemExit("provide --snapshot <dir> or --base-url <url>")
 
 
 def build_server(snapshot: Snapshot):
-    """Build a FastMCP server exposing the read-only tools (SDK imported lazily)."""
-    from mcp.server.fastmcp import FastMCP
+    """Build a low-level MCP server exposing the read-only tools (SDK imported lazily)."""
+    from mcp import types
+    from mcp.server.lowlevel import Server
 
-    server = FastMCP("openva")
-    for spec in TOOL_SPECS:
-        def make_handler(spec: ToolSpec):
-            async def handler(**arguments: Any) -> dict[str, Any]:
-                return spec.func(snapshot, arguments)
+    server: Server = Server("openva")
 
-            handler.__name__ = spec.name
-            handler.__doc__ = spec.description
-            return handler
+    @server.list_tools()
+    async def list_tools() -> list[types.Tool]:
+        return [
+            types.Tool(name=spec.name, description=spec.description, inputSchema=spec.input_schema)
+            for spec in TOOL_SPECS
+        ]
 
-        server.add_tool(
-            make_handler(spec),
-            name=spec.name,
-            description=spec.description,
-        )
+    @server.call_tool()
+    async def call_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
+        spec = SPEC_BY_NAME.get(name)
+        if spec is None:
+            raise ValueError(f"unknown tool: {name}")
+        # Returning a dict surfaces as structuredContent (and JSON text content).
+        return spec.func(snapshot, arguments or {})
+
     return server
 
 
@@ -153,14 +153,32 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def run_stdio(server) -> None:
+    import anyio
+    from mcp.server.stdio import stdio_server
+
+    async def _run() -> None:
+        async with stdio_server() as (read_stream, write_stream):
+            await server.run(read_stream, write_stream, server.create_initialization_options())
+
+    anyio.run(_run)
+
+
 def main(argv: list[str] | None = None) -> int:
+    from openva_mcp.snapshot import SnapshotError
+
     args = build_arg_parser().parse_args(argv)
-    snapshot = resolve_snapshot(args)
-    if args.verify:
-        report = tools.verify_snapshot(snapshot)["verification"]
-        print("ok" if report["ok"] else "FAILED", snapshot.commit_sha, file=sys.stderr)
-        return 0 if report["ok"] else 1
-    build_server(snapshot).run()
+    try:
+        # Snapshot load enforces digest integrity and supported schema.
+        snapshot = resolve_snapshot(args)
+        if args.verify:
+            report = tools.verify_snapshot(snapshot)["verification"]
+            print("ok" if report["ok"] else "FAILED", snapshot.commit_sha, file=sys.stderr)
+            return 0 if report["ok"] else 1
+    except SnapshotError as exc:
+        print(f"snapshot error: {exc}", file=sys.stderr)
+        return 1
+    run_stdio(build_server(snapshot))
     return 0
 
 

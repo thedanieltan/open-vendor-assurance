@@ -1,0 +1,120 @@
+"""Real MCP client/server protocol tests.
+
+The authoritative test runs a genuine ``ClientSession`` against the server over
+the SDK's in-memory transport: it initializes, lists tools, checks each
+published input schema against ``TOOL_SPECS``, and invokes representative tools.
+A second test exercises the stdio transport via a subprocess; it skips only when
+the host cannot spawn a subprocess (an environment limitation, not an SDK skip).
+"""
+
+import sys
+from pathlib import Path
+
+import anyio
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+for _src in (
+    ROOT / "integrations" / "mcp" / "openva_mcp",
+    ROOT / "adapters" / "python" / "openva_vendor_inventory_matcher",
+    ROOT / "adapters" / "python" / "openva_pack_reader",
+):
+    if str(_src) not in sys.path:
+        sys.path.insert(0, str(_src))
+
+pytest.importorskip("mcp")
+
+from mcp.shared.memory import create_connected_server_and_client_session  # noqa: E402
+
+from openva_mcp.server import TOOL_SPECS, build_server  # noqa: E402
+from openva_mcp.snapshot import LocalSnapshotSource, Snapshot  # noqa: E402
+
+from tests.test_agent_export import build, make_repo, run_artifact, write_ledger_event  # noqa: E402
+
+REQUIRED_TOOLS = {
+    "search_vendors",
+    "get_vendor",
+    "list_vendor_sources",
+    "get_source",
+    "get_source_health",
+    "get_vendor_changes",
+    "match_inventory",
+    "get_snapshot_metadata",
+    "verify_snapshot",
+}
+
+
+@pytest.fixture
+def export_tree(tmp_path) -> Path:
+    make_repo(tmp_path)
+    write_ledger_event(tmp_path, observed_at="2026-06-01T05:30:00Z")
+    return build(tmp_path, latest_observations=run_artifact())
+
+
+def test_protocol_tools_list_and_calls(export_tree):
+    snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
+    expected_schema = {spec.name: spec.input_schema for spec in TOOL_SPECS}
+
+    async def scenario() -> None:
+        server = build_server(snapshot)
+        async with create_connected_server_and_client_session(server) as client:
+            listed = await client.list_tools()
+            names = {tool.name for tool in listed.tools}
+            assert REQUIRED_TOOLS.issubset(names)
+            for tool in listed.tools:
+                # The schema published over the wire matches the declared spec.
+                assert tool.inputSchema == expected_schema[tool.name], tool.name
+
+            meta = await client.call_tool("get_snapshot_metadata", {})
+            assert meta.structuredContent["not_advice"] is True
+            assert meta.structuredContent["snapshot"]["commit_sha"] == snapshot.commit_sha
+
+            found = await client.call_tool("search_vendors", {"query": "example"})
+            assert any(v["vendor_id"] == "example-vendor" for v in found.structuredContent["vendors"])
+
+            vendor = await client.call_tool("get_vendor", {"vendor_id": "example-vendor"})
+            assert vendor.structuredContent["found"] is True
+            assert vendor.structuredContent["snapshot"]["digest"].startswith("sha256:")
+
+            matched = await client.call_tool("match_inventory", {"rows": [{"domain": "vendor.example"}]})
+            row = matched.structuredContent["results"][0]
+            assert row["match_status"] == "matched"
+            assert row["matched_vendor_id"] == "example-vendor"
+            assert matched.structuredContent["not_advice"] is True
+
+    anyio.run(scenario)
+
+
+def test_protocol_over_stdio_subprocess(export_tree):
+    from mcp import ClientSession, StdioServerParameters
+    from mcp.client.stdio import stdio_client
+
+    env = {
+        "PYTHONPATH": ";".join(
+            str(p)
+            for p in (
+                ROOT / "integrations" / "mcp" / "openva_mcp",
+                ROOT / "adapters" / "python" / "openva_vendor_inventory_matcher",
+                ROOT / "adapters" / "python" / "openva_pack_reader",
+            )
+        ),
+    }
+    params = StdioServerParameters(
+        command=sys.executable,
+        args=["-m", "openva_mcp", "--snapshot", str(export_tree)],
+        env=env,
+    )
+
+    async def scenario() -> None:
+        async with stdio_client(params) as (read, write):
+            async with ClientSession(read, write) as session:
+                await session.initialize()
+                listed = await session.list_tools()
+                assert REQUIRED_TOOLS.issubset({tool.name for tool in listed.tools})
+                meta = await session.call_tool("get_snapshot_metadata", {})
+                assert meta.structuredContent["not_advice"] is True
+
+    try:
+        anyio.run(scenario)
+    except (OSError, NotImplementedError) as exc:  # host cannot spawn the child process
+        pytest.skip(f"stdio subprocess transport unavailable here: {exc}")

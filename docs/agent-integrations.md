@@ -22,8 +22,10 @@ The MCP server reads one snapshot, in one of two modes:
   Remote data is represented as verified only after its content digest matches
   the agent index.
 
-Pin a `commit_sha` for reproducibility; `get_snapshot_metadata` and
-`verify_snapshot` expose and check snapshot identity.
+The hosted base URL is `<canonical_base_url>/public`, where
+`canonical_base_url` is the value in `config/publication.yaml`. Pin a
+`commit_sha` for reproducibility; `get_snapshot_metadata` and `verify_snapshot`
+expose and check snapshot identity.
 
 ## Claude / MCP host configuration
 
@@ -39,7 +41,8 @@ Pin a `commit_sha` for reproducibility; `get_snapshot_metadata` and
 ```
 
 Hosted mode: replace `args` with
-`["--base-url", "https://thedanieltan.github.io/open-vendor-assurance/public"]`.
+`["--base-url", "<canonical_base_url>/public"]` (the `canonical_base_url` from
+`config/publication.yaml`).
 
 ## OpenAI tool usage
 
@@ -94,7 +97,13 @@ ambiguous.
 
 ## Container
 
+The image runs as a non-root user over stdio and needs no secrets. Mount the
+snapshot read-only:
+
 ```bash
-docker build -t openva-mcp integrations/mcp/openva_mcp
-docker run --rm -i -v /path/to/openva-export:/snapshot openva-mcp
+docker build -f integrations/mcp/openva_mcp/Dockerfile -t openva-mcp .
+docker run --rm -i --read-only -v /path/to/openva-export:/snapshot:ro openva-mcp
 ```
+
+For hosted mode with caching, add a writable cache mount and
+`--base-url <canonical_base_url>/public --cache-dir /cache`.
