@@ -51,6 +51,14 @@ tool's name and JSON Schema (from `openva_mcp.server.TOOL_SPECS`) and dispatchin
 calls to the server. Each result is returned verbatim, including its `snapshot`
 identity and `not_advice` flag.
 
+## Install
+
+Install the three repository packages together (online dependency resolution),
+or, on **Linux x86_64 with CPython 3.12 only**, install offline from the
+attached `openva-mcp-wheelhouse-linux-x86_64-py312.zip`. See the package
+[README](../integrations/mcp/openva_mcp/README.md). The wheelhouse is not
+cross-platform; on other systems use the repository install.
+
 ## Local Python
 
 ```python

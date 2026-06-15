@@ -270,6 +270,62 @@ def test_unlisted_required_export_with_valid_self_digest_is_rejected(export_tree
         snapshot.load_verified("vendors/example-vendor.json")
 
 
+def _mutate_child_snapshot(path: Path, **changes) -> None:
+    """Change a child export's snapshot metadata while leaving its payload (and
+    therefore its payload digest) untouched — the exact attack the root binding
+    must catch.
+    """
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    for key, value in changes.items():
+        if value is _DELETE:
+            doc["snapshot"].pop(key, None)
+        else:
+            doc["snapshot"][key] = value
+    path.write_text(json.dumps(doc), encoding="utf-8")
+
+
+_DELETE = object()
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"commit_sha": "different" + "0" * 32},
+        {"generated_at": "2099-01-01T00:00:00Z"},
+        {"commit_sha": _DELETE},
+        {"generated_at": _DELETE},
+    ],
+)
+def test_child_export_unbound_from_root_fails_closed_local(export_tree, changes):
+    _mutate_child_snapshot(export_tree / "vendors" / "index.json", **changes)
+    snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
+    with pytest.raises(SnapshotIntegrityError):
+        snapshot.vendors_index()
+
+
+def test_child_export_unbound_from_root_fails_closed_hosted(export_tree):
+    # Same payload and digest, different child commit: must fail in hosted mode.
+    _mutate_child_snapshot(export_tree / "vendors" / "example-vendor.json", commit_sha="other" + "0" * 35)
+    snapshot = Snapshot.load(RemoteSnapshotSource("https://host/tree/", fetch=_reader(export_tree)))
+    with pytest.raises(SnapshotIntegrityError):
+        snapshot.vendor_export("example-vendor")
+
+
+def test_cached_child_from_older_snapshot_fails_closed(export_tree, tmp_path):
+    cache = tmp_path / "cache"
+    _warm_cache(export_tree, cache)
+    # Replace the cached child with an older-snapshot copy: identical payload,
+    # different commit_sha. Served from cache, the root binding must reject it.
+    cached_child = cache / "vendors" / "example-vendor.json"
+    _mutate_child_snapshot(cached_child, commit_sha="older" + "0" * 35)
+    cold = RemoteSnapshotSource(
+        "https://host/tree/", fetch=_reader(export_tree, fail={"vendors/example-vendor.json"}), cache_dir=cache
+    )
+    snapshot = Snapshot.load(cold)
+    with pytest.raises(SnapshotIntegrityError):
+        snapshot.vendor_export("example-vendor")
+
+
 def test_verify_enforces_supported_schema_for_every_export(export_tree):
     target = export_tree / "vendors" / "example-vendor.json"
     doc = json.loads(target.read_text(encoding="utf-8"))

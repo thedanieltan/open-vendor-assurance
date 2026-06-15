@@ -25,6 +25,7 @@ import hashlib
 import json
 import os
 import tomllib
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -38,9 +39,9 @@ DEFAULT_MANIFEST_NAME = "openva-release-manifest.json"
 DEFAULT_CHECKSUMS_NAME = "SHA256SUMS"
 AGENT_INDEX_IN_ARCHIVE = "public/openva-agent-index.json"
 SELF_EXCLUDE = {DEFAULT_MANIFEST_NAME, DEFAULT_CHECKSUMS_NAME}
-# The agent-export tree is staged here only to be zipped; the zip is the release
-# asset, so the loose tree is not listed as a separate asset.
-STAGING_DIRS = {"agent-exports"}
+# Loose staging directories under the asset dir that are zipped into a single
+# release asset; their loose contents are never published separately.
+STAGING_DIRS = {"agent-exports", "mcp-wheelhouse"}
 
 
 def sha256_file(path: Path) -> str:
@@ -56,21 +57,30 @@ def mcp_software_version() -> str:
     return str(data["project"]["version"])
 
 
-def read_release_agent_index(agent_index_path: Path) -> dict[str, Any]:
-    """Read the staged agent index and recompute its digest from the bytes.
+def read_agent_index_from_archive(archive_path: Path) -> dict[str, Any]:
+    """Read the agent index from the actual ZIP archive and verify its digest.
 
-    Fails if the declared digest does not recompute, so the manifest never
-    records a digest that is not provable from the attached file.
+    The archive is the authority: bytes are read directly from
+    ``public/openva-agent-index.json`` inside the zip, not from any loose
+    staging tree. Fails if the index is missing, at the wrong internal path, or
+    if its declared digest does not recompute.
     """
-    document = json.loads(agent_index_path.read_text(encoding="utf-8"))
+    with zipfile.ZipFile(archive_path) as archive:
+        names = set(archive.namelist())
+        if AGENT_INDEX_IN_ARCHIVE not in names:
+            raise ValueError(f"{archive_path}: {AGENT_INDEX_IN_ARCHIVE} not found in archive")
+        data = archive.read(AGENT_INDEX_IN_ARCHIVE)
+    document = json.loads(data)
     snapshot = document.get("snapshot", {})
     declared = str(snapshot.get("digest", ""))
     recomputed = payload_digest(document)
     if declared != recomputed:
         raise ValueError(
-            f"{agent_index_path}: agent index digest does not recompute (declared {declared}, got {recomputed})"
+            f"{archive_path}: agent index digest does not recompute (declared {declared}, got {recomputed})"
         )
     return {
+        "declared_digest": declared,
+        "recomputed_digest": recomputed,
         "digest": recomputed,
         "observation_input": document.get("observation_input"),
         "commit_sha": str(snapshot.get("commit_sha", "")),
@@ -112,11 +122,11 @@ def build_release_manifest(
     release_tag: str,
     commit_sha: str,
     published_at: str,
-    agent_index_path: Path,
+    agent_archive_path: Path,
     agent_archive_name: str,
     software_version: str | None = None,
 ) -> dict[str, Any]:
-    agent = read_release_agent_index(agent_index_path)
+    agent = read_agent_index_from_archive(agent_archive_path)
     if commit_sha and agent["commit_sha"] and agent["commit_sha"] != commit_sha:
         raise ValueError(
             f"release commit {commit_sha} does not match export snapshot commit {agent['commit_sha']}"
@@ -140,9 +150,12 @@ def build_release_manifest(
         "agent_export": {
             "archive_asset": agent_archive_name,
             "index_path_in_archive": AGENT_INDEX_IN_ARCHIVE,
+            "declared_digest": agent["declared_digest"],
+            "recomputed_digest": agent["recomputed_digest"],
             "index_digest": agent["digest"],
             "observation_input": agent["observation_input"],
             "snapshot_commit_sha": agent["commit_sha"],
+            "generated_at": agent["generated_at"],
         },
         "agent_index_digest": agent["digest"],
         "published_at": published_at,
@@ -184,15 +197,38 @@ def check_release_manifest(asset_dir: Path, manifest_path: Path) -> list[str]:
         failures.append("release manifest must assert not_advice=true")
 
     agent = manifest.get("agent_export", {})
-    for field in ("archive_asset", "index_path_in_archive", "index_digest", "observation_input", "snapshot_commit_sha"):
+    for field in (
+        "archive_asset",
+        "index_path_in_archive",
+        "index_digest",
+        "observation_input",
+        "snapshot_commit_sha",
+        "generated_at",
+    ):
         if field not in agent:
             failures.append(f"release manifest agent_export missing {field}")
     if not str(manifest.get("agent_index_digest", "")).startswith("sha256:"):
         failures.append("release manifest agent_index_digest must be a sha256 digest")
-    # The agent-export archive named in the manifest must be a real asset.
+
     recorded = {row["name"]: row for row in manifest.get("assets", [])}
-    if agent.get("archive_asset") and agent["archive_asset"] not in recorded:
-        failures.append(f"agent export archive not among release assets: {agent.get('archive_asset')}")
+    # Reopen the actual archive (not the loose staging tree) and re-verify the
+    # agent index digest, internal path, and commit linkage from its bytes.
+    archive_name = agent.get("archive_asset")
+    if not archive_name or archive_name not in recorded:
+        failures.append(f"agent export archive not among release assets: {archive_name}")
+    else:
+        archive_path = asset_dir / archive_name
+        try:
+            reread = read_agent_index_from_archive(archive_path)
+            if reread["digest"] != agent.get("index_digest"):
+                failures.append("agent export archive digest does not match the manifest")
+            release_commit = manifest.get("identities", {}).get("repository_commit_sha")
+            if reread["commit_sha"] != agent.get("snapshot_commit_sha"):
+                failures.append("agent export archive commit does not match the manifest")
+            if release_commit and reread["commit_sha"] and reread["commit_sha"] != release_commit:
+                failures.append("agent export archive commit does not match the release commit")
+        except (ValueError, OSError, zipfile.BadZipFile) as exc:
+            failures.append(f"agent export archive failed re-verification: {exc}")
 
     actual = {row["name"]: row for row in asset_rows(asset_dir, exclude=SELF_EXCLUDE)}
     for name, row in recorded.items():
@@ -212,8 +248,7 @@ def main() -> int:
 
     build = sub.add_parser("build", help="Build the release coherence manifest from built assets")
     build.add_argument("--asset-dir", type=Path, required=True)
-    build.add_argument("--agent-index", type=Path, required=True, help="Staged agent index JSON inside the asset tree")
-    build.add_argument("--agent-archive", required=True, help="Release asset name of the agent-export archive")
+    build.add_argument("--agent-archive", type=Path, required=True, help="Path to the agent-export ZIP in the asset dir")
     build.add_argument("--release-tag", default=os.environ.get("GITHUB_REF_NAME", ""))
     build.add_argument("--commit-sha", default=os.environ.get("GITHUB_SHA", ""))
     build.add_argument("--published-at", required=True)
@@ -231,8 +266,8 @@ def main() -> int:
             release_tag=args.release_tag,
             commit_sha=args.commit_sha or "unknown",
             published_at=args.published_at,
-            agent_index_path=args.agent_index,
-            agent_archive_name=args.agent_archive,
+            agent_archive_path=args.agent_archive,
+            agent_archive_name=args.agent_archive.name,
         )
         out = args.out or (args.asset_dir / DEFAULT_MANIFEST_NAME)
         out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")

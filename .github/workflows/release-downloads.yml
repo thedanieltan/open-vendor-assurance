@@ -76,41 +76,64 @@ jobs:
         run: python -m tools.openva.release_downloads manifest --out release-downloads > release-downloads/openva-release-downloads-manifest.json
       - name: Check non-technical release downloads
         run: python -m tools.openva.release_downloads check --out release-downloads
-      # Reproducible from committed repository state: no --latest-observations, so
-      # observation input is committed_events_fallback (or none).
-      - name: Build pinned agent-export bundle
+      # Deterministic from committed state: timestamp derived from the tagged
+      # commit; no --latest-observations, so observation input is
+      # committed_events_fallback (or none).
+      - name: Build deterministic agent-export bundle
         run: |
+          EXPORT_GENERATED_AT="$(git show -s --format=%cI "${{ github.sha }}")"
+          mkdir -p "$RUNNER_TEMP/agent-exports/public"
           python -m tools.openva.agent_export build \
-            --out release-downloads/agent-exports/public \
-            --commit-sha "${{ github.sha }}"
-          (cd release-downloads/agent-exports && zip -r ../openva-agent-exports.zip public)
-      - name: Build MCP wheelhouse
+            --out "$RUNNER_TEMP/agent-exports/public" \
+            --commit-sha "${{ github.sha }}" \
+            --generated-at "$EXPORT_GENERATED_AT"
+          python -m tools.openva.deterministic_zip \
+            "$RUNNER_TEMP/agent-exports/public" \
+            release-downloads/openva-agent-exports.zip \
+            --arcname-root public \
+            --generated-at "$EXPORT_GENERATED_AT"
+      - name: Build MCP packages and resolve wheelhouse (Linux x86_64, CPython 3.12)
         run: |
           python -m pip install build
-          mkdir -p release-downloads/mcp-wheelhouse
-          python -m build adapters/python/openva_pack_reader --outdir release-downloads/mcp-wheelhouse
-          python -m build adapters/python/openva_vendor_inventory_matcher --outdir release-downloads/mcp-wheelhouse
-          python -m build integrations/mcp/openva_mcp --outdir release-downloads/mcp-wheelhouse
-          python -m pip download --dest release-downloads/mcp-wheelhouse "mcp>=1.27,<2" "jsonschema>=4.0"
+          mkdir -p "$RUNNER_TEMP/mcp-wheelhouse"
+          python -m build adapters/python/openva_pack_reader --outdir "$RUNNER_TEMP/mcp-wheelhouse"
+          python -m build adapters/python/openva_vendor_inventory_matcher --outdir "$RUNNER_TEMP/mcp-wheelhouse"
+          python -m build integrations/mcp/openva_mcp --outdir "$RUNNER_TEMP/mcp-wheelhouse"
+          python -m pip download --dest "$RUNNER_TEMP/mcp-wheelhouse" "mcp>=1.27,<2" "jsonschema>=4.0"
       - name: Clean-environment wheelhouse install and verify
         run: |
           python -m venv "$RUNNER_TEMP/openva-mcp-test"
           "$RUNNER_TEMP/openva-mcp-test/bin/pip" install --no-index \
-            --find-links release-downloads/mcp-wheelhouse openva-mcp==0.1.0
+            --find-links "$RUNNER_TEMP/mcp-wheelhouse" openva-mcp==0.1.0
           "$RUNNER_TEMP/openva-mcp-test/bin/openva-mcp" \
-            --snapshot release-downloads/agent-exports --verify
+            --snapshot "$RUNNER_TEMP/agent-exports" --verify
+      - name: Package wheelhouse archive
+        run: |
+          EXPORT_GENERATED_AT="$(git show -s --format=%cI "${{ github.sha }}")"
+          python -m tools.openva.deterministic_zip \
+            "$RUNNER_TEMP/mcp-wheelhouse" \
+            release-downloads/openva-mcp-wheelhouse-linux-x86_64-py312.zip \
+            --generated-at "$EXPORT_GENERATED_AT"
+      - name: Verify wheelhouse archive installs after extraction
+        run: |
+          mkdir -p "$RUNNER_TEMP/wh-extract"
+          (cd "$RUNNER_TEMP/wh-extract" && unzip -q "$GITHUB_WORKSPACE/release-downloads/openva-mcp-wheelhouse-linux-x86_64-py312.zip")
+          python -m venv "$RUNNER_TEMP/openva-mcp-test2"
+          "$RUNNER_TEMP/openva-mcp-test2/bin/pip" install --no-index \
+            --find-links "$RUNNER_TEMP/wh-extract" openva-mcp==0.1.0
+          "$RUNNER_TEMP/openva-mcp-test2/bin/openva-mcp" \
+            --snapshot "$RUNNER_TEMP/agent-exports" --verify
       - name: Stage MCP Registry metadata
         run: cp integrations/mcp/openva_mcp/manifest/server.json release-downloads/
-      - name: Build release coherence manifest
+      - name: Build release coherence manifest from root-level assets
         run: |
           python -m tools.openva.release_coherence build \
             --asset-dir release-downloads \
-            --agent-index release-downloads/agent-exports/public/openva-agent-index.json \
-            --agent-archive openva-agent-exports.zip \
+            --agent-archive release-downloads/openva-agent-exports.zip \
             --release-tag "${{ github.ref_name }}" \
             --commit-sha "${{ github.sha }}" \
             --published-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-      - name: Check release coherence manifest
+      - name: Verify release coherence manifest and agent-export archive
         run: |
           python -m tools.openva.release_coherence check \
             --asset-dir release-downloads \
@@ -126,6 +149,6 @@ jobs:
             release-downloads/openva-release-downloads-manifest.json
             release-downloads/openva-release-manifest.json
             release-downloads/openva-agent-exports.zip
+            release-downloads/openva-mcp-wheelhouse-linux-x86_64-py312.zip
             release-downloads/server.json
             release-downloads/SHA256SUMS
-            release-downloads/mcp-wheelhouse/*

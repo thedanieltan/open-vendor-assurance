@@ -275,6 +275,7 @@ class Snapshot:
             return self._cache[rel_path]
         document = _load_json(self.source, rel_path)
         _require_supported_schema(document, rel_path)
+        self._require_bound_snapshot(document, rel_path)
         computed = payload_digest(document)
         declared = str(document.get("snapshot", {}).get("digest", ""))
         expected = self._expected_digest(rel_path)  # raises if not linked
@@ -287,6 +288,29 @@ class Snapshot:
         self.from_cache = self.from_cache or bool(getattr(self.source, "last_read_from_cache", False))
         self._cache[rel_path] = document
         return document
+
+    def _require_bound_snapshot(self, document: dict[str, Any], rel_path: str) -> None:
+        """Bind a child export to the root snapshot metadata.
+
+        The payload digest excludes the snapshot block, so two files with the
+        same payload but different snapshot identity hash identically. Comparing
+        commit_sha and generated_at to the root closes that gap: a cached child
+        from an older snapshot with otherwise-identical payload fails closed.
+        """
+        snapshot = document.get("snapshot")
+        if not isinstance(snapshot, dict):
+            raise SnapshotIntegrityError(f"{rel_path}: missing snapshot block")
+        for key in ("commit_sha", "generated_at", "digest"):
+            if not snapshot.get(key):
+                raise SnapshotIntegrityError(f"{rel_path}: snapshot.{key} missing")
+        if snapshot["commit_sha"] != self.commit_sha:
+            raise SnapshotIntegrityError(
+                f"{rel_path}: snapshot commit {snapshot['commit_sha']} does not match root {self.commit_sha}"
+            )
+        if snapshot["generated_at"] != self.generated_at:
+            raise SnapshotIntegrityError(
+                f"{rel_path}: snapshot generated_at {snapshot['generated_at']} does not match root {self.generated_at}"
+            )
 
     def vendors_index(self) -> dict[str, Any]:
         return self.load_verified(VENDORS_INDEX_FILE)
@@ -339,6 +363,9 @@ class Snapshot:
         for rel_path in list(INDEX_EXPORTS.values()) + list(self.vendor_export_paths().values()):
             document = _load_json(self.source, rel_path)
             _require_supported_schema(document, rel_path)
+            # Binding to the root snapshot is part of verification; a payload-
+            # identical child from another snapshot must not pass.
+            self._require_bound_snapshot(document, rel_path)
             self.from_cache = self.from_cache or bool(getattr(self.source, "last_read_from_cache", False))
             results.append(self._verify_one(rel_path, document, self._expected_digest(rel_path)))
         ok = all(item.match for item in results)

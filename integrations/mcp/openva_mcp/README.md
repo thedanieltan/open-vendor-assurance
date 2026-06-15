@@ -26,11 +26,19 @@ Windows PowerShell (one line):
 pip install ./adapters/python/openva_pack_reader ./adapters/python/openva_vendor_inventory_matcher ./integrations/mcp/openva_mcp
 ```
 
-Or install offline from a release wheelhouse (see the release assets):
+### Offline wheelhouse (Linux x86_64, CPython 3.12)
+
+The release attaches `openva-mcp-wheelhouse-linux-x86_64-py312.zip`, resolved on
+Ubuntu with CPython 3.12. It is **not** cross-platform. Extract it and install
+with no network:
 
 ```bash
-pip install --no-index --find-links <mcp-wheelhouse-dir> openva-mcp==0.1.0
+unzip openva-mcp-wheelhouse-linux-x86_64-py312.zip -d wheelhouse
+pip install --no-index --find-links wheelhouse openva-mcp==0.1.0
 ```
+
+On other operating systems or Python versions, install from the repository with
+normal online dependency resolution (the multi-package command above).
 
 After publication (not yet available), `pipx install openva-mcp` will work
 directly. Until then, the bare `pipx install openva-mcp` cannot resolve the
