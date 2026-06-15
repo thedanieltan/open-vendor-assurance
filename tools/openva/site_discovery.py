@@ -109,12 +109,11 @@ def _source_health_label(source: dict[str, Any]) -> str | None:
 
 
 def _latest_observed_at(source: dict[str, Any]) -> str | None:
-    health = source.get("source_health") or {}
-    verified = health.get("verified_at")
-    if verified:
-        return str(verified)
-    collected = (source.get("provenance") or {}).get("collected_at")
-    return str(collected) if collected else None
+    # Only a genuine observation timestamp counts. provenance.collected_at is
+    # catalog-curation metadata, not an observation, so it is never used here;
+    # an unobserved source renders the empty state instead.
+    verified = (source.get("source_health") or {}).get("verified_at")
+    return str(verified) if verified else None
 
 
 def _vendor_dataset_jsonld(
@@ -320,6 +319,24 @@ def render_agents_page(config: PublicationConfig, *, commit_sha: str, snapshot_d
   </body>
 </html>
 """
+
+
+HOMEPAGE_PLACEHOLDERS = ("{{OPENVA_HOME_URL}}", "{{OPENVA_AGENT_INDEX_URL}}")
+
+
+def render_index_html(template: str, config: PublicationConfig) -> str:
+    """Substitute publication-config URLs into the homepage template.
+
+    A minimal token replacement, not a template engine: the homepage's
+    OpenVA-owned metadata URLs (og:url, canonical, structured-data URLs, and the
+    agent-index download URL) come from config/publication.yaml so a host change
+    is a one-line config edit.
+    """
+    return (
+        template
+        .replace("{{OPENVA_HOME_URL}}", config.url(""))
+        .replace("{{OPENVA_AGENT_INDEX_URL}}", config.agent_index_url)
+    )
 
 
 def render_robots(config: PublicationConfig) -> str:

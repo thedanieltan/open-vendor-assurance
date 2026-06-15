@@ -1,3 +1,4 @@
+import dataclasses
 import json
 import re
 import subprocess
@@ -10,22 +11,27 @@ import yaml
 
 from tools.openva.pack import canonical_json, sha256_bytes
 from tools.openva.publication import load_publication_config
+from tools.openva.site_discovery import _latest_observed_at, render_index_html
 
 ROOT = Path(__file__).resolve().parents[1]
 SITEMAP_NS = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+PAGES_BASE_URL = "https://thedanieltan.github.io/open-vendor-assurance"
+INDEX_TEMPLATE = ROOT / "site" / "src" / "index.html"
 
 
 def build_site(out: Path) -> Path:
-    log = out.parent / f"{out.name}.build.log"
-    with log.open("w", encoding="utf-8") as handle:
-        result = subprocess.run(
-            [sys.executable, "site/build.py", "--out", str(out)],
-            cwd=ROOT,
-            stdout=handle,
-            stderr=subprocess.STDOUT,
-            check=False,
-        )
-    assert result.returncode == 0, log.read_text(encoding="utf-8")
+    # All std streams point at DEVNULL (always-valid OS handles) so Popen never
+    # tries to duplicate the parent's or a tmp-filesystem handle, which is not
+    # supported on every Windows mount.
+    result = subprocess.run(
+        [sys.executable, "site/build.py", "--out", str(out)],
+        cwd=ROOT,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    assert result.returncode == 0, f"site build failed (exit {result.returncode}) for {out}"
     return out
 
 
@@ -183,6 +189,75 @@ def test_well_known_digest_detects_drift(site):
     # A drifted payload must not validate against the committed digest.
     drifted = {**payload, "canonical_base_url": "https://evil.example"}
     assert manifest["snapshot"]["digest"] != sha256_bytes(canonical_json(drifted))
+
+
+def _ld_blocks(page: str) -> list[dict]:
+    return [json.loads(b) for b in re.findall(r'<script type="application/ld\+json">(.*?)</script>', page, re.DOTALL)]
+
+
+def _ld_by_type(page: str, type_name: str) -> dict:
+    return next(b for b in _ld_blocks(page) if b.get("@type") == type_name)
+
+
+def _meta_url(page: str, *, prop: str, attr: str) -> str:
+    match = re.search(rf'<meta property="{prop}" content="([^"]+)">', page)
+    if not match:
+        match = re.search(rf'<link rel="{attr}" href="([^"]+)">', page)
+    assert match, f"missing {prop}/{attr}"
+    return match.group(1)
+
+
+def test_homepage_metadata_matches_publication_configuration(site, config):
+    page = (site / "index.html").read_text(encoding="utf-8")
+    home_url = config.url("")
+
+    assert re.search(r'<meta property="og:url" content="([^"]+)">', page).group(1) == home_url
+    assert re.search(r'<link rel="canonical" href="([^"]+)">', page).group(1) == home_url
+    assert _ld_by_type(page, "WebSite")["url"] == home_url
+    catalog = _ld_by_type(page, "DataCatalog")
+    assert catalog["url"] == home_url
+    assert catalog["dataset"]["distribution"]["contentUrl"] == config.agent_index_url
+
+
+def test_homepage_metadata_changes_with_publication_configuration(config):
+    template = INDEX_TEMPLATE.read_text(encoding="utf-8")
+    alt = dataclasses.replace(config, canonical_base_url="https://example.org/openva")
+    rendered = render_index_html(template, alt)
+
+    assert 'content="https://example.org/openva/"' in rendered  # og:url
+    assert 'href="https://example.org/openva/"' in rendered  # canonical
+    assert '"url": "https://example.org/openva/"' in rendered  # WebSite / DataCatalog
+    assert "https://example.org/openva/public/openva-agent-index.json" in rendered
+    # The default Pages base URL must not survive when config points elsewhere.
+    assert PAGES_BASE_URL not in rendered
+
+
+def test_no_hardcoded_pages_base_url_in_template_or_generators():
+    for path in (
+        INDEX_TEMPLATE,
+        ROOT / "tools" / "openva" / "site_discovery.py",
+        ROOT / "site" / "build.py",
+    ):
+        assert PAGES_BASE_URL not in path.read_text(encoding="utf-8"), f"{path} hardcodes the Pages base URL"
+    # The base URL lives only in the canonical publication configuration.
+    assert PAGES_BASE_URL in (ROOT / "config" / "publication.yaml").read_text(encoding="utf-8")
+
+
+def test_latest_observed_at_ignores_provenance_collected_at():
+    only_provenance = {"provenance": {"collected_at": "2026-05-16T00:00:00Z"}}
+    assert _latest_observed_at(only_provenance) is None
+
+    observed = {"source_health": {"verified_at": "2026-05-24T12:00:00Z"}, "provenance": {"collected_at": "2026-05-16T00:00:00Z"}}
+    assert _latest_observed_at(observed) == "2026-05-24T12:00:00Z"
+
+
+def test_vendor_page_does_not_show_provenance_date_as_observation(site):
+    # Without a source-health snapshot, sources carry provenance.collected_at but
+    # no verified_at; that provenance date must not be rendered as an observation.
+    sources = json.loads((ROOT / "indexes" / "sources.json").read_text(encoding="utf-8"))["items"]
+    sample = next(s for s in sources if s.get("vendor_id") and (s.get("provenance") or {}).get("collected_at"))
+    page = (site / "vendors" / sample["vendor_id"] / "index.html").read_text(encoding="utf-8")
+    assert sample["provenance"]["collected_at"] not in page
 
 
 def test_publication_config_requires_all_fields(tmp_path):

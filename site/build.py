@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from tools.openva.publication import load_publication_config
-from tools.openva.site_discovery import build_discovery
+from tools.openva.site_discovery import build_discovery, render_index_html
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE_ROOT = Path(__file__).resolve().parent
@@ -551,8 +551,15 @@ def build_site(
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
 
+    config = load_publication_config()
     for path in (SITE_ROOT / "src").iterdir():
-        if path.is_file():
+        if not path.is_file():
+            continue
+        if path.name == "index.html":
+            # Homepage OpenVA-owned metadata URLs derive from publication config.
+            rendered = render_index_html(path.read_text(encoding="utf-8"), config)
+            (output_dir / path.name).write_text(rendered, encoding="utf-8", newline="\n")
+        else:
             shutil.copy2(path, output_dir / path.name)
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
 
@@ -574,7 +581,7 @@ def build_site(
     meta = compiled["meta"]
     build_discovery(
         output_dir,
-        load_publication_config(),
+        config,
         vendor_summaries=compiled["vendor_summaries"],
         vendor_details=compiled["vendor_details"],
         commit_sha=str(meta.get("commit_sha") or "unknown"),

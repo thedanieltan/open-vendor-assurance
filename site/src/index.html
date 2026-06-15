@@ -8,7 +8,8 @@
     <meta property="og:title" content="OpenVA — Open Vendor Assurance Catalog">
     <meta property="og:description" content="Find public assurance links for vendors: privacy notices, trust centers, DPA pages, security pages, and subprocessor lists.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://thedanieltan.github.io/open-vendor-assurance/">
+    <meta property="og:url" content="{{OPENVA_HOME_URL}}">
+    <link rel="canonical" href="{{OPENVA_HOME_URL}}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="OpenVA — Open Vendor Assurance Catalog">
     <meta name="twitter:description" content="Search public vendor assurance links for vendor due diligence and third-party risk review.">
@@ -29,7 +30,7 @@
         "@type": "WebSite",
         "name": "Open Vendor Assurance",
         "alternateName": "OpenVA",
-        "url": "https://thedanieltan.github.io/open-vendor-assurance/",
+        "url": "{{OPENVA_HOME_URL}}",
         "description": "Public-source-only registry of vendor-published assurance source references. Metadata only; not advice."
       }
     </script>
@@ -38,7 +39,7 @@
         "@context": "https://schema.org",
         "@type": "DataCatalog",
         "name": "Open Vendor Assurance",
-        "url": "https://thedanieltan.github.io/open-vendor-assurance/",
+        "url": "{{OPENVA_HOME_URL}}",
         "description": "Catalogue of public, vendor-published assurance source references such as privacy notices, DPAs, subprocessor lists, trust centers, security pages, and certification references.",
         "isAccessibleForFree": true,
         "license": "https://opensource.org/license/mit",
@@ -52,7 +53,7 @@
           "distribution": {
             "@type": "DataDownload",
             "encodingFormat": "application/json",
-            "contentUrl": "https://thedanieltan.github.io/open-vendor-assurance/public/openva-agent-index.json"
+            "contentUrl": "{{OPENVA_AGENT_INDEX_URL}}"
           }
         }
       }
