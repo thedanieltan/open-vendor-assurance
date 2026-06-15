@@ -32,7 +32,7 @@ strict_growth:
     - source.candidate_source_id
   report_only_is_merge_authority: false
   head_sha_mismatch: hard_fail
-  base_sha_mismatch: warning
+  base_sha_mismatch: failure
   evidence_timestamp_source:
     primary: eligibility_report.generated_at
     fallback: promotion_plan.generated_at

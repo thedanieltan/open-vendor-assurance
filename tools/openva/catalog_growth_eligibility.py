@@ -13,7 +13,7 @@ import yaml
 
 from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.automerge_lanes import load_policy
-from tools.openva.source_discovery import DEFAULT_SOURCE_TYPES
+from tools.openva.source_discovery import DEFAULT_SOURCE_TYPES, source_type_role
 from tools.openva.source_verification import ROOT, display_path
 from tools.openva.strict_growth_redirects import (
     REDIRECT_CANONICALIZED,
@@ -115,7 +115,13 @@ def sources_by_vendor(report: dict[str, Any]) -> dict[str, list[dict[str, Any]]]
     for vendor in report.get("vendors", []) or []:
         vendor_id = str(vendor.get("vendor_id") or "")
         for candidate in vendor.get("candidates", []) or []:
-            if vendor_id and isinstance(candidate, dict):
+            source_type = str(candidate.get("source_type_candidate") or "")
+            if (
+                vendor_id
+                and isinstance(candidate, dict)
+                and str(candidate.get("candidate_status") or "selected") == "selected"
+                and source_type_role(source_type, "qualifies_for_vendor_materialization")
+            ):
                 result[vendor_id].append(candidate)
     return dict(result)
 

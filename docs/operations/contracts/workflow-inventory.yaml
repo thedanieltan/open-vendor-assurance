@@ -74,6 +74,14 @@ public_workflows:
     writes_repository_state: true
     creates_prs: true
     merges_prs: false
+  - name: discovery-ledger-append-pr.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_dispatch, workflow_run]
+    permissions: {actions: read, contents: write, pull-requests: write}
+    writes_repository_state: true
+    creates_prs: true
+    merges_prs: false
   - name: coverage-audit.yml
     loop: catalog_quality
     status: core
@@ -105,6 +113,14 @@ public_workflows:
     permissions: {contents: write, pull-requests: write}
     writes_repository_state: true
     creates_prs: true
+    merges_prs: false
+  - name: machine-provisional-materialization.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_dispatch, schedule]
+    permissions: {actions: write, contents: read}
+    writes_repository_state: false
+    creates_prs: false
     merges_prs: false
   - name: release-candidate.yml
     loop: publication

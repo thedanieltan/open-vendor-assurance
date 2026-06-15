@@ -207,11 +207,11 @@ def test_blocked_inference_mode_wins_over_allowed_attestation():
     )
 
 
-def test_base_sha_mismatch_warns_but_does_not_hard_fail():
+def test_base_sha_mismatch_hard_fails():
     result = eligible_result(recorded_base_sha="older-base-sha")
 
-    assert result.eligible is True
-    assert "base_sha_mismatch_warning" in result.reasons
+    assert result.eligible is False
+    assert "base_sha_mismatch" in result.reasons
 
 
 def test_report_only_policy_cannot_enable_merge_authority():

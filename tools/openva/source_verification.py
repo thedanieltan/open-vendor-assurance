@@ -63,6 +63,22 @@ SOURCE_TYPE_KEYWORDS: dict[str, tuple[str, ...]] = {
         "audit",
         "trust",
     ),
+    "trust_center": (
+        "trust",
+        "trust center",
+        "trust centre",
+        "security",
+        "compliance",
+        "privacy",
+    ),
+    "status_page": (
+        "status",
+        "uptime",
+        "incident",
+        "availability",
+        "operational",
+        "service status",
+    ),
     "kyc_aml_statement": (
         "kyc",
         "aml",

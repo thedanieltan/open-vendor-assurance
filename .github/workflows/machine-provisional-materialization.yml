@@ -1,0 +1,81 @@
+name: machine-provisional-materialization
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 9 * * 3"
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: machine-provisional-materialization
+  cancel-in-progress: false
+
+jobs:
+  dispatch-machine-provisional-materialization:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require autonomous trigger token
+        env:
+          OPENVA_AUTOMERGE_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${OPENVA_AUTOMERGE_TOKEN:-}" ]; then
+            echo "::error::OPENVA_AUTOMERGE_TOKEN is required before scheduling autonomous machine-provisional materialization"
+            exit 1
+          fi
+      - name: Check live queue state
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN }}
+        run: |
+          set -euo pipefail
+          OPEN_MACHINE=$(gh pr list --state open --label machine-provisional --json number --jq 'length')
+          OPEN_CATALOG=$(gh pr list --state open --label catalog-growth --json number --jq 'length')
+          GLOBAL_PAUSE=$(gh issue list --state open --label openva-bot-paused --json number --jq 'length' 2>/dev/null || echo 0)
+          LANE_PAUSE=$(gh issue list --state open --label machine-provisional-paused --json number --jq 'length' 2>/dev/null || echo 0)
+          RECENT_BOT_PRS=$(gh pr list --state all --author "github-actions[bot]" --search "created:>$(date -u -d '24 hours ago' +%Y-%m-%d)" --json number --jq 'length')
+          EXISTING_PROMOTION_BRANCHES=$(gh pr list --state open --json headRefName --jq '[.[] | select(.headRefName | startswith("agent-candidate-promotion-"))] | length')
+          BASE_SHA=$(gh api repos/${{ github.repository }}/commits/main --jq '.sha')
+          if [ "$OPEN_MACHINE" != "0" ]; then
+            echo "::error::existing machine-provisional PR blocks scheduled materialization"
+            exit 1
+          fi
+          if [ "$OPEN_CATALOG" -ge "1" ]; then
+            echo "::error::catalog growth PR queue is full"
+            exit 1
+          fi
+          if [ "$GLOBAL_PAUSE" != "0" ]; then
+            echo "::error::global bot circuit breaker is active"
+            exit 1
+          fi
+          if [ "$LANE_PAUSE" != "0" ]; then
+            echo "::error::machine-provisional lane circuit breaker is active"
+            exit 1
+          fi
+          if [ "$RECENT_BOT_PRS" -ge "3" ]; then
+            echo "::error::recent bot PR limit blocks scheduled materialization"
+            exit 1
+          fi
+          if [ "$EXISTING_PROMOTION_BRANCHES" != "0" ]; then
+            echo "::error::existing candidate-promotion branch blocks scheduled materialization"
+            exit 1
+          fi
+          echo "Current main base SHA: $BASE_SHA"
+      - name: Dispatch machine-provisional materialization
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN }}
+        run: |
+          set -euo pipefail
+          OPEN_MACHINE=$(gh pr list --state open --label machine-provisional --json number --jq 'length')
+          OPEN_CATALOG=$(gh pr list --state open --label catalog-growth --json number --jq 'length')
+          if [ "$OPEN_MACHINE" != "0" ] || [ "$OPEN_CATALOG" -ge "1" ]; then
+            echo "::error::queue state changed before machine-provisional dispatch"
+            exit 1
+          fi
+          gh workflow run candidate-promotion-pr.yml \
+            --ref "${{ github.ref_name }}" \
+            -f promotion_plan_mode=machine-provisional-from-queue \
+            -f max_promotion_actions_per_pr=1 \
+            -f pr_title="Catalog: materialize one machine-provisional vendor"

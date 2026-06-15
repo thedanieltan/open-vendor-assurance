@@ -34,6 +34,15 @@ lanes:
     source_host_rate_limit: conservative
     vendor_domain_concurrency_limit: 1
     stale_evidence_max_age_hours: 4
+  - lane_id: discovery_ledger_append
+    max_open_prs: 1
+    max_actions_per_pr: 500
+    schedule_window: after_successful_catalog_growth_discovery
+    duplicate_pr_policy: do_not_create_duplicate_discovery_ledger_prs
+    base_change_policy: append_only_revalidate_before_merge
+    source_host_rate_limit: not_applicable
+    vendor_domain_concurrency_limit: 1
+    stale_evidence_max_age_hours: 24
 
   - lane_id: bot_chatops_hold
     max_open_prs: 0

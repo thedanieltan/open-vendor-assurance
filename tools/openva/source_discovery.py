@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Callable
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 import yaml
 
@@ -19,53 +20,108 @@ from tools.openva.source_verification import (
     title_from_sample,
 )
 
-DEFAULT_SOURCE_TYPES = (
-    "dpa",
-    "subprocessors_list",
-    "privacy_notice",
-    "security_page",
-    "compliance_page",
-)
+SOURCE_TYPE_REGISTRY: dict[str, dict[str, Any]] = {
+    "dpa": {
+        "candidate_paths": (
+            "/legal/data-processing-addendum",
+            "/data-processing-addendum",
+            "/legal/dpa",
+            "/dpa",
+            "/privacy/dpa.html",
+            "/privacy/dpa",
+        ),
+        "known_subdomain_patterns": (),
+        "qualifies_for_coverage": True,
+        "qualifies_for_vendor_materialization": True,
+        "qualifies_as_promotion_source_role": True,
+    },
+    "subprocessors_list": {
+        "candidate_paths": (
+            "/legal/subprocessors",
+            "/subprocessors",
+            "/legal/sub-processors",
+            "/sub-processors",
+            "/privacy/sub-processors.html",
+            "/privacy/subprocessors",
+        ),
+        "known_subdomain_patterns": (),
+        "qualifies_for_coverage": True,
+        "qualifies_for_vendor_materialization": True,
+        "qualifies_as_promotion_source_role": True,
+    },
+    "privacy_notice": {
+        "candidate_paths": (
+            "/privacy",
+            "/privacy-policy",
+            "/legal/privacy",
+            "/legal/privacy-policy",
+            "/privacy.html",
+        ),
+        "known_subdomain_patterns": (),
+        "qualifies_for_coverage": True,
+        "qualifies_for_vendor_materialization": True,
+        "qualifies_as_promotion_source_role": True,
+    },
+    "security_page": {
+        "candidate_paths": (
+            "/security",
+            "/trust",
+            "/trust-center",
+            "/trustcenter",
+            "/security.html",
+        ),
+        "known_subdomain_patterns": ("security",),
+        "qualifies_for_coverage": True,
+        "qualifies_for_vendor_materialization": True,
+        "qualifies_as_promotion_source_role": True,
+    },
+    "compliance_page": {
+        "candidate_paths": (
+            "/compliance",
+            "/security/compliance",
+            "/trust/compliance",
+            "/trust-center/compliance",
+            "/trustcenter/compliance",
+            "/compliance.html",
+        ),
+        "known_subdomain_patterns": (),
+        "qualifies_for_coverage": True,
+        "qualifies_for_vendor_materialization": False,
+        "qualifies_as_promotion_source_role": True,
+    },
+    "trust_center": {
+        "candidate_paths": (
+            "/trust",
+            "/trust-center",
+            "/trustcenter",
+            "/security",
+            "/security/trust",
+            "/security/compliance",
+        ),
+        "known_subdomain_patterns": ("trust", "trustcenter"),
+        "qualifies_for_coverage": True,
+        "qualifies_for_vendor_materialization": True,
+        "qualifies_as_promotion_source_role": True,
+    },
+    "status_page": {
+        "candidate_paths": (
+            "/status",
+            "/statuspage",
+            "/system-status",
+            "/service-status",
+            "/uptime",
+        ),
+        "known_subdomain_patterns": ("status",),
+        "qualifies_for_coverage": True,
+        "qualifies_for_vendor_materialization": False,
+        "qualifies_as_promotion_source_role": False,
+    },
+}
 
+DEFAULT_SOURCE_TYPES = tuple(SOURCE_TYPE_REGISTRY)
 DISCOVERY_PATHS: dict[str, tuple[str, ...]] = {
-    "dpa": (
-        "/legal/data-processing-addendum",
-        "/data-processing-addendum",
-        "/legal/dpa",
-        "/dpa",
-        "/privacy/dpa.html",
-        "/privacy/dpa",
-    ),
-    "subprocessors_list": (
-        "/legal/subprocessors",
-        "/subprocessors",
-        "/legal/sub-processors",
-        "/sub-processors",
-        "/privacy/sub-processors.html",
-        "/privacy/subprocessors",
-    ),
-    "privacy_notice": (
-        "/privacy",
-        "/privacy-policy",
-        "/legal/privacy",
-        "/legal/privacy-policy",
-        "/privacy.html",
-    ),
-    "security_page": (
-        "/security",
-        "/trust",
-        "/trust-center",
-        "/trustcenter",
-        "/security.html",
-    ),
-    "compliance_page": (
-        "/compliance",
-        "/security/compliance",
-        "/trust/compliance",
-        "/trust-center/compliance",
-        "/trustcenter/compliance",
-        "/compliance.html",
-    ),
+    source_type: registry["candidate_paths"]
+    for source_type, registry in SOURCE_TYPE_REGISTRY.items()
 }
 
 UNAVAILABLE_REASON = {
@@ -74,6 +130,8 @@ UNAVAILABLE_REASON = {
     "privacy_notice": "distinct_public_url_not_identified",
     "security_page": "distinct_public_url_not_identified",
     "compliance_page": "distinct_public_url_not_identified",
+    "trust_center": "distinct_public_url_not_identified",
+    "status_page": "distinct_public_url_not_identified",
 }
 
 
@@ -102,6 +160,10 @@ def parse_source_types(value: str | None) -> tuple[str, ...]:
     if unknown:
         raise ValueError(f"unsupported source types: {', '.join(unknown)}")
     return source_types
+
+
+def source_type_role(source_type: str, role: str) -> bool:
+    return bool(SOURCE_TYPE_REGISTRY.get(source_type, {}).get(role, False))
 
 
 def fetcher_with_timeout(timeout: float) -> Callable[[str], FetchResult]:
@@ -140,6 +202,37 @@ def unavailable_source_types_for_vendor(vendor_id: str, root: Path = ROOT) -> se
     return result
 
 
+def unavailable_records_for_vendor(vendor_id: str, root: Path = ROOT) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for path in sorted((root / "data" / "vendors" / vendor_id / "unavailable_sources").glob("*.yaml")):
+        unavailable = load_yaml(path)
+        if isinstance(unavailable.get("source_type"), str):
+            records.append(unavailable)
+    return records
+
+
+def unavailable_lifecycle(record: dict[str, Any], *, today: date | None = None) -> str:
+    if record.get("status") in {"recovered", "superseded"}:
+        return str(record["status"])
+    today = today or date.today()
+    next_review_after = record.get("next_review_after")
+    if not next_review_after:
+        return "due_for_recheck"
+    try:
+        due = date.fromisoformat(str(next_review_after))
+    except ValueError:
+        return "due_for_recheck"
+    return "not_due" if today < due else "due_for_recheck"
+
+
+def not_due_unavailable_source_types(vendor_id: str, root: Path = ROOT) -> set[str]:
+    return {
+        str(record["source_type"])
+        for record in unavailable_records_for_vendor(vendor_id, root)
+        if unavailable_lifecycle(record) == "not_due"
+    }
+
+
 def base_urls_for_vendor(vendor: dict[str, Any]) -> list[str]:
     bases: list[str] = []
     for entrypoint in vendor.get("public_entrypoints", []) or []:
@@ -157,6 +250,13 @@ def candidate_urls_for(vendor: dict[str, Any], source_type: str) -> list[str]:
     for base in base_urls_for_vendor(vendor):
         for path in DISCOVERY_PATHS.get(source_type, ()):
             urls.append(f"{base}{path}")
+    for domain in vendor.get("official_domains", []) or []:
+        normalized_domain = str(domain).strip().lower().removeprefix("www.")
+        for label in SOURCE_TYPE_REGISTRY.get(source_type, {}).get("known_subdomain_patterns", ()):
+            base = f"https://{label}.{normalized_domain}"
+            urls.append(base)
+            for path in DISCOVERY_PATHS.get(source_type, ()):
+                urls.append(f"{base}{path}")
     return list(dict.fromkeys(urls))
 
 
@@ -168,8 +268,43 @@ def is_candidate_match(source_type: str, result: FetchResult) -> tuple[bool, dic
     return semantic.get("status") in {"strong", "weak", "not_evaluated_pdf_sample"}, semantic
 
 
-def candidate_source_id(vendor_id: str, source_type: str) -> str:
+TRACKING_QUERY_PREFIXES = ("utm_",)
+TRACKING_QUERY_KEYS = {"fbclid", "gclid", "msclkid"}
+
+
+def canonical_url_for_id(url: str) -> str:
+    parsed = urlparse(url)
+    scheme = (parsed.scheme or "https").lower()
+    host = parsed.hostname or parsed.netloc
+    try:
+        host = host.encode("idna").decode("ascii")
+    except UnicodeError:
+        host = host.lower()
+    host = host.lower()
+    port = parsed.port
+    netloc = host
+    if port and not ((scheme == "https" and port == 443) or (scheme == "http" and port == 80)):
+        netloc = f"{host}:{port}"
+    path = parsed.path or "/"
+    if path != "/":
+        path = path.rstrip("/")
+    query_items = [
+        (key, value)
+        for key, value in parse_qsl(parsed.query, keep_blank_values=True)
+        if key.lower() not in TRACKING_QUERY_KEYS and not key.lower().startswith(TRACKING_QUERY_PREFIXES)
+    ]
+    query = urlencode(sorted(query_items), doseq=True)
+    return urlunparse((scheme, netloc, path, "", query, ""))
+
+
+def url_digest(url: str) -> str:
+    return hashlib.sha256(canonical_url_for_id(url).encode("utf-8")).hexdigest()[:12]
+
+
+def candidate_source_id(vendor_id: str, source_type: str, url: str | None = None) -> str:
     suffix = source_type.replace("_", "-")
+    if url:
+        return f"{vendor_id}-{suffix}-{url_digest(url)}"
     return f"{vendor_id}-{suffix}-candidate"
 
 
@@ -185,30 +320,39 @@ def candidate_record(
     result: FetchResult,
     semantic: dict[str, Any],
     discovered_at: str,
-) -> dict[str, Any]:
+    ) -> dict[str, Any]:
     verification_source = {"source_url": url, "source_type": source_type}
     verification_status = classify_status(verification_source, result, semantic)
+    canonical_candidate_url = result.final_url if same_authority(url, result.final_url) else url
+    evidence = {
+        "page_title": title_from_sample(result.body_sample, result.content_type),
+        "matched_terms": semantic.get("matched_terms", []),
+        "final_url": result.final_url,
+        "http_status": result.http_status,
+        "content_type": result.content_type,
+        "semantic_status": semantic.get("status"),
+        "verification_status": verification_status,
+        "soft_404_detected": verification_status == "soft_not_found",
+    }
     return {
         "schema_version": "0.1.0",
-        "candidate_source_id": candidate_source_id(vendor_id, source_type),
+        "candidate_source_id": candidate_source_id(vendor_id, source_type, canonical_candidate_url),
         "vendor_id": vendor_id,
         "source_type_candidate": source_type,
         "candidate_url": url,
+        "requested_url": url,
+        "observed_final_url": result.final_url,
+        "canonical_candidate_url": canonical_candidate_url,
+        "candidate_status": "selected",
+        "selection_run_id": discovered_at,
+        "superseded_by_candidate_id": None,
+        "evidence_digest": evidence_digest(evidence),
         "discovery_method": "official_domain_crawl",
         "confidence": "likely" if semantic.get("status") == "strong" else "candidate",
         "requires_review": True,
         "discovered_at": discovered_at,
         "discovered_by": "agent",
-        "evidence": {
-            "page_title": title_from_sample(result.body_sample, result.content_type),
-            "matched_terms": semantic.get("matched_terms", []),
-            "final_url": result.final_url,
-            "http_status": result.http_status,
-            "content_type": result.content_type,
-            "semantic_status": semantic.get("status"),
-            "verification_status": verification_status,
-            "soft_404_detected": verification_status == "soft_not_found",
-        },
+        "evidence": evidence,
         "notes": "Candidate source discovered from official vendor domains. Not promoted to canonical source without review.",
         "not_advice": True,
     }
@@ -237,6 +381,95 @@ def unavailable_record(
     }
 
 
+def same_authority(candidate_url: str, final_url: str | None) -> bool:
+    candidate_host = urlparse(candidate_url).netloc.lower().removeprefix("www.")
+    final_host = urlparse(final_url or candidate_url).netloc.lower().removeprefix("www.")
+    return candidate_host == final_host
+
+
+def url_text_evidence(source_type: str, url: str, result: FetchResult) -> bool:
+    haystack = " ".join(
+        [
+            urlparse(url).path.replace("-", " ").replace("_", " "),
+            urlparse(result.final_url or "").path.replace("-", " ").replace("_", " "),
+            title_from_sample(result.body_sample, result.content_type) or "",
+        ]
+    ).lower()
+    terms = {
+        "dpa": ("dpa", "data processing"),
+        "subprocessors_list": ("subprocessor", "sub processor"),
+        "privacy_notice": ("privacy",),
+        "security_page": ("security", "trust"),
+        "compliance_page": ("compliance", "soc", "iso"),
+        "trust_center": ("trust", "security", "compliance"),
+        "status_page": ("status", "uptime", "incident"),
+    }.get(source_type, ())
+    return any(term in haystack for term in terms)
+
+
+def candidate_rank(source_type: str, url: str, result: FetchResult, semantic: dict[str, Any]) -> tuple[int, str]:
+    if result.http_status != 200:
+        return 0, "unavailable_or_mismatch"
+    status = str(semantic.get("status") or "")
+    authority = same_authority(url, result.final_url)
+    corroborated_pdf = (
+        status == "not_evaluated_pdf_sample"
+        and "pdf" in str(result.content_type or "").lower()
+        and url_text_evidence(source_type, url, result)
+    )
+    if status == "strong" and authority:
+        return 500, "strong_same_authority_canonical_url"
+    if status == "strong":
+        return 450, "strong_safe_redirect"
+    if corroborated_pdf:
+        return 400, "pdf_with_corroborating_title_path_evidence"
+    if status == "weak":
+        return 300, "weak_semantic_candidate"
+    return 0, "unavailable_or_mismatch"
+
+
+def evidence_digest(record: dict[str, Any]) -> str:
+    payload = json.dumps(record, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+def discovery_event(
+    *,
+    vendor_id: str,
+    source_type: str,
+    observation: dict[str, Any],
+    classification: str,
+    discovered_at: str,
+    discovery_run_id: str,
+) -> dict[str, Any]:
+    candidate_url = str(observation.get("candidate_url") or "")
+    return {
+        "schema_version": "0.1.0",
+        "discovery_event_id": evidence_digest(
+            {
+                "candidate_id": candidate_source_id(vendor_id, source_type, candidate_url),
+                "discovery_run_id": discovery_run_id,
+                "evidence_digest": evidence_digest(observation),
+                "classification": classification,
+            }
+        ).removeprefix("sha256:")[:32],
+        "candidate_id": candidate_source_id(vendor_id, source_type, candidate_url),
+        "vendor_id": vendor_id,
+        "source_type": source_type,
+        "origin": "source_discovery",
+        "candidate_url": candidate_url,
+        "evidence_digest": evidence_digest(observation),
+        "classification": classification,
+        "reason_codes": [str(observation.get("rank_reason") or classification)],
+        "retry_after": None,
+        "supersedes": None,
+        "discovered_at": discovered_at,
+        "discovery_run_id": discovery_run_id,
+        "policy_version": "source_discovery_registry_0.2.0",
+        "not_advice": True,
+    }
+
+
 def discover_for_vendor(
     vendor: dict[str, Any],
     root: Path = ROOT,
@@ -245,42 +478,84 @@ def discover_for_vendor(
     max_urls_per_type: int = 20,
 ) -> dict[str, Any]:
     vendor_id = str(vendor["vendor_id"])
-    existing_types = canonical_source_types_for_vendor(vendor_id, root) | unavailable_source_types_for_vendor(vendor_id, root)
+    existing_types = canonical_source_types_for_vendor(vendor_id, root) | not_due_unavailable_source_types(vendor_id, root)
     discovered_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    discovery_run_id = f"{vendor_id}-{discovered_at}"
     next_review_after = (date.today() + timedelta(days=90)).isoformat()
     candidates: list[dict[str, Any]] = []
     unavailable: list[dict[str, Any]] = []
     observations: list[dict[str, Any]] = []
+    events: list[dict[str, Any]] = []
 
     for source_type in source_types:
         if source_type in existing_types:
             continue
         checked_urls: list[str] = []
-        selected: dict[str, Any] | None = None
-        for url in candidate_urls_for(vendor, source_type)[:max_urls_per_type]:
+        candidate_urls = candidate_urls_for(vendor, source_type)[:max_urls_per_type]
+        ranked: list[tuple[int, int, str, str, FetchResult, dict[str, Any]]] = []
+        for index, url in enumerate(candidate_urls):
             checked_urls.append(url)
             result = fetcher(url)
             matched, semantic = is_candidate_match(source_type, result)
-            observations.append(
-                {
-                    "source_type": source_type,
-                    "candidate_url": url,
-                    "http_status": result.http_status,
-                    "final_url": result.final_url,
-                    "content_type": result.content_type,
-                    "semantic_status": semantic.get("status"),
-                    "verification_status": classify_status(
-                        {"source_url": url, "source_type": source_type},
-                        result,
-                        semantic,
-                    ),
-                    "matched_terms": semantic.get("matched_terms", []),
-                }
+            rank, rank_reason = candidate_rank(source_type, url, result, semantic)
+            observation = {
+                "source_type": source_type,
+                "candidate_url": url,
+                "http_status": result.http_status,
+                "final_url": result.final_url,
+                "content_type": result.content_type,
+                "semantic_status": semantic.get("status"),
+                "verification_status": classify_status(
+                    {"source_url": url, "source_type": source_type},
+                    result,
+                    semantic,
+                ),
+                "matched_terms": semantic.get("matched_terms", []),
+                "candidate_rank": rank,
+                "rank_reason": rank_reason,
+            }
+            observations.append(observation)
+            events.append(
+                discovery_event(
+                    vendor_id=vendor_id,
+                    source_type=source_type,
+                    observation=observation,
+                    classification=rank_reason,
+                    discovered_at=discovered_at,
+                    discovery_run_id=discovery_run_id,
+                )
             )
-            if matched:
-                selected = candidate_record(vendor_id, source_type, url, result, semantic, discovered_at)
-                break
-        if selected:
+            if matched and rank > 0:
+                ranked.append((rank, index, rank_reason, url, result, semantic))
+        if ranked:
+            rank, _index, rank_reason, url, result, semantic = sorted(
+                ranked,
+                key=lambda item: (-item[0], item[1]),
+            )[0]
+            selected = candidate_record(vendor_id, source_type, url, result, semantic, discovered_at)
+            selected["selection"] = {
+                "rank": rank,
+                "rank_reason": rank_reason,
+                "alternative_candidate_count": max(0, len(ranked) - 1),
+            }
+            selected["alternative_candidates"] = [
+                {
+                    "candidate_source_id": candidate_source_id(vendor_id, source_type, alternative_url),
+                    "candidate_status": "alternative",
+                    "candidate_url": alternative_url,
+                    "requested_url": alternative_url,
+                    "observed_final_url": alternative_result.final_url,
+                    "canonical_candidate_url": alternative_result.final_url or alternative_url,
+                    "candidate_rank": alternative_rank,
+                    "rank_reason": alternative_reason,
+                    "semantic_status": alternative_semantic.get("status"),
+                    "matched_terms": alternative_semantic.get("matched_terms", []),
+                    "http_status": alternative_result.http_status,
+                    "final_url": alternative_result.final_url,
+                }
+                for alternative_rank, _alternative_index, alternative_reason, alternative_url, alternative_result, alternative_semantic in ranked
+                if alternative_url != url
+            ]
             candidates.append(selected)
         else:
             unavailable.append(
@@ -298,6 +573,7 @@ def discover_for_vendor(
         "candidates": candidates,
         "unavailable_sources": unavailable,
         "observations": observations,
+        "discovery_events": events,
     }
 
 

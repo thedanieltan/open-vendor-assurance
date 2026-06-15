@@ -7,12 +7,68 @@ import subprocess
 from datetime import UTC, datetime
 
 from tools.openva import machine_provisional_automerge as mp
+from tools.openva.pack import canonical_json, sha256_bytes
 
 NOW = datetime(2026, 6, 20, 0, 0, 0, tzinfo=UTC)
 VENDOR_PATH = "data/vendors/okta/vendor.yaml"
 DECISION_PATH = "maintenance/machine-decisions/2026-06.ndjson"
 GENERATED = "indexes/vendors.json"
 LABELS = [mp.MARKER_LABEL, mp.MACHINE_PROVISIONAL_LABEL]
+
+
+def decision_evidence(**overrides):
+    evidence = {
+        "official_domain": "okta.com",
+        "candidate_source_id": "okta-security-page-a1b2c3d4",
+        "source_type": "security_page",
+        "candidate_url": "https://okta.com/security",
+        "http_status": 200,
+        "matched_terms": ["security"],
+        "final_url": "https://okta.com/security",
+        "name_supported_by_official_domain_metadata": True,
+        "source_host_authority": "vendor_controlled",
+        "adversarial_review": "clean",
+        "evidence_fresh": True,
+        "materialization_envelope_digest": "sha256:" + "a" * 64,
+    }
+    evidence.update(overrides)
+    return evidence
+
+
+def threshold_results(evidence, *, retrieval_ids=None, duplicate_ids=None):
+    retrieval_ids = retrieval_ids or ["retrieval-1:https://okta.com/security", "retrieval-2:https://okta.com/security"]
+    duplicate_ids = duplicate_ids or ["duplicate-collision:okta:okta.com"]
+    retrieval_claim = {
+        "required": 2,
+        "observed": 2,
+        "agreeing": True,
+        "evidence_ids": retrieval_ids,
+        "final_url": evidence.get("final_url"),
+        "candidate_url": evidence.get("candidate_url"),
+        "http_status": evidence.get("http_status"),
+    }
+    duplicate_claim = {
+        "maximum": 0.0,
+        "observed": 0.0,
+        "evidence_ids": duplicate_ids,
+        "candidate_vendor_id": "okta",
+        "official_domain": evidence.get("official_domain"),
+    }
+    return {
+        "official_entrypoint": "pass",
+        "name_supported_by_official_metadata": "pass",
+        "retrieval_attempts": {
+            **retrieval_claim,
+            "result_digest": sha256_bytes(canonical_json(retrieval_claim)),
+        },
+        "duplicate_collision_score": {
+            **duplicate_claim,
+            "result_digest": sha256_bytes(canonical_json(duplicate_claim)),
+        },
+        "source_host_authority": "pass",
+        "adversarial_review": "pass",
+        "evidence_freshness": "pass",
+    }
 
 
 def vendor_yaml(**overrides) -> str:
@@ -30,13 +86,25 @@ def vendor_yaml(**overrides) -> str:
 
 
 def decision_line(**overrides) -> str:
+    evidence = overrides.pop("evidence", decision_evidence())
+    thresholds = overrides.pop(
+        "thresholds",
+        {
+            "required_score": 1.0,
+            "actual_score": 1.0,
+            "results": threshold_results(evidence),
+        },
+    )
     record = {
         "decision_id": "okta-vendor-materialization",
         "subject_id": "okta",
         "decision": "materialize_provisional",
         "deciding_bot": "strict-growth-materializer",
         "discovery_bot": "catalog-growth-discovery",
+        "evidence": evidence,
         "not_before": "2026-06-15T00:00:00Z",  # past relative to NOW
+        "thresholds": thresholds,
+        "candidate_digest": "sha256:" + "b" * 64,
         "not_advice": True,
     }
     record.update(overrides)
@@ -122,3 +190,65 @@ def test_rejects_missing_decision_record():
     result = mp.check_machine_provisional_automerge(paths, LABELS, "BASE", "HEAD", loader=make_loader(), now=NOW)
     assert not result.eligible
     assert any("missing_machine_decision_record" in r for r in result.reasons)
+
+
+def test_rejects_forged_name_support_without_metadata():
+    evidence = decision_evidence(name_supported_by_official_domain_metadata=False)
+    loader = make_loader(decision_text=decision_line(evidence=evidence))
+
+    result = mp.check_machine_provisional_automerge(PATHS, LABELS, "BASE", "HEAD", loader=loader, now=NOW)
+
+    assert not result.eligible
+    assert "decision_threshold_recompute_failed:name_supported_by_official_metadata" in result.reasons
+
+
+def test_rejects_forged_retrieval_count_without_evidence_ids():
+    evidence = decision_evidence()
+    thresholds = {
+        "required_score": 1.0,
+        "actual_score": 1.0,
+        "results": threshold_results(evidence, retrieval_ids=["retrieval-1:https://okta.com/security"]),
+    }
+    loader = make_loader(decision_text=decision_line(evidence=evidence, thresholds=thresholds))
+
+    result = mp.check_machine_provisional_automerge(PATHS, LABELS, "BASE", "HEAD", loader=loader, now=NOW)
+
+    assert not result.eligible
+    assert "decision_threshold_evidence_missing:retrieval_attempts" in result.reasons
+
+
+def test_rejects_source_type_not_permitted_for_materialization():
+    evidence = decision_evidence(
+        source_type="status_page",
+        candidate_url="https://status.okta.com",
+        final_url="https://status.okta.com",
+    )
+    loader = make_loader(decision_text=decision_line(evidence=evidence))
+
+    result = mp.check_machine_provisional_automerge(PATHS, LABELS, "BASE", "HEAD", loader=loader, now=NOW)
+
+    assert not result.eligible
+    assert "decision_source_type_not_materialization:status_page" in result.reasons
+
+
+def test_rejects_source_host_authority_pass_on_unrelated_host():
+    evidence = decision_evidence(candidate_url="https://status.example.net", final_url="https://status.example.net")
+    loader = make_loader(decision_text=decision_line(evidence=evidence))
+
+    result = mp.check_machine_provisional_automerge(PATHS, LABELS, "BASE", "HEAD", loader=loader, now=NOW)
+
+    assert not result.eligible
+    assert "decision_threshold_recompute_failed:source_host_authority_url" in result.reasons
+
+
+def test_rejects_forged_duplicate_threshold_digest():
+    evidence = decision_evidence()
+    results = threshold_results(evidence)
+    results["duplicate_collision_score"]["result_digest"] = "sha256:forged"
+    thresholds = {"required_score": 1.0, "actual_score": 1.0, "results": results}
+    loader = make_loader(decision_text=decision_line(evidence=evidence, thresholds=thresholds))
+
+    result = mp.check_machine_provisional_automerge(PATHS, LABELS, "BASE", "HEAD", loader=loader, now=NOW)
+
+    assert not result.eligible
+    assert "decision_threshold_digest_mismatch:duplicate_collision_score" in result.reasons

@@ -16,7 +16,6 @@ from tools.openva.strict_growth_redirects import canonical_clean_reasons
 
 LANE = "automerge:strict-growth"
 INFORMATIONAL_REASONS = {
-    "base_sha_mismatch_warning",
     "eligibility_report_missing_used_promotion_plan_timestamp",
 }
 SOURCE_PREFLIGHT_FAIL_STATUSES = {
@@ -370,7 +369,7 @@ def check_strict_growth_eligibility(
     if not effective_recorded_base_sha:
         reasons.append("recorded_base_sha_missing")
     elif current_base_sha and current_base_sha != effective_recorded_base_sha:
-        reasons.append("base_sha_mismatch_warning")
+        reasons.append("base_sha_mismatch")
 
     timestamp, _source = evidence_timestamp(promotion_plan, eligibility_report, reasons)
     if timestamp is None:

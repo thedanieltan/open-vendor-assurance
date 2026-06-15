@@ -1,14 +1,41 @@
 import copy
 
+import pytest
 import yaml
 
 from tools.openva.candidate_promotion_actions import apply_candidate_promotions
+from tools.openva.materialization_envelope import build_envelope
 from tools.openva.promotion_planner import build_strict_growth_plan
 
 
 def write_yaml(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+
+
+def write_json(path, data):
+    import json
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def attach_envelope(action, root):
+    write_json(root / "vendor-candidate-discovery-report.json", {"report_type": "vendor_candidate_discovery_report"})
+    write_json(root / "source-discovery-report.json", {"report_type": "source_discovery_report"})
+    write_json(root / "catalog-growth-eligibility-report.json", {"report_type": "catalog_growth_eligibility_report"})
+    action["materialization_envelope"] = build_envelope(
+        action,
+        root=root,
+        artifact_paths={
+            "vendor_candidate_report": root / "vendor-candidate-discovery-report.json",
+            "source_discovery_report": root / "source-discovery-report.json",
+            "eligibility_report": root / "catalog-growth-eligibility-report.json",
+        },
+        generated_at="2099-06-14T00:00:00Z",
+        base_sha="b" * 40,
+    )
+    return action
 
 
 def reviewed_action():
@@ -50,6 +77,11 @@ def strict_growth_action():
                 "final_url": "https://candidate-a.example/security",
                 "http_status": 200,
                 "content_type": "text/html",
+                "name_supported_by_official_domain_metadata": True,
+                "retrieval_attempts": {"observed": 2, "agreeing": True},
+                "source_host_authority": "vendor_controlled",
+                "adversarial_review": "clean",
+                "evidence_fresh": True,
             },
         },
         "requires_human_review": False,
@@ -151,14 +183,12 @@ def test_apply_reviewed_candidate_promotion_skips_duplicate_source(tmp_path):
         {"schema_version": "0.1.0", "source_id": "example-dpa", "vendor_id": "example"},
     )
 
-    report = apply_candidate_promotions({"actions": [reviewed_action()]}, root=tmp_path)
-
-    assert report["summary"]["canonical_sources_written"] == 0
-    assert report["summary"]["skipped_actions"] == 1
+    with pytest.raises(ValueError, match="canonical source already exists"):
+        apply_candidate_promotions({"actions": [reviewed_action()]}, root=tmp_path)
 
 
 def test_apply_strict_growth_writes_vendor_source_artifact_and_change(tmp_path):
-    report = apply_candidate_promotions({"actions": [strict_growth_action()]}, root=tmp_path)
+    report = apply_candidate_promotions({"actions": [attach_envelope(strict_growth_action(), tmp_path)]}, root=tmp_path)
     vendor_path = tmp_path / "data/vendors/candidate-a/vendor.yaml"
     source_path = tmp_path / "data/vendors/candidate-a/sources/candidate-a-security-page.yaml"
     artifact_path = tmp_path / "data/vendors/candidate-a/artifacts/candidate-a-security-page.yaml"
@@ -177,7 +207,7 @@ def test_apply_strict_growth_writes_vendor_source_artifact_and_change(tmp_path):
     # WP36: machine materialization writes machine_provisional, never active.
     assert vendor["catalog_status"] == "machine_provisional"
     assert vendor["machine_generated"] is True
-    assert vendor["machine_decision_id"] == "candidate-a-vendor-materialization"
+    assert vendor["machine_decision_id"].startswith("candidate-a-materialization-")
     assert vendor["reversal"]["method"] == "remove"
     assert vendor["source_policy"]["public_sources_only"] is True
     assert source["source_id"] == "candidate-a-security-page"
@@ -194,7 +224,7 @@ def test_apply_strict_growth_writes_vendor_source_artifact_and_change(tmp_path):
     decisions = [_json.loads(line) for line in decision_files[0].read_text(encoding="utf-8").splitlines() if line.strip()]
     assert len(decisions) == 1
     decision = decisions[0]
-    assert decision["decision_id"] == "candidate-a-vendor-materialization"
+    assert decision["decision_id"].startswith("candidate-a-materialization-")
     assert decision["decision"] == "materialize_provisional"
     assert decision["subject_id"] == "candidate-a"
     assert decision["deciding_bot"] != decision["discovery_bot"]
@@ -212,7 +242,7 @@ def test_apply_strict_growth_preserves_canonicalized_final_url(tmp_path):
     action["source"]["evidence"]["redirect_decision"] = "canonicalize"
     action["source"]["evidence"]["redirect_reason"] = "redirect_canonicalized"
 
-    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
+    report = apply_candidate_promotions({"actions": [attach_envelope(action, tmp_path)]}, root=tmp_path)
     source = yaml.safe_load(
         (tmp_path / "data/vendors/candidate-a/sources/candidate-a-security-page.yaml").read_text(encoding="utf-8")
     )
@@ -231,11 +261,8 @@ def test_apply_strict_growth_rejects_unresolved_redirect_before_writes(tmp_path)
     action["source"]["evidence"]["verification_status"] = "redirected"
     action["source"]["evidence"]["final_url"] = "https://candidate-a.example/company/security"
 
-    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
-
-    assert report["summary"]["canonical_sources_written"] == 0
-    assert report["summary"]["skipped_actions"] == 1
-    assert "redirect_canonicalization_required" in report["skipped"][0]["reason"]
+    with pytest.raises(ValueError, match="redirect_canonicalization_required"):
+        apply_candidate_promotions({"actions": [action]}, root=tmp_path)
     assert not (tmp_path / "data/vendors/candidate-a/vendor.yaml").exists()
 
 
@@ -251,9 +278,17 @@ def test_apply_strict_growth_writes_multiple_sources_for_same_new_vendor(tmp_pat
         "final_url": "https://candidate-a.example/privacy",
         "http_status": 200,
         "content_type": "text/html",
+        "name_supported_by_official_domain_metadata": True,
+        "retrieval_attempts": {"observed": 2, "agreeing": True},
+        "source_host_authority": "vendor_controlled",
+        "adversarial_review": "clean",
+        "evidence_fresh": True,
     }
 
-    report = apply_candidate_promotions({"actions": [security, privacy]}, root=tmp_path)
+    report = apply_candidate_promotions(
+        {"actions": [attach_envelope(security, tmp_path), attach_envelope(privacy, tmp_path)]},
+        root=tmp_path,
+    )
 
     assert report["summary"]["promotion_actions_seen"] == 2
     assert report["summary"]["canonical_vendors_written"] == 1
@@ -270,23 +305,16 @@ def test_apply_strict_growth_rejects_missing_country(tmp_path):
     action = strict_growth_action()
     del action["vendor"]["headquarters_country_candidate"]
 
-    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
-
-    assert report["summary"]["canonical_vendors_written"] == 0
-    assert report["summary"]["skipped_actions"] == 1
-    assert "headquarters_country_candidate" in report["skipped"][0]["reason"]
+    with pytest.raises(ValueError, match="headquarters_country_candidate"):
+        apply_candidate_promotions({"actions": [action]}, root=tmp_path)
 
 
 def test_apply_strict_growth_rejects_advisory_page_title_before_writes(tmp_path):
     action = strict_growth_action()
     action["source"]["evidence"]["page_title"] = "Cloud Security | How Candidate A Keeps Your Data Safe"
 
-    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
-
-    assert report["summary"]["canonical_vendors_written"] == 0
-    assert report["summary"]["canonical_sources_written"] == 0
-    assert report["summary"]["skipped_actions"] == 1
-    assert "strict growth advisory wording detected: safe" in report["skipped"][0]["reason"]
+    with pytest.raises(ValueError, match="strict growth advisory wording detected: safe"):
+        apply_candidate_promotions({"actions": [action]}, root=tmp_path)
     assert not (tmp_path / "data/vendors/candidate-a/vendor.yaml").exists()
 
 
@@ -294,7 +322,7 @@ def test_apply_strict_growth_does_not_infer_coverage_claims_from_broad_title(tmp
     action = strict_growth_action()
     action["source"]["evidence"]["page_title"] = "Security and Trust Center"
 
-    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
+    report = apply_candidate_promotions({"actions": [attach_envelope(action, tmp_path)]}, root=tmp_path)
     source = yaml.safe_load(
         (tmp_path / "data/vendors/candidate-a/sources/candidate-a-security-page.yaml").read_text(encoding="utf-8")
     )
@@ -333,6 +361,8 @@ def test_strict_growth_batch_cap_prevents_applying_five_actions(tmp_path):
         },
         max_actions_per_plan=2,
     )
+    for action in plan["actions"]:
+        attach_envelope(action, tmp_path)
 
     report = apply_candidate_promotions(plan, root=tmp_path)
 

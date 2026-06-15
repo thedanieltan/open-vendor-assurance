@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import yaml
@@ -5,6 +6,7 @@ import yaml
 from tools.openva.source_discovery import (
     build_discovery_report,
     build_vendor_candidate_discovery_report,
+    candidate_source_id,
     discover_for_vendor,
 )
 from tools.openva.source_verification import FetchResult
@@ -232,3 +234,114 @@ def test_vendor_candidate_mode_respects_vendor_limit(tmp_path):
 
     assert report["summary"]["vendor_candidates_checked"] == 1
     assert report["vendors"][0]["vendor_id"] == "candidate-a"
+
+
+def test_discovery_ranks_strong_candidate_after_weak_first_hit():
+    vendor = vendor_record()
+    weak = "https://www.example.com/legal/data-processing-addendum"
+    strong = "https://www.example.com/data-processing-addendum"
+
+    result = discover_for_vendor(
+        vendor,
+        root=Path("/tmp/nonexistent-openva-root"),
+        fetcher=fetcher_for(
+            {
+                weak: "processor",
+                strong: "Data Processing Addendum processor controller",
+            }
+        ),
+        source_types=("dpa",),
+        max_urls_per_type=2,
+    )
+
+    assert len(result["candidates"]) == 1
+    candidate = result["candidates"][0]
+    assert candidate["candidate_url"] == strong
+    assert candidate["confidence"] == "likely"
+    assert candidate["selection"]["rank_reason"] == "strong_same_authority_canonical_url"
+    assert candidate["selection"]["alternative_candidate_count"] == 1
+    assert not candidate["candidate_source_id"].endswith("-candidate")
+    assert len(result["observations"]) == 2
+
+
+def test_due_unavailable_source_type_is_rediscovered(tmp_path):
+    vendor = vendor_record()
+    write_vendor(tmp_path, vendor)
+    unavailable_dir = tmp_path / "data/vendors/example/unavailable_sources"
+    unavailable_dir.mkdir(parents=True, exist_ok=True)
+    (unavailable_dir / "example-dpa.yaml").write_text(
+        "schema_version: 0.1.0\n"
+        "unavailable_source_id: example-dpa\n"
+        "vendor_id: example\n"
+        "source_type: dpa\n"
+        "status: not_identified\n"
+        "next_review_after: '2000-01-01'\n"
+        "not_advice: true\n",
+        encoding="utf-8",
+    )
+
+    result = discover_for_vendor(
+        vendor,
+        root=tmp_path,
+        fetcher=fetcher_for(
+            {"https://www.example.com/legal/data-processing-addendum": "Data Processing Addendum processor controller"}
+        ),
+        source_types=("dpa",),
+        max_urls_per_type=1,
+    )
+
+    assert len(result["candidates"]) == 1
+    assert result["unavailable_sources"] == []
+
+
+def test_registry_discovers_trust_center_and_status_page():
+    vendor = vendor_record()
+    result = discover_for_vendor(
+        vendor,
+        root=Path("/tmp/nonexistent-openva-root"),
+        fetcher=fetcher_for(
+            {
+                "https://www.example.com/trust": "Trust center security compliance privacy",
+                "https://status.example.com": "Status uptime incident operational availability",
+            }
+        ),
+        source_types=("trust_center", "status_page"),
+        max_urls_per_type=20,
+    )
+
+    found = {candidate["source_type_candidate"]: candidate for candidate in result["candidates"]}
+    assert found["trust_center"]["candidate_url"] == "https://www.example.com/trust"
+    assert found["status_page"]["candidate_url"] == "https://status.example.com"
+
+
+def test_write_discovery_outputs_appends_discovery_event_ledger(tmp_path):
+    vendor = vendor_record()
+    write_vendor(tmp_path, vendor)
+    discovery = discover_for_vendor(
+        vendor,
+        root=tmp_path,
+        fetcher=fetcher_for({"https://www.example.com/security": "Security encryption availability vulnerability"}),
+        source_types=("security_page",),
+        max_urls_per_type=1,
+    )
+
+    from tools.openva.discovery_ledger import append_events
+    from tools.openva.source_discovery import write_discovery_outputs
+
+    write_discovery_outputs(discovery, root=tmp_path)
+    assert not (tmp_path / "maintenance/discovery-events").exists()
+
+    append_events(discovery["discovery_events"], tmp_path / "maintenance/discovery-events")
+    event_files = sorted((tmp_path / "maintenance/discovery-events").glob("*.ndjson"))
+    assert len(event_files) == 1
+    events = [json.loads(line) for line in event_files[0].read_text(encoding="utf-8").splitlines()]
+    assert events[0]["candidate_id"] == discovery["candidates"][0]["candidate_source_id"]
+    assert events[0]["evidence_digest"].startswith("sha256:")
+    assert events[0]["discovery_event_id"]
+
+
+def test_candidate_source_id_normalizes_equivalent_urls():
+    first = candidate_source_id("example", "privacy_notice", "HTTPS://Example.TEST:443/privacy/?utm_source=x#top")
+    second = candidate_source_id("example", "privacy_notice", "https://example.test/privacy")
+
+    assert first == second
