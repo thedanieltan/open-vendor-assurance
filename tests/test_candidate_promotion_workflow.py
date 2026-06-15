@@ -82,6 +82,25 @@ def test_strict_growth_plan_preflight_runs_before_candidate_apply():
     assert "--current-base-sha" in block
 
 
+def test_strict_growth_plan_gets_immutable_materialization_envelope_before_selection():
+    text = workflow_text()
+    regenerate = text.index("- name: Regenerate strict-growth promotion plan")
+    attach = text.index("python -m tools.openva.materialization_envelope attach")
+    select = text.index("- name: Select candidate promotion plan")
+    block = text[regenerate:select]
+
+    assert regenerate < attach < select
+    assert "--promotion-plan strict-growth-promotion-plan.json \\" in block
+    assert "--vendor-candidate-report vendor-candidate-discovery-report.json \\" in block
+    assert "--source-discovery-report vendor-candidate-source-discovery-report.json \\" in block
+    assert "--eligibility-report catalog-growth-eligibility-report.json \\" in block
+    assert '--discovery-run-id "${{ github.run_id }}-${{ github.run_attempt }}" \\' in block
+    assert '--workflow-run-id "${{ github.run_id }}" \\' in block
+    assert '--workflow-attempt "${{ github.run_attempt }}" \\' in block
+    assert '--source-commit-sha "${{ github.sha }}" \\' in block
+    assert '--base-sha "${{ github.sha }}"' in block
+
+
 def test_candidate_promotion_commits_rebuilt_dist_outputs():
     text = workflow_text()
 

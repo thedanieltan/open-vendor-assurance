@@ -94,6 +94,30 @@ def unavailable(vendor_id: str = "example", source_type: str = "subprocessors_li
     }
 
 
+def test_candidate_planner_uses_exact_candidate_id_and_skips_alternatives(tmp_path: Path):
+    write_yaml(tmp_path / "data/vendors/example/vendor.yaml", vendor())
+    selected = candidate()
+    selected["candidate_source_id"] = "example-dpa-selected"
+    alternative = candidate()
+    alternative["candidate_source_id"] = "example-dpa-alternative"
+    alternative["candidate_status"] = "alternative"
+    alternative["evidence"] = {"http_status": 200, "matched_terms": []}
+    write_yaml(tmp_path / "data/vendors/example/candidate_sources/example-dpa-selected.yaml", selected)
+    write_yaml(tmp_path / "data/vendors/example/candidate_sources/example-dpa-alternative.yaml", alternative)
+    discovery_report = {
+        "report_type": "source_discovery_report",
+        "vendors": [{"vendor_id": "example", "candidates": [selected], "observations": []}],
+    }
+    discovery_path = tmp_path / "source-discovery-report.json"
+    discovery_path.write_text(json.dumps(discovery_report), encoding="utf-8")
+
+    plan = build_promotion_plan(root=tmp_path, discovery_report_path=discovery_path)
+    actions = {action["candidate_source_id"]: action for action in plan["actions"] if "candidate_source_id" in action}
+
+    assert actions["example-dpa-selected"]["action"] == "promote_candidate_source_for_review"
+    assert actions["example-dpa-alternative"]["action"] == "no_action_candidate_not_selected"
+
+
 def strict_eligibility_report() -> dict:
     return {
         "schema_version": "0.1.0",

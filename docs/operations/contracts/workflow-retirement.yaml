@@ -113,6 +113,18 @@ workflows:
     required_retirement_evidence: [replacement observation ledger append path, append-only and release-gate proof, validation suite pass]
     allowed_triggers_until_retired: [workflow_dispatch, workflow_run]
     write_permissions_allowed_until_retired: true
+  - name: discovery-ledger-append-pr.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: discovery_ledger_append
+    replacement_owner: discovery-ledger-append-pr.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [autonomous append-only discovery-ledger continuity path]
+    required_retirement_evidence: [replacement discovery ledger append path, append-only and release-gate proof, validation suite pass]
+    allowed_triggers_until_retired: [workflow_dispatch, workflow_run]
+    write_permissions_allowed_until_retired: true
   - name: source-repair-pr-cleanup.yml
     current_status: active
     inventory_status: core
@@ -173,6 +185,18 @@ workflows:
     required_retirement_evidence: [replacement controlled promotion PR path, strict-growth simulation, reviewed evidence compatibility proof]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: true
+  - name: machine-provisional-materialization.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: catalog_growth_promotion
+    replacement_owner: machine-provisional-materialization.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [scheduled machine-provisional materialization dispatcher]
+    required_retirement_evidence: [replacement machine-provisional scheduler, queue enforcement proof, validation suite pass]
+    allowed_triggers_until_retired: [workflow_dispatch, schedule]
+    write_permissions_allowed_until_retired: false
   - name: release-candidate.yml
     current_status: active
     inventory_status: core

@@ -30,6 +30,9 @@
     },
     "subject_type": { "enum": ["vendor", "source"] },
     "subject_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "subject_lineage_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "supersedes_decision_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "reapplies_after_rollback_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
     "decision": {
       "enum": ["materialize_provisional", "promote", "quarantine", "rollback", "reject", "defer"]
     },

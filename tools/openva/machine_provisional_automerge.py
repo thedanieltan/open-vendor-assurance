@@ -29,14 +29,27 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import PurePosixPath
 from typing import Any, Callable
+from urllib.parse import urlparse
 
 import yaml
+
+from tools.openva.pack import canonical_json, sha256_bytes
+from tools.openva.source_discovery import SOURCE_TYPE_REGISTRY
 
 MACHINE_PROVISIONAL_LABEL = "automerge:machine-provisional"
 MARKER_LABEL = "machine-provisional"
 DECISION_PREFIX = "maintenance/machine-decisions/"
 GENERATED_EXACT = {"openva-pack.json"}
 GENERATED_PREFIXES = ("indexes/", "dist/")
+REQUIRED_THRESHOLD_RESULTS = {
+    "official_entrypoint",
+    "name_supported_by_official_metadata",
+    "retrieval_attempts",
+    "duplicate_collision_score",
+    "source_host_authority",
+    "adversarial_review",
+    "evidence_freshness",
+}
 
 
 @dataclass(frozen=True)
@@ -88,6 +101,125 @@ def load_decisions_from_changed(
             record = json.loads(line)
             decisions[str(record.get("decision_id"))] = record
     return decisions
+
+
+def _sha256_like(value: Any) -> bool:
+    return isinstance(value, str) and value.startswith("sha256:") and len(value) > len("sha256:")
+
+
+def _host(value: Any) -> str:
+    parsed = urlparse(str(value or ""))
+    return (parsed.hostname or "").lower().rstrip(".")
+
+
+def _domain(value: Any) -> str:
+    return str(value or "").lower().rstrip(".")
+
+
+def _host_matches_domain(url: Any, domain: Any) -> bool:
+    host = _host(url)
+    clean_domain = _domain(domain)
+    return bool(host and clean_domain and (host == clean_domain or host.endswith("." + clean_domain)))
+
+
+def _recompute_threshold_reasons(decision: dict[str, Any], results: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    evidence = decision.get("evidence") or {}
+    if not isinstance(evidence, dict):
+        return ["decision_evidence_missing"]
+
+    source_type = str(evidence.get("source_type") or "")
+    if not SOURCE_TYPE_REGISTRY.get(source_type, {}).get("qualifies_for_vendor_materialization"):
+        reasons.append(f"decision_source_type_not_materialization:{source_type}")
+
+    if not _sha256_like(decision.get("candidate_digest")):
+        reasons.append("decision_candidate_digest_missing")
+    if not _sha256_like(evidence.get("materialization_envelope_digest")):
+        reasons.append("decision_materialization_envelope_digest_missing")
+
+    expected_pass_inputs = {
+        "official_entrypoint": bool(evidence.get("official_domain")),
+        "name_supported_by_official_metadata": evidence.get("name_supported_by_official_domain_metadata") is True,
+        "source_host_authority": evidence.get("source_host_authority") in {"vendor_controlled", "same_domain"},
+        "adversarial_review": evidence.get("adversarial_review") == "clean",
+        "evidence_freshness": evidence.get("evidence_fresh") is True,
+    }
+    for key, expected_pass in expected_pass_inputs.items():
+        if results.get(key) == "pass" and not expected_pass:
+            reasons.append(f"decision_threshold_recompute_failed:{key}")
+
+    if results.get("source_host_authority") == "pass" and not _host_matches_domain(
+        evidence.get("final_url") or evidence.get("candidate_url"), evidence.get("official_domain")
+    ):
+        reasons.append("decision_threshold_recompute_failed:source_host_authority_url")
+
+    retrieval = results.get("retrieval_attempts")
+    if isinstance(retrieval, dict):
+        required = int(retrieval.get("required") or 2)
+        observed = int(retrieval.get("observed") or 0)
+        evidence_ids = retrieval.get("evidence_ids")
+        if not isinstance(evidence_ids, list) or len(evidence_ids) < required or len(evidence_ids) < observed:
+            reasons.append("decision_threshold_evidence_missing:retrieval_attempts")
+        retrieval_claim = {
+            "required": required,
+            "observed": observed,
+            "agreeing": retrieval.get("agreeing") is True,
+            "evidence_ids": evidence_ids if isinstance(evidence_ids, list) else [],
+            "final_url": evidence.get("final_url"),
+            "candidate_url": evidence.get("candidate_url"),
+            "http_status": evidence.get("http_status"),
+        }
+        if retrieval.get("result_digest") != sha256_bytes(canonical_json(retrieval_claim)):
+            reasons.append("decision_threshold_digest_mismatch:retrieval_attempts")
+
+    duplicate = results.get("duplicate_collision_score")
+    if isinstance(duplicate, dict):
+        evidence_ids = duplicate.get("evidence_ids")
+        if not isinstance(evidence_ids, list) or not evidence_ids:
+            reasons.append("decision_threshold_evidence_missing:duplicate_collision_score")
+        duplicate_claim = {
+            "maximum": float(duplicate.get("maximum", 0.0)),
+            "observed": float(duplicate.get("observed", 1.0)),
+            "evidence_ids": evidence_ids if isinstance(evidence_ids, list) else [],
+            "candidate_vendor_id": decision.get("subject_id"),
+            "official_domain": evidence.get("official_domain"),
+        }
+        if duplicate.get("result_digest") != sha256_bytes(canonical_json(duplicate_claim)):
+            reasons.append("decision_threshold_digest_mismatch:duplicate_collision_score")
+
+    return reasons
+
+
+def threshold_attestation_reasons(decision: dict[str, Any]) -> list[str]:
+    thresholds = decision.get("thresholds") or {}
+    results = thresholds.get("results") if isinstance(thresholds, dict) else None
+    if not isinstance(results, dict):
+        return ["decision_threshold_results_missing"]
+    reasons: list[str] = []
+    missing = sorted(REQUIRED_THRESHOLD_RESULTS - set(results))
+    if missing:
+        reasons.append(f"decision_threshold_results_missing:{','.join(missing)}")
+    for key in (
+        "official_entrypoint",
+        "name_supported_by_official_metadata",
+        "source_host_authority",
+        "adversarial_review",
+        "evidence_freshness",
+    ):
+        if results.get(key) != "pass":
+            reasons.append(f"decision_threshold_failed:{key}")
+    retrieval = results.get("retrieval_attempts")
+    if not isinstance(retrieval, dict):
+        reasons.append("decision_threshold_failed:retrieval_attempts")
+    elif retrieval.get("observed", 0) < retrieval.get("required", 2) or retrieval.get("agreeing") is not True:
+        reasons.append("decision_threshold_failed:retrieval_attempts")
+    duplicate = results.get("duplicate_collision_score")
+    if not isinstance(duplicate, dict):
+        reasons.append("decision_threshold_failed:duplicate_collision_score")
+    elif float(duplicate.get("observed", 1.0)) > float(duplicate.get("maximum", 0.0)):
+        reasons.append("decision_threshold_failed:duplicate_collision_score")
+    reasons.extend(_recompute_threshold_reasons(decision, results))
+    return reasons
 
 
 def check_machine_provisional_automerge(
@@ -166,6 +298,7 @@ def check_machine_provisional_automerge(
                 reasons.append("decision_subject_mismatch")
             if decision.get("decision") != "materialize_provisional":
                 reasons.append(f"unexpected_decision:{decision.get('decision')}")
+            reasons.extend(threshold_attestation_reasons(decision))
             if decision.get("deciding_bot") == decision.get("discovery_bot"):
                 reasons.append("separation_of_duty:deciding_bot == discovery_bot")
             not_before = decision.get("not_before")

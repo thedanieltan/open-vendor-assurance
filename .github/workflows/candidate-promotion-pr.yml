@@ -189,6 +189,17 @@ jobs:
               --base-sha "${{ github.sha }}" \
               --max-promotion-actions-per-pr "$MAX_PROMOTION_ACTIONS_PER_PR"
           fi
+          python -m tools.openva.materialization_envelope attach \
+            --promotion-plan strict-growth-promotion-plan.json \
+            --vendor-candidate-report vendor-candidate-discovery-report.json \
+            --source-discovery-report vendor-candidate-source-discovery-report.json \
+            --eligibility-report catalog-growth-eligibility-report.json \
+            --output strict-growth-promotion-plan.json \
+            --discovery-run-id "${{ github.run_id }}-${{ github.run_attempt }}" \
+            --workflow-run-id "${{ github.run_id }}" \
+            --workflow-attempt "${{ github.run_attempt }}" \
+            --source-commit-sha "${{ github.sha }}" \
+            --base-sha "${{ github.sha }}"
       - name: Select candidate promotion plan
         id: reviewed_plan
         run: |

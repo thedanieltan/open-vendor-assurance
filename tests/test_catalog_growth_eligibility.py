@@ -299,6 +299,25 @@ def test_existing_vendor_is_rejected(tmp_path: Path):
     assert report["summary"]["strict_promote_ready_count"] == 0
 
 
+def test_status_page_alone_does_not_materialize_vendor(tmp_path: Path):
+    status = source()
+    status["source_type_candidate"] = "status_page"
+    status["candidate_source_id"] = "vendor-a-status-page-candidate"
+    status["candidate_url"] = "https://status.vendor-a.example"
+    status["evidence"]["final_url"] = "https://status.vendor-a.example"
+    status["evidence"]["matched_terms"] = ["status", "uptime"]
+
+    report = build_catalog_growth_eligibility(
+        vendor_report([vendor()]),
+        source_report([{"vendor_id": "vendor-a", "candidates": [status], "observations": []}]),
+        root=tmp_path,
+        generated_at="2026-05-26T00:00:00Z",
+    )
+
+    assert report["items"][0]["classification"] == REJECT_NO_PUBLIC_SOURCE
+    assert report["strict_promotions"] == []
+
+
 def test_writer_outputs_report_csv_and_markdown(tmp_path: Path):
     report = build_catalog_growth_eligibility(
         vendor_report([vendor(), vendor("vendor-b", "vendor-b.example")]),

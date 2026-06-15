@@ -11,6 +11,7 @@ import yaml
 
 from tools.openva.automerge_lanes import load_policy
 from tools.openva.catalog_growth_eligibility import DEFAULT_SOURCE_TYPE_PRIORITY
+from tools.openva.source_discovery import source_type_role
 from tools.openva.source_verification import ROOT, display_path
 from tools.openva.strict_growth_redirects import canonical_clean_reasons, redirect_metrics_for_actions
 
@@ -113,16 +114,15 @@ def verification_by_source_id(report: dict[str, Any] | None) -> dict[tuple[str, 
     return result
 
 
-def candidate_report_by_key(report: dict[str, Any] | None) -> dict[tuple[str, str], dict[str, Any]]:
+def candidate_report_by_key(report: dict[str, Any] | None) -> dict[str, dict[str, Any]]:
     if not report:
         return {}
-    result: dict[tuple[str, str], dict[str, Any]] = {}
+    result: dict[str, dict[str, Any]] = {}
     for vendor in report.get("vendors", []) or []:
         for candidate in vendor.get("candidates", []) or []:
-            vendor_id = candidate.get("vendor_id")
-            source_type = candidate.get("source_type_candidate")
-            if vendor_id and source_type:
-                result[(str(vendor_id), str(source_type))] = candidate
+            candidate_source_id = str(candidate.get("candidate_source_id") or "")
+            if candidate_source_id:
+                result[candidate_source_id] = candidate
     return result
 
 
@@ -130,7 +130,7 @@ def plan_for_candidate(
     path: Path,
     candidate: dict[str, Any],
     existing_types: set[tuple[str, str]],
-    discovery_candidates: dict[tuple[str, str], dict[str, Any]],
+    discovery_candidates: dict[str, dict[str, Any]],
     root: Path,
 ) -> dict[str, Any]:
     vendor_id = str(candidate["vendor_id"])
@@ -138,12 +138,20 @@ def plan_for_candidate(
     key = (vendor_id, source_type)
     evidence = candidate.get("evidence", {}) or {}
     semantic_terms = evidence.get("matched_terms", []) or []
-    report_candidate = discovery_candidates.get(key)
+    candidate_source_id = str(candidate.get("candidate_source_id") or "")
+    report_candidate = discovery_candidates.get(candidate_source_id)
     report_evidence = (report_candidate or {}).get("evidence", {}) if report_candidate else {}
     confidence = str(candidate.get("confidence", "candidate"))
     http_status = evidence.get("http_status") or report_evidence.get("http_status")
 
-    if key in existing_types:
+    candidate_status = str(candidate.get("candidate_status") or "selected")
+    if candidate_status != "selected":
+        action = "no_action_candidate_not_selected"
+        reason = f"Candidate source status is {candidate_status}; only selected candidates enter promotion planning."
+    elif not source_type_role(source_type, "qualifies_as_promotion_source_role"):
+        action = "no_action_source_type_not_promotable"
+        reason = f"Source type {source_type} is not a promotion source role."
+    elif key in existing_types:
         action = "no_action_existing_source_type"
         reason = "A canonical source record already exists for this vendor/source_type."
     elif confidence == "likely" and http_status == 200 and semantic_terms:

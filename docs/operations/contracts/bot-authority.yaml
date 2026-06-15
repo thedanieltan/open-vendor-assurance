@@ -201,6 +201,29 @@ lanes:
     token_permissions: {actions: read, contents: write, pull-requests: write}
     audit_artifacts: [observation ledger append plan summary, observation-ledger-delta.ndjson, append PR body]
     deny_by_default: true
+  - id: discovery_ledger_append
+    status: active
+    authority_level: 1
+    workflows: [discovery-ledger-append-pr.yml]
+    may_write_branches: true
+    may_open_prs: true
+    may_label_prs: true
+    allowed_labels: [discovery-ledger, automerge:observation]
+    allowed_label_actions: [add]
+    may_enable_auto_merge: false
+    may_merge_prs: false
+    may_write_catalog_truth: false
+    write_authority_explanation: >-
+      May open PRs appending discovery events under
+      maintenance/discovery-events/** only. Discovery remains report-only;
+      executor validates source workflow authenticity, append-only event rows,
+      duplicate event ids, deterministic ordering, path confinement, and
+      artifact provenance before PR creation.
+    allowed_paths: [maintenance/discovery-events/**]
+    required_labels_for_write_authority: []
+    token_permissions: {actions: read, contents: write, pull-requests: write}
+    audit_artifacts: [source-discovery-report.json, discovery ledger append summary, append PR body]
+    deny_by_default: true
   - id: catalog_quality
     status: active
     authority_level: 0
@@ -267,7 +290,7 @@ lanes:
   - id: catalog_growth_promotion
     status: active
     authority_level: 3
-    workflows: [candidate-promotion-pr.yml]
+    workflows: [candidate-promotion-pr.yml, machine-provisional-materialization.yml]
     may_write_branches: true
     may_open_prs: true
     may_label_prs: true
