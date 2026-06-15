@@ -87,13 +87,50 @@ class FetchResult:
 Fetcher = Callable[[str], FetchResult]
 
 
+# Robots access-result states (RFC-9309 informed). These drive whether this
+# fetch lane proceeds or assumes a complete disallow:
+# - success: 200 with parseable rules (or an empty no-rule file) -> proceed,
+#   per-URL rules (if any) govern;
+# - unavailable: robots absent (HTTP 4xx) -> proceed, no restriction;
+# - unreachable: HTTP 5xx, DNS / connection / TLS / timeout failure, or redirect
+#   overflow -> assume complete disallow, suppress ALL fetching;
+# - restrictive: 200 parseable but the root is disallowed for our agent ->
+#   proceed but the rules suppress most/all URLs;
+# - malformed_restrictive: 200 but fully unparseable -> OpenVA extension, treated
+#   as a complete disallow (suppress all), distinct from rule-based restrictive.
+ROBOTS_SUCCESS = "success"
+ROBOTS_UNAVAILABLE = "unavailable"
+ROBOTS_UNREACHABLE = "unreachable"
+ROBOTS_RESTRICTIVE = "restrictive"
+ROBOTS_MALFORMED_RESTRICTIVE = "malformed_restrictive"
+# States that mean "assume complete disallow": suppress every sitemap and
+# candidate fetch for the vendor.
+_ROBOTS_SUPPRESS_ALL = frozenset({ROBOTS_UNREACHABLE, ROBOTS_MALFORMED_RESTRICTIVE})
+
+
+@dataclass(frozen=True)
+class RobotsAccess:
+    """The outcome of fetching robots.txt: an explicit state, never collapsed."""
+
+    state: str
+    reason_code: str
+    sitemaps: tuple[str, ...]
+    policy: "RobotsPolicy | None"
+
+    @property
+    def suppress_all(self) -> bool:
+        return self.state in _ROBOTS_SUPPRESS_ALL
+
+
 @dataclass
 class DiscoveryOutcome:
     candidates: list[dict[str, str]] = field(default_factory=list)
     rejected: list[dict[str, str]] = field(default_factory=list)
-    robots_state: str = "unavailable"
+    robots_state: str = ROBOTS_UNAVAILABLE
+    robots_reason: str = ""
     # Versioned so a robots-evaluator change is a visible policy change.
     robots_parser: str = ROBOTS_PARSER_ID
+    sitemaps_attempted: int = 0
     events: list[dict[str, Any]] = field(default_factory=list)
 
 
@@ -282,12 +319,21 @@ def discover_sitemap_candidates(
         return outcome
     base = f"https://{official_domains[0].strip().lower().rstrip('.')}/"
 
-    robots_state, sitemap_urls, robots = _read_robots(base, fetcher)
-    outcome.robots_state = robots_state
+    access = _read_robots(base, fetcher)
+    outcome.robots_state = access.state
+    outcome.robots_reason = access.reason_code
+    robots = access.policy
+
+    if access.suppress_all:
+        # 5xx / DNS / connection / TLS / timeout / redirect-overflow / unparseable
+        # robots: assume a complete disallow and fetch NOTHING — no sitemaps, no
+        # candidate pages. The vendor is recorded with zero sitemaps attempted.
+        outcome.rejected.append({"url": base, "reason": f"discovery_suppressed:{access.reason_code}"})
+        return outcome
 
     # Default sitemap locations plus any declared in robots.
     candidate_sitemaps = [urljoin(base, "/sitemap.xml"), urljoin(base, "/sitemap_index.xml")]
-    candidate_sitemaps.extend(sitemap_urls)
+    candidate_sitemaps.extend(access.sitemaps)
 
     visited: set[str] = set()
     files_fetched = [0]
@@ -328,6 +374,8 @@ def discover_sitemap_candidates(
         seen.add(url)
         found_in[url] = sitemap_url
 
+    outcome.sitemaps_attempted = files_fetched[0]
+
     # deterministic order then cap
     ordered = sorted(seen)[: bounds.max_candidate_urls]
     for url in ordered:
@@ -344,18 +392,54 @@ def discover_sitemap_candidates(
     return outcome
 
 
-def _read_robots(base: str, fetcher: Fetcher) -> tuple[str, list[str], RobotsPolicy | None]:
+def _robots_error_reason(message: str) -> str:
+    """Map a fetch-boundary error to a bounded reason code (no raw detail)."""
+    if message.startswith("redirect_overflow"):
+        return "robots_redirect_overflow"
+    if message.startswith("transport_error"):
+        return "robots_transport_error"
+    if message.startswith("dns_") or "blocked_ip" in message:
+        return "robots_dns_error"
+    if message.startswith("request_deadline_exceeded"):
+        return "robots_timeout"
+    if message.startswith("response_too_large"):
+        return "robots_oversized"
+    return "robots_fetch_error"
+
+
+def _read_robots(base: str, fetcher: Fetcher) -> RobotsAccess:
+    """Fetch robots.txt and map the outcome to an explicit access state.
+
+    HTTP 4xx => absent/unavailable (proceed, no restriction). HTTP 5xx and every
+    transport failure (DNS, connection, TLS, timeout) or redirect overflow =>
+    unreachable (assume complete disallow). 200 with parseable rules => success
+    or, if the root is disallowed for our agent, restrictive. A fully unparseable
+    200 => malformed_restrictive (OpenVA extension). An empty 200 => success with
+    no restriction.
+    """
     url = urljoin(base, "/robots.txt")
     try:
         result = fetcher(url)
-    except Exception:
-        return "unavailable", [], None
-    if result.status != 200 or not result.body:
-        return "unavailable", [], None
-    robots = RobotsPolicy.parse(result.body.decode("utf-8", "replace"))
-    # "restrictive" if it disallows the root for our agent; still operating policy.
-    state = "restrictive" if not robots.can_fetch(USER_AGENT, base) else "found"
-    return state, list(robots.sitemaps), robots
+    except SitemapDiscoveryError as exc:  # SafeFetchError and bounded-fetch failures
+        return RobotsAccess(ROBOTS_UNREACHABLE, _robots_error_reason(str(exc)), (), None)
+    except Exception:  # any other unexpected fetch error: fail closed
+        return RobotsAccess(ROBOTS_UNREACHABLE, "robots_fetch_error", (), None)
+
+    status = int(result.status)
+    if 400 <= status <= 499:
+        return RobotsAccess(ROBOTS_UNAVAILABLE, f"robots_http_{status}", (), None)
+    if status != 200:
+        # 5xx (and any other non-2xx) -> assume complete disallow.
+        return RobotsAccess(ROBOTS_UNREACHABLE, f"robots_http_{status}", (), None)
+
+    robots = RobotsPolicy.parse((result.body or b"").decode("utf-8", "replace"))
+    if robots.malformed:
+        return RobotsAccess(
+            ROBOTS_MALFORMED_RESTRICTIVE, "robots_unparseable", tuple(robots.sitemaps), robots
+        )
+    if not robots.can_fetch(USER_AGENT, base):
+        return RobotsAccess(ROBOTS_RESTRICTIVE, "robots_root_disallowed", tuple(robots.sitemaps), robots)
+    return RobotsAccess(ROBOTS_SUCCESS, "robots_ok", tuple(robots.sitemaps), robots)
 
 
 def _discovery_event(
@@ -382,7 +466,11 @@ def _discovery_event(
     evidence_digest = sha256_bytes(canonical_json(evidence))
     return {
         "schema_version": "0.1.0",
-        "discovery_event_id": sha256_bytes(canonical_json([url, discovery_run_id]))[len("sha256:") : len("sha256:") + 32],
+        # Content-stable identity: the same locator for the same vendor yields the
+        # same event id across runs, so re-discovery is idempotent (the committed
+        # discovery-ledger append dedups on this id). discovery_run_id is recorded
+        # as a field but is NOT part of the identity.
+        "discovery_event_id": sha256_bytes(canonical_json(["sitemap", vendor_id, url]))[len("sha256:") : len("sha256:") + 32],
         "candidate_id": f"cand-sitemap-{sha256_bytes(canonical_json(url))[len('sha256:'): len('sha256:') + 12]}",
         "origin": "sitemap",
         "candidate_url": url,

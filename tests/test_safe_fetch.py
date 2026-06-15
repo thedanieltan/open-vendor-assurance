@@ -64,11 +64,25 @@ class FakeTransport:
         return self._responses[url]
 
 
-def _fetcher(transport, *, same_authority=None, **policy):
+class _Clock:
+    """Monotonic fake clock: returns queued values, repeating the last forever."""
+
+    def __init__(self, values):
+        self._values = list(values)
+        self._i = 0
+
+    def __call__(self):
+        value = self._values[min(self._i, len(self._values) - 1)]
+        self._i += 1
+        return value
+
+
+def _fetcher(transport, *, same_authority=None, clock=None, **policy):
     return SafeFetcher(
         transport,
         FetchPolicy(**policy) if policy else None,
         same_authority_domains=same_authority,
+        clock=clock,
     )
 
 
@@ -201,25 +215,71 @@ def test_redirect_overflow_is_refused():
 # --- size / timeout negatives ------------------------------------------------
 
 
-def test_oversized_robots_response_is_refused_while_streaming():
-    big = [b"x" * 1024] * 8  # 8 KiB streamed, cap 4 KiB
+def test_oversized_identity_response_is_refused_while_streaming():
+    big = [b"x" * 1024] * 8  # 8 KiB streamed, identity cap 4 KiB
+    served = _Resp(200, chunks=big)
     t = FakeTransport(
         dns={"vendor.example": ["93.184.216.34"]},
-        responses={"https://vendor.example/robots.txt": _Resp(200, chunks=big)},
+        responses={"https://vendor.example/robots.txt": served},
     )
     with pytest.raises(SafeFetchError) as exc:
-        _fetcher(t, max_response_bytes=4096).fetch("https://vendor.example/robots.txt")
+        _fetcher(t, max_decompressed_bytes=4096).fetch("https://vendor.example/robots.txt")
+    assert "response_too_large" in str(exc.value)
+    assert served.closed is True  # response closed on the limit failure
+
+
+def test_gzip_response_is_bounded_by_the_compressed_cap_below_the_decompressed_cap():
+    # 8 KiB gzip wire body: trips the 4 KiB compressed cap even though the 10 MB
+    # decompressed cap is far higher. This is the exact gap the split closes.
+    chunks = [b"x" * 1024] * 8
+    served = _Resp(200, {"Content-Encoding": "gzip"}, chunks=chunks)
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={"https://vendor.example/sitemap.xml.gz": served},
+    )
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t, max_compressed_bytes=4096, max_decompressed_bytes=10_000_000).fetch(
+            "https://vendor.example/sitemap.xml.gz"
+        )
+    assert "response_too_large" in str(exc.value)
+    assert served.closed is True
+
+
+def test_identity_body_of_the_same_size_passes_under_the_decompressed_cap():
+    chunks = [b"x" * 1024] * 8  # identical 8 KiB, but identity -> decompressed cap
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={"https://vendor.example/sitemap.xml": _Resp(200, chunks=chunks)},
+    )
+    result = _fetcher(t, max_compressed_bytes=4096, max_decompressed_bytes=10_000_000).fetch(
+        "https://vendor.example/sitemap.xml"
+    )
+    assert result.status == 200 and len(result.body) == 8192
+
+
+def test_gzip_magic_without_header_switches_to_the_compressed_cap():
+    chunks = [b"\x1f\x8b" + b"x" * 1022] + [b"x" * 1024] * 7  # gzip magic, no header
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={"https://vendor.example/sitemap.xml": _Resp(200, chunks=chunks)},
+    )
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t, max_compressed_bytes=4096, max_decompressed_bytes=10_000_000).fetch(
+            "https://vendor.example/sitemap.xml"
+        )
     assert "response_too_large" in str(exc.value)
 
 
-def test_declared_content_length_over_cap_refused_before_read():
-    served = _Resp(200, {"Content-Length": "10000000"}, body=b"unused")
+def test_declared_content_length_over_compressed_cap_refused_before_read():
+    served = _Resp(200, {"Content-Encoding": "gzip", "Content-Length": "10000000"}, body=b"unused")
     t = FakeTransport(
         dns={"vendor.example": ["93.184.216.34"]},
-        responses={"https://vendor.example/sitemap.xml": served},
+        responses={"https://vendor.example/sitemap.xml.gz": served},
     )
     with pytest.raises(SafeFetchError) as exc:
-        _fetcher(t, max_response_bytes=4096).fetch("https://vendor.example/sitemap.xml")
+        _fetcher(t, max_compressed_bytes=4096, max_decompressed_bytes=10_000_000).fetch(
+            "https://vendor.example/sitemap.xml.gz"
+        )
     assert "response_too_large" in str(exc.value)
 
 
@@ -230,8 +290,49 @@ def test_oversized_streamed_sitemap_without_content_length_is_refused():
         responses={"https://vendor.example/sitemap.xml": _Resp(200, chunks=huge)},
     )
     with pytest.raises(SafeFetchError) as exc:
-        _fetcher(t, max_response_bytes=1_000_000).fetch("https://vendor.example/sitemap.xml")
+        _fetcher(t, max_decompressed_bytes=1_000_000).fetch("https://vendor.example/sitemap.xml")
     assert "response_too_large" in str(exc.value)
+
+
+# --- whole-exchange deadline -------------------------------------------------
+
+
+def test_slow_trickle_aborts_on_the_whole_exchange_deadline():
+    # Every chunk is tiny (well under the byte cap) and no single read times out,
+    # but total elapsed time exceeds the deadline mid-stream. The injected clock
+    # stays within budget through resolution/open, then jumps past the deadline
+    # on the first streaming check.
+    served = _Resp(200, chunks=[b"x" * 16] * 50)
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={"https://vendor.example/sitemap.xml": served},
+    )
+    clock = _Clock([0, 0, 0, 0, 100])  # deadline=0+10; pre-stream checks at 0; stream at 100
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t, timeout_seconds=10, clock=clock).fetch("https://vendor.example/sitemap.xml")
+    assert "request_deadline_exceeded" in str(exc.value)
+    assert served.closed is True  # closed on the deadline failure
+
+
+def test_redirects_consume_the_shared_overall_deadline():
+    # Two redirect hops each stay within their per-op budget, but the SHARED
+    # deadline (never reset per hop) is exhausted before the third hop fetches.
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={
+            "https://vendor.example/a": _Resp(301, {"Location": "https://vendor.example/b"}),
+            "https://vendor.example/b": _Resp(301, {"Location": "https://vendor.example/c"}),
+            "https://vendor.example/c": _Resp(200, body=b"final"),
+        },
+    )
+    clock = _Clock([0, 1, 1, 1, 2, 2, 2, 100])  # deadline=10; hops a,b ok; hop c loop-top trips
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t, same_authority=["vendor.example"], timeout_seconds=10, clock=clock).fetch(
+            "https://vendor.example/a"
+        )
+    assert "request_deadline_exceeded" in str(exc.value)
+    # Hops a and b were fetched; c was never connected (deadline tripped first).
+    assert [u for u, _ in t.connected] == ["https://vendor.example/a", "https://vendor.example/b"]
 
 
 def test_open_timeout_fails_closed():

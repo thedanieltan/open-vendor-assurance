@@ -15,8 +15,11 @@ them directly:
   Allow/Disallow tie prefers Allow (least restrictive);
 - ``*`` matches any sequence, a trailing ``$`` anchors the path end;
 - an empty Disallow imposes no restriction;
-- percent-encoded unreserved octets are normalized before comparison; reserved
-  and non-ASCII octets are compared as percent-encoded.
+- comparison is octet-based (RFC 3986 / RFC 9309): raw non-ASCII characters in
+  both rule paths and target URIs are first encoded to their UTF-8 percent
+  octets, percent-encoded unreserved octets are then decoded, and reserved /
+  non-ASCII octets are compared as (upper-cased) percent-encoding. Specificity
+  (longest-match precedence) is measured in octets, not Python code points.
 
 OpenVA policy extension (NOT from RFC 9309): a present-but-unparseable robots
 file (directives present, none recognized) is treated as restrictive, distinct
@@ -31,24 +34,53 @@ import re
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
-PARSER_ID = "openva-robots.v2"
+# v3: raw non-ASCII characters are encoded to their UTF-8 percent octets before
+# comparison (in both rule paths and target URIs), and specificity is measured in
+# octets rather than Python code points.
+PARSER_ID = "openva-robots.v3"
 
 _UNRESERVED = set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~")
 _PCT = re.compile(r"%([0-9a-fA-F]{2})")
 
 
-def _normalize_percent(value: str) -> str:
-    """Decode percent-encoded unreserved octets; keep reserved/non-ASCII encoded.
+def _percent_encode_non_ascii(value: str) -> str:
+    """Encode every raw non-ASCII character as its UTF-8 percent octets.
 
-    RFC 3986 / RFC 9309 path comparison: %41 ('A') is equivalent to 'A', but a
-    reserved octet such as %2F ('/') stays encoded (uppercased).
+    A literal ``資`` becomes ``%E8%B3%87`` so it compares equal to a server URI
+    that is already percent-encoded. ASCII (including an existing ``%XX`` escape)
+    passes through untouched here and is canonicalized by ``_normalize_percent``.
+    """
+
+    out: list[str] = []
+    for char in value:
+        if ord(char) < 0x80:
+            out.append(char)
+        else:
+            out.append("".join(f"%{byte:02X}" for byte in char.encode("utf-8")))
+    return "".join(out)
+
+
+def _normalize_percent(value: str) -> str:
+    """Octet-canonical form: encode raw non-ASCII, then fold unreserved escapes.
+
+    RFC 3986 / RFC 9309 path comparison is octet-based: ``%41`` ('A') is
+    equivalent to 'A', a reserved octet such as ``%2F`` ('/') stays encoded
+    (upper-cased), and a raw non-ASCII character is equivalent to its UTF-8
+    percent octets (``資`` == ``%E8%B3%87``). Encoding raw non-ASCII first makes
+    the comparison symmetric whichever form the rule or the URI used.
     """
 
     def repl(match: re.Match[str]) -> str:
         char = chr(int(match.group(1), 16))
         return char if char in _UNRESERVED else "%" + match.group(1).upper()
 
-    return _PCT.sub(repl, value)
+    return _PCT.sub(repl, _percent_encode_non_ascii(value))
+
+
+def _octet_length(normalized: str) -> int:
+    """Length of an octet-canonical path in octets (each ``%XX`` is one octet)."""
+
+    return len(_PCT.sub("\x00", normalized))
 
 
 @dataclass(frozen=True)
@@ -64,8 +96,8 @@ def _compile(path: str) -> tuple[re.Pattern[str], int]:
     core = path[:-1] if end_anchor else path
     normalized = _normalize_percent(core)
     # RFC 9309 specificity is the octet length of the rule path (the end anchor
-    # is a meta-character, not a path octet).
-    length = len(normalized)
+    # is a meta-character, not a path octet); a wildcard ``*`` counts as one.
+    length = _octet_length(normalized)
     regex = "^" + re.escape(normalized).replace(r"\*", ".*") + ("$" if end_anchor else "")
     return re.compile(regex), length
 

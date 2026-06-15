@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -224,6 +226,18 @@ def sitemap_discovery_enabled(queue: dict[str, Any]) -> bool:
     return SITEMAP_DISCOVERY_MODE in (queue.get("discovery_modes", []) or [])
 
 
+def _normalize_reason(reason: str) -> str:
+    """A bounded rejection reason code with no raw page/parse detail."""
+    reason = str(reason or "")
+    if reason.startswith("malformed_sitemap_xml"):
+        return "malformed_sitemap_xml"
+    return reason[:60]
+
+
+def _bounded_reason_codes(rejected: list[dict[str, Any]], *, limit: int = 20) -> list[str]:
+    return sorted({_normalize_reason(r.get("reason", "")) for r in rejected if r.get("reason")})[:limit]
+
+
 def run_sitemap_source_discovery(
     queue: dict[str, Any],
     vendors: list[dict[str, Any]],
@@ -233,12 +247,16 @@ def run_sitemap_source_discovery(
     discovery_run_id: str,
     discovered_at: str,
 ) -> list[dict[str, Any]]:
-    """Invoke bounded sitemap discovery for queued vendors when the mode is on.
+    """Run bounded sitemap discovery for the GIVEN vendors when the mode is on.
 
-    Returns normalized discovery events (each valid under the existing
-    discovery-event ledger) ready for the append-only discovery lane. The events
-    carry zero promotion weight; they are candidates, not evidence. A disabled
-    mode yields nothing.
+    Returns one structured record per vendor — robots access state, the robots
+    parser id, sitemaps attempted, the zero-weight discovery events, the
+    discovered locator URLs, and bounded rejection reason codes — so the
+    scheduled command can both surface per-vendor execution metadata and feed the
+    locators into ordinary candidate verification. Events carry zero promotion
+    weight; they are candidates, not evidence. A disabled mode yields nothing.
+    Vendor selection/bounding is the caller's responsibility (see
+    ``select_rotation_vendors``); this processes exactly the vendors it is given.
 
     Pass ``fetcher`` to use one fetcher for every vendor (tests), or
     ``fetcher_factory(official_domains) -> Fetcher`` to bind a same-authority
@@ -251,26 +269,98 @@ def run_sitemap_source_discovery(
         return []
     if fetcher is None and fetcher_factory is None:
         raise ValueError("a fetcher or fetcher_factory is required")
-    max_vendors = int((queue.get("limits", {}) or {}).get("max_vendors_per_discovery_run", len(vendors)))
-    events: list[dict[str, Any]] = []
-    for vendor in vendors[:max_vendors]:
+    records: list[dict[str, Any]] = []
+    for vendor in vendors:
         official_domains = [str(d) for d in (vendor.get("official_domains") or []) if d]
         if not official_domains:
             continue
         vendor_fetcher = fetcher_factory(official_domains) if fetcher_factory is not None else fetcher
+        vendor_id = str(vendor.get("vendor_id") or "")
         outcome = discover_sitemap_candidates(
             official_domains,
             vendor_fetcher,
             discovery_run_id=discovery_run_id,
             discovered_at=discovered_at,
-            vendor_id=str(vendor.get("vendor_id") or "") or None,
+            vendor_id=vendor_id or None,
         )
         for event in outcome.events:
             failures = validate_event(event)
             if failures:
                 raise ValueError(f"sitemap discovery emitted an invalid event: {failures}")
-            events.append(event)
-    return events
+        records.append(
+            {
+                "vendor_id": vendor_id,
+                "official_domain": official_domains[0],
+                "robots_state": outcome.robots_state,
+                "robots_reason": outcome.robots_reason,
+                "robots_parser": outcome.robots_parser,
+                "sitemaps_attempted": outcome.sitemaps_attempted,
+                "candidate_count": len(outcome.candidates),
+                "rejected_count": len(outcome.rejected),
+                "rejection_reason_codes": _bounded_reason_codes(outcome.rejected),
+                "locators": [c["url"] for c in outcome.candidates],
+                "events": list(outcome.events),
+            }
+        )
+    return records
+
+
+# --- deterministic vendor rotation (item 4) ----------------------------------
+
+
+def _parse_discovered_at(discovered_at: str) -> datetime:
+    text = str(discovered_at or "").strip()
+    for fmt in ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%d"):
+        try:
+            dt = datetime.strptime(text, fmt)
+            return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt
+        except ValueError:
+            continue
+    raise ValueError(f"unrecognized discovered_at: {discovered_at!r}")
+
+
+def rotation_shard_count(vendor_count: int, max_vendors: int) -> int:
+    """How many cycles a full rotation takes: ceil(vendors / per-run bound)."""
+    if vendor_count <= 0 or max_vendors <= 0:
+        return 1
+    return max(1, math.ceil(vendor_count / max_vendors))
+
+
+def iso_week_shard_index(discovered_at: str, shard_count: int) -> int:
+    """Derived rotation cursor: ISO week of ``discovered_at`` modulo shard_count.
+
+    Derived (not committed) so the scheduled lane mutates no repository state
+    (PR-only posture) and a rerun of the same logical cycle selects the same
+    vendors — the key is the ISO week, never the run id, which changes on rerun.
+    """
+    if shard_count <= 0:
+        raise ValueError("shard_count must be positive")
+    return _parse_discovered_at(discovered_at).isocalendar()[1] % shard_count
+
+
+def select_rotation_vendors(
+    vendors: list[dict[str, Any]], *, max_vendors: int, discovered_at: str
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Bounded deterministic ISO-week stride rotation over the sorted catalog.
+
+    Each scheduled cycle selects one stride of the (already path-sorted) vendor
+    list; over ``shard_count`` consecutive cycles every vendor is covered, while
+    any single run stays bounded by ``max_vendors``. Stride membership
+    (``offset % shard_count``) keeps each vendor's assignment stable except at the
+    modulo seam, so adding one vendor does not reshuffle the whole schedule.
+    """
+    shard_count = rotation_shard_count(len(vendors), max_vendors)
+    shard_index = iso_week_shard_index(discovered_at, shard_count)
+    sharded = [vendor for offset, vendor in enumerate(vendors) if offset % shard_count == shard_index]
+    selected = sharded[:max_vendors]
+    meta = {
+        "shard_index": shard_index,
+        "shard_count": shard_count,
+        "iso_week": _parse_discovered_at(discovered_at).isocalendar()[1],
+        "eligible_vendor_count": len(vendors),
+        "selected_vendor_ids": [str(vendor.get("vendor_id") or "") for vendor in selected],
+    }
+    return selected, meta
 
 
 def load_catalog_vendors(root: Path = ROOT) -> list[dict[str, Any]]:
@@ -297,16 +387,47 @@ def _production_fetcher_factory() -> Any:
     bounds = load_bounds()
 
     def factory(official_domains: list[str]) -> Any:
-        # Wire cap is the decompressed ceiling; decode bounds the compressed and
-        # decompressed sizes more finely once the bytes are in hand.
+        # Distinct wire caps: gzip bodies are bounded by the compressed ceiling
+        # while streaming, identity bodies by the decompressed ceiling; the whole
+        # exchange is bounded by max_request_seconds.
         return build_safe_fetcher(
             official_domains,
             max_redirects=bounds.max_redirects,
             timeout_seconds=bounds.max_request_seconds,
-            max_response_bytes=bounds.max_decompressed_bytes,
+            max_compressed_bytes=bounds.max_compressed_bytes,
+            max_decompressed_bytes=bounds.max_decompressed_bytes,
         ).fetch
 
     return factory
+
+
+def _production_verify_fetcher_factory() -> Any:
+    """Ordinary candidate-verification fetcher used to fetch+classify locators."""
+    from tools.openva.source_verification import fetch_url
+
+    def factory(_official_domain: str) -> Any:
+        return fetch_url
+
+    return factory
+
+
+def _eligibility_outcome(vendor: dict[str, Any], verification: dict[str, Any]) -> str:
+    """Run the EXISTING eligibility classifier on verified locator candidates.
+
+    Returns the outcome label (strict_promote_ready / review_required /
+    reject_*). A verified locator can reach an eligibility outcome but still
+    cannot be promoted: materialization independence (distinct runs/modes) and
+    the reviewed quorum remain required, so a single-run sitemap locator carries
+    zero promotion weight.
+    """
+    from tools.openva.catalog_growth_eligibility import classify
+
+    sources = verification.get("candidates", []) or []
+    statuses = {
+        str((source.get("evidence") or {}).get("verification_status") or "") for source in sources
+    }
+    classification, _reasons, _strict, _rejections = classify(vendor, sources, statuses, [])
+    return classification
 
 
 def run_sitemap_discovery_command(
@@ -318,31 +439,112 @@ def run_sitemap_discovery_command(
     root: Path = ROOT,
     vendors: list[dict[str, Any]] | None = None,
     fetcher_factory: Any = None,
+    verify_fetcher_factory: Any = None,
 ) -> dict[str, Any]:
     """The scheduled-path entrypoint: run (or skip) bounded sitemap discovery.
 
     Always callable; it is a no-op that performs no network I/O when the
     ``sitemap_source_discovery`` mode is not enabled in the committed queue, so
     the workflow can invoke it unconditionally and the committed config decides
-    whether it is active. ``fetcher_factory`` is injected by tests; production
-    uses the SSRF-safe SafeFetcher bound per vendor to that vendor's domains.
+    whether it is active.
+
+    When enabled it (1) selects a bounded, deterministic ISO-week vendor shard so
+    successive cycles cover the whole catalog without starving any vendor;
+    (2) runs bounded sitemap discovery per vendor via the SSRF-safe SafeFetcher;
+    (3) feeds each discovered locator through ORDINARY candidate verification
+    (``verify_sitemap_locators``) and the EXISTING eligibility classifier, so a
+    locator becomes an eligible/deferred/rejected candidate without any new
+    mutation path and with zero promotion weight; and (4) records per-vendor
+    execution + rejection metadata and the rotation cursor in the report.
+    ``fetcher_factory`` / ``verify_fetcher_factory`` are injected by tests.
     """
+    from tools.openva.robots_policy import PARSER_ID as ROBOTS_PARSER_ID
+    from tools.openva.source_discovery import verify_sitemap_locators
+
     validate_queue(queue_path, root)  # fail closed on an incoherent queue/posture
     queue = load_json(queue_path)
     enabled = sitemap_discovery_enabled(queue)
+
+    rotation: dict[str, Any] = {
+        "shard_index": None,
+        "shard_count": None,
+        "iso_week": None,
+        "eligible_vendor_count": 0,
+        "selected_vendor_ids": [],
+    }
     events: list[dict[str, Any]] = []
+    per_vendor: list[dict[str, Any]] = []
+    verified_vendor_results: list[dict[str, Any]] = []
+    outcome_counts: Counter[str] = Counter()
+    robots_parser = ""
+
     if enabled:
         if vendors is None:
             vendors = load_catalog_vendors(root)
         if fetcher_factory is None:
             fetcher_factory = _production_fetcher_factory()
-        events = run_sitemap_source_discovery(
+        if verify_fetcher_factory is None:
+            verify_fetcher_factory = _production_verify_fetcher_factory()
+        max_vendors = int((queue.get("limits", {}) or {}).get("max_vendors_per_discovery_run", 0)) or len(vendors)
+        selected, rotation = select_rotation_vendors(
+            vendors, max_vendors=max_vendors, discovered_at=discovered_at
+        )
+        records = run_sitemap_source_discovery(
             queue,
-            vendors,
+            selected,
             fetcher_factory=fetcher_factory,
             discovery_run_id=discovery_run_id,
             discovered_at=discovered_at,
         )
+        for record in records:
+            events.extend(record["events"])
+            robots_parser = robots_parser or record["robots_parser"]
+            verified_count = 0
+            eligibility_outcome: str | None = None
+            if record["locators"]:
+                vendor = {
+                    "vendor_id": record["vendor_id"],
+                    "candidate_vendor_id": record["vendor_id"],
+                    "official_domains": [record["official_domain"]],
+                    "official_domain_candidate": record["official_domain"],
+                }
+                verification = verify_sitemap_locators(
+                    vendor,
+                    record["locators"],
+                    fetcher=verify_fetcher_factory(record["official_domain"]),
+                    discovered_at=discovered_at,
+                    discovery_run_id=f"{discovery_run_id}-{record['vendor_id']}",
+                )
+                verified_count = len(verification["candidates"])
+                eligibility_outcome = _eligibility_outcome(vendor, verification)
+                outcome_counts[eligibility_outcome] += 1
+                verified_vendor_results.append(
+                    {
+                        "vendor_id": record["vendor_id"],
+                        "candidates": verification["candidates"],
+                        "unavailable_sources": [],
+                        "observations": verification["observations"],
+                        "discovery_events": verification["discovery_events"],
+                    }
+                )
+            # Per-vendor execution + rejection metadata (item 5): identifiers and
+            # bounded codes only — never raw robots text, page content or snippets.
+            per_vendor.append(
+                {
+                    "vendor_id": record["vendor_id"],
+                    "official_domain": record["official_domain"],
+                    "robots_parser": record["robots_parser"],
+                    "robots_state": record["robots_state"],
+                    "robots_reason": record["robots_reason"],
+                    "sitemaps_attempted": record["sitemaps_attempted"],
+                    "candidate_count": record["candidate_count"],
+                    "rejected_count": record["rejected_count"],
+                    "rejection_reason_codes": record["rejection_reason_codes"],
+                    "verified_candidate_count": verified_count,
+                    "eligibility_outcome": eligibility_outcome,
+                }
+            )
+
     report = {
         "report_type": "sitemap_source_discovery_events",
         "schema_version": "0.1.0",
@@ -350,8 +552,17 @@ def run_sitemap_discovery_command(
         "non_advisory": True,
         "discovery_run_id": discovery_run_id,
         "discovered_at": discovered_at,
+        # Demonstrates the corrected robots evaluator was actually used.
+        "robots_parser": robots_parser or ROBOTS_PARSER_ID,
+        "rotation": rotation,
         "event_count": len(events),
         "events": events,
+        "per_vendor": per_vendor,
+        "verification": {
+            "verified_candidate_count": sum(v["verified_candidate_count"] for v in per_vendor),
+            "eligibility_outcomes": dict(sorted(outcome_counts.items())),
+            "vendors": verified_vendor_results,
+        },
     }
     output_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return report

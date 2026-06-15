@@ -238,3 +238,106 @@ def test_sitemap_declared_through_robots_is_followed():
         "https://vendor.example/declared.xml": {"body": _urlset("https://vendor.example/security")},
     })
     assert any(c["url"] == "https://vendor.example/security" for c in out.candidates)
+
+
+# --- robots access-result states (item 1): failures suppress all fetching ----
+
+
+def _robots_then_sitemaps(robots_behavior):
+    """A fetcher whose robots.txt behaves as given; every sitemap would yield a
+    candidate IF it were ever fetched. Records every requested URL."""
+
+    requested: list[str] = []
+
+    def fetch(url: str) -> FetchResult:
+        requested.append(url)
+        if url.endswith("/robots.txt"):
+            return robots_behavior(url)
+        return FetchResult(status=200, final_url=url, body=_urlset("https://vendor.example/trust"))
+
+    fetch.requested = requested  # type: ignore[attr-defined]
+    return fetch
+
+
+def _raising_robots(message):
+    def fetch(url: str) -> FetchResult:
+        fetch.requested.append(url)  # type: ignore[attr-defined]
+        if url.endswith("/robots.txt"):
+            raise SitemapDiscoveryError(message)
+        return FetchResult(status=200, final_url=url, body=_urlset("https://vendor.example/trust"))
+
+    fetch.requested = []  # type: ignore[attr-defined]
+    return fetch
+
+
+def _discover(fetch):
+    return discover_sitemap_candidates(DOMAINS, fetch, bounds=BOUNDS, **RUN)
+
+
+def test_robots_5xx_is_unreachable_and_suppresses_all_fetching():
+    fetch = _robots_then_sitemaps(lambda url: FetchResult(status=503, final_url=url, body=b""))
+    out = _discover(fetch)
+    assert out.robots_state == "unreachable"
+    assert out.robots_reason == "robots_http_503"
+    assert out.candidates == []
+    assert out.sitemaps_attempted == 0
+    # Only robots.txt was ever requested — no sitemap or candidate fetch happened.
+    assert all(u.endswith("/robots.txt") for u in fetch.requested)
+
+
+def test_robots_transport_failure_is_unreachable_and_suppresses_all():
+    fetch = _raising_robots("transport_error:TimeoutError")
+    out = _discover(fetch)
+    assert out.robots_state == "unreachable"
+    assert out.robots_reason == "robots_transport_error"
+    assert out.candidates == []
+    assert all(u.endswith("/robots.txt") for u in fetch.requested)
+
+
+def test_robots_timeout_is_unreachable_and_suppresses_all():
+    fetch = _raising_robots("request_deadline_exceeded")
+    out = _discover(fetch)
+    assert out.robots_state == "unreachable"
+    assert out.robots_reason == "robots_timeout"
+    assert out.candidates == []
+    assert all(u.endswith("/robots.txt") for u in fetch.requested)
+
+
+def test_robots_redirect_overflow_is_distinct_from_transport_failure():
+    fetch = _raising_robots("redirect_overflow")
+    out = _discover(fetch)
+    assert out.robots_state == "unreachable"
+    assert out.robots_reason == "robots_redirect_overflow"  # not collapsed with transport
+    assert out.candidates == []
+
+
+def test_robots_unparseable_is_malformed_restrictive_and_suppresses_all():
+    fetch = _robots_then_sitemaps(
+        lambda url: FetchResult(status=200, final_url=url, body=b"garbage: nonsense\nfoo: bar\n")
+    )
+    out = _discover(fetch)
+    assert out.robots_state == "malformed_restrictive"
+    assert out.candidates == []
+    assert out.sitemaps_attempted == 0
+    assert all(u.endswith("/robots.txt") for u in fetch.requested)
+
+
+def test_robots_4xx_absent_proceeds_with_no_restriction():
+    fetch = _robots_then_sitemaps(lambda url: FetchResult(status=403, final_url=url, body=b""))
+    out = _discover(fetch)
+    assert out.robots_state == "unavailable"
+    assert any(c["url"] == "https://vendor.example/trust" for c in out.candidates)
+
+
+def test_robots_empty_200_is_success_and_proceeds():
+    fetch = _robots_then_sitemaps(lambda url: FetchResult(status=200, final_url=url, body=b""))
+    out = _discover(fetch)
+    assert out.robots_state == "success"
+    assert any(c["url"] == "https://vendor.example/trust" for c in out.candidates)
+
+
+def test_outcome_records_parser_id_and_sitemaps_attempted():
+    out = run({"https://vendor.example/sitemap.xml": {"body": _urlset("https://vendor.example/trust")}})
+    assert out.robots_parser == "openva-robots.v3"  # the corrected evaluator was used
+    # Both default locations are probed: sitemap.xml (200) and sitemap_index.xml (404).
+    assert out.sitemaps_attempted == 2

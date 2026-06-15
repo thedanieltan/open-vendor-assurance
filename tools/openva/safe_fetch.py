@@ -17,10 +17,18 @@ every guarantee here is enforced at the boundary, never merely documented:
   safety, same-authority, DNS-resolved address). Redirects are capped;
 - requests carry a deterministic user agent and no cookies, Authorization, or
   other authenticated state;
-- the response body is read under a hard byte cap while streaming, so an
-  oversized (or oversized-compressed) body is abandoned before it is buffered;
-  a declared ``Content-Length`` over the cap is refused before the first read;
-- a per-request timeout bounds the whole exchange.
+- the response body is read under a hard byte cap while streaming, with a
+  SEPARATE cap for compressed (gzip) wire bytes and identity bytes: a gzip
+  response is bounded by ``max_compressed_bytes`` while it streams (so an
+  oversized-compressed body is abandoned before it is buffered past the
+  compressed limit, not after), and an identity response by
+  ``max_decompressed_bytes``; a declared ``Content-Length`` over the applicable
+  cap is refused before the first read;
+- a single monotonic deadline (``timeout_seconds``) bounds the WHOLE exchange —
+  resolution, connection, TLS, the entire redirect chain, headers and body
+  streaming — so a slow-trickle body whose individual socket reads each beat the
+  per-operation timeout still aborts once total elapsed time is exceeded. The
+  per-socket-operation timeout is clamped to the remaining deadline each hop.
 
 The transport (DNS + socket) is injected so tests drive the negatives through a
 fake transport rather than fabricated ``FetchResult`` objects, and so the SSRF
@@ -36,8 +44,9 @@ import http.client
 import ipaddress
 import socket
 import ssl
+import time
 from dataclasses import dataclass
-from typing import Iterator, Mapping, Protocol
+from typing import Callable, Iterator, Mapping, Protocol
 from urllib.parse import urljoin, urlsplit
 
 from tools.openva.sitemap_discovery import FetchResult, SitemapDiscoveryError
@@ -53,6 +62,7 @@ from tools.openva.url_safety import (
 USER_AGENT = "OpenVA-Discovery"
 _REDIRECT_STATUS = {301, 302, 303, 307, 308}
 _CHUNK = 65536
+_GZIP_MAGIC = b"\x1f\x8b"
 
 
 class SafeFetchError(SitemapDiscoveryError):
@@ -90,7 +100,10 @@ class Transport(Protocol):
 class FetchPolicy:
     max_redirects: int = 5
     timeout_seconds: float = 20.0
-    max_response_bytes: int = 5_000_000
+    # Distinct caps: gzip wire bytes are bounded by max_compressed_bytes WHILE
+    # streaming; identity (uncompressed) bytes by max_decompressed_bytes.
+    max_compressed_bytes: int = 5_000_000
+    max_decompressed_bytes: int = 50_000_000
     user_agent: str = USER_AGENT
 
 
@@ -103,19 +116,28 @@ class SafeFetcher:
         policy: FetchPolicy | None = None,
         *,
         same_authority_domains: list[str] | None = None,
+        clock: Callable[[], float] | None = None,
     ) -> None:
         self.transport = transport
         self.policy = policy or FetchPolicy()
         # None means "no same-authority restriction"; an empty list would reject
         # everything, which is never what a caller means, so treat it as None.
         self.same_authority_domains = list(same_authority_domains) if same_authority_domains else None
+        # Monotonic clock, injectable so tests drive elapsed time deterministically.
+        self._clock = clock or time.monotonic
 
     def fetch(self, url: str) -> FetchResult:
+        # One monotonic deadline for the ENTIRE exchange, including every redirect
+        # hop. It is never reset per hop, so a redirect chain consumes the same
+        # shared budget as resolution, connection, TLS, headers and body.
+        deadline = self._clock() + self.policy.timeout_seconds
         redirects = 0
         current = url
         while True:
+            self._remaining(deadline)  # abort if the budget is already spent
             self._validate_request_url(current)
             ip = self._resolve_and_pin(current)
+            remaining = self._remaining(deadline)
             host = normalize_host(urlsplit(current).hostname) or ""
             try:
                 response = self.transport.open(
@@ -123,11 +145,14 @@ class SafeFetcher:
                     ip=ip,
                     host=host,
                     headers=self._request_headers(),
-                    timeout=self.policy.timeout_seconds,
+                    # Clamp the per-socket-operation timeout to the remaining
+                    # budget so no single op can outlive the whole-exchange deadline.
+                    timeout=min(self.policy.timeout_seconds, remaining),
                 )
             except OSError as exc:  # connect/TLS/timeout failures fail closed
                 raise SafeFetchError(f"transport_error:{type(exc).__name__}") from exc
             try:
+                self._remaining(deadline)  # headers received within budget?
                 status = int(response.status)
                 location = response.headers.get("location")
                 if status in _REDIRECT_STATUS and location:
@@ -136,7 +161,9 @@ class SafeFetcher:
                         raise SafeFetchError("redirect_overflow")
                     current = urljoin(current, location)
                     continue  # re-validate the next hop from the top of the loop
-                body, encoding = self._read_capped(response)
+                body, encoding = self._read_capped(
+                    response, is_gzip=self._looks_gzip(response, current), deadline=deadline
+                )
                 return FetchResult(
                     status=status,
                     final_url=current,
@@ -146,6 +173,13 @@ class SafeFetcher:
                 )
             finally:
                 response.close()
+
+    def _remaining(self, deadline: float) -> float:
+        """Remaining budget; raise (fail closed) the moment the deadline passes."""
+        remaining = deadline - self._clock()
+        if remaining <= 0:
+            raise SafeFetchError("request_deadline_exceeded")
+        return remaining
 
     # --- request construction ------------------------------------------------
 
@@ -207,25 +241,43 @@ class SafeFetcher:
         assert pinned is not None
         return pinned
 
+    def _looks_gzip(self, response: RawResponse, url: str) -> bool:
+        """Decide the wire cap from signals available before the body is read."""
+        if (response.headers.get("content-encoding") or "").strip().lower() == "gzip":
+            return True
+        return urlsplit(url).path.lower().endswith(".gz")
+
     # --- bounded body read ---------------------------------------------------
 
-    def _read_capped(self, response: RawResponse) -> tuple[bytes, str | None]:
-        cap = self.policy.max_response_bytes
+    def _read_capped(self, response: RawResponse, *, is_gzip: bool, deadline: float) -> tuple[bytes, str | None]:
+        # gzip wire bytes are bounded by the compressed cap; identity bytes by
+        # the (larger) decompressed cap. A gzip body that lacks Content-Encoding
+        # but starts with the gzip magic is detected on the first chunk and the
+        # compressed cap is applied retroactively (the first 64 KiB is far below
+        # either cap, so nothing oversized is buffered before the switch).
+        gzip_body = is_gzip
+        cap = self.policy.max_compressed_bytes if gzip_body else self.policy.max_decompressed_bytes
         declared = response.headers.get("content-length")
-        if declared is not None:
-            try:
-                if int(declared) > cap:
-                    raise SafeFetchError("response_too_large")
-            except ValueError:
-                pass  # unparseable Content-Length: rely on the streaming cap
+        if declared is not None and declared.strip().isdigit() and int(declared) > cap:
+            raise SafeFetchError("response_too_large")
         buffer = bytearray()
+        first = True
         try:
             for chunk in response.stream(_CHUNK):
+                if first:
+                    first = False
+                    if not gzip_body and chunk[:2] == _GZIP_MAGIC:
+                        gzip_body = True
+                        cap = self.policy.max_compressed_bytes
                 buffer += chunk
                 if len(buffer) > cap:
-                    # Abandon before fully buffering: the compressed/wire bytes
-                    # are bounded here, decompressed bytes bounded downstream.
+                    # Abandon before buffering past the cap: gzip wire bytes trip
+                    # at the compressed bound, identity bytes at the decompressed
+                    # bound. decode_sitemap_bytes re-checks decompressed expansion.
                     raise SafeFetchError("response_too_large")
+                # Whole-exchange deadline also covers the streaming read loop, so a
+                # slow trickle whose chunks each beat the socket timeout still aborts.
+                self._remaining(deadline)
         except OSError as exc:  # mid-body timeout / reset fails closed
             raise SafeFetchError(f"transport_error:{type(exc).__name__}") from exc
         encoding = response.headers.get("content-encoding")
@@ -307,17 +359,21 @@ def build_safe_fetcher(
     *,
     max_redirects: int,
     timeout_seconds: float,
-    max_response_bytes: int,
+    max_compressed_bytes: int,
+    max_decompressed_bytes: int,
     transport: Transport | None = None,
+    clock: Callable[[], float] | None = None,
 ) -> SafeFetcher:
     """Construct the production fetcher bound to a vendor's own authority."""
     policy = FetchPolicy(
         max_redirects=max_redirects,
         timeout_seconds=timeout_seconds,
-        max_response_bytes=max_response_bytes,
+        max_compressed_bytes=max_compressed_bytes,
+        max_decompressed_bytes=max_decompressed_bytes,
     )
     return SafeFetcher(
         transport or SocketTransport(),
         policy,
         same_authority_domains=official_domains,
+        clock=clock,
     )

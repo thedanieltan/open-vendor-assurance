@@ -90,7 +90,7 @@ def test_absent_policy_is_not_malformed():
 
 
 def test_parser_id_is_versioned():
-    assert RobotsPolicy.parse("").parser_id == PARSER_ID == "openva-robots.v2"
+    assert RobotsPolicy.parse("").parser_id == PARSER_ID == "openva-robots.v3"
 
 
 def test_blank_line_does_not_detach_rule():
@@ -150,3 +150,32 @@ def test_percent_encoded_unreserved_normalizes_reserved_stays_encoded():
     assert p.can_fetch(UA, "/%41dmin/x") is False  # encoded form normalizes too
     assert p.can_fetch(UA, "/a%2Fb") is False  # reserved stays encoded, matches rule
     assert p.can_fetch(UA, "/a/b") is True  # decoded slash is a different path
+
+
+def test_raw_non_ascii_rule_matches_percent_encoded_uri_and_vice_versa():
+    # 資料 -> %E8%B3%87%E6%96%99 (RFC 3986 octet equivalence), both directions.
+    raw_rule = policy("User-agent: *\nDisallow: /資料\n")
+    assert raw_rule.can_fetch(UA, "/%E8%B3%87%E6%96%99/report") is False
+    assert raw_rule.can_fetch(UA, "/資料/report") is False
+    assert raw_rule.can_fetch(UA, "/other") is True
+
+    encoded_rule = policy("User-agent: *\nDisallow: /%E8%B3%87%E6%96%99\n")
+    assert encoded_rule.can_fetch(UA, "/資料/report") is False
+    assert encoded_rule.can_fetch(UA, "/%E8%B3%87%E6%96%99/report") is False
+
+
+def test_specificity_is_measured_in_octets_not_code_points():
+    # The non-ASCII Disallow is 1 slash + 6 UTF-8 octets = 7 octets, longer than
+    # the 5-octet Allow "/a/b/", so the Disallow wins by octet length. If length
+    # were counted in code points the rule path would be 3 (/ + 2 chars) and the
+    # Allow would wrongly win.
+    p = policy("User-agent: *\nAllow: /資料\nDisallow: /資料/x\n")
+    assert p.can_fetch(UA, "/資料/x/y") is False  # 9-octet Disallow wins
+    assert p.can_fetch(UA, "/資料/z") is True  # only the Allow matches
+
+
+def test_reserved_octet_stays_encoded_and_distinct_from_decoded():
+    # %2F (reserved '/') must NOT be folded into a literal slash.
+    p = policy("User-agent: *\nDisallow: /a%2Fb\n")
+    assert p.can_fetch(UA, "/a%2Fb") is False
+    assert p.can_fetch(UA, "/a/b") is True
