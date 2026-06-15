@@ -7,6 +7,12 @@ package version with the catalog snapshot. It is generated from the *actual*
 built asset files (their bytes are hashed), not from a hardcoded filename list,
 so it cannot drift from what was published.
 
+The agent-index digest is read from the agent-export bundle that is actually
+attached to the release (`agent-exports/public/openva-agent-index.json`), and
+its declared digest is recomputed from those bytes. The release commit must
+match the export snapshot commit. This immutable release export is distinct from
+the hosted site export, which may carry fresher observation input.
+
 It records only identities and digests. It makes no claim that any artifact was
 published to PyPI, an OCI registry, or the MCP Registry, and adds no signing or
 provenance attestation the workflow does not actually emit.
@@ -23,13 +29,18 @@ from pathlib import Path
 from typing import Any
 
 from tools.openva.agent_export import SCHEMA_VERSION as AGENT_EXPORT_SCHEMA_VERSION
-from tools.openva.agent_export import build_agent_exports
+from tools.openva.agent_export import payload_digest
 from tools.openva.indexes import EXPORT_SCHEMA_VERSION, ROOT, SCHEMA_VERSION
 
 MANIFEST_SCHEMA_VERSION = "0.1.0"
 MCP_PYPROJECT = ROOT / "integrations" / "mcp" / "openva_mcp" / "pyproject.toml"
 DEFAULT_MANIFEST_NAME = "openva-release-manifest.json"
 DEFAULT_CHECKSUMS_NAME = "SHA256SUMS"
+AGENT_INDEX_IN_ARCHIVE = "public/openva-agent-index.json"
+SELF_EXCLUDE = {DEFAULT_MANIFEST_NAME, DEFAULT_CHECKSUMS_NAME}
+# The agent-export tree is staged here only to be zipped; the zip is the release
+# asset, so the loose tree is not listed as a separate asset.
+STAGING_DIRS = {"agent-exports"}
 
 
 def sha256_file(path: Path) -> str:
@@ -45,14 +56,26 @@ def mcp_software_version() -> str:
     return str(data["project"]["version"])
 
 
-def agent_index_digest(commit_sha: str, generated_at: str, *, out_dir: Path | None = None) -> str:
-    """Build the agent export tree and return the root index digest."""
-    import tempfile
+def read_release_agent_index(agent_index_path: Path) -> dict[str, Any]:
+    """Read the staged agent index and recompute its digest from the bytes.
 
-    with tempfile.TemporaryDirectory() as tmp:
-        target = out_dir or Path(tmp)
-        summary = build_agent_exports(out_dir=target, commit_sha=commit_sha, generated_at=generated_at)
-        return str(summary["agent_index_digest"])
+    Fails if the declared digest does not recompute, so the manifest never
+    records a digest that is not provable from the attached file.
+    """
+    document = json.loads(agent_index_path.read_text(encoding="utf-8"))
+    snapshot = document.get("snapshot", {})
+    declared = str(snapshot.get("digest", ""))
+    recomputed = payload_digest(document)
+    if declared != recomputed:
+        raise ValueError(
+            f"{agent_index_path}: agent index digest does not recompute (declared {declared}, got {recomputed})"
+        )
+    return {
+        "digest": recomputed,
+        "observation_input": document.get("observation_input"),
+        "commit_sha": str(snapshot.get("commit_sha", "")),
+        "generated_at": str(snapshot.get("generated_at", "")),
+    }
 
 
 def build_provenance() -> dict[str, Any]:
@@ -71,7 +94,8 @@ def build_provenance() -> dict[str, Any]:
 def asset_rows(asset_dir: Path, *, exclude: set[str]) -> list[dict[str, Any]]:
     rows = []
     for path in sorted(asset_dir.rglob("*")):
-        if path.is_file() and path.name not in exclude:
+        rel_parts = path.relative_to(asset_dir).parts
+        if path.is_file() and path.name not in exclude and rel_parts[0] not in STAGING_DIRS:
             rows.append(
                 {
                     "name": path.relative_to(asset_dir).as_posix(),
@@ -88,10 +112,16 @@ def build_release_manifest(
     release_tag: str,
     commit_sha: str,
     published_at: str,
-    agent_digest: str,
+    agent_index_path: Path,
+    agent_archive_name: str,
     software_version: str | None = None,
 ) -> dict[str, Any]:
-    assets = asset_rows(asset_dir, exclude={DEFAULT_MANIFEST_NAME, DEFAULT_CHECKSUMS_NAME})
+    agent = read_release_agent_index(agent_index_path)
+    if commit_sha and agent["commit_sha"] and agent["commit_sha"] != commit_sha:
+        raise ValueError(
+            f"release commit {commit_sha} does not match export snapshot commit {agent['commit_sha']}"
+        )
+    assets = asset_rows(asset_dir, exclude=SELF_EXCLUDE)
     return {
         "manifest_schema_version": MANIFEST_SCHEMA_VERSION,
         "not_advice": True,
@@ -105,7 +135,16 @@ def build_release_manifest(
             "agent_export_schema_version": AGENT_EXPORT_SCHEMA_VERSION,
             "mcp_software_version": software_version or mcp_software_version(),
         },
-        "agent_index_digest": agent_digest,
+        # The immutable agent-export release bundle (distinct from the hosted
+        # site export, which may carry fresher observation input).
+        "agent_export": {
+            "archive_asset": agent_archive_name,
+            "index_path_in_archive": AGENT_INDEX_IN_ARCHIVE,
+            "index_digest": agent["digest"],
+            "observation_input": agent["observation_input"],
+            "snapshot_commit_sha": agent["commit_sha"],
+        },
+        "agent_index_digest": agent["digest"],
         "published_at": published_at,
         "build_provenance": build_provenance(),
         "distributions": {
@@ -118,10 +157,8 @@ def build_release_manifest(
     }
 
 
-def write_checksums(asset_dir: Path, *, exclude: set[str]) -> Path:
-    lines = []
-    for row in asset_rows(asset_dir, exclude=exclude):
-        lines.append(f"{row['sha256'].removeprefix('sha256:')}  {row['name']}")
+def write_checksums(asset_dir: Path, *, exclude: set[str] = SELF_EXCLUDE) -> Path:
+    lines = [f"{row['sha256'].removeprefix('sha256:')}  {row['name']}" for row in asset_rows(asset_dir, exclude=exclude)]
     path = asset_dir / DEFAULT_CHECKSUMS_NAME
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
@@ -145,12 +182,19 @@ def check_release_manifest(asset_dir: Path, manifest_path: Path) -> list[str]:
         failures.append(f"release manifest missing identities: {missing}")
     if manifest.get("not_advice") is not True:
         failures.append("release manifest must assert not_advice=true")
+
+    agent = manifest.get("agent_export", {})
+    for field in ("archive_asset", "index_path_in_archive", "index_digest", "observation_input", "snapshot_commit_sha"):
+        if field not in agent:
+            failures.append(f"release manifest agent_export missing {field}")
     if not str(manifest.get("agent_index_digest", "")).startswith("sha256:"):
         failures.append("release manifest agent_index_digest must be a sha256 digest")
-
-    # Every listed asset must exist and hash to the recorded digest.
+    # The agent-export archive named in the manifest must be a real asset.
     recorded = {row["name"]: row for row in manifest.get("assets", [])}
-    actual = {row["name"]: row for row in asset_rows(asset_dir, exclude={DEFAULT_MANIFEST_NAME, DEFAULT_CHECKSUMS_NAME})}
+    if agent.get("archive_asset") and agent["archive_asset"] not in recorded:
+        failures.append(f"agent export archive not among release assets: {agent.get('archive_asset')}")
+
+    actual = {row["name"]: row for row in asset_rows(asset_dir, exclude=SELF_EXCLUDE)}
     for name, row in recorded.items():
         if name not in actual:
             failures.append(f"release asset missing on disk: {name}")
@@ -168,6 +212,8 @@ def main() -> int:
 
     build = sub.add_parser("build", help="Build the release coherence manifest from built assets")
     build.add_argument("--asset-dir", type=Path, required=True)
+    build.add_argument("--agent-index", type=Path, required=True, help="Staged agent index JSON inside the asset tree")
+    build.add_argument("--agent-archive", required=True, help="Release asset name of the agent-export archive")
     build.add_argument("--release-tag", default=os.environ.get("GITHUB_REF_NAME", ""))
     build.add_argument("--commit-sha", default=os.environ.get("GITHUB_SHA", ""))
     build.add_argument("--published-at", required=True)
@@ -179,14 +225,14 @@ def main() -> int:
 
     args = parser.parse_args()
     if args.command == "build":
-        digest = agent_index_digest(args.commit_sha or "unknown", args.published_at)
-        write_checksums(args.asset_dir, exclude={DEFAULT_MANIFEST_NAME, DEFAULT_CHECKSUMS_NAME})
+        write_checksums(args.asset_dir)
         manifest = build_release_manifest(
             asset_dir=args.asset_dir,
             release_tag=args.release_tag,
             commit_sha=args.commit_sha or "unknown",
             published_at=args.published_at,
-            agent_digest=digest,
+            agent_index_path=args.agent_index,
+            agent_archive_name=args.agent_archive,
         )
         out = args.out or (args.asset_dir / DEFAULT_MANIFEST_NAME)
         out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")

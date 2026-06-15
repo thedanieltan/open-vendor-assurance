@@ -8,6 +8,7 @@ required_status_contexts:
   - validate / catalog-quality
   - validate / release-site
   - validate / full-suite
+  - validate / mcp-integration
 jobs:
   repository-integrity:
     owner_loop: repository_integrity
@@ -87,3 +88,16 @@ jobs:
       - tests/**
       - tools/**
       - services/**
+  mcp-integration:
+    owner_loop: publication
+    purpose: Run the MCP server protocol, hardening, conformance, and release-coherence tests with the real MCP SDK and local dependency chain installed, so the protocol tests are authoritative and never skipped.
+    commands:
+      - pip install -e adapters/python/openva_pack_reader
+      - pip install -e adapters/python/openva_vendor_inventory_matcher
+      - pip install -e "integrations/mcp/openva_mcp[dev]"
+      - pytest -q tests/test_openva_mcp.py tests/test_openva_mcp_protocol.py tests/test_openva_mcp_hardening.py tests/test_openva_mcp_metadata.py tests/test_matching_conformance.py tests/test_release_coherence.py
+    protects:
+      - integrations/mcp/**
+      - adapters/python/openva_vendor_inventory_matcher/**
+      - adapters/python/openva_pack_reader/**
+      - tools/openva/release_coherence.py

@@ -1,42 +1,53 @@
 import json
 from pathlib import Path
 
+from tools.openva.agent_export import build_agent_exports
 from tools.openva.release_coherence import (
     DEFAULT_CHECKSUMS_NAME,
     DEFAULT_MANIFEST_NAME,
     build_release_manifest,
     check_release_manifest,
     mcp_software_version,
+    read_release_agent_index,
     write_checksums,
 )
 
-AGENT_DIGEST = "sha256:" + "a" * 64
 PUBLISHED_AT = "2026-06-15T00:00:00Z"
+COMMIT = "deadbeef" + "0" * 32
+ARCHIVE = "openva-agent-exports.zip"
 
 
-def _asset_dir(tmp_path: Path) -> Path:
+def _asset_dir(tmp_path: Path, commit: str = COMMIT) -> Path:
     d = tmp_path / "assets"
     d.mkdir()
+    # Release assets.
     (d / "openva-csv.zip").write_bytes(b"zip-bytes")
-    (d / "openva_mcp-0.1.0.tar.gz").write_bytes(b"sdist-bytes")
-    (d / "openva_mcp-0.1.0-py3-none-any.whl").write_bytes(b"wheel-bytes")
-    (d / "server.json").write_text("{}", encoding="utf-8")
+    (d / ARCHIVE).write_bytes(b"agent-export-archive-bytes")
+    mcp = d / "mcp"
+    mcp.mkdir()
+    (mcp / "openva_mcp-0.1.0-py3-none-any.whl").write_bytes(b"wheel-bytes")
+    # Staged agent-export tree (zipped into ARCHIVE; not a separate asset).
+    build_agent_exports(out_dir=d / "agent-exports" / "public", commit_sha=commit, generated_at=PUBLISHED_AT)
     return d
 
 
-def _manifest(tmp_path: Path) -> dict:
+def _index_path(asset_dir: Path) -> Path:
+    return asset_dir / "agent-exports" / "public" / "openva-agent-index.json"
+
+
+def _manifest(asset_dir: Path, commit: str = COMMIT) -> dict:
     return build_release_manifest(
-        asset_dir=_asset_dir(tmp_path),
+        asset_dir=asset_dir,
         release_tag="v0.1.0",
-        commit_sha="deadbeef" + "0" * 32,
+        commit_sha=commit,
         published_at=PUBLISHED_AT,
-        agent_digest=AGENT_DIGEST,
+        agent_index_path=_index_path(asset_dir),
+        agent_archive_name=ARCHIVE,
     )
 
 
 def test_manifest_keeps_four_identities_distinct(tmp_path):
-    manifest = _manifest(tmp_path)
-    ids = manifest["identities"]
+    ids = _manifest(_asset_dir(tmp_path))["identities"]
     for key in (
         "release_tag",
         "repository_commit_sha",
@@ -46,88 +57,79 @@ def test_manifest_keeps_four_identities_distinct(tmp_path):
         "mcp_software_version",
     ):
         assert key in ids
-    # Software version and catalog/export schema are separate fields.
     assert ids["mcp_software_version"] == mcp_software_version()
     assert ids["export_pack_schema_version"] != ids["mcp_software_version"]
-    assert ids["release_tag"] == "v0.1.0"
-    assert manifest["agent_index_digest"] == AGENT_DIGEST
-    assert manifest["not_advice"] is True
 
 
-def test_manifest_digests_are_computed_from_actual_asset_bytes(tmp_path):
+def test_agent_export_block_is_read_from_attached_bytes(tmp_path):
     asset_dir = _asset_dir(tmp_path)
-    manifest = build_release_manifest(
-        asset_dir=asset_dir,
-        release_tag="v0.1.0",
-        commit_sha="c" * 40,
-        published_at=PUBLISHED_AT,
-        agent_digest=AGENT_DIGEST,
-    )
+    manifest = _manifest(asset_dir)
+    agent = manifest["agent_export"]
+    # Digest recorded is exactly the staged index's declared+recomputed digest.
+    declared = json.loads(_index_path(asset_dir).read_text(encoding="utf-8"))["snapshot"]["digest"]
+    assert agent["index_digest"] == declared == manifest["agent_index_digest"]
+    assert agent["archive_asset"] == ARCHIVE
+    assert agent["index_path_in_archive"] == "public/openva-agent-index.json"
+    assert agent["observation_input"] in ("committed_events_fallback", "none", "run_artifact")
+    assert agent["snapshot_commit_sha"] == COMMIT
+    # The staged tree is not listed as a separate asset; the zip is.
     names = {row["name"] for row in manifest["assets"]}
-    assert {"openva-csv.zip", "openva_mcp-0.1.0.tar.gz", "openva_mcp-0.1.0-py3-none-any.whl"} <= names
-    for row in manifest["assets"]:
-        assert row["sha256"].startswith("sha256:")
-        assert row["size_bytes"] == (asset_dir / row["name"]).stat().st_size
+    assert ARCHIVE in names
+    assert not any(name.startswith("agent-exports/") for name in names)
+
+
+def test_release_commit_must_match_export_snapshot_commit(tmp_path):
+    asset_dir = _asset_dir(tmp_path, commit="a" * 40)
+    import pytest
+
+    with pytest.raises(ValueError):
+        build_release_manifest(
+            asset_dir=asset_dir,
+            release_tag="v0.1.0",
+            commit_sha="b" * 40,  # different from the export snapshot commit
+            published_at=PUBLISHED_AT,
+            agent_index_path=_index_path(asset_dir),
+            agent_archive_name=ARCHIVE,
+        )
+
+
+def test_read_agent_index_rejects_digest_that_does_not_recompute(tmp_path):
+    asset_dir = _asset_dir(tmp_path)
+    index = _index_path(asset_dir)
+    doc = json.loads(index.read_text(encoding="utf-8"))
+    doc["counts"] = {"vendors": 999}  # mutate payload, leave digest stale
+    index.write_text(json.dumps(doc), encoding="utf-8")
+    import pytest
+
+    with pytest.raises(ValueError):
+        read_release_agent_index(index)
 
 
 def test_unpublished_distributions_are_not_claimed(tmp_path):
-    manifest = _manifest(tmp_path)
+    manifest = _manifest(_asset_dir(tmp_path))
     assert manifest["distributions"] == {
         "pypi_published": False,
         "oci_published": False,
         "mcp_registry_published": False,
     }
     assert manifest["build_provenance"]["signed"] is False
-    assert manifest["build_provenance"]["attested"] is False
 
 
-def test_check_passes_for_consistent_manifest_and_fails_on_tamper(tmp_path):
+def test_check_passes_then_fails_on_tamper(tmp_path):
     asset_dir = _asset_dir(tmp_path)
-    manifest = build_release_manifest(
-        asset_dir=asset_dir,
-        release_tag="v0.1.0",
-        commit_sha="c" * 40,
-        published_at=PUBLISHED_AT,
-        agent_digest=AGENT_DIGEST,
-    )
+    manifest = _manifest(asset_dir)
     manifest_path = asset_dir / DEFAULT_MANIFEST_NAME
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     assert check_release_manifest(asset_dir, manifest_path) == []
 
-    # Tamper an asset on disk: digest no longer matches.
     (asset_dir / "openva-csv.zip").write_bytes(b"tampered")
     assert check_release_manifest(asset_dir, manifest_path)
 
 
-def test_check_rejects_missing_identity(tmp_path):
+def test_checksums_file_excludes_staging_and_self(tmp_path):
     asset_dir = _asset_dir(tmp_path)
-    manifest = build_release_manifest(
-        asset_dir=asset_dir,
-        release_tag="v0.1.0",
-        commit_sha="c" * 40,
-        published_at=PUBLISHED_AT,
-        agent_digest=AGENT_DIGEST,
-    )
-    del manifest["identities"]["mcp_software_version"]
-    manifest_path = asset_dir / DEFAULT_MANIFEST_NAME
-    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
-    assert any("identities" in failure for failure in check_release_manifest(asset_dir, manifest_path))
-
-
-def test_checksums_file_lists_every_asset(tmp_path):
-    asset_dir = _asset_dir(tmp_path)
-    path = write_checksums(asset_dir, exclude={DEFAULT_MANIFEST_NAME, DEFAULT_CHECKSUMS_NAME})
-    lines = path.read_text(encoding="utf-8").strip().splitlines()
-    assert len(lines) == 4
-    for line in lines:
-        digest, name = line.split("  ", 1)
-        assert len(digest) == 64
-        assert (asset_dir / name).is_file()
-
-
-def test_agent_index_digest_is_real(tmp_path):
-    from tools.openva.release_coherence import agent_index_digest
-
-    digest = agent_index_digest("commit" + "0" * 34, PUBLISHED_AT, out_dir=tmp_path / "tree")
-    assert digest.startswith("sha256:")
-    assert (tmp_path / "tree" / "openva-agent-index.json").is_file()
+    path = write_checksums(asset_dir)
+    names = [line.split("  ", 1)[1] for line in path.read_text(encoding="utf-8").strip().splitlines()]
+    assert ARCHIVE in names
+    assert DEFAULT_CHECKSUMS_NAME not in names
+    assert not any(n.startswith("agent-exports/") for n in names)

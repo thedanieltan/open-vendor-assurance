@@ -116,6 +116,33 @@ jobs:
       - name: Run release and site tests
         run: pytest -q tests/test_release_*.py tests/test_site.py tests/test_adapter_contract.py
 
+  mcp-integration:
+    name: mcp-integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Install MCP local dependency chain
+        run: |
+          pip install -e adapters/python/openva_pack_reader
+          pip install -e adapters/python/openva_vendor_inventory_matcher
+          pip install -e "integrations/mcp/openva_mcp[dev]"
+      - name: Assert MCP SDK is installed
+        run: python -c "import mcp.shared.memory, mcp.client.stdio, openva_mcp, jsonschema"
+      - name: Run MCP integration tests
+        run: >-
+          pytest -q
+          tests/test_openva_mcp.py
+          tests/test_openva_mcp_protocol.py
+          tests/test_openva_mcp_hardening.py
+          tests/test_openva_mcp_metadata.py
+          tests/test_matching_conformance.py
+          tests/test_release_coherence.py
+
   full-suite:
     name: full-suite
     runs-on: ubuntu-latest
