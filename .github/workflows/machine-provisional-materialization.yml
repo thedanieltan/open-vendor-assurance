@@ -1,9 +1,9 @@
 name: machine-provisional-materialization
 
+# Manual recovery/diagnostic dispatcher only. The authoritative schedule lives
+# in autonomous-catalog-growth.yml to prevent competing schedulers.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "17 9 * * 3"
 
 permissions:
   actions: write

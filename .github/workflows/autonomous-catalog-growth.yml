@@ -10,13 +10,14 @@ name: autonomous-catalog-growth
 # capped at one vendor. There is no second mutation path; this workflow only
 # gates and dispatches.
 #
+# Scheduled daily at 07:17 Asia/Singapore (23:17 UTC on the previous day).
 # Operational metadata only. Not legal, compliance, procurement, security, KYC,
 # AML, audit, or vendor-risk advice.
 
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "23 9 * * *"
+    - cron: "17 23 * * *"
 
 permissions:
   contents: read

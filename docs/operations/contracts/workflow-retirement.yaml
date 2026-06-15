@@ -193,9 +193,9 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [scheduled machine-provisional materialization dispatcher]
-    required_retirement_evidence: [replacement machine-provisional scheduler, queue enforcement proof, validation suite pass]
-    allowed_triggers_until_retired: [workflow_dispatch, schedule]
+    retirement_blockers: [manual machine-provisional recovery and diagnostic dispatcher]
+    required_retirement_evidence: [replacement manual recovery path, queue enforcement proof, validation suite pass]
+    allowed_triggers_until_retired: [workflow_dispatch]
     write_permissions_allowed_until_retired: false
   - name: release-candidate.yml
     current_status: active
