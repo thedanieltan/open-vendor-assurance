@@ -1,6 +1,7 @@
 from pathlib import Path
 
 
+AUTONOMOUS_GROWTH = Path(".github/workflows/autonomous-catalog-growth.yml")
 DISCOVERY_LEDGER = Path(".github/workflows/discovery-ledger-append-pr.yml")
 MACHINE_MATERIALIZATION = Path(".github/workflows/machine-provisional-materialization.yml")
 
@@ -48,3 +49,13 @@ def test_machine_provisional_scheduler_uses_live_queue_and_race_checks():
     assert "queue state changed before machine-provisional dispatch" in text
     assert "-f promotion_plan_mode=machine-provisional-from-queue" in text
     assert "-f max_promotion_actions_per_pr=1" in text
+
+
+def test_autonomous_growth_is_the_single_scheduled_materialization_controller():
+    autonomous_text = AUTONOMOUS_GROWTH.read_text(encoding="utf-8")
+    materialization_text = MACHINE_MATERIALIZATION.read_text(encoding="utf-8")
+
+    assert 'cron: "17 23 * * *"' in autonomous_text
+    assert "07:17 Asia/Singapore" in autonomous_text
+    assert "schedule:" not in materialization_text
+    assert "workflow_dispatch:" in materialization_text
