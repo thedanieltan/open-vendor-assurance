@@ -107,6 +107,7 @@ For developers and downstream importers, use:
 
 ```text
 docs/agent-export-contract.md
+docs/agent-integrations.md
 docs/consumer-conformance-fixtures.md
 docs/adapter-contract.md
 docs/versioning-policy.md
@@ -117,6 +118,9 @@ openva-pack.json
 indexes/
 schemas/openva/
 ```
+
+For a read-only MCP server over the export contract, see
+`docs/agent-integrations.md` and `integrations/mcp/openva_mcp/`.
 
 ## Discovery surface
 

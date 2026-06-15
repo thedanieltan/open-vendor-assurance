@@ -48,6 +48,26 @@ jobs:
         run: python -m tools.openva.release_downloads manifest --out release-downloads > release-downloads/openva-release-downloads-manifest.json
       - name: Check non-technical release downloads
         run: python -m tools.openva.release_downloads check --out release-downloads
+      - name: Build MCP distribution
+        run: |
+          python -m pip install build
+          python -m build integrations/mcp/openva_mcp --outdir release-downloads/mcp
+      - name: Stage MCP manifests
+        run: |
+          cp integrations/mcp/openva_mcp/manifest/mcp-manifest.json release-downloads/mcp/
+          cp integrations/mcp/openva_mcp/manifest/server.json release-downloads/mcp/
+      - name: Build release coherence manifest
+        run: |
+          python -m tools.openva.release_coherence build \
+            --asset-dir release-downloads \
+            --release-tag "${{ github.ref_name }}" \
+            --commit-sha "${{ github.sha }}" \
+            --published-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+      - name: Check release coherence manifest
+        run: |
+          python -m tools.openva.release_coherence check \
+            --asset-dir release-downloads \
+            --manifest release-downloads/openva-release-manifest.json
       - name: Upload release downloads
         uses: softprops/action-gh-release@v3
         with:
@@ -57,3 +77,19 @@ jobs:
             release-downloads/openva-sample-inventory.csv
             release-downloads/openva-inventory-template.csv
             release-downloads/openva-release-downloads-manifest.json
+            release-downloads/openva-release-manifest.json
+            release-downloads/SHA256SUMS
+            release-downloads/mcp/*
+
+  mcp-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build MCP OCI image (no push)
+        run: |
+          docker build \
+            -f integrations/mcp/openva_mcp/Dockerfile \
+            --build-arg SOURCE_COMMIT="${{ github.sha }}" \
+            -t openva-mcp:"${{ github.ref_name }}" .

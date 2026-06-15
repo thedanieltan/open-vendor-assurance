@@ -197,6 +197,30 @@ def test_fresh_export_against_cached_older_index_fails_closed(export_tree, tmp_p
         snapshot.vendor_export("example-vendor")
 
 
+def test_tampered_source_index_fails_closed(export_tree):
+    target = export_tree / "sources" / "index.json"
+    doc = json.loads(target.read_text(encoding="utf-8"))
+    doc["sources"].append({"vendor_id": "x", "source_id": "injected", "source_url": "https://evil.example"})
+    target.write_text(json.dumps(doc, indent=2, sort_keys=True), encoding="utf-8")
+    snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
+    with pytest.raises(SnapshotIntegrityError):
+        snapshot.sources_index()
+
+
+def test_local_and_hosted_modes_agree_on_ids_urls_and_snapshot(export_tree):
+    local = Snapshot.load(LocalSnapshotSource(export_tree))
+    hosted = Snapshot.load(RemoteSnapshotSource("https://host/tree/", fetch=_reader(export_tree)))
+
+    # Same snapshot identity regardless of transport.
+    assert local.commit_sha == hosted.commit_sha
+    assert local.digest == hosted.digest
+
+    local_v = tools.get_vendor(local, "example-vendor")["vendor"]
+    hosted_v = tools.get_vendor(hosted, "example-vendor")["vendor"]
+    assert local_v["vendor_id"] == hosted_v["vendor_id"]
+    assert [s["source_url"] for s in local_v["sources"]] == [s["source_url"] for s in hosted_v["sources"]]
+
+
 def test_verify_enforces_supported_schema_for_every_export(export_tree):
     target = export_tree / "vendors" / "example-vendor.json"
     doc = json.loads(target.read_text(encoding="utf-8"))
