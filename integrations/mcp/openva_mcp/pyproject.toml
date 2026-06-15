@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openva-mcp"
+version = "0.1.0"
+description = "Local-first, read-only MCP server over the OpenVA public export contract."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+keywords = ["openva", "mcp", "vendor-assurance", "model-context-protocol"]
+dependencies = [
+  # v1 FastMCP/low-level API. Hold below 2 until the server is tested against it.
+  "mcp>=1.27,<2",
+  # Standards-compliant JSON Schema validation of tool inputs.
+  "jsonschema>=4.0",
+  # Shared vendor-identity matching authority (also the CSV adapter's core).
+  "openva-vendor-inventory-matcher>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+openva-mcp = "openva_mcp.server:main"
+
+[project.urls]
+Homepage = "https://thedanieltan.github.io/open-vendor-assurance"
+Repository = "https://github.com/thedanieltan/open-vendor-assurance"
+
+[tool.hatch.build.targets.wheel]
+packages = ["openva_mcp"]

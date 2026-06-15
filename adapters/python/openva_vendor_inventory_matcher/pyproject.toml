@@ -8,6 +8,9 @@ version = "0.1.0"
 description = "Vendor inventory matching adapter for OpenVA public metadata packs."
 requires-python = ">=3.11"
 license = "MIT"
+dependencies = [
+  "openva-pack-reader>=0.1.0",
+]
 
 [project.scripts]
 openva-vendor-inventory-match = "openva_vendor_inventory_matcher.cli:main"

@@ -2,17 +2,33 @@ from __future__ import annotations
 
 import csv
 import json
-import re
 from collections import defaultdict
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
 
 from openva_pack_reader import OpenVAPack
 
-MINIMUM_MATCH_CONFIDENCE = 0.90
-AMBIGUITY_MARGIN = 0.05
+from openva_vendor_inventory_matcher.core import (
+    LegalEntityRecord,
+    LegalEntityResolution,
+    MatchCandidate,
+    VendorRecord,
+    classify,
+    group_legal_entities_by_registration,
+    group_legal_entities_by_vendor,
+    legal_entity_record,
+    list_value,
+    match_candidates,
+    normalize_domain,
+    normalize_jurisdiction,
+    normalize_name,
+    resolve_legal_entity,
+    scalar,
+    select_match,
+    sorted_legal_entities,
+    vendor_record,
+)
+
 MATCH_INPUT_COLUMNS = {"domain", "vendor_name", "business_entity_name", "registration_number"}
 
 ENRICHMENT_COLUMNS = [
@@ -54,43 +70,6 @@ ENRICHMENT_COLUMNS = [
 ]
 
 
-@dataclass(frozen=True)
-class VendorRecord:
-    vendor_id: str
-    display_name: str
-    legal_name: str
-    catalog_status: str
-    official_domains: list[str]
-    manifest_path: str
-    name_keys: frozenset[str]
-
-
-@dataclass(frozen=True)
-class LegalEntityRecord:
-    entity_id: str
-    vendor_id: str
-    legal_name: str
-    jurisdiction: str
-    registration_number: str
-    catalog_status: str
-    registered_address: dict[str, Any] | None
-
-
-@dataclass(frozen=True)
-class MatchCandidate:
-    vendor: VendorRecord
-    confidence: float
-    method: str
-
-
-@dataclass(frozen=True)
-class LegalEntityResolution:
-    method: str
-    confidence: str
-    matched_entity: LegalEntityRecord | None
-    candidates: list[LegalEntityRecord]
-
-
 def match_inventory(pack_path: str | Path, input_csv: str | Path, output_csv: str | Path) -> Path:
     pack = OpenVAPack.load(pack_path)
     index = MatcherIndex.from_pack(pack)
@@ -114,6 +93,8 @@ def match_inventory(pack_path: str | Path, input_csv: str | Path, output_csv: st
 
 
 class MatcherIndex:
+    """CSV/pack glue around the shared matching core."""
+
     def __init__(
         self,
         vendors: list[VendorRecord],
@@ -153,7 +134,9 @@ class MatcherIndex:
         )
 
     def enrich_row(self, input_row: dict[str, str]) -> dict[str, str]:
-        candidates = self.match_candidates(input_row)
+        domain = normalize_domain(input_row.get("domain", ""))
+        name = normalize_name(input_row.get("vendor_name", "")) or normalize_name(input_row.get("business_entity_name", ""))
+        candidates = match_candidates(self.vendors, domain, name)
         selected = select_match(candidates)
         entity_resolution = self.resolve_legal_entity(input_row, selected.vendor if selected else None)
         if selected is None and entity_resolution.matched_entity is not None:
@@ -163,119 +146,27 @@ class MatcherIndex:
         output = dict(input_row)
         output.update(base_annotation())
 
-        if selected is None and candidates:
-            output.update(match_fields("ambiguous", None, candidates))
-        elif selected is None:
-            output.update(match_fields("no_match", None, []))
+        status = classify(candidates, selected)
+        if selected is None:
+            output.update(match_fields(status, None, candidates))
         else:
-            output.update(match_fields("matched", selected, candidates or [selected]))
+            output.update(match_fields(status, selected, candidates or [selected]))
             output.update(enrichment_fields(selected.vendor, self))
         output.update(legal_entity_fields(entity_resolution, selected.vendor if selected else None, self))
         return output
-
-    def match_candidates(self, input_row: dict[str, str]) -> list[MatchCandidate]:
-        domain = normalize_domain(input_row.get("domain", ""))
-        name = normalize_name(input_row.get("vendor_name", "")) or normalize_name(input_row.get("business_entity_name", ""))
-        candidates: dict[str, MatchCandidate] = {}
-        for vendor in self.vendors:
-            candidate = candidate_for_vendor(vendor, domain, name)
-            if candidate and candidate.confidence >= MINIMUM_MATCH_CONFIDENCE:
-                current = candidates.get(vendor.vendor_id)
-                if current is None or candidate.confidence > current.confidence:
-                    candidates[vendor.vendor_id] = candidate
-        return sorted(candidates.values(), key=lambda item: (-item.confidence, item.vendor.vendor_id))
 
     def resolve_legal_entity(
         self,
         input_row: dict[str, str],
         selected_vendor: VendorRecord | None,
     ) -> LegalEntityResolution:
-        registration_number = normalize_registration_number(input_row.get("registration_number", ""))
-        jurisdiction = normalize_jurisdiction(input_row.get("jurisdiction", ""))
-        if registration_number:
-            matches = self.legal_entities_by_registration.get(registration_number, [])
-            if jurisdiction:
-                matches = [entity for entity in matches if entity.jurisdiction == jurisdiction]
-            if len(matches) == 1:
-                return LegalEntityResolution("registration_number_exact", "matched", matches[0], matches)
-            if len(matches) > 1:
-                return LegalEntityResolution("registration_number_exact", "ambiguous", None, sorted_legal_entities(matches))
-
-        if selected_vendor is not None and jurisdiction:
-            resolution = self.contracting_resolution_by_key.get((selected_vendor.vendor_id, jurisdiction))
-            if resolution is not None:
-                candidate_ids = list_value(resolution.get("candidate_entity_ids"))
-                candidates = sorted_legal_entities(
-                    [
-                        self.legal_entities_by_id[entity_id]
-                        for entity_id in candidate_ids
-                        if isinstance(entity_id, str) and entity_id in self.legal_entities_by_id
-                    ]
-                )
-                resolved_entity_id = resolution.get("resolved_entity_id")
-                matched_entity = self.legal_entities_by_id.get(resolved_entity_id) if isinstance(resolved_entity_id, str) else None
-                if matched_entity is not None and matched_entity not in candidates:
-                    candidates = sorted_legal_entities([matched_entity, *candidates])
-                status = scalar(resolution.get("resolution_status"))
-                confidence = "ambiguous" if status == "ambiguous" else "candidate"
-                return LegalEntityResolution("jurisdiction_resolution_index", confidence, matched_entity, candidates)
-
-        return LegalEntityResolution("unresolved", "unresolved", None, [])
-
-
-def vendor_record(row: dict[str, Any]) -> VendorRecord:
-    vendor_id = scalar(row.get("vendor_id"))
-    display_name = scalar(row.get("display_name"))
-    legal_name = scalar(row.get("legal_name"))
-    domains = [domain for domain in [normalize_domain(value) for value in row.get("official_domains", [])] if domain]
-    name_keys = {normalize_name(value) for value in [vendor_id, display_name, legal_name, vendor_id.replace("-", " ")]}
-    name_keys.add(strip_legal_suffixes(legal_name))
-    return VendorRecord(
-        vendor_id=vendor_id,
-        display_name=display_name,
-        legal_name=legal_name,
-        catalog_status=scalar(row.get("catalog_status", row.get("status"))),
-        official_domains=domains,
-        manifest_path=scalar(row.get("manifest_path")),
-        name_keys=frozenset(key for key in name_keys if key),
-    )
-
-
-def legal_entity_record(row: dict[str, Any]) -> LegalEntityRecord:
-    registered_address = row.get("registered_address")
-    return LegalEntityRecord(
-        entity_id=scalar(row.get("entity_id")),
-        vendor_id=scalar(row.get("vendor_id")),
-        legal_name=scalar(row.get("legal_name")),
-        jurisdiction=normalize_jurisdiction(row.get("jurisdiction", "")),
-        registration_number=scalar(row.get("registration_number")),
-        catalog_status=scalar(row.get("catalog_status")),
-        registered_address=registered_address if isinstance(registered_address, dict) else None,
-    )
-
-
-def candidate_for_vendor(vendor: VendorRecord, domain: str, name: str) -> MatchCandidate | None:
-    if domain:
-        for official_domain in vendor.official_domains:
-            if domain == official_domain:
-                return MatchCandidate(vendor, 1.00, "domain_exact")
-        for official_domain in vendor.official_domains:
-            if domain.endswith(f".{official_domain}"):
-                return MatchCandidate(vendor, 0.95, "domain_subdomain")
-    if name and name in vendor.name_keys:
-        return MatchCandidate(vendor, 0.90, "name_exact")
-    return None
-
-
-def select_match(candidates: list[MatchCandidate]) -> MatchCandidate | None:
-    if not candidates:
-        return None
-    if len(candidates) == 1:
-        return candidates[0]
-    first, second = candidates[0], candidates[1]
-    if first.confidence == second.confidence or first.confidence - second.confidence < AMBIGUITY_MARGIN:
-        return None
-    return first
+        return resolve_legal_entity(
+            input_row,
+            selected_vendor,
+            by_registration=self.legal_entities_by_registration,
+            by_id=self.legal_entities_by_id,
+            contracting_by_key=self.contracting_resolution_by_key,
+        )
 
 
 def match_fields(status: str, selected: MatchCandidate | None, candidates: list[MatchCandidate]) -> dict[str, str]:
@@ -325,8 +216,6 @@ def legal_entity_fields(
     matched_entity = resolution.matched_entity
     vendor_entities = index.legal_entities_by_vendor.get(selected_vendor.vendor_id, []) if selected_vendor else []
     candidates = resolution.candidates
-    if not candidates and resolution.confidence == "unresolved":
-        candidates = []
     return {
         "legal_entity_match_method": resolution.method,
         "legal_entity_resolution_confidence": resolution.confidence,
@@ -455,26 +344,6 @@ def group_sources(rows: list[dict[str, Any]], key: str) -> dict[str, list[dict[s
     return dict(grouped)
 
 
-def group_legal_entities_by_vendor(rows: list[LegalEntityRecord]) -> dict[str, list[LegalEntityRecord]]:
-    grouped: dict[str, list[LegalEntityRecord]] = defaultdict(list)
-    for row in rows:
-        grouped[row.vendor_id].append(row)
-    return {vendor_id: sorted_legal_entities(items) for vendor_id, items in grouped.items()}
-
-
-def group_legal_entities_by_registration(rows: list[LegalEntityRecord]) -> dict[str, list[LegalEntityRecord]]:
-    grouped: dict[str, list[LegalEntityRecord]] = defaultdict(list)
-    for row in rows:
-        registration_number = normalize_registration_number(row.registration_number)
-        if registration_number:
-            grouped[registration_number].append(row)
-    return {registration_number: sorted_legal_entities(items) for registration_number, items in grouped.items()}
-
-
-def sorted_legal_entities(rows: list[LegalEntityRecord]) -> list[LegalEntityRecord]:
-    return sorted(rows, key=lambda row: (row.vendor_id, row.jurisdiction, row.entity_id))
-
-
 def latest_observations(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     latest: dict[str, dict[str, Any]] = {}
     for row in rows:
@@ -485,59 +354,6 @@ def latest_observations(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]
         if current is None or scalar(row.get("observed_at")) > scalar(current.get("observed_at")):
             latest[vendor_id] = row
     return latest
-
-
-def normalize_domain(value: str | None) -> str:
-    raw = (value or "").strip().lower()
-    if not raw:
-        return ""
-    if "://" in raw:
-        parsed = urlsplit(raw)
-        domain = parsed.netloc
-    else:
-        domain = re.split(r"[/#?]", raw, maxsplit=1)[0]
-    domain = domain.rsplit("@", maxsplit=1)[-1]
-    if ":" in domain and domain.count(":") == 1:
-        domain = domain.split(":", maxsplit=1)[0]
-    domain = domain.strip().rstrip(".")
-    if domain.startswith("www."):
-        domain = domain[4:]
-    return domain
-
-
-def normalize_jurisdiction(value: str | None) -> str:
-    return (value or "").strip().upper()
-
-
-def normalize_name(value: str | None) -> str:
-    raw = (value or "").strip().lower()
-    raw = raw.replace("&", " and ")
-    raw = re.sub(r"[^a-z0-9]+", " ", raw)
-    return " ".join(raw.split())
-
-
-def strip_legal_suffixes(value: str | None) -> str:
-    tokens = normalize_name(value).split()
-    suffixes = {"inc", "llc", "ltd", "limited", "corp", "corporation", "company", "co"}
-    while tokens and tokens[-1] in suffixes:
-        tokens.pop()
-    return " ".join(tokens)
-
-
-def normalize_registration_number(value: str | None) -> str:
-    return re.sub(r"[^A-Za-z0-9]+", "", value or "").upper()
-
-
-def scalar(value: Any) -> str:
-    if value is None:
-        return ""
-    if isinstance(value, str):
-        return value
-    return str(value)
-
-
-def list_value(value: Any) -> list[Any]:
-    return value if isinstance(value, list) else []
 
 
 def bool_cell(value: bool) -> str:
