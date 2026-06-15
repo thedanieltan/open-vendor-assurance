@@ -16,7 +16,7 @@ carries `not_advice: true`.
 
 The MCP server reads one snapshot, in one of two modes:
 
-- **Pinned local** — `--snapshot <dir>`: an OpenVA export or release directory
+- **Pinned local** — `--snapshot <dir>`: an extracted OpenVA agent-export release bundle (or export tree)
   on disk. Reproducible and offline.
 - **Hosted static** — `--base-url <url>`: the public export tree over HTTP.
   Remote data is represented as verified only after its content digest matches
@@ -82,9 +82,9 @@ exports directly with an HTTP Request node starting at
 ## Spreadsheet inventory matching
 
 `match_inventory` accepts rows with `domain`, `vendor_name`, or
-`business_entity_name`. Ambiguous rows return `match_status: "ambiguous"` with
-candidates; unmatched rows return `match_status: "unmatched"`. For a file-based
-CSV workflow use the `openva-vendor-inventory-matcher` adapter.
+`business_entity_name`. Each row's `match_status` is `matched`, `ambiguous`
+(with candidates), or `no_match`. For a file-based CSV workflow use the
+`openva-vendor-inventory-matcher` adapter, which uses the same vocabulary.
 
 ## Self-hosted match service
 
@@ -92,8 +92,8 @@ For an HTTP matching endpoint over the same data, run
 `services/openva_match_service` (see
 [`openva-match-service-deployment.md`](openva-match-service-deployment.md)). The
 MCP `match_inventory` tool and the match service share the same identity-only
-matching rules: insufficient evidence stays unmatched, competing identities stay
-ambiguous.
+matching rules: insufficient evidence stays `no_match`, competing identities
+stay `ambiguous`.
 
 ## Container
 

@@ -9,23 +9,36 @@ catalog authority, a hosted service, a risk engine, or a write path.
 
 ## Install
 
-This package is not yet published to PyPI. Install from the repository:
+This package and its sibling adapter packages are not yet published to PyPI, so
+install all three from the repository together (their dependencies resolve to
+the local copies):
 
 ```bash
-pipx install ./integrations/mcp/openva_mcp
-# or
-pip install ./integrations/mcp/openva_mcp
+pip install \
+  ./adapters/python/openva_pack_reader \
+  ./adapters/python/openva_vendor_inventory_matcher \
+  ./integrations/mcp/openva_mcp
 ```
 
-After publication (not yet available), the command will be:
+Windows PowerShell (one line):
+
+```powershell
+pip install ./adapters/python/openva_pack_reader ./adapters/python/openva_vendor_inventory_matcher ./integrations/mcp/openva_mcp
+```
+
+Or install offline from a release wheelhouse (see the release assets):
 
 ```bash
-# pipx install openva-mcp
+pip install --no-index --find-links <mcp-wheelhouse-dir> openva-mcp==0.1.0
 ```
+
+After publication (not yet available), `pipx install openva-mcp` will work
+directly. Until then, the bare `pipx install openva-mcp` cannot resolve the
+unpublished dependencies.
 
 ## Run
 
-Pinned local snapshot (an OpenVA export or release directory):
+Pinned local snapshot (an OpenVA export tree or extracted agent-export release bundle):
 
 ```bash
 openva-mcp --snapshot /path/to/openva-export
@@ -54,7 +67,7 @@ openva-mcp --snapshot /path/to/openva-export --verify
 | `get_source` | A single source record |
 | `get_source_health` | Latest observed health and timestamp |
 | `get_vendor_changes` | Latest recorded change events |
-| `match_inventory` | Match inventory rows to vendors (ambiguous/unmatched preserved) |
+| `match_inventory` | Match inventory rows to vendors (`match_status`: `matched` / `ambiguous` / `no_match`) |
 | `get_snapshot_metadata` | Snapshot identity and catalog counts |
 | `verify_snapshot` | Recompute and cross-check every export digest |
 
@@ -66,8 +79,8 @@ openva-mcp --snapshot /path/to/openva-export --verify
   content digest matches the agent index; a mismatch fails closed. Cached
   fallback is used only when the exact cached snapshot identity is disclosed.
 - **Original URLs preserved.** Every source result keeps the original
-  vendor-published URL; ambiguous matches stay ambiguous and unmatched inputs
-  stay unmatched.
+  vendor-published URL; ambiguous matches stay `ambiguous` and rows with no
+  confident match stay `no_match`.
 - **Not advice.** Every result carries `not_advice: true`.
 
 See [`docs/agent-integrations.md`](../../../docs/agent-integrations.md) for host

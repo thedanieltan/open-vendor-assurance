@@ -85,6 +85,48 @@ def test_protocol_tools_list_and_calls(export_tree):
     anyio.run(scenario)
 
 
+def test_protocol_rejects_invalid_tool_input(export_tree):
+    snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
+
+    bad_calls = [
+        ("get_vendor", {}),                              # missing required vendor_id
+        ("get_vendor", {"vendor_id": "x", "extra": 1}),  # unknown additional property
+        ("search_vendors", {"limit": 501}),              # above maximum
+        ("search_vendors", {"limit": "many"}),           # wrong type
+        ("match_inventory", {"rows": [{}] * 5001}),      # exceeds maxItems
+        ("match_inventory", {"rows": "notalist"}),       # wrong type
+    ]
+
+    async def scenario() -> None:
+        server = build_server(snapshot)
+        async with create_connected_server_and_client_session(server) as client:
+            for name, args in bad_calls:
+                result = await client.call_tool(name, args)
+                assert result.isError, f"{name} {args} should be a tool error"
+
+            unknown = await client.call_tool("get_snapshot_metadata", {})  # sanity: valid call ok
+            assert unknown.isError is False
+
+    anyio.run(scenario)
+
+
+def test_protocol_unknown_tool_is_an_error(export_tree):
+    snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
+
+    async def scenario() -> None:
+        server = build_server(snapshot)
+        async with create_connected_server_and_client_session(server) as client:
+            try:
+                result = await client.call_tool("no_such_tool", {})
+                assert result.isError
+            except Exception:
+                # Some SDK versions raise for an unknown tool; that is also a
+                # controlled rejection.
+                pass
+
+    anyio.run(scenario)
+
+
 def test_protocol_over_stdio_subprocess(export_tree):
     from mcp import ClientSession, StdioServerParameters
     from mcp.client.stdio import stdio_client

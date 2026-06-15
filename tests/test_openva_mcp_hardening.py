@@ -221,6 +221,55 @@ def test_local_and_hosted_modes_agree_on_ids_urls_and_snapshot(export_tree):
     assert [s["source_url"] for s in local_v["sources"]] == [s["source_url"] for s in hosted_v["sources"]]
 
 
+def _rewrite_index(export_tree: Path, mutate) -> None:
+    """Apply a mutation to the root index and refresh its self-digest, so the
+    self-digest check passes and root-index *structure* validation is exercised.
+    """
+    target = export_tree / AGENT_INDEX_FILE
+    doc = json.loads(target.read_text(encoding="utf-8"))
+    mutate(doc)
+    doc["snapshot"]["digest"] = payload_digest(doc)
+    target.write_text(json.dumps(doc), encoding="utf-8")
+
+
+def _drop_export(doc):
+    del doc["exports"]["vendors_index"]
+
+
+def _wrong_path(doc):
+    doc["exports"]["sources_index"]["path"] = "sources/wrong.json"
+
+
+def _bad_digest(doc):
+    doc["exports"]["changes_latest"]["digest"] = "not-a-digest"
+
+
+def _duplicate_vendor(doc):
+    doc["vendor_exports"].append(dict(doc["vendor_exports"][0]))
+
+
+def _path_not_matching_id(doc):
+    entry = dict(doc["vendor_exports"][0])
+    entry["vendor_id"] = "other-vendor"
+    doc["vendor_exports"].append(entry)
+
+
+@pytest.mark.parametrize("mutate", [_drop_export, _wrong_path, _bad_digest, _duplicate_vendor, _path_not_matching_id])
+def test_malformed_root_index_fails_closed(export_tree, mutate):
+    _rewrite_index(export_tree, mutate)
+    with pytest.raises(SnapshotIntegrityError):
+        Snapshot.load(LocalSnapshotSource(export_tree))
+
+
+def test_unlisted_required_export_with_valid_self_digest_is_rejected(export_tree):
+    # Remove a vendor from the root index but leave its (valid) file on disk;
+    # loading it must fail because it is not linked from the index.
+    _rewrite_index(export_tree, lambda doc: doc["vendor_exports"].clear())
+    snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
+    with pytest.raises(SnapshotIntegrityError):
+        snapshot.load_verified("vendors/example-vendor.json")
+
+
 def test_verify_enforces_supported_schema_for_every_export(export_tree):
     target = export_tree / "vendors" / "example-vendor.json"
     doc = json.loads(target.read_text(encoding="utf-8"))

@@ -114,7 +114,7 @@ def test_get_vendor_changes(snapshot):
     assert all(c["vendor_id"] == "example-vendor" for c in changes["changes"])
 
 
-def test_match_inventory_matched_ambiguous_unmatched(snapshot):
+def test_match_inventory_matched_ambiguous_no_match(snapshot):
     rows = [
         {"domain": "vendor.example"},
         {"vendor_name": "Example Vendor"},

@@ -2,8 +2,9 @@
 
 The matching *decision* (status, vendor id, confidence, method, candidates) is
 owned by ``openva_vendor_inventory_matcher.core`` — the same authority the CSV
-adapter uses — so both agree for the same evidence. This module only adapts the
-verified vendor-index rows into core records and shapes a JSON-friendly result.
+adapter uses — so both agree for the same evidence and share one vocabulary:
+``match_status`` is ``matched``, ``ambiguous``, or ``no_match``. This module only
+adapts the verified vendor-index rows into core records and shapes a result.
 
 The hosted export tree carries no legal-entity data, so legal-entity resolution
 here is always ``unresolved``; that is the same result the core produces from an

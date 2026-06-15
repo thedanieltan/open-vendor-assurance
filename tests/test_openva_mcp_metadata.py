@@ -4,32 +4,24 @@ Offline checks always run; the Registry-schema validation fetches the official
 schema and skips only when the network is unavailable.
 """
 
+import hashlib
 import json
 from pathlib import Path
-from urllib.error import URLError
-from urllib.request import urlopen
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 PKG = ROOT / "integrations" / "mcp" / "openva_mcp"
 SERVER_JSON = PKG / "manifest" / "server.json"
-MCP_MANIFEST = PKG / "manifest" / "mcp-manifest.json"
 README = PKG / "README.md"
 DOCKERFILE = PKG / "Dockerfile"
 PYPROJECT = PKG / "pyproject.toml"
 
-REQUIRED_TOOLS = {
-    "search_vendors",
-    "get_vendor",
-    "list_vendor_sources",
-    "get_source",
-    "get_source_health",
-    "get_vendor_changes",
-    "match_inventory",
-    "get_snapshot_metadata",
-    "verify_snapshot",
-}
+# Pinned copy of the official MCP Registry schema, so PR validation is
+# deterministic and offline. Provenance is asserted by the digest below.
+SCHEMA_URL = "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json"
+PINNED_SCHEMA = PKG / "manifest" / "server.schema.2025-12-11.json"
+PINNED_SCHEMA_SHA256 = "3fba09590c99f61735d234822279f4223fab9e300c0a81e81c91ab62a4114de0"
 
 
 def _server_json() -> dict:
@@ -46,11 +38,9 @@ def test_server_json_targets_current_schema_and_has_required_fields():
     assert doc["packages"][0]["identifier"] == "openva-mcp"
 
 
-def test_mcp_manifest_lists_all_tools_and_no_secret_requirement():
-    doc = json.loads(MCP_MANIFEST.read_text(encoding="utf-8"))
-    assert set(doc["tools"]) == REQUIRED_TOOLS
-    assert doc["capabilities"]["read_only"] is True
-    assert doc["capabilities"]["requires_secrets"] is False
+def test_no_bespoke_manifest_remains():
+    # Only the standards-based server.json is kept.
+    assert not (PKG / "manifest" / "mcp-manifest.json").exists()
 
 
 def test_readme_has_pypi_ownership_marker_and_no_false_publication_claim():
@@ -75,12 +65,15 @@ def test_pyproject_pins_mcp_below_v2():
     assert "mcp>=1.27,<2" in text
 
 
-def test_server_json_validates_against_official_schema():
-    jsonschema = pytest.importorskip("jsonschema")
-    url = _server_json()["$schema"]
-    try:
-        with urlopen(url, timeout=15) as response:  # noqa: S310 - official https schema URL
-            schema = json.loads(response.read())
-    except (URLError, TimeoutError, OSError) as exc:
-        pytest.skip(f"schema not reachable: {exc}")
+def test_pinned_schema_provenance_digest_matches():
+    data = PINNED_SCHEMA.read_bytes()
+    assert hashlib.sha256(data).hexdigest() == PINNED_SCHEMA_SHA256
+    # server.json declares the same schema URL the pinned copy came from.
+    assert _server_json()["$schema"] == SCHEMA_URL
+
+
+def test_server_json_validates_against_pinned_official_schema():
+    import jsonschema
+
+    schema = json.loads(PINNED_SCHEMA.read_text(encoding="utf-8"))
     jsonschema.validate(instance=_server_json(), schema=schema)

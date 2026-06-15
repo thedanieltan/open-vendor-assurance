@@ -86,7 +86,7 @@ TOOL_SPECS: list[ToolSpec] = [
     ToolSpec(
         "match_inventory",
         "Match inventory rows (domain / vendor_name / business_entity_name / registration_number) "
-        "to vendors; ambiguous and unmatched rows stay explicitly so.",
+        "to vendors. Each row's match_status is matched, ambiguous, or no_match.",
         _obj(
             {"rows": {"type": "array", "items": {"type": "object"}, "maxItems": 5000}},
             ["rows"],
@@ -118,8 +118,15 @@ def resolve_snapshot(args: argparse.Namespace) -> Snapshot:
     raise SystemExit("provide --snapshot <dir> or --base-url <url>")
 
 
+def _tool_error(message: str):
+    from mcp import types
+
+    return types.CallToolResult(content=[types.TextContent(type="text", text=message)], isError=True)
+
+
 def build_server(snapshot: Snapshot):
     """Build a low-level MCP server exposing the read-only tools (SDK imported lazily)."""
+    import jsonschema
     from mcp import types
     from mcp.server.lowlevel import Server
 
@@ -132,11 +139,19 @@ def build_server(snapshot: Snapshot):
             for spec in TOOL_SPECS
         ]
 
-    @server.call_tool()
-    async def call_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
+    # validate_input=False: this handler is the single authoritative validation
+    # point. Every request is checked against the tool's declared input_schema
+    # before dispatch, and invalid input becomes a controlled tool error rather
+    # than an uncaught exception or a silently accepted bad argument.
+    @server.call_tool(validate_input=False)
+    async def call_tool(name: str, arguments: dict[str, Any]):
         spec = SPEC_BY_NAME.get(name)
         if spec is None:
-            raise ValueError(f"unknown tool: {name}")
+            return _tool_error(f"unknown tool: {name}")
+        try:
+            jsonschema.validate(arguments or {}, spec.input_schema)
+        except jsonschema.ValidationError as exc:
+            return _tool_error(f"invalid input for {name}: {exc.message}")
         # Returning a dict surfaces as structuredContent (and JSON text content).
         return spec.func(snapshot, arguments or {})
 
@@ -146,7 +161,7 @@ def build_server(snapshot: Snapshot):
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="openva-mcp", description="Read-only OpenVA MCP server.")
     source = parser.add_mutually_exclusive_group()
-    source.add_argument("--snapshot", help="Path to a local OpenVA export or release directory.")
+    source.add_argument("--snapshot", help="Path to a local OpenVA export tree or extracted agent-export release bundle.")
     source.add_argument("--base-url", help="Base URL of a hosted OpenVA export tree.")
     parser.add_argument("--cache-dir", default=None, help="Optional cache dir for disclosed remote fallback.")
     parser.add_argument("--verify", action="store_true", help="Verify the snapshot and exit.")

@@ -2,7 +2,7 @@
 
 Two data modes are supported:
 
-- **pinned_local** — an operator-supplied export or release directory on disk.
+- **pinned_local** — an operator-supplied export tree or extracted agent-export release bundle on disk.
 - **hosted_static** — the public agent index and export tree fetched over HTTP.
 
 Integrity is the central invariant. Every export carries a ``snapshot`` block
@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Protocol
@@ -37,12 +38,17 @@ OBSERVATIONS_LATEST_FILE = "observations/latest.json"
 CHANGES_LATEST_FILE = "changes/latest.json"
 
 # Logical name -> path, for the files the root index lists in its `exports` map.
+# This is the exact required set: the root index must declare these and only
+# these named exports.
 INDEX_EXPORTS = {
     "vendors_index": VENDORS_INDEX_FILE,
     "sources_index": SOURCES_INDEX_FILE,
     "observations_latest": OBSERVATIONS_LATEST_FILE,
     "changes_latest": CHANGES_LATEST_FILE,
 }
+
+VENDOR_EXPORT_PREFIX = "vendors/"
+DIGEST_RE = re.compile(r"^sha256:[a-f0-9]{64}$")
 
 
 class SnapshotError(Exception):
@@ -244,19 +250,25 @@ class Snapshot:
             raise SnapshotIntegrityError(
                 f"{AGENT_INDEX_FILE}: self digest mismatch (declared {declared}, computed {computed})"
             )
+        _validate_root_index(agent_index)
         from_cache = bool(getattr(source, "last_read_from_cache", False))
         return cls(source=source, agent_index=agent_index, from_cache=from_cache)
 
     # --- verified loaders -------------------------------------------------
 
-    def _expected_digest(self, rel_path: str) -> str | None:
+    def _required_paths(self) -> set[str]:
+        return set(INDEX_EXPORTS.values()) | set(self.vendor_export_paths().values())
+
+    def _expected_digest(self, rel_path: str) -> str:
         for entry in self.agent_index.get("exports", {}).values():
             if entry.get("path") == rel_path:
-                return entry.get("digest")
+                return str(entry["digest"])
         for entry in self.agent_index.get("vendor_exports", []):
             if entry.get("path") == rel_path:
-                return entry.get("digest")
-        return None
+                return str(entry["digest"])
+        # A required export must be linked from the root index; never treat a
+        # missing required digest as "optional" and skip the cross-check.
+        raise SnapshotIntegrityError(f"{rel_path}: not linked from the agent index")
 
     def load_verified(self, rel_path: str) -> dict[str, Any]:
         if rel_path in self._cache:
@@ -265,10 +277,10 @@ class Snapshot:
         _require_supported_schema(document, rel_path)
         computed = payload_digest(document)
         declared = str(document.get("snapshot", {}).get("digest", ""))
-        expected = self._expected_digest(rel_path)
+        expected = self._expected_digest(rel_path)  # raises if not linked
         if computed != declared:
             raise SnapshotIntegrityError(f"{rel_path}: self digest mismatch")
-        if expected is not None and computed != expected:
+        if computed != expected:
             raise SnapshotIntegrityError(
                 f"{rel_path}: digest does not match the agent index ({computed} != {expected})"
             )
@@ -366,3 +378,57 @@ def _require_supported_schema(document: dict[str, Any], rel_path: str) -> None:
         raise SnapshotUnsupportedSchemaError(
             f"{rel_path}: unsupported schema_version {version!r} (supported: {SUPPORTED_SCHEMA_VERSION})"
         )
+
+
+def _valid_digest(value: Any) -> bool:
+    return isinstance(value, str) and bool(DIGEST_RE.match(value))
+
+
+def _validate_root_index(agent_index: dict[str, Any]) -> None:
+    """Enforce completeness and linkage of the root index.
+
+    The named ``exports`` map must contain exactly the required entries, each at
+    its expected path with a valid digest; vendor exports must have unique ids
+    and unique safe paths of the form ``vendors/{vendor_id}.json`` with valid
+    digests. A malformed root index is an integrity failure, not a soft warning.
+    """
+    exports = agent_index.get("exports")
+    if not isinstance(exports, dict):
+        raise SnapshotIntegrityError("agent index: exports map missing or not an object")
+    if set(exports) != set(INDEX_EXPORTS):
+        raise SnapshotIntegrityError(
+            f"agent index: exports must be exactly {sorted(INDEX_EXPORTS)} (got {sorted(exports)})"
+        )
+    for name, expected_path in INDEX_EXPORTS.items():
+        entry = exports.get(name) or {}
+        if entry.get("path") != expected_path:
+            raise SnapshotIntegrityError(f"agent index: export {name} must point to {expected_path}")
+        if not _valid_digest(entry.get("digest")):
+            raise SnapshotIntegrityError(f"agent index: export {name} has an invalid digest")
+
+    vendor_exports = agent_index.get("vendor_exports")
+    if not isinstance(vendor_exports, list):
+        raise SnapshotIntegrityError("agent index: vendor_exports missing or not a list")
+    seen_ids: set[str] = set()
+    seen_paths: set[str] = set()
+    for entry in vendor_exports:
+        vendor_id = entry.get("vendor_id") if isinstance(entry, dict) else None
+        path = entry.get("path") if isinstance(entry, dict) else None
+        if not isinstance(vendor_id, str) or not vendor_id:
+            raise SnapshotIntegrityError("agent index: vendor export missing vendor_id")
+        if vendor_id in seen_ids:
+            raise SnapshotIntegrityError(f"agent index: duplicate vendor_id {vendor_id}")
+        seen_ids.add(vendor_id)
+        if not isinstance(path, str):
+            raise SnapshotIntegrityError(f"agent index: vendor export {vendor_id} missing path")
+        try:
+            _safe_rel(path)
+        except SnapshotError as exc:
+            raise SnapshotIntegrityError(f"agent index: vendor export {vendor_id} has unsafe path") from exc
+        if path != f"{VENDOR_EXPORT_PREFIX}{vendor_id}.json":
+            raise SnapshotIntegrityError(f"agent index: vendor export path {path} does not match id {vendor_id}")
+        if path in seen_paths:
+            raise SnapshotIntegrityError(f"agent index: duplicate vendor export path {path}")
+        seen_paths.add(path)
+        if not _valid_digest(entry.get("digest")):
+            raise SnapshotIntegrityError(f"agent index: vendor export {vendor_id} has an invalid digest")

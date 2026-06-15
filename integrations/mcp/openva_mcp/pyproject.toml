@@ -13,6 +13,8 @@ keywords = ["openva", "mcp", "vendor-assurance", "model-context-protocol"]
 dependencies = [
   # v1 FastMCP/low-level API. Hold below 2 until the server is tested against it.
   "mcp>=1.27,<2",
+  # Standards-compliant JSON Schema validation of tool inputs.
+  "jsonschema>=4.0",
   # Shared vendor-identity matching authority (also the CSV adapter's core).
   "openva-vendor-inventory-matcher>=0.1.0",
 ]
