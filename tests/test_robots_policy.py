@@ -90,4 +90,63 @@ def test_absent_policy_is_not_malformed():
 
 
 def test_parser_id_is_versioned():
-    assert RobotsPolicy.parse("").parser_id == PARSER_ID == "openva-robots.v1"
+    assert RobotsPolicy.parse("").parser_id == PARSER_ID == "openva-robots.v2"
+
+
+def test_blank_line_does_not_detach_rule():
+    # RFC 9309: blank lines do not terminate a group.
+    p = policy("User-agent: OpenVA-Discovery\n\nDisallow: /private\n")
+    assert p.can_fetch(UA, "/private/x") is False
+    assert p.can_fetch(UA, "/public") is True
+
+
+def test_two_groups_same_token_are_combined():
+    text = (
+        "User-agent: openva-discovery\n"
+        "Disallow: /a\n"
+        "\n"
+        "User-agent: openva-discovery\n"
+        "Disallow: /b\n"
+    )
+    p = policy(text)
+    assert p.can_fetch(UA, "/a") is False  # first group's rule applies
+    assert p.can_fetch(UA, "/b") is False  # second group's rule also applies
+    assert p.can_fetch(UA, "/c") is True
+
+
+def test_wildcard_group_is_fallback_only_when_no_explicit_group_matches():
+    text = "User-agent: *\nDisallow: /x\n\nUser-agent: openva-discovery\nAllow: /\n"
+    p = policy(text)
+    # Named group matches -> the * Disallow does not apply to us.
+    assert p.can_fetch(UA, "/x") is True
+    # A different agent falls back to the * group.
+    assert p.can_fetch("OtherBot", "/x") is False
+
+
+def test_rules_before_first_user_agent_are_ignored():
+    p = policy("Disallow: /everything\nUser-agent: *\nAllow: /\n")
+    assert p.can_fetch(UA, "/everything") is True
+
+
+def test_sitemap_and_unknown_records_do_not_terminate_a_group():
+    text = (
+        "User-agent: openva-discovery\n"
+        "Disallow: /a\n"
+        "Sitemap: https://v.example/s.xml\n"
+        "Crawl-delay: 5\n"
+        "Disallow: /b\n"
+    )
+    p = policy(text)
+    # Both rules remain in the same group despite the interleaved records.
+    assert p.can_fetch(UA, "/a") is False
+    assert p.can_fetch(UA, "/b") is False
+    assert "https://v.example/s.xml" in p.sitemaps
+
+
+def test_percent_encoded_unreserved_normalizes_reserved_stays_encoded():
+    # %41 == 'A' (unreserved) should match; %2F ('/') reserved stays distinct.
+    p = policy("User-agent: *\nDisallow: /%41dmin\nDisallow: /a%2Fb\n")
+    assert p.can_fetch(UA, "/Admin/x") is False  # %41 decoded to A
+    assert p.can_fetch(UA, "/%41dmin/x") is False  # encoded form normalizes too
+    assert p.can_fetch(UA, "/a%2Fb") is False  # reserved stays encoded, matches rule
+    assert p.can_fetch(UA, "/a/b") is True  # decoded slash is a different path
