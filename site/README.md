@@ -27,6 +27,27 @@ The viewer is static and GitHub Pages-ready. It has no backend, database,
 account system, upload endpoint, private inventory processing, or server-side
 workspace persistence.
 
+## Discovery surface
+
+The same build also emits a static discovery layer for search engines and
+machine consumers:
+
+```text
+vendors/{vendor_id}/index.html   one page per canonical vendor
+agents/index.html                agent and machine integration guide
+.well-known/openva.json          typed discovery manifest with content digest
+sitemap.xml
+robots.txt
+llms.txt
+assets/openva-pages.css          shared stylesheet for the generated pages
+```
+
+These files are generated from the committed catalog and
+`config/publication.yaml`; they are deterministic and must not be hand-edited.
+Each vendor page links to that vendor's JSON export and keeps the original
+vendor-published source URLs. To change the canonical base URL, edit
+`config/publication.yaml` rather than the generators.
+
 Selections are held in browser memory only. They are not written to
 `localStorage`, `sessionStorage`, a server, or a database.
 

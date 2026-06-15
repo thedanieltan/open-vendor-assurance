@@ -1,0 +1,11 @@
+schema_version: 0.1.0
+
+# Canonical publication configuration for OpenVA-owned public URLs.
+# Every generated discovery artifact (vendor pages, sitemap, robots, llms.txt,
+# the discovery manifest, and the agent integration page) derives its OpenVA
+# URLs from this file. Generators must not hardcode a duplicate base URL.
+project_name: Open Vendor Assurance
+canonical_base_url: https://thedanieltan.github.io/open-vendor-assurance
+repository_url: https://github.com/thedanieltan/open-vendor-assurance
+release_url: https://github.com/thedanieltan/open-vendor-assurance/releases
+agent_index_path: public/openva-agent-index.json

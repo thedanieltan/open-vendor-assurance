@@ -8,7 +8,8 @@
     <meta property="og:title" content="OpenVA — Open Vendor Assurance Catalog">
     <meta property="og:description" content="Find public assurance links for vendors: privacy notices, trust centers, DPA pages, security pages, and subprocessor lists.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://thedanieltan.github.io/open-vendor-assurance/">
+    <meta property="og:url" content="{{OPENVA_HOME_URL}}">
+    <link rel="canonical" href="{{OPENVA_HOME_URL}}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="OpenVA — Open Vendor Assurance Catalog">
     <meta name="twitter:description" content="Search public vendor assurance links for vendor due diligence and third-party risk review.">
@@ -21,6 +22,40 @@
         "applicationSubCategory": "Vendor due diligence catalog",
         "description": "OpenVA is an open public-source catalog for finding public vendor assurance links such as privacy notices, trust centers, DPA pages, security pages, and subprocessor lists.",
         "operatingSystem": "Web"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Open Vendor Assurance",
+        "alternateName": "OpenVA",
+        "url": "{{OPENVA_HOME_URL}}",
+        "description": "Public-source-only registry of vendor-published assurance source references. Metadata only; not advice."
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "DataCatalog",
+        "name": "Open Vendor Assurance",
+        "url": "{{OPENVA_HOME_URL}}",
+        "description": "Catalogue of public, vendor-published assurance source references such as privacy notices, DPAs, subprocessor lists, trust centers, security pages, and certification references.",
+        "isAccessibleForFree": true,
+        "license": "https://opensource.org/license/mit",
+        "dataset": {
+          "@type": "Dataset",
+          "name": "OpenVA public assurance sources",
+          "description": "Factual metadata about public vendor assurance sources: source type, original vendor-published URL, observed source health, and snapshot identity. OpenVA does not endorse, certify, score, or rank listed vendors.",
+          "isAccessibleForFree": true,
+          "license": "https://opensource.org/license/mit",
+          "creator": { "@type": "Organization", "name": "Open Vendor Assurance" },
+          "distribution": {
+            "@type": "DataDownload",
+            "encodingFormat": "application/json",
+            "contentUrl": "{{OPENVA_AGENT_INDEX_URL}}"
+          }
+        }
       }
     </script>
     <link rel="stylesheet" href="styles.css?v=20260523-ui6">

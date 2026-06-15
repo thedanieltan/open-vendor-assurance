@@ -9,6 +9,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from tools.openva.publication import load_publication_config
+from tools.openva.site_discovery import build_discovery, render_index_html
+
 ROOT = Path(__file__).resolve().parents[1]
 SITE_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUT = SITE_ROOT / "dist"
@@ -351,6 +354,7 @@ def build_meta(pack: dict[str, Any], sources: list[dict[str, Any]], vendor_count
     sha = commit_sha()
     tag = release_tag()
     date = commit_date() or source_date(sources) or str(pack.get("generated_at") or pack.get("generatedAt") or "")
+    config = load_publication_config()
     return {
         "profileId": pack.get("profileId"),
         "schemaVersion": pack.get("schemaVersion"),
@@ -363,7 +367,8 @@ def build_meta(pack: dict[str, Any], sources: list[dict[str, Any]], vendor_count
         "pack_generated_at": pack.get("generated_at") or pack.get("generatedAt"),
         "vendor_count": vendor_count,
         "source_count": len(sources),
-        "github_releases_url": "https://github.com/thedanieltan/open-vendor-assurance/releases",
+        "canonical_base_url": config.canonical_base_url,
+        "github_releases_url": config.release_url,
         "non_advisory": True,
         "compiled_distribution": True,
         "site_data_contract": "openva-site-compiled-catalog.v1",
@@ -546,8 +551,15 @@ def build_site(
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
 
+    config = load_publication_config()
     for path in (SITE_ROOT / "src").iterdir():
-        if path.is_file():
+        if not path.is_file():
+            continue
+        if path.name == "index.html":
+            # Homepage OpenVA-owned metadata URLs derive from publication config.
+            rendered = render_index_html(path.read_text(encoding="utf-8"), config)
+            (output_dir / path.name).write_text(rendered, encoding="utf-8", newline="\n")
+        else:
             shutil.copy2(path, output_dir / path.name)
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
 
@@ -565,6 +577,18 @@ def build_site(
     for vendor_id, detail in compiled["vendor_details"].items():
         write_json(output_dir / "data/vendors" / f"{vendor_id}.json", {"meta": compiled["meta"], **detail})
     write_json(output_dir / "data/observation-feed.json", build_observation_feed())
+
+    meta = compiled["meta"]
+    build_discovery(
+        output_dir,
+        config,
+        vendor_summaries=compiled["vendor_summaries"],
+        vendor_details=compiled["vendor_details"],
+        commit_sha=str(meta.get("commit_sha") or "unknown"),
+        # Derived from the committed snapshot date (commit date / source / pack),
+        # never wall-clock time, so the discovery surface is build-deterministic.
+        generated_at=str(meta.get("catalog_snapshot_date") or meta.get("pack_generated_at") or ""),
+    )
 
 
 def main() -> int:
