@@ -78,6 +78,13 @@ corroborating_authority_methods:
   - cname_corroboration
   - tls_corroboration
 
+# Tier A: retrieval modes for independent materialization corroboration.
+# render_lane is reserved for Tier B (a sandboxed public-JS render lane) and is
+# not implemented in Tier A.
+retrieval_modes:
+  - direct_http
+  - render_lane
+
 rights_classes:
   - metadata_only
   - public_link_only

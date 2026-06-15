@@ -33,6 +33,7 @@ from urllib.parse import urlparse
 
 import yaml
 
+from tools.openva.candidate_promotion_actions import build_retrieval_claim
 from tools.openva.pack import canonical_json, sha256_bytes
 from tools.openva.source_discovery import SOURCE_TYPE_REGISTRY
 
@@ -160,17 +161,24 @@ def _recompute_threshold_reasons(decision: dict[str, Any], results: dict[str, An
         evidence_ids = retrieval.get("evidence_ids")
         if not isinstance(evidence_ids, list) or len(evidence_ids) < required or len(evidence_ids) < observed:
             reasons.append("decision_threshold_evidence_missing:retrieval_attempts")
-        retrieval_claim = {
-            "required": required,
-            "observed": observed,
-            "agreeing": retrieval.get("agreeing") is True,
-            "evidence_ids": evidence_ids if isinstance(evidence_ids, list) else [],
-            "final_url": evidence.get("final_url"),
-            "candidate_url": evidence.get("candidate_url"),
-            "http_status": evidence.get("http_status"),
-        }
+        retrieval_claim = build_retrieval_claim(
+            required=required,
+            observed=observed,
+            agreeing=retrieval.get("agreeing") is True,
+            evidence_ids=evidence_ids if isinstance(evidence_ids, list) else [],
+            final_url=evidence.get("final_url"),
+            candidate_url=evidence.get("candidate_url"),
+            http_status=evidence.get("http_status"),
+            min_distinct_workflow_runs=int(retrieval.get("min_distinct_workflow_runs") or 2),
+            min_distinct_retrieval_modes=int(retrieval.get("min_distinct_retrieval_modes") or 2),
+            distinct_workflow_runs=int(retrieval.get("distinct_workflow_runs") or 0),
+            distinct_retrieval_modes=int(retrieval.get("distinct_retrieval_modes") or 0),
+            independent=retrieval.get("independent") is True,
+        )
         if retrieval.get("result_digest") != sha256_bytes(canonical_json(retrieval_claim)):
             reasons.append("decision_threshold_digest_mismatch:retrieval_attempts")
+        if retrieval.get("independent") is not True:
+            reasons.append("decision_threshold_failed:retrieval_attempts_independence")
 
     duplicate = results.get("duplicate_collision_score")
     if isinstance(duplicate, dict):
@@ -213,6 +221,8 @@ def threshold_attestation_reasons(decision: dict[str, Any]) -> list[str]:
         reasons.append("decision_threshold_failed:retrieval_attempts")
     elif retrieval.get("observed", 0) < retrieval.get("required", 2) or retrieval.get("agreeing") is not True:
         reasons.append("decision_threshold_failed:retrieval_attempts")
+    elif retrieval.get("independent") is not True:
+        reasons.append("decision_threshold_failed:retrieval_attempts_independence")
     duplicate = results.get("duplicate_collision_score")
     if not isinstance(duplicate, dict):
         reasons.append("decision_threshold_failed:duplicate_collision_score")

@@ -24,6 +24,15 @@ materialization:
 
   # Retrieval agreement and duplicate detection.
   min_agreeing_retrieval_attempts: 2
+  # Independence (Tier A): two agreeing retrievals only count as independent
+  # corroboration when they come from distinct workflow runs OR distinct
+  # retrieval modes (e.g. direct_http and a future render lane). Two immediate
+  # retries in one run and one mode count as a single evidentiary observation.
+  # IP-address / geographic diversity is deliberately excluded (it would create
+  # an incentive for proxy infrastructure and drift toward bypass behavior).
+  retrieval_independence:
+    min_distinct_workflow_runs: 2
+    min_distinct_retrieval_modes: 2
   max_duplicate_collision_score: 0.0
 
   # URL safety / redirect authority.
