@@ -1,9 +1,11 @@
 """Tier A: trust-center scope and gated-child non-disclosure at export + MCP.
 
 A public trust-center landing page is a content-bearing source; its gated child
-documents are never inspected. The export and MCP layers must disclose that
-scope and must never surface gated-child content, hashes, summaries, or inferred
-claims.
+documents are never inspected. verified_scope is a committed classification fact
+projected verbatim by the export; gated_child_content_observed is a universal
+non-observation doctrine guarantee (always false). Both are optional in the wire
+schema (legacy 0.1.0 exports may omit them) but always emitted by current
+builders. Absence is never "gated content observed".
 """
 
 import json
@@ -26,13 +28,14 @@ from openva_mcp import tools  # noqa: E402
 from openva_mcp.snapshot import LocalSnapshotSource, Snapshot  # noqa: E402
 
 from tools.openva.agent_export import build_agent_exports  # noqa: E402
+from tools.openva.source_authority import classify_verified_scope  # noqa: E402
 
 SOURCE_SCHEMA = json.loads((ROOT / "schemas/openva/source-reference.schema.json").read_text(encoding="utf-8"))
 EXPORT_SCHEMA = json.loads((ROOT / "schemas/openva/agent-export.schema.json").read_text(encoding="utf-8"))
 
 COMMIT = "tadisclose" + "0" * 30
 GENERATED_AT = "2026-06-15T00:00:00Z"
-ALLOWED_SOURCE_ROW_KEYS = set(EXPORT_SCHEMA["$defs"]["source_row"]["properties"])
+SOURCE_ROW_SUBSCHEMA = {"$ref": "#/$defs/source_row", "$defs": EXPORT_SCHEMA["$defs"]}
 BANNED_CONTENT_HINTS = ("hash", "summary", "digest", "raw", "text", "screenshot", "certificat", "report")
 
 
@@ -42,14 +45,22 @@ def _make_repo(tmp_path: Path) -> Path:
     (vendor / "vendor.yaml").write_text(
         "vendor_id: acme\ndisplay_name: Acme\nofficial_domains:\n  - acme.example\n", encoding="utf-8"
     )
+    # verified_scope is set by classification on the committed record.
     (vendor / "sources" / "acme-trust.yaml").write_text(
         "source_id: acme-trust\nvendor_id: acme\nsource_type: trust_center\n"
-        "source_url: https://acme.example/trust\naccess_class: public_landing_gated_docs\n",
+        "source_url: https://acme.example/trust\naccess_class: public_landing_gated_docs\n"
+        "verified_scope: landing_page_only\n",
         encoding="utf-8",
     )
     (vendor / "sources" / "acme-privacy.yaml").write_text(
         "source_id: acme-privacy\nvendor_id: acme\nsource_type: privacy_notice\n"
-        "source_url: https://acme.example/privacy\naccess_class: public_web\n",
+        "source_url: https://acme.example/privacy\naccess_class: public_web\nverified_scope: full_content\n",
+        encoding="utf-8",
+    )
+    # Unclassified scope: the export emits verified_scope null, not full_content.
+    (vendor / "sources" / "acme-blog.yaml").write_text(
+        "source_id: acme-blog\nvendor_id: acme\nsource_type: other_public_source\n"
+        "source_url: https://acme.example/blog\naccess_class: public_web\n",
         encoding="utf-8",
     )
     return tmp_path
@@ -69,58 +80,72 @@ def _rows(export_tree: Path) -> dict[str, dict]:
     return {row["source_id"]: row for row in vendor["sources"]}
 
 
-def test_trust_center_landing_page_discloses_landing_scope(export_tree):
+def test_committed_scope_is_projected_verbatim(export_tree):
     rows = _rows(export_tree)
-    trust = rows["acme-trust"]
-    assert trust["verified_scope"] == "landing_page_only"
-    assert trust["gated_child_content_observed"] is False
-
-
-def test_normal_source_discloses_full_content_scope(export_tree):
-    rows = _rows(export_tree)
+    assert rows["acme-trust"]["verified_scope"] == "landing_page_only"
     assert rows["acme-privacy"]["verified_scope"] == "full_content"
-    assert rows["acme-privacy"]["gated_child_content_observed"] is False
+    # Unclassified -> null (never inferred to full_content).
+    assert rows["acme-blog"]["verified_scope"] is None
 
 
-def test_no_export_row_ever_claims_gated_child_content(export_tree):
+def test_new_exports_always_carry_both_fields_and_never_observe_gated_children(export_tree):
     for path in export_tree.rglob("*.json"):
         doc = json.loads(path.read_text(encoding="utf-8"))
-        for source_list in (doc.get("sources", []),):
-            for row in source_list:
-                if "gated_child_content_observed" in row:
-                    assert row["gated_child_content_observed"] is False
+        for row in doc.get("sources", []):
+            assert "verified_scope" in row
+            assert "gated_child_content_observed" in row
+            assert row["gated_child_content_observed"] is False
 
 
 def test_export_rows_carry_no_child_document_content_fields(export_tree):
-    rows = _rows(export_tree)
-    for row in rows.values():
-        # additionalProperties:false already forbids extra keys; assert the row
-        # shape is exactly the allowed disclosure set and nothing content-bearing.
-        assert set(row).issubset(ALLOWED_SOURCE_ROW_KEYS)
+    allowed = set(EXPORT_SCHEMA["$defs"]["source_row"]["properties"])
+    for row in _rows(export_tree).values():
+        assert set(row).issubset(allowed)
         for key in row:
             assert not any(hint in key.lower() for hint in BANNED_CONTENT_HINTS), key
 
 
-def test_source_schema_forbids_observed_gated_child_content():
-    record = {"gated_child_content_observed": True}
+def test_legacy_export_without_fields_still_validates():
+    # An older 0.1.0 export row that omits the Tier A fields remains valid:
+    # they are optional in the wire schema.
+    legacy = {
+        "source_id": "x",
+        "source_type": "dpa",
+        "source_url": "https://acme.example/dpa",
+        "canonical_confidence": None,
+        "retrieval_method": None,
+        "machine_readable": None,
+        "source_health": None,
+        "last_observed_at": None,
+        "material_change_since_baseline": None,
+    }
+    jsonschema.validate(legacy, SOURCE_ROW_SUBSCHEMA)
+    # A true is schema-impossible even when present.
     with pytest.raises(jsonschema.ValidationError):
-        jsonschema.validate(record, {"properties": SOURCE_SCHEMA["properties"], "type": "object"})
-    ok = {"gated_child_content_observed": False, "verified_scope": "landing_page_only"}
-    jsonschema.validate(ok, {"properties": SOURCE_SCHEMA["properties"], "type": "object"})
+        jsonschema.validate({**legacy, "gated_child_content_observed": True}, SOURCE_ROW_SUBSCHEMA)
 
 
-def test_mcp_discloses_scope_and_no_gated_content(export_tree):
+def test_source_schema_forbids_observed_gated_child_content():
+    record_props = {"properties": SOURCE_SCHEMA["properties"], "type": "object"}
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"gated_child_content_observed": True}, record_props)
+    jsonschema.validate({"gated_child_content_observed": False, "verified_scope": "landing_page_only"}, record_props)
+
+
+def test_classify_verified_scope_rule():
+    assert classify_verified_scope("public_landing_gated_docs") == "landing_page_only"
+    assert classify_verified_scope("public_web") == "full_content"
+    assert classify_verified_scope(None) == "full_content"
+
+
+def test_mcp_preserves_absent_vs_explicit_false(export_tree):
     snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
-
     source = tools.get_source(snapshot, "acme-trust")["source"]
     assert source["verified_scope"] == "landing_page_only"
     assert source["gated_child_content_observed"] is False
 
-    listed = tools.list_vendor_sources(snapshot, "acme")["sources"]
-    by_id = {s["source_id"]: s for s in listed}
-    assert by_id["acme-trust"]["verified_scope"] == "landing_page_only"
-    assert all(s["gated_child_content_observed"] is False for s in listed)
-    # No MCP source field carries gated-child content.
-    for s in listed:
-        for key in s:
-            assert not any(hint in key.lower() for hint in ("hash", "summary", "digest", "raw", "screenshot")), key
+    # A legacy row missing the fields: MCP returns None for both — never true,
+    # never collapsed to false.
+    legacy_view = tools._source_view("acme", {"source_id": "y", "source_url": "https://acme.example/y"})
+    assert legacy_view["verified_scope"] is None
+    assert legacy_view["gated_child_content_observed"] is None

@@ -36,7 +36,9 @@ A public trust-center landing page is a content-bearing source, even when the do
 | Login wall with no public assurance content | No | `unavailable_source` / access-state fact only |
 | Unfetchable or bot-protected locator | No | candidate / access-state fact only |
 
-A landing-page-only source establishes that the trust center exists and which document categories it lists. It must not assert possession or validity of any certification, report coverage periods, report contents, gated DPA or subprocessor contents, child-document hashes, or child-document summaries. Sources record `verified_scope` (`full_content` by default, `landing_page_only` for `public_landing_gated_docs`); `gated_child_content_observed` is a doctrine guarantee that is always `false`.
+A landing-page-only source establishes that the trust center exists and which document categories it lists. It must not assert possession or validity of any certification, report coverage periods, report contents, gated DPA or subprocessor contents, child-document hashes, or child-document summaries.
+
+`verified_scope` is a committed source-classification fact set when the source is classified (`landing_page_only` for `public_landing_gated_docs`, otherwise `full_content`); the export projects the committed value and never infers it from `access_class`. When a record carries no `verified_scope`, the export emits `null` (unspecified), which must never be read as full-content verification. `gated_child_content_observed` is not a measured observation result: it is a universal non-observation doctrine guarantee that OpenVA never inspects gated child documents, so it is always `false`. In exports the field is optional for backward compatibility — a legacy export that omits it means "unknown, not true", never that gated content was observed.
 
 ### `excluded_non_public`
 

@@ -47,6 +47,18 @@ def _vocab() -> dict[str, Any]:
     return yaml.safe_load(_VOCAB_PATH.read_text(encoding="utf-8"))
 
 
+def classify_verified_scope(access_class: str | None) -> str:
+    """Content-verification scope from a source's committed access class.
+
+    This is the classification rule the committing path uses to set
+    verified_scope on the source record. A public_landing_gated_docs source is,
+    by classification, only landing-page-content-verified — its gated child
+    documents are never inspected. The export projects the committed value; it
+    does not run this rule at export time.
+    """
+    return "landing_page_only" if access_class == "public_landing_gated_docs" else "full_content"
+
+
 def normalize_host(url: str | None) -> str:
     host = urlsplit(url or "").netloc.lower()
     host = host.rsplit("@", maxsplit=1)[-1]

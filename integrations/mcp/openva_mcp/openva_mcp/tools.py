@@ -43,10 +43,11 @@ def _source_view(vendor_id: str, row: dict[str, Any]) -> dict[str, Any]:
         "source_health": row.get("source_health"),
         "last_observed_at": row.get("last_observed_at"),
         "material_change_since_baseline": row.get("material_change_since_baseline"),
-        # Tier A disclosure: scope of content verification, and the doctrine
-        # guarantee that gated child documents were never inspected.
+        # Tier A disclosure: projected verbatim so consumers can distinguish a
+        # legacy export (field absent -> null) from an explicit false. Absence is
+        # never "gated content observed"; a true is schema-impossible.
         "verified_scope": row.get("verified_scope"),
-        "gated_child_content_observed": row.get("gated_child_content_observed", False),
+        "gated_child_content_observed": row.get("gated_child_content_observed"),
     }
 
 
