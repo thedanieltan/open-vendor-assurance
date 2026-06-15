@@ -14,17 +14,19 @@ OpenVA uses taxonomy-driven discovery to grow the launch corpus without treating
 
 The queue drives discovery reports and generated candidate-promotion plan proposals. It does not write canonical vendor or source records.
 
-Required queue posture:
+The queue posture declares the aggregate capability of its enabled discovery modes. Network-fetching modes (`official_domain_source_discovery`, `sitemap_source_discovery`) make `network_fetch_performed` true; the queue and discovery lane still never write repository state, canonical sources, or candidate source records. Each enabled mode also carries a per-mode capability declaration validated against the authoritative code registry (`tools/openva/catalog_growth_discovery_queue.py`), so a network-fetching mode cannot be enabled under a no-network posture.
+
+Required queue posture (for the committed queue, whose enabled modes fetch):
 
 ```text
-network_fetch_performed: false
+network_fetch_performed: true
 writes_repository_state: false
 writes_canonical_sources: false
 creates_candidate_sources: false
 non_advisory: true
 ```
 
-The scale-readiness guide is non-executing. It does not fetch network sources, create pull requests, run promotion, or write canonical vendor/source records.
+Discovery may fetch a vendor's own public assurance locators, but it never creates pull requests, runs promotion, or writes canonical vendor/source records. Catalog admission stays on the human-reviewed, PR-only promotion path.
 
 ## Launch corpus goal
 

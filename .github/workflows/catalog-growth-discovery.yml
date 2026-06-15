@@ -91,6 +91,14 @@ jobs:
         run: |
           python -m tools.openva.catalog_growth_discovery_queue validate \
             --output catalog-growth-discovery-queue-summary.json
+      - name: Run bounded sitemap source discovery
+        run: |
+          set -euo pipefail
+          python -m tools.openva.catalog_growth_discovery_queue run-sitemap-discovery \
+            --queue maintenance/queues/catalog-growth-discovery.json \
+            --discovery-run-id "${{ github.run_id }}-${{ github.run_attempt }}" \
+            --discovered-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --output sitemap-source-discovery-events.json
       - name: Configure bounded source discovery
         run: |
           set -euo pipefail
@@ -384,6 +392,7 @@ jobs:
             reports/source-discovery-unavailable.csv
             reports/promotion-plan-actions.csv
             catalog-growth-discovery-queue-summary.json
+            sitemap-source-discovery-events.json
             vendor-candidate-discovery-report.json
             vendor-candidate-source-discovery-report.json
             source-discovery-report.json

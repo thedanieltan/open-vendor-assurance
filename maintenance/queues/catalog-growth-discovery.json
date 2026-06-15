@@ -4,10 +4,30 @@
   "purpose": "Drive launch-corpus discovery from OpenVA coverage lanes without treating discovered vendors or sources as canonical truth.",
   "non_advisory": true,
   "posture": {
-    "network_fetch_performed": false,
+    "network_fetch_performed": true,
     "writes_repository_state": false,
     "writes_canonical_sources": false,
     "creates_candidate_sources": false
+  },
+  "mode_capabilities": {
+    "seed_file_vendor_discovery": {
+      "network_fetch_performed": false,
+      "writes_repository_state": false,
+      "writes_canonical_sources": false,
+      "creates_candidate_sources": false
+    },
+    "official_domain_source_discovery": {
+      "network_fetch_performed": true,
+      "writes_repository_state": false,
+      "writes_canonical_sources": false,
+      "creates_candidate_sources": false
+    },
+    "sitemap_source_discovery": {
+      "network_fetch_performed": true,
+      "writes_repository_state": false,
+      "writes_canonical_sources": false,
+      "creates_candidate_sources": false
+    }
   },
   "limits": {
     "target_vendor_candidates": 240,
@@ -23,7 +43,8 @@
   ],
   "discovery_modes": [
     "seed_file_vendor_discovery",
-    "official_domain_source_discovery"
+    "official_domain_source_discovery",
+    "sitemap_source_discovery"
   ],
   "cohorts": [
     {"cohort_id": "cloud-platforms-launch", "coverage_lane": "cloud_platforms", "target_vendor_candidates": 15, "priority": "high", "status": "queued"},
