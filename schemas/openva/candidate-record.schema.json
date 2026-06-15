@@ -119,6 +119,7 @@
         "duplicate_of": { "type": ["string", "null"], "maxLength": 200 },
         "evidence_digest": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
         "verification_result": { "type": ["string", "null"], "maxLength": 60 },
+        "authority": { "$ref": "#/$defs/authority" },
         "reasons": {
           "type": "array",
           "items": { "type": "string", "minLength": 1, "maxLength": 200 },
@@ -126,6 +127,53 @@
         }
       },
       "additionalProperties": false
+    },
+    "authority": {
+      "type": ["object", "null"],
+      "description": "Tier A: durable, structured provenance for why this URL is treated as vendor-authorized. CNAME/TLS are corroboration only and never strong on their own; off-domain authority needs a strong content-anchored or governed signal. Reconstructable after evaluation; machines must not need to parse the free-text note.",
+      "required": ["class", "method", "target_url", "observed_at"],
+      "properties": {
+        "class": { "enum": ["strong", "corroborating", "unproven"] },
+        "method": {
+          "enum": [
+            "same_official_domain",
+            "official_domain_link",
+            "official_domain_redirect",
+            "official_vendor_manifest",
+            "manual_exception",
+            "cname_corroboration",
+            "tls_corroboration"
+          ]
+        },
+        "source_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "target_url": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "evidence_digest": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+        "note": { "type": ["string", "null"], "maxLength": 500 }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "method": { "enum": ["cname_corroboration", "tls_corroboration"] } }, "required": ["method"] },
+          "then": { "properties": { "class": { "enum": ["corroborating", "unproven"] } } }
+        },
+        {
+          "if": { "properties": { "class": { "const": "strong" } }, "required": ["class"] },
+          "then": {
+            "properties": {
+              "method": {
+                "enum": [
+                  "same_official_domain",
+                  "official_domain_link",
+                  "official_domain_redirect",
+                  "official_vendor_manifest",
+                  "manual_exception"
+                ]
+              }
+            }
+          }
+        }
+      ]
     },
     "evidence_record": {
       "type": "object",

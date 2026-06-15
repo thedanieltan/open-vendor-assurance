@@ -43,6 +43,41 @@ access_classes:
   - public_landing_gated_docs
   - excluded_non_public
 
+# Tier A: how far content verification reached for a source. landing_page_only
+# means the public landing page was content-verified but its gated child
+# documents were not (and must not be) inspected. Absent => full_content.
+verified_scopes:
+  - full_content
+  - landing_page_only
+
+# Tier A: durable, structured provenance for why a discovered URL is treated as
+# vendor-authorized. Locator discovered != authority proven; authority must be
+# reconstructable after eligibility evaluation, not free-text only.
+authority_classes:
+  - strong
+  - corroborating
+  - unproven
+authority_methods:
+  - same_official_domain
+  - official_domain_link
+  - official_domain_redirect
+  - official_vendor_manifest
+  - manual_exception
+  - cname_corroboration
+  - tls_corroboration
+# Only strong, content-anchored or governed signals may establish authority on
+# their own. CNAME/TLS relationships are corroboration only and never establish
+# authority by themselves (dangling-CNAME / forgotten-subdomain takeover risk).
+strong_authority_methods:
+  - same_official_domain
+  - official_domain_link
+  - official_domain_redirect
+  - official_vendor_manifest
+  - manual_exception
+corroborating_authority_methods:
+  - cname_corroboration
+  - tls_corroboration
+
 rights_classes:
   - metadata_only
   - public_link_only
