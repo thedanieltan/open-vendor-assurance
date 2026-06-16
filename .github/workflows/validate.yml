@@ -18,11 +18,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install package
         run: pip install -e ".[dev]"
+      - name: Enforce repository hygiene
+        env:
+          OPENVA_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          OPENVA_HEAD_SHA: ${{ github.sha }}
+          OPENVA_HEAD_REF: ${{ github.head_ref || github.ref_name }}
+        run: >-
+          python -m tools.openva.repository_hygiene check
+          --base "$OPENVA_BASE_SHA"
+          --head "$OPENVA_HEAD_SHA"
+          --head-ref "$OPENVA_HEAD_REF"
       - name: Run OpenVA validator
         run: python -m tools.openva.validate validate
       - name: Rebuild generated indexes
