@@ -1,190 +1,105 @@
 # Public Roadmap
 
-This roadmap communicates OpenVA direction without creating a support, legal, compliance, or vendor-certification commitment.
+This roadmap communicates OpenVA direction without creating a support, legal,
+compliance, procurement, security, or vendor-certification commitment.
 
-OpenVA is a public-source-only, metadata-first vendor assurance registry. It is not a legal, compliance, security, procurement, KYC, AML, or vendor-risk advisory service.
+OpenVA is a public-source-only, metadata-first registry of vendor-published
+assurance references. It is not an advisory or vendor-ranking service.
 
-## Current maturity
+## Current state
 
-OpenVA is early public infrastructure.
+OpenVA operates an autonomous catalog pipeline for bounded, machine-verifiable
+public-source facts. Discovery, verification, observation, maintenance,
+promotion, rollback, publication, and audit actions run through declared
+workflows and pull-request gates. Humans govern code, schemas, authority,
+permissions, thresholds, and exceptions.
 
-OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
+The catalog remains an evolving public dataset. A published record means OpenVA
+identified and classified a public source reference; it does not mean the vendor
+is compliant, approved, safe, certified, suitable, or recommended.
 
-The initial catalog is a seed dataset. It is useful for testing importer
-workflows, matching public vendor assurance references, and contributing
-public-source metadata, but it should not be treated as complete vendor
-assurance coverage.
+## Priorities
 
-Current focus:
+### Coverage quality
 
-- stable metadata schemas;
-- public-source-only contribution workflow;
-- reproducible generated indexes;
-- export pack contract;
-- scheduled maintenance reports;
-- catalog-agent guardrails;
-- consumer conformance fixtures;
-- public governance readiness;
-- operating the source-intelligence layer (submission intake, claim verification, observation ledger, agent exports, coverage growth reporting).
+- deepen DPA, subprocessor, privacy, security, compliance, and trust-center
+  coverage for commonly used vendors;
+- expand regional and industry coverage through bounded catalog batches;
+- prefer authoritative vendor-controlled sources over inferred URLs;
+- preserve native-language source metadata where available.
 
-## Source-intelligence layer (live, June 2026)
+### Source freshness and reliability
 
-The source-intelligence layer is now operating end to end:
+- increase recent observation coverage;
+- detect moved, unavailable, bot-protected, and materially changed sources;
+- repair or quarantine sources only through evidence-bearing workflows;
+- keep discovery and maintenance bounded by host, URL, byte, and time limits.
 
-- structured source-claim submission forms (`docs/submission-intake.md`);
-- deterministic claim verification with comment-and-label-only authority (`docs/submission-verification.md`);
-- an append-only observation/change ledger with reviewed-PR commits (`docs/observation-ledger.md`);
-- digest-verifiable public agent exports on the hosted site (`docs/agent-export-contract.md`);
-- coverage growth reporting and prioritization through the candidate model (`docs/coverage-growth.md`).
+### Machine consumption
 
-Current posture, per the WP34.6 corrective decision in `docs/reviews/openva-roadmap-decision-2026-06.md`: the earlier "run 3–4 weekly cycles before starting release gates" posture is **superseded**. P0 work begins immediately — consolidated source-intelligence release gates (WP35) and autonomous observation-ledger continuity (WP35.5) — followed in strict order by machine-provisional vendor materialization (WP36) and independent bot-quorum promotion (WP37). Machine autonomy is permitted only through independent review, evidence-bearing decision records, delay windows, and PR-based merge paths; no single bot discovers, approves, and merges the same claim, and ambiguous cases fail closed. Freshness gates run warn-only until a complete observation baseline is committed, then enforce. The full assessment remains in `docs/reviews/openva-system-review-2026-06.md`; operational measurements are regenerated before each step rather than copied from that snapshot.
+- keep static exports deterministic, schema-versioned, and digest-verifiable;
+- maintain the hosted vendor pages, agent index, discovery manifest, sitemap,
+  robots file, and `llms.txt` surface;
+- publish stable MCP and package distributions when release operations are ready;
+- provide importer fixtures and inventory-matching examples without introducing
+  risk scoring or organization-specific decisions.
 
-## Active workstreams
+### Governance and compatibility
 
-### Governance and public boundaries
+- preserve deny-by-default workflow authority;
+- require independent evidence and separation of duties for autonomous promotion;
+- keep every machine-created catalog claim reversible;
+- maintain release gates, conformance fixtures, versioning rules, and public
+  security and contribution policies;
+- retire obsolete workflows and documentation only after their durable contracts
+  and evidence have been identified.
 
-Goal: keep contribution boundaries clear as public participation grows.
+## Operating boundaries
 
-Includes:
-
-- maintainer guide;
-- triage policy;
-- issue templates;
-- public launch checklist;
-- label taxonomy;
-- public roadmap;
-- first-good-issue policy;
-- non-advisory disclaimer.
-
-### Release and versioning discipline
-
-Goal: define how consumers should pin and reason about OpenVA packs.
-
-Includes:
-
-- release policy;
-- versioning policy;
-- schema-version rules;
-- profile-version rules;
-- changelog expectations;
-- compatibility expectations.
-
-### Catalog expansion
-
-Goal: expand coverage through small metadata-only PRs.
-
-Rules:
+OpenVA will continue to use:
 
 - public sources only;
-- bounded catalog-agent PRs;
-- no gated materials;
-- no raw document mirroring;
-- no advisory language;
-- generated indexes and pack updated before merge.
-
-### Scheduled catalog maintenance
-
-Goal: keep the catalog usable without relying on one-off manual sweeps.
-
-Includes:
-
-- scheduled validation;
-- generated-index drift checks;
-- source-observation reports;
-- source-refinement queues;
-- workflow inventory review;
-- maintainer-facing artifacts rather than automatic writes to `main`.
-
-### Agent-assisted expansion
-
-Goal: let agents expand the vendor catalog while keeping human review at the trust boundary.
-
-Includes:
-
-- bounded catalog-batch manifests;
-- agent-created catalog PRs;
-- generated index and pack updates;
-- public-source checks;
-- maintainer approval before merge.
-
-### Observation hardening
-
-Goal: make observation records safe enough for downstream trust signals.
-
-Includes:
-
-- result taxonomy;
-- dry-run summaries;
-- URL safety;
-- no anti-bot bypass;
-- no raw content storage;
-- clear handling of bot-protected, size-limited, failed, or quarantined results.
-
-### Consumer compatibility
-
-Goal: help downstream importers validate packs safely.
-
-Includes:
-
-- conformance fixtures;
-- import-safety checks;
-- invalid-pack examples;
-- stable pack contract documentation.
+- metadata-first records rather than raw document mirroring;
+- pull requests for every repository mutation;
+- machine-readable authority contracts and release gates;
+- bounded automation that fails closed on ambiguity;
+- human governance for policy, authority, schema, workflow, and permission changes.
 
 ## Not on the roadmap
 
 OpenVA does not plan to provide:
 
-- legal advice;
-- compliance advice;
-- procurement recommendations;
-- vendor risk scoring;
-- vendor approval badges;
-- vendor rankings;
+- legal, compliance, procurement, audit, security, KYC, AML, sanctions, or
+  vendor-risk advice;
+- vendor approval badges, rankings, recommendations, or risk scores;
 - customer-specific agreement analysis;
-- gated trust-center collection;
-- SOC report collection from private portals;
-- credentialed scraping;
-- anti-bot bypass tooling;
+- authenticated trust-center or private-portal collection;
+- credentialed scraping, CAPTCHA solving, proxy rotation, or anti-bot bypass;
+- private evidence storage;
 - raw document mirroring by default.
 
-## Good first issues
+## Contribution priorities
 
-Good first issues should be low-risk and bounded.
+Good contributions are bounded and testable, for example:
 
-Examples:
+- correcting a public source reference;
+- adding public metadata for a clearly identified vendor source;
+- improving fixtures, examples, or factual documentation;
+- adding tests around existing behavior;
+- improving adapter compatibility without changing catalog meaning.
 
-- clarify documentation wording;
-- improve examples;
-- add tests around existing behavior;
-- fix typos;
-- add public-source metadata for one clearly public source after maintainer approval;
-- improve fixture documentation.
+Schema, workflow-authority, permission, and policy-threshold changes require
+maintainer review and explicit scope.
 
-Not good first issues:
+## Public operation checks
 
-- schema changes;
-- workflow permission changes;
-- pack contract changes;
-- observation fetch changes;
-- non-English legal-source interpretation;
-- KYC/AML records;
-- vendor-submitted promotional updates;
-- large vendor catalog batches.
+Maintainers should keep the following true:
 
-## Public readiness
-
-For public operation, maintainers should continue to confirm:
-
-- README accurately states scope and limitations;
-- CONTRIBUTING and GOVERNANCE are current;
-- SECURITY is current;
-- LICENSE reflects the intended free-use posture;
-- CODEOWNERS covers governance-sensitive paths;
-- issue templates route users through a small catalog update, structured source-claim submission, scope question, bug, and docs set;
-- PR templates communicate source and non-advisory checks;
-- validation workflow is green;
-- scheduled maintenance workflow is enabled;
-- catalog-agent workflow is manual and review-gated;
-- consumer conformance fixtures pass;
-- open PRs that may confuse launch state are resolved or clearly labelled.
+- project scope and limitations are accurately documented;
+- governance, contribution, security, and licensing documents are current;
+- generated outputs are reproducible and drift-free;
+- validation and release gates pass;
+- scheduled workflows are enabled and observable;
+- public discovery and agent-export endpoints are available;
+- open issues and pull requests do not misrepresent catalog completeness or
+  automation authority.
