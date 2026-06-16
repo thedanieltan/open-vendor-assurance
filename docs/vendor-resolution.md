@@ -33,6 +33,7 @@ It composes existing machinery rather than duplicating it:
 | Vendor identity matching | `openva_vendor_inventory_matcher.core` (the single matching authority) |
 | Source health + safety | `tools/openva/source_verification.py`, `tools/openva/url_safety.py` |
 | Candidate emission + eligibility | `tools/openva/candidate_record.py` (`build_candidate`, `evaluate_eligibility`) |
+| Durable lifecycle ingress | `maintenance/candidates/<candidate_id>.json` — the queue `autonomous-catalog-growth.yml` already consumes |
 | Promotion | The existing candidate → machine_provisional → quorum → PR → release-gate → automerge lifecycle |
 
 ## Result-state vocabulary
@@ -51,10 +52,23 @@ One small, consistent set is used everywhere (browser, API, agent, CSV export):
 | `candidate_processing` | A discovered/refreshed source has entered the autonomous lifecycle. |
 | `catalogued` | The candidate passed existing promotion controls and is now canonical. |
 
-`catalog_current … verification_inconclusive` are **resolution outcomes**.
-`candidate_processing` and `catalogued` are **catalogue-lifecycle stages**, carried
-per source in `catalog_status` so a consumer can tell a pending update from a
-canonical record.
+These nine are kept on three independent axes, because conflating them misleads
+agents:
+
+- **`status`** — the resolution/health outcome (`catalog_current …
+  verification_inconclusive`).
+- **`catalog_membership`** — `canonical` when the answer is backed by a canonical
+  catalogue record (true even when that record is stale or broken), else `none`.
+- **`catalog_status`** — the *durable* catalogue-lifecycle stage of the record
+  backing the answer: `catalogued` (canonical), `candidate_processing` (eligible
+  **and** durably enqueued), `candidate_deferred`, `candidate_rejected`, or
+  `pending_ingress` (recorded but not durably enqueued), or `null`.
+
+`catalog_status` is derived from the shared evaluator's actual decision plus the
+ingress result — never asserted optimistically. A deferred or rejected candidate
+is never reported as `candidate_processing`, and a rejected replacement is
+downgraded to `verification_inconclusive` rather than returned as a usable
+source.
 
 ## Freshness modes
 
@@ -114,13 +128,26 @@ Each source distinguishes:
 
 ## Human upload workflow
 
-The hosted viewer's Local Matcher resolves an uploaded CSV
-(`vendor_name, business_entity_name, domain, jurisdiction, registration_number,
-registered_address`) into one unified result per vendor, with CSV and JSON
-export. The CSV export always includes a `result_state` column. Discovered or
-refreshed sources are routed into the catalogue lifecycle automatically — users
-never need to file GitHub issues for routine unmatched vendors, and never need to
-understand candidates, machine quorum, or internal workflow terminology.
+There are two surfaces with deliberately different capabilities:
+
+- **Hosted browser Local Matcher** — a static, fully client-side page. It resolves
+  an uploaded CSV (`vendor_name, business_entity_name, domain, jurisdiction,
+  registration_number, registered_address`) against the catalogue in **cached**
+  mode only, returning one unified result per vendor with a `result_state` column
+  in the CSV/JSON export. Being static, it **does not** perform live discovery,
+  fetch vendor URLs, or route candidates into the lifecycle; it reports cached
+  catalogue state and points to the resolver for live verification. It never
+  uploads the CSV.
+- **Resolver `verify` mode** (`resolve_inventory(...)` via Python/CLI, run
+  server-side or in CI) — performs the live checks, discovers replacements and
+  missing sources, and **durably enqueues** discovered/refreshed sources into the
+  catalogue lifecycle. Here users genuinely do not need to file GitHub issues for
+  routine unmatched vendors, and never need to understand candidates, machine
+  quorum, or internal workflow terminology.
+
+Connecting the hosted page to a running resolver service (so browser uploads also
+get `verify` mode) is tracked in `docs/roadmap.md`; today that live path is the
+Python/CLI contract.
 
 ## Candidate emission and idempotency
 
@@ -139,6 +166,20 @@ reduces verification. Candidate ids are derived deterministically from
 many users or agents reuses one in-flight candidate instead of spawning
 duplicates.
 
+A brand-new vendor is emitted as **one aggregate candidate** carrying its full
+discovery set (all discovered source types), so it materialises from complete
+evidence rather than fragmenting into one candidate per source type (which would
+risk duplicate provisional PRs and identity collisions). Existing-vendor source
+replacements and coverage-gap fills remain independently keyed.
+
+Discovered/refreshed candidates are handed to a **durable, idempotent ingress**:
+`CatalogQueueIngress` writes the unified candidate record to
+`maintenance/candidates/<candidate_id>.json` (skipping if it already exists),
+which is exactly the queue `autonomous-catalog-growth.yml` reads eligible
+candidates from. The response's `catalog_status` reflects the actual persisted
+state. Read-only/preview callers can use the non-durable `RecordingIngress`,
+which never claims a candidate is processing.
+
 ## Catalogue mutation boundary
 
 Live resolution **never** writes canonical catalogue files or `main`. It resolves
@@ -154,9 +195,18 @@ candidate → eligibility → machine_provisional → observation
 
 ## Historical source-reference model
 
-When a URL is replaced, OpenVA preserves **reference metadata only**: the former
+A replacement is only ever returned as `catalog_refreshed` when the final URL
+passes safety validation, stays on the vendor's authoritative domain, is not a
+generic/homepage redirect, and remains semantically consistent with the source
+type. A redirect that fails any of these is not treated as a moved source:
+discovery runs, and if no safe replacement is found the result is
+`verification_inconclusive` (not a refreshed source).
+
+When a URL is replaced, OpenVA proposes **reference metadata only**: the former
 URL, the current URL, first/last observed timestamps, redirect target,
-unavailable state, and a `superseded_by` relationship. It records **no** document
-content, DPA/privacy text, clause-level versions, document comparisons, or
-full-text archives. See the `history` block of the resolution result and the
-`source_history` definition in the result schema.
+unavailable state, and a `superseded_by` relationship — in the
+`proposed_source_history` block of the resolution result (`source_history` in the
+schema). It is *proposed* because durable supersession history is written through
+the existing observation/change-event model only after the replacement is admitted
+by the lifecycle. It records **no** document content, DPA/privacy text,
+clause-level versions, document comparisons, or full-text archives.

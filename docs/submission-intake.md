@@ -2,11 +2,14 @@
 
 This guide explains how to submit vendor and source claims to OpenVA through GitHub issue forms, and what happens to a submission after it is filed.
 
-> **You usually do not need this form.** Uploading a vendor list to the hosted
-> Local Matcher, or calling the unified resolver (`docs/vendor-resolution.md`),
-> already routes unmatched vendors and stale/missing sources into the same
-> autonomous lifecycle automatically. GitHub issue forms remain available for
-> manual claims, but routine unmatched vendors do not require one.
+> **You often do not need this form.** Running the unified resolver in `verify`
+> mode (`resolve_vendor_sources` / `resolve_inventory`, see
+> `docs/vendor-resolution.md`) durably routes unmatched vendors and stale/missing
+> sources into this same autonomous lifecycle automatically, via the
+> `maintenance/candidates` queue. The hosted browser Local Matcher is cached-only
+> and does **not** route candidates. GitHub issue forms remain available for
+> manual claims, but routine unmatched vendors resolved in `verify` mode do not
+> require one.
 
 A submission is a claim. It does not change catalog data directly. Claims enter
 verification, then the **same autonomous lifecycle** the bot-discovered

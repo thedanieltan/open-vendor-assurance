@@ -15,7 +15,11 @@ canonical catalogue files. It composes machinery that already exists:
   :mod:`tools.openva.url_safety` (fail-closed on unsafe URLs);
 - candidate emission: :mod:`tools.openva.candidate_record` (deterministic ids,
   evidence digests, and the one fail-closed eligibility evaluator that every
-  origin must pass through).
+  origin must pass through);
+- durable lifecycle ingress: ``maintenance/candidates/<candidate_id>.json`` — the
+  same queue the autonomous-catalog-growth workflow consumes. Live resolution
+  enqueues candidates there idempotently; it never writes canonical catalogue
+  records or ``main``.
 
 Resolution result vocabulary (one small, consistent set):
 
@@ -28,6 +32,12 @@ Resolution result vocabulary (one small, consistent set):
     verification_inconclusive  no reliable current result could be established
     candidate_processing     a discovered/refreshed source entered the lifecycle
     catalogued               candidate passed promotion controls; now canonical
+
+Catalogue membership, source health, and lifecycle state are kept on separate
+axes: ``catalog_membership`` (canonical / none) says whether the answer is backed
+by a canonical record; ``status`` carries the resolution/health outcome; and
+``catalog_status`` carries the durable lifecycle stage of the record backing the
+answer.
 
 Operational metadata only. Not legal, compliance, procurement, security, KYC,
 AML, audit, or vendor-risk advice. OpenVA preserves source-reference and
@@ -101,13 +111,22 @@ _ROLLUP_PRECEDENCE = (
     RESULT_CATALOG_REFRESHED,
 )
 
+# Catalogue-lifecycle axis (separate from the resolution/health axis above).
+LIFECYCLE_CATALOGUED = "catalogued"
+LIFECYCLE_PROCESSING = "candidate_processing"
+LIFECYCLE_DEFERRED = "candidate_deferred"
+LIFECYCLE_REJECTED = "candidate_rejected"
+LIFECYCLE_PENDING = "pending_ingress"
+
 # --- freshness modes --------------------------------------------------------
 
 FRESHNESS_CACHED = "cached"
 FRESHNESS_VERIFY = "verify"
 FRESHNESS_MODES = (FRESHNESS_CACHED, FRESHNESS_VERIFY)
 
-# Stored catalogue source-health buckets, mapped to a cached-mode result.
+# Stored catalogue source-health buckets, mapped to a cached-mode result. The
+# record stays canonical (catalogued) regardless of health; this is only the
+# resolution/health outcome axis.
 _CACHED_HEALTH_RESULT = {
     "ok": RESULT_CATALOG_CURRENT,
     None: RESULT_CATALOG_CURRENT,
@@ -121,7 +140,11 @@ _CACHED_HEALTH_RESULT = {
 
 # Live verification statuses (from classify_status) and how they route.
 _VERIFY_CURRENT = {"ok"}
-_VERIFY_MOVED = {"redirected", "homepage_or_generic_redirect"}
+# A clean redirect *may* be a moved source, but only if it stays on-authority and
+# semantically consistent (checked in _valid_replacement). Generic/homepage
+# redirects never count as a moved source.
+_VERIFY_REDIRECT = {"redirected"}
+_VERIFY_GENERIC_REDIRECT = {"homepage_or_generic_redirect"}
 _VERIFY_BROKEN = {
     "not_found",
     "gone",
@@ -162,6 +185,7 @@ _DISCOVERY_PATHS: dict[str, tuple[str, ...]] = {
     "trust_center": ("trust", "trust-center", "security"),
     "status_page": ("status",),
 }
+
 
 def _now_default() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
@@ -207,10 +231,9 @@ class ResolutionCatalog:
         match_index = _load_json(root / "indexes" / "vendor-match-index.json")
         sources_index = _load_json(root / "indexes" / "sources.json")
         pack = _load_json(root / "openva-pack.json")
-        commit_sha = _git_head(root)
         snapshot = {
-            "catalog_commit_sha": commit_sha,
-            "catalog_generated_at": str(pack.get("generated_at") or matcher.scalar(None)),
+            "catalog_commit_sha": _git_head(root),
+            "catalog_generated_at": str(pack.get("generated_at") or ""),
         }
         vendor_rows: list[dict[str, Any]] = []
         for item in match_index.get("items", []):
@@ -224,7 +247,6 @@ class ResolutionCatalog:
                     "manifest_path": item.get("manifest_path"),
                 }
             )
-        health_by_source: dict[str, CatalogSource] = {}
         sources_by_vendor: dict[str, list[CatalogSource]] = {}
         for record in sources_index.get("items", []):
             vendor_id = str(record.get("vendor_id") or "")
@@ -237,9 +259,80 @@ class ResolutionCatalog:
                 health_status=source_health.get("status"),
                 observed_at=source_health.get("as_of") or provenance.get("collected_at"),
             )
-            health_by_source[source.source_id] = source
             sources_by_vendor.setdefault(vendor_id, []).append(source)
         return cls(snapshot=snapshot, vendor_rows=vendor_rows, sources_by_vendor=sources_by_vendor)
+
+
+# --- durable lifecycle ingress ----------------------------------------------
+
+
+@dataclass(frozen=True)
+class IngressOutcome:
+    """Result of handing a candidate to the durable lifecycle ingress."""
+
+    lifecycle_state: str  # LIFECYCLE_*
+    enqueued: bool        # newly persisted this call (vs already in flight)
+    durable: bool         # whether the candidate was persisted to disk
+    reference: str | None  # queue path or id
+
+
+def lifecycle_from_eligibility(eligibility_state: str, *, durable: bool) -> str:
+    """Map the shared evaluator's eligibility to a lifecycle stage.
+
+    A candidate is only "processing toward the catalogue" once it is both eligible
+    and durably persisted; otherwise it is deferred, rejected, or merely pending.
+    """
+    if not durable:
+        return LIFECYCLE_PENDING
+    if eligibility_state == candidate_record.ELIGIBLE_STATE:
+        return LIFECYCLE_PROCESSING
+    if eligibility_state.startswith("deferred"):
+        return LIFECYCLE_DEFERRED
+    if eligibility_state.startswith("rejected"):
+        return LIFECYCLE_REJECTED
+    return LIFECYCLE_PENDING
+
+
+class CatalogQueueIngress:
+    """Durable, idempotent ingress to the existing autonomous-growth queue.
+
+    Writes the unified candidate record to ``maintenance/candidates/<id>.json``,
+    the same directory ``autonomous-catalog-growth.yml`` reads eligible candidates
+    from. Idempotent by deterministic ``candidate_id`` filename: a repeat enqueue
+    reuses the in-flight candidate and reports its persisted state. Never touches
+    canonical catalogue files (``data/vendors``) or ``main``.
+    """
+
+    def __init__(self, root: Path = ROOT) -> None:
+        self.queue_dir = Path(root) / "maintenance" / "candidates"
+
+    def enqueue(self, record: dict[str, Any]) -> IngressOutcome:
+        self.queue_dir.mkdir(parents=True, exist_ok=True)
+        path = self.queue_dir / f"{record['candidate_id']}.json"
+        if path.exists():
+            existing = json.loads(path.read_text(encoding="utf-8"))
+            state = lifecycle_from_eligibility(existing.get("eligibility_state", ""), durable=True)
+            return IngressOutcome(state, enqueued=False, durable=True, reference=str(path))
+        path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        state = lifecycle_from_eligibility(record.get("eligibility_state", ""), durable=True)
+        return IngressOutcome(state, enqueued=True, durable=True, reference=str(path))
+
+
+class RecordingIngress:
+    """Non-durable ingress for read-only/preview contexts and tests.
+
+    Records candidates in memory only. Because nothing is persisted, it never
+    claims a candidate is processing toward the catalogue.
+    """
+
+    def __init__(self) -> None:
+        self.records: dict[str, dict[str, Any]] = {}
+
+    def enqueue(self, record: dict[str, Any]) -> IngressOutcome:
+        candidate_id = record["candidate_id"]
+        newly = candidate_id not in self.records
+        self.records[candidate_id] = record
+        return IngressOutcome(LIFECYCLE_PENDING, enqueued=newly, durable=False, reference=None)
 
 
 # --- request / result data --------------------------------------------------
@@ -272,11 +365,12 @@ class ResolvedSource:
     status: str
     source_url: str | None = None
     origin: str | None = None  # "catalog" | "live_discovery" | None
+    catalog_membership: str = "none"  # "canonical" | "none"
     live_checked: bool = False
     checked_at: str | None = None
-    catalog_status: str | None = None  # "catalogued" | "candidate_processing" | None
+    catalog_status: str | None = None  # lifecycle stage (LIFECYCLE_*) or None
     previous_source_url: str | None = None
-    history: dict[str, Any] | None = None
+    proposed_source_history: dict[str, Any] | None = None
     reasons: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -285,14 +379,15 @@ class ResolvedSource:
             "status": self.status,
             "source_url": self.source_url,
             "origin": self.origin,
+            "catalog_membership": self.catalog_membership,
             "live_checked": self.live_checked,
             "checked_at": self.checked_at,
             "catalog_status": self.catalog_status,
         }
         if self.previous_source_url is not None:
             payload["previous_source_url"] = self.previous_source_url
-        if self.history is not None:
-            payload["history"] = self.history
+        if self.proposed_source_history is not None:
+            payload["proposed_source_history"] = self.proposed_source_history
         if self.reasons:
             payload["reasons"] = list(self.reasons)
         return payload
@@ -305,7 +400,7 @@ class VendorResolution:
     freshness_mode: str
     sources: list[ResolvedSource]
     snapshot: dict[str, str]
-    candidates: list[dict[str, Any]] = field(default_factory=list)
+    candidate_updates: list[dict[str, Any]] = field(default_factory=list)
     identity_candidates: list[str] = field(default_factory=list)
 
     def to_response(self) -> dict[str, Any]:
@@ -320,30 +415,48 @@ class VendorResolution:
         }
         if self.identity_candidates:
             response["identity_candidates"] = list(self.identity_candidates)
+        if self.candidate_updates:
+            response["candidate_updates"] = list(self.candidate_updates)
         return response
 
 
 # --- idempotent candidate emission ------------------------------------------
 
 
-class SessionEmitter:
-    """Collects discovered/refreshed sources as candidate records.
+@dataclass(frozen=True)
+class EmitResult:
+    record: dict[str, Any]
+    outcome: IngressOutcome
 
-    Idempotent by construction: the candidate id is derived deterministically
-    from (origin, origin_reference), so the same vendor/source discovered by
-    many users or agents reuses one in-flight candidate rather than spawning
-    duplicates. Emission records candidates only; it never writes canonical
-    catalogue files or opens pull requests. Promotion stays with the existing
-    autonomous lifecycle.
+
+class SessionEmitter:
+    """Builds candidate records and hands them to a durable lifecycle ingress.
+
+    Idempotent on two levels: the deterministic candidate id dedups within a
+    session, and the injected ingress dedups across sessions/processes. Emission
+    never writes canonical catalogue files; canonical mutation stays with the
+    existing autonomous lifecycle.
     """
 
-    def __init__(self) -> None:
-        self._by_id: dict[str, dict[str, Any]] = {}
-        self._seen_keys: set[str] = set()
+    def __init__(self, ingress: Any | None = None) -> None:
+        self._ingress = ingress if ingress is not None else RecordingIngress()
+        self._by_id: dict[str, EmitResult] = {}
 
     @property
-    def candidates(self) -> list[dict[str, Any]]:
-        return [self._by_id[key] for key in sorted(self._by_id)]
+    def candidate_updates(self) -> list[dict[str, Any]]:
+        updates = []
+        for candidate_id in sorted(self._by_id):
+            result = self._by_id[candidate_id]
+            updates.append(
+                {
+                    "candidate_id": candidate_id,
+                    "candidate_origin": result.record["candidate_origin"],
+                    "eligibility_state": result.record["eligibility_state"],
+                    "lifecycle_state": result.outcome.lifecycle_state,
+                    "durable": result.outcome.durable,
+                }
+            )
+        return updates
 
     def emit(
         self,
@@ -357,11 +470,10 @@ class SessionEmitter:
         created_at: str,
         is_new_vendor: bool,
         identity_collision: bool = False,
-    ) -> tuple[dict[str, Any], bool]:
-        """Return (candidate_record, newly_created). Repeat emits are no-ops."""
+    ) -> EmitResult:
         candidate_id = candidate_record.compute_candidate_id(candidate_origin, origin_reference)
         if candidate_id in self._by_id:
-            return self._by_id[candidate_id], False
+            return self._by_id[candidate_id]
 
         eligibility_state, reasons = candidate_record.evaluate_eligibility(
             vendor_identity_candidate,
@@ -386,8 +498,10 @@ class SessionEmitter:
             eligibility_state=eligibility_state,
             decision_reasons=reasons,
         )
-        self._by_id[candidate_id] = record
-        return record, True
+        outcome = self._ingress.enqueue(record)
+        result = EmitResult(record=record, outcome=outcome)
+        self._by_id[candidate_id] = result
+        return result
 
 
 def _clean_source_candidate(source: dict[str, Any]) -> dict[str, Any]:
@@ -408,9 +522,9 @@ def bounded_discovery(
 ) -> DiscoveryResult | None:
     """Try a small, fixed set of vendor-published paths on the official domain.
 
-    Fails closed: only ``https`` URLs on the official domain that pass URL
-    safety are fetched, and a candidate is accepted only when the response is
-    reachable, on-domain, and semantically consistent with the source type.
+    Fails closed: only ``https`` URLs on the official domain that pass URL safety
+    are fetched, and a candidate is accepted only when the response is reachable,
+    on-domain, and semantically consistent with the source type.
     """
     domain = matcher.normalize_domain(official_domain)
     if not domain:
@@ -436,25 +550,38 @@ def _evaluate_fetch(
     text = normalize_text(result.body_sample, result.content_type)
     semantic = semantic_match(source_type, text, result.content_type)
     status = classify_status({"source_url": candidate_url, "source_type": source_type}, result, semantic)
-    final_host = matcher.normalize_domain(result.final_url or candidate_url)
-    on_domain = final_host == official_domain or final_host.endswith(f".{official_domain}")
-    accepted = (
-        status in {"ok", "redirected"}
-        and on_domain
-        and semantic.get("status") in {"strong", "weak"}
-    )
-    if not accepted:
+    final_url = result.final_url or candidate_url
+    if not _valid_replacement(final_url, semantic.get("status"), status, official_domain):
         return None
     return DiscoveryResult(
         candidate_url=candidate_url,
-        final_url=result.final_url or candidate_url,
+        final_url=final_url,
         http_status=result.http_status,
         content_type=result.content_type,
         verification_status=status,
         matched_terms=list(semantic.get("matched_terms", [])),
         observed_at=observed_at,
-        on_vendor_domain=on_domain,
+        on_vendor_domain=True,
     )
+
+
+def _valid_replacement(
+    final_url: str,
+    semantic_status: str | None,
+    verification_status: str,
+    official_domain: str | None,
+) -> bool:
+    """A replacement is acceptable only when safe, on-authority, non-generic, and
+    semantically consistent with the source type."""
+    if validate_url_safety(final_url, resolve_dns=True):
+        return False
+    if verification_status not in {"ok", "redirected"}:
+        return False
+    if not _on_domain(final_url, official_domain):
+        return False
+    if semantic_status not in {"strong", "weak"}:
+        return False
+    return True
 
 
 # --- identity resolution ----------------------------------------------------
@@ -498,16 +625,18 @@ def resolve_identity(catalog: ResolutionCatalog, vendor_input: dict[str, Any]) -
 
 
 def _resolve_cached_source(source: CatalogSource) -> ResolvedSource:
+    # Catalogue membership and source health are independent axes: a stale or
+    # broken source is still a canonical (catalogued) record.
     status = _CACHED_HEALTH_RESULT.get(source.health_status, RESULT_VERIFICATION_INCONCLUSIVE)
-    catalog_status = RESULT_CATALOGUED if status == RESULT_CATALOG_CURRENT else None
     return ResolvedSource(
         source_type=source.source_type,
         status=status,
         source_url=source.source_url,
         origin="catalog",
+        catalog_membership="canonical",
         live_checked=False,  # cached never claims live verification
         checked_at=source.observed_at,
-        catalog_status=catalog_status,
+        catalog_status=LIFECYCLE_CATALOGUED,
         reasons=[f"cached_health:{source.health_status or 'unknown'}"],
     )
 
@@ -519,13 +648,13 @@ def _make_history(
     previous: CatalogSource,
     new_url: str,
     now: str,
-) -> tuple[dict[str, Any], str]:
-    """Source-reference history only: former/current URL + observation times.
-
-    Records *no* document content, text, or clause-level versions.
-    """
+) -> dict[str, Any]:
+    """Proposed source-reference history only: former/current URL + observation
+    times. Records *no* document content, text, or clause-level versions. Becomes
+    durable supersession history only after the replacement is admitted by the
+    lifecycle."""
     new_id = f"{vendor_id}-{source_type}-{_short_digest(new_url)}"
-    history = {
+    return {
         "source_type": source_type,
         "current_source": {
             "source_id": new_id,
@@ -543,7 +672,6 @@ def _make_history(
             }
         ],
     }
-    return history, new_id
 
 
 def _verify_existing_source(
@@ -559,16 +687,8 @@ def _verify_existing_source(
 ) -> ResolvedSource:
     # Fail closed on unsafe URLs before any network access.
     if validate_url_safety(source.source_url, resolve_dns=True):
-        return ResolvedSource(
-            source_type=source.source_type,
-            status=RESULT_VERIFICATION_INCONCLUSIVE,
-            source_url=source.source_url,
-            origin="catalog",
-            live_checked=False,
-            checked_at=None,
-            catalog_status=RESULT_CATALOGUED,
-            reasons=["unsafe_url_not_fetched"],
-        )
+        return _canonical_outcome(source, RESULT_VERIFICATION_INCONCLUSIVE, now, live_checked=False,
+                                  reasons=["unsafe_url_not_fetched"])
     result = fetcher(source.source_url)
     text = normalize_text(result.body_sample, result.content_type)
     semantic = semantic_match(source.source_type, text, result.content_type)
@@ -576,55 +696,65 @@ def _verify_existing_source(
         {"source_url": source.source_url, "source_type": source.source_type}, result, semantic
     )
     if status in _VERIFY_CURRENT:
-        return ResolvedSource(
-            source_type=source.source_type,
-            status=RESULT_CATALOG_CURRENT,
-            source_url=result.final_url or source.source_url,
-            origin="catalog",
-            live_checked=True,
-            checked_at=now,  # verify records the current observation time
-            catalog_status=RESULT_CATALOGUED,
-            reasons=[f"verified:{status}"],
-        )
-    if status in _VERIFY_MOVED:
-        # Source moved: the redirect target is the replacement. Preserve old URL.
+        return _canonical_outcome(source, RESULT_CATALOG_CURRENT, now, live_checked=True,
+                                  source_url=result.final_url or source.source_url,
+                                  reasons=[f"verified:{status}"])
+    if status in _VERIFY_REDIRECT:
         new_url = result.final_url or source.source_url
-        return _refresh_via_replacement(
-            vendor_id=vendor_id,
-            previous=source,
-            new_url=new_url,
-            matched_terms=list(semantic.get("matched_terms", [])),
-            http_status=result.http_status,
-            content_type=result.content_type,
-            on_domain=_on_domain(new_url, official_domain),
-            emitter=emitter,
-            channel=channel,
-            now=now,
-            reason=f"moved:{status}",
+        if _valid_replacement(new_url, semantic.get("status"), status, official_domain):
+            return _refresh_via_replacement(
+                vendor_id=vendor_id, previous=source, new_url=new_url,
+                matched_terms=list(semantic.get("matched_terms", [])),
+                http_status=result.http_status, content_type=result.content_type,
+                on_domain=True, emitter=emitter, channel=channel, now=now, reason=f"moved:{status}",
+            )
+        # Redirect off-authority/generic/semantically inconsistent: not a safe
+        # replacement. Try discovery, else inconclusive (the original may persist).
+        return _discovery_fallback(
+            vendor_id=vendor_id, official_domain=official_domain, previous=source,
+            source_type=source.source_type, fetcher=fetcher, discovery=discovery,
+            emitter=emitter, channel=channel, now=now,
+            broken_reason=f"unsafe_or_generic_redirect:{status}",
+            no_replacement_status=RESULT_VERIFICATION_INCONCLUSIVE,
+        )
+    if status in _VERIFY_GENERIC_REDIRECT:
+        return _discovery_fallback(
+            vendor_id=vendor_id, official_domain=official_domain, previous=source,
+            source_type=source.source_type, fetcher=fetcher, discovery=discovery,
+            emitter=emitter, channel=channel, now=now, broken_reason=f"generic_redirect:{status}",
+            no_replacement_status=RESULT_VERIFICATION_INCONCLUSIVE,
         )
     if status in _VERIFY_BROKEN:
-        return _refresh_via_discovery(
-            vendor_id=vendor_id,
-            official_domain=official_domain,
-            previous=source,
-            source_type=source.source_type,
-            fetcher=fetcher,
-            discovery=discovery,
-            emitter=emitter,
-            channel=channel,
-            now=now,
-            broken_reason=f"broken:{status}",
+        return _discovery_fallback(
+            vendor_id=vendor_id, official_domain=official_domain, previous=source,
+            source_type=source.source_type, fetcher=fetcher, discovery=discovery,
+            emitter=emitter, channel=channel, now=now, broken_reason=f"broken:{status}",
+            no_replacement_status=RESULT_SOURCE_UNAVAILABLE,
         )
     # Gated / bot-protected / mismatch: cannot establish a reliable result.
+    return _canonical_outcome(source, RESULT_VERIFICATION_INCONCLUSIVE, now, live_checked=True,
+                              reasons=[f"inconclusive:{status}"])
+
+
+def _canonical_outcome(
+    source: CatalogSource,
+    status: str,
+    now: str,
+    *,
+    live_checked: bool,
+    source_url: str | None = None,
+    reasons: list[str] | None = None,
+) -> ResolvedSource:
     return ResolvedSource(
         source_type=source.source_type,
-        status=RESULT_VERIFICATION_INCONCLUSIVE,
-        source_url=source.source_url,
+        status=status,
+        source_url=source_url or source.source_url,
         origin="catalog",
-        live_checked=True,
-        checked_at=now,
-        catalog_status=RESULT_CATALOGUED,
-        reasons=[f"inconclusive:{status}"],
+        catalog_membership="canonical",
+        live_checked=live_checked,
+        checked_at=now if live_checked else None,
+        catalog_status=LIFECYCLE_CATALOGUED,  # the canonical record still exists
+        reasons=reasons or [],
     )
 
 
@@ -642,44 +772,35 @@ def _refresh_via_replacement(
     now: str,
     reason: str,
 ) -> ResolvedSource:
-    history, _new_id = _make_history(
-        vendor_id=vendor_id,
-        source_type=previous.source_type,
-        previous=previous,
-        new_url=new_url,
-        now=now,
+    history = _make_history(
+        vendor_id=vendor_id, source_type=previous.source_type, previous=previous,
+        new_url=new_url, now=now,
     )
-    _emit_source_candidate(
-        emitter=emitter,
-        candidate_origin="source_replacement",
-        channel=channel,
-        vendor_id=vendor_id,
-        official_domain=matcher.normalize_domain(new_url),
-        source_type=previous.source_type,
-        candidate_url=new_url,
-        final_url=new_url,
-        http_status=http_status,
-        content_type=content_type,
-        matched_terms=matched_terms,
-        on_domain=on_domain,
-        now=now,
-        is_new_vendor=False,
+    emitted = _emit_source_candidate(
+        emitter=emitter, candidate_origin="source_replacement", channel=channel,
+        vendor_id=vendor_id, official_domain=matcher.normalize_domain(new_url),
+        source_type=previous.source_type, candidate_url=new_url, final_url=new_url,
+        http_status=http_status, content_type=content_type, matched_terms=matched_terms,
+        on_domain=on_domain, now=now, is_new_vendor=False,
     )
+    status, catalog_status = _status_for_outcome(RESULT_CATALOG_REFRESHED, emitted.outcome)
     return ResolvedSource(
         source_type=previous.source_type,
-        status=RESULT_CATALOG_REFRESHED,
-        source_url=new_url,
+        status=status,
+        # A rejected replacement is not trustworthy: fall back to the prior URL.
+        source_url=new_url if status == RESULT_CATALOG_REFRESHED else previous.source_url,
         origin="live_discovery",
+        catalog_membership="none",
         live_checked=True,
         checked_at=now,
-        catalog_status=RESULT_CANDIDATE_PROCESSING,
+        catalog_status=catalog_status,
         previous_source_url=previous.source_url,
-        history=history,
-        reasons=[reason],
+        proposed_source_history=history if status == RESULT_CATALOG_REFRESHED else None,
+        reasons=[reason, f"eligibility:{emitted.record['eligibility_state']}"],
     )
 
 
-def _refresh_via_discovery(
+def _discovery_fallback(
     *,
     vendor_id: str,
     official_domain: str | None,
@@ -691,85 +812,38 @@ def _refresh_via_discovery(
     channel: str,
     now: str,
     broken_reason: str,
+    no_replacement_status: str,
 ) -> ResolvedSource:
     found = discovery(official_domain or "", source_type, fetcher, now) if official_domain else None
     if found is None:
         return ResolvedSource(
             source_type=source_type,
-            status=RESULT_SOURCE_UNAVAILABLE,
+            status=no_replacement_status,
             source_url=previous.source_url,
             origin="catalog",
+            catalog_membership="canonical",
             live_checked=True,
             checked_at=now,
-            catalog_status=RESULT_CATALOGUED,
+            catalog_status=LIFECYCLE_CATALOGUED,
             reasons=[broken_reason, "no_replacement_found"],
         )
     return _refresh_via_replacement(
-        vendor_id=vendor_id,
-        previous=previous,
-        new_url=found.final_url,
-        matched_terms=found.matched_terms,
-        http_status=found.http_status,
-        content_type=found.content_type,
-        on_domain=found.on_vendor_domain,
-        emitter=emitter,
-        channel=channel,
-        now=now,
-        reason=broken_reason,
+        vendor_id=vendor_id, previous=previous, new_url=found.final_url,
+        matched_terms=found.matched_terms, http_status=found.http_status,
+        content_type=found.content_type, on_domain=found.on_vendor_domain,
+        emitter=emitter, channel=channel, now=now, reason=broken_reason,
     )
 
 
-def _discover_missing_source(
-    *,
-    vendor_id: str,
-    official_domain: str | None,
-    source_type: str,
-    is_new_vendor: bool,
-    fetcher: Callable[[str], FetchResult],
-    discovery: DiscoveryFn,
-    emitter: SessionEmitter,
-    channel: str,
-    now: str,
-) -> ResolvedSource:
-    found = discovery(official_domain or "", source_type, fetcher, now) if official_domain else None
-    if found is None:
-        return ResolvedSource(
-            source_type=source_type,
-            status=RESULT_NOT_FOUND,
-            source_url=None,
-            origin="live_discovery",
-            live_checked=True,
-            checked_at=now,
-            catalog_status=None,
-            reasons=["no_public_source_found"],
-        )
-    candidate_origin = "catalog_discovery" if is_new_vendor else "coverage_gap"
-    _emit_source_candidate(
-        emitter=emitter,
-        candidate_origin=candidate_origin,
-        channel=channel,
-        vendor_id=vendor_id,
-        official_domain=matcher.normalize_domain(found.final_url) or official_domain or "",
-        source_type=source_type,
-        candidate_url=found.final_url,
-        final_url=found.final_url,
-        http_status=found.http_status,
-        content_type=found.content_type,
-        matched_terms=found.matched_terms,
-        on_domain=found.on_vendor_domain,
-        now=now,
-        is_new_vendor=is_new_vendor,
-    )
-    return ResolvedSource(
-        source_type=source_type,
-        status=RESULT_NEWLY_DISCOVERED,
-        source_url=found.final_url,
-        origin="live_discovery",
-        live_checked=True,
-        checked_at=now,
-        catalog_status=RESULT_CANDIDATE_PROCESSING,
-        reasons=[f"discovered:{found.verification_status}"],
-    )
+def _status_for_outcome(success_status: str, outcome: IngressOutcome) -> tuple[str, str | None]:
+    """Map an ingress outcome to (resolution status, catalog_status).
+
+    A rejected candidate is never presented as a usable result; deferred and
+    processing keep the discovered URL but disclose the true lifecycle stage.
+    """
+    if outcome.lifecycle_state == LIFECYCLE_REJECTED:
+        return RESULT_VERIFICATION_INCONCLUSIVE, LIFECYCLE_REJECTED
+    return success_status, outcome.lifecycle_state
 
 
 def _emit_source_candidate(
@@ -788,8 +862,27 @@ def _emit_source_candidate(
     on_domain: bool,
     now: str,
     is_new_vendor: bool,
-) -> None:
-    official_domain = official_domain or matcher.normalize_domain(candidate_url)
+) -> EmitResult:
+    identity = _identity_candidate(vendor_id, official_domain or matcher.normalize_domain(candidate_url))
+    source_candidate = _source_candidate(
+        source_type, candidate_url, final_url, http_status, content_type, matched_terms, on_domain
+    )
+    evidence = [_evidence(candidate_url, final_url, http_status, content_type, source_candidate, now)]
+    origin_reference = f"{vendor_id}:{source_type}:{_canonical_url(final_url)}"
+    return emitter.emit(
+        candidate_origin=candidate_origin,
+        origin_reference=origin_reference,
+        discovery_component=f"vendor_resolution:{channel}",
+        vendor_identity_candidate=identity,
+        source_candidates=[source_candidate],
+        evidence_references=evidence,
+        created_at=now,
+        is_new_vendor=is_new_vendor,
+    )
+
+
+def _identity_candidate(vendor_id: str, official_domain: str) -> dict[str, Any]:
+    official_domain = official_domain or ""
     official_unsafe = bool(validate_url_safety(f"https://{official_domain}")) if official_domain else True
     identity = {
         "vendor_id_candidate": candidate_record.slugify(vendor_id) or "unknown-vendor",
@@ -797,7 +890,19 @@ def _emit_source_candidate(
     }
     if official_unsafe:
         identity["official_domain_unsafe"] = True
-    source_candidate = {
+    return identity
+
+
+def _source_candidate(
+    source_type: str,
+    candidate_url: str,
+    final_url: str,
+    http_status: int | None,
+    content_type: str | None,
+    matched_terms: list[str],
+    on_domain: bool,
+) -> dict[str, Any]:
+    return {
         "candidate_url": candidate_url,
         "final_url": final_url,
         "http_status": http_status,
@@ -810,27 +915,24 @@ def _emit_source_candidate(
         "verification_result": "likely_vendor_published" if on_domain else "possible_match",
         "reasons": [f"matched_terms:{len(matched_terms)}"],
     }
-    evidence = [
-        {
-            "candidate_url": candidate_url,
-            "final_url": final_url,
-            "http_status": http_status,
-            "content_type": content_type,
-            "verification_result": source_candidate["verification_result"],
-            "observed_at": now,
-        }
-    ]
-    origin_reference = f"{vendor_id}:{source_type}:{_canonical_url(final_url)}"
-    emitter.emit(
-        candidate_origin=candidate_origin,
-        origin_reference=origin_reference,
-        discovery_component=f"vendor_resolution:{channel}",
-        vendor_identity_candidate=identity,
-        source_candidates=[source_candidate],
-        evidence_references=evidence,
-        created_at=now,
-        is_new_vendor=is_new_vendor,
-    )
+
+
+def _evidence(
+    candidate_url: str,
+    final_url: str,
+    http_status: int | None,
+    content_type: str | None,
+    source_candidate: dict[str, Any],
+    now: str,
+) -> dict[str, Any]:
+    return {
+        "candidate_url": candidate_url,
+        "final_url": final_url,
+        "http_status": http_status,
+        "content_type": content_type,
+        "verification_result": source_candidate["verification_result"],
+        "observed_at": now,
+    }
 
 
 # --- top-level resolution ---------------------------------------------------
@@ -852,6 +954,10 @@ def resolve_vendor_sources(
         {"vendor": {"vendor_name": ..., "domain": ...},
          "required_source_types": [...],
          "freshness_mode": "cached" | "verify"}
+
+    By default candidates are recorded but not durably enqueued. Pass an
+    ``emitter`` backed by :class:`CatalogQueueIngress` (as :func:`resolve_inventory`
+    and the CLI do) to durably hand candidates to the autonomous lifecycle.
     """
     emitter = emitter if emitter is not None else SessionEmitter()
     timestamp = now()
@@ -866,13 +972,12 @@ def resolve_vendor_sources(
     snapshot = catalog.snapshot
 
     if identity.status == "ambiguous":
-        vendor_block = {
-            "vendor_id": None,
-            "display_name": vendor_input.get("vendor_name"),
-            "official_domain": identity.official_domain,
-        }
         return VendorResolution(
-            vendor=vendor_block,
+            vendor={
+                "vendor_id": None,
+                "display_name": vendor_input.get("vendor_name"),
+                "official_domain": identity.official_domain,
+            },
             resolution_status=RESULT_IDENTITY_AMBIGUOUS,
             freshness_mode=freshness,
             sources=[],
@@ -890,67 +995,176 @@ def resolve_vendor_sources(
         else {}
     )
 
-    resolved: list[ResolvedSource] = []
-    for source_type in required:
-        existing = catalog_sources.get(source_type)
-        if freshness == FRESHNESS_CACHED:
-            if existing is not None:
-                resolved.append(_resolve_cached_source(existing))
-            else:
-                resolved.append(
-                    ResolvedSource(
-                        source_type=source_type,
-                        status=RESULT_NOT_FOUND,
-                        origin="catalog",
-                        live_checked=False,
-                        catalog_status=None,
-                        reasons=["not_in_catalog_cached_mode"],
-                    )
-                )
-            continue
-        # verify mode
-        if existing is not None:
-            resolved.append(
-                _verify_existing_source(
-                    vendor_id=vendor_id,
-                    official_domain=identity.official_domain,
-                    source=existing,
-                    fetcher=fetcher,
-                    discovery=discovery,
-                    emitter=emitter,
-                    channel=channel,
-                    now=timestamp,
-                )
+    if is_new_vendor and freshness == FRESHNESS_VERIFY:
+        resolved = _resolve_new_vendor(
+            vendor_id=vendor_id, official_domain=identity.official_domain,
+            required=required, fetcher=fetcher, discovery=discovery, emitter=emitter,
+            channel=channel, now=timestamp,
+        )
+    else:
+        resolved = [
+            _resolve_one(
+                source_type=source_type, existing=catalog_sources.get(source_type),
+                freshness=freshness, vendor_id=vendor_id,
+                official_domain=identity.official_domain, is_new_vendor=is_new_vendor,
+                fetcher=fetcher, discovery=discovery, emitter=emitter, channel=channel,
+                now=timestamp,
             )
-        else:
-            resolved.append(
-                _discover_missing_source(
-                    vendor_id=vendor_id,
-                    official_domain=identity.official_domain,
-                    source_type=source_type,
-                    is_new_vendor=is_new_vendor,
-                    fetcher=fetcher,
-                    discovery=discovery,
-                    emitter=emitter,
-                    channel=channel,
-                    now=timestamp,
-                )
-            )
+            for source_type in required
+        ]
 
-    resolution_status = _rollup(identity, resolved)
-    vendor_block = {
-        "vendor_id": identity.vendor_id,
-        "display_name": identity.display_name,
-        "official_domain": identity.official_domain,
-    }
     return VendorResolution(
-        vendor=vendor_block,
-        resolution_status=resolution_status,
+        vendor={
+            "vendor_id": identity.vendor_id,
+            "display_name": identity.display_name,
+            "official_domain": identity.official_domain,
+        },
+        resolution_status=_rollup(identity, resolved),
         freshness_mode=freshness,
         sources=resolved,
         snapshot=snapshot,
-        candidates=emitter.candidates,
+        candidate_updates=emitter.candidate_updates,
     )
+
+
+def _resolve_one(
+    *,
+    source_type: str,
+    existing: CatalogSource | None,
+    freshness: str,
+    vendor_id: str,
+    official_domain: str | None,
+    is_new_vendor: bool,
+    fetcher: Callable[[str], FetchResult],
+    discovery: DiscoveryFn,
+    emitter: SessionEmitter,
+    channel: str,
+    now: str,
+) -> ResolvedSource:
+    if freshness == FRESHNESS_CACHED:
+        if existing is not None:
+            return _resolve_cached_source(existing)
+        return ResolvedSource(
+            source_type=source_type, status=RESULT_NOT_FOUND, origin="catalog",
+            catalog_membership="none", live_checked=False, catalog_status=None,
+            reasons=["not_in_catalog_cached_mode"],
+        )
+    if existing is not None:
+        return _verify_existing_source(
+            vendor_id=vendor_id, official_domain=official_domain, source=existing,
+            fetcher=fetcher, discovery=discovery, emitter=emitter, channel=channel, now=now,
+        )
+    # Missing type on a known vendor: independent coverage-gap candidate.
+    found = discovery(official_domain or "", source_type, fetcher, now) if official_domain else None
+    if found is None:
+        return ResolvedSource(
+            source_type=source_type, status=RESULT_NOT_FOUND, source_url=None,
+            origin="live_discovery", catalog_membership="none", live_checked=True,
+            checked_at=now, catalog_status=None, reasons=["no_public_source_found"],
+        )
+    emitted = _emit_source_candidate(
+        emitter=emitter, candidate_origin="coverage_gap", channel=channel, vendor_id=vendor_id,
+        official_domain=matcher.normalize_domain(found.final_url) or official_domain or "",
+        source_type=source_type, candidate_url=found.final_url, final_url=found.final_url,
+        http_status=found.http_status, content_type=found.content_type,
+        matched_terms=found.matched_terms, on_domain=found.on_vendor_domain, now=now,
+        is_new_vendor=False,
+    )
+    status, catalog_status = _status_for_outcome(RESULT_NEWLY_DISCOVERED, emitted.outcome)
+    return ResolvedSource(
+        source_type=source_type,
+        status=status,
+        source_url=found.final_url if status == RESULT_NEWLY_DISCOVERED else None,
+        origin="live_discovery", catalog_membership="none", live_checked=True, checked_at=now,
+        catalog_status=catalog_status,
+        reasons=[f"discovered:{found.verification_status}", f"eligibility:{emitted.record['eligibility_state']}"],
+    )
+
+
+def _resolve_new_vendor(
+    *,
+    vendor_id: str,
+    official_domain: str | None,
+    required: list[str],
+    fetcher: Callable[[str], FetchResult],
+    discovery: DiscoveryFn,
+    emitter: SessionEmitter,
+    channel: str,
+    now: str,
+) -> list[ResolvedSource]:
+    """Resolve a brand-new vendor: discover all requested types first, then emit
+    ONE aggregate ``catalog_discovery`` candidate so the new vendor materialises
+    from its complete discovery set rather than fragmenting into per-source
+    candidates."""
+    discovered: dict[str, DiscoveryResult] = {}
+    for source_type in required:
+        found = discovery(official_domain or "", source_type, fetcher, now) if official_domain else None
+        if found is not None:
+            discovered[source_type] = found
+
+    if not discovered:
+        return [
+            ResolvedSource(
+                source_type=source_type, status=RESULT_NOT_FOUND, source_url=None,
+                origin="live_discovery", catalog_membership="none", live_checked=True,
+                checked_at=now, catalog_status=None, reasons=["no_public_source_found"],
+            )
+            for source_type in required
+        ]
+
+    # One aggregate candidate carrying every discovered source.
+    domain = matcher.normalize_domain(
+        official_domain or next(iter(discovered.values())).final_url
+    )
+    identity = _identity_candidate(vendor_id, domain)
+    source_candidates = []
+    evidence = []
+    for source_type, found in discovered.items():
+        source_candidate = _source_candidate(
+            source_type, found.candidate_url, found.final_url, found.http_status,
+            found.content_type, found.matched_terms, found.on_vendor_domain,
+        )
+        source_candidates.append(source_candidate)
+        evidence.append(
+            _evidence(found.candidate_url, found.final_url, found.http_status,
+                      found.content_type, source_candidate, now)
+        )
+    emitted = emitter.emit(
+        candidate_origin="catalog_discovery",
+        origin_reference=f"{vendor_id}:{domain}",
+        discovery_component=f"vendor_resolution:{channel}",
+        vendor_identity_candidate=identity,
+        source_candidates=source_candidates,
+        evidence_references=evidence,
+        created_at=now,
+        is_new_vendor=True,
+    )
+
+    resolved: list[ResolvedSource] = []
+    for source_type in required:
+        found = discovered.get(source_type)
+        if found is None:
+            resolved.append(
+                ResolvedSource(
+                    source_type=source_type, status=RESULT_NOT_FOUND, source_url=None,
+                    origin="live_discovery", catalog_membership="none", live_checked=True,
+                    checked_at=now, catalog_status=None, reasons=["no_public_source_found"],
+                )
+            )
+            continue
+        status, catalog_status = _status_for_outcome(RESULT_NEWLY_DISCOVERED, emitted.outcome)
+        resolved.append(
+            ResolvedSource(
+                source_type=source_type,
+                status=status,
+                source_url=found.final_url if status == RESULT_NEWLY_DISCOVERED else None,
+                origin="live_discovery", catalog_membership="none", live_checked=True,
+                checked_at=now, catalog_status=catalog_status,
+                reasons=[f"discovered:{found.verification_status}",
+                         f"eligibility:{emitted.record['eligibility_state']}"],
+            )
+        )
+    return resolved
 
 
 def _rollup(identity: IdentityResolution, sources: list[ResolvedSource]) -> str:
@@ -958,16 +1172,13 @@ def _rollup(identity: IdentityResolution, sources: list[ResolvedSource]) -> str:
         return RESULT_IDENTITY_AMBIGUOUS
     if not sources:
         return RESULT_NOT_FOUND if identity.status == "absent" else RESULT_VERIFICATION_INCONCLUSIVE
-    statuses = {source.status for source in sources}
     best = RESULT_NOT_FOUND
     best_rank = -1
-    for status in statuses:
-        rank = _ROLLUP_PRECEDENCE.index(status) if status in _ROLLUP_PRECEDENCE else -1
+    for source in sources:
+        rank = _ROLLUP_PRECEDENCE.index(source.status) if source.status in _ROLLUP_PRECEDENCE else -1
         if rank > best_rank:
             best_rank = rank
-            best = status
-    if identity.status == "absent" and best == RESULT_NOT_FOUND:
-        return RESULT_NOT_FOUND
+            best = source.status
     return best
 
 
@@ -983,14 +1194,16 @@ def resolve_inventory(
     channel: str = DEFAULT_CHANNEL,
     fetcher: Callable[[str], FetchResult] = fetch_url,
     discovery: DiscoveryFn = bounded_discovery,
+    ingress: Any | None = None,
     now: Callable[[], str] = _now_default,
 ) -> dict[str, Any]:
     """Resolve a whole uploaded vendor list, returning results + a summary.
 
-    A single shared emitter across the list keeps the run idempotent: the same
-    vendor or source appearing twice reuses one candidate.
+    A single shared emitter (durably enqueuing to ``maintenance/candidates`` by
+    default) keeps the run idempotent: the same vendor or source appearing twice
+    reuses one candidate.
     """
-    emitter = SessionEmitter()
+    emitter = SessionEmitter(ingress if ingress is not None else CatalogQueueIngress())
     results: list[VendorResolution] = []
     for row in rows:
         request = {
@@ -1001,12 +1214,8 @@ def resolve_inventory(
         }
         results.append(
             resolve_vendor_sources(
-                request,
-                catalog=catalog,
-                fetcher=fetcher,
-                discovery=discovery,
-                emitter=emitter,
-                now=now,
+                request, catalog=catalog, fetcher=fetcher, discovery=discovery,
+                emitter=emitter, now=now,
             )
         )
     return {
@@ -1016,7 +1225,7 @@ def resolve_inventory(
         "summary": _inventory_summary(results),
         "results": [result.to_response() for result in results],
         "csv_rows": [resolution_csv_row(result) for result in results],
-        "candidates": emitter.candidates,
+        "candidate_updates": emitter.candidate_updates,
         "not_advice": True,
     }
 
@@ -1079,6 +1288,8 @@ def _on_domain(url: str, official_domain: str | None) -> bool:
         return False
     host = matcher.normalize_domain(url)
     base = matcher.normalize_domain(official_domain)
+    if not host or not base:
+        return False
     return host == base or host.endswith(f".{base}")
 
 
@@ -1121,16 +1332,24 @@ def validate_result(result: dict[str, Any], schema: dict[str, Any] | None = None
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="openva-vendor-resolution")
     sub = parser.add_subparsers(dest="command", required=True)
-    resolve = sub.add_parser("resolve", help="resolve a single request JSON file (cached mode by default)")
+    resolve = sub.add_parser("resolve", help="resolve a single request JSON file")
     resolve.add_argument("--request", type=Path, required=True)
     resolve.add_argument("--root", type=Path, default=ROOT)
+    resolve.add_argument(
+        "--enqueue",
+        action="store_true",
+        help="durably enqueue discovered candidates to maintenance/candidates (verify mode)",
+    )
     args = parser.parse_args(argv)
 
     if args.command == "resolve":
         request = json.loads(args.request.read_text(encoding="utf-8"))
         request.setdefault("freshness_mode", FRESHNESS_CACHED)
         catalog = ResolutionCatalog.from_indexes(args.root)
-        result = resolve_vendor_sources(request, catalog=catalog)
+        ingress = CatalogQueueIngress(args.root) if args.enqueue else RecordingIngress()
+        result = resolve_vendor_sources(request, catalog=catalog, emitter=SessionEmitter(ingress))
+        # to_response() includes candidate_updates so durable enqueue outcomes are
+        # never silently dropped from the CLI output.
         print(json.dumps(result.to_response(), indent=2, sort_keys=True))
         return 0
     return 2

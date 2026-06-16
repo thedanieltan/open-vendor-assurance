@@ -255,6 +255,7 @@ async function matchInventoryRow(row, indexes) {
       review_state: "human_review_required",
       advisory_boundary: "non_advisory",
       freshness_mode: "cached",
+      catalog_membership: "none",
       result_state: "not_found",
       matched_source_types: "",
       canonical_source_urls: "",
@@ -268,7 +269,21 @@ async function matchInventoryRow(row, indexes) {
   // Browser-local resolution is always cached: it reports the latest known
   // catalogue state and never claims live verification. The verify mode (live
   // refresh, discovery, candidate routing) is served by the resolver contract.
-  const resultState = summary.sourceTypes.length ? "catalog_current" : "verification_inconclusive";
+  // Catalogue membership and source health are separate axes: a matched vendor is
+  // canonical regardless of health, and result_state consults the latest health
+  // snapshot rather than assuming current.
+  const buckets = (summary.sources || []).map((source) => (source.source_health && source.source_health.status_bucket) || "missing");
+  let resultState;
+  if (!summary.sourceTypes.length) {
+    resultState = "verification_inconclusive";
+  } else if (buckets.some((bucket) => bucket === "unavailable")) {
+    resultState = "source_unavailable";
+  } else if (buckets.length && buckets.every((bucket) => bucket === "healthy")) {
+    resultState = "catalog_current";
+  } else {
+    // Health not yet verified in the snapshot: cached mode cannot claim current.
+    resultState = "verification_inconclusive";
+  }
   return {
     ...row,
     matched_vendor_id: vendor.vendor_id,
@@ -279,6 +294,7 @@ async function matchInventoryRow(row, indexes) {
     review_state: "human_reviewed",
     advisory_boundary: "non_advisory",
     freshness_mode: "cached",
+    catalog_membership: "canonical",
     result_state: resultState,
     matched_source_types: summary.sourceTypes.join("; "),
     canonical_source_urls: summary.sourceUrls.join("; "),
@@ -362,6 +378,7 @@ function setupLocalMatcher() {
       "match_method",
       "match_confidence",
       "result_state",
+      "catalog_membership",
       "freshness_mode",
       "catalog_tier",
       "review_state",

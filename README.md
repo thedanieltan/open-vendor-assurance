@@ -258,7 +258,15 @@ Results use one small vocabulary — `catalog_current`, `catalog_refreshed`,
 `newly_discovered`, `source_unavailable`, `not_found`, `identity_ambiguous`,
 `verification_inconclusive`, `candidate_processing`, `catalogued` — and two
 explicit freshness modes (`cached` for stored state, `verify` for a live check).
-Cached and verified results are never silently treated as equivalent.
+Cached and verified results are never silently treated as equivalent, and
+catalogue membership, source health, and durable lifecycle stage are reported on
+separate axes so a deferred or rejected candidate is never shown as processing.
+
+In `verify` mode the resolver durably enqueues discovered/refreshed candidates to
+`maintenance/candidates/` — the same queue the autonomous-growth workflow
+consumes. The hosted browser Local Matcher is cached-only (static page): it
+reports catalogue state and a `result_state` per vendor but does not perform live
+discovery or lifecycle routing.
 
 OpenVA preserves source-reference and observation history. It does not archive or
 reproduce historical vendor documents.

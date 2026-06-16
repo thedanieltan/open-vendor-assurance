@@ -31,6 +31,22 @@
       "type": "array",
       "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" }
     },
+    "candidate_updates": {
+      "type": "array",
+      "description": "Candidates this resolution handed to the autonomous lifecycle, with their actual durable lifecycle state.",
+      "items": {
+        "type": "object",
+        "required": ["candidate_id", "candidate_origin", "eligibility_state", "lifecycle_state", "durable"],
+        "properties": {
+          "candidate_id": { "type": "string", "minLength": 1 },
+          "candidate_origin": { "type": "string", "minLength": 1 },
+          "eligibility_state": { "type": "string", "minLength": 1 },
+          "lifecycle_state": { "$ref": "#/$defs/lifecycle_state" },
+          "durable": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
     "sources": {
       "type": "array",
       "items": { "$ref": "#/$defs/resolved_source" }
@@ -61,19 +77,35 @@
         "catalogued"
       ]
     },
+    "lifecycle_state": {
+      "enum": [
+        "catalogued",
+        "candidate_processing",
+        "candidate_deferred",
+        "candidate_rejected",
+        "pending_ingress"
+      ]
+    },
     "resolved_source": {
       "type": "object",
-      "required": ["source_type", "status", "origin", "live_checked", "catalog_status"],
+      "required": ["source_type", "status", "origin", "catalog_membership", "live_checked", "catalog_status"],
       "properties": {
         "source_type": { "type": "string", "minLength": 1, "maxLength": 60 },
         "status": { "$ref": "#/$defs/result_state" },
         "source_url": { "type": ["string", "null"], "maxLength": 2048 },
         "origin": { "enum": ["catalog", "live_discovery", null] },
+        "catalog_membership": { "enum": ["canonical", "none"] },
         "live_checked": { "type": "boolean" },
         "checked_at": { "type": ["string", "null"] },
-        "catalog_status": { "enum": ["catalogued", "candidate_processing", null] },
+        "catalog_status": {
+          "description": "Durable lifecycle stage of the record backing this answer; null when no candidate was durably enqueued.",
+          "oneOf": [
+            { "$ref": "#/$defs/lifecycle_state" },
+            { "type": "null" }
+          ]
+        },
         "previous_source_url": { "type": ["string", "null"], "maxLength": 2048 },
-        "history": { "$ref": "#/$defs/source_history" },
+        "proposed_source_history": { "$ref": "#/$defs/source_history" },
         "reasons": {
           "type": "array",
           "items": { "type": "string", "minLength": 1, "maxLength": 200 }
