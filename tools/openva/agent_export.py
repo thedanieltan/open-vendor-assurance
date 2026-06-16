@@ -135,6 +135,12 @@ def material_change_since_baseline(
 def source_row(source_record: dict[str, Any], observation: dict[str, Any] | None) -> dict[str, Any]:
     canonical_confidence = (source_record.get("canonical_confidence") or {}).get("class")
     retrieval = source_record.get("retrieval") or {}
+    # verified_scope is a committed source-classification fact, projected
+    # verbatim (null when the record did not classify it) — the export never
+    # invents scope from access_class. gated_child_content_observed is a
+    # universal non-observation doctrine guarantee, not a measured result:
+    # OpenVA never observes gated child documents, so it is always false.
+    scope = source_record.get("verified_scope")
     return {
         "source_id": source_record.get("source_id"),
         "source_type": source_record.get("source_type"),
@@ -145,6 +151,8 @@ def source_row(source_record: dict[str, Any], observation: dict[str, Any] | None
         "source_health": (observation or {}).get("source_health_status"),
         "last_observed_at": (observation or {}).get("observed_at"),
         "material_change_since_baseline": material_change_since_baseline(source_record, observation),
+        "verified_scope": scope if scope in ("full_content", "landing_page_only") else None,
+        "gated_child_content_observed": False,
     }
 
 

@@ -26,6 +26,20 @@ A public landing page that mentions or links to restricted materials.
 
 OpenVA may record the public landing page. It must not record the gated document contents, gated document hashes, screenshots, extracted text, or summaries of the gated content.
 
+#### Trust-center landing pages and verification scope
+
+A public trust-center landing page is a content-bearing source, even when the documents it links require approval. Distinguish three cases:
+
+| Case | Eligible for materialization | Disclosure |
+| --- | --- | --- |
+| Public, content-bearing landing page (HTTP 200, identifies the vendor, names document categories); child documents gated | Yes — as a `trust_center` source verified at landing-page scope | `verified_scope: landing_page_only`, `gated_child_content_observed: false` |
+| Login wall with no public assurance content | No | `unavailable_source` / access-state fact only |
+| Unfetchable or bot-protected locator | No | candidate / access-state fact only |
+
+A landing-page-only source establishes that the trust center exists and which document categories it lists. It must not assert possession or validity of any certification, report coverage periods, report contents, gated DPA or subprocessor contents, child-document hashes, or child-document summaries.
+
+`verified_scope` is a committed source-classification fact set when the source is classified (`landing_page_only` for `public_landing_gated_docs`, otherwise `full_content`); the export projects the committed value and never infers it from `access_class`. When a record carries no `verified_scope`, the export emits `null` (unspecified), which must never be read as full-content verification. `gated_child_content_observed` is not a measured observation result: it is a universal non-observation doctrine guarantee that OpenVA never inspects gated child documents, so it is always `false`. In exports the field is optional for backward compatibility — a legacy export that omits it means "unknown, not true", never that gated content was observed.
+
 ### `excluded_non_public`
 
 A source that is not public enough for OpenVA records. This class should normally appear only in review notes or quarantined records.

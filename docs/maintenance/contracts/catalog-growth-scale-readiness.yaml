@@ -9,8 +9,13 @@ staging_roots:
   - maintenance/queues/**
   - catalog-batches/**
   - generated discovery reports
+# Posture mirrors the discovery queue: it declares the aggregate capability of
+# the queue's enabled discovery modes. Network-fetching modes (official-domain
+# and sitemap source discovery) make network_fetch_performed true; the queue and
+# discovery lane never write repository state, canonical sources, or candidate
+# source records (those mutations stay on the human-reviewed promotion path).
 posture:
-  network_fetch_performed: false
+  network_fetch_performed: true
   writes_repository_state: false
   writes_canonical_sources: false
   creates_candidate_sources: false

@@ -9,6 +9,15 @@ def test_rejects_javascript_scheme():
     assert validate_url_safety("javascript:alert(1)")
 
 
+def test_malformed_url_is_classified_as_unsafe_not_raised():
+    # Bad IPv6 brackets and out-of-range ports must be a bounded failure, never an
+    # escaping ValueError from urlparse attribute access.
+    assert validate_url_safety("https://[:::]/x") == ["URL is malformed"]
+    assert validate_url_safety("https://[gg::1]/x") == ["URL is malformed"]
+    assert validate_url_safety("https://example.com:99999/x") == ["URL is malformed"]
+    assert not is_safe_public_url("https://[:::]/x")
+
+
 def test_rejects_file_scheme():
     assert validate_url_safety("file:///etc/passwd")
 

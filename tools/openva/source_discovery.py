@@ -577,6 +577,94 @@ def discover_for_vendor(
     }
 
 
+def verify_sitemap_locators(
+    vendor: dict[str, Any],
+    locator_urls: list[str],
+    *,
+    fetcher: Callable[[str], FetchResult],
+    source_types: tuple[str, ...] = DEFAULT_SOURCE_TYPES,
+    discovered_at: str | None = None,
+    discovery_run_id: str | None = None,
+    max_locators: int = 50,
+) -> dict[str, Any]:
+    """Verify sitemap-discovered locator URLs through the ORDINARY verification.
+
+    A sitemap locator is only a URL with no authority and no content evidence
+    until it is fetched. This re-uses the exact verification primitives
+    ``discover_for_vendor`` uses — fetch, ``is_candidate_match`` /
+    ``semantic_match``, ``candidate_rank`` and ``candidate_record`` — so a
+    verified locator becomes a normal candidate that the existing eligibility and
+    promotion consumers handle unchanged, and the same materialization and
+    cross-run retrieval-independence gates apply. It introduces no new mutation
+    path and can never short-circuit verification. Output matches the
+    ``discover_for_vendor`` vendor-result shape.
+    """
+    vendor_id = str(vendor["vendor_id"])
+    discovered_at = discovered_at or datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    discovery_run_id = discovery_run_id or f"{vendor_id}-sitemap-{discovered_at}"
+    candidates: list[dict[str, Any]] = []
+    observations: list[dict[str, Any]] = []
+    events: list[dict[str, Any]] = []
+    seen_candidate_ids: set[str] = set()
+
+    for url in list(dict.fromkeys(locator_urls))[:max_locators]:
+        result = fetcher(url)
+        best: tuple[int, str, dict[str, Any], str] | None = None
+        for source_type in source_types:
+            matched, semantic = is_candidate_match(source_type, result)
+            rank, rank_reason = candidate_rank(source_type, url, result, semantic)
+            if matched and rank > 0 and (best is None or rank > best[0]):
+                best = (rank, source_type, semantic, rank_reason)
+        if best is not None:
+            rank, source_type, semantic, rank_reason = best
+        else:
+            # No source type matched: keep a record-keeping observation under the
+            # primary type so the rejected locator is still auditable.
+            source_type = source_types[0]
+            _matched, semantic = is_candidate_match(source_type, result)
+            rank, rank_reason = candidate_rank(source_type, url, result, semantic)
+        observation = {
+            "source_type": source_type,
+            "candidate_url": url,
+            "http_status": result.http_status,
+            "final_url": result.final_url,
+            "content_type": result.content_type,
+            "semantic_status": semantic.get("status"),
+            "verification_status": classify_status(
+                {"source_url": url, "source_type": source_type}, result, semantic
+            ),
+            "matched_terms": semantic.get("matched_terms", []),
+            "candidate_rank": rank,
+            "rank_reason": rank_reason,
+            "discovery_method": "sitemap_locator_verification",
+        }
+        observations.append(observation)
+        events.append(
+            discovery_event(
+                vendor_id=vendor_id,
+                source_type=source_type,
+                observation=observation,
+                classification=rank_reason,
+                discovered_at=discovered_at,
+                discovery_run_id=discovery_run_id,
+            )
+        )
+        if best is not None:
+            record = candidate_record(vendor_id, source_type, url, result, semantic, discovered_at)
+            record["discovery_method"] = "sitemap_locator_verification"
+            if record["candidate_source_id"] not in seen_candidate_ids:
+                seen_candidate_ids.add(record["candidate_source_id"])
+                candidates.append(record)
+
+    return {
+        "vendor_id": vendor_id,
+        "candidates": candidates,
+        "unavailable_sources": [],
+        "observations": observations,
+        "discovery_events": events,
+    }
+
+
 def write_discovery_outputs(discovery: dict[str, Any], root: Path = ROOT) -> None:
     vendor_id = discovery["vendor_id"]
     base = root / "data" / "vendors" / vendor_id

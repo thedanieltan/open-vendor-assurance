@@ -1,0 +1,27 @@
+schema_version: 0.1.0
+
+# Tier A bounded sitemap/robots discovery limits. Discovery is report-only and
+# queue-bound; these bounds make the request budget deterministic and guard
+# against cyclic sitemap indexes, sitemap/gzip bombs, and runaway crawls. The
+# candidate set is fully bounded BEFORE any candidate page is fetched.
+sitemap_discovery:
+  max_sitemap_index_depth: 2
+  max_sitemap_files: 20
+  max_candidate_urls: 200
+  max_compressed_bytes: 5000000
+  max_decompressed_bytes: 50000000
+  max_request_seconds: 20
+  max_redirects: 5
+  # Candidate URLs are relevance-filtered to assurance-related paths. Inclusion
+  # in a sitemap confers no semantic verification and no promotion weight.
+  relevance_terms:
+    - trust
+    - security
+    - privacy
+    - legal
+    - dpa
+    - data-processing
+    - subprocessor
+    - compliance
+    - certification
+    - assurance

@@ -104,6 +104,14 @@
     },
     "access_class": { "enum": ["public_web", "public_pdf", "public_doc_portal", "public_landing_gated_docs", "excluded_non_public"] },
     "rights_class": { "enum": ["metadata_only", "public_link_only", "snapshot_allowed", "snapshot_forbidden", "gated_excluded"] },
+    "verified_scope": {
+      "description": "Tier A: how far content verification reached. landing_page_only means only the public landing page was content-verified; its gated child documents were not (and must not be) inspected.",
+      "enum": ["full_content", "landing_page_only"]
+    },
+    "gated_child_content_observed": {
+      "description": "Tier A doctrine guarantee: OpenVA never observes gated child documents, so this may only ever be false. Any true is a schema violation.",
+      "const": false
+    },
     "catalog_tier": { "enum": ["machine_validated", "human_reviewed"] },
     "review_state": { "enum": ["proposed", "validated", "auto_validated", "human_reviewed", "human_review_required", "quarantined", "superseded"] },
     "quarantine": {
@@ -141,7 +149,54 @@
           "enum": ["canonical", "likely_canonical", "mirror", "redirected_entrypoint", "ambiguous"]
         },
         "basis": { "type": ["string", "null"], "maxLength": 500 },
-        "assessed_at": { "type": ["string", "null"], "format": "date-time" }
+        "assessed_at": { "type": ["string", "null"], "format": "date-time" },
+        "authority": {
+          "type": ["object", "null"],
+          "description": "Tier A: durable, structured authority provenance carried from the candidate. CNAME/TLS are corroboration only and never strong on their own. The free-text basis above is supplemental; machines read this object, not the prose.",
+          "required": ["class", "method", "target_url", "observed_at"],
+          "properties": {
+            "class": { "enum": ["strong", "corroborating", "unproven"] },
+            "method": {
+              "enum": [
+                "same_official_domain",
+                "official_domain_link",
+                "official_domain_redirect",
+                "official_vendor_manifest",
+                "manual_exception",
+                "cname_corroboration",
+                "tls_corroboration"
+              ]
+            },
+            "source_url": { "type": ["string", "null"], "maxLength": 2048 },
+            "target_url": { "type": "string", "minLength": 1, "maxLength": 2048 },
+            "observed_at": { "type": "string", "format": "date-time" },
+            "evidence_digest": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+            "note": { "type": ["string", "null"], "maxLength": 500 }
+          },
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": { "properties": { "method": { "enum": ["cname_corroboration", "tls_corroboration"] } }, "required": ["method"] },
+              "then": { "properties": { "class": { "enum": ["corroborating", "unproven"] } } }
+            },
+            {
+              "if": { "properties": { "class": { "const": "strong" } }, "required": ["class"] },
+              "then": {
+                "properties": {
+                  "method": {
+                    "enum": [
+                      "same_official_domain",
+                      "official_domain_link",
+                      "official_domain_redirect",
+                      "official_vendor_manifest",
+                      "manual_exception"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       "additionalProperties": false
     },

@@ -91,6 +91,14 @@ jobs:
         run: |
           python -m tools.openva.catalog_growth_discovery_queue validate \
             --output catalog-growth-discovery-queue-summary.json
+      - name: Run bounded sitemap source discovery
+        run: |
+          set -euo pipefail
+          python -m tools.openva.catalog_growth_discovery_queue run-sitemap-discovery \
+            --queue maintenance/queues/catalog-growth-discovery.json \
+            --discovery-run-id "${{ github.run_id }}-${{ github.run_attempt }}" \
+            --discovered-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --output sitemap-source-discovery-events.json
       - name: Configure bounded source discovery
         run: |
           set -euo pipefail
@@ -201,6 +209,17 @@ jobs:
           backlog = json.load(open('catalog-growth-backlog-report.json', encoding='utf-8'))
           batches = json.load(open('promotion-plan-batch-summary.json', encoding='utf-8'))
           eligibility = json.load(open('catalog-growth-eligibility-report.json', encoding='utf-8'))
+          sitemap = json.load(open('sitemap-source-discovery-events.json', encoding='utf-8'))
+          sitemap_rotation = sitemap.get('rotation', {}) or {}
+          sitemap_verification = sitemap.get('verification', {}) or {}
+          sitemap_outcomes = sitemap_verification.get('provisional_eligibility_outcomes', {}) or {}
+          sitemap_vendor_lines = [
+              f"- `{pv['vendor_id']}` ({pv['official_domain']}): robots `{pv['robots_state']}`"
+              f" via `{pv['robots_parser']}`, sitemaps attempted `{pv['sitemaps_attempted']}`,"
+              f" locators `{pv['candidate_count']}`, verified `{pv['verified_candidate_count']}`,"
+              f" provisional `{pv.get('provisional_eligibility')}`, rejected `{pv['rejected_count']}`"
+              for pv in sitemap.get('per_vendor', [])[:10]
+          ] or ['- none']
           lines = [
               '<!-- openva-catalog-growth-discovery -->',
               '',
@@ -232,6 +251,21 @@ jobs:
               f"- Existing vendors checked: `{discovery['summary']['vendors_checked']}`",
               f"- Candidate sources reported: `{discovery['summary']['candidate_sources_written_or_reported']}`",
               f"- Unavailable sources reported: `{discovery['summary']['unavailable_sources_written_or_reported']}`",
+              '',
+              '## Sitemap source discovery',
+              '',
+              f"- Mode enabled: `{sitemap.get('mode_enabled')}`",
+              f"- Robots parser: `{sitemap.get('robots_parser')}`",
+              f"- Rotation shard: `{sitemap_rotation.get('shard_index')}` of `{sitemap_rotation.get('shard_count')}`"
+              f" (ISO week `{sitemap_rotation.get('iso_week')}`, eligible vendors `{sitemap_rotation.get('eligible_vendor_count')}`)",
+              f"- Vendors inspected this cycle: `{len(sitemap.get('per_vendor', []))}`",
+              f"- Zero-weight locator events: `{sitemap.get('event_count')}`",
+              f"- Verified candidate sources: `{sitemap_verification.get('verified_candidate_count')}`",
+              f"- Provisional eligibility (source-quality only; identity/materialization gates apply downstream): `{sitemap_outcomes}`",
+              '',
+              '### Per-vendor sitemap execution',
+              '',
+              *sitemap_vendor_lines,
               '',
               '## Growth eligibility summary',
               '',
@@ -384,6 +418,7 @@ jobs:
             reports/source-discovery-unavailable.csv
             reports/promotion-plan-actions.csv
             catalog-growth-discovery-queue-summary.json
+            sitemap-source-discovery-events.json
             vendor-candidate-discovery-report.json
             vendor-candidate-source-discovery-report.json
             source-discovery-report.json

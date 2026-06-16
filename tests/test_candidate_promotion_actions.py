@@ -78,7 +78,14 @@ def strict_growth_action():
                 "http_status": 200,
                 "content_type": "text/html",
                 "name_supported_by_official_domain_metadata": True,
-                "retrieval_attempts": {"observed": 2, "agreeing": True},
+                "retrieval_attempts": {
+                    "observed": 2,
+                    "agreeing": True,
+                    "attempts": [
+                        {"workflow_run_id": "run-1", "retrieval_mode": "direct_http"},
+                        {"workflow_run_id": "run-2", "retrieval_mode": "direct_http"},
+                    ],
+                },
                 "source_host_authority": "vendor_controlled",
                 "adversarial_review": "clean",
                 "evidence_fresh": True,
@@ -279,7 +286,14 @@ def test_apply_strict_growth_writes_multiple_sources_for_same_new_vendor(tmp_pat
         "http_status": 200,
         "content_type": "text/html",
         "name_supported_by_official_domain_metadata": True,
-        "retrieval_attempts": {"observed": 2, "agreeing": True},
+        "retrieval_attempts": {
+            "observed": 2,
+            "agreeing": True,
+            "attempts": [
+                {"workflow_run_id": "run-1", "retrieval_mode": "direct_http"},
+                {"workflow_run_id": "run-2", "retrieval_mode": "direct_http"},
+            ],
+        },
         "source_host_authority": "vendor_controlled",
         "adversarial_review": "clean",
         "evidence_fresh": True,

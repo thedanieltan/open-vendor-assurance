@@ -46,6 +46,51 @@ def materialization_threshold_config() -> dict[str, Any]:
     return materialization if isinstance(materialization, dict) else {}
 
 
+def retrieval_independence(attempts: list[Any], min_runs: int, min_modes: int) -> tuple[int, int, bool]:
+    """Two agreeing retrievals are independent only across distinct workflow
+    runs OR distinct retrieval modes. Same-run, same-mode retries are one
+    observation. IP/geography is deliberately not a dimension.
+    """
+    runs = {str(a.get("workflow_run_id")) for a in attempts if isinstance(a, dict) and a.get("workflow_run_id")}
+    modes = {str(a.get("retrieval_mode")) for a in attempts if isinstance(a, dict) and a.get("retrieval_mode")}
+    distinct_runs, distinct_modes = len(runs), len(modes)
+    return distinct_runs, distinct_modes, (distinct_runs >= min_runs or distinct_modes >= min_modes)
+
+
+def build_retrieval_claim(
+    *,
+    required: int,
+    observed: int,
+    agreeing: bool,
+    evidence_ids: list[Any],
+    final_url: Any,
+    candidate_url: Any,
+    http_status: Any,
+    min_distinct_workflow_runs: int,
+    min_distinct_retrieval_modes: int,
+    distinct_workflow_runs: int,
+    distinct_retrieval_modes: int,
+    independent: bool,
+) -> dict[str, Any]:
+    """Single authority for the retrieval claim shape, used by the evaluator and
+    re-used by the automerge digest cross-check so the digest can never drift.
+    """
+    return {
+        "required": required,
+        "observed": observed,
+        "agreeing": agreeing,
+        "evidence_ids": evidence_ids,
+        "final_url": final_url,
+        "candidate_url": candidate_url,
+        "http_status": http_status,
+        "min_distinct_workflow_runs": min_distinct_workflow_runs,
+        "min_distinct_retrieval_modes": min_distinct_retrieval_modes,
+        "distinct_workflow_runs": distinct_workflow_runs,
+        "distinct_retrieval_modes": distinct_retrieval_modes,
+        "independent": independent,
+    }
+
+
 def materialization_threshold_results(action: dict[str, Any]) -> dict[str, Any]:
     config = materialization_threshold_config()
     vendor = action.get("vendor", {}) or {}
@@ -54,13 +99,26 @@ def materialization_threshold_results(action: dict[str, Any]) -> dict[str, Any]:
     retrieval = evidence.get("retrieval_attempts") or {}
     if not isinstance(retrieval, dict):
         retrieval = {}
-    observed_retrievals = int(retrieval.get("observed") or evidence.get("retrieval_attempt_count") or 0)
+    independence_config = config.get("retrieval_independence") or {}
+    min_runs = int(independence_config.get("min_distinct_workflow_runs", 2))
+    min_modes = int(independence_config.get("min_distinct_retrieval_modes", 2))
+    attempts = retrieval.get("attempts")
+    if not isinstance(attempts, list):
+        attempts = []
+    observed_retrievals = len(attempts) if attempts else int(retrieval.get("observed") or evidence.get("retrieval_attempt_count") or 0)
     agreeing_retrievals = bool(retrieval.get("agreeing") or evidence.get("retrieval_attempts_agree") is True)
+    distinct_runs, distinct_modes, independent = retrieval_independence(attempts, min_runs, min_modes)
     duplicate_score = float(vendor.get("duplicate_collision_score", evidence.get("duplicate_collision_score", 0.0)))
     retrieval_evidence_ids = retrieval.get("evidence_ids") or evidence.get("retrieval_evidence_ids") or []
     if not isinstance(retrieval_evidence_ids, list):
         retrieval_evidence_ids = []
-    if observed_retrievals and not retrieval_evidence_ids:
+    if attempts and not retrieval_evidence_ids:
+        retrieval_evidence_ids = [
+            f"retrieval-{idx + 1}:{attempt.get('workflow_run_id')}:{attempt.get('retrieval_mode')}"
+            for idx, attempt in enumerate(attempts)
+            if isinstance(attempt, dict)
+        ]
+    elif observed_retrievals and not retrieval_evidence_ids:
         retrieval_evidence_ids = [
             f"retrieval-{idx + 1}:{evidence.get('final_url') or source.get('candidate_url') or 'unknown'}"
             for idx in range(observed_retrievals)
@@ -75,15 +133,20 @@ def materialization_threshold_results(action: dict[str, Any]) -> dict[str, Any]:
             + ":"
             + str(vendor.get("official_domain_candidate") or "")
         ]
-    retrieval_claim = {
-        "required": int(config.get("min_agreeing_retrieval_attempts", 2)),
-        "observed": observed_retrievals,
-        "agreeing": agreeing_retrievals,
-        "evidence_ids": retrieval_evidence_ids,
-        "final_url": evidence.get("final_url"),
-        "candidate_url": source.get("candidate_url"),
-        "http_status": evidence.get("http_status"),
-    }
+    retrieval_claim = build_retrieval_claim(
+        required=int(config.get("min_agreeing_retrieval_attempts", 2)),
+        observed=observed_retrievals,
+        agreeing=agreeing_retrievals,
+        evidence_ids=retrieval_evidence_ids,
+        final_url=evidence.get("final_url"),
+        candidate_url=source.get("candidate_url"),
+        http_status=evidence.get("http_status"),
+        min_distinct_workflow_runs=min_runs,
+        min_distinct_retrieval_modes=min_modes,
+        distinct_workflow_runs=distinct_runs,
+        distinct_retrieval_modes=distinct_modes,
+        independent=independent,
+    )
     duplicate_claim = {
         "maximum": float(config.get("max_duplicate_collision_score", 0.0)),
         "observed": duplicate_score,
@@ -127,6 +190,8 @@ def validate_materialization_thresholds(action: dict[str, Any]) -> None:
     retrieval = results["retrieval_attempts"]
     if retrieval["observed"] < retrieval["required"] or retrieval["agreeing"] is not True:
         failures.append("retrieval_attempts=fail")
+    if retrieval.get("independent") is not True:
+        failures.append("retrieval_attempts_independence=fail")
     duplicate = results["duplicate_collision_score"]
     if duplicate["observed"] > duplicate["maximum"]:
         failures.append("duplicate_collision_score=fail")

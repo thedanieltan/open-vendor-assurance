@@ -7,6 +7,7 @@ import subprocess
 from datetime import UTC, datetime
 
 from tools.openva import machine_provisional_automerge as mp
+from tools.openva.candidate_promotion_actions import build_retrieval_claim, retrieval_independence
 from tools.openva.pack import canonical_json, sha256_bytes
 
 NOW = datetime(2026, 6, 20, 0, 0, 0, tzinfo=UTC)
@@ -35,18 +36,28 @@ def decision_evidence(**overrides):
     return evidence
 
 
-def threshold_results(evidence, *, retrieval_ids=None, duplicate_ids=None):
+def threshold_results(evidence, *, retrieval_ids=None, duplicate_ids=None, attempts=None):
     retrieval_ids = retrieval_ids or ["retrieval-1:https://okta.com/security", "retrieval-2:https://okta.com/security"]
     duplicate_ids = duplicate_ids or ["duplicate-collision:okta:okta.com"]
-    retrieval_claim = {
-        "required": 2,
-        "observed": 2,
-        "agreeing": True,
-        "evidence_ids": retrieval_ids,
-        "final_url": evidence.get("final_url"),
-        "candidate_url": evidence.get("candidate_url"),
-        "http_status": evidence.get("http_status"),
-    }
+    attempts = attempts if attempts is not None else [
+        {"workflow_run_id": "run-1", "retrieval_mode": "direct_http"},
+        {"workflow_run_id": "run-2", "retrieval_mode": "direct_http"},
+    ]
+    distinct_runs, distinct_modes, independent = retrieval_independence(attempts, 2, 2)
+    retrieval_claim = build_retrieval_claim(
+        required=2,
+        observed=2,
+        agreeing=True,
+        evidence_ids=retrieval_ids,
+        final_url=evidence.get("final_url"),
+        candidate_url=evidence.get("candidate_url"),
+        http_status=evidence.get("http_status"),
+        min_distinct_workflow_runs=2,
+        min_distinct_retrieval_modes=2,
+        distinct_workflow_runs=distinct_runs,
+        distinct_retrieval_modes=distinct_modes,
+        independent=independent,
+    )
     duplicate_claim = {
         "maximum": 0.0,
         "observed": 0.0,

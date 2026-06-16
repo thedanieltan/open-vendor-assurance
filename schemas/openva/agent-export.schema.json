@@ -60,7 +60,9 @@
         "machine_readable": { "type": ["boolean", "null"] },
         "source_health": { "$ref": "#/$defs/source_health" },
         "last_observed_at": { "type": ["string", "null"] },
-        "material_change_since_baseline": { "type": ["boolean", "null"] }
+        "material_change_since_baseline": { "type": ["boolean", "null"] },
+        "verified_scope": { "anyOf": [{ "enum": ["full_content", "landing_page_only"] }, { "type": "null" }] },
+        "gated_child_content_observed": { "const": false }
       },
       "additionalProperties": false
     },
@@ -130,7 +132,9 @@
               "machine_readable": { "type": ["boolean", "null"] },
               "source_health": { "$ref": "#/$defs/source_health" },
               "last_observed_at": { "type": ["string", "null"] },
-              "material_change_since_baseline": { "type": ["boolean", "null"] }
+              "material_change_since_baseline": { "type": ["boolean", "null"] },
+              "verified_scope": { "anyOf": [{ "enum": ["full_content", "landing_page_only"] }, { "type": "null" }] },
+              "gated_child_content_observed": { "const": false }
             },
             "additionalProperties": false
           }
