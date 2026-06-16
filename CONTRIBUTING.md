@@ -126,6 +126,23 @@ Pull requests must:
 - explain whether any generated files were updated;
 - pass validation checks.
 
+## Repository hygiene
+
+Repository history and documentation should describe the technical change and its evidence, not the tool used to produce it.
+
+Do not add:
+
+- model or tool co-author trailers;
+- tool-prefixed branch names;
+- chat, session, or shared-conversation links;
+- prompt transcripts or internal scratch notes;
+- statements that files were generated, written, or reviewed by a named model;
+- implementation diaries, work-package closeouts, or superseded planning snapshots when an active contract, runbook, roadmap, or changelog already records the durable state.
+
+Operational automation artifacts are allowed when they are part of the product or control plane, including `AGENTS.md`, bot authority contracts, workflow definitions, MCP integration documentation, and bounded execution prompts. Those files must specify executable behavior or governance boundaries rather than narrate how the repository was built.
+
+Published commit and release identities are not rewritten for cosmetic cleanup. Remove obsolete material from the current tree, make corrections forward, and preserve released snapshot integrity.
+
 ## Catalog-agent pull requests
 
 Catalog-agent PRs must follow:
