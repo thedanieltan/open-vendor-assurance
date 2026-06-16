@@ -336,6 +336,22 @@ def test_robots_empty_200_is_success_and_proceeds():
     assert any(c["url"] == "https://vendor.example/trust" for c in out.candidates)
 
 
+def test_malformed_locator_is_a_bounded_rejection_and_later_locators_still_process():
+    # Malformed locators (bad IPv6 brackets, out-of-range port) must not raise a
+    # URL-parse error that aborts the run; they become bounded rejections and the
+    # remaining valid locators are still discovered.
+    out = run({"https://vendor.example/sitemap.xml": {"body": _urlset(
+        "https://[:::]/trust",                    # malformed IPv6 host
+        "https://vendor.example:99999/security",  # out-of-range port
+        "https://vendor.example/security/dpa",    # valid, relevant
+    )}})
+    urls = {c["url"] for c in out.candidates}
+    assert "https://vendor.example/security/dpa" in urls  # later locator still processed
+    assert all("[:::]" not in u and ":99999" not in u for u in urls)  # malformed not candidates
+    reasons = {r["reason"] for r in out.rejected}
+    assert reasons & {"unsafe_candidate_url", "malformed_candidate_url"}  # bounded rejection codes
+
+
 def test_outcome_records_parser_id_and_sitemaps_attempted():
     out = run({"https://vendor.example/sitemap.xml": {"body": _urlset("https://vendor.example/trust")}})
     assert out.robots_parser == "openva-robots.v3"  # the corrected evaluator was used

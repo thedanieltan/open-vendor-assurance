@@ -37,13 +37,21 @@ def normalize_host(host: str | None) -> str | None:
 
 def validate_url_safety(url: str, *, resolve_dns: bool = False) -> list[str]:
     failures: list[str] = []
-    parsed = urlparse(url)
+    try:
+        parsed = urlparse(url)
+        scheme = parsed.scheme
+        raw_host = parsed.hostname  # raises ValueError on malformed IPv6 brackets
+        _port = parsed.port  # raises ValueError on an out-of-range port
+    except ValueError:
+        # A malformed URL (bad IPv6 literal, out-of-range port) is treated as
+        # unsafe rather than raising, so callers reject it as a bounded failure.
+        return ["URL is malformed"]
 
-    if parsed.scheme not in ALLOWED_SCHEMES:
-        failures.append(f"URL scheme {parsed.scheme or '<missing>'} is not allowed")
+    if scheme not in ALLOWED_SCHEMES:
+        failures.append(f"URL scheme {scheme or '<missing>'} is not allowed")
         return failures
 
-    host = normalize_host(parsed.hostname)
+    host = normalize_host(raw_host)
     if not host:
         failures.append("URL host is missing")
         return failures

@@ -157,10 +157,15 @@ class SafeFetcher:
         current = url
         while True:
             self._remaining(deadline)  # abort if the budget is already spent
-            self._validate_request_url(current)
-            ip = self._resolve_and_pin(current, deadline)
+            try:
+                self._validate_request_url(current)
+                ip = self._resolve_and_pin(current, deadline)
+                host = normalize_host(urlsplit(current).hostname) or ""
+            except ValueError as exc:
+                # A malformed URL (bad IPv6 literal, out-of-range port) is a
+                # bounded rejection, never an escaping parse error.
+                raise SafeFetchError(f"malformed_url:{type(exc).__name__}") from exc
             self._remaining(deadline)  # abort before opening if the budget is spent
-            host = normalize_host(urlsplit(current).hostname) or ""
             try:
                 # The transport enforces the whole-exchange deadline across every
                 # blocking phase (connect, TLS, request, header read).
@@ -172,8 +177,12 @@ class SafeFetcher:
                     deadline=deadline,
                     clock=self._clock,
                 )
-            except OSError as exc:  # connect/TLS/timeout failures fail closed
+            except (OSError, http.client.HTTPException) as exc:
+                # Connect/TLS/timeout (OSError) and HTTP protocol errors
+                # (BadStatusLine, LineTooLong, IncompleteRead, ...) fail closed.
                 raise SafeFetchError(f"transport_error:{type(exc).__name__}") from exc
+            except ValueError as exc:  # malformed port surfaced inside the transport
+                raise SafeFetchError(f"malformed_url:{type(exc).__name__}") from exc
             try:
                 self._remaining(deadline)  # headers received within budget?
                 status = int(response.status)
@@ -336,7 +345,9 @@ class SafeFetcher:
                     # at the compressed bound, identity bytes at the decompressed
                     # bound. decode_sitemap_bytes re-checks decompressed expansion.
                     raise SafeFetchError("response_too_large")
-        except OSError as exc:  # mid-body timeout / reset fails closed
+        except (OSError, http.client.HTTPException) as exc:
+            # Mid-body timeout/reset (OSError) and HTTP protocol errors
+            # (IncompleteRead, ...) fail closed as a bounded transport error.
             raise SafeFetchError(f"transport_error:{type(exc).__name__}") from exc
         encoding = response.headers.get("content-encoding")
         return bytes(buffer), (encoding or None)

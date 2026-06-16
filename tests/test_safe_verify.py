@@ -5,7 +5,10 @@ must also refuse — and surface it as a not-a-candidate FetchResult so a sitema
 locator stays zero-weight until safe verification actually succeeds.
 """
 
+import http.client
 import socket
+
+import pytest
 
 from tools.openva.safe_verify import build_safe_verify_fetcher
 
@@ -170,6 +173,23 @@ def test_verify_off_authority_url_is_still_refused_with_multiple_domains():
     result = verify("https://evil.test/x")
     assert result.http_status is None
     assert "off_authority" in (result.error or "")
+
+
+def test_verify_http_protocol_error_is_a_rejected_observation():
+    # An HTTP protocol error (BadStatusLine etc.) must become a not-a-candidate
+    # observation, never abort the scheduled command.
+    t = FakeTransport(dns={"vendor.example": ["93.184.216.34"]}, open_error=http.client.BadStatusLine("garbage"))
+    result = _verify(t)("https://vendor.example/trust")
+    assert result.http_status is None
+    assert "transport_error" in (result.error or "")
+
+
+@pytest.mark.parametrize("url", ["https://[:::]/trust", "https://vendor.example:99999/trust"])
+def test_verify_malformed_url_is_a_rejected_observation(url):
+    t = FakeTransport(dns={"vendor.example": ["93.184.216.34"]})
+    result = _verify(t)(url)
+    assert result.http_status is None
+    assert "malformed" in (result.error or "")
 
 
 def test_verify_gzip_body_despite_identity_is_a_distinct_rejection():

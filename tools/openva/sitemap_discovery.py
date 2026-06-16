@@ -359,19 +359,27 @@ def discover_sitemap_candidates(
             )
         except SitemapDiscoveryError as exc:
             outcome.rejected.append({"url": sitemap_url, "reason": str(exc)})
+        except ValueError:  # a malformed sitemap URL must not abort the vendor run
+            outcome.rejected.append({"url": sitemap_url, "reason": "malformed_sitemap_url"})
 
     # normalize -> reject unsafe/off-authority -> dedup -> relevance-filter
     seen: set[str] = set()
     found_in: dict[str, str] = {}
     for loc, sitemap_url in locs:
-        url = normalize_candidate_url(loc)
-        if url in seen:
-            continue
-        if not url_is_safe(url):
-            outcome.rejected.append({"url": loc, "reason": "unsafe_candidate_url"})
-            continue
-        if not is_on_official_domain(url, official_domains):
-            outcome.rejected.append({"url": loc, "reason": "off_authority_candidate_url"})
+        try:
+            url = normalize_candidate_url(loc)
+            if url in seen:
+                continue
+            if not url_is_safe(url):
+                outcome.rejected.append({"url": loc, "reason": "unsafe_candidate_url"})
+                continue
+            if not is_on_official_domain(url, official_domains):
+                outcome.rejected.append({"url": loc, "reason": "off_authority_candidate_url"})
+                continue
+        except ValueError:
+            # A malformed locator (bad IPv6, out-of-range port) is a bounded
+            # rejection; the loop continues with the remaining locators.
+            outcome.rejected.append({"url": loc, "reason": "malformed_candidate_url"})
             continue
         if robots is not None and not robots.can_fetch(USER_AGENT, url):
             outcome.rejected.append({"url": url, "reason": "discovery_suppressed_by_robots"})

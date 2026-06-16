@@ -5,6 +5,7 @@ transport (DNS answers, redirects, streamed bytes, timeouts), never from
 fabricated FetchResult objects, so the checks under test actually run.
 """
 
+import http.client
 import socket
 
 import pytest
@@ -19,12 +20,13 @@ from tools.openva.safe_fetch import (
 class _Resp:
     """A fake in-flight response read in caller-sized chunks (RawResponse)."""
 
-    def __init__(self, status, headers=None, body=b"", *, chunks=None, raise_mid=None):
+    def __init__(self, status, headers=None, body=b"", *, chunks=None, raise_mid=None, read_error=None):
         self.status = status
         self.headers = {k.lower(): v for k, v in (headers or {}).items()}
         self._body = b"".join(chunks) if chunks is not None else body
         self._pos = 0
         self._raise_mid = raise_mid  # raise socket.timeout on the Nth read (0-based)
+        self._read_error = read_error  # raise this exception on the first read
         self._reads = 0
         self.closed = False
         self.timeouts = []  # records every set_timeout (proves per-read clamping)
@@ -33,6 +35,8 @@ class _Resp:
         self.timeouts.append(seconds)
 
     def read(self, size):
+        if self._read_error is not None and self._reads == 0:
+            raise self._read_error
         if self._raise_mid is not None and self._reads == self._raise_mid:
             raise socket.timeout("read timed out")
         self._reads += 1
@@ -597,6 +601,44 @@ def test_mid_body_timeout_fails_closed():
     with pytest.raises(SafeFetchError) as exc:
         _fetcher(t).fetch("https://vendor.example/sitemap.xml")
     assert "transport_error" in str(exc.value)
+
+
+def test_http_protocol_exception_on_open_fails_closed():
+    # BadStatusLine / LineTooLong etc. are HTTPException, NOT OSError; they must
+    # still be normalized to a bounded SafeFetchError, not escape.
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        open_error=http.client.BadStatusLine("garbage line"),
+    )
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t).fetch("https://vendor.example/robots.txt")
+    assert "transport_error:BadStatusLine" in str(exc.value)
+
+
+def test_incomplete_read_during_body_fails_closed():
+    served = _Resp(200, read_error=http.client.IncompleteRead(b"partial"))
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={"https://vendor.example/sitemap.xml": served},
+    )
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t).fetch("https://vendor.example/sitemap.xml")
+    assert "transport_error:IncompleteRead" in str(exc.value)
+    assert served.closed is True  # response closed on the protocol failure
+
+
+@pytest.mark.parametrize(
+    "url",
+    ["https://[:::]/x", "https://[gg::1]/x", "https://vendor.example:99999/x"],
+)
+def test_malformed_url_is_a_bounded_rejection(url):
+    # Bad IPv6 brackets / out-of-range port raise ValueError from urlsplit; the
+    # boundary normalizes them to a bounded SafeFetchError instead of escaping.
+    t = FakeTransport(dns={"vendor.example": ["93.184.216.34"]})
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t).fetch(url)
+    assert "malformed" in str(exc.value)
+    assert t.connected == []  # never connected
 
 
 def test_response_is_closed_even_on_success():
