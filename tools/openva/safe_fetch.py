@@ -96,9 +96,23 @@ class Transport(Protocol):
         """Return the resolved IP addresses (as strings) for ``host``."""
 
     def open(
-        self, *, url: str, ip: str, host: str, headers: Mapping[str, str], timeout: float
+        self,
+        *,
+        url: str,
+        ip: str,
+        host: str,
+        headers: Mapping[str, str],
+        deadline: float,
+        clock: Callable[[], float],
     ) -> RawResponse:
-        """Open ``url`` by connecting to the pinned ``ip`` (no re-resolution)."""
+        """Open ``url`` by connecting to the pinned ``ip`` (no re-resolution).
+
+        ``deadline`` is the absolute monotonic instant the whole exchange must
+        finish by; ``clock`` reads the same monotonic time the fetcher uses. The
+        transport must recompute the remaining budget before each blocking phase
+        (connect, TLS, request send, header read) and fail closed if none remains,
+        so the aggregate of all phases cannot exceed the deadline.
+        """
 
 
 @dataclass(frozen=True)
@@ -110,6 +124,9 @@ class FetchPolicy:
     max_compressed_bytes: int = 5_000_000
     max_decompressed_bytes: int = 50_000_000
     user_agent: str = USER_AGENT
+    # The candidate-verification lane requests identity so the body it classifies
+    # is readable text; the sitemap lane accepts gzip and decompresses downstream.
+    accept_encoding: str = "gzip, identity"
 
 
 class SafeFetcher:
@@ -142,17 +159,18 @@ class SafeFetcher:
             self._remaining(deadline)  # abort if the budget is already spent
             self._validate_request_url(current)
             ip = self._resolve_and_pin(current, deadline)
-            remaining = self._remaining(deadline)
+            self._remaining(deadline)  # abort before opening if the budget is spent
             host = normalize_host(urlsplit(current).hostname) or ""
             try:
+                # The transport enforces the whole-exchange deadline across every
+                # blocking phase (connect, TLS, request, header read).
                 response = self.transport.open(
                     url=current,
                     ip=ip,
                     host=host,
                     headers=self._request_headers(),
-                    # Clamp the per-socket-operation timeout to the remaining
-                    # budget so no single op can outlive the whole-exchange deadline.
-                    timeout=min(self.policy.timeout_seconds, remaining),
+                    deadline=deadline,
+                    clock=self._clock,
                 )
             except OSError as exc:  # connect/TLS/timeout failures fail closed
                 raise SafeFetchError(f"transport_error:{type(exc).__name__}") from exc
@@ -175,6 +193,7 @@ class SafeFetcher:
                     body=body,
                     content_encoding=encoding,
                     redirects=redirects,
+                    headers=dict(response.headers),
                 )
             finally:
                 response.close()
@@ -192,8 +211,8 @@ class SafeFetcher:
         # Deterministic, identity-free: no cookies, no Authorization, no UA drift.
         return {
             "User-Agent": self.policy.user_agent,
-            "Accept": "application/xml,text/xml,text/plain,*/*",
-            "Accept-Encoding": "gzip, identity",
+            "Accept": "application/xml,text/xml,text/html,application/pdf,text/plain,*/*",
+            "Accept-Encoding": self.policy.accept_encoding,
             "Connection": "close",
         }
 
@@ -365,16 +384,34 @@ class SocketTransport:
         return seen
 
     def open(
-        self, *, url: str, ip: str, host: str, headers: Mapping[str, str], timeout: float
+        self,
+        *,
+        url: str,
+        ip: str,
+        host: str,
+        headers: Mapping[str, str],
+        deadline: float,
+        clock: Callable[[], float],
     ) -> RawResponse:
         parts = urlsplit(url)
         scheme = parts.scheme
         port = parts.port or (443 if scheme == "https" else 80)
+
+        def budget(phase: str) -> float:
+            # The remaining budget before THIS phase; recomputed each time so the
+            # phases (connect, TLS, request, header read) cannot collectively
+            # exceed the deadline. Fail closed before a phase with no budget left.
+            remaining = deadline - clock()
+            if remaining <= 0:
+                raise SafeFetchError(f"request_deadline_exceeded:{phase}")
+            return remaining
+
         # Connect to the validated IP literal (create_connection does not
         # re-resolve a literal), so the socket cannot rebind to another address.
-        raw = socket.create_connection((ip, port), timeout=timeout)
+        raw = socket.create_connection((ip, port), timeout=budget("connect"))
         try:
             if scheme == "https":
+                raw.settimeout(budget("tls"))
                 context = ssl.create_default_context()
                 # SNI + certificate validation use the real hostname, not the IP.
                 sock: socket.socket = context.wrap_socket(raw, server_hostname=host)
@@ -383,20 +420,27 @@ class SocketTransport:
         except Exception:
             raw.close()
             raise
-        connection = http.client.HTTPConnection(host, port, timeout=timeout)
-        connection.sock = sock
-        path = parts.path or "/"
-        if parts.query:
-            path = f"{path}?{parts.query}"
-        request_headers = dict(headers)
-        request_headers.setdefault("Host", host)
+        connection: http.client.HTTPConnection | None = None
         try:
+            request_budget = budget("request")
+            connection = http.client.HTTPConnection(host, port, timeout=request_budget)
+            connection.sock = sock
+            sock.settimeout(request_budget)
+            path = parts.path or "/"
+            if parts.query:
+                path = f"{path}?{parts.query}"
+            request_headers = dict(headers)
+            request_headers.setdefault("Host", host)
             connection.request("GET", path, headers=request_headers)
+            sock.settimeout(budget("headers"))
             response = connection.getresponse()
         except Exception:
-            # Connect/TLS succeeded but the request/response failed: close the
-            # socket and connection so the descriptor is not leaked.
-            connection.close()
+            # A failure (including request_deadline_exceeded) after connect/TLS:
+            # close the socket/connection so the descriptor is not leaked.
+            if connection is not None:
+                connection.close()
+            else:
+                sock.close()
             raise
         return _HttpRawResponse(response, connection)
 
@@ -408,6 +452,7 @@ def build_safe_fetcher(
     timeout_seconds: float,
     max_compressed_bytes: int,
     max_decompressed_bytes: int,
+    accept_encoding: str = "gzip, identity",
     transport: Transport | None = None,
     clock: Callable[[], float] | None = None,
 ) -> SafeFetcher:
@@ -417,6 +462,7 @@ def build_safe_fetcher(
         timeout_seconds=timeout_seconds,
         max_compressed_bytes=max_compressed_bytes,
         max_decompressed_bytes=max_decompressed_bytes,
+        accept_encoding=accept_encoding,
     )
     return SafeFetcher(
         transport or SocketTransport(),

@@ -196,7 +196,7 @@ def test_end_to_end_unmatched_locator_is_rejected(tmp_path):
     assert pv["provisional_eligibility"].startswith("reject_")
 
 
-def test_end_to_end_is_idempotent_across_runs(tmp_path):
+def test_same_run_is_deterministic_and_event_identity_is_observation_specific(tmp_path):
     sitemap = _sitemap_fetcher({"https://vendor.example/sitemap.xml": _sitemap_body(
         "https://vendor.example/legal/dpa",
     )})
@@ -215,12 +215,17 @@ def test_end_to_end_is_idempotent_across_runs(tmp_path):
 
     a = run("run-1", "a.json")
     b = run("run-1", "b.json")
-    assert a == b  # same inputs -> byte-identical report
+    assert a == b  # same run -> deterministic, byte-identical report
 
-    # Locator event identity is content-stable, not run-scoped: a different run id
-    # produces the SAME discovery_event_ids (so the committed ledger dedups them).
+    # Event identity is observation-specific (run-scoped, mirroring the existing
+    # source-discovery lane): a different run yields fresh event ids the
+    # append-only ledger accepts, never a duplicate-id rejection...
     c = run("run-2", "c.json")
-    assert {e["discovery_event_id"] for e in a["events"]} == {e["discovery_event_id"] for e in c["events"]}
+    a_ids = {e["discovery_event_id"] for e in a["events"]}
+    c_ids = {e["discovery_event_id"] for e in c["events"]}
+    assert a_ids and a_ids.isdisjoint(c_ids)
+    # ...while the candidate (locator) identity is stable across runs.
+    assert {e["candidate_id"] for e in a["events"]} == {e["candidate_id"] for e in c["events"]}
 
 
 # --- item 4: deterministic vendor rotation -----------------------------------
@@ -283,35 +288,67 @@ def test_rotation_no_shard_runs_twice_consecutively_across_year_seam():
         assert b == (a + 1) % 3
 
 
-def test_rotation_adding_one_vendor_does_not_reshuffle_within_a_band():
-    from datetime import date
+import hashlib
 
-    from tools.openva.catalog_growth_discovery_queue import select_rotation_vendors
 
+def _order_hash(vendor_id):
+    return hashlib.sha256(vendor_id.encode("utf-8")).hexdigest()
+
+
+def _window_assignments(vendors, max_vendors):
+    # Each vendor's window index under the identity-hash windowing.
+    from tools.openva.catalog_growth_discovery_queue import rotation_shard_count
+
+    shard_count = rotation_shard_count(len(vendors), max_vendors)
+    ordered = sorted(vendors, key=lambda v: _order_hash(v["vendor_id"]))
+    return {v["vendor_id"]: i // max_vendors for i, v in enumerate(ordered)}, shard_count
+
+
+def _id_landing(predicate):
+    # An inserted vendor id whose hash satisfies `predicate` (controls where it
+    # lands in the stable order: before-first / middle / after-last).
+    for i in range(200000):
+        cand = f"insert-{i}"
+        if predicate(_order_hash(cand)):
+            return cand
+    raise AssertionError("no landing id found")
+
+
+def test_rotation_insertion_causes_only_local_window_reshuffle():
     base = _fake_vendors(60)
-    grown = base + [{"vendor_id": "v999", "official_domains": ["v999.example"]}]  # 61, still shard_count 3
-    at = _at(date(2026, 6, 15))
-    before, before_meta = select_rotation_vendors(base, max_vendors=25, discovered_at=at)
-    after, after_meta = select_rotation_vendors(grown, max_vendors=25, discovered_at=at)
-    assert before_meta["shard_count"] == after_meta["shard_count"] == 3  # same band
-    before_ids = {v["vendor_id"] for v in before}
-    after_ids = {v["vendor_id"] for v in after}
-    assert before_ids <= after_ids  # no existing vendor dropped
-    assert after_ids - before_ids <= {"v999"}  # only the new vendor can join
+    max_vendors = 25
+    base_hashes = sorted(_order_hash(v["vendor_id"]) for v in base)
+    before, shard_count = _window_assignments(base, max_vendors)
+
+    # Insert before the first, in the middle, and after the last existing vendor.
+    insertions = {
+        "before_first": _id_landing(lambda h: h < base_hashes[0]),
+        "middle": _id_landing(lambda h: base_hashes[29] < h < base_hashes[30]),
+        "after_last": _id_landing(lambda h: h > base_hashes[-1]),
+    }
+    for where, new_id in insertions.items():
+        grown = base + [{"vendor_id": new_id, "official_domains": [f"{new_id}.example"]}]
+        after, shard_count_after = _window_assignments(grown, max_vendors)
+        assert shard_count_after == shard_count, where  # 60->61 stays shard_count 3
+        # No SUBSTANTIAL reshuffle: only vendors adjacent to a window boundary can
+        # move, at most one per internal boundary (<= shard_count).
+        changed = sum(1 for vid in before if before[vid] != after[vid])
+        assert changed <= shard_count, (where, changed)
 
 
-def test_rotation_shard_count_is_recorded_so_band_transitions_are_visible():
+def test_rotation_shard_count_boundary_is_recorded():
     from datetime import date
 
     from tools.openva.catalog_growth_discovery_queue import select_rotation_vendors
 
-    # Crossing a max_vendors multiple changes shard_count; it is recorded so a
-    # consumer can detect (and explain) the band-boundary reshuffle.
+    # Crossing a max_vendors multiple changes shard_count (windows re-tile); it is
+    # recorded so a consumer can detect and explain that transition.
     at = _at(date(2026, 6, 15))
     _, meta_50 = select_rotation_vendors(_fake_vendors(50), max_vendors=25, discovered_at=at)
     _, meta_51 = select_rotation_vendors(_fake_vendors(51), max_vendors=25, discovered_at=at)
     assert meta_50["shard_count"] == 2
     assert meta_51["shard_count"] == 3
+    assert meta_51["assignment_basis"] == "sha256_vendor_id_window"
 
 
 # --- scheduled-path wiring + surfacing ---------------------------------------
@@ -339,6 +376,25 @@ def test_scheduled_workflow_surfaces_sitemap_counts_in_the_issue_body():
     body = issue_step["run"]
     assert "sitemap-source-discovery-events.json" in body
     assert "Sitemap source discovery" in body
+
+
+def test_production_verify_factory_uses_the_safe_boundary(monkeypatch):
+    # The scheduled command must verify candidate pages over the SSRF-safe
+    # boundary, never the legacy unrestricted urllib client.
+    import tools.openva.catalog_growth_discovery_queue as q
+
+    calls = {}
+
+    def fake_build(domains, **kwargs):
+        calls["domains"] = domains
+        calls["kwargs"] = kwargs
+        return lambda _url: None
+
+    monkeypatch.setattr("tools.openva.safe_verify.build_safe_verify_fetcher", fake_build)
+    factory = q._production_verify_fetcher_factory()
+    factory("vendor.example")
+    assert calls["domains"] == ["vendor.example"]  # bound to the vendor's own authority
+    assert "max_redirects" in calls["kwargs"] and "timeout_seconds" in calls["kwargs"]
 
 
 def test_committed_queue_has_the_mode_enabled_so_the_command_is_active():

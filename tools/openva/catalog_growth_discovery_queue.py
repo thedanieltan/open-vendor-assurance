@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -366,25 +367,39 @@ def rotation_cursor_index(discovered_at: str, shard_count: int) -> int:
     return epoch_week_index(discovered_at) % shard_count
 
 
+def _vendor_order_key(vendor: dict[str, Any]) -> str:
+    """Stable per-vendor ordering key: the SHA-256 of the vendor id.
+
+    Position-independent, so an inserted vendor lands at its own hash position
+    and shifts only the elements adjacent to a window boundary — not the whole
+    schedule, as a catalog-position stride (``offset % shard_count``) would.
+    """
+    return hashlib.sha256(str(vendor.get("vendor_id") or "").encode("utf-8")).hexdigest()
+
+
 def select_rotation_vendors(
     vendors: list[dict[str, Any]], *, max_vendors: int, discovered_at: str
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    """Bounded deterministic epoch-week stride rotation over the sorted catalog.
+    """Bounded deterministic identity-windowed rotation over the catalog.
 
-    Each scheduled cycle selects one stride of the (already path-sorted) vendor
-    list; over ``shard_count`` consecutive cycles every vendor is covered, while
-    any single run stays bounded by ``max_vendors``. Stride membership
-    (``offset % shard_count``) keeps each vendor's assignment stable except when
-    ``shard_count`` itself changes (the catalog grows past a ``max_vendors``
-    multiple), so adding one vendor within a band does not reshuffle the schedule;
-    ``shard_count`` is recorded so a consumer can detect a band transition.
+    Vendors are ordered by a stable content hash of their id (NOT catalog
+    position) and tiled into ``shard_count`` contiguous windows of at most
+    ``max_vendors``. Each cycle selects the window at the epoch-week cursor; over
+    ``shard_count`` consecutive cycles every vendor is covered exactly once, each
+    run stays bounded, and no vendor is starved. Because assignment is by identity
+    hash, inserting a vendor moves only the elements next to window boundaries
+    (at most ``shard_count`` existing vendors), never the whole schedule. When
+    ``shard_count`` itself changes (the catalog crosses a ``max_vendors`` multiple)
+    the windows re-tile; ``shard_count`` is recorded so that transition is visible.
     """
     shard_count = rotation_shard_count(len(vendors), max_vendors)
     shard_index = rotation_cursor_index(discovered_at, shard_count)
-    sharded = [vendor for offset, vendor in enumerate(vendors) if offset % shard_count == shard_index]
-    selected = sharded[:max_vendors]
+    ordered = sorted(vendors, key=_vendor_order_key)
+    start = shard_index * max_vendors
+    selected = ordered[start : start + max_vendors]
     parsed = _parse_discovered_at(discovered_at)
     meta = {
+        "assignment_basis": "sha256_vendor_id_window",
         "shard_index": shard_index,
         "shard_count": shard_count,
         "cursor_week": epoch_week_index(discovered_at),
@@ -434,11 +449,23 @@ def _production_fetcher_factory() -> Any:
 
 
 def _production_verify_fetcher_factory() -> Any:
-    """Ordinary candidate-verification fetcher used to fetch+classify locators."""
-    from tools.openva.source_verification import fetch_url
+    """Per-vendor candidate-verification fetcher over the SSRF-safe boundary.
 
-    def factory(_official_domain: str) -> Any:
-        return fetch_url
+    NOT the legacy unrestricted urllib client: sitemap-nominated candidate URLs
+    are verified with the same DNS-pinned, same-authority, bounded, deadline-
+    enforced protections as discovery, bound to the vendor's own official domains.
+    """
+    from tools.openva.safe_verify import build_safe_verify_fetcher
+    from tools.openva.sitemap_discovery import load_bounds
+
+    bounds = load_bounds()
+
+    def factory(official_domain: str) -> Any:
+        return build_safe_verify_fetcher(
+            [official_domain],
+            max_redirects=bounds.max_redirects,
+            timeout_seconds=bounds.max_request_seconds,
+        )
 
     return factory
 

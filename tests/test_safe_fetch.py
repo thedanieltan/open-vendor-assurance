@@ -60,7 +60,7 @@ class FakeTransport:
             raise socket.gaierror(f"no DNS for {host}")
         return list(self._dns[host])
 
-    def open(self, *, url, ip, host, headers, timeout):
+    def open(self, *, url, ip, host, headers, deadline, clock):
         # Prove the boundary pinned the connection to a validated address and
         # never leaks credentials/cookies.
         self.connected.append((url, ip))
@@ -373,6 +373,75 @@ def test_hung_resolver_is_bounded_by_the_deadline():
         assert "request_deadline_exceeded" in str(exc.value)
     finally:
         release.set()  # let the daemon resolver thread exit
+
+
+def test_socket_transport_enforces_a_hard_aggregate_deadline(monkeypatch):
+    # Each blocking phase (connect, request send, header read) is given only the
+    # REMAINING budget, recomputed each time, so their aggregate cannot exceed the
+    # configured deadline: a phase that would push past it fails before it starts.
+    import tools.openva.safe_fetch as sf
+
+    state = {"t": 0.0}
+    seen = []
+
+    class FakeSock:
+        def settimeout(self, t):
+            seen.append(("settimeout", round(t, 3)))
+
+        def close(self):
+            seen.append(("sock_close",))
+
+    def fake_connect(addr, timeout=None):
+        seen.append(("connect", round(timeout, 3)))
+        state["t"] += 4  # the connect phase consumes 4s of the budget
+        return FakeSock()
+
+    class FakeResponse:
+        status = 200
+
+        def getheaders(self):
+            return []
+
+        def read(self, n):
+            return b""
+
+        def close(self):
+            pass
+
+    class FakeConn:
+        def __init__(self, host, port, timeout=None):
+            seen.append(("conn", round(timeout, 3)))
+            self.sock = None
+
+        def request(self, *a, **k):
+            seen.append(("request",))
+            state["t"] += 4  # the request phase consumes another 4s
+
+        def getresponse(self):
+            seen.append(("getresponse",))
+            return FakeResponse()
+
+        def close(self):
+            seen.append(("conn_close",))
+
+    monkeypatch.setattr(sf.socket, "create_connection", fake_connect)
+    monkeypatch.setattr(sf.http.client, "HTTPConnection", FakeConn)
+
+    transport = sf.SocketTransport()
+    with pytest.raises(sf.SafeFetchError) as exc:
+        transport.open(
+            url="http://vendor.example/x",
+            ip="93.184.216.34",
+            host="vendor.example",
+            headers={"Host": "vendor.example"},
+            deadline=7.0,  # connect(7s budget) + request(4s) overruns before headers
+            clock=lambda: state["t"],
+        )
+    assert "request_deadline_exceeded" in str(exc.value)
+    # connect saw the full 7s remaining, the request phase saw the reduced 3s.
+    budgets = [entry[1] for entry in seen if entry[0] in ("connect", "conn")]
+    assert budgets == [7.0, 3.0]
+    assert ("conn_close",) in seen  # the connection was closed on the failure
 
 
 def test_compressed_cap_below_one_chunk_is_honored():

@@ -79,6 +79,9 @@ class FetchResult:
     body: bytes
     content_encoding: str | None = None
     redirects: int = 0
+    # Lower-cased response headers, when the fetcher can supply them (the safe
+    # verification adapter maps content-type / etag / last-modified from here).
+    headers: dict[str, str] | None = None
 
 
 # A fetcher returns a FetchResult or raises. It is injected so this module never
@@ -468,18 +471,25 @@ def _discovery_event(
         "promotion_weight": "none",
     }
     evidence_digest = sha256_bytes(canonical_json(evidence))
+    candidate_id = f"cand-sitemap-{sha256_bytes(canonical_json(url))[len('sha256:'): len('sha256:') + 12]}"
+    classification = "unverified_candidate"
     return {
         "schema_version": "0.1.0",
-        # Content-stable identity: the same locator for the same vendor yields the
-        # same event id across runs, so re-discovery is idempotent (the committed
-        # discovery-ledger append dedups on this id). discovery_run_id is recorded
-        # as a field but is NOT part of the identity.
-        "discovery_event_id": sha256_bytes(canonical_json(["sitemap", vendor_id, url]))[len("sha256:") : len("sha256:") + 32],
-        "candidate_id": f"cand-sitemap-{sha256_bytes(canonical_json(url))[len('sha256:'): len('sha256:') + 12]}",
+        # Observation-specific identity (mirrors source_discovery.discovery_event):
+        # the event id folds in discovery_run_id, so each run records a fresh
+        # observation that the append-only ledger accepts. The STABLE identity is
+        # candidate_id (content-derived from the locator URL), which correlates
+        # repeated observations of the same locator across runs. The ledger rejects
+        # a reused id with conflicting content, which never happens here because the
+        # id is run-scoped. These events are NOT idempotent-on-append by design.
+        "discovery_event_id": sha256_bytes(
+            canonical_json([candidate_id, discovery_run_id, evidence_digest, classification])
+        )[len("sha256:") : len("sha256:") + 32],
+        "candidate_id": candidate_id,
         "origin": "sitemap",
         "candidate_url": url,
         "evidence_digest": evidence_digest,
-        "classification": "unverified_candidate",
+        "classification": classification,
         "reason_codes": [
             "discovery_method:sitemap",
             f"discovered_from:{discovered_from}",
