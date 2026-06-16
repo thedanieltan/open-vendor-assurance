@@ -378,9 +378,10 @@ def test_scheduled_workflow_surfaces_sitemap_counts_in_the_issue_body():
     assert "Sitemap source discovery" in body
 
 
-def test_production_verify_factory_uses_the_safe_boundary(monkeypatch):
+def test_production_verify_factory_uses_the_safe_boundary_and_full_domains(monkeypatch):
     # The scheduled command must verify candidate pages over the SSRF-safe
-    # boundary, never the legacy unrestricted urllib client.
+    # boundary (never legacy urllib), bound to the vendor's FULL official-domain
+    # set so multi-domain vendors' cross-domain locators are not dropped.
     import tools.openva.catalog_growth_discovery_queue as q
 
     calls = {}
@@ -392,8 +393,8 @@ def test_production_verify_factory_uses_the_safe_boundary(monkeypatch):
 
     monkeypatch.setattr("tools.openva.safe_verify.build_safe_verify_fetcher", fake_build)
     factory = q._production_verify_fetcher_factory()
-    factory("vendor.example")
-    assert calls["domains"] == ["vendor.example"]  # bound to the vendor's own authority
+    factory(["vendor.example", "vendor-cdn.example"])
+    assert calls["domains"] == ["vendor.example", "vendor-cdn.example"]
     assert "max_redirects" in calls["kwargs"] and "timeout_seconds" in calls["kwargs"]
 
 

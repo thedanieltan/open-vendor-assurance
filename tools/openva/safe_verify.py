@@ -27,6 +27,7 @@ VERIFY_SAMPLE_BYTES = source_verification.MAX_SAMPLE_BYTES
 # Hard wire bound for a candidate page; larger responses are refused (a bounded,
 # DoS-resistant fetch — not a silent sample of an unbounded body).
 VERIFY_MAX_BYTES = 2_000_000
+_GZIP_MAGIC = b"\x1f\x8b"
 
 
 def _int_or_none(value: str | None) -> int | None:
@@ -81,6 +82,22 @@ def build_safe_verify_fetcher(
                 last_modified=None,
                 body_sample=b"",
                 error=str(exc),
+            )
+        if (result.content_encoding or "").strip().lower() == "gzip" or result.body[:2] == _GZIP_MAGIC:
+            # The server returned gzip despite an identity request; the classifier
+            # would see undecodable bytes. Record an explicit, auditable rejection
+            # rather than a silent semantic mismatch (the lane does not decompress
+            # candidate pages — only sitemaps are decompressed, under their own bounds).
+            return source_verification.FetchResult(
+                requested_url=url,
+                final_url=result.final_url,
+                http_status=None,
+                content_type=None,
+                content_length=None,
+                etag=None,
+                last_modified=None,
+                body_sample=b"",
+                error="unexpected_gzip_despite_identity",
             )
         headers = result.headers or {}
         return source_verification.FetchResult(

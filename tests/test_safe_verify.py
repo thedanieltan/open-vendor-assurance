@@ -145,6 +145,48 @@ def test_verify_success_returns_source_verification_fetchresult_shape():
     assert result.error is None
 
 
+def test_verify_cross_domain_locator_on_second_official_domain_is_allowed():
+    # A multi-domain vendor: a locator on the SECOND official domain must verify
+    # (the fetcher is bound to the FULL domain list), not be dropped off-authority.
+    body = b"<html>data processing agreement processor</html>"
+    t = FakeTransport(
+        dns={"cdn.example": ["93.184.216.34"]},
+        responses={"https://cdn.example/legal/dpa": _Resp(200, {"Content-Type": "text/html"}, body=body)},
+    )
+    verify = build_safe_verify_fetcher(
+        ["primary.example", "cdn.example"], transport=t, max_redirects=5, timeout_seconds=20.0
+    )
+    result = verify("https://cdn.example/legal/dpa")
+    assert result.http_status == 200
+    assert result.body_sample == body
+    assert result.error is None
+
+
+def test_verify_off_authority_url_is_still_refused_with_multiple_domains():
+    t = FakeTransport(dns={"evil.test": ["198.51.100.7"]})
+    verify = build_safe_verify_fetcher(
+        ["primary.example", "cdn.example"], transport=t, max_redirects=5, timeout_seconds=20.0
+    )
+    result = verify("https://evil.test/x")
+    assert result.http_status is None
+    assert "off_authority" in (result.error or "")
+
+
+def test_verify_gzip_body_despite_identity_is_a_distinct_rejection():
+    # A server that returns gzip despite the identity request: the classifier
+    # would see undecodable bytes, so record an explicit auditable rejection.
+    gzip_body = b"\x1f\x8b" + b"\x00" * 64
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={
+            "https://vendor.example/trust": _Resp(200, {"Content-Type": "text/html", "Content-Encoding": "gzip"}, body=gzip_body)
+        },
+    )
+    result = _verify(t)("https://vendor.example/trust")
+    assert result.http_status is None
+    assert result.error == "unexpected_gzip_despite_identity"
+
+
 def test_verify_same_authority_redirect_is_followed():
     body = b"<html>data processing agreement processor</html>"
     t = FakeTransport(

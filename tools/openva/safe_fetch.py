@@ -401,6 +401,9 @@ class SocketTransport:
             # The remaining budget before THIS phase; recomputed each time so the
             # phases (connect, TLS, request, header read) cannot collectively
             # exceed the deadline. Fail closed before a phase with no budget left.
+            # settimeout bounds each individual recv/send, so a phase doing several
+            # syscalls is enforced per-recv; the absolute-deadline recheck at the
+            # next phase boundary (and at every body read) bounds the aggregate.
             remaining = deadline - clock()
             if remaining <= 0:
                 raise SafeFetchError(f"request_deadline_exceeded:{phase}")

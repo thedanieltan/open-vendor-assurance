@@ -303,6 +303,7 @@ def run_sitemap_source_discovery(
             {
                 "vendor_id": vendor_id,
                 "official_domain": official_domains[0],
+                "official_domains": list(official_domains),
                 "robots_state": outcome.robots_state,
                 "robots_reason": outcome.robots_reason,
                 "robots_parser": outcome.robots_parser,
@@ -345,8 +346,12 @@ def rotation_shard_count(vendor_count: int, max_vendors: int) -> int:
 
 
 def epoch_week_index(discovered_at: str) -> int:
-    """Contiguous week counter from the fixed Monday epoch (no year-seam gap)."""
-    dt = _parse_discovered_at(discovered_at)
+    """Contiguous week counter from the fixed Monday epoch (no year-seam gap).
+
+    Normalized to UTC first, so an offset-bearing timestamp is assigned by the
+    instant it denotes rather than its local wall date.
+    """
+    dt = _parse_discovered_at(discovered_at).astimezone(timezone.utc)
     iso_year, iso_week, _iso_day = dt.isocalendar()
     monday = date.fromisocalendar(iso_year, iso_week, 1)
     return (monday - _ROTATION_EPOCH).days // 7
@@ -385,8 +390,11 @@ def select_rotation_vendors(
     Vendors are ordered by a stable content hash of their id (NOT catalog
     position) and tiled into ``shard_count`` contiguous windows of at most
     ``max_vendors``. Each cycle selects the window at the epoch-week cursor; over
-    ``shard_count`` consecutive cycles every vendor is covered exactly once, each
-    run stays bounded, and no vendor is starved. Because assignment is by identity
+    ``shard_count`` consecutive cycles (assuming a stable ``vendor_count`` over that
+    span) every vendor is covered exactly once, each run stays bounded, and no
+    vendor is starved. A catalog that crosses a ``max_vendors`` multiple mid-span
+    re-tiles (``shard_count`` flips); that transition is made observable via the
+    recorded ``shard_count``/``cursor_week``. Because assignment is by identity
     hash, inserting a vendor moves only the elements next to window boundaries
     (at most ``shard_count`` existing vendors), never the whole schedule. When
     ``shard_count`` itself changes (the catalog crosses a ``max_vendors`` multiple)
@@ -460,9 +468,12 @@ def _production_verify_fetcher_factory() -> Any:
 
     bounds = load_bounds()
 
-    def factory(official_domain: str) -> Any:
+    def factory(official_domains: list[str]) -> Any:
+        # Bound to the vendor's FULL official-domain set, symmetric with the
+        # discovery fetcher, so a legitimately on-authority cross-domain locator
+        # (multi-domain vendors) is verified rather than dropped as off-authority.
         return build_safe_verify_fetcher(
-            [official_domain],
+            list(official_domains),
             max_redirects=bounds.max_redirects,
             timeout_seconds=bounds.max_request_seconds,
         )
@@ -566,16 +577,17 @@ def run_sitemap_discovery_command(
             verified_count = 0
             provisional_eligibility: str | None = None
             if record["locators"]:
+                official_domains = record.get("official_domains") or [record["official_domain"]]
                 vendor = {
                     "vendor_id": record["vendor_id"],
                     "candidate_vendor_id": record["vendor_id"],
-                    "official_domains": [record["official_domain"]],
+                    "official_domains": list(official_domains),
                     "official_domain_candidate": record["official_domain"],
                 }
                 verification = verify_sitemap_locators(
                     vendor,
                     record["locators"],
-                    fetcher=verify_fetcher_factory(record["official_domain"]),
+                    fetcher=verify_fetcher_factory(official_domains),
                     discovered_at=discovered_at,
                     discovery_run_id=f"{discovery_run_id}-{record['vendor_id']}",
                 )

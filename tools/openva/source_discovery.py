@@ -581,7 +581,7 @@ def verify_sitemap_locators(
     vendor: dict[str, Any],
     locator_urls: list[str],
     *,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult],
     source_types: tuple[str, ...] = DEFAULT_SOURCE_TYPES,
     discovered_at: str | None = None,
     discovery_run_id: str | None = None,

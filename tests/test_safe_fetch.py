@@ -444,6 +444,124 @@ def test_socket_transport_enforces_a_hard_aggregate_deadline(monkeypatch):
     assert ("conn_close",) in seen  # the connection was closed on the failure
 
 
+def test_socket_transport_budgets_the_tls_phase(monkeypatch):
+    # The https TLS handshake is a budgeted phase: it receives the remaining
+    # budget after connect, and on a budget-exhausting TLS phase it fails closed
+    # and closes the raw socket (no descriptor leak).
+    import tools.openva.safe_fetch as sf
+
+    state = {"t": 0.0}
+    events = []
+
+    class FakeRaw:
+        def settimeout(self, t):
+            events.append(("raw_settimeout", round(t, 3)))
+
+        def close(self):
+            events.append(("raw_close",))
+
+    def fake_connect(addr, timeout=None):
+        events.append(("connect", round(timeout, 3)))
+        state["t"] += 6  # connect consumes 6s of a 5s deadline -> TLS has no budget
+        return FakeRaw()
+
+    class FakeCtx:
+        def wrap_socket(self, sock, server_hostname=None):
+            events.append(("wrap", server_hostname))
+            return sock
+
+    monkeypatch.setattr(sf.socket, "create_connection", fake_connect)
+    monkeypatch.setattr(sf.ssl, "create_default_context", lambda: FakeCtx())
+
+    transport = sf.SocketTransport()
+    with pytest.raises(sf.SafeFetchError) as exc:
+        transport.open(
+            url="https://vendor.example/x",
+            ip="93.184.216.34",
+            host="vendor.example",
+            headers={"Host": "vendor.example"},
+            deadline=5.0,
+            clock=lambda: state["t"],
+        )
+    assert "request_deadline_exceeded:tls" in str(exc.value)
+    assert ("wrap", "vendor.example") not in events  # TLS never started
+    assert ("raw_close",) in events  # the raw socket was closed on the failure
+
+
+def test_socket_transport_tls_phase_receives_the_reduced_budget(monkeypatch):
+    import tools.openva.safe_fetch as sf
+
+    state = {"t": 0.0}
+    events = []
+
+    class FakeRaw:
+        def settimeout(self, t):
+            events.append(("raw_settimeout", round(t, 3)))
+
+        def close(self):
+            pass
+
+    class FakeSock:
+        def settimeout(self, t):
+            pass
+
+        def close(self):
+            pass
+
+    def fake_connect(addr, timeout=None):
+        events.append(("connect", round(timeout, 3)))
+        state["t"] += 1
+        return FakeRaw()
+
+    class FakeCtx:
+        def wrap_socket(self, sock, server_hostname=None):
+            events.append(("wrap", server_hostname))
+            return FakeSock()
+
+    class FakeResp:
+        status = 200
+
+        def getheaders(self):
+            return []
+
+        def read(self, n):
+            return b""
+
+        def close(self):
+            pass
+
+    class FakeConn:
+        def __init__(self, host, port, timeout=None):
+            self.sock = None
+
+        def request(self, *a, **k):
+            pass
+
+        def getresponse(self):
+            return FakeResp()
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(sf.socket, "create_connection", fake_connect)
+    monkeypatch.setattr(sf.ssl, "create_default_context", lambda: FakeCtx())
+    monkeypatch.setattr(sf.http.client, "HTTPConnection", FakeConn)
+
+    transport = sf.SocketTransport()
+    response = transport.open(
+        url="https://vendor.example/x",
+        ip="93.184.216.34",
+        host="vendor.example",
+        headers={"Host": "vendor.example"},
+        deadline=100.0,
+        clock=lambda: state["t"],
+    )
+    assert response.status == 200
+    assert ("connect", 100.0) in events  # connect saw the full budget
+    assert ("raw_settimeout", 99.0) in events  # TLS handshake clamped to the reduced remaining
+    assert ("wrap", "vendor.example") in events  # SNI uses the real hostname
+
+
 def test_compressed_cap_below_one_chunk_is_honored():
     # A gzip body (via magic, no header) with a sub-default-chunk compressed cap:
     # reads are sized to the cap so buffering never exceeds it by more than a read.
