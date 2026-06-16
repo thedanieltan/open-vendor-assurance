@@ -606,13 +606,12 @@ def test_concurrent_writers_no_lost_update(tmp_path):
     assert urls == {f"https://vendorco.com/s{i}" for i in range(n)}
 
 
-# 30 (blocker 4). A corrupt persisted record is not merged into; the freshly built
-#                 record is used instead (fail closed).
+# 30 (blocker 4). A schema-invalid persisted record is not merged into; the freshly
+#                 built record is used instead (fail closed).
 def test_corrupt_persisted_record_not_merged(tmp_path):
     queue_dir = tmp_path / "maintenance" / "candidates"
     queue_dir.mkdir(parents=True)
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
-    # Pre-seed a corrupt file at the deterministic candidate id path.
     candidate_id = candidate_record.compute_candidate_id("catalog_discovery", "newvendor:newvendor.com")
     (queue_dir / f"{candidate_id}.json").write_text(json.dumps({"candidate_id": candidate_id, "garbage": True}))
     result = resolve(
@@ -623,3 +622,96 @@ def test_corrupt_persisted_record_not_merged(tmp_path):
     assert candidate_record.validate_candidate(record) == []
     assert "garbage" not in record
     assert result.candidate_updates[0]["candidate_id"] == candidate_id
+
+
+# 30b (smaller fix 3). A malformed/truncated persisted file does not crash the
+#                      transaction; it is replaced with the valid record.
+def test_malformed_persisted_json_recovers(tmp_path):
+    queue_dir = tmp_path / "maintenance" / "candidates"
+    queue_dir.mkdir(parents=True)
+    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+    candidate_id = candidate_record.compute_candidate_id("catalog_discovery", "newvendor:newvendor.com")
+    (queue_dir / f"{candidate_id}.json").write_text("{ this is not valid json")
+    result = resolve(
+        {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
+        catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path)), discovery=discovery_found, now=fixed_now,
+    )
+    record = json.loads((queue_dir / f"{candidate_id}.json").read_text())
+    assert candidate_record.validate_candidate(record) == []
+    assert result.candidate_updates[0]["candidate_id"] == candidate_id
+
+
+# 31 (smaller fix 1). committed_local is detected from repository reality and does
+#                     not regress to persisted_local on an idempotent retry.
+def test_committed_local_stable_on_retry(tmp_path):
+    repo = git_repo_with_remote(tmp_path)  # origin/main exists; candidate not pushed
+    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+    req = {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"}
+    ingress = vr.CatalogQueueIngress(repo, commit=True, workflow_ref="origin/main")
+    first = resolve(req, catalog, emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
+    assert first.candidate_updates[0]["ingress_state"] == vr.INGRESS_COMMITTED_LOCAL
+    second = resolve(req, catalog, emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
+    assert second.candidate_updates[0]["ingress_state"] == vr.INGRESS_COMMITTED_LOCAL  # no regression
+
+
+# 32 (blocker 2). A failed remote intake fails closed: the source is still
+#                 returned, but never as candidate_processing.
+def test_github_intake_failed_submit_fails_closed():
+    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+
+    def submit(record):
+        raise RuntimeError("intake network error")
+
+    result = resolve(
+        {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
+        catalog, emitter=vr.SessionEmitter(vr.GitHubIntakeIngress(submit, verify_visible=lambda r: True)),
+        discovery=discovery_found, now=fixed_now,
+    )
+    source = result.sources[0]
+    assert source.status == vr.RESULT_NEWLY_DISCOVERED  # source still returned
+    assert source.catalog_status == vr.LIFECYCLE_PENDING
+    assert result.candidate_updates[0]["ingress_state"] == vr.INGRESS_RECORDED
+
+
+# 32b. A malformed acknowledgement is never elevated to workflow_visible.
+def test_github_intake_malformed_ack_not_visible():
+    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+
+    def submit(record):
+        return {"record": {"candidate_id": "cand-bad", "garbage": True}, "created": True}
+
+    result = resolve(
+        {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
+        catalog, emitter=vr.SessionEmitter(vr.GitHubIntakeIngress(submit, verify_visible=lambda r: True)),
+        discovery=discovery_found, now=fixed_now,
+    )
+    assert result.candidate_updates[0]["ingress_state"] == vr.INGRESS_SUBMITTED_REMOTE
+    assert result.sources[0].catalog_status == vr.LIFECYCLE_PENDING
+
+
+# 33 (smaller fix 4). URL normalisation lowercases scheme/host only, drops the
+#                     fragment/default port/trailing slash and tracking params, and
+#                     preserves path/query case.
+def test_canonical_url_normalisation():
+    assert vr._canonical_url("HTTPS://Example.COM:443/Legal/DPA/?utm_source=x&a=B#frag") == "https://example.com/Legal/DPA?a=B"
+    assert vr._canonical_url("https://example.com/A") != vr._canonical_url("https://example.com/a")
+    assert vr._canonical_url("not a url") == "not a url"
+
+
+def test_merge_dedups_tracking_param_variants(tmp_path):
+    ingress = vr.CatalogQueueIngress(tmp_path)
+
+    def record_for(url):
+        return candidate_record.build_candidate(
+            candidate_origin="catalog_discovery", origin_reference="vendorco:vendorco.com",
+            vendor_identity_candidate={"vendor_id_candidate": "vendorco", "official_domain": "vendorco.com"},
+            source_candidates=[{"candidate_url": url, "source_type_candidate": "privacy_notice", "access_state": "public_reachable", "source_role": "primary_assurance"}],
+            evidence_references=[{"candidate_url": url, "verification_result": "likely_vendor_published", "observed_at": FIXED_NOW}],
+            discovery_component="vendor_resolution:test", created_at=FIXED_NOW, eligibility_state="pending",
+        )
+
+    ingress.enqueue(record_for("https://vendorco.com/privacy"))
+    ingress.enqueue(record_for("https://vendorco.com/privacy?utm_source=newsletter"))
+    record = json.loads(next((tmp_path / "maintenance" / "candidates").glob("*.json")).read_text())
+    assert len(record["source_candidates"]) == 1
+

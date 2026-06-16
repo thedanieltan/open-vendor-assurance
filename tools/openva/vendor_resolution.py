@@ -19,11 +19,14 @@ canonical catalogue files. It composes machinery that already exists:
   evidence digests, and the one fail-closed eligibility evaluator that every
   origin must pass through);
 - durable lifecycle ingress: ``maintenance/candidates/<candidate_id>.json`` — the
-  same queue the autonomous-catalog-growth workflow consumes. A candidate is only
-  reported as ``candidate_processing`` once it is eligible **and committed to git**
-  (the scheduled workflow starts from a fresh checkout and only sees committed
-  files); an uncommitted working-tree write is ``pending_ingress``. Live
-  resolution never writes canonical catalogue records or ``main``.
+  same queue the autonomous-catalog-growth workflow consumes. The scheduled
+  workflow starts from a fresh checkout and only sees what is committed on the ref
+  it checks out, so a candidate is reported as ``candidate_processing`` only once
+  it is eligible **and ``workflow_visible``** — reachable from that ref (normally
+  the remote default branch). Recorded, ``persisted_local``, ``committed_local``
+  (a local commit never pushed/merged), and ``submitted_remote`` candidates stay
+  ``pending_ingress``. See the durability ladder (``INGRESS_*``). Live resolution
+  never writes canonical catalogue records or ``main``.
 
 Resolution result vocabulary (one small, consistent set):
 
@@ -62,6 +65,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Callable
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 try:
     import fcntl  # POSIX advisory file locking
@@ -444,19 +448,25 @@ class CatalogQueueIngress:
         self.queue_dir.mkdir(parents=True, exist_ok=True)
         path = self.queue_dir / f"{record['candidate_id']}.json"
         with _FileLock(self.queue_dir / ".lock"):
-            if path.exists():
-                persisted = json.loads(path.read_text(encoding="utf-8"))
+            persisted = _read_json_or_none(path)
+            if persisted is None:
+                # New file, or a malformed/truncated one we will not trust.
+                authoritative = record
+                enqueued = not path.exists()
+                _atomic_write_json(path, authoritative)
+            else:
                 authoritative = merge_candidate(persisted, record)
                 enqueued = False
                 if authoritative != persisted:
                     _atomic_write_json(path, authoritative)
-            else:
-                authoritative = record
-                enqueued = True
-                _atomic_write_json(path, authoritative)
-            state = INGRESS_PERSISTED_LOCAL
-            if self.commit and _git_commit(path, self.root, f"Enqueue resolver candidate {record['candidate_id']}"):
-                state = INGRESS_COMMITTED_LOCAL
+            # Derive the durability rung from repository reality after the write,
+            # so an idempotent retry of an already-committed candidate does not
+            # regress to persisted_local.
+            state = INGRESS_COMMITTED_LOCAL if _is_committed(path, self.root) else INGRESS_PERSISTED_LOCAL
+            if self.commit and state != INGRESS_COMMITTED_LOCAL:
+                _git_commit(path, self.root, f"Enqueue resolver candidate {record['candidate_id']}")
+                if _is_committed(path, self.root):
+                    state = INGRESS_COMMITTED_LOCAL
             if self.workflow_ref and _workflow_visible(path, self.root, self.workflow_ref):
                 state = INGRESS_WORKFLOW_VISIBLE
         return IngressOutcome(
@@ -487,11 +497,27 @@ class GitHubIntakeIngress:
         self._verify_visible = verify_visible
 
     def enqueue(self, record: dict[str, Any]) -> IngressOutcome:
-        ack = self._submit(record)
-        authoritative = ack.get("record", record)
+        try:
+            ack = self._submit(record)
+        except Exception:  # noqa: BLE001 - a failed intake must not abort resolution
+            # Fail closed: return the discovered candidate, not visible, so the
+            # caller still gets the source but never sees candidate_processing.
+            return IngressOutcome(record=record, ingress_state=INGRESS_RECORDED, enqueued=False, reference=None)
+        if not isinstance(ack, dict):
+            ack = {}
+        # Never trust a remote-returned record that is not schema-valid, and never
+        # let a malformed acknowledgement be elevated to workflow_visible.
+        acknowledged = ack.get("record", record)
+        ack_valid = isinstance(acknowledged, dict) and not candidate_record.validate_candidate(acknowledged)
+        authoritative = acknowledged if ack_valid else record
         state = INGRESS_SUBMITTED_REMOTE
-        if self._verify_visible and self._verify_visible(authoritative):
-            state = INGRESS_WORKFLOW_VISIBLE
+        if ack_valid and self._verify_visible:
+            try:
+                visible = bool(self._verify_visible(authoritative))
+            except Exception:  # noqa: BLE001 - an unconfirmed verifier is not visible
+                visible = False
+            if visible:
+                state = INGRESS_WORKFLOW_VISIBLE
         return IngressOutcome(
             record=authoritative,
             ingress_state=state,
@@ -1506,8 +1532,60 @@ def _short_digest(value: str) -> str:
     return hashlib.sha256(_canonical_url(value).encode("utf-8")).hexdigest()[:12]
 
 
+# Tracking parameters dropped during URL normalisation so utm/click-id variants of
+# the same source collapse to one key.
+_TRACKING_PARAMS = frozenset(
+    {
+        "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+        "fbclid", "gclid", "gclsrc", "dclid", "msclkid", "mc_cid", "mc_eid",
+        "igshid", "ref_src", "_hsenc", "_hsmi",
+    }
+)
+
+
 def _canonical_url(url: str) -> str:
-    return (url or "").strip().rstrip("/").lower()
+    """Normalise a URL for stable identity/dedup keys.
+
+    Lowercases the scheme and host only (path and query case are significant and
+    preserved), strips default ports, drops the fragment, removes a trailing slash,
+    and removes known tracking parameters. Malformed URLs fall back to a trimmed
+    lowercase string rather than raising.
+    """
+    raw = (url or "").strip()
+    if not raw:
+        return ""
+    try:
+        parts = urlsplit(raw)
+        host = (parts.hostname or "").lower()
+        port = parts.port
+    except ValueError:
+        return raw.lower()
+    if not parts.scheme or not host:
+        return raw.lower()
+    scheme = parts.scheme.lower()
+    netloc = host
+    if port is not None and not ((scheme == "http" and port == 80) or (scheme == "https" and port == 443)):
+        netloc = f"{host}:{port}"
+    path = parts.path.rstrip("/")
+    query = urlencode(
+        [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k.lower() not in _TRACKING_PARAMS]
+    )
+    return urlunsplit((scheme, netloc, path, query, ""))
+
+
+def _read_json_or_none(path: Path) -> dict[str, Any] | None:
+    """Read a JSON object, returning None for a missing or malformed file.
+
+    A truncated/corrupt persisted candidate is treated as absent so the
+    transaction fails closed to the freshly built record instead of crashing.
+    """
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+    return data if isinstance(data, dict) else None
 
 
 def _load_json(path: Path) -> dict[str, Any]:
