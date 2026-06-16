@@ -254,15 +254,36 @@ async function matchInventoryRow(row, indexes) {
       catalog_tier: "",
       review_state: "human_review_required",
       advisory_boundary: "non_advisory",
+      freshness_mode: "cached",
+      catalog_membership: "none",
+      result_state: "not_found",
       matched_source_types: "",
       canonical_source_urls: "",
       candidate_source_count: "0",
       unavailable_source_count: "0",
-      notes: "No conservative OpenVA match found.",
+      notes: "No conservative OpenVA match found. Live discovery and catalogue-lifecycle routing run through the OpenVA resolver contract; the browser surface returns cached catalogue state only.",
     };
   }
 
   const summary = await vendorSourceSummary(vendor.vendor_id);
+  // Browser-local resolution is always cached: it reports the latest known
+  // catalogue state and never claims live verification. The verify mode (live
+  // refresh, discovery, candidate routing) is served by the resolver contract.
+  // Catalogue membership and source health are separate axes: a matched vendor is
+  // canonical regardless of health, and result_state consults the latest health
+  // snapshot rather than assuming current.
+  const buckets = (summary.sources || []).map((source) => (source.source_health && source.source_health.status_bucket) || "missing");
+  let resultState;
+  if (!summary.sourceTypes.length) {
+    resultState = "verification_inconclusive";
+  } else if (buckets.some((bucket) => bucket === "unavailable")) {
+    resultState = "source_unavailable";
+  } else if (buckets.length && buckets.every((bucket) => bucket === "healthy")) {
+    resultState = "catalog_current";
+  } else {
+    // Health not yet verified in the snapshot: cached mode cannot claim current.
+    resultState = "verification_inconclusive";
+  }
   return {
     ...row,
     matched_vendor_id: vendor.vendor_id,
@@ -272,11 +293,14 @@ async function matchInventoryRow(row, indexes) {
     catalog_tier: "human_reviewed",
     review_state: "human_reviewed",
     advisory_boundary: "non_advisory",
+    freshness_mode: "cached",
+    catalog_membership: "canonical",
+    result_state: resultState,
     matched_source_types: summary.sourceTypes.join("; "),
     canonical_source_urls: summary.sourceUrls.join("; "),
     candidate_source_count: String(summary.candidates.length),
     unavailable_source_count: String(summary.unavailable.length),
-    notes: "Matched against OpenVA public metadata. This is not vendor approval, compliance advice, risk scoring, or a procurement recommendation.",
+    notes: "Matched against OpenVA public metadata (cached). This is not vendor approval, compliance advice, risk scoring, or a procurement recommendation.",
   };
 }
 
@@ -292,13 +316,13 @@ function renderLocalMatcher() {
   ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
 
   document.getElementById("match-preview").innerHTML = localMatchRows.length
-    ? `<table><thead><tr><th>Input vendor</th><th>Matched vendor</th><th>Method</th><th>Confidence</th><th>Source types</th></tr></thead><tbody>${
+    ? `<table><thead><tr><th>Input vendor</th><th>Matched vendor</th><th>Result state</th><th>Method</th><th>Source types</th></tr></thead><tbody>${
         localMatchRows.slice(0, 20).map((row) => `
           <tr>
             <td>${html(row.vendor_name || row.business_entity_name || row.domain || row.registration_number)}</td>
             <td>${html(row.matched_vendor_name || "No match")}</td>
+            <td>${html(row.result_state || "")}</td>
             <td>${html(row.match_method)}</td>
-            <td>${html(row.match_confidence)}</td>
             <td>${html(row.matched_source_types)}</td>
           </tr>
         `).join("")
@@ -353,6 +377,9 @@ function setupLocalMatcher() {
       "matched_vendor_name",
       "match_method",
       "match_confidence",
+      "result_state",
+      "catalog_membership",
+      "freshness_mode",
       "catalog_tier",
       "review_state",
       "advisory_boundary",

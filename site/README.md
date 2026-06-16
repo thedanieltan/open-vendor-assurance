@@ -84,7 +84,16 @@ Supported input columns:
 vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
 ```
 
-The downloaded match result preserves user-provided columns and appends OpenVA public metadata fields such as matched vendor ID, match method, confidence, source types, canonical source URLs, review state, and the non-advisory boundary.
+The downloaded match result preserves user-provided columns and appends OpenVA public metadata fields such as matched vendor ID, match method, confidence, the unified `result_state`, `freshness_mode`, source types, canonical source URLs, review state, and the non-advisory boundary.
+
+The browser Local Matcher resolves in **cached** mode: it reports the latest known
+catalogue state and never claims live verification (`freshness_mode: cached`,
+`result_state` drawn from the unified vocabulary — `catalog_current`,
+`verification_inconclusive`, `not_found`). Live `verify`-mode resolution (live
+link checks, discovery of replacements and missing sources, and routing into the
+catalogue lifecycle) is served by the unified resolver contract — see
+`docs/vendor-resolution.md`. OpenVA preserves source-reference and observation
+history; it does not archive or reproduce historical vendor documents.
 
 Local match results are not vendor approval, compliance findings, risk scores, procurement recommendations, legal opinions, or suitability determinations.
 
