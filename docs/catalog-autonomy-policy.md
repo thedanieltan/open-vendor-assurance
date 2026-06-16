@@ -4,6 +4,22 @@ OpenVA separates public-source metadata from assurance conclusions.
 
 Agents may autonomously maintain verified public source-location facts, registry-backed entity facts, and vendor-source-attested relationship facts when the evidence is explicit, bounded, and machine-verifiable. Agents must not make legal, compliance, procurement, security, KYC, AML, sanctions, approval, suitability, vendor-risk, or certification-validity conclusions.
 
+## Live resolution feeds, but never bypasses, this policy
+
+The unified vendor resolver (`tools/openva/vendor_resolution.py`,
+`docs/vendor-resolution.md`) discovers and refreshes sources during human and
+agent requests, but it is **not** a parallel admission path. It resolves
+identity, checks source health, discovers candidate URLs, classifies
+provisionally, records observations, creates candidate records, and returns
+session results. It never writes canonical catalogue files or `main`. Every
+resolver-emitted candidate — regardless of channel (`public_matcher_discovery`,
+`agent_resolution`, `api_resolution`, `scheduled_discovery`, `human_submission`) —
+converges on the same `evaluate_eligibility` evaluator and the same lane:
+candidate → eligibility → machine_provisional → observation → independent machine
+quorum → pull request → release gates → controlled automerge → active catalogue.
+Channel never reduces verification, and the existing release gates remain
+authoritative.
+
 ## Current state and target state
 
 This policy describes both the current operating state and the approved target design for catalog growth autonomy.

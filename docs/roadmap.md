@@ -4,6 +4,22 @@ This roadmap communicates OpenVA direction without creating a support, legal, co
 
 OpenVA is a public-source-only, metadata-first vendor assurance registry. It is not a legal, compliance, security, procurement, KYC, AML, or vendor-risk advisory service.
 
+## Unified vendor resolution
+
+OpenVA has moved from static catalogue lookup to **catalogue-first,
+live-refresh-on-use** resolution shared by browser users, API consumers, agents,
+and future MCP integrations (`docs/vendor-resolution.md`). Shipped: the
+`resolve_vendor_sources` contract, the result-state vocabulary, `cached`/`verify`
+freshness modes, the source-reference history model, idempotent candidate
+emission into the existing lifecycle, the result schema, and a CLI. Browser uploads
+return cached catalogue state with a `result_state` per vendor. Planned next:
+exposing the same contract over HTTP and MCP so live `verify`-mode resolution is
+available to remote agents, and wiring `scheduled_discovery` runs.
+
+This is not a new advisory or scoring system. OpenVA preserves source-reference
+and observation history; it does not archive or reproduce historical vendor
+documents.
+
 ## Current maturity
 
 OpenVA is early public infrastructure.

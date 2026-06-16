@@ -4,6 +4,13 @@ OpenVA publishes spreadsheet-friendly release assets through GitHub Releases.
 
 These files are for users who want to inspect public vendor assurance metadata without installing Python, running Docker, or hosting a service.
 
+To resolve your own vendor list against the catalogue with live refresh — current
+sources confirmed, stale or broken sources refreshed, missing vendors and source
+types discovered, all in one combined result with CSV/JSON export and a
+`result_state` per vendor — use the hosted Local Matcher or the unified resolver
+contract described in `docs/vendor-resolution.md`. The browser surface returns
+cached catalogue state; the resolver's `verify` mode performs the live check.
+
 OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
 
 The initial catalog is a seed dataset. It is useful for testing importer
