@@ -241,6 +241,44 @@ See `docs/agent-export-contract.md` for shapes, field semantics, and the digest 
 
 The hosted site also publishes a static discovery surface over these exports: a static page per vendor at `/vendors/{vendor_id}/`, an agent integration guide at `/agents/`, a typed discovery manifest at `/.well-known/openva.json`, plus `sitemap.xml`, `robots.txt`, and `llms.txt`. All OpenVA-owned public URLs derive from `config/publication.yaml`.
 
+## Unified vendor resolution
+
+OpenVA resolves vendor assurance sources **catalogue-first, with live refresh on
+use**, through one pipeline shared by browser users, API consumers, agents, and
+future MCP integrations. A request resolves the vendor identity, matches the
+catalogue, and for each required source type checks whether a catalogue source
+exists and is current. Current sources are returned as-is; missing, stale,
+broken, redirected, or unavailable sources trigger bounded public discovery, and
+any discovered or refreshed source is routed into the *existing* autonomous
+catalogue-growth lifecycle (candidate → eligibility → machine_provisional →
+quorum → PR → release gates → automerge). Live resolution never writes canonical
+catalogue files.
+
+Results use one small vocabulary — `catalog_current`, `catalog_refreshed`,
+`newly_discovered`, `source_unavailable`, `not_found`, `identity_ambiguous`,
+`verification_inconclusive`, `candidate_processing`, `catalogued` — and two
+explicit freshness modes (`cached` for stored state, `verify` for a live check).
+Cached and verified results are never silently treated as equivalent, and
+catalogue membership, source health, and durable lifecycle stage are reported on
+separate axes so a deferred or rejected candidate is never shown as processing.
+
+In `verify` mode the resolver enqueues discovered/refreshed candidates to
+`maintenance/candidates/` — the same queue the autonomous-growth workflow
+consumes — under a concurrency-safe, deterministic merge. A candidate is only
+reported as `candidate_processing` once it is reachable from the ref that workflow
+checks out (the remote default branch); local-only writes/commits stay
+`pending_ingress`. The hosted browser Local Matcher is cached-only (static page):
+it reports catalogue state and a `result_state` per vendor but does not perform
+live discovery or lifecycle routing.
+
+OpenVA preserves source-reference and observation history. It does not archive or
+reproduce historical vendor documents.
+
+The contract lives in `tools/openva/vendor_resolution.py`
+(`resolve_vendor_sources(...)`), validates against
+`schemas/openva/vendor-resolution-result.schema.json`, and is documented in
+`docs/vendor-resolution.md`.
+
 ## Release Downloads
 
 For spreadsheet-first users, OpenVA publishes non-technical download assets through GitHub Releases:

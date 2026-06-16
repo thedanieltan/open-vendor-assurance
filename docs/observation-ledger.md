@@ -2,6 +2,15 @@
 
 OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.
 
+When the unified resolver (`docs/vendor-resolution.md`) replaces a stale, moved,
+or broken source URL, it preserves **source-reference history only**: the former
+URL, the current URL, first/last observed timestamps, redirect target,
+unavailable state, and a `superseded_by` relationship — mirroring this ledger's
+change-event and `previous_observation_id` model. OpenVA preserves
+source-reference and observation history; it does not archive or reproduce
+historical vendor documents (no historical document content, DPA/privacy text,
+clause-level versions, comparisons, or full-text archives).
+
 The observation ledger answers four operational questions:
 
 ```text
