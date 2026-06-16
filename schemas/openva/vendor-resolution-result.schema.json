@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/vendor-resolution-result.schema.json",
+  "title": "OpenVA Vendor Resolution Result",
+  "description": "Unified, catalogue-first live-resolution result for one vendor. Distinguishes a catalogue-derived result from a live-discovery result, a pending catalogue update from a canonical catalogue result, and a cached observation from a current live check. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice. OpenVA preserves source-reference and observation history; it does not archive or reproduce historical vendor documents.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "vendor",
+    "resolution_status",
+    "freshness_mode",
+    "sources",
+    "snapshot",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "vendor": {
+      "type": "object",
+      "required": ["vendor_id", "display_name", "official_domain"],
+      "properties": {
+        "vendor_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+        "display_name": { "type": ["string", "null"], "maxLength": 300 },
+        "official_domain": { "type": ["string", "null"], "maxLength": 253 }
+      },
+      "additionalProperties": false
+    },
+    "resolution_status": { "$ref": "#/$defs/result_state" },
+    "freshness_mode": { "enum": ["cached", "verify"] },
+    "identity_candidates": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" }
+    },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/resolved_source" }
+    },
+    "snapshot": {
+      "type": "object",
+      "required": ["catalog_commit_sha", "catalog_generated_at"],
+      "properties": {
+        "catalog_commit_sha": { "type": "string", "minLength": 1 },
+        "catalog_generated_at": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "result_state": {
+      "enum": [
+        "catalog_current",
+        "catalog_refreshed",
+        "newly_discovered",
+        "source_unavailable",
+        "not_found",
+        "identity_ambiguous",
+        "verification_inconclusive",
+        "candidate_processing",
+        "catalogued"
+      ]
+    },
+    "resolved_source": {
+      "type": "object",
+      "required": ["source_type", "status", "origin", "live_checked", "catalog_status"],
+      "properties": {
+        "source_type": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "status": { "$ref": "#/$defs/result_state" },
+        "source_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "origin": { "enum": ["catalog", "live_discovery", null] },
+        "live_checked": { "type": "boolean" },
+        "checked_at": { "type": ["string", "null"] },
+        "catalog_status": { "enum": ["catalogued", "candidate_processing", null] },
+        "previous_source_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "history": { "$ref": "#/$defs/source_history" },
+        "reasons": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 200 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_history": {
+      "type": "object",
+      "description": "Source-reference history only: former URL, current URL, and observation timestamps. Must never carry historical document content, extracted text, clause-level versions, or full-text archives.",
+      "required": ["source_type", "current_source", "previous_sources"],
+      "properties": {
+        "source_type": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "current_source": {
+          "type": "object",
+          "required": ["source_id", "url", "status", "first_observed_at"],
+          "properties": {
+            "source_id": { "type": "string", "minLength": 1 },
+            "url": { "type": "string", "maxLength": 2048 },
+            "status": { "const": "current" },
+            "first_observed_at": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "previous_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source_id", "url", "status", "last_observed_at", "superseded_by"],
+            "properties": {
+              "source_id": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "maxLength": 2048 },
+              "status": { "enum": ["superseded", "unavailable"] },
+              "last_observed_at": { "type": "string" },
+              "superseded_by": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
