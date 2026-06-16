@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 from tools.openva import candidate_record, vendor_resolution as vr
@@ -88,13 +89,21 @@ def discovery_none(domain, source_type, fetcher, observed_at):
     return None
 
 
-def durable_emitter(tmp_path):
-    return vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path))
+def git_repo(path):
+    subprocess.run(["git", "init", "-q", str(path)], check=True)
+    subprocess.run(["git", "-C", str(path), "config", "user.email", "t@example.com"], check=True)
+    subprocess.run(["git", "-C", str(path), "config", "user.name", "tester"], check=True)
+    return path
 
 
-def resolve(request, catalog, tmp_path=None, **kwargs):
-    if tmp_path is not None:
-        kwargs.setdefault("emitter", durable_emitter(tmp_path))
+def committed_emitter(tmp_path):
+    """An emitter whose candidates are committed to git (GitHub-durable)."""
+    return vr.SessionEmitter(vr.CatalogQueueIngress(git_repo(tmp_path), commit=True))
+
+
+def resolve(request, catalog, emitter=None, **kwargs):
+    if emitter is not None:
+        kwargs["emitter"] = emitter
     return vr.resolve_vendor_sources(request, catalog=catalog, **kwargs)
 
 
@@ -131,7 +140,6 @@ def test_existing_vendor_stale_source_cached():
     source = result.sources[0]
     assert source.status == vr.RESULT_VERIFICATION_INCONCLUSIVE
     assert source.live_checked is False
-    # A stale source is still a canonical, catalogued record.
     assert source.catalog_membership == "canonical"
     assert source.catalog_status == vr.LIFECYCLE_CATALOGUED
 
@@ -146,7 +154,8 @@ def test_existing_vendor_redirected_replacement(tmp_path):
     new = "https://examplecloud.com/legal/dpa"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, tmp_path, fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path),
+        fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
     )
     source = result.sources[0]
     assert result.resolution_status == vr.RESULT_CATALOG_REFRESHED
@@ -167,7 +176,7 @@ def test_existing_vendor_missing_source_type(tmp_path):
     )
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, tmp_path, discovery=discovery_found, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_found, now=fixed_now,
     )
     source = result.sources[0]
     assert source.status == vr.RESULT_NEWLY_DISCOVERED
@@ -181,11 +190,10 @@ def test_missing_vendor_sources_discovered_aggregated(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     result = resolve(
         {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice", "security_page"], "freshness_mode": "verify"},
-        catalog, tmp_path, discovery=discovery_found, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_found, now=fixed_now,
     )
     assert result.resolution_status == vr.RESULT_NEWLY_DISCOVERED
     assert all(s.status == vr.RESULT_NEWLY_DISCOVERED for s in result.sources)
-    # New vendor materialises from one candidate carrying its full discovery set.
     assert len(result.candidate_updates) == 1
     assert result.candidate_updates[0]["candidate_origin"] == "catalog_discovery"
 
@@ -195,7 +203,7 @@ def test_missing_vendor_no_sources_found(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     result = resolve(
         {"vendor": {"vendor_name": "Ghost", "domain": "ghost.example"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
-        catalog, tmp_path, discovery=discovery_none, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_none, now=fixed_now,
     )
     assert result.resolution_status == vr.RESULT_NOT_FOUND
     assert result.sources[0].status == vr.RESULT_NOT_FOUND
@@ -216,16 +224,18 @@ def test_identity_ambiguous():
     assert vr.validate_result(result.to_response()) == []
 
 
-# 8. Candidate already in processing (durable, idempotent across calls).
+# 8. Candidate already in processing (durable+committed, idempotent across calls).
 def test_candidate_already_in_processing(tmp_path):
-    emitter = durable_emitter(tmp_path)
+    emitter = committed_emitter(tmp_path)
     catalog = make_catalog([vendor_row("examplecloud", "examplecloud.com")])
     request = {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"}
     vr.resolve_vendor_sources(request, catalog=catalog, discovery=discovery_found, emitter=emitter, now=fixed_now)
-    vr.resolve_vendor_sources(request, catalog=catalog, discovery=discovery_found, emitter=emitter, now=fixed_now)
+    second = vr.resolve_vendor_sources(request, catalog=catalog, discovery=discovery_found, emitter=emitter, now=fixed_now)
     queue_files = list((tmp_path / "maintenance" / "candidates").glob("*.json"))
     assert len(queue_files) == 1
     assert len(emitter.candidate_updates) == 1
+    assert second.candidate_updates[0]["committed"] is True
+    assert second.sources[0].catalog_status == vr.LIFECYCLE_PROCESSING
 
 
 # 9. Duplicate requests remain idempotent (durable queue holds one record).
@@ -234,7 +244,7 @@ def test_duplicate_requests_idempotent(tmp_path):
     inv = vr.resolve_inventory(
         [{"vendor_name": "NewVendor", "domain": "newvendor.com"}, {"vendor_name": "NewVendor", "domain": "newvendor.com"}],
         ["privacy_notice"], catalog=catalog, discovery=discovery_found,
-        ingress=vr.CatalogQueueIngress(tmp_path), now=fixed_now,
+        ingress=vr.CatalogQueueIngress(git_repo(tmp_path), commit=True), now=fixed_now,
     )
     assert len(inv["candidate_updates"]) == 1
     assert len(list((tmp_path / "maintenance" / "candidates").glob("*.json"))) == 1
@@ -250,7 +260,8 @@ def test_history_supersedes_and_preserves_reference(tmp_path):
     new = "https://examplecloud.com/legal/dpa"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, tmp_path, fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path),
+        fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
     )
     history = result.sources[0].proposed_source_history
     assert history["current_source"]["url"] == new
@@ -271,7 +282,8 @@ def test_no_historical_document_content(tmp_path):
     new = "https://examplecloud.com/legal/dpa"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, tmp_path, fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path),
+        fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
     )
     blob = json.dumps(result.to_response()).lower()
     for forbidden in ("document_content", "extracted_text", "clause", "full_text", "body_text", "raw_document"):
@@ -356,9 +368,9 @@ def test_live_resolution_does_not_mutate_catalog(tmp_path):
     new = "https://examplecloud.com/legal/dpa"
     resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, tmp_path, fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
+        catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path)),
+        fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
     )
-    # Catalogue view unchanged; the only write is into the candidate queue.
     assert catalog.sources_for("examplecloud")[0].source_url == old
     assert not (tmp_path / "data").exists()
     assert list((tmp_path / "maintenance" / "candidates").glob("*.json"))
@@ -367,18 +379,15 @@ def test_live_resolution_does_not_mutate_catalog(tmp_path):
 # 18. Candidates route through the existing evaluator and durable ingress.
 def test_candidates_route_through_existing_evaluator(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
-    emitter = durable_emitter(tmp_path)
-    result = vr.resolve_vendor_sources(
+    result = resolve(
         {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
-        catalog=catalog, discovery=discovery_found, emitter=emitter, now=fixed_now,
+        catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path)), discovery=discovery_found, now=fixed_now,
     )
-    # The durably enqueued record is a valid candidate with evaluator-decided state.
     queue_file = next((tmp_path / "maintenance" / "candidates").glob("*.json"))
     record = json.loads(queue_file.read_text())
     assert candidate_record.validate_candidate(record) == []
     assert record["eligibility_state"] in candidate_record.ELIGIBILITY_STATES
     assert record["candidate_origin"] in candidate_record.CANDIDATE_ORIGINS
-    # Live discovery never claims canonical status; only the lifecycle can.
     for source in result.sources:
         if source.origin == "live_discovery":
             assert source.catalog_status != vr.LIFECYCLE_CATALOGUED
@@ -408,10 +417,10 @@ def test_result_schema_round_trips(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     response = resolve(
         {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice", "dpa"], "freshness_mode": "verify"},
-        catalog, tmp_path, discovery=discovery_found, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_found, now=fixed_now,
     ).to_response()
     assert vr.validate_result(response) == []
-    assert response["candidate_updates"][0]["durable"] is True
+    assert response["candidate_updates"][0]["committed"] is True
 
 
 # 21. A generic/homepage redirect is NOT returned as a refreshed source.
@@ -424,11 +433,10 @@ def test_generic_redirect_not_refreshed(tmp_path):
     home = "https://examplecloud.com/"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, tmp_path, fetcher=fetcher_map({old: fetch_ok(old, final_url=home)}), discovery=discovery_none, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path),
+        fetcher=fetcher_map({old: fetch_ok(old, final_url=home)}), discovery=discovery_none, now=fixed_now,
     )
-    source = result.sources[0]
-    assert source.status == vr.RESULT_VERIFICATION_INCONCLUSIVE
-    assert source.status != vr.RESULT_CATALOG_REFRESHED
+    assert result.sources[0].status == vr.RESULT_VERIFICATION_INCONCLUSIVE
 
 
 # 22. An off-domain redirect is NOT returned as a refreshed source.
@@ -441,7 +449,8 @@ def test_offdomain_redirect_not_refreshed(tmp_path):
     away = "https://evil.example/dpa"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, tmp_path, fetcher=fetcher_map({old: fetch_ok(old, final_url=away)}), discovery=discovery_none, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path),
+        fetcher=fetcher_map({old: fetch_ok(old, final_url=away)}), discovery=discovery_none, now=fixed_now,
     )
     assert result.sources[0].status == vr.RESULT_VERIFICATION_INCONCLUSIVE
 
@@ -449,10 +458,9 @@ def test_offdomain_redirect_not_refreshed(tmp_path):
 # 23. A rejected candidate is never reported as processing toward the catalogue.
 def test_rejected_candidate_not_processing(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
-    # Unsafe official domain -> evaluator returns rejected_unsafe_url.
     result = resolve(
         {"vendor": {"vendor_name": "Loopback", "domain": "localhost"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
-        catalog, tmp_path, discovery=discovery_found, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_found, now=fixed_now,
     )
     source = result.sources[0]
     assert source.status == vr.RESULT_VERIFICATION_INCONCLUSIVE
@@ -462,16 +470,19 @@ def test_rejected_candidate_not_processing(tmp_path):
     assert update["eligibility_state"] == "rejected_unsafe_url"
 
 
-# 24. A deferred candidate keeps its URL but discloses the deferred lifecycle.
-def test_deferred_candidate_discloses_lifecycle(tmp_path):
+# 24. A deferred candidate is verification_inconclusive with the URL exposed only
+#     as an unverified candidate_url (not the resolved source_url).
+def test_deferred_candidate_is_inconclusive_with_candidate_url(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     result = resolve(
         {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
-        catalog, tmp_path, discovery=discovery_offdomain, now=fixed_now,
+        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_offdomain, now=fixed_now,
     )
     source = result.sources[0]
-    assert source.status == vr.RESULT_NEWLY_DISCOVERED
+    assert source.status == vr.RESULT_VERIFICATION_INCONCLUSIVE
     assert source.catalog_status == vr.LIFECYCLE_DEFERRED
+    assert source.source_url is None
+    assert source.candidate_url == "https://cdn.other.example/privacy_notice"
 
 
 # 25. Non-durable (read-only) ingress never claims processing.
@@ -482,18 +493,89 @@ def test_non_durable_ingress_does_not_claim_processing():
         catalog=catalog, discovery=discovery_found, now=fixed_now,  # default RecordingIngress
     )
     assert result.sources[0].catalog_status == vr.LIFECYCLE_PENDING
-    assert result.candidate_updates[0]["durable"] is False
+    update = result.candidate_updates[0]
+    assert update["persisted"] is False
+    assert update["committed"] is False
 
 
-# 26. The durable queue record is readable back with its eligibility state.
-def test_durable_queue_record_is_persisted(tmp_path):
+# 26 (blocker 1). A persisted-but-uncommitted candidate stays pending_ingress;
+#                 only a committed candidate is candidate_processing.
+def test_uncommitted_candidate_is_pending_committed_is_processing(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
-    resolve(
-        {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
-        catalog, tmp_path, discovery=discovery_found, now=fixed_now,
+    req = {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"}
+
+    uncommitted = resolve(req, catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path / "wt")), discovery=discovery_found, now=fixed_now)
+    assert (tmp_path / "wt" / "maintenance" / "candidates").exists()
+    assert uncommitted.sources[0].catalog_status == vr.LIFECYCLE_PENDING
+    assert uncommitted.candidate_updates[0]["persisted"] is True
+    assert uncommitted.candidate_updates[0]["committed"] is False
+
+    committed = resolve(req, catalog, emitter=committed_emitter(tmp_path / "repo"), discovery=discovery_found, now=fixed_now)
+    assert committed.sources[0].catalog_status == vr.LIFECYCLE_PROCESSING
+    assert committed.candidate_updates[0]["committed"] is True
+
+
+# 27 (blocker 2). The default fetcher is the SSRF-safe one: it refuses
+#                 loopback/private/link-local targets without fetching them.
+def test_default_fetcher_rejects_ssrf():
+    fetcher = vr.default_fetcher_factory(["example.com"])
+    for url in ("http://127.0.0.1/x", "http://169.254.169.254/latest/meta-data", "http://10.0.0.1/"):
+        result = fetcher(url)
+        assert result.http_status is None
+        assert result.error
+
+
+# 27b (blocker 2). The resolver builds the per-vendor fetcher via the factory,
+#                  bound to the vendor's official domain.
+def test_resolver_binds_safe_fetcher_to_official_domain():
+    catalog = make_catalog(
+        [vendor_row("examplecloud", "examplecloud.com")],
+        {"examplecloud": [vr.CatalogSource("examplecloud-privacy", "privacy_notice", "https://examplecloud.com/privacy", "ok")]},
     )
+    calls = []
+
+    def spy_factory(domains):
+        calls.append(list(domains))
+        return fetcher_map({"https://examplecloud.com/privacy": fetch_ok("https://examplecloud.com/privacy")})
+
+    vr.resolve_vendor_sources(
+        {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
+        catalog=catalog, fetcher_factory=spy_factory, discovery=discovery_none, now=fixed_now,
+    )
+    assert calls == [["examplecloud.com"]]
+
+
+# 28 (blocker 4). Expanded discovery merges into the persisted candidate;
+#                 newly discovered sources are never silently discarded.
+def test_aggregate_candidate_merges_expanded_sources(tmp_path):
+    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+    ingress = vr.CatalogQueueIngress(tmp_path)
+    base = {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "freshness_mode": "verify"}
+
+    # First request discovers only privacy_notice.
+    resolve({**base, "required_source_types": ["privacy_notice"]}, catalog,
+            emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
+    # A later request (separate session, same queue) discovers an extra type.
+    second = resolve({**base, "required_source_types": ["privacy_notice", "dpa"]}, catalog,
+                     emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
+
     queue_file = next((tmp_path / "maintenance" / "candidates").glob("*.json"))
     record = json.loads(queue_file.read_text())
-    assert record["eligibility_state"] == "eligible"
-    assert record["candidate_origin"] == "catalog_discovery"
-    assert record["discovery_component"].startswith("vendor_resolution:")
+    types = sorted(s["source_type_candidate"] for s in record["source_candidates"])
+    assert types == ["dpa", "privacy_notice"]  # nothing discarded
+    # The response reflects the authoritative persisted (merged) record.
+    assert candidate_record.validate_candidate(record) == []
+    assert len(second.candidate_updates) == 1
+
+
+# 29 (blocker 4). The persisted record is authoritative across sessions.
+def test_persisted_record_is_authoritative(tmp_path):
+    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+    ingress = vr.CatalogQueueIngress(tmp_path)
+    req = {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"}
+    first = resolve(req, catalog, emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
+    again = resolve(req, catalog, emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
+    cid_first = first.candidate_updates[0]["candidate_id"]
+    cid_again = again.candidate_updates[0]["candidate_id"]
+    assert cid_first == cid_again
+    assert again.candidate_updates[0]["persisted"] is True

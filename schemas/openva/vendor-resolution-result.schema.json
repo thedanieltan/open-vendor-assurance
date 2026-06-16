@@ -36,13 +36,14 @@
       "description": "Candidates this resolution handed to the autonomous lifecycle, with their actual durable lifecycle state.",
       "items": {
         "type": "object",
-        "required": ["candidate_id", "candidate_origin", "eligibility_state", "lifecycle_state", "durable"],
+        "required": ["candidate_id", "candidate_origin", "eligibility_state", "lifecycle_state", "persisted", "committed"],
         "properties": {
           "candidate_id": { "type": "string", "minLength": 1 },
           "candidate_origin": { "type": "string", "minLength": 1 },
           "eligibility_state": { "type": "string", "minLength": 1 },
           "lifecycle_state": { "$ref": "#/$defs/lifecycle_state" },
-          "durable": { "type": "boolean" }
+          "persisted": { "type": "boolean" },
+          "committed": { "type": "boolean" }
         },
         "additionalProperties": false
       }
@@ -93,6 +94,11 @@
         "source_type": { "type": "string", "minLength": 1, "maxLength": 60 },
         "status": { "$ref": "#/$defs/result_state" },
         "source_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "candidate_url": {
+          "type": ["string", "null"],
+          "maxLength": 2048,
+          "description": "An unverified discovered URL for a deferred candidate; never the resolved source_url."
+        },
         "origin": { "enum": ["catalog", "live_discovery", null] },
         "catalog_membership": { "enum": ["canonical", "none"] },
         "live_checked": { "type": "boolean" },

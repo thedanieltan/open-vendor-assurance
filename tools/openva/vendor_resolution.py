@@ -11,15 +11,19 @@ canonical catalogue files. It composes machinery that already exists:
 
 - vendor identity matching: ``openva_vendor_inventory_matcher.core`` (the single
   matching authority, shared with the CSV and MCP adapters);
-- source health + safety: :mod:`tools.openva.source_verification` and
-  :mod:`tools.openva.url_safety` (fail-closed on unsafe URLs);
+- SSRF-safe fetch: :mod:`tools.openva.safe_verify` (``build_safe_verify_fetcher``)
+  bound to the vendor's official domain — DNS pinning, private/loopback rejection,
+  per-hop redirect validation, same-authority enforcement, byte limits, deadline.
+  Plus :mod:`tools.openva.url_safety` to fail closed before any fetch;
 - candidate emission: :mod:`tools.openva.candidate_record` (deterministic ids,
   evidence digests, and the one fail-closed eligibility evaluator that every
   origin must pass through);
 - durable lifecycle ingress: ``maintenance/candidates/<candidate_id>.json`` — the
-  same queue the autonomous-catalog-growth workflow consumes. Live resolution
-  enqueues candidates there idempotently; it never writes canonical catalogue
-  records or ``main``.
+  same queue the autonomous-catalog-growth workflow consumes. A candidate is only
+  reported as ``candidate_processing`` once it is eligible **and committed to git**
+  (the scheduled workflow starts from a fresh checkout and only sees committed
+  files); an uncommitted working-tree write is ``pending_ingress``. Live
+  resolution never writes canonical catalogue records or ``main``.
 
 Resolution result vocabulary (one small, consistent set):
 
@@ -37,7 +41,7 @@ Catalogue membership, source health, and lifecycle state are kept on separate
 axes: ``catalog_membership`` (canonical / none) says whether the answer is backed
 by a canonical record; ``status`` carries the resolution/health outcome; and
 ``catalog_status`` carries the durable lifecycle stage of the record backing the
-answer.
+answer. A deferred or rejected candidate is never reported as a usable source.
 
 Operational metadata only. Not legal, compliance, procurement, security, KYC,
 AML, audit, or vendor-risk advice. OpenVA preserves source-reference and
@@ -50,6 +54,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -58,10 +64,10 @@ from typing import Any, Callable
 
 from tools.openva import candidate_record
 from tools.openva.indexes import ROOT
+from tools.openva.safe_verify import build_safe_verify_fetcher
 from tools.openva.source_verification import (
     FetchResult,
     classify_status,
-    fetch_url,
     normalize_text,
     semantic_match,
 )
@@ -75,6 +81,13 @@ from openva_vendor_inventory_matcher import core as matcher  # noqa: E402
 
 SCHEMA_VERSION = "0.1.0"
 SCHEMA_PATH = ROOT / "schemas" / "openva" / "vendor-resolution-result.schema.json"
+
+# Bounded transport defaults (mirroring config/discovery-bounds.yaml).
+SAFE_MAX_REDIRECTS = 5
+SAFE_TIMEOUT_SECONDS = 20.0
+
+Fetcher = Callable[[str], FetchResult]
+FetcherFactory = Callable[[list[str]], Fetcher]
 
 # --- result-state vocabulary ------------------------------------------------
 
@@ -140,9 +153,6 @@ _CACHED_HEALTH_RESULT = {
 
 # Live verification statuses (from classify_status) and how they route.
 _VERIFY_CURRENT = {"ok"}
-# A clean redirect *may* be a moved source, but only if it stays on-authority and
-# semantically consistent (checked in _valid_replacement). Generic/homepage
-# redirects never count as a moved source.
 _VERIFY_REDIRECT = {"redirected"}
 _VERIFY_GENERIC_REDIRECT = {"homepage_or_generic_redirect"}
 _VERIFY_BROKEN = {
@@ -152,14 +162,6 @@ _VERIFY_BROKEN = {
     "server_error",
     "client_error",
     "soft_not_found",
-}
-_VERIFY_INCONCLUSIVE = {
-    "gated_or_login_required",
-    "bot_protected",
-    "rate_limited",
-    "forbidden_unknown",
-    "possible_mismatch",
-    "suspect_inferred_url",
 }
 
 # Resolution channel -> existing candidate_record origin enum. The channel is the
@@ -189,6 +191,21 @@ _DISCOVERY_PATHS: dict[str, tuple[str, ...]] = {
 
 def _now_default() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
+
+
+def default_fetcher_factory(official_domains: list[str]) -> Fetcher:
+    """Build the SSRF-safe verification fetcher bound to a vendor's authority.
+
+    All resolution fetches go through ``SafeFetcher`` by default: DNS-pinned IP,
+    private/loopback/reserved/mixed-answer rejection, per-hop redirect validation,
+    same-authority enforcement, byte bound, and a monotonic deadline. The legacy
+    unrestricted ``source_verification.fetch_url`` is never the default.
+    """
+    return build_safe_verify_fetcher(
+        official_domains or [],
+        max_redirects=SAFE_MAX_REDIRECTS,
+        timeout_seconds=SAFE_TIMEOUT_SECONDS,
+    )
 
 
 # --- catalogue access -------------------------------------------------------
@@ -268,24 +285,28 @@ class ResolutionCatalog:
 
 @dataclass(frozen=True)
 class IngressOutcome:
-    """Result of handing a candidate to the durable lifecycle ingress."""
+    """Result of handing a candidate to the lifecycle ingress.
 
-    lifecycle_state: str  # LIFECYCLE_*
-    enqueued: bool        # newly persisted this call (vs already in flight)
-    durable: bool         # whether the candidate was persisted to disk
-    reference: str | None  # queue path or id
-
-
-def lifecycle_from_eligibility(eligibility_state: str, *, durable: bool) -> str:
-    """Map the shared evaluator's eligibility to a lifecycle stage.
-
-    A candidate is only "processing toward the catalogue" once it is both eligible
-    and durably persisted; otherwise it is deferred, rejected, or merely pending.
+    ``record`` is the *authoritative* candidate after any merge with an existing
+    persisted record. ``persisted`` means written to disk; ``committed`` means
+    committed to git (and therefore visible to a fresh-checkout workflow).
     """
-    if not durable:
-        return LIFECYCLE_PENDING
+
+    record: dict[str, Any]
+    persisted: bool
+    committed: bool
+    enqueued: bool  # newly created this call (vs reused/merged)
+    reference: str | None
+
+
+def catalog_status_for(eligibility_state: str, *, committed: bool) -> str:
+    """Map evaluator eligibility + git-durability to a lifecycle stage.
+
+    A candidate only "processes toward the catalogue" once it is both eligible and
+    committed to git; eligible-but-uncommitted is ``pending_ingress``.
+    """
     if eligibility_state == candidate_record.ELIGIBLE_STATE:
-        return LIFECYCLE_PROCESSING
+        return LIFECYCLE_PROCESSING if committed else LIFECYCLE_PENDING
     if eligibility_state.startswith("deferred"):
         return LIFECYCLE_DEFERRED
     if eligibility_state.startswith("rejected"):
@@ -293,35 +314,90 @@ def lifecycle_from_eligibility(eligibility_state: str, *, durable: bool) -> str:
     return LIFECYCLE_PENDING
 
 
+def merge_candidate(persisted: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any]:
+    """Deterministically merge expanded discovery into a persisted candidate.
+
+    The persisted record is authoritative for identity and origin. New source
+    candidates (and their evidence) are added by normalised URL; the union is
+    re-evaluated by the shared evaluator so eligibility reflects the complete set
+    rather than silently discarding newly discovered sources. Returns the
+    persisted record unchanged when nothing new is added.
+    """
+    by_url = {s["candidate_url"]: s for s in persisted.get("source_candidates", [])}
+    added = False
+    for source in incoming.get("source_candidates", []):
+        if source["candidate_url"] not in by_url:
+            by_url[source["candidate_url"]] = source
+            added = True
+    if not added:
+        return persisted
+    merged_sources = [by_url[key] for key in sorted(by_url)]
+    ev_by = {e["candidate_url"]: e for e in persisted.get("evidence_references", [])}
+    for evidence in incoming.get("evidence_references", []):
+        ev_by.setdefault(evidence["candidate_url"], evidence)
+    merged_evidence = [ev_by[key] for key in sorted(ev_by)]
+    is_new_vendor = persisted.get("candidate_origin") == "catalog_discovery"
+    eligibility_state, reasons = candidate_record.evaluate_eligibility(
+        persisted["vendor_identity_candidate"], merged_sources, is_new_vendor=is_new_vendor
+    )
+    return candidate_record.build_candidate(
+        candidate_origin=persisted["candidate_origin"],
+        origin_reference=persisted["origin_reference"],
+        vendor_identity_candidate=persisted["vendor_identity_candidate"],
+        source_candidates=merged_sources,
+        evidence_references=merged_evidence,
+        discovery_component=persisted["discovery_component"],
+        created_at=persisted["created_at"],
+        eligibility_state=eligibility_state,
+        decision_reasons=reasons,
+    )
+
+
 class CatalogQueueIngress:
     """Durable, idempotent ingress to the existing autonomous-growth queue.
 
-    Writes the unified candidate record to ``maintenance/candidates/<id>.json``,
-    the same directory ``autonomous-catalog-growth.yml`` reads eligible candidates
-    from. Idempotent by deterministic ``candidate_id`` filename: a repeat enqueue
-    reuses the in-flight candidate and reports its persisted state. Never touches
-    canonical catalogue files (``data/vendors``) or ``main``.
+    Writes the unified candidate record to ``maintenance/candidates/<id>.json``
+    (atomically), the same directory ``autonomous-catalog-growth.yml`` reads
+    eligible candidates from on a fresh checkout. Because that workflow only sees
+    *committed* files, a freshly written working-tree file is reported as
+    uncommitted (``pending_ingress``); pass ``commit=True`` to commit it to git as
+    a real intake step, or commit/push it via an intake workflow. The persisted
+    record is authoritative and expanded evidence is merged deterministically.
+    Never writes canonical catalogue files (``data/vendors``) or ``main``.
     """
 
-    def __init__(self, root: Path = ROOT) -> None:
-        self.queue_dir = Path(root) / "maintenance" / "candidates"
+    def __init__(self, root: Path = ROOT, *, commit: bool = False) -> None:
+        self.root = Path(root)
+        self.queue_dir = self.root / "maintenance" / "candidates"
+        self.commit = commit
 
     def enqueue(self, record: dict[str, Any]) -> IngressOutcome:
         self.queue_dir.mkdir(parents=True, exist_ok=True)
         path = self.queue_dir / f"{record['candidate_id']}.json"
         if path.exists():
-            existing = json.loads(path.read_text(encoding="utf-8"))
-            state = lifecycle_from_eligibility(existing.get("eligibility_state", ""), durable=True)
-            return IngressOutcome(state, enqueued=False, durable=True, reference=str(path))
-        path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        state = lifecycle_from_eligibility(record.get("eligibility_state", ""), durable=True)
-        return IngressOutcome(state, enqueued=True, durable=True, reference=str(path))
+            persisted = json.loads(path.read_text(encoding="utf-8"))
+            authoritative = merge_candidate(persisted, record)
+            enqueued = False
+            if authoritative != persisted:
+                _atomic_write_json(path, authoritative)
+        else:
+            authoritative = record
+            enqueued = True
+            _atomic_write_json(path, authoritative)
+        if self.commit:
+            _git_commit(path, self.root, f"Enqueue resolver candidate {record['candidate_id']}")
+        committed = _is_committed(path, self.root)
+        return IngressOutcome(
+            record=authoritative, persisted=True, committed=committed,
+            enqueued=enqueued, reference=str(path),
+        )
 
 
 class RecordingIngress:
     """Non-durable ingress for read-only/preview contexts and tests.
 
-    Records candidates in memory only. Because nothing is persisted, it never
+    Records candidates in memory only (still merging expanded evidence into the
+    authoritative record). Because nothing is persisted or committed, it never
     claims a candidate is processing toward the catalogue.
     """
 
@@ -330,9 +406,12 @@ class RecordingIngress:
 
     def enqueue(self, record: dict[str, Any]) -> IngressOutcome:
         candidate_id = record["candidate_id"]
-        newly = candidate_id not in self.records
+        if candidate_id in self.records:
+            authoritative = merge_candidate(self.records[candidate_id], record)
+            self.records[candidate_id] = authoritative
+            return IngressOutcome(authoritative, persisted=False, committed=False, enqueued=False, reference=None)
         self.records[candidate_id] = record
-        return IngressOutcome(LIFECYCLE_PENDING, enqueued=newly, durable=False, reference=None)
+        return IngressOutcome(record, persisted=False, committed=False, enqueued=True, reference=None)
 
 
 # --- request / result data --------------------------------------------------
@@ -364,6 +443,7 @@ class ResolvedSource:
     source_type: str
     status: str
     source_url: str | None = None
+    candidate_url: str | None = None  # unverified discovered URL (deferred outcomes)
     origin: str | None = None  # "catalog" | "live_discovery" | None
     catalog_membership: str = "none"  # "canonical" | "none"
     live_checked: bool = False
@@ -384,6 +464,8 @@ class ResolvedSource:
             "checked_at": self.checked_at,
             "catalog_status": self.catalog_status,
         }
+        if self.candidate_url is not None:
+            payload["candidate_url"] = self.candidate_url
         if self.previous_source_url is not None:
             payload["previous_source_url"] = self.previous_source_url
         if self.proposed_source_history is not None:
@@ -425,7 +507,7 @@ class VendorResolution:
 
 @dataclass(frozen=True)
 class EmitResult:
-    record: dict[str, Any]
+    record: dict[str, Any]  # authoritative record (post-merge)
     outcome: IngressOutcome
 
 
@@ -433,7 +515,9 @@ class SessionEmitter:
     """Builds candidate records and hands them to a durable lifecycle ingress.
 
     Idempotent on two levels: the deterministic candidate id dedups within a
-    session, and the injected ingress dedups across sessions/processes. Emission
+    session, and the injected ingress dedups (and merges) across
+    sessions/processes. The record returned is always the ingress's authoritative
+    record, so response state never diverges from what is persisted. Emission
     never writes canonical catalogue files; canonical mutation stays with the
     existing autonomous lifecycle.
     """
@@ -452,8 +536,11 @@ class SessionEmitter:
                     "candidate_id": candidate_id,
                     "candidate_origin": result.record["candidate_origin"],
                     "eligibility_state": result.record["eligibility_state"],
-                    "lifecycle_state": result.outcome.lifecycle_state,
-                    "durable": result.outcome.durable,
+                    "lifecycle_state": catalog_status_for(
+                        result.record["eligibility_state"], committed=result.outcome.committed
+                    ),
+                    "persisted": result.outcome.persisted,
+                    "committed": result.outcome.committed,
                 }
             )
         return updates
@@ -471,10 +558,6 @@ class SessionEmitter:
         is_new_vendor: bool,
         identity_collision: bool = False,
     ) -> EmitResult:
-        candidate_id = candidate_record.compute_candidate_id(candidate_origin, origin_reference)
-        if candidate_id in self._by_id:
-            return self._by_id[candidate_id]
-
         eligibility_state, reasons = candidate_record.evaluate_eligibility(
             vendor_identity_candidate,
             source_candidates,
@@ -498,9 +581,12 @@ class SessionEmitter:
             eligibility_state=eligibility_state,
             decision_reasons=reasons,
         )
+        # Always hand to the ingress, which merges with any existing record so
+        # newly discovered sources are never silently discarded; the ingress's
+        # authoritative (persisted/merged) record wins.
         outcome = self._ingress.enqueue(record)
-        result = EmitResult(record=record, outcome=outcome)
-        self._by_id[candidate_id] = result
+        result = EmitResult(record=outcome.record, outcome=outcome)
+        self._by_id[outcome.record["candidate_id"]] = result
         return result
 
 
@@ -511,20 +597,21 @@ def _clean_source_candidate(source: dict[str, Any]) -> dict[str, Any]:
 
 # --- bounded public discovery -----------------------------------------------
 
-DiscoveryFn = Callable[[str, str, Callable[[str], FetchResult], str], DiscoveryResult | None]
+DiscoveryFn = Callable[[str, str, Fetcher, str], DiscoveryResult | None]
 
 
 def bounded_discovery(
     official_domain: str,
     source_type: str,
-    fetcher: Callable[[str], FetchResult],
+    fetcher: Fetcher,
     observed_at: str,
 ) -> DiscoveryResult | None:
     """Try a small, fixed set of vendor-published paths on the official domain.
 
     Fails closed: only ``https`` URLs on the official domain that pass URL safety
-    are fetched, and a candidate is accepted only when the response is reachable,
-    on-domain, and semantically consistent with the source type.
+    are fetched (through the SSRF-safe fetcher), and a candidate is accepted only
+    when the response is reachable, on-domain, and semantically consistent with
+    the source type.
     """
     domain = matcher.normalize_domain(official_domain)
     if not domain:
@@ -679,7 +766,7 @@ def _verify_existing_source(
     vendor_id: str,
     official_domain: str | None,
     source: CatalogSource,
-    fetcher: Callable[[str], FetchResult],
+    fetcher: Fetcher,
     discovery: DiscoveryFn,
     emitter: SessionEmitter,
     channel: str,
@@ -708,8 +795,6 @@ def _verify_existing_source(
                 http_status=result.http_status, content_type=result.content_type,
                 on_domain=True, emitter=emitter, channel=channel, now=now, reason=f"moved:{status}",
             )
-        # Redirect off-authority/generic/semantically inconsistent: not a safe
-        # replacement. Try discovery, else inconclusive (the original may persist).
         return _discovery_fallback(
             vendor_id=vendor_id, official_domain=official_domain, previous=source,
             source_type=source.source_type, fetcher=fetcher, discovery=discovery,
@@ -772,10 +857,6 @@ def _refresh_via_replacement(
     now: str,
     reason: str,
 ) -> ResolvedSource:
-    history = _make_history(
-        vendor_id=vendor_id, source_type=previous.source_type, previous=previous,
-        new_url=new_url, now=now,
-    )
     emitted = _emit_source_candidate(
         emitter=emitter, candidate_origin="source_replacement", channel=channel,
         vendor_id=vendor_id, official_domain=matcher.normalize_domain(new_url),
@@ -783,20 +864,27 @@ def _refresh_via_replacement(
         http_status=http_status, content_type=content_type, matched_terms=matched_terms,
         on_domain=on_domain, now=now, is_new_vendor=False,
     )
-    status, catalog_status = _status_for_outcome(RESULT_CATALOG_REFRESHED, emitted.outcome)
+    elig = emitted.record["eligibility_state"]
+    status, catalog_status, surface = _outcome_view(RESULT_CATALOG_REFRESHED, elig, emitted.outcome.committed)
+    history = _make_history(
+        vendor_id=vendor_id, source_type=previous.source_type, previous=previous,
+        new_url=new_url, now=now,
+    ) if surface else None
     return ResolvedSource(
         source_type=previous.source_type,
         status=status,
-        # A rejected replacement is not trustworthy: fall back to the prior URL.
-        source_url=new_url if status == RESULT_CATALOG_REFRESHED else previous.source_url,
+        # When surfaced, the replacement is the result; otherwise keep the prior
+        # canonical URL and expose the discovered URL only as unverified.
+        source_url=new_url if surface else previous.source_url,
+        candidate_url=None if surface else (new_url if catalog_status == LIFECYCLE_DEFERRED else None),
         origin="live_discovery",
         catalog_membership="none",
         live_checked=True,
         checked_at=now,
         catalog_status=catalog_status,
         previous_source_url=previous.source_url,
-        proposed_source_history=history if status == RESULT_CATALOG_REFRESHED else None,
-        reasons=[reason, f"eligibility:{emitted.record['eligibility_state']}"],
+        proposed_source_history=history,
+        reasons=[reason, f"eligibility:{elig}"],
     )
 
 
@@ -806,7 +894,7 @@ def _discovery_fallback(
     official_domain: str | None,
     previous: CatalogSource,
     source_type: str,
-    fetcher: Callable[[str], FetchResult],
+    fetcher: Fetcher,
     discovery: DiscoveryFn,
     emitter: SessionEmitter,
     channel: str,
@@ -835,15 +923,20 @@ def _discovery_fallback(
     )
 
 
-def _status_for_outcome(success_status: str, outcome: IngressOutcome) -> tuple[str, str | None]:
-    """Map an ingress outcome to (resolution status, catalog_status).
+def _outcome_view(
+    success_status: str, eligibility_state: str, committed: bool
+) -> tuple[str, str, bool]:
+    """Map (success status, eligibility, git-durability) to the response.
 
-    A rejected candidate is never presented as a usable result; deferred and
-    processing keep the discovered URL but disclose the true lifecycle stage.
+    Returns ``(resolution_status, catalog_status, surface_source_url)``. Only an
+    eligible candidate is surfaced as a usable result; deferred and rejected
+    candidates return ``verification_inconclusive`` so agents are never told an
+    unverified or rejected URL is the resolved source.
     """
-    if outcome.lifecycle_state == LIFECYCLE_REJECTED:
-        return RESULT_VERIFICATION_INCONCLUSIVE, LIFECYCLE_REJECTED
-    return success_status, outcome.lifecycle_state
+    catalog_status = catalog_status_for(eligibility_state, committed=committed)
+    if eligibility_state == candidate_record.ELIGIBLE_STATE:
+        return success_status, catalog_status, True
+    return RESULT_VERIFICATION_INCONCLUSIVE, catalog_status, False
 
 
 def _emit_source_candidate(
@@ -942,7 +1035,8 @@ def resolve_vendor_sources(
     request: dict[str, Any],
     *,
     catalog: ResolutionCatalog,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Fetcher | None = None,
+    fetcher_factory: FetcherFactory = default_fetcher_factory,
     discovery: DiscoveryFn = bounded_discovery,
     emitter: SessionEmitter | None = None,
     now: Callable[[], str] = _now_default,
@@ -955,9 +1049,11 @@ def resolve_vendor_sources(
          "required_source_types": [...],
          "freshness_mode": "cached" | "verify"}
 
-    By default candidates are recorded but not durably enqueued. Pass an
-    ``emitter`` backed by :class:`CatalogQueueIngress` (as :func:`resolve_inventory`
-    and the CLI do) to durably hand candidates to the autonomous lifecycle.
+    By default fetches go through the SSRF-safe fetcher bound to the resolved
+    official domain (``fetcher_factory``); pass an explicit ``fetcher`` to override
+    (e.g. in tests). By default candidates are recorded but not durably committed;
+    pass an ``emitter`` backed by :class:`CatalogQueueIngress` (as
+    :func:`resolve_inventory` and the CLI do) to durably enqueue them.
     """
     emitter = emitter if emitter is not None else SessionEmitter()
     timestamp = now()
@@ -994,11 +1090,16 @@ def resolve_vendor_sources(
         if identity.vendor_id
         else {}
     )
+    # Bind the SSRF-safe fetcher to the vendor's own authority unless overridden.
+    active_fetcher = (
+        fetcher if fetcher is not None
+        else fetcher_factory([identity.official_domain] if identity.official_domain else [])
+    )
 
     if is_new_vendor and freshness == FRESHNESS_VERIFY:
         resolved = _resolve_new_vendor(
             vendor_id=vendor_id, official_domain=identity.official_domain,
-            required=required, fetcher=fetcher, discovery=discovery, emitter=emitter,
+            required=required, fetcher=active_fetcher, discovery=discovery, emitter=emitter,
             channel=channel, now=timestamp,
         )
     else:
@@ -1007,7 +1108,7 @@ def resolve_vendor_sources(
                 source_type=source_type, existing=catalog_sources.get(source_type),
                 freshness=freshness, vendor_id=vendor_id,
                 official_domain=identity.official_domain, is_new_vendor=is_new_vendor,
-                fetcher=fetcher, discovery=discovery, emitter=emitter, channel=channel,
+                fetcher=active_fetcher, discovery=discovery, emitter=emitter, channel=channel,
                 now=timestamp,
             )
             for source_type in required
@@ -1035,7 +1136,7 @@ def _resolve_one(
     vendor_id: str,
     official_domain: str | None,
     is_new_vendor: bool,
-    fetcher: Callable[[str], FetchResult],
+    fetcher: Fetcher,
     discovery: DiscoveryFn,
     emitter: SessionEmitter,
     channel: str,
@@ -1070,15 +1171,7 @@ def _resolve_one(
         matched_terms=found.matched_terms, on_domain=found.on_vendor_domain, now=now,
         is_new_vendor=False,
     )
-    status, catalog_status = _status_for_outcome(RESULT_NEWLY_DISCOVERED, emitted.outcome)
-    return ResolvedSource(
-        source_type=source_type,
-        status=status,
-        source_url=found.final_url if status == RESULT_NEWLY_DISCOVERED else None,
-        origin="live_discovery", catalog_membership="none", live_checked=True, checked_at=now,
-        catalog_status=catalog_status,
-        reasons=[f"discovered:{found.verification_status}", f"eligibility:{emitted.record['eligibility_state']}"],
-    )
+    return _discovered_source(source_type, found, emitted, now)
 
 
 def _resolve_new_vendor(
@@ -1086,7 +1179,7 @@ def _resolve_new_vendor(
     vendor_id: str,
     official_domain: str | None,
     required: list[str],
-    fetcher: Callable[[str], FetchResult],
+    fetcher: Fetcher,
     discovery: DiscoveryFn,
     emitter: SessionEmitter,
     channel: str,
@@ -1103,19 +1196,9 @@ def _resolve_new_vendor(
             discovered[source_type] = found
 
     if not discovered:
-        return [
-            ResolvedSource(
-                source_type=source_type, status=RESULT_NOT_FOUND, source_url=None,
-                origin="live_discovery", catalog_membership="none", live_checked=True,
-                checked_at=now, catalog_status=None, reasons=["no_public_source_found"],
-            )
-            for source_type in required
-        ]
+        return [_not_found_source(source_type, now) for source_type in required]
 
-    # One aggregate candidate carrying every discovered source.
-    domain = matcher.normalize_domain(
-        official_domain or next(iter(discovered.values())).final_url
-    )
+    domain = matcher.normalize_domain(official_domain or next(iter(discovered.values())).final_url)
     identity = _identity_candidate(vendor_id, domain)
     source_candidates = []
     evidence = []
@@ -1144,27 +1227,39 @@ def _resolve_new_vendor(
     for source_type in required:
         found = discovered.get(source_type)
         if found is None:
-            resolved.append(
-                ResolvedSource(
-                    source_type=source_type, status=RESULT_NOT_FOUND, source_url=None,
-                    origin="live_discovery", catalog_membership="none", live_checked=True,
-                    checked_at=now, catalog_status=None, reasons=["no_public_source_found"],
-                )
-            )
-            continue
-        status, catalog_status = _status_for_outcome(RESULT_NEWLY_DISCOVERED, emitted.outcome)
-        resolved.append(
-            ResolvedSource(
-                source_type=source_type,
-                status=status,
-                source_url=found.final_url if status == RESULT_NEWLY_DISCOVERED else None,
-                origin="live_discovery", catalog_membership="none", live_checked=True,
-                checked_at=now, catalog_status=catalog_status,
-                reasons=[f"discovered:{found.verification_status}",
-                         f"eligibility:{emitted.record['eligibility_state']}"],
-            )
-        )
+            resolved.append(_not_found_source(source_type, now))
+        else:
+            resolved.append(_discovered_source(source_type, found, emitted, now))
     return resolved
+
+
+def _discovered_source(
+    source_type: str, found: DiscoveryResult, emitted: EmitResult, now: str
+) -> ResolvedSource:
+    elig = emitted.record["eligibility_state"]
+    status, catalog_status, surface = _outcome_view(
+        RESULT_NEWLY_DISCOVERED, elig, emitted.outcome.committed
+    )
+    return ResolvedSource(
+        source_type=source_type,
+        status=status,
+        source_url=found.final_url if surface else None,
+        candidate_url=None if surface else (found.final_url if catalog_status == LIFECYCLE_DEFERRED else None),
+        origin="live_discovery",
+        catalog_membership="none",
+        live_checked=True,
+        checked_at=now,
+        catalog_status=catalog_status,
+        reasons=[f"discovered:{found.verification_status}", f"eligibility:{elig}"],
+    )
+
+
+def _not_found_source(source_type: str, now: str) -> ResolvedSource:
+    return ResolvedSource(
+        source_type=source_type, status=RESULT_NOT_FOUND, source_url=None,
+        origin="live_discovery", catalog_membership="none", live_checked=True,
+        checked_at=now, catalog_status=None, reasons=["no_public_source_found"],
+    )
 
 
 def _rollup(identity: IdentityResolution, sources: list[ResolvedSource]) -> str:
@@ -1192,7 +1287,8 @@ def resolve_inventory(
     catalog: ResolutionCatalog,
     freshness_mode: str = FRESHNESS_VERIFY,
     channel: str = DEFAULT_CHANNEL,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Fetcher | None = None,
+    fetcher_factory: FetcherFactory = default_fetcher_factory,
     discovery: DiscoveryFn = bounded_discovery,
     ingress: Any | None = None,
     now: Callable[[], str] = _now_default,
@@ -1201,7 +1297,7 @@ def resolve_inventory(
 
     A single shared emitter (durably enqueuing to ``maintenance/candidates`` by
     default) keeps the run idempotent: the same vendor or source appearing twice
-    reuses one candidate.
+    reuses (and merges into) one candidate.
     """
     emitter = SessionEmitter(ingress if ingress is not None else CatalogQueueIngress())
     results: list[VendorResolution] = []
@@ -1214,8 +1310,8 @@ def resolve_inventory(
         }
         results.append(
             resolve_vendor_sources(
-                request, catalog=catalog, fetcher=fetcher, discovery=discovery,
-                emitter=emitter, now=now,
+                request, catalog=catalog, fetcher=fetcher, fetcher_factory=fetcher_factory,
+                discovery=discovery, emitter=emitter, now=now,
             )
         )
     return {
@@ -1307,6 +1403,44 @@ def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _atomic_write_json(path: Path, data: dict[str, Any]) -> None:
+    tmp = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+    tmp.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(tmp, path)  # atomic on POSIX/NTFS
+
+
+def _git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", "-C", str(root), *args], capture_output=True, text=True, check=False
+    )
+
+
+def _rel(path: Path, root: Path) -> str:
+    try:
+        return str(path.relative_to(root))
+    except ValueError:
+        return os.path.relpath(str(path), str(root))
+
+
+def _is_committed(path: Path, root: Path) -> bool:
+    """True only when the file is git-tracked with no uncommitted changes."""
+    rel = _rel(path, root)
+    tracked = _git(root, "ls-files", "--error-unmatch", "--", rel)
+    if tracked.returncode != 0:
+        return False
+    status = _git(root, "status", "--porcelain", "--", rel)
+    return status.returncode == 0 and status.stdout.strip() == ""
+
+
+def _git_commit(path: Path, root: Path, message: str) -> bool:
+    rel = _rel(path, root)
+    if _git(root, "add", "--", rel).returncode != 0:
+        return False
+    # The candidate-intake commit is a metadata enqueue, not a release commit; do
+    # not require local commit signing (the autonomous workflow signs its own).
+    return _git(root, "-c", "commit.gpgsign=false", "commit", "-q", "-m", message, "--", rel).returncode == 0
+
+
 def _git_head(root: Path) -> str:
     head = root / ".git" / "HEAD"
     try:
@@ -1336,9 +1470,12 @@ def main(argv: list[str] | None = None) -> int:
     resolve.add_argument("--request", type=Path, required=True)
     resolve.add_argument("--root", type=Path, default=ROOT)
     resolve.add_argument(
-        "--enqueue",
-        action="store_true",
-        help="durably enqueue discovered candidates to maintenance/candidates (verify mode)",
+        "--enqueue", action="store_true",
+        help="durably write discovered candidates to maintenance/candidates (verify mode)",
+    )
+    resolve.add_argument(
+        "--commit", action="store_true",
+        help="commit enqueued candidate files to git so the autonomous workflow can see them",
     )
     args = parser.parse_args(argv)
 
@@ -1346,7 +1483,10 @@ def main(argv: list[str] | None = None) -> int:
         request = json.loads(args.request.read_text(encoding="utf-8"))
         request.setdefault("freshness_mode", FRESHNESS_CACHED)
         catalog = ResolutionCatalog.from_indexes(args.root)
-        ingress = CatalogQueueIngress(args.root) if args.enqueue else RecordingIngress()
+        ingress = (
+            CatalogQueueIngress(args.root, commit=args.commit)
+            if args.enqueue else RecordingIngress()
+        )
         result = resolve_vendor_sources(request, catalog=catalog, emitter=SessionEmitter(ingress))
         # to_response() includes candidate_updates so durable enqueue outcomes are
         # never silently dropped from the CLI output.
