@@ -689,6 +689,33 @@ def test_github_intake_malformed_ack_not_visible():
     assert result.sources[0].catalog_status == vr.LIFECYCLE_PENDING
 
 
+# 32c. A schema-valid but UNRELATED acknowledgement (different identity) cannot
+#      attribute its visibility to this resolution.
+def test_github_intake_mismatched_ack_identity_not_visible():
+    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+
+    other = candidate_record.build_candidate(
+        candidate_origin="catalog_discovery", origin_reference="otherco:otherco.com",
+        vendor_identity_candidate={"vendor_id_candidate": "otherco", "official_domain": "otherco.com"},
+        source_candidates=[{"candidate_url": "https://otherco.com/privacy", "source_type_candidate": "privacy_notice", "access_state": "public_reachable", "source_role": "primary_assurance"}],
+        evidence_references=[{"candidate_url": "https://otherco.com/privacy", "verification_result": "likely_vendor_published", "observed_at": FIXED_NOW}],
+        discovery_component="vendor_resolution:test", created_at=FIXED_NOW, eligibility_state="eligible",
+    )
+
+    def submit(record):  # returns a valid but unrelated candidate
+        return {"record": other, "created": True}
+
+    result = resolve(
+        {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
+        catalog, emitter=vr.SessionEmitter(vr.GitHubIntakeIngress(submit, verify_visible=lambda r: True)),
+        discovery=discovery_found, now=fixed_now,
+    )
+    update = result.candidate_updates[0]
+    assert update["ingress_state"] == vr.INGRESS_SUBMITTED_REMOTE  # not elevated
+    assert update["candidate_id"] != other["candidate_id"]  # bound to the submitted candidate
+    assert result.sources[0].catalog_status == vr.LIFECYCLE_PENDING
+
+
 # 33 (smaller fix 4). URL normalisation lowercases scheme/host only, drops the
 #                     fragment/default port/trailing slash and tracking params, and
 #                     preserves path/query case.

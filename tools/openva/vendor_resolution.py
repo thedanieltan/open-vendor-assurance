@@ -505,10 +505,19 @@ class GitHubIntakeIngress:
             return IngressOutcome(record=record, ingress_state=INGRESS_RECORDED, enqueued=False, reference=None)
         if not isinstance(ack, dict):
             ack = {}
-        # Never trust a remote-returned record that is not schema-valid, and never
-        # let a malformed acknowledgement be elevated to workflow_visible.
+        # Never trust a remote-returned record that is not schema-valid, and bind
+        # the acknowledgement to the *submitted* candidate identity so an unrelated
+        # (even schema-valid) record cannot attribute its eligibility/visibility to
+        # this resolution. A mismatch reverts to the submitted record and cannot be
+        # elevated to workflow_visible.
         acknowledged = ack.get("record", record)
-        ack_valid = isinstance(acknowledged, dict) and not candidate_record.validate_candidate(acknowledged)
+        ack_valid = (
+            isinstance(acknowledged, dict)
+            and not candidate_record.validate_candidate(acknowledged)
+            and acknowledged.get("candidate_id") == record["candidate_id"]
+            and acknowledged.get("candidate_origin") == record["candidate_origin"]
+            and acknowledged.get("origin_reference") == record["origin_reference"]
+        )
         authoritative = acknowledged if ack_valid else record
         state = INGRESS_SUBMITTED_REMOTE
         if ack_valid and self._verify_visible:
