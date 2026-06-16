@@ -262,11 +262,14 @@ Cached and verified results are never silently treated as equivalent, and
 catalogue membership, source health, and durable lifecycle stage are reported on
 separate axes so a deferred or rejected candidate is never shown as processing.
 
-In `verify` mode the resolver durably enqueues discovered/refreshed candidates to
+In `verify` mode the resolver enqueues discovered/refreshed candidates to
 `maintenance/candidates/` — the same queue the autonomous-growth workflow
-consumes. The hosted browser Local Matcher is cached-only (static page): it
-reports catalogue state and a `result_state` per vendor but does not perform live
-discovery or lifecycle routing.
+consumes — under a concurrency-safe, deterministic merge. A candidate is only
+reported as `candidate_processing` once it is reachable from the ref that workflow
+checks out (the remote default branch); local-only writes/commits stay
+`pending_ingress`. The hosted browser Local Matcher is cached-only (static page):
+it reports catalogue state and a `result_state` per vendor but does not perform
+live discovery or lifecycle routing.
 
 OpenVA preserves source-reference and observation history. It does not archive or
 reproduce historical vendor documents.

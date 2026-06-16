@@ -36,14 +36,16 @@
       "description": "Candidates this resolution handed to the autonomous lifecycle, with their actual durable lifecycle state.",
       "items": {
         "type": "object",
-        "required": ["candidate_id", "candidate_origin", "eligibility_state", "lifecycle_state", "persisted", "committed"],
+        "required": ["candidate_id", "candidate_origin", "eligibility_state", "lifecycle_state", "ingress_state"],
         "properties": {
           "candidate_id": { "type": "string", "minLength": 1 },
           "candidate_origin": { "type": "string", "minLength": 1 },
           "eligibility_state": { "type": "string", "minLength": 1 },
           "lifecycle_state": { "$ref": "#/$defs/lifecycle_state" },
-          "persisted": { "type": "boolean" },
-          "committed": { "type": "boolean" }
+          "ingress_state": {
+            "description": "Durability rung reached; only workflow_visible maps an eligible candidate to candidate_processing.",
+            "enum": ["recorded", "persisted_local", "committed_local", "submitted_remote", "workflow_visible"]
+          }
         },
         "additionalProperties": false
       }

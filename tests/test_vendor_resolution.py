@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import threading
 from pathlib import Path
 
 from tools.openva import candidate_record, vendor_resolution as vr
@@ -39,13 +40,8 @@ def vendor_row(vendor_id, domain, display=None):
 def fetch_ok(url, final_url=None, status=200, body=None):
     text = body or "privacy policy personal data privacy notice subprocessor data processing security"
     return FetchResult(
-        requested_url=url,
-        final_url=final_url or url,
-        http_status=status,
-        content_type="text/html",
-        content_length=len(text),
-        etag=None,
-        last_modified=None,
+        requested_url=url, final_url=final_url or url, http_status=status,
+        content_type="text/html", content_length=len(text), etag=None, last_modified=None,
         body_sample=f"<title>Doc</title>{text}".encode("utf-8"),
     )
 
@@ -61,27 +57,17 @@ def fetcher_map(mapping):
 
 def discovery_found(domain, source_type, fetcher, observed_at):
     return vr.DiscoveryResult(
-        candidate_url=f"https://{domain}/{source_type}",
-        final_url=f"https://{domain}/{source_type}",
-        http_status=200,
-        content_type="text/html",
-        verification_status="ok",
-        matched_terms=["privacy", "personal data"],
-        observed_at=observed_at,
-        on_vendor_domain=True,
+        candidate_url=f"https://{domain}/{source_type}", final_url=f"https://{domain}/{source_type}",
+        http_status=200, content_type="text/html", verification_status="ok",
+        matched_terms=["privacy", "personal data"], observed_at=observed_at, on_vendor_domain=True,
     )
 
 
 def discovery_offdomain(domain, source_type, fetcher, observed_at):
     return vr.DiscoveryResult(
-        candidate_url=f"https://cdn.other.example/{source_type}",
-        final_url=f"https://cdn.other.example/{source_type}",
-        http_status=200,
-        content_type="text/html",
-        verification_status="ok",
-        matched_terms=["privacy", "personal data"],
-        observed_at=observed_at,
-        on_vendor_domain=False,
+        candidate_url=f"https://cdn.other.example/{source_type}", final_url=f"https://cdn.other.example/{source_type}",
+        http_status=200, content_type="text/html", verification_status="ok",
+        matched_terms=["privacy", "personal data"], observed_at=observed_at, on_vendor_domain=False,
     )
 
 
@@ -89,16 +75,32 @@ def discovery_none(domain, source_type, fetcher, observed_at):
     return None
 
 
-def git_repo(path):
-    subprocess.run(["git", "init", "-q", str(path)], check=True)
-    subprocess.run(["git", "-C", str(path), "config", "user.email", "t@example.com"], check=True)
-    subprocess.run(["git", "-C", str(path), "config", "user.name", "tester"], check=True)
-    return path
+def _run(*args):
+    subprocess.run(args, check=True, capture_output=True)
 
 
-def committed_emitter(tmp_path):
-    """An emitter whose candidates are committed to git (GitHub-durable)."""
-    return vr.SessionEmitter(vr.CatalogQueueIngress(git_repo(tmp_path), commit=True))
+def git_repo_with_remote(tmp_path):
+    """A working repo with a bare 'origin' whose default branch is 'main'."""
+    repo, remote = tmp_path / "repo", tmp_path / "remote.git"
+    _run("git", "init", "-q", "-b", "main", str(repo))
+    _run("git", "-C", str(repo), "config", "user.email", "t@example.com")
+    _run("git", "-C", str(repo), "config", "user.name", "tester")
+    _run("git", "-C", str(repo), "config", "commit.gpgsign", "false")
+    _run("git", "init", "--bare", "-q", "-b", "main", str(remote))
+    _run("git", "-C", str(repo), "remote", "add", "origin", str(remote))
+    (repo / "README").write_text("seed")
+    _run("git", "-C", str(repo), "add", "README")
+    _run("git", "-C", str(repo), "commit", "-q", "-m", "init")
+    _run("git", "-C", str(repo), "push", "-q", "origin", "main")
+    return repo
+
+
+def visible_emitter():
+    """Emitter whose remote intake reports the candidate workflow-visible."""
+    def submit(record):
+        return {"record": record, "created": True, "reference": "intake-pr-1"}
+
+    return vr.SessionEmitter(vr.GitHubIntakeIngress(submit, verify_visible=lambda record: True))
 
 
 def resolve(request, catalog, emitter=None, **kwargs):
@@ -145,16 +147,15 @@ def test_existing_vendor_stale_source_cached():
 
 
 # 3. Existing vendor with redirected (on-authority) replacement.
-def test_existing_vendor_redirected_replacement(tmp_path):
+def test_existing_vendor_redirected_replacement():
     catalog = make_catalog(
         [vendor_row("examplecloud", "examplecloud.com")],
         {"examplecloud": [vr.CatalogSource("examplecloud-dpa", "dpa", "https://examplecloud.com/old-dpa", "ok", "2026-06-01T00:00:00Z")]},
     )
-    old = "https://examplecloud.com/old-dpa"
-    new = "https://examplecloud.com/legal/dpa"
+    old, new = "https://examplecloud.com/old-dpa", "https://examplecloud.com/legal/dpa"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path),
+        catalog, emitter=visible_emitter(),
         fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
     )
     source = result.sources[0]
@@ -169,14 +170,14 @@ def test_existing_vendor_redirected_replacement(tmp_path):
 
 
 # 4. Existing vendor with missing source type (independent coverage_gap candidate).
-def test_existing_vendor_missing_source_type(tmp_path):
+def test_existing_vendor_missing_source_type():
     catalog = make_catalog(
         [vendor_row("examplecloud", "examplecloud.com")],
         {"examplecloud": [vr.CatalogSource("examplecloud-privacy", "privacy_notice", "https://examplecloud.com/privacy", "ok")]},
     )
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_found, now=fixed_now,
+        catalog, emitter=visible_emitter(), discovery=discovery_found, now=fixed_now,
     )
     source = result.sources[0]
     assert source.status == vr.RESULT_NEWLY_DISCOVERED
@@ -186,11 +187,11 @@ def test_existing_vendor_missing_source_type(tmp_path):
 
 
 # 5. Missing vendor with sources discovered -> ONE aggregate candidate.
-def test_missing_vendor_sources_discovered_aggregated(tmp_path):
+def test_missing_vendor_sources_discovered_aggregated():
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     result = resolve(
         {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice", "security_page"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_found, now=fixed_now,
+        catalog, emitter=visible_emitter(), discovery=discovery_found, now=fixed_now,
     )
     assert result.resolution_status == vr.RESULT_NEWLY_DISCOVERED
     assert all(s.status == vr.RESULT_NEWLY_DISCOVERED for s in result.sources)
@@ -199,11 +200,11 @@ def test_missing_vendor_sources_discovered_aggregated(tmp_path):
 
 
 # 6. Missing vendor with no sources found.
-def test_missing_vendor_no_sources_found(tmp_path):
+def test_missing_vendor_no_sources_found():
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     result = resolve(
         {"vendor": {"vendor_name": "Ghost", "domain": "ghost.example"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_none, now=fixed_now,
+        catalog, emitter=visible_emitter(), discovery=discovery_none, now=fixed_now,
     )
     assert result.resolution_status == vr.RESULT_NOT_FOUND
     assert result.sources[0].status == vr.RESULT_NOT_FOUND
@@ -224,17 +225,15 @@ def test_identity_ambiguous():
     assert vr.validate_result(result.to_response()) == []
 
 
-# 8. Candidate already in processing (durable+committed, idempotent across calls).
-def test_candidate_already_in_processing(tmp_path):
-    emitter = committed_emitter(tmp_path)
+# 8. Candidate already in processing (idempotent across calls).
+def test_candidate_already_in_processing():
+    emitter = visible_emitter()
     catalog = make_catalog([vendor_row("examplecloud", "examplecloud.com")])
     request = {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"}
     vr.resolve_vendor_sources(request, catalog=catalog, discovery=discovery_found, emitter=emitter, now=fixed_now)
     second = vr.resolve_vendor_sources(request, catalog=catalog, discovery=discovery_found, emitter=emitter, now=fixed_now)
-    queue_files = list((tmp_path / "maintenance" / "candidates").glob("*.json"))
-    assert len(queue_files) == 1
     assert len(emitter.candidate_updates) == 1
-    assert second.candidate_updates[0]["committed"] is True
+    assert second.candidate_updates[0]["ingress_state"] == vr.INGRESS_WORKFLOW_VISIBLE
     assert second.sources[0].catalog_status == vr.LIFECYCLE_PROCESSING
 
 
@@ -244,23 +243,22 @@ def test_duplicate_requests_idempotent(tmp_path):
     inv = vr.resolve_inventory(
         [{"vendor_name": "NewVendor", "domain": "newvendor.com"}, {"vendor_name": "NewVendor", "domain": "newvendor.com"}],
         ["privacy_notice"], catalog=catalog, discovery=discovery_found,
-        ingress=vr.CatalogQueueIngress(git_repo(tmp_path), commit=True), now=fixed_now,
+        ingress=vr.CatalogQueueIngress(tmp_path), now=fixed_now,
     )
     assert len(inv["candidate_updates"]) == 1
     assert len(list((tmp_path / "maintenance" / "candidates").glob("*.json"))) == 1
 
 
 # 10 + 11. Proposed history supersedes old URL and preserves the reference.
-def test_history_supersedes_and_preserves_reference(tmp_path):
+def test_history_supersedes_and_preserves_reference():
     catalog = make_catalog(
         [vendor_row("examplecloud", "examplecloud.com")],
         {"examplecloud": [vr.CatalogSource("examplecloud-dpa-old", "dpa", "https://examplecloud.com/old-dpa", "ok", "2026-06-10T12:00:00Z")]},
     )
-    old = "https://examplecloud.com/old-dpa"
-    new = "https://examplecloud.com/legal/dpa"
+    old, new = "https://examplecloud.com/old-dpa", "https://examplecloud.com/legal/dpa"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path),
+        catalog, emitter=visible_emitter(),
         fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
     )
     history = result.sources[0].proposed_source_history
@@ -273,16 +271,15 @@ def test_history_supersedes_and_preserves_reference(tmp_path):
 
 
 # 12. No historical document content is stored.
-def test_no_historical_document_content(tmp_path):
+def test_no_historical_document_content():
     catalog = make_catalog(
         [vendor_row("examplecloud", "examplecloud.com")],
         {"examplecloud": [vr.CatalogSource("examplecloud-dpa", "dpa", "https://examplecloud.com/old-dpa", "ok")]},
     )
-    old = "https://examplecloud.com/old-dpa"
-    new = "https://examplecloud.com/legal/dpa"
+    old, new = "https://examplecloud.com/old-dpa", "https://examplecloud.com/legal/dpa"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path),
+        catalog, emitter=visible_emitter(),
         fetcher=fetcher_map({old: fetch_ok(old, final_url=new)}), discovery=discovery_none, now=fixed_now,
     )
     blob = json.dumps(result.to_response()).lower()
@@ -364,8 +361,7 @@ def test_agent_response_includes_origin_and_freshness():
 def test_live_resolution_does_not_mutate_catalog(tmp_path):
     sources = {"examplecloud": [vr.CatalogSource("examplecloud-dpa", "dpa", "https://examplecloud.com/old-dpa", "ok")]}
     catalog = make_catalog([vendor_row("examplecloud", "examplecloud.com")], sources)
-    old = "https://examplecloud.com/old-dpa"
-    new = "https://examplecloud.com/legal/dpa"
+    old, new = "https://examplecloud.com/old-dpa", "https://examplecloud.com/legal/dpa"
     resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
         catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path)),
@@ -413,54 +409,52 @@ def test_unsafe_url_fails_closed():
 
 
 # 20. The result schema validates produced responses (round-trip contract).
-def test_result_schema_round_trips(tmp_path):
+def test_result_schema_round_trips():
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     response = resolve(
         {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice", "dpa"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_found, now=fixed_now,
+        catalog, emitter=visible_emitter(), discovery=discovery_found, now=fixed_now,
     ).to_response()
     assert vr.validate_result(response) == []
-    assert response["candidate_updates"][0]["committed"] is True
+    assert response["candidate_updates"][0]["ingress_state"] == vr.INGRESS_WORKFLOW_VISIBLE
 
 
 # 21. A generic/homepage redirect is NOT returned as a refreshed source.
-def test_generic_redirect_not_refreshed(tmp_path):
+def test_generic_redirect_not_refreshed():
     catalog = make_catalog(
         [vendor_row("examplecloud", "examplecloud.com")],
         {"examplecloud": [vr.CatalogSource("examplecloud-dpa", "dpa", "https://examplecloud.com/old-dpa", "ok")]},
     )
-    old = "https://examplecloud.com/old-dpa"
-    home = "https://examplecloud.com/"
+    old, home = "https://examplecloud.com/old-dpa", "https://examplecloud.com/"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path),
+        catalog, emitter=visible_emitter(),
         fetcher=fetcher_map({old: fetch_ok(old, final_url=home)}), discovery=discovery_none, now=fixed_now,
     )
     assert result.sources[0].status == vr.RESULT_VERIFICATION_INCONCLUSIVE
 
 
 # 22. An off-domain redirect is NOT returned as a refreshed source.
-def test_offdomain_redirect_not_refreshed(tmp_path):
+def test_offdomain_redirect_not_refreshed():
     catalog = make_catalog(
         [vendor_row("examplecloud", "examplecloud.com")],
         {"examplecloud": [vr.CatalogSource("examplecloud-dpa", "dpa", "https://examplecloud.com/old-dpa", "ok")]},
     )
-    old = "https://examplecloud.com/old-dpa"
-    away = "https://evil.example/dpa"
+    old, away = "https://examplecloud.com/old-dpa", "https://evil.example/dpa"
     result = resolve(
         {"vendor": {"domain": "examplecloud.com"}, "required_source_types": ["dpa"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path),
+        catalog, emitter=visible_emitter(),
         fetcher=fetcher_map({old: fetch_ok(old, final_url=away)}), discovery=discovery_none, now=fixed_now,
     )
     assert result.sources[0].status == vr.RESULT_VERIFICATION_INCONCLUSIVE
 
 
 # 23. A rejected candidate is never reported as processing toward the catalogue.
-def test_rejected_candidate_not_processing(tmp_path):
+def test_rejected_candidate_not_processing():
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     result = resolve(
         {"vendor": {"vendor_name": "Loopback", "domain": "localhost"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_found, now=fixed_now,
+        catalog, emitter=visible_emitter(), discovery=discovery_found, now=fixed_now,
     )
     source = result.sources[0]
     assert source.status == vr.RESULT_VERIFICATION_INCONCLUSIVE
@@ -470,13 +464,12 @@ def test_rejected_candidate_not_processing(tmp_path):
     assert update["eligibility_state"] == "rejected_unsafe_url"
 
 
-# 24. A deferred candidate is verification_inconclusive with the URL exposed only
-#     as an unverified candidate_url (not the resolved source_url).
+# 24. Deferred -> verification_inconclusive with URL only as unverified candidate_url.
 def test_deferred_candidate_is_inconclusive_with_candidate_url(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     result = resolve(
         {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
-        catalog, emitter=committed_emitter(tmp_path), discovery=discovery_offdomain, now=fixed_now,
+        catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path)), discovery=discovery_offdomain, now=fixed_now,
     )
     source = result.sources[0]
     assert source.status == vr.RESULT_VERIFICATION_INCONCLUSIVE
@@ -493,26 +486,45 @@ def test_non_durable_ingress_does_not_claim_processing():
         catalog=catalog, discovery=discovery_found, now=fixed_now,  # default RecordingIngress
     )
     assert result.sources[0].catalog_status == vr.LIFECYCLE_PENDING
-    update = result.candidate_updates[0]
-    assert update["persisted"] is False
-    assert update["committed"] is False
+    assert result.candidate_updates[0]["ingress_state"] == vr.INGRESS_RECORDED
 
 
-# 26 (blocker 1). A persisted-but-uncommitted candidate stays pending_ingress;
-#                 only a committed candidate is candidate_processing.
-def test_uncommitted_candidate_is_pending_committed_is_processing(tmp_path):
+# 26 (blocker 1). The full durability ladder: persisted_local and committed_local
+#                 (not on the workflow ref) stay pending; only a candidate
+#                 reachable from the workflow ref (remote default branch) is
+#                 candidate_processing.
+def test_durability_ladder_only_workflow_visible_processes(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     req = {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"}
 
-    uncommitted = resolve(req, catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path / "wt")), discovery=discovery_found, now=fixed_now)
-    assert (tmp_path / "wt" / "maintenance" / "candidates").exists()
-    assert uncommitted.sources[0].catalog_status == vr.LIFECYCLE_PENDING
-    assert uncommitted.candidate_updates[0]["persisted"] is True
-    assert uncommitted.candidate_updates[0]["committed"] is False
+    # persisted_local: written to the working tree, not committed.
+    persisted = resolve(req, catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path / "wt")), discovery=discovery_found, now=fixed_now)
+    assert persisted.candidate_updates[0]["ingress_state"] == vr.INGRESS_PERSISTED_LOCAL
+    assert persisted.sources[0].catalog_status == vr.LIFECYCLE_PENDING
 
-    committed = resolve(req, catalog, emitter=committed_emitter(tmp_path / "repo"), discovery=discovery_found, now=fixed_now)
-    assert committed.sources[0].catalog_status == vr.LIFECYCLE_PROCESSING
-    assert committed.candidate_updates[0]["committed"] is True
+    # committed_local: committed locally but origin/main does not have it yet.
+    repo = git_repo_with_remote(tmp_path)
+    local = resolve(req, catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(repo, commit=True, workflow_ref="origin/main")), discovery=discovery_found, now=fixed_now)
+    assert local.candidate_updates[0]["ingress_state"] == vr.INGRESS_COMMITTED_LOCAL
+    assert local.sources[0].catalog_status == vr.LIFECYCLE_PENDING
+
+    # Push to the workflow ref, then re-resolve: now workflow_visible -> processing.
+    _run("git", "-C", str(repo), "push", "-q", "origin", "main")
+    visible = resolve(req, catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(repo, workflow_ref="origin/main")), discovery=discovery_found, now=fixed_now)
+    assert visible.candidate_updates[0]["ingress_state"] == vr.INGRESS_WORKFLOW_VISIBLE
+    assert visible.sources[0].catalog_status == vr.LIFECYCLE_PROCESSING
+
+
+# 26b (blocker 1). A remote intake that has not confirmed visibility stays pending.
+def test_submitted_remote_without_visibility_is_pending():
+    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+    emitter = vr.SessionEmitter(vr.GitHubIntakeIngress(lambda record: {"record": record, "reference": "pr-9"}))
+    result = vr.resolve_vendor_sources(
+        {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
+        catalog=catalog, discovery=discovery_found, emitter=emitter, now=fixed_now,
+    )
+    assert result.candidate_updates[0]["ingress_state"] == vr.INGRESS_SUBMITTED_REMOTE
+    assert result.sources[0].catalog_status == vr.LIFECYCLE_PENDING
 
 
 # 27 (blocker 2). The default fetcher is the SSRF-safe one: it refuses
@@ -525,8 +537,7 @@ def test_default_fetcher_rejects_ssrf():
         assert result.error
 
 
-# 27b (blocker 2). The resolver builds the per-vendor fetcher via the factory,
-#                  bound to the vendor's official domain.
+# 27b (blocker 2). The resolver binds the safe fetcher to the official domain.
 def test_resolver_binds_safe_fetcher_to_official_domain():
     catalog = make_catalog(
         [vendor_row("examplecloud", "examplecloud.com")],
@@ -545,37 +556,70 @@ def test_resolver_binds_safe_fetcher_to_official_domain():
     assert calls == [["examplecloud.com"]]
 
 
-# 28 (blocker 4). Expanded discovery merges into the persisted candidate;
-#                 newly discovered sources are never silently discarded.
+# 28 (blocker 4). Expanded discovery merges into the persisted candidate; newly
+#                 discovered sources are never silently discarded (cross-session).
 def test_aggregate_candidate_merges_expanded_sources(tmp_path):
     catalog = make_catalog([vendor_row("stripe", "stripe.com")])
     ingress = vr.CatalogQueueIngress(tmp_path)
     base = {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "freshness_mode": "verify"}
-
-    # First request discovers only privacy_notice.
-    resolve({**base, "required_source_types": ["privacy_notice"]}, catalog,
-            emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
-    # A later request (separate session, same queue) discovers an extra type.
-    second = resolve({**base, "required_source_types": ["privacy_notice", "dpa"]}, catalog,
-                     emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
-
+    resolve({**base, "required_source_types": ["privacy_notice"]}, catalog, emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
+    second = resolve({**base, "required_source_types": ["privacy_notice", "dpa"]}, catalog, emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
     queue_file = next((tmp_path / "maintenance" / "candidates").glob("*.json"))
     record = json.loads(queue_file.read_text())
     types = sorted(s["source_type_candidate"] for s in record["source_candidates"])
-    assert types == ["dpa", "privacy_notice"]  # nothing discarded
-    # The response reflects the authoritative persisted (merged) record.
+    assert types == ["dpa", "privacy_notice"]
     assert candidate_record.validate_candidate(record) == []
     assert len(second.candidate_updates) == 1
 
 
-# 29 (blocker 4). The persisted record is authoritative across sessions.
-def test_persisted_record_is_authoritative(tmp_path):
-    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+# 29 (blocker 4). Concurrent writers to the same candidate lose no source under
+#                 the ingress lock.
+def test_concurrent_writers_no_lost_update(tmp_path):
     ingress = vr.CatalogQueueIngress(tmp_path)
-    req = {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"}
-    first = resolve(req, catalog, emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
-    again = resolve(req, catalog, emitter=vr.SessionEmitter(ingress), discovery=discovery_found, now=fixed_now)
-    cid_first = first.candidate_updates[0]["candidate_id"]
-    cid_again = again.candidate_updates[0]["candidate_id"]
-    assert cid_first == cid_again
-    assert again.candidate_updates[0]["persisted"] is True
+    n = 8
+    barrier = threading.Barrier(n)
+
+    def record_for(i):
+        url = f"https://vendorco.com/s{i}"
+        return candidate_record.build_candidate(
+            candidate_origin="catalog_discovery",
+            origin_reference="vendorco:vendorco.com",  # same id for all -> they merge
+            vendor_identity_candidate={"vendor_id_candidate": "vendorco", "official_domain": "vendorco.com"},
+            source_candidates=[{"candidate_url": url, "source_type_candidate": "privacy_notice", "access_state": "public_reachable", "source_role": "primary_assurance"}],
+            evidence_references=[{"candidate_url": url, "verification_result": "likely_vendor_published", "observed_at": FIXED_NOW}],
+            discovery_component="vendor_resolution:test", created_at=FIXED_NOW, eligibility_state="pending",
+        )
+
+    def worker(i):
+        barrier.wait()
+        ingress.enqueue(record_for(i))
+
+    threads = [threading.Thread(target=worker, args=(i,)) for i in range(n)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    queue_file = next((tmp_path / "maintenance" / "candidates").glob("*.json"))
+    record = json.loads(queue_file.read_text())
+    urls = {s["candidate_url"] for s in record["source_candidates"]}
+    assert urls == {f"https://vendorco.com/s{i}" for i in range(n)}
+
+
+# 30 (blocker 4). A corrupt persisted record is not merged into; the freshly built
+#                 record is used instead (fail closed).
+def test_corrupt_persisted_record_not_merged(tmp_path):
+    queue_dir = tmp_path / "maintenance" / "candidates"
+    queue_dir.mkdir(parents=True)
+    catalog = make_catalog([vendor_row("stripe", "stripe.com")])
+    # Pre-seed a corrupt file at the deterministic candidate id path.
+    candidate_id = candidate_record.compute_candidate_id("catalog_discovery", "newvendor:newvendor.com")
+    (queue_dir / f"{candidate_id}.json").write_text(json.dumps({"candidate_id": candidate_id, "garbage": True}))
+    result = resolve(
+        {"vendor": {"vendor_name": "NewVendor", "domain": "newvendor.com"}, "required_source_types": ["privacy_notice"], "freshness_mode": "verify"},
+        catalog, emitter=vr.SessionEmitter(vr.CatalogQueueIngress(tmp_path)), discovery=discovery_found, now=fixed_now,
+    )
+    record = json.loads((queue_dir / f"{candidate_id}.json").read_text())
+    assert candidate_record.validate_candidate(record) == []
+    assert "garbage" not in record
+    assert result.candidate_updates[0]["candidate_id"] == candidate_id

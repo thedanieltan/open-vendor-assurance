@@ -61,9 +61,8 @@ agents:
   catalogue record (true even when that record is stale or broken), else `none`.
 - **`catalog_status`** — the *durable* catalogue-lifecycle stage of the record
   backing the answer: `catalogued` (canonical), `candidate_processing` (eligible
-  **and committed to git** so a fresh-checkout workflow can see it),
-  `candidate_deferred`, `candidate_rejected`, or `pending_ingress` (written but
-  not yet committed), or `null`.
+  **and `workflow_visible`** — see the durability ladder below),
+  `candidate_deferred`, `candidate_rejected`, or `pending_ingress`, or `null`.
 - A deferred candidate's discovered URL is exposed only as an unverified
   `candidate_url`, never as the resolved `source_url`.
 
@@ -175,19 +174,44 @@ evidence rather than fragmenting into one candidate per source type (which would
 risk duplicate provisional PRs and identity collisions). Existing-vendor source
 replacements and coverage-gap fills remain independently keyed.
 
-Discovered/refreshed candidates are handed to a **durable, idempotent ingress**:
-`CatalogQueueIngress` writes the unified candidate record (atomically) to
-`maintenance/candidates/<candidate_id>.json`, which is exactly the queue
+Discovered/refreshed candidates are handed to a **durable, idempotent ingress**
+that writes the unified candidate record to
+`maintenance/candidates/<candidate_id>.json` — exactly the queue
 `autonomous-catalog-growth.yml` reads eligible candidates from on a fresh
-checkout. Because that workflow only sees *committed* files, the resolver reports
-`candidate_processing` only once the candidate is eligible **and committed to
-git** (`CatalogQueueIngress(..., commit=True)`, the CLI `--commit`, or an intake
-workflow that commits/pushes `maintenance/candidates`); a written-but-uncommitted
-file is `pending_ingress`. If a candidate already exists, the persisted record is
-authoritative and expanded evidence (new source candidates) is merged
-deterministically and re-evaluated, so newly discovered sources are never
-silently dropped. Read-only/preview callers can use the non-durable
-`RecordingIngress`, which never claims a candidate is processing.
+checkout.
+
+### Durability ladder
+
+Because the scheduled workflow checks out a ref (normally the remote default
+branch) and only sees what is committed *there*, the resolver reports an
+`ingress_state` and maps **only the top rung** to `candidate_processing`:
+
+| `ingress_state` | meaning | eligible candidate's `catalog_status` |
+| --- | --- | --- |
+| `recorded` | in-memory only (`RecordingIngress`) | `pending_ingress` |
+| `persisted_local` | written to the working tree | `pending_ingress` |
+| `committed_local` | committed to a local ref (not pushed/merged) | `pending_ingress` |
+| `submitted_remote` | submitted to a remote intake, visibility unconfirmed | `pending_ingress` |
+| `workflow_visible` | reachable from the workflow ref (e.g. `origin/main`) | `candidate_processing` |
+
+`CatalogQueueIngress(root, commit=…, workflow_ref="origin/main")` reaches
+`workflow_visible` by comparing the candidate's blob OID against
+`<workflow_ref>:<path>`, so a local-only commit never counts. `GitHubIntakeIngress`
+implements the cleaner path — submit the candidate to a remote intake (PR/API or a
+blob compare-and-swap onto the workflow branch) and report the acknowledged
+visibility. Until a candidate is `workflow_visible`, the caller sees
+`pending_ingress`.
+
+### Concurrency and merge
+
+The whole read → validate → merge → re-evaluate → write(-commit) transaction runs
+under an exclusive lock (`fcntl` file lock for the shared queue;
+`GitHubIntakeIngress` relies on the remote intake's serialisation / compare-and-swap
+for cross-host safety). The persisted record is validated before merge (a corrupt
+base is not trusted), and expanded evidence is merged by **normalised URL** so
+trailing-slash/case/tracking-param variants do not create duplicates and newly
+discovered sources are never silently dropped. Read-only/preview callers use the
+non-durable `RecordingIngress`, which never claims a candidate is processing.
 
 All fetches use the SSRF-safe `build_safe_verify_fetcher` bound to the vendor's
 official domain (DNS-pinned IP, private/loopback/reserved/mixed-answer rejection,

@@ -57,10 +57,16 @@ import json
 import os
 import subprocess
 import sys
+import threading
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Callable
+
+try:
+    import fcntl  # POSIX advisory file locking
+except ImportError:  # pragma: no cover - non-POSIX fallback
+    fcntl = None
 
 from tools.openva import candidate_record
 from tools.openva.indexes import ROOT
@@ -130,6 +136,23 @@ LIFECYCLE_PROCESSING = "candidate_processing"
 LIFECYCLE_DEFERRED = "candidate_deferred"
 LIFECYCLE_REJECTED = "candidate_rejected"
 LIFECYCLE_PENDING = "pending_ingress"
+
+# Durability ladder for an emitted candidate. Only WORKFLOW_VISIBLE — reachable
+# from the ref the autonomous-growth workflow checks out (the remote default
+# branch) — may map an eligible candidate to candidate_processing. A local commit
+# that was never pushed/merged is not visible to a fresh-checkout workflow.
+INGRESS_RECORDED = "recorded"            # in-memory only (non-durable)
+INGRESS_PERSISTED_LOCAL = "persisted_local"   # written to the working tree
+INGRESS_COMMITTED_LOCAL = "committed_local"   # committed to a local ref
+INGRESS_SUBMITTED_REMOTE = "submitted_remote"  # submitted to a remote intake
+INGRESS_WORKFLOW_VISIBLE = "workflow_visible"  # reachable from the workflow ref
+INGRESS_STATES = (
+    INGRESS_RECORDED,
+    INGRESS_PERSISTED_LOCAL,
+    INGRESS_COMMITTED_LOCAL,
+    INGRESS_SUBMITTED_REMOTE,
+    INGRESS_WORKFLOW_VISIBLE,
+)
 
 # --- freshness modes --------------------------------------------------------
 
@@ -288,25 +311,26 @@ class IngressOutcome:
     """Result of handing a candidate to the lifecycle ingress.
 
     ``record`` is the *authoritative* candidate after any merge with an existing
-    persisted record. ``persisted`` means written to disk; ``committed`` means
-    committed to git (and therefore visible to a fresh-checkout workflow).
+    record. ``ingress_state`` is the durability rung reached (see ``INGRESS_*``);
+    only ``workflow_visible`` (reachable from the ref the autonomous-growth
+    workflow checks out) lets an eligible candidate reach ``candidate_processing``.
     """
 
     record: dict[str, Any]
-    persisted: bool
-    committed: bool
+    ingress_state: str
     enqueued: bool  # newly created this call (vs reused/merged)
     reference: str | None
 
 
-def catalog_status_for(eligibility_state: str, *, committed: bool) -> str:
-    """Map evaluator eligibility + git-durability to a lifecycle stage.
+def catalog_status_for(eligibility_state: str, *, ingress_state: str) -> str:
+    """Map evaluator eligibility + durability rung to a lifecycle stage.
 
     A candidate only "processes toward the catalogue" once it is both eligible and
-    committed to git; eligible-but-uncommitted is ``pending_ingress``.
+    ``workflow_visible``; an eligible candidate that is merely recorded, persisted
+    locally, or committed/pushed to a non-workflow ref stays ``pending_ingress``.
     """
     if eligibility_state == candidate_record.ELIGIBLE_STATE:
-        return LIFECYCLE_PROCESSING if committed else LIFECYCLE_PENDING
+        return LIFECYCLE_PROCESSING if ingress_state == INGRESS_WORKFLOW_VISIBLE else LIFECYCLE_PENDING
     if eligibility_state.startswith("deferred"):
         return LIFECYCLE_DEFERRED
     if eligibility_state.startswith("rejected"):
@@ -317,24 +341,30 @@ def catalog_status_for(eligibility_state: str, *, committed: bool) -> str:
 def merge_candidate(persisted: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any]:
     """Deterministically merge expanded discovery into a persisted candidate.
 
-    The persisted record is authoritative for identity and origin. New source
-    candidates (and their evidence) are added by normalised URL; the union is
-    re-evaluated by the shared evaluator so eligibility reflects the complete set
-    rather than silently discarding newly discovered sources. Returns the
-    persisted record unchanged when nothing new is added.
+    The persisted record is validated first; if it is not schema-valid it is not
+    trusted and the freshly built ``incoming`` record is used instead (fail
+    closed). Otherwise the persisted record is authoritative for identity and
+    origin, and new source candidates (and their evidence) are added keyed by
+    *normalised* URL so trailing-slash/case/tracking-param variants do not slip in
+    as duplicates. The union is re-evaluated by the shared evaluator so eligibility
+    reflects the complete set rather than silently discarding newly discovered
+    sources. Returns the persisted record unchanged when nothing new is added.
     """
-    by_url = {s["candidate_url"]: s for s in persisted.get("source_candidates", [])}
+    if candidate_record.validate_candidate(persisted):
+        return incoming  # corrupt/invalid base: do not merge into it
+    by_url = {_canonical_url(s["candidate_url"]): s for s in persisted.get("source_candidates", [])}
     added = False
     for source in incoming.get("source_candidates", []):
-        if source["candidate_url"] not in by_url:
-            by_url[source["candidate_url"]] = source
+        key = _canonical_url(source["candidate_url"])
+        if key not in by_url:
+            by_url[key] = source
             added = True
     if not added:
         return persisted
     merged_sources = [by_url[key] for key in sorted(by_url)]
-    ev_by = {e["candidate_url"]: e for e in persisted.get("evidence_references", [])}
+    ev_by = {_canonical_url(e["candidate_url"]): e for e in persisted.get("evidence_references", [])}
     for evidence in incoming.get("evidence_references", []):
-        ev_by.setdefault(evidence["candidate_url"], evidence)
+        ev_by.setdefault(_canonical_url(evidence["candidate_url"]), evidence)
     merged_evidence = [ev_by[key] for key in sorted(ev_by)]
     is_new_vendor = persisted.get("candidate_origin") == "catalog_discovery"
     eligibility_state, reasons = candidate_record.evaluate_eligibility(
@@ -353,43 +383,120 @@ def merge_candidate(persisted: dict[str, Any], incoming: dict[str, Any]) -> dict
     )
 
 
+class _FileLock:
+    """Advisory exclusive lock guarding the whole read-merge-write transaction.
+
+    Protects concurrent writers sharing the queue filesystem (the demonstrated
+    lost-update race). Cross-host durability/concurrency is handled by the
+    workflow-ref / remote-intake path, not by this lock.
+    """
+
+    def __init__(self, path: Path) -> None:
+        self._path = path
+        self._handle = None
+
+    def __enter__(self) -> "_FileLock":
+        self._path.parent.mkdir(parents=True, exist_ok=True)
+        self._handle = self._path.open("a+")
+        if fcntl is not None:
+            fcntl.flock(self._handle.fileno(), fcntl.LOCK_EX)
+        return self
+
+    def __exit__(self, *exc: Any) -> None:
+        if self._handle is not None:
+            if fcntl is not None:
+                fcntl.flock(self._handle.fileno(), fcntl.LOCK_UN)
+            self._handle.close()
+            self._handle = None
+
+
 class CatalogQueueIngress:
     """Durable, idempotent ingress to the existing autonomous-growth queue.
 
     Writes the unified candidate record to ``maintenance/candidates/<id>.json``
     (atomically), the same directory ``autonomous-catalog-growth.yml`` reads
-    eligible candidates from on a fresh checkout. Because that workflow only sees
-    *committed* files, a freshly written working-tree file is reported as
-    uncommitted (``pending_ingress``); pass ``commit=True`` to commit it to git as
-    a real intake step, or commit/push it via an intake workflow. The persisted
-    record is authoritative and expanded evidence is merged deterministically.
-    Never writes canonical catalogue files (``data/vendors``) or ``main``.
+    eligible candidates from on a fresh checkout. The whole read-merge-write(-commit)
+    transaction runs under an exclusive file lock so concurrent writers cannot lose
+    updates. The persisted record is authoritative and expanded evidence is merged
+    deterministically by normalised URL.
+
+    Durability is reported honestly. Because the scheduled workflow checks out a
+    ref (normally the remote default branch) and only sees what is committed there,
+    a working-tree write is ``persisted_local`` and a local commit is
+    ``committed_local`` — neither is ``candidate_processing``. Only when the
+    candidate blob is reachable from ``workflow_ref`` (e.g. ``origin/main``) is it
+    ``workflow_visible``. Never writes canonical catalogue files or ``main``.
     """
 
-    def __init__(self, root: Path = ROOT, *, commit: bool = False) -> None:
+    def __init__(
+        self,
+        root: Path = ROOT,
+        *,
+        commit: bool = False,
+        workflow_ref: str | None = None,
+    ) -> None:
         self.root = Path(root)
         self.queue_dir = self.root / "maintenance" / "candidates"
         self.commit = commit
+        self.workflow_ref = workflow_ref
 
     def enqueue(self, record: dict[str, Any]) -> IngressOutcome:
         self.queue_dir.mkdir(parents=True, exist_ok=True)
         path = self.queue_dir / f"{record['candidate_id']}.json"
-        if path.exists():
-            persisted = json.loads(path.read_text(encoding="utf-8"))
-            authoritative = merge_candidate(persisted, record)
-            enqueued = False
-            if authoritative != persisted:
+        with _FileLock(self.queue_dir / ".lock"):
+            if path.exists():
+                persisted = json.loads(path.read_text(encoding="utf-8"))
+                authoritative = merge_candidate(persisted, record)
+                enqueued = False
+                if authoritative != persisted:
+                    _atomic_write_json(path, authoritative)
+            else:
+                authoritative = record
+                enqueued = True
                 _atomic_write_json(path, authoritative)
-        else:
-            authoritative = record
-            enqueued = True
-            _atomic_write_json(path, authoritative)
-        if self.commit:
-            _git_commit(path, self.root, f"Enqueue resolver candidate {record['candidate_id']}")
-        committed = _is_committed(path, self.root)
+            state = INGRESS_PERSISTED_LOCAL
+            if self.commit and _git_commit(path, self.root, f"Enqueue resolver candidate {record['candidate_id']}"):
+                state = INGRESS_COMMITTED_LOCAL
+            if self.workflow_ref and _workflow_visible(path, self.root, self.workflow_ref):
+                state = INGRESS_WORKFLOW_VISIBLE
         return IngressOutcome(
-            record=authoritative, persisted=True, committed=committed,
-            enqueued=enqueued, reference=str(path),
+            record=authoritative, ingress_state=state, enqueued=enqueued, reference=str(path),
+        )
+
+
+class GitHubIntakeIngress:
+    """GitHub-backed intake: submit the candidate to a remote intake and report
+    the acknowledged durability.
+
+    ``submit(record) -> ack`` performs the real remote operation (open/append an
+    intake PR, call an intake API, commit onto the workflow-visible branch using a
+    blob compare-and-swap, etc.) and returns an acknowledgement dict. The optional
+    ``verify_visible(record) -> bool`` confirms the candidate is reachable from the
+    workflow ref. The remote target is the durability + concurrency boundary
+    (serialised intake / compare-and-swap), so this ingress needs no local lock.
+    A failed submit fails closed to ``pending_ingress`` semantics for the caller.
+    """
+
+    def __init__(
+        self,
+        submit: Callable[[dict[str, Any]], dict[str, Any]],
+        *,
+        verify_visible: Callable[[dict[str, Any]], bool] | None = None,
+    ) -> None:
+        self._submit = submit
+        self._verify_visible = verify_visible
+
+    def enqueue(self, record: dict[str, Any]) -> IngressOutcome:
+        ack = self._submit(record)
+        authoritative = ack.get("record", record)
+        state = INGRESS_SUBMITTED_REMOTE
+        if self._verify_visible and self._verify_visible(authoritative):
+            state = INGRESS_WORKFLOW_VISIBLE
+        return IngressOutcome(
+            record=authoritative,
+            ingress_state=state,
+            enqueued=bool(ack.get("created", True)),
+            reference=ack.get("reference"),
         )
 
 
@@ -397,21 +504,26 @@ class RecordingIngress:
     """Non-durable ingress for read-only/preview contexts and tests.
 
     Records candidates in memory only (still merging expanded evidence into the
-    authoritative record). Because nothing is persisted or committed, it never
-    claims a candidate is processing toward the catalogue.
+    authoritative record, under a lock for thread safety). Because nothing is
+    persisted, it never claims a candidate is processing toward the catalogue.
     """
 
     def __init__(self) -> None:
         self.records: dict[str, dict[str, Any]] = {}
+        self._lock = threading.Lock()
 
     def enqueue(self, record: dict[str, Any]) -> IngressOutcome:
         candidate_id = record["candidate_id"]
-        if candidate_id in self.records:
-            authoritative = merge_candidate(self.records[candidate_id], record)
-            self.records[candidate_id] = authoritative
-            return IngressOutcome(authoritative, persisted=False, committed=False, enqueued=False, reference=None)
-        self.records[candidate_id] = record
-        return IngressOutcome(record, persisted=False, committed=False, enqueued=True, reference=None)
+        with self._lock:
+            if candidate_id in self.records:
+                authoritative = merge_candidate(self.records[candidate_id], record)
+                self.records[candidate_id] = authoritative
+                enqueued = False
+            else:
+                authoritative = record
+                self.records[candidate_id] = record
+                enqueued = True
+        return IngressOutcome(authoritative, ingress_state=INGRESS_RECORDED, enqueued=enqueued, reference=None)
 
 
 # --- request / result data --------------------------------------------------
@@ -537,10 +649,9 @@ class SessionEmitter:
                     "candidate_origin": result.record["candidate_origin"],
                     "eligibility_state": result.record["eligibility_state"],
                     "lifecycle_state": catalog_status_for(
-                        result.record["eligibility_state"], committed=result.outcome.committed
+                        result.record["eligibility_state"], ingress_state=result.outcome.ingress_state
                     ),
-                    "persisted": result.outcome.persisted,
-                    "committed": result.outcome.committed,
+                    "ingress_state": result.outcome.ingress_state,
                 }
             )
         return updates
@@ -865,7 +976,9 @@ def _refresh_via_replacement(
         on_domain=on_domain, now=now, is_new_vendor=False,
     )
     elig = emitted.record["eligibility_state"]
-    status, catalog_status, surface = _outcome_view(RESULT_CATALOG_REFRESHED, elig, emitted.outcome.committed)
+    status, catalog_status, surface = _outcome_view(
+        RESULT_CATALOG_REFRESHED, elig, emitted.outcome.ingress_state
+    )
     history = _make_history(
         vendor_id=vendor_id, source_type=previous.source_type, previous=previous,
         new_url=new_url, now=now,
@@ -924,16 +1037,16 @@ def _discovery_fallback(
 
 
 def _outcome_view(
-    success_status: str, eligibility_state: str, committed: bool
+    success_status: str, eligibility_state: str, ingress_state: str
 ) -> tuple[str, str, bool]:
-    """Map (success status, eligibility, git-durability) to the response.
+    """Map (success status, eligibility, durability rung) to the response.
 
     Returns ``(resolution_status, catalog_status, surface_source_url)``. Only an
     eligible candidate is surfaced as a usable result; deferred and rejected
     candidates return ``verification_inconclusive`` so agents are never told an
     unverified or rejected URL is the resolved source.
     """
-    catalog_status = catalog_status_for(eligibility_state, committed=committed)
+    catalog_status = catalog_status_for(eligibility_state, ingress_state=ingress_state)
     if eligibility_state == candidate_record.ELIGIBLE_STATE:
         return success_status, catalog_status, True
     return RESULT_VERIFICATION_INCONCLUSIVE, catalog_status, False
@@ -1238,7 +1351,7 @@ def _discovered_source(
 ) -> ResolvedSource:
     elig = emitted.record["eligibility_state"]
     status, catalog_status, surface = _outcome_view(
-        RESULT_NEWLY_DISCOVERED, elig, emitted.outcome.committed
+        RESULT_NEWLY_DISCOVERED, elig, emitted.outcome.ingress_state
     )
     return ResolvedSource(
         source_type=source_type,
@@ -1432,6 +1545,23 @@ def _is_committed(path: Path, root: Path) -> bool:
     return status.returncode == 0 and status.stdout.strip() == ""
 
 
+def _workflow_visible(path: Path, root: Path, workflow_ref: str) -> bool:
+    """True only when the candidate's exact content is reachable from the ref the
+    autonomous-growth workflow checks out (normally the remote default branch).
+
+    Compares the working-tree blob OID against the blob at ``<workflow_ref>:<rel>``
+    so a local-only commit (never pushed/merged) does not count as visible.
+    """
+    rel = _rel(path, root)
+    local = _git(root, "hash-object", "--", str(path))
+    if local.returncode != 0:
+        return False
+    ref_blob = _git(root, "rev-parse", "--verify", "--quiet", f"{workflow_ref}:{rel}")
+    if ref_blob.returncode != 0:
+        return False
+    return local.stdout.strip() == ref_blob.stdout.strip() and bool(local.stdout.strip())
+
+
 def _git_commit(path: Path, root: Path, message: str) -> bool:
     rel = _rel(path, root)
     if _git(root, "add", "--", rel).returncode != 0:
@@ -1475,7 +1605,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     resolve.add_argument(
         "--commit", action="store_true",
-        help="commit enqueued candidate files to git so the autonomous workflow can see them",
+        help="commit enqueued candidate files to a local git ref (committed_local)",
+    )
+    resolve.add_argument(
+        "--workflow-ref", default=None,
+        help="ref the autonomous-growth workflow checks out (e.g. origin/main); a "
+             "candidate is candidate_processing only when reachable from it",
     )
     args = parser.parse_args(argv)
 
@@ -1484,7 +1619,7 @@ def main(argv: list[str] | None = None) -> int:
         request.setdefault("freshness_mode", FRESHNESS_CACHED)
         catalog = ResolutionCatalog.from_indexes(args.root)
         ingress = (
-            CatalogQueueIngress(args.root, commit=args.commit)
+            CatalogQueueIngress(args.root, commit=args.commit, workflow_ref=args.workflow_ref)
             if args.enqueue else RecordingIngress()
         )
         result = resolve_vendor_sources(request, catalog=catalog, emitter=SessionEmitter(ingress))
