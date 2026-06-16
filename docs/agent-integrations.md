@@ -27,7 +27,7 @@ The hosted base URL is `<canonical_base_url>/public`, where
 `commit_sha` for reproducibility; `get_snapshot_metadata` and `verify_snapshot`
 expose and check snapshot identity.
 
-## Claude / MCP host configuration
+## MCP host configuration
 
 ```json
 {
@@ -44,12 +44,12 @@ Hosted mode: replace `args` with
 `["--base-url", "<canonical_base_url>/public"]` (the `canonical_base_url` from
 `config/publication.yaml`).
 
-## OpenAI tool usage
+## Structured tool adapters
 
-Expose the same tools through the OpenAI tools interface by forwarding each
-tool's name and JSON Schema (from `openva_mcp.server.TOOL_SPECS`) and dispatching
-calls to the server. Each result is returned verbatim, including its `snapshot`
-identity and `not_advice` flag.
+A host that does not consume MCP directly can expose the same operations through
+its structured-tool interface. Forward each tool name and JSON Schema from
+`openva_mcp.server.TOOL_SPECS`, dispatch calls to the server, and return each
+result verbatim so the `snapshot` identity and `not_advice` flag are preserved.
 
 ## Install
 
