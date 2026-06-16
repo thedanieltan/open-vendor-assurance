@@ -340,6 +340,28 @@ def test_write_discovery_outputs_appends_discovery_event_ledger(tmp_path):
     assert events[0]["discovery_event_id"]
 
 
+def test_discovery_fails_closed_for_authority_less_vendor_without_fetcher():
+    # No official_domains and no injected fetcher: the per-vendor safe default
+    # cannot anchor to any authority, so it fails closed (http_status None) and
+    # never issues a raw fetch. Every candidate observation is unreachable and
+    # no candidate is selected, proving an unanchored vendor triggers no network.
+    result = discover_for_vendor(
+        # A public_entrypoint so candidate URLs are still enumerated, but NO
+        # official_domains so the safe default fetcher has nothing to anchor to.
+        {"vendor_id": "x", "official_domains": [], "public_entrypoints": ["https://x.example"]},
+        root=Path("/tmp/nonexistent-openva-root"),
+        fetcher=None,  # -> safe_discovery_fetcher, fail-closed (no authority)
+        source_types=("dpa",),
+        max_urls_per_type=5,
+    )
+
+    assert result["observations"]  # candidate URLs were still enumerated
+    assert all(obs["verification_status"] == "unreachable" for obs in result["observations"])
+    assert all(obs["http_status"] is None for obs in result["observations"])
+    assert result["candidates"] == []
+    assert len(result["unavailable_sources"]) == 1
+
+
 def test_candidate_source_id_normalizes_equivalent_urls():
     first = candidate_source_id("example", "privacy_notice", "HTTPS://Example.TEST:443/privacy/?utm_source=x#top")
     second = candidate_source_id("example", "privacy_notice", "https://example.test/privacy")

@@ -34,7 +34,6 @@ from tools.openva.contribution_intake import (
 from tools.openva.source_verification import (
     FetchResult,
     classify_status,
-    fetch_url,
     normalize_text,
 )
 from tools.openva.submission_fields import (
@@ -285,13 +284,49 @@ def propose_canonical_confidence(
     return "likely_canonical"
 
 
+def _safe_submission_fetcher(
+    submission_domains: list[str], target_url: str
+) -> Callable[[str], FetchResult]:
+    """SSRF-safe fetcher for a submitted source, bound to the submission's own
+    authority: the submitted/matched vendor domains PLUS the target URL's own host
+    (so a legitimately off-vendor-domain source is still fetched, while a redirect
+    to any other host is refused). Computed before the fetch; fails closed (no
+    network) when no authority can be derived."""
+    # Normalise authority entries to match the same-authority gate, which strips
+    # a leading "www." from the URL host (source_authority.normalize_host) but
+    # NOT from the domain list — so a "www."-prefixed entry would be permanently
+    # unmatchable and refuse the submission's own URL. Strip it here too.
+    def _norm(value: str) -> str:
+        return (value or "").strip().lower().rstrip("/").rstrip(".").removeprefix("www.")
+
+    authority = list(
+        dict.fromkeys(
+            normalized
+            for normalized in ([_norm(domain) for domain in submission_domains] + [_norm(host_for(target_url))])
+            if normalized
+        )
+    )
+    if not authority:
+        return disabled_fetcher
+
+    from tools.openva.safe_verify import build_safe_verify_fetcher
+    from tools.openva.sitemap_discovery import load_bounds
+
+    bounds = load_bounds()
+    return build_safe_verify_fetcher(
+        authority,
+        max_redirects=bounds.max_redirects,
+        timeout_seconds=bounds.max_request_seconds,
+    )
+
+
 def verify_submission(
     issue_title: str,
     issue_body: str,
     issue_labels: list[str],
     *,
     issue_number: int,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
     root: Path = ROOT,
     observed_at: str,
 ) -> dict[str, Any]:
@@ -384,6 +419,11 @@ def verify_submission(
         )
     check("declared_gated", "not_declared")
 
+    # Default to an SSRF-safe fetcher bound to the submission's own authority,
+    # computed BEFORE the fetch. An injected fetcher (tests, or the explicit
+    # network-disabled fetcher) is honoured verbatim; raw fetch_url is never used.
+    if fetcher is None:
+        fetcher = _safe_submission_fetcher(vendor_domains(fields, vendor), target_url)
     result = fetcher(target_url)
     check("fetch", "completed" if result.http_status is not None else "failed", result.error or "")
 
@@ -614,7 +654,7 @@ def main() -> int:
         args.issue_body.read_text(encoding="utf-8"),
         labels,
         issue_number=args.issue_number,
-        fetcher=fetch_url if args.network_check else disabled_fetcher,
+        fetcher=None if args.network_check else disabled_fetcher,
         observed_at=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
     )
     write_outputs(report, args.output_dir, github_env=args.github_env)

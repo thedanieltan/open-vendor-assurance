@@ -407,12 +407,91 @@ def sample_hashes(result: FetchResult) -> dict[str, str]:
     }
 
 
+def _official_domains_for_source_path(path: Path, root: Path = ROOT) -> list[str]:
+    """Read ``official_domains`` from the source record's vendor.yaml.
+
+    Source records live at ``data/vendors/<vendor_id>/<sources|artifacts>/<id>.yaml``
+    so the vendor record is two levels up. Relative paths are resolved under
+    ``root``. Returns an empty list (fail closed) when the vendor record is
+    absent, unreadable, or carries no official domains.
+    """
+    base = path if Path(path).is_absolute() else (root / path)
+    vendor_yaml = base.parent.parent / "vendor.yaml"
+    try:
+        record = load_yaml(vendor_yaml)
+    except (OSError, ValueError, yaml.YAMLError):
+        # Missing, unreadable, or non-mapping vendor.yaml (load_yaml raises
+        # ValueError on a non-mapping top level): fail closed with no authority.
+        return []
+    if not isinstance(record, dict):
+        return []
+    domains = record.get("official_domains") or []
+    if isinstance(domains, str):
+        domains = [domains]
+    return [str(domain) for domain in domains if domain]
+
+
+def safe_fetcher_for_domains(official_domains: list[str]) -> Callable[[str], FetchResult]:
+    """SSRF-safe verification fetcher bound to a known set of official domains.
+
+    Returns a DNS-pinned, same-authority, byte- and redirect-bounded fetcher built
+    over ``build_safe_verify_fetcher``. When the authority set is empty it fails
+    closed with a ``FetchResult(http_status=None)`` rather than ever touching the
+    raw transport, so an unanchored target classifies as ``unreachable`` /
+    requires_review. An empty list is never passed to ``build_safe_verify_fetcher``
+    (that would coerce same-authority to None and disable the gate).
+    """
+    domains = [str(domain) for domain in (official_domains or []) if domain]
+    if not domains:
+        def _unresolved(url: str) -> FetchResult:
+            return FetchResult(
+                requested_url=url,
+                final_url=url,
+                http_status=None,
+                content_type=None,
+                content_length=None,
+                etag=None,
+                last_modified=None,
+                body_sample=b"",
+                error="authority_unresolved:no_official_domains",
+            )
+
+        return _unresolved
+
+    # Lazy imports: safe_verify imports this module, and load_bounds lives in the
+    # sitemap lane; importing them here avoids an import cycle at module load.
+    from tools.openva.safe_verify import build_safe_verify_fetcher
+    from tools.openva.sitemap_discovery import load_bounds
+
+    bounds = load_bounds()
+    return build_safe_verify_fetcher(
+        domains,
+        max_redirects=bounds.max_redirects,
+        timeout_seconds=bounds.max_request_seconds,
+    )
+
+
+def safe_fetcher_for_source_path(path: Path, root: Path = ROOT) -> Callable[[str], FetchResult]:
+    """Default verification fetcher bound to the source's own vendor authority.
+
+    Resolves official_domains from the source record's path-adjacent vendor.yaml
+    and delegates to :func:`safe_fetcher_for_domains` (so an unanchored source
+    fails closed rather than touching the raw transport).
+    """
+    return safe_fetcher_for_domains(_official_domains_for_source_path(path, root))
+
+
 def verify_source(
     source: dict[str, Any],
     path: Path,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
     root: Path = ROOT,
 ) -> dict[str, Any]:
+    # Default to an SSRF-safe fetcher bound to the source's own vendor authority.
+    # An explicitly injected fetcher (tests, or callers that have already resolved
+    # authority) is used verbatim; the raw fetch_url is never the default.
+    if fetcher is None:
+        fetcher = safe_fetcher_for_source_path(path, root)
     url = str(source.get("source_url") or "")
     result = fetcher(url)
     text = normalize_text(result.body_sample, result.content_type)
@@ -446,7 +525,7 @@ def verify_source(
 
 def build_source_verification_report(
     root: Path = ROOT,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
     limit: int | None = None,
     shard_count: int | None = None,
     shard_index: int | None = None,

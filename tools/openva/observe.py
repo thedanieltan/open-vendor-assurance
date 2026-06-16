@@ -148,6 +148,12 @@ def select_sources(*, pilot_only: bool) -> list[dict[str, Any]]:
 
 
 def fetch_public(url: str) -> tuple[str, int | None, str | None, bytes]:
+    # SSRF carve-out (tracked): this lane fetches COMMITTED catalog source_urls on
+    # a schedule (observe-report.yml) — the lowest attacker-control surface — and
+    # is the one live fetch not yet routed through the safe boundary, pending a
+    # dedicated observation-lane change. See docs/security/ssrf-fetch-boundary.md.
+    # The static validate_url_safety pre-check below rejects IP-literal and
+    # malformed targets but does not pin DNS for hostnames.
     if validate_url_safety(url):
         return "quarantined", None, None, b""
 

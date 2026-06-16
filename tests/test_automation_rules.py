@@ -166,6 +166,41 @@ def test_source_accessibility_passes_public_web_metadata_source(tmp_path, monkey
     assert result.escalations == []
 
 
+def test_source_accessibility_off_authority_url_escalates_via_safe_default(tmp_path, monkeypatch):
+    # No injected fetcher: source_accessibility builds the per-record SSRF-safe
+    # default bound to the changed record's own vendor authority. The source_url
+    # points off the vendor's official domain (example.com), so the safe default
+    # rejects it as off_authority (http_status None) with NO network, and the
+    # record is escalated as unreachable.
+    vendor_dir = tmp_path / "data/vendors/example"
+    (vendor_dir / "sources").mkdir(parents=True)
+    (vendor_dir / "vendor.yaml").write_text(
+        "vendor_id: example\nofficial_domains: ['example.com']\n",
+        encoding="utf-8",
+    )
+    source = {
+        "schema_version": "0.1.0",
+        "source_id": "example-dpa",
+        "vendor_id": "example",
+        "source_type": "dpa",
+        "source_url": "https://evil.test/x",
+    }
+    (vendor_dir / "sources" / "example-dpa.yaml").write_text(yaml.safe_dump(source), encoding="utf-8")
+    config = tmp_path / "config"
+    config.mkdir()
+    (config / "domain-blocklist.yaml").write_text("blocked_domain_classes: {}\n", encoding="utf-8")
+
+    monkeypatch.setattr(automation_rules, "ROOT", tmp_path)
+
+    result = automation_rules.source_accessibility(
+        ["data/vendors/example/sources/example-dpa.yaml"],
+    )  # fetcher=None -> per-record safe default
+
+    assert result.score == 0
+    assert any("unreachable: off_authority" in item for item in result.escalations)
+    assert result.details["urls_checked"] == 1
+
+
 def test_entity_mention_exact_match_suggests_agent_provenance(tmp_path, monkeypatch):
     mention = {
         "schema_version": "0.1.0",
