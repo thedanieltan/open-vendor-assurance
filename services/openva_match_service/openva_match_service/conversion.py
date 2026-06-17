@@ -30,7 +30,9 @@ BOOLEAN_FIELDS = {
 }
 
 
-def match_csv_bytes(csv_bytes: bytes, matcher_index: MatcherIndex) -> list[dict[str, Any]]:
+def match_csv_bytes(
+    csv_bytes: bytes, matcher_index: MatcherIndex, *, max_rows: int | None = None
+) -> list[dict[str, Any]]:
     try:
         text = csv_bytes.decode("utf-8-sig")
     except UnicodeDecodeError as exc:
@@ -43,6 +45,8 @@ def match_csv_bytes(csv_bytes: bytes, matcher_index: MatcherIndex) -> list[dict[
 
     rows: list[dict[str, Any]] = []
     for input_row in reader:
+        if max_rows is not None and len(rows) >= max_rows:
+            raise ValueError(f"inventory_csv exceeds the maximum of {max_rows} rows")
         enriched = {column: "" for column in ENRICHMENT_COLUMNS}
         enriched.update({key: value or "" for key, value in input_row.items()})
         enriched.update(matcher_index.enrich_row({key: value or "" for key, value in input_row.items()}))

@@ -41,6 +41,26 @@ docker run --rm \
 
 `OPENVA_SERVICE_PORT` is optional and defaults to `8000`. If you change it, publish the same container port in your runtime configuration.
 
+## Health probes
+
+The service exposes unauthenticated probes for orchestrators:
+
+- `GET /healthz` — liveness; returns `200 {"status": "ok"}` whenever the process is up.
+- `GET /readyz` — readiness; returns `200 {"status": "ready"}` once the pack/matcher state is loaded, and `503 {"status": "not_ready"}` otherwise.
+
+## Configuration limits
+
+Optional environment variables bound request size and shape (defaults shown). An invalid (non-integer or non-positive) value fails service startup.
+
+| Variable | Default | Effect |
+| --- | --- | --- |
+| `OPENVA_MAX_UPLOAD_BYTES` | `5000000` | `POST /match` rejects an upload larger than this with `413` (the in-memory read is bounded). |
+| `OPENVA_MAX_ROWS` | `500` | `POST /match` rejects an inventory with more rows than this with `400`. |
+| `OPENVA_MAX_ACTIVE_JOBS` | `3` | Read-and-stored scaffolding for the future async resolver; not enforced while the service is synchronous. |
+| `OPENVA_JOB_TTL_HOURS` | `24` | Read-and-stored scaffolding for the future async resolver; not enforced while the service is synchronous. |
+
+The service remains synchronous with no persistence and no network egress in this version.
+
 ## Smoke Tests
 
 From the repository root, with the container running:
