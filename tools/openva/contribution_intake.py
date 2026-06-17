@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 
 import yaml
 
-from tools.openva.source_verification import FetchResult, fetch_url, verify_source
+from tools.openva.source_verification import FetchResult, verify_source
 from tools.openva.url_safety import validate_url_safety
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -353,13 +353,49 @@ def network_check_source(
     }
 
 
+def _safe_intake_fetcher(vendor: Any) -> Callable[[str], FetchResult]:
+    """SSRF-safe network-check fetcher bound to the matched vendor's official
+    domains. The fetched URL is already proven on the vendor's authority by
+    ``is_authoritative_url`` before this runs, so binding to official_domains
+    closes the DNS-rebind / off-authority-redirect gap of the raw transport.
+    Fails closed (no raw fetch) when the vendor has no official domain."""
+    official_domains: list[str] = []
+    if vendor is not None:
+        official_domains = [str(domain) for domain in (vendor.record.get("official_domains") or []) if domain]
+    if not official_domains:
+        def _unresolved(url: str) -> FetchResult:
+            return FetchResult(
+                requested_url=url,
+                final_url=url,
+                http_status=None,
+                content_type=None,
+                content_length=None,
+                etag=None,
+                last_modified=None,
+                body_sample=b"",
+                error="authority_unresolved:no_official_domains",
+            )
+
+        return _unresolved
+
+    from tools.openva.safe_verify import build_safe_verify_fetcher
+    from tools.openva.sitemap_discovery import load_bounds
+
+    bounds = load_bounds()
+    return build_safe_verify_fetcher(
+        official_domains,
+        max_redirects=bounds.max_redirects,
+        timeout_seconds=bounds.max_request_seconds,
+    )
+
+
 def intake_decision(
     issue_body: str,
     *,
     issue_number: int,
     root: Path = ROOT,
     network_check: bool = False,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     generated_at = generated_at or datetime.now(UTC).isoformat().replace("+00:00", "Z")
@@ -476,7 +512,8 @@ def intake_decision(
                     url_checks["messages"].append("existing source type update requires correction request")
                     reasons.append("existing_source_update_requires_human_review")
                 if network_check and url_checks["passed"]:
-                    verification = network_check_source(source, fetcher, root)
+                    effective_fetcher = fetcher if fetcher is not None else _safe_intake_fetcher(vendor)
+                    verification = network_check_source(source, effective_fetcher, root)
                     url_checks["network_verification"] = verification
                     if not verification["ok"]:
                         url_checks["passed"] = False

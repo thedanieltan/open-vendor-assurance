@@ -186,6 +186,45 @@ def test_credentials_in_url_are_refused():
 # --- redirect negatives ------------------------------------------------------
 
 
+# --- same-authority floor (single-element gate) ------------------------------
+
+
+def test_single_element_same_authority_refuses_off_host_fetch_before_any_network():
+    # A one-element authority list keeps the gate ON: a fetch to a DIFFERENT host
+    # is refused as off_authority BEFORE any DNS or connection. No transport
+    # entries are needed precisely because the authority check precedes them.
+    t = FakeTransport(dns={})
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t, same_authority=["vendor.example"]).fetch("https://other.example/robots.txt")
+    assert "off_authority" in str(exc.value)
+    assert t.resolved == []  # authority gate fired before resolution
+    assert t.connected == []
+
+
+def test_single_element_same_authority_refuses_redirect_to_other_host():
+    # The floor is re-enforced on every hop: a 302 whose Location points to a
+    # different host is refused as off_authority on the redirect hop.
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={
+            "https://vendor.example/x": _Resp(302, {"Location": "https://other.example/y"}),
+        },
+    )
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t, same_authority=["vendor.example"]).fetch("https://vendor.example/x")
+    assert "off_authority" in str(exc.value)
+    assert [u for u, _ in t.connected] == ["https://vendor.example/x"]  # only the first hop opened
+
+
+def test_empty_same_authority_list_coerces_to_none_disabling_the_gate():
+    # TRAP: an empty list would reject every URL, which is never what a caller
+    # means, so SafeFetcher coerces [] -> None. This documents WHY call sites
+    # must bind a real authority and never pass [] (which would silently DISABLE
+    # the same-authority floor, not lock it shut).
+    fetcher = SafeFetcher(FakeTransport(dns={}), same_authority_domains=[])
+    assert fetcher.same_authority_domains is None
+
+
 def test_robots_redirect_off_authority_is_refused():
     t = FakeTransport(
         dns={"vendor.example": ["93.184.216.34"], "evil.test": ["198.51.100.7"]},
@@ -352,6 +391,31 @@ def test_redirects_consume_the_shared_overall_deadline():
     assert "request_deadline_exceeded" in str(exc.value)
     # Hops a and b were fetched; c was never connected (deadline tripped first).
     assert [u for u, _ in t.connected] == ["https://vendor.example/a", "https://vendor.example/b"]
+
+
+def test_redirect_hop_trips_the_monotonic_whole_exchange_deadline():
+    # A single redirect hop: the first hop fetches within budget, but aggregate
+    # elapsed time crosses the shared monotonic deadline before the SECOND hop's
+    # body is read, so it fails closed with request_deadline_exceeded rather than
+    # resetting the budget per hop. Same-authority so the redirect itself is fine;
+    # only the deadline ends the exchange.
+    t = FakeTransport(
+        dns={"vendor.example": ["93.184.216.34"]},
+        responses={
+            "https://vendor.example/a": _Resp(301, {"Location": "https://vendor.example/b"}),
+            "https://vendor.example/b": _Resp(200, body=b"final"),
+        },
+    )
+    # Hop a: deadline-init, loop-top, resolve, after-resolve, after-open all at 0.
+    # Hop b: loop-top check jumps past the 10s deadline (elapsed 100s).
+    clock = _Clock([0, 0, 0, 0, 0, 100])
+    with pytest.raises(SafeFetchError) as exc:
+        _fetcher(t, same_authority=["vendor.example"], timeout_seconds=10, clock=clock).fetch(
+            "https://vendor.example/a"
+        )
+    assert "request_deadline_exceeded" in str(exc.value)
+    # Hop a was connected; hop b never was (the shared deadline tripped first).
+    assert [u for u, _ in t.connected] == ["https://vendor.example/a"]
 
 
 def test_hung_resolver_is_bounded_by_the_deadline():

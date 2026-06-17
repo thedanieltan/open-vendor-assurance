@@ -14,7 +14,6 @@ from tools.openva.source_verification import (
     FetchResult,
     ROOT,
     classify_status,
-    fetch_url,
     normalize_text,
     semantic_match,
     title_from_sample,
@@ -166,11 +165,42 @@ def source_type_role(source_type: str, role: str) -> bool:
     return bool(SOURCE_TYPE_REGISTRY.get(source_type, {}).get(role, False))
 
 
-def fetcher_with_timeout(timeout: float) -> Callable[[str], FetchResult]:
-    def fetch(url: str) -> FetchResult:
-        return fetch_url(url, timeout=timeout)
+def safe_discovery_fetcher(
+    vendor: dict[str, Any], fetch_timeout: float | None = None
+) -> Callable[[str], FetchResult]:
+    """SSRF-safe discovery fetcher bound to the vendor's own official domains.
 
-    return fetch
+    Candidate-URL preflights are fetched over the same DNS-pinned, same-authority,
+    bounded boundary as the sitemap lane. Fails closed (``FetchResult`` with
+    ``http_status=None``) when the vendor has no official domain to anchor to, so
+    discovery never issues a raw, unbounded fetch for an unanchored vendor.
+    """
+    official_domains = [str(domain) for domain in (vendor.get("official_domains") or []) if domain]
+    if not official_domains:
+        def _unresolved(url: str) -> FetchResult:
+            return FetchResult(
+                requested_url=url,
+                final_url=url,
+                http_status=None,
+                content_type=None,
+                content_length=None,
+                etag=None,
+                last_modified=None,
+                body_sample=b"",
+                error="authority_unresolved:no_official_domains",
+            )
+
+        return _unresolved
+
+    from tools.openva.safe_verify import build_safe_verify_fetcher
+    from tools.openva.sitemap_discovery import load_bounds
+
+    bounds = load_bounds()
+    return build_safe_verify_fetcher(
+        official_domains,
+        max_redirects=bounds.max_redirects,
+        timeout_seconds=fetch_timeout if fetch_timeout is not None else bounds.max_request_seconds,
+    )
 
 
 def write_yaml(path: Path, data: dict[str, Any]) -> None:
@@ -473,10 +503,15 @@ def discovery_event(
 def discover_for_vendor(
     vendor: dict[str, Any],
     root: Path = ROOT,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
     source_types: tuple[str, ...] = DEFAULT_SOURCE_TYPES,
     max_urls_per_type: int = 20,
+    fetch_timeout: float | None = None,
 ) -> dict[str, Any]:
+    # Default to an SSRF-safe fetcher bound to this vendor's own authority; an
+    # injected fetcher (tests) is honoured verbatim. Raw fetch_url is never default.
+    if fetcher is None:
+        fetcher = safe_discovery_fetcher(vendor, fetch_timeout)
     vendor_id = str(vendor["vendor_id"])
     existing_types = canonical_source_types_for_vendor(vendor_id, root) | not_due_unavailable_source_types(vendor_id, root)
     discovered_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
@@ -688,11 +723,12 @@ def candidate_to_vendor(candidate: dict[str, Any]) -> dict[str, Any]:
 
 def build_discovery_report(
     root: Path = ROOT,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
     vendor_limit: int | None = None,
     write: bool = False,
     source_types: tuple[str, ...] = DEFAULT_SOURCE_TYPES,
     max_urls_per_type: int = 20,
+    fetch_timeout: float | None = None,
 ) -> dict[str, Any]:
     paths = vendor_paths(root)
     if vendor_limit is not None:
@@ -707,6 +743,7 @@ def build_discovery_report(
             fetcher=fetcher,
             source_types=source_types,
             max_urls_per_type=max_urls_per_type,
+            fetch_timeout=fetch_timeout,
         )
         if write:
             write_discovery_outputs(result, root=root)
@@ -736,10 +773,11 @@ def build_discovery_report(
 def build_vendor_candidate_discovery_report(
     vendor_candidate_report: dict[str, Any],
     root: Path = ROOT,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
     vendor_limit: int | None = None,
     source_types: tuple[str, ...] = DEFAULT_SOURCE_TYPES,
     max_urls_per_type: int = 20,
+    fetch_timeout: float | None = None,
 ) -> dict[str, Any]:
     if vendor_candidate_report.get("report_type") != "vendor_candidate_discovery_report":
         raise ValueError("expected vendor_candidate_discovery_report")
@@ -756,6 +794,7 @@ def build_vendor_candidate_discovery_report(
             fetcher=fetcher,
             source_types=source_types,
             max_urls_per_type=max_urls_per_type,
+            fetch_timeout=fetch_timeout,
         )
         result.update(
             {
@@ -813,7 +852,7 @@ def main() -> int:
         report = build_vendor_candidate_discovery_report(
             load_json(args.vendor_candidates),
             vendor_limit=args.vendor_limit,
-            fetcher=fetcher_with_timeout(args.fetch_timeout),
+            fetch_timeout=args.fetch_timeout,
             source_types=parse_source_types(args.source_types),
             max_urls_per_type=args.max_urls_per_type,
         )
@@ -821,7 +860,7 @@ def main() -> int:
         report = build_discovery_report(
             vendor_limit=args.vendor_limit,
             write=args.write,
-            fetcher=fetcher_with_timeout(args.fetch_timeout),
+            fetch_timeout=args.fetch_timeout,
             source_types=parse_source_types(args.source_types),
             max_urls_per_type=args.max_urls_per_type,
         )

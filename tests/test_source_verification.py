@@ -1,3 +1,4 @@
+import socket
 from pathlib import Path
 
 import pytest
@@ -316,6 +317,63 @@ def test_report_is_network_aware_and_non_mutating(tmp_path):
     }
     assert report["summary"]["source_count"] == 1
     assert report["summary"]["sources_requiring_review"] == 0
+
+
+# --- SSRF-safe default fetcher (no injected fetcher) -------------------------
+# verify_source with fetcher=None must NEVER fall back to a raw fetch. It binds
+# to the source's vendor authority (path.parent.parent/vendor.yaml). These lock
+# the fail-closed and authority-binding properties of that default.
+
+
+def _ban_sockets(monkeypatch):
+    def _no_socket(*args, **kwargs):
+        raise AssertionError("no socket may be opened by the fail-closed default fetcher")
+
+    monkeypatch.setattr(socket, "socket", _no_socket)
+    monkeypatch.setattr(socket, "create_connection", _no_socket)
+    monkeypatch.setattr(socket, "getaddrinfo", _no_socket)
+
+
+def test_default_fetcher_fails_closed_when_vendor_yaml_absent(tmp_path, monkeypatch):
+    # No vendor.yaml at path.parent.parent: the default fetcher cannot resolve
+    # an authority, so it fails closed (http_status None, authority_unresolved)
+    # and performs NO network — verify_source classifies the source unreachable /
+    # requires_review without ever constructing a transport.
+    _ban_sockets(monkeypatch)
+    source_dir = tmp_path / "data/vendors/example/sources"
+    source_dir.mkdir(parents=True)
+    source_path = source_dir / "example-dpa.yaml"  # path exists; vendor.yaml does NOT
+    source = source_record("dpa", "https://example.com/legal/dpa")
+
+    result = verify_source(source, source_path, root=tmp_path)  # fetcher=None -> safe default
+
+    assert result["http_status"] is None
+    assert result["fetch_error"].startswith("authority_unresolved")
+    assert result["verification_status"] == "unreachable"
+    assert result["requires_review"] is True
+
+
+def test_default_fetcher_authority_is_bound_from_the_source_path(tmp_path):
+    # vendor.yaml present with official_domains [example.com], but the source_url
+    # points off-authority (evil.test). The path-derived default fetcher rejects
+    # it as http_status None (off_authority) — and the authority check precedes
+    # any DNS, so this needs no network. Proves authority comes from the PATH's
+    # vendor record, not the URL.
+    vendor_dir = tmp_path / "data/vendors/example"
+    (vendor_dir / "sources").mkdir(parents=True)
+    (vendor_dir / "vendor.yaml").write_text(
+        "vendor_id: example\nofficial_domains: ['example.com']\n",
+        encoding="utf-8",
+    )
+    source_path = vendor_dir / "sources" / "example-dpa.yaml"
+    source = source_record("dpa", "https://evil.test/x")
+
+    result = verify_source(source, source_path, root=tmp_path)  # fetcher=None -> safe default
+
+    assert result["http_status"] is None
+    assert result["fetch_error"] == "off_authority"
+    assert result["verification_status"] == "unreachable"
+    assert result["requires_review"] is True
 
 
 def test_select_source_shard_is_stable_and_non_overlapping():

@@ -17,7 +17,12 @@ import yaml
 from tools.openva.indexes import check_generated_current, records_for
 from tools.openva.pack import verify_pack_integrity
 from tools.openva.paths import normalize_repo_path, relative_repo_path
-from tools.openva.source_verification import FetchResult, fetch_url, verify_source
+from tools.openva.source_verification import (
+    FetchResult,
+    safe_fetcher_for_domains,
+    safe_fetcher_for_source_path,
+    verify_source,
+)
 from tools.openva.validate import (
     SCHEMA_MAP,
     load_json,
@@ -309,7 +314,7 @@ def retry_fetch(url: str, fetcher: Callable[[str], FetchResult], *, retry_429: b
 def source_accessibility(
     changed_files: list[str],
     *,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
     retry_429: bool = False,
 ) -> ValidatorResult:
     warnings: list[str] = []
@@ -335,7 +340,11 @@ def source_accessibility(
             "source_url": url,
             "source_type": item.get("source_type") or item.get("artifact_type"),
         }
-        fetched = retry_fetch(url, fetcher, retry_429=retry_429)
+        # A PR-controlled source_url is fetched over the SSRF-safe boundary bound
+        # to the changed record's own vendor authority (fail-closed when it cannot
+        # be resolved); an explicitly injected fetcher (tests) is honoured verbatim.
+        record_fetcher = fetcher if fetcher is not None else safe_fetcher_for_source_path(path, ROOT)
+        fetched = retry_fetch(url, record_fetcher, retry_429=retry_429)
         status = verify_source(source_for_check, path, fetcher=lambda _url: fetched)["verification_status"]
 
         if fetched.http_status == 429:
@@ -681,7 +690,7 @@ def domain_has_public_dns(domain: str) -> bool:
 def new_vendor_rules(
     changed_files: list[str],
     *,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
     check_dns: bool = True,
 ) -> ValidatorResult:
     warnings: list[str] = []
@@ -734,9 +743,12 @@ def new_vendor_rules(
         entrypoints = vendor.get("public_entrypoints", []) or []
         if not entrypoints:
             escalations.append(f"{rel_path}: at least one public_entrypoint is required")
+        # SSRF-safe fetch bound to this vendor's own official domains (fail-closed
+        # if none); an injected fetcher (tests) is honoured verbatim.
+        vendor_fetcher = fetcher if fetcher is not None else safe_fetcher_for_domains(domains)
         reachable = False
         for entrypoint in entrypoints:
-            status, http_status = public_url_status(str(entrypoint), fetcher)
+            status, http_status = public_url_status(str(entrypoint), vendor_fetcher)
             if status == "reachable" and http_status in {200, 301, 302} | set(range(200, 400)):
                 reachable = True
             if http_status == 403 or status == "bot_protected":
@@ -823,7 +835,7 @@ def entity_resolution_rules(changed_files: list[str]) -> ValidatorResult:
 def legal_entity_promotion_rules(
     changed_files: list[str],
     *,
-    fetcher: Callable[[str], FetchResult] = fetch_url,
+    fetcher: Callable[[str], FetchResult] | None = None,
 ) -> ValidatorResult:
     escalations: list[str] = []
     warnings: list[str] = []
@@ -855,8 +867,13 @@ def legal_entity_promotion_rules(
         ]
         if not authoritative:
             escalations.append(f"{rel_path}: public registry or public authority verification source required")
+        # SSRF-safe fetch bound to the resolved vendor's official domains
+        # (fail-closed if the vendor is unresolved or has none).
+        vendor_fetcher = fetcher if fetcher is not None else safe_fetcher_for_domains(
+            (vendor or {}).get("official_domains") or []
+        )
         for source in authoritative[:1]:
-            status, http_status = public_url_status(str(source.get("source_url") or ""), fetcher)
+            status, http_status = public_url_status(str(source.get("source_url") or ""), vendor_fetcher)
             if status != "reachable" or http_status != 200:
                 escalations.append(f"{rel_path}: verification source {source.get('source_id')} is not HTTP 200")
         for event in entity.get("lifecycle_events", []) or []:
