@@ -1,0 +1,186 @@
+name: catalog-growth-promotion-bridge
+
+# WP-OPENVA-ZERO-INSTALL-DISTRIBUTION-01 PR2: scheduled-discovery -> strict-growth
+# promotion handoff (closes the issue formerly tracked as #274).
+#
+# After a successful scheduled catalog-growth-discovery run on main, this bridge
+# reads the strict-growth promotion plan emitted by that run and, only when the plan
+# contains eligible promotion actions and no global hold / open growth PR blocks it,
+# dispatches the SINGLE existing mutation workflow (candidate-promotion-pr.yml) in
+# strict-growth-latest mode.
+#
+# This bridge NEVER writes catalog state, opens a PR, evaluates candidate eligibility,
+# or implements a second mutation path. The discovery artifact is a dispatch SIGNAL,
+# not final merge authority: the dispatched promotion workflow regenerates and
+# re-validates current evidence and remains the sole catalog write authority, gated by
+# its own queue, cadence, stale-evidence, source-preflight, and strict-growth automerge
+# checks. The existing strict-growth lane stays authoritative.
+#
+# Operational metadata only. Not legal, compliance, procurement, security, KYC, AML,
+# audit, or vendor-risk advice.
+
+on:
+  workflow_run:
+    workflows: ["catalog-growth-discovery"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      discovery_run_id:
+        description: "Exact catalog-growth-discovery run id to bridge from"
+        required: true
+        type: string
+
+permissions:
+  actions: write
+  contents: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: catalog-growth-promotion-bridge
+  cancel-in-progress: false
+
+jobs:
+  catalog-growth-promotion-bridge:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:
+      MUTATION_WORKFLOW: candidate-promotion-pr.yml
+      DISCOVERY_WORKFLOW: catalog-growth-discovery
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Resolve discovery run id
+        id: resolve
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RUN_ID="${{ inputs.discovery_run_id }}"
+          else
+            RUN_ID="${{ github.event.workflow_run.id }}"
+          fi
+          case "$RUN_ID" in *[!0-9]*) echo "discovery_run_id must be numeric" >&2; exit 1 ;; esac
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Validate discovery run authority
+        id: run_meta
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.resolve.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          META=$(gh run view "$RUN_ID" --json conclusion,headBranch,headSha,workflowName)
+          WORKFLOW_NAME=$(printf '%s' "$META" | jq -r '.workflowName // ""')
+          CONCLUSION=$(printf '%s' "$META" | jq -r '.conclusion // ""')
+          HEAD_BRANCH=$(printf '%s' "$META" | jq -r '.headBranch // ""')
+          HEAD_SHA=$(printf '%s' "$META" | jq -r '.headSha // ""')
+          if [ "$WORKFLOW_NAME" != "$DISCOVERY_WORKFLOW" ]; then
+            echo "::error::promotion bridge only accepts catalog-growth-discovery runs"
+            exit 1
+          fi
+          if [ "$CONCLUSION" != "success" ]; then
+            echo "::error::discovery run must have succeeded"
+            exit 1
+          fi
+          if [ "$HEAD_BRANCH" != "main" ]; then
+            echo "::error::discovery run must originate from main"
+            exit 1
+          fi
+          echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Download strict-growth promotion plan
+        id: artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.resolve.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/discovery-artifacts"
+          gh run download "$RUN_ID" \
+            --name openva-catalog-growth-discovery-artifacts \
+            --dir "$RUNNER_TEMP/discovery-artifacts"
+          test -f "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json"
+          DIGEST=$(sha256sum "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json" | cut -d' ' -f1)
+          echo "plan_digest=sha256:$DIGEST" >> "$GITHUB_OUTPUT"
+
+      - name: Compute live hold and open growth PR state
+        id: state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          PAUSE="false"
+          if gh label list --json name --jq '.[].name' | grep -qx "openva-bot-paused"; then
+            if [ "$(gh issue list --label openva-bot-paused --state open --json number --jq 'length')" != "0" ]; then
+              PAUSE="true"
+            fi
+          fi
+          OPEN_GROWTH_PRS="$(gh pr list --state open --label catalog-growth --json number --jq 'length' || echo 0)"
+          echo "pause=$PAUSE" >> "$GITHUB_OUTPUT"
+          echo "open_growth_prs=$OPEN_GROWTH_PRS" >> "$GITHUB_OUTPUT"
+
+      - name: Decide promotion dispatch (bounded bridge gate)
+        id: decide
+        env:
+          RUN_ID: ${{ steps.resolve.outputs.run_id }}
+          HOLD: ${{ steps.state.outputs.pause }}
+          OPEN_GROWTH_PRS: ${{ steps.state.outputs.open_growth_prs }}
+          PLAN_DIGEST: ${{ steps.artifact.outputs.plan_digest }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          python -m tools.openva.discovery_promotion_bridge decide \
+            --plan "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json" \
+            --hold-active "$HOLD" \
+            --open-growth-pr-count "$OPEN_GROWTH_PRS" \
+            --source-run-id "$RUN_ID" \
+            --plan-digest "$PLAN_DIGEST" \
+            --output reports/promotion-bridge-decision.json
+          DISPATCH="$(python -c 'import json;print(str(json.load(open("reports/promotion-bridge-decision.json"))["dispatch"]).lower())')"
+          MODE="$(python -c 'import json;print(json.load(open("reports/promotion-bridge-decision.json"))["mode"])')"
+          CAP="$(python -c 'import json;d=json.load(open("reports/promotion-bridge-decision.json"));c=d.get("max_promotion_actions_per_pr");print("" if c is None else c)')"
+          echo "dispatch=$DISPATCH" >> "$GITHUB_OUTPUT"
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "cap=$CAP" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Catalog growth promotion bridge decision";
+            echo "Source discovery run: \`$RUN_ID\` (plan digest \`$PLAN_DIGEST\`)";
+            echo "Dispatch: \`$DISPATCH\`";
+            echo '```json';
+            cat reports/promotion-bridge-decision.json;
+            echo '```';
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Dispatch existing strict-growth promotion workflow
+        if: steps.decide.outputs.dispatch == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ steps.resolve.outputs.run_id }}
+          MODE: ${{ steps.decide.outputs.mode }}
+          CAP: ${{ steps.decide.outputs.cap }}
+        run: |
+          set -euo pipefail
+          # Hand the single authorised cycle to the one existing mutation workflow.
+          # This bridge never writes catalog state itself; candidate-promotion-pr.yml
+          # regenerates/re-validates current evidence and remains the sole catalog
+          # write authority. Provenance (the source discovery run id) is recorded in
+          # the dispatched PR title, this step's audit, and the workflow summary.
+          ARGS=(-f "promotion_plan_mode=$MODE" -f "pr_title=Catalog: strict-growth promotion bridged from discovery run $RUN_ID")
+          if [ -n "$CAP" ]; then
+            ARGS+=(-f "max_promotion_actions_per_pr=$CAP")
+          fi
+          echo "Dispatching $MUTATION_WORKFLOW (mode=$MODE, source discovery run=$RUN_ID)"
+          gh workflow run "$MUTATION_WORKFLOW" "${ARGS[@]}"
+
+      - name: Upload promotion bridge decision artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-catalog-growth-promotion-bridge
+          path: reports/promotion-bridge-decision.json
+          if-no-files-found: warn

@@ -18,6 +18,8 @@ Catalog discovery is a proposal pipeline. Discovery may identify candidate vendo
 
 Lane B starts with `catalog-growth-discovery.yml`. Reviewed and approved plans are copied into `maintenance/reviewed/`, then applied through `candidate-promotion-pr.yml`. Candidate promotion creates reviewable PRs, evaluates the `catalog_growth_promotion` queue gate before pushing a generated branch or creating/updating a PR, and remains subject to the PR safety loop.
 
+For strict-safe growth, `catalog-growth-promotion-bridge.yml` automates the handoff: after a successful scheduled `catalog-growth-discovery` run on `main`, it reads that run's strict-growth promotion plan and — only when the plan has eligible actions and no global hold or open growth PR blocks it — dispatches `candidate-promotion-pr.yml` in `strict-growth-latest` mode. The bridge never writes catalog state, opens a PR, or evaluates candidate eligibility itself: the discovery artifact is a dispatch signal, and `candidate-promotion-pr.yml` regenerates and re-validates current evidence and remains the sole catalog write authority, subject to the same queue gate, strict-growth automerge checks, and PR safety loop.
+
 ### Lane C: Workflow loop refinement
 
 Workflow refinement exists to make the operating system understandable and scalable. Lane C should consolidate, document, and simplify existing workflows rather than add more workflow sprawl.
@@ -151,6 +153,12 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 5. Let the PR safety loop run.
 6. Continue into the site/release loop after approval and merge.
 
+The scheduled strict-growth path is automatic and uses the same controlled write workflow:
+
+`catalog-growth-discovery.yml` → `catalog-growth-promotion-bridge.yml` (confirms the discovery run succeeded on `main`, reads the strict-growth promotion plan, and no-ops on zero eligible actions, a global hold, or an already-open growth PR) → `candidate-promotion-pr.yml` in `strict-growth-latest` mode → PR safety and strict-growth automerge gates.
+
+The manual reviewed path (steps 1–6 above) remains the route for ambiguous, rejected, or deferred candidates; those stay report-only.
+
 ### Lane C sequence
 
 1. Maintain this workflow operating model.
@@ -172,6 +180,7 @@ The reviewer sheet is untrusted input. `validate-sheet` is report-only. `export-
 | `source-repair-pr-cleanup.yml` | Close stale generated source repair PRs. | `workflow_dispatch`, scheduled weekly | `contents: read`, `pull-requests: write`, `issues: write` | PR state only | No | No | Stale PR cleanup report | Operators | Core |
 | `observation-ledger-append-pr.yml` | Autonomous observation-ledger continuity. Appends new observation events from a source-maintenance run into the committed ledger and opens a path-restricted, append-only, release-gated PR labelled for the observation automerge lane. | `workflow_run` (after `source-maintenance-report`), `workflow_dispatch` | `contents: write`, `pull-requests: write`, `actions: read` | Yes, in PR branch; `maintenance/source-observations/events/**` only | Yes | No | Append plan summary, PR body, failure routing report | Observation automerge lane, agent exports | Core |
 | `discovery-ledger-append-pr.yml` | Autonomous discovery-ledger continuity. Appends discovery events from a catalog-growth-discovery run into the committed discovery ledger and opens a path-restricted, append-only PR. | `workflow_run` (after `catalog-growth-discovery`), `workflow_dispatch` | `contents: write`, `pull-requests: write`, `actions: read` | Yes, in PR branch; `maintenance/discovery-events/**` only | Yes | No | Discovery ledger append summary, PR body | Discovery ledger append lane, catalog growth promotion | Core |
+| `catalog-growth-promotion-bridge.yml` | Scheduled discovery → strict-growth promotion handoff. After a successful main-branch `catalog-growth-discovery` run, reads its strict-growth promotion plan and dispatches `candidate-promotion-pr.yml` in `strict-growth-latest` mode only when eligible actions exist and no hold or open growth PR blocks it. Never writes catalog state or opens a PR. | `workflow_run` (after `catalog-growth-discovery`), `workflow_dispatch` | `actions: write`, `contents: read`, `issues: read`, `pull-requests: read` | No | No | No | Promotion bridge decision artifact, dispatch audit | `candidate-promotion-pr.yml` strict-growth lane | Core |
 | `coverage-audit.yml` | Catalog quality entry point for completeness, entity review, and provenance coverage. | `workflow_dispatch`, scheduled | `contents: read` | No | No | No | Coverage, completeness, entity, and provenance reports | Site pages, operators | Core |
 | `catalog-growth-discovery.yml` | Catalog expansion proposal entry point. Discovers candidate vendors and sources without writing catalog truth. | `workflow_dispatch`, scheduled | `contents: read`, `issues: write` | No catalog writes; may create/update issues | No | No | Candidate discovery reports, proposal plans, failure routing report | Reviewers, candidate promotion | Core |
 | `candidate-promotion-pr.yml` | Controlled write path for reviewed catalog growth promotions. | `workflow_dispatch`, scheduled | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Promotion application report, queue gate report, failure routing report, and PR | PR safety loop, site/release loop | Core |
