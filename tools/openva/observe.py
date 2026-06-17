@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import socket
-import urllib.error
-import urllib.request
 from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
@@ -16,9 +13,7 @@ from tools.openva.indexes import ROOT, records_for
 from tools.openva.paths import relative_repo_path
 from tools.openva.url_safety import validate_url_safety
 
-USER_AGENT = "open-vendor-assurance-observer/0.1 (+metadata-only; public sources only)"
 MAX_BYTES = 2_000_000
-TIMEOUT_SECONDS = 20
 PILOT_CONFIG = ROOT / "config" / "observation-pilot.yaml"
 
 BOT_PROTECTED_STATUS_CODES = {401, 403, 407, 429}
@@ -147,34 +142,67 @@ def select_sources(*, pilot_only: bool) -> list[dict[str, Any]]:
     return [source for source in sources if source["source_id"] in pilot_ids]
 
 
-def fetch_public(url: str) -> tuple[str, int | None, str | None, bytes]:
-    # SSRF carve-out (tracked): this lane fetches COMMITTED catalog source_urls on
-    # a schedule (observe-report.yml) — the lowest attacker-control surface — and
-    # is the one live fetch not yet routed through the safe boundary, pending a
-    # dedicated observation-lane change. See docs/security/ssrf-fetch-boundary.md.
-    # The static validate_url_safety pre-check below rejects IP-literal and
-    # malformed targets but does not pin DNS for hostnames.
+def _official_domains_for_source(source: dict[str, Any], root: Path = ROOT) -> list[str]:
+    """Authoritative domains for a source's vendor, from data/vendors/<id>/vendor.yaml."""
+    vendor_id = str(source.get("vendor_id") or "")
+    vendor_yaml = root / "data" / "vendors" / vendor_id / "vendor.yaml"
+    try:
+        record = yaml.safe_load(vendor_yaml.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError):
+        return []
+    if not isinstance(record, dict):
+        return []
+    return [str(domain) for domain in (record.get("official_domains") or []) if domain]
+
+
+def _result_to_observation(result: Any) -> tuple[str, int | None, str | None, bytes]:
+    """Map a safe-fetch FetchResult into the observation vocabulary."""
+    status = result.http_status
+    final_url = result.final_url
+    if status is None:
+        # SSRF/off-authority/blocked-IP/byte-bound/redirect/deadline/transport
+        # failure: fail closed to the ambiguous quarantined state with no body.
+        return "quarantined", None, final_url, b""
+    if status in BOT_PROTECTED_STATUS_CODES:
+        return "bot_protected", status, final_url, b""
+    if status >= 400:
+        return "fetch_failed", status, final_url, b""
+    return "ok", status, final_url, result.body_sample or b""
+
+
+def fetch_public(
+    url: str, official_domains: list[str], *, transport: Any = None, clock: Any = None
+) -> tuple[str, int | None, str | None, bytes]:
+    """Fetch a public source over the shared SSRF-safe boundary, bound to the
+    source vendor's authoritative domains.
+
+    Routes through ``build_safe_verify_fetcher``: DNS-resolved + pinned IP,
+    private/loopback/mixed-answer rejection, same-authority per-hop redirects, a
+    bounded body, a single whole-exchange deadline, and no credentials. Fails
+    closed (``quarantined``) when authority cannot be established or any safety,
+    bound, or transport check trips. ``transport`` and ``clock`` are injected by
+    tests.
+    """
     if validate_url_safety(url):
         return "quarantined", None, None, b""
+    domains = [domain for domain in official_domains if domain]
+    if not domains:
+        return "quarantined", None, url, b""
 
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    try:
-        with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:
-            status = int(response.status)
-            final_url = response.geturl()
-            if validate_url_safety(final_url):
-                return "quarantined", status, final_url, b""
-            data = response.read(MAX_BYTES + 1)
-            if len(data) > MAX_BYTES:
-                return "size_limited", status, final_url, b""
-            return "ok", status, final_url, data
-    except urllib.error.HTTPError as error:
-        status = int(error.code)
-        if status in BOT_PROTECTED_STATUS_CODES:
-            return "bot_protected", status, url, b""
-        return "fetch_failed", status, url, b""
-    except (urllib.error.URLError, TimeoutError, socket.timeout):
-        return "fetch_failed", None, url, b""
+    from tools.openva.safe_verify import build_safe_verify_fetcher
+    from tools.openva.sitemap_discovery import load_bounds
+
+    bounds = load_bounds()
+    fetcher = build_safe_verify_fetcher(
+        domains,
+        max_redirects=bounds.max_redirects,
+        timeout_seconds=bounds.max_request_seconds,
+        max_bytes=MAX_BYTES,
+        sample_bytes=MAX_BYTES,
+        transport=transport,
+        clock=clock,
+    )
+    return _result_to_observation(fetcher(url))
 
 
 def looks_blocked(data: bytes) -> bool:
@@ -185,7 +213,9 @@ def looks_blocked(data: bytes) -> bool:
 def observation_for_source(source: dict[str, Any], *, rule_set_f_results: bool = False) -> dict[str, Any]:
     observed_at = now_iso()
     source_id = source["source_id"]
-    result, http_status, final_url, data = fetch_public(source["source_url"])
+    result, http_status, final_url, data = fetch_public(
+        source["source_url"], _official_domains_for_source(source)
+    )
 
     if result == "ok" and looks_blocked(data):
         result = "bot_protected"
