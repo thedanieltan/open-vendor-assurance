@@ -10,6 +10,7 @@ import yaml
 AUTOMERGE_GENERATED = "automerge:generated"
 AUTOMERGE_OBSERVATION = "automerge:observation"
 AUTOMERGE_MACHINE_CANONICAL = "automerge:machine-canonical"
+AUTOMERGE_CANDIDATE_INTAKE = "automerge:candidate-intake"
 
 DEFAULT_MAX_MACHINE_CANONICAL_RECORDS = 50
 
@@ -48,6 +49,12 @@ GENERATED_PREFIXES = (
 OBSERVATION_PREFIXES = (
     "maintenance/source-observations/events/",
 )
+
+# ACT-05/ACT-02: the candidate-intake lane is scoped to the single-level
+# candidate staging store. Single-level (split length 3) matches the consumer
+# glob maintenance/candidates/*.json in autonomous-catalog-growth.yml, so a lane-
+# eligible candidate is never a controller no-op.
+CANDIDATE_INTAKE_PREFIX = "maintenance/candidates/"
 
 MACHINE_CANONICAL_EXACT = {"openva-pack.json"}
 MACHINE_CANONICAL_GENERATED_PREFIXES = ("indexes/",)
@@ -95,6 +102,23 @@ def is_generated_path(path: str) -> bool:
 
 def is_observation_path(path: str) -> bool:
     return any(path.startswith(prefix) for prefix in OBSERVATION_PREFIXES)
+
+
+def is_candidate_intake_path(path: str) -> bool:
+    """A single-level candidate-staging JSON file: maintenance/candidates/<id>.json.
+
+    Single-level (3 path segments) matches the consumer glob in
+    autonomous-catalog-growth.yml, so the lane/guard never accept a nested path
+    the growth controller would silently ignore. This is the SINGLE shared
+    predicate; the candidate-intake guard imports it rather than re-implementing.
+    """
+    parts = path.split("/")
+    return (
+        path.startswith(CANDIDATE_INTAKE_PREFIX)
+        and path.endswith(".json")
+        and len(parts) == 3
+        and len(parts[-1]) > len(".json")  # reject an empty filename stem (".json")
+    )
 
 
 def is_machine_canonical_source_path(path: str) -> bool:
@@ -164,6 +188,22 @@ def eligible_for_lane(
                 report_only,
             )
         return EligibilityResult(True, AUTOMERGE_OBSERVATION, (), report_only)
+
+    if AUTOMERGE_CANDIDATE_INTAKE in clean_labels:
+        # Unlike the observation lane, there is NO is_generated_path escape: a
+        # candidate-intake PR has no legitimate reason to touch indexes/ or dist/.
+        # Every changed path must be a single-level candidate-staging JSON file.
+        # (The sensitive-path pre-check above already blocks .github/workflows,
+        # schemas, etc.)
+        bad = [path for path in paths if not is_candidate_intake_path(path)]
+        if bad:
+            return EligibilityResult(
+                False,
+                AUTOMERGE_CANDIDATE_INTAKE,
+                tuple(f"non_candidate_intake_path:{path}" for path in bad),
+                report_only,
+            )
+        return EligibilityResult(True, AUTOMERGE_CANDIDATE_INTAKE, (), report_only)
 
     if AUTOMERGE_MACHINE_CANONICAL in clean_labels:
         bad = [path for path in paths if not is_machine_canonical_path(path)]
