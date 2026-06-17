@@ -7,7 +7,7 @@ directory and selects records by their committed `eligibility_state` (recomputat
 of that state against the resolver's own evaluation is a documented follow-up — see
 `docs/candidate-intake.md`).
 
-This is operational candidate **staging**, not canonical catalog data — never
+This is non-canonical candidate **staging**, not catalog truth — never
 `data/**`. Records are written by the unified resolver's durable ingress
 (`tools/openva/vendor_resolution.py` — `CatalogQueueIngress`, the single canonical
 writer: atomic, file-locked, idempotent merge) and reach `main` only through the
