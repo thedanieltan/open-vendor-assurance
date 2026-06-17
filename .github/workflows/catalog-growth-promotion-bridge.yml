@@ -15,6 +15,10 @@ name: catalog-growth-promotion-bridge
 #     promotion.
 #   * Recovery path (workflow_dispatch): an intentional operator action against an
 #     exact, successful, main discovery run id; no "latest" is ever inferred.
+#   * Either path: the discovery run's commit must still be an ancestor of current
+#     main; a historical run from a commit outside main history cannot promote.
+#   * Live safety-state queries (pause, open growth PR, active promotion run) are
+#     mandatory and authoritative; a GitHub API failure stops the run before dispatch.
 #
 # This bridge NEVER writes catalog state, opens a PR, evaluates candidate eligibility,
 # or implements a second mutation path. The discovery artifact is a dispatch SIGNAL,
@@ -55,6 +59,8 @@ jobs:
       DISCOVERY_WORKFLOW: catalog-growth-discovery
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -80,7 +86,8 @@ jobs:
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
         run: |
           set -euo pipefail
-          # Authoritative run metadata, including the run's own triggering event.
+          # Authoritative run metadata, including the run's own triggering event and
+          # head commit. No "latest run" is ever inferred.
           META=$(gh run view "$RUN_ID" --json conclusion,event,headBranch,headSha,workflowName)
           {
             echo "workflow_name=$(printf '%s' "$META" | jq -r '.workflowName // ""')"
@@ -118,8 +125,31 @@ jobs:
             echo "Eligible: \`$ELIGIBLE\` (\`$ELIGIBILITY_REASON\`)";
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Download strict-growth promotion plan
+      - name: Verify upstream commit is an ancestor of current main (fail closed)
         if: steps.eligibility.outputs.eligible == 'true'
+        id: ancestry
+        env:
+          HEAD_SHA: ${{ steps.run_meta.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          # A successful historical discovery run must not promote if its commit is no
+          # longer part of current main. Applies to both the automatic and the explicit
+          # operator-recovery paths. Same authority pattern as
+          # discovery-ledger-append-pr.yml.
+          if [ -z "$HEAD_SHA" ]; then
+            echo "::error::missing discovery run head SHA"
+            exit 1
+          fi
+          git fetch origin main
+          if git merge-base --is-ancestor "$HEAD_SHA" origin/main; then
+            echo "ancestor=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::discovery run commit is not an ancestor of current main"
+            exit 1
+          fi
+
+      - name: Download strict-growth promotion plan
+        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
         id: artifact
         env:
           GH_TOKEN: ${{ github.token }}
@@ -134,30 +164,48 @@ jobs:
           DIGEST=$(sha256sum "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json" | cut -d' ' -f1)
           echo "plan_digest=sha256:$DIGEST" >> "$GITHUB_OUTPUT"
 
-      - name: Compute hold, open growth PR, and active promotion-run state
-        if: steps.eligibility.outputs.eligible == 'true'
+      - name: Compute hold, open growth PR, and active promotion-run state (mandatory, fail closed)
+        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
         id: state
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          PAUSE="false"
-          if gh label list --json name --jq '.[].name' | grep -qx "openva-bot-paused"; then
-            if [ "$(gh issue list --label openva-bot-paused --state open --json number --jq 'length')" != "0" ]; then
-              PAUSE="true"
-            fi
+          # Every query below is authoritative and mandatory. Under set -euo pipefail a
+          # GitHub API/auth/rate-limit failure aborts this step (the job fails and no
+          # dispatch occurs); failures are never converted to an unblocked state.
+
+          # Global pause state.
+          LABELS_JSON="$(gh label list --json name)"
+          printf '%s' "$LABELS_JSON" | jq -e 'type == "array"' >/dev/null || { echo "::error::could not parse repository labels"; exit 1; }
+          HAS_PAUSE_LABEL="$(printf '%s' "$LABELS_JSON" | jq -r 'map(.name) | index("openva-bot-paused") != null')"
+          if [ "$HAS_PAUSE_LABEL" = "true" ]; then
+            PAUSED_OPEN="$(gh issue list --label openva-bot-paused --state open --json number --jq 'length')"
+            case "$PAUSED_OPEN" in ''|*[!0-9]*) echo "::error::invalid paused issue count"; exit 1 ;; esac
+            if [ "$PAUSED_OPEN" != "0" ]; then PAUSE="true"; else PAUSE="false"; fi
+          elif [ "$HAS_PAUSE_LABEL" = "false" ]; then
+            PAUSE="false"
+          else
+            echo "::error::could not determine pause label state"
+            exit 1
           fi
-          OPEN_GROWTH_PRS="$(gh pr list --state open --label catalog-growth --json number --jq 'length' || echo 0)"
-          # Count queued/in-progress promotion runs on main so a second dispatch cannot
-          # race the PR-creation window of an already-active promotion run.
+
+          # Open catalog-growth PR count.
+          OPEN_GROWTH_PRS="$(gh pr list --state open --label catalog-growth --json number --jq 'length')"
+          case "$OPEN_GROWTH_PRS" in ''|*[!0-9]*) echo "::error::invalid open growth PR count"; exit 1 ;; esac
+
+          # Queued/in-progress promotion runs on main, so a second dispatch cannot race
+          # the PR-creation window of an already-active promotion run.
           ACTIVE_PROMOTION_RUNS="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --limit 50 --json status \
-            --jq '[.[] | select(.status == "queued" or .status == "in_progress")] | length' || echo 0)"
+            --jq '[.[] | select(.status == "queued" or .status == "in_progress")] | length')"
+          case "$ACTIVE_PROMOTION_RUNS" in ''|*[!0-9]*) echo "::error::invalid active promotion run count"; exit 1 ;; esac
+
           echo "pause=$PAUSE" >> "$GITHUB_OUTPUT"
           echo "open_growth_prs=$OPEN_GROWTH_PRS" >> "$GITHUB_OUTPUT"
           echo "active_promotion_runs=$ACTIVE_PROMOTION_RUNS" >> "$GITHUB_OUTPUT"
 
       - name: Decide promotion dispatch (bounded bridge gate)
-        if: steps.eligibility.outputs.eligible == 'true'
+        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true'
         id: decide
         env:
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
@@ -192,7 +240,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Dispatch existing strict-growth promotion workflow
-        if: steps.eligibility.outputs.eligible == 'true' && steps.decide.outputs.dispatch == 'true'
+        if: steps.eligibility.outputs.eligible == 'true' && steps.ancestry.outputs.ancestor == 'true' && steps.decide.outputs.dispatch == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
