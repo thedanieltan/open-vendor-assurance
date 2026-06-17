@@ -106,6 +106,14 @@ public_workflows:
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
+  - name: catalog-growth-promotion-bridge.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_run, workflow_dispatch]
+    permissions: {actions: write, contents: read, issues: read, pull-requests: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
   - name: candidate-promotion-pr.yml
     loop: catalog_growth
     status: core
