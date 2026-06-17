@@ -34,6 +34,14 @@ Every response, including errors, includes:
 use a fixed timestamp such as `1970-01-01T00:00:00Z`, this header is not a
 catalog freshness signal.
 
+## `GET /healthz` and `GET /readyz`
+
+Unauthenticated probes for orchestrators. `GET /healthz` returns `200 {"status": "ok"}` while the process is up. `GET /readyz` returns `200 {"status": "ready"}` once the pack/matcher state is loaded and `503 {"status": "not_ready"}` otherwise. Both responses still carry the `X-OpenVA-*` headers.
+
+## Request limits
+
+`POST /match` is bounded by configurable limits (defaults `OPENVA_MAX_UPLOAD_BYTES=5000000`, `OPENVA_MAX_ROWS=500`). An upload larger than `OPENVA_MAX_UPLOAD_BYTES` is rejected with `413` and the stable `http_error` shape; an inventory with more than `OPENVA_MAX_ROWS` rows is rejected with `400`. The service remains synchronous with no persistence and no verification in this version; `OPENVA_MAX_ACTIVE_JOBS` and `OPENVA_JOB_TTL_HOURS` are read-and-stored scaffolding for a future async resolver and are not enforced today.
+
 ## `GET /pack/meta`
 
 Returns pack metadata:

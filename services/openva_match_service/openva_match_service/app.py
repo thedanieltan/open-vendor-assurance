@@ -36,6 +36,18 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
     app = FastAPI(title="OpenVA Match Service", version=service_config.service_version, lifespan=lifespan)
     install_middleware_and_handlers(app)
 
+    @app.get("/healthz")
+    async def healthz() -> dict[str, str]:
+        # Liveness: the process is up. No auth, no pack dependency.
+        return {"status": "ok"}
+
+    @app.get("/readyz")
+    async def readyz() -> JSONResponse:
+        # Readiness: 200 only once the pack/matcher state is loaded; 503 otherwise.
+        state = getattr(app.state, "service_state", None)
+        status_code = 200 if state is not None else 503
+        return JSONResponse(status_code=status_code, content={"status": "ready" if state is not None else "not_ready"})
+
     @app.get("/pack/meta")
     async def pack_meta(_: None = Depends(require_api_key)) -> dict[str, Any]:
         state = get_service_state(app)
@@ -48,9 +60,17 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
     ) -> dict[str, Any]:
         if inventory_csv.content_type not in {None, "", "text/csv", "application/vnd.ms-excel"}:
             raise HTTPException(status_code=400, detail="inventory_csv must be a CSV upload")
+        # Bound the in-memory read so an oversized upload cannot exhaust memory
+        # before matching (reads at most max_upload_bytes + 1 to detect overflow).
+        data = await inventory_csv.read(service_config.max_upload_bytes + 1)
+        if len(data) > service_config.max_upload_bytes:
+            raise HTTPException(
+                status_code=413,
+                detail=f"inventory_csv exceeds the maximum of {service_config.max_upload_bytes} bytes",
+            )
         state = get_service_state(app)
         try:
-            rows = match_csv_bytes(await inventory_csv.read(), state.matcher_index)
+            rows = match_csv_bytes(data, state.matcher_index, max_rows=service_config.max_rows)
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
         return {

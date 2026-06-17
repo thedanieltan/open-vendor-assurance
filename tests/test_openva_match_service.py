@@ -229,6 +229,97 @@ def test_missing_upload_uses_contract_error_shape():
     assert response.json() == {"error": "validation_error", "message": "Invalid match service request"}
 
 
+def test_healthz_is_ok_without_auth():
+    with TestClient(make_test_app()) as client:
+        response = client.get("/healthz")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+    assert_required_headers(response)
+
+
+def test_readyz_reports_ready_when_state_loaded():
+    with TestClient(make_test_app()) as client:
+        response = client.get("/readyz")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ready"}
+
+
+def test_readyz_reports_503_before_state_loaded():
+    app = make_test_app()
+    with TestClient(app) as client:
+        client.app.state.service_state = None  # simulate state not yet loaded
+        response = client.get("/readyz")
+
+    assert response.status_code == 503
+    assert response.json() == {"status": "not_ready"}
+
+
+def test_match_rejects_oversize_upload():
+    app = create_app(ServiceConfig(pack_path=Path("."), api_key=API_KEY, max_upload_bytes=50))
+    with TestClient(app) as client:
+        response = client.post(
+            "/match",
+            headers=AUTH_HEADERS,
+            files={"inventory_csv": ("vendors.csv", "x" * 200, "text/csv")},
+        )
+
+    assert response.status_code == 413
+    assert "exceeds the maximum of 50 bytes" in response.json()["message"]
+    assert_required_headers(response)
+
+
+def test_match_rejects_too_many_rows():
+    app = create_app(ServiceConfig(pack_path=Path("."), api_key=API_KEY, max_rows=1))
+    csv_body = "vendor_name,domain\nStripe,\nSlack,\n"  # two rows, cap is one
+    with TestClient(app) as client:
+        response = client.post(
+            "/match",
+            headers=AUTH_HEADERS,
+            files={"inventory_csv": ("vendors.csv", csv_body, "text/csv")},
+        )
+
+    assert response.status_code == 400
+    assert "exceeds the maximum of 1 rows" in response.json()["message"]
+
+
+def test_in_limit_match_is_unchanged():
+    # The default limits do not alter the response shape for an in-limit upload.
+    csv_body = "vendor_name,business_entity_name,domain\nStripe,,\n"
+    with TestClient(make_test_app()) as client:
+        response = client.post(
+            "/match",
+            headers=AUTH_HEADERS,
+            files={"inventory_csv": ("vendors.csv", csv_body, "text/csv")},
+        )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert set(payload.keys()) == {"meta", "rows"}
+    assert payload["rows"][0]["matched_vendor_id"] == "stripe"
+
+
+def test_config_from_env_reads_limit_overrides(monkeypatch):
+    monkeypatch.setenv("OPENVA_PACK_PATH", ".")
+    monkeypatch.setenv("OPENVA_SERVICE_API_KEY", "k")
+    monkeypatch.setenv("OPENVA_MAX_UPLOAD_BYTES", "123")
+    monkeypatch.setenv("OPENVA_MAX_ROWS", "7")
+    config = ServiceConfig.from_env()
+    assert config.max_upload_bytes == 123
+    assert config.max_rows == 7
+    assert config.max_active_jobs == 3  # untouched default
+    assert config.job_ttl_hours == 24
+
+
+def test_config_from_env_rejects_invalid_limit(monkeypatch):
+    monkeypatch.setenv("OPENVA_PACK_PATH", ".")
+    monkeypatch.setenv("OPENVA_SERVICE_API_KEY", "k")
+    monkeypatch.setenv("OPENVA_MAX_ROWS", "0")
+    with pytest.raises(RuntimeError):
+        ServiceConfig.from_env()
+
+
 def assert_required_headers(response) -> None:
     for header in REQUIRED_HEADERS:
         assert header in response.headers
