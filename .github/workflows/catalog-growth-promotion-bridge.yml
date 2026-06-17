@@ -3,18 +3,24 @@ name: catalog-growth-promotion-bridge
 # WP-OPENVA-ZERO-INSTALL-DISTRIBUTION-01 PR2: scheduled-discovery -> strict-growth
 # promotion handoff (closes the issue formerly tracked as #274).
 #
-# After a successful scheduled catalog-growth-discovery run on main, this bridge
-# reads the strict-growth promotion plan emitted by that run and, only when the plan
-# contains eligible promotion actions and no global hold / open growth PR blocks it,
-# dispatches the SINGLE existing mutation workflow (candidate-promotion-pr.yml) in
-# strict-growth-latest mode.
+# After a successful SCHEDULED catalog-growth-discovery run on main, this bridge reads
+# the strict-growth promotion plan emitted by that run and, only when the plan contains
+# eligible promotion actions and no global hold, no active promotion run, and no open
+# growth PR blocks it, dispatches the SINGLE existing mutation workflow
+# (candidate-promotion-pr.yml) in strict-growth-latest mode.
+#
+# Authority boundary (fail closed):
+#   * Automatic path (workflow_run): the triggering discovery run's own event must be
+#     exactly `schedule`. A manually dispatched discovery run must NOT cause automatic
+#     promotion.
+#   * Recovery path (workflow_dispatch): an intentional operator action against an
+#     exact, successful, main discovery run id; no "latest" is ever inferred.
 #
 # This bridge NEVER writes catalog state, opens a PR, evaluates candidate eligibility,
 # or implements a second mutation path. The discovery artifact is a dispatch SIGNAL,
-# not final merge authority: the dispatched promotion workflow regenerates and
-# re-validates current evidence and remains the sole catalog write authority, gated by
-# its own queue, cadence, stale-evidence, source-preflight, and strict-growth automerge
-# checks. The existing strict-growth lane stays authoritative.
+# not final merge authority: candidate-promotion-pr.yml regenerates and re-validates
+# current evidence and remains the sole catalog write authority, gated by its own
+# queue, stale-evidence, source-preflight, and strict-growth automerge checks.
 #
 # Operational metadata only. Not legal, compliance, procurement, security, KYC, AML,
 # audit, or vendor-risk advice.
@@ -67,33 +73,53 @@ jobs:
           case "$RUN_ID" in *[!0-9]*) echo "discovery_run_id must be numeric" >&2; exit 1 ;; esac
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
 
-      - name: Validate discovery run authority
+      - name: Read discovery run metadata
         id: run_meta
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
         run: |
           set -euo pipefail
-          META=$(gh run view "$RUN_ID" --json conclusion,headBranch,headSha,workflowName)
-          WORKFLOW_NAME=$(printf '%s' "$META" | jq -r '.workflowName // ""')
-          CONCLUSION=$(printf '%s' "$META" | jq -r '.conclusion // ""')
-          HEAD_BRANCH=$(printf '%s' "$META" | jq -r '.headBranch // ""')
-          HEAD_SHA=$(printf '%s' "$META" | jq -r '.headSha // ""')
-          if [ "$WORKFLOW_NAME" != "$DISCOVERY_WORKFLOW" ]; then
-            echo "::error::promotion bridge only accepts catalog-growth-discovery runs"
-            exit 1
-          fi
-          if [ "$CONCLUSION" != "success" ]; then
-            echo "::error::discovery run must have succeeded"
-            exit 1
-          fi
-          if [ "$HEAD_BRANCH" != "main" ]; then
-            echo "::error::discovery run must originate from main"
-            exit 1
-          fi
-          echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+          # Authoritative run metadata, including the run's own triggering event.
+          META=$(gh run view "$RUN_ID" --json conclusion,event,headBranch,headSha,workflowName)
+          {
+            echo "workflow_name=$(printf '%s' "$META" | jq -r '.workflowName // ""')"
+            echo "conclusion=$(printf '%s' "$META" | jq -r '.conclusion // ""')"
+            echo "head_branch=$(printf '%s' "$META" | jq -r '.headBranch // ""')"
+            echo "head_sha=$(printf '%s' "$META" | jq -r '.headSha // ""')"
+            echo "upstream_event=$(printf '%s' "$META" | jq -r '.event // ""')"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Evaluate run eligibility (fail closed)
+        id: eligibility
+        env:
+          BRIDGE_EVENT: ${{ github.event_name }}
+          UPSTREAM_EVENT: ${{ steps.run_meta.outputs.upstream_event }}
+          WORKFLOW_NAME: ${{ steps.run_meta.outputs.workflow_name }}
+          CONCLUSION: ${{ steps.run_meta.outputs.conclusion }}
+          HEAD_BRANCH: ${{ steps.run_meta.outputs.head_branch }}
+          RUN_ID: ${{ steps.resolve.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          python -m tools.openva.discovery_promotion_bridge eligibility \
+            --bridge-event "$BRIDGE_EVENT" \
+            --upstream-event "$UPSTREAM_EVENT" \
+            --workflow-name "$WORKFLOW_NAME" \
+            --conclusion "$CONCLUSION" \
+            --head-branch "$HEAD_BRANCH" \
+            --output reports/promotion-bridge-eligibility.json
+          ELIGIBLE="$(python -c 'import json;print(str(json.load(open("reports/promotion-bridge-eligibility.json"))["eligible"]).lower())')"
+          ELIGIBILITY_REASON="$(python -c 'import json;print(json.load(open("reports/promotion-bridge-eligibility.json"))["reason"])')"
+          echo "eligible=$ELIGIBLE" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Catalog growth promotion bridge — run eligibility";
+            echo "Discovery run \`$RUN_ID\`: bridge_event=\`$BRIDGE_EVENT\`, upstream_event=\`$UPSTREAM_EVENT\`";
+            echo "Eligible: \`$ELIGIBLE\` (\`$ELIGIBILITY_REASON\`)";
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Download strict-growth promotion plan
+        if: steps.eligibility.outputs.eligible == 'true'
         id: artifact
         env:
           GH_TOKEN: ${{ github.token }}
@@ -108,7 +134,8 @@ jobs:
           DIGEST=$(sha256sum "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json" | cut -d' ' -f1)
           echo "plan_digest=sha256:$DIGEST" >> "$GITHUB_OUTPUT"
 
-      - name: Compute live hold and open growth PR state
+      - name: Compute hold, open growth PR, and active promotion-run state
+        if: steps.eligibility.outputs.eligible == 'true'
         id: state
         env:
           GH_TOKEN: ${{ github.token }}
@@ -121,15 +148,22 @@ jobs:
             fi
           fi
           OPEN_GROWTH_PRS="$(gh pr list --state open --label catalog-growth --json number --jq 'length' || echo 0)"
+          # Count queued/in-progress promotion runs on main so a second dispatch cannot
+          # race the PR-creation window of an already-active promotion run.
+          ACTIVE_PROMOTION_RUNS="$(gh run list --workflow "$MUTATION_WORKFLOW" --branch main --limit 50 --json status \
+            --jq '[.[] | select(.status == "queued" or .status == "in_progress")] | length' || echo 0)"
           echo "pause=$PAUSE" >> "$GITHUB_OUTPUT"
           echo "open_growth_prs=$OPEN_GROWTH_PRS" >> "$GITHUB_OUTPUT"
+          echo "active_promotion_runs=$ACTIVE_PROMOTION_RUNS" >> "$GITHUB_OUTPUT"
 
       - name: Decide promotion dispatch (bounded bridge gate)
+        if: steps.eligibility.outputs.eligible == 'true'
         id: decide
         env:
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
           HOLD: ${{ steps.state.outputs.pause }}
           OPEN_GROWTH_PRS: ${{ steps.state.outputs.open_growth_prs }}
+          ACTIVE_PROMOTION_RUNS: ${{ steps.state.outputs.active_promotion_runs }}
           PLAN_DIGEST: ${{ steps.artifact.outputs.plan_digest }}
         run: |
           set -euo pipefail
@@ -138,6 +172,7 @@ jobs:
             --plan "$RUNNER_TEMP/discovery-artifacts/strict-growth-promotion-plan.json" \
             --hold-active "$HOLD" \
             --open-growth-pr-count "$OPEN_GROWTH_PRS" \
+            --active-promotion-run-count "$ACTIVE_PROMOTION_RUNS" \
             --source-run-id "$RUN_ID" \
             --plan-digest "$PLAN_DIGEST" \
             --output reports/promotion-bridge-decision.json
@@ -157,7 +192,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Dispatch existing strict-growth promotion workflow
-        if: steps.decide.outputs.dispatch == 'true'
+        if: steps.eligibility.outputs.eligible == 'true' && steps.decide.outputs.dispatch == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
@@ -177,10 +212,12 @@ jobs:
           echo "Dispatching $MUTATION_WORKFLOW (mode=$MODE, source discovery run=$RUN_ID)"
           gh workflow run "$MUTATION_WORKFLOW" "${ARGS[@]}"
 
-      - name: Upload promotion bridge decision artifact
+      - name: Upload promotion bridge decision artifacts
         if: always()
         uses: actions/upload-artifact@v6
         with:
           name: openva-catalog-growth-promotion-bridge
-          path: reports/promotion-bridge-decision.json
+          path: |
+            reports/promotion-bridge-eligibility.json
+            reports/promotion-bridge-decision.json
           if-no-files-found: warn

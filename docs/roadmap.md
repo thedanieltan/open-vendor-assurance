@@ -20,9 +20,10 @@ vendor; it does not perform live discovery or lifecycle routing. Scheduled
 `catalog-growth-discovery` runs now hand strict-safe growth to the existing
 `candidate-promotion-pr.yml` promotion workflow automatically through
 `catalog-growth-promotion-bridge.yml`, which dispatches the controlled write path
-only when the strict-growth plan has eligible actions and no hold or open growth
-PR blocks it. Planned next: exposing the same `verify`-mode contract over
-HTTP/MCP and connecting the hosted upload page to it.
+only when the strict-growth plan has eligible actions and no hold, active
+promotion run, or open growth PR blocks it (and only for scheduled discovery
+runs). Planned next: exposing the same `verify`-mode contract over HTTP/MCP and
+connecting the hosted upload page to it.
 
 This is not a new advisory or scoring system. OpenVA preserves source-reference
 and observation history; it does not archive or reproduce historical vendor
