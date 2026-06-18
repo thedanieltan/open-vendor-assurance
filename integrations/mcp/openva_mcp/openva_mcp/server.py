@@ -42,7 +42,16 @@ _ENRICH_ROW_SCHEMA = {
         "vendor_name": {"type": ["string", "null"], "maxLength": _ENRICH_MAX_FIELD_LEN},
         "domain": {"type": ["string", "null"], "maxLength": _ENRICH_MAX_FIELD_LEN},
         "business_entity_name": {"type": ["string", "null"], "maxLength": _ENRICH_MAX_FIELD_LEN},
-        "registration_number": {"type": ["string", "null"], "maxLength": _ENRICH_MAX_FIELD_LEN},
+        "registration_number": {
+            "type": ["string", "null"],
+            "maxLength": _ENRICH_MAX_FIELD_LEN,
+            "description": (
+                "Accepted for row-shape compatibility but NOT used for matching on this "
+                "snapshot-backed surface: the agent export carries no legal-entity data, so a "
+                "registration-number-only row returns no_match here. The /v1 HTTP enrichment "
+                "endpoint is the legal-entity-capable surface."
+            ),
+        },
     },
     "additionalProperties": False,
 }
@@ -105,7 +114,9 @@ TOOL_SPECS: list[ToolSpec] = [
     ToolSpec(
         "match_inventory",
         "Match inventory rows (domain / vendor_name / business_entity_name / registration_number) "
-        "to vendors. Each row's match_status is matched, ambiguous, or no_match.",
+        "to vendors. Each row's match_status is matched, ambiguous, or no_match. Each row must "
+        "carry at least one identity field. registration_number is NOT used for matching on this "
+        "snapshot surface (no legal-entity data); use the /v1 HTTP endpoint for legal-entity matching.",
         # Bounded to the shared identity row (additionalProperties=False): the
         # workspace-data boundary applies to the whole remote MCP surface, so an
         # undeclared field (e.g. workspace_id) is rejected here too, not just by
@@ -122,8 +133,10 @@ TOOL_SPECS: list[ToolSpec] = [
         "business_entity_name / registration_number) and attach their public assurance "
         "sources, optionally filtered by source_type. For agents that have already read a "
         "workspace through their own connector: send only vendor-identity fields, never "
-        "workspace content. Input order and duplicates are preserved, row_id is echoed, "
-        "ambiguous stays ambiguous, no_match stays no-match. Read-only; not advice.",
+        "workspace content. Each row must carry at least one identity field. registration_number "
+        "is NOT used for matching on this snapshot surface (no legal-entity data); the /v1 HTTP "
+        "endpoint is the legal-entity-capable surface. Input order and duplicates are preserved, "
+        "row_id is echoed, ambiguous stays ambiguous, no_match stays no-match. Read-only; not advice.",
         _obj(
             {
                 "rows": {

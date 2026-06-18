@@ -349,6 +349,18 @@ def test_match_rejects_unknown_workspace_fields():
     assert resp.status_code == 422
 
 
+def test_enrich_envelope_rejects_unknown_top_level_field():
+    # The enrich envelope fails closed too: an undeclared top-level field (e.g. a
+    # workspace token) must be rejected, not silently discarded (ADR-0004 boundary).
+    with TestClient(private_app()) as client:
+        resp = client.post(
+            "/v1/enrich",
+            headers=AUTH,
+            json={"vendors": [{"vendor_name": "Stripe"}], "workspace_token": "secret"},
+        )
+    assert resp.status_code == 422
+
+
 def test_enrich_row_id_rejects_non_string_non_integer():
     with TestClient(private_app()) as client:
         assert client.post("/v1/enrich", headers=AUTH, json={"vendors": [{"row_id": 1.5, "vendor_name": "Stripe"}]}).status_code == 422

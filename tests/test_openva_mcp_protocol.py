@@ -124,10 +124,30 @@ def test_protocol_bounds_match_inventory_and_controls_empty_identity(export_tree
             )
             assert bounded.isError, "match_inventory must reject an undeclared workspace field"
 
-            empty = await client.call_tool("enrich_inventory", {"rows": [{"row_id": "1"}]})
-            assert empty.isError, "empty-identity enrich row must be a controlled tool error"
-            text = " ".join(getattr(block, "text", "") for block in (empty.content or []))
-            assert "Traceback" not in text and "at least one of" in text
+            for tool in ("match_inventory", "enrich_inventory"):
+                empty = await client.call_tool(tool, {"rows": [{"row_id": "1"}]})
+                assert empty.isError, f"{tool}: empty-identity row must be a controlled tool error"
+                text = " ".join(getattr(block, "text", "") for block in (empty.content or []))
+                assert "Traceback" not in text and "at least one of" in text
+
+    anyio.run(scenario)
+
+
+def test_protocol_tools_list_discloses_registration_number_limitation(export_tree):
+    # An agent discovering OpenVA only via tools/list must learn that the snapshot
+    # surface cannot match on registration_number alone.
+    snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
+
+    async def scenario() -> None:
+        server = build_server(snapshot)
+        async with create_connected_server_and_client_session(server) as client:
+            by_name = {tool.name: tool for tool in (await client.list_tools()).tools}
+            for name in ("match_inventory", "enrich_inventory"):
+                tool = by_name[name]
+                reg = tool.inputSchema["properties"]["rows"]["items"]["properties"]["registration_number"]
+                disclosure = (tool.description + " " + reg.get("description", "")).lower()
+                assert "registration_number is not used" in disclosure or "not used for matching" in disclosure
+                assert "/v1" in disclosure
 
     anyio.run(scenario)
 

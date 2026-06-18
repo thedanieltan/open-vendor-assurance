@@ -184,7 +184,11 @@ class EnrichVendorItem(MatchInput):
 
 
 class EnrichRequest(BaseModel):
+    # extra="forbid" closes the envelope: an undeclared top-level field (e.g. a
+    # workspace token) is rejected with 422 rather than silently discarded, matching
+    # the MCP request schema's additionalProperties:false and ADR-0004's boundary.
     model_config = ConfigDict(
+        extra="forbid",
         json_schema_extra={
             "example": {
                 "vendors": [

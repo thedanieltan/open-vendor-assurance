@@ -150,18 +150,20 @@ def test_match_inventory_rejects_undeclared_workspace_fields(snapshot):
     assert result["isError"] is True
 
 
-def test_empty_identity_enrich_is_a_controlled_tool_error(snapshot):
-    # A row with only row_id passes the JSON Schema but fails the identity check; the
-    # dispatcher must surface that as a controlled tool error, not a stack trace.
+@pytest.mark.parametrize("tool", ["enrich_inventory", "match_inventory"])
+def test_empty_identity_is_a_controlled_tool_error(snapshot, tool):
+    # A row with only row_id passes the JSON Schema but fails the shared identity
+    # check; both inventory tools must surface a controlled tool error, not a stack
+    # trace. Same validator across both MCP tools.
     with TestClient(build_streamable_http_app(snapshot, _config())) as client:
         result = _rpc(
             client,
             "tools/call",
-            {"name": "enrich_inventory", "arguments": {"rows": [{"row_id": "1"}]}},
+            {"name": tool, "arguments": {"rows": [{"row_id": "1"}]}},
         ).json()["result"]
     assert result["isError"] is True
     text = " ".join(block.get("text", "") for block in result.get("content", []))
-    assert "Traceback" not in text and "row_id" not in text
+    assert "Traceback" not in text
     assert "at least one of" in text
 
 

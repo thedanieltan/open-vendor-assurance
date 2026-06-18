@@ -141,6 +141,15 @@ def get_vendor_changes(snapshot: Snapshot, vendor_id: str) -> dict[str, Any]:
 
 
 def match_inventory(snapshot: Snapshot, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    # Same bounded-identity contract as enrich_inventory: a row must carry at least
+    # one identity field. An identity-empty row is a controlled invalid-input error
+    # (the dispatcher turns this ValueError into a tool error), not a silent no_match.
+    for row in rows:
+        if not _has_identity(row or {}):
+            raise ValueError(
+                "each row requires at least one of vendor_name, domain, "
+                "business_entity_name, registration_number"
+            )
     vendors = snapshot.vendors_index().get("vendors", [])
     results = [match_row(vendors, row or {}) for row in rows]
     summary = {"matched": 0, "ambiguous": 0, "no_match": 0}
