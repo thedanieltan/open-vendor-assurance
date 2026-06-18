@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <style>
+      body { font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #202124; margin: 12px; }
+      h2 { font-size: 15px; margin: 0 0 8px; }
+      h3 { font-size: 13px; margin: 14px 0 4px; }
+      code { background: #f1f3f4; padding: 1px 4px; border-radius: 3px; }
+      ul { margin: 4px 0 4px 18px; padding: 0; }
+      .note { background: #fef7e0; border-left: 3px solid #f9ab00; padding: 8px; margin-top: 12px; }
+    </style>
+  </head>
+  <body>
+    <h2>OpenVA for Google Sheets</h2>
+    <p>
+      Look up canonical, public-source assurance references for your vendors against an
+      OpenVA catalogue, and write stable result columns back into this sheet.
+    </p>
+
+    <h3>1. Configure</h3>
+    <p>
+      <strong>OpenVA &rarr; Configure API endpoint</strong> — enter the HTTPS base URL of an
+      OpenVA deployment that has public read access enabled. The URL is stored with this
+      document. No API key is used or stored.
+    </p>
+
+    <h3>2. Test</h3>
+    <p>
+      <strong>OpenVA &rarr; Test API connection</strong> — confirms the endpoint and shows the
+      catalogue snapshot it is serving.
+    </p>
+
+    <h3>3. Input columns</h3>
+    <p>Row 1 must be a header row. At least one of these is needed per row:</p>
+    <ul>
+      <li><code>vendor_name</code></li>
+      <li><code>domain</code></li>
+      <li><code>business_entity_name</code></li>
+      <li><code>registration_number</code></li>
+    </ul>
+    <p>Common header variants (e.g. <code>Vendor Name</code>, <code>website</code>, <code>legal name</code>) are recognized.</p>
+
+    <h3>4. Enrich</h3>
+    <ul>
+      <li><strong>Enrich selected rows</strong> — processes the rows in your selection.</li>
+      <li><strong>Enrich active sheet</strong> — processes every data row.</li>
+    </ul>
+    <p>Output columns are written with the <code>openva_</code> prefix and reused on later runs.</p>
+
+    <h3>What is sent</h3>
+    <p>
+      Only the four identity fields above, per processed row. Sheet names, spreadsheet ids,
+      formulas, notes, and your email are never sent. Nothing is persisted outside this
+      spreadsheet.
+    </p>
+
+    <div class="note">
+      Results are public-source references cached to the service's loaded catalogue
+      snapshot. They are <strong>not</strong> advice, live verification, compliance approval,
+      security certification, or a vendor-risk judgement. An unmatched vendor means no
+      catalogue match was found — not that the vendor is unsafe or non-compliant.
+    </div>
+  </body>
+</html>

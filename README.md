@@ -53,6 +53,20 @@ indexes/
 schemas/openva/
 ```
 
+For spreadsheet users (Google Sheets):
+
+```text
+integrations/google-sheets/      Google Sheets client over the /v1/enrich API
+```
+
+The Google Sheets integration is a bound Apps Script project that enriches vendor rows
+against a configured public-read OpenVA deployment. It consumes the existing `/v1/enrich`
+API, embeds no API key, and writes stable `openva_*` reference columns back into a sheet.
+No local Python, Docker, repository checkout or API secret is required; the current release
+requires manual installation into a bound Apps Script project, and a zero-install Workspace
+add-on is a future objective rather than a current capability. Results are public-source
+references cached to the service's loaded snapshot — not advice or live verification.
+
 For public relaunch readiness:
 
 ```text

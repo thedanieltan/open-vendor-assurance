@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <style>
+      body { font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #202124; margin: 14px; }
+      h2 { font-size: 15px; margin: 0 0 6px; }
+      p { margin: 0 0 10px; color: #5f6368; }
+      label { display: block; margin: 6px 0; }
+      .actions { margin-top: 16px; }
+      button { font-size: 13px; padding: 6px 14px; margin-right: 8px; }
+      #status { margin-top: 10px; min-height: 16px; color: #c5221f; }
+    </style>
+  </head>
+  <body>
+    <h2>Source types</h2>
+    <p>Choose which canonical source types to request. At least one is required.</p>
+    <div id="list">Loading…</div>
+    <div id="status"></div>
+    <div class="actions">
+      <button id="save" onclick="save()" disabled>Save</button>
+      <button onclick="google.script.host.close()">Cancel</button>
+    </div>
+
+    <script>
+      var SUPPORTED = [];
+
+      function render(config) {
+        SUPPORTED = config.supported;
+        var selected = {};
+        config.selected.forEach(function (type) { selected[type] = true; });
+        var html = '';
+        SUPPORTED.forEach(function (type) {
+          var label = config.labels[type] || type;
+          html +=
+            '<label><input type="checkbox" value="' + type + '"' +
+            (selected[type] ? ' checked' : '') + '> ' + label + '</label>';
+        });
+        document.getElementById('list').innerHTML = html;
+        document.getElementById('save').disabled = false;
+      }
+
+      function selectedValues() {
+        var boxes = document.querySelectorAll('#list input[type=checkbox]');
+        var values = [];
+        for (var i = 0; i < boxes.length; i++) {
+          if (boxes[i].checked) { values.push(boxes[i].value); }
+        }
+        return values;
+      }
+
+      function save() {
+        document.getElementById('status').textContent = '';
+        google.script.run
+          .withSuccessHandler(function (result) {
+            if (result.ok) {
+              google.script.host.close();
+            } else {
+              document.getElementById('status').textContent = result.error;
+            }
+          })
+          .withFailureHandler(function () {
+            document.getElementById('status').textContent = 'Could not save the selection.';
+          })
+          .openvaSaveSourceTypes(selectedValues());
+      }
+
+      google.script.run
+        .withSuccessHandler(render)
+        .withFailureHandler(function () {
+          document.getElementById('list').textContent = 'Could not load configuration.';
+        })
+        .openvaGetSourceTypesConfig();
+    </script>
+  </body>
+</html>

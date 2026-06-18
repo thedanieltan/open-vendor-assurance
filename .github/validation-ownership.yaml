@@ -9,6 +9,7 @@ required_status_contexts:
   - validate / release-site
   - validate / full-suite
   - validate / mcp-integration
+  - validate / google-sheets-integration
 jobs:
   repository-integrity:
     owner_loop: repository_integrity
@@ -101,3 +102,11 @@ jobs:
       - adapters/python/openva_vendor_inventory_matcher/**
       - adapters/python/openva_pack_reader/**
       - tools/openva/release_coherence.py
+  google-sheets-integration:
+    owner_loop: publication
+    purpose: Run the Google Sheets integration pure-function tests on the Node runtime so the manual-install Apps Script client's input mapping, batching, response validation, write isolation, and formula-injection behavior are covered.
+    commands:
+      - node --test integrations/google-sheets/test/*.test.mjs
+    protects:
+      - integrations/google-sheets/**
+      - tests/test_google_sheets_integration.py
