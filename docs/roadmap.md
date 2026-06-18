@@ -22,8 +22,13 @@ vendor; it does not perform live discovery or lifecycle routing. Scheduled
 `catalog-growth-promotion-bridge.yml`, which dispatches the controlled write path
 only when the strict-growth plan has eligible actions and no hold, active
 promotion run, or open growth PR blocks it (and only for scheduled discovery
-runs). Planned next: exposing the same `verify`-mode contract over HTTP/MCP and
-connecting the hosted upload page to it.
+runs). A read-only, cached-pack enrichment API now extends the match service under
+`/v1` (catalogue meta, vendor and source lookup, single-vendor match, and a bounded
+batch `enrich` endpoint) so zero-install spreadsheet and document clients can resolve
+vendors against the published catalogue without cloning the repository
+(`docs/resolver-api.md`); it performs no live verification and persists nothing. Planned
+next: exposing the same `verify`-mode contract over HTTP/MCP and the Google Sheets,
+Excel, and Word clients that consume the `/v1` API.
 
 This is not a new advisory or scoring system. OpenVA preserves source-reference
 and observation history; it does not archive or reproduce historical vendor

@@ -351,4 +351,4 @@ python -m openva_jsonl_export --pack . --out ./openva-jsonl
 python -m openva_vendor_inventory_matcher --pack . --input customer_vendors.csv --out matched_vendors.csv
 ```
 
-The optional match service in `services/openva_match_service/` wraps the pack reader and inventory matcher as a self-hosted HTTP service. OpenVA does not operate a central hosted service.
+The optional match service in `services/openva_match_service/` wraps the pack reader and inventory matcher as a self-hosted HTTP service. OpenVA does not operate a central hosted service. It also exposes a read-only, cached-pack enrichment API under `/v1` for zero-install spreadsheet and document clients — see [`docs/resolver-api.md`](docs/resolver-api.md).
