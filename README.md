@@ -53,19 +53,35 @@ indexes/
 schemas/openva/
 ```
 
-For spreadsheet users (Google Sheets):
+For agent-composed use (primary distribution):
+
+```text
+docs/agent-workspace-composition.md   how an agent composes OpenVA with its own workspace connector
+docs/agent-integrations.md            MCP (stdio + Streamable HTTP), HTTP, and framework adapters
+integrations/mcp/openva_mcp/          read-only MCP server (stdio + Streamable HTTP)
+```
+
+OpenVA's primary distribution model is agent-composed: a user's existing agent reads the
+workspace (spreadsheet, database, tickets) through the connector it already controls, sends
+OpenVA only bounded vendor identities via the read-only HTTP/MCP tools, and writes results
+back itself. OpenVA never accesses the workspace and holds no workspace credential
+(see [ADR-0002](docs/architecture/decisions/ADR-0002-agent-composed-workspace-integration.md)
+and [ADR-0003](docs/architecture/decisions/ADR-0003-remote-mcp-product-surface.md)).
+
+For spreadsheet users without a capable agent (Google Sheets — secondary/fallback):
 
 ```text
 integrations/google-sheets/      Google Sheets client over the /v1/enrich API
 ```
 
-The Google Sheets integration is a bound Apps Script project that enriches vendor rows
-against a configured public-read OpenVA deployment. It consumes the existing `/v1/enrich`
-API, embeds no API key, and writes stable `openva_*` reference columns back into a sheet.
-No local Python, Docker, repository checkout or API secret is required; the current release
-requires manual installation into a bound Apps Script project, and a zero-install Workspace
-add-on is a future objective rather than a current capability. Results are public-source
-references cached to the service's loaded snapshot — not advice or live verification.
+The Google Sheets integration is a **secondary compatibility surface**, not the primary
+distribution path: a bound Apps Script project that enriches vendor rows against a configured
+public-read OpenVA deployment. It consumes the existing `/v1/enrich` API, embeds no API key,
+and writes stable `openva_*` reference columns back into a sheet. No local Python, Docker,
+repository checkout or API secret is required; the current release requires manual
+installation into a bound Apps Script project, and a zero-install Workspace add-on is a
+future objective rather than a current capability. Results are public-source references
+cached to the service's loaded snapshot — not advice or live verification.
 
 For public relaunch readiness:
 
@@ -259,7 +275,7 @@ The hosted site also publishes a static discovery surface over these exports: a 
 
 OpenVA resolves vendor assurance sources **catalogue-first, with live refresh on
 use**, through one pipeline shared by browser users, API consumers, agents, and
-future MCP integrations. A request resolves the vendor identity, matches the
+MCP integrations (stdio and Streamable HTTP). A request resolves the vendor identity, matches the
 catalogue, and for each required source type checks whether a catalogue source
 exists and is current. Current sources are returned as-is; missing, stale,
 broken, redirected, or unavailable sources trigger bounded public discovery, and

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/agent-enrichment-row.schema.json",
+  "title": "OpenVA Agent Enrichment Row",
+  "description": "The shared, transport-neutral vendor-identity row. This is the contract genuinely common to both enrichment surfaces: the MCP enrich_inventory tool wraps a list of these rows under `rows`, and the match-service /v1/enrich HTTP endpoint wraps the same rows under `vendors`. A row carries only bounded vendor-identity fields and an opaque row_id; additionalProperties is false so unrelated workspace columns cannot enter OpenVA. At least one identity field must be non-empty (enforced by each transport).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "row_id": {
+      "type": ["string", "integer", "null"],
+      "maxLength": 128,
+      "description": "Opaque caller correlation id. Echoed verbatim; never interpreted as a workspace identifier."
+    },
+    "vendor_name": { "type": ["string", "null"], "maxLength": 512 },
+    "domain": { "type": ["string", "null"], "maxLength": 512 },
+    "business_entity_name": { "type": ["string", "null"], "maxLength": 512 },
+    "registration_number": {
+      "type": ["string", "null"],
+      "maxLength": 512,
+      "description": "Used for matching only on surfaces that carry legal-entity data (the match service over a catalogue pack). The agent-export snapshot has no legal-entity data, so the snapshot-backed MCP tool does not match on this field alone."
+    }
+  }
+}

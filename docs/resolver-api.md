@@ -58,7 +58,18 @@ Response `match` carries the authoritative state and is never reinterpreted:
 | `no_match` | No catalogue vendor. No sources returned. |
 
 ### `POST /v1/enrich`
-The primary spreadsheet/document endpoint. `vendors` is required and non-empty (bounded
+The batch enrichment endpoint. It is consumed primarily by **agents** composing OpenVA
+with their own workspace connectors (the agent-composed primary distribution path —
+see [`agent-workspace-composition.md`](agent-workspace-composition.md)), and also by the
+secondary native/reference clients. The MCP `enrich_inventory` tool delegates to the same
+shared enrichment authority as this endpoint, so the two surfaces agree.
+This HTTP endpoint carries the rows under a **`vendors`** array; the MCP
+`enrich_inventory` tool carries the **same** shared rows
+([`schemas/openva/agent-enrichment-row.schema.json`](../schemas/openva/agent-enrichment-row.schema.json))
+under a `rows` array instead — a deliberate, documented adapter mapping, not one wire
+schema for both surfaces.
+
+`vendors` is required and non-empty (bounded
 by `OPENVA_MAX_ROWS`; exceeding it returns `413`). `source_types` is optional (omitted =
 all canonical types). Rows are processed in input order; duplicates are preserved;
 `row_id` (string or integer) is echoed back exactly. The whole JSON body is also bounded
@@ -105,5 +116,8 @@ the deployment supplies `OPENVA_CATALOG_COMMIT_SHA`.
 
 Cached only — no live verification. The catalogue covers a curated set of vendors; an
 unmatched vendor means OpenVA has no catalogue record, not that the vendor is unsafe.
-The Google Sheets, Excel, and Word integrations that consume this API are delivered in
-later work.
+This endpoint and the MCP `enrich_inventory` tool are the primary, agent-composed way to
+consume OpenVA. The Google Sheets client (`integrations/google-sheets/`) is a secondary,
+manually installed reference/fallback client; Excel and Word clients are optional
+secondary surfaces built only where demand or policy justifies them, not a committed next
+step ([ADR-0005](architecture/decisions/ADR-0005-native-clients-as-secondary-compatibility-surfaces.md)).

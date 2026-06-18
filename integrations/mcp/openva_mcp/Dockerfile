@@ -22,14 +22,22 @@ RUN pip install --no-cache-dir ./openva_pack_reader ./openva_vendor_inventory_ma
 
 # Run as an unprivileged user; the application directory is not written to at
 # runtime. The MCP tool surface has no catalog-write authority and needs no
-# secrets or network listener: it speaks stdio only.
+# secrets. It can speak stdio (default) or Streamable HTTP; neither path accepts a
+# workspace or GitHub token, and the HTTP path serves only the read-only tools.
 RUN useradd --create-home --uid 10001 openva
 USER openva
 
-# Pinned-local mode: mount a snapshot read-only at /snapshot.
+# Pinned-local stdio mode (default): mount a snapshot read-only at /snapshot.
 #   docker run --rm -i --read-only -v /path/to/export:/snapshot:ro openva-mcp
-# Hosted mode with caching: also mount a writable cache and pass
+# Hosted-static stdio mode with caching: also mount a writable cache and pass
 #   --base-url <url> --cache-dir /cache  (mount -v cache:/cache).
+# Streamable HTTP mode (read-only tools over /mcp). A non-loopback bind requires
+# OPENVA_MCP_PUBLIC_READ_ENABLED=true and a Host/Origin allow-list:
+#   docker run --rm -p 8000:8000 \
+#     -e OPENVA_MCP_TRANSPORT=streamable-http -e OPENVA_MCP_HOST=0.0.0.0 \
+#     -e OPENVA_MCP_PUBLIC_READ_ENABLED=true -e OPENVA_MCP_ALLOWED_HOSTS=mcp.example:8000 \
+#     -v /path/to/export:/snapshot:ro openva-mcp
 ENV OPENVA_SNAPSHOT_DIR=/snapshot
+EXPOSE 8000
 ENTRYPOINT ["openva-mcp"]
 CMD ["--snapshot", "/snapshot"]

@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path("services/openva_match_service").resolve()))
 
 from openva_pack_reader import OpenVAPack, PackError  # noqa: E402
 from openva_vendor_inventory_matcher.matcher import MatcherIndex  # noqa: E402
-from openva_vendor_inventory_matcher.core import vendor_record  # noqa: E402
+from openva_vendor_inventory_matcher.core import legal_entity_record, vendor_record  # noqa: E402
 from openva_match_service import cli  # noqa: E402
 from openva_match_service.app import HEADER_ADVISORY_BOUNDARY, RequestSizeLimitMiddleware, create_app  # noqa: E402
 from openva_match_service.config import ServiceConfig, parse_allowed_origins  # noqa: E402
@@ -50,6 +50,15 @@ def ambiguous_state(base):
     one = vendor_record({"vendor_id": "acme-a", "display_name": "Acme Corp", "legal_name": "Acme Corp", "catalog_status": "active", "official_domains": [], "manifest_path": ""})
     two = vendor_record({"vendor_id": "acme-b", "display_name": "Acme Corp", "legal_name": "Acme Corp", "catalog_status": "active", "official_domains": [], "manifest_path": ""})
     return replace(base, matcher_index=MatcherIndex([one, two], {}, {}, {}, {}, [], {}))
+
+
+def legal_entity_state(base):
+    """A vendor matchable ONLY by registration number (no domain/name overlap), plus a
+    canonical source. Exercises the pack-backed legal-entity path that /v1 must keep."""
+    vendor = vendor_record({"vendor_id": "regco", "display_name": "Reg Co", "legal_name": "Reg Co Limited", "catalog_status": "active", "official_domains": ["regco.example"], "manifest_path": ""})
+    entity = legal_entity_record({"entity_id": "regco-le", "vendor_id": "regco", "legal_name": "Reg Co Limited", "jurisdiction": "GB", "registration_number": "RC-987654", "catalog_status": "active"})
+    sources = {"regco": [{"source_id": "regco-dpa", "source_type": "dpa", "source_url": "https://regco.example/dpa", "effective_or_published_at": "2026-01-01"}]}
+    return replace(base, matcher_index=MatcherIndex([vendor], {}, sources, {}, {}, [entity], {}))
 
 
 # --------------------------------------------------------------------------- backward compat
@@ -289,9 +298,67 @@ def test_enrich_rejects_empty_list_and_enforces_row_cap():
     assert resp.status_code == 413
 
 
+def test_enrich_preserves_registration_number_matching():
+    # Regression: /v1/enrich must keep the pack-backed registration-number match path.
+    # A row with ONLY a registration number resolves via the legal entity to the vendor
+    # and returns that vendor's sources — it must not silently become no_match.
+    with TestClient(public_app()) as client:
+        client.app.state.service_state = legal_entity_state(client.app.state.service_state)
+        result = client.post(
+            "/v1/enrich",
+            json={"vendors": [{"row_id": "1", "registration_number": "RC-987654"}], "source_types": ["dpa"]},
+        ).json()["results"][0]
+    assert result["match"]["status"] == "matched"
+    assert result["match"]["vendor_id"] == "regco"
+    assert result["match"]["method"] == "registration_number_exact"
+    assert result["spreadsheet"]["openva_dpa"] == "https://regco.example/dpa"
+    assert result["source_urls_by_type"]["dpa"] == ["https://regco.example/dpa"]
+
+
+def test_match_preserves_registration_number_matching():
+    # The single-identity /v1/match path keeps the same capability.
+    with TestClient(public_app()) as client:
+        client.app.state.service_state = legal_entity_state(client.app.state.service_state)
+        match = client.post("/v1/match", json={"registration_number": "RC-987654"}).json()["match"]
+    assert match["status"] == "matched"
+    assert match["vendor_id"] == "regco"
+    assert match["method"] == "registration_number_exact"
+
+
 def test_enrich_item_requires_identity_field():
     with TestClient(private_app()) as client:
         assert client.post("/v1/enrich", headers=AUTH, json={"vendors": [{"row_id": "1"}]}).status_code == 422
+
+
+def test_enrich_row_rejects_unknown_workspace_fields():
+    # Authority boundary: the shared row sets additionalProperties:false, so an
+    # undeclared workspace column must be rejected, not silently ignored.
+    with TestClient(private_app()) as client:
+        resp = client.post(
+            "/v1/enrich",
+            headers=AUTH,
+            json={"vendors": [{"row_id": "1", "vendor_name": "Stripe", "spreadsheet_id": "sheet-123"}]},
+        )
+    assert resp.status_code == 422
+    assert resp.json() == {"error": "validation_error", "message": "Invalid match service request"}
+
+
+def test_match_rejects_unknown_workspace_fields():
+    with TestClient(private_app()) as client:
+        resp = client.post("/v1/match", headers=AUTH, json={"vendor_name": "Stripe", "workspace_id": "ws-9"})
+    assert resp.status_code == 422
+
+
+def test_enrich_envelope_rejects_unknown_top_level_field():
+    # The enrich envelope fails closed too: an undeclared top-level field (e.g. a
+    # workspace token) must be rejected, not silently discarded (ADR-0004 boundary).
+    with TestClient(private_app()) as client:
+        resp = client.post(
+            "/v1/enrich",
+            headers=AUTH,
+            json={"vendors": [{"vendor_name": "Stripe"}], "workspace_token": "secret"},
+        )
+    assert resp.status_code == 422
 
 
 def test_enrich_row_id_rejects_non_string_non_integer():

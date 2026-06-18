@@ -15,6 +15,7 @@ functions in ``TOOL_SPECS`` and never accepts a GitHub token or any write path.
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from dataclasses import dataclass
 from typing import Any, Callable
@@ -27,6 +28,33 @@ from openva_mcp.snapshot import (
 )
 
 _STRING = {"type": "string"}
+
+# Bounded enrichment row: only the four vendor-identity fields plus an opaque
+# row_id. additionalProperties=False keeps unrelated workspace columns out, and
+# the per-field maxLength bounds caller-supplied strings before any processing.
+_ENRICH_MAX_FIELD_LEN = 512
+_ENRICH_MAX_ROWS = 500
+_ENRICH_MAX_SOURCE_TYPES = 64
+_ENRICH_ROW_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "row_id": {"type": ["string", "integer", "null"], "maxLength": 128},
+        "vendor_name": {"type": ["string", "null"], "maxLength": _ENRICH_MAX_FIELD_LEN},
+        "domain": {"type": ["string", "null"], "maxLength": _ENRICH_MAX_FIELD_LEN},
+        "business_entity_name": {"type": ["string", "null"], "maxLength": _ENRICH_MAX_FIELD_LEN},
+        "registration_number": {
+            "type": ["string", "null"],
+            "maxLength": _ENRICH_MAX_FIELD_LEN,
+            "description": (
+                "Accepted for row-shape compatibility but NOT used for matching on this "
+                "snapshot-backed surface: the agent export carries no legal-entity data, so a "
+                "registration-number-only row returns no_match here. The /v1 HTTP enrichment "
+                "endpoint is the legal-entity-capable surface."
+            ),
+        },
+    },
+    "additionalProperties": False,
+}
 
 
 @dataclass(frozen=True)
@@ -86,12 +114,48 @@ TOOL_SPECS: list[ToolSpec] = [
     ToolSpec(
         "match_inventory",
         "Match inventory rows (domain / vendor_name / business_entity_name / registration_number) "
-        "to vendors. Each row's match_status is matched, ambiguous, or no_match.",
+        "to vendors. Each row's match_status is matched, ambiguous, or no_match. Each row must "
+        "carry at least one identity field. registration_number is NOT used for matching on this "
+        "snapshot surface (no legal-entity data); use the /v1 HTTP endpoint for legal-entity matching.",
+        # Bounded to the shared identity row (additionalProperties=False): the
+        # workspace-data boundary applies to the whole remote MCP surface, so an
+        # undeclared field (e.g. workspace_id) is rejected here too, not just by
+        # enrich_inventory. The larger maxItems preserves this tool's batch capacity.
         _obj(
-            {"rows": {"type": "array", "items": {"type": "object"}, "maxItems": 5000}},
+            {"rows": {"type": "array", "items": _ENRICH_ROW_SCHEMA, "maxItems": 5000}},
             ["rows"],
         ),
         lambda snapshot, args: tools.match_inventory(snapshot, list(args["rows"])),
+    ),
+    ToolSpec(
+        "enrich_inventory",
+        "Match a bounded batch of vendor-identity rows (row_id / vendor_name / domain / "
+        "business_entity_name / registration_number) and attach their public assurance "
+        "sources, optionally filtered by source_type. For agents that have already read a "
+        "workspace through their own connector: send only vendor-identity fields, never "
+        "workspace content. Each row must carry at least one identity field. registration_number "
+        "is NOT used for matching on this snapshot surface (no legal-entity data); the /v1 HTTP "
+        "endpoint is the legal-entity-capable surface. Input order and duplicates are preserved, "
+        "row_id is echoed, ambiguous stays ambiguous, no_match stays no-match. Read-only; not advice.",
+        _obj(
+            {
+                "rows": {
+                    "type": "array",
+                    "items": _ENRICH_ROW_SCHEMA,
+                    "minItems": 1,
+                    "maxItems": _ENRICH_MAX_ROWS,
+                },
+                "source_types": {
+                    "type": ["array", "null"],
+                    "items": {"type": "string", "maxLength": 128},
+                    "maxItems": _ENRICH_MAX_SOURCE_TYPES,
+                },
+            },
+            ["rows"],
+        ),
+        lambda snapshot, args: tools.enrich_inventory(
+            snapshot, list(args["rows"]), args.get("source_types")
+        ),
     ),
     ToolSpec(
         "get_snapshot_metadata",
@@ -152,10 +216,143 @@ def build_server(snapshot: Snapshot):
             jsonschema.validate(arguments or {}, spec.input_schema)
         except jsonschema.ValidationError as exc:
             return _tool_error(f"invalid input for {name}: {exc.message}")
-        # Returning a dict surfaces as structuredContent (and JSON text content).
-        return spec.func(snapshot, arguments or {})
+        try:
+            # Returning a dict surfaces as structuredContent (and JSON text content).
+            return spec.func(snapshot, arguments or {})
+        except ValueError as exc:
+            # Expected tool-domain rejections (e.g. a row with no identity field)
+            # become a controlled tool error with a safe message — never a stack
+            # trace and never the caller's arguments.
+            return _tool_error(f"{name}: {exc}")
 
     return server
+
+
+# True loopback bind addresses. A non-loopback bind (a specific public host OR a
+# wildcard like 0.0.0.0 / ::) is refused unless the operator explicitly opts in
+# (OPENVA_MCP_PUBLIC_READ_ENABLED) AND supplies an explicit Host allow-list, so the
+# default posture stays local even with the streamable-http transport selected.
+# 0.0.0.0 / :: are wildcard binds, NOT loopback.
+LOOPBACK_HOSTS = frozenset({"127.0.0.1", "::1", "localhost"})
+_TRUE_TOKENS = frozenset({"1", "true", "yes", "on"})
+TRANSPORT_STDIO = "stdio"
+TRANSPORT_STREAMABLE_HTTP = "streamable-http"
+DEFAULT_HOST = "127.0.0.1"
+DEFAULT_PORT = 8000
+DEFAULT_MOUNT_PATH = "/mcp"
+
+
+@dataclass(frozen=True)
+class TransportConfig:
+    """Resolved transport settings. stdio is the default and is unaffected by the
+    streamable-http fields, so existing stdio invocations keep working unchanged."""
+
+    transport: str = TRANSPORT_STDIO
+    host: str = DEFAULT_HOST
+    port: int = DEFAULT_PORT
+    mount_path: str = DEFAULT_MOUNT_PATH
+    # Read-only public bind opt-in. Never enables any write, candidate-intake,
+    # GitHub-write, live-verification, arbitrary-fetch, or workspace capability —
+    # there are none in the tool surface. It only permits a non-loopback bind of
+    # the existing read-only tools.
+    public_read_enabled: bool = False
+    allowed_origins: tuple[str, ...] = ()
+    allowed_hosts: tuple[str, ...] = ()
+    access_log: bool = False
+    # Bound the JSON-RPC body before the transport parses it. Generous for a
+    # bounded enrich batch; rejects a single oversized payload up front.
+    max_request_bytes: int = 1_000_000
+
+
+def _parse_origins(raw: str) -> tuple[str, ...]:
+    """Comma-separated origins; whitespace stripped, blanks dropped, order-preserving
+    de-dup. An absent or empty value yields an empty tuple, never a wildcard."""
+    seen: list[str] = []
+    for entry in (raw or "").split(","):
+        value = entry.strip()
+        if value and value not in seen:
+            seen.append(value)
+    return tuple(seen)
+
+
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = os.environ.get(name, "").strip().lower()
+    return raw in _TRUE_TOKENS if raw else default
+
+
+def default_allowed_hosts(host: str, port: int) -> tuple[str, ...]:
+    """Default Host allow-list — **loopback only**.
+
+    DNS-rebinding protection is always on for the HTTP transport, and the SDK
+    rejects every request when the Host allow-list is empty. For a loopback bind a
+    usable default is derived (loopback names with and without the port; IPv6
+    loopback is bracketed for the Host header). For any non-loopback bind (a specific
+    public host OR a wildcard like 0.0.0.0 / ::) this returns ``()`` — a real
+    deployment must name its own host via OPENVA_MCP_ALLOWED_HOSTS, and startup fails
+    closed otherwise (see ``check_public_binding``)."""
+    if host not in LOOPBACK_HOSTS:
+        return ()
+    if host == "::1":
+        return ("[::1]", f"[::1]:{port}")
+    names = {"127.0.0.1", "localhost", f"127.0.0.1:{port}", f"localhost:{port}"}
+    return tuple(sorted(names))
+
+
+def transport_config_from_args(args: argparse.Namespace) -> TransportConfig:
+    """Resolve transport config from CLI args, falling back to OPENVA_MCP_* env vars.
+
+    Defaults keep stdio behaviour; env equivalents exist for container deployment."""
+    transport = (args.transport or os.environ.get("OPENVA_MCP_TRANSPORT") or TRANSPORT_STDIO).strip()
+    host = (args.host or os.environ.get("OPENVA_MCP_HOST") or DEFAULT_HOST).strip()
+    port_raw = args.port or os.environ.get("OPENVA_MCP_PORT") or DEFAULT_PORT
+    mount_path = (args.mount_path or os.environ.get("OPENVA_MCP_MOUNT_PATH") or DEFAULT_MOUNT_PATH).strip()
+    try:
+        port = int(port_raw)
+    except (TypeError, ValueError) as exc:
+        raise SystemExit(f"invalid port: {port_raw!r}") from exc
+    if not mount_path.startswith("/"):
+        mount_path = "/" + mount_path
+    public_read = bool(args.public_read) or _env_bool("OPENVA_MCP_PUBLIC_READ_ENABLED")
+    origins = _parse_origins(args.allowed_origins or os.environ.get("OPENVA_MCP_ALLOWED_ORIGINS", ""))
+    hosts = _parse_origins(args.allowed_hosts or os.environ.get("OPENVA_MCP_ALLOWED_HOSTS", ""))
+    if not hosts:
+        hosts = default_allowed_hosts(host, port)
+    access_log = _env_bool("OPENVA_MCP_ACCESS_LOG_ENABLED")
+    return TransportConfig(
+        transport=transport,
+        host=host,
+        port=port,
+        mount_path=mount_path,
+        public_read_enabled=public_read,
+        allowed_origins=origins,
+        allowed_hosts=hosts,
+        access_log=access_log,
+    )
+
+
+def check_public_binding(config: TransportConfig) -> None:
+    """Fail closed before serving on any non-loopback bind.
+
+    A loopback bind is always allowed. A non-loopback bind (a specific public host
+    or a wildcard like 0.0.0.0 / ::) requires BOTH an explicit public-read opt-in
+    AND an explicit Host allow-list. The Host allow-list requirement closes the gap
+    where a wildcard bind would otherwise start with healthy probes but a ``/mcp``
+    that DNS-rebinding protection rejects for every Host (empty allow-list)."""
+    if config.transport != TRANSPORT_STREAMABLE_HTTP:
+        return
+    if config.host in LOOPBACK_HOSTS:
+        return
+    if not config.public_read_enabled:
+        raise SystemExit(
+            f"refusing to bind {config.host!r}: set OPENVA_MCP_PUBLIC_READ_ENABLED=true "
+            "(or --public-read) to expose the read-only tools on a non-loopback address"
+        )
+    if not config.allowed_hosts:
+        raise SystemExit(
+            f"refusing to bind {config.host!r}: a non-loopback bind requires an explicit Host "
+            "allow-list (OPENVA_MCP_ALLOWED_HOSTS), otherwise DNS-rebinding protection rejects "
+            "every request to the MCP endpoint"
+        )
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -165,6 +362,22 @@ def build_arg_parser() -> argparse.ArgumentParser:
     source.add_argument("--base-url", help="Base URL of a hosted OpenVA export tree.")
     parser.add_argument("--cache-dir", default=None, help="Optional cache dir for disclosed remote fallback.")
     parser.add_argument("--verify", action="store_true", help="Verify the snapshot and exit.")
+    parser.add_argument(
+        "--transport",
+        choices=[TRANSPORT_STDIO, TRANSPORT_STREAMABLE_HTTP],
+        default=None,
+        help="Transport (default: stdio; env OPENVA_MCP_TRANSPORT).",
+    )
+    parser.add_argument("--host", default=None, help="Streamable HTTP bind host (default: 127.0.0.1).")
+    parser.add_argument("--port", default=None, type=int, help="Streamable HTTP bind port (default: 8000).")
+    parser.add_argument("--mount-path", default=None, help="Streamable HTTP MCP mount path (default: /mcp).")
+    parser.add_argument(
+        "--public-read",
+        action="store_true",
+        help="Allow a non-loopback streamable-http bind of the read-only tools (env OPENVA_MCP_PUBLIC_READ_ENABLED).",
+    )
+    parser.add_argument("--allowed-origins", default=None, help="Comma-separated Origin allow-list (env OPENVA_MCP_ALLOWED_ORIGINS).")
+    parser.add_argument("--allowed-hosts", default=None, help="Comma-separated Host allow-list (env OPENVA_MCP_ALLOWED_HOSTS).")
     return parser
 
 
@@ -179,10 +392,173 @@ def run_stdio(server) -> None:
     anyio.run(_run)
 
 
+class _BodyLimit:
+    """ASGI guard that bounds a request body before the MCP transport parses it.
+
+    A declared Content-Length over the cap is rejected up front; a chunked body is
+    buffered up to the cap (never holding more than ~max_bytes) and replayed, so a
+    single oversized JSON-RPC payload cannot exhaust memory regardless of framing."""
+
+    def __init__(self, app, *, max_bytes: int) -> None:
+        self.app = app
+        self.max_bytes = max_bytes
+
+    async def __call__(self, scope, receive, send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+        for name, value in scope.get("headers") or []:
+            if name == b"content-length":
+                try:
+                    if int(value) > self.max_bytes:
+                        await self._reject(scope, send)
+                        return
+                except ValueError:
+                    pass
+                break
+
+        buffered: list[dict[str, Any]] = []
+        total = 0
+        more = True
+        while more:
+            message = await receive()
+            if message["type"] != "http.request":
+                buffered.append(message)
+                if message["type"] == "http.disconnect":
+                    break
+                continue
+            total += len(message.get("body", b"") or b"")
+            if total > self.max_bytes:
+                await self._reject(scope, send)
+                return
+            buffered.append(message)
+            more = message.get("more_body", False)
+
+        replayed_terminal = False
+
+        async def replay() -> dict[str, Any]:
+            nonlocal replayed_terminal
+            if buffered:
+                return buffered.pop(0)
+            if not replayed_terminal:
+                replayed_terminal = True
+                return {"type": "http.request", "body": b"", "more_body": False}
+            return await receive()
+
+        await self.app(scope, replay, send)
+
+    async def _reject(self, scope, send) -> None:
+        from starlette.responses import JSONResponse
+
+        async def _empty_receive() -> dict[str, Any]:
+            return {"type": "http.request", "body": b"", "more_body": False}
+
+        await JSONResponse(
+            {"error": "payload_too_large", "message": f"request body exceeds the maximum of {self.max_bytes} bytes"},
+            status_code=413,
+        )(scope, _empty_receive, send)
+
+
+def build_streamable_http_app(snapshot: Snapshot | None, config: TransportConfig):
+    """Build the Starlette ASGI app exposing the read-only MCP tools over Streamable HTTP.
+
+    The same ``TOOL_SPECS`` registry and ``build_server`` wiring back this transport
+    and stdio, so there is no tool drift between them. DNS-rebinding protection is
+    always on (Host + Origin validation via the SDK's transport security). Readiness
+    fails closed: snapshot integrity is verified at startup, and ``/mcp`` returns 503
+    until verification has passed. ``snapshot`` may be ``None`` when loading failed —
+    then the server is never built and readiness stays not-ready."""
+    import contextlib
+
+    from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
+    from mcp.server.transport_security import TransportSecuritySettings
+    from starlette.applications import Starlette
+    from starlette.responses import JSONResponse, Response
+    from starlette.routing import Mount, Route
+
+    state = {"ready": False, "detail": "starting"}
+    server = build_server(snapshot) if snapshot is not None else None
+
+    security = TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=list(config.allowed_hosts),
+        allowed_origins=list(config.allowed_origins),
+    )
+    session_manager = (
+        StreamableHTTPSessionManager(
+            app=server,
+            event_store=None,
+            json_response=True,
+            stateless=True,
+            security_settings=security,
+        )
+        if server is not None
+        else None
+    )
+
+    async def healthz(_request) -> JSONResponse:
+        # Liveness: the process is up. No snapshot dependency.
+        return JSONResponse({"status": "ok"})
+
+    async def readyz(_request) -> JSONResponse:
+        ok = state["ready"]
+        return JSONResponse(
+            {"status": "ready" if ok else "not_ready", "detail": state["detail"]},
+            status_code=200 if ok else 503,
+        )
+
+    async def handle_mcp(scope, receive, send) -> None:
+        # Fail closed: never serve tools until the snapshot has verified.
+        if session_manager is None or not state["ready"]:
+            await Response("snapshot not ready", status_code=503)(scope, receive, send)
+            return
+        await session_manager.handle_request(scope, receive, send)
+
+    @contextlib.asynccontextmanager
+    async def lifespan(_app):
+        if snapshot is not None:
+            try:
+                report = snapshot.verify()
+                state["ready"] = bool(report.get("ok"))
+                state["detail"] = "ok" if state["ready"] else "integrity_failed"
+            except Exception:  # integrity / load failure -> fail closed, no detail leak
+                state["ready"] = False
+                state["detail"] = "integrity_failed"
+        else:
+            state["detail"] = "snapshot_unavailable"
+        if session_manager is not None:
+            async with session_manager.run():
+                yield
+        else:
+            yield
+
+    return Starlette(
+        routes=[
+            Route("/healthz", healthz, methods=["GET"]),
+            Route("/readyz", readyz, methods=["GET"]),
+            Mount(config.mount_path, app=_BodyLimit(handle_mcp, max_bytes=config.max_request_bytes)),
+        ],
+        lifespan=lifespan,
+    )
+
+
+def serve_streamable_http(snapshot: Snapshot, config: TransportConfig) -> None:
+    import uvicorn
+
+    app = build_streamable_http_app(snapshot, config)
+    # access_log defaults False so request lines (and any query) are never logged;
+    # the MCP path carries no vendor identity, and bodies are never logged.
+    uvicorn.run(app, host=config.host, port=config.port, access_log=config.access_log, log_level="warning")
+
+
 def main(argv: list[str] | None = None) -> int:
     from openva_mcp.snapshot import SnapshotError
 
     args = build_arg_parser().parse_args(argv)
+    transport_config = transport_config_from_args(args)
+    # Guard the public bind before loading anything, so a misconfigured non-loopback
+    # bind fails fast and never starts serving.
+    check_public_binding(transport_config)
     try:
         # Snapshot load enforces digest integrity and supported schema.
         snapshot = resolve_snapshot(args)
@@ -193,7 +569,10 @@ def main(argv: list[str] | None = None) -> int:
     except SnapshotError as exc:
         print(f"snapshot error: {exc}", file=sys.stderr)
         return 1
-    run_stdio(build_server(snapshot))
+    if transport_config.transport == TRANSPORT_STREAMABLE_HTTP:
+        serve_streamable_http(snapshot, transport_config)
+    else:
+        run_stdio(build_server(snapshot))
     return 0
 
 

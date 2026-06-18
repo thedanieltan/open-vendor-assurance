@@ -1,20 +1,43 @@
 # Agent Integrations
 
-OpenVA publishes static, digest-verifiable JSON exports (see
-[`agent-export-contract.md`](agent-export-contract.md)). Two ways to consume
-them programmatically:
+**Primary distribution:** OpenVA's read-only HTTP/MCP capabilities are designed to
+be composed by a user's existing agent with the workspace connectors that agent
+already controls. The agent reads the workspace (spreadsheet, database, tickets),
+sends OpenVA only bounded vendor identities, and writes results back through its own
+connector. OpenVA never accesses the workspace. See
+[`agent-workspace-composition.md`](agent-workspace-composition.md) and
+[ADR-0002](architecture/decisions/ADR-0002-agent-composed-workspace-integration.md).
 
-- the read-only **MCP server** (`integrations/mcp/openva_mcp`), for MCP hosts
-  and agent frameworks;
+OpenVA publishes static, digest-verifiable JSON exports (see
+[`agent-export-contract.md`](agent-export-contract.md)). Ways to consume them
+programmatically:
+
+- the read-only **MCP server** (`integrations/mcp/openva_mcp`), over **stdio** or
+  **Streamable HTTP**, for MCP hosts and agent frameworks;
 - the static exports directly, for any HTTP or file client.
 
 Everything below is read-only. Nothing here approves, scores, ranks, or makes
 compliance, procurement, or risk conclusions about any vendor; every result
 carries `not_advice: true`.
 
+## Transports
+
+The same tool registry and implementation back both transports — there is no
+tool drift between them ([ADR-0003](architecture/decisions/ADR-0003-remote-mcp-product-surface.md)):
+
+- **stdio** (default) — `--transport stdio`. Best for reproducibility, offline use,
+  and local MCP hosts.
+- **Streamable HTTP** — `--transport streamable-http --host 127.0.0.1 --port 8000
+  --mount-path /mcp`. Read-only tools over `/mcp`, loopback by default; a
+  non-loopback bind requires `OPENVA_MCP_PUBLIC_READ_ENABLED=true` and a Host/Origin
+  allow-list. Liveness/readiness at `/healthz` and `/readyz` (readiness fails closed
+  until the snapshot verifies). This is cached-snapshot, read-only operation; OpenVA
+  does not operate a production hosted endpoint, and live verification is governed
+  separately by ADR-0001.
+
 ## Data modes
 
-The MCP server reads one snapshot, in one of two modes:
+Independent of transport, the server reads one snapshot in one of two data modes:
 
 - **Pinned local** — `--snapshot <dir>`: an extracted OpenVA agent-export release bundle (or export tree)
   on disk. Reproducible and offline.
@@ -94,6 +117,22 @@ exports directly with an HTTP Request node starting at
 (with candidates), or `no_match`. For a file-based CSV workflow use the
 `openva-vendor-inventory-matcher` adapter, which uses the same vocabulary.
 
+## Agent-composed enrichment (`enrich_inventory`)
+
+`enrich_inventory` is the composite tool for agent-composed workspace workflows: an
+agent that has read a workspace through its own connector sends a bounded batch of
+vendor-identity rows (`row_id`, `vendor_name`, `domain`, `business_entity_name`,
+`registration_number`) plus optional `source_types`, and receives, per row, the
+match, canonical public sources, the primary source per type, source URLs per type,
+and machine-state notes — with input order, duplicates, and exact `row_id`
+preserved. It delegates to the same shared authority as the match service
+`/v1/enrich`, so the two surfaces agree. The request/result shapes are pinned by
+[`schemas/openva/agent-enrichment-request.schema.json`](../schemas/openva/agent-enrichment-request.schema.json)
+and
+[`schemas/openva/agent-enrichment-result.schema.json`](../schemas/openva/agent-enrichment-result.schema.json).
+See [`agent-workspace-composition.md`](agent-workspace-composition.md) for the full
+read → enrich → preview → write-back workflow.
+
 ## Self-hosted match service
 
 For an HTTP matching endpoint over the same data, run
@@ -105,13 +144,17 @@ stay `ambiguous`.
 
 ## Container
 
-The image runs as a non-root user over stdio and needs no secrets. Mount the
-snapshot read-only:
+The image runs as a non-root user and needs no secrets. It defaults to stdio; it
+can also serve the read-only tools over Streamable HTTP. Mount the snapshot
+read-only:
 
 ```bash
 docker build -f integrations/mcp/openva_mcp/Dockerfile -t openva-mcp .
 docker run --rm -i --read-only -v /path/to/openva-export:/snapshot:ro openva-mcp
 ```
 
-For hosted mode with caching, add a writable cache mount and
-`--base-url <canonical_base_url>/public --cache-dir /cache`.
+For hosted-static data with caching, add a writable cache mount and
+`--base-url <canonical_base_url>/public --cache-dir /cache`. For Streamable HTTP,
+publish a port and set `OPENVA_MCP_TRANSPORT=streamable-http` (a non-loopback bind
+also needs `OPENVA_MCP_PUBLIC_READ_ENABLED=true` and a Host allow-list) — see the
+package [README](../integrations/mcp/openva_mcp/README.md).
