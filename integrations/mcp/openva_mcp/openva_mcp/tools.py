@@ -183,14 +183,18 @@ def enrich_inventory(
 
     This is the composite tool for agents that have already read a user-controlled
     workspace through their own connector: it accepts only bounded vendor-identity
-    fields and requested source types, never workspace content. Matching, source-type
-    filtering, primary-source ranking, and notes are delegated to the shared
-    ``enrich_identity`` authority — the same one the match service ``/v1/enrich``
-    endpoint uses — so the two surfaces agree for the same evidence. Input order and
-    duplicates are preserved, ``row_id`` is echoed verbatim, ``ambiguous`` stays
-    ambiguous, and ``no_match`` stays no-match. The snapshot identity is disclosed
-    once on the envelope; OpenVA performs no workspace write and makes no compliance,
-    suitability, or risk conclusion.
+    fields and requested source types, never workspace content. It matches with the
+    snapshot-grade identity matcher (``enrich_identity`` -> ``match_identity``:
+    domain / vendor name only — the snapshot carries no legal-entity data) and then
+    delegates source-type filtering, primary-source ranking, and notes to the shared
+    ``assemble_enrichment`` projection authority. The match service ``/v1/enrich``
+    uses the *same projection* over its own pack-backed matcher, so the two surfaces
+    agree for the same decision and sources; matcher capability differs by the data
+    each surface holds (a registration-number-only row matches on ``/v1`` but is
+    ``no_match`` here). Input order and duplicates are preserved, ``row_id`` is echoed
+    verbatim, ``ambiguous`` stays ambiguous, and ``no_match`` stays no-match. The
+    snapshot identity is disclosed once on the envelope; OpenVA performs no workspace
+    write and makes no compliance, suitability, or risk conclusion.
     """
     for row in rows:
         if not _has_identity(row or {}):

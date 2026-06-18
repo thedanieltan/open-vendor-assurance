@@ -87,9 +87,16 @@ class MatchResultModel(BaseModel):
 
 
 class MatchInput(BaseModel):
-    """A single vendor identity. At least one field must be non-empty."""
+    """A single vendor identity. At least one field must be non-empty.
+
+    ``extra="forbid"`` enforces the shared row contract
+    (``schemas/openva/agent-enrichment-row.schema.json``, ``additionalProperties: false``)
+    on the HTTP surface, so an unknown/undeclared field (e.g. a workspace id or
+    spreadsheet id) is rejected with 422 rather than silently ignored — the same
+    authority boundary the MCP tool's JSON Schema enforces."""
 
     model_config = ConfigDict(
+        extra="forbid",
         json_schema_extra={
             "example": {
                 "vendor_name": "Stripe",
@@ -97,7 +104,7 @@ class MatchInput(BaseModel):
                 "business_entity_name": None,
                 "registration_number": None,
             }
-        }
+        },
     )
 
     vendor_name: IdentityField | None = None
@@ -150,7 +157,10 @@ def _normalize_row_id(value: Any) -> str | int | None:
 
 
 class EnrichVendorItem(MatchInput):
+    # Inherits extra="forbid" from MatchInput (declared again for clarity), so a row
+    # with an undeclared workspace column is rejected, not silently dropped.
     model_config = ConfigDict(
+        extra="forbid",
         json_schema_extra={
             "example": {
                 "row_id": "12",
@@ -159,7 +169,7 @@ class EnrichVendorItem(MatchInput):
                 "business_entity_name": None,
                 "registration_number": None,
             }
-        }
+        },
     )
 
     row_id: str | int | None = None

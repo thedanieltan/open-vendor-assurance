@@ -330,6 +330,25 @@ def test_enrich_item_requires_identity_field():
         assert client.post("/v1/enrich", headers=AUTH, json={"vendors": [{"row_id": "1"}]}).status_code == 422
 
 
+def test_enrich_row_rejects_unknown_workspace_fields():
+    # Authority boundary: the shared row sets additionalProperties:false, so an
+    # undeclared workspace column must be rejected, not silently ignored.
+    with TestClient(private_app()) as client:
+        resp = client.post(
+            "/v1/enrich",
+            headers=AUTH,
+            json={"vendors": [{"row_id": "1", "vendor_name": "Stripe", "spreadsheet_id": "sheet-123"}]},
+        )
+    assert resp.status_code == 422
+    assert resp.json() == {"error": "validation_error", "message": "Invalid match service request"}
+
+
+def test_match_rejects_unknown_workspace_fields():
+    with TestClient(private_app()) as client:
+        resp = client.post("/v1/match", headers=AUTH, json={"vendor_name": "Stripe", "workspace_id": "ws-9"})
+    assert resp.status_code == 422
+
+
 def test_enrich_row_id_rejects_non_string_non_integer():
     with TestClient(private_app()) as client:
         assert client.post("/v1/enrich", headers=AUTH, json={"vendors": [{"row_id": 1.5, "vendor_name": "Stripe"}]}).status_code == 422

@@ -1,25 +1,28 @@
-"""Shared, dependency-neutral enrichment authority.
+"""Shared, dependency-neutral enrichment projection authority.
 
-This module is the single authority for the *host-neutral* enrichment contract:
-match one bounded vendor identity, filter that vendor's canonical public sources
-by requested type, pick the primary source per type, and emit machine-state
-notes. It is consumed by both transport adapters that expose enrichment:
+This module owns the *projection* half of the host-neutral enrichment contract:
+given a match decision and the matched vendor's canonical sources, filter by
+requested source type, pick the primary source per type, group URLs, and emit
+machine-state notes. ``assemble_enrichment`` is that shared authority, used by
+both surfaces, so for the **same decision and the same sources** they produce an
+identical projection.
 
-- the match service ``/v1/enrich`` HTTP endpoint, and
-- the MCP ``enrich_inventory`` tool.
+Matching is *not* uniformly owned here. Matching capability is surface- and
+data-dependent:
 
-Like :mod:`openva_vendor_inventory_matcher.core`, it has no CSV, pack, FastAPI,
-or MCP dependency. Each adapter owns reading its own catalogue representation
-(an in-memory pack index or a verified agent-export snapshot) and projecting
-source rows; the *decision* — match status, candidate set, which source types
-survive the filter, which source is primary per type, and the notes — comes from
-here, so the two surfaces agree for the same evidence.
+- the match service ``/v1/enrich`` runs the pack-backed ``MatcherIndex.enrich_row``
+  (``match_one``), which resolves registration-number / legal-entity matches; it
+  then calls ``assemble_enrichment`` directly with that decision;
+- the MCP ``enrich_inventory`` tool has only the verified agent-export snapshot
+  (no legal-entity data), so it uses the snapshot-grade ``match_identity`` here
+  (domain / vendor name) via the ``enrich_identity`` convenience wrapper, which
+  then calls ``assemble_enrichment``.
 
-It deliberately performs *identity* matching only (domain / vendor name). Legal-
-entity registration resolution is a richer, pack-only capability owned by
-``matcher.py`` and is not part of the host-neutral enrichment contract: the
-agent-export snapshot carries no legal-entity data, so binding enrichment to it
-would make the two surfaces disagree by construction.
+This is the honest parity boundary: the projection is shared and identical; the
+matcher follows the data each surface holds. ``match_identity`` therefore matches
+on identity only and never performs a legal-entity lookup. Like
+:mod:`openva_vendor_inventory_matcher.core`, this module has no CSV, pack, FastAPI,
+or MCP dependency.
 """
 
 from __future__ import annotations

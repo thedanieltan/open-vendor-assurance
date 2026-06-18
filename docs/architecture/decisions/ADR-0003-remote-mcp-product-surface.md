@@ -61,20 +61,31 @@ incompatible payloads.
 
 ## Shared authority
 
-No second matching algorithm or primary-source ranker is introduced. The
-dependency-neutral enrichment core
-(`openva_vendor_inventory_matcher.enrichment.enrich_identity`) is shared so that
-`/v1/enrich` and the MCP `enrich_inventory` tool delegate to the same matching,
-canonical-source filtering, primary-source ranking, notes and projection logic:
+No second primary-source ranker or projection algorithm is introduced. The shared,
+dependency-neutral authority is the **projection** —
+`openva_vendor_inventory_matcher.enrichment.assemble_enrichment` (canonical-source
+filtering, primary-source ranking, URL grouping, and machine-state notes). Both
+surfaces call it, so for the **same match decision and the same sources** they
+produce an identical projection.
+
+**Matching capability is surface- and data-dependent** — it is not uniformly shared,
+because the two surfaces hold different data:
 
 ```text
-shared dependency-neutral enrichment core
-  ├── HTTP /v1 adapter (observation-aware source projection + spreadsheet projection)
-  └── MCP adapter (snapshot source projection)
+shared projection authority  (assemble_enrichment: filter + rank + notes)
+  ├── HTTP /v1 adapter — pack-backed matcher (MatcherIndex.enrich_row / match_one);
+  │     resolves registration-number / legal-entity matches; observation-aware
+  │     source projection + spreadsheet projection
+  └── MCP adapter — snapshot-grade identity matcher (match_identity: domain/name only,
+        no legal-entity data); snapshot source projection
 ```
 
-The MCP adapter must never reimplement `/v1` enrichment, call a localhost `/v1`
-over HTTP, import FastAPI route handlers, or invent a different source ranker.
+This is the documented registration-number parity boundary: a registration-number-only
+row matches on `/v1` (pack-backed) and is `no_match` on the snapshot, by design. The
+MCP adapter must never reimplement `/v1` enrichment, call a localhost `/v1` over HTTP,
+import FastAPI route handlers, or invent a different source ranker. The
+primary-source ranker (`primary_source_by_type`) lives once in the shared module and
+is re-exported by `matcher.py` so the CSV adapter uses the same ranking.
 
 ## Transport boundaries
 

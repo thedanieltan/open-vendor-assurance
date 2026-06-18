@@ -1,12 +1,14 @@
 """Tests for the MCP composite ``enrich_inventory`` tool.
 
 The tool is the agent-composed workspace path: an agent reads a workspace through
-its own connector, then sends only bounded vendor-identity rows here. It delegates
-matching, source-type filtering, primary-source ranking, and notes to the shared
-``enrich_identity`` authority (the same one ``/v1/enrich`` uses), so the two
-surfaces agree. These tests pin matched/ambiguous/no-match behaviour, order and
-duplicate preservation, exact ``row_id`` echo, bounded inputs, schema conformance,
-and that no internal path or advisory claim leaks.
+its own connector, then sends only bounded vendor-identity rows here. It matches with
+the snapshot-grade identity matcher and delegates source-type filtering,
+primary-source ranking, and notes to the shared ``assemble_enrichment`` projection
+authority — the same projection ``/v1/enrich`` uses over its own pack-backed matcher,
+so the two surfaces agree for the same decision and sources. These tests pin
+matched/ambiguous/no-match behaviour, order and duplicate preservation, exact
+``row_id`` echo, bounded inputs, schema conformance, and that no internal path or
+advisory claim leaks.
 """
 
 import json
@@ -262,3 +264,31 @@ def test_enrich_inventory_registered_with_valid_schema():
     assert "rows" in spec.input_schema["properties"]
     assert spec.description and callable(spec.func)
     assert spec in TOOL_SPECS
+
+
+def _normalize_row(schema):
+    """Structural view of a row schema for drift comparison: additionalProperties plus
+    each property's type (order-insensitive) and maxLength. Descriptions/titles ignored."""
+
+    def types(prop):
+        declared = prop.get("type")
+        return sorted(declared) if isinstance(declared, list) else [declared]
+
+    return {
+        "additionalProperties": schema.get("additionalProperties"),
+        "properties": {
+            name: {"type": types(prop), "maxLength": prop.get("maxLength")}
+            for name, prop in schema.get("properties", {}).items()
+        },
+    }
+
+
+def test_three_row_schema_definitions_do_not_drift():
+    # The shared row is declared in three places; assert they are structurally equal so
+    # the runtime tool schema and the published JSON Schemas cannot drift apart.
+    from openva_mcp.server import _ENRICH_ROW_SCHEMA
+
+    standalone = _normalize_row(ROW_SCHEMA)
+    request_defs_row = _normalize_row(REQUEST_SCHEMA["$defs"]["row"])
+    mcp_runtime_row = _normalize_row(_ENRICH_ROW_SCHEMA)
+    assert standalone == request_defs_row == mcp_runtime_row

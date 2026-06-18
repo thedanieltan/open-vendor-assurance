@@ -1,11 +1,14 @@
 """Cross-surface parity: MCP ``enrich_inventory`` vs match-service ``enrich_one``.
 
-Both adapters delegate to the shared ``enrich_identity`` authority, so for the same
-vendor identity and the same canonical sources they must agree on the parity-
-relevant decisions: match status, matched vendor, candidate set, which source
-types survive the filter, which source is primary per type, and the notes. The two
-surfaces project per-source fields differently (snapshot vs pack), so only the
-shared-decision fields are compared, not whole source objects.
+Both adapters delegate to the shared ``assemble_enrichment`` projection authority, so
+for the same match decision and the same canonical sources they must agree on the
+projection: which source types survive the filter, which source is primary per type,
+URL grouping, and the notes. Matching itself is surface-specific (pack-backed for
+``/v1``, snapshot-grade for MCP); these tests use evidence both matchers resolve the
+same way (domain/name/ambiguous/no-match) so the comparison isolates the shared
+projection, plus a dedicated test for the registration-number capability boundary.
+The two surfaces project per-source fields differently (snapshot vs pack), so only
+the shared-decision fields are compared, not whole source objects.
 
 This runs in the full suite (it imports both surfaces). It builds one logical
 catalogue — the agent-export ``example-vendor`` tree for MCP, and an equivalent
