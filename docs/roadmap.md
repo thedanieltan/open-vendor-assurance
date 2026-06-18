@@ -26,13 +26,15 @@ runs). A read-only, cached-pack enrichment API now extends the match service und
 `/v1` (catalogue meta, vendor and source lookup, single-vendor match, and a bounded
 batch `enrich` endpoint) so zero-install spreadsheet and document clients can resolve
 vendors against the published catalogue without cloning the repository
-(`docs/resolver-api.md`); it performs no live verification and persists nothing. A
-zero-install Google Sheets client now consumes that `/v1/enrich` endpoint
-(`integrations/google-sheets/`): from a custom menu a spreadsheet user configures a
-public-read OpenVA endpoint and writes stable `openva_*` reference columns back into a
-sheet, without reproducing any matcher, ranking, or canonicality logic and without
-embedding an API key. Planned next: exposing the same `verify`-mode contract over HTTP/MCP
-and the Excel and Word clients that consume the `/v1` API.
+(`docs/resolver-api.md`); it performs no live verification and persists nothing. A Google
+Sheets client now consumes that `/v1/enrich` endpoint (`integrations/google-sheets/`): from
+a custom menu a spreadsheet user configures a public-read OpenVA endpoint, selects source
+types, and writes stable `openva_*` reference columns back into a sheet, without reproducing
+any matcher, ranking, or canonicality logic and without embedding an API key. It needs no
+local Python, Docker, repository checkout, or API secret, but the current release installs
+manually into a bound Apps Script project; a zero-install Google Workspace add-on remains a
+future objective, not a shipped capability. Planned next: exposing the same `verify`-mode
+contract over HTTP/MCP and the Excel and Word clients that consume the `/v1` API.
 
 This is not a new advisory or scoring system. OpenVA preserves source-reference
 and observation history; it does not archive or reproduce historical vendor

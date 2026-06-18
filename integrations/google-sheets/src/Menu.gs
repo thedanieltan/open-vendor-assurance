@@ -16,6 +16,7 @@ function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('OpenVA')
     .addItem('Configure API endpoint', 'openvaConfigureEndpoint')
+    .addItem('Configure source types', 'openvaConfigureSourceTypes')
     .addItem('Test API connection', 'openvaTestConnection')
     .addSeparator()
     .addItem('Enrich selected rows', 'openvaEnrichSelectedRows')
@@ -54,6 +55,35 @@ function openvaConfigureEndpoint() {
   }
   PropertiesService.getDocumentProperties().setProperty(OPENVA_API_BASE_URL_KEY, normalized.url);
   openvaToast('Endpoint saved: ' + normalized.url);
+}
+
+/** OpenVA → Configure source types. Opens a small checkbox dialog. */
+function openvaConfigureSourceTypes() {
+  var html = HtmlService.createHtmlOutputFromFile('SourceTypes').setWidth(360).setHeight(360);
+  SpreadsheetApp.getUi().showModalDialog(html, 'Configure source types');
+}
+
+/** Server callback for the source-types dialog: current supported list, labels, selection. */
+function openvaGetSourceTypesConfig() {
+  var stored = PropertiesService.getDocumentProperties().getProperty(OPENVA_SOURCE_TYPES_KEY);
+  return {
+    supported: OPENVA_SUPPORTED_SOURCE_TYPES,
+    labels: OPENVA_SOURCE_TYPE_LABELS,
+    selected: resolveStoredSourceTypes(stored),
+  };
+}
+
+/** Server callback for the source-types dialog: validate and persist the selection. */
+function openvaSaveSourceTypes(selected) {
+  var normalized = normalizeSourceTypes(selected || []);
+  if (!normalized.ok) {
+    return { ok: false, error: normalized.error };
+  }
+  PropertiesService.getDocumentProperties().setProperty(
+    OPENVA_SOURCE_TYPES_KEY,
+    JSON.stringify(normalized.sourceTypes)
+  );
+  return { ok: true, sourceTypes: normalized.sourceTypes };
 }
 
 /** OpenVA → Test API connection. Calls GET /v1/catalog/meta and summarizes the snapshot. */

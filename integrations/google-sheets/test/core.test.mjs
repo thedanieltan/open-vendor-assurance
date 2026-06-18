@@ -260,18 +260,34 @@ test('mapProjectionToOutputRow escapes a formula-like returned vendor name', () 
 
 // --------------------------------------------------------------------------- column planning
 
-test('planOutputColumns appends new OpenVA columns to the right of existing data', () => {
+test('planOutputColumns appends new OpenVA columns when none exist', () => {
   const plan = Core.planOutputColumns(['vendor_name', 'domain'], Core.OPENVA_OUTPUT_COLUMNS);
+  assert.ok(plan.ok);
   assert.equal(plan.assignments.openva_match_status, 2);
   assert.equal(plan.totalWidth, 2 + Core.OPENVA_OUTPUT_COLUMNS.length);
   assert.equal(plan.headerWrites.length, Core.OPENVA_OUTPUT_COLUMNS.length);
 });
 
-test('planOutputColumns reuses existing OpenVA columns by normalized header', () => {
+test('planOutputColumns reuses a single existing OpenVA column by normalized header', () => {
   const header = ['vendor_name', 'OpenVA Match Status', 'domain'];
   const plan = Core.planOutputColumns(header, Core.OPENVA_OUTPUT_COLUMNS);
+  assert.ok(plan.ok);
   assert.equal(plan.assignments.openva_match_status, 1); // reused, not appended
   assert.ok(plan.headerWrites.every((w) => w.value !== 'openva_match_status'));
+});
+
+test('planOutputColumns rejects duplicate exact output headers', () => {
+  const header = ['vendor_name', 'openva_dpa', 'openva_dpa'];
+  const plan = Core.planOutputColumns(header, Core.OPENVA_OUTPUT_COLUMNS);
+  assert.equal(plan.ok, false);
+  assert.match(plan.error, /Ambiguous OpenVA output columns.*openva_dpa/);
+});
+
+test('planOutputColumns rejects duplicate normalized output-header variants', () => {
+  const header = ['vendor_name', 'OpenVA DPA', 'openva_dpa'];
+  const plan = Core.planOutputColumns(header, Core.OPENVA_OUTPUT_COLUMNS);
+  assert.equal(plan.ok, false);
+  assert.match(plan.error, /openva_dpa/);
 });
 
 test('groupContiguous splits indices into ascending runs', () => {
@@ -284,4 +300,145 @@ test('groupContiguous splits indices into ascending runs', () => {
 test('isRetryableStatus retries only transient statuses', () => {
   for (const status of [429, 502, 503, 504]) assert.equal(Core.isRetryableStatus(status), true, String(status));
   for (const status of [400, 401, 404, 413, 422, 200]) assert.equal(Core.isRetryableStatus(status), false, String(status));
+});
+
+// --------------------------------------------------------------------------- source types
+
+test('OPENVA_SUPPORTED_SOURCE_TYPES is the exact canonical API vocabulary', () => {
+  assert.deepEqual(Core.OPENVA_SUPPORTED_SOURCE_TYPES, [
+    'dpa',
+    'subprocessors_list',
+    'privacy_notice',
+    'security_page',
+    'trust_center',
+    'compliance_page',
+  ]);
+});
+
+test('resolveStoredSourceTypes defaults to all supported types when unset', () => {
+  assert.deepEqual(Core.resolveStoredSourceTypes(null), Core.OPENVA_SUPPORTED_SOURCE_TYPES);
+  assert.deepEqual(Core.resolveStoredSourceTypes(''), Core.OPENVA_SUPPORTED_SOURCE_TYPES);
+  assert.deepEqual(Core.resolveStoredSourceTypes('not json'), Core.OPENVA_SUPPORTED_SOURCE_TYPES);
+});
+
+test('resolveStoredSourceTypes returns a saved valid selection', () => {
+  assert.deepEqual(Core.resolveStoredSourceTypes('["dpa","trust_center"]'), ['dpa', 'trust_center']);
+});
+
+test('normalizeSourceTypes returns the fixed canonical order regardless of input order', () => {
+  const result = Core.normalizeSourceTypes(['trust_center', 'dpa', 'privacy_notice']);
+  assert.ok(result.ok);
+  assert.deepEqual(result.sourceTypes, ['dpa', 'privacy_notice', 'trust_center']);
+});
+
+test('normalizeSourceTypes dedupes and trims/lowercases', () => {
+  const result = Core.normalizeSourceTypes(['DPA', ' dpa ', 'security_page']);
+  assert.ok(result.ok);
+  assert.deepEqual(result.sourceTypes, ['dpa', 'security_page']);
+});
+
+test('normalizeSourceTypes rejects unknown values', () => {
+  const result = Core.normalizeSourceTypes(['dpa', 'made_up_type']);
+  assert.equal(result.ok, false);
+  assert.match(result.error, /made_up_type/);
+});
+
+test('normalizeSourceTypes rejects an empty selection', () => {
+  assert.equal(Core.normalizeSourceTypes([]).ok, false);
+  assert.equal(Core.normalizeSourceTypes(['  ']).ok, false);
+});
+
+// --------------------------------------------------------------------------- document lock
+
+function fakeLock() {
+  return { locked: false, acquired: 0, released: 0 };
+}
+
+test('withDocumentLock does not run the body when the lock cannot be acquired', () => {
+  const lock = fakeLock();
+  let bodyCalls = 0;
+  const result = Core.withDocumentLock(
+    {
+      acquireLock: () => false,
+      releaseLock: () => {
+        lock.released += 1;
+      },
+    },
+    () => {
+      bodyCalls += 1;
+      return { ok: true };
+    }
+  );
+  assert.equal(bodyCalls, 0); // no API call / no write planning happens
+  assert.equal(lock.released, 0); // nothing to release
+  assert.equal(result.ok, false);
+  assert.match(result.error, /already running/i);
+});
+
+test('withDocumentLock releases the lock after a successful body', () => {
+  const lock = fakeLock();
+  const result = Core.withDocumentLock(
+    {
+      acquireLock: () => {
+        lock.acquired += 1;
+        return true;
+      },
+      releaseLock: () => {
+        lock.released += 1;
+      },
+    },
+    () => ({ ok: true, enriched: 3 })
+  );
+  assert.deepEqual(result, { ok: true, enriched: 3 });
+  assert.equal(lock.acquired, 1);
+  assert.equal(lock.released, 1);
+});
+
+test('withDocumentLock releases the lock even when the body throws', () => {
+  const lock = fakeLock();
+  assert.throws(
+    () =>
+      Core.withDocumentLock(
+        {
+          acquireLock: () => true,
+          releaseLock: () => {
+            lock.released += 1;
+          },
+        },
+        () => {
+          throw new Error('boom');
+        }
+      ),
+    /boom/
+  );
+  assert.equal(lock.released, 1);
+});
+
+test('withDocumentLock serializes writers: a second run is rejected while one holds the lock', () => {
+  // A shared lock that only one holder can take at a time.
+  const shared = { held: false };
+  const ports = {
+    acquireLock: () => {
+      if (shared.held) return false;
+      shared.held = true;
+      return true;
+    },
+    releaseLock: () => {
+      shared.held = false;
+    },
+  };
+  let writes = 0;
+  // First holder runs an inner second attempt before releasing; the second must not write.
+  const outer = Core.withDocumentLock(ports, () => {
+    const inner = Core.withDocumentLock(ports, () => {
+      writes += 1; // would be a concurrent write
+      return { ok: true };
+    });
+    assert.equal(inner.ok, false); // blocked while the outer run holds the lock
+    writes += 1;
+    return { ok: true };
+  });
+  assert.ok(outer.ok);
+  assert.equal(writes, 1); // only the lock holder wrote
+  assert.equal(shared.held, false); // released
 });

@@ -35,6 +35,34 @@ var OPENVA_BATCH_SIZE = 100;
 var OPENVA_RETRYABLE_STATUSES = [429, 502, 503, 504];
 var OPENVA_MAX_RETRIES = 2;
 
+// Document-property key holding the user's selected source types (non-sensitive). When
+// unset, all supported types are sent.
+var OPENVA_SOURCE_TYPES_KEY = 'OPENVA_SOURCE_TYPES';
+
+// Supported /v1/enrich source types, in their canonical order. This is the exact API
+// vocabulary; no new aliases are inferred.
+var OPENVA_SUPPORTED_SOURCE_TYPES = [
+  'dpa',
+  'subprocessors_list',
+  'privacy_notice',
+  'security_page',
+  'trust_center',
+  'compliance_page',
+];
+
+// Human-readable labels for the source-type configuration dialog only.
+var OPENVA_SOURCE_TYPE_LABELS = {
+  dpa: 'Data processing addendum (DPA)',
+  subprocessors_list: 'Subprocessors list',
+  privacy_notice: 'Privacy notice',
+  security_page: 'Security page',
+  trust_center: 'Trust center',
+  compliance_page: 'Compliance page',
+};
+
+// Maximum time to wait for the per-document enrichment lock before giving up.
+var OPENVA_LOCK_TIMEOUT_MS = 5000;
+
 // Stable OpenVA output columns, reusing the API's "spreadsheet" projection. This exact
 // order is written back into the sheet unless the merged API contract differs.
 var OPENVA_OUTPUT_COLUMNS = [
@@ -244,6 +272,84 @@ function isRetryableStatus(status) {
 }
 
 /**
+ * Validate and canonicalize a list of source types.
+ *
+ * Lowercases/trims each value, rejects any unsupported value, dedupes, requires at least
+ * one, and returns the selection in the fixed canonical order (never the input order).
+ *
+ * @returns {{ok: true, sourceTypes: Array<string>} | {ok: false, error: string}}
+ */
+function normalizeSourceTypes(values) {
+  if (!Array.isArray(values)) {
+    return { ok: false, error: 'Source types must be provided as a list.' };
+  }
+  var seen = {};
+  var unknown = [];
+  values.forEach(function (value) {
+    var token = String(value === null || value === undefined ? '' : value).trim().toLowerCase();
+    if (token === '') {
+      return;
+    }
+    if (OPENVA_SUPPORTED_SOURCE_TYPES.indexOf(token) === -1) {
+      if (unknown.indexOf(token) === -1) {
+        unknown.push(token);
+      }
+      return;
+    }
+    seen[token] = true;
+  });
+  if (unknown.length > 0) {
+    return { ok: false, error: 'Unknown source type(s): ' + unknown.join(', ') + '.' };
+  }
+  var canonical = OPENVA_SUPPORTED_SOURCE_TYPES.filter(function (type) {
+    return seen[type];
+  });
+  if (canonical.length === 0) {
+    return { ok: false, error: 'Select at least one source type.' };
+  }
+  return { ok: true, sourceTypes: canonical };
+}
+
+/**
+ * Resolve the source types to send for an enrichment run from the stored property value.
+ * Defaults to all supported types when nothing valid is stored.
+ */
+function resolveStoredSourceTypes(raw) {
+  if (raw === null || raw === undefined || String(raw).trim() === '') {
+    return OPENVA_SUPPORTED_SOURCE_TYPES.slice();
+  }
+  var parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (parseError) {
+    return OPENVA_SUPPORTED_SOURCE_TYPES.slice();
+  }
+  var normalized = normalizeSourceTypes(parsed);
+  return normalized.ok ? normalized.sourceTypes : OPENVA_SUPPORTED_SOURCE_TYPES.slice();
+}
+
+/**
+ * Run `body` while holding a document lock. The lock is acquired via the injected
+ * `acquireLock` port (a bounded tryLock) and always released via `releaseLock` in a
+ * finally, even if `body` throws. When the lock cannot be acquired, `body` is never
+ * called and no release is attempted. Factored as a pure helper so the locking contract
+ * is testable without Google services.
+ */
+function withDocumentLock(ports, body) {
+  if (!ports.acquireLock()) {
+    return {
+      ok: false,
+      error: 'Another OpenVA enrichment is already running for this spreadsheet. Try again after it finishes.',
+    };
+  }
+  try {
+    return body();
+  } finally {
+    ports.releaseLock();
+  }
+}
+
+/**
  * Validate one /v1/enrich response body against the row_ids submitted in that batch.
  *
  * Enforces the response contract before any sheet mutation: result count equals the
@@ -381,11 +487,13 @@ function groupContiguous(indices) {
 /**
  * Plan where OpenVA output columns live in the header.
  *
- * Existing OpenVA columns are reused by normalized header match; missing ones are
- * appended to the right of existing data. Non-OpenVA columns are never moved or
+ * For each stable output column: zero existing matches -> append to the right of existing
+ * data; exactly one match -> reuse it; more than one match -> fail closed so the caller
+ * makes no API call and writes no cells. Non-OpenVA columns are never moved or
  * overwritten.
  *
- * @returns {{assignments: Object, totalWidth: number, headerWrites: Array<{index:number,value:string}>}}
+ * @returns {{ok: true, assignments: Object, totalWidth: number,
+ *            headerWrites: Array<{index:number,value:string}>} | {ok: false, error: string}}
  */
 function planOutputColumns(headerRow, outputColumns) {
   var columns = outputColumns || OPENVA_OUTPUT_COLUMNS;
@@ -393,17 +501,32 @@ function planOutputColumns(headerRow, outputColumns) {
   var assignments = {};
   var headerWrites = [];
   var nextIndex = headerRow.length;
-  columns.forEach(function (column) {
-    var existing = normalized.indexOf(column);
-    if (existing !== -1) {
-      assignments[column] = existing;
+  for (var c = 0; c < columns.length; c++) {
+    var column = columns[c];
+    var matches = [];
+    for (var i = 0; i < normalized.length; i++) {
+      if (normalized[i] === column) {
+        matches.push(i);
+      }
+    }
+    if (matches.length > 1) {
+      return {
+        ok: false,
+        error:
+          'Ambiguous OpenVA output columns: multiple columns map to ' +
+          column +
+          '. Rename or remove the duplicate column and retry.',
+      };
+    }
+    if (matches.length === 1) {
+      assignments[column] = matches[0];
     } else {
       assignments[column] = nextIndex;
       headerWrites.push({ index: nextIndex, value: column });
       nextIndex += 1;
     }
-  });
-  return { assignments: assignments, totalWidth: nextIndex, headerWrites: headerWrites };
+  }
+  return { ok: true, assignments: assignments, totalWidth: nextIndex, headerWrites: headerWrites };
 }
 
 // Export pure helpers for the Node test runner. Apps Script has no `module` global, so
@@ -419,6 +542,13 @@ if (typeof module === 'object' && module.exports) {
     OPENVA_MAX_RETRIES: OPENVA_MAX_RETRIES,
     OPENVA_OUTPUT_COLUMNS: OPENVA_OUTPUT_COLUMNS,
     OPENVA_HEADER_ALIASES: OPENVA_HEADER_ALIASES,
+    OPENVA_SOURCE_TYPES_KEY: OPENVA_SOURCE_TYPES_KEY,
+    OPENVA_SUPPORTED_SOURCE_TYPES: OPENVA_SUPPORTED_SOURCE_TYPES,
+    OPENVA_SOURCE_TYPE_LABELS: OPENVA_SOURCE_TYPE_LABELS,
+    OPENVA_LOCK_TIMEOUT_MS: OPENVA_LOCK_TIMEOUT_MS,
+    normalizeSourceTypes: normalizeSourceTypes,
+    resolveStoredSourceTypes: resolveStoredSourceTypes,
+    withDocumentLock: withDocumentLock,
     normalizeHeader: normalizeHeader,
     buildAliasLookup: buildAliasLookup,
     normalizeBaseUrl: normalizeBaseUrl,

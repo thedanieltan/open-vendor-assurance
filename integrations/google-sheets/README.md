@@ -1,18 +1,24 @@
 # OpenVA for Google Sheets
 
-A zero-install Google Apps Script integration that enriches vendor rows in a Google Sheet
-against an OpenVA catalogue, using the existing OpenVA `/v1/enrich` API.
+A Google Apps Script integration that enriches vendor rows in a Google Sheet against an
+OpenVA catalogue, using the existing OpenVA `/v1/enrich` API.
 
-You do **not** need to clone this repository, install Python, run Docker, understand the
-catalogue schema, call the API by hand, or embed an API secret in the spreadsheet.
+No local Python, Docker, repository checkout or API secret is required. The current
+release requires manual installation into a bound Apps Script project (see "Create a bound
+Apps Script project" below). Marketplace or centrally deployed add-on distribution is not
+yet available.
+
+> Future objective: a zero-install Google Workspace add-on. That does not exist yet — for
+> now installation is manual.
 
 ## 1. What it does
 
 From a custom **OpenVA** menu you can:
 
 1. Configure the OpenVA API endpoint.
-2. Test the connection.
-3. Enrich the selected rows, or the whole active sheet.
+2. Configure which source types to request.
+3. Test the connection.
+4. Enrich the selected rows, or the whole active sheet.
 
 For each row it sends the supported vendor-identity fields to `POST /v1/enrich`, receives
 canonical public-source references, and writes stable `openva_*` columns back into the
@@ -100,6 +106,25 @@ The endpoint is stored in this document's properties
 service URL, not a secret. There is no hardcoded production endpoint — you must configure
 one before enriching.
 
+## 6a. Configure source types (optional)
+
+**OpenVA → Configure source types** opens a checkbox dialog for choosing which canonical
+source types to request from `/v1/enrich`:
+
+```
+dpa
+subprocessors_list
+privacy_notice
+security_page
+trust_center
+compliance_page
+```
+
+The selection is stored in this document's properties (key `OPENVA_SOURCE_TYPES`,
+non-sensitive). When nothing is saved, all supported types are requested. At least one type
+must be selected; unknown values are rejected; the saved order is always the canonical
+order above. The relevant output columns for unselected types are left blank.
+
 ## 7. Requires a public-read OpenVA deployment
 
 This client carries **no API key**. It targets an OpenVA deployment configured with
@@ -135,12 +160,15 @@ number, as a string) are sent:
   "vendors": [
     { "row_id": "12", "vendor_name": "Stripe", "domain": "stripe.com",
       "business_entity_name": null, "registration_number": null }
-  ]
+  ],
+  "source_types": ["dpa", "subprocessors_list", "privacy_notice",
+                   "security_page", "trust_center", "compliance_page"]
 }
 ```
 
-The integration never sends the whole spreadsheet, unrelated columns, formulas, notes,
-hidden metadata, sheet names, spreadsheet ids, or your email address.
+The `source_types` list reflects your saved selection (all supported types by default). The
+integration never sends the whole spreadsheet, unrelated columns, formulas, notes, hidden
+metadata, sheet names, spreadsheet ids, or your email address.
 
 Rows are sent in sheet order, in bounded batches of 100. All batch responses are validated
 (result count, order, `row_id` correspondence, spreadsheet projection, and a single shared
@@ -191,11 +219,18 @@ clasp push
 
 ## 16. Current limitations
 
+- Manual installation only. You create a bound Apps Script project and paste in the files;
+  there is no one-click install. A zero-install Google Workspace add-on is a future
+  objective, not a current capability.
 - Google Sheets only. There is no Excel or Word client here, and this is not published in
   the Google Workspace Marketplace.
 - No hosted public OpenVA endpoint is bundled; you configure your own.
 - A single enrichment run uses one catalogue snapshot; if the snapshot changes during a
   multi-batch run, the run aborts and asks you to rerun.
+- One enrichment runs at a time per spreadsheet. A document lock is held across reads, API
+  calls, and writes; a second run started while one is in progress is asked to wait.
+- Duplicate input headers and duplicate OpenVA output columns fail closed before any API
+  call, so you are asked to rename the conflicting column rather than risk a wrong write.
 - Enrichment is an explicit menu action only — there are no per-cell network functions, no
   `onEdit` calls, and no scheduled triggers.
 
@@ -209,7 +244,9 @@ clasp push
 | `422`                            | The service rejected the input; check the identity columns.                    |
 | Timeout / "Could not reach…"     | Check the endpoint URL and network; transient errors are retried twice.        |
 | "The catalogue snapshot changed" | The catalogue moved mid-run; rerun the enrichment.                             |
-| "Ambiguous headers"              | Two columns map to the same field; rename one.                                 |
+| "Ambiguous headers"              | Two input columns map to the same identity field; rename one.                  |
+| "Ambiguous OpenVA output columns"| Two columns map to the same `openva_*` output; rename or remove the duplicate. |
+| "Another OpenVA enrichment is already running" | Wait for the in-progress run to finish, then retry.              |
 
 ## Development
 

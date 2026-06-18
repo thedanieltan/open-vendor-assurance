@@ -116,6 +116,66 @@ def test_only_catalog_meta_and_enrich_endpoints_are_called():
     assert "/v1/catalog/meta" in paths
 
 
+def test_source_type_selection_supported():
+    core = (SRC / "Core.gs").read_text(encoding="utf-8")
+    # The exact canonical API vocabulary is present, plus the config key and validators.
+    for token in (
+        "OPENVA_SOURCE_TYPES_KEY",
+        "OPENVA_SUPPORTED_SOURCE_TYPES",
+        "normalizeSourceTypes",
+        "resolveStoredSourceTypes",
+    ):
+        assert token in core, token
+    for source_type in (
+        "dpa",
+        "subprocessors_list",
+        "privacy_notice",
+        "security_page",
+        "trust_center",
+        "compliance_page",
+    ):
+        assert source_type in core, source_type
+    # The enrich request includes source_types, and a config menu item exists.
+    assert "source_types" in (SRC / "ApiClient.gs").read_text(encoding="utf-8")
+    assert "Configure source types" in (SRC / "Menu.gs").read_text(encoding="utf-8")
+
+
+def test_document_lock_guards_enrichment():
+    adapter = (SRC / "SheetAdapter.gs").read_text(encoding="utf-8")
+    assert "LockService.getDocumentLock" in adapter
+    assert "tryLock" in adapter
+    assert "releaseLock" in adapter
+    # The lock contract is factored into a finally-releasing helper in Core.gs.
+    core = (SRC / "Core.gs").read_text(encoding="utf-8")
+    assert "withDocumentLock" in core
+    assert "finally" in core
+
+
+def test_no_broad_scope_added_for_locking_or_dialogs():
+    # Locking and HTML dialogs must not have introduced a broader scope.
+    manifest = json.loads((INTEGRATION / "appsscript.json").read_text(encoding="utf-8"))
+    assert set(manifest["oauthScopes"]) == {
+        "https://www.googleapis.com/auth/spreadsheets.currentonly",
+        "https://www.googleapis.com/auth/script.external_request",
+        "https://www.googleapis.com/auth/script.container.ui",
+    }
+
+
+def test_distribution_language_is_accurate():
+    readme = (INTEGRATION / "README.md").read_text(encoding="utf-8")
+    flat = " ".join(readme.split())  # collapse line wraps for phrase matching
+    assert "No local Python, Docker, repository checkout or API secret is required." in flat
+    assert "manual installation into a bound Apps Script project" in flat
+    assert "not yet available" in flat
+    # "zero-install" and "one-click" only appear as future objectives or explicit
+    # negations, never as a current availability claim.
+    for line in readme.lower().splitlines():
+        if "zero-install" in line:
+            assert "future" in line, line
+        if "one-click" in line or "one click" in line:
+            assert "no one-click" in line or "future" in line, line
+
+
 def test_stable_openva_projection_headers_present():
     core = (SRC / "Core.gs").read_text(encoding="utf-8")
     for column in (

@@ -44,14 +44,37 @@ function activeSheetRowNumbers(sheet) {
 /**
  * Orchestrate enrichment for an explicit, ordered list of sheet-row numbers.
  *
- * Returns a structured summary. Validates all batch responses (count, order, row_id
- * correspondence, snapshot-digest consistency) before any sheet mutation; on any failure
- * it aborts and writes nothing.
+ * A per-document lock is held across header reads, output-column planning, API calls, and
+ * writes, so two concurrent runs can neither create duplicate columns nor overwrite each
+ * other. If the lock cannot be acquired, no API call or write occurs.
  *
  * @returns {{ok: true, enriched: number, skipped: number, snapshotDigest: string}
  *           | {ok: false, error: string}}
  */
 function enrichRows(rowNumbers) {
+  var lock = LockService.getDocumentLock();
+  return withDocumentLock(
+    {
+      acquireLock: function () {
+        return lock.tryLock(OPENVA_LOCK_TIMEOUT_MS);
+      },
+      releaseLock: function () {
+        lock.releaseLock();
+      },
+    },
+    function () {
+      return enrichRowsLocked(rowNumbers);
+    }
+  );
+}
+
+/**
+ * The locked body of enrichRows. Validates configuration, input columns, and the output
+ * column plan (failing closed on duplicate output headers) BEFORE any API call. Validates
+ * all batch responses (count, order, row_id correspondence, snapshot-digest consistency)
+ * before any sheet mutation; on any failure it aborts and writes nothing.
+ */
+function enrichRowsLocked(rowNumbers) {
   var base = getConfiguredBaseUrl();
   if (!base.ok) {
     return { ok: false, error: base.error + ' Use OpenVA → Configure API endpoint.' };
@@ -73,6 +96,17 @@ function enrichRows(rowNumbers) {
         OPENVA_IDENTITY_FIELDS.join(', ') + '.',
     };
   }
+
+  // Plan output columns now, before any API call, so duplicate OpenVA output headers fail
+  // closed without sending vendor data or mutating the sheet.
+  var plan = planOutputColumns(header, OPENVA_OUTPUT_COLUMNS);
+  if (!plan.ok) {
+    return { ok: false, error: plan.error };
+  }
+
+  var sourceTypes = resolveStoredSourceTypes(
+    PropertiesService.getDocumentProperties().getProperty(OPENVA_SOURCE_TYPES_KEY)
+  );
 
   // One bounded read of the cells we need, then build payloads in sheet order.
   var lastColumn = sheet.getLastColumn();
@@ -107,7 +141,7 @@ function enrichRows(rowNumbers) {
   var batches = chunkRows(vendors, OPENVA_BATCH_SIZE);
   var validatedBatches = [];
   for (var b = 0; b < batches.length; b++) {
-    var batchResult = enrichBatch(base.url, batches[b]);
+    var batchResult = enrichBatch(base.url, batches[b], sourceTypes);
     if (!batchResult.ok) {
       return { ok: false, error: batchResult.error };
     }
@@ -125,7 +159,7 @@ function enrichRows(rowNumbers) {
     projectionByRow[String(result.row_id)] = result.spreadsheet;
   }
 
-  writeResults(sheet, header, processedRows, projectionByRow);
+  writeResults(sheet, plan, processedRows, projectionByRow);
 
   return {
     ok: true,
@@ -136,15 +170,15 @@ function enrichRows(rowNumbers) {
 }
 
 /**
- * Write the OpenVA output columns for the processed rows.
+ * Write the OpenVA output columns for the processed rows, using an already-validated
+ * column plan (see planOutputColumns).
  *
  * Existing OpenVA columns are reused; missing ones are appended to the right. Each
  * contiguous run of output columns is written in a single setValues over the processed
  * row span, reading current values first so non-OpenVA columns and skipped rows are
  * preserved.
  */
-function writeResults(sheet, header, processedRows, projectionByRow) {
-  var plan = planOutputColumns(header, OPENVA_OUTPUT_COLUMNS);
+function writeResults(sheet, plan, processedRows, projectionByRow) {
   plan.headerWrites.forEach(function (write) {
     sheet.getRange(1, write.index + 1).setValue(write.value);
   });

@@ -115,13 +115,18 @@ function testApiConnection(baseUrl) {
  *
  * @param {string} baseUrl normalized base URL
  * @param {Array<Object>} vendors batch of vendor identity payloads (already bounded)
+ * @param {Array<string>} sourceTypes canonical source types to request
  * @returns {{ok: true, snapshotDigest: string, results: Array} | {ok: false, error: string}}
  */
-function enrichBatch(baseUrl, vendors) {
+function enrichBatch(baseUrl, vendors, sourceTypes) {
+  var requestBody = { vendors: vendors };
+  if (sourceTypes && sourceTypes.length) {
+    requestBody.source_types = sourceTypes;
+  }
   var result = fetchJson(joinUrl(baseUrl, OPENVA_ENRICH_PATH), {
     method: 'post',
     contentType: 'application/json',
-    payload: JSON.stringify({ vendors: vendors }),
+    payload: JSON.stringify(requestBody),
     muteHttpExceptions: true,
   });
   if (!result.ok) {
