@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "openva-mcp"
 version = "0.1.0"
-description = "Local-first, read-only MCP server over the OpenVA public export contract."
+description = "Read-only MCP server over the OpenVA public export contract (stdio and Streamable HTTP)."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -15,12 +15,18 @@ dependencies = [
   "mcp>=1.27,<2",
   # Standards-compliant JSON Schema validation of tool inputs.
   "jsonschema>=4.0",
-  # Shared vendor-identity matching authority (also the CSV adapter's core).
+  # Shared vendor-identity matching and primary-source ranking authority (also the
+  # CSV adapter's core and the match service's enrichment authority).
   "openva-vendor-inventory-matcher>=0.1.0",
+  # Streamable HTTP transport (read-only remote MCP). Imported only on the HTTP
+  # path; both are already in the MCP SDK's dependency closure.
+  "starlette>=0.40",
+  "uvicorn>=0.30",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+# httpx drives the in-process Streamable HTTP ASGI tests (Starlette TestClient).
+dev = ["pytest>=8.0", "httpx>=0.27"]
 
 [project.scripts]
 openva-mcp = "openva_mcp.server:main"

@@ -80,6 +80,7 @@ and [`docs/operations/WORKFLOW_OPERATING_MODEL.md`](docs/operations/WORKFLOW_OPE
 | Rollback | `tools/openva/rollback.py`, `tools/openva/rollback_eligibility.py`, `tools/openva/catalog_audit.py`, `bot-authority.yaml` lane `source_rollback` |
 | Queue / scheduling | `bot-queue-policy.yaml`, `bot-work-priority.yaml`, `tools/openva/bot_queue.py`, `tools/openva/work_priority.py` |
 | Telemetry / dashboards | `tools/openva/bot_telemetry.py`, `docs/operations/BOT_DASHBOARD.md` |
+| Architecture / distribution / integration decisions | [`docs/architecture/decisions/`](docs/architecture/decisions/README.md) (ADR log), `docs/agent-workspace-composition.md`, `docs/agent-integrations.md` |
 | Any code/schema/workflow/policy change | `GOVERNANCE.md`, `CONTRIBUTING.md`, this file |
 
 ## Permitted paths

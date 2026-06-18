@@ -12,8 +12,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from openva_mcp.matching import match_row
+from openva_vendor_inventory_matcher.enrichment import enrich_identity
+
+from openva_mcp.matching import _vendor_records, match_row
 from openva_mcp.snapshot import Snapshot
+
+# Vendor-identity fields a caller may supply for matching. No other field is read,
+# so unrelated workspace columns an agent might hold never enter matching.
+_IDENTITY_FIELDS = ("vendor_name", "domain", "business_entity_name", "registration_number")
 
 
 def _envelope(snapshot: Snapshot, **payload: Any) -> dict[str, Any]:
@@ -141,6 +147,89 @@ def match_inventory(snapshot: Snapshot, rows: list[dict[str, Any]]) -> dict[str,
     for result in results:
         summary[result["match_status"]] += 1
     return _envelope(snapshot, count=len(results), summary=summary, results=results)
+
+
+def _enrich_source_view(row: dict[str, Any]) -> dict[str, Any]:
+    """Project a snapshot source row into the enrichment public source view.
+
+    Preserves the original vendor-published URL and observation provenance; carries
+    no vendor identity field beyond the source's own and no workspace metadata.
+    """
+    return {
+        "source_id": row.get("source_id"),
+        "source_type": row.get("source_type"),
+        "source_url": row.get("source_url"),
+        "canonical_confidence": row.get("canonical_confidence"),
+        "retrieval_method": row.get("retrieval_method"),
+        "machine_readable": row.get("machine_readable"),
+        "source_health": row.get("source_health"),
+        "last_observed_at": row.get("last_observed_at"),
+        "material_change_since_baseline": row.get("material_change_since_baseline"),
+        "verified_scope": row.get("verified_scope"),
+        "gated_child_content_observed": row.get("gated_child_content_observed"),
+    }
+
+
+def _has_identity(row: dict[str, Any]) -> bool:
+    return any(str(row.get(field) or "").strip() for field in _IDENTITY_FIELDS)
+
+
+def enrich_inventory(
+    snapshot: Snapshot,
+    rows: list[dict[str, Any]],
+    source_types: list[str] | None = None,
+) -> dict[str, Any]:
+    """Match a bounded batch of vendor-identity rows and attach public sources.
+
+    This is the composite tool for agents that have already read a user-controlled
+    workspace through their own connector: it accepts only bounded vendor-identity
+    fields and requested source types, never workspace content. Matching, source-type
+    filtering, primary-source ranking, and notes are delegated to the shared
+    ``enrich_identity`` authority — the same one the match service ``/v1/enrich``
+    endpoint uses — so the two surfaces agree for the same evidence. Input order and
+    duplicates are preserved, ``row_id`` is echoed verbatim, ``ambiguous`` stays
+    ambiguous, and ``no_match`` stays no-match. The snapshot identity is disclosed
+    once on the envelope; OpenVA performs no workspace write and makes no compliance,
+    suitability, or risk conclusion.
+    """
+    for row in rows:
+        if not _has_identity(row or {}):
+            raise ValueError(
+                "each row requires at least one of vendor_name, domain, "
+                "business_entity_name, registration_number"
+            )
+
+    vendors = _vendor_records(snapshot.vendors_index().get("vendors", []))
+
+    def sources_for(vendor_id: str) -> list[dict[str, Any]]:
+        export = snapshot.vendor_export(vendor_id)
+        return export.get("sources", []) if export else []
+
+    results = [
+        enrich_identity(
+            vendors,
+            sources_for=sources_for,
+            row_id=(row or {}).get("row_id"),
+            vendor_name=(row or {}).get("vendor_name"),
+            domain=(row or {}).get("domain"),
+            business_entity_name=(row or {}).get("business_entity_name"),
+            registration_number=(row or {}).get("registration_number"),
+            source_types=source_types,
+            project_source=_enrich_source_view,
+        )
+        for row in rows
+    ]
+
+    summary = {"matched": 0, "ambiguous": 0, "no_match": 0}
+    for result in results:
+        summary[result["match"]["status"]] += 1
+    return _envelope(
+        snapshot,
+        count=len(results),
+        source_types=source_types,
+        summary=summary,
+        results=results,
+    )
 
 
 def get_snapshot_metadata(snapshot: Snapshot) -> dict[str, Any]:

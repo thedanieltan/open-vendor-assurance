@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/agent-enrichment-result.schema.json",
+  "title": "OpenVA Agent Enrichment Result",
+  "description": "Host-neutral per-row enrichment result emitted by the MCP enrich_inventory tool and the match-service /v1/enrich endpoint. It records public-source references and machine-state notes only; it never carries a compliance, suitability, approval, or risk conclusion. additionalProperties is true so a transport may add a compatibility projection (e.g. the match service's spreadsheet block) without forking this contract.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "row_id",
+    "input",
+    "match",
+    "sources",
+    "primary_source_by_type",
+    "source_urls_by_type",
+    "notes",
+    "not_advice"
+  ],
+  "properties": {
+    "row_id": {
+      "type": ["string", "integer", "null"],
+      "description": "The caller correlation id, echoed verbatim."
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The bounded identity that was matched, echoed back.",
+      "properties": {
+        "vendor_name": { "type": ["string", "null"] },
+        "domain": { "type": ["string", "null"] },
+        "business_entity_name": { "type": ["string", "null"] },
+        "registration_number": { "type": ["string", "null"] }
+      }
+    },
+    "match": { "$ref": "#/$defs/match" },
+    "sources": {
+      "type": "array",
+      "description": "Canonical public sources for the matched vendor, filtered by requested type, preserving original vendor-published URLs. Empty unless the match status is matched.",
+      "items": { "type": "object" }
+    },
+    "primary_source_by_type": {
+      "type": "object",
+      "description": "The primary source object per source_type, chosen deterministically by the shared ranking.",
+      "additionalProperties": { "type": "object" }
+    },
+    "source_urls_by_type": {
+      "type": "object",
+      "description": "Original source URLs grouped by source_type.",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "description": "Machine-state notes only (e.g. ambiguous match, no catalogue match, missing canonical source type). Never a compliance conclusion.",
+      "items": { "type": "string" }
+    },
+    "not_advice": {
+      "const": true,
+      "description": "Always true. OpenVA returns public-source references, not advice."
+    }
+  },
+  "$defs": {
+    "match": {
+      "type": "object",
+      "required": ["status", "candidates"],
+      "properties": {
+        "status": {
+          "enum": ["matched", "ambiguous", "no_match"],
+          "description": "ambiguous is never collapsed into matched; a weak identity stays no_match."
+        },
+        "method": { "type": ["string", "null"] },
+        "confidence": { "type": ["number", "null"] },
+        "vendor_id": { "type": ["string", "null"] },
+        "display_name": { "type": ["string", "null"] },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "vendor_id": { "type": ["string", "null"] },
+              "display_name": { "type": ["string", "null"] },
+              "match_confidence": { "type": ["number", "null"] },
+              "match_method": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

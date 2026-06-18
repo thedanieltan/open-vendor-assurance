@@ -3,6 +3,15 @@
 A Google Apps Script integration that enriches vendor rows in a Google Sheet against an
 OpenVA catalogue, using the existing OpenVA `/v1/enrich` API.
 
+> **This is a secondary compatibility surface, not the primary distribution path.**
+> OpenVA's primary model is agent-composed: a user's existing agent reads the
+> workspace through its own connector and calls OpenVA's read-only HTTP/MCP tools
+> (see [`docs/agent-workspace-composition.md`](../../docs/agent-workspace-composition.md)
+> and [ADR-0005](../../docs/architecture/decisions/ADR-0005-native-clients-as-secondary-compatibility-surfaces.md)).
+> This client remains useful as a tested reference and a fallback for environments
+> without a capable agent. It is not abandoned, and it reuses the shared enrichment
+> contract rather than reproducing any matching or ranking logic.
+
 No local Python, Docker, repository checkout or API secret is required. The current
 release requires manual installation into a bound Apps Script project (see "Create a bound
 Apps Script project" below). Marketplace or centrally deployed add-on distribution is not

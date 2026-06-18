@@ -8,6 +8,13 @@ from typing import Any
 
 from openva_pack_reader import OpenVAPack
 
+# Single primary-source ranking authority lives in the dependency-neutral
+# enrichment core; re-exported here so existing importers and the CSV enrichment
+# fields keep one ranking implementation shared with the /v1 and MCP surfaces.
+from openva_vendor_inventory_matcher.enrichment import (  # noqa: F401
+    primary_source_by_type,
+    reverse_date_key,
+)
 from openva_vendor_inventory_matcher.core import (
     LegalEntityRecord,
     LegalEntityResolution,
@@ -261,29 +268,6 @@ def canonical_source_json(row: dict[str, Any]) -> dict[str, Any]:
         "review_state": "human_reviewed",
         "advisory_boundary": "non_advisory",
     }
-
-
-def primary_source_by_type(sources: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
-    by_type: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for source in sources:
-        source_type = source.get("source_type", "")
-        if source_type:
-            by_type[source_type].append(source)
-    return {
-        source_type: sorted(
-            typed_sources,
-            key=lambda item: (
-                item.get("effective_or_published_at", "") == "",
-                reverse_date_key(item.get("effective_or_published_at", "")),
-                item.get("source_id", ""),
-            ),
-        )[0]
-        for source_type, typed_sources in sorted(by_type.items())
-    }
-
-
-def reverse_date_key(value: str) -> str:
-    return "".join(chr(255 - ord(character)) for character in value)
 
 
 def candidate_source_json(row: dict[str, Any]) -> dict[str, Any]:

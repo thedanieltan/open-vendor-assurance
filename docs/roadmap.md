@@ -10,7 +10,7 @@ assurance references. It is not an advisory or vendor-ranking service.
 
 OpenVA has moved from static catalogue lookup to **catalogue-first,
 live-refresh-on-use** resolution shared by browser users, API consumers, agents,
-and future MCP integrations (`docs/vendor-resolution.md`). Shipped: the
+and MCP integrations (`docs/vendor-resolution.md`). Shipped: the
 `resolve_vendor_sources` contract, the result-state vocabulary, `cached`/`verify`
 freshness modes, the proposed source-reference history model, durable idempotent
 candidate ingress into the existing `maintenance/candidates` queue (the same one
@@ -32,13 +32,41 @@ a custom menu a spreadsheet user configures a public-read OpenVA endpoint, selec
 types, and writes stable `openva_*` reference columns back into a sheet, without reproducing
 any matcher, ranking, or canonicality logic and without embedding an API key. It needs no
 local Python, Docker, repository checkout, or API secret, but the current release installs
-manually into a bound Apps Script project; a zero-install Google Workspace add-on remains a
-future objective, not a shipped capability. Planned next: exposing the same `verify`-mode
-contract over HTTP/MCP and the Excel and Word clients that consume the `/v1` API.
+manually into a bound Apps Script project; it is a reference and fallback client, not the
+primary distribution path (see Distribution model below), and a zero-install Google
+Workspace add-on remains a future objective, not a shipped capability.
 
 This is not a new advisory or scoring system. OpenVA preserves source-reference
 and observation history; it does not archive or reproduce historical vendor
 documents.
+
+## Distribution model
+
+**Primary distribution:** OpenVA HTTP/MCP capabilities composed by users' existing
+agents with the workspace connectors those agents already control. The agent reads
+the user's spreadsheet, database, or tickets through its own connector, sends OpenVA
+only bounded vendor identities, and writes results back itself. OpenVA does not
+require direct access to Google Drive, Microsoft 365, Notion, Jira, Slack, or any
+other workspace, and holds no workspace credential. The read-only MCP surface is
+available over **stdio** and **Streamable HTTP**, and a composite `enrich_inventory`
+tool serves agent-composed workspace workflows. See
+[`agent-workspace-composition.md`](agent-workspace-composition.md) and
+[ADR-0002](architecture/decisions/ADR-0002-agent-composed-workspace-integration.md)
+/ [ADR-0003](architecture/decisions/ADR-0003-remote-mcp-product-surface.md).
+
+**Secondary distribution:** thin native/reference clients for environments without
+capable agents or where organisational policy requires a dedicated client. The
+Google Sheets client (`integrations/google-sheets/`) is the current example —
+implemented, manually installed, useful as a tested reference and fallback. Excel,
+Word, or Google Workspace add-on clients are not the default next step; a native
+client is built only where demonstrated demand or policy justifies it
+([ADR-0005](architecture/decisions/ADR-0005-native-clients-as-secondary-compatibility-surfaces.md)).
+
+The static GitHub Pages viewer, pinned digest-verifiable exports, and the static/
+local MCP layer remain the canonical reproducible foundation. This positioning
+describes priority and transport capability; OpenVA does not operate a production
+hosted endpoint, and live `verify`-mode over remote MCP remains future work governed
+by [ADR-0001](architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md).
 
 ## Current state
 

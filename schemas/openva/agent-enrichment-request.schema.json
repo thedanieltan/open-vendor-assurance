@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/agent-enrichment-request.schema.json",
+  "title": "OpenVA Agent Enrichment Request",
+  "description": "Host-neutral request shared by the MCP enrich_inventory tool and the match-service /v1/enrich endpoint. It carries only bounded vendor-identity fields and an optional source-type filter. It must never carry workspace credentials, file or document contents, workspace identifiers, or any field other than those below; additionalProperties is false so unrelated workspace columns cannot enter OpenVA.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["rows"],
+  "properties": {
+    "rows": {
+      "type": "array",
+      "description": "Bounded batch of vendor-identity rows. Processed in input order; duplicates are preserved.",
+      "minItems": 1,
+      "maxItems": 500,
+      "items": { "$ref": "#/$defs/row" }
+    },
+    "source_types": {
+      "type": ["array", "null"],
+      "description": "Optional canonical source-type filter. Omitted (or null) means all canonical source types. An unknown type simply yields no sources for that type.",
+      "maxItems": 64,
+      "items": { "type": "string", "maxLength": 128 }
+    }
+  },
+  "$defs": {
+    "row": {
+      "type": "object",
+      "description": "One vendor identity. At least one identity field must be non-empty; row_id is an opaque correlation id echoed back without reinterpretation and is never treated as a workspace identifier.",
+      "additionalProperties": false,
+      "properties": {
+        "row_id": {
+          "type": ["string", "integer", "null"],
+          "maxLength": 128,
+          "description": "Opaque caller correlation id. Echoed verbatim."
+        },
+        "vendor_name": { "type": ["string", "null"], "maxLength": 512 },
+        "domain": { "type": ["string", "null"], "maxLength": 512 },
+        "business_entity_name": { "type": ["string", "null"], "maxLength": 512 },
+        "registration_number": { "type": ["string", "null"], "maxLength": 512 }
+      }
+    }
+  }
+}

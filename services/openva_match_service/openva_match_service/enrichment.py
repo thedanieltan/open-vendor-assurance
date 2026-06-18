@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from openva_vendor_inventory_matcher.enrichment import enrich_identity
 from openva_vendor_inventory_matcher.matcher import canonical_source_json, primary_source_by_type
 
 from .config import ServiceConfig
@@ -25,17 +26,6 @@ SPREADSHEET_TYPE_MAP: dict[str, str] = {
     "openva_security": "security_page",
     "openva_trust_center": "trust_center",
     "openva_compliance": "compliance_page",
-}
-
-SOURCE_TYPE_LABELS: dict[str, str] = {
-    "dpa": "DPA",
-    "subprocessors_list": "subprocessors",
-    "privacy_notice": "privacy notice",
-    "security_page": "security",
-    "trust_center": "trust centre",
-    "compliance_page": "compliance",
-    "terms_of_service": "terms of service",
-    "other_public_source": "other public source",
 }
 
 
@@ -145,29 +135,6 @@ def vendor_sources(
     return sources, primary_by_type, urls_by_type
 
 
-def build_notes(
-    status: str,
-    *,
-    source_types: list[str] | None,
-    primary_by_type: dict[str, dict[str, Any]],
-    has_any_sources: bool,
-) -> list[str]:
-    """Machine-state notes only; never a compliance conclusion, never 'non-compliant'."""
-    if status == "ambiguous":
-        return ["Ambiguous vendor match"]
-    if status != "matched":
-        return ["No catalogue match"]
-    notes: list[str] = []
-    if source_types:
-        for source_type in source_types:
-            if source_type not in primary_by_type:
-                label = SOURCE_TYPE_LABELS.get(source_type, source_type)
-                notes.append(f"Matched vendor has no canonical {label} source")
-    elif not has_any_sources:
-        notes.append("Matched vendor has no canonical sources")
-    return notes
-
-
 def build_spreadsheet(
     match: dict[str, Any],
     primary_by_type: dict[str, dict[str, Any]],
@@ -200,42 +167,34 @@ def enrich_one(
     registration_number: str | None,
     source_types: list[str] | None,
 ) -> dict[str, Any]:
-    match = match_one(
-        state,
+    """Enrich one row via the shared, dependency-neutral authority.
+
+    Identity matching, source-type filtering, primary-source ranking, and notes
+    come from ``enrich_identity`` — the same authority the MCP ``enrich_inventory``
+    tool uses — so the two surfaces agree for the same evidence. This adapter adds
+    only the observation-aware source projection and the stable ``spreadsheet``
+    column projection that native spreadsheet/document clients consume; the
+    ``spreadsheet`` block is a compatibility convenience, not the canonical contract.
+    """
+    result = enrich_identity(
+        state.matcher_index.vendors,
+        sources_for=lambda vendor_id: state.matcher_index.canonical_sources_by_vendor.get(vendor_id, []),
+        row_id=row_id,
         vendor_name=vendor_name,
         domain=domain,
         business_entity_name=business_entity_name,
         registration_number=registration_number,
-    )
-    sources: list[dict[str, Any]] = []
-    primary_by_type: dict[str, dict[str, Any]] = {}
-    urls_by_type: dict[str, list[str]] = {}
-    if match["status"] == "matched" and match.get("vendor_id"):
-        sources, primary_by_type, urls_by_type = vendor_sources(state, match["vendor_id"], source_types)
-
-    notes = build_notes(
-        match["status"],
         source_types=source_types,
-        primary_by_type=primary_by_type,
-        has_any_sources=bool(sources),
+        project_source=lambda raw: project_source(raw, state),
     )
-    spreadsheet = build_spreadsheet(match, primary_by_type, sources, state.snapshot_digest, notes)
-    return {
-        "row_id": row_id,
-        "input": {
-            "vendor_name": vendor_name,
-            "domain": domain,
-            "business_entity_name": business_entity_name,
-            "registration_number": registration_number,
-        },
-        "match": match,
-        "sources": sources,
-        "primary_source_by_type": primary_by_type,
-        "source_urls_by_type": urls_by_type,
-        "spreadsheet": spreadsheet,
-        "notes": notes,
-        "not_advice": True,
-    }
+    spreadsheet = build_spreadsheet(
+        result["match"],
+        result["primary_source_by_type"],
+        result["sources"],
+        state.snapshot_digest,
+        result["notes"],
+    )
+    return {**result, "spreadsheet": spreadsheet}
 
 
 def vendor_detail(state: ServiceState, vendor_id: str) -> dict[str, Any]:

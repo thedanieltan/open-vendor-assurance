@@ -96,7 +96,7 @@ jobs:
       - pip install -e adapters/python/openva_pack_reader
       - pip install -e adapters/python/openva_vendor_inventory_matcher
       - pip install -e "integrations/mcp/openva_mcp[dev]"
-      - pytest -q tests/test_openva_mcp.py tests/test_openva_mcp_protocol.py tests/test_openva_mcp_hardening.py tests/test_openva_mcp_metadata.py tests/test_matching_conformance.py tests/test_release_coherence.py tests/test_agent_bundle_verification.py
+      - pytest -q tests/test_openva_mcp.py tests/test_openva_mcp_protocol.py tests/test_openva_mcp_hardening.py tests/test_openva_mcp_metadata.py tests/test_openva_mcp_enrich.py tests/test_openva_mcp_streamable_http.py tests/test_openva_mcp_authority_boundaries.py tests/test_matching_conformance.py tests/test_release_coherence.py tests/test_agent_bundle_verification.py
     protects:
       - integrations/mcp/**
       - adapters/python/openva_vendor_inventory_matcher/**

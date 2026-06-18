@@ -2,10 +2,20 @@
 
 # openva-mcp
 
-Local-first, read-only [MCP](https://modelcontextprotocol.io) server over the
-OpenVA public export contract. It is a consumer adapter: it reads the static,
-digest-verifiable agent export tree and exposes read-only tools. It is not
-catalog authority, a hosted service, a risk engine, or a write path.
+Read-only [MCP](https://modelcontextprotocol.io) server over the OpenVA public
+export contract, available over **stdio** and **Streamable HTTP**. It is a
+consumer adapter: it reads the static, digest-verifiable agent export tree and
+exposes read-only tools. It is not catalog authority, a risk engine, or a write
+path, and it holds no GitHub or workspace credential. OpenVA does not operate a
+production hosted endpoint; the Streamable HTTP transport is something you run
+yourself (loopback by default), and a non-loopback bind is opt-in.
+
+This server is the agent-composed integration surface described in
+[`docs/agent-workspace-composition.md`](../../../docs/agent-workspace-composition.md):
+an agent reads a user's workspace through its own connector and sends OpenVA only
+bounded vendor identities. See
+[ADR-0003](../../../docs/architecture/decisions/ADR-0003-remote-mcp-product-surface.md)
+for the transport decision.
 
 ## Install
 
@@ -65,6 +75,20 @@ Verify a snapshot and exit:
 openva-mcp --snapshot /path/to/openva-export --verify
 ```
 
+Remote (Streamable HTTP) mode — read-only tools over `/mcp`, loopback by default:
+
+```bash
+openva-mcp --snapshot /path/to/openva-export --transport streamable-http --host 127.0.0.1 --port 8000 --mount-path /mcp
+```
+
+A non-loopback bind is refused unless `OPENVA_MCP_PUBLIC_READ_ENABLED=true` (or
+`--public-read`) is set, and you should supply a Host/Origin allow-list
+(`OPENVA_MCP_ALLOWED_HOSTS`, `OPENVA_MCP_ALLOWED_ORIGINS`). Both transports publish
+the **same** tools and schemas. Liveness and readiness are exposed at `/healthz`
+and `/readyz`; readiness fails closed until the snapshot has verified. This PR ships
+cached, read-only snapshot tools only — live verification is governed separately by
+[ADR-0001](../../../docs/architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md).
+
 ## Tools
 
 | Tool | Purpose |
@@ -76,6 +100,7 @@ openva-mcp --snapshot /path/to/openva-export --verify
 | `get_source_health` | Latest observed health and timestamp |
 | `get_vendor_changes` | Latest recorded change events |
 | `match_inventory` | Match inventory rows to vendors (`match_status`: `matched` / `ambiguous` / `no_match`) |
+| `enrich_inventory` | Match a bounded batch of vendor-identity rows and attach their public sources, optionally filtered by `source_type`. For agent-composed workspace workflows; preserves order, duplicates, and exact `row_id`. |
 | `get_snapshot_metadata` | Snapshot identity and catalog counts |
 | `verify_snapshot` | Recompute and cross-check every export digest |
 
