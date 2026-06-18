@@ -21,6 +21,19 @@ SRC = INTEGRATION / "src"
 
 GS_FILES = sorted(SRC.glob("*.gs"))
 
+# Every file a user must create when installing into a bound Apps Script project. A shipped
+# Apps Script/HTML dependency that the menu loads at runtime must appear here (and in the
+# README install steps) so it can never be silently omitted again.
+REQUIRED_MANUAL_INSTALL_FILES = (
+    "src/Core.gs",
+    "src/ApiClient.gs",
+    "src/SheetAdapter.gs",
+    "src/Menu.gs",
+    "src/Help.html",
+    "src/SourceTypes.html",
+    "appsscript.json",
+)
+
 
 def _all_gs_text() -> str:
     return "\n".join(path.read_text(encoding="utf-8") for path in GS_FILES)
@@ -37,6 +50,25 @@ def test_integration_files_exist():
         assert (SRC / name).is_file(), name
     assert (INTEGRATION / "test" / "core.test.mjs").is_file()
     assert GS_FILES, "expected at least one .gs source file"
+
+
+def test_required_manual_install_files_exist_and_are_documented():
+    # Every required file ships ...
+    for rel in REQUIRED_MANUAL_INSTALL_FILES:
+        assert (INTEGRATION / rel).is_file(), rel
+    # ... and is named in the README's manual-install steps, including HTML dialogs the
+    # menu loads at runtime (e.g. SourceTypes.html for "Configure source types"), so the
+    # documented install path cannot omit a runtime dependency.
+    install_section = (INTEGRATION / "README.md").read_text(encoding="utf-8")
+    assert "Create a bound Apps Script project" in install_section
+    for rel in REQUIRED_MANUAL_INSTALL_FILES:
+        name = Path(rel).name
+        assert name in install_section, name
+    # Cross-check: any HTML file the menu loads via createHtmlOutputFromFile must be in the
+    # required set, so a newly added dialog is caught here too.
+    menu = (SRC / "Menu.gs").read_text(encoding="utf-8")
+    for loaded in re.findall(r"createHtmlOutputFromFile\(['\"]([A-Za-z0-9_]+)['\"]\)", menu):
+        assert f"src/{loaded}.html" in REQUIRED_MANUAL_INSTALL_FILES, loaded
 
 
 # --------------------------------------------------------------------------- manifest / scopes

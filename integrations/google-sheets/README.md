@@ -199,9 +199,16 @@ No Gmail, Drive-wide, Contacts, Calendar, profile, or admin scopes are requested
 1. Open your Google Sheet.
 2. **Extensions → Apps Script.**
 3. Set the project to the **V8** runtime (default for new projects).
-4. Create files matching `src/` (`Core.gs`, `ApiClient.gs`, `SheetAdapter.gs`, `Menu.gs`,
-   and `Help.html`) and paste in the contents. The `module.exports` block at the bottom of
-   `Core.gs` is inert in Apps Script — leave it in place.
+4. Create files matching `src/` and paste in the contents. The complete set is required:
+   - `Core.gs`
+   - `ApiClient.gs`
+   - `SheetAdapter.gs`
+   - `Menu.gs`
+   - `Help.html` (the **Help** dialog)
+   - `SourceTypes.html` (the **Configure source types** dialog)
+
+   The `module.exports` block at the bottom of `Core.gs` is inert in Apps Script — leave it
+   in place.
 5. Replace the manifest with `appsscript.json` (enable "Show appsscript.json" under Project
    Settings).
 6. Reload the spreadsheet; the **OpenVA** menu appears.
