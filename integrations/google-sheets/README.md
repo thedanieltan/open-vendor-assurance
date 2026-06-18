@@ -8,8 +8,8 @@ release requires manual installation into a bound Apps Script project (see "Crea
 Apps Script project" below). Marketplace or centrally deployed add-on distribution is not
 yet available.
 
-> Future objective: a zero-install Google Workspace add-on. That does not exist yet — for
-> now installation is manual.
+> Future objective: a zero-install Google Workspace add-on. That does not exist yet;
+> installation is currently manual.
 
 ## 1. What it does
 
@@ -87,9 +87,11 @@ openva_notes
 ```
 
 Existing OpenVA columns are reused (matched by normalized header); missing ones are
-appended to the right of your data. Non-OpenVA columns are never overwritten, deleted, or
-reordered, and rows are never deleted, reordered, or deduplicated. Missing values are
-written as blank cells.
+appended to the right of your data. Only processed rows are written: skipped and unselected
+rows are excluded from every write range, so a formula in a skipped row between two
+processed rows is left in place. Non-OpenVA columns are not overwritten, deleted, or
+reordered, and rows are not deleted, reordered, or deduplicated. Missing values are written
+as blank cells.
 
 ## 6. Configure the API endpoint
 

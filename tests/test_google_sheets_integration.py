@@ -1,8 +1,8 @@
 """Contract tests for the Google Sheets enrichment integration (integrations/google-sheets).
 
-These assert the integration's static guarantees from Python so they run in the existing
+These check the integration's static properties from Python so they run in the existing
 pytest suite, and execute the JavaScript pure-function tests via ``node --test`` when a
-Node runtime is available (skipped otherwise). They do not weaken any existing suite.
+Node runtime is available (skipped otherwise).
 """
 
 from __future__ import annotations
@@ -136,6 +136,30 @@ def test_no_request_logging_in_source():
 def test_no_custom_network_spreadsheet_formula():
     # No @customfunction custom function (which would create a per-cell network formula).
     assert "@customfunction" not in _all_gs_text()
+
+
+def test_write_path_does_not_read_existing_cells():
+    # writeResults must not call getValues: reading would let an evaluated cell value
+    # replace an existing formula in a skipped/intervening row. Reads belong to the input
+    # path (readHeaderRow / enrichRowsLocked), not the write path.
+    adapter = (SRC / "SheetAdapter.gs").read_text(encoding="utf-8")
+    match = re.search(r"function writeResults\([^)]*\)\s*\{", adapter)
+    assert match, "writeResults not found"
+    # Extract the function body by brace matching from the opening brace.
+    start = match.end() - 1
+    depth = 0
+    end = start
+    for i in range(start, len(adapter)):
+        if adapter[i] == "{":
+            depth += 1
+        elif adapter[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i
+                break
+    body = adapter[start : end + 1]
+    assert "getValues" not in body, "writeResults must not read existing cells"
+    assert "setValues" in body
 
 
 # --------------------------------------------------------------------------- API surface

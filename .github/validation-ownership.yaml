@@ -104,7 +104,7 @@ jobs:
       - tools/openva/release_coherence.py
   google-sheets-integration:
     owner_loop: publication
-    purpose: Run the zero-install Google Sheets client pure-function tests (Apps Script transformation logic) on the Node runtime so the spreadsheet integration's input mapping, batching, response validation, and formula-injection guarantees are authoritative.
+    purpose: Run the Google Sheets integration pure-function tests on the Node runtime so the manual-install Apps Script client's input mapping, batching, response validation, write isolation, and formula-injection behavior are covered.
     commands:
       - node --test integrations/google-sheets/test/*.test.mjs
     protects:

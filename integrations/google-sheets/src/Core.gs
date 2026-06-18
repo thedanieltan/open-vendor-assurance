@@ -485,6 +485,88 @@ function groupContiguous(indices) {
 }
 
 /**
+ * Group sheet-row numbers into ascending contiguous runs, e.g.
+ * [2, 3, 5, 8, 9] -> [[2, 3], [5], [8, 9]].
+ *
+ * Input is sorted ascending and deduplicated before grouping, so a row number is written
+ * at most once and gaps (skipped rows) split runs. This is the unit that bounds each
+ * write range to processed rows only.
+ */
+function groupContiguousRows(rowNumbers) {
+  var sorted = rowNumbers.slice().sort(function (a, b) {
+    return a - b;
+  });
+  var runs = [];
+  var current = null;
+  var previous = null;
+  for (var i = 0; i < sorted.length; i++) {
+    var row = sorted[i];
+    if (row === previous) {
+      continue; // drop duplicate row numbers
+    }
+    if (current === null || row !== previous + 1) {
+      current = [row];
+      runs.push(current);
+    } else {
+      current.push(row);
+    }
+    previous = row;
+  }
+  return runs;
+}
+
+/**
+ * Compute the batched cell writes for an enrichment result.
+ *
+ * Returns one operation per (contiguous processed-row run x contiguous output-column run).
+ * Each operation's matrix is built directly from the projection values (with formula
+ * protection applied), so writes never read existing cells and never span skipped rows.
+ *
+ * @returns {Array<{startRow:number, startColumn:number, values:Array<Array<*>>}>}
+ *   startColumn is a 0-based column index; callers add 1 for the 1-based Sheets API.
+ */
+function buildCellWriteOperations(plan, processedRows, projectionByRow) {
+  if (!processedRows.length) {
+    return [];
+  }
+  var indexToColumn = {};
+  var columnPosition = {};
+  OPENVA_OUTPUT_COLUMNS.forEach(function (column, position) {
+    indexToColumn[plan.assignments[column]] = column;
+    columnPosition[column] = position;
+  });
+
+  var outputByRow = {};
+  processedRows.forEach(function (rowNumber) {
+    outputByRow[rowNumber] = mapProjectionToOutputRow(
+      projectionByRow[String(rowNumber)],
+      OPENVA_OUTPUT_COLUMNS
+    );
+  });
+
+  var columnRuns = groupContiguous(
+    OPENVA_OUTPUT_COLUMNS.map(function (column) {
+      return plan.assignments[column];
+    })
+  );
+  var rowRuns = groupContiguousRows(processedRows);
+
+  var operations = [];
+  rowRuns.forEach(function (rowRun) {
+    columnRuns.forEach(function (columnRun) {
+      var values = rowRun.map(function (rowNumber) {
+        return columnRun.map(function (columnIndex) {
+          var columnName = indexToColumn[columnIndex];
+          return outputByRow[rowNumber][columnPosition[columnName]];
+        });
+      });
+      operations.push({ startRow: rowRun[0], startColumn: columnRun[0], values: values });
+    });
+  });
+  return operations;
+}
+
+/**
  * Plan where OpenVA output columns live in the header.
  *
  * For each stable output column: zero existing matches -> append to the right of existing
@@ -563,6 +645,8 @@ if (typeof module === 'object' && module.exports) {
     safeCellValue: safeCellValue,
     mapProjectionToOutputRow: mapProjectionToOutputRow,
     groupContiguous: groupContiguous,
+    groupContiguousRows: groupContiguousRows,
+    buildCellWriteOperations: buildCellWriteOperations,
     planOutputColumns: planOutputColumns,
   };
 }

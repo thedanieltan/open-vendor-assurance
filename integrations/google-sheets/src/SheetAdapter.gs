@@ -173,55 +173,19 @@ function enrichRowsLocked(rowNumbers) {
  * Write the OpenVA output columns for the processed rows, using an already-validated
  * column plan (see planOutputColumns).
  *
- * Existing OpenVA columns are reused; missing ones are appended to the right. Each
- * contiguous run of output columns is written in a single setValues over the processed
- * row span, reading current values first so non-OpenVA columns and skipped rows are
- * preserved.
+ * Only processed rows are written. Skipped and unselected rows are excluded from every
+ * write range: each write covers one contiguous run of processed rows by one contiguous
+ * run of output columns. Existing cells are never read, so a formula in a skipped row
+ * between two processed rows is left untouched. Existing OpenVA columns are reused; missing
+ * ones are appended to the right.
  */
 function writeResults(sheet, plan, processedRows, projectionByRow) {
   plan.headerWrites.forEach(function (write) {
     sheet.getRange(1, write.index + 1).setValue(write.value);
   });
-  if (processedRows.length === 0) {
-    return;
-  }
-
-  var indexToColumn = {};
-  var columnPosition = {};
-  OPENVA_OUTPUT_COLUMNS.forEach(function (column, position) {
-    indexToColumn[plan.assignments[column]] = column;
-    columnPosition[column] = position;
-  });
-
-  var outputByRow = {};
-  processedRows.forEach(function (rowNumber) {
-    outputByRow[rowNumber] = mapProjectionToOutputRow(
-      projectionByRow[String(rowNumber)],
-      OPENVA_OUTPUT_COLUMNS
-    );
-  });
-
-  var minRow = Math.min.apply(null, processedRows);
-  var maxRow = Math.max.apply(null, processedRows);
-  var numRows = maxRow - minRow + 1;
-
-  var runs = groupContiguous(
-    OPENVA_OUTPUT_COLUMNS.map(function (column) {
-      return plan.assignments[column];
-    })
-  );
-
-  runs.forEach(function (run) {
-    var startColumn = run[0];
-    var range = sheet.getRange(minRow, startColumn + 1, numRows, run.length);
-    var values = range.getValues();
-    processedRows.forEach(function (rowNumber) {
-      var rowOffset = rowNumber - minRow;
-      for (var k = 0; k < run.length; k++) {
-        var columnName = indexToColumn[run[k]];
-        values[rowOffset][k] = outputByRow[rowNumber][columnPosition[columnName]];
-      }
-    });
-    range.setValues(values);
+  buildCellWriteOperations(plan, processedRows, projectionByRow).forEach(function (op) {
+    sheet
+      .getRange(op.startRow, op.startColumn + 1, op.values.length, op.values[0].length)
+      .setValues(op.values);
   });
 }

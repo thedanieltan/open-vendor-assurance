@@ -295,6 +295,120 @@ test('groupContiguous splits indices into ascending runs', () => {
   assert.deepEqual(Core.groupContiguous([1, 2, 4, 5]), [[1, 2], [4, 5]]);
 });
 
+// --------------------------------------------------------------------------- row-run grouping
+
+test('groupContiguousRows returns no runs for empty input', () => {
+  assert.deepEqual(Core.groupContiguousRows([]), []);
+});
+
+test('groupContiguousRows wraps a single row', () => {
+  assert.deepEqual(Core.groupContiguousRows([5]), [[5]]);
+});
+
+test('groupContiguousRows keeps one contiguous block as a single run', () => {
+  assert.deepEqual(Core.groupContiguousRows([2, 3, 4]), [[2, 3, 4]]);
+});
+
+test('groupContiguousRows splits non-contiguous rows', () => {
+  assert.deepEqual(Core.groupContiguousRows([2, 3, 5, 8, 9]), [[2, 3], [5], [8, 9]]);
+});
+
+test('groupContiguousRows sorts unordered input (ascending contract)', () => {
+  assert.deepEqual(Core.groupContiguousRows([9, 2, 8, 3, 5]), [[2, 3], [5], [8, 9]]);
+});
+
+test('groupContiguousRows deduplicates repeated row numbers', () => {
+  assert.deepEqual(Core.groupContiguousRows([2, 2, 3, 3, 3, 5]), [[2, 3], [5]]);
+});
+
+// --------------------------------------------------------------------------- write operations
+
+// Header that already carries vendor_name + domain, no OpenVA columns yet.
+const PLAIN_HEADER = ['vendor_name', 'domain'];
+
+function projection(values) {
+  return Object.assign({ openva_match_status: 'matched' }, values);
+}
+
+test('buildCellWriteOperations writes exact processed rows only, skipping gaps', () => {
+  const plan = Core.planOutputColumns(PLAIN_HEADER, Core.OPENVA_OUTPUT_COLUMNS);
+  const ops = Core.buildCellWriteOperations(plan, [2, 4], {
+    2: projection({ openva_vendor_id: 'stripe' }),
+    4: projection({ openva_vendor_id: 'slack' }),
+  });
+  // Two non-contiguous rows -> two single-row operations; none covers row 3.
+  assert.equal(ops.length, 2);
+  assert.deepEqual(ops.map((o) => o.startRow), [2, 4]);
+  for (const op of ops) {
+    assert.equal(op.values.length, 1); // exactly one row each
+    const lastRow = op.startRow + op.values.length - 1;
+    assert.ok(!(op.startRow <= 3 && 3 <= lastRow), 'no operation may span row 3');
+  }
+});
+
+test('buildCellWriteOperations combines contiguous rows into one run', () => {
+  const plan = Core.planOutputColumns(PLAIN_HEADER, Core.OPENVA_OUTPUT_COLUMNS);
+  const ops = Core.buildCellWriteOperations(plan, [2, 3, 4], {
+    2: projection({}),
+    3: projection({}),
+    4: projection({}),
+  });
+  assert.equal(ops.length, 1);
+  assert.equal(ops[0].startRow, 2);
+  assert.equal(ops[0].values.length, 3);
+});
+
+test('buildCellWriteOperations appends columns contiguously to the right of data', () => {
+  const plan = Core.planOutputColumns(PLAIN_HEADER, Core.OPENVA_OUTPUT_COLUMNS);
+  const ops = Core.buildCellWriteOperations(plan, [2], { 2: projection({ openva_vendor_id: 'stripe' }) });
+  assert.equal(ops.length, 1); // all 12 columns contiguous -> one column run
+  assert.equal(ops[0].startColumn, 2); // appended after vendor_name(0), domain(1)
+  assert.equal(ops[0].values[0].length, Core.OPENVA_OUTPUT_COLUMNS.length);
+  assert.equal(ops[0].values[0][0], 'matched'); // openva_match_status
+});
+
+test('buildCellWriteOperations maps scattered existing OpenVA columns correctly', () => {
+  // openva_dpa already exists at column index 1 (between vendor_name and domain); the rest
+  // are appended to the right, producing two column runs.
+  const header = ['vendor_name', 'openva_dpa', 'domain'];
+  const plan = Core.planOutputColumns(header, Core.OPENVA_OUTPUT_COLUMNS);
+  const ops = Core.buildCellWriteOperations(plan, [2], {
+    2: projection({ openva_dpa: 'https://stripe.com/dpa', openva_vendor_id: 'stripe' }),
+  });
+  // The dpa value must land in its existing column (index 1), not in the appended block.
+  const dpaOp = ops.find((o) => o.startColumn === 1);
+  assert.ok(dpaOp, 'expected a write at the existing openva_dpa column');
+  assert.equal(dpaOp.values[0][0], 'https://stripe.com/dpa');
+  // The appended run carries openva_match_status as its first column.
+  const appended = ops.find((o) => o.startColumn === header.length);
+  assert.ok(appended);
+  assert.equal(appended.values[0][0], 'matched');
+});
+
+test('buildCellWriteOperations leaves missing values blank, not "null"/"undefined"', () => {
+  const plan = Core.planOutputColumns(PLAIN_HEADER, Core.OPENVA_OUTPUT_COLUMNS);
+  const ops = Core.buildCellWriteOperations(plan, [2], { 2: { openva_match_status: 'no_match' } });
+  const row = ops[0].values[0];
+  // openva_vendor_id (index 1) absent in projection -> blank cell.
+  assert.equal(row[1], '');
+  assert.ok(!row.includes('null'));
+  assert.ok(!row.includes('undefined'));
+});
+
+test('buildCellWriteOperations applies formula-injection protection to written values', () => {
+  const plan = Core.planOutputColumns(PLAIN_HEADER, Core.OPENVA_OUTPUT_COLUMNS);
+  const ops = Core.buildCellWriteOperations(plan, [2], {
+    2: projection({ openva_vendor_name: '=DANGER()' }),
+  });
+  const nameIndex = Core.OPENVA_OUTPUT_COLUMNS.indexOf('openva_vendor_name');
+  assert.equal(ops[0].values[0][nameIndex], "'=DANGER()");
+});
+
+test('buildCellWriteOperations returns nothing when there are no processed rows', () => {
+  const plan = Core.planOutputColumns(PLAIN_HEADER, Core.OPENVA_OUTPUT_COLUMNS);
+  assert.deepEqual(Core.buildCellWriteOperations(plan, [], {}), []);
+});
+
 // --------------------------------------------------------------------------- retry policy
 
 test('isRetryableStatus retries only transient statuses', () => {
