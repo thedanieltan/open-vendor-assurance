@@ -37,7 +37,13 @@ request surface.
 - Readiness (`/readyz`) returns 503 until the snapshot has loaded **and** integrity
   verification has passed. `/mcp` returns 503 in the same window. A verification
   failure keeps the surface closed rather than serving unverified data.
-- A non-loopback bind is refused unless `OPENVA_MCP_PUBLIC_READ_ENABLED=true` is set
+- A non-loopback bind is refused unless BOTH `OPENVA_MCP_PUBLIC_READ_ENABLED=true` and
+  an explicit `OPENVA_MCP_ALLOWED_HOSTS` are set; a wildcard bind (`0.0.0.0` / `::`)
+  with no Host allow-list fails startup rather than serving healthy probes over an
+  unusable `/mcp`. This applies to the whole MCP surface — every identity-accepting
+  tool (`match_inventory`, `enrich_inventory`) bounds its rows to declared
+  vendor-identity fields, so undeclared workspace fields are rejected. Specifically,
+  `OPENVA_MCP_PUBLIC_READ_ENABLED=true` alone is not sufficient.
   explicitly; the default binding is loopback-only.
 
 ## Operational controls required before public activation

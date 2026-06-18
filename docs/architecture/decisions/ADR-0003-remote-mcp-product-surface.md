@@ -101,9 +101,11 @@ is re-exported by `matcher.py` so the CSV adapter uses the same ranking.
 6. It bounds request size before JSON parsing where practical.
 7. It has liveness (`/healthz`) and readiness (`/readyz`) probes.
 8. It fails closed on snapshot integrity failure.
-9. Non-loopback binding requires an explicit public-read configuration
-   (`OPENVA_MCP_PUBLIC_READ_ENABLED`); the default local binding remains
-   loopback-only.
+9. Non-loopback binding requires BOTH an explicit public-read configuration
+   (`OPENVA_MCP_PUBLIC_READ_ENABLED`) AND an explicit Host allow-list
+   (`OPENVA_MCP_ALLOWED_HOSTS`); startup fails closed otherwise, so a wildcard bind
+   can never start with healthy probes but a `/mcp` that DNS-rebinding protection
+   rejects for every Host. The default local binding remains loopback-only.
 10. Deployment-level rate limiting and abuse controls are mandatory before public
     activation (a successor work package).
 

@@ -106,8 +106,12 @@ TOOL_SPECS: list[ToolSpec] = [
         "match_inventory",
         "Match inventory rows (domain / vendor_name / business_entity_name / registration_number) "
         "to vendors. Each row's match_status is matched, ambiguous, or no_match.",
+        # Bounded to the shared identity row (additionalProperties=False): the
+        # workspace-data boundary applies to the whole remote MCP surface, so an
+        # undeclared field (e.g. workspace_id) is rejected here too, not just by
+        # enrich_inventory. The larger maxItems preserves this tool's batch capacity.
         _obj(
-            {"rows": {"type": "array", "items": {"type": "object"}, "maxItems": 5000}},
+            {"rows": {"type": "array", "items": _ENRICH_ROW_SCHEMA, "maxItems": 5000}},
             ["rows"],
         ),
         lambda snapshot, args: tools.match_inventory(snapshot, list(args["rows"])),
@@ -199,17 +203,24 @@ def build_server(snapshot: Snapshot):
             jsonschema.validate(arguments or {}, spec.input_schema)
         except jsonschema.ValidationError as exc:
             return _tool_error(f"invalid input for {name}: {exc.message}")
-        # Returning a dict surfaces as structuredContent (and JSON text content).
-        return spec.func(snapshot, arguments or {})
+        try:
+            # Returning a dict surfaces as structuredContent (and JSON text content).
+            return spec.func(snapshot, arguments or {})
+        except ValueError as exc:
+            # Expected tool-domain rejections (e.g. a row with no identity field)
+            # become a controlled tool error with a safe message — never a stack
+            # trace and never the caller's arguments.
+            return _tool_error(f"{name}: {exc}")
 
     return server
 
 
-# Hosts that are not a remote/public bind. A non-loopback bind is refused unless
-# the operator explicitly opts in (OPENVA_MCP_PUBLIC_READ_ENABLED), so the default
-# posture stays local even with the streamable-http transport selected.
-LOOPBACK_HOSTS = frozenset({"127.0.0.1", "::1", "0.0.0.0", "localhost"})
-PUBLIC_BIND_HOSTS = frozenset({"0.0.0.0", "::"})
+# True loopback bind addresses. A non-loopback bind (a specific public host OR a
+# wildcard like 0.0.0.0 / ::) is refused unless the operator explicitly opts in
+# (OPENVA_MCP_PUBLIC_READ_ENABLED) AND supplies an explicit Host allow-list, so the
+# default posture stays local even with the streamable-http transport selected.
+# 0.0.0.0 / :: are wildcard binds, NOT loopback.
+LOOPBACK_HOSTS = frozenset({"127.0.0.1", "::1", "localhost"})
 _TRUE_TOKENS = frozenset({"1", "true", "yes", "on"})
 TRANSPORT_STDIO = "stdio"
 TRANSPORT_STREAMABLE_HTTP = "streamable-http"
@@ -257,18 +268,20 @@ def _env_bool(name: str, default: bool = False) -> bool:
 
 
 def default_allowed_hosts(host: str, port: int) -> tuple[str, ...]:
-    """Default Host allow-list when the operator does not supply one.
+    """Default Host allow-list — **loopback only**.
 
     DNS-rebinding protection is always on for the HTTP transport, and the SDK
-    rejects every request when the Host allow-list is empty, so a usable default is
-    derived from the configured bind. For a loopback bind this covers the loopback
-    names with and without the port; a public bind requires an explicit
-    OPENVA_MCP_ALLOWED_HOSTS (so a real deployment names its own host)."""
-    if host in PUBLIC_BIND_HOSTS:
+    rejects every request when the Host allow-list is empty. For a loopback bind a
+    usable default is derived (loopback names with and without the port; IPv6
+    loopback is bracketed for the Host header). For any non-loopback bind (a specific
+    public host OR a wildcard like 0.0.0.0 / ::) this returns ``()`` — a real
+    deployment must name its own host via OPENVA_MCP_ALLOWED_HOSTS, and startup fails
+    closed otherwise (see ``check_public_binding``)."""
+    if host not in LOOPBACK_HOSTS:
         return ()
-    names = {host, f"{host}:{port}"}
-    if host in ("127.0.0.1", "localhost"):
-        names |= {"127.0.0.1", "localhost", f"127.0.0.1:{port}", f"localhost:{port}"}
+    if host == "::1":
+        return ("[::1]", f"[::1]:{port}")
+    names = {"127.0.0.1", "localhost", f"127.0.0.1:{port}", f"localhost:{port}"}
     return tuple(sorted(names))
 
 
@@ -305,18 +318,27 @@ def transport_config_from_args(args: argparse.Namespace) -> TransportConfig:
 
 
 def check_public_binding(config: TransportConfig) -> None:
-    """Fail closed on a non-loopback bind unless public-read is explicitly enabled."""
+    """Fail closed before serving on any non-loopback bind.
+
+    A loopback bind is always allowed. A non-loopback bind (a specific public host
+    or a wildcard like 0.0.0.0 / ::) requires BOTH an explicit public-read opt-in
+    AND an explicit Host allow-list. The Host allow-list requirement closes the gap
+    where a wildcard bind would otherwise start with healthy probes but a ``/mcp``
+    that DNS-rebinding protection rejects for every Host (empty allow-list)."""
     if config.transport != TRANSPORT_STREAMABLE_HTTP:
         return
-    if config.host not in LOOPBACK_HOSTS and not config.public_read_enabled:
+    if config.host in LOOPBACK_HOSTS:
+        return
+    if not config.public_read_enabled:
         raise SystemExit(
             f"refusing to bind {config.host!r}: set OPENVA_MCP_PUBLIC_READ_ENABLED=true "
             "(or --public-read) to expose the read-only tools on a non-loopback address"
         )
-    if config.host in PUBLIC_BIND_HOSTS and not config.public_read_enabled:
+    if not config.allowed_hosts:
         raise SystemExit(
-            f"refusing to bind {config.host!r}: set OPENVA_MCP_PUBLIC_READ_ENABLED=true "
-            "(or --public-read) to expose the read-only tools publicly"
+            f"refusing to bind {config.host!r}: a non-loopback bind requires an explicit Host "
+            "allow-list (OPENVA_MCP_ALLOWED_HOSTS), otherwise DNS-rebinding protection rejects "
+            "every request to the MCP endpoint"
         )
 
 

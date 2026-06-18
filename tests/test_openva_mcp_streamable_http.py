@@ -138,6 +138,33 @@ def test_malformed_jsonrpc_is_rejected(snapshot):
     assert resp.status_code == 400
 
 
+def test_match_inventory_rejects_undeclared_workspace_fields(snapshot):
+    # The bounded workspace-data boundary applies to the whole MCP surface, not just
+    # enrich_inventory: match_inventory rejects an undeclared field too.
+    with TestClient(build_streamable_http_app(snapshot, _config())) as client:
+        result = _rpc(
+            client,
+            "tools/call",
+            {"name": "match_inventory", "arguments": {"rows": [{"domain": "vendor.example", "workspace_id": "ws-1"}]}},
+        ).json()["result"]
+    assert result["isError"] is True
+
+
+def test_empty_identity_enrich_is_a_controlled_tool_error(snapshot):
+    # A row with only row_id passes the JSON Schema but fails the identity check; the
+    # dispatcher must surface that as a controlled tool error, not a stack trace.
+    with TestClient(build_streamable_http_app(snapshot, _config())) as client:
+        result = _rpc(
+            client,
+            "tools/call",
+            {"name": "enrich_inventory", "arguments": {"rows": [{"row_id": "1"}]}},
+        ).json()["result"]
+    assert result["isError"] is True
+    text = " ".join(block.get("text", "") for block in result.get("content", []))
+    assert "Traceback" not in text and "row_id" not in text
+    assert "at least one of" in text
+
+
 # --------------------------------------------------------------------------- origin validation
 
 
@@ -207,14 +234,60 @@ def test_readyz_fails_closed_on_integrity_failure(tmp_path):
 
 
 def test_public_binding_guard_refuses_non_loopback_without_optin():
+    # Non-loopback bind without the public-read opt-in is refused.
     with pytest.raises(SystemExit):
         check_public_binding(TransportConfig(transport="streamable-http", host="0.0.0.0", public_read_enabled=False))
     with pytest.raises(SystemExit):
         check_public_binding(TransportConfig(transport="streamable-http", host="10.0.0.5", public_read_enabled=False))
-    # Opt-in or loopback is permitted; stdio is never guarded.
-    check_public_binding(TransportConfig(transport="streamable-http", host="0.0.0.0", public_read_enabled=True))
+    # Loopback is always permitted; stdio is never guarded.
     check_public_binding(TransportConfig(transport="streamable-http", host="127.0.0.1"))
+    check_public_binding(TransportConfig(transport="streamable-http", host="::1"))
     check_public_binding(TransportConfig(transport="stdio", host="0.0.0.0"))
+
+
+def test_public_binding_requires_explicit_host_allow_list():
+    # Opt-in alone is not enough for a wildcard bind: without an explicit Host
+    # allow-list, DNS-rebinding protection would reject every /mcp request while
+    # probes stay healthy. Startup must fail closed instead.
+    with pytest.raises(SystemExit):
+        check_public_binding(TransportConfig(transport="streamable-http", host="0.0.0.0", public_read_enabled=True, allowed_hosts=()))
+    with pytest.raises(SystemExit):
+        check_public_binding(TransportConfig(transport="streamable-http", host="10.0.0.5", public_read_enabled=True, allowed_hosts=()))
+    # With an explicit Host allow-list, the public bind is permitted.
+    check_public_binding(
+        TransportConfig(transport="streamable-http", host="0.0.0.0", public_read_enabled=True, allowed_hosts=("mcp.example:8000",))
+    )
+
+
+def test_default_allowed_hosts_loopback_only_and_ipv6_bracketed():
+    assert default_allowed_hosts("0.0.0.0", 8000) == ()  # wildcard -> must configure explicitly
+    assert default_allowed_hosts("10.0.0.5", 8000) == ()  # specific public host -> explicit
+    v4 = default_allowed_hosts("127.0.0.1", 8000)
+    assert "127.0.0.1:8000" in v4 and "localhost:8000" in v4
+    # IPv6 loopback Host headers are bracketed.
+    assert default_allowed_hosts("::1", 8000) == ("[::1]", "[::1]:8000")
+
+
+def test_public_bind_with_allow_list_initializes_and_denies_other_host(snapshot):
+    # A fresh app per client: the SDK's session manager may only run() once.
+    def app():
+        config = _config(host="0.0.0.0", public_read_enabled=True, allowed_hosts=("allowed.example",), allowed_origins=())
+        return build_streamable_http_app(snapshot, config)
+
+    # Allowed Host -> initialize succeeds.
+    with TestClient(app(), base_url="http://allowed.example") as client:
+        init = _rpc(
+            client,
+            "initialize",
+            {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "t", "version": "0"}},
+        )
+        assert init.status_code == 200
+    # A Host outside the allow-list is rejected by DNS-rebinding protection (421).
+    with TestClient(app(), base_url="http://evil.example") as client:
+        denied = _rpc(client, "tools/list")
+        assert denied.status_code == 421
+        # Probes remain available regardless of the MCP Host guard.
+        assert client.get("/healthz").status_code == 200
 
 
 def test_default_transport_config_is_loopback_stdio():

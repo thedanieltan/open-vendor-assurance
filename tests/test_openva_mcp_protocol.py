@@ -110,6 +110,28 @@ def test_protocol_rejects_invalid_tool_input(export_tree):
     anyio.run(scenario)
 
 
+def test_protocol_bounds_match_inventory_and_controls_empty_identity(export_tree):
+    # Over the in-memory transport (same dispatcher stdio uses): the bounded
+    # workspace-data boundary covers match_inventory, and an empty-identity enrich row
+    # becomes a controlled tool error rather than an uncaught exception.
+    snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
+
+    async def scenario() -> None:
+        server = build_server(snapshot)
+        async with create_connected_server_and_client_session(server) as client:
+            bounded = await client.call_tool(
+                "match_inventory", {"rows": [{"domain": "vendor.example", "workspace_id": "ws-1"}]}
+            )
+            assert bounded.isError, "match_inventory must reject an undeclared workspace field"
+
+            empty = await client.call_tool("enrich_inventory", {"rows": [{"row_id": "1"}]})
+            assert empty.isError, "empty-identity enrich row must be a controlled tool error"
+            text = " ".join(getattr(block, "text", "") for block in (empty.content or []))
+            assert "Traceback" not in text and "at least one of" in text
+
+    anyio.run(scenario)
+
+
 def test_protocol_unknown_tool_is_an_error(export_tree):
     snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
 

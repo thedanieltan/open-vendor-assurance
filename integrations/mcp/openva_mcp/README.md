@@ -81,9 +81,11 @@ Remote (Streamable HTTP) mode — read-only tools over `/mcp`, loopback by defau
 openva-mcp --snapshot /path/to/openva-export --transport streamable-http --host 127.0.0.1 --port 8000 --mount-path /mcp
 ```
 
-A non-loopback bind is refused unless `OPENVA_MCP_PUBLIC_READ_ENABLED=true` (or
-`--public-read`) is set, and you should supply a Host/Origin allow-list
-(`OPENVA_MCP_ALLOWED_HOSTS`, `OPENVA_MCP_ALLOWED_ORIGINS`). Both transports publish
+A non-loopback bind is refused unless **both** `OPENVA_MCP_PUBLIC_READ_ENABLED=true`
+(or `--public-read`) **and** an explicit `OPENVA_MCP_ALLOWED_HOSTS` are set — startup
+fails closed otherwise, so a wildcard bind can never come up with healthy probes but a
+`/mcp` that DNS-rebinding protection rejects for every Host. Configure
+`OPENVA_MCP_ALLOWED_ORIGINS` too for browser clients. Both transports publish
 the **same** tools and schemas. Liveness and readiness are exposed at `/healthz`
 and `/readyz`; readiness fails closed until the snapshot has verified. This PR ships
 cached, read-only snapshot tools only — live verification is governed separately by
