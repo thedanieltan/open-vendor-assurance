@@ -7,11 +7,21 @@ at startup. Every catalogue-data response carries a ``snapshot`` identity object
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Annotated, Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 IDENTITY_FIELDS = ("vendor_name", "domain", "business_entity_name", "registration_number")
+
+# Defense-in-depth model bounds (the authoritative protection is the request-byte limit
+# enforced at the ASGI boundary). Generous relative to real catalogue values.
+MAX_IDENTITY_LEN = 512
+MAX_ROW_ID_LEN = 128
+MAX_SOURCE_TYPE_LEN = 128
+MAX_SOURCE_TYPES = 64
+
+IdentityField = Annotated[str, Field(max_length=MAX_IDENTITY_LEN)]
+SourceTypeField = Annotated[str, Field(max_length=MAX_SOURCE_TYPE_LEN)]
 
 
 class Snapshot(BaseModel):
@@ -90,10 +100,10 @@ class MatchInput(BaseModel):
         }
     )
 
-    vendor_name: str | None = None
-    domain: str | None = None
-    business_entity_name: str | None = None
-    registration_number: str | None = None
+    vendor_name: IdentityField | None = None
+    domain: IdentityField | None = None
+    business_entity_name: IdentityField | None = None
+    registration_number: IdentityField | None = None
 
     @model_validator(mode="after")
     def _require_identity(self) -> "MatchInput":
@@ -126,7 +136,11 @@ class VendorSourcesResponse(BaseModel):
 
 def _normalize_row_id(value: Any) -> str | int | None:
     # row_id may be string or integer only (not bool/float); preserve as supplied.
-    if value is None or isinstance(value, str):
+    if value is None:
+        return value
+    if isinstance(value, str):
+        if len(value) > MAX_ROW_ID_LEN:
+            raise ValueError(f"row_id must be at most {MAX_ROW_ID_LEN} characters")
         return value
     if isinstance(value, bool):
         raise ValueError("row_id must be a string or integer")
@@ -179,7 +193,11 @@ class EnrichRequest(BaseModel):
     )
 
     vendors: list[EnrichVendorItem] = Field(min_length=1, description="Bounded by OPENVA_MAX_ROWS. Processed in input order; duplicates preserved.")
-    source_types: list[str] | None = Field(default=None, description="Optional. Omitted means all canonical source types.")
+    source_types: list[SourceTypeField] | None = Field(
+        default=None,
+        max_length=MAX_SOURCE_TYPES,
+        description="Optional. Omitted means all canonical source types.",
+    )
 
 
 class SpreadsheetProjection(BaseModel):

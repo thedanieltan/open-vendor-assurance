@@ -34,10 +34,12 @@ and the schema at `/openapi.json`.
 | `OPENVA_PACK_PATH` | _required_ | Path to the pack directory or its `openva-pack.json` |
 | `OPENVA_SERVICE_API_KEY` | _required_ | Bearer key for authenticated endpoints |
 | `OPENVA_MAX_UPLOAD_BYTES` | `5000000` | CSV upload byte cap (`/match`) |
+| `OPENVA_MAX_REQUEST_BYTES` | = `OPENVA_MAX_UPLOAD_BYTES` | JSON request-body cap for the `/v1` endpoints, enforced at the ASGI boundary before parsing (chunked / no-Content-Length included). Independent of the CSV cap; `/match` is exempt and keeps its own cap. Over-limit → stable `413`. |
 | `OPENVA_MAX_ROWS` | `500` | Row cap for `/match` and `/v1/enrich` |
 | `OPENVA_PUBLIC_READ_ENABLED` | `false` | When true, `/v1` read endpoints need no key. Read-only only; never enables any write/submission/candidate-intake capability. |
 | `OPENVA_ALLOWED_ORIGINS` | _empty_ | Comma-separated CORS origins for browser clients. Empty means no cross-origin origins (never an implicit `*`). Methods limited to GET/POST/OPTIONS; headers to Authorization/Content-Type; credentials disabled. |
 | `OPENVA_CATALOG_COMMIT_SHA` | _unset_ | Optional 40-char lowercase hex commit SHA surfaced in `snapshot.catalog_commit_sha`; `null` when unset. Never fabricated. |
+| `OPENVA_ACCESS_LOG_ENABLED` | `false` | Whether the bundled launcher enables Uvicorn's request access log. Off by default because default access logs record concrete request targets (e.g. `/v1/vendors/{vendor_id}`), which are submitted vendor identities. |
 
 ## Snapshot identity
 
@@ -51,8 +53,13 @@ computed once at startup — **not** a git commit SHA), and `catalog_commit_sha`
 The service has no database and persists nothing. Submitted vendor names, domains,
 business-entity names, registration numbers, row IDs, source-type selections, and
 generated results are used only to answer the request and are never written to disk,
-stored in process state, logged in full, or sent to analytics. Ordinary access logs
-record method, route, and status only.
+stored in process state, logged in full, or sent to analytics.
+
+Because `/v1/vendors/{vendor_id}` carries a submitted vendor identity in its path, the
+bundled launcher disables Uvicorn's request access log by default (`OPENVA_ACCESS_LOG_ENABLED`,
+default `false`). If you front the service with your own ASGI server, Gunicorn, or a
+reverse proxy, disable raw-path access logging or use route-template / redacted structured
+logging, and never log request bodies, query values, or concrete vendor IDs.
 
 ## Local development
 

@@ -15,8 +15,6 @@ from .adapter_paths import ensure_adapter_paths
 
 ensure_adapter_paths()
 
-from openva_pack_reader import PackError  # noqa: E402
-
 from .config import ADVISORY_BOUNDARY, ServiceConfig  # noqa: E402
 from .conversion import match_csv_bytes  # noqa: E402
 from .enrichment import build_snapshot, enrich_one, match_one, vendor_detail, vendor_sources  # noqa: E402
@@ -67,6 +65,10 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
         openapi_tags=[{"name": V1_TAG, "description": V1_DESCRIPTION}],
     )
     install_middleware_and_handlers(app)
+    # Bound the request body at the ASGI boundary, before Pydantic parses it, so a single
+    # huge JSON payload cannot exhaust memory regardless of row count (added before CORS
+    # so CORS remains outermost and still annotates the 413 for browser clients).
+    app.add_middleware(RequestSizeLimitMiddleware, max_bytes=service_config.max_request_bytes)
     # Browser clients (Sheets/Office task panes) are enabled per configured origin only.
     # An empty allow-list never becomes a wildcard; existing server-to-server clients are
     # unaffected. Credentialed cross-origin requests are not enabled.
@@ -152,13 +154,13 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
     )
     async def v1_vendor(vendor_id: str, _: None = Depends(require_read_access)) -> dict[str, Any]:
         state = get_service_state(app)
-        if not VENDOR_ID_RE.fullmatch(vendor_id):
+        # Decide "unknown vendor" only from the authoritative loaded vendor index. A
+        # PackError after this point means pack corruption, not an unknown vendor, so it
+        # is NOT converted to 404 — it propagates to the generic handler as a non-leaking
+        # 500 rather than masquerading as an ordinary not-found.
+        if not VENDOR_ID_RE.fullmatch(vendor_id) or vendor_id not in state.matcher_index.vendors_by_id:
             raise HTTPException(status_code=404, detail="vendor not found")
-        try:
-            detail = vendor_detail(state, vendor_id)
-        except PackError as exc:
-            # Do not leak the underlying pack message (it may reference internal paths).
-            raise HTTPException(status_code=404, detail="vendor not found") from exc
+        detail = vendor_detail(state, vendor_id)
         return {**detail, "snapshot": build_snapshot(state, service_config), "not_advice": True}
 
     @app.get(
@@ -308,3 +310,80 @@ def apply_headers(headers: dict[str, str], app: FastAPI) -> None:
         headers[HEADER_PACK_SCHEMA_VERSION] = state.meta.schema_version
         headers[HEADER_PACK_GENERATED_AT] = state.meta.generated_at
     headers[HEADER_ADVISORY_BOUNDARY] = ADVISORY_BOUNDARY
+
+
+async def _empty_receive() -> dict[str, Any]:
+    return {"type": "http.request", "body": b"", "more_body": False}
+
+
+class RequestSizeLimitMiddleware:
+    """ASGI middleware that bounds the request body before Pydantic parses it.
+
+    Enforcement happens at the ASGI boundary, including chunked / no-Content-Length
+    requests: it fast-rejects on a declared Content-Length over the cap, then buffers the
+    streamed body up to the cap (never holding more than ~max_bytes in memory) before
+    replaying it to the app. The CSV ``/match`` endpoint is exempt — it keeps its own
+    dedicated byte cap unchanged. A breach returns the stable 413 envelope with the
+    standard OpenVA headers."""
+
+    EXEMPT_PATHS = frozenset({"/match"})
+
+    def __init__(self, app, *, max_bytes: int) -> None:
+        self.app = app
+        self.max_bytes = max_bytes
+
+    async def __call__(self, scope, receive, send) -> None:
+        if scope["type"] != "http" or scope.get("path") in self.EXEMPT_PATHS:
+            await self.app(scope, receive, send)
+            return
+
+        for name, value in scope.get("headers") or []:
+            if name == b"content-length":
+                try:
+                    declared = int(value)
+                except ValueError:
+                    break
+                if declared > self.max_bytes:
+                    await self._reject(scope, send)
+                    return
+                break
+
+        buffered: list[dict[str, Any]] = []
+        total = 0
+        more = True
+        while more:
+            message = await receive()
+            if message["type"] != "http.request":
+                buffered.append(message)
+                if message["type"] == "http.disconnect":
+                    break
+                continue
+            total += len(message.get("body", b"") or b"")
+            if total > self.max_bytes:
+                await self._reject(scope, send)
+                return
+            buffered.append(message)
+            more = message.get("more_body", False)
+
+        replayed_terminal = False
+
+        async def replay() -> dict[str, Any]:
+            nonlocal replayed_terminal
+            if buffered:
+                return buffered.pop(0)
+            if not replayed_terminal:
+                replayed_terminal = True
+                return {"type": "http.request", "body": b"", "more_body": False}
+            return await receive()
+
+        await self.app(scope, replay, send)
+
+    async def _reject(self, scope, send) -> None:
+        response = JSONResponse(
+            status_code=413,
+            content={"error": "http_error", "message": f"request body exceeds the maximum of {self.max_bytes} bytes"},
+        )
+        app = scope.get("app")
+        if app is not None:
+            apply_headers(response.headers, app)
+        await response(scope, _empty_receive, send)

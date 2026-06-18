@@ -26,6 +26,10 @@ class ServiceConfig:
     api_key: str
     service_version: str = SERVICE_VERSION
     max_upload_bytes: int = DEFAULT_MAX_UPLOAD_BYTES
+    # Maximum JSON request body accepted before parsing, enforced at the ASGI boundary
+    # for the /v1 endpoints. Independent of the CSV upload cap, though it defaults to the
+    # same value when unset.
+    max_request_bytes: int = DEFAULT_MAX_UPLOAD_BYTES
     max_rows: int = DEFAULT_MAX_ROWS
     max_active_jobs: int = DEFAULT_MAX_ACTIVE_JOBS
     job_ttl_hours: int = DEFAULT_JOB_TTL_HOURS
@@ -48,10 +52,13 @@ class ServiceConfig:
             raise RuntimeError("OPENVA_PACK_PATH is required")
         if not api_key:
             raise RuntimeError("OPENVA_SERVICE_API_KEY is required")
+        max_upload_bytes = _positive_int_env("OPENVA_MAX_UPLOAD_BYTES", DEFAULT_MAX_UPLOAD_BYTES)
         return cls(
             pack_path=Path(pack_path),
             api_key=api_key,
-            max_upload_bytes=_positive_int_env("OPENVA_MAX_UPLOAD_BYTES", DEFAULT_MAX_UPLOAD_BYTES),
+            max_upload_bytes=max_upload_bytes,
+            # Defaults to the upload cap when unset, but is configured independently.
+            max_request_bytes=_positive_int_env("OPENVA_MAX_REQUEST_BYTES", max_upload_bytes),
             max_rows=_positive_int_env("OPENVA_MAX_ROWS", DEFAULT_MAX_ROWS),
             max_active_jobs=_positive_int_env("OPENVA_MAX_ACTIVE_JOBS", DEFAULT_MAX_ACTIVE_JOBS),
             job_ttl_hours=_positive_int_env("OPENVA_JOB_TTL_HOURS", DEFAULT_JOB_TTL_HOURS),

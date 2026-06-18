@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import shutil
 import sys
 import types
@@ -15,10 +16,11 @@ sys.path.insert(0, str(Path("adapters/python/openva_pack_reader").resolve()))
 sys.path.insert(0, str(Path("adapters/python/openva_vendor_inventory_matcher").resolve()))
 sys.path.insert(0, str(Path("services/openva_match_service").resolve()))
 
-from openva_pack_reader import OpenVAPack  # noqa: E402
+from openva_pack_reader import OpenVAPack, PackError  # noqa: E402
 from openva_vendor_inventory_matcher.matcher import MatcherIndex  # noqa: E402
 from openva_vendor_inventory_matcher.core import vendor_record  # noqa: E402
-from openva_match_service.app import HEADER_ADVISORY_BOUNDARY, create_app  # noqa: E402
+from openva_match_service import cli  # noqa: E402
+from openva_match_service.app import HEADER_ADVISORY_BOUNDARY, RequestSizeLimitMiddleware, create_app  # noqa: E402
 from openva_match_service.config import ServiceConfig, parse_allowed_origins  # noqa: E402
 from openva_match_service.service_state import (  # noqa: E402
     build_latest_observation_by_source,
@@ -383,3 +385,124 @@ def test_enrich_does_not_persist_request_data_or_mutate_state(tmp_path):
     for module in ("app", "enrichment", "service_state"):
         text = Path(f"services/openva_match_service/openva_match_service/{module}.py").read_text(encoding="utf-8")
         assert "sqlite" not in text.lower() and "open(" not in text.replace("read_bytes", "")
+
+
+# --------------------------------------------------------------------------- request-size limit
+
+
+def bounded_app(max_request_bytes):
+    return create_app(ServiceConfig(pack_path=Path("."), api_key=API_KEY, max_request_bytes=max_request_bytes))
+
+
+def test_oversize_v1_match_json_rejected_with_413_envelope_and_headers():
+    with TestClient(bounded_app(300)) as client:
+        resp = client.post("/v1/match", headers=AUTH, json={"vendor_name": "Z" * 5000})
+    assert resp.status_code == 413
+    assert resp.json() == {"error": "http_error", "message": "request body exceeds the maximum of 300 bytes"}
+    assert resp.headers[HEADER_ADVISORY_BOUNDARY] == "non_advisory"
+
+
+def test_oversize_v1_enrich_json_rejected_413():
+    with TestClient(bounded_app(300)) as client:
+        resp = client.post("/v1/enrich", headers=AUTH, json={"vendors": [{"row_id": "1", "vendor_name": "X" * 5000}]})
+    assert resp.status_code == 413
+
+
+def test_boundary_size_json_is_accepted():
+    # A body comfortably under the cap is processed normally.
+    with TestClient(bounded_app(2000)) as client:
+        resp = client.post("/v1/match", headers=AUTH, json={"vendor_name": "Stripe", "domain": "stripe.com"})
+    assert resp.status_code == 200
+    assert resp.json()["match"]["status"] == "matched"
+
+
+def test_chunked_oversize_without_content_length_is_rejected():
+    # Drives the middleware directly with a streamed body and no Content-Length header.
+    app_called = {"value": False}
+
+    async def downstream(scope, receive, send):
+        app_called["value"] = True
+
+    middleware = RequestSizeLimitMiddleware(downstream, max_bytes=10)
+    sent: list[dict] = []
+
+    async def send(message):
+        sent.append(message)
+
+    messages = [
+        {"type": "http.request", "body": b"x" * 6, "more_body": True},
+        {"type": "http.request", "body": b"y" * 6, "more_body": False},
+    ]
+    iterator = iter(messages)
+
+    async def receive():
+        return next(iterator)
+
+    scope = {"type": "http", "path": "/v1/enrich", "headers": []}  # no content-length
+    asyncio.run(middleware(scope, receive, send))
+
+    assert app_called["value"] is False  # downstream never invoked
+    starts = [m for m in sent if m["type"] == "http.response.start"]
+    assert starts and starts[0]["status"] == 413
+
+
+def test_excessively_long_identity_field_is_rejected_422():
+    with TestClient(private_app()) as client:
+        resp = client.post("/v1/match", headers=AUTH, json={"vendor_name": "Z" * 600})
+    assert resp.status_code == 422
+
+
+def test_excessively_large_source_types_array_is_rejected_422():
+    with TestClient(private_app()) as client:
+        resp = client.post("/v1/enrich", headers=AUTH, json={"vendors": [{"vendor_name": "Stripe"}], "source_types": ["dpa"] * 100})
+    assert resp.status_code == 422
+
+
+def test_existing_csv_match_is_exempt_from_request_byte_limit():
+    # /match keeps its own byte cap; the JSON request-byte limit does not bound it.
+    csv_body = "vendor_name,domain\nStripe,stripe.com\n"  # ~37 bytes of content, larger multipart envelope
+    with TestClient(bounded_app(50)) as client:
+        resp = client.post("/match", headers=AUTH, files={"inventory_csv": ("v.csv", csv_body, "text/csv")})
+    assert resp.status_code == 200
+    assert resp.json()["rows"][0]["matched_vendor_id"] == "stripe"
+
+
+# --------------------------------------------------------------------------- access logging
+
+
+def test_access_log_disabled_by_default(monkeypatch):
+    monkeypatch.delenv("OPENVA_ACCESS_LOG_ENABLED", raising=False)
+    assert cli.access_log_enabled() is False
+
+
+def test_access_log_enabled_only_when_configured(monkeypatch):
+    monkeypatch.setenv("OPENVA_ACCESS_LOG_ENABLED", "true")
+    assert cli.access_log_enabled() is True
+    monkeypatch.setenv("OPENVA_ACCESS_LOG_ENABLED", "false")
+    assert cli.access_log_enabled() is False
+
+
+def test_launcher_passes_access_log_false_by_default(monkeypatch):
+    captured = {}
+
+    def fake_run(*args, **kwargs):
+        captured.update(kwargs)
+
+    monkeypatch.delenv("OPENVA_ACCESS_LOG_ENABLED", raising=False)
+    monkeypatch.setattr(cli.uvicorn, "run", fake_run)
+    assert cli.main() == 0
+    assert captured["access_log"] is False
+
+
+# --------------------------------------------------------------------------- vendor 404 vs 500
+
+
+def test_known_vendor_with_corrupt_manifest_is_500_without_leaking_paths():
+    with TestClient(private_app(), raise_server_exceptions=False) as client:
+        state = client.app.state.service_state
+        # stripe is a known vendor; simulate pack corruption that references an internal path.
+        state.pack.vendor = lambda vid: (_ for _ in ()).throw(PackError("escapes pack root: /secret/internal/manifest.json"))
+        resp = client.get("/v1/vendors/stripe", headers=AUTH)
+    assert resp.status_code == 500
+    assert resp.json() == {"error": "internal_error", "message": "Internal OpenVA match service error"}
+    assert "/secret" not in resp.text and "escapes pack root" not in resp.text

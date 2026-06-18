@@ -61,7 +61,9 @@ Response `match` carries the authoritative state and is never reinterpreted:
 The primary spreadsheet/document endpoint. `vendors` is required and non-empty (bounded
 by `OPENVA_MAX_ROWS`; exceeding it returns `413`). `source_types` is optional (omitted =
 all canonical types). Rows are processed in input order; duplicates are preserved;
-`row_id` (string or integer) is echoed back exactly.
+`row_id` (string or integer) is echoed back exactly. The whole JSON body is also bounded
+by `OPENVA_MAX_REQUEST_BYTES` (enforced before parsing; over-limit returns `413`), with
+per-field length and array-size caps as defense in depth (over-limit returns `422`).
 
 ```json
 {
