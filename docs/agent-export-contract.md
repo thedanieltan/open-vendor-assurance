@@ -102,7 +102,7 @@ none                       no observation input was available; observed fields a
 
 ## What the exports never contain
 
-- No embedded API or server — the exports themselves are static, digest-verifiable files. They can be read directly, or served read-only by the separate MCP server over stdio or Streamable HTTP (`integrations/mcp/openva_mcp`); OpenVA operates no production hosted endpoint.
+- No hosted API and no embedded server — the exports themselves are static, digest-verifiable files. They can be read directly, or served read-only by the separate MCP server over stdio or Streamable HTTP (`integrations/mcp/openva_mcp`); OpenVA operates no production hosted endpoint.
 - No private or gated document contents: URLs, enums, timestamps, and hashes only.
 - No legal conclusions and no vendor risk scores.
 - No full observation history by default — latest state only; durable history lives in the committed change-event ledger.
