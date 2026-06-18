@@ -6,6 +6,7 @@ supports stdio and Streamable HTTP, no production hosted endpoint is claimed, an
 the cached-vs-verified and non-advisory semantics stay explicit.
 """
 
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -85,6 +86,22 @@ def test_workspace_composition_doc_is_non_advisory_and_host_owned():
     assert "not_advice" in text
     for state in ("matched", "ambiguous", "no_match"):
         assert state in text
+
+
+def test_enrichment_schemas_are_transport_honest():
+    # A shared row schema exists, and the request schema is the MCP envelope, not a
+    # single wire schema falsely claimed for both /v1 and MCP.
+    row = json.loads(read("schemas/openva/agent-enrichment-row.schema.json"))
+    request = json.loads(read("schemas/openva/agent-enrichment-request.schema.json"))
+    assert "row" in row["title"].lower()
+    # MCP request uses top-level `rows`; /v1 uses `vendors` (documented, not the same schema).
+    assert request["required"] == ["rows"]
+    assert "vendors" in request["description"]
+    # The composition doc and resolver API describe the two transport envelopes honestly.
+    comp = read("docs/agent-workspace-composition.md")
+    assert "agent-enrichment-row.schema.json" in comp
+    assert "rows" in comp and "vendors" in comp
+    assert "vendors" in read("docs/resolver-api.md")
 
 
 def test_resolver_api_reframes_enrich_around_agents():

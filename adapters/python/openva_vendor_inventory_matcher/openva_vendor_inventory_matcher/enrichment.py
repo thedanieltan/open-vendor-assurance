@@ -91,10 +91,20 @@ def match_identity(
 ) -> tuple[dict[str, Any], Any]:
     """Resolve one identity through the shared core. Returns (match dict, selected).
 
-    Status, confidence, method, and the candidate set come verbatim from the core
-    matcher; ``ambiguous`` is never collapsed into ``matched`` and a weak identity
-    stays ``no_match``. ``registration_number`` participates only as identity
-    evidence the core may use; no pack-only legal-entity lookup happens here.
+    This is the *snapshot-grade* identity matcher: it matches on domain and name
+    only. Status, confidence, method, and the candidate set come verbatim from the
+    core matcher; ``ambiguous`` is never collapsed into ``matched`` and a weak
+    identity stays ``no_match``.
+
+    ``registration_number`` is accepted for signature parity with the shared
+    identity contract but is **not** used here: registration-number / legal-entity
+    resolution is a pack-backed capability (``MatcherIndex.enrich_row``) that
+    depends on legal-entity data the agent-export snapshot does not carry. A surface
+    that has that data (the match service over a catalogue pack) runs its own
+    capability-aware matcher and feeds the result to :func:`assemble_enrichment`;
+    the snapshot-backed MCP surface, which has no legal-entity data, does not. This
+    is the honest parity boundary: the *projection* (filtering, ranking, notes) is
+    shared and identical; the *matcher capability* follows the data each surface holds.
     """
     domain_normalized = normalize_domain(domain)
     name_normalized = normalize_name(vendor_name) or normalize_name(business_entity_name)
@@ -173,44 +183,39 @@ def filter_and_rank(
     return filtered, primary, urls_by_type
 
 
-def enrich_identity(
-    vendors: list[VendorRecord],
+def assemble_enrichment(
+    match: dict[str, Any],
+    matched_vendor_id: str | None,
     *,
     sources_for: Callable[[str], list[dict[str, Any]]],
-    row_id: str | int | None = None,
-    vendor_name: str | None = None,
-    domain: str | None = None,
-    business_entity_name: str | None = None,
-    registration_number: str | None = None,
     source_types: list[str] | None = None,
+    row_id: str | int | None = None,
+    identity: dict[str, Any] | None = None,
     project_source: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Enrich one bounded vendor identity into the host-neutral result shape.
+    """Assemble the host-neutral enrichment result from an *already-decided* match.
 
-    ``sources_for`` returns the matched vendor's raw canonical source rows for a
-    vendor id (each row needs at least ``source_type``, ``source_url``, and
-    ``source_id``; ``effective_or_published_at`` is used for ranking when present).
-    ``project_source`` shapes each surviving raw row into the adapter's public
-    source view (the snapshot and the pack expose different per-source fields);
-    filtering, primary selection, and notes are decided here regardless, so both
-    surfaces agree. The returned ``input`` echoes the supplied identity and
-    ``row_id`` is passed through without reinterpretation. No snapshot identity is
-    attached here — the transport adapter discloses that once at the response
-    envelope.
+    This is the **shared projection authority**: given a match decision and the
+    matched vendor's raw canonical source rows, it performs source-type filtering,
+    primary-source ranking, URL grouping, and machine-state notes — identically for
+    every surface. The *matcher* that produced ``match`` is the caller's concern and
+    may differ in capability (pack-backed legal-entity resolution for the match
+    service; snapshot identity matching for MCP); only the projection is shared, so
+    parity holds for the same decision and the same sources.
+
+    ``match`` is the match dict (``status`` plus ``vendor_id`` / ``candidates`` …).
+    ``sources_for`` returns the matched vendor's raw canonical source rows (each
+    needs ``source_type``, ``source_url``, ``source_id``; ``effective_or_published_at``
+    is used for ranking when present). ``project_source`` shapes each surviving raw
+    row into the adapter's public source view. ``row_id`` and ``identity`` are echoed
+    verbatim. No snapshot identity is attached here — the transport discloses that
+    once at the response envelope.
     """
-    match, selected = match_identity(
-        vendors,
-        vendor_name=vendor_name,
-        domain=domain,
-        business_entity_name=business_entity_name,
-        registration_number=registration_number,
-    )
-
     sources: list[dict[str, Any]] = []
     primary_by_type: dict[str, dict[str, Any]] = {}
     urls_by_type: dict[str, list[str]] = {}
-    if match["status"] == "matched" and selected is not None:
-        raw = sources_for(selected.vendor.vendor_id) or []
+    if match.get("status") == "matched" and matched_vendor_id:
+        raw = sources_for(matched_vendor_id) or []
         filtered_raw, primary_raw, urls_by_type = filter_and_rank(raw, source_types)
         project = project_source or (lambda row: row)
         sources = [project(row) for row in filtered_raw]
@@ -224,7 +229,7 @@ def enrich_identity(
         }
 
     notes = build_notes(
-        match["status"],
+        match.get("status", ""),
         source_types=source_types,
         primary_by_type=primary_by_type,
         has_any_sources=bool(sources),
@@ -232,12 +237,7 @@ def enrich_identity(
 
     return {
         "row_id": row_id,
-        "input": {
-            "vendor_name": vendor_name,
-            "domain": domain,
-            "business_entity_name": business_entity_name,
-            "registration_number": registration_number,
-        },
+        "input": identity or {},
         "match": match,
         "sources": sources,
         "primary_source_by_type": primary_by_type,
@@ -245,3 +245,47 @@ def enrich_identity(
         "notes": notes,
         "not_advice": True,
     }
+
+
+def enrich_identity(
+    vendors: list[VendorRecord],
+    *,
+    sources_for: Callable[[str], list[dict[str, Any]]],
+    row_id: str | int | None = None,
+    vendor_name: str | None = None,
+    domain: str | None = None,
+    business_entity_name: str | None = None,
+    registration_number: str | None = None,
+    source_types: list[str] | None = None,
+    project_source: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Snapshot-grade enrichment: match on domain/name, then assemble the result.
+
+    Convenience wrapper for surfaces whose only matcher is the snapshot identity
+    matcher (the MCP ``enrich_inventory`` tool). It runs :func:`match_identity` and
+    feeds the result to :func:`assemble_enrichment`. Surfaces with a richer,
+    capability-aware matcher (the match service's pack-backed
+    ``MatcherIndex.enrich_row``) call :func:`assemble_enrichment` directly with their
+    own match decision so registration-number / legal-entity matches are preserved.
+    """
+    match, selected = match_identity(
+        vendors,
+        vendor_name=vendor_name,
+        domain=domain,
+        business_entity_name=business_entity_name,
+        registration_number=registration_number,
+    )
+    return assemble_enrichment(
+        match,
+        selected.vendor.vendor_id if selected else None,
+        sources_for=sources_for,
+        source_types=source_types,
+        row_id=row_id,
+        identity={
+            "vendor_name": vendor_name,
+            "domain": domain,
+            "business_entity_name": business_entity_name,
+            "registration_number": registration_number,
+        },
+        project_source=project_source,
+    )

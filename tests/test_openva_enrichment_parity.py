@@ -28,7 +28,7 @@ for _src in (
     if str(_src) not in sys.path:
         sys.path.insert(0, str(_src))
 
-from openva_vendor_inventory_matcher.core import vendor_record  # noqa: E402
+from openva_vendor_inventory_matcher.core import legal_entity_record, vendor_record  # noqa: E402
 from openva_vendor_inventory_matcher.matcher import MatcherIndex  # noqa: E402
 
 from openva_mcp import tools  # noqa: E402
@@ -153,6 +153,48 @@ def test_ambiguous_decision_is_identical():
     assert mcp == http
     assert mcp["status"] == "ambiguous"
     assert mcp["notes"] == ["Ambiguous vendor match"]
+
+
+def test_registration_number_is_the_documented_parity_boundary():
+    """The honest boundary: matcher capability follows the data each surface holds.
+
+    The match service runs the pack-backed matcher with legal-entity data, so a
+    registration-number-only row matches. The MCP snapshot carries no legal-entity
+    data, so the same row is no_match. The shared *projection* is identical; the
+    *matcher* differs by capability, and that difference is intentional, not a
+    regression of the HTTP contract.
+    """
+    # HTTP surface: vendor reachable only via its legal entity's registration number.
+    vendor = vendor_record({"vendor_id": "regco", "display_name": "Reg Co", "legal_name": "Reg Co Limited", "official_domains": ["regco.example"]})
+    entity = legal_entity_record({"entity_id": "regco-le", "vendor_id": "regco", "legal_name": "Reg Co Limited", "jurisdiction": "GB", "registration_number": "RC-987654", "catalog_status": "active"})
+    http_state = ServiceState(
+        pack=None,
+        matcher_index=MatcherIndex([vendor], {}, {"regco": []}, {}, {}, [entity], {}),
+        meta=PackMeta(profile_id="parity", schema_version="0.1.0", generated_at="2026-06-12T00:00:00Z", counts={}),
+        snapshot_digest="sha256:" + "0" * 64,
+        latest_observation_by_source={},
+        guarantees={},
+    )
+    http = _http(http_state, {"registration_number": "RC-987654"}, ["dpa"])
+    assert http["match"]["status"] == "matched"
+    assert http["match"]["vendor_id"] == "regco"
+
+    # MCP surface: same vendor present, but the snapshot has no legal-entity data.
+    class _FakeSnapshot:
+        mode = "pinned_local"
+        commit_sha = "sha"
+        digest = "sha256:" + "0" * 64
+        generated_at = "2026-06-12T00:00:00Z"
+        from_cache = False
+
+        def vendors_index(self):
+            return {"vendors": [{"vendor_id": "regco", "canonical_name": "Reg Co", "domains": ["regco.example"]}]}
+
+        def vendor_export(self, vendor_id):
+            return {"sources": []} if vendor_id == "regco" else None
+
+    mcp = _mcp(_FakeSnapshot(), {"registration_number": "RC-987654"}, ["dpa"])
+    assert mcp["match"]["status"] == "no_match"
 
 
 def test_duplicate_rows_and_order_preserved_identically(snapshot):

@@ -52,10 +52,22 @@ Call `enrich_inventory` (MCP) or `POST /v1/enrich` (HTTP) with:
 - bounded vendor identities;
 - explicitly requested `source_types` (optional; omit for all canonical types).
 
-The request and result shapes are pinned by
-[`schemas/openva/agent-enrichment-request.schema.json`](../schemas/openva/agent-enrichment-request.schema.json)
-and
+The genuinely shared, transport-neutral contract is the **row**, pinned by
+[`schemas/openva/agent-enrichment-row.schema.json`](../schemas/openva/agent-enrichment-row.schema.json).
+The two surfaces wrap the same rows in transport-specific envelopes — a deliberate,
+documented adapter mapping, not one wire schema for both:
+
+- **MCP `enrich_inventory`** takes the rows under a top-level `rows` array
+  ([`agent-enrichment-request.schema.json`](../schemas/openva/agent-enrichment-request.schema.json)).
+- **HTTP `/v1/enrich`** takes the same rows under a `vendors` array (see
+  [`resolver-api.md`](resolver-api.md) and the service's generated OpenAPI).
+
+The per-row result shape is shared and pinned by
 [`schemas/openva/agent-enrichment-result.schema.json`](../schemas/openva/agent-enrichment-result.schema.json).
+A surface that carries legal-entity data (the match service over a catalogue pack)
+may match a row by `registration_number`; the snapshot-backed MCP tool has no
+legal-entity data and matches on domain/name only — the result *shape* is identical,
+the *matcher capability* follows the data each surface holds.
 
 ## 4. Interpret
 

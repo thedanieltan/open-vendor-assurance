@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/agent-enrichment-request.schema.json",
-  "title": "OpenVA Agent Enrichment Request",
-  "description": "Host-neutral request shared by the MCP enrich_inventory tool and the match-service /v1/enrich endpoint. It carries only bounded vendor-identity fields and an optional source-type filter. It must never carry workspace credentials, file or document contents, workspace identifiers, or any field other than those below; additionalProperties is false so unrelated workspace columns cannot enter OpenVA.",
+  "title": "OpenVA MCP enrich_inventory Request",
+  "description": "The wire request for the MCP enrich_inventory tool: a list of shared enrichment rows under `rows`, plus an optional source-type filter. This is transport-specific: the match-service /v1/enrich HTTP endpoint carries the SAME rows (agent-enrichment-row.schema.json) under a `vendors` array instead — a deliberate, documented adapter mapping, not a single wire schema for both. The shared, transport-neutral contract is the row in `$defs/row` (identical to agent-enrichment-row.schema.json).",
   "type": "object",
   "additionalProperties": false,
   "required": ["rows"],
@@ -24,14 +24,10 @@
   "$defs": {
     "row": {
       "type": "object",
-      "description": "One vendor identity. At least one identity field must be non-empty; row_id is an opaque correlation id echoed back without reinterpretation and is never treated as a workspace identifier.",
+      "description": "Mirror of agent-enrichment-row.schema.json: one vendor identity with an opaque row_id. At least one identity field must be non-empty (enforced by the tool).",
       "additionalProperties": false,
       "properties": {
-        "row_id": {
-          "type": ["string", "integer", "null"],
-          "maxLength": 128,
-          "description": "Opaque caller correlation id. Echoed verbatim."
-        },
+        "row_id": { "type": ["string", "integer", "null"], "maxLength": 128 },
         "vendor_name": { "type": ["string", "null"], "maxLength": 512 },
         "domain": { "type": ["string", "null"], "maxLength": 512 },
         "business_entity_name": { "type": ["string", "null"], "maxLength": 512 },

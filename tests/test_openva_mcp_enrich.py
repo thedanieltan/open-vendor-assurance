@@ -31,6 +31,7 @@ from openva_mcp.snapshot import LocalSnapshotSource, Snapshot  # noqa: E402
 
 from tests.test_agent_export import build, make_repo, run_artifact, write_ledger_event  # noqa: E402
 
+ROW_SCHEMA = json.loads((ROOT / "schemas/openva/agent-enrichment-row.schema.json").read_text(encoding="utf-8"))
 REQUEST_SCHEMA = json.loads((ROOT / "schemas/openva/agent-enrichment-request.schema.json").read_text(encoding="utf-8"))
 RESULT_SCHEMA = json.loads((ROOT / "schemas/openva/agent-enrichment-result.schema.json").read_text(encoding="utf-8"))
 
@@ -200,7 +201,8 @@ def test_tool_output_conforms_to_result_schema(snapshot):
         jsonschema.validate(result, RESULT_SCHEMA)
 
 
-def test_request_schema_accepts_documented_example():
+def test_request_schema_accepts_documented_mcp_example():
+    # The request schema is the MCP envelope (top-level `rows`).
     example = {
         "rows": [
             {"row_id": "17", "vendor_name": "Stripe", "domain": "stripe.com", "business_entity_name": None, "registration_number": None}
@@ -208,6 +210,27 @@ def test_request_schema_accepts_documented_example():
         "source_types": ["dpa", "subprocessors_list", "privacy_notice", "security_page", "trust_center", "compliance_page"],
     }
     jsonschema.validate(example, REQUEST_SCHEMA)
+
+
+def test_mcp_request_schema_is_transport_specific_not_v1_vendors():
+    # The MCP request uses `rows`, so a /v1-style `{vendors: [...]}` payload is NOT
+    # valid against it. This proves the schema is honestly transport-specific rather
+    # than falsely claimed to validate both surfaces.
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"vendors": [{"vendor_name": "Stripe"}]}, REQUEST_SCHEMA)
+
+
+def test_shared_row_schema_accepts_both_surfaces_rows():
+    # The genuinely shared contract is the row; both a /v1 `vendors[]` item and an MCP
+    # `rows[]` item are the same row shape.
+    for row in (
+        {"row_id": "12", "vendor_name": "Stripe", "domain": "stripe.com"},  # MCP rows[] item
+        {"row_id": 7, "domain": "slack.com", "registration_number": "RC-1"},  # /v1 vendors[] item
+    ):
+        jsonschema.validate(row, ROW_SCHEMA)
+    # The shared row also rejects unrelated workspace columns.
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"vendor_name": "x", "spreadsheet_id": "abc"}, ROW_SCHEMA)
 
 
 # --------------------------------------------------------------------------- no leakage / no advice

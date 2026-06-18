@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from openva_vendor_inventory_matcher.enrichment import enrich_identity
+from openva_vendor_inventory_matcher.enrichment import assemble_enrichment
 from openva_vendor_inventory_matcher.matcher import canonical_source_json, primary_source_by_type
 
 from .config import ServiceConfig
@@ -167,24 +167,38 @@ def enrich_one(
     registration_number: str | None,
     source_types: list[str] | None,
 ) -> dict[str, Any]:
-    """Enrich one row via the shared, dependency-neutral authority.
+    """Enrich one row, preserving the full pack-backed match capability.
 
-    Identity matching, source-type filtering, primary-source ranking, and notes
-    come from ``enrich_identity`` — the same authority the MCP ``enrich_inventory``
-    tool uses — so the two surfaces agree for the same evidence. This adapter adds
-    only the observation-aware source projection and the stable ``spreadsheet``
-    column projection that native spreadsheet/document clients consume; the
-    ``spreadsheet`` block is a compatibility convenience, not the canonical contract.
+    Matching runs through ``match_one`` (the pack-backed ``MatcherIndex.enrich_row``),
+    so registration-number and legal-entity resolution are preserved exactly as
+    before this refactor. The match decision and the matched vendor's canonical
+    sources are then handed to the shared ``assemble_enrichment`` authority — the
+    same projection (source-type filtering, primary-source ranking, notes) the MCP
+    ``enrich_inventory`` tool uses — so the two surfaces agree for the same decision
+    and sources. This adapter adds only the observation-aware source projection and
+    the stable ``spreadsheet`` column projection that native spreadsheet/document
+    clients consume; the ``spreadsheet`` block is a compatibility convenience, not
+    the canonical contract.
     """
-    result = enrich_identity(
-        state.matcher_index.vendors,
-        sources_for=lambda vendor_id: state.matcher_index.canonical_sources_by_vendor.get(vendor_id, []),
-        row_id=row_id,
+    match = match_one(
+        state,
         vendor_name=vendor_name,
         domain=domain,
         business_entity_name=business_entity_name,
         registration_number=registration_number,
+    )
+    result = assemble_enrichment(
+        match,
+        match.get("vendor_id"),
+        sources_for=lambda vendor_id: state.matcher_index.canonical_sources_by_vendor.get(vendor_id, []),
         source_types=source_types,
+        row_id=row_id,
+        identity={
+            "vendor_name": vendor_name,
+            "domain": domain,
+            "business_entity_name": business_entity_name,
+            "registration_number": registration_number,
+        },
         project_source=lambda raw: project_source(raw, state),
     )
     spreadsheet = build_spreadsheet(

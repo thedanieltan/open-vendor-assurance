@@ -63,6 +63,12 @@ with their own workspace connectors (the agent-composed primary distribution pat
 see [`agent-workspace-composition.md`](agent-workspace-composition.md)), and also by the
 secondary native/reference clients. The MCP `enrich_inventory` tool delegates to the same
 shared enrichment authority as this endpoint, so the two surfaces agree.
+This HTTP endpoint carries the rows under a **`vendors`** array; the MCP
+`enrich_inventory` tool carries the **same** shared rows
+([`schemas/openva/agent-enrichment-row.schema.json`](../schemas/openva/agent-enrichment-row.schema.json))
+under a `rows` array instead — a deliberate, documented adapter mapping, not one wire
+schema for both surfaces.
+
 `vendors` is required and non-empty (bounded
 by `OPENVA_MAX_ROWS`; exceeding it returns `413`). `source_types` is optional (omitted =
 all canonical types). Rows are processed in input order; duplicates are preserved;

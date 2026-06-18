@@ -50,6 +50,15 @@ order and duplicates are preserved, `row_id` is echoed verbatim, ambiguous stays
 ambiguous, and no-match stays no-match. A compatibility `spreadsheet` projection
 may remain available on the HTTP surface but is not the canonical agent contract.
 
+The shared, transport-neutral contract is the **row**
+(`schemas/openva/agent-enrichment-row.schema.json`); transport envelopes differ by
+design — MCP wraps rows under `rows`
+(`schemas/openva/agent-enrichment-request.schema.json`) and `/v1/enrich` wraps the
+same rows under `vendors`. The per-row result shape is shared
+(`schemas/openva/agent-enrichment-result.schema.json`). This is a deliberate,
+documented adapter mapping, not one wire schema presented as authoritative for two
+incompatible payloads.
+
 ## Shared authority
 
 No second matching algorithm or primary-source ranker is introduced. The
