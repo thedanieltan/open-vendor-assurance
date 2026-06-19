@@ -95,7 +95,9 @@ def test_contract_loads_and_is_decision_only():
 
 def test_contract_provider_recommendation_has_baseline_and_alternatives():
     rec = _contract()["provider_recommendation"]
-    assert rec["baseline"] == "google-cloud-run"
+    # Reassessed after review #402: edge cost moved the baseline to Lambda.
+    assert rec["baseline"] == "aws-lambda-container"
+    assert "google-cloud-run" in rec["alternatives"]
     assert len(rec["alternatives"]) >= 2
     assert rec["accepted_by_maintainer"] is False
 
@@ -226,13 +228,57 @@ def test_observability_doc_lists_prohibited_telemetry_fields():
 
 def test_schema_models_capability_envelope_and_has_no_expired_state():
     schema = json.loads(_read(SCHEMA_PATH))
-    states = schema["properties"]["state"]["enum"]
+    props = schema["properties"]
+    states = props["state"]["enum"]
     assert "expired" not in states, "expiry is time-based, not a persisted state"
-    assert "job_token_digest" in schema["properties"]
-    assert "job_token_digest" in schema["required"]
-    assert "request_ref" in schema["properties"]
+    assert "job_token_digest" in props and "job_token_digest" in schema["required"]
+    assert "request_ref" in props
+    # Review #402: the dangerous content-derived dedup key is gone; idempotency is
+    # an optional client key only.
+    assert "request_digest" not in props, "content-derived dedup key must be removed"
+    assert "idempotency_key_digest" in props
+    # Job records are verify-only (cached mode is synchronous).
+    assert props["freshness_mode"].get("const") == "verify"
     # job_id must be described as NOT a credential (capability is job_token).
-    assert "not an access credential" in schema["properties"]["job_id"]["description"].lower()
+    assert "not an access credential" in props["job_id"]["description"].lower()
+
+
+def test_schema_enforces_state_dependent_invariants():
+    validator = _validator()
+    base = json.loads(_read(EXAMPLES / "received.json"))
+
+    def fails(mutate):
+        rec = json.loads(json.dumps(base))
+        mutate(rec)
+        return bool(list(validator.iter_errors(rec)))
+
+    # completed with no result_ref must fail.
+    assert fails(lambda r: (r.update({"state": "completed", "request_ref": None}),))
+    # failed with no error_code must fail.
+    assert fails(lambda r: (r.update({"state": "failed", "request_ref": None, "result_ref": None}),))
+    # terminal state retaining a request_ref must fail.
+    assert fails(lambda r: (r.update({"state": "completed", "result_ref": "result/x"}),))  # request_ref still set
+    # non-terminal state without a request envelope must fail.
+    assert fails(lambda r: r.update({"request_ref": None}))
+    # cached job record must fail (job records are verify-only).
+    assert fails(lambda r: r.update({"freshness_mode": "cached"}))
+    # a fully valid received record still passes.
+    assert not list(validator.iter_errors(base))
+
+
+def test_contract_idempotency_has_no_content_dedup():
+    idem = _contract()["idempotency"]
+    assert idem["cross_caller_dedup"] is False
+    assert idem["content_digest_dedup"] is False
+    assert idem["default"] == "new_job_per_request"
+
+
+def test_contract_models_handoff_recovery():
+    handoff = _contract()["handoff"]
+    assert handoff["state_transitions"] == "compare_and_set"
+    assert "reconciler" in handoff
+    assert handoff["polling_distinguishes"]["received"]
+    assert handoff["polling_distinguishes"]["queued"]
 
 
 def test_contract_models_transient_data_path_and_edge():
@@ -305,6 +351,28 @@ def test_cost_envelope_uses_bounded_spend_rate_not_hard_cap():
     assert "load balancer" in flat or "load-balancer" in flat  # edge fixed floor acknowledged
     # The overstated "hard ceiling on worst-case running compute" must be gone.
     assert "hard ceiling on worst-case running compute" not in flat
+    # Review #402: the concrete Cloud Run edge floor (~$24/mo) and the baseline
+    # reassessment to Lambda must be present.
+    assert "$24" in flat or "~$24" in flat
+    assert "reassess" in flat
+
+
+def test_decision_and_adr_lead_with_lambda_baseline():
+    for path in (OPS / "hosted-deployment-decision.md", ADR_0006):
+        flat = " ".join(_read(path).lower().split())
+        assert "aws lambda" in flat
+        assert "reassess" in flat  # the baseline reassessment is explicit
+        # Cloud Run is retained as the lead alternative, not the baseline.
+        assert "lead alternative" in flat
+
+
+def test_job_lifecycle_has_no_content_dedup_and_documents_recovery():
+    flat = " ".join(_read(OPS / "hosted-deployment-job-lifecycle.md").lower().split())
+    assert "no content-derived dedup key" in flat or "no content-based dedup" in flat
+    assert "request_digest" not in flat  # the unsafe content key is gone
+    assert "reconciler" in flat  # handoff recovery
+    assert "compare-and-set" in flat or "compare and set" in flat
+    assert "state invariants" in flat
 
 
 def test_adr_lifecycle_supports_proposed_on_main_via_status_change():

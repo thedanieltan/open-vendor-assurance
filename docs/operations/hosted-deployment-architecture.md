@@ -36,19 +36,30 @@ retains, reuses, or incorporates that input into canonical catalogue records.
 `client → public_api → resolver_app (pinned pack) → response (not_advice, from_cache labelled)`.
 
 **Live verify (`freshness_mode: verify`)** — asynchronous:
-1. `public_api` validates limits, computes `request_digest`, writes the submitted
-   input to `transient_request_store` (referenced by `request_ref`), creates a
-   `received` job (idempotent on digest), enqueues **only the `job_id`**, and
-   returns the `job_id` plus a one-time `job_token` capability.
+1. `public_api` validates limits, writes the submitted input to
+   `transient_request_store` (referenced by `request_ref`), creates a **new**
+   `received` job (one per request; an optional client-supplied high-entropy
+   idempotency key dedups only that caller's own retries — never across callers and
+   never on request content), enqueues **only the `job_id`**, and returns the
+   `job_id` plus a one-time `job_token` capability.
 2. `async_worker` dequeues the `job_id` → `executing` → **re-reads the request
    envelope** (workload identity) → SSRF-safe fetch/discovery via the resolver →
    writes the transient result, sets `completed`/`failed`, and **deletes the
    request envelope**.
-3. `client` polls with `job_id` + `job_token`; on `completed`, retrieves the
-   result via `result_ref`. After `expires_at` the API returns `410 Gone`; the
-   record, envelope, and result blob are deleted by TTL/lifecycle.
+3. `client` polls with `job_id` + `job_token`; the API distinguishes `received`
+   (accepted, not yet dispatched) from `queued` (dispatched). On `completed` it
+   retrieves the result via `result_ref`. After `expires_at` the API returns
+   `410 Gone`; the record, envelope, and result blob are deleted by TTL/lifecycle.
 4. Discovered candidates are *proposed* through `candidate_ingress_boundary` →
    existing durable ingress → PR lifecycle. The hosted service never merges.
+
+**Consistency and recovery.** The three durable steps (write envelope → create
+`received` job → enqueue `job_id`) are recoverable, not assumed atomic: the queue
+task name equals `job_id` (re-enqueue is a no-op); a reconciler re-enqueues jobs
+stuck in `received` (owning `received → queued`); transitions are compare-and-set;
+an orphan envelope (job-create failed) is invisible to clients and TTL-reaped while
+the API returns a generic retryable `503`. See the lifecycle spec for the full
+rules.
 
 **Degraded** — request/result store, queue, or worker unavailable → `public_api`
 serves cached/static labelled results; verify returns `queued`/`rate_limited`/cached,
@@ -70,9 +81,15 @@ the terminal safe state is "hosted disabled, static layer serving."
 ## Portability
 
 The deployable is a standard OCI image; the only provider-specific surface is a
-thin adapter at the `queue` and `durable_job_store` boundary (Cloud Tasks +
-Firestore for the baseline; SQS + DynamoDB or Service Bus + Cosmos for the
-alternatives). This keeps lock-in low and rollback to a prior image clean.
+thin adapter at the `edge_gateway`, `queue`, and store boundary. **Baseline (AWS
+Lambda-container):** API Gateway (throttling/usage plans, no fixed edge floor) +
+SQS + DynamoDB TTL + Secrets Manager/KMS. **Alternatives:** Cloud Run + external
+HTTPS LB & Cloud Armor + Cloud Tasks + Firestore TTL (carries a ~fixed LB cost
+floor); or Azure Container Apps + Front Door/APIM + Service Bus + Cosmos. The
+Lambda baseline needs an ASGI→handler adapter and a ≤15-min per-invocation budget
+(verify work fans out per row), which is the lock-in cost traded for `$0` idle and
+a hard concurrency cap; Cloud Run keeps the container unchanged. Lock-in stays
+bounded to the adapter, and rollback to a prior image is clean on all three.
 
 ## Topology diagram
 

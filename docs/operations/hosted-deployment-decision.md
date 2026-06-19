@@ -25,25 +25,30 @@ is low and bursty.
 
 ## 1. Provider and execution platform
 
-| Option | Execution | Queue + tiny store | Secrets + identity | Ops (1–5) | Lock-in (1–5) |
-| --- | --- | --- | --- | --- | --- |
-| **Google Cloud Run (baseline)** | OCI container, scale-to-zero, no idle charge, instant revision rollback | Cloud Tasks (HTTP dispatch + retry) + Firestore Native TTL | Secret Manager + Workload Identity (keyless cloud APIs) | 2 | 2 |
-| **AWS Lambda (container)** | Container image, true `$0` idle, 15-min cap | SQS + DynamoDB on-demand TTL | SSM/Secrets Manager + IAM roles; KMS remote signing | 3 | 4 |
-| **Azure Container Apps** | OCI on KEDA, scale-to-zero, ACA Jobs for the worker | Service Bus + Cosmos serverless TTL | Key Vault + Managed Identity; **remote JWT signing** | 3 | 2 |
-| AWS App Runner | **Rejected** — closed to new customers (2026) | — | — | — | — |
-| AWS ECS Fargate | **Rejected** — no scale-to-zero; always-on idle | — | — | 4 | 2 |
-| Render | **Rejected** — paid tiers do not scale to zero; ~fixed idle floor | — | — | 2 | 2 |
+| Option | Execution | Edge (rate limit) | Queue + tiny store | Secrets + identity | Idle floor | Cost-cap rigor | Ops | Lock-in |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **AWS Lambda container (baseline)** | container image, true `$0` idle, ≤15-min cap (fan out per row) | API Gateway throttling/usage plans — **no fixed floor** | SQS + DynamoDB on-demand TTL | SSM/Secrets Manager + IAM roles; KMS remote signing | **≈ `$0`** | **hard** (reserved concurrency + gateway quota) | 3 | 4 |
+| **Google Cloud Run (lead alternative)** | OCI container unchanged, scale-to-zero, instant revision rollback | external HTTPS LB + Cloud Armor — **~$24/mo fixed floor** | Cloud Tasks + Firestore Native TTL | Secret Manager + Workload Identity | ~$24/mo | soft (`max-instances` briefly exceedable) | 2 | 2 |
+| **Azure Container Apps** | OCI on KEDA, scale-to-zero, ACA Jobs for the worker | Front Door/APIM — fixed-ish floor | Service Bus + Cosmos serverless TTL | Key Vault + Managed Identity; **remote JWT signing** | low–mod | hard (`maxReplicas`) | 3 | 2 |
+| AWS App Runner | **Rejected** — closed to new customers (2026) | — | — | — | — | — | — | — |
+| AWS ECS Fargate | **Rejected** — no scale-to-zero; always-on idle | — | — | — | — | — | 4 | 2 |
+| Render | **Rejected** — paid tiers do not scale to zero; ~fixed idle floor | — | — | — | — | — | 2 | 2 |
 
-**Recommendation: Google Cloud Run.** For a solo maintainer it best balances
-simplicity, portability (runs the existing container unchanged — no handler
-rewrite), scale-to-zero with no idle charge, a keyless cloud-API identity story,
-and instant rollback. Operational complexity, scaling, and portability are all
-favourable; the one honest gap (a soft instance cap and alert-only budgets) is
-addressed by the engineered cost ceiling in §8 and §11. **AWS Lambda** is the
-first alternative when hard abuse throttling and `$0` idle dominate; **Azure
-Container Apps** when the GitHub App key must never enter the app (Key Vault
-remote signing). The recommendation is provider-portable: the deployable is a
-standard OCI container with a small adapter at the queue/store boundary.
+**Recommendation (reassessed after review #402): AWS Lambda (container).** The
+mandatory rate-limiting edge changes the economics. Cloud Run needs an external
+HTTPS load balancer + Cloud Armor — a **~$24/mo fixed floor** (§11) — which defeats
+its scale-to-zero idle advantage for a low-traffic service, and its `max-instances`
+is only a **soft** cap. AWS Lambda + API Gateway has **no fixed edge floor**
+(throttling and usage-plan quotas are built in), **true `$0` idle**, and a **hard**
+reserved-concurrency cap — directly satisfying the two priorities both review
+rounds flagged as dominant: low idle cost and boundable cost/abuse. Its costs are
+an ASGI→handler adapter (lock-in 4) and a ≤15-min invocation budget (verify work
+fans out per row, which the async worker already supports). **Cloud Run is the lead
+alternative** when running the container unchanged and operational simplicity
+outweigh the idle floor; **Azure Container Apps** when the GitHub App key must
+never enter the app (Key Vault remote signing). The deployable stays a standard OCI
+image with a thin adapter at the edge/queue/store boundary, so the provider remains
+the maintainer's reversible choice.
 
 ## 2. Region and data location
 
@@ -148,12 +153,14 @@ Three stores, two of them transient. Full lifecycle:
   identity (least privilege), and **deleted on the terminal transition** with an
   object-lifecycle TTL as a backstop. Bounded by the existing upload/row caps.
 - **Durable job record (`durable_job_store`):** operational metadata only —
-  `job_id`, `job_token_digest`, `state`, `freshness_mode`, `request_digest`
-  (SHA-256, idempotency; the request itself is not stored here), `request_ref`,
-  `row_count`, `result_ref`, `error_code`, timestamps, `expires_at`, `not_advice`.
-  Schema: [`schemas/openva/hosted-job-record.schema.json`](../../schemas/openva/hosted-job-record.schema.json)
-  (`additionalProperties: false`, so a leaked inventory/identity field fails
-  validation).
+  `job_id`, `job_token_digest`, `idempotency_key_digest` (optional), `state`,
+  `freshness_mode` (always `verify`), `request_ref`, `row_count`, `result_ref`,
+  `error_code`, timestamps, `expires_at`, `not_advice`. No request content and no
+  content fingerprint are stored. Schema:
+  [`schemas/openva/hosted-job-record.schema.json`](../../schemas/openva/hosted-job-record.schema.json)
+  — `additionalProperties: false` **and** `if`/`then`/`allOf` state invariants, so a
+  leaked field or an inconsistent state (e.g. `completed` with no `result_ref`)
+  fails validation.
 - **Transient result blob (`transient_result_store`):** the resolver result,
   referenced by `result_ref`, deleted on TTL/expiry; never indexed by submitted
   content.
@@ -161,8 +168,18 @@ Three stores, two of them transient. Full lifecycle:
   **not** a credential. A one-time high-entropy `job_token` capability (returned at
   creation, never logged, stored only as `job_token_digest`) is required to poll/
   retrieve the result.
-- **Idempotency:** keyed on `job_id`; a repeated identical request (same
-  `request_digest`) reuses the existing job (and issues a fresh `job_token`).
+- **Idempotency (no content dedup):** the default is a **new job per request**.
+  There is **no content-derived dedup key** — a digest of low-entropy vendor names
+  is dictionary-testable and must not gate access. An optional client-supplied
+  high-entropy idempotency key, scoped to the calling capability, dedups only that
+  caller's own retries (stored as `idempotency_key_digest`); it never dedups across
+  callers and never mints a capability for an existing job to a different caller.
+- **Consistency/recovery:** the write-envelope → create-`received`-job → enqueue
+  handoff is recoverable (idempotent task name = `job_id`, an outbox reconciler for
+  stuck `received` jobs, compare-and-set transitions, TTL-reaped orphan envelopes,
+  and a generic retryable `503` on create failure). Polling distinguishes
+  `received` (accepted, not dispatched) from `queued` (dispatched). Detail:
+  [`hosted-deployment-job-lifecycle.md`](hosted-deployment-job-lifecycle.md).
 - **Expiry/deletion:** **time-based on `expires_at`, not a persisted state.** Once
   `now >= expires_at` the API returns a content-free **`410 Gone`** whether or not
   physical deletion has run yet (store TTL is asynchronous). The record, the
@@ -230,14 +247,17 @@ Three stores, two of them transient. Full lifecycle:
 
 | Scenario | Cloud Run (baseline) | AWS Lambda | Azure ACA |
 | --- | --- | --- | --- |
-| Idle (~0 traffic) | edge LB fixed floor + ≈ `$0` compute (scale-to-zero) + cents storage | ≈ `$0` (ECR storage only) | edge floor + ≈ `$0` within free grant |
+| Idle (~0 traffic) | **~$24/mo** edge floor (HTTPS LB ~$18/mo + Cloud Armor ~$5–6/mo) + ≈ `$0` compute `[confirm]` | **≈ `$0`** (API Gateway has no fixed floor; ECR storage cents) | edge floor (Front Door/APIM) + ≈ `$0` compute within grant |
 | Normal (light/bursty) | `$0`–single-digit `$` (free tier likely covers) | `$0`–low `$` | `$0`–a few `$` (companions dominate) |
 | Abusive (hammered) | per-request scaling = real risk | **hard throttle** (reserved concurrency + gateway quota) | bounded by `maxReplicas` |
 
-- **Fixed vs variable:** the compute is variable (scale-to-zero), but the **edge
-  HTTPS load balancer adds a fixed monthly floor** — so the baseline idle cost is
-  not ≈ `$0`; it is "edge floor + ≈ `$0` compute." The companions (secret store,
-  tiny stores, registry storage) are cents.
+- **Fixed vs variable:** compute is variable (scale-to-zero) on all three. The
+  **edge is the deciding fixed cost**: on Cloud Run/ACA the rate-limiting edge is an
+  external HTTPS LB + Cloud Armor (≈ **$24/mo** before traffic) or Front Door/APIM;
+  on the **Lambda baseline the edge is API Gateway with no fixed monthly floor**
+  (pay-per-request throttling), so its idle is genuinely ≈ `$0`. This is the
+  correction that moved the baseline from Cloud Run to Lambda (§1). Companions
+  (secret store, tiny stores, registry storage) are cents.
 - **Bounded spend rate, not a hard cap:** **no platform offers a hard spend cap,
   and on Cloud Run `max-instances` is a soft cap that may be briefly exceeded
   during traffic spikes** (and is complicated by traffic split across revisions).
@@ -277,7 +297,7 @@ Three stores, two of them transient. Full lifecycle:
 
 | Decision | Recommended option | Alternatives | Rationale | Reversibility | Lock-in | Approx. cost | Maintainer action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Provider | Google Cloud Run | AWS Lambda; Azure ACA | Solo-simple, portable, scale-to-zero, keyless cloud, instant rollback | High (portable container) | Low | `$0`–single-digit/mo idle+light | Accept provider |
+| Provider | AWS Lambda (container) | Cloud Run; Azure ACA | `$0` idle (no fixed edge floor), hard reserved-concurrency cap, built-in gateway throttling — fits low-traffic + cost-bounding | High (OCI image; adapter swappable) | Medium-High (ASGI adapter) | ≈ `$0` idle + per-request | Accept provider (Cloud Run if portability/simplicity preferred) |
 | Region | Maintainer-selected | — | Data residency + latency + free-grant rates | High | Low | region-dependent | Select region |
 | Domain | Maintainer-owned OpenVA host | — | OpenVA-controlled HTTPS host (ADR-0001) | High | None | domain renewal | Provide domain |
 | DNS / TLS | Managed cert on the host | — | Auto-renew, no key handling | High | None | included | Configure DNS/TLS |

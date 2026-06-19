@@ -20,13 +20,19 @@ in the provider's own pricing calculator before any provisioning (§6).
 
 ## 1. Cost envelopes (qualitative + rough ranges)
 
-Three load regimes, all marked `[confirm]` because rates and free grants change.
+> **Baseline reassessed (review #402).** The mandatory rate-limiting edge gives
+> Cloud Run a **~$24/mo fixed floor** (external HTTPS LB ~$18/mo + Cloud Armor
+> ~$5–6/mo, before traffic), defeating its scale-to-zero idle advantage for a
+> low-traffic service. **AWS Lambda + API Gateway has no fixed edge floor**
+> (pay-per-request throttling) and `$0` idle, so it is now the recommended
+> baseline; Cloud Run is the lead alternative when container portability/simplicity
+> outweighs the floor. All figures `[confirm]` — rates and free grants change.
 
-| Regime | Cloud Run (baseline) | AWS Lambda (container) | Azure Container Apps |
+| Regime | AWS Lambda (baseline) | Cloud Run (alternative) | Azure Container Apps |
 | --- | --- | --- | --- |
-| **IDLE** (~0 traffic) | Scale-to-zero → ≈ `$0` *compute*, **plus the external HTTPS load-balancer fixed monthly floor** (the rate-limiting edge, decision §4/§8) — so baseline idle is **not** ≈ `$0`, it is ≈ the LB floor + cents for companions. `~ LB floor + low cents/mo` `[confirm]` | True `$0` idle (no warm instance billed); gateway/quota costs only when used; ECR image storage. `~$0–low cents/mo` `[confirm]` | Scale-to-zero → ≈ `$0` compute within free grant + any always-on ingress/gateway cost. `~$0–low single-digit $/mo` `[confirm]` |
-| **NORMAL** (light, bursty public read; occasional verify job) | Free tier likely absorbs idle + light; spillover variable. `~$0–single-digit $/mo` `[confirm]` | On-demand request + GB-s billing; low at this volume. `~$0–low single-digit $/mo` `[confirm]` | Free grant covers light use; companions (Cosmos/Service Bus) tend to dominate. `~$0–a few $/mo` `[confirm]` |
-| **ABUSIVE** (sustained hammering / scripted flood) | **Highest unbounded risk**: per-request autoscaling can fan out instances and bill linearly with traffic *unless* `max-instances` caps it. Bounded only by the engineered ceiling (§4–§5). | **Strongest hard throttle**: reserved/maximum concurrency + API Gateway usage-plan quota reject excess *before* compute, flattening the worst case. | Bounded by `maxReplicas`; excess sheds rather than scaling without limit. Worst case is `maxReplicas` running continuously. |
+| **IDLE** (~0 traffic) | True `$0` idle (no warm instance billed); **API Gateway has no fixed monthly floor** (pay-per-request); ECR image storage cents. `~$0–low cents/mo` `[confirm]` | Scale-to-zero ≈ `$0` *compute* **plus the external HTTPS LB + Cloud Armor fixed floor** (decision §4/§8) — idle is **not** ≈ `$0`, it is **~$24/mo** + cents. `~$24/mo + cents` `[confirm]` | Scale-to-zero ≈ `$0` compute within free grant + an always-on ingress/gateway (Front Door/APIM) cost. `~$0–low single-digit $/mo` `[confirm]` |
+| **NORMAL** (light, bursty public read; occasional verify job) | On-demand request + GB-s billing; low at this volume; API Gateway per-request. `~$0–low single-digit $/mo` `[confirm]` | Free tier likely absorbs idle + light compute, but the **~$24/mo edge floor dominates** at this volume. `~$24/mo + spillover` `[confirm]` | Free grant covers light use; companions (Cosmos/Service Bus) + edge tend to dominate. `~$0–a few $/mo + edge` `[confirm]` |
+| **ABUSIVE** (sustained hammering / scripted flood) | **Strongest hard throttle**: reserved/maximum concurrency + API Gateway usage-plan quota reject excess *before* compute, flattening the worst case. | **Highest soft-cap risk**: per-request autoscaling can fan out instances; `max-instances` is a *soft* cap (briefly exceedable), so bounded by the engineered spend-rate controls (§3–§4), not a hard ceiling. | Bounded by `maxReplicas` (hard); excess sheds rather than scaling without limit. Worst case is `maxReplicas` running continuously. |
 
 Read across: at IDLE and NORMAL all three sit near zero. They diverge under
 ABUSIVE — and that divergence is the entire reason for §4.

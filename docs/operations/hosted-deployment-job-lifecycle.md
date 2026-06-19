@@ -39,10 +39,11 @@ in the contract; a test asserts the doc, contract, and schema agree.
 ## Transient request envelope (how the worker gets the request)
 
 The submitted input (vendor identities / batch rows) is **not** carried in the
-queue and **not** stored in the durable job record (which holds only
-`request_digest`). At `received`, the API writes the input to a **transient
-request store** (`transient_request_store`) — a separate, encrypted-at-rest object
-keyed by `job_id` and referenced by `request_ref` — and enqueues only the `job_id`.
+queue and **not** stored in the durable job record (which holds only a
+`request_ref` pointer and minimised metadata). At `received`, the API writes the
+input to a **transient request store** (`transient_request_store`) — a separate,
+encrypted-at-rest object keyed by `job_id` and referenced by `request_ref` — and
+enqueues only the `job_id`.
 The worker, at `executing`, reads the envelope by `job_id` using **workload
 identity** (least privilege: API writes, worker reads; no static credentials).
 
@@ -64,21 +65,70 @@ the record persists only its SHA-256 digest, `job_token_digest`, for verificatio
 The result blob lives in the **transient result store** (`transient_result_store`),
 referenced by `result_ref`, and is deleted on TTL/expiry.
 
-## Idempotency
+## Idempotency (no content-based deduplication)
 
-Jobs are idempotent on `job_id`. The API computes `request_digest` (SHA-256 over
-the canonical request) and, if a non-expired job with the same digest exists,
-returns that `job_id` (and a fresh `job_token`) instead of creating a duplicate.
-The request itself is never stored in the durable record — only its digest.
+There is **no content-derived dedup key.** A SHA-256 of low-entropy vendor
+names/domains is dictionary-testable and must not gate result access — deduping
+across callers on request content would let one caller reach another caller's
+job/result. So:
+
+- **Default:** every request creates a **new job** (fresh `job_id` + fresh
+  `job_token`).
+- **Optional:** a client may supply a **high-entropy idempotency key** scoped to
+  its own calling capability; the API stores only its digest (`idempotency_key_digest`)
+  and dedups **only that caller's own retries** — returning the existing job (and a
+  capability) **only to a caller presenting the matching key**, which the original
+  caller holds. It never dedups across callers and never mints a capability for an
+  existing job to a different caller.
+
+If a content fingerprint is ever needed for diagnostics it must be a keyed HMAC
+with a defined scope, never a plain content digest, and never an identity or
+access key.
+
+## State invariants (schema-enforced)
+
+The job schema (`hosted-job-record.schema.json`) enforces the state-dependent
+invariants with `if`/`then`/`allOf`, not just field shapes — invalid records fail
+validation:
+
+- `received` / `queued` / `executing`: `request_ref` present (live envelope),
+  `result_ref` null, `error_code` null;
+- `completed`: `result_ref` present, `request_ref` null (envelope deleted),
+  `error_code` null;
+- `failed`: `error_code` present (generic), `request_ref` null, `result_ref` null;
+- `freshness_mode` is `verify` for every record (cached mode is synchronous and
+  creates no job).
+
+## Consistency and recovery (envelope → job → queue handoff)
+
+The three durable steps are made recoverable, not assumed atomic:
+
+1. write the request envelope → 2. create the job record in `received` (with
+`request_ref`) → 3. enqueue the `job_id`.
+
+- **Enqueue is idempotent:** the queue task name equals `job_id`, so a retry/
+  re-enqueue is a no-op (no duplicate dispatch).
+- **Reconciler (outbox):** a job left in `received` past a short threshold is
+  re-enqueued by a reconciler that **owns the `received → queued` transition**;
+  this recovers a crash between steps 2 and 3.
+- **Compare-and-set transitions:** every transition advances only from its
+  expected prior state; the worker owns `executing → completed|failed`.
+- **Orphan envelope:** an envelope written when step 2 then fails has no job record
+  (so it is invisible to clients) and is removed by its object-lifecycle TTL; the
+  API returns a generic retryable `503` and leaks no `job_id`.
+- **Polling distinguishes** *accepted-but-not-dispatched* (`received`) from
+  *dispatched* (`queued`), so a client never mistakes an undispatched job for a
+  lost one.
 
 ## Data minimisation
 
-The job record carries operational metadata only: `job_id`, `state`,
-`freshness_mode`, `request_digest`, `row_count`, `result_ref`, `error_code`,
-`attempt`, timestamps, `expires_at`, `not_advice`. It carries **no** uploaded
-inventory, vendor identity, or request body — enforced by `additionalProperties:
-false`. The result blob (referenced by `result_ref`) is likewise transient and
-TTL-deleted and is never indexed by submitted content.
+The job record carries operational metadata only: `job_id`, `job_token_digest`,
+`idempotency_key_digest` (optional), `state`, `freshness_mode`, `request_ref`,
+`row_count`, `result_ref`, `error_code`, `attempt`, timestamps, `expires_at`,
+`not_advice`. It carries **no** uploaded inventory, vendor identity, request body,
+or content fingerprint — enforced by `additionalProperties: false`. The result blob
+(referenced by `result_ref`) is likewise transient and TTL-deleted and is never
+indexed by submitted content.
 
 ## Expiry and deletion
 

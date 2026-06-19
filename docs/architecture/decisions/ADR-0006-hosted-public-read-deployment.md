@@ -52,19 +52,25 @@ the hosted service is down), the existing PR-bound candidate-ingress boundary,
 health/readiness endpoints, and an administrative kill-switch. See
 [`docs/operations/hosted-deployment-architecture.md`](../../operations/hosted-deployment-architecture.md).
 
-### Recommended baseline (recommendation only)
+### Recommended baseline (recommendation only — reassessed after review #402)
 
-**Google Cloud Run** (+ Cloud Tasks for dispatch, Firestore Native TTL for the
-tiny job store, Secret Manager, and Workload Identity), because it runs the
-existing container unchanged (low lock-in), scales to zero with no idle charge,
-offers instant revision rollback, and gives keyless access to cloud APIs.
-**Alternatives:** AWS Lambda (container) — strongest hard abuse throttles
-(reserved concurrency + gateway quotas) and true `$0` idle, at the cost of a
-handler adapter and a 15-minute job ceiling; **Azure Container Apps** — same
-scale-to-zero/portable-container profile plus Key Vault remote JWT signing, the
-strongest secret posture (the GitHub App key never enters the app). Rejected:
-AWS App Runner (closed to new customers in 2026), ECS Fargate and Render (no
-scale-to-zero / high idle floor).
+**AWS Lambda (container)** (+ API Gateway for the rate-limiting edge, SQS for
+dispatch, DynamoDB on-demand TTL for the tiny stores, and Secrets Manager/KMS).
+The reassessment driver: the mandatory rate-limiting edge gives **Cloud Run a
+~$24/mo fixed floor** (external HTTPS LB + Cloud Armor) that defeats its
+scale-to-zero idle advantage for a low-traffic service, and its `max-instances`
+is only a **soft** cap. Lambda + API Gateway has **no fixed edge floor**, **true
+`$0` idle**, and a **hard** reserved-concurrency cap — best satisfying the low-idle
+and boundable-cost priorities both reviews flagged as dominant. Its costs are an
+ASGI→handler adapter (higher lock-in) and a ≤15-minute invocation budget (verify
+work fans out per row). **Lead alternative — Google Cloud Run** (+ Cloud Tasks +
+Firestore TTL + Secret Manager + Workload Identity): runs the container unchanged
+with the lowest lock-in; choose it when portability/operational simplicity
+outweigh the idle floor. **Azure Container Apps** when the GitHub App key must
+never enter the app (Key Vault remote JWT signing). Rejected: AWS App Runner
+(closed to new customers in 2026), ECS Fargate and Render (no scale-to-zero / high
+idle floor). The deployable stays a portable OCI image; the provider is a
+reversible maintainer choice.
 
 ### Deployment-specific acceptance gates (in addition to ADR-0001's six)
 

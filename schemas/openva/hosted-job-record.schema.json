@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/hosted-job-record.schema.json",
   "title": "OpenVA Hosted Job Record",
-  "description": "Operational metadata for one hosted resolver job in the durable job store. Data-minimised and transient by design: it carries NO uploaded inventory content, NO vendor identity strings, and NO request bodies — only a request digest, a row count, lifecycle state, and a TTL. The submitted request lives separately in a transient request envelope (referenced by request_ref) and the result lives in a transient result blob (referenced by result_ref); both are TTL-deleted. Expiry is time-based on expires_at (the API returns 410 once now >= expires_at); there is no persisted 'expired' state. Non-advisory: it never carries a verdict, score, risk level, approval, or suitability. additionalProperties is false so a leaked inventory or identity field fails validation. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+  "description": "Operational metadata for one hosted resolver VERIFY-mode job in the durable job store. (Cached mode is synchronous and creates no job record.) Data-minimised and transient by design: it carries NO uploaded inventory content, NO vendor identity strings, and NO request bodies. The submitted request lives separately in a transient request envelope (referenced by request_ref) and the result in a transient result blob (referenced by result_ref); both are TTL-deleted. Expiry is time-based on expires_at (the API returns 410 once now >= expires_at); there is no persisted 'expired' state. There is NO content-derived deduplication key: deduplication, if any, is only via an optional client-supplied high-entropy idempotency key (stored as idempotency_key_digest) scoped to the calling capability — never across callers. Result access requires the separate job_token capability (stored only as job_token_digest); job_id is a loggable correlation id, not a credential. additionalProperties is false and state-dependent invariants are enforced below so a leaked or inconsistent field fails validation. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
   "type": "object",
   "required": [
     "schema_version",
@@ -10,7 +10,6 @@
     "job_token_digest",
     "state",
     "freshness_mode",
-    "request_digest",
     "row_count",
     "created_at",
     "updated_at",
@@ -29,26 +28,29 @@
       "description": "SHA-256 of the high-entropy job_token capability returned once at creation. The token gates result polling/retrieval; it is never logged and never stored in plaintext — only this digest persists for verification.",
       "pattern": "^sha256:[a-f0-9]{64}$"
     },
-    "state": { "enum": ["received", "queued", "executing", "completed", "failed"] },
-    "freshness_mode": { "enum": ["cached", "verify"] },
-    "request_digest": {
-      "type": "string",
-      "description": "SHA-256 over the canonical request for idempotency/dedup only. The request itself is never stored in this record. SHA-256 only (bot constitution).",
+    "idempotency_key_digest": {
+      "type": ["string", "null"],
+      "description": "SHA-256 of an OPTIONAL client-supplied high-entropy idempotency key, scoped to the calling capability. Used only to dedup the same caller's own retries; null means a new job is always created. It is NOT a content fingerprint and is never used to dedup across callers or to mint a capability for an existing job to a different caller.",
       "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "state": { "enum": ["received", "queued", "executing", "completed", "failed"] },
+    "freshness_mode": {
+      "const": "verify",
+      "description": "Job records exist only for verify-mode async work; cached mode is synchronous and creates no record."
     },
     "request_ref": {
       "type": ["string", "null"],
-      "description": "Opaque pointer to the TRANSIENT request envelope (submitted input) the worker reads, or null once the envelope is deleted (on completion/failure/abandonment/TTL). Never the input itself.",
+      "description": "Opaque pointer to the TRANSIENT request envelope (submitted input) the worker reads. Non-null while the job is non-terminal; null once the envelope is deleted on the terminal transition. Never the input itself.",
       "maxLength": 256
     },
     "row_count": { "type": "integer", "minimum": 0, "maximum": 100000 },
     "result_ref": {
       "type": ["string", "null"],
-      "description": "Opaque pointer to the transient result blob (also TTL-deleted), or null until completed.",
+      "description": "Opaque pointer to the transient result blob (TTL-deleted). Non-null only when completed.",
       "maxLength": 256
     },
     "error_code": {
-      "description": "Stable, generic failure code (never an upstream message or submitted content).",
+      "description": "Stable, generic failure code (never an upstream message or submitted content). Non-null only when failed.",
       "enum": [null, "input_too_large", "row_limit_exceeded", "execution_timeout", "upstream_unavailable", "rate_limited", "internal_error"]
     },
     "attempt": { "type": "integer", "minimum": 0, "maximum": 10, "default": 0 },
@@ -57,5 +59,43 @@
     "expires_at": { "type": "string", "format": "date-time" },
     "not_advice": { "const": true }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "$comment": "Non-terminal states own a live request envelope and have no result or error.",
+      "if": { "properties": { "state": { "enum": ["received", "queued", "executing"] } }, "required": ["state"] },
+      "then": {
+        "required": ["request_ref"],
+        "properties": {
+          "request_ref": { "type": "string" },
+          "result_ref": { "type": "null" },
+          "error_code": { "const": null }
+        }
+      }
+    },
+    {
+      "$comment": "completed has a result, no error, and the envelope is deleted.",
+      "if": { "properties": { "state": { "const": "completed" } }, "required": ["state"] },
+      "then": {
+        "required": ["result_ref"],
+        "properties": {
+          "result_ref": { "type": "string" },
+          "request_ref": { "type": "null" },
+          "error_code": { "const": null }
+        }
+      }
+    },
+    {
+      "$comment": "failed has a generic error, no result, and the envelope is deleted.",
+      "if": { "properties": { "state": { "const": "failed" } }, "required": ["state"] },
+      "then": {
+        "required": ["error_code"],
+        "properties": {
+          "error_code": { "type": "string" },
+          "request_ref": { "type": "null" },
+          "result_ref": { "type": "null" }
+        }
+      }
+    }
+  ]
 }

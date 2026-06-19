@@ -42,10 +42,16 @@ adr0001_boundaries_preserved:
   catalogue_determinism_preserved: true
 
 # Deployment recommendation. RECOMMENDATION ONLY — maintainer accepts a provider.
+# Reassessed after review #402: the mandatory rate-limiting edge gives Cloud Run a
+# fixed ~$24/mo load-balancer + Cloud Armor floor, defeating its scale-to-zero idle
+# advantage for a low-traffic service, while AWS Lambda + API Gateway has no fixed
+# edge floor (built-in throttling) and a HARD reserved-concurrency cap. Baseline is
+# therefore AWS Lambda (container); Cloud Run is the lead alternative when
+# container portability/operational simplicity outweighs the idle floor.
 provider_recommendation:
-  baseline: google-cloud-run
+  baseline: aws-lambda-container
   alternatives:
-    - aws-lambda-container
+    - google-cloud-run
     - azure-container-apps
   rejected:
     - id: aws-app-runner
@@ -54,6 +60,7 @@ provider_recommendation:
       reason: no scale-to-zero; always-on idle cost
     - id: render
       reason: paid tiers do not scale to zero; high idle floor
+  reassessment: see docs/operations/hosted-deployment-cost-envelope.md and decision report §1/§11
   accepted_by_maintainer: false
 
 # Durable job/result lifecycle (paired with the schema). The job record is
@@ -98,7 +105,7 @@ expiry:
 request_envelope:
   store: transient_request_store
   carried_in_queue: false             # queue messages carry job_id only
-  carried_in_job_record: false        # the durable record stores only request_digest
+  carried_in_job_record: false        # the durable record stores only a request_ref pointer + minimised metadata
   encryption: at_rest
   access: workload_identity_least_privilege   # API writes; worker reads
   deleted_on: [completion, failure, abandonment, ttl]
@@ -113,6 +120,34 @@ result_access:
   capability: job_token               # returned once at creation; never logged
   stored_as: job_token_digest         # sha256 of the capability only
   result_store: transient_result_store
+
+# Idempotency. There is NO content-derived dedup key (a SHA-256 of low-entropy
+# vendor names is dictionary-testable and would let one caller reach another
+# caller's job/result). Default: create a NEW job (fresh job_id + job_token) per
+# request. Optional: a client-supplied high-entropy idempotency key, scoped to the
+# calling capability, dedups only that caller's own retries; it never dedups across
+# callers and never mints a capability for an existing job to a different caller.
+idempotency:
+  default: new_job_per_request
+  optional_key: client_supplied_high_entropy   # stored as idempotency_key_digest
+  scope: calling_capability
+  cross_caller_dedup: false
+  content_digest_dedup: false
+
+# Crash/failure recovery for the three-step handoff (write envelope -> create job
+# record -> enqueue job_id). Each step is independently durable, so the handoff is
+# made recoverable rather than assumed atomic.
+handoff:
+  order: [write_request_envelope, create_job_record_received, enqueue_job_id]
+  enqueue_idempotency: task_name_equals_job_id          # re-enqueue is a no-op
+  reconciler: re_enqueues_received_jobs_past_threshold  # outbox-style; owns received -> queued
+  worker_ownership: "executing -> completed | failed"   # CAS on expected prior state
+  state_transitions: compare_and_set                    # only advance from the expected state
+  orphan_envelope_cleanup: object_lifecycle_ttl         # envelope written but job-create failed
+  polling_distinguishes:
+    received: accepted_not_yet_dispatched
+    queued: dispatched_to_worker
+  on_job_create_failure: generic_503_retryable_no_job_id_leaked
 
 # Service topology components (each is specified in the architecture doc).
 topology_components:
@@ -134,10 +169,12 @@ topology_components:
 # Balancer with Cloud Armor, and Cloud Run ingress is restricted so direct
 # ingress cannot bypass the edge. The edge adds a fixed cost floor (see cost doc).
 edge:
-  gateway: external_https_load_balancer_plus_rate_limiting   # e.g. Cloud Armor on GCP
-  origin_ingress: restricted_to_edge_only                    # internal-and-cloud-load-balancing on Cloud Run
+  gateway: managed_api_gateway_or_load_balancer_with_rate_limiting
+  baseline_realization: aws_api_gateway_throttling_and_usage_plans   # no fixed monthly floor; hard quotas
+  alternative_realization: gcp_external_https_lb_plus_cloud_armor    # ~fixed monthly floor (~$24/mo + traffic)
+  origin_ingress: restricted_to_edge_only                           # private integration (Lambda) / internal-and-cloud-load-balancing (Cloud Run)
   bypass_prevented: true
-  adds_fixed_cost_floor: true
+  adds_fixed_cost_floor: depends_on_provider                        # API Gateway ~none; external LB yes
 
 # Telemetry fields that MUST NEVER be emitted to logs, traces, or metric labels
 # (the ADR-0001 transient-input + leakage boundary).

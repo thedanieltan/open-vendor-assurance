@@ -51,12 +51,12 @@ spend ceiling, permissions). They fail closed until those are made.
 
 ### WP-02B — Async job/result persistence
 - **Inputs:** WP-02A; `schemas/openva/hosted-job-record.schema.json`; the job-lifecycle spec.
-- **Outputs:** a store adapter behind an interface (in-memory + one provider impl), TTL enforcement, idempotency on `request_digest`, the state machine.
+- **Outputs:** the transient request-envelope store, the durable job store, and the transient result store behind interfaces (in-memory + one provider impl); TTL enforcement + `expires_at`→`410` expiry; the schema-enforced state machine; the **handoff reconciler** (re-enqueues stuck `received` jobs, CAS transitions, orphan-envelope cleanup); idempotency via the **optional client idempotency key** (no content dedup).
 - **Allowed paths:** `services/openva_match_service/**`, `schemas/openva/**`, `tests/**`.
 - **Non-goals:** the worker; provider provisioning.
-- **Tests:** schema validation of records; state-transition tests (illegal transitions rejected); TTL expiry; idempotency; **minimisation** (no submitted content persisted).
+- **Tests:** schema validation incl. **state-invariant negative cases** (`completed` w/o `result_ref`, `failed` w/o `error_code`, terminal retaining `request_ref`, non-terminal w/o envelope, `cached` job — all rejected); illegal-transition rejection; `410`/TTL expiry of record + envelope + result; **no cross-caller dedup** (default new job; optional-key dedup scoped to caller); handoff recovery (crash between envelope/job/enqueue); **minimisation** (no submitted content persisted).
 - **Rollback:** disable verify → store unused; cached mode unaffected.
-- **Acceptance evidence:** CI green; records validate; minimisation test passes.
+- **Acceptance evidence:** CI green; records + negative cases validate as expected; recovery + minimisation tests pass.
 
 ### WP-02C — Worker + queue execution
 - **Inputs:** WP-02B; the SSRF-safe fetch boundary.
