@@ -110,8 +110,10 @@ def test_no_arbitrary_url_fetch_tool():
         assert "endpoint" not in properties
 
 
-def test_candidate_intake_lane_remains_inert():
-    """Issue #393 / candidate-intake stays inert: execution_wired must be false."""
+def test_candidate_intake_lane_is_wired_and_stays_non_canonical():
+    """Issue #393: candidate-intake is now execution-wired, but it remains a
+    non-MCP, staging-only lane — it never writes catalog truth and never merges,
+    and no MCP tool mutates the candidate store."""
     import yaml
 
     policy = yaml.safe_load((ROOT / "config" / "automerge-policy.yaml").read_text(encoding="utf-8"))
@@ -128,4 +130,16 @@ def test_candidate_intake_lane_remains_inert():
 
     lane = find_candidate_intake(policy)
     assert lane is not None, "candidate_intake lane not found in automerge policy"
-    assert lane.get("execution_wired") is False
+    assert lane.get("execution_wired") is True
+    assert lane.get("label") == "automerge:candidate-intake"
+
+    # The bot-authority candidate_intake lane stays Level-1 staging: no catalog
+    # truth, no merge, confined to the candidate store. The MCP surface exposes
+    # none of this (no candidate-mutation tool; asserted by the tests above).
+    authority = yaml.safe_load(
+        (ROOT / "docs" / "operations" / "contracts" / "bot-authority.yaml").read_text(encoding="utf-8")
+    )
+    intake = next(lane for lane in authority["lanes"] if lane["id"] == "candidate_intake")
+    assert intake["may_write_catalog_truth"] is False
+    assert intake["may_merge_prs"] is False
+    assert intake["allowed_paths"] == ["maintenance/candidates/**"]
