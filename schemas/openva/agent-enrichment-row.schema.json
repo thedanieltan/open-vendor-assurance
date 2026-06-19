@@ -17,7 +17,7 @@
     "registration_number": {
       "type": ["string", "null"],
       "maxLength": 512,
-      "description": "Used for matching only on surfaces that carry legal-entity data (the match service over a catalogue pack). The agent-export snapshot has no legal-entity data, so the snapshot-backed MCP tool does not match on this field alone."
+      "description": "Matched via legal-entity resolution on any surface that carries legal-entity data for the vendor (the match service over a catalogue pack; the MCP snapshot over the vendor export's legal_entities) using one shared fallback. The shipped catalogue carries no legal-entity records yet, so a registration-number-only row currently resolves to no_match until such data exists."
     }
   }
 }

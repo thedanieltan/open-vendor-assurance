@@ -77,7 +77,23 @@
         "domains": { "type": "array", "items": { "type": "string" } },
         "catalog_status": { "type": ["string", "null"] },
         "sources": { "type": "array", "items": { "$ref": "#/$defs/source_row" } },
+        "legal_entities": { "type": "array", "items": { "$ref": "#/$defs/legal_entity" } },
         "not_advice": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "legal_entity": {
+      "type": "object",
+      "description": "Public legal-entity identity metadata projected into a vendor export. Optional and backward-compatible: present only when the vendor has legal-entity records.",
+      "required": ["entity_id", "vendor_id", "legal_name", "jurisdiction", "catalog_status"],
+      "properties": {
+        "entity_id": { "type": "string" },
+        "vendor_id": { "type": "string" },
+        "legal_name": { "type": "string" },
+        "jurisdiction": { "type": "string" },
+        "registration_number": { "type": ["string", "null"] },
+        "catalog_status": { "type": "string" },
+        "registered_address": { "type": ["object", "null"] }
       },
       "additionalProperties": false
     },

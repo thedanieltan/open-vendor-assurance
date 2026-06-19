@@ -258,3 +258,37 @@ def resolve_legal_entity(
             return LegalEntityResolution("jurisdiction_resolution_index", confidence, matched_entity, candidates)
 
     return LegalEntityResolution("unresolved", "unresolved", None, [])
+
+
+def select_with_legal_fallback(
+    vendors_by_id: dict[str, VendorRecord],
+    candidates: list[MatchCandidate],
+    input_row: dict[str, str],
+    *,
+    by_registration: dict[str, list[LegalEntityRecord]],
+    by_id: dict[str, LegalEntityRecord],
+    contracting_by_key: dict[tuple[str, str], dict[str, Any]],
+) -> tuple[MatchCandidate | None, LegalEntityResolution]:
+    """Select a match, falling back to registration-number / legal-entity resolution.
+
+    The single shared authority for the "no identity match, but a registration number
+    resolves to a known legal entity" path. Used by both the pack matcher
+    (``MatcherIndex.enrich_row``) and the snapshot matcher
+    (``openva_vendor_inventory_matcher.enrichment.match_identity``), so a surface that
+    carries legal-entity data matches the same way regardless of transport. When the
+    legal-entity indexes are empty (no legal data), this behaves exactly like
+    ``select_match``: a registration-only row stays unmatched.
+    """
+    selected = select_match(candidates)
+    resolution = resolve_legal_entity(
+        input_row,
+        selected.vendor if selected else None,
+        by_registration=by_registration,
+        by_id=by_id,
+        contracting_by_key=contracting_by_key,
+    )
+    if selected is None and resolution.matched_entity is not None:
+        vendor = vendors_by_id.get(resolution.matched_entity.vendor_id)
+        if vendor is not None:
+            selected = MatchCandidate(vendor, 1.00, "registration_number_exact")
+    return selected, resolution

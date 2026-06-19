@@ -64,10 +64,12 @@ documented adapter mapping, not one wire schema for both:
 
 The per-row result shape is shared and pinned by
 [`schemas/openva/agent-enrichment-result.schema.json`](../schemas/openva/agent-enrichment-result.schema.json).
-A surface that carries legal-entity data (the match service over a catalogue pack)
-may match a row by `registration_number`; the snapshot-backed MCP tool has no
-legal-entity data and matches on domain/name only — the result *shape* is identical,
-the *matcher capability* follows the data each surface holds.
+Registration-number matching is data-dependent, not transport-dependent: both
+surfaces use one shared legal-entity fallback and match a `registration_number` when
+the underlying data carries legal entities for the vendor (the pack for `/v1`; each
+vendor export's `legal_entities` for the MCP snapshot). The shipped catalogue carries
+no legal-entity records yet, so a registration-number-only row currently resolves to
+`no_match` on both surfaces until such data exists.
 
 ## 4. Interpret
 

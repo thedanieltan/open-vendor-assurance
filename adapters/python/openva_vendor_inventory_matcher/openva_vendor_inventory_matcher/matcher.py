@@ -29,10 +29,8 @@ from openva_vendor_inventory_matcher.core import (
     normalize_domain,
     normalize_jurisdiction,
     normalize_name,
-    resolve_legal_entity,
     scalar,
-    select_match,
-    sorted_legal_entities,
+    select_with_legal_fallback,
     vendor_record,
 )
 
@@ -144,12 +142,14 @@ class MatcherIndex:
         domain = normalize_domain(input_row.get("domain", ""))
         name = normalize_name(input_row.get("vendor_name", "")) or normalize_name(input_row.get("business_entity_name", ""))
         candidates = match_candidates(self.vendors, domain, name)
-        selected = select_match(candidates)
-        entity_resolution = self.resolve_legal_entity(input_row, selected.vendor if selected else None)
-        if selected is None and entity_resolution.matched_entity is not None:
-            vendor = self.vendors_by_id.get(entity_resolution.matched_entity.vendor_id)
-            if vendor is not None:
-                selected = MatchCandidate(vendor, 1.00, "registration_number_exact")
+        selected, entity_resolution = select_with_legal_fallback(
+            self.vendors_by_id,
+            candidates,
+            input_row,
+            by_registration=self.legal_entities_by_registration,
+            by_id=self.legal_entities_by_id,
+            contracting_by_key=self.contracting_resolution_by_key,
+        )
         output = dict(input_row)
         output.update(base_annotation())
 
@@ -161,19 +161,6 @@ class MatcherIndex:
             output.update(enrichment_fields(selected.vendor, self))
         output.update(legal_entity_fields(entity_resolution, selected.vendor if selected else None, self))
         return output
-
-    def resolve_legal_entity(
-        self,
-        input_row: dict[str, str],
-        selected_vendor: VendorRecord | None,
-    ) -> LegalEntityResolution:
-        return resolve_legal_entity(
-            input_row,
-            selected_vendor,
-            by_registration=self.legal_entities_by_registration,
-            by_id=self.legal_entities_by_id,
-            contracting_by_key=self.contracting_resolution_by_key,
-        )
 
 
 def match_fields(status: str, selected: MatchCandidate | None, candidates: list[MatchCandidate]) -> dict[str, str]:

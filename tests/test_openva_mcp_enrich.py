@@ -31,7 +31,13 @@ from openva_mcp import tools  # noqa: E402
 from openva_mcp.server import SPEC_BY_NAME, TOOL_SPECS  # noqa: E402
 from openva_mcp.snapshot import LocalSnapshotSource, Snapshot  # noqa: E402
 
-from tests.test_agent_export import build, make_repo, run_artifact, write_ledger_event  # noqa: E402
+from tests.test_agent_export import (  # noqa: E402
+    build,
+    make_repo,
+    run_artifact,
+    write_ledger_event,
+    write_legal_entity,
+)
 
 ROW_SCHEMA = json.loads((ROOT / "schemas/openva/agent-enrichment-row.schema.json").read_text(encoding="utf-8"))
 REQUEST_SCHEMA = json.loads((ROOT / "schemas/openva/agent-enrichment-request.schema.json").read_text(encoding="utf-8"))
@@ -86,6 +92,34 @@ def test_matched_no_match_and_summary(snapshot):
     assert out["count"] == 2
     assert out["not_advice"] is True
     assert out["snapshot"]["commit_sha"] == snapshot.commit_sha
+
+
+def test_registration_number_matches_when_export_carries_legal_entity(tmp_path):
+    # End-to-end over a real verified snapshot whose vendor export now carries a legal
+    # entity: a registration-number-only row matches via the shared legal-entity fallback.
+    make_repo(tmp_path)
+    write_legal_entity(tmp_path, entity_id="example-vendor-le", registration_number="RC-555")
+    snapshot = Snapshot.load(LocalSnapshotSource(build(tmp_path, latest_observations=run_artifact())))
+
+    enriched = tools.enrich_inventory(snapshot, [{"row_id": "1", "registration_number": "RC-555"}], source_types=["dpa"])
+    result = enriched["results"][0]
+    assert result["match"]["status"] == "matched"
+    assert result["match"]["vendor_id"] == "example-vendor"
+    assert result["match"]["method"] == "registration_number_exact"
+
+    matched = tools.match_inventory(snapshot, [{"registration_number": "RC-555"}])
+    assert matched["results"][0]["match_status"] == "matched"
+    assert matched["results"][0]["matched_vendor_id"] == "example-vendor"
+
+    # An unknown registration number still resolves to no_match.
+    unknown = tools.enrich_inventory(snapshot, [{"row_id": "2", "registration_number": "RC-NOPE"}])
+    assert unknown["results"][0]["match"]["status"] == "no_match"
+
+
+def test_registration_number_no_match_without_legal_data(snapshot):
+    # The default fixture export carries no legal entities -> registration-only no_match.
+    out = tools.enrich_inventory(snapshot, [{"row_id": "1", "registration_number": "RC-555"}])
+    assert out["results"][0]["match"]["status"] == "no_match"
 
 
 def test_ambiguous_stays_ambiguous_and_projection_empty():
