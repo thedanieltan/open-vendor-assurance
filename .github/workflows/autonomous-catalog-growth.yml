@@ -18,6 +18,16 @@ on:
   workflow_dispatch: {}
   schedule:
     - cron: "17 23 * * *"
+  # WP-OPENVA-CANDIDATE-ACTIVATION-01: a newly-merged candidate enters the same
+  # gated decision path promptly rather than only on the daily schedule. This is
+  # NOT a bypass: the push trigger runs the identical decide_cycle gate below
+  # (live queue, reserved integrity capacity, holds, one-candidate selection,
+  # eligibility recompute + identity binding). The candidate store is the only
+  # path it responds to.
+  push:
+    branches: [main]
+    paths:
+      - "maintenance/candidates/*.json"
 
 permissions:
   contents: read
@@ -74,20 +84,15 @@ jobs:
           }
           json.dump(state, open("reports/queue-state.json", "w"), indent=2)
           PY
-          # Eligible candidate records committed under maintenance/candidates/.
-          python - <<'PY'
-          import glob, json
-          eligible = []
-          for path in sorted(glob.glob("maintenance/candidates/*.json")):
-              try:
-                  rec = json.load(open(path, encoding="utf-8"))
-              except json.JSONDecodeError:
-                  continue
-              if isinstance(rec, dict) and rec.get("eligibility_state") == "eligible":
-                  eligible.append(rec)
-          json.dump(eligible, open("reports/eligible-candidates.json", "w"), indent=2)
-          print(f"eligible candidates: {len(eligible)}")
-          PY
+          # Eligible candidate records under maintenance/candidates/, each carrying
+          # its bound candidate_path. Eligibility is RECOMPUTED from the persisted
+          # record via the one canonical evaluator (the stored eligibility_state is
+          # never trusted); only consistent, eligible candidates are passed on. The
+          # controller re-binds the single candidate it selects.
+          python -m tools.openva.candidate_activation collect-eligible \
+            --candidates-dir maintenance/candidates \
+            --root . \
+            --output reports/eligible-candidates.json
           echo "OPEN_COUNT=$OPEN_COUNT" >> "$GITHUB_ENV"
 
       - name: Run autonomous growth controller (gate)
@@ -107,17 +112,30 @@ jobs:
             echo '```';
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Dispatch single machine-provisional generation
+      - name: Dispatch candidate-bound machine-provisional materialization
         if: env.GROWTH_PROCEED == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Workflow-triggering token so the dispatched mutation PR can in turn
+          # trigger the automerge lane; falls back to github.token until set.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          # Hand the single authorised cycle to the one existing mutation
-          # workflow; this controller never writes catalog state itself.
+          # Hand the single authorised cycle to the one existing mutation workflow,
+          # carrying the bound candidate identity (id / path / content digest /
+          # selected vendor / origin). The candidate the controller selected is the
+          # exact candidate the mutation verifies and materializes; identity is
+          # never re-derived from a separate queue. This controller never writes
+          # catalog state itself.
+          DECISION=reports/growth-cycle-decision.json
+          read_field() { python -c 'import json,sys; print(json.load(open(sys.argv[1]))["selected_candidate"][sys.argv[2]])' "$DECISION" "$1"; }
           gh workflow run "$MUTATION_WORKFLOW" \
-            -f promotion_plan_mode=machine-provisional-from-queue \
-            -f max_promotion_actions_per_pr=1
+            -f promotion_plan_mode=candidate-bound \
+            -f max_promotion_actions_per_pr=1 \
+            -f candidate_id="$(read_field candidate_id)" \
+            -f candidate_path="$(read_field candidate_path)" \
+            -f content_digest="$(read_field content_digest)" \
+            -f selected_vendor="$(read_field selected_vendor)" \
+            -f candidate_origin="$(read_field origin)"
 
       - name: Upload growth controller artifacts
         uses: actions/upload-artifact@v5

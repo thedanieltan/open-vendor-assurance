@@ -1,10 +1,17 @@
-"""WP40A Issue 3: scheduled autonomous growth controller decides one cycle."""
+"""WP40A Issue 3: scheduled autonomous growth controller decides one cycle.
+
+Updated for WP-OPENVA-CANDIDATE-ACTIVATION-01: the controller now binds the
+selected candidate (recomputes eligibility + identity from the persisted record)
+before authorising a cycle, so candidates are full schema-valid records, not
+eligibility-state stubs.
+"""
 
 from __future__ import annotations
 
 from datetime import UTC, datetime
 
 from tools.openva import autonomous_growth_controller as agc
+from tools.openva import candidate_record as cr
 
 NOW = datetime(2026, 6, 14, tzinfo=UTC)
 LANE = "catalog_growth_promotion"
@@ -23,15 +30,53 @@ def _live_state(**overrides):
     return state
 
 
-def _candidate(cid, state="eligible", created_at="2026-06-10T00:00:00Z"):
-    return {"candidate_id": cid, "eligibility_state": state, "created_at": created_at}
+def _candidate(ref, *, on_domain=True, created_at="2026-06-10T00:00:00Z", country="US"):
+    """A full, schema-valid candidate record the controller can recompute."""
+    identity = {
+        "vendor_id_candidate": ref,
+        "vendor_name": ref.replace("-", " ").title(),
+        "official_domain": f"{ref}.example",
+        "headquarters_country": country,
+    }
+    sources = [
+        {
+            "candidate_url": f"https://{ref}.example/dpa",
+            "final_url": f"https://{ref}.example/dpa",
+            "http_status": 200,
+            "source_type_candidate": "dpa",
+            "access_state": "public_reachable",
+            "source_role": "primary_assurance",
+            "on_vendor_domain": on_domain,
+        }
+    ]
+    evidence = [{"candidate_url": f"https://{ref}.example/dpa", "verification_result": "ok", "observed_at": created_at}]
+    state, reasons = cr.evaluate_eligibility(identity, sources, is_new_vendor=True)
+    record = cr.build_candidate(
+        candidate_origin="catalog_discovery",
+        origin_reference=ref,
+        vendor_identity_candidate=identity,
+        source_candidates=sources,
+        evidence_references=evidence,
+        discovery_component="vendor-resolution:catalog_discovery",
+        created_at=created_at,
+        eligibility_state=state,
+        decision_reasons=reasons,
+    )
+    record["candidate_path"] = f"maintenance/candidates/{record['candidate_id']}.json"
+    return record
 
 
 def test_authorises_one_cycle_with_one_candidate():
-    result = agc.decide_cycle(_live_state(), [_candidate("cand-a")], now=NOW)
+    candidate = _candidate("cand-a")
+    result = agc.decide_cycle(_live_state(), [candidate], now=NOW)
     assert result["proceed"] is True
     assert result["max_vendors_this_cycle"] == 1
-    assert result["selected_candidate_id"] == "cand-a"
+    assert result["selected_candidate_id"] == candidate["candidate_id"]
+    binding = result["selected_candidate"]
+    assert binding["candidate_id"] == candidate["candidate_id"]
+    assert binding["candidate_path"] == candidate["candidate_path"]
+    assert binding["selected_vendor"] == "cand-a"
+    assert binding["content_digest"].startswith("sha256:")
 
 
 def test_selects_oldest_eligible_deterministically():
@@ -41,7 +86,9 @@ def test_selects_oldest_eligible_deterministically():
         _candidate("cand-mid", created_at="2026-06-05T00:00:00Z"),
     ]
     result = agc.decide_cycle(_live_state(), cands, now=NOW)
-    assert result["selected_candidate_id"] == "cand-old"
+    oldest = next(c for c in cands if c["origin_reference"] == "cand-old")
+    assert result["selected_candidate_id"] == oldest["candidate_id"]
+    assert result["selected_candidate"]["selected_vendor"] == "cand-old"
 
 
 def test_never_more_than_one_vendor_per_cycle():
@@ -72,6 +119,18 @@ def test_reserved_capacity_yields_to_integrity_work():
 
 
 def test_no_eligible_candidate_defers():
-    result = agc.decide_cycle(_live_state(), [_candidate("cand-a", state="deferred_insufficient_evidence")], now=NOW)
+    # An off-domain candidate recomputes to deferred, never eligible.
+    result = agc.decide_cycle(_live_state(), [_candidate("cand-a", on_domain=False)], now=NOW)
     assert result["proceed"] is False
     assert result["reason"] == "no_eligible_candidate"
+
+
+def test_eligibility_mismatch_fails_closed():
+    # A forged candidate: off-domain (truly deferred) but stamped "eligible".
+    candidate = _candidate("cand-forged", on_domain=False)
+    candidate["eligibility_state"] = "eligible"
+    result = agc.decide_cycle(_live_state(), [candidate], now=NOW)
+    assert result["proceed"] is False
+    assert result["reason"] == "candidate_eligibility_mismatch"
+    assert result["selected_candidate"] is None
+    assert result.get("candidate_mismatch_reasons")

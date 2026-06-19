@@ -32,6 +32,8 @@ Use this checklist before making OpenVA public or announcing broader contributio
 - [ ] Observation report workflow is read-only and does not write observation records.
 - [ ] Source maintenance report workflow is read-only and publishes maintainer-readable summary, JSON, and CSV artifacts.
 - [ ] Automation cannot merge directly to main.
+- [ ] Candidate intake is autonomous and fail-closed: the consuming job recomputes eligibility and identity from each persisted candidate (never trusting the stored `eligibility_state`); the selected candidate is bound by id/path/SHA-256 digest/origin/vendor through to the candidate-bound mutation (selected == mutated), and stale, forged, or changed records create no canonical catalogue PR.
+- [ ] Candidate records remain non-canonical; catalogue truth changes only through the established PR path, and promotion to a terminal status remains the independent quorum (candidate intake never writes `data/vendors/**` directly and never merges).
 - [ ] Workflows use least-privilege permissions.
 - [ ] No workflow requires credentials for public source collection.
 - [ ] No workflow bypasses anti-bot systems, CAPTCHAs, login gates, form gates, or portals.

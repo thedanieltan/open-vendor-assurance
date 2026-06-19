@@ -224,6 +224,38 @@ lanes:
     token_permissions: {actions: read, contents: write, pull-requests: write}
     audit_artifacts: [source-discovery-report.json, discovery ledger append summary, append PR body]
     deny_by_default: true
+  - id: candidate_intake
+    status: active
+    authority_level: 1
+    workflows: [candidate-intake-pr.yml, agent-automerge.yml]
+    may_write_branches: true
+    may_open_prs: true
+    may_label_prs: true
+    allowed_labels: [candidate-intake, automerge:candidate-intake]
+    allowed_label_actions: [add]
+    may_enable_auto_merge: false
+    may_merge_prs: false
+    may_write_catalog_truth: false
+    write_authority_explanation: >-
+      WP-OPENVA-CANDIDATE-ACTIVATION-01. May open PRs that stage NON-CANONICAL
+      candidate records under maintenance/candidates/** through the canonical
+      durable ingress, and apply ONLY the two candidate-intake labels. It never
+      writes catalog truth (data/vendors/**), never decides promotion, and never
+      merges. The consuming agent-automerge candidate-intake job (lane pr_safety,
+      Level 4) recomputes eligibility and identity from each persisted record —
+      never trusting the committed eligibility_state — and enables auto-merge only
+      after the guard and the WP35 release gate pass. Candidate identity (id /
+      path / content digest / origin / selected vendor) is bound through the gated
+      growth-controller decision to the candidate-bound materialization, so the
+      selected candidate is provably the one mutated; identity is never re-derived
+      from a separate queue. Materialization writes a NEW machine_provisional
+      vendor only and remains subject to the independent quorum and the existing
+      machine-provisional merge policy.
+    allowed_paths: [maintenance/candidates/**]
+    required_labels_for_write_authority: []
+    token_permissions: {contents: write, pull-requests: write}
+    audit_artifacts: [staged candidate records, candidate-intake PR body, recomputed eligibility and identity verification]
+    deny_by_default: true
   - id: catalog_quality
     status: active
     authority_level: 0

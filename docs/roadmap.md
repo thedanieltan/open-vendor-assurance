@@ -40,6 +40,24 @@ This is not a new advisory or scoring system. OpenVA preserves source-reference
 and observation history; it does not archive or reproduce historical vendor
 documents.
 
+### Autonomous candidate-bound promotion
+
+Candidate intake is now an end-to-end, fail-closed control path
+(`docs/candidate-intake.md`). The external boundary (`candidate-intake-pr.yml`)
+stages non-canonical candidate records via the canonical ingress and opens a
+PR with a workflow-triggering token; the `agent-automerge` candidate-intake job
+recomputes eligibility and identity from each persisted record — never trusting
+the stored `eligibility_state` — and auto-merges only after the guard and
+release gate pass. The growth controller then recomputes the selected
+candidate's eligibility, binds its identity and SHA-256 content digest, and
+dispatches `candidate-promotion-pr.yml` in `candidate-bound` mode, which verifies
+the binding on the exact head and materializes exactly that candidate as one
+`machine_provisional` vendor (selected == mutated). Candidate records stay
+non-canonical; catalogue truth still changes only through the established PR path,
+and promotion to a terminal status remains the independent quorum. This completes
+autonomous candidate promotion up to a reviewable, bound catalogue PR; it is not
+production hosting, and OpenVA's hosted `/v1` API and remote MCP are not live.
+
 ## Distribution model
 
 **Primary distribution:** OpenVA HTTP/MCP capabilities composed by users' existing

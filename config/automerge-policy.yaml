@@ -119,20 +119,19 @@ lanes:
     # Non-canonical candidate staging under maintenance/candidates/*.json only.
     # Path scope is enforced in code (automerge_lanes.is_candidate_intake_path)
     # and the candidate-intake guard additionally requires schema validity and no
-    # canonical/generated drift. The guard does NOT re-derive eligibility: the
-    # committed eligibility_state is not recomputed here. Eligibility recomputation
-    # (against the resolver's own evaluation) belongs WITH the deferred consuming
-    # job, not this lane. Staging only; promotion to catalog truth still flows
-    # through the independent quorum/promotion path.
+    # canonical/generated drift. The consuming agent-automerge candidate-intake
+    # job ALSO recomputes eligibility and identity from each persisted record
+    # (candidate_activation.verify_intake_paths -> evaluate_persisted_candidate),
+    # never trusting the committed eligibility_state. Staging only; promotion to
+    # catalog truth still flows through the independent quorum/promotion path.
     label: automerge:candidate-intake
     required_labels:
       - candidate-intake
-    # Not yet execution-wired: the lane (automerge_lanes) and guard
-    # (candidate_intake_guard) are built and tested, but the consuming
-    # agent-automerge candidate-intake merge job + producer PR-open workflow are
-    # the GitHub-App/branch-protection external boundary (see docs/candidate-intake.md).
-    # Flip to true when that job lands so the contract stays truthful.
-    execution_wired: false
+    # WP-OPENVA-CANDIDATE-ACTIVATION-01: execution-wired. The producer PR-open
+    # workflow (candidate-intake-pr.yml, OPENVA_AUTOMERGE_TOKEN boundary) and the
+    # consuming agent-automerge candidate-intake merge job both exist, so the lane
+    # is live and the contract stays truthful.
+    execution_wired: true
   machine_canonical:
     label: automerge:machine-canonical
   strict_growth:

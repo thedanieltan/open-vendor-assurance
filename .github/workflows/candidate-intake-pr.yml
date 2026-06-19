@@ -1,0 +1,148 @@
+name: candidate-intake-pr
+
+# WP-OPENVA-CANDIDATE-ACTIVATION-01 remote candidate intake (external boundary).
+#
+# Stages non-canonical candidate records under maintenance/candidates/*.json via
+# the one canonical durable ingress (vendor_resolution.CatalogQueueIngress) and
+# opens (or updates) a path-confined PR labelled for the candidate-intake
+# automerge lane. It never writes catalog truth (data/vendors/**), never decides
+# promotion, and never merges; the agent-automerge candidate-intake job recomputes
+# eligibility, verifies candidate identity, and enables native auto-merge after
+# the guard and release gate pass.
+#
+# Credential boundary: a PR opened with the default GITHUB_TOKEN does NOT trigger
+# downstream workflows, so the candidate-intake automerge lane would never run.
+# This uses the established workflow-triggering token (OPENVA_AUTOMERGE_TOKEN — a
+# GitHub App installation token or PAT), mirroring observation-ledger-append-pr.yml.
+#
+# Scheduled discovery -> ingress convergence (mass candidate population) remains
+# the deferred sitemap-discovery work; this lane is the deliberate, bounded,
+# request-driven external boundary.
+#
+# Authority: lane `candidate_intake` (docs/operations/contracts/bot-authority.yaml)
+# — Level 1; may open PRs and apply ONLY the two candidate-intake labels; writes
+# only maintenance/candidates/**; no catalog truth, no merge.
+
+on:
+  workflow_dispatch:
+    inputs:
+      request_path:
+        description: "Path to a committed vendor-resolution request JSON to stage candidates from."
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: candidate-intake-pr
+  cancel-in-progress: false
+
+jobs:
+  candidate-intake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Validate request input
+        run: |
+          set -euo pipefail
+          REQ="$(printf '%s' "${{ inputs.request_path }}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          if [ -z "$REQ" ] || [ ! -f "$REQ" ]; then
+            echo "::error::request_path must be a committed vendor-resolution request JSON file"
+            exit 1
+          fi
+          echo "REQUEST_PATH=$REQ" >> "$GITHUB_ENV"
+
+      - name: Stage candidates through the canonical ingress
+        run: |
+          set -euo pipefail
+          # Durable, idempotent, locked ingress writes maintenance/candidates/*.json
+          # only; it never writes catalog truth and never opens a PR.
+          python -m tools.openva.vendor_resolution resolve \
+            --request "$REQUEST_PATH" \
+            --enqueue \
+            --root .
+
+      - name: Collect staged candidate changes
+        id: staged
+        run: |
+          set -euo pipefail
+          git add maintenance/candidates 2>/dev/null || true
+          CHANGED="$(git diff --cached --name-only)"
+          if [ -z "$CHANGED" ]; then
+            echo "No new or changed candidate records staged; exiting without a PR."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Path confinement: the intake lane writes only the candidate store.
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              maintenance/candidates/*.json) : ;;
+              *) echo "::error::candidate intake produced a change outside the candidate store: $f"; exit 1 ;;
+            esac
+          done <<< "$CHANGED"
+          printf '%s\n' "$CHANGED" > "$RUNNER_TEMP/changed-candidates.txt"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: Self-check candidate intake guard
+        if: steps.staged.outputs.has_changes == 'true'
+        run: |
+          set -euo pipefail
+          python -m tools.openva.candidate_intake_guard \
+            --paths-file "$RUNNER_TEMP/changed-candidates.txt" \
+            --labels "candidate-intake,automerge:candidate-intake" \
+            --root .
+
+      - name: Open or update the candidate-intake PR
+        if: steps.staged.outputs.has_changes == 'true'
+        env:
+          # A PR opened with the default GITHUB_TOKEN does not trigger downstream
+          # workflows, so the candidate-intake automerge lane never runs. Use a
+          # workflow-triggering token when available (a GitHub App installation
+          # token or PAT in OPENVA_AUTOMERGE_TOKEN); fall back to github.token
+          # until the secret is set.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          PR_BRANCH="agent-candidate-intake-${GITHUB_RUN_ID}"
+          PR_TITLE="Candidate intake: stage discovered candidate records"
+          {
+            echo "## Candidate intake (autonomous, non-canonical staging)"
+            echo ""
+            echo "Stages non-canonical candidate records under \`maintenance/candidates/*.json\`."
+            echo "Operational metadata only; not legal, compliance, procurement, security, audit, or vendor-risk advice."
+            echo ""
+            echo "### Authority and boundary"
+            echo "- Lane: \`candidate_intake\` (Level 1; staging only)."
+            echo "- Writes only \`maintenance/candidates/**\`; never catalog truth (\`data/vendors/**\`)."
+            echo "- Does not decide promotion and does not merge."
+            echo "- Labels applied: \`candidate-intake\`, \`automerge:candidate-intake\`."
+            echo "- The agent-automerge candidate-intake job recomputes eligibility, verifies"
+            echo "  candidate identity, and enables auto-merge only after the guard and release gate pass."
+            echo ""
+            echo "### Reversal"
+            echo "Reversible by reverting the staging commit; candidate ids are deterministic and idempotent."
+          } > "$RUNNER_TEMP/pr-body.md"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$PR_BRANCH" 2>/dev/null || git switch "$PR_BRANCH"
+          git commit -m "$PR_TITLE"
+          git push --force-with-lease origin "$PR_BRANCH"
+          EXISTING=$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh pr edit "$EXISTING" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/pr-body.md"
+            PR_NUMBER="$EXISTING"
+          else
+            PR_NUMBER=$(gh pr create --base main --head "$PR_BRANCH" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/pr-body.md")
+          fi
+          gh pr edit "$PR_NUMBER" --add-label "candidate-intake" --add-label "automerge:candidate-intake"

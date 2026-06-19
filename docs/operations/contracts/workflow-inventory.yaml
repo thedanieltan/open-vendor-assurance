@@ -101,7 +101,7 @@ public_workflows:
   - name: autonomous-catalog-growth.yml
     loop: catalog_growth
     status: core
-    triggers: [workflow_dispatch, schedule]
+    triggers: [workflow_dispatch, schedule, push]
     permissions: {contents: read, actions: write}
     writes_repository_state: false
     creates_prs: false
@@ -129,6 +129,14 @@ public_workflows:
     permissions: {actions: write, contents: read}
     writes_repository_state: false
     creates_prs: false
+    merges_prs: false
+  - name: candidate-intake-pr.yml
+    loop: catalog_growth
+    status: core
+    triggers: [workflow_dispatch]
+    permissions: {contents: write, pull-requests: write}
+    writes_repository_state: true
+    creates_prs: true
     merges_prs: false
   - name: release-candidate.yml
     loop: publication
