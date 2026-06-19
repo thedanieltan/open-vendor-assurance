@@ -52,40 +52,48 @@ the hosted service is down), the existing PR-bound candidate-ingress boundary,
 health/readiness endpoints, and an administrative kill-switch. See
 [`docs/operations/hosted-deployment-architecture.md`](../../operations/hosted-deployment-architecture.md).
 
-### Recommended baseline (recommendation only — reassessed after review #402)
+### Recommended baseline (recommendation only — reassessed across review rounds)
 
-**AWS Lambda (container)** (+ API Gateway for the rate-limiting edge, SQS for
-dispatch, DynamoDB on-demand TTL for the tiny stores, and Secrets Manager/KMS).
-The reassessment driver: the mandatory rate-limiting edge gives **Cloud Run a
-~$24/mo fixed floor** (external HTTPS LB + Cloud Armor) that defeats its
-scale-to-zero idle advantage for a low-traffic service, and its `max-instances`
-is only a **soft** cap. Lambda + API Gateway has **no fixed edge floor**, **true
-`$0` idle**, and a **hard** reserved-concurrency cap — best satisfying the low-idle
-and boundable-cost priorities both reviews flagged as dominant. Its costs are an
-ASGI→handler adapter (higher lock-in) and a ≤15-minute invocation budget (verify
-work fans out per row). **Lead alternative — Google Cloud Run** (+ Cloud Tasks +
-Firestore TTL + Secret Manager + Workload Identity): runs the container unchanged
-with the lowest lock-in; choose it when portability/operational simplicity
-outweigh the idle floor. **Azure Container Apps** when the GitHub App key must
-never enter the app (Key Vault remote JWT signing). Rejected: AWS App Runner
+**Google Cloud Run** — a container API **and a long-running container worker**
+(+ external HTTPS LB & Cloud Armor for the rate-limiting edge, Cloud Tasks,
+Firestore TTL, Secret Manager, Workload Identity). The reassessment converged here
+after two corrections: review #402 r2 surfaced that the mandatory edge gives Cloud
+Run a **~$24/mo fixed floor** (briefly moving the baseline to Lambda); r3 corrected
+that AWS Lambda's **API Gateway throttling is best-effort, not a hard cost cap**,
+and that verify is **long-running batch work** (≤500 rows of live fetch) that
+exceeds Lambda's **15-minute invocation ceiling** and would require per-row fan-out
++ aggregation. The decisive factor for a solo maintainer is a **container worker
+with no invocation ceiling**: Cloud Run runs the existing container unchanged for
+both API and worker, the ~$24/mo edge floor is modest and bounded, and **no
+provider offers a hard spend cap** (so the engineered bounded-spend-rate applies
+regardless). **Alternative — Azure Container Apps** (container worker; Key Vault
+remote JWT signing — strongest secret posture). **Alternative — AWS Lambda**, only
+if `$0` idle justifies building per-row fan-out + aggregation; its gateway throttle
+is best-effort. Rejected: AWS App Runner
 (closed to new customers in 2026), ECS Fargate and Render (no scale-to-zero / high
 idle floor). The deployable stays a portable OCI image; the provider is a
 reversible maintainer choice.
 
 ### Deployment-specific acceptance gates (in addition to ADR-0001's six)
 
-1. **Engineered cost ceiling.** No major platform offers a hard spend cap. The
-   deployment MUST bound cost with an instance/concurrency cap **plus** edge rate
-   limiting **plus** a budget-alert-driven kill-switch — not a vendor checkbox.
+1. **Engineered bounded spend rate (no hard cap).** No major platform offers a hard
+   spend cap; Cloud Run's `max-instances` is a **soft** cap and AWS API Gateway
+   throttling is **best-effort** (only Lambda reserved concurrency / ACA
+   `maxReplicas` are hard, and only at the compute boundary). The deployment MUST
+   bound the *rate* of spend with an instance/concurrency cap **plus** edge rate
+   limiting **plus** a budget-alert-driven kill-switch, and accept a bounded
+   worst-case overrun window (budget alerts lag) — not a vendor checkbox.
 2. **GitHub App key is a stored secret everywhere.** GitHub Apps do not support
    OIDC token exchange, so the private key remains a stored secret on every
    platform. It MUST live in a managed secret store, never in the repo, browser,
    artifacts, or logs; remote signing (KMS / Key Vault) is preferred where the
    chosen provider supports it.
 3. **Transient, minimised job records.** The durable store holds operational
-   metadata only — a request digest, a row count, lifecycle state, timestamps,
-   and a TTL — never uploaded inventory, vendor identity, or request bodies
-   (`schemas/openva/hosted-job-record.schema.json`, `additionalProperties: false`).
+   metadata only — a `request_ref` pointer, a row count, lifecycle state,
+   timestamps, and a TTL — never uploaded inventory, vendor identity, request
+   bodies, or a content-derived dedup key. The schema enforces this with
+   `additionalProperties: false` **and** `if`/`then`/`allOf` state invariants
+   (`schemas/openva/hosted-job-record.schema.json`).
 4. **Honest degradation.** When the job store, queue, or worker is unavailable the
    service degrades to cached/static results, clearly labelled, and never presents
    a stale result as live. The static layer remains independently functional.
@@ -105,9 +113,11 @@ is out of scope and needs a new decision.
    baseline: naturally bounded cost but a permanent idle floor for a low-traffic
    service, and no scale-to-zero. Retained as a fallback if scale-to-zero cold
    starts prove unacceptable.
-3. **Serverless functions (AWS Lambda) as the baseline.** Strong on cost caps and
-   `$0` idle, but the ASGI→handler adapter raises lock-in and the 15-minute limit
-   constrains verify batches. Kept as the first alternative, not the baseline.
+3. **Serverless functions (AWS Lambda) as the baseline.** `$0` idle, but its API
+   Gateway throttling is best-effort (not a hard cost cap), and the 15-minute
+   invocation limit means the ≤500-row verify batch needs per-row fan-out +
+   aggregation, and the ASGI→handler adapter raises lock-in. Kept as an alternative
+   for the `$0`-idle case, not the baseline.
 4. **Browser/edge-only execution.** Rejected for the same reasons as ADR-0001
    alternative 2: the SSRF-safe boundary and credential custody cannot run there.
 

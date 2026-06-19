@@ -65,25 +65,20 @@ the record persists only its SHA-256 digest, `job_token_digest`, for verificatio
 The result blob lives in the **transient result store** (`transient_result_store`),
 referenced by `result_ref`, and is deleted on TTL/expiry.
 
-## Idempotency (no content-based deduplication)
+## Idempotency (none in v1)
 
-There is **no content-derived dedup key.** A SHA-256 of low-entropy vendor
-names/domains is dictionary-testable and must not gate result access — deduping
-across callers on request content would let one caller reach another caller's
-job/result. So:
+**There is no deduplication in v1.** Every request creates a **new job** (fresh
+`job_id` + fresh `job_token`). There is **no content-derived dedup key** — a
+SHA-256 of low-entropy vendor names/domains is dictionary-testable and must not
+gate result access (deduping across callers on request content would let one
+caller reach another caller's job/result).
 
-- **Default:** every request creates a **new job** (fresh `job_id` + fresh
-  `job_token`).
-- **Optional:** a client may supply a **high-entropy idempotency key** scoped to
-  its own calling capability; the API stores only its digest (`idempotency_key_digest`)
-  and dedups **only that caller's own retries** — returning the existing job (and a
-  capability) **only to a caller presenting the matching key**, which the original
-  caller holds. It never dedups across callers and never mints a capability for an
-  existing job to a different caller.
-
-If a content fingerprint is ever needed for diagnostics it must be a keyed HMAC
-with a defined scope, never a plain content digest, and never an identity or
-access key.
+An optional idempotency key is explicitly **deferred** to a later version and, if
+added, must satisfy all of: bound to the request via a **server-keyed HMAC** (never
+a plain content digest), scoped to an **authenticated caller namespace**, replay
+(same key + same request) returns the existing job, conflict (same key + different
+request) is rejected, and expiry + token-return are defined. None of that exists in
+v1, so the schema carries no idempotency field.
 
 ## State invariants (schema-enforced)
 
@@ -101,34 +96,48 @@ validation:
 
 ## Consistency and recovery (envelope → job → queue handoff)
 
-The three durable steps are made recoverable, not assumed atomic:
+The three independently-durable steps follow **one exact compare-and-set (CAS)
+protocol with a single owner per transition** — not an assumed atomic op.
 
-1. write the request envelope → 2. create the job record in `received` (with
-`request_ref`) → 3. enqueue the `job_id`.
+**Normal path (the API owns `received → queued`):**
+1. API writes the request envelope.
+2. API creates the job record in `received` (with `request_ref`).
+3. API enqueues a task whose **name equals `job_id`** (so any re-enqueue is an
+   idempotent no-op).
+4. **After the enqueue is acknowledged,** the API does CAS `received → queued`.
 
-- **Enqueue is idempotent:** the queue task name equals `job_id`, so a retry/
-  re-enqueue is a no-op (no duplicate dispatch).
-- **Reconciler (outbox):** a job left in `received` past a short threshold is
-  re-enqueued by a reconciler that **owns the `received → queued` transition**;
-  this recovers a crash between steps 2 and 3.
-- **Compare-and-set transitions:** every transition advances only from its
-  expected prior state; the worker owns `executing → completed|failed`.
-- **Orphan envelope:** an envelope written when step 2 then fails has no job record
-  (so it is invisible to clients) and is removed by its object-lifecycle TTL; the
-  API returns a generic retryable `503` and leaks no `job_id`.
-- **Polling distinguishes** *accepted-but-not-dispatched* (`received`) from
-  *dispatched* (`queued`), so a client never mistakes an undispatched job for a
-  lost one.
+**Worker:** on delivery it does CAS `{received | queued} → executing` — so it
+tolerates a record still in `received` (the API crashed between steps 3 and 4) and
+exactly one worker wins. It then does CAS `executing → completed | failed`. A
+**duplicate delivery** whose `* → executing` CAS fails (already executing/terminal)
+is **acked and dropped**.
+
+**Reconciler — recovery only.** It **never** owns the normal-path
+`received → queued`. It only re-enqueues jobs stuck in `received` past a threshold
+(idempotent task name; the worker's CAS dedups any resulting duplicate delivery),
+recovering a crash between steps 2 and 3.
+
+**Crash points:**
+- after envelope, before job create → orphan envelope (no job record; invisible to
+  clients), TTL-reaped; API returns a generic retryable `503`, no `job_id` leaked;
+- after job create, before enqueue → reconciler re-enqueues;
+- after enqueue, before CAS `received → queued` → the worker advances via CAS
+  `received → executing`; a reconciler re-enqueue is deduped by the task name;
+- worker crash while `executing` → execution timeout → `failed`, or expiry → `410`.
+
+**Polling distinguishes** *accepted-but-not-dispatched* (`received`) from
+*dispatched* (`queued`), so a client never mistakes an undispatched job for a lost
+one.
 
 ## Data minimisation
 
 The job record carries operational metadata only: `job_id`, `job_token_digest`,
-`idempotency_key_digest` (optional), `state`, `freshness_mode`, `request_ref`,
-`row_count`, `result_ref`, `error_code`, `attempt`, timestamps, `expires_at`,
-`not_advice`. It carries **no** uploaded inventory, vendor identity, request body,
-or content fingerprint — enforced by `additionalProperties: false`. The result blob
-(referenced by `result_ref`) is likewise transient and TTL-deleted and is never
-indexed by submitted content.
+`state`, `freshness_mode`, `request_ref`, `row_count`, `result_ref`, `error_code`,
+`attempt`, timestamps, `expires_at`, `not_advice`. It carries **no** uploaded
+inventory, vendor identity, request body, content fingerprint, or dedup key —
+enforced by `additionalProperties: false`. The result blob (referenced by
+`result_ref`) is likewise transient and TTL-deleted and is never indexed by
+submitted content.
 
 ## Expiry and deletion
 

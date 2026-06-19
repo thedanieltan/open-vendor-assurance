@@ -20,22 +20,26 @@ in the provider's own pricing calculator before any provisioning (§6).
 
 ## 1. Cost envelopes (qualitative + rough ranges)
 
-> **Baseline reassessed (review #402).** The mandatory rate-limiting edge gives
-> Cloud Run a **~$24/mo fixed floor** (external HTTPS LB ~$18/mo + Cloud Armor
-> ~$5–6/mo, before traffic), defeating its scale-to-zero idle advantage for a
-> low-traffic service. **AWS Lambda + API Gateway has no fixed edge floor**
-> (pay-per-request throttling) and `$0` idle, so it is now the recommended
-> baseline; Cloud Run is the lead alternative when container portability/simplicity
-> outweighs the floor. All figures `[confirm]` — rates and free grants change.
+> **Baseline reassessed across review rounds (#402).** Round 2 corrected that the
+> mandatory rate-limiting edge gives Cloud Run a **~$24/mo fixed floor** (external
+> HTTPS LB ~$18/mo + Cloud Armor ~$5–6/mo) and briefly moved the baseline to AWS
+> Lambda. Round 3 corrected two facts that reverse that: API Gateway throttling is
+> **best-effort, not a hard cost cap**, and verify is **long-running batch work**
+> (≤500 rows of live fetch) that exceeds Lambda's 15-min ceiling and would need
+> per-row fan-out. So the baseline is **Google Cloud Run** with a **long-running
+> container worker** (no invocation ceiling); the ~$24/mo edge floor is modest and
+> bounded, and **no provider offers a hard spend cap** anyway. Lambda is an
+> alternative only with fan-out; ACA is the container alternative. All figures
+> `[confirm]` — rates and free grants change.
 
-| Regime | AWS Lambda (baseline) | Cloud Run (alternative) | Azure Container Apps |
+| Regime | Google Cloud Run (baseline) | Azure Container Apps (alternative) | AWS Lambda (alt — needs fan-out) |
 | --- | --- | --- | --- |
-| **IDLE** (~0 traffic) | True `$0` idle (no warm instance billed); **API Gateway has no fixed monthly floor** (pay-per-request); ECR image storage cents. `~$0–low cents/mo` `[confirm]` | Scale-to-zero ≈ `$0` *compute* **plus the external HTTPS LB + Cloud Armor fixed floor** (decision §4/§8) — idle is **not** ≈ `$0`, it is **~$24/mo** + cents. `~$24/mo + cents` `[confirm]` | Scale-to-zero ≈ `$0` compute within free grant + an always-on ingress/gateway (Front Door/APIM) cost. `~$0–low single-digit $/mo` `[confirm]` |
-| **NORMAL** (light, bursty public read; occasional verify job) | On-demand request + GB-s billing; low at this volume; API Gateway per-request. `~$0–low single-digit $/mo` `[confirm]` | Free tier likely absorbs idle + light compute, but the **~$24/mo edge floor dominates** at this volume. `~$24/mo + spillover` `[confirm]` | Free grant covers light use; companions (Cosmos/Service Bus) + edge tend to dominate. `~$0–a few $/mo + edge` `[confirm]` |
-| **ABUSIVE** (sustained hammering / scripted flood) | **Strongest hard throttle**: reserved/maximum concurrency + API Gateway usage-plan quota reject excess *before* compute, flattening the worst case. | **Highest soft-cap risk**: per-request autoscaling can fan out instances; `max-instances` is a *soft* cap (briefly exceedable), so bounded by the engineered spend-rate controls (§3–§4), not a hard ceiling. | Bounded by `maxReplicas` (hard); excess sheds rather than scaling without limit. Worst case is `maxReplicas` running continuously. |
+| **IDLE** (~0 traffic) | Scale-to-zero ≈ `$0` *compute* **plus the external HTTPS LB + Cloud Armor fixed floor** (decision §4/§8) — idle is **~$24/mo** + cents, not ≈ `$0`. `~$24/mo + cents` `[confirm]` | Scale-to-zero ≈ `$0` compute within free grant + an always-on ingress/gateway (Front Door/APIM) cost. `~low single-digit $/mo` `[confirm]` | True `$0` idle (no warm instance); **API Gateway has no fixed monthly floor**; ECR image storage cents. `~$0–low cents/mo` `[confirm]` |
+| **NORMAL** (light, bursty public read; occasional verify job) | Free tier likely absorbs light compute, but the **~$24/mo edge floor dominates** at this volume. `~$24/mo + spillover` `[confirm]` | Free grant covers light use; companions (Cosmos/Service Bus) + edge dominate. `~$0–a few $/mo + edge` `[confirm]` | On-demand request + GB-s billing; low at this volume; API Gateway per-request. `~$0–low single-digit $/mo` `[confirm]` |
+| **ABUSIVE** (sustained hammering / scripted flood) | **Soft-cap risk**: per-request autoscaling can fan out; `max-instances` is a *soft* cap, so bounded by the engineered spend-rate controls (§3–§4) + Cloud Armor rate limit, not a hard ceiling. | Bounded by `maxReplicas` (hard at compute); excess sheds rather than scaling without limit. | Reserved concurrency caps **Lambda compute** (hard), but **API Gateway throttling/quotas are best-effort** (AWS: do not rely on usage plans for cost control), so the public edge is **not** a hard cost cap. |
 
-Read across: at IDLE and NORMAL all three sit near zero. They diverge under
-ABUSIVE — and that divergence is the entire reason for §4.
+Read across: under ABUSIVE, every provider relies on the engineered bounded-spend-
+rate (§3) — none gives a hard spend cap.
 
 ## 2. Fixed vs variable cost breakdown
 

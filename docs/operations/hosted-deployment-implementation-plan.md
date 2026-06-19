@@ -51,21 +51,21 @@ spend ceiling, permissions). They fail closed until those are made.
 
 ### WP-02B — Async job/result persistence
 - **Inputs:** WP-02A; `schemas/openva/hosted-job-record.schema.json`; the job-lifecycle spec.
-- **Outputs:** the transient request-envelope store, the durable job store, and the transient result store behind interfaces (in-memory + one provider impl); TTL enforcement + `expires_at`→`410` expiry; the schema-enforced state machine; the **handoff reconciler** (re-enqueues stuck `received` jobs, CAS transitions, orphan-envelope cleanup); idempotency via the **optional client idempotency key** (no content dedup).
+- **Outputs:** the transient request-envelope store, the durable job store, and the transient result store behind interfaces (in-memory + one provider impl); TTL enforcement + `expires_at`→`410` expiry; the schema-enforced state machine; the **handoff protocol** (API owns normal `received→queued` after enqueue ack; idempotent task name; CAS transitions; **recovery-only reconciler** for stuck `received`; orphan-envelope cleanup); **no deduplication in v1** (new job per request).
 - **Allowed paths:** `services/openva_match_service/**`, `schemas/openva/**`, `tests/**`.
-- **Non-goals:** the worker; provider provisioning.
-- **Tests:** schema validation incl. **state-invariant negative cases** (`completed` w/o `result_ref`, `failed` w/o `error_code`, terminal retaining `request_ref`, non-terminal w/o envelope, `cached` job — all rejected); illegal-transition rejection; `410`/TTL expiry of record + envelope + result; **no cross-caller dedup** (default new job; optional-key dedup scoped to caller); handoff recovery (crash between envelope/job/enqueue); **minimisation** (no submitted content persisted).
+- **Non-goals:** the worker; provider provisioning; any request deduplication.
+- **Tests:** schema validation incl. **state-invariant negative cases** (`completed` w/o `result_ref`, `failed` w/o `error_code`, terminal retaining `request_ref`, non-terminal w/o envelope, `cached` job — all rejected); illegal-transition rejection; `410`/TTL expiry of record + envelope + result; **new-job-per-request** (no dedup key persisted); handoff recovery at each crash point (envelope/job/enqueue, duplicate delivery acked-and-dropped); **minimisation** (no submitted content persisted).
 - **Rollback:** disable verify → store unused; cached mode unaffected.
 - **Acceptance evidence:** CI green; records + negative cases validate as expected; recovery + minimisation tests pass.
 
 ### WP-02C — Worker + queue execution
 - **Inputs:** WP-02B; the SSRF-safe fetch boundary.
-- **Outputs:** the async worker (bounded SSRF-safe fetch + discovery) and a queue adapter behind an interface; bounded concurrency + `attempt` retries.
+- **Outputs:** the async worker as a **long-running container** (no invocation ceiling; one job processes the whole ≤500-row batch, bounded by a per-job execution timeout) that re-reads the request envelope by `job_id`, does CAS `{received|queued}→executing` then `executing→completed|failed`, and acks-and-drops duplicate deliveries; plus a queue adapter behind an interface; bounded concurrency + `attempt` retries.
 - **Allowed paths:** `services/openva_match_service/**`, `tools/openva/**` (read-only reuse), `tests/**`.
-- **Non-goals:** candidate write-back; deployment.
-- **Tests:** worker executes via the resolver; **SSRF-negative**; concurrency cap; retry/timeout → generic `error_code`; no partial `completed`.
+- **Non-goals:** candidate write-back; deployment. (A serverless AWS-Lambda variant is out of scope for the baseline — it would need a separate per-row fan-out + aggregation sub-slice to fit the 15-min ceiling.)
+- **Tests:** worker re-reads the envelope + executes via the resolver; **SSRF-negative**; concurrency cap; per-job execution timeout → `failed` (`execution_timeout`); duplicate-delivery CAS dropped; no partial `completed`.
 - **Rollback:** disable worker → verify returns `queued`/cached; no stale-as-live.
-- **Acceptance evidence:** CI green; degradation honest.
+- **Acceptance evidence:** CI green; degradation honest; CAS protocol exercised.
 
 ### WP-02D — Candidate-ingress integration
 - **Inputs:** WP-02C; the existing durable ingress + PR-bound candidate lifecycle.

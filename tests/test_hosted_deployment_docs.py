@@ -93,12 +93,21 @@ def test_contract_loads_and_is_decision_only():
         assert posture[key] is False, f"{key} must be false in a decision-only package"
 
 
+def _alt_ids(rec) -> set:
+    out = set()
+    for a in rec["alternatives"]:
+        out.add(a["id"] if isinstance(a, dict) else a)
+    return out
+
+
 def test_contract_provider_recommendation_has_baseline_and_alternatives():
     rec = _contract()["provider_recommendation"]
-    # Reassessed after review #402: edge cost moved the baseline to Lambda.
-    assert rec["baseline"] == "aws-lambda-container"
-    assert "google-cloud-run" in rec["alternatives"]
-    assert len(rec["alternatives"]) >= 2
+    # Reassessed across review #402 rounds: converged on Cloud Run (container worker)
+    # — Lambda's 15-min ceiling + best-effort gateway make it an alternative only.
+    assert rec["baseline"] == "google-cloud-run"
+    alts = _alt_ids(rec)
+    assert {"azure-container-apps", "aws-lambda-container"} <= alts
+    assert rec["worker_execution"] == "long_running_container"
     assert rec["accepted_by_maintainer"] is False
 
 
@@ -233,14 +242,15 @@ def test_schema_models_capability_envelope_and_has_no_expired_state():
     assert "expired" not in states, "expiry is time-based, not a persisted state"
     assert "job_token_digest" in props and "job_token_digest" in schema["required"]
     assert "request_ref" in props
-    # Review #402: the dangerous content-derived dedup key is gone; idempotency is
-    # an optional client key only.
+    # Review #402: no content-derived dedup key AND no dedup field at all in v1.
     assert "request_digest" not in props, "content-derived dedup key must be removed"
-    assert "idempotency_key_digest" in props
+    assert "idempotency_key_digest" not in props, "no deduplication in v1"
     # Job records are verify-only (cached mode is synchronous).
     assert props["freshness_mode"].get("const") == "verify"
     # job_id must be described as NOT a credential (capability is job_token).
     assert "not an access credential" in props["job_id"]["description"].lower()
+    # Round 3: do not over-claim UUIDv4 while accepting any UUID shape.
+    assert "uuidv4" not in props["job_id"]["description"].lower()
 
 
 def test_schema_enforces_state_dependent_invariants():
@@ -266,17 +276,26 @@ def test_schema_enforces_state_dependent_invariants():
     assert not list(validator.iter_errors(base))
 
 
-def test_contract_idempotency_has_no_content_dedup():
+def test_contract_idempotency_has_no_dedup_in_v1():
     idem = _contract()["idempotency"]
+    assert idem["deduplication_in_v1"] is False
     assert idem["cross_caller_dedup"] is False
     assert idem["content_digest_dedup"] is False
     assert idem["default"] == "new_job_per_request"
+    # A future key must be a server-keyed HMAC, not a content digest.
+    assert idem["deferred_optional_key"]["binding"] == "server_keyed_hmac"
 
 
-def test_contract_models_handoff_recovery():
+def test_contract_handoff_protocol_has_single_owner_per_transition():
     handoff = _contract()["handoff"]
     assert handoff["state_transitions"] == "compare_and_set"
-    assert "reconciler" in handoff
+    # The API owns the normal received -> queued (after enqueue ack).
+    assert any("cas_received_to_queued" in step for step in handoff["normal_path"])
+    # The worker advances {received|queued} -> executing and acks duplicates.
+    assert any("executing" in step for step in handoff["worker"])
+    assert "duplicate_delivery" in handoff
+    # The reconciler is recovery-only; it never owns the normal transition.
+    assert handoff["reconciler"]["role"] == "recovery_only"
     assert handoff["polling_distinguishes"]["received"]
     assert handoff["polling_distinguishes"]["queued"]
 
@@ -351,27 +370,32 @@ def test_cost_envelope_uses_bounded_spend_rate_not_hard_cap():
     assert "load balancer" in flat or "load-balancer" in flat  # edge fixed floor acknowledged
     # The overstated "hard ceiling on worst-case running compute" must be gone.
     assert "hard ceiling on worst-case running compute" not in flat
-    # Review #402: the concrete Cloud Run edge floor (~$24/mo) and the baseline
-    # reassessment to Lambda must be present.
+    # Review #402: the concrete Cloud Run edge floor (~$24/mo), the reassessment,
+    # and the accurate best-effort gateway framing must be present.
     assert "$24" in flat or "~$24" in flat
     assert "reassess" in flat
+    assert "best-effort" in flat  # API Gateway throttling is best-effort, not a cap
+    # The overstated "strongest hard throttle" Lambda claim must be gone.
+    assert "strongest hard throttle" not in flat
 
 
-def test_decision_and_adr_lead_with_lambda_baseline():
+def test_decision_and_adr_lead_with_cloud_run_baseline():
     for path in (OPS / "hosted-deployment-decision.md", ADR_0006):
         flat = " ".join(_read(path).lower().split())
-        assert "aws lambda" in flat
+        assert "google cloud run" in flat
         assert "reassess" in flat  # the baseline reassessment is explicit
-        # Cloud Run is retained as the lead alternative, not the baseline.
-        assert "lead alternative" in flat
+        # Lambda is an alternative that needs fan-out, not the baseline.
+        assert "fan-out" in flat or "fan out" in flat
+        assert "best-effort" in flat  # accurate gateway framing
 
 
-def test_job_lifecycle_has_no_content_dedup_and_documents_recovery():
+def test_job_lifecycle_has_no_dedup_and_documents_recovery():
     flat = " ".join(_read(OPS / "hosted-deployment-job-lifecycle.md").lower().split())
-    assert "no content-derived dedup key" in flat or "no content-based dedup" in flat
+    assert "no deduplication in v1" in flat
+    assert "no content-derived dedup key" in flat
     assert "request_digest" not in flat  # the unsafe content key is gone
-    assert "reconciler" in flat  # handoff recovery
-    assert "compare-and-set" in flat or "compare and set" in flat
+    assert "reconciler is recovery-only" in flat or "recovery only" in flat
+    assert "compare-and-set" in flat or "cas " in flat
     assert "state invariants" in flat
 
 
@@ -383,3 +407,27 @@ def test_adr_lifecycle_supports_proposed_on_main_via_status_change():
     adr = _read(ADR_0006).lower()
     assert "non-authoritative" in adr
     assert "status-change pr" in adr
+
+
+def test_baseline_is_consistent_across_files():
+    # Codex #402 r3: cross-file semantic agreement, not token presence. After the
+    # reassessment, every file names Google Cloud Run as the baseline.
+    c = _contract()
+    assert c["provider_recommendation"]["baseline"] == "google-cloud-run"
+    prov = next(d for d in c["maintainer_decisions"] if d["id"] == "provider")
+    assert str(prov["recommended"]).startswith("google-cloud-run")
+    for path in (ADR_0006, OPS / "hosted-deployment-decision.md", OPS / "hosted-deployment-cost-envelope.md"):
+        flat = " ".join(_read(path).lower().split())
+        assert "google cloud run" in flat
+        # No file declares Lambda/AWS as THE baseline.
+        assert "aws lambda (baseline)" not in flat
+        assert "lambda (container) (baseline)" not in flat
+        assert "aws lambda container (baseline)" not in flat
+
+
+def test_no_request_digest_field_anywhere():
+    targets = HOSTED_DOCS + [ADR_0006, CONTRACT_PATH, SCHEMA_PATH] + list(EXAMPLES.glob("*.json"))
+    for path in targets:
+        assert "request_digest" not in _read(path), (
+            f"{path.name} still references the removed request_digest field"
+        )

@@ -42,17 +42,27 @@ adr0001_boundaries_preserved:
   catalogue_determinism_preserved: true
 
 # Deployment recommendation. RECOMMENDATION ONLY — maintainer accepts a provider.
-# Reassessed after review #402: the mandatory rate-limiting edge gives Cloud Run a
-# fixed ~$24/mo load-balancer + Cloud Armor floor, defeating its scale-to-zero idle
-# advantage for a low-traffic service, while AWS Lambda + API Gateway has no fixed
-# edge floor (built-in throttling) and a HARD reserved-concurrency cap. Baseline is
-# therefore AWS Lambda (container); Cloud Run is the lead alternative when
-# container portability/operational simplicity outweighs the idle floor.
+# Reassessment history (driven by independent review):
+#   - #402 r2 corrected that the mandatory rate-limiting edge gives Cloud Run a
+#     ~$24/mo fixed floor, and briefly moved the baseline to AWS Lambda.
+#   - #402 r3 corrected two facts that reverse that: (a) API Gateway throttling/
+#     quotas are BEST-EFFORT, not a hard cost cap (only Lambda reserved concurrency
+#     is hard, and only at the Lambda-compute boundary), and (b) verify is
+#     long-running batch work (up to 500 rows of live fetch) that exceeds Lambda's
+#     15-min invocation ceiling and would require per-row fan-out + aggregation.
+# Conclusion: the verify WORKER is a long-running container (no invocation ceiling);
+# NO provider offers a hard spend cap, so the engineered bounded-spend-rate applies
+# everywhere; the ~$24/mo Cloud Run edge floor is modest and bounded. Baseline is
+# Google Cloud Run (container API + worker). Lambda is an alternative ONLY with
+# per-row fan-out; ACA is the container alternative with the strongest secret posture.
 provider_recommendation:
-  baseline: aws-lambda-container
+  baseline: google-cloud-run
+  worker_execution: long_running_container   # NOT a 15-min function; bounded by per-job timeout + row cap
   alternatives:
-    - google-cloud-run
-    - azure-container-apps
+    - id: azure-container-apps
+      note: container; Key Vault remote signing (strongest secret posture); has its own edge cost
+    - id: aws-lambda-container
+      note: "$0 idle, but REQUIRES per-row fan-out + aggregation (15-min ceiling); gateway throttling is best-effort, not a hard cost cap"
   rejected:
     - id: aws-app-runner
       reason: closed to new customers in 2026
@@ -81,7 +91,7 @@ transitions:
   executing: [completed, failed]
   completed: []
   failed: []
-idempotency_key: job_id
+record_key: job_id                    # the durable record's primary key (server-generated)
 result_ttl_hours_default: 24
 
 # Expiry is NOT a persisted state. Expiry is time-based on expires_at: once
@@ -128,26 +138,42 @@ result_access:
 # calling capability, dedups only that caller's own retries; it never dedups across
 # callers and never mints a capability for an existing job to a different caller.
 idempotency:
-  default: new_job_per_request
-  optional_key: client_supplied_high_entropy   # stored as idempotency_key_digest
-  scope: calling_capability
+  default: new_job_per_request          # the ONLY behaviour in v1
+  deduplication_in_v1: false            # no dedup at all; every request creates a new job
   cross_caller_dedup: false
   content_digest_dedup: false
+  deferred_optional_key:                # if ever added, it MUST satisfy ALL of:
+    binding: server_keyed_hmac          # never a plain, dictionary-testable content digest
+    scope: authenticated_caller_namespace
+    same_key_same_request: replay_returns_existing_job
+    same_key_different_request: conflict_rejected
+    expiry_and_token_return: defined
 
 # Crash/failure recovery for the three-step handoff (write envelope -> create job
-# record -> enqueue job_id). Each step is independently durable, so the handoff is
-# made recoverable rather than assumed atomic.
+# record -> enqueue job_id). Each step is independently durable, so the handoff is a
+# precise CAS protocol with a single owner per transition, not an assumed atomic op.
 handoff:
-  order: [write_request_envelope, create_job_record_received, enqueue_job_id]
-  enqueue_idempotency: task_name_equals_job_id          # re-enqueue is a no-op
-  reconciler: re_enqueues_received_jobs_past_threshold  # outbox-style; owns received -> queued
-  worker_ownership: "executing -> completed | failed"   # CAS on expected prior state
-  state_transitions: compare_and_set                    # only advance from the expected state
-  orphan_envelope_cleanup: object_lifecycle_ttl         # envelope written but job-create failed
+  state_transitions: compare_and_set
+  normal_path:                          # the API owns the normal received -> queued
+    - api_write_request_envelope
+    - api_create_job_record_received
+    - api_enqueue_task_name_equals_job_id          # idempotent: a duplicate enqueue is a no-op
+    - api_cas_received_to_queued_after_enqueue_ack
+  worker:
+    - cas_received_or_queued_to_executing          # exactly-once via CAS; tolerates a record still in received
+    - cas_executing_to_completed_or_failed
+  duplicate_delivery: ack_and_drop_if_cas_to_executing_fails   # already executing/terminal
+  reconciler:
+    role: recovery_only                 # NEVER owns the normal-path received -> queued
+    action: re_enqueue_received_past_threshold     # idempotent task name; worker CAS dedups delivery
+  crash_points:
+    after_envelope_before_job: orphan_envelope_ttl_reaped; api_returns_retryable_503_no_job_id
+    after_job_before_enqueue: reconciler_re_enqueues
+    after_enqueue_before_cas_queued: worker_advances_via_cas_received_to_executing; reconciler_re_enqueue_deduped_by_task_name
+    worker_crash_executing: execution_timeout_to_failed_or_expiry_to_410
   polling_distinguishes:
     received: accepted_not_yet_dispatched
     queued: dispatched_to_worker
-  on_job_create_failure: generic_503_retryable_no_job_id_leaked
 
 # Service topology components (each is specified in the architecture doc).
 topology_components:
@@ -169,12 +195,13 @@ topology_components:
 # Balancer with Cloud Armor, and Cloud Run ingress is restricted so direct
 # ingress cannot bypass the edge. The edge adds a fixed cost floor (see cost doc).
 edge:
-  gateway: managed_api_gateway_or_load_balancer_with_rate_limiting
-  baseline_realization: aws_api_gateway_throttling_and_usage_plans   # no fixed monthly floor; hard quotas
-  alternative_realization: gcp_external_https_lb_plus_cloud_armor    # ~fixed monthly floor (~$24/mo + traffic)
-  origin_ingress: restricted_to_edge_only                           # private integration (Lambda) / internal-and-cloud-load-balancing (Cloud Run)
+  gateway: load_balancer_with_rate_limiting
+  baseline_realization: gcp_external_https_lb_plus_cloud_armor      # ~$24/mo fixed floor (~$18 LB + ~$5-6 Cloud Armor)
+  alternative_realization: aws_api_gateway_throttling               # no fixed floor BUT best-effort, not a hard cost cap
+  rate_limit_is_hard_cost_cap: false                               # no provider edge is a hard spend cap
+  origin_ingress: restricted_to_edge_only                          # internal-and-cloud-load-balancing (Cloud Run) / private integration (Lambda)
   bypass_prevented: true
-  adds_fixed_cost_floor: depends_on_provider                        # API Gateway ~none; external LB yes
+  adds_fixed_cost_floor: true                                      # ~$24/mo on the Cloud Run baseline
 
 # Telemetry fields that MUST NEVER be emitted to logs, traces, or metric labels
 # (the ADR-0001 transient-input + leakage boundary).
