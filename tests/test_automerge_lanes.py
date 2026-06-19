@@ -198,6 +198,6 @@ def test_policy_declares_candidate_intake_lane():
     lane = policy["lanes"]["candidate_intake"]
     assert lane["label"] == "automerge:candidate-intake"
     assert lane["required_labels"] == ["candidate-intake"]
-    # Not yet execution-wired: the consuming agent-automerge merge job is the
-    # external (GitHub-App) boundary, so the lane is built/tested but inert.
-    assert lane["execution_wired"] is False
+    # WP-OPENVA-CANDIDATE-ACTIVATION-01: execution-wired now that the producer
+    # PR-open workflow and the consuming agent-automerge merge job both exist.
+    assert lane["execution_wired"] is True

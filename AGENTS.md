@@ -74,6 +74,7 @@ and [`docs/operations/WORKFLOW_OPERATING_MODEL.md`](docs/operations/WORKFLOW_OPE
 | --- | --- |
 | Human-submission intake / new vendor | `docs/submission-intake.md`, `docs/submission-verification.md`, `tools/openva/submission_bridge.py`, `schemas/openva/candidate-record.schema.json` |
 | Machine-provisional growth | `docs/catalog-autonomy-policy.md`, `tools/openva/machine_provisional_controller.py`, `bot-authority.yaml` lane `catalog_growth_promotion` |
+| Candidate intake / candidate-bound activation | `docs/candidate-intake.md`, `tools/openva/candidate_activation.py`, `tools/openva/vendor_resolution.py` (`evaluate_persisted_candidate`), `bot-authority.yaml` lane `candidate_intake` |
 | Quorum promotion | `tools/openva/bot_quorum.py`, `tools/openva/quorum_promotion.py`, `config/machine-evidence-thresholds.yaml` |
 | Source repair | `tools/openva/source_repair_classifier.py`, `docs/source-refinement-workflow.md`, `bot-authority.yaml` lane `source_repair` |
 | Quarantine | `tools/openva/source_quarantine.py`, `bot-authority.yaml` lane `source_quarantine` |
@@ -89,6 +90,7 @@ Each lane's `allowed_paths` in `bot-authority.yaml` is authoritative. Routine
 autonomous lanes are bounded to:
 
 - `data/vendors/**` — catalog records (one vendor per machine-provisional PR);
+- `maintenance/candidates/**` — non-canonical staged candidate records (the `candidate_intake` lane; staging only, never catalog truth);
 - `maintenance/machine-decisions/**` — append-only decision records;
 - `maintenance/source-observations/events/**` — append-only observation events;
 - `maintenance/reviewed/**` — reviewed repair evidence (legacy lane).

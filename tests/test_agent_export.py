@@ -53,6 +53,33 @@ def make_repo(tmp_path: Path) -> Path:
     return tmp_path
 
 
+def write_legal_entity(
+    tmp_path: Path,
+    *,
+    vendor_id: str = "example-vendor",
+    entity_id: str = "example-vendor-le",
+    registration_number: str = "RC-123456",
+    jurisdiction: str = "GB",
+    catalog_status: str = "stub",
+) -> Path:
+    entity_dir = tmp_path / "data" / "vendors" / vendor_id / "legal_entities"
+    entity_dir.mkdir(parents=True, exist_ok=True)
+    path = entity_dir / f"{entity_id}.yaml"
+    path.write_text(
+        "schema_version: 0.1.0\n"
+        f"entity_id: {entity_id}\n"
+        f"vendor_id: {vendor_id}\n"
+        "legal_name: Example Vendor Ltd\n"
+        f"jurisdiction: {jurisdiction}\n"
+        f"registration_number: {registration_number}\n"
+        "verification_source_ids: []\n"
+        f"catalog_status: {catalog_status}\n"
+        "not_advice: true\n",
+        encoding="utf-8",
+    )
+    return path
+
+
 def write_ledger_event(
     tmp_path: Path,
     *,
@@ -202,6 +229,33 @@ def test_vendor_export_matches_spec_shape(tmp_path):
     assert vendor["canonical_name"] == "Example Vendor"
     assert vendor["domains"] == ["vendor.example"]
     assert vendor["not_advice"] is True
+
+
+def test_vendor_export_omits_legal_entities_when_absent(tmp_path):
+    # Backward-compatible: a vendor with no legal entities keeps a byte-identical
+    # export (no legal_entities key), so the shipped catalogue is unchanged.
+    out = build(tmp_path, latest_observations=run_artifact())
+    vendor = load(out, "vendors/example-vendor.json")
+    assert "legal_entities" not in vendor
+    jsonschema.validate(vendor, subschema("vendor_export"))
+
+
+def test_vendor_export_includes_legal_entities_when_present(tmp_path):
+    make_repo(tmp_path)
+    write_legal_entity(tmp_path, entity_id="example-vendor-le-b", registration_number="RC-2")
+    write_legal_entity(tmp_path, entity_id="example-vendor-le-a", registration_number="RC-1")
+    out = build(tmp_path, latest_observations=run_artifact())
+    vendor = load(out, "vendors/example-vendor.json")
+    jsonschema.validate(vendor, subschema("vendor_export"))
+    entities = vendor["legal_entities"]
+    # Sorted by entity_id (deterministic), exact public field set, no extra keys.
+    assert [e["entity_id"] for e in entities] == ["example-vendor-le-a", "example-vendor-le-b"]
+    assert set(entities[0]) == {
+        "entity_id", "vendor_id", "legal_name", "jurisdiction",
+        "registration_number", "catalog_status", "registered_address",
+    }
+    assert entities[0]["registration_number"] == "RC-1"
+    assert entities[0]["registered_address"] is None  # absent in the record -> null
 
 
 def test_per_source_projection_from_registry_fields(tmp_path):

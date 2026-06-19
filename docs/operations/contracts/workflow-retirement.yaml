@@ -113,6 +113,18 @@ workflows:
     required_retirement_evidence: [replacement observation ledger append path, append-only and release-gate proof, validation suite pass]
     allowed_triggers_until_retired: [workflow_dispatch, workflow_run]
     write_permissions_allowed_until_retired: true
+  - name: candidate-intake-pr.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: candidate_intake
+    replacement_owner: candidate-intake-pr.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [external boundary that stages candidate records for the candidate-bound autonomous promotion path]
+    required_retirement_evidence: [replacement candidate-intake boundary, candidate-bound binding proof, validation suite pass]
+    allowed_triggers_until_retired: [workflow_dispatch]
+    write_permissions_allowed_until_retired: true
   - name: discovery-ledger-append-pr.yml
     current_status: active
     inventory_status: core

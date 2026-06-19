@@ -133,9 +133,10 @@ def test_protocol_bounds_match_inventory_and_controls_empty_identity(export_tree
     anyio.run(scenario)
 
 
-def test_protocol_tools_list_discloses_registration_number_limitation(export_tree):
-    # An agent discovering OpenVA only via tools/list must learn that the snapshot
-    # surface cannot match on registration_number alone.
+def test_protocol_tools_list_discloses_registration_number_capability(export_tree):
+    # An agent discovering OpenVA only via tools/list must learn that
+    # registration_number matching is data-dependent: it works when the export carries
+    # legal-entity data for the vendor, and otherwise resolves to no_match.
     snapshot = Snapshot.load(LocalSnapshotSource(export_tree))
 
     async def scenario() -> None:
@@ -146,8 +147,9 @@ def test_protocol_tools_list_discloses_registration_number_limitation(export_tre
                 tool = by_name[name]
                 reg = tool.inputSchema["properties"]["rows"]["items"]["properties"]["registration_number"]
                 disclosure = (tool.description + " " + reg.get("description", "")).lower()
-                assert "registration_number is not used" in disclosure or "not used for matching" in disclosure
-                assert "/v1" in disclosure
+                assert "legal-entity" in disclosure
+                assert "registration" in disclosure
+                assert "no_match" in disclosure  # current behaviour while the catalogue carries none
 
     anyio.run(scenario)
 

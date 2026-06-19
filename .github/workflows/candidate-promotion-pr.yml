@@ -18,6 +18,7 @@ on:
           - strict-growth-latest
           - strict-growth-shortlist
           - machine-provisional-from-queue
+          - candidate-bound
           - quorum-promotion
           - quarantine
           - rollback
@@ -60,6 +61,31 @@ on:
         required: false
         type: string
         default: "Catalog: apply reviewed candidate source promotion"
+      candidate_id:
+        description: "candidate-bound mode: the bound candidate id selected by the growth controller."
+        required: false
+        type: string
+        default: ""
+      candidate_path:
+        description: "candidate-bound mode: maintenance/candidates/<id>.json path of the bound candidate."
+        required: false
+        type: string
+        default: ""
+      content_digest:
+        description: "candidate-bound mode: SHA-256 content digest binding the exact candidate state."
+        required: false
+        type: string
+        default: ""
+      selected_vendor:
+        description: "candidate-bound mode: the vendor id the bound candidate resolves to (mutated == selected)."
+        required: false
+        type: string
+        default: ""
+      candidate_origin:
+        description: "candidate-bound mode: the bound candidate origin."
+        required: false
+        type: string
+        default: ""
   schedule:
     - cron: "47 8 * * 3"
 
@@ -73,6 +99,9 @@ concurrency:
 
 jobs:
   candidate-promotion-pr:
+    # The reviewed / strict-growth / quorum / coverage-queue paths. The
+    # candidate-bound mutation runs in its own job below.
+    if: ${{ inputs.promotion_plan_mode != 'candidate-bound' }}
     runs-on: ubuntu-latest
     env:
       REQUESTED_PROMOTION_PLAN_PATH: "${{ inputs.promotion_plan_path || '' }}"
@@ -667,6 +696,155 @@ jobs:
             reports/openva-failure-routing/catalog-promotion-failure-routing-report.json
             reports/openva-failure-routing/catalog-promotion-failure-routing-report.md
           if-no-files-found: ignore
+
+  candidate-bound-materialization:
+    # WP-OPENVA-CANDIDATE-ACTIVATION-01 candidate-bound mutation boundary.
+    # Materializes the EXACT candidate the autonomous growth controller selected,
+    # verified by id / path / content digest / origin / selected vendor against
+    # the candidate on the checked-out main head, into a NEW machine_provisional
+    # vendor plus an append-only decision, then opens a PR. It fails closed on any
+    # binding drift; it never re-derives the vendor from a queue, never promotes to
+    # a terminal status (that is the independent WP37 quorum), and never merges.
+    if: github.event_name == 'workflow_dispatch' && inputs.promotion_plan_mode == 'candidate-bound'
+    runs-on: ubuntu-latest
+    env:
+      CANDIDATE_ID: "${{ inputs.candidate_id }}"
+      CANDIDATE_PATH: "${{ inputs.candidate_path }}"
+      CONTENT_DIGEST: "${{ inputs.content_digest }}"
+      SELECTED_VENDOR: "${{ inputs.selected_vendor }}"
+      CANDIDATE_ORIGIN: "${{ inputs.candidate_origin }}"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Validate candidate binding inputs
+        run: |
+          set -euo pipefail
+          for v in CANDIDATE_ID CANDIDATE_PATH CONTENT_DIGEST SELECTED_VENDOR CANDIDATE_ORIGIN; do
+            eval "val=\${$v:-}"
+            if [ -z "$val" ]; then echo "::error::missing candidate binding input: $v"; exit 1; fi
+          done
+          case "$CANDIDATE_PATH" in
+            maintenance/candidates/*.json) : ;;
+            *) echo "::error::candidate_path must be under maintenance/candidates/"; exit 1 ;;
+          esac
+          test -f "$CANDIDATE_PATH" || { echo "::error::bound candidate not found on the head: $CANDIDATE_PATH"; exit 1; }
+      - name: Validate current records
+        run: python -m tools.openva.validate validate
+      - name: Materialize the bound candidate (fail closed)
+        run: |
+          set -euo pipefail
+          python -m tools.openva.candidate_activation materialize \
+            --candidate "$CANDIDATE_PATH" \
+            --candidate-path "$CANDIDATE_PATH" \
+            --candidate-id "$CANDIDATE_ID" \
+            --content-digest "$CONTENT_DIGEST" \
+            --selected-vendor "$SELECTED_VENDOR" \
+            --origin "$CANDIDATE_ORIGIN" \
+            --root . \
+            --output candidate-bound-materialization-report.json
+      - name: Validate generated catalog
+        run: python -m tools.openva.validate validate
+      - name: Rebuild generated outputs
+        run: python -m tools.openva.validate build-indexes
+      - name: Re-verify the binding on the produced state
+        run: |
+          set -euo pipefail
+          python -m tools.openva.candidate_activation verify \
+            --candidate "$CANDIDATE_PATH" \
+            --candidate-path "$CANDIDATE_PATH" \
+            --candidate-id "$CANDIDATE_ID" \
+            --content-digest "$CONTENT_DIGEST" \
+            --selected-vendor "$SELECTED_VENDOR" \
+            --origin "$CANDIDATE_ORIGIN" \
+            --root .
+      - name: Run source-intelligence release gate (pr profile)
+        run: python -m tools.openva.release_gates check --profile pr
+      - name: Prepare PR body
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.load(open("candidate-bound-materialization-report.json", encoding="utf-8"))
+          lines = [
+              "## Summary",
+              "",
+              f"Candidate-bound materialization of `{report['mutated_vendor']}` as machine_provisional",
+              "from the exact candidate the autonomous growth controller selected.",
+              "",
+              "## Binding",
+              "",
+              f"- Candidate id: `{report['candidate_id']}`",
+              f"- Candidate path: `{report['candidate_path']}`",
+              f"- Content digest: `{report['content_digest']}`",
+              f"- Selected vendor: `{report['selected_vendor']}`",
+              f"- Mutated vendor: `{report['mutated_vendor']}`",
+              f"- Materialization decision: `{report['decision_id']}`",
+              "",
+              "## Guardrails",
+              "",
+              "- Selected candidate == mutated candidate (verified id/path/digest/origin/vendor); identity is never re-derived from a queue.",
+              "- Writes a NEW machine_provisional vendor only, linked to an append-only decision; promotion to active is the independent WP37 quorum.",
+              "- Does not merge automatically; the not_before controller releases the automerge label after the delay and the existing machine-provisional policy governs the merge.",
+              "- Operational metadata only; not legal, compliance, procurement, security, or vendor-risk advice.",
+              "",
+          ]
+          Path("candidate-bound-pr-body.md").write_text("\n".join(lines), encoding="utf-8")
+          PY
+      - name: Commit and push materialization branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          PR_BRANCH="agent-candidate-bound-${SELECTED_VENDOR}-${GITHUB_RUN_ID}"
+          echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
+          git switch -c "$PR_BRANCH"
+          git add data indexes dist openva-pack.json maintenance/machine-decisions
+          git commit -m "Catalog: materialize machine-provisional ${SELECTED_VENDOR} from bound candidate"
+          git push --force-with-lease origin "$PR_BRANCH"
+      - name: Create pull request
+        env:
+          # Workflow-triggering token so the opened PR can trigger the merge lane;
+          # falls back to github.token until the secret is set.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA=$(git rev-parse HEAD)
+          cp candidate-bound-pr-body.md candidate-bound-pr-body-final.md
+          { echo ""; echo "- Head SHA: \`$HEAD_SHA\`"; } >> candidate-bound-pr-body-final.md
+          gh pr create \
+            --base main \
+            --head "$PR_BRANCH" \
+            --title "Catalog: materialize machine-provisional ${SELECTED_VENDOR} from bound candidate" \
+            --body-file candidate-bound-pr-body-final.md
+      - name: Label machine-provisional materialization PR
+        env:
+          # WP36b: mark the PR as a machine-provisional materialization. The
+          # not_before controller applies automerge:machine-provisional later,
+          # once the decision's delay window has passed, and the existing
+          # machine-provisional policy governs the merge.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          PR_NUMBER=$(gh pr list --state open --head "$PR_BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr edit "$PR_NUMBER" --add-label machine-provisional
+          fi
+      - name: Upload candidate-bound materialization artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-candidate-bound-materialization-artifacts
+          path: |
+            candidate-bound-materialization-report.json
+            candidate-bound-pr-body.md
+          if-no-files-found: warn
 
   quorum-promotion:
     # WP37: autonomous promotion of a machine_provisional vendor to active

@@ -156,16 +156,33 @@ def source_row(source_record: dict[str, Any], observation: dict[str, Any] | None
     }
 
 
+def legal_entity_projection(entity: dict[str, Any]) -> dict[str, Any]:
+    """Public legal-entity identity fields only — the same shape the matcher emits.
+
+    Source-backed public identity metadata (legal_name, jurisdiction, registration
+    number, registered address). Carries no private or self-certifying content."""
+    return {
+        "entity_id": entity.get("entity_id"),
+        "vendor_id": entity.get("vendor_id"),
+        "legal_name": entity.get("legal_name"),
+        "jurisdiction": entity.get("jurisdiction"),
+        "registration_number": entity.get("registration_number"),
+        "catalog_status": entity.get("catalog_status"),
+        "registered_address": entity.get("registered_address"),
+    }
+
+
 def vendor_export_payload(
     vendor: dict[str, Any],
     sources: list[dict[str, Any]],
     observations: dict[str, dict[str, Any]],
+    legal_entities: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     rows = [
         source_row(source, observations.get(str(source.get("source_id"))))
         for source in sorted(sources, key=lambda record: str(record.get("source_id") or ""))
     ]
-    return {
+    payload: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "vendor_id": vendor.get("vendor_id"),
         "canonical_name": vendor.get("display_name"),
@@ -176,6 +193,13 @@ def vendor_export_payload(
         "sources": rows,
         "not_advice": True,
     }
+    # Optional, backward-compatible (versioning-policy 0.1.x additive optional field):
+    # the key is emitted only when the vendor has legal-entity records, so vendors
+    # without them (the entire shipped catalogue today) keep a byte-identical export.
+    entities = sorted(legal_entities or [], key=lambda record: str(record.get("entity_id") or ""))
+    if entities:
+        payload["legal_entities"] = [legal_entity_projection(entity) for entity in entities]
+    return payload
 
 
 def observation_projection(entry: dict[str, Any], freshness: dict[str, Any] | None) -> dict[str, Any]:
@@ -238,6 +262,11 @@ def build_agent_exports(
     for source in sources:
         sources_by_vendor.setdefault(str(source.get("vendor_id") or ""), []).append(source)
 
+    legal_entities = load_records(root, "data/vendors/*/legal_entities/*.yaml")
+    legal_entities_by_vendor: dict[str, list[dict[str, Any]]] = {}
+    for entity in legal_entities:
+        legal_entities_by_vendor.setdefault(str(entity.get("vendor_id") or ""), []).append(entity)
+
     ledger_baseline = load_ledger_baseline(ledger_dir)
     observation_input, observations = observation_entries(latest_observations, ledger_baseline)
     freshness_by_source = {
@@ -258,7 +287,15 @@ def build_agent_exports(
     for vendor in vendors:
         vendor_id = str(vendor.get("vendor_id"))
         rel_path = VENDOR_EXPORT_TEMPLATE.format(vendor_id=vendor_id)
-        document = emit(rel_path, vendor_export_payload(vendor, sources_by_vendor.get(vendor_id, []), observations))
+        document = emit(
+            rel_path,
+            vendor_export_payload(
+                vendor,
+                sources_by_vendor.get(vendor_id, []),
+                observations,
+                legal_entities_by_vendor.get(vendor_id, []),
+            ),
+        )
         vendor_exports.append({"vendor_id": vendor_id, "path": rel_path, "digest": document["snapshot"]["digest"]})
         vendor_index_rows.append(
             {

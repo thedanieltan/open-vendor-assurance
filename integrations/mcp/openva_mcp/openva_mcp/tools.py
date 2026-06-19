@@ -14,7 +14,7 @@ from typing import Any
 
 from openva_vendor_inventory_matcher.enrichment import enrich_identity
 
-from openva_mcp.matching import _vendor_records, match_row
+from openva_mcp.matching import _vendor_records, build_legal_indexes, match_row
 from openva_mcp.snapshot import Snapshot
 
 # Vendor-identity fields a caller may supply for matching. No other field is read,
@@ -151,7 +151,11 @@ def match_inventory(snapshot: Snapshot, rows: list[dict[str, Any]]) -> dict[str,
                 "business_entity_name, registration_number"
             )
     vendors = snapshot.vendors_index().get("vendors", [])
-    results = [match_row(vendors, row or {}) for row in rows]
+    legal_by_registration, legal_by_id = _legal_indexes_for(snapshot, rows)
+    results = [
+        match_row(vendors, row or {}, legal_by_registration=legal_by_registration, legal_by_id=legal_by_id)
+        for row in rows
+    ]
     summary = {"matched": 0, "ambiguous": 0, "no_match": 0}
     for result in results:
         summary[result["match_status"]] += 1
@@ -183,6 +187,18 @@ def _has_identity(row: dict[str, Any]) -> bool:
     return any(str(row.get(field) or "").strip() for field in _IDENTITY_FIELDS)
 
 
+def _legal_indexes_for(snapshot: Snapshot, rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Build legal-entity indexes only when a row carries a registration number.
+
+    Registration-number matching needs a global legal-entity index, which means
+    loading every vendor export; we pay that cost only when a row actually supplies a
+    registration number. For the shipped catalogue (no legal-entity data) the indexes
+    are empty and a registration-only row stays no_match — same result, no scan when
+    no registration number is present."""
+    needs_legal = any(str((row or {}).get("registration_number") or "").strip() for row in rows)
+    return build_legal_indexes(snapshot) if needs_legal else ({}, {})
+
+
 def enrich_inventory(
     snapshot: Snapshot,
     rows: list[dict[str, Any]],
@@ -192,18 +208,19 @@ def enrich_inventory(
 
     This is the composite tool for agents that have already read a user-controlled
     workspace through their own connector: it accepts only bounded vendor-identity
-    fields and requested source types, never workspace content. It matches with the
-    snapshot-grade identity matcher (``enrich_identity`` -> ``match_identity``:
-    domain / vendor name only — the snapshot carries no legal-entity data) and then
-    delegates source-type filtering, primary-source ranking, and notes to the shared
-    ``assemble_enrichment`` projection authority. The match service ``/v1/enrich``
-    uses the *same projection* over its own pack-backed matcher, so the two surfaces
-    agree for the same decision and sources; matcher capability differs by the data
-    each surface holds (a registration-number-only row matches on ``/v1`` but is
-    ``no_match`` here). Input order and duplicates are preserved, ``row_id`` is echoed
-    verbatim, ``ambiguous`` stays ambiguous, and ``no_match`` stays no-match. The
-    snapshot identity is disclosed once on the envelope; OpenVA performs no workspace
-    write and makes no compliance, suitability, or risk conclusion.
+    fields and requested source types, never workspace content. It matches with
+    ``enrich_identity`` -> ``match_identity`` (domain / vendor name, plus a
+    registration-number / legal-entity fallback when the export carries legal-entity
+    data for the vendor) and delegates source-type filtering, primary-source ranking,
+    and notes to the shared ``assemble_enrichment`` projection authority. The match
+    service ``/v1/enrich`` uses the *same projection* and the *same shared
+    registration fallback*, so the two surfaces agree for the same data; a
+    registration-number-only row matches on either surface when legal-entity data
+    exists for that vendor and stays ``no_match`` when it does not (the shipped
+    catalogue carries none yet). Input order and duplicates are preserved, ``row_id``
+    is echoed verbatim, ``ambiguous`` stays ambiguous, and ``no_match`` stays no-match.
+    The snapshot identity is disclosed once on the envelope; OpenVA performs no
+    workspace write and makes no compliance, suitability, or risk conclusion.
     """
     for row in rows:
         if not _has_identity(row or {}):
@@ -213,6 +230,7 @@ def enrich_inventory(
             )
 
     vendors = _vendor_records(snapshot.vendors_index().get("vendors", []))
+    legal_by_registration, legal_by_id = _legal_indexes_for(snapshot, rows)
 
     def sources_for(vendor_id: str) -> list[dict[str, Any]]:
         export = snapshot.vendor_export(vendor_id)
@@ -229,6 +247,8 @@ def enrich_inventory(
             registration_number=(row or {}).get("registration_number"),
             source_types=source_types,
             project_source=_enrich_source_view,
+            legal_by_registration=legal_by_registration,
+            legal_by_id=legal_by_id,
         )
         for row in rows
     ]

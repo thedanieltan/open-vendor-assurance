@@ -68,23 +68,27 @@ filtering, primary-source ranking, URL grouping, and machine-state notes). Both
 surfaces call it, so for the **same match decision and the same sources** they
 produce an identical projection.
 
-**Matching capability is surface- and data-dependent** — it is not uniformly shared,
-because the two surfaces hold different data:
+**Matching capability is data-dependent, not transport-dependent.** Both surfaces use
+one shared registration-number / legal-entity fallback authority
+(`core.select_with_legal_fallback`) on top of the shared projection; each feeds it the
+legal-entity data it holds:
 
 ```text
 shared projection authority  (assemble_enrichment: filter + rank + notes)
+shared matching fallback     (core.select_with_legal_fallback)
   ├── HTTP /v1 adapter — pack-backed matcher (MatcherIndex.enrich_row / match_one);
-  │     resolves registration-number / legal-entity matches; observation-aware
-  │     source projection + spreadsheet projection
-  └── MCP adapter — snapshot-grade identity matcher (match_identity: domain/name only,
-        no legal-entity data); snapshot source projection
+  │     legal entities from the pack; observation-aware source projection + spreadsheet
+  └── MCP adapter — match_identity over the snapshot; legal entities from each vendor
+        export's legal_entities; snapshot source projection
 ```
 
-This is the documented registration-number parity boundary: a registration-number-only
-row matches on `/v1` (pack-backed) and is `no_match` on the snapshot, by design. The
-MCP adapter must never reimplement `/v1` enrichment, call a localhost `/v1` over HTTP,
-import FastAPI route handlers, or invent a different source ranker. The
-primary-source ranker (`primary_source_by_type`) lives once in the shared module and
+Registration-number matching therefore converges across surfaces when the underlying
+data carries legal entities: a registration-number-only row matches on both `/v1` and
+the snapshot, and is `no_match` on both when no legal-entity data exists for the vendor
+(the shipped catalogue carries none yet). The MCP adapter must never reimplement `/v1`
+enrichment, call a localhost `/v1` over HTTP, import FastAPI route handlers, or invent a
+different source ranker. The primary-source ranker (`primary_source_by_type`) lives once
+in the shared module and
 is re-exported by `matcher.py` so the CSV adapter uses the same ranking.
 
 ## Transport boundaries

@@ -17,11 +17,12 @@ from typing import Any
 
 from openva_vendor_inventory_matcher.core import (
     classify,
+    group_legal_entities_by_registration,
+    legal_entity_record,
     match_candidates,
     normalize_domain,
     normalize_name,
-    resolve_legal_entity,
-    select_match,
+    select_with_legal_fallback,
     vendor_record,
 )
 
@@ -45,14 +46,46 @@ def _vendor_records(vendor_rows: list[dict[str, Any]]) -> list:
     ]
 
 
-def match_row(vendor_rows: list[dict[str, Any]], row: dict[str, Any]) -> dict[str, Any]:
+def build_legal_indexes(snapshot) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Build (by_registration, by_id) legal-entity indexes from the snapshot.
+
+    Legal entities are embedded per vendor export (``vendor_export.legal_entities``).
+    This collects them across all vendor exports and groups them with the shared core
+    helpers. It is empty when the export carries no legal-entity data (the entire
+    shipped catalogue today), in which case registration-number matching resolves to
+    no_match exactly as before. Loading every vendor export is bounded to calls that
+    actually carry a registration number (see the tool layer)."""
+    entities = [
+        legal_entity_record(entity)
+        for vendor_id in snapshot.vendor_export_paths()
+        for entity in ((snapshot.vendor_export(vendor_id) or {}).get("legal_entities") or [])
+    ]
+    by_registration = group_legal_entities_by_registration(entities)
+    by_id = {entity.entity_id: entity for entity in entities}
+    return by_registration, by_id
+
+
+def match_row(
+    vendor_rows: list[dict[str, Any]],
+    row: dict[str, Any],
+    *,
+    legal_by_registration: dict[str, Any] | None = None,
+    legal_by_id: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     vendors = _vendor_records(vendor_rows)
     domain = normalize_domain(row.get("domain"))
     name = normalize_name(row.get("vendor_name")) or normalize_name(row.get("business_entity_name"))
     candidates = match_candidates(vendors, domain, name)
-    selected = select_match(candidates)
+    vendors_by_id = {vendor.vendor_id: vendor for vendor in vendors}
+    selected, legal = select_with_legal_fallback(
+        vendors_by_id,
+        candidates,
+        {"registration_number": row.get("registration_number") or "", "jurisdiction": ""},
+        by_registration=legal_by_registration or {},
+        by_id=legal_by_id or {},
+        contracting_by_key={},
+    )
     status = classify(candidates, selected)
-    legal = resolve_legal_entity(row, selected.vendor if selected else None, by_registration={}, by_id={}, contracting_by_key={})
     return {
         "input": row,
         "match_status": status,

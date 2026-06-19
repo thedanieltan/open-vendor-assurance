@@ -3,10 +3,10 @@
 Both adapters delegate to the shared ``assemble_enrichment`` projection authority, so
 for the same match decision and the same canonical sources they must agree on the
 projection: which source types survive the filter, which source is primary per type,
-URL grouping, and the notes. Matching itself is surface-specific (pack-backed for
-``/v1``, snapshot-grade for MCP); these tests use evidence both matchers resolve the
-same way (domain/name/ambiguous/no-match) so the comparison isolates the shared
-projection, plus a dedicated test for the registration-number capability boundary.
+URL grouping, and the notes. Both surfaces share the ``select_with_legal_fallback``
+matching authority, so they also agree on registration-number / legal-entity matches
+when the underlying data carries legal entities (the pack for ``/v1``, the vendor
+export's ``legal_entities`` for the snapshot); a dedicated test covers that convergence.
 The two surfaces project per-source fields differently (snapshot vs pack), so only
 the shared-decision fields are compared, not whole source objects.
 
@@ -158,21 +158,21 @@ def test_ambiguous_decision_is_identical():
     assert mcp["notes"] == ["Ambiguous vendor match"]
 
 
-def test_registration_number_is_the_documented_parity_boundary():
-    """The honest boundary: matcher capability follows the data each surface holds.
-
-    The match service runs the pack-backed matcher with legal-entity data, so a
-    registration-number-only row matches. The MCP snapshot carries no legal-entity
-    data, so the same row is no_match. The shared *projection* is identical; the
-    *matcher* differs by capability, and that difference is intentional, not a
-    regression of the HTTP contract.
+def test_registration_number_parity_with_legal_entity_data():
+    """Registration-number matching now converges across surfaces — capability follows
+    the *data*, not the transport. When legal-entity data exists for the vendor (the
+    pack for /v1, the vendor export's ``legal_entities`` for the snapshot), a
+    registration-number-only row matches on BOTH surfaces via the shared
+    ``select_with_legal_fallback`` authority. With no legal-entity data both surfaces
+    return no_match.
     """
-    # HTTP surface: vendor reachable only via its legal entity's registration number.
     vendor = vendor_record({"vendor_id": "regco", "display_name": "Reg Co", "legal_name": "Reg Co Limited", "official_domains": ["regco.example"]})
-    entity = legal_entity_record({"entity_id": "regco-le", "vendor_id": "regco", "legal_name": "Reg Co Limited", "jurisdiction": "GB", "registration_number": "RC-987654", "catalog_status": "active"})
+    entity_row = {"entity_id": "regco-le", "vendor_id": "regco", "legal_name": "Reg Co Limited", "jurisdiction": "GB", "registration_number": "RC-987654", "catalog_status": "canonical"}
+
+    # HTTP (pack-backed) surface with the legal entity.
     http_state = ServiceState(
         pack=None,
-        matcher_index=MatcherIndex([vendor], {}, {"regco": []}, {}, {}, [entity], {}),
+        matcher_index=MatcherIndex([vendor], {}, {"regco": []}, {}, {}, [legal_entity_record(entity_row)], {}),
         meta=PackMeta(profile_id="parity", schema_version="0.1.0", generated_at="2026-06-12T00:00:00Z", counts={}),
         snapshot_digest="sha256:" + "0" * 64,
         latest_observation_by_source={},
@@ -182,8 +182,8 @@ def test_registration_number_is_the_documented_parity_boundary():
     assert http["match"]["status"] == "matched"
     assert http["match"]["vendor_id"] == "regco"
 
-    # MCP surface: same vendor present, but the snapshot has no legal-entity data.
-    class _FakeSnapshot:
+    # MCP snapshot that NOW carries the same legal entity inside the vendor export.
+    class _LegalSnapshot:
         mode = "pinned_local"
         commit_sha = "sha"
         digest = "sha256:" + "0" * 64
@@ -193,11 +193,23 @@ def test_registration_number_is_the_documented_parity_boundary():
         def vendors_index(self):
             return {"vendors": [{"vendor_id": "regco", "canonical_name": "Reg Co", "domains": ["regco.example"]}]}
 
+        def vendor_export_paths(self):
+            return {"regco": "vendors/regco.json"}
+
+        def vendor_export(self, vendor_id):
+            return {"sources": [], "legal_entities": [entity_row]} if vendor_id == "regco" else None
+
+    mcp = _mcp(_LegalSnapshot(), {"registration_number": "RC-987654"}, ["dpa"])
+    assert mcp["match"]["status"] == "matched"
+    assert mcp["match"]["vendor_id"] == "regco"
+
+    # With no legal-entity data in the export, the snapshot returns no_match.
+    class _BareSnapshot(_LegalSnapshot):
         def vendor_export(self, vendor_id):
             return {"sources": []} if vendor_id == "regco" else None
 
-    mcp = _mcp(_FakeSnapshot(), {"registration_number": "RC-987654"}, ["dpa"])
-    assert mcp["match"]["status"] == "no_match"
+    bare = _mcp(_BareSnapshot(), {"registration_number": "RC-987654"}, ["dpa"])
+    assert bare["match"]["status"] == "no_match"
 
 
 def test_duplicate_rows_and_order_preserved_identically(snapshot):

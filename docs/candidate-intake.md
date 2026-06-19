@@ -36,51 +36,66 @@ merge*.
 
 | Piece | Where |
 | --- | --- |
-| Path-scoped automerge lane | `automerge:candidate-intake` in `config/automerge-policy.yaml` + `tools/openva/automerge_lanes.py` (`is_candidate_intake_path`, single-level `maintenance/candidates/*.json`, **no generated/canonical escape hatch**), `execution_wired: false` until the consuming job lands |
-| Admission guard | `tools/openva/candidate_intake_guard.py` — path confinement, no canonical/generated drift, schema validity. It does **not** re-derive eligibility (see Deferred) |
+| Path-scoped automerge lane | `automerge:candidate-intake` in `config/automerge-policy.yaml` + `tools/openva/automerge_lanes.py` (`is_candidate_intake_path`, single-level `maintenance/candidates/*.json`, **no generated/canonical escape hatch**), `execution_wired: true` |
+| Admission guard | `tools/openva/candidate_intake_guard.py` — path confinement, no canonical/generated drift, schema validity |
+| Persisted-candidate evaluation | `tools/openva/vendor_resolution.py` `evaluate_persisted_candidate` — recomputes eligibility + the deterministic id/evidence digest via the **one** canonical evaluator; fails closed on any mismatch |
+| Candidate-bound activation | `tools/openva/candidate_activation.py` — `collect-eligible`, `verify-intake`, `verify`, and `materialize` (identity binding + the candidate-bound mutation, reusing the canonical decision/source/artifact/change writers) |
+| Producer (external boundary) | `.github/workflows/candidate-intake-pr.yml` — stages via the canonical ingress and opens the candidate-intake PR with `OPENVA_AUTOMERGE_TOKEN` so the lane triggers |
+| Consuming merge job | `agent-automerge.yml` `candidate-intake` job — checks out the PR head, runs the guard, **recomputes** eligibility/identity, runs the release gate, then enables native auto-merge |
 
-These are additive and inert: `main` has no candidate-intake automerge lane or
-guard. This spine deliberately does **not** add an event-driven trigger. The
-autonomous growth controller already globs `maintenance/candidates/*.json` and
-selects records by their committed `eligibility_state` on its existing
-schedule/dispatch; a `push`-triggered fast path must not be wired until the
-consuming job recomputes eligibility and binds candidate identity end-to-end (see
-Deferred). With `execution_wired: false`, no candidate-intake PR auto-merges, so
-nothing reaches `main` through this path yet.
+> **Candidate intake is wired now that the complete control path is operational.**
+> The producer PR-open workflow and the consuming agent-automerge candidate-intake
+> job both exist, so `execution_wired: true` and the `candidate_intake`
+> bot-authority lane is declared.
 
-## Deferred (follow-up, lands with the consuming job)
+## The wired control path (WP-OPENVA-CANDIDATE-ACTIVATION-01)
 
-- **Event-driven freshness trigger — only with the candidate-bound consuming
-  path.** A `push` trigger on `maintenance/candidates/*.json` would let the growth
-  controller consider a newly-merged candidate promptly rather than only on its
-  schedule. It is intentionally **not** added in this spine: an event-driven
-  trigger must not be activated while its input is merely a gate signal. It lands
-  together with a consuming path that (a) **recomputes** eligibility from each
-  persisted record via the resolver's own evaluation — never trusting the
-  self-declared `eligibility_state` — failing closed on any mismatch, and
-  (b) **binds candidate identity** (candidate_id / path / digest / origin /
-  selected vendor) through to the downstream promotion mutation, so the promotion
-  job consumes the candidate record rather than re-deriving the vendor from a
-  separate queue.
-- **Eligibility reproducibility in the guard.** The guard does not re-derive the
-  committed `eligibility_state`. Re-deriving the resolver's per-origin eligibility
-  in this side module would be a second evaluator; that admission check belongs in
-  the consuming agent-automerge job, where it can call the resolver's own
-  evaluation path.
-- **The consuming agent-automerge candidate-intake job + the PR-open workflow** —
-  both need a GitHub App / `OPENVA_AUTOMERGE_TOKEN` and branch protection (the
-  external boundary). The job runs `python -m tools.openva.candidate_intake_guard`
-  plus the release gate, checks out the PR head, then enables native auto-merge. A
-  PR opened with the default `GITHUB_TOKEN` does not trigger downstream workflows,
-  so it must use an App installation token (mirror
-  `observation-ledger-append-pr.yml`).
+```text
+remote candidate intake (candidate-intake-pr.yml, OPENVA_AUTOMERGE_TOKEN)
+  → agent-automerge candidate-intake job
+      guard + recompute eligibility/identity (never trust eligibility_state)
+      + release gate → native auto-merge (staging record reaches main)
+  → autonomous-catalog-growth.yml (push on maintenance/candidates/*.json OR schedule)
+      decide_cycle gate → recompute eligibility from the persisted record
+      + bind candidate_id / candidate_path / content_digest / origin / selected_vendor
+  → candidate-bound promotion dispatch (candidate-promotion-pr.yml, mode candidate-bound)
+      verify the binding on the exact head (fail closed) → materialize ONE
+      machine_provisional vendor + append-only decision (candidate_digest = content_digest)
+  → catalogue PR (machine_provisional; independent quorum + machine-provisional policy govern the merge)
+```
+
+Key properties:
+
+- **Candidate records remain non-canonical.** The candidate store
+  (`maintenance/candidates/*.json`) is staging; merging a candidate-intake PR does
+  not write catalogue truth (`data/vendors/**`) and does not decide promotion.
+- **Selected candidate identity and digest are bound through all stages.** The
+  controller decision carries `candidate_id`, `candidate_path`, `content_digest`,
+  `origin`, and `selected_vendor`; the mutation re-verifies them on the exact head
+  and asserts the materialized vendor equals the selected vendor. Identity is never
+  re-derived later from a separate queue.
+- **Stale or changed records fail closed.** A changed candidate, forged
+  `eligibility_state`, altered content/digest, missing record, path substitution,
+  id/vendor/origin mismatch, or a head differing from the reviewed candidate state
+  all fail the binding closed and create no canonical catalogue PR.
+- **Catalogue truth still changes only through the established PR path.** The
+  candidate-bound mutation writes a NEW `machine_provisional` vendor only, linked
+  to an append-only decision; promotion to a terminal status remains the
+  independent WP37 quorum, and the existing machine-provisional merge policy
+  governs the catalogue PR.
+- This completes autonomous candidate promotion **up to a reviewable, bound
+  catalogue PR**; it is **not** production hosting and does not claim OpenVA's
+  hosted `/v1` API or remote MCP is live.
+
+## Still deferred
+
 - **Scheduled sitemap-discovery → ingress convergence.** Scheduled discovery is
   still report-only; converting `sitemap_source_discovery_events` into the unified
-  candidate queue must hand records to `CatalogQueueIngress`, not a parallel writer.
-- **`bot-authority.yaml` lane entry** — declare a `candidate_intake` lane
-  (`authority_level: 1`, `may_write_catalog_truth: false`, `may_merge_prs: false`,
-  `deny_by_default: true`, `workflows: [agent-automerge.yml]`) once the consuming
-  job exists, so it never references a not-yet-present workflow.
-
-Until the consuming job is wired, the lane (`execution_wired: false`) and guard are
-inert and exercised offline against committed fixtures.
+  candidate queue must hand records to `CatalogQueueIngress`, not a parallel
+  writer. The producer (`candidate-intake-pr.yml`) is the deliberate, bounded,
+  request-driven external boundary until that convergence lands.
+- **Materialization-complete candidates.** A candidate-bound materialization needs
+  the metadata a canonical vendor profile requires (a display name and a valid
+  ISO-3166 alpha-2 headquarters country). Eligible candidates that lack it fail the
+  materialization closed (defer) rather than fabricating it; enriching the
+  resolver/ingress to populate it is follow-up catalogue work.

@@ -114,11 +114,26 @@ def test_legal_entity_resolution_uses_the_shared_core():
     assert csv_decision[5] == resolution.method == "registration_number_exact"
     assert csv_decision[6] == resolution.confidence == "matched"
 
-    # The MCP adapter imports the same core function; with no legal-entity data
-    # in the hosted export it resolves to unresolved (the core's empty result).
-    assert mcp_matching.resolve_legal_entity is core.resolve_legal_entity
-    mcp_out = mcp_matching.match_row(_mcp_rows(pack), row)
-    assert mcp_out["legal_entity_resolution"]["method"] == "unresolved"
+    # The MCP adapter uses the same shared registration/legal-entity fallback authority
+    # as the pack matcher — not a fork.
+    assert mcp_matching.select_with_legal_fallback is core.select_with_legal_fallback
+
+    # With no legal-entity indexes (the default — e.g. an export carrying none) a
+    # registration-only row is unresolved and no_match.
+    mcp_unresolved = mcp_matching.match_row(_mcp_rows(pack), row)
+    assert mcp_unresolved["legal_entity_resolution"]["method"] == "unresolved"
+    assert mcp_unresolved["match_status"] == "no_match"
+
+    # Given the same legal-entity indexes, the MCP adapter resolves registration too —
+    # the capability follows the data, identically to the CSV/pack surface.
+    mcp_matched = mcp_matching.match_row(
+        _mcp_rows(pack),
+        row,
+        legal_by_registration=index.legal_entities_by_registration,
+        legal_by_id=index.legal_entities_by_id,
+    )
+    assert mcp_matched["match_status"] == "matched"
+    assert mcp_matched["match_method"] == "registration_number_exact"
 
 
 def test_mcp_matching_has_no_independent_rules():

@@ -20,8 +20,12 @@ def _load():
 def test_workflow_exists_and_is_scheduled():
     wf = _load()
     triggers = wf.get("on") or wf.get(True)
-    assert set(triggers.keys()) == {"workflow_dispatch", "schedule"}
+    # WP-OPENVA-CANDIDATE-ACTIVATION-01 adds an event trigger on the candidate
+    # store so a newly-merged candidate enters the same gated decision path.
+    assert set(triggers.keys()) == {"workflow_dispatch", "schedule", "push"}
     assert triggers["schedule"][0]["cron"]
+    assert triggers["push"]["branches"] == ["main"]
+    assert triggers["push"]["paths"] == ["maintenance/candidates/*.json"]
 
 
 def test_workflow_has_no_catalog_write_permissions():
@@ -30,11 +34,17 @@ def test_workflow_has_no_catalog_write_permissions():
     assert wf["permissions"] == {"contents": "read", "actions": "write"}
 
 
-def test_workflow_runs_controller_and_dispatches_single_mutation():
+def test_workflow_runs_controller_and_dispatches_candidate_bound_mutation():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "python -m tools.openva.autonomous_growth_controller" in text
-    assert "promotion_plan_mode=machine-provisional-from-queue" in text
+    # eligibility is recomputed (never trusting the stored state) and each
+    # eligible candidate carries its bound path
+    assert "candidate_activation collect-eligible" in text
+    # the controller-selected candidate is dispatched with its full binding
+    assert "promotion_plan_mode=candidate-bound" in text
     assert "max_promotion_actions_per_pr=1" in text
+    for field in ("candidate_id", "candidate_path", "content_digest", "selected_vendor", "candidate_origin"):
+        assert field in text
     assert "gh workflow run" in text
     # gate: dispatch only happens when the controller authorises the cycle
     assert "env.GROWTH_PROCEED == 'true'" in text

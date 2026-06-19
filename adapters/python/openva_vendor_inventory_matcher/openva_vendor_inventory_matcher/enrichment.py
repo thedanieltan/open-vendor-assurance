@@ -36,7 +36,7 @@ from openva_vendor_inventory_matcher.core import (
     match_candidates,
     normalize_domain,
     normalize_name,
-    select_match,
+    select_with_legal_fallback,
 )
 
 # Canonical source-type -> human label, used only to phrase machine-state notes.
@@ -91,28 +91,38 @@ def match_identity(
     domain: str | None,
     business_entity_name: str | None,
     registration_number: str | None,
+    legal_by_registration: dict[str, Any] | None = None,
+    legal_by_id: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], Any]:
     """Resolve one identity through the shared core. Returns (match dict, selected).
 
-    This is the *snapshot-grade* identity matcher: it matches on domain and name
-    only. Status, confidence, method, and the candidate set come verbatim from the
-    core matcher; ``ambiguous`` is never collapsed into ``matched`` and a weak
-    identity stays ``no_match``.
+    Matches on domain and name, then — via the shared
+    :func:`~openva_vendor_inventory_matcher.core.select_with_legal_fallback` authority
+    (the same one the pack matcher uses) — falls back to a registration-number /
+    legal-entity resolution when ``legal_by_registration`` / ``legal_by_id`` are
+    supplied. Status, confidence, method, and the candidate set come from the core
+    matcher; ``ambiguous`` is never collapsed into ``matched`` and a weak identity
+    stays ``no_match``.
 
-    ``registration_number`` is accepted for signature parity with the shared
-    identity contract but is **not** used here: registration-number / legal-entity
-    resolution is a pack-backed capability (``MatcherIndex.enrich_row``) that
-    depends on legal-entity data the agent-export snapshot does not carry. A surface
-    that has that data (the match service over a catalogue pack) runs its own
-    capability-aware matcher and feeds the result to :func:`assemble_enrichment`;
-    the snapshot-backed MCP surface, which has no legal-entity data, does not. This
-    is the honest parity boundary: the *projection* (filtering, ranking, notes) is
-    shared and identical; the *matcher capability* follows the data each surface holds.
+    Registration-number matching is therefore **capability-aware by data, not by
+    transport**: a surface that supplies legal-entity indexes (the MCP snapshot now
+    carries them per vendor export; the match service builds them from the pack)
+    matches a registration-only row; with no legal-entity data the indexes are empty
+    and a registration-only row stays ``no_match``. The projection (filtering,
+    ranking, notes) is shared via :func:`assemble_enrichment` regardless.
     """
     domain_normalized = normalize_domain(domain)
     name_normalized = normalize_name(vendor_name) or normalize_name(business_entity_name)
     candidates = match_candidates(vendors, domain_normalized, name_normalized)
-    selected = select_match(candidates)
+    vendors_by_id = {vendor.vendor_id: vendor for vendor in vendors}
+    selected, _resolution = select_with_legal_fallback(
+        vendors_by_id,
+        candidates,
+        {"registration_number": registration_number or "", "jurisdiction": ""},
+        by_registration=legal_by_registration or {},
+        by_id=legal_by_id or {},
+        contracting_by_key={},
+    )
     status = classify(candidates, selected)
     match = {
         "status": status,
@@ -261,15 +271,16 @@ def enrich_identity(
     registration_number: str | None = None,
     source_types: list[str] | None = None,
     project_source: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+    legal_by_registration: dict[str, Any] | None = None,
+    legal_by_id: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Snapshot-grade enrichment: match on domain/name, then assemble the result.
+    """Enrichment for surfaces that match via :func:`match_identity` (the MCP tool).
 
-    Convenience wrapper for surfaces whose only matcher is the snapshot identity
-    matcher (the MCP ``enrich_inventory`` tool). It runs :func:`match_identity` and
-    feeds the result to :func:`assemble_enrichment`. Surfaces with a richer,
-    capability-aware matcher (the match service's pack-backed
-    ``MatcherIndex.enrich_row``) call :func:`assemble_enrichment` directly with their
-    own match decision so registration-number / legal-entity matches are preserved.
+    Runs :func:`match_identity` (domain/name, plus the shared registration-number
+    fallback when ``legal_by_registration`` / ``legal_by_id`` are supplied) and feeds
+    the result to :func:`assemble_enrichment`. Surfaces with their own capability-aware
+    matcher (the match service's pack-backed ``MatcherIndex.enrich_row``) call
+    :func:`assemble_enrichment` directly with their own match decision.
     """
     match, selected = match_identity(
         vendors,
@@ -277,6 +288,8 @@ def enrich_identity(
         domain=domain,
         business_entity_name=business_entity_name,
         registration_number=registration_number,
+        legal_by_registration=legal_by_registration,
+        legal_by_id=legal_by_id,
     )
     return assemble_enrichment(
         match,

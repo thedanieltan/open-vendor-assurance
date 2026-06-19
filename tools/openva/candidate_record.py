@@ -128,6 +128,26 @@ def compute_evidence_digest(evidence_references: list[dict[str, Any]]) -> str:
     return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
+def compute_candidate_content_digest(record: dict[str, Any]) -> str:
+    """SHA-256 over the canonical JSON of the *whole* candidate record.
+
+    This is the binding digest carried through the candidate-activation path
+    (controller decision -> dispatch -> mutation). It covers the full record
+    content, so any post-decision mutation of the persisted candidate — a
+    changed source, a forged ``eligibility_state``, an altered identity —
+    changes the digest and fails the binding closed. SHA-256 only (bot
+    constitution); stable under key ordering and absent/None fields so an
+    unchanged record always hashes identically.
+    """
+    canonical = json.dumps(
+        _canonical(dict(record)),
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    )
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 def evaluate_eligibility(
     vendor_identity_candidate: dict[str, Any],
     source_candidates: list[dict[str, Any]],

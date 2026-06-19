@@ -32,7 +32,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from tools.openva import bot_queue, work_priority
+from tools.openva import bot_queue, vendor_resolution, work_priority
 
 GROWTH_LANE = "catalog_growth_promotion"
 GROWTH_WORK_CLASS = "machine_provisional_growth"
@@ -79,7 +79,34 @@ def decide_cycle(
     if candidate is None:
         return _result(False, "no_eligible_candidate", None, queue_decision, capacity)
 
-    return _result(True, "growth_cycle_authorised", candidate, queue_decision, capacity)
+    # WP-OPENVA-CANDIDATE-ACTIVATION-01: bind the selected candidate before it
+    # may proceed. Recompute eligibility and identity from the persisted record
+    # via the one canonical evaluator (never trusting the stored
+    # eligibility_state) and carry the candidate_id / candidate_path /
+    # content_digest / origin / selected_vendor through to the downstream
+    # promotion mutation. Any mismatch fails this cycle closed; the identity is
+    # never re-derived later from a separate queue.
+    binding = vendor_resolution.evaluate_persisted_candidate(
+        candidate, candidate_path=candidate.get("candidate_path")
+    )
+    if not binding.eligible:
+        return _result(
+            False,
+            "candidate_eligibility_mismatch",
+            candidate,
+            queue_decision,
+            capacity,
+            mismatch_reasons=binding.reasons,
+        )
+
+    return _result(
+        True,
+        "growth_cycle_authorised",
+        candidate,
+        queue_decision,
+        capacity,
+        binding=binding.binding(),
+    )
 
 
 def _result(
@@ -88,20 +115,29 @@ def _result(
     candidate: dict[str, Any] | None,
     queue_decision: dict[str, Any],
     capacity: dict[str, Any] | None = None,
+    *,
+    binding: dict[str, Any] | None = None,
+    mismatch_reasons: tuple[str, ...] = (),
 ) -> dict[str, Any]:
-    return {
+    result = {
         "schema_version": "0.1.0",
         "report_type": "autonomous_growth_cycle_decision",
         "proceed": proceed,
         "reason": reason,
         "max_vendors_this_cycle": MAX_VENDORS_PER_CYCLE if proceed else 0,
         "selected_candidate_id": (candidate or {}).get("candidate_id"),
+        # The bound candidate identity carried to the candidate-bound promotion
+        # dispatch (None unless the cycle is authorised and binding succeeded).
+        "selected_candidate": binding,
         "queue_decision": queue_decision["decision"],
         "queue_reasons": queue_decision["reasons"],
         "state_authoritative": queue_decision.get("state_authoritative"),
         "capacity_decision": (capacity or {}).get("decision"),
         "not_advice": True,
     }
+    if mismatch_reasons:
+        result["candidate_mismatch_reasons"] = list(mismatch_reasons)
+    return result
 
 
 def main(argv: list[str] | None = None) -> int:

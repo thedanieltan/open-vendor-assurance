@@ -387,6 +387,120 @@ def merge_candidate(persisted: dict[str, Any], incoming: dict[str, Any]) -> dict
     )
 
 
+@dataclass(frozen=True)
+class PersistedCandidateDecision:
+    """Result of recomputing a persisted candidate's eligibility and identity.
+
+    A persisted candidate record is never trusted merely because it exists in
+    the repository. This recomputes eligibility from the record's own fields via
+    the one canonical evaluator (``candidate_record.evaluate_eligibility`` — the
+    same evaluator the resolver used to write it; not a second or simplified
+    one) and reproduces the deterministic ``candidate_id`` and
+    ``evidence_digest``. Any divergence between the recomputed and persisted
+    state fails closed (``consistent == False``); a candidate may proceed only
+    when it is internally consistent *and* recomputes to ``eligible``.
+    """
+
+    candidate_id: str
+    candidate_path: str | None
+    content_digest: str
+    origin: str
+    selected_vendor: str
+    persisted_state: str
+    recomputed_state: str
+    consistent: bool
+    eligible: bool
+    reasons: tuple[str, ...]
+
+    def binding(self) -> dict[str, Any]:
+        """The identity binding carried unchanged through every downstream stage."""
+        return {
+            "candidate_id": self.candidate_id,
+            "candidate_path": self.candidate_path,
+            "content_digest": self.content_digest,
+            "origin": self.origin,
+            "selected_vendor": self.selected_vendor,
+        }
+
+
+def _persisted_is_new_vendor(record: dict[str, Any]) -> bool:
+    # Mirror merge_candidate: a catalog_discovery candidate is a new vendor.
+    # is_new_vendor only changes the outcome when matches_existing_vendor_id is
+    # set (rejected_duplicate); an eligible record is unaffected by the choice.
+    return record.get("candidate_origin") == "catalog_discovery"
+
+
+def evaluate_persisted_candidate(
+    record: dict[str, Any], *, candidate_path: str | None = None
+) -> PersistedCandidateDecision:
+    """Recompute a persisted candidate's eligibility and identity; fail closed.
+
+    Reuses the one canonical evaluator. Recomputes the deterministic candidate
+    id and evidence digest and the eligibility state and compares each against
+    the persisted record. The persisted ``eligibility_state`` is never trusted.
+    This is the eligibility-reproducibility gate the candidate-intake spine
+    deferred to its consuming job; it does not bypass the strict-growth or
+    source-preflight policy the downstream promotion/mutation lane still applies.
+    """
+    reasons: list[str] = []
+    # The controller may carry a transient ``candidate_path`` routing key on the
+    # record; it is not part of the candidate schema and must not affect schema
+    # validity or the content digest (which binds the on-disk record).
+    if candidate_path is None:
+        candidate_path = record.get("candidate_path")
+    record = {k: v for k, v in record.items() if k != "candidate_path"}
+    identity = record.get("vendor_identity_candidate") or {}
+    origin = str(record.get("candidate_origin") or "")
+    selected_vendor = str(identity.get("vendor_id_candidate") or "")
+    persisted_state = str(record.get("eligibility_state") or "")
+    content_digest = candidate_record.compute_candidate_content_digest(record)
+    candidate_id = str(record.get("candidate_id") or "")
+
+    for err in candidate_record.validate_candidate(record):
+        reasons.append(f"schema_invalid:{err}")
+
+    # 1. deterministic identity reproduces from origin + origin_reference.
+    recomputed_id = candidate_record.compute_candidate_id(
+        origin, str(record.get("origin_reference") or "")
+    )
+    if recomputed_id != candidate_id:
+        reasons.append(f"candidate_id_mismatch:{candidate_id}!={recomputed_id}")
+
+    # 2. evidence digest reproduces from the evidence references.
+    recomputed_digest = candidate_record.compute_evidence_digest(
+        record.get("evidence_references") or []
+    )
+    persisted_digest = str(record.get("evidence_digest") or "")
+    if recomputed_digest != persisted_digest:
+        reasons.append(
+            f"evidence_digest_mismatch:{persisted_digest}!={recomputed_digest}"
+        )
+
+    # 3. eligibility recomputes via the canonical evaluator (state never trusted).
+    recomputed_state, _elig_reasons = candidate_record.evaluate_eligibility(
+        identity,
+        record.get("source_candidates") or [],
+        is_new_vendor=_persisted_is_new_vendor(record),
+    )
+    if recomputed_state != persisted_state:
+        reasons.append(f"eligibility_mismatch:{persisted_state}!={recomputed_state}")
+
+    consistent = not reasons
+    eligible = consistent and recomputed_state == candidate_record.ELIGIBLE_STATE
+    return PersistedCandidateDecision(
+        candidate_id=candidate_id,
+        candidate_path=candidate_path,
+        content_digest=content_digest,
+        origin=origin,
+        selected_vendor=selected_vendor,
+        persisted_state=persisted_state,
+        recomputed_state=recomputed_state,
+        consistent=consistent,
+        eligible=eligible,
+        reasons=tuple(reasons),
+    )
+
+
 class _FileLock:
     """Advisory exclusive lock guarding the whole read-merge-write transaction.
 
