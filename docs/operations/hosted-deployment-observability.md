@@ -130,8 +130,14 @@ deliberate low instance/concurrency cap **+** edge rate limiting **+** a
   low-cardinality — client identity is reduced to an opaque key class, never a raw
   identifier, and never a prohibited field.
 - **Scale-bounded by design**: instance/concurrency caps and the per-job execution
-  timeout bound worst-case spend even before an alert fires; the alert chain is the
-  backstop, not the only control.
+  timeout bound the *rate* of worst-case spend even before an alert fires; the alert
+  chain is the backstop, not the only control.
+- **Budget-alert lag is real**: provider budget alerts can lag (often hours) and the
+  Cloud Run instance cap is soft (briefly exceedable on spikes), so the kill-switch
+  is not instantaneous. The accepted worst-case overrun window
+  (`instance_cap × cost-rate × (alert lag + kill-switch exec time)`) is quantified
+  in [`hosted-deployment-cost-envelope.md`](hosted-deployment-cost-envelope.md); the
+  instance cap + edge rate limit are what actually bound it.
 
 ## 7. Dashboards and SLO-breach → kill-switch
 
@@ -141,7 +147,7 @@ A single maintainer dashboard (future) would surface:
 | --- | --- |
 | **Availability & probes** | `/healthz` + `/readyz` success rate, current SLO burn |
 | **Cached read latency** | `/v1` cached p50/p95/p99 vs the 800 ms line |
-| **Verify pipeline** | Completion rate, p95 duration, state distribution (`received`/`queued`/`executing`/`completed`/`failed`/`expired`) |
+| **Verify pipeline** | Completion rate, p95 duration, state distribution (`received`/`queued`/`executing`/`completed`/`failed`); expiry is time-based (`410` after `expires_at`), not a state |
 | **Queue health** | Depth + oldest-age gauges with the saturation threshold marked |
 | **Error budget** | Rolling error rate vs the 1% line and remaining monthly budget |
 | **Cost & abuse** | Spend vs ceiling, budget-alert state, throttled-client count |

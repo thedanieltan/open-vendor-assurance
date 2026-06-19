@@ -1,10 +1,15 @@
 # ADR-0006: Hosted Public-Read Deployment Architecture
 
-- **Status:** Proposed — becomes Accepted when a maintainer accepts the deployment
-  baseline and merges this ADR. **No production infrastructure is provisioned, no
-  provider is accepted, no DNS/TLS is configured, no production secret exists, and
-  no hosted OpenVA endpoint is live.** This ADR records *how* the already-accepted
-  hosted posture should be deployed; it does not itself deploy anything.
+- **Status:** Proposed — a recorded, **non-authoritative proposal** (see the ADR
+  lifecycle in [`README.md`](README.md)). Merging the PR that introduces this ADR
+  records the proposal but does **not** make it authoritative and authorises no
+  deployment. It becomes Accepted only through a subsequent **status-change PR** in
+  which a maintainer accepts the deployment baseline and the external decisions
+  (that PR flips this Status and the index row to Accepted and updates the
+  acceptance-count test). **No production infrastructure is provisioned, no provider
+  is accepted, no DNS/TLS is configured, no production secret exists, and no hosted
+  OpenVA endpoint is live.** This ADR records *how* the already-accepted hosted
+  posture should be deployed; it does not itself deploy anything.
 - **Date:** 2026-06-19 (proposed)
 - **Decision owners:** OpenVA maintainers. Provider, region, domain, credentials,
   spend, production permissions, and public positioning remain human authority
@@ -150,8 +155,11 @@ roll back to the prior immutable image, keep the read-only catalogue available.
 
 ## Sign-off
 
-- [ ] Maintainer accepts the deployment architecture and the recommended baseline,
-      and the external decisions in the decision table, by merging this ADR
-      (flips Status to Accepted and the README row to Accepted).
+- [ ] Maintainer accepts the deployment architecture, the recommended baseline, and
+      the external decisions in the decision table via a **status-change PR** that
+      flips this ADR's Status and the README index row to Accepted (and updates the
+      acceptance-count test). Merging the introducing PR only *records* this
+      proposal.
 
-Until then this ADR is **Proposed** and authorises no provisioning.
+Until that status-change PR, this ADR is **Proposed**, non-authoritative, and
+authorises no provisioning.

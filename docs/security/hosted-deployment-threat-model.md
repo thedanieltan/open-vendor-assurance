@@ -11,15 +11,21 @@ live. Output stays non-advisory and public-source-only.
 
 ## Trust boundaries
 
-1. **Public client → public API.** Untrusted input (vendor identities, batch
-   rows). Validated, bounded, rate-limited; bodies never logged.
-2. **API → worker (queue).** Internal; messages carry `job_id` only, no submitted
-   content.
-3. **Worker → vendor websites (egress).** Untrusted third parties. All egress via
+1. **Public client → edge → public API.** Untrusted input (vendor identities,
+   batch rows) arrives only through the rate-limiting edge; the origin's ingress is
+   restricted to the edge so direct ingress cannot bypass it. Validated, bounded;
+   bodies never logged.
+2. **API → worker (queue).** Internal; messages carry `job_id` only — **no
+   submitted content and no request envelope**.
+3. **API/worker → transient request & result stores.** The submitted input lives
+   in a transient request envelope (keyed by `job_id`) and the result in a
+   transient result blob; both are encrypted at rest, access-controlled by workload
+   identity (API writes, worker reads), and TTL-deleted.
+4. **Worker → vendor websites (egress).** Untrusted third parties. All egress via
    `build_safe_verify_fetcher` bound to vendor authority (see ssrf-fetch-boundary).
-4. **Service → GitHub (candidate write-back).** Privileged but discovery-only:
+5. **Service → GitHub (candidate write-back).** Privileged but discovery-only:
    opens candidate-intake PRs; no merge, no `data/**` write.
-5. **Service → secret store / cloud APIs.** Workload identity for cloud APIs; the
+6. **Service → secret store / cloud APIs.** Workload identity for cloud APIs; the
    GitHub App key is a stored secret (GitHub Apps cannot use OIDC).
 
 ## Threats and mitigations
@@ -28,8 +34,13 @@ live. Output stays non-advisory and public-source-only.
 | --- | --- |
 | Arbitrary-URL fetch / SSRF | No endpoint accepts a caller URL; all egress through `build_safe_verify_fetcher`, DNS-pinned, private/loopback rejected, same-authority redirects, bounded bytes + deadline. SSRF-negative tests gate the transport slice. |
 | Portal / CAPTCHA / WAF / paywall bypass | Never attempted; gated pages recorded as access-state facts only (public-sources-only policy). |
-| Submitted-content leakage (logs/traces/metric labels) | `prohibited_telemetry_fields` (request bodies, vendor identity, inventory rows, uploaded inventory, tool arguments, candidate URLs) are never emitted; job records are minimised (`additionalProperties: false`); errors are generic with a `job_id` correlation id only. |
-| Inventory persistence beyond the request | Uploaded inventory is processed in memory only; only the minimised job record + aggregate metrics persist; job + result TTL-deleted (default 24h). |
+| Submitted-content leakage (logs/traces/metric labels) | `prohibited_telemetry_fields` (request bodies, vendor identity, inventory rows, uploaded inventory, tool arguments, candidate URLs, **`job_token`**) are never emitted; job records are minimised (`additionalProperties: false`); errors are generic with a `job_id` correlation id only. |
+| Submitted input lost / unavailable to the worker | The worker reconstructs the request from the **transient request envelope** keyed by `job_id` (the queue carries no content). The envelope is the single transient home for submitted input. |
+| Transient request/result store exposure | Envelope + result blob encrypted at rest; access-controlled by workload identity (API writes, worker reads); deleted on the terminal transition with an object-lifecycle TTL backstop; never published, never in canonical records. |
+| Inventory persistence beyond the request | Uploaded inventory lives only in the transient envelope, deleted on completion/failure/abandonment (+ TTL backstop); only the minimised job record + aggregate metrics persist. |
+| Result-access abuse / IDOR via `job_id` | `job_id` is a loggable correlation id, **not** an access credential. Result polling/retrieval requires the one-time high-entropy `job_token` capability, never logged and stored only as `job_token_digest`. Guessing `job_id` does not grant access. |
+| Rate-limit / edge bypass | The origin's ingress is restricted to the edge (e.g. `internal-and-cloud-load-balancing`); direct origin requests are refused, so the edge rate limit cannot be bypassed. |
+| Expired-job access | After `expires_at` the API returns a content-free `410 Gone` even before physical TTL deletion completes (deletion is asynchronous); no stale result is served. |
 | Oversized / abusive request | Body cap, row cap, max-active-jobs, per-job timeout, edge + app rate limiting; rejected before work. |
 | Denial of service / cost blowout | Instance/concurrency cap + rate limit + budget-alert kill-switch (no vendor hard cap exists); queue saturation sheds verify load, never grows unbounded. |
 | Catalogue mutation via the hosted path | The service only *proposes* candidates via the existing ingress; no `data/**` or `main` write; discovery ≠ decision ≠ merge. |

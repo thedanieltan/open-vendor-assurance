@@ -2,11 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/hosted-job-record.schema.json",
   "title": "OpenVA Hosted Job Record",
-  "description": "Operational metadata for one hosted resolver job in the durable job store. Data-minimised and transient by design: it carries NO uploaded inventory content, NO vendor identity strings, and NO request bodies — only a request digest, a row count, lifecycle state, and a TTL. It is deleted on expiry. Non-advisory: it never carries a verdict, score, risk level, approval, or suitability. additionalProperties is false so a leaked inventory or identity field fails validation. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+  "description": "Operational metadata for one hosted resolver job in the durable job store. Data-minimised and transient by design: it carries NO uploaded inventory content, NO vendor identity strings, and NO request bodies — only a request digest, a row count, lifecycle state, and a TTL. The submitted request lives separately in a transient request envelope (referenced by request_ref) and the result lives in a transient result blob (referenced by result_ref); both are TTL-deleted. Expiry is time-based on expires_at (the API returns 410 once now >= expires_at); there is no persisted 'expired' state. Non-advisory: it never carries a verdict, score, risk level, approval, or suitability. additionalProperties is false so a leaked inventory or identity field fails validation. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
   "type": "object",
   "required": [
     "schema_version",
     "job_id",
+    "job_token_digest",
     "state",
     "freshness_mode",
     "request_digest",
@@ -20,15 +21,25 @@
     "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
     "job_id": {
       "type": "string",
-      "description": "Opaque correlation id (UUIDv4). Carries no submitted content; safe to log.",
+      "description": "Opaque correlation id (UUIDv4). Carries no submitted content and is NOT an access credential; safe to log. Result access requires the separate job_token capability (stored here only as job_token_digest).",
       "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
     },
-    "state": { "enum": ["received", "queued", "executing", "completed", "failed", "expired"] },
+    "job_token_digest": {
+      "type": "string",
+      "description": "SHA-256 of the high-entropy job_token capability returned once at creation. The token gates result polling/retrieval; it is never logged and never stored in plaintext — only this digest persists for verification.",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "state": { "enum": ["received", "queued", "executing", "completed", "failed"] },
     "freshness_mode": { "enum": ["cached", "verify"] },
     "request_digest": {
       "type": "string",
-      "description": "SHA-256 over the canonical request for idempotency/dedup only. The request itself is never stored. SHA-256 only (bot constitution).",
+      "description": "SHA-256 over the canonical request for idempotency/dedup only. The request itself is never stored in this record. SHA-256 only (bot constitution).",
       "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "request_ref": {
+      "type": ["string", "null"],
+      "description": "Opaque pointer to the TRANSIENT request envelope (submitted input) the worker reads, or null once the envelope is deleted (on completion/failure/abandonment/TTL). Never the input itself.",
+      "maxLength": 256
     },
     "row_count": { "type": "integer", "minimum": 0, "maximum": 100000 },
     "result_ref": {

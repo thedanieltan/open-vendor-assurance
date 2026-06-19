@@ -8,18 +8,23 @@ Contract: [`contracts/hosted-deployment.yaml`](contracts/hosted-deployment.yaml)
 
 **Decision-only.** Nothing here is provisioned and no hosted endpoint is live.
 OpenVA stays public-source-only and metadata-first; it does not provide legal or
-vendor-risk advice, handles no private or gated or customer-specific material, and
-stores no raw vendor documents.
+vendor-risk advice, never handles private or gated source material, and stores no
+raw vendor documents. The hosted service **transiently processes the
+customer-specific vendor identities a caller submits** but never publishes, logs,
+retains, reuses, or incorporates that input into canonical catalogue records.
 
 ## Components
 
 | Component | Responsibility | Hosted boundary |
 | --- | --- | --- |
-| `public_api` | FastAPI `/v1` read + enrich + `/healthz` + `/readyz`; cached mode answers from the pinned pack with no egress | Non-advisory headers on every response; CORS allow-list; rate limited |
+| `edge_gateway` | HTTPS load balancer + rate limiting (e.g. Cloud Armor) in front of the API | Origin ingress restricted to the edge so direct ingress cannot bypass rate limits; CORS allow-list |
+| `public_api` | FastAPI `/v1` read + enrich + `/healthz` + `/readyz`; cached mode answers from the pinned pack with no egress | Non-advisory headers on every response; reachable only via the edge |
 | `resolver_app` | The already-merged `vendor_resolution` core wrapped by the transport; no second resolver | Writes nothing to `data/**` or `main` |
-| `async_worker` | Executes `verify`-mode jobs: bounded SSRF-safe fetch + discovery | Egress only via `build_safe_verify_fetcher` bound to vendor authority |
-| `queue` | Dispatches jobs API→worker with retry/backoff | Bounded concurrency; no submitted content in messages (carries `job_id`) |
-| `durable_job_store` | Operational job/result metadata, TTL-deleted | `hosted-job-record.schema.json`; minimised; never uploaded content |
+| `async_worker` | Executes `verify`-mode jobs: re-reads the request envelope, then bounded SSRF-safe fetch + discovery | Egress only via `build_safe_verify_fetcher` bound to vendor authority |
+| `queue` | Dispatches jobs API→worker with retry/backoff | Carries `job_id` only — **no submitted content, no envelope** |
+| `transient_request_store` | Holds the submitted-input envelope between API receipt and worker execution, keyed by `job_id` | Encrypted at rest; workload-identity least privilege (API writes, worker reads); deleted on terminal + TTL backstop |
+| `durable_job_store` | Operational job metadata, TTL-deleted | `hosted-job-record.schema.json`; minimised; never uploaded content |
+| `transient_result_store` | Holds the result blob (`result_ref`), retrieved only with the `job_token` capability | Transient; TTL/expiry-deleted; never indexed by submitted content |
 | `static_cached_fallback` | GitHub Pages exports + static MCP + pinned pack | Canonical, reproducible, **independent of the host**; always-on floor |
 | `candidate_ingress_boundary` | Proposes discovered candidates into the existing PR-bound lifecycle | Discovery only; no decision/merge authority |
 | `health_readiness` | `/healthz` (liveness), `/readyz` (200 only when pack loaded + integrity verified) | Unauthenticated; no content |
@@ -31,16 +36,23 @@ stores no raw vendor documents.
 `client → public_api → resolver_app (pinned pack) → response (not_advice, from_cache labelled)`.
 
 **Live verify (`freshness_mode: verify`)** — asynchronous:
-1. `public_api` validates limits, computes `request_digest`, creates a `received`
-   job (idempotent on digest), enqueues it, returns the `job_id`.
-2. `async_worker` dequeues → `executing` → SSRF-safe fetch/discovery via the
-   resolver → writes the transient result, sets `completed`/`failed`.
-3. `client` polls `job_id`; on `completed`, reads the result via `result_ref`.
+1. `public_api` validates limits, computes `request_digest`, writes the submitted
+   input to `transient_request_store` (referenced by `request_ref`), creates a
+   `received` job (idempotent on digest), enqueues **only the `job_id`**, and
+   returns the `job_id` plus a one-time `job_token` capability.
+2. `async_worker` dequeues the `job_id` → `executing` → **re-reads the request
+   envelope** (workload identity) → SSRF-safe fetch/discovery via the resolver →
+   writes the transient result, sets `completed`/`failed`, and **deletes the
+   request envelope**.
+3. `client` polls with `job_id` + `job_token`; on `completed`, retrieves the
+   result via `result_ref`. After `expires_at` the API returns `410 Gone`; the
+   record, envelope, and result blob are deleted by TTL/lifecycle.
 4. Discovered candidates are *proposed* through `candidate_ingress_boundary` →
    existing durable ingress → PR lifecycle. The hosted service never merges.
 
-**Degraded** — store/queue/worker unavailable → `public_api` serves cached/static
-labelled results; verify returns `queued`/`rate_limited`/cached, never stale-as-live.
+**Degraded** — request/result store, queue, or worker unavailable → `public_api`
+serves cached/static labelled results; verify returns `queued`/`rate_limited`/cached,
+never stale-as-live.
 
 ## Separation of duties
 

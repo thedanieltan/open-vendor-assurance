@@ -11,8 +11,11 @@ provisioned, no provider is accepted, no DNS/TLS is configured, no production
 secret exists, and no hosted OpenVA endpoint is live. OpenVA is a public-source-only,
 metadata-first registry of vendor-published assurance references; it does not
 provide legal, compliance, or vendor-risk advice, never handles private or gated
-or customer-specific material, and stores no raw vendor documents. Those limits
-are unchanged by hosting.
+source material, and stores no raw vendor documents. The hosted service
+**transiently processes the customer-specific vendor identities a caller submits**
+but never publishes, logs, retains, reuses, or incorporates that input into
+canonical catalogue records — the input is held only in a transient, TTL-deleted
+request envelope (§7). Those limits are unchanged by hosting.
 
 The workload is a stateless FastAPI read API (`services/openva_match_service/`) plus
 an asynchronous `verify`-mode worker doing bounded, SSRF-safe outbound fetches,
@@ -60,21 +63,28 @@ standard OCI container with a small adapter at the queue/store boundary.
             ┌─────────────── static/cached fallback (canonical, always-on) ───────────────┐
             │  GitHub Pages exports + static MCP + pinned pack — independent of the host    │
             └──────────────────────────────────────────────────────────────────────────────┘
- client ─▶ public API (FastAPI /v1, /healthz, /readyz)
+ client ─▶ edge gateway (HTTPS LB + rate limiting; origin reachable only via edge)
+              ▼
+           public API (FastAPI /v1, /healthz, /readyz)
               │  cached mode: answer from pinned pack (no egress)
-              │  verify mode: create job ──▶ queue ──▶ async worker
-              │                                          │  SSRF-safe fetch (vendor authority)
+              │  verify mode: write input ─▶ transient request store (envelope, encrypted, TTL)
+              │               create job (job_id + one-time job_token) ─▶ queue (job_id only) ─▶ async worker
+              │                                          │  re-read envelope ─▶ SSRF-safe fetch (vendor authority)
               │                                          ▼
-              │                              durable job/result store (TTL, minimised)
-              │  poll job ◀───────────────────────────── (state, result_ref)
+              │   durable job store (TTL, minimised) + transient result store (result_ref, TTL)
+              │  poll (job_id + job_token) ◀──────────── (state, result_ref); 410 Gone after expires_at
               ▼
          candidate-ingress boundary ──▶ existing PR-bound candidate lifecycle (discovery only)
          admin/kill-switch ──▶ disable verify + ingress; static layer keeps serving
 ```
 
-Components (`topology_components` in the contract): `public_api`, `resolver_app`,
-`async_worker`, `queue`, `durable_job_store`, `static_cached_fallback`,
-`candidate_ingress_boundary`, `health_readiness`, `admin_kill_switch`. Detail in
+Components (`topology_components` in the contract): `edge_gateway`, `public_api`,
+`resolver_app`, `async_worker`, `queue`, `transient_request_store`,
+`durable_job_store`, `transient_result_store`, `static_cached_fallback`,
+`candidate_ingress_boundary`, `health_readiness`, `admin_kill_switch`. The worker
+reconstructs the request from the transient envelope by `job_id`; the queue and the
+durable record never carry submitted input. Result access requires the `job_token`
+capability (`job_id` is a loggable correlation id, not a credential). Detail in
 [`hosted-deployment-architecture.md`](hosted-deployment-architecture.md).
 
 ## 4. Domain, DNS, and TLS
@@ -85,8 +95,12 @@ Components (`topology_components` in the contract): `public_api`, `resolver_app`
   domain is maintainer-owned.
 - **Change boundary:** DNS and the domain are **maintainer-controlled**. This
   package configures nothing.
-- **Certificates:** provider-managed certificates on the maintainer host
-  (automatic renewal); no private key handling in the repo.
+- **Edge + TLS:** a public **HTTPS Application Load Balancer with rate limiting**
+  (e.g. Cloud Armor) terminates TLS on the maintainer host and is the only path to
+  the origin — the container service's ingress is restricted to the edge
+  (`internal-and-cloud-load-balancing` on Cloud Run) so **direct origin ingress
+  cannot bypass** the rate limits. Provider-managed certificate (auto-renew); no
+  private key in the repo. This edge adds a fixed monthly cost floor (§11).
 - **DNS rollback:** keep the static GitHub Pages site authoritative; a hosted
   failure is recovered by removing the API/MCP records and pointing users back to
   the static layer. **No DNS change is made in this WP.**
@@ -124,26 +138,43 @@ Components (`topology_components` in the contract): `public_api`, `resolver_app`
 
 ## 7. Persistence and retention
 
-- **Job record:** operational metadata only — `job_id`, `state`, `freshness_mode`,
-  `request_digest` (SHA-256, for idempotency; the request is never stored),
+Three stores, two of them transient. Full lifecycle:
+[`hosted-deployment-job-lifecycle.md`](hosted-deployment-job-lifecycle.md).
+
+- **Transient request envelope (`transient_request_store`):** the submitted input
+  the worker must process. It is **not** carried in the queue (which holds `job_id`
+  only) and **not** in the durable record. Written by the API at `received`, keyed
+  by `job_id` (`request_ref`), encrypted at rest, read by the worker via workload
+  identity (least privilege), and **deleted on the terminal transition** with an
+  object-lifecycle TTL as a backstop. Bounded by the existing upload/row caps.
+- **Durable job record (`durable_job_store`):** operational metadata only —
+  `job_id`, `job_token_digest`, `state`, `freshness_mode`, `request_digest`
+  (SHA-256, idempotency; the request itself is not stored here), `request_ref`,
   `row_count`, `result_ref`, `error_code`, timestamps, `expires_at`, `not_advice`.
   Schema: [`schemas/openva/hosted-job-record.schema.json`](../../schemas/openva/hosted-job-record.schema.json)
   (`additionalProperties: false`, so a leaked inventory/identity field fails
-  validation). States and transitions: [`hosted-deployment-job-lifecycle.md`](hosted-deployment-job-lifecycle.md).
-- **Result blob:** the resolver result returned to the caller, also transient and
-  TTL-deleted; referenced by `result_ref`, never indexed by submitted content.
+  validation).
+- **Transient result blob (`transient_result_store`):** the resolver result,
+  referenced by `result_ref`, deleted on TTL/expiry; never indexed by submitted
+  content.
+- **Result-access authorization:** `job_id` is a loggable correlation id and is
+  **not** a credential. A one-time high-entropy `job_token` capability (returned at
+  creation, never logged, stored only as `job_token_digest`) is required to poll/
+  retrieve the result.
 - **Idempotency:** keyed on `job_id`; a repeated identical request (same
-  `request_digest`) reuses the existing job rather than duplicating work.
-- **Expiry/deletion:** native store TTL (default 24h) deletes job + result; failed
-  jobs expire on the same TTL. **Operational records vs uploaded content:** only
-  the minimised job record + aggregate metrics persist; uploaded inventory content
-  is never persisted beyond in-memory processing.
+  `request_digest`) reuses the existing job (and issues a fresh `job_token`).
+- **Expiry/deletion:** **time-based on `expires_at`, not a persisted state.** Once
+  `now >= expires_at` the API returns a content-free **`410 Gone`** whether or not
+  physical deletion has run yet (store TTL is asynchronous). The record, the
+  request envelope, and the result blob are each deleted by their own native TTL
+  plus an object-lifecycle backstop; the result blob is not auto-deleted by the
+  record TTL. Only the minimised record + aggregate metrics persist; uploaded
+  content is never persisted beyond the transient envelope.
 - **Backup:** none required for transient data; the catalogue itself is the git
-  repo (already durable). Optional short-retention store snapshots are operational
-  only and carry no submitted content.
-- **Concurrency + recovery:** bounded concurrent jobs; a crashed worker leaves the
-  job in `queued`/`executing` and the TTL reaps it; retries are bounded
-  (`attempt`).
+  repo (already durable).
+- **Concurrency + recovery:** bounded concurrent jobs; a crashed/abandoned job
+  times out to `failed` (`execution_timeout`) or expires to `410` after
+  `expires_at`; retries are bounded (`attempt`) and re-read the same envelope.
 
 ## 8. Abuse and application security
 
@@ -151,10 +182,15 @@ Components (`topology_components` in the contract): `public_api`, `resolver_app`
   (`OPENVA_MAX_ROWS`), max active jobs (`OPENVA_MAX_ACTIVE_JOBS` — enforced in the
   transport slice), per-job execution timeout, and bounded outbound fetch
   (size/deadline) via the SSRF boundary.
-- **Rate limiting:** edge/gateway rate limiting plus app-level per-client limits;
-  abusive traffic is rejected before doing work.
+- **Rate limiting + edge:** a concrete edge (HTTPS load balancer + rate limiting,
+  e.g. Cloud Armor) plus app-level per-client limits; abusive traffic is rejected
+  before doing work. The origin's ingress is restricted to the edge so **direct
+  ingress cannot bypass** the limits (§4).
 - **CORS:** explicit allow-list; an empty allow-list is never treated as wildcard
   (mirrors the MCP transport posture).
+- **Result-access authorization:** results are retrieved with the one-time
+  `job_token` capability, not the `job_id`; the token is never logged and is stored
+  only as `job_token_digest`.
 - **Errors:** stable, generic external messages with an internal correlation id
   (`job_id`) that leaks no submitted content.
 - **CSV-formula-safe exports:** the existing formula-injection-safe export handling
@@ -194,19 +230,29 @@ Components (`topology_components` in the contract): `public_api`, `resolver_app`
 
 | Scenario | Cloud Run (baseline) | AWS Lambda | Azure ACA |
 | --- | --- | --- | --- |
-| Idle (~0 traffic) | ≈ `$0` compute (scale-to-zero) + cents storage | ≈ `$0` (ECR storage only) | ≈ `$0` within free grant |
+| Idle (~0 traffic) | edge LB fixed floor + ≈ `$0` compute (scale-to-zero) + cents storage | ≈ `$0` (ECR storage only) | edge floor + ≈ `$0` within free grant |
 | Normal (light/bursty) | `$0`–single-digit `$` (free tier likely covers) | `$0`–low `$` | `$0`–a few `$` (companions dominate) |
 | Abusive (hammered) | per-request scaling = real risk | **hard throttle** (reserved concurrency + gateway quota) | bounded by `maxReplicas` |
 
-- **Fixed vs variable:** baseline is almost entirely variable (scale-to-zero); the
-  companions (secret store, tiny job store, registry storage) are cents.
-- **Cost ceiling:** **no platform offers a hard spend cap.** The engineered ceiling
-  is: a deliberate low instance/concurrency cap **+** edge rate limiting **+** a
-  budget-alert → automation kill-switch. Detail + numbers to confirm:
+- **Fixed vs variable:** the compute is variable (scale-to-zero), but the **edge
+  HTTPS load balancer adds a fixed monthly floor** — so the baseline idle cost is
+  not ≈ `$0`; it is "edge floor + ≈ `$0` compute." The companions (secret store,
+  tiny stores, registry storage) are cents.
+- **Bounded spend rate, not a hard cap:** **no platform offers a hard spend cap,
+  and on Cloud Run `max-instances` is a soft cap that may be briefly exceeded
+  during traffic spikes** (and is complicated by traffic split across revisions).
+  So the design bounds the *rate* of spend, it does not purchase a ceiling: a
+  deliberately low instance/concurrency cap **+** the edge rate limit **+** a
+  budget-alert → automation kill-switch. Because budget alerts lag (often hours),
+  the **worst-case overrun** before the kill-switch fires is roughly
+  `instance_cap × per-instance cost-rate × (budget-alert lag + kill-switch exec
+  time)` — a bounded but non-zero window the maintainer must accept. (AWS Lambda's
+  reserved concurrency and ACA's `maxReplicas` are harder ceilings; Cloud Run's is
+  softer — a baseline trade-off.) Detail + numbers to confirm:
   [`hosted-deployment-cost-envelope.md`](hosted-deployment-cost-envelope.md).
 - **Maintainer-confirm before provisioning:** the spend ceiling value, the budget
-  alert threshold, and the exact free-tier/region rates (these shift; verify in the
-  provider calculator).
+  alert threshold, the edge/LB fixed cost, and the exact free-tier/region rates
+  (these shift; verify in the provider calculator).
 
 ## 12. Delivery and rollback
 

@@ -65,32 +65,79 @@ job_states:
   - executing
   - completed
   - failed
-  - expired
 terminal_states:
   - completed
   - failed
-  - expired
 transitions:
   received: [queued, failed]
-  queued: [executing, failed, expired]
+  queued: [executing, failed]
   executing: [completed, failed]
-  completed: [expired]
-  failed: [expired]
-  expired: []
+  completed: []
+  failed: []
 idempotency_key: job_id
 result_ttl_hours_default: 24
 
+# Expiry is NOT a persisted state. Expiry is time-based on expires_at: once
+# now >= expires_at the API returns a content-free 410 Gone, whether or not the
+# physical record has been deleted yet. Physical deletion (the job record, the
+# transient request envelope, and the result blob) is by store-native TTL plus an
+# object-lifecycle TTL backstop, and is not guaranteed instantaneous.
+expiry:
+  model: expires_at_then_410_then_delete
+  response_when_expired: "410 Gone (content-free)"
+  physical_deletion: store_native_ttl_plus_object_lifecycle
+  deletes:
+    - job_record
+    - transient_request_envelope
+    - result_blob
+  persisted_expired_state: false
+
+# The async data path. The worker reconstructs the request from a TRANSIENT
+# request envelope keyed by job_id; the queue and the job record never carry the
+# submitted input.
+request_envelope:
+  store: transient_request_store
+  carried_in_queue: false             # queue messages carry job_id only
+  carried_in_job_record: false        # the durable record stores only request_digest
+  encryption: at_rest
+  access: workload_identity_least_privilege   # API writes; worker reads
+  deleted_on: [completion, failure, abandonment, ttl]
+  max_size: existing_upload_and_row_caps      # OPENVA_MAX_UPLOAD_BYTES / OPENVA_MAX_ROWS
+
+# Result-access authorization. job_id is a loggable correlation id and is NOT an
+# access credential. A high-entropy job_token capability is returned once at job
+# creation and is required to poll/retrieve the result; it is never logged and
+# never stored in plaintext — only its SHA-256 digest (job_token_digest) persists.
+result_access:
+  correlation_id: job_id              # loggable; not a credential
+  capability: job_token               # returned once at creation; never logged
+  stored_as: job_token_digest         # sha256 of the capability only
+  result_store: transient_result_store
+
 # Service topology components (each is specified in the architecture doc).
 topology_components:
+  - edge_gateway                      # HTTPS load balancer + rate limiting in front of the API
   - public_api
   - resolver_app
   - async_worker
   - queue
+  - transient_request_store          # transient submitted-input envelope (keyed by job_id)
   - durable_job_store
+  - transient_result_store           # transient result blob (referenced by result_ref)
   - static_cached_fallback
   - candidate_ingress_boundary
   - health_readiness
   - admin_kill_switch
+
+# Edge architecture. Rate limiting requires a concrete edge in front of the
+# service; on the baseline (Cloud Run) that is an external HTTPS Application Load
+# Balancer with Cloud Armor, and Cloud Run ingress is restricted so direct
+# ingress cannot bypass the edge. The edge adds a fixed cost floor (see cost doc).
+edge:
+  gateway: external_https_load_balancer_plus_rate_limiting   # e.g. Cloud Armor on GCP
+  origin_ingress: restricted_to_edge_only                    # internal-and-cloud-load-balancing on Cloud Run
+  bypass_prevented: true
+  adds_fixed_cost_floor: true
 
 # Telemetry fields that MUST NEVER be emitted to logs, traces, or metric labels
 # (the ADR-0001 transient-input + leakage boundary).
@@ -101,6 +148,7 @@ prohibited_telemetry_fields:
   - uploaded_inventory
   - tool_arguments
   - candidate_url
+  - job_token            # the result-access capability is never logged
 
 # Maintainer-controlled external decisions (the fail-closed boundary). None of
 # these is decided in this work package.
