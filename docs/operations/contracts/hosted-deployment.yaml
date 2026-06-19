@@ -1,0 +1,155 @@
+# Hosted public-read deployment contract (WP-OPENVA-AI-NATIVE-DISTRIBUTION-02).
+#
+# Single machine-readable source of truth for the hosted-deployment DECISION
+# package. It records a deployment RECOMMENDATION and an implementation-ready
+# architecture; it does NOT provision infrastructure, accept a provider, or
+# claim a hosted endpoint is live. The deployment ADR (ADR-0006) is Proposed
+# until a maintainer accepts it. Authority order applies: ADR-0001 governs the
+# product posture; this contract and ADR-0006 govern how that posture deploys.
+#
+# Operational metadata only. Not legal, compliance, procurement, security, KYC,
+# AML, audit, or vendor-risk advice.
+
+version: 1
+contract: hosted-deployment
+source_document: docs/operations/hosted-deployment-decision.md
+governed_by:
+  - docs/architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md
+  - docs/architecture/decisions/ADR-0006-hosted-public-read-deployment.md
+
+# Decision-only posture. Every flag here MUST stay false in this work package;
+# flipping any of them is a maintainer-controlled action in a later slice with
+# real provisioning evidence. Tests assert these remain false.
+posture:
+  decision_only: true
+  production_infrastructure_provisioned: false
+  hosted_endpoint_live: false
+  provider_accepted_by_maintainer: false
+  dns_or_tls_configured: false
+  production_secrets_created: false
+
+# Hard boundaries inherited from ADR-0001 (referenced, not restated). The
+# hosted deployment preserves all six acceptance gates.
+adr0001_boundaries_preserved:
+  non_advisory: true
+  public_sources_only: true
+  ssrf_safe_fetch_only: true
+  no_arbitrary_url_fetch: true
+  no_catalogue_mutation_path: true        # PR-bound candidate write-back only
+  transient_unpublished_inputs: true
+  credential_isolation: true
+  honest_degradation_static_fallback: true
+  catalogue_determinism_preserved: true
+
+# Deployment recommendation. RECOMMENDATION ONLY — maintainer accepts a provider.
+provider_recommendation:
+  baseline: google-cloud-run
+  alternatives:
+    - aws-lambda-container
+    - azure-container-apps
+  rejected:
+    - id: aws-app-runner
+      reason: closed to new customers in 2026
+    - id: aws-ecs-fargate
+      reason: no scale-to-zero; always-on idle cost
+    - id: render
+      reason: paid tiers do not scale to zero; high idle floor
+  accepted_by_maintainer: false
+
+# Durable job/result lifecycle (paired with the schema). The job record is
+# operational metadata only and carries no uploaded inventory content.
+job_record_schema: schemas/openva/hosted-job-record.schema.json
+job_states:
+  - received
+  - queued
+  - executing
+  - completed
+  - failed
+  - expired
+terminal_states:
+  - completed
+  - failed
+  - expired
+transitions:
+  received: [queued, failed]
+  queued: [executing, failed, expired]
+  executing: [completed, failed]
+  completed: [expired]
+  failed: [expired]
+  expired: []
+idempotency_key: job_id
+result_ttl_hours_default: 24
+
+# Service topology components (each is specified in the architecture doc).
+topology_components:
+  - public_api
+  - resolver_app
+  - async_worker
+  - queue
+  - durable_job_store
+  - static_cached_fallback
+  - candidate_ingress_boundary
+  - health_readiness
+  - admin_kill_switch
+
+# Telemetry fields that MUST NEVER be emitted to logs, traces, or metric labels
+# (the ADR-0001 transient-input + leakage boundary).
+prohibited_telemetry_fields:
+  - request_body
+  - vendor_identity
+  - inventory_row
+  - uploaded_inventory
+  - tool_arguments
+  - candidate_url
+
+# Maintainer-controlled external decisions (the fail-closed boundary). None of
+# these is decided in this work package.
+maintainer_decisions:
+  - id: provider
+    recommended: google-cloud-run
+  - id: region
+    recommended: maintainer-selected (data-residency dependent)
+  - id: domain
+    recommended: maintainer-owned OpenVA host
+  - id: dns_tls
+    recommended: managed certificate on the maintainer-owned host
+  - id: container_registry
+    recommended: provider-native registry with immutable tags
+  - id: secrets_and_identity
+    recommended: workload identity for cloud APIs; GitHub App key in managed secret store (remote-signing where available)
+  - id: spend_ceiling
+    recommended: instance/concurrency cap + edge rate limit + budget-alert kill-switch
+  - id: production_permissions
+    recommended: least-privilege; separate staging and production
+  - id: public_traffic_enablement
+    recommended: enabled only after staging smokes pass
+  - id: adr0006_acceptance
+    recommended: maintainer merges ADR-0006 to accept the architecture
+
+# Follow-on implementation slices (dependency-ordered). Specified in the
+# implementation plan; each becomes executable after maintainer acceptance.
+implementation_slices:
+  - id: WP-02A-hosted-transport-api
+    depends_on: []
+  - id: WP-02B-async-job-persistence
+    depends_on: [WP-02A-hosted-transport-api]
+  - id: WP-02C-worker-and-queue
+    depends_on: [WP-02B-async-job-persistence]
+  - id: WP-02D-candidate-ingress-integration
+    depends_on: [WP-02C-worker-and-queue]
+  - id: WP-02E-artifact-and-supply-chain
+    depends_on: [WP-02A-hosted-transport-api]
+  - id: WP-02F-staging-environment
+    depends_on: [WP-02E-artifact-and-supply-chain, WP-02C-worker-and-queue]
+  - id: WP-02G-production-infrastructure
+    depends_on: [WP-02F-staging-environment]
+  - id: WP-02H-observability-and-abuse-controls
+    depends_on: [WP-02F-staging-environment]
+  - id: WP-02I-remote-mcp-resolver-activation
+    depends_on: [WP-02D-candidate-ingress-integration, WP-02H-observability-and-abuse-controls]
+  - id: WP-02J-live-check-integration
+    depends_on: [WP-02I-remote-mcp-resolver-activation]
+  - id: WP-02K-production-smokes-and-launch-evidence
+    depends_on: [WP-02G-production-infrastructure, WP-02J-live-check-integration]
+  - id: WP-02L-positioning-reconciliation
+    depends_on: [WP-02A-hosted-transport-api]

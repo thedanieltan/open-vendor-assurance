@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/hosted-job-record.schema.json",
+  "title": "OpenVA Hosted Job Record",
+  "description": "Operational metadata for one hosted resolver job in the durable job store. Data-minimised and transient by design: it carries NO uploaded inventory content, NO vendor identity strings, and NO request bodies — only a request digest, a row count, lifecycle state, and a TTL. It is deleted on expiry. Non-advisory: it never carries a verdict, score, risk level, approval, or suitability. additionalProperties is false so a leaked inventory or identity field fails validation. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "job_id",
+    "state",
+    "freshness_mode",
+    "request_digest",
+    "row_count",
+    "created_at",
+    "updated_at",
+    "expires_at",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "job_id": {
+      "type": "string",
+      "description": "Opaque correlation id (UUIDv4). Carries no submitted content; safe to log.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "state": { "enum": ["received", "queued", "executing", "completed", "failed", "expired"] },
+    "freshness_mode": { "enum": ["cached", "verify"] },
+    "request_digest": {
+      "type": "string",
+      "description": "SHA-256 over the canonical request for idempotency/dedup only. The request itself is never stored. SHA-256 only (bot constitution).",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "row_count": { "type": "integer", "minimum": 0, "maximum": 100000 },
+    "result_ref": {
+      "type": ["string", "null"],
+      "description": "Opaque pointer to the transient result blob (also TTL-deleted), or null until completed.",
+      "maxLength": 256
+    },
+    "error_code": {
+      "description": "Stable, generic failure code (never an upstream message or submitted content).",
+      "enum": [null, "input_too_large", "row_limit_exceeded", "execution_timeout", "upstream_unavailable", "rate_limited", "internal_error"]
+    },
+    "attempt": { "type": "integer", "minimum": 0, "maximum": 10, "default": 0 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false
+}
