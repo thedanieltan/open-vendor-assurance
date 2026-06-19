@@ -1,7 +1,7 @@
 # ADR-0002: Agent-Composed Workspace Integration as the Primary Distribution Model
 
-- **Status:** Proposed — becomes Accepted when the PR containing this record is merged.
-- **Date:** 2026-06-18 (proposed)
+- **Status:** Accepted — recorded by merging PR #398.
+- **Date:** 2026-06-18 (proposed), 2026-06-18 (accepted)
 - **Decision owners:** OpenVA maintainers (human authority required for boundary,
   policy, and positioning changes per `AGENTS.md`).
 - **Programme:** WP-OPENVA-AI-NATIVE-DISTRIBUTION-01.

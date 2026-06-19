@@ -16,7 +16,9 @@ def read(rel: str) -> str:
     return (ROOT / rel).read_text(encoding="utf-8")
 
 
-def test_adrs_exist_and_are_proposed():
+def test_adrs_exist_and_are_accepted():
+    # ADR-0002..0005 were Proposed until PR #398; on merge they become Accepted
+    # (their own status rule, mirroring ADR-0001's post-merge Accepted status).
     decisions = ROOT / "docs/architecture/decisions"
     for adr in (
         "ADR-0002-agent-composed-workspace-integration.md",
@@ -25,15 +27,17 @@ def test_adrs_exist_and_are_proposed():
         "ADR-0005-native-clients-as-secondary-compatibility-surfaces.md",
     ):
         text = (decisions / adr).read_text(encoding="utf-8")
-        assert "Proposed — becomes Accepted when the PR containing this record is merged." in text
+        assert "**Status:** Accepted" in text
+        # No ADR should still claim it is unmerged/Proposed.
+        assert "Proposed — becomes Accepted when the PR" not in text
 
 
-def test_adr_index_lists_all_records():
+def test_adr_index_lists_all_records_as_accepted():
     index = read("docs/architecture/decisions/README.md")
     for adr in ("ADR-0001", "ADR-0002", "ADR-0003", "ADR-0004", "ADR-0005"):
         assert adr in index
-    # ADR-0001 stays Accepted; the new records stay Proposed until merge.
-    assert "Accepted" in index and "Proposed" in index
+    # Every ADR row is Accepted; no row remains Proposed.
+    assert index.count("| Accepted |") == 5
 
 
 def test_roadmap_frames_primary_and_secondary_distribution():
