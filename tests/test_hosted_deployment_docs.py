@@ -10,6 +10,7 @@ this package; these tests assert that stays true.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 import jsonschema
@@ -750,3 +751,83 @@ def test_regional_logs_are_explicitly_configured_not_automatic():
         flat = " ".join(_read(path).lower().split())
         assert "log bucket" in flat or "_default sink" in flat or "regional log" in flat
         assert "not automatic" in flat or "explicitly configured" in flat or "not assumed" in flat
+
+
+# --- independent review round 7 (#402) locks -----------------------------------
+
+_CLOUD_TASKS_TASK_ID = re.compile(r"^[A-Za-z0-9_-]+$")  # Cloud Tasks TASK_ID charset
+
+
+def test_recovery_task_name_is_a_valid_cloud_tasks_id():
+    # Finding 1: the recovery task name must be a valid Cloud Tasks TASK_ID
+    # (letters/numbers/hyphen/underscore only); a colon is invalid.
+    template = _contract()["handoff"]["reconciler"]["recovery_task_name_template"]
+    assert ":" not in template, "recovery task name template must not use a colon"
+    sample_job_id = "9f1c2d3e-4b5a-46c7-8d9e-0a1b2c3d4e5f"  # a UUID job_id (hyphenated)
+    for attempt in range(1, 11):
+        task_id = template.format(job_id=sample_job_id, attempt=attempt)
+        assert _CLOUD_TASKS_TASK_ID.fullmatch(task_id), f"invalid Cloud Tasks task id: {task_id!r}"
+        assert len(task_id) <= 500  # Cloud Tasks TASK_ID max length
+
+    # Regression: the invalid colon form must not reappear in the contract or docs,
+    # and the ~24h tombstone behaviour it works around must stay documented.
+    for path in [CONTRACT_PATH, OPS / "hosted-deployment-job-lifecycle.md"] + HOSTED_DOCS:
+        text = _read(path)
+        assert "job_id:r" not in text and ":r{n}" not in text, f"{path.name} has an invalid colon task id"
+    lifecycle = " ".join(_read(OPS / "hosted-deployment-job-lifecycle.md").lower().split())
+    assert "tombstone" in lifecycle  # the 24h tombstone semantics remain documented
+
+
+def test_attempt_counter_is_required_and_zero_on_received():
+    # Finding 2: the retry counter must be REQUIRED (default does not populate it),
+    # zero on a newly received record, and bounded-retry terminalization stays valid.
+    schema = json.loads(_read(SCHEMA_PATH))
+    assert "attempt" in schema["required"], "attempt must be a required field"
+
+    validator = _validator()
+    # Deleting attempt from EVERY lifecycle fixture must fail validation.
+    for path in sorted(EXAMPLES.glob("*.json")):
+        record = json.loads(_read(path))
+        assert "attempt" in record, f"{path.name} fixture must carry attempt"
+        del record["attempt"]
+        assert list(validator.iter_errors(record)), f"{path.name} without attempt must fail validation"
+
+    # A newly received record must be attempt 0.
+    received = json.loads(_read(EXAMPLES / "received.json"))
+    assert received["attempt"] == 0
+    assert list(validator.iter_errors(dict(received, attempt=1))), "received with attempt>0 must fail"
+
+    # The watchdog increment-and-terminalize path stays schema-valid:
+    # executing -> queued with attempt incremented (stale-lease takeover, re-queued).
+    executing = json.loads(_read(EXAMPLES / "executing.json"))
+    requeued = dict(executing, state="queued", lease_owner=None, lease_expires_at=None, attempt=executing["attempt"] + 1)
+    assert not list(validator.iter_errors(requeued)), "watchdog re-queue with incremented attempt must validate"
+    # executing -> failed at the retry bound (terminalize).
+    terminalized = dict(
+        executing, state="failed", error_code="execution_timeout",
+        request_ref=None, result_ref=None, lease_owner=None, lease_expires_at=None, attempt=10,
+    )
+    assert not list(validator.iter_errors(terminalized)), "watchdog terminalize at the bound must validate"
+
+
+def test_withdrawn_500_live_row_rationale_cannot_reappear():
+    # Finding 3: the authoritative contract must not claim verify is 500 rows of live
+    # fetch; 500 is the cached/batch (no-egress) limit, verify is bounded (max_verify_rows).
+    contract_text = _read(CONTRACT_PATH).lower()
+    for withdrawn in ("rows of live fetch", "500 rows of live", "up to 500 rows of live"):
+        assert withdrawn not in contract_text, f"withdrawn 500-live-row rationale reappeared: {withdrawn!r}"
+    c = _contract()
+    # The two limits remain distinct and correctly ordered (verify < cached).
+    assert c["hosted_verify_limits"]["max_verify_rows"] < c["limits"]["max_rows_cached"]
+    # No hosted doc revives the false "500 live rows" framing either.
+    for path in HOSTED_DOCS + [ADR_0006]:
+        assert "rows of live fetch" not in _read(path).lower(), f"{path.name} revives the withdrawn 500-live claim"
+
+
+def test_adr0006_acceptance_is_a_status_change_pr_not_this_merge():
+    # Finding 4: acceptance happens via a SUBSEQUENT ADR-0006 status-change PR, not by
+    # merging this proposal PR (consistent with the non-authoritative ADR lifecycle).
+    decision = next(d for d in _contract()["maintainer_decisions"] if d["id"] == "adr0006_acceptance")
+    rec = decision["recommended"].lower()
+    assert "status-change pr" in rec, "adr0006_acceptance must point to a status-change PR"
+    assert "merges adr-0006 to accept" not in rec, "must not say merging this PR accepts the architecture"

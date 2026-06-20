@@ -160,7 +160,9 @@ is **acked and dropped**.
 `received → queued`. For a job stuck in `received` past a threshold: if the task is
 still pending it sees `ALREADY_EXISTS` and leaves it; if the original task name is
 tombstoned (completed/deleted), it re-enqueues with an **attempt-suffixed task
-name** (`job_id:r{n}`) — the worker's CAS dedups any resulting duplicate delivery.
+name** (`job_id-r{n}`, e.g. `<uuid>-r1`) — a hyphen, never a colon, because Cloud
+Tasks task IDs permit only `[A-Za-z0-9_-]`. The fresh name sidesteps the original's
+~24h tombstone, and the worker's CAS dedups any resulting duplicate delivery.
 
 **Crash points:**
 - after envelope, before job create → orphan envelope (no job record; invisible to

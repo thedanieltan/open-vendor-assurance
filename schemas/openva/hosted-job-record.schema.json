@@ -14,6 +14,7 @@
     "created_at",
     "updated_at",
     "expires_at",
+    "attempt",
     "not_advice"
   ],
   "properties": {
@@ -48,7 +49,13 @@
       "description": "Stable, generic JOB failure code (never an upstream message or submitted content). Non-null only when failed. input_too_large / row_limit_exceeded are API pre-job rejection responses, NOT job failures, so they are not in this vocabulary.",
       "enum": [null, "execution_timeout", "upstream_unavailable", "rate_limited", "internal_error"]
     },
-    "attempt": { "type": "integer", "minimum": 0, "maximum": 10, "default": 0 },
+    "attempt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 0,
+      "description": "Bounded retry counter. REQUIRED (not merely defaulted): the watchdog compares and increments it to terminalize a job once the retry bound is reached, so a missing counter would break bounded recovery. A newly received record is 0 (enforced below); each watchdog recovery increments it; reaching the maximum terminalizes the job to failed."
+    },
     "lease_owner": {
       "type": ["string", "null"],
       "description": "Execution lease holder (the worker instance id). Non-null only while executing; a stale lease (lease_expires_at < now) is recovered by the watchdog. Carries no submitted content.",
@@ -66,6 +73,11 @@
   },
   "additionalProperties": false,
   "allOf": [
+    {
+      "$comment": "received: a newly accepted job has not been retried yet, so attempt is 0.",
+      "if": { "properties": { "state": { "const": "received" } }, "required": ["state"] },
+      "then": { "properties": { "attempt": { "const": 0 } } }
+    },
     {
       "$comment": "received/queued: live envelope, no result/error, and NOT yet leased.",
       "if": { "properties": { "state": { "enum": ["received", "queued"] } }, "required": ["state"] },
