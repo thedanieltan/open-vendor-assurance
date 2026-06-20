@@ -195,12 +195,15 @@ Three stores, two of them transient. Full lifecycle:
   authenticated caller with defined replay/conflict/expiry — never a plain content
   digest.
 - **Consistency/recovery:** the write-envelope → create-`received`-job → enqueue
-  handoff follows one CAS protocol — **the API owns the normal `received → queued`**
-  (after the enqueue ack; task name = `job_id`), the **worker** CAS
-  `{received|queued} → executing` (duplicate deliveries acked-and-dropped), and the
-  **reconciler is recovery-only**. Orphan envelopes are TTL-reaped; job-create
-  failure returns a generic retryable `503`. Polling distinguishes `received`
-  (accepted, not dispatched) from `queued` (dispatched). Full rules:
+  handoff follows one actor-scoped CAS protocol — **the API owns the normal
+  `received → queued`** (after the enqueue ack; task name = `job_id`); the **worker**
+  recovers via `received → queued` then `queued → executing` (no direct
+  `received → executing`), takes an **execution lease**, and acks-and-drops duplicate
+  deliveries; a **watchdog** recovers a stale lease (`executing → queued` re-dispatch,
+  else `executing → failed`); the reconciler recovers un-dispatched `received` jobs.
+  Orphan envelopes are TTL-reaped; job-create failure returns a generic retryable
+  `503`. Polling distinguishes `received` (accepted, not dispatched) from `queued`
+  (dispatched). Full rules:
   [`hosted-deployment-job-lifecycle.md`](hosted-deployment-job-lifecycle.md).
 - **Expiry/deletion:** **time-based on `expires_at`, not a persisted state**, with
   explicit **three-phase** HTTP semantics (the record holds `expires_at` and

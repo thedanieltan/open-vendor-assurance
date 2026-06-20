@@ -447,6 +447,66 @@ def test_transition_graph_actor_scoped_no_received_to_executing():
     assert "received_to_queued" in worker_steps and "queued_to_executing" in worker_steps
 
 
+def test_execution_lease_and_watchdog_recover_a_crashed_executing_job():
+    c = _contract()
+    t = c["transitions"]
+    # A crashed worker must be recoverable: the watchdog owns the executing exits.
+    assert t["executing"]["queued"] == ["watchdog"], "stale-lease takeover -> queued"
+    assert "watchdog" in t["executing"]["failed"], "watchdog can time out a stale lease"
+    # The lease model exists and is owned by the watchdog for stale recovery.
+    lease = c["execution_lease"]
+    assert lease["stale_recovery_owner"] == "watchdog"
+    assert lease["live_lease_preemption"] == "forbidden"
+    assert c["access_matrix"]["watchdog"]["owned_transitions"]
+    # The schema makes the lease mandatory while executing and absent otherwise.
+    validator = _validator()
+    ex = json.loads(_read(EXAMPLES / "executing.json"))
+    assert not list(validator.iter_errors(ex))
+    no_lease = dict(ex, lease_owner=None, lease_expires_at=None)
+    assert list(validator.iter_errors(no_lease)), "executing without a lease must fail"
+    leased_received = dict(json.loads(_read(EXAMPLES / "received.json")), lease_owner="w1")
+    assert list(validator.iter_errors(leased_received)), "a lease in a non-executing state must fail"
+
+
+def test_access_matrix_permits_the_documented_request_flow():
+    am = _contract()["access_matrix"]
+    api = am["public_api"]
+    # The API must own its CAS edges and be able to read the result (with a token).
+    assert "owned_cas" in api["job_record"]
+    assert "received->queued" in api["owned_transitions"]
+    assert "job_token" in api["result_blob"]  # result read gated on a valid token
+    assert _contract()["result_read_rule"].startswith("no_result_blob_read_without")
+    worker = am["async_worker"]
+    assert "queued->executing" in worker["owned_transitions"]
+    assert "executing->completed" in worker["owned_transitions"]
+
+
+def test_concurrency_budget_is_computed_and_fits_with_margin():
+    import math
+
+    c = _contract()
+    b = c["concurrency_budget"]
+    lim = c["limits"]["max_rows"]
+    waves = math.ceil(lim * b["max_fetches_per_row"] / b["fetch_concurrency"])
+    worst = waves * b["per_fetch_deadline_seconds"] * b["retry_backoff_factor"] / 60 + b["handler_overhead_seconds"] / 60
+    # The recorded worst case matches the formula (no independent drift).
+    assert abs(worst - b["worst_case_minutes_v1"]) <= 1, f"recomputed {worst} != {b['worst_case_minutes_v1']}"
+    pl = c["platform_limits"]
+    assert b["worst_case_minutes_v1"] < pl["baseline_per_job_budget_minutes"] < pl["cloud_tasks_http_dispatch_deadline_minutes"]
+
+
+def test_no_received_or_queued_to_executing_phrase_drift():
+    # The stale "{received|queued} -> executing" wording must be gone everywhere; the
+    # authoritative path is received -> queued -> executing.
+    for path in (OPS / "hosted-deployment-decision.md", OPS / "hosted-deployment-architecture.md", OPS / "hosted-deployment-job-lifecycle.md"):
+        text = _read(path)
+        assert "{received|queued}" not in text and "{received | queued}" not in text, f"{path.name} has stale transition wording"
+    flat = " ".join(_read(OPS / "hosted-deployment-job-lifecycle.md").lower().split())
+    assert "received → queued" in _read(OPS / "hosted-deployment-job-lifecycle.md") or "received -> queued" in flat
+    # 'received' no longer claims a content digest is validated.
+    assert "limits + digest" not in _read(OPS / "hosted-deployment-job-lifecycle.md")
+
+
 def test_execution_surface_is_concrete_and_bounded():
     c = _contract()
     surf = c["execution_surface"]

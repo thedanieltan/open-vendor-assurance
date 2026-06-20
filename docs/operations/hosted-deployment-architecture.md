@@ -63,8 +63,13 @@ deliveries acked-and-dropped; the **reconciler is recovery-only** (re-enqueues
 stuck `received` jobs with an attempt-suffixed task name when the original is
 tombstoned, never owning the normal transition); an orphan envelope (job-create
 failed) is invisible to clients and TTL-reaped while the API returns a generic
-retryable `503`. Full per-crash-point rules + the three-phase (`410`/`404`) expiry
-semantics: the lifecycle spec.
+retryable `503`. A **crashed `executing` worker** is recovered by a **watchdog**:
+the worker holds an **execution lease** (`lease_owner` + `lease_expires_at`,
+heartbeated) while `executing`, and on a stale lease the watchdog CAS `executing →
+queued` (re-dispatch, `attempt++`) or `executing → failed` (`execution_timeout`) —
+so a dead worker never strands a job, and a live lease is never preempted. Full
+per-crash-point rules + the three-phase (`410`/`404`) expiry semantics: the
+lifecycle spec.
 
 **Degraded** — request/result store, queue, or worker unavailable → `public_api`
 serves cached/static labelled results; verify returns `queued`/`rate_limited`/cached,

@@ -49,6 +49,16 @@
       "enum": [null, "execution_timeout", "upstream_unavailable", "rate_limited", "internal_error"]
     },
     "attempt": { "type": "integer", "minimum": 0, "maximum": 10, "default": 0 },
+    "lease_owner": {
+      "type": ["string", "null"],
+      "description": "Execution lease holder (the worker instance id). Non-null only while executing; a stale lease (lease_expires_at < now) is recovered by the watchdog. Carries no submitted content.",
+      "maxLength": 128
+    },
+    "lease_expires_at": {
+      "type": ["string", "null"],
+      "description": "When the execution lease goes stale; the worker heartbeats to extend it. Non-null only while executing.",
+      "format": "date-time"
+    },
     "created_at": { "type": "string", "format": "date-time" },
     "updated_at": { "type": "string", "format": "date-time" },
     "expires_at": { "type": "string", "format": "date-time" },
@@ -57,38 +67,58 @@
   "additionalProperties": false,
   "allOf": [
     {
-      "$comment": "Non-terminal states own a live request envelope and have no result or error.",
-      "if": { "properties": { "state": { "enum": ["received", "queued", "executing"] } }, "required": ["state"] },
+      "$comment": "received/queued: live envelope, no result/error, and NOT yet leased.",
+      "if": { "properties": { "state": { "enum": ["received", "queued"] } }, "required": ["state"] },
       "then": {
         "required": ["request_ref"],
         "properties": {
           "request_ref": { "type": "string" },
           "result_ref": { "type": "null" },
-          "error_code": { "const": null }
+          "error_code": { "const": null },
+          "lease_owner": { "type": "null" },
+          "lease_expires_at": { "type": "null" }
         }
       }
     },
     {
-      "$comment": "completed has a result, no error, and the envelope is deleted.",
+      "$comment": "executing: live envelope, no result/error, and a live execution lease.",
+      "if": { "properties": { "state": { "const": "executing" } }, "required": ["state"] },
+      "then": {
+        "required": ["request_ref", "lease_owner", "lease_expires_at"],
+        "properties": {
+          "request_ref": { "type": "string" },
+          "result_ref": { "type": "null" },
+          "error_code": { "const": null },
+          "lease_owner": { "type": "string" },
+          "lease_expires_at": { "type": "string" }
+        }
+      }
+    },
+    {
+      "$comment": "completed has a result, no error, the envelope is deleted, and the lease is released.",
       "if": { "properties": { "state": { "const": "completed" } }, "required": ["state"] },
       "then": {
         "required": ["result_ref"],
         "properties": {
           "result_ref": { "type": "string" },
           "request_ref": { "type": "null" },
-          "error_code": { "const": null }
+          "error_code": { "const": null },
+          "lease_owner": { "type": "null" },
+          "lease_expires_at": { "type": "null" }
         }
       }
     },
     {
-      "$comment": "failed has a generic error, no result, and the envelope is deleted.",
+      "$comment": "failed has a generic error, no result, the envelope is deleted, and the lease is released.",
       "if": { "properties": { "state": { "const": "failed" } }, "required": ["state"] },
       "then": {
         "required": ["error_code"],
         "properties": {
           "error_code": { "type": "string" },
           "request_ref": { "type": "null" },
-          "result_ref": { "type": "null" }
+          "result_ref": { "type": "null" },
+          "lease_owner": { "type": "null" },
+          "lease_expires_at": { "type": "null" }
         }
       }
     }

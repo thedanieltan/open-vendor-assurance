@@ -17,7 +17,7 @@ deletion*); it is time-based on `expires_at`.
 
 | State | Meaning |
 | --- | --- |
-| `received` | Request validated (limits + digest); job created, request envelope stored, not yet enqueued |
+| `received` | Request validated (limits only — no content digest); job created, request envelope stored, not yet enqueued |
 | `queued` | Enqueued for the worker (queue carries `job_id` only) |
 | `executing` | Worker re-read the request envelope and is running bounded SSRF-safe fetch/discovery |
 | `completed` | Result written to the transient result store; `result_ref` set |
@@ -33,9 +33,10 @@ worker's recovery path is `received → queued → executing`.
 received  → queued      [api (normal), reconciler (recovery), worker (recovery)]
 received  → failed      [api]
 queued    → executing   [worker]
-queued    → failed      [worker]
+queued    → failed      [worker, watchdog]
 executing → completed   [worker]
-executing → failed      [worker]
+executing → failed      [worker (internal failure), watchdog (stale-lease / timeout)]
+executing → queued      [watchdog (stale-lease takeover, re-dispatch)]
 completed → (none)
 failed    → (none)
 ```
@@ -43,6 +44,22 @@ failed    → (none)
 Any other edge — or an actor not listed for an edge — is rejected. This is the
 authoritative `transitions` map in the contract; a test asserts every edge each
 actor protocol uses is present and that `received → executing` is not a direct edge.
+
+## Execution lease and crashed-worker recovery
+
+The worker is the only actor that can leave `executing` on the happy path, so a
+crashed worker must not strand a job. On winning `queued → executing` the worker
+takes an **execution lease** (`lease_owner` + `lease_expires_at`, both required by
+the schema while `executing`) and **heartbeats** to extend it. A **watchdog** (the
+reconciler's `executing`-scoped role) owns recovery of a **stale** lease
+(`lease_expires_at < now`): it CAS `executing → queued` to re-dispatch
+(incrementing `attempt`) while `attempt < max`, else CAS `executing → failed`
+(`execution_timeout`). A **live** lease is never preempted — a duplicate/redelivered
+task whose record is `executing` with a live lease is **acked and dropped**; with an
+expired lease it defers to the watchdog. This makes `execution_timeout → failed` and
+bounded `attempt` retries performable by a live component even after the original
+worker dies. (Drift test: worker wins `executing` → worker dies → lease expires →
+exactly one component, the watchdog, recovers or terminalizes the job.)
 
 ## Transient request envelope (how the worker gets the request)
 
@@ -146,8 +163,9 @@ one.
 
 The job record carries operational metadata only: `job_id`, `job_token_digest`,
 `state`, `freshness_mode`, `request_ref`, `row_count`, `result_ref`, `error_code`,
-`attempt`, timestamps, `expires_at`, `not_advice`. It carries **no** uploaded
-inventory, vendor identity, request body, content fingerprint, or dedup key —
+`attempt`, `lease_owner`, `lease_expires_at`, timestamps, `expires_at`,
+`not_advice`. It carries **no** uploaded inventory, vendor identity, request body,
+content fingerprint, or dedup key —
 enforced by `additionalProperties: false`. The result blob (referenced by
 `result_ref`) is likewise transient and TTL-deleted and is never indexed by
 submitted content.
@@ -186,23 +204,40 @@ The baseline worker is a **Cloud Run service handler invoked by Cloud Tasks**.
 There is **no unbounded-runtime claim** — the relevant platform limits are
 explicit: a Cloud Tasks HTTP dispatch deadline of **30 min** and a Cloud Run
 service request timeout of up to **60 min**. The ≤500-row batch is **bounded to fit
-the 30-min dispatch deadline** by processing rows with **bounded intra-job fetch
-concurrency** (e.g. 500 rows at ~20 concurrent fetches completes in minutes, not
-the serial worst case), and a per-job execution timeout (`baseline_per_job_budget_minutes`,
-< 30 min) caps it. Batches that cannot fit the dispatch deadline are a documented
-**scale-up path**: Cloud Run **Jobs** (up to 168 h) started by a short-lived Cloud
-Tasks **launcher** with its own execution id, launch idempotency, status
-reconciliation, cancellation, and CAS mapping — out of scope for v1.
+the 30-min dispatch deadline** by **bounded intra-job fetch concurrency**, and a
+per-job execution timeout (`baseline_per_job_budget_minutes` = 25 min) caps it.
+
+The bound is **computed, not asserted** (contract `concurrency_budget`):
+`worst_case = ceil(max_rows × max_fetches_per_row / fetch_concurrency) ×
+per_fetch_deadline_seconds × retry_backoff_factor + handler_overhead`. With v1
+values (`max_rows 500`, `max_fetches_per_row 3`, `fetch_concurrency 20`,
+`per_fetch_deadline 8 s`, `backoff 1.5`, `overhead 60 s`) → `ceil(75) × 8 × 1.5 / 60
++ 1 = 16 min`, comfortably **< the 25-min budget < the 30-min dispatch deadline**. A
+drift test recomputes this so the row cap, fetch deadline, concurrency, and budget
+cannot drift apart. Batches that cannot fit are a documented **scale-up path**:
+Cloud Run **Jobs** (up to 168 h) started by a short-lived Cloud Tasks **launcher**
+with its own execution id, launch idempotency, status reconciliation, cancellation,
+and CAS mapping — out of scope for v1.
 
 ## Component access and terminalization
 
-Least-privilege access (contract `access_matrix`): the **API** writes the envelope
-and creates/reads the job record; the **worker** reads the envelope, writes the
-result, does the CAS transitions, and deletes the envelope; the **candidate-ingress**
-component is the **only** holder of the GitHub App key. On success the worker
-terminalizes in this exact order: **write result blob → CAS `executing → completed`
-(record `result_ref`) → delete request envelope** (a crash before the delete leaves
-an orphan envelope reaped by its object-lifecycle TTL).
+Least-privilege access (contract `access_matrix`) is scoped to exactly the
+operations each component performs:
+
+- **API:** writes the envelope; creates/reads the job record **and CAS-owns only its
+  edges** (`received → queued`, `received → failed`); **reads the result blob only
+  after verifying a valid `job_token`** to serve it to the client. No result is ever
+  readable without a valid `job_token`.
+- **Worker:** reads the envelope, holds the execution lease, writes the result, CAS-
+  owns `received → queued` (recovery) / `queued → executing` / `executing →
+  completed | failed`, and deletes the envelope on terminalization.
+- **Watchdog:** CAS-owns only the stale-lease recovery edges (`executing → queued`,
+  `executing → failed`).
+- **Candidate-ingress:** the **only** holder of the GitHub App key.
+
+On success the worker terminalizes in this exact order: **write result blob → CAS
+`executing → completed` (record `result_ref`) → delete request envelope** (a crash
+before the delete leaves an orphan envelope reaped by its object-lifecycle TTL).
 
 ## Concurrency and failure recovery
 

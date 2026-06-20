@@ -96,12 +96,29 @@ transitions:
     failed: [api]
   queued:
     executing: [worker]
-    failed: [worker]
+    failed: [worker, watchdog]
   executing:
     completed: [worker]
-    failed: [worker]
+    failed: [worker, watchdog]          # worker on internal failure; watchdog on stale-lease / timeout
+    queued: [watchdog]                  # stale-lease takeover: re-dispatch (attempt++)
   completed: {}
   failed: {}
+
+# Execution lease: a crashed worker must not strand an `executing` job (the worker
+# is the only actor that can leave `executing` on the happy path). On winning
+# queued -> executing the worker takes a lease (lease_owner + lease_expires_at) and
+# heartbeats to extend it. A WATCHDOG (the reconciler's executing-scoped role)
+# owns recovery of a STALE lease: CAS executing -> queued (re-dispatch, attempt++)
+# while attempt < max, else CAS executing -> failed (execution_timeout). A live
+# lease is never preempted; a redelivered task whose record is executing with a
+# live lease is acked-and-dropped, with an expired lease it defers to the watchdog.
+execution_lease:
+  fields: [lease_owner, lease_expires_at]   # present (non-null) only while executing
+  acquired_on: cas_queued_to_executing
+  extended_by: worker_heartbeat
+  stale_recovery_owner: watchdog
+  stale_recovery: cas_executing_to_queued_attempt_increment_else_failed
+  live_lease_preemption: forbidden
 record_key: job_id                    # the durable record's primary key (server-generated)
 result_ttl_hours_default: 24
 
@@ -124,13 +141,28 @@ limits:
 execution_surface:
   baseline: cloud_run_service_handler_invoked_by_cloud_tasks
   batch_bounded_to_fit_platform_limits: true
-  intra_job_fetch_concurrency: bounded         # keeps the ≤500-row wall-clock well under the dispatch deadline
   scale_up_path: cloud_run_jobs_plus_cloud_tasks_launcher   # for batches that cannot fit the dispatch deadline
 platform_limits:
   cloud_tasks_http_dispatch_deadline_minutes: 30
   cloud_run_service_request_timeout_minutes_max: 60
   cloud_run_jobs_task_hours_max: 168           # only via a launcher; not a direct Cloud Tasks dispatch
-  baseline_per_job_budget_minutes: 25          # < the Cloud Tasks dispatch deadline; enforced by the per-job execution timeout
+  baseline_per_job_budget_minutes: 25          # the enforced per-job execution timeout; < the Cloud Tasks dispatch deadline
+
+# Concrete v1 concurrency budget, so the 500-row cap is PROVEN to fit, not asserted.
+# worst_case_minutes = ceil(max_rows * max_fetches_per_row / fetch_concurrency)
+#                      * per_fetch_deadline_seconds * retry_backoff_factor / 60
+#                      + handler_overhead_seconds / 60
+# A drift test recomputes this from the inputs and asserts
+# worst_case_minutes < baseline_per_job_budget_minutes < cloud_tasks dispatch deadline,
+# so the row cap, fetch deadline, concurrency, and budget cannot drift independently.
+concurrency_budget:
+  fetch_concurrency: 20                        # v1 concrete intra-job concurrency limit
+  max_fetches_per_row: 3                        # bounded source operations per row (resolver per-vendor fetch set)
+  per_fetch_deadline_seconds: 8                 # the canonical safe-fetch whole-request deadline (must match safe_verify config)
+  retry_backoff_factor: 1.5                     # bounded retry/backoff allowance
+  handler_overhead_seconds: 60
+  worst_case_minutes_v1: 16                     # ceil(500*3/20)=75; 75*8*1.5/60=15 + 60/60=1 => 16
+  fits_with_margin: true                        # 16 < baseline_per_job_budget_minutes (25) < dispatch deadline (30)
 
 # Expiry is NOT a persisted state; it is time-based on expires_at. Because the job
 # record (which holds expires_at and job_token_digest) is physically deleted at
@@ -227,19 +259,26 @@ handoff:
 access_matrix:
   public_api:
     request_envelope: write
-    job_record: create_and_read
-    result_blob: none
-    github_app_key: none               # the internet-facing API never holds the GitHub App key
+    job_record: create_read_and_owned_cas   # create + read + ONLY its owned edges: received->queued, received->failed
+    owned_transitions: ["received->queued", "received->failed"]
+    result_blob: read_only_with_valid_job_token   # serves the result to the client; NEVER readable without a valid job_token
+    github_app_key: none                    # the internet-facing API never holds the GitHub App key
   async_worker:
     request_envelope: read_then_delete_on_terminal
-    job_record: cas_transitions
+    job_record: owned_cas                   # received->queued (recovery), queued->executing, executing->completed|failed; holds the lease
+    owned_transitions: ["received->queued", "queued->executing", "executing->completed", "executing->failed"]
     result_blob: write
     github_app_key: none
+  watchdog:                                 # stale-lease recovery (the reconciler's executing-scoped role)
+    job_record: recovery_cas
+    owned_transitions: ["executing->queued", "executing->failed", "queued->failed"]
   candidate_ingress:
-    github_app_key: access_or_sign      # the ONLY component that may use the GitHub App key
-    catalog_truth: none                 # proposes PRs only; never writes data/** or merges
+    github_app_key: access_or_sign          # the ONLY component that may use the GitHub App key
+    catalog_truth: none                     # proposes PRs only; never writes data/** or merges
   reconciler:
-    job_record: read_and_recovery_cas
+    job_record: read_and_recovery_cas       # received->queued recovery (un-dispatched jobs)
+    owned_transitions: ["received->queued"]
+result_read_rule: no_result_blob_read_without_valid_job_token
 terminalization_order:                  # worker, on success
   - write_result_blob
   - cas_executing_to_completed_record_result_ref
