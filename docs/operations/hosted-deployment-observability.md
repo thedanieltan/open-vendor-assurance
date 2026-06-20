@@ -60,6 +60,19 @@ contract and inherits the ADR-0001 transient-input / minimal-leakage boundary:
 - `uploaded_inventory`
 - `tool_arguments`
 - `candidate_url`
+- `authorization_header`
+- `job_token`
+
+**Result-token transport.** Result polling carries the one-time `job_token`
+capability **header-only** (`Authorization: Bearer <job_token>`) — never in a URL,
+query string, path, or redirect, so it cannot land in access logs, the edge
+proxy's request line, or a referrer. The API and edge proxy **redact** the
+`Authorization` header; comparison is **constant-time** against the stored
+`job_token_digest`; an auth failure returns a **generic** code with no echo of the
+presented value. `authorization_header` and `job_token` are therefore in the
+prohibited list above: neither the header nor the bearer value may appear in any
+log line, metric label, or trace attribute. The loggable correlation id is
+`job_id`, which is **not** a credential.
 
 **Generic-error rule.** External error responses are **stable and generic**: a
 fixed `error_code` plus a safe message, with **`job_id` as the only correlation

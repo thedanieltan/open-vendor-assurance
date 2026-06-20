@@ -27,7 +27,7 @@ is low and bursty.
 
 | Option | Execution | Edge (rate limit) | Queue + tiny store | Secrets | Idle floor | Cost-cap rigor | Ops | Lock-in |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **Google Cloud Run (baseline)** | container API **+ container worker (Cloud Run service handler invoked by Cloud Tasks)**; ≤500-row batch bounded to the 30-min Cloud Tasks dispatch deadline via intra-job concurrency; Jobs+launcher scale-up | external HTTPS LB + Cloud Armor — configurable rate limit; **~$24/mo fixed floor** | Cloud Tasks + Firestore Native TTL | Secret Manager + Workload Identity | ~$24/mo | no hard cap (soft `max-instances` + Cloud Armor rate limit + budget kill-switch) | 2 | 2 |
+| **Google Cloud Run (baseline)** | container API **+ container worker (Cloud Run service handler invoked by Cloud Tasks)**; grounded **20-row** live-verify limit (~12-min worst case) fits the 30-min Cloud Tasks deadline with ~2× headroom | external HTTPS LB + Cloud Armor — configurable rate limit; **~$24/mo fixed floor** | Cloud Tasks + Firestore Native TTL | Secret Manager + Workload Identity | ~$24/mo | no hard cap (soft `max-instances` + Cloud Armor rate limit + budget kill-switch) | 2 | 2 |
 | **Azure Container Apps (alternative)** | container + ACA Jobs worker (ACA Jobs run long; no 15-min function limit) | Front Door/APIM — fixed-ish floor | Service Bus + Cosmos serverless TTL | Key Vault + Managed Identity; **remote JWT signing** | low–mod | no hard cap (`maxReplicas` hard at compute) | 3 | 2 |
 | **AWS Lambda (alternative — needs fan-out)** | functions, **≤15-min cap ⇒ per-row fan-out + aggregation** required | API Gateway throttling — **no fixed floor but best-effort, not a cost cap** | SQS + DynamoDB on-demand TTL | Secrets Manager + IAM; KMS remote signing | ≈ `$0` | reserved concurrency hard at **Lambda compute only**; gateway best-effort | 4 | 4 |
 | AWS App Runner | **Rejected** — closed to new customers (2026) | — | — | — | — | — | — | — |
@@ -35,20 +35,22 @@ is low and bursty.
 | Render | **Rejected** — paid tiers do not scale to zero; ~fixed idle floor | — | — | — | — | — | 2 | 2 |
 
 **Recommendation: Google Cloud Run (container API + long-running container worker).**
-This is a reassessment after two review rounds that corrected two facts. (a) The
+This is a reassessment after several review rounds that corrected the facts. (a) The
 mandatory rate-limiting edge gives Cloud Run a **~$24/mo fixed floor** (LB + Cloud
-Armor, §11) — but that floor is modest and bounded. (b) Verify is **long-running
-batch work** (up to 500 rows of live fetch) that exceeds **AWS Lambda's 15-minute
-invocation ceiling**; using Lambda would require building per-row fan-out +
-aggregation, and its API Gateway throttling is **best-effort, not a hard cost cap**
-(AWS documents not relying on usage plans for cost control). For a solo maintainer
-prioritising simplicity, a **container worker without Lambda's 15-min function
-limit** is the decisive advantage: Cloud Run runs the existing container unchanged
-for both the API and the worker (the ≤500-row batch fits the 30-min Cloud Tasks
-dispatch deadline via bounded intra-job concurrency), scales to zero on compute, and
-rolls back instantly. **No provider
-offers a hard spend cap**, so the engineered bounded-spend-rate (soft cap + edge
-rate limit + budget kill-switch, §8/§11) applies regardless. **Azure Container Apps**
+Armor, §11) — modest and bounded. (b) Verify is **live-fetch batch work**: each row
+drives serial 20-second (`SAFE_TIMEOUT_SECONDS`) SSRF-safe fetches, so the hosted
+verify limit is **grounded and deliberately small — 20 rows, ~12-minute worst case**
+(§7), distinct from the 500-row *cached* batch which does no fetch. That worst case
+fits **Cloud Run's 30-minute Cloud Tasks dispatch deadline with ~2× headroom**;
+AWS Lambda's **15-minute** function ceiling would be tighter for the same worst case
+and grows fragile if source-type coverage widens, and its API Gateway throttling is
+**best-effort, not a hard cost cap** (AWS documents not relying on usage plans for
+cost control). For a solo maintainer prioritising simplicity, **running the existing
+container unchanged for both API and worker, with ~2× time headroom**, is the
+decisive advantage; Cloud Run scales to zero on compute and rolls back instantly.
+**No provider offers a hard spend cap**, so the engineered bounded-spend-rate (soft
+cap + edge rate limit + budget kill-switch, §8/§11) applies regardless. **Azure
+Container Apps**
 is the alternative when the GitHub App key must never enter the app (Key Vault
 remote signing); **AWS Lambda** only if `$0` idle justifies building per-row
 fan-out. The deployable stays a portable OCI image, so the provider remains the
@@ -102,11 +104,13 @@ Components (`topology_components` in the contract): `edge_gateway`, `public_api`
 `candidate_ingress_boundary`, `health_readiness`, `admin_kill_switch`. The worker
 reconstructs the request from the transient envelope by `job_id`; the queue and the
 durable record never carry submitted input. Result access requires the `job_token`
-capability (`job_id` is a loggable correlation id, not a credential). **Execution
-surface (concrete):** the worker is a Cloud Run service handler invoked by Cloud
-Tasks; the ≤500-row batch is bounded to fit the Cloud Tasks 30-min dispatch deadline
-via bounded intra-job fetch concurrency (Cloud Run Jobs + a launcher is the
-documented scale-up path). Detail in
+capability (`job_id` is a loggable correlation id, not a credential), sent **header-only
+as `Authorization: Bearer`** (never in a URL/query/path). **Execution surface
+(concrete):** the worker is a Cloud Run service handler invoked by Cloud Tasks; the
+**grounded 20-row** live-verify limit (worst case ~12 min, derived from the
+resolver's `SAFE_TIMEOUT_SECONDS`) fits the Cloud Tasks 30-min dispatch deadline with
+~2× headroom. A larger verify limit is a separate future WP requiring a full
+parent/child decomposition (not a hand-waved scale-up). Detail in
 [`hosted-deployment-architecture.md`](hosted-deployment-architecture.md).
 
 ## 4. Domain, DNS, and TLS
@@ -214,9 +218,11 @@ Three stores, two of them transient. Full lifecycle:
   their own native TTL + object-lifecycle backstop; the result blob is not
   auto-deleted by the record TTL. Only the minimised record + aggregate metrics
   persist; uploaded content never persists beyond the transient envelope.
-- **Limits + error codes:** the authoritative cap is `max_rows: 500` (the schema's
-  `row_count` maximum matches). Over-limit requests are **rejected by the API before
-  a job exists**, so `input_too_large` / `row_limit_exceeded` are API rejection
+- **Limits + error codes:** two distinct caps — the cached/batch enrich limit
+  `max_rows_cached: 500` (no live fetch) and the hosted **live-verify** limit
+  `max_verify_rows: 20` (the schema's `row_count` maximum matches *this*, grounded in
+  the resolver fetch model, §7/§11). Over-limit requests are **rejected by the API
+  before a job exists**, so `input_too_large` / `row_limit_exceeded` are API rejection
   responses, **not** durable job error codes (those are `execution_timeout`,
   `upstream_unavailable`, `rate_limited`, `internal_error`).
 - **Backup:** none required for transient data; the catalogue itself is the git
@@ -237,9 +243,13 @@ Three stores, two of them transient. Full lifecycle:
   ingress cannot bypass** the limits (§4).
 - **CORS:** explicit allow-list; an empty allow-list is never treated as wildcard
   (mirrors the MCP transport posture).
-- **Result-access authorization:** results are retrieved with the one-time
-  `job_token` capability, not the `job_id`; the token is never logged and is stored
-  only as `job_token_digest`.
+- **Result-access authorization + token transport:** results are retrieved with the
+  one-time `job_token` capability, not the `job_id`. The token is sent **header-only
+  (`Authorization: Bearer`)** — never in a URL, query string, path, or redirect;
+  verified with a **constant-time** digest comparison; redacted by the API and the
+  edge proxy; never logged/traced/metered/echoed/persisted (only `job_token_digest`
+  persists; `authorization_header` + `job_token` are in `prohibited_telemetry_fields`).
+  Failed/absent token → generic content-free response. No rotation in v1.
 - **Errors:** stable, generic external messages with an internal correlation id
   (`job_id`) that leaks no submitted content.
 - **CSV-formula-safe exports:** the existing formula-injection-safe export handling

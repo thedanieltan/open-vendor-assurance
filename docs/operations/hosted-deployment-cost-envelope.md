@@ -20,20 +20,24 @@ in the provider's own pricing calculator before any provisioning (§6).
 
 ## 1. Cost envelopes (qualitative + rough ranges)
 
-> **Baseline reassessed across review rounds (#402).** Round 2 corrected that the
-> mandatory rate-limiting edge gives Cloud Run a **~$24/mo fixed floor** (external
-> HTTPS LB ~$18/mo + Cloud Armor ~$5–6/mo) and briefly moved the baseline to AWS
-> Lambda. Round 3 corrected two facts that reverse that: API Gateway throttling is
-> **best-effort, not a hard cost cap**, and verify is **long-running batch work**
-> (≤500 rows of live fetch) that exceeds Lambda's 15-min ceiling and would need
-> per-row fan-out. So the baseline is **Google Cloud Run** with a **long-running
-> container worker** (no 15-min function limit; the ≤500-row batch fits the 30-min
-> Cloud Tasks dispatch deadline via intra-job concurrency); the ~$24/mo edge floor is modest and
-> bounded, and **no provider offers a hard spend cap** anyway. Lambda is an
-> alternative only with fan-out; ACA is the container alternative. All figures
-> `[confirm]` — rates and free grants change.
+> **Baseline rationale, reassessed across review #402.** The mandatory rate-limiting edge gives Cloud Run a
+> **~$24/mo fixed floor** (external HTTPS LB ~$18/mo + Cloud Armor ~$5–6/mo); AWS
+> API Gateway throttling is **best-effort, not a hard cost cap**, and **no provider
+> offers a hard spend cap**, so cost is roughly a wash and **not** the deciding
+> factor. The baseline is **Google Cloud Run** with a **long-running container
+> worker** chosen primarily for **portability** (it runs the existing container
+> unchanged) and **execution headroom**: the hosted **live-verify** limit is grounded
+> in the resolver's real fetch model — `max_verify_rows 20`, each row up to 4 serial
+> fetches per source type at `SAFE_TIMEOUT_SECONDS` = 20 s, worst case **~12 min** —
+> which fits Cloud Run's 30-min Cloud Tasks dispatch deadline with ~2× headroom. AWS
+> Lambda's **15-min** ceiling gives less headroom for the same worst case (it is
+> **not** claimed impossible — the earlier "500-row batch can't fit Lambda" framing
+> is withdrawn; the 500-row figure is the *cached* batch, which does no live fetch).
+> A larger verify limit is a **separate future WP** (parent/child decomposition),
+> not assumed here. Lambda stays a `$0`-idle alternative; ACA is the container
+> alternative. All figures `[confirm]` — rates and free grants change.
 
-| Regime | Google Cloud Run (baseline) | Azure Container Apps (alternative) | AWS Lambda (alt — needs fan-out) |
+| Regime | Google Cloud Run (baseline) | Azure Container Apps (alternative) | AWS Lambda (alt — tighter 15-min headroom) |
 | --- | --- | --- | --- |
 | **IDLE** (~0 traffic) | Scale-to-zero ≈ `$0` *compute* **plus the external HTTPS LB + Cloud Armor fixed floor** (decision §4/§8) — idle is **~$24/mo** + cents, not ≈ `$0`. `~$24/mo + cents` `[confirm]` | Scale-to-zero ≈ `$0` compute within free grant + an always-on ingress/gateway (Front Door/APIM) cost. `~low single-digit $/mo` `[confirm]` | True `$0` idle (no warm instance); **API Gateway has no fixed monthly floor**; ECR image storage cents. `~$0–low cents/mo` `[confirm]` |
 | **NORMAL** (light, bursty public read; occasional verify job) | Free tier likely absorbs light compute, but the **~$24/mo edge floor dominates** at this volume. `~$24/mo + spillover` `[confirm]` | Free grant covers light use; companions (Cosmos/Service Bus) + edge dominate. `~$0–a few $/mo + edge` `[confirm]` | On-demand request + GB-s billing; low at this volume; API Gateway per-request. `~$0–low single-digit $/mo` `[confirm]` |

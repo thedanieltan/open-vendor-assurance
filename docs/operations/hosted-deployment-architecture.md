@@ -45,10 +45,12 @@ retains, reuses, or incorporates that input into canonical catalogue records.
    envelope** (workload identity) → SSRF-safe fetch/discovery via the resolver →
    writes the transient result, sets `completed`/`failed`, and **deletes the
    request envelope**.
-3. `client` polls with `job_id` + `job_token`; the API distinguishes `received`
-   (accepted, not yet dispatched) from `queued` (dispatched). On `completed` it
-   retrieves the result via `result_ref`. After `expires_at` the API returns
-   `410 Gone`; the record, envelope, and result blob are deleted by TTL/lifecycle.
+3. `client` polls with `job_id` + the `job_token` sent **header-only**
+   (`Authorization: Bearer`, never in the URL/query/path; constant-time digest
+   check; redacted in API + edge logs); the API distinguishes `received` (accepted,
+   not yet dispatched) from `queued` (dispatched). On `completed` it retrieves the
+   result via `result_ref`. After `expires_at` → `410` while retained, then `404`
+   after deletion; the record, envelope, and result blob are deleted by TTL/lifecycle.
 4. Discovered candidates are *proposed* through `candidate_ingress_boundary` →
    existing durable ingress → PR lifecycle. The hosted service never merges.
 
@@ -96,16 +98,18 @@ Cloud Run):** a container API **and a container worker realized as a Cloud Run
 service handler invoked by Cloud Tasks**, behind an external HTTPS LB + Cloud Armor
 (the rate-limiting edge; ~$24/mo fixed floor), with Cloud Tasks + Firestore TTL +
 Secret Manager + Workload Identity. The execution surface is **concrete and
-bounded**, not unbounded: Cloud Tasks dispatch is capped at 30 min
-and Cloud Run service requests at 60 min, so the ≤500-row batch is processed with
-**bounded intra-job fetch concurrency** to stay well under the 30-min dispatch
-deadline (a per-job execution timeout enforces it). Larger batches are a documented
-scale-up path — **Cloud Run Jobs (up to 168 h) started by a short-lived Cloud Tasks
-launcher** — out of scope for v1. A worker is preferred over AWS Lambda precisely
-because Lambda's 15-min function model can't bound a 500-row live-fetch batch
-without per-row fan-out. **Alternatives:** Azure Container Apps (container worker; Key Vault remote
-signing); or AWS Lambda, which is `$0`-idle but **requires per-row fan-out +
-aggregation** to fit the 15-min ceiling and whose API Gateway throttling is
+bounded**, not unbounded: Cloud Tasks dispatch is capped at 30 min and Cloud Run
+service requests at 60 min. The hosted **live-verify** limit is **grounded in the
+resolver's real fetch model** (per source type, 1 verify + up to 3 discovery-fallback
+fetches, serial, at `SAFE_TIMEOUT_SECONDS` = 20 s) — `max_verify_rows 20`,
+`verify_row_concurrency 10`, worst case **~12 min** — so it fits the 30-min deadline
+with ~2× headroom; this is distinct from the 500-row *cached* batch (no fetch).
+A larger verify limit is **not v1** and **not** a hand-waved scale-up: it is a
+separate future WP requiring a full parent/child decomposition (Cloud Run Jobs +
+a launcher is the likely vehicle for *that* WP, but it is not claimed to work here).
+**Alternatives:** Azure Container Apps (container worker; Key Vault remote signing);
+or AWS Lambda, whose **15-min** ceiling gives less headroom than Cloud Run's 30-min
+deadline for the same worst case, is `$0`-idle, and whose API Gateway throttling is
 best-effort (not a hard cost cap). Lock-in stays bounded to the adapter; rollback
 to a prior image is clean on all three. No provider offers a hard spend cap, so the
 bounded-spend-rate controls apply regardless of provider.

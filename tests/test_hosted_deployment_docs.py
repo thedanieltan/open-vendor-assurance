@@ -481,18 +481,190 @@ def test_access_matrix_permits_the_documented_request_flow():
     assert "executing->completed" in worker["owned_transitions"]
 
 
-def test_concurrency_budget_is_computed_and_fits_with_margin():
+def test_verify_execution_budget_is_grounded_in_real_resolver_constants():
+    # Independent review #402 round 6, Finding 1: the hosted live-verify budget must
+    # be derived from the resolver's ACTUAL fetch behaviour, not an invented timeout.
+    # Import the executable constants so the contract cannot drift from the code.
     import math
 
+    from tools.openva.vendor_resolution import SAFE_TIMEOUT_SECONDS, _DISCOVERY_PATHS
+
     c = _contract()
-    b = c["concurrency_budget"]
-    lim = c["limits"]["max_rows"]
-    waves = math.ceil(lim * b["max_fetches_per_row"] / b["fetch_concurrency"])
-    worst = waves * b["per_fetch_deadline_seconds"] * b["retry_backoff_factor"] / 60 + b["handler_overhead_seconds"] / 60
-    # The recorded worst case matches the formula (no independent drift).
-    assert abs(worst - b["worst_case_minutes_v1"]) <= 1, f"recomputed {worst} != {b['worst_case_minutes_v1']}"
+    hv = c["hosted_verify_limits"]
+    budget = c["verify_execution_budget"]
     pl = c["platform_limits"]
-    assert b["worst_case_minutes_v1"] < pl["baseline_per_job_budget_minutes"] < pl["cloud_tasks_http_dispatch_deadline_minutes"]
+
+    # 1) The per-fetch deadline is the REAL resolver timeout, not a lower invention.
+    assert budget["per_fetch_deadline_seconds"] == int(SAFE_TIMEOUT_SECONDS), (
+        "contract per_fetch_deadline_seconds must equal the resolver's SAFE_TIMEOUT_SECONDS"
+    )
+    assert SAFE_TIMEOUT_SECONDS == 20.0  # guards against a silent resolver change
+
+    # 2) Worst-case network ops per source type = 1 primary verify fetch + the longest
+    #    discovery-fallback path list. Derived from the real _DISCOVERY_PATHS, not assumed.
+    max_discovery_paths = max(len(paths) for paths in _DISCOVERY_PATHS.values())
+    assert max_discovery_paths == 3  # current resolver: dpa/subprocessors/privacy each have 3
+    assert budget["network_ops_per_source_type_worst"] == 1 + max_discovery_paths, (
+        "network ops per source type must be 1 (verify) + max discovery-fallback paths"
+    )
+
+    # 3) Recompute the worst-case wall time from the grounded inputs and check the
+    #    contract's recorded figure has not drifted.
+    per_row_seconds = (
+        hv["max_source_types_per_verify_row"]
+        * budget["network_ops_per_source_type_worst"]
+        * budget["per_fetch_deadline_seconds"]
+    )
+    waves = math.ceil(hv["max_verify_rows"] / hv["verify_row_concurrency"])
+    worst_seconds = waves * per_row_seconds + budget["handler_overhead_seconds"]
+    assert worst_seconds == budget["worst_case_seconds_v1"], (
+        f"recomputed worst case {worst_seconds}s != recorded {budget['worst_case_seconds_v1']}s"
+    )
+
+    # 4) Ordering invariant: worst case < per-job budget < the platform dispatch deadline.
+    worst_minutes = worst_seconds / 60
+    assert (
+        worst_minutes
+        < pl["baseline_per_job_budget_minutes"]
+        < pl["cloud_tasks_http_dispatch_deadline_minutes"]
+    ), "verify worst case must fit inside the per-job budget inside the dispatch deadline"
+    assert budget["fits_with_margin"] is True
+
+    # 5) The hosted live-verify limit (egress) is DISTINCT from the cached/batch limit
+    #    (no egress). Conflating them is exactly the round-6 error.
+    assert hv["max_verify_rows"] < c["limits"]["max_rows_cached"]
+    # The job record's row_count is bounded by the verify limit, not the cached limit.
+    schema = json.loads(_read(SCHEMA_PATH))
+    assert schema["properties"]["row_count"]["maximum"] == hv["max_verify_rows"]
+
+
+def test_watchdog_authority_is_exactly_two_executing_edges():
+    # Independent review #402 round 6, Finding 2: the watchdog owns EXACTLY
+    # executing->queued and executing->failed — no more. This test fails on EXTRA
+    # authority (e.g. a re-introduced queued->failed [watchdog] edge).
+    c = _contract()
+    t = c["transitions"]
+
+    # Reconstruct every edge the watchdog is granted directly from the transition map.
+    watchdog_edges = {
+        f"{src}->{dst}"
+        for src, dests in t.items()
+        for dst, actors in dests.items()
+        if "watchdog" in actors
+    }
+    assert watchdog_edges == {"executing->queued", "executing->failed"}, (
+        f"watchdog must own exactly its two executing edges, got {sorted(watchdog_edges)}"
+    )
+
+    # The access_matrix must agree exactly (no extra owned_transitions).
+    owned = set(c["access_matrix"]["watchdog"]["owned_transitions"])
+    assert owned == {"executing->queued", "executing->failed"}, (
+        f"access_matrix watchdog owned_transitions must be exactly the two edges, got {sorted(owned)}"
+    )
+
+    # A queued record holds no lease, so there is intentionally no queued->failed edge
+    # for ANY actor (the watchdog has nothing to recover there).
+    assert "failed" not in t["queued"], "queued has no failed edge (queued holds no lease)"
+
+
+def test_transition_mutations_apply_to_fixtures_and_validate_against_schema():
+    # Independent review #402 round 6, Finding 3: every transition is a complete,
+    # schema-valid atomic mutation. Apply each mutation's `set` (and envelope delete)
+    # to the source-state fixture and assert the result validates.
+    c = _contract()
+    validator = _validator()
+    mutations = c["transition_mutations"]
+
+    # Concrete, schema-valid sample values for the contract's "<placeholder>" tokens.
+    samples = {
+        "state": None,  # always provided explicitly by the mutation
+        "error_code": "execution_timeout",
+        "result_ref": "result/9f1c2d3e-4b5a-46c7-8d9e-0a1b2c3d4e5f",
+        "lease_owner": "worker-9f1c2d3e-01",
+        "lease_expires_at": "2026-06-20T12:05:00Z",
+        "updated_at": "2026-06-20T12:02:00Z",
+        "attempt": 1,
+    }
+
+    def materialize(value, key):
+        # Replace "<...>" placeholders with schema-valid concrete values; keep nulls/literals.
+        if isinstance(value, str) and value.startswith("<") and value.endswith(">"):
+            assert key in samples, f"no sample value for placeholder field {key}"
+            return samples[key]
+        return value
+
+    fixtures = {p.stem: json.loads(_read(p)) for p in EXAMPLES.glob("*.json")}
+
+    for name, mut in mutations.items():
+        src_state = mut["from"]
+        assert src_state in fixtures, f"{name}: no source fixture for state {src_state}"
+        record = json.loads(json.dumps(fixtures[src_state]))
+        # Sanity: the fixture really is in the declared source state.
+        assert record["state"] == src_state, f"{name}: fixture state mismatch"
+
+        for field, raw in mut["set"].items():
+            record[field] = materialize(raw, field)
+        # The optional post-step physically deletes the request envelope -> request_ref null.
+        if mut.get("then") == "delete_request_envelope":
+            record["request_ref"] = None
+
+        errors = [e.message for e in validator.iter_errors(record)]
+        assert errors == [], f"{name}: post-mutation record is not schema-valid: {errors}"
+
+    # Negative: an INCOMPLETE terminal mutation (forgets to clear request_ref) must be
+    # rejected by the schema — proving the invariant is enforced, not just documented.
+    completed = json.loads(json.dumps(fixtures["executing"]))
+    completed.update(
+        {
+            "state": "completed",
+            "result_ref": samples["result_ref"],
+            "error_code": None,
+            "lease_owner": None,
+            "lease_expires_at": None,
+        }
+    )  # NOTE: request_ref deliberately left set
+    assert list(validator.iter_errors(completed)), (
+        "a completed record that still carries request_ref must fail validation"
+    )
+
+
+def test_result_token_transport_is_header_only_bearer_capability():
+    # Independent review #402 round 6, Finding 4: the job_token is transported
+    # header-only as `Authorization: Bearer`, never in a URL/query/path/redirect,
+    # redacted in logs, compared in constant time, and not rotated in v1.
+    c = _contract()
+    tt = c["result_access"]["token_transport"]
+    assert tt["mechanism"] == "Authorization: Bearer <job_token>"
+    assert tt["header_only"] is True
+    assert tt["query_string_forbidden"] is True
+    assert tt["url_path_forbidden"] is True
+    assert tt["redirect_carries_token"] is False
+    assert tt["authorization_header_redacted_in_logs"] is True
+    assert tt["edge_proxy_must_not_log_token"] is True
+    assert tt["raw_token_persisted"] is False
+    assert tt["digest_comparison"] == "constant_time"
+    assert tt["failed_auth_response"] == "generic_content_free"
+    assert tt["response_echoes_token"] is False
+    assert tt["token_rotation_in_v1"] is False
+
+    # Both the header and the raw token are prohibited telemetry fields.
+    prohibited = set(c["prohibited_telemetry_fields"])
+    assert {"authorization_header", "job_token"} <= prohibited
+
+    # The raw capability never appears in any example fixture (only job_token_digest).
+    for path in EXAMPLES.glob("*.json"):
+        text = _read(path)
+        assert "job_token_digest" in text
+        assert '"job_token"' not in text, f"{path.name} must not carry a raw job_token"
+
+    # The threat model and observability docs both pin header-only transport.
+    threat = " ".join(
+        _read(ROOT / "docs" / "security" / "hosted-deployment-threat-model.md").lower().split()
+    )
+    obs = " ".join(_read(OPS / "hosted-deployment-observability.md").lower().split())
+    for flat in (threat, obs):
+        assert "authorization: bearer" in flat or "authorization header" in flat
+        assert "constant-time" in flat or "constant time" in flat
 
 
 def test_no_received_or_queued_to_executing_phrase_drift():
@@ -511,23 +683,35 @@ def test_execution_surface_is_concrete_and_bounded():
     c = _contract()
     surf = c["execution_surface"]
     assert "cloud_run_service_handler" in surf["baseline"]
-    assert surf["batch_bounded_to_fit_platform_limits"] is True
+    # The verify batch is bounded by the grounded hosted_verify_limits (round 6),
+    # and a larger batch is explicitly a separate future WP, not a hand-waved scale-up.
+    assert surf["verify_batch_bounded_by"] == "hosted_verify_limits"
+    assert "separate_wp" in surf["larger_verify_batches"]
+    assert "parent_child" in surf["larger_verify_batches"]
     pl = c["platform_limits"]
     assert pl["cloud_tasks_http_dispatch_deadline_minutes"] == 30
     assert pl["baseline_per_job_budget_minutes"] < pl["cloud_tasks_http_dispatch_deadline_minutes"]
-    # No doc may claim a "no invocation ceiling".
+    # No doc may claim a "no invocation ceiling" or re-introduce the withdrawn 16-min figure.
     for path in HOSTED_DOCS + [ADR_0006]:
-        assert "no invocation ceiling" not in _read(path).lower(), f"{path.name} claims no invocation ceiling"
+        low = _read(path).lower()
+        assert "no invocation ceiling" not in low, f"{path.name} claims no invocation ceiling"
+        assert "16 min" not in low and "16-min" not in low, f"{path.name} re-introduced the withdrawn 16-min figure"
 
 
 def test_limits_aligned_across_schema_and_contract():
     schema = json.loads(_read(SCHEMA_PATH))
-    contract_max = _contract()["limits"]["max_rows"]
-    assert schema["properties"]["row_count"]["maximum"] == contract_max
+    c = _contract()
+    # Round 6: two DISTINCT limits. The cached/batch limit (no egress) is the larger
+    # one; the hosted live-verify limit (egress, grounded budget) bounds job records.
+    cached = c["limits"]["max_rows_cached"]
+    verify = c["hosted_verify_limits"]["max_verify_rows"]
+    assert verify < cached, "verify (egress) limit must be smaller than the cached/batch limit"
+    # The job record is verify-only, so row_count is bounded by the VERIFY limit.
+    assert schema["properties"]["row_count"]["maximum"] == verify
     # Pre-job rejection codes are NOT durable job error codes.
     err = schema["properties"]["error_code"]["enum"]
     assert "input_too_large" not in err and "row_limit_exceeded" not in err
-    assert set(_contract()["limits"]["pre_job_rejections"]) == {"input_too_large", "row_limit_exceeded"}
+    assert set(c["limits"]["pre_job_rejections"]) == {"input_too_large", "row_limit_exceeded"}
 
 
 def test_expiry_is_three_phase_410_then_404():

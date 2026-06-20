@@ -47,9 +47,11 @@ the machine-readable contract is [`docs/operations/contracts/hosted-deployment.y
 A single OCI deployable composed of: a rate-limiting edge (HTTPS LB + Cloud Armor),
 a public read API (FastAPI), an asynchronous `verify`-mode **worker realized as a
 Cloud Run service handler invoked by Cloud Tasks** (a concrete, bounded surface —
-the ≤500-row batch fits the Cloud Tasks 30-min dispatch deadline via bounded
-intra-job fetch concurrency; Cloud Run Jobs + a launcher is the documented scale-up
-path for larger batches), a queue, a transient request envelope + a small durable
+the **grounded** live-verify limit of `max_verify_rows 20` at the resolver's real
+`SAFE_TIMEOUT_SECONDS` = 20 s per fetch, worst case ~12 min, fits the Cloud Tasks
+30-min dispatch deadline with ~2× headroom; a larger verify limit is a separate
+future WP requiring parent/child decomposition, not assumed here), a queue, a
+transient request envelope + a small durable
 job store (operational metadata only, TTL-deleted) + a transient result store, the
 static/cached fallback layer (GitHub Pages exports + static MCP, which remain
 canonical and keep working when the hosted service is down), the existing PR-bound
@@ -63,19 +65,20 @@ kill-switch. See
 **Google Cloud Run** — a container API **and a long-running container worker**
 (+ external HTTPS LB & Cloud Armor for the rate-limiting edge, Cloud Tasks,
 Firestore TTL, Secret Manager, Workload Identity). The reassessment converged here
-after two corrections: review #402 r2 surfaced that the mandatory edge gives Cloud
-Run a **~$24/mo fixed floor** (briefly moving the baseline to Lambda); r3 corrected
-that AWS Lambda's **API Gateway throttling is best-effort, not a hard cost cap**,
-and that verify is **long-running batch work** (≤500 rows of live fetch) that
-exceeds Lambda's **15-minute invocation ceiling** and would require per-row fan-out
-+ aggregation. The decisive factor for a solo maintainer is a **container worker
-without Lambda's 15-min function limit**: Cloud Run runs the existing container unchanged for
-both API and worker, the ~$24/mo edge floor is modest and bounded, and **no
-provider offers a hard spend cap** (so the engineered bounded-spend-rate applies
-regardless). **Alternative — Azure Container Apps** (container worker; Key Vault
-remote JWT signing — strongest secret posture). **Alternative — AWS Lambda**, only
-if `$0` idle justifies building per-row fan-out + aggregation; its gateway throttle
-is best-effort. Rejected: AWS App Runner
+after review #402 corrected the cost facts: the mandatory edge gives Cloud Run a
+**~$24/mo fixed floor**, AWS Lambda's **API Gateway throttling is best-effort, not a
+hard cost cap**, and **no provider offers a hard spend cap** — so cost is roughly a
+wash and **not** decisive. The decisive factors for a solo maintainer are
+**portability** (Cloud Run runs the existing container unchanged for both API and
+worker) and **execution headroom**: the **grounded** live-verify worst case (~12 min
+for `max_verify_rows 20` at `SAFE_TIMEOUT_SECONDS` = 20 s) fits Cloud Run's 30-min
+dispatch deadline with ~2× headroom, where AWS Lambda's **15-min** ceiling is
+tighter for the same work. (The earlier "verify is a 500-row batch that can't fit
+Lambda" framing is **withdrawn**: 500 rows is the *cached* batch, which does no live
+fetch; the hosted verify limit is 20 rows.) **Alternative — Azure Container Apps**
+(container worker; Key Vault remote JWT signing — strongest secret posture).
+**Alternative — AWS Lambda**, a viable `$0`-idle option with tighter execution
+headroom and best-effort gateway throttling. Rejected: AWS App Runner
 (closed to new customers in 2026), ECS Fargate and Render (no scale-to-zero / high
 idle floor). The deployable stays a portable OCI image; the provider is a
 reversible maintainer choice.
@@ -122,10 +125,11 @@ is out of scope and needs a new decision.
    service, and no scale-to-zero. Retained as a fallback if scale-to-zero cold
    starts prove unacceptable.
 3. **Serverless functions (AWS Lambda) as the baseline.** `$0` idle, but its API
-   Gateway throttling is best-effort (not a hard cost cap), and the 15-minute
-   invocation limit means the ≤500-row verify batch needs per-row fan-out +
-   aggregation, and the ASGI→handler adapter raises lock-in. Kept as an alternative
-   for the `$0`-idle case, not the baseline.
+   Gateway throttling is best-effort (not a hard cost cap), its 15-minute invocation
+   ceiling gives tighter headroom than Cloud Run's 30-min dispatch deadline for the
+   grounded ~12-min verify worst case (and a *larger* future verify limit would force
+   per-row fan-out + aggregation sooner), and the ASGI→handler adapter raises lock-in.
+   Kept as an alternative for the `$0`-idle case, not the baseline.
 4. **Browser/edge-only execution.** Rejected for the same reasons as ADR-0001
    alternative 2: the SSRF-safe boundary and credential custody cannot run there.
 

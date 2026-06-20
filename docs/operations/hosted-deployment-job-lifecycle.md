@@ -33,7 +33,6 @@ worker's recovery path is `received → queued → executing`.
 received  → queued      [api (normal), reconciler (recovery), worker (recovery)]
 received  → failed      [api]
 queued    → executing   [worker]
-queued    → failed      [worker, watchdog]
 executing → completed   [worker]
 executing → failed      [worker (internal failure), watchdog (stale-lease / timeout)]
 executing → queued      [watchdog (stale-lease takeover, re-dispatch)]
@@ -41,9 +40,13 @@ completed → (none)
 failed    → (none)
 ```
 
-Any other edge — or an actor not listed for an edge — is rejected. This is the
-authoritative `transitions` map in the contract; a test asserts every edge each
-actor protocol uses is present and that `received → executing` is not a direct edge.
+There is **intentionally no `queued → failed` edge**: a `queued` record holds no
+execution lease, so the watchdog (whose authority is **exactly** `executing → queued`
+and `executing → failed`) has nothing to recover there, and a queued job only ever
+leaves via `queued → executing`. Any other edge — or an actor not listed for an edge
+— is rejected. This is the authoritative `transitions` map in the contract; a test
+asserts every edge each actor protocol uses is present, that `received → executing`
+is not a direct edge, and that the watchdog owns no edge beyond its two.
 
 ## Execution lease and crashed-worker recovery
 
@@ -84,9 +87,22 @@ used to carry inventory (task payloads are durably stored and size-limited).
 
 `job_id` is a loggable correlation id and is **not** an access credential. At
 creation the API returns a single high-entropy **`job_token`** capability; the
-client must present it to poll status and retrieve the result. The token is never
-logged (it is in `prohibited_telemetry_fields`) and never stored in plaintext —
-the record persists only its SHA-256 digest, `job_token_digest`, for verification.
+client must present it to poll status and retrieve the result (the **same** rule for
+both).
+
+**Token transport (contract `result_access.token_transport`).** The capability
+travels in a header **only** — `Authorization: Bearer <job_token>` — and **never in
+a URL, query string, path, or redirect**, so it cannot leak via access/proxy logs,
+browser history, or analytics. The Authorization header is **redacted/omitted** by
+the API *and* the edge/reverse proxy; the raw token is never logged, traced,
+metered, echoed in responses, or stored in plaintext — the record persists only its
+SHA-256 digest `job_token_digest`. Verification uses a **constant-time** digest
+comparison; a failed/absent token yields a **generic, content-free** response; CORS
+does not expose the capability to unauthorized origins; browsers hold it
+**in-memory for the session only** (not persistent storage). There is **no token
+rotation/reissue in v1**. The token is listed in `prohibited_telemetry_fields`
+(alongside `authorization_header`).
+
 The result blob lives in the **transient result store** (`transient_result_store`),
 referenced by `result_ref`, and is deleted on TTL/expiry.
 
@@ -201,23 +217,37 @@ durations) that contain no submitted content.
 ## Execution surface and platform limits (concrete)
 
 The baseline worker is a **Cloud Run service handler invoked by Cloud Tasks**.
-There is **no unbounded-runtime claim** — the relevant platform limits are
-explicit: a Cloud Tasks HTTP dispatch deadline of **30 min** and a Cloud Run
-service request timeout of up to **60 min**. The ≤500-row batch is **bounded to fit
-the 30-min dispatch deadline** by **bounded intra-job fetch concurrency**, and a
-per-job execution timeout (`baseline_per_job_budget_minutes` = 25 min) caps it.
+There is **no unbounded-runtime claim** — the platform limits are explicit: a Cloud
+Tasks HTTP dispatch deadline of **30 min** and a Cloud Run service request timeout
+of up to **60 min**, with a per-job execution timeout
+(`baseline_per_job_budget_minutes` = 25 min) enforcing the ceiling.
 
-The bound is **computed, not asserted** (contract `concurrency_budget`):
-`worst_case = ceil(max_rows × max_fetches_per_row / fetch_concurrency) ×
-per_fetch_deadline_seconds × retry_backoff_factor + handler_overhead`. With v1
-values (`max_rows 500`, `max_fetches_per_row 3`, `fetch_concurrency 20`,
-`per_fetch_deadline 8 s`, `backoff 1.5`, `overhead 60 s`) → `ceil(75) × 8 × 1.5 / 60
-+ 1 = 16 min`, comfortably **< the 25-min budget < the 30-min dispatch deadline**. A
-drift test recomputes this so the row cap, fetch deadline, concurrency, and budget
-cannot drift apart. Batches that cannot fit are a documented **scale-up path**:
-Cloud Run **Jobs** (up to 168 h) started by a short-lived Cloud Tasks **launcher**
-with its own execution id, launch idempotency, status reconciliation, cancellation,
-and CAS mapping — out of scope for v1.
+**The hosted live-verify limit is grounded in the resolver's real fetch behaviour,
+not in an assumed 500-row figure.** The resolver (`tools/openva/vendor_resolution.py`)
+fetches with a **`SAFE_TIMEOUT_SECONDS` = 20 s** whole-request deadline, and per
+source type it does **1 verify fetch + up to `max(len(_DISCOVERY_PATHS))` = 3
+discovery-fallback fetches**, all **serial**; source types within a row are serial;
+rows run at `verify_row_concurrency`. So `network_ops_per_source_type_worst = 4` and
+`per_fetch_deadline_seconds = 20` are **imported from / asserted against the
+resolver** by a drift test (it fails if the contract invents a lower timeout than
+the resolver uses, or understates the per-source-type op bound).
+
+The hosted limits (contract `hosted_verify_limits` + `verify_execution_budget`) are
+therefore deliberately small and **distinct from the 500-row cached/batch limit**
+(`limits.max_rows_cached`, which performs no live fetch):
+`max_verify_rows 20`, `max_source_types_per_verify_row 4`, `verify_row_concurrency 10`.
+Worst case = `ceil(20/10) × 4 × 4 × 20 s + 60 s = 700 s ≈ 11.7 min`, comfortably
+**< the 25-min per-job budget < the 30-min dispatch deadline**. A drift test
+recomputes this from the imported resolver constants so the row cap, fetch deadline,
+op bound, concurrency, and budget cannot drift apart, and **fails if the hosted
+limits could ever exceed the deadline**.
+
+A **larger** verify limit is **not supported in v1** and is **not** achieved by a
+hand-waved "scale-up path": it is a separate future work package that must fully
+specify a parent/child decomposition (parent lifecycle, child work-item schema,
+chunking, queue identity, child lease/attempt, aggregation, partial-failure,
+terminalisation ownership, expiry coordination, and tests) before claiming any
+larger bound.
 
 ## Component access and terminalization
 
@@ -236,8 +266,31 @@ operations each component performs:
 - **Candidate-ingress:** the **only** holder of the GitHub App key.
 
 On success the worker terminalizes in this exact order: **write result blob → CAS
-`executing → completed` (record `result_ref`) → delete request envelope** (a crash
-before the delete leaves an orphan envelope reaped by its object-lifecycle TTL).
+`executing → completed`** — and that single CAS **atomically sets `result_ref` and
+clears `request_ref`, `error_code`, `lease_owner`, and `lease_expires_at` IN the job
+record** (so the record is schema-valid the instant it is `completed`) — **→ delete
+the physical request envelope** as a *separate* step (deleting the envelope is never
+a substitute for clearing the `request_ref` pointer; a crash before the delete
+leaves an orphan envelope reaped by its object-lifecycle TTL).
+
+## Atomic transition mutations
+
+Every transition that changes a field invariant is a **single compare-and-set on
+the durable record** carrying the complete field payload, recorded machine-readably
+in the contract `transition_mutations` and validated by a drift test that applies
+each mutation to a source-state fixture and re-checks the schema:
+
+| Transition (owner) | The CAS atomically sets |
+| --- | --- |
+| `received → queued` (api/reconciler/worker) | `state=queued`, `updated_at` (request_ref preserved; lease stays null) |
+| `received → failed` (api) | `state=failed`, `error_code`, `request_ref=null`, `result_ref=null`, lease=null; then delete envelope |
+| `queued → executing` (worker) | `state=executing`, `lease_owner`, `lease_expires_at`, `updated_at` (request_ref preserved) |
+| `executing → completed` (worker) | `state=completed`, `result_ref`, `request_ref=null`, `error_code=null`, lease=null; then delete envelope |
+| `executing → failed` (worker/watchdog) | `state=failed`, `error_code`, `request_ref=null`, `result_ref=null`, lease=null; then delete envelope |
+| `executing → queued` (watchdog) | `state=queued`, `lease_owner=null`, `lease_expires_at=null`, `attempt=attempt+1`, `updated_at` (request_ref preserved for retry) |
+
+A CAS is conditioned on the record version; a stale-version CAS fails and the actor
+re-reads (so two actors never both win a transition).
 
 ## Concurrency and failure recovery
 
@@ -252,13 +305,16 @@ before the delete leaves an orphan envelope reaped by its object-lifecycle TTL).
 
 ## Limits and error codes
 
-The authoritative request limit is `max_rows: 500` (contract `limits`; the schema's
-`row_count` maximum matches). **Over-limit requests are rejected by the API before a
-job is created**, so `input_too_large` / `row_limit_exceeded` are **API rejection
-responses, not durable job error codes**. The durable job `error_code` vocabulary is
-only: `execution_timeout`, `upstream_unavailable`, `rate_limited`, `internal_error`
-— stable, generic, content-free; upstream vendor messages and submitted content
-never appear in an error.
+There are **two distinct limits**: the cached/batch enrich limit
+`limits.max_rows_cached = 500` (no live fetch, no egress) and the hosted **live-verify**
+limit `hosted_verify_limits.max_verify_rows = 20` (the job record's `row_count`
+maximum matches *this*, since a job record exists only for verify mode).
+**Over-limit requests are rejected by the API before a job is created**, so
+`input_too_large` / `row_limit_exceeded` are **API rejection responses, not durable
+job error codes**. The durable job `error_code` vocabulary is only:
+`execution_timeout`, `upstream_unavailable`, `rate_limited`, `internal_error` —
+stable, generic, content-free; upstream vendor messages and submitted content never
+appear in an error.
 
 ## Non-advisory guarantee
 

@@ -41,11 +41,14 @@ spend ceiling, permissions). They fail closed until those are made.
 ### WP-02A — Hosted transport + API contract
 - **Inputs:** the merged resolver core; ADR-0001/0006; the match-service contract.
 - **Outputs:** the `/v1` verify transport over the existing FastAPI service (job
-  create + poll), the revised match-service contract acknowledging persistence +
-  egress (in lockstep, per ADR-0001), and the API contract doc.
+  create returns `job_id` + a one-time `job_token`; poll retrieves the result with
+  the `job_token` sent **header-only** as `Authorization: Bearer <job_token>` —
+  never in the URL/query/path/redirect — verified by **constant-time** digest
+  comparison and redacted in logs), the revised match-service contract acknowledging
+  persistence + egress (in lockstep, per ADR-0001), and the API contract doc.
 - **Allowed paths:** `services/openva_match_service/**`, `docs/openva-match-service-contract.md`, `docs/resolver-api.md`, `tests/**`.
 - **Non-goals:** persistence backend, worker, deployment.
-- **Tests:** contract tests for job-create/poll shapes; non-advisory headers on every response; CORS allow-list; body/row limits; **SSRF-negative**.
+- **Tests:** contract tests for job-create/poll shapes; **`job_token` accepted only via the `Authorization: Bearer` header** (query-string/path/redirect rejected); constant-time digest comparison; generic auth-failure with no token echo; non-advisory headers on every response; CORS allow-list; body/row limits; **SSRF-negative**.
 - **Rollback:** transport behind a flag; off → cached-only synchronous service.
 - **Acceptance evidence:** CI green; ADR-0001 six gates demonstrably preserved.
 
@@ -60,10 +63,10 @@ spend ceiling, permissions). They fail closed until those are made.
 
 ### WP-02C — Worker + queue execution
 - **Inputs:** WP-02B; the SSRF-safe fetch boundary.
-- **Outputs:** the async worker as a **Cloud Run service handler invoked by Cloud Tasks** (concrete, bounded: the ≤500-row batch fits the 30-min Cloud Tasks dispatch deadline via the computed `concurrency_budget` — `fetch_concurrency 20`, worst-case ~16 min < the 25-min per-job timeout) that re-reads the envelope by `job_id`, does the recovery CAS `received→queued` then `queued→executing`, **takes + heartbeats the execution lease**, then `executing→completed|failed`, and acks-and-drops duplicate deliveries; the **watchdog** (stale-lease recovery); plus a queue adapter behind an interface; `attempt` retries.
+- **Outputs:** the async worker as a **Cloud Run service handler invoked by Cloud Tasks** (concrete, bounded by the **grounded `verify_execution_budget`**: `max_verify_rows 20` × up to 4 serial fetches/source-type at `per_fetch_deadline_seconds 20` = `SAFE_TIMEOUT_SECONDS`, `verify_row_concurrency 10` → worst case ~12 min < the per-job timeout < the 30-min Cloud Tasks dispatch deadline) that re-reads the envelope by `job_id`, does the recovery CAS `received→queued` then `queued→executing`, **takes + heartbeats the execution lease**, then `executing→completed|failed`, and acks-and-drops duplicate deliveries; the **watchdog** (stale-lease recovery); plus a queue adapter behind an interface; `attempt` retries.
 - **Allowed paths:** `services/openva_match_service/**`, `tools/openva/**` (read-only reuse), `tests/**`.
-- **Non-goals:** candidate write-back; deployment. (Larger-than-bound batches are a separate scale-up sub-slice — Cloud Run Jobs + a Cloud Tasks launcher; the AWS-Lambda variant would additionally need per-row fan-out for the 15-min ceiling.)
-- **Tests:** worker re-reads the envelope + executes via the resolver; **SSRF-negative**; **`concurrency_budget` worst-case < per-job timeout < dispatch deadline** (recomputed from inputs); lease heartbeat extends; **watchdog recovers a stale lease** (`executing→queued` re-dispatch / `executing→failed` timeout); live lease not preempted; recovery CAS `received→queued→executing`; duplicate-delivery CAS dropped; no partial `completed`.
+- **Non-goals:** candidate write-back; deployment. (A **larger verify limit** is a separate future WP needing a full parent/child decomposition — Cloud Run Jobs + a Cloud Tasks launcher is the likely vehicle for *that* WP — not a hand-waved scale-up here. The 500-row figure is the *cached* batch, which does no live fetch.)
+- **Tests:** worker re-reads the envelope + executes via the resolver; **SSRF-negative**; **`verify_execution_budget` recomputed from the imported resolver constants** (`per_fetch_deadline_seconds == SAFE_TIMEOUT_SECONDS`; `network_ops_per_source_type_worst >= 1 + max len(_DISCOVERY_PATHS)`; worst case < per-job timeout < dispatch deadline); lease heartbeat extends; **watchdog recovers a stale lease** (`executing→queued` re-dispatch / `executing→failed` timeout); live lease not preempted; recovery CAS `received→queued→executing`; duplicate-delivery CAS dropped; no partial `completed`.
 - **Rollback:** disable worker → verify returns `queued`/cached; no stale-as-live.
 - **Acceptance evidence:** CI green; degradation honest; CAS protocol exercised.
 

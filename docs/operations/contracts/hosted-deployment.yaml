@@ -93,16 +93,20 @@ terminal_states:
 transitions:
   received:
     queued: [api, reconciler, worker]   # api on the normal path; reconciler + worker on recovery
-    failed: [api]
+    failed: [api]                       # api terminalizes a received job it cannot enqueue
   queued:
     executing: [worker]
-    failed: [worker, watchdog]
   executing:
     completed: [worker]
     failed: [worker, watchdog]          # worker on internal failure; watchdog on stale-lease / timeout
     queued: [watchdog]                  # stale-lease takeover: re-dispatch (attempt++)
   completed: {}
   failed: {}
+# NB: there is intentionally NO queued -> failed edge. A queued record has no
+# execution lease, so the watchdog (a stale-LEASE recoverer) has no authority over
+# it; a queued job is recovered by re-dispatch (reconciler) or terminated only via
+# executing (worker/watchdog) or by expiry. The watchdog owns EXACTLY
+# executing -> queued and executing -> failed.
 
 # Execution lease: a crashed worker must not strand an `executing` job (the worker
 # is the only actor that can leave `executing` on the happy path). On winning
@@ -122,47 +126,61 @@ execution_lease:
 record_key: job_id                    # the durable record's primary key (server-generated)
 result_ttl_hours_default: 24
 
-# Authoritative request limits (single source of truth; the schema's row_count
-# maximum is aligned to max_rows). Over-limit requests are rejected by the API
-# BEFORE any job is created, so input_too_large / row_limit_exceeded are API
-# rejection responses, NOT durable job error codes.
+# Two DISTINCT request limits. The CACHED limit is the existing repository import
+# limit (synchronous batch enrich, NO live fetch, no egress). The hosted LIVE-VERIFY
+# limit is separate and far smaller because each verify row drives real, serial,
+# 20-second SSRF-safe fetches (see verify_execution_budget). The job record's
+# row_count is the VERIFY count and is bounded by hosted_verify_limits.max_verify_rows.
+# Over-limit requests are rejected by the API BEFORE any job is created, so
+# input_too_large / row_limit_exceeded are API rejection responses, never job codes.
 limits:
-  max_rows: 500                        # == OPENVA_MAX_ROWS default; the schema row_count maximum matches this
+  max_rows_cached: 500                  # == OPENVA_MAX_ROWS default; cached/batch enrich only (no egress)
   max_upload_bytes: 5242880            # == OPENVA_MAX_UPLOAD_BYTES default (5 MiB)
   pre_job_rejections: [input_too_large, row_limit_exceeded]   # returned by the API; never a job error_code
 
 # Execution surface (chosen, concrete). The baseline worker is a Cloud Run SERVICE
-# handler invoked by Cloud Tasks; the ≤500-row batch is bounded to fit the platform
-# limits below by processing rows with bounded intra-job fetch concurrency, so
-# wall-clock stays well under the Cloud Tasks dispatch deadline. There is NO
-# unbounded-runtime claim. Batches that cannot fit the dispatch deadline are
-# a documented scale-up path (Cloud Run Jobs + a short-lived Cloud Tasks launcher),
-# out of scope for v1.
+# handler invoked by Cloud Tasks. There is NO unbounded-runtime claim and NO claim
+# that 500 verify rows fit: the hosted verify limit is GROUNDED in the resolver's
+# real fetch behaviour (verify_execution_budget) so the worst case provably fits the
+# platform limits. A LARGER verify limit is NOT supported in v1 and is NOT achieved
+# by a hand-waved "scale-up path"; it is a separate future work package that must
+# fully specify a parent/child decomposition (its own lifecycle, child schema,
+# chunking, aggregation, partial-failure, terminalisation, expiry coordination,
+# tests) before it can claim any larger bound.
 execution_surface:
   baseline: cloud_run_service_handler_invoked_by_cloud_tasks
-  batch_bounded_to_fit_platform_limits: true
-  scale_up_path: cloud_run_jobs_plus_cloud_tasks_launcher   # for batches that cannot fit the dispatch deadline
+  verify_batch_bounded_by: hosted_verify_limits   # grounded; not a 500-row claim
+  larger_verify_batches: out_of_scope_v1_separate_wp_needs_full_parent_child_decomposition
 platform_limits:
   cloud_tasks_http_dispatch_deadline_minutes: 30
   cloud_run_service_request_timeout_minutes_max: 60
-  cloud_run_jobs_task_hours_max: 168           # only via a launcher; not a direct Cloud Tasks dispatch
+  cloud_run_jobs_task_hours_max: 168           # only via a launcher; relevant only to the future decomposition WP
   baseline_per_job_budget_minutes: 25          # the enforced per-job execution timeout; < the Cloud Tasks dispatch deadline
 
-# Concrete v1 concurrency budget, so the 500-row cap is PROVEN to fit, not asserted.
-# worst_case_minutes = ceil(max_rows * max_fetches_per_row / fetch_concurrency)
-#                      * per_fetch_deadline_seconds * retry_backoff_factor / 60
-#                      + handler_overhead_seconds / 60
-# A drift test recomputes this from the inputs and asserts
-# worst_case_minutes < baseline_per_job_budget_minutes < cloud_tasks dispatch deadline,
-# so the row cap, fetch deadline, concurrency, and budget cannot drift independently.
-concurrency_budget:
-  fetch_concurrency: 20                        # v1 concrete intra-job concurrency limit
-  max_fetches_per_row: 3                        # bounded source operations per row (resolver per-vendor fetch set)
-  per_fetch_deadline_seconds: 8                 # the canonical safe-fetch whole-request deadline (must match safe_verify config)
-  retry_backoff_factor: 1.5                     # bounded retry/backoff allowance
+# Hosted LIVE-VERIFY limits, GROUNDED in executable resolver behaviour. A drift test
+# (tests/test_hosted_deployment_docs.py) IMPORTS the resolver constants
+# (vendor_resolution.SAFE_TIMEOUT_SECONDS, _DISCOVERY_PATHS) and asserts:
+#   - per_fetch_deadline_seconds == SAFE_TIMEOUT_SECONDS (fail if the contract
+#     invents a lower timeout than the resolver actually uses);
+#   - network_ops_per_source_type_worst >= 1 (verify) + max(len(_DISCOVERY_PATHS));
+#   - the recomputed worst case < baseline_per_job_budget_minutes < dispatch deadline.
+# Real model (vendor_resolution): per source type the resolver does 1 verify fetch
+# then up to max_discovery_paths fallback fetches, all SERIAL at SAFE_TIMEOUT_SECONDS
+# each; source types within a row are SERIAL; rows run at verify_row_concurrency.
+hosted_verify_limits:
+  max_verify_rows: 20                          # the job record's row_count maximum is aligned to this
+  max_source_types_per_verify_row: 4           # hosted cap (the core assurance source types)
+  verify_row_concurrency: 10                   # concurrent rows in one job
+verify_execution_budget:
+  per_fetch_deadline_seconds: 20               # MUST equal vendor_resolution.SAFE_TIMEOUT_SECONDS (asserted by import)
+  network_ops_per_source_type_worst: 4         # 1 verify + max(len(_DISCOVERY_PATHS))==3 discovery fallbacks (asserted)
   handler_overhead_seconds: 60
-  worst_case_minutes_v1: 16                     # ceil(500*3/20)=75; 75*8*1.5/60=15 + 60/60=1 => 16
-  fits_with_margin: true                        # 16 < baseline_per_job_budget_minutes (25) < dispatch deadline (30)
+  # worst_case_seconds = ceil(max_verify_rows / verify_row_concurrency)
+  #                      * max_source_types_per_verify_row
+  #                      * network_ops_per_source_type_worst
+  #                      * per_fetch_deadline_seconds + handler_overhead_seconds
+  worst_case_seconds_v1: 700                    # ceil(20/10)=2; 2*4*4*20=640; +60 = 700 (~11.7 min)
+  fits_with_margin: true                        # 700s (~11.7m) < per-job budget 25m (1500s) < dispatch 30m (1800s)
 
 # Expiry is NOT a persisted state; it is time-based on expires_at. Because the job
 # record (which holds expires_at and job_token_digest) is physically deleted at
@@ -193,7 +211,7 @@ request_envelope:
   encryption: at_rest
   access: workload_identity_least_privilege   # API writes; worker reads
   deleted_on: [completion, failure, abandonment, ttl]
-  max_size: existing_upload_and_row_caps      # OPENVA_MAX_UPLOAD_BYTES / OPENVA_MAX_ROWS
+  max_size: bounded_by_limits                 # max_upload_bytes + hosted_verify_limits.max_verify_rows
 
 # Result-access authorization. job_id is a loggable correlation id and is NOT an
 # access credential. A high-entropy job_token capability is returned once at job
@@ -204,6 +222,24 @@ result_access:
   capability: job_token               # returned once at creation; never logged
   stored_as: job_token_digest         # sha256 of the capability only
   result_store: transient_result_store
+  # Token TRANSPORT contract (v1). The capability travels in a header ONLY, never in
+  # a URL, query string, path, or redirect, so it cannot leak via access/proxy logs,
+  # browser history, or analytics. Poll and result retrieval use the SAME rule.
+  token_transport:
+    mechanism: "Authorization: Bearer <job_token>"   # standard Authorization header
+    header_only: true
+    query_string_forbidden: true
+    url_path_forbidden: true
+    redirect_carries_token: false
+    authorization_header_redacted_in_logs: true       # API + edge/reverse proxies redact it
+    edge_proxy_must_not_log_token: true
+    raw_token_persisted: false                        # only job_token_digest persists
+    digest_comparison: constant_time
+    failed_auth_response: generic_content_free
+    response_echoes_token: false
+    cors_exposes_capability: false
+    browser_storage: in_memory_session_only_not_persistent
+    token_rotation_in_v1: false                       # no reissue/rotation modelled in v1
 
 # Idempotency. There is NO deduplication in v1 and NO content-derived dedup key (a
 # SHA-256 of low-entropy vendor names is dictionary-testable and would let one
@@ -269,9 +305,9 @@ access_matrix:
     owned_transitions: ["received->queued", "queued->executing", "executing->completed", "executing->failed"]
     result_blob: write
     github_app_key: none
-  watchdog:                                 # stale-lease recovery (the reconciler's executing-scoped role)
+  watchdog:                                 # stale-LEASE recovery only (executing has a lease; queued does not)
     job_record: recovery_cas
-    owned_transitions: ["executing->queued", "executing->failed", "queued->failed"]
+    owned_transitions: ["executing->queued", "executing->failed"]
   candidate_ingress:
     github_app_key: access_or_sign          # the ONLY component that may use the GitHub App key
     catalog_truth: none                     # proposes PRs only; never writes data/** or merges
@@ -279,10 +315,41 @@ access_matrix:
     job_record: read_and_recovery_cas       # received->queued recovery (un-dispatched jobs)
     owned_transitions: ["received->queued"]
 result_read_rule: no_result_blob_read_without_valid_job_token
-terminalization_order:                  # worker, on success
-  - write_result_blob
-  - cas_executing_to_completed_record_result_ref
-  - delete_request_envelope             # orphan cleanup if the worker crashes before this: object-lifecycle TTL
+
+# Complete ATOMIC mutation payload for every transition that changes a field
+# invariant. The mutation is a single compare-and-set on the durable record (it
+# clears request_ref / lease fields IN the record — deleting the physical envelope
+# is a SEPARATE step and is never a substitute for clearing the pointer). Placeholder
+# values <now>/<worker>/<deadline>/<ref>/<code> are filled at runtime; a drift test
+# applies each mutation to a valid source-state fixture and re-validates against
+# hosted-job-record.schema.json. CAS is on the record version: a stale-version CAS
+# fails and the actor re-reads.
+transition_mutations:
+  api__received_to_queued:
+    from: received
+    set: {state: queued, updated_at: "<now>"}     # request_ref preserved; lease stays null
+  api__received_to_failed:
+    from: received
+    set: {state: failed, error_code: "<code>", request_ref: null, result_ref: null, lease_owner: null, lease_expires_at: null, updated_at: "<now>"}
+    then: delete_request_envelope
+  worker__queued_to_executing:
+    from: queued
+    set: {state: executing, lease_owner: "<worker>", lease_expires_at: "<deadline>", updated_at: "<now>"}   # request_ref preserved
+  worker__executing_to_completed:
+    from: executing
+    set: {state: completed, result_ref: "<ref>", request_ref: null, error_code: null, lease_owner: null, lease_expires_at: null, updated_at: "<now>"}
+    then: delete_request_envelope                 # if the delete fails, the envelope TTL is the backstop
+  worker__executing_to_failed:
+    from: executing
+    set: {state: failed, error_code: "<code>", request_ref: null, result_ref: null, lease_owner: null, lease_expires_at: null, updated_at: "<now>"}
+    then: delete_request_envelope
+  watchdog__executing_to_queued:
+    from: executing
+    set: {state: queued, lease_owner: null, lease_expires_at: null, attempt: "<attempt+1>", updated_at: "<now>"}   # request_ref preserved for retry
+terminalization_order:                  # worker, on success: write blob, record the atomic CAS, THEN physical delete
+  - write_result_blob_to_transient_result_store               # produces result_ref consumed by the CAS below
+  - cas_executing_to_completed_clears_request_ref_and_lease_and_records_result_ref   # single atomic mutation (transition_mutations.worker__executing_to_completed)
+  - delete_request_envelope             # separate step; orphan cleanup if the worker crashes before it: object-lifecycle TTL
 
 # Service topology components (each is specified in the architecture doc).
 topology_components:
@@ -321,7 +388,8 @@ prohibited_telemetry_fields:
   - uploaded_inventory
   - tool_arguments
   - candidate_url
-  - job_token            # the result-access capability is never logged
+  - authorization_header        # the Bearer job_token must be redacted/omitted everywhere
+  - job_token                   # the raw capability is never logged/traced/stored (only job_token_digest)
 
 # Maintainer-controlled external decisions (the fail-closed boundary). None of
 # these is decided in this work package.
