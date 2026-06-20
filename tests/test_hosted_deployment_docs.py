@@ -431,3 +431,78 @@ def test_no_request_digest_field_anywhere():
         assert "request_digest" not in _read(path), (
             f"{path.name} still references the removed request_digest field"
         )
+
+
+# --- independent review round 4 (#402) locks -----------------------------------
+
+
+def test_transition_graph_actor_scoped_no_received_to_executing():
+    t = _contract()["transitions"]
+    # received cannot go straight to executing — the worker recovers via queued.
+    assert "executing" not in t["received"], "no direct received -> executing edge"
+    assert "queued" in t["received"] and "worker" in t["received"]["queued"]
+    assert t["queued"]["executing"] == ["worker"]
+    # The worker protocol uses only declared edges.
+    worker_steps = " ".join(_contract()["handoff"]["worker"])
+    assert "received_to_queued" in worker_steps and "queued_to_executing" in worker_steps
+
+
+def test_execution_surface_is_concrete_and_bounded():
+    c = _contract()
+    surf = c["execution_surface"]
+    assert "cloud_run_service_handler" in surf["baseline"]
+    assert surf["batch_bounded_to_fit_platform_limits"] is True
+    pl = c["platform_limits"]
+    assert pl["cloud_tasks_http_dispatch_deadline_minutes"] == 30
+    assert pl["baseline_per_job_budget_minutes"] < pl["cloud_tasks_http_dispatch_deadline_minutes"]
+    # No doc may claim a "no invocation ceiling".
+    for path in HOSTED_DOCS + [ADR_0006]:
+        assert "no invocation ceiling" not in _read(path).lower(), f"{path.name} claims no invocation ceiling"
+
+
+def test_limits_aligned_across_schema_and_contract():
+    schema = json.loads(_read(SCHEMA_PATH))
+    contract_max = _contract()["limits"]["max_rows"]
+    assert schema["properties"]["row_count"]["maximum"] == contract_max
+    # Pre-job rejection codes are NOT durable job error codes.
+    err = schema["properties"]["error_code"]["enum"]
+    assert "input_too_large" not in err and "row_limit_exceeded" not in err
+    assert set(_contract()["limits"]["pre_job_rejections"]) == {"input_too_large", "row_limit_exceeded"}
+
+
+def test_expiry_is_three_phase_410_then_404():
+    exp = _contract()["expiry"]
+    assert "410" in exp["expired_record_retained"]
+    assert "404" in exp["after_physical_deletion"]
+    # Decision + lifecycle docs spell out the 404-after-deletion case.
+    for path in (OPS / "hosted-deployment-decision.md", OPS / "hosted-deployment-job-lifecycle.md"):
+        flat = " ".join(_read(path).lower().split())
+        assert "410" in flat and "404" in flat
+
+
+def test_credential_isolation_api_and_worker_hold_no_github_key():
+    am = _contract()["access_matrix"]
+    assert am["public_api"]["github_app_key"] == "none"
+    assert am["async_worker"]["github_app_key"] == "none"
+    assert am["candidate_ingress"]["github_app_key"].startswith("access")
+    # Docs state the isolation.
+    for path in (ADR_0006, OPS / "hosted-deployment-decision.md", ROOT / "docs" / "security" / "hosted-deployment-threat-model.md"):
+        flat = " ".join(_read(path).lower().split())
+        assert "candidate-ingress" in flat or "candidate_ingress" in flat
+        assert "no github credential" in flat or "hold no github" in flat or "holds no github" in flat
+
+
+def test_terminalization_order_is_specified():
+    order = _contract()["terminalization_order"]
+    # result blob written, then completed CAS, then envelope deleted.
+    joined = " ".join(order)
+    assert order[0].startswith("write_result")
+    assert "completed" in joined
+    assert order[-1].startswith("delete_request_envelope")
+
+
+def test_regional_logs_are_explicitly_configured_not_automatic():
+    for path in (OPS / "hosted-deployment-decision.md", OPS / "hosted-deployment-observability.md", OPS / "hosted-deployment-implementation-plan.md"):
+        flat = " ".join(_read(path).lower().split())
+        assert "log bucket" in flat or "_default sink" in flat or "regional log" in flat
+        assert "not automatic" in flat or "explicitly configured" in flat or "not assumed" in flat

@@ -27,7 +27,8 @@ in the provider's own pricing calculator before any provisioning (§6).
 > **best-effort, not a hard cost cap**, and verify is **long-running batch work**
 > (≤500 rows of live fetch) that exceeds Lambda's 15-min ceiling and would need
 > per-row fan-out. So the baseline is **Google Cloud Run** with a **long-running
-> container worker** (no invocation ceiling); the ~$24/mo edge floor is modest and
+> container worker** (no 15-min function limit; the ≤500-row batch fits the 30-min
+> Cloud Tasks dispatch deadline via intra-job concurrency); the ~$24/mo edge floor is modest and
 > bounded, and **no provider offers a hard spend cap** anyway. Lambda is an
 > alternative only with fan-out; ACA is the container alternative. All figures
 > `[confirm]` — rates and free grants change.

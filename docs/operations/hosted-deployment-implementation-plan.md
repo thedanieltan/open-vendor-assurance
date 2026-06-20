@@ -60,10 +60,10 @@ spend ceiling, permissions). They fail closed until those are made.
 
 ### WP-02C — Worker + queue execution
 - **Inputs:** WP-02B; the SSRF-safe fetch boundary.
-- **Outputs:** the async worker as a **long-running container** (no invocation ceiling; one job processes the whole ≤500-row batch, bounded by a per-job execution timeout) that re-reads the request envelope by `job_id`, does CAS `{received|queued}→executing` then `executing→completed|failed`, and acks-and-drops duplicate deliveries; plus a queue adapter behind an interface; bounded concurrency + `attempt` retries.
+- **Outputs:** the async worker as a **Cloud Run service handler invoked by Cloud Tasks** (concrete, bounded: the ≤500-row batch fits the 30-min Cloud Tasks dispatch deadline via bounded intra-job fetch concurrency + a per-job execution-timeout budget < 30 min) that re-reads the request envelope by `job_id`, does the recovery CAS `received→queued` then `queued→executing` then `executing→completed|failed`, and acks-and-drops duplicate deliveries; plus a queue adapter behind an interface; bounded concurrency + `attempt` retries.
 - **Allowed paths:** `services/openva_match_service/**`, `tools/openva/**` (read-only reuse), `tests/**`.
-- **Non-goals:** candidate write-back; deployment. (A serverless AWS-Lambda variant is out of scope for the baseline — it would need a separate per-row fan-out + aggregation sub-slice to fit the 15-min ceiling.)
-- **Tests:** worker re-reads the envelope + executes via the resolver; **SSRF-negative**; concurrency cap; per-job execution timeout → `failed` (`execution_timeout`); duplicate-delivery CAS dropped; no partial `completed`.
+- **Non-goals:** candidate write-back; deployment. (Larger-than-bound batches are a separate scale-up sub-slice — Cloud Run Jobs + a Cloud Tasks launcher; the AWS-Lambda variant would additionally need per-row fan-out for the 15-min ceiling.)
+- **Tests:** worker re-reads the envelope + executes via the resolver; **SSRF-negative**; concurrency cap; per-job budget < the Cloud Tasks dispatch deadline; per-job execution timeout → `failed` (`execution_timeout`); recovery CAS `received→queued→executing`; duplicate-delivery CAS dropped; no partial `completed`.
 - **Rollback:** disable worker → verify returns `queued`/cached; no stale-as-live.
 - **Acceptance evidence:** CI green; degradation honest; CAS protocol exercised.
 
@@ -97,12 +97,12 @@ spend ceiling, permissions). They fail closed until those are made.
 
 ### WP-02G — Production infrastructure
 - **Inputs:** WP-02F; **maintainer external decisions** (production provider/region/domain/secrets/permissions/spend ceiling).
-- **Outputs:** production service (not yet public), separate prod secrets/identity, the engineered cost ceiling (instance cap + rate limit + budget-alert kill-switch).
+- **Outputs:** production service (not yet public), separate prod secrets/identity with the GitHub App key **isolated to the candidate-ingress component** (API/worker hold none), explicit **regional log buckets + `_Default` sink** so logs stay in the primary region (not automatic on GCP), and the engineered cost ceiling (instance cap + rate limit + budget-alert kill-switch).
 - **Authority:** maintainer.
 - **Non-goals:** enabling public traffic (WP-02K).
-- **Tests:** prod health/readiness; least-privilege check; cost-ceiling controls present.
+- **Tests:** prod health/readiness; least-privilege + credential-isolation check (API/worker have no GitHub credential); log-residency check; cost-ceiling controls present.
 - **Rollback:** disable transport; revoke credentials; static layer serving.
-- **Acceptance evidence:** prod stood up, traffic disabled, cost controls verified.
+- **Acceptance evidence:** prod stood up, traffic disabled, credential isolation + regional logs + cost controls verified.
 
 ### WP-02H — Observability + abuse controls
 - **Inputs:** WP-02F; the observability spec.

@@ -44,12 +44,18 @@ the machine-readable contract is [`docs/operations/contracts/hosted-deployment.y
 
 ### Topology
 
-A single deployable composed of: a public read API (FastAPI), an asynchronous
-worker for `verify`-mode jobs, a queue between them, a small durable job/result
-store (operational metadata only, TTL-deleted), the static/cached fallback layer
-(GitHub Pages exports + static MCP, which remain canonical and keep working when
-the hosted service is down), the existing PR-bound candidate-ingress boundary,
-health/readiness endpoints, and an administrative kill-switch. See
+A single OCI deployable composed of: a rate-limiting edge (HTTPS LB + Cloud Armor),
+a public read API (FastAPI), an asynchronous `verify`-mode **worker realized as a
+Cloud Run service handler invoked by Cloud Tasks** (a concrete, bounded surface —
+the ≤500-row batch fits the Cloud Tasks 30-min dispatch deadline via bounded
+intra-job fetch concurrency; Cloud Run Jobs + a launcher is the documented scale-up
+path for larger batches), a queue, a transient request envelope + a small durable
+job store (operational metadata only, TTL-deleted) + a transient result store, the
+static/cached fallback layer (GitHub Pages exports + static MCP, which remain
+canonical and keep working when the hosted service is down), the existing PR-bound
+candidate-ingress boundary (the **only** holder of the GitHub App key — the API and
+worker hold no GitHub credential), health/readiness endpoints, and an administrative
+kill-switch. See
 [`docs/operations/hosted-deployment-architecture.md`](../../operations/hosted-deployment-architecture.md).
 
 ### Recommended baseline (recommendation only — reassessed across review rounds)
@@ -63,7 +69,7 @@ that AWS Lambda's **API Gateway throttling is best-effort, not a hard cost cap**
 and that verify is **long-running batch work** (≤500 rows of live fetch) that
 exceeds Lambda's **15-minute invocation ceiling** and would require per-row fan-out
 + aggregation. The decisive factor for a solo maintainer is a **container worker
-with no invocation ceiling**: Cloud Run runs the existing container unchanged for
+without Lambda's 15-min function limit**: Cloud Run runs the existing container unchanged for
 both API and worker, the ~$24/mo edge floor is modest and bounded, and **no
 provider offers a hard spend cap** (so the engineered bounded-spend-rate applies
 regardless). **Alternative — Azure Container Apps** (container worker; Key Vault
@@ -83,11 +89,13 @@ reversible maintainer choice.
    bound the *rate* of spend with an instance/concurrency cap **plus** edge rate
    limiting **plus** a budget-alert-driven kill-switch, and accept a bounded
    worst-case overrun window (budget alerts lag) — not a vendor checkbox.
-2. **GitHub App key is a stored secret everywhere.** GitHub Apps do not support
-   OIDC token exchange, so the private key remains a stored secret on every
-   platform. It MUST live in a managed secret store, never in the repo, browser,
-   artifacts, or logs; remote signing (KMS / Key Vault) is preferred where the
-   chosen provider supports it.
+2. **GitHub App key is a stored secret everywhere, isolated to candidate-ingress.**
+   GitHub Apps do not support OIDC token exchange, so the private key remains a
+   stored secret on every platform. It MUST live in a managed secret store, never in
+   the repo, browser, artifacts, or logs; remote signing (KMS / Key Vault) is
+   preferred where supported. It is held/used by **only the candidate-ingress
+   component** — the internet-facing API and the verify worker hold no GitHub
+   credential (least-privilege `access_matrix`).
 3. **Transient, minimised job records.** The durable store holds operational
    metadata only — a `request_ref` pointer, a row count, lifecycle state,
    timestamps, and a TTL — never uploaded inventory, vendor identity, request

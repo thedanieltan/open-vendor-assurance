@@ -38,15 +38,15 @@
       "description": "Opaque pointer to the TRANSIENT request envelope (submitted input) the worker reads. Non-null while the job is non-terminal; null once the envelope is deleted on the terminal transition. Never the input itself.",
       "maxLength": 256
     },
-    "row_count": { "type": "integer", "minimum": 0, "maximum": 100000 },
+    "row_count": { "type": "integer", "minimum": 0, "maximum": 500, "description": "Bounded by the authoritative max_rows limit (contract limits.max_rows). Over-limit requests are rejected by the API before a job exists." },
     "result_ref": {
       "type": ["string", "null"],
       "description": "Opaque pointer to the transient result blob (TTL-deleted). Non-null only when completed.",
       "maxLength": 256
     },
     "error_code": {
-      "description": "Stable, generic failure code (never an upstream message or submitted content). Non-null only when failed.",
-      "enum": [null, "input_too_large", "row_limit_exceeded", "execution_timeout", "upstream_unavailable", "rate_limited", "internal_error"]
+      "description": "Stable, generic JOB failure code (never an upstream message or submitted content). Non-null only when failed. input_too_large / row_limit_exceeded are API pre-job rejection responses, NOT job failures, so they are not in this vocabulary.",
+      "enum": [null, "execution_timeout", "upstream_unavailable", "rate_limited", "internal_error"]
     },
     "attempt": { "type": "integer", "minimum": 0, "maximum": 10, "default": 0 },
     "created_at": { "type": "string", "format": "date-time" },

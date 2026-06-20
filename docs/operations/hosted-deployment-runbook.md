@@ -98,6 +98,7 @@ pack) keeps serving because it is independent of the host.
 | Concern | Rule |
 | --- | --- |
 | GitHub App key custody | A **stored secret on every platform** — GitHub Apps cannot use OIDC. Lives in a managed secret store (Secret Manager / Key Vault / SSM). |
+| Credential isolation | Held/used by **only the candidate-ingress component**. The internet-facing API and the verify worker hold **no** GitHub credential (least-privilege `access_matrix`), so a compromise of the public surface cannot reach the key. |
 | Storage prohibition | Never in the repo, browser, build artifacts, or logs. |
 | Remote signing | Preferred where the provider supports it (AWS KMS, Azure Key Vault) so the raw key never enters the app. |
 | Cloud API access | Provider **workload identity** (keyless); no static cloud keys. This does not remove the GitHub App key. |

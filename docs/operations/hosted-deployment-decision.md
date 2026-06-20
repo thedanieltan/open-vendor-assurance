@@ -27,8 +27,8 @@ is low and bursty.
 
 | Option | Execution | Edge (rate limit) | Queue + tiny store | Secrets | Idle floor | Cost-cap rigor | Ops | Lock-in |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **Google Cloud Run (baseline)** | container API **+ long-running container worker** (no invocation ceiling; bounded by per-job timeout + row cap) | external HTTPS LB + Cloud Armor — configurable rate limit; **~$24/mo fixed floor** | Cloud Tasks + Firestore Native TTL | Secret Manager + Workload Identity | ~$24/mo | no hard cap (soft `max-instances` + Cloud Armor rate limit + budget kill-switch) | 2 | 2 |
-| **Azure Container Apps (alternative)** | container + ACA Jobs worker (no invocation ceiling) | Front Door/APIM — fixed-ish floor | Service Bus + Cosmos serverless TTL | Key Vault + Managed Identity; **remote JWT signing** | low–mod | no hard cap (`maxReplicas` hard at compute) | 3 | 2 |
+| **Google Cloud Run (baseline)** | container API **+ container worker (Cloud Run service handler invoked by Cloud Tasks)**; ≤500-row batch bounded to the 30-min Cloud Tasks dispatch deadline via intra-job concurrency; Jobs+launcher scale-up | external HTTPS LB + Cloud Armor — configurable rate limit; **~$24/mo fixed floor** | Cloud Tasks + Firestore Native TTL | Secret Manager + Workload Identity | ~$24/mo | no hard cap (soft `max-instances` + Cloud Armor rate limit + budget kill-switch) | 2 | 2 |
+| **Azure Container Apps (alternative)** | container + ACA Jobs worker (ACA Jobs run long; no 15-min function limit) | Front Door/APIM — fixed-ish floor | Service Bus + Cosmos serverless TTL | Key Vault + Managed Identity; **remote JWT signing** | low–mod | no hard cap (`maxReplicas` hard at compute) | 3 | 2 |
 | **AWS Lambda (alternative — needs fan-out)** | functions, **≤15-min cap ⇒ per-row fan-out + aggregation** required | API Gateway throttling — **no fixed floor but best-effort, not a cost cap** | SQS + DynamoDB on-demand TTL | Secrets Manager + IAM; KMS remote signing | ≈ `$0` | reserved concurrency hard at **Lambda compute only**; gateway best-effort | 4 | 4 |
 | AWS App Runner | **Rejected** — closed to new customers (2026) | — | — | — | — | — | — | — |
 | AWS ECS Fargate | **Rejected** — no scale-to-zero; always-on idle | — | — | — | — | — | 4 | 2 |
@@ -42,9 +42,11 @@ batch work** (up to 500 rows of live fetch) that exceeds **AWS Lambda's 15-minut
 invocation ceiling**; using Lambda would require building per-row fan-out +
 aggregation, and its API Gateway throttling is **best-effort, not a hard cost cap**
 (AWS documents not relying on usage plans for cost control). For a solo maintainer
-prioritising simplicity, a **container worker with no invocation ceiling** is the
-decisive advantage: Cloud Run runs the existing container unchanged for both the API
-and the worker, scales to zero on compute, and rolls back instantly. **No provider
+prioritising simplicity, a **container worker without Lambda's 15-min function
+limit** is the decisive advantage: Cloud Run runs the existing container unchanged
+for both the API and the worker (the ≤500-row batch fits the 30-min Cloud Tasks
+dispatch deadline via bounded intra-job concurrency), scales to zero on compute, and
+rolls back instantly. **No provider
 offers a hard spend cap**, so the engineered bounded-spend-rate (soft cap + edge
 rate limit + budget kill-switch, §8/§11) applies regardless. **Azure Container Apps**
 is the alternative when the GitHub App key must never enter the app (Key Vault
@@ -68,7 +70,10 @@ maintainer's reversible choice.
   stay in that region. **No inventory, job, result, log, or backup crosses
   regions** in the baseline; cross-region is out of scope and would need a new
   decision.
-- Logs and metrics are regional and carry no submitted content (§8, §9).
+- Logs and metrics carry no submitted content (§8, §9). Keeping them in the primary
+  region is **not automatic on GCP** — it requires explicit regional log buckets +
+  `_Default` sink configuration; this is an infrastructure-slice task with
+  acceptance evidence (§12, implementation plan), not an assumed default.
 
 ## 3. Service topology
 
@@ -85,7 +90,7 @@ maintainer's reversible choice.
               │                                          │  re-read envelope ─▶ SSRF-safe fetch (vendor authority)
               │                                          ▼
               │   durable job store (TTL, minimised) + transient result store (result_ref, TTL)
-              │  poll (job_id + job_token) ◀──────────── (state, result_ref); 410 Gone after expires_at
+              │  poll (job_id + job_token) ◀──────────── (state, result_ref); 410 while retained / 404 after deletion
               ▼
          candidate-ingress boundary ──▶ existing PR-bound candidate lifecycle (discovery only)
          admin/kill-switch ──▶ disable verify + ingress; static layer keeps serving
@@ -97,7 +102,11 @@ Components (`topology_components` in the contract): `edge_gateway`, `public_api`
 `candidate_ingress_boundary`, `health_readiness`, `admin_kill_switch`. The worker
 reconstructs the request from the transient envelope by `job_id`; the queue and the
 durable record never carry submitted input. Result access requires the `job_token`
-capability (`job_id` is a loggable correlation id, not a credential). Detail in
+capability (`job_id` is a loggable correlation id, not a credential). **Execution
+surface (concrete):** the worker is a Cloud Run service handler invoked by Cloud
+Tasks; the ≤500-row batch is bounded to fit the Cloud Tasks 30-min dispatch deadline
+via bounded intra-job fetch concurrency (Cloud Run Jobs + a launcher is the
+documented scale-up path). Detail in
 [`hosted-deployment-architecture.md`](hosted-deployment-architecture.md).
 
 ## 4. Domain, DNS, and TLS
@@ -141,9 +150,12 @@ capability (`job_id` is a loggable correlation id, not a credential). Detail in
   never enters the app.
 - **Workload identity:** use the provider's workload identity for *cloud* API
   access (no static cloud keys). This does not remove the GitHub key.
-- **Least privilege:** the serving process holds read-only catalogue access and a
-  narrowly-scoped GitHub App (contents + pull-requests on the OpenVA repo only,
-  for candidate-intake PRs); it has **no** catalogue-merge authority.
+- **Least privilege + credential isolation:** the GitHub App key is held and used
+  by **only the candidate-ingress component** (the one that proposes PRs). The
+  **internet-facing API and the verify worker hold no GitHub credential** — they
+  have read-only catalogue access only (contract `access_matrix`). The App itself is
+  narrowly scoped (contents + pull-requests on the OpenVA repo only) with **no**
+  catalogue-merge authority.
 - **Break-glass:** documented revocation (revoke installation token, rotate key,
   disable ingress) in the runbook.
 - **Staging vs production:** separate apps, secrets, and identities. **No secret is
@@ -190,13 +202,20 @@ Three stores, two of them transient. Full lifecycle:
   failure returns a generic retryable `503`. Polling distinguishes `received`
   (accepted, not dispatched) from `queued` (dispatched). Full rules:
   [`hosted-deployment-job-lifecycle.md`](hosted-deployment-job-lifecycle.md).
-- **Expiry/deletion:** **time-based on `expires_at`, not a persisted state.** Once
-  `now >= expires_at` the API returns a content-free **`410 Gone`** whether or not
-  physical deletion has run yet (store TTL is asynchronous). The record, the
-  request envelope, and the result blob are each deleted by their own native TTL
-  plus an object-lifecycle backstop; the result blob is not auto-deleted by the
-  record TTL. Only the minimised record + aggregate metrics persist; uploaded
-  content is never persisted beyond the transient envelope.
+- **Expiry/deletion:** **time-based on `expires_at`, not a persisted state**, with
+  explicit **three-phase** HTTP semantics (the record holds `expires_at` and
+  `job_token_digest`, both gone once deleted): pre-expiry → status/result (`job_token`
+  required); expired-but-retained → content-free **`410 Gone`**; after physical
+  deletion → content-free **`404 Not Found`** (a 404 leaks nothing — `job_id` is not
+  a credential). The record, request envelope, and result blob are each deleted by
+  their own native TTL + object-lifecycle backstop; the result blob is not
+  auto-deleted by the record TTL. Only the minimised record + aggregate metrics
+  persist; uploaded content never persists beyond the transient envelope.
+- **Limits + error codes:** the authoritative cap is `max_rows: 500` (the schema's
+  `row_count` maximum matches). Over-limit requests are **rejected by the API before
+  a job exists**, so `input_too_large` / `row_limit_exceeded` are API rejection
+  responses, **not** durable job error codes (those are `execution_timeout`,
+  `upstream_unavailable`, `rate_limited`, `internal_error`).
 - **Backup:** none required for transient data; the catalogue itself is the git
   repo (already durable).
 - **Concurrency + recovery:** bounded concurrent jobs; a crashed/abandoned job
@@ -232,6 +251,9 @@ Three stores, two of them transient. Full lifecycle:
 - **Signals:** structured logs, metrics, traces, and alerts — all carrying
   **none** of `prohibited_telemetry_fields` (request bodies, vendor identity,
   inventory rows, uploaded inventory, tool arguments, candidate URLs).
+- **Log residency:** keeping logs in the primary region is **explicitly configured**
+  (regional log buckets + `_Default` sink on GCP), not assumed automatic — an
+  infrastructure-slice task with acceptance evidence.
 - **SLIs:** availability (successful `/healthz`/`/readyz`), `/v1` p95 latency
   (cached path), verify-job completion rate + p95 duration, error rate, queue
   depth/age.

@@ -26,7 +26,7 @@ retains, reuses, or incorporates that input into canonical catalogue records.
 | `durable_job_store` | Operational job metadata, TTL-deleted | `hosted-job-record.schema.json`; minimised; never uploaded content |
 | `transient_result_store` | Holds the result blob (`result_ref`), retrieved only with the `job_token` capability | Transient; TTL/expiry-deleted; never indexed by submitted content |
 | `static_cached_fallback` | GitHub Pages exports + static MCP + pinned pack | Canonical, reproducible, **independent of the host**; always-on floor |
-| `candidate_ingress_boundary` | Proposes discovered candidates into the existing PR-bound lifecycle | Discovery only; no decision/merge authority |
+| `candidate_ingress_boundary` | Proposes discovered candidates into the existing PR-bound lifecycle | Discovery only; no decision/merge authority. **The ONLY component that holds/uses the GitHub App key** — the internet-facing API and the worker hold no GitHub credential (least-privilege `access_matrix`) |
 | `health_readiness` | `/healthz` (liveness), `/readyz` (200 only when pack loaded + integrity verified) | Unauthenticated; no content |
 | `admin_kill_switch` | Disables verify + ingress; static read keeps serving | Maintainer-operated; independent of read path |
 
@@ -54,13 +54,17 @@ retains, reuses, or incorporates that input into canonical catalogue records.
 
 **Consistency and recovery.** The three durable steps (write envelope → create
 `received` job → enqueue `job_id`) follow one exact CAS protocol: **the API owns
-the normal `received → queued`** (after the enqueue ack; task name = `job_id` so
-re-enqueue is a no-op); the **worker** does CAS `{received | queued} → executing`
-(tolerating a record still in `received`, with duplicate deliveries acked-and-
-dropped); the **reconciler is recovery-only** and merely re-enqueues jobs stuck in
-`received` (it never owns the normal transition); an orphan envelope (job-create
+the normal `received → queued`** (after the enqueue ack; creating task name =
+`job_id` returns `ALREADY_EXISTS`, deduping the API's own retry — a completed/
+deleted name is tombstoned ~24h); the **worker**, if it finds a delivered record
+still in `received`, does the recovery CAS `received → queued` then `queued →
+executing` (only declared edges; no direct `received → executing`), with duplicate
+deliveries acked-and-dropped; the **reconciler is recovery-only** (re-enqueues
+stuck `received` jobs with an attempt-suffixed task name when the original is
+tombstoned, never owning the normal transition); an orphan envelope (job-create
 failed) is invisible to clients and TTL-reaped while the API returns a generic
-retryable `503`. Full per-crash-point rules: the lifecycle spec.
+retryable `503`. Full per-crash-point rules + the three-phase (`410`/`404`) expiry
+semantics: the lifecycle spec.
 
 **Degraded** — request/result store, queue, or worker unavailable → `public_api`
 serves cached/static labelled results; verify returns `queued`/`rate_limited`/cached,
@@ -83,13 +87,18 @@ the terminal safe state is "hosted disabled, static layer serving."
 
 The deployable is a standard OCI image; the only provider-specific surface is a
 thin adapter at the `edge_gateway`, `queue`, and store boundary. **Baseline (Google
-Cloud Run):** a container API **and a long-running container worker** (no
-invocation ceiling — bounded by the per-job execution timeout + row cap), behind an
-external HTTPS LB + Cloud Armor (the rate-limiting edge; ~$24/mo fixed floor), with
-Cloud Tasks + Firestore TTL + Secret Manager + Workload Identity. The worker is a
-**container** precisely because verify is long-running batch work (up to 500 rows
-of live fetch) that a 15-minute function model could not bound without per-row
-fan-out. **Alternatives:** Azure Container Apps (container worker; Key Vault remote
+Cloud Run):** a container API **and a container worker realized as a Cloud Run
+service handler invoked by Cloud Tasks**, behind an external HTTPS LB + Cloud Armor
+(the rate-limiting edge; ~$24/mo fixed floor), with Cloud Tasks + Firestore TTL +
+Secret Manager + Workload Identity. The execution surface is **concrete and
+bounded**, not unbounded: Cloud Tasks dispatch is capped at 30 min
+and Cloud Run service requests at 60 min, so the ≤500-row batch is processed with
+**bounded intra-job fetch concurrency** to stay well under the 30-min dispatch
+deadline (a per-job execution timeout enforces it). Larger batches are a documented
+scale-up path — **Cloud Run Jobs (up to 168 h) started by a short-lived Cloud Tasks
+launcher** — out of scope for v1. A worker is preferred over AWS Lambda precisely
+because Lambda's 15-min function model can't bound a 500-row live-fetch batch
+without per-row fan-out. **Alternatives:** Azure Container Apps (container worker; Key Vault remote
 signing); or AWS Lambda, which is `$0`-idle but **requires per-row fan-out +
 aggregation** to fit the 15-min ceiling and whose API Gateway throttling is
 best-effort (not a hard cost cap). Lock-in stays bounded to the adapter; rollback

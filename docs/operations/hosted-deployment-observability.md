@@ -41,6 +41,13 @@ metric label** (it is unbounded cardinality). Logs are structured JSON; sampling
 of verbose spans is allowed but never lowers the integrity of the prohibited-field
 rule.
 
+**Log residency.** Keeping logs in the primary region is **explicitly configured**,
+not automatic: on GCP this means provisioning **regional log buckets and routing the
+`_Default` sink** to them (and disabling the global default where required). This is
+an infrastructure-slice task (WP-02G) with acceptance evidence, not an assumed
+default — consistent with the "no inventory/job/result/log/backup crosses regions"
+boundary in the decision report §2.
+
 ## 2. Prohibited telemetry fields
 
 These fields **MUST NEVER** appear in any log line, metric label, or trace

@@ -50,7 +50,7 @@ adr0001_boundaries_preserved:
 #     is hard, and only at the Lambda-compute boundary), and (b) verify is
 #     long-running batch work (up to 500 rows of live fetch) that exceeds Lambda's
 #     15-min invocation ceiling and would require per-row fan-out + aggregation.
-# Conclusion: the verify WORKER is a long-running container (no invocation ceiling);
+# Conclusion: the verify WORKER is a long-running container (no 15-min function limit);
 # NO provider offers a hard spend cap, so the engineered bounded-spend-rate applies
 # everywhere; the ~$24/mo Cloud Run edge floor is modest and bounded. Baseline is
 # Google Cloud Run (container API + worker). Lambda is an alternative ONLY with
@@ -85,23 +85,65 @@ job_states:
 terminal_states:
   - completed
   - failed
+# Transition graph, ACTOR-SCOPED: each edge lists the actors permitted to perform
+# it. Every actor protocol below uses ONLY edges declared here. The worker has NO
+# direct received -> executing edge; on recovering a delivered task still in
+# received it promotes received -> queued (worker, recovery) then queued ->
+# executing — both declared edges.
 transitions:
-  received: [queued, failed]
-  queued: [executing, failed]
-  executing: [completed, failed]
-  completed: []
-  failed: []
+  received:
+    queued: [api, reconciler, worker]   # api on the normal path; reconciler + worker on recovery
+    failed: [api]
+  queued:
+    executing: [worker]
+    failed: [worker]
+  executing:
+    completed: [worker]
+    failed: [worker]
+  completed: {}
+  failed: {}
 record_key: job_id                    # the durable record's primary key (server-generated)
 result_ttl_hours_default: 24
 
-# Expiry is NOT a persisted state. Expiry is time-based on expires_at: once
-# now >= expires_at the API returns a content-free 410 Gone, whether or not the
-# physical record has been deleted yet. Physical deletion (the job record, the
-# transient request envelope, and the result blob) is by store-native TTL plus an
-# object-lifecycle TTL backstop, and is not guaranteed instantaneous.
+# Authoritative request limits (single source of truth; the schema's row_count
+# maximum is aligned to max_rows). Over-limit requests are rejected by the API
+# BEFORE any job is created, so input_too_large / row_limit_exceeded are API
+# rejection responses, NOT durable job error codes.
+limits:
+  max_rows: 500                        # == OPENVA_MAX_ROWS default; the schema row_count maximum matches this
+  max_upload_bytes: 5242880            # == OPENVA_MAX_UPLOAD_BYTES default (5 MiB)
+  pre_job_rejections: [input_too_large, row_limit_exceeded]   # returned by the API; never a job error_code
+
+# Execution surface (chosen, concrete). The baseline worker is a Cloud Run SERVICE
+# handler invoked by Cloud Tasks; the ≤500-row batch is bounded to fit the platform
+# limits below by processing rows with bounded intra-job fetch concurrency, so
+# wall-clock stays well under the Cloud Tasks dispatch deadline. There is NO
+# unbounded-runtime claim. Batches that cannot fit the dispatch deadline are
+# a documented scale-up path (Cloud Run Jobs + a short-lived Cloud Tasks launcher),
+# out of scope for v1.
+execution_surface:
+  baseline: cloud_run_service_handler_invoked_by_cloud_tasks
+  batch_bounded_to_fit_platform_limits: true
+  intra_job_fetch_concurrency: bounded         # keeps the ≤500-row wall-clock well under the dispatch deadline
+  scale_up_path: cloud_run_jobs_plus_cloud_tasks_launcher   # for batches that cannot fit the dispatch deadline
+platform_limits:
+  cloud_tasks_http_dispatch_deadline_minutes: 30
+  cloud_run_service_request_timeout_minutes_max: 60
+  cloud_run_jobs_task_hours_max: 168           # only via a launcher; not a direct Cloud Tasks dispatch
+  baseline_per_job_budget_minutes: 25          # < the Cloud Tasks dispatch deadline; enforced by the per-job execution timeout
+
+# Expiry is NOT a persisted state; it is time-based on expires_at. Because the job
+# record (which holds expires_at and job_token_digest) is physically deleted at
+# TTL, the API cannot authenticate or return 410 once the record is gone. Explicit
+# three-phase semantics: pre-expiry -> result/status (job_token required);
+# expired-but-still-retained (now >= expires_at, record not yet deleted) -> 410
+# Gone; after physical deletion (record gone) -> 404 Not Found. A 404 leaks nothing
+# because job_id is not a credential and is indistinguishable from an unknown id.
 expiry:
-  model: expires_at_then_410_then_delete
-  response_when_expired: "410 Gone (content-free)"
+  model: expires_at_then_410_while_retained_then_404_after_deletion
+  pre_expiry: result_or_status_requires_job_token
+  expired_record_retained: "410 Gone (content-free)"      # now >= expires_at, not yet physically deleted
+  after_physical_deletion: "404 Not Found (content-free)"  # record + token digest gone; job_id is not a credential
   physical_deletion: store_native_ttl_plus_object_lifecycle
   deletes:
     - job_record
@@ -131,12 +173,11 @@ result_access:
   stored_as: job_token_digest         # sha256 of the capability only
   result_store: transient_result_store
 
-# Idempotency. There is NO content-derived dedup key (a SHA-256 of low-entropy
-# vendor names is dictionary-testable and would let one caller reach another
-# caller's job/result). Default: create a NEW job (fresh job_id + job_token) per
-# request. Optional: a client-supplied high-entropy idempotency key, scoped to the
-# calling capability, dedups only that caller's own retries; it never dedups across
-# callers and never mints a capability for an existing job to a different caller.
+# Idempotency. There is NO deduplication in v1 and NO content-derived dedup key (a
+# SHA-256 of low-entropy vendor names is dictionary-testable and would let one
+# caller reach another caller's job/result). Every request creates a NEW job (fresh
+# job_id + job_token). Any FUTURE optional key must be a server-keyed HMAC scoped to
+# an authenticated caller (see deferred_optional_key) — never a plain content digest.
 idempotency:
   default: new_job_per_request          # the ONLY behaviour in v1
   deduplication_in_v1: false            # no dedup at all; every request creates a new job
@@ -157,23 +198,52 @@ handoff:
   normal_path:                          # the API owns the normal received -> queued
     - api_write_request_envelope
     - api_create_job_record_received
-    - api_enqueue_task_name_equals_job_id          # idempotent: a duplicate enqueue is a no-op
+    - api_enqueue_task_name_job_id                  # create dedups the API's own retry (ALREADY_EXISTS)
     - api_cas_received_to_queued_after_enqueue_ack
-  worker:
-    - cas_received_or_queued_to_executing          # exactly-once via CAS; tolerates a record still in received
+  worker:                               # uses only declared edges (no direct received -> executing)
+    - on_delivery_if_received_cas_received_to_queued   # recovery: API crashed before its CAS
+    - cas_queued_to_executing
     - cas_executing_to_completed_or_failed
   duplicate_delivery: ack_and_drop_if_cas_to_executing_fails   # already executing/terminal
+  # Cloud Tasks task-name semantics (corrected): creating task name=job_id dedups
+  # the API's own enqueue retry (ALREADY_EXISTS while the task is pending), but a
+  # COMPLETED/DELETED task name is tombstoned for ~24h and cannot be recreated.
+  enqueue_dedup: create_with_task_name_job_id_returns_already_exists_while_pending
   reconciler:
     role: recovery_only                 # NEVER owns the normal-path received -> queued
-    action: re_enqueue_received_past_threshold     # idempotent task name; worker CAS dedups delivery
+    on_already_exists: leave_pending_task_no_action
+    on_name_tombstoned: re_enqueue_with_attempt_suffixed_task_name   # job_id:r{n}; worker CAS dedups any duplicate delivery
   crash_points:
     after_envelope_before_job: orphan_envelope_ttl_reaped; api_returns_retryable_503_no_job_id
     after_job_before_enqueue: reconciler_re_enqueues
-    after_enqueue_before_cas_queued: worker_advances_via_cas_received_to_executing; reconciler_re_enqueue_deduped_by_task_name
+    after_enqueue_before_cas_queued: worker_cas_received_to_queued_then_queued_to_executing
     worker_crash_executing: execution_timeout_to_failed_or_expiry_to_410
   polling_distinguishes:
     received: accepted_not_yet_dispatched
     queued: dispatched_to_worker
+
+# Per-component access matrix (least privilege) and the exact terminalization
+# order. Only the candidate-ingress component can access the GitHub App key.
+access_matrix:
+  public_api:
+    request_envelope: write
+    job_record: create_and_read
+    result_blob: none
+    github_app_key: none               # the internet-facing API never holds the GitHub App key
+  async_worker:
+    request_envelope: read_then_delete_on_terminal
+    job_record: cas_transitions
+    result_blob: write
+    github_app_key: none
+  candidate_ingress:
+    github_app_key: access_or_sign      # the ONLY component that may use the GitHub App key
+    catalog_truth: none                 # proposes PRs only; never writes data/** or merges
+  reconciler:
+    job_record: read_and_recovery_cas
+terminalization_order:                  # worker, on success
+  - write_result_blob
+  - cas_executing_to_completed_record_result_ref
+  - delete_request_envelope             # orphan cleanup if the worker crashes before this: object-lifecycle TTL
 
 # Service topology components (each is specified in the architecture doc).
 topology_components:
