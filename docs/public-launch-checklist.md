@@ -67,6 +67,21 @@ Use this checklist before making OpenVA public or announcing broader contributio
 - [ ] Issues requesting legal/compliance/procurement/risk advice are closed or labelled as blocked by scope.
 - [ ] Security-sensitive reports are not exposed publicly.
 
+## Hosted deployment readiness (ADR-0006, decision-ready — not yet live)
+
+The hosted deployment is **specified, not provisioned**. ADR-0006 is Proposed; no
+provider is accepted and no endpoint is live. Before any hosted launch:
+
+- [ ] ADR-0006 (`docs/architecture/decisions/ADR-0006-hosted-public-read-deployment.md`) is accepted by a maintainer and recorded as Accepted in the ADR index.
+- [ ] The maintainer external decisions (provider, region, domain, DNS/TLS, registry, secrets/identity, spend ceiling, production permissions) are made — see `docs/operations/hosted-deployment-decision.md` §13.
+- [ ] The engineered cost ceiling (instance/concurrency cap + edge rate limit + budget-alert kill-switch) is configured — no vendor offers a hard spend cap.
+- [ ] The GitHub App key lives only in a managed secret store (never repo/browser/artifacts/logs); least-privilege App (no merge); break-glass revocation tested.
+- [ ] Durable job/result records validate against `schemas/openva/hosted-job-record.schema.json` and carry no uploaded inventory, vendor identity, or request bodies.
+- [ ] No prohibited telemetry field appears in any log, trace, or metric label (`docs/operations/hosted-deployment-observability.md`).
+- [ ] The hosted path proposes candidates only through the existing PR-bound lifecycle; it never writes `data/**` or merges.
+- [ ] Static exports + static MCP + cached operation keep working with the hosted service disabled (kill-switch + rollback drills pass).
+- [ ] Production smoke evidence (A/B/C) exists before any "live" claim, and the seven positioning files are revised in lockstep with the first transport merge (preserving the seven required limitation phrases).
+
 ## Launch note
 
 - [ ] Public launch copy describes OpenVA as an infrastructure launch.

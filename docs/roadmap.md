@@ -86,6 +86,19 @@ describes priority and transport capability; OpenVA does not operate a productio
 hosted endpoint, and live `verify`-mode over remote MCP remains future work governed
 by [ADR-0001](architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md).
 
+### Hosted public-read deployment (decision-ready)
+
+The deployment architecture for ADR-0001's accepted hosted posture is specified in
+[ADR-0006](architecture/decisions/ADR-0006-hosted-public-read-deployment.md) and
+[`docs/operations/hosted-deployment-decision.md`](operations/hosted-deployment-decision.md):
+a portable container (recommended baseline Google Cloud Run; alternatives AWS Lambda
+and Azure Container Apps), an async `verify`-worker, a TTL-deleted job/result store,
+and an always-on static fallback. ADR-0006 is **Proposed** and decision-only — it
+provisions nothing, accepts no provider, and OpenVA still does not operate a production
+hosted endpoint. The dependency-ordered implementation slices are in
+[`docs/operations/hosted-deployment-implementation-plan.md`](operations/hosted-deployment-implementation-plan.md);
+they become executable only after a maintainer accepts the external deployment choices.
+
 ## Current state
 
 OpenVA operates an autonomous catalog pipeline for bounded, machine-verifiable

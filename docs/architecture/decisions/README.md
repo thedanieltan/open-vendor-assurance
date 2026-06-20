@@ -12,8 +12,23 @@ ADR. This index is a pointer only — it is not a second source of decision cont
 | [ADR-0003](ADR-0003-remote-mcp-product-surface.md) | Remote Read-Only MCP as a First-Class Agent Transport | Accepted |
 | [ADR-0004](ADR-0004-workspace-credential-and-action-boundary.md) | Workspace Credentials and Workspace Actions Remain Outside OpenVA | Accepted |
 | [ADR-0005](ADR-0005-native-clients-as-secondary-compatibility-surfaces.md) | Native Workspace Clients Are Secondary Compatibility Surfaces | Accepted |
+| [ADR-0006](ADR-0006-hosted-public-read-deployment.md) | Hosted Public-Read Deployment Architecture | Proposed |
 
-A *Proposed* ADR becomes *Accepted* when the PR containing it merges; ADR-0002–0005
-were accepted on the merge of PR #398. ADR-0001 remains authoritative for the hosted
-live-verification transport; ADR-0002–0005 govern agent-composed distribution and the
-remote read-only MCP surface, and do not themselves claim a production hosted deployment.
+**ADR lifecycle.** An ADR whose authoring PR records a decision already taken is
+authored *Accepted* and becomes authoritative on that PR's merge (ADR-0001 on its
+merge; ADR-0002–0005 on the merge of PR #398). An ADR may instead be authored
+*Proposed* and merge to `main` as a **recorded, non-authoritative proposal**: it
+documents a recommendation but authorises and provisions nothing. A *Proposed* ADR
+becomes *Accepted* only through a **subsequent status-change PR** in which a
+maintainer accepts it; that PR flips the ADR's Status and this index row to
+Accepted (and updates any acceptance-count assertion). Merging a *Proposed* ADR
+never makes it authoritative on its own.
+
+ADR-0001 remains authoritative for the hosted live-verification transport;
+ADR-0002–0005 govern agent-composed distribution and the remote read-only MCP
+surface, and do not themselves claim a production hosted deployment. **ADR-0006 is
+a *Proposed*, non-authoritative proposal**: it records *how* ADR-0001's accepted
+hosted posture should be deployed (topology + a provider recommendation),
+provisions no infrastructure, and claims no live endpoint. It becomes Accepted
+only via a maintainer status-change PR that accepts the external deployment choices
+(provider, region, domain, credentials, spend, positioning).

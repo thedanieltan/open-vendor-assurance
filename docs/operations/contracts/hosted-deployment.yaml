@@ -1,0 +1,466 @@
+# Hosted public-read deployment contract (WP-OPENVA-AI-NATIVE-DISTRIBUTION-02).
+#
+# Single machine-readable source of truth for the hosted-deployment DECISION
+# package. It records a deployment RECOMMENDATION and an implementation-ready
+# architecture; it does NOT provision infrastructure, accept a provider, or
+# claim a hosted endpoint is live. The deployment ADR (ADR-0006) is Proposed
+# until a maintainer accepts it. Authority order applies: ADR-0001 governs the
+# product posture; this contract and ADR-0006 govern how that posture deploys.
+#
+# Operational metadata only. Not legal, compliance, procurement, security, KYC,
+# AML, audit, or vendor-risk advice.
+
+version: 1
+contract: hosted-deployment
+source_document: docs/operations/hosted-deployment-decision.md
+governed_by:
+  - docs/architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md
+  - docs/architecture/decisions/ADR-0006-hosted-public-read-deployment.md
+
+# Decision-only posture. Every flag here MUST stay false in this work package;
+# flipping any of them is a maintainer-controlled action in a later slice with
+# real provisioning evidence. Tests assert these remain false.
+posture:
+  decision_only: true
+  production_infrastructure_provisioned: false
+  hosted_endpoint_live: false
+  provider_accepted_by_maintainer: false
+  dns_or_tls_configured: false
+  production_secrets_created: false
+
+# Hard boundaries inherited from ADR-0001 (referenced, not restated). The
+# hosted deployment preserves all six acceptance gates.
+adr0001_boundaries_preserved:
+  non_advisory: true
+  public_sources_only: true
+  ssrf_safe_fetch_only: true
+  no_arbitrary_url_fetch: true
+  no_catalogue_mutation_path: true        # PR-bound candidate write-back only
+  transient_unpublished_inputs: true
+  credential_isolation: true
+  honest_degradation_static_fallback: true
+  catalogue_determinism_preserved: true
+
+# Deployment recommendation. RECOMMENDATION ONLY — maintainer accepts a provider.
+# Reassessment history (driven by independent review):
+#   - #402 r2 corrected that the mandatory rate-limiting edge gives Cloud Run a
+#     ~$24/mo fixed floor, and briefly moved the baseline to AWS Lambda.
+#   - #402 r3 corrected two facts that reverse that: (a) API Gateway throttling/
+#     quotas are BEST-EFFORT, not a hard cost cap (only Lambda reserved concurrency
+#     is hard, and only at the Lambda-compute boundary), and (b) the verify WORKER
+#     is long-running batch work. The v1 verify batch is BOUNDED by hosted_verify_limits
+#     (~700s worst case, which fits a single invocation); the 500-row limit is the
+#     CACHED/batch path with NO live fetch — verify (egress) and cached limits are
+#     distinct. A long-running container runs the bounded v1 batch directly and scales
+#     to larger future verify batches (a separate WP) without the per-row fan-out +
+#     aggregation Lambda needs for batches beyond its 15-min invocation ceiling.
+# Conclusion: the verify WORKER is a long-running container (no 15-min function limit);
+# NO provider offers a hard spend cap, so the engineered bounded-spend-rate applies
+# everywhere; the ~$24/mo Cloud Run edge floor is modest and bounded. Baseline is
+# Google Cloud Run (container API + worker). Lambda is an alternative ONLY with
+# per-row fan-out for larger batches; ACA is the container alternative with the strongest secret posture.
+provider_recommendation:
+  baseline: google-cloud-run
+  worker_execution: long_running_container   # NOT a 15-min function; bounded by per-job timeout + row cap
+  alternatives:
+    - id: azure-container-apps
+      note: container; Key Vault remote signing (strongest secret posture); has its own edge cost
+    - id: aws-lambda-container
+      note: "$0 idle; runs the bounded v1 verify batch within its 15-min ceiling, but larger future verify batches require per-row fan-out + aggregation; gateway throttling is best-effort, not a hard cost cap"
+  rejected:
+    - id: aws-app-runner
+      reason: closed to new customers in 2026
+    - id: aws-ecs-fargate
+      reason: no scale-to-zero; always-on idle cost
+    - id: render
+      reason: paid tiers do not scale to zero; high idle floor
+  reassessment: see docs/operations/hosted-deployment-cost-envelope.md and decision report §1/§11
+  accepted_by_maintainer: false
+
+# Durable job/result lifecycle (paired with the schema). The job record is
+# operational metadata only and carries no uploaded inventory content.
+job_record_schema: schemas/openva/hosted-job-record.schema.json
+job_states:
+  - received
+  - queued
+  - executing
+  - completed
+  - failed
+terminal_states:
+  - completed
+  - failed
+# Transition graph, ACTOR-SCOPED: each edge lists the actors permitted to perform
+# it. Every actor protocol below uses ONLY edges declared here. The worker has NO
+# direct received -> executing edge; on recovering a delivered task still in
+# received it promotes received -> queued (worker, recovery) then queued ->
+# executing — both declared edges.
+transitions:
+  received:
+    queued: [api, reconciler, worker]   # api on the normal path; reconciler + worker on recovery
+    failed: [api]                       # api terminalizes a received job it cannot enqueue
+  queued:
+    executing: [worker]
+  executing:
+    completed: [worker]
+    failed: [worker, watchdog]          # worker on internal failure; watchdog on stale-lease / timeout
+    queued: [watchdog]                  # stale-lease takeover: re-dispatch (attempt++)
+  completed: {}
+  failed: {}
+# NB: there is intentionally NO queued -> failed edge. A queued record has no
+# execution lease, so the watchdog (a stale-LEASE recoverer) has no authority over
+# it; a queued job is recovered by re-dispatch (reconciler) or terminated only via
+# executing (worker/watchdog) or by expiry. The watchdog owns EXACTLY
+# executing -> queued and executing -> failed.
+
+# Execution lease: a crashed worker must not strand an `executing` job (the worker
+# is the only actor that can leave `executing` on the happy path). On winning
+# queued -> executing the worker takes a lease (lease_owner + lease_expires_at) and
+# heartbeats to extend it. A WATCHDOG (the reconciler's executing-scoped role)
+# owns recovery of a STALE lease: CAS executing -> queued (re-dispatch, attempt++)
+# while attempt < max, else CAS executing -> failed (execution_timeout). A live
+# lease is never preempted; a redelivered task whose record is executing with a
+# live lease is acked-and-dropped, with an expired lease it defers to the watchdog.
+execution_lease:
+  fields: [lease_owner, lease_expires_at]   # present (non-null) only while executing
+  acquired_on: cas_queued_to_executing
+  extended_by: worker_heartbeat
+  stale_recovery_owner: watchdog
+  stale_recovery: cas_executing_to_queued_attempt_increment_else_failed
+  live_lease_preemption: forbidden
+record_key: job_id                    # the durable record's primary key (server-generated)
+result_ttl_hours_default: 24
+
+# Two DISTINCT request limits. The CACHED limit is the existing repository import
+# limit (synchronous batch enrich, NO live fetch, no egress). The hosted LIVE-VERIFY
+# limit is separate and far smaller because each verify row drives real, serial,
+# 20-second SSRF-safe fetches (see verify_execution_budget). The job record's
+# row_count is the VERIFY count and is bounded by hosted_verify_limits.max_verify_rows.
+# Over-limit requests are rejected by the API BEFORE any job is created, so
+# input_too_large / row_limit_exceeded are API rejection responses, never job codes.
+limits:
+  max_rows_cached: 500                  # == OPENVA_MAX_ROWS default; cached/batch enrich only (no egress)
+  max_upload_bytes: 5242880            # == OPENVA_MAX_UPLOAD_BYTES default (5 MiB)
+  pre_job_rejections: [input_too_large, row_limit_exceeded]   # returned by the API; never a job error_code
+
+# Execution surface (chosen, concrete). The baseline worker is a Cloud Run SERVICE
+# handler invoked by Cloud Tasks. There is NO unbounded-runtime claim and NO claim
+# that 500 verify rows fit: the hosted verify limit is GROUNDED in the resolver's
+# real fetch behaviour (verify_execution_budget) so the worst case provably fits the
+# platform limits. A LARGER verify limit is NOT supported in v1 and is NOT achieved
+# by a hand-waved "scale-up path"; it is a separate future work package that must
+# fully specify a parent/child decomposition (its own lifecycle, child schema,
+# chunking, aggregation, partial-failure, terminalisation, expiry coordination,
+# tests) before it can claim any larger bound.
+execution_surface:
+  baseline: cloud_run_service_handler_invoked_by_cloud_tasks
+  verify_batch_bounded_by: hosted_verify_limits   # grounded; not a 500-row claim
+  larger_verify_batches: out_of_scope_v1_separate_wp_needs_full_parent_child_decomposition
+platform_limits:
+  cloud_tasks_http_dispatch_deadline_minutes: 30
+  cloud_run_service_request_timeout_minutes_max: 60
+  cloud_run_jobs_task_hours_max: 168           # only via a launcher; relevant only to the future decomposition WP
+  baseline_per_job_budget_minutes: 25          # the enforced per-job execution timeout; < the Cloud Tasks dispatch deadline
+
+# Hosted LIVE-VERIFY limits, GROUNDED in executable resolver behaviour. A drift test
+# (tests/test_hosted_deployment_docs.py) IMPORTS the resolver constants
+# (vendor_resolution.SAFE_TIMEOUT_SECONDS, _DISCOVERY_PATHS) and asserts:
+#   - per_fetch_deadline_seconds == SAFE_TIMEOUT_SECONDS (fail if the contract
+#     invents a lower timeout than the resolver actually uses);
+#   - network_ops_per_source_type_worst >= 1 (verify) + max(len(_DISCOVERY_PATHS));
+#   - the recomputed worst case < baseline_per_job_budget_minutes < dispatch deadline.
+# Real model (vendor_resolution): per source type the resolver does 1 verify fetch
+# then up to max_discovery_paths fallback fetches, all SERIAL at SAFE_TIMEOUT_SECONDS
+# each; source types within a row are SERIAL; rows run at verify_row_concurrency.
+hosted_verify_limits:
+  max_verify_rows: 20                          # the job record's row_count maximum is aligned to this
+  max_source_types_per_verify_row: 4           # hosted cap (the core assurance source types)
+  verify_row_concurrency: 10                   # concurrent rows in one job
+verify_execution_budget:
+  per_fetch_deadline_seconds: 20               # MUST equal vendor_resolution.SAFE_TIMEOUT_SECONDS (asserted by import)
+  network_ops_per_source_type_worst: 4         # 1 verify + max(len(_DISCOVERY_PATHS))==3 discovery fallbacks (asserted)
+  handler_overhead_seconds: 60
+  # worst_case_seconds = ceil(max_verify_rows / verify_row_concurrency)
+  #                      * max_source_types_per_verify_row
+  #                      * network_ops_per_source_type_worst
+  #                      * per_fetch_deadline_seconds + handler_overhead_seconds
+  worst_case_seconds_v1: 700                    # ceil(20/10)=2; 2*4*4*20=640; +60 = 700 (~11.7 min)
+  fits_with_margin: true                        # 700s (~11.7m) < per-job budget 25m (1500s) < dispatch 30m (1800s)
+
+# Expiry is NOT a persisted state; it is time-based on expires_at. Because the job
+# record (which holds expires_at and job_token_digest) is physically deleted at
+# TTL, the API cannot authenticate or return 410 once the record is gone. Explicit
+# three-phase semantics: pre-expiry -> result/status (job_token required);
+# expired-but-still-retained (now >= expires_at, record not yet deleted) -> 410
+# Gone; after physical deletion (record gone) -> 404 Not Found. A 404 leaks nothing
+# because job_id is not a credential and is indistinguishable from an unknown id.
+expiry:
+  model: expires_at_then_410_while_retained_then_404_after_deletion
+  pre_expiry: result_or_status_requires_job_token
+  expired_record_retained: "410 Gone (content-free)"      # now >= expires_at, not yet physically deleted
+  after_physical_deletion: "404 Not Found (content-free)"  # record + token digest gone; job_id is not a credential
+  physical_deletion: store_native_ttl_plus_object_lifecycle
+  deletes:
+    - job_record
+    - transient_request_envelope
+    - result_blob
+  persisted_expired_state: false
+
+# The async data path. The worker reconstructs the request from a TRANSIENT
+# request envelope keyed by job_id; the queue and the job record never carry the
+# submitted input.
+request_envelope:
+  store: transient_request_store
+  carried_in_queue: false             # queue messages carry job_id only
+  carried_in_job_record: false        # the durable record stores only a request_ref pointer + minimised metadata
+  encryption: at_rest
+  access: workload_identity_least_privilege   # API writes; worker reads
+  deleted_on: [completion, failure, abandonment, ttl]
+  max_size: bounded_by_limits                 # max_upload_bytes + hosted_verify_limits.max_verify_rows
+
+# Result-access authorization. job_id is a loggable correlation id and is NOT an
+# access credential. A high-entropy job_token capability is returned once at job
+# creation and is required to poll/retrieve the result; it is never logged and
+# never stored in plaintext — only its SHA-256 digest (job_token_digest) persists.
+result_access:
+  correlation_id: job_id              # loggable; not a credential
+  capability: job_token               # returned once at creation; never logged
+  stored_as: job_token_digest         # sha256 of the capability only
+  result_store: transient_result_store
+  # Token TRANSPORT contract (v1). The capability travels in a header ONLY, never in
+  # a URL, query string, path, or redirect, so it cannot leak via access/proxy logs,
+  # browser history, or analytics. Poll and result retrieval use the SAME rule.
+  token_transport:
+    mechanism: "Authorization: Bearer <job_token>"   # standard Authorization header
+    header_only: true
+    query_string_forbidden: true
+    url_path_forbidden: true
+    redirect_carries_token: false
+    authorization_header_redacted_in_logs: true       # API + edge/reverse proxies redact it
+    edge_proxy_must_not_log_token: true
+    raw_token_persisted: false                        # only job_token_digest persists
+    digest_comparison: constant_time
+    failed_auth_response: generic_content_free
+    response_echoes_token: false
+    cors_exposes_capability: false
+    browser_storage: in_memory_session_only_not_persistent
+    token_rotation_in_v1: false                       # no reissue/rotation modelled in v1
+
+# Idempotency. There is NO deduplication in v1 and NO content-derived dedup key (a
+# SHA-256 of low-entropy vendor names is dictionary-testable and would let one
+# caller reach another caller's job/result). Every request creates a NEW job (fresh
+# job_id + job_token). Any FUTURE optional key must be a server-keyed HMAC scoped to
+# an authenticated caller (see deferred_optional_key) — never a plain content digest.
+idempotency:
+  default: new_job_per_request          # the ONLY behaviour in v1
+  deduplication_in_v1: false            # no dedup at all; every request creates a new job
+  cross_caller_dedup: false
+  content_digest_dedup: false
+  deferred_optional_key:                # if ever added, it MUST satisfy ALL of:
+    binding: server_keyed_hmac          # never a plain, dictionary-testable content digest
+    scope: authenticated_caller_namespace
+    same_key_same_request: replay_returns_existing_job
+    same_key_different_request: conflict_rejected
+    expiry_and_token_return: defined
+
+# Crash/failure recovery for the three-step handoff (write envelope -> create job
+# record -> enqueue job_id). Each step is independently durable, so the handoff is a
+# precise CAS protocol with a single owner per transition, not an assumed atomic op.
+handoff:
+  state_transitions: compare_and_set
+  normal_path:                          # the API owns the normal received -> queued
+    - api_write_request_envelope
+    - api_create_job_record_received
+    - api_enqueue_task_name_job_id                  # create dedups the API's own retry (ALREADY_EXISTS)
+    - api_cas_received_to_queued_after_enqueue_ack
+  worker:                               # uses only declared edges (no direct received -> executing)
+    - on_delivery_if_received_cas_received_to_queued   # recovery: API crashed before its CAS
+    - cas_queued_to_executing
+    - cas_executing_to_completed_or_failed
+  duplicate_delivery: ack_and_drop_if_cas_to_executing_fails   # already executing/terminal
+  # Cloud Tasks task-name semantics (corrected): creating task name=job_id dedups
+  # the API's own enqueue retry (ALREADY_EXISTS while the task is pending), but a
+  # COMPLETED/DELETED task name is tombstoned for ~24h and cannot be recreated.
+  enqueue_dedup: create_with_task_name_job_id_returns_already_exists_while_pending
+  reconciler:
+    role: recovery_only                 # NEVER owns the normal-path received -> queued
+    on_already_exists: leave_pending_task_no_action
+    on_name_tombstoned: re_enqueue_with_dispatch_generation_suffixed_task_name   # job_id-r{dispatch_attempt}; worker CAS dedups any duplicate delivery
+    # Cloud Tasks TASK_ID permits only [A-Za-z0-9_-]; a ':' is INVALID, so the
+    # generation suffix uses a hyphen. job_id is a (hyphenated) UUID, so the recovery
+    # name stays in the allowed set.
+    #
+    # DISPATCH recovery is a SEPARATE counter from execution retries. `attempt` is the
+    # WATCHDOG's execution-retry counter and is pinned to 0 while `received` (no
+    # watchdog runs on a non-executing job), so it can never advance a recovery name —
+    # naming from it would regenerate the SAME task id forever and strand the job
+    # behind the ~24h tombstone. The reconciler owns `dispatch_attempt` instead and
+    # increments it (CAS) BEFORE each re-enqueue of a still-`received` job, so every
+    # recovery uses a fresh, never-yet-tombstoned name. The first recovery is r1
+    # (0 -> 1); the template never reproduces the original r0.
+    dispatch_recovery_counter: dispatch_attempt
+    dispatch_recovery_increment: atomic_cas_while_received   # concurrent reconcilers serialize on the CAS; only one wins per generation, the loser observes the new value
+    dispatch_recovery_max: 10                                # bounded; beyond this the reconciler stops re-enqueueing
+    on_dispatch_exhausted: stop_reenqueue_then_expiry_returns_410   # time-based terminal (410 -> 404); no persisted state, no infinite churn, no stranded job
+    first_recovery_generation: 1                             # 0 is the original API enqueue (task name = job_id, no suffix)
+    recovery_task_name_template: "{job_id}-r{dispatch_attempt}"   # e.g. <uuid>-r1; matches ^[A-Za-z0-9_-]+$
+  crash_points:
+    after_envelope_before_job: orphan_envelope_ttl_reaped; api_returns_retryable_503_no_job_id
+    after_job_before_enqueue: reconciler_re_enqueues
+    after_enqueue_before_cas_queued: worker_cas_received_to_queued_then_queued_to_executing
+    worker_crash_executing: execution_timeout_to_failed_or_expiry_to_410
+  polling_distinguishes:
+    received: accepted_not_yet_dispatched
+    queued: dispatched_to_worker
+
+# Per-component access matrix (least privilege) and the exact terminalization
+# order. Only the candidate-ingress component can access the GitHub App key.
+access_matrix:
+  public_api:
+    request_envelope: write
+    job_record: create_read_and_owned_cas   # create + read + ONLY its owned edges: received->queued, received->failed
+    owned_transitions: ["received->queued", "received->failed"]
+    result_blob: read_only_with_valid_job_token   # serves the result to the client; NEVER readable without a valid job_token
+    github_app_key: none                    # the internet-facing API never holds the GitHub App key
+  async_worker:
+    request_envelope: read_then_delete_on_terminal
+    job_record: owned_cas                   # received->queued (recovery), queued->executing, executing->completed|failed; holds the lease
+    owned_transitions: ["received->queued", "queued->executing", "executing->completed", "executing->failed"]
+    result_blob: write
+    github_app_key: none
+  watchdog:                                 # stale-LEASE recovery only (executing has a lease; queued does not)
+    job_record: recovery_cas
+    owned_transitions: ["executing->queued", "executing->failed"]
+  candidate_ingress:
+    github_app_key: access_or_sign          # the ONLY component that may use the GitHub App key
+    catalog_truth: none                     # proposes PRs only; never writes data/** or merges
+  reconciler:
+    job_record: read_and_recovery_cas       # received->queued recovery (un-dispatched jobs)
+    owned_transitions: ["received->queued"]
+result_read_rule: no_result_blob_read_without_valid_job_token
+
+# Complete ATOMIC mutation payload for every transition that changes a field
+# invariant. The mutation is a single compare-and-set on the durable record (it
+# clears request_ref / lease fields IN the record — deleting the physical envelope
+# is a SEPARATE step and is never a substitute for clearing the pointer). Placeholder
+# values <now>/<worker>/<deadline>/<ref>/<code> are filled at runtime; a drift test
+# applies each mutation to a valid source-state fixture and re-validates against
+# hosted-job-record.schema.json. CAS is on the record version: a stale-version CAS
+# fails and the actor re-reads.
+transition_mutations:
+  api__received_to_queued:
+    from: received
+    set: {state: queued, updated_at: "<now>"}     # request_ref preserved; lease stays null
+  api__received_to_failed:
+    from: received
+    set: {state: failed, error_code: "<code>", request_ref: null, result_ref: null, lease_owner: null, lease_expires_at: null, updated_at: "<now>"}
+    then: delete_request_envelope
+  worker__queued_to_executing:
+    from: queued
+    set: {state: executing, lease_owner: "<worker>", lease_expires_at: "<deadline>", updated_at: "<now>"}   # request_ref preserved
+  worker__executing_to_completed:
+    from: executing
+    set: {state: completed, result_ref: "<ref>", request_ref: null, error_code: null, lease_owner: null, lease_expires_at: null, updated_at: "<now>"}
+    then: delete_request_envelope                 # if the delete fails, the envelope TTL is the backstop
+  worker__executing_to_failed:
+    from: executing
+    set: {state: failed, error_code: "<code>", request_ref: null, result_ref: null, lease_owner: null, lease_expires_at: null, updated_at: "<now>"}
+    then: delete_request_envelope
+  watchdog__executing_to_queued:
+    from: executing
+    set: {state: queued, lease_owner: null, lease_expires_at: null, attempt: "<attempt+1>", updated_at: "<now>"}   # request_ref preserved for retry
+terminalization_order:                  # worker, on success: write blob, record the atomic CAS, THEN physical delete
+  - write_result_blob_to_transient_result_store               # produces result_ref consumed by the CAS below
+  - cas_executing_to_completed_clears_request_ref_and_lease_and_records_result_ref   # single atomic mutation (transition_mutations.worker__executing_to_completed)
+  - delete_request_envelope             # separate step; orphan cleanup if the worker crashes before it: object-lifecycle TTL
+
+# Service topology components (each is specified in the architecture doc).
+topology_components:
+  - edge_gateway                      # HTTPS load balancer + rate limiting in front of the API
+  - public_api
+  - resolver_app
+  - async_worker
+  - queue
+  - transient_request_store          # transient submitted-input envelope (keyed by job_id)
+  - durable_job_store
+  - transient_result_store           # transient result blob (referenced by result_ref)
+  - static_cached_fallback
+  - candidate_ingress_boundary
+  - health_readiness
+  - admin_kill_switch
+
+# Edge architecture. Rate limiting requires a concrete edge in front of the
+# service; on the baseline (Cloud Run) that is an external HTTPS Application Load
+# Balancer with Cloud Armor, and Cloud Run ingress is restricted so direct
+# ingress cannot bypass the edge. The edge adds a fixed cost floor (see cost doc).
+edge:
+  gateway: load_balancer_with_rate_limiting
+  baseline_realization: gcp_external_https_lb_plus_cloud_armor      # ~$24/mo fixed floor (~$18 LB + ~$5-6 Cloud Armor)
+  alternative_realization: aws_api_gateway_throttling               # no fixed floor BUT best-effort, not a hard cost cap
+  rate_limit_is_hard_cost_cap: false                               # no provider edge is a hard spend cap
+  origin_ingress: restricted_to_edge_only                          # internal-and-cloud-load-balancing (Cloud Run) / private integration (Lambda)
+  bypass_prevented: true
+  adds_fixed_cost_floor: true                                      # ~$24/mo on the Cloud Run baseline
+
+# Telemetry fields that MUST NEVER be emitted to logs, traces, or metric labels
+# (the ADR-0001 transient-input + leakage boundary).
+prohibited_telemetry_fields:
+  - request_body
+  - vendor_identity
+  - inventory_row
+  - uploaded_inventory
+  - tool_arguments
+  - candidate_url
+  - authorization_header        # the Bearer job_token must be redacted/omitted everywhere
+  - job_token                   # the raw capability is never logged/traced/stored (only job_token_digest)
+
+# Maintainer-controlled external decisions (the fail-closed boundary). None of
+# these is decided in this work package.
+maintainer_decisions:
+  - id: provider
+    recommended: google-cloud-run
+  - id: region
+    recommended: maintainer-selected (data-residency dependent)
+  - id: domain
+    recommended: maintainer-owned OpenVA host
+  - id: dns_tls
+    recommended: managed certificate on the maintainer-owned host
+  - id: container_registry
+    recommended: provider-native registry with immutable tags
+  - id: secrets_and_identity
+    recommended: workload identity for cloud APIs; GitHub App key in managed secret store (remote-signing where available)
+  - id: spend_ceiling
+    recommended: instance/concurrency cap + edge rate limit + budget-alert kill-switch
+  - id: production_permissions
+    recommended: least-privilege; separate staging and production
+  - id: public_traffic_enablement
+    recommended: enabled only after staging smokes pass
+  - id: adr0006_acceptance
+    recommended: maintainer merges a subsequent ADR-0006 status-change PR to accept the architecture and external deployment decisions
+
+# Follow-on implementation slices (dependency-ordered). Specified in the
+# implementation plan; each becomes executable after maintainer acceptance.
+implementation_slices:
+  - id: WP-02A-hosted-transport-api
+    depends_on: []
+  - id: WP-02B-async-job-persistence
+    depends_on: [WP-02A-hosted-transport-api]
+  - id: WP-02C-worker-and-queue
+    depends_on: [WP-02B-async-job-persistence]
+  - id: WP-02D-candidate-ingress-integration
+    depends_on: [WP-02C-worker-and-queue]
+  - id: WP-02E-artifact-and-supply-chain
+    depends_on: [WP-02A-hosted-transport-api]
+  - id: WP-02F-staging-environment
+    depends_on: [WP-02E-artifact-and-supply-chain, WP-02C-worker-and-queue]
+  - id: WP-02G-production-infrastructure
+    depends_on: [WP-02F-staging-environment]
+  - id: WP-02H-observability-and-abuse-controls
+    depends_on: [WP-02F-staging-environment]
+  - id: WP-02I-remote-mcp-resolver-activation
+    depends_on: [WP-02D-candidate-ingress-integration, WP-02H-observability-and-abuse-controls]
+  - id: WP-02J-live-check-integration
+    depends_on: [WP-02I-remote-mcp-resolver-activation]
+  - id: WP-02K-production-smokes-and-launch-evidence
+    depends_on: [WP-02G-production-infrastructure, WP-02J-live-check-integration]
+  - id: WP-02L-positioning-reconciliation
+    depends_on: [WP-02A-hosted-transport-api]

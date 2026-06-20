@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/hosted-job-record.schema.json",
+  "title": "OpenVA Hosted Job Record",
+  "description": "Operational metadata for one hosted resolver VERIFY-mode job in the durable job store. (Cached mode is synchronous and creates no job record.) Data-minimised and transient by design: it carries NO uploaded inventory content, NO vendor identity strings, and NO request bodies. The submitted request lives separately in a transient request envelope (referenced by request_ref) and the result in a transient result blob (referenced by result_ref); both are TTL-deleted. Expiry is time-based on expires_at (the API returns 410 once now >= expires_at); there is no persisted 'expired' state. There is NO deduplication in v1: every request creates a new job, and there is no content-derived dedup key (any future idempotency option must use a server-keyed HMAC bound to an authenticated caller, never a dictionary-testable content digest). Result access requires the separate job_token capability (stored only as job_token_digest); job_id is a loggable correlation id, not a credential. additionalProperties is false and state-dependent invariants are enforced below so a leaked or inconsistent field fails validation. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "job_id",
+    "job_token_digest",
+    "state",
+    "freshness_mode",
+    "row_count",
+    "created_at",
+    "updated_at",
+    "expires_at",
+    "attempt",
+    "dispatch_attempt",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "job_id": {
+      "type": "string",
+      "description": "Opaque correlation id (an opaque UUID). Carries no submitted content and is NOT an access credential; safe to log. Result access requires the separate job_token capability (stored here only as job_token_digest).",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "job_token_digest": {
+      "type": "string",
+      "description": "SHA-256 of the high-entropy job_token capability returned once at creation. The token gates result polling/retrieval; it is never logged and never stored in plaintext — only this digest persists for verification.",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "state": { "enum": ["received", "queued", "executing", "completed", "failed"] },
+    "freshness_mode": {
+      "const": "verify",
+      "description": "Job records exist only for verify-mode async work; cached mode is synchronous and creates no record."
+    },
+    "request_ref": {
+      "type": ["string", "null"],
+      "description": "Opaque pointer to the TRANSIENT request envelope (submitted input) the worker reads. Non-null while the job is non-terminal; null once the envelope is deleted on the terminal transition. Never the input itself.",
+      "maxLength": 256
+    },
+    "row_count": { "type": "integer", "minimum": 0, "maximum": 20, "description": "A verify job's row count, bounded by the authoritative hosted_verify_limits.max_verify_rows (NOT the larger cached/batch limits.max_rows_cached). Over-limit requests are rejected by the API before a job exists." },
+    "result_ref": {
+      "type": ["string", "null"],
+      "description": "Opaque pointer to the transient result blob (TTL-deleted). Non-null only when completed.",
+      "maxLength": 256
+    },
+    "error_code": {
+      "description": "Stable, generic JOB failure code (never an upstream message or submitted content). Non-null only when failed. input_too_large / row_limit_exceeded are API pre-job rejection responses, NOT job failures, so they are not in this vocabulary.",
+      "enum": [null, "execution_timeout", "upstream_unavailable", "rate_limited", "internal_error"]
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 0,
+      "description": "Bounded EXECUTION retry counter, owned by the watchdog. REQUIRED (not merely defaulted): the watchdog compares and increments it to terminalize a job once the retry bound is reached, so a missing counter would break bounded recovery. A newly received record is 0 (enforced below) and stays 0 until execution; each watchdog recovery (executing -> queued/failed) increments it; reaching the maximum terminalizes the job to failed. This is NOT the dispatch recovery counter — see dispatch_attempt."
+    },
+    "dispatch_attempt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 0,
+      "description": "Bounded DISPATCH (enqueue) recovery generation, owned by the reconciler — distinct from attempt (execution retries, watchdog). 0 is the original API enqueue (Cloud Task name = job_id, no suffix). While a job remains received, the reconciler atomically increments this (CAS) BEFORE re-enqueueing and names the new Cloud Task {job_id}-r{dispatch_attempt}, so every recovery uses a fresh, never-tombstoned name (the first recovery is r1, never the tombstoned r0). It can advance while received (so it is NOT pinned to 0 like attempt); beyond the maximum the reconciler stops re-enqueueing and the job terminates by time-based expiry (410 -> 404)."
+    },
+    "lease_owner": {
+      "type": ["string", "null"],
+      "description": "Execution lease holder (the worker instance id). Non-null only while executing; a stale lease (lease_expires_at < now) is recovered by the watchdog. Carries no submitted content.",
+      "maxLength": 128
+    },
+    "lease_expires_at": {
+      "type": ["string", "null"],
+      "description": "When the execution lease goes stale; the worker heartbeats to extend it. Non-null only while executing.",
+      "format": "date-time"
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "$comment": "received: a newly accepted job has not been retried yet, so attempt is 0.",
+      "if": { "properties": { "state": { "const": "received" } }, "required": ["state"] },
+      "then": { "properties": { "attempt": { "const": 0 } } }
+    },
+    {
+      "$comment": "received/queued: live envelope, no result/error, and NOT yet leased.",
+      "if": { "properties": { "state": { "enum": ["received", "queued"] } }, "required": ["state"] },
+      "then": {
+        "required": ["request_ref"],
+        "properties": {
+          "request_ref": { "type": "string" },
+          "result_ref": { "type": "null" },
+          "error_code": { "const": null },
+          "lease_owner": { "type": "null" },
+          "lease_expires_at": { "type": "null" }
+        }
+      }
+    },
+    {
+      "$comment": "executing: live envelope, no result/error, and a live execution lease.",
+      "if": { "properties": { "state": { "const": "executing" } }, "required": ["state"] },
+      "then": {
+        "required": ["request_ref", "lease_owner", "lease_expires_at"],
+        "properties": {
+          "request_ref": { "type": "string" },
+          "result_ref": { "type": "null" },
+          "error_code": { "const": null },
+          "lease_owner": { "type": "string" },
+          "lease_expires_at": { "type": "string" }
+        }
+      }
+    },
+    {
+      "$comment": "completed has a result, no error, the envelope is deleted, and the lease is released.",
+      "if": { "properties": { "state": { "const": "completed" } }, "required": ["state"] },
+      "then": {
+        "required": ["result_ref"],
+        "properties": {
+          "result_ref": { "type": "string" },
+          "request_ref": { "type": "null" },
+          "error_code": { "const": null },
+          "lease_owner": { "type": "null" },
+          "lease_expires_at": { "type": "null" }
+        }
+      }
+    },
+    {
+      "$comment": "failed has a generic error, no result, the envelope is deleted, and the lease is released.",
+      "if": { "properties": { "state": { "const": "failed" } }, "required": ["state"] },
+      "then": {
+        "required": ["error_code"],
+        "properties": {
+          "error_code": { "type": "string" },
+          "request_ref": { "type": "null" },
+          "result_ref": { "type": "null" },
+          "lease_owner": { "type": "null" },
+          "lease_expires_at": { "type": "null" }
+        }
+      }
+    }
+  ]
+}
