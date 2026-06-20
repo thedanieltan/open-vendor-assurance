@@ -759,15 +759,20 @@ _CLOUD_TASKS_TASK_ID = re.compile(r"^[A-Za-z0-9_-]+$")  # Cloud Tasks TASK_ID ch
 
 
 def test_recovery_task_name_is_a_valid_cloud_tasks_id():
-    # Finding 1: the recovery task name must be a valid Cloud Tasks TASK_ID
+    # Finding 1 (r7): the recovery task name must be a valid Cloud Tasks TASK_ID
     # (letters/numbers/hyphen/underscore only); a colon is invalid.
-    template = _contract()["handoff"]["reconciler"]["recovery_task_name_template"]
+    rec = _contract()["handoff"]["reconciler"]
+    template = rec["recovery_task_name_template"]
     assert ":" not in template, "recovery task name template must not use a colon"
     sample_job_id = "9f1c2d3e-4b5a-46c7-8d9e-0a1b2c3d4e5f"  # a UUID job_id (hyphenated)
-    for attempt in range(1, 11):
-        task_id = template.format(job_id=sample_job_id, attempt=attempt)
+    seen = set()
+    for dispatch_attempt in range(1, int(rec["dispatch_recovery_max"]) + 1):
+        task_id = template.format(job_id=sample_job_id, dispatch_attempt=dispatch_attempt)
         assert _CLOUD_TASKS_TASK_ID.fullmatch(task_id), f"invalid Cloud Tasks task id: {task_id!r}"
         assert len(task_id) <= 500  # Cloud Tasks TASK_ID max length
+        seen.add(task_id)
+    # Finding (r8): successive recovery attempts MUST produce DISTINCT task ids.
+    assert len(seen) == int(rec["dispatch_recovery_max"]), "recovery task ids must be distinct per generation"
 
     # Regression: the invalid colon form must not reappear in the contract or docs,
     # and the ~24h tombstone behaviour it works around must stay documented.
@@ -776,6 +781,47 @@ def test_recovery_task_name_is_a_valid_cloud_tasks_id():
         assert "job_id:r" not in text and ":r{n}" not in text, f"{path.name} has an invalid colon task id"
     lifecycle = " ".join(_read(OPS / "hosted-deployment-job-lifecycle.md").lower().split())
     assert "tombstone" in lifecycle  # the 24h tombstone semantics remain documented
+
+
+def test_dispatch_recovery_counter_is_separate_from_execution_attempt():
+    # Finding (r8): the recovery task name is driven by a RECONCILER-owned dispatch
+    # generation (dispatch_attempt), NOT the watchdog's execution counter (attempt),
+    # which is pinned to 0 while received and would regenerate the same -r0 forever.
+    rec = _contract()["handoff"]["reconciler"]
+    template = rec["recovery_task_name_template"]
+    assert "{dispatch_attempt}" in template, "recovery name must derive from dispatch_attempt"
+    assert "{attempt}" not in template, "recovery name must NOT derive from the execution attempt counter"
+    assert rec["dispatch_recovery_counter"] == "dispatch_attempt"
+    assert rec["role"] == "recovery_only"
+    # Reconciler-owned, atomic CAS increment while received (concurrent-safe).
+    assert "cas" in rec["dispatch_recovery_increment"].lower()
+    assert "received" in rec["dispatch_recovery_increment"].lower()
+    # First recovery is r1, never the tombstoned original r0.
+    assert int(rec["first_recovery_generation"]) == 1
+    first = template.format(job_id="9f1c2d3e-4b5a-46c7-8d9e-0a1b2c3d4e5f", dispatch_attempt=1)
+    assert first.endswith("-r1"), f"first recovery must be -r1, got {first!r}"
+    not_r0 = template.format(job_id="9f1c2d3e-4b5a-46c7-8d9e-0a1b2c3d4e5f", dispatch_attempt=0)
+    assert not_r0.endswith("-r0")  # generation 0 is the ORIGINAL enqueue, never used for recovery
+    # Bounded with a terminal: beyond the max the job expires (410), never strands/churns.
+    assert int(rec["dispatch_recovery_max"]) >= 1
+    exhausted = rec["on_dispatch_exhausted"].lower()
+    assert "410" in exhausted or "expiry" in exhausted
+
+    # The two counters are distinct, both schema-required fields.
+    schema = json.loads(_read(SCHEMA_PATH))
+    assert "dispatch_attempt" in schema["required"] and "attempt" in schema["required"]
+    assert "dispatch_attempt" in schema["properties"] and "attempt" in schema["properties"]
+
+    # A received job can advance dispatch_attempt while attempt stays 0 (the exact
+    # state the original bug stranded). Both must be schema-valid.
+    validator = _validator()
+    received = json.loads(_read(EXAMPLES / "received.json"))
+    recovered = dict(received, dispatch_attempt=2)  # reconciler re-enqueued twice, still received
+    assert recovered["attempt"] == 0
+    assert not list(validator.iter_errors(recovered)), "received with advanced dispatch_attempt must validate"
+    # Deleting dispatch_attempt must fail (required; default does not populate it).
+    no_dispatch = {k: v for k, v in received.items() if k != "dispatch_attempt"}
+    assert list(validator.iter_errors(no_dispatch)), "missing dispatch_attempt must fail validation"
 
 
 def test_attempt_counter_is_required_and_zero_on_received():

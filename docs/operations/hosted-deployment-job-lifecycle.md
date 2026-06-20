@@ -159,10 +159,22 @@ is **acked and dropped**.
 **Reconciler — recovery only.** It **never** owns the normal-path
 `received → queued`. For a job stuck in `received` past a threshold: if the task is
 still pending it sees `ALREADY_EXISTS` and leaves it; if the original task name is
-tombstoned (completed/deleted), it re-enqueues with an **attempt-suffixed task
-name** (`job_id-r{n}`, e.g. `<uuid>-r1`) — a hyphen, never a colon, because Cloud
-Tasks task IDs permit only `[A-Za-z0-9_-]`. The fresh name sidesteps the original's
-~24h tombstone, and the worker's CAS dedups any resulting duplicate delivery.
+tombstoned (completed/deleted), it re-enqueues with a **dispatch-generation-suffixed
+task name** (`job_id-r{dispatch_attempt}`, e.g. `<uuid>-r1`) — a hyphen, never a
+colon, because Cloud Tasks task IDs permit only `[A-Za-z0-9_-]`.
+
+`dispatch_attempt` is a **separate counter from `attempt`**. `attempt` is the
+watchdog's *execution*-retry counter and is pinned to `0` while `received` (no
+watchdog runs on a non-executing job), so it can never advance a recovery name —
+naming from it would regenerate the same `-r0` forever and strand the job behind the
+~24h tombstone. The reconciler instead atomically increments `dispatch_attempt` (CAS;
+concurrent reconcilers serialize, one wins per generation) **before** each re-enqueue,
+so the first recovery is `-r1` (0 → 1, never the tombstoned `-r0`) and every
+subsequent recovery (`-r2`, `-r3`, …) is a fresh, never-tombstoned name. Dispatch
+recovery is **bounded** by a maximum generation; beyond it the reconciler stops
+re-enqueueing and the job terminates by time-based expiry (`410` → `404`), so a stuck
+job is neither stranded nor churning forever. The worker's CAS dedups any resulting
+duplicate delivery.
 
 **Crash points:**
 - after envelope, before job create → orphan envelope (no job record; invisible to
@@ -170,7 +182,8 @@ Tasks task IDs permit only `[A-Za-z0-9_-]`. The fresh name sidesteps the origina
 - after job create, before enqueue → reconciler re-enqueues;
 - after enqueue, before CAS `received → queued` → the worker recovers via CAS
   `received → queued` then `queued → executing`; a reconciler re-enqueue is deduped
-  (`ALREADY_EXISTS`) or uses an attempt-suffixed name if tombstoned;
+  (`ALREADY_EXISTS`) or uses a dispatch-generation-suffixed name (`-r{dispatch_attempt}`)
+  if tombstoned;
 - worker crash while `executing` → execution timeout → `failed`, or expiry.
 
 **Polling distinguishes** *accepted-but-not-dispatched* (`received`) from

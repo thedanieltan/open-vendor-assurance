@@ -284,13 +284,25 @@ handoff:
   reconciler:
     role: recovery_only                 # NEVER owns the normal-path received -> queued
     on_already_exists: leave_pending_task_no_action
-    on_name_tombstoned: re_enqueue_with_attempt_suffixed_task_name   # job_id-r{n}; worker CAS dedups any duplicate delivery
+    on_name_tombstoned: re_enqueue_with_dispatch_generation_suffixed_task_name   # job_id-r{dispatch_attempt}; worker CAS dedups any duplicate delivery
     # Cloud Tasks TASK_ID permits only [A-Za-z0-9_-]; a ':' is INVALID, so the
-    # attempt suffix uses a hyphen. job_id is a (hyphenated) UUID, so the recovery
-    # name stays in the allowed set. Each recovery attempt uses a fresh, never-yet-
-    # tombstoned name, which is exactly why it works around the ~24h tombstone on the
-    # original (completed/deleted) task name.
-    recovery_task_name_template: "{job_id}-r{attempt}"   # e.g. <uuid>-r1; matches ^[A-Za-z0-9_-]+$
+    # generation suffix uses a hyphen. job_id is a (hyphenated) UUID, so the recovery
+    # name stays in the allowed set.
+    #
+    # DISPATCH recovery is a SEPARATE counter from execution retries. `attempt` is the
+    # WATCHDOG's execution-retry counter and is pinned to 0 while `received` (no
+    # watchdog runs on a non-executing job), so it can never advance a recovery name —
+    # naming from it would regenerate the SAME task id forever and strand the job
+    # behind the ~24h tombstone. The reconciler owns `dispatch_attempt` instead and
+    # increments it (CAS) BEFORE each re-enqueue of a still-`received` job, so every
+    # recovery uses a fresh, never-yet-tombstoned name. The first recovery is r1
+    # (0 -> 1); the template never reproduces the original r0.
+    dispatch_recovery_counter: dispatch_attempt
+    dispatch_recovery_increment: atomic_cas_while_received   # concurrent reconcilers serialize on the CAS; only one wins per generation, the loser observes the new value
+    dispatch_recovery_max: 10                                # bounded; beyond this the reconciler stops re-enqueueing
+    on_dispatch_exhausted: stop_reenqueue_then_expiry_returns_410   # time-based terminal (410 -> 404); no persisted state, no infinite churn, no stranded job
+    first_recovery_generation: 1                             # 0 is the original API enqueue (task name = job_id, no suffix)
+    recovery_task_name_template: "{job_id}-r{dispatch_attempt}"   # e.g. <uuid>-r1; matches ^[A-Za-z0-9_-]+$
   crash_points:
     after_envelope_before_job: orphan_envelope_ttl_reaped; api_returns_retryable_503_no_job_id
     after_job_before_enqueue: reconciler_re_enqueues
