@@ -1,0 +1,68 @@
+# Work-package path-scope manifest.
+#
+# A PR declares its work package; the scope guard (tools/openva/pr_scope_guard.py)
+# asserts every changed path matches that work package's allowed globs (or the shared
+# set). This prevents an unrelated ANCESTOR branch's commits from silently entering a
+# PR via a squash/rebase — the exact failure behind PR #400, which inherited the
+# legal-entity commit (26b2922) and bundled it into the candidate-activation squash
+# without independent review of that change set.
+#
+# Globs use fnmatch case-sensitive semantics where `*` spans `/` (so `dir/*` matches
+# everything beneath `dir/`). Add a new work package here (with its allowed_paths)
+# before opening a PR that declares it; an undeclared work package fails the guard.
+version: 1
+
+# Paths any PR may touch regardless of work package (never flagged): the scope
+# machinery itself.
+shared_allowed:
+  - docs/operations/contracts/work-package-scope.yaml
+  - docs/operations/pr-scope-guard.md
+  - tools/openva/pr_scope_guard.py
+  - tests/test_pr_scope_guard.py
+
+work_packages:
+  WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01:
+    description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400.
+    allowed_paths:
+      - docs/operations/legal-entity-export-ratification.md
+      - tests/test_legal_entity_export_ratification.py
+
+  WP-OPENVA-AI-NATIVE-DISTRIBUTION-LEGAL-ENTITY:
+    description: Legal-entity export projection + shared registration-number matching (the change set bundled into PR #400).
+    allowed_paths:
+      - tools/openva/agent_export.py
+      - schemas/openva/agent-export.schema.json
+      - schemas/openva/agent-enrichment-row.schema.json
+      - adapters/python/openva_vendor_inventory_matcher/*
+      - integrations/mcp/openva_mcp/*
+      - docs/architecture/decisions/ADR-0003-remote-mcp-product-surface.md
+      - docs/agent-workspace-composition.md
+      - tests/test_agent_export.py
+      - tests/test_matching_conformance.py
+      - tests/test_openva_enrichment_parity.py
+      - tests/test_openva_mcp_*.py
+
+  WP-OPENVA-CANDIDATE-ACTIVATION-01:
+    description: Candidate-bound autonomous catalogue promotion (#393 / merged as PR #400).
+    allowed_paths:
+      - tools/openva/candidate_record.py
+      - tools/openva/vendor_resolution.py
+      - tools/openva/autonomous_growth_controller.py
+      - tools/openva/candidate_intake_guard.py
+      - config/automerge-policy.yaml
+      - .github/workflows/agent-automerge.yml
+      - docs/candidate-intake.md
+      - docs/operations/contracts/bot-authority.yaml
+      - tests/test_candidate_*.py
+      - tests/test_automerge_lanes.py
+
+  WP-OPENVA-AI-NATIVE-DISTRIBUTION-02:
+    description: Hosted public-read deployment decision package and follow-on transport slices (WP-02 family).
+    allowed_paths:
+      - docs/operations/hosted-deployment-*.md
+      - docs/operations/contracts/hosted-deployment.yaml
+      - docs/architecture/decisions/ADR-0006-*.md
+      - schemas/openva/hosted-job-record.schema.json
+      - docs/security/hosted-deployment-threat-model.md
+      - examples/hosted-deployment/*
+      - tests/test_hosted_deployment_docs.py
