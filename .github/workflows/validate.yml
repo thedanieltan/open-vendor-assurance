@@ -2,7 +2,12 @@ name: validate
 
 on:
   pull_request:
+    # `edited` fires on PR title/body/base edits, so a PR-body `Work-Package:` change
+    # reruns the pr-scope-guard job and cannot leave a stale-green scope-guard result;
+    # opened/synchronize/reopened/ready_for_review preserve normal code-change validation.
+    types: [opened, synchronize, reopened, edited, ready_for_review]
   push:
+    # push validation on main is unchanged.
     branches: [main]
 
 permissions:

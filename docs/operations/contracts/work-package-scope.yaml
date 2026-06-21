@@ -1,28 +1,42 @@
 # Work-package path-scope manifest.
 #
 # A PR declares its work package; the scope guard (tools/openva/pr_scope_guard.py)
-# asserts every changed path matches that work package's allowed globs (or the shared
-# set). This prevents an unrelated ANCESTOR branch's commits from silently entering a
-# PR via a squash/rebase — the exact failure behind PR #400, which inherited the
-# legal-entity commit (26b2922) and bundled it into the candidate-activation squash
-# without independent review of that change set.
+# asserts every changed path matches that work package's allowed globs. This prevents
+# an unrelated ANCESTOR branch's commits from silently entering a PR via a
+# squash/rebase — the exact failure behind PR #400, which inherited the legal-entity
+# commit (26b2922) and bundled it into the candidate-activation squash without
+# independent review of that change set.
 #
 # Globs use fnmatch case-sensitive semantics where `*` spans `/` (so `dir/*` matches
 # everything beneath `dir/`). Add a new work package here (with its allowed_paths)
 # before opening a PR that declares it; an undeclared work package fails the guard.
+#
+# Trusted-base evaluation: CI reads this manifest (and the guard) from the trusted
+# BASE revision, so a PR cannot weaken the policy that judges its own diff. Adding or
+# widening a scope is therefore a two-PR process: land the manifest change under
+# WP-PR-SCOPE-POLICY-01 first, then open the implementation PR. See
+# docs/operations/pr-scope-guard.md.
 version: 1
 
-# Paths any PR may touch regardless of work package (never flagged): the scope
-# machinery itself.
-shared_allowed:
-  - docs/operations/contracts/work-package-scope.yaml
-  - docs/operations/pr-scope-guard.md
-  - tools/openva/pr_scope_guard.py
-  - tests/test_pr_scope_guard.py
+# Fail-closed: there are NO globally-exempt paths. The scope-policy machinery (this
+# manifest, the guard, its doc and tests, the CI workflow and its ownership map) is
+# governed SOLELY by WP-PR-SCOPE-POLICY-01 below — it is not shared, so no unrelated
+# work package can edit the policy that judges it.
+shared_allowed: []
 
 work_packages:
+  WP-PR-SCOPE-POLICY-01:
+    description: The PR scope-policy machinery itself (manifest, guard, doc, tests, and the CI enforcement workflow + its ownership map). Changes here go through an independent policy PR before any implementation PR may rely on them.
+    allowed_paths:
+      - docs/operations/contracts/work-package-scope.yaml
+      - docs/operations/pr-scope-guard.md
+      - tools/openva/pr_scope_guard.py
+      - tests/test_pr_scope_guard.py
+      - .github/workflows/validate.yml
+      - .github/validation-ownership.yaml
+
   WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01:
-    description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400 (audit evidence, required corrections, regression tests, and the PR scope guard's CI enforcement).
+    description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400 (audit evidence, required corrections, and regression tests). Scope-policy files are NOT included here — they live in WP-PR-SCOPE-POLICY-01.
     allowed_paths:
       - docs/operations/legal-entity-export-ratification.md
       - tests/test_legal_entity_export_ratification.py
@@ -32,10 +46,6 @@ work_packages:
       - tools/openva/agent_export.py
       - integrations/mcp/openva_mcp/openva_mcp/matching.py
       - tests/test_agent_export.py
-      # CI enforcement of the scope guard (finding 1/4): a pull_request-only job in the
-      # core validate workflow, registered in the validation-ownership contract.
-      - .github/workflows/validate.yml
-      - .github/validation-ownership.yaml
 
   WP-OPENVA-AI-NATIVE-DISTRIBUTION-LEGAL-ENTITY:
     description: Legal-entity export projection + shared registration-number matching (the change set bundled into PR #400).
@@ -66,13 +76,138 @@ work_packages:
       - tests/test_candidate_*.py
       - tests/test_automerge_lanes.py
 
-  WP-OPENVA-AI-NATIVE-DISTRIBUTION-02:
-    description: Hosted public-read deployment decision package and follow-on transport slices (WP-02 family).
+  # ADR-0006 acceptance precedes WP-02A. The WP-OPENVA-AI-NATIVE-DISTRIBUTION-02 family
+  # (a programme umbrella in the decision docs) is decomposed here into one governance
+  # work package (the ADR status flip) plus the WP-02A..L implementation slices. Each
+  # slice carries a `slice_id` linking to hosted-deployment.yaml `implementation_slices`
+  # and a `depends_on` of manifest WP keys; for every WP-02 slice the `depends_on`
+  # MINUS the WP-ADR-0006-STATUS-CHANGE governance edge mirrors that slice's
+  # `depends_on` in hosted-deployment.yaml.
+  WP-ADR-0006-STATUS-CHANGE:
+    description: Flip ADR-0006 (hosted public-read deployment) from Proposed to Accepted — the decision-record status change, its index row, and the acceptance-count test. NO service/schema/worker/infra paths.
+    depends_on: []
     allowed_paths:
-      - docs/operations/hosted-deployment-*.md
-      - docs/operations/contracts/hosted-deployment.yaml
-      - docs/architecture/decisions/ADR-0006-*.md
-      - schemas/openva/hosted-job-record.schema.json
-      - docs/security/hosted-deployment-threat-model.md
-      - examples/hosted-deployment/*
-      - tests/test_hosted_deployment_docs.py
+      - docs/architecture/decisions/ADR-0006-hosted-public-read-deployment.md
+      - docs/architecture/decisions/README.md
+      - tests/test_ai_native_distribution_docs.py
+
+  WP-02A-HOSTED-TRANSPORT:
+    description: Hosted transport/API for the match service (WP-02A).
+    slice_id: WP-02A-hosted-transport-api
+    depends_on:
+      - WP-ADR-0006-STATUS-CHANGE
+    allowed_paths:
+      - services/openva_match_service/*
+      - docs/openva-match-service-contract.md
+      - docs/resolver-api.md
+      - tests/*
+
+  WP-02B-ASYNC-PERSISTENCE:
+    description: Async job persistence for the match service (WP-02B).
+    slice_id: WP-02B-async-job-persistence
+    depends_on:
+      - WP-02A-HOSTED-TRANSPORT
+    allowed_paths:
+      - services/openva_match_service/*
+      - schemas/openva/*
+      - tests/*
+
+  WP-02C-WORKER-QUEUE:
+    description: Worker and queue for asynchronous match jobs (WP-02C).
+    slice_id: WP-02C-worker-and-queue
+    depends_on:
+      - WP-02B-ASYNC-PERSISTENCE
+    allowed_paths:
+      - services/openva_match_service/*
+      - tools/openva/*
+      - tests/*
+
+  WP-02D-CANDIDATE-INGRESS:
+    description: Candidate-ingress integration into the hosted match service (WP-02D).
+    slice_id: WP-02D-candidate-ingress-integration
+    depends_on:
+      - WP-02C-WORKER-QUEUE
+    allowed_paths:
+      - services/openva_match_service/*
+      - tools/openva/*
+      - tests/*
+
+  WP-02E-SUPPLY-CHAIN:
+    description: Artifact build and supply-chain controls for the hosted service (WP-02E).
+    slice_id: WP-02E-artifact-and-supply-chain
+    depends_on:
+      - WP-02A-HOSTED-TRANSPORT
+    allowed_paths:
+      - services/openva_match_service/*
+      - .github/workflows/*
+      - docs/operations/*
+
+  WP-02F-STAGING:
+    description: Staging environment for the hosted service (WP-02F).
+    slice_id: WP-02F-staging-environment
+    depends_on:
+      - WP-02E-SUPPLY-CHAIN
+      - WP-02C-WORKER-QUEUE
+    allowed_paths:
+      - infra/*
+      - docs/operations/*
+
+  WP-02G-PRODUCTION-INFRA:
+    description: Production infrastructure for the hosted service (WP-02G).
+    slice_id: WP-02G-production-infrastructure
+    depends_on:
+      - WP-02F-STAGING
+    allowed_paths:
+      - infra/*
+
+  WP-02H-OBSERVABILITY:
+    description: Observability and abuse controls for the hosted service (WP-02H).
+    slice_id: WP-02H-observability-and-abuse-controls
+    depends_on:
+      - WP-02F-STAGING
+    allowed_paths:
+      - services/openva_match_service/*
+      - infra/*
+      - docs/operations/*
+      - tests/*
+
+  WP-02I-REMOTE-MCP:
+    description: Remote MCP resolver activation against the hosted service (WP-02I).
+    slice_id: WP-02I-remote-mcp-resolver-activation
+    depends_on:
+      - WP-02D-CANDIDATE-INGRESS
+      - WP-02H-OBSERVABILITY
+    allowed_paths:
+      - integrations/mcp/*
+      - services/openva_match_service/*
+      - tests/*
+
+  WP-02J-LIVE-CHECK:
+    description: Live-check integration against the hosted resolver (WP-02J).
+    slice_id: WP-02J-live-check-integration
+    depends_on:
+      - WP-02I-REMOTE-MCP
+    allowed_paths:
+      - services/openva_match_service/*
+      - docs/*
+      - tests/*
+
+  WP-02K-LAUNCH-EVIDENCE:
+    description: Production smokes and launch evidence for the hosted service (WP-02K).
+    slice_id: WP-02K-production-smokes-and-launch-evidence
+    depends_on:
+      - WP-02G-PRODUCTION-INFRA
+      - WP-02J-LIVE-CHECK
+    allowed_paths:
+      - docs/operations/*
+      - infra/*
+
+  WP-02L-POSITIONING:
+    description: Positioning reconciliation across docs and READMEs for the hosted launch (WP-02L).
+    slice_id: WP-02L-positioning-reconciliation
+    depends_on:
+      - WP-02A-HOSTED-TRANSPORT
+    allowed_paths:
+      - docs/*
+      - README.md
+      - integrations/*/README.md

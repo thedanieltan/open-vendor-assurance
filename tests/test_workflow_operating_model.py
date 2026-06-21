@@ -140,3 +140,59 @@ def test_reviewer_decision_handoff_documents_controlled_manual_boundary():
         "Do not validate a completed sheet against a different triage plan",
     }:
         assert fragment in text
+
+
+def _pr_scope_guard_job() -> dict:
+    workflow = load_workflow("validate.yml")
+    assert "pr-scope-guard" in workflow["jobs"], "pr-scope-guard job must exist on validate.yml"
+    return workflow["jobs"]["pr-scope-guard"]
+
+
+def _pr_scope_guard_run_text() -> str:
+    return "\n".join(str(step.get("run", "")) for step in _pr_scope_guard_job()["steps"])
+
+
+def test_pr_scope_guard_job_is_pull_request_only():
+    """The scope guard must only run on pull_request events; it reads PR-event payload
+    (base/head SHAs and PR body) that does not exist on push."""
+    assert _pr_scope_guard_job()["if"] == "github.event_name == 'pull_request'"
+
+
+def test_pr_scope_guard_derives_shas_and_body_from_pull_request_event():
+    """BASE_SHA/HEAD_SHA/PR_BODY must come from the pull_request event payload, so the
+    guard evaluates the exact base->head diff and the current PR-body declaration."""
+    env_blobs = []
+    for step in _pr_scope_guard_job()["steps"]:
+        env = step.get("env")
+        if env:
+            env_blobs.append({key: str(value) for key, value in env.items()})
+    flattened = {key: value for blob in env_blobs for key, value in blob.items()}
+    assert "github.event.pull_request.base.sha" in flattened.get("BASE_SHA", "")
+    assert "github.event.pull_request.head.sha" in flattened.get("HEAD_SHA", "")
+    assert "github.event.pull_request.body" in flattened.get("PR_BODY", "")
+
+
+def test_pr_scope_guard_runs_from_trusted_base_worktree_not_head():
+    """Trusted-base evaluation: the guard must add a worktree at the BASE SHA and run the
+    guard module FROM that base copy, so a PR cannot weaken the policy that judges it. It
+    must NOT evaluate the guard from the head revision."""
+    run_text = _pr_scope_guard_run_text()
+    assert 'git worktree add /tmp/base-guard "$BASE_SHA"' in run_text
+    assert "cd /tmp/base-guard" in run_text
+    assert "python -m tools.openva.pr_scope_guard" in run_text
+    assert "--declaration-file" in run_text
+    assert "--changed-paths-file" in run_text
+    # The diff under evaluation is the exact base->head range.
+    assert 'git diff --name-only "$BASE_SHA" "$HEAD_SHA"' in run_text
+
+
+def test_pr_scope_guard_contains_self_bootstrap_skip_branch():
+    """The job must skip (exit 0) when the BASE revision lacks the guard module, so the
+    guard can be introduced without failing its own introducing PR. NOTE: this means the
+    introducing PR's pr-scope-guard success may be bootstrap-only (skipped) and is NOT
+    proof the diff passed the future policy — that policy applies only to later PRs whose
+    base already contains the guard."""
+    run_text = _pr_scope_guard_run_text()
+    assert "/tmp/base-guard/tools/openva/pr_scope_guard.py" in run_text
+    assert "self-bootstrap" in run_text
+    assert "exit 0" in run_text

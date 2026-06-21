@@ -1,16 +1,20 @@
 """PR work-package scope guard.
 
 Assert that every path a PR changes falls within its declared work package's allowed
-globs (or the shared set), so an unrelated ancestor branch's commits cannot silently
-enter a PR via a squash/rebase. This is the guard required by
-WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01 after PR #400 inherited the legal-entity commit
-and bundled it without independent review of that change set.
+globs, so an unrelated ancestor branch's commits cannot silently enter a PR via a
+squash/rebase. This is the guard required by WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01
+after PR #400 inherited the legal-entity commit and bundled it without independent
+review of that change set.
 
 The matching/manifest logic is pure (``out_of_scope_paths``) and unit-tested; the CLI
-wraps it with a git diff. CI usage (the PR declares its work package, e.g. from its
-title or a label):
+wraps it with a git diff. A PR declares its work package with exactly one
+``Work-Package: WP-...`` line in its body; CI passes that body via
+``--declaration-file`` (the only authoritative declaration mechanism — PR title and
+labels are NOT used):
 
-    python -m tools.openva.pr_scope_guard --work-package WP-... --base origin/main
+    python -m tools.openva.pr_scope_guard --declaration-file pr_body.txt --base origin/main
+
+For local/test use a work package may be passed directly with ``--work-package``.
 
 Globs use ``fnmatch`` case-sensitive semantics where ``*`` spans ``/`` (so ``dir/*``
 matches everything beneath ``dir/``).
@@ -40,7 +44,7 @@ class DeclarationError(ValueError):
 
 
 def declared_work_package(text: str) -> str:
-    """Parse exactly one `Work-Package: WP-...` declaration from a PR body/title.
+    """Parse exactly one `Work-Package: WP-...` declaration from a PR body.
 
     Fails closed: zero or multiple distinct declarations raise DeclarationError, so a PR
     can neither skip the guard (no declaration) nor straddle work packages (several)."""
@@ -100,8 +104,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--work-package", help="The declared work-package id (must exist in the manifest).")
     parser.add_argument(
         "--declaration-file",
-        help="Path to a file (e.g. the PR body) carrying a single 'Work-Package: WP-...' line; "
-        "fails closed on zero or multiple declarations.",
+        help="Path to a file (the PR body) carrying a single 'Work-Package: WP-...' line; "
+        "fails closed on zero or multiple declarations. This is how CI derives the work package.",
     )
     parser.add_argument("--base", default="origin/main", help="Base ref to diff against (default: origin/main).")
     parser.add_argument("--manifest", default=str(DEFAULT_MANIFEST), help="Path to the work-package-scope manifest.")
