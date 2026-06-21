@@ -110,11 +110,17 @@ absence is never labelled non-compliance.
 The endpoints above are **cached** catalogue enrichment: synchronous, no persistence, and
 no live source fetch. A separate **verify** transport adds an async job model behind the
 `OPENVA_VERIFY_TRANSPORT_ENABLED` feature flag (**off by default**). When the flag is off
-both verify endpoints return `404` and the service is cached-only (the rollback posture).
-WP-02A ships the **transport and API contract only** — there is no worker yet, so a
-created job stays in state `received` and never executes. Verify mode acknowledges that it
-introduces async jobs (persistence) and, in a later slice, live source egress (the
+both verify endpoints return `404` (the rollback posture): the existing cached-endpoint
+behaviour and the loaded app state are unchanged, and the verify routes are still
+*registered* (so they appear on the OpenAPI surface) but return `404` until the flag is
+enabled. WP-02A ships the **transport and API contract only** — there is no worker yet, so
+a created job stays in state `received` and never executes. Verify mode acknowledges that
+it introduces async jobs (persistence) and, in a later slice, live source egress (the
 worker) per [ADR-0001](architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md).
+Because WP-02A has no worker to consume the submission, the transport **validates then
+discards** the submitted identities: only non-identifying metadata (the row count) is
+retained in the transient envelope — no vendor identity strings or raw rows. The durable,
+encrypted, TTL-deleted request envelope that holds the actual input arrives in WP-02B.
 
 ### `POST /v1/verify`
 Create a verify job. **This endpoint ALWAYS requires the bearer API key**
@@ -153,22 +159,31 @@ again, never logged, and only its SHA-256 digest is persisted.
 Poll a verify job. The **`job_token` is the sole authorizer** — neither the API key nor
 public-read applies. The token must be sent in the `Authorization: Bearer <job_token>`
 header **only**; a token in the query string, the URL path, a cookie, or via a redirect
-does **not** authenticate. The lifecycle status codes are, in order:
+does **not** authenticate. The lifecycle status codes are, in order. The `404`, `410`, and
+`401` responses are all **content-free** (an empty body) — they carry the `X-OpenVA-*` and
+`X-OpenVA-Advisory-Boundary: non_advisory` headers but no JSON body and no `not_advice`
+field:
 
-- **`404`** — unknown or deleted `job_id` (also a non-UUID id, e.g. a token mistakenly put
-  in the path). `job_id` is not a credential, so a `404` leaks nothing. Checked first, so
-  no token is echoed.
-- **`410`** — expired-but-retained job (now ≥ `expires_at`), content-free. Checked before
-  the token.
+- **`404`** — unknown, deleted, or physically purged `job_id` (also a non-UUID id, e.g. a
+  token mistakenly put in the path). `job_id` is not a credential, so a content-free `404`
+  leaks nothing. Checked first, so no token is echoed.
+- **`410`** — expired-but-retained job (now ≥ `expires_at`, still within the bounded
+  retained window), content-free. Checked before the token.
 - **`401`** — a missing or invalid `job_token` on a live job. Generic, content-free, no
   token echo; the digest comparison is constant-time.
 - **`200`** — valid token on a live job.
 
-On success it returns the job `state`, `row_count`, `created_at`/`updated_at`/`expires_at`,
-snapshot, and `not_advice: true`. The `result` field is populated only when the job is
-`completed`; `error_code` is set only when `failed`. The response never includes the
-token, the token digest, the submitted request content, or the lease fields. (In WP-02A,
-with no worker, a polled job remains `received`.)
+On success (and only on success) it returns the job `state`, `row_count`,
+`created_at`/`updated_at`/`expires_at`, snapshot, and `not_advice: true` in the JSON body
+— `not_advice: true` is carried on successful payloads only, while every response,
+including the content-free errors, carries the advisory-boundary header. The `result`
+field is populated only when the job is `completed`; `error_code` is set only when
+`failed`. The response never includes the token, the token digest, the submitted request
+content, or the lease fields. (In WP-02A, with no worker, a polled job remains `received`.)
+The expiry lifecycle is **physical**: once the bounded retained window past `expires_at`
+elapses, the record (with its `expires_at` + `job_token_digest`) and its transient
+envelope/result are deleted, so the `410`-while-retained state advances to a content-free
+`404` — it is not a status-only flag.
 
 ## Snapshot and refresh
 

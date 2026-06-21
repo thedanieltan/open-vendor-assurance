@@ -6,7 +6,7 @@ from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from fastapi import Depends, FastAPI, File, HTTPException, Query, Request, UploadFile
+from fastapi import Depends, FastAPI, File, HTTPException, Query, Request, Response, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -16,7 +16,7 @@ from .adapter_paths import ensure_adapter_paths
 
 ensure_adapter_paths()
 
-from .config import ADVISORY_BOUNDARY, ServiceConfig  # noqa: E402
+from .config import ADVISORY_BOUNDARY, VERIFY_RETAINED_WINDOW_HOURS, ServiceConfig  # noqa: E402
 from .conversion import match_csv_bytes  # noqa: E402
 from .enrichment import build_snapshot, enrich_one, match_one, vendor_detail, vendor_sources  # noqa: E402
 from .models import (  # noqa: E402
@@ -42,6 +42,7 @@ from .verify_transport import (  # noqa: E402
     new_job_id,
     new_job_token,
     new_ref,
+    purge_expired_jobs,
     token_digest,
 )
 
@@ -304,18 +305,28 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
 
         state = get_service_state(app)
         now = datetime.now(timezone.utc)
+        # Opportunistically advance the expiry lifecycle on access (no background
+        # thread): physically delete any job whose retained window has fully elapsed,
+        # plus its envelope/result. Keeps the in-memory stores bounded over time.
+        purge_expired_jobs(
+            jobs, envelopes, app.state.verify_results, now, timedelta(hours=VERIFY_RETAINED_WINDOW_HOURS)
+        )
         expires_at = now + timedelta(hours=service_config.job_ttl_hours)
 
         job_id = new_job_id()
         token = new_job_token()
         digest = token_digest(token)
         request_ref = new_ref()
-        # Store the submitted rows transiently (the worker would read them); the rows
-        # never enter the job record. row_id/identities are not logged.
-        envelopes.put(
-            request_ref,
-            {"rows": [row.model_dump() for row in payload.rows], "source_types": payload.source_types},
-        )
+        # WP-02A minimisation — the transport validates then DISCARDS submitted
+        # identities; only non-identifying metadata is retained. We store NO vendor
+        # identities (no vendor_name/domain/business_entity_name/registration_number and
+        # no raw rows) — only a minimised envelope carrying the row count. WP-02A ships
+        # no worker, so nothing would ever consume the rows; retaining them would breach
+        # ADR-0001 boundary 4 (transient unpublished inputs). The durable, encrypted,
+        # TTL-deleted request envelope holding the actual input arrives in WP-02B.
+        # request_ref is still generated and set on the record (the schema requires a
+        # non-null request_ref for `received`) and points at this minimised envelope.
+        envelopes.put(request_ref, {"row_count": len(payload.rows)})
 
         record = JobRecord(
             job_id=job_id,
@@ -350,32 +361,45 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
         job_id: str,
         request: Request,
         _enabled: None = Depends(require_verify_enabled),
-    ) -> dict[str, Any]:
+    ) -> Any:
         # Poll is authorized SOLELY by the job_token (not the API key, not public
         # read). The token is header-only — there is no query/path/cookie fallback.
-        # Lifecycle ordering per hosted-deployment.yaml `expiry`:
-        #   unknown/deleted -> 404 (job_id is NOT a credential, so 404 leaks nothing)
-        #   expired-but-retained -> 410 (content-free, checked before the token)
-        #   missing/invalid job_token on a live job -> 401
-        #   else -> 200
+        # Lifecycle ordering per hosted-deployment.yaml `expiry` (all error cases are
+        # CONTENT-FREE: empty body, X-OpenVA-* + advisory-boundary headers only, added
+        # by the add_openva_headers middleware):
+        #   record gone (purged or never existed) -> 404 (job_id is NOT a credential)
+        #   now >= expires_at (retained, within window) -> 410 (checked before the token)
+        #   live job + missing/invalid job_token -> 401
+        #   else -> 200 (the JSON status projection, with not_advice: true)
         jobs = app.state.verify_jobs
+        now = datetime.now(timezone.utc)
+        # Opportunistically advance the expiry lifecycle on access (no background
+        # thread): physically delete any job past expires_at + the retained window,
+        # together with its envelope/result. This makes the 410 (retained) -> 404
+        # (deleted) transition real — a record polled after its retained window is
+        # GONE, not merely flagged.
+        purge_expired_jobs(
+            jobs, app.state.verify_envelopes, app.state.verify_results, now,
+            timedelta(hours=VERIFY_RETAINED_WINDOW_HOURS),
+        )
         # A non-UUID path param can never be a real job; resolve to None so it takes
         # the same not-found path (never a 500, never an existence signal beyond 404).
         record = jobs.get(job_id) if JOB_ID_RE.fullmatch(job_id) else None
         if record is None:
-            # Unknown or deleted (covers non-UUID too). job_id is not a credential.
-            raise HTTPException(status_code=404, detail="job not found")
+            # Unknown, deleted, or just purged (covers non-UUID too). job_id is not a
+            # credential, so a content-free 404 leaks nothing.
+            return Response(status_code=404)
 
-        now = datetime.now(timezone.utc)
         if now >= _parse_iso_z(record.expires_at):
-            # Expired-but-retained: content-free 410 (no status, no token echo).
-            raise HTTPException(status_code=410, detail="job expired")
+            # Expired-but-retained (within the retained window): content-free 410. The
+            # record still exists; it is removed once the window fully elapses (-> 404).
+            return Response(status_code=410)
 
         # Token check last, constant-time, with no token echo. A missing or wrong
-        # token on a live job is an indistinguishable generic 401.
+        # token on a live job is an indistinguishable, content-free generic 401.
         token = extract_bearer_token(request.headers.get("authorization"))
         if token is None or not digests_match(token_digest(token), record.job_token_digest):
-            raise HTTPException(status_code=401, detail="invalid credentials")
+            return Response(status_code=401)
 
         state = get_service_state(app)
         result = None

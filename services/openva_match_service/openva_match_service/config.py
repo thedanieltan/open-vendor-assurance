@@ -27,6 +27,15 @@ DEFAULT_JOB_TTL_HOURS = 24
 # because each verify row drives real, serial, SSRF-safe live fetches.
 DEFAULT_MAX_VERIFY_ROWS = 20
 
+# The expired-but-retained window: the time after `expires_at` during which a job
+# record is kept (so a poll returns a content-free 410) before it is physically
+# deleted (after which a poll returns a content-free 404). This realizes the
+# hosted-deployment.yaml `expiry` model
+# (expires_at_then_410_while_retained_then_404_after_deletion): in production this is
+# the store-native TTL + object-lifecycle delete; in the WP-02A in-memory transport it
+# is enforced by an opportunistic purge on access. Not env-overridable in WP-02A.
+VERIFY_RETAINED_WINDOW_HOURS = 1
+
 _COMMIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _TRUE_TOKENS = {"1", "true", "yes", "on"}
 

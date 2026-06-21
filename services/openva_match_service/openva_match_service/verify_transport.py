@@ -29,6 +29,7 @@ import secrets
 import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from typing import Any
 
 SCHEMA_VERSION = "0.1.0"
@@ -187,6 +188,20 @@ class JobStore(ABC):
     @abstractmethod
     def active_count(self) -> int: ...
 
+    @abstractmethod
+    def purge_expired(self, now: datetime, retained_window: timedelta) -> list[JobRecord]:
+        """Physically delete every job record whose retained window has fully elapsed
+        (``now >= expires_at + retained_window``) and return the deleted RECORDS.
+
+        This realizes the hosted-deployment.yaml `expiry` model in the in-memory
+        transport: a record stays retained (poll -> 410) for ``retained_window`` past
+        ``expires_at``, then is physically removed (poll -> 404). In production the
+        store-native TTL + object-lifecycle does this; WP-02B swaps that backend in.
+        The job store removes ONLY the job records here; the caller (purge_expired_jobs)
+        uses the returned records' request_ref/result_ref to delete the matching
+        transient envelope/result blobs."""
+        ...
+
 
 class InMemoryJobStore(JobStore):
     """In-memory, NON-DURABLE job store. Lost on process restart. The durable
@@ -203,6 +218,14 @@ class InMemoryJobStore(JobStore):
 
     def active_count(self) -> int:
         return sum(1 for record in self._records.values() if not record.is_terminal())
+
+    def purge_expired(self, now: datetime, retained_window: timedelta) -> list[JobRecord]:
+        purged: list[JobRecord] = []
+        for job_id, record in list(self._records.items()):
+            if now >= _parse_iso_z(record.expires_at) + retained_window:
+                del self._records[job_id]
+                purged.append(record)
+        return purged
 
 
 class RequestEnvelopeStore(ABC):
@@ -268,6 +291,42 @@ class InMemoryResultStore(ResultStore):
 
     def delete(self, ref: str) -> None:
         self._results.pop(ref, None)
+
+
+# --- Expiry / purge coordination ----------------------------------------------
+
+
+def _parse_iso_z(value: str) -> datetime:
+    """Parse an ISO-8601 timestamp (with Z or offset) to a timezone-aware datetime.
+
+    Local to the transport so the job store can decide its own retained-window
+    physical-deletion boundary without importing the route layer."""
+    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def purge_expired_jobs(
+    jobs: JobStore,
+    envelopes: RequestEnvelopeStore,
+    results: ResultStore,
+    now: datetime,
+    retained_window: timedelta,
+) -> list[str]:
+    """Opportunistically advance the expiry lifecycle by PHYSICALLY deleting every job
+    whose retained window has fully elapsed, together with its transient request
+    envelope (request_ref) and any result blob (result_ref).
+
+    This is the in-memory realization of the hosted-deployment.yaml `expiry.deletes`
+    set (job_record + transient_request_envelope + result_blob): the 410-while-retained
+    -> 404-after-deletion transition is PHYSICAL, not a status-only flag. The job store
+    returns the records it removed, so the envelope/result deletes run by ref.
+    Returns the deleted job_ids. Idempotent: deleting an absent ref is a no-op."""
+    purged = jobs.purge_expired(now, retained_window)
+    for record in purged:
+        if record.request_ref is not None:
+            envelopes.delete(record.request_ref)
+        if record.result_ref is not None:
+            results.delete(record.result_ref)
+    return [record.job_id for record in purged]
 
 
 # --- Identifier helpers -------------------------------------------------------

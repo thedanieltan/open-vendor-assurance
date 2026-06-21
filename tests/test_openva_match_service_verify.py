@@ -35,7 +35,11 @@ from openva_match_service.app import (  # noqa: E402
     _iso_z,
     create_app,
 )
-from openva_match_service.config import VERIFY_ROWS_HARD_CEILING, ServiceConfig  # noqa: E402
+from openva_match_service.config import (  # noqa: E402
+    VERIFY_RETAINED_WINDOW_HOURS,
+    VERIFY_ROWS_HARD_CEILING,
+    ServiceConfig,
+)
 from openva_match_service.models import MAX_VERIFY_SOURCE_TYPES  # noqa: E402
 from openva_match_service.verify_transport import (  # noqa: E402
     JobRecord,
@@ -162,6 +166,7 @@ def test_poll_with_correct_token_returns_status():
 
 
 # 4. Poll auth failures on an EXISTING job stay 401; an UNKNOWN job is 404.
+#    Both are CONTENT-FREE (empty body) and still carry the advisory-boundary header.
 def test_poll_auth_failures_and_unknown_job():
     with TestClient(make_verify_app()) as client:
         created = create_job(client).json()
@@ -175,19 +180,23 @@ def test_poll_auth_failures_and_unknown_job():
     assert wrong.status_code == 401
     assert_required_headers(no_auth)
     assert_required_headers(wrong)
-    # Generic shape, no token echo, no existence disclosure.
+    # Content-free: empty body, no token echo, no existence disclosure; the advisory
+    # header is still present.
     for resp in (no_auth, wrong):
-        assert resp.json()["error"] == "http_error"
-        assert created["job_token"] not in json.dumps(resp.json())
-    # An UNKNOWN (or deleted) job is 404 — job_id is not a credential, so a 404 leaks
-    # nothing. It is checked before the token, so no token is echoed.
+        assert resp.content == b""
+        assert resp.headers["X-OpenVA-Advisory-Boundary"] == "non_advisory"
+        assert created["job_token"] not in resp.text
+    # An UNKNOWN (or deleted) job is a content-free 404 — job_id is not a credential, so a
+    # 404 leaks nothing. It is checked before the token, so no token is echoed.
     with TestClient(make_verify_app()) as client:
         unknown = client.get(
             "/v1/verify/11111111-1111-1111-1111-111111111111",
             headers={"Authorization": "Bearer whatever"},
         )
     assert unknown.status_code == 404
-    assert "whatever" not in json.dumps(unknown.json())
+    assert unknown.content == b""
+    assert unknown.headers["X-OpenVA-Advisory-Boundary"] == "non_advisory"
+    assert "whatever" not in unknown.text
 
 
 # 5. Token in the query string OR in the path does NOT authenticate (header-only).
@@ -206,6 +215,10 @@ def test_token_in_query_or_path_does_not_authenticate():
 
     assert via_query.status_code == 401
     assert via_path.status_code == 404
+    # Both poll failures are content-free with the advisory-boundary header.
+    for resp in (via_query, via_path):
+        assert resp.content == b""
+        assert resp.headers["X-OpenVA-Advisory-Boundary"] == "non_advisory"
 
 
 # 6. Row limit: max_verify_rows + 1 rows -> 413 row_limit_exceeded; no job created.
@@ -316,12 +329,13 @@ def test_completed_job_poll_returns_result():
     assert body["result"] == {"rows": [{"status": "ok"}]}
 
 
-# 10. Expired job -> 410 (content-free).
+# 10. Expired-but-retained job -> content-free 410. Use a recent expiry (a few minutes
+#     ago) so the record is still within the retained window (not yet purged to 404).
 def test_expired_job_returns_410():
     app = make_verify_app()
     with TestClient(app) as client:
         token = new_job_token()
-        past = datetime.now(timezone.utc) - timedelta(hours=1)
+        past = datetime.now(timezone.utc) - timedelta(minutes=5)
         record = JobRecord(
             job_id=new_job_id(),
             job_token_digest=token_digest(token),
@@ -340,7 +354,10 @@ def test_expired_job_returns_410():
 
     assert response.status_code == 410
     assert_required_headers(response)
-    assert token not in json.dumps(response.json())
+    # Content-free: empty body, advisory header present, no token echo.
+    assert response.content == b""
+    assert response.headers["X-OpenVA-Advisory-Boundary"] == "non_advisory"
+    assert token not in response.text
 
 
 # 11. to_record_dict() validates against the hosted-job-record schema.
@@ -395,7 +412,9 @@ def test_cors_preflight_for_verify():
     assert disallowed.headers.get("access-control-allow-origin") is None
 
 
-# 13. Every verify response carries the non-advisory boundary header.
+# 13. Every verify response carries the non-advisory boundary HEADER; success payloads
+#     additionally carry not_advice: true in the BODY, while the content-free poll error
+#     carries the header but an empty body (no not_advice field).
 def test_all_verify_responses_are_non_advisory():
     app = make_verify_app(max_verify_rows=1)
     with TestClient(app) as client:
@@ -412,8 +431,17 @@ def test_all_verify_responses_are_non_advisory():
         )
 
     assert over_limit.status_code == 413
+    # Every response carries the advisory-boundary header.
     for resp in (created, poll_ok, poll_401, over_limit):
         assert resp.headers[HEADER_ADVISORY_BOUNDARY] == "non_advisory"
+    # Successful responses (create, poll-200) carry not_advice: true in the body.
+    for resp in (created, poll_ok):
+        assert resp.status_code == 200
+        assert resp.json()["not_advice"] is True
+    # The content-free poll error carries the advisory HEADER but an empty body — no
+    # not_advice field (no body at all).
+    assert poll_401.status_code == 401
+    assert poll_401.content == b""
 
 
 # Pure helper coverage for extract_bearer_token (header-only parsing).
@@ -499,3 +527,115 @@ def test_verify_ceilings_match_contract():
     limits = contract["hosted_verify_limits"]
     assert VERIFY_ROWS_HARD_CEILING == limits["max_verify_rows"] == 20
     assert MAX_VERIFY_SOURCE_TYPES == limits["max_source_types_per_verify_row"] == 4
+
+
+# 19. Minimisation: creating a verify job does NOT retain the submitted identities.
+#     WP-02A has no worker to consume the rows, so the transport validates then discards
+#     them; only non-identifying metadata (row_count) is retained.
+def test_verify_create_does_not_retain_submitted_identities():
+    secret_name = "SecretVendorXYZ"
+    secret_domain = "secret.example"
+    app = make_verify_app()
+    with TestClient(app) as client:
+        response = client.post(
+            "/v1/verify",
+            headers=AUTH_HEADERS,
+            json={"rows": [{"vendor_name": secret_name, "domain": secret_domain}]},
+        )
+        assert response.status_code == 200
+
+        # Serialize the FULL internal contents of every verify store and assert the
+        # distinctive identity strings appear nowhere.
+        jobs = client.app.state.verify_jobs
+        envelopes = client.app.state.verify_envelopes
+        results = client.app.state.verify_results
+        job_records = [record.to_record_dict() for record in jobs._records.values()]
+        serialized = json.dumps(
+            {
+                "jobs": job_records,
+                "envelopes": envelopes._envelopes,
+                "results": results._results,
+            },
+            default=str,
+        )
+
+    assert secret_name not in serialized
+    assert secret_domain not in serialized
+    # The minimised envelope retains only row_count (no identities, no raw rows).
+    assert list(envelopes._envelopes.values()) == [{"row_count": 1}]
+    # The job record still carries its non-null request_ref (schema requires it for
+    # `received`) and the row_count, but no identity content.
+    assert job_records and job_records[0]["request_ref"] is not None
+    assert job_records[0]["row_count"] == 1
+
+
+# 20. The expiry lifecycle is PHYSICAL, not status-only: a record within the retained
+#     window polls 410 and still exists; a record past expires_at + the retained window
+#     polls 404 and is physically purged (record + envelope + result gone).
+def test_expired_retained_then_physically_deleted_lifecycle():
+    app = make_verify_app()
+    with TestClient(app) as client:
+        now = datetime.now(timezone.utc)
+        jobs = client.app.state.verify_jobs
+        envelopes = client.app.state.verify_envelopes
+        results = client.app.state.verify_results
+
+        # (a) Retained: expired a few minutes ago, still within the retained window.
+        retained_token = new_job_token()
+        retained_ref = new_ref()
+        retained = JobRecord(
+            job_id=new_job_id(),
+            job_token_digest=token_digest(retained_token),
+            state="received",
+            request_ref=retained_ref,
+            row_count=1,
+            created_at=_iso_z(now - timedelta(hours=2)),
+            updated_at=_iso_z(now - timedelta(hours=2)),
+            expires_at=_iso_z(now - timedelta(minutes=5)),
+        )
+        jobs.create(retained)
+        envelopes.put(retained_ref, {"row_count": 1})
+
+        # (b) Deleted: expired older than expires_at + VERIFY_RETAINED_WINDOW. Carry BOTH
+        # a request_ref and a result_ref so the purge is shown to delete the record AND
+        # both its referenced transient blobs (the helper reads the refs off the record).
+        deleted_token = new_job_token()
+        deleted_ref = new_ref()
+        deleted_result_ref = new_ref()
+        deleted = JobRecord(
+            job_id=new_job_id(),
+            job_token_digest=token_digest(deleted_token),
+            state="received",
+            request_ref=deleted_ref,
+            result_ref=deleted_result_ref,
+            row_count=1,
+            created_at=_iso_z(now - timedelta(hours=5)),
+            updated_at=_iso_z(now - timedelta(hours=5)),
+            expires_at=_iso_z(now - timedelta(hours=VERIFY_RETAINED_WINDOW_HOURS, minutes=5)),
+        )
+        jobs.create(deleted)
+        envelopes.put(deleted_ref, {"row_count": 1})
+        results.put(deleted_result_ref, {"rows": [{"status": "ok"}]})
+
+        retained_resp = client.get(
+            f"/v1/verify/{retained.job_id}",
+            headers={"Authorization": f"Bearer {retained_token}"},
+        )
+        deleted_resp = client.get(
+            f"/v1/verify/{deleted.job_id}",
+            headers={"Authorization": f"Bearer {deleted_token}"},
+        )
+
+        # Retained: content-free 410, record still present.
+        assert retained_resp.status_code == 410
+        assert retained_resp.content == b""
+        assert retained_resp.headers["X-OpenVA-Advisory-Boundary"] == "non_advisory"
+        assert jobs.get(retained.job_id) is not None
+
+        # Deleted: content-free 404, record + envelope + result physically purged.
+        assert deleted_resp.status_code == 404
+        assert deleted_resp.content == b""
+        assert deleted_resp.headers["X-OpenVA-Advisory-Boundary"] == "non_advisory"
+        assert jobs.get(deleted.job_id) is None
+        assert envelopes.get(deleted_ref) is None
+        assert results.get(deleted_result_ref) is None

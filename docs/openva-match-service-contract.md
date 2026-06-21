@@ -45,10 +45,11 @@ Unauthenticated probes for orchestrators. `GET /healthz` returns `200 {"status":
 ## Verify transport (async, WP-02A)
 
 A hosted **verify** transport is available behind the `OPENVA_VERIFY_TRANSPORT_ENABLED`
-feature flag. It is **off by default**: when off, both verify endpoints return `404` and
-the service is exactly the cached-only synchronous service described above (the rollback
-posture). Enabling it adds the verify endpoints only — it does not change any existing
-endpoint.
+feature flag. It is **off by default**: when off, both verify endpoints return `404`
+(the rollback posture). Disabling the flag does not change the existing cached-endpoint
+behaviour or the loaded app state; the verify routes are still *registered* (so they
+appear on the OpenAPI surface) but return `404` until the flag is enabled. Enabling it
+adds the verify behaviour only — it does not change any existing endpoint.
 
 Unlike the cached path (synchronous, no persistence, no source fetch), verify mode is an
 **async job** model: it acknowledges that verify introduces durable jobs and, in a later
@@ -80,8 +81,14 @@ or redirect. `job_id` is a loggable correlation id, not a credential. The raw to
 and comparison is **constant-time**. The poll endpoint resolves the lifecycle in order:
 `404` for an unknown/deleted (or non-UUID) `job_id` (checked first; `job_id` is not a
 credential so it leaks nothing), `410` for an expired-but-retained job (checked before the
-token), `401` for a missing/invalid `job_token` on a live job (generic, content-free, no
-token echo), and `200` otherwise.
+token), `401` for a missing/invalid `job_token` on a live job (generic, no token echo),
+and `200` otherwise. The `401`, `404`, and `410` responses are all **content-free** (an
+empty body) — they carry the `X-OpenVA-*` and `X-OpenVA-Advisory-Boundary: non_advisory`
+headers but no JSON. `not_advice: true` appears in the body of **successful** payloads
+only (creation and the `200` poll); every response, including the content-free errors,
+still carries the advisory-boundary header. The expired-but-retained `410` window is
+bounded: after it elapses the record (with its `expires_at` + `job_token_digest`) is
+physically deleted, so a later poll is a content-free `404`.
 
 **Limit.** Verify requests are bounded by `OPENVA_MAX_VERIFY_ROWS` (default and
 authoritative maximum `20`, aligned to the hosted-deployment contract's
