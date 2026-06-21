@@ -106,8 +106,33 @@ work_packages:
       - docs/operations/hosted-deployment-runbook.md
       - docs/operations/contracts/hosted-deployment.yaml
 
+  # Composite LOCKSTEP work package for the FIRST hosted-transport activation. ADR-0001
+  # requires the seven positioning files to be reconciled in the SAME merge as the first
+  # hosted transport ("not afterward"), so that activation is THIS one atomic, narrowly-
+  # scoped composite — never a standalone WP-02A or WP-02L PR. WP-02A and WP-02L below are
+  # retained only as decomposed/historical definitions and are NOT independently mergeable
+  # for that first activation. No slice_id: this is a manifest-only lockstep wrapper, not a
+  # hosted-deployment.yaml slice; for the dependency mirror it stands in for WP-02A's slice.
+  WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP:
+    description: Atomic first hosted-transport activation bundled with ADR-0001 positioning reconciliation (the WP-02A transport surface + the seven positioning files, in one merge). Supersedes standalone WP-02A/WP-02L for this one activation; exact path union, no broad docs/** access.
+    depends_on:
+      - WP-ADR-0006-STATUS-CHANGE
+    allowed_paths:
+      # WP-02A transport surface
+      - services/openva_match_service/*
+      - docs/resolver-api.md
+      - tests/*
+      # The seven ADR-0001 positioning files (exact paths, NOT docs/**)
+      - README.md
+      - docs/openva-match-service-contract.md
+      - docs/openva-match-service-deployment.md
+      - docs/public-launch-checklist.md
+      - docs/release-downloads.md
+      - docs/v0.1.0-public-launch-readiness.md
+      - docs/agent-export-contract.md
+
   WP-02A-HOSTED-TRANSPORT:
-    description: Hosted transport/API for the match service (WP-02A).
+    description: Hosted transport/API for the match service (WP-02A). DECOMPOSED/historical — NOT independently mergeable for the first hosted-transport activation (that lands via WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP per ADR-0001's positioning lockstep). Retained for decomposition reference.
     slice_id: WP-02A-hosted-transport-api
     depends_on:
       - WP-ADR-0006-STATUS-CHANGE
@@ -121,7 +146,7 @@ work_packages:
     description: Async job persistence for the match service (WP-02B).
     slice_id: WP-02B-async-job-persistence
     depends_on:
-      - WP-02A-HOSTED-TRANSPORT
+      - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
     allowed_paths:
       - services/openva_match_service/*
       - schemas/openva/*
@@ -151,7 +176,7 @@ work_packages:
     description: Artifact build and supply-chain controls for the hosted service (WP-02E).
     slice_id: WP-02E-artifact-and-supply-chain
     depends_on:
-      - WP-02A-HOSTED-TRANSPORT
+      - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
     allowed_paths:
       - services/openva_match_service/*
       - .github/workflows/*
@@ -218,7 +243,7 @@ work_packages:
       - infra/*
 
   WP-02L-POSITIONING:
-    description: Positioning reconciliation across docs and READMEs for the hosted launch (WP-02L).
+    description: Positioning reconciliation across docs and READMEs for the hosted launch (WP-02L). DECOMPOSED/historical — the first positioning reconciliation lands in lockstep with the transport via WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP; not independently mergeable for that activation.
     slice_id: WP-02L-positioning-reconciliation
     depends_on:
       - WP-02A-HOSTED-TRANSPORT
