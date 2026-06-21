@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from contextlib import asynccontextmanager
 from dataclasses import asdict
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from fastapi import Depends, FastAPI, File, HTTPException, Query, Request, UploadFile
@@ -26,8 +27,24 @@ from .models import (  # noqa: E402
     MatchResponse,
     VendorDetailResponse,
     VendorSourcesResponse,
+    VerifyCreatedResponse,
+    VerifyRequest,
+    VerifyStatusResponse,
 )
 from .service_state import ServiceState, load_service_state  # noqa: E402
+from .verify_transport import (  # noqa: E402
+    InMemoryJobStore,
+    InMemoryRequestEnvelopeStore,
+    InMemoryResultStore,
+    JobRecord,
+    extract_bearer_token,
+    digests_match,
+    new_job_id,
+    new_job_token,
+    new_ref,
+    token_digest,
+    DUMMY_TOKEN_DIGEST,
+)
 
 HEADER_SERVICE_VERSION = "X-OpenVA-Service-Version"
 HEADER_PACK_PROFILE = "X-OpenVA-Pack-Profile"
@@ -38,6 +55,10 @@ HEADER_ADVISORY_BOUNDARY = "X-OpenVA-Advisory-Boundary"
 # Catalogue vendor ids are lowercase-kebab tokens; reject anything else (path-traversal
 # attempts, spaces, slashes) consistently as not found.
 VENDOR_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,200}$")
+
+# A job_id is a canonical UUID. A non-UUID path param is never a real job and is
+# treated as not-found via the same generic 401 path (never a 500).
+JOB_ID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 
 V1_TAG = "v1"
 V1_DESCRIPTION = (
@@ -56,6 +77,12 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
     async def lifespan(app: FastAPI):
         app.state.config = service_config
         app.state.service_state = load_service_state(str(service_config.pack_path))
+        # In-memory, NON-DURABLE verify-transport stores (WP-02A). They exist
+        # regardless of the flag (cheap, empty) but are only reachable through the
+        # flag-gated /v1/verify endpoints. The durable backend is WP-02B.
+        app.state.verify_jobs = InMemoryJobStore()
+        app.state.verify_envelopes = InMemoryRequestEnvelopeStore()
+        app.state.verify_results = InMemoryResultStore()
         yield
 
     app = FastAPI(
@@ -239,7 +266,133 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
             "not_advice": True,
         }
 
+    @app.post(
+        "/v1/verify",
+        response_model=VerifyCreatedResponse,
+        tags=[V1_TAG],
+        summary="Create a hosted verify job (async transport; behind a flag, default off)",
+    )
+    async def v1_verify_create(
+        payload: VerifyRequest,
+        _enabled: None = Depends(require_verify_enabled),
+        _access: None = Depends(require_read_access),
+    ) -> dict[str, Any]:
+        # Pre-job rejection: an over-limit request is rejected BEFORE any job
+        # exists, so row_limit_exceeded is an API response, never a job error_code.
+        if len(payload.rows) > service_config.max_verify_rows:
+            raise HTTPException(
+                status_code=413,
+                detail=f"verify request exceeds the maximum of {service_config.max_verify_rows} rows",
+            )
+        jobs = app.state.verify_jobs
+        envelopes = app.state.verify_envelopes
+        # Optional concurrency cap (also a pre-job rejection).
+        if jobs.active_count() >= service_config.max_active_jobs:
+            raise HTTPException(status_code=429, detail="too many active verify jobs")
+
+        state = get_service_state(app)
+        now = datetime.now(timezone.utc)
+        expires_at = now + timedelta(hours=service_config.job_ttl_hours)
+
+        job_id = new_job_id()
+        token = new_job_token()
+        digest = token_digest(token)
+        request_ref = new_ref()
+        # Store the submitted rows transiently (the worker would read them); the rows
+        # never enter the job record. row_id/identities are not logged.
+        envelopes.put(
+            request_ref,
+            {"rows": [row.model_dump() for row in payload.rows], "source_types": payload.source_types},
+        )
+
+        record = JobRecord(
+            job_id=job_id,
+            job_token_digest=digest,
+            state="received",
+            request_ref=request_ref,
+            row_count=len(payload.rows),
+            created_at=_iso_z(now),
+            updated_at=_iso_z(now),
+            expires_at=_iso_z(expires_at),
+        )
+        jobs.create(record)
+
+        # WP-02A ships no worker, so the job stays `received` and never executes.
+        # That is correct for this slice. The token is returned ONLY here.
+        return {
+            "job_id": job_id,
+            "job_token": token,
+            "state": record.state,
+            "expires_at": record.expires_at,
+            "snapshot": build_snapshot(state, service_config),
+            "not_advice": True,
+        }
+
+    @app.get(
+        "/v1/verify/{job_id}",
+        response_model=VerifyStatusResponse,
+        tags=[V1_TAG],
+        summary="Poll a hosted verify job (job_token via Authorization: Bearer only)",
+    )
+    async def v1_verify_status(
+        job_id: str,
+        request: Request,
+        _enabled: None = Depends(require_verify_enabled),
+    ) -> dict[str, Any]:
+        # Poll is authorized SOLELY by the job_token (not the API key, not public
+        # read). The token is header-only — there is no query/path/cookie fallback.
+        token = extract_bearer_token(request.headers.get("authorization"))
+        if token is None:
+            raise HTTPException(status_code=401, detail="authentication required")
+
+        provided_digest = token_digest(token)
+        jobs = app.state.verify_jobs
+        # A non-UUID path param can never be a real job; resolve to None so it takes
+        # the same generic 401 path (never a 500, never an existence signal).
+        record = jobs.get(job_id) if JOB_ID_RE.fullmatch(job_id) else None
+
+        # ALWAYS run the constant-time compare — against the record's digest when
+        # found, else a fixed dummy digest — so a missing job and a token mismatch
+        # are indistinguishable in timing and response shape. No token is echoed.
+        stored_digest = record.job_token_digest if record is not None else DUMMY_TOKEN_DIGEST
+        if record is None or not digests_match(provided_digest, stored_digest):
+            raise HTTPException(status_code=401, detail="invalid credentials")
+
+        now = datetime.now(timezone.utc)
+        if now >= _parse_iso_z(record.expires_at):
+            # Expired-but-retained: content-free 410 (no status, no token echo).
+            raise HTTPException(status_code=410, detail="job expired")
+
+        state = get_service_state(app)
+        result = None
+        if record.state == "completed" and record.result_ref is not None:
+            result = app.state.verify_results.get(record.result_ref)
+
+        # Projection excludes the token, the digest, request content, and lease fields.
+        return {
+            "job_id": record.job_id,
+            "state": record.state,
+            "row_count": record.row_count,
+            "created_at": record.created_at,
+            "updated_at": record.updated_at,
+            "expires_at": record.expires_at,
+            "result": result,
+            "error_code": record.error_code,
+            "snapshot": build_snapshot(state, service_config),
+            "not_advice": True,
+        }
+
     return app
+
+
+def _iso_z(value: datetime) -> str:
+    """Render a timezone-aware datetime as ISO-8601 with a literal Z suffix."""
+    return value.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _parse_iso_z(value: str) -> datetime:
+    """Parse an ISO-8601 timestamp (with Z or offset) to a timezone-aware datetime."""
+    return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
 def install_middleware_and_handlers(app: FastAPI) -> None:
@@ -282,6 +435,18 @@ def require_api_key(request: Request) -> None:
     expected = f"Bearer {config.api_key}"
     if request.headers.get("authorization") != expected:
         raise HTTPException(status_code=401, detail="missing or invalid API key")
+
+
+def require_verify_enabled(request: Request) -> None:
+    """Gate the hosted verify transport behind the feature flag.
+
+    When OPENVA_VERIFY_TRANSPORT_ENABLED is False (default) both verify endpoints
+    return 404 and the service is exactly the current cached-only synchronous
+    service (rollback posture). A 404 (rather than 403) leaks nothing about whether
+    the capability exists for this deployment."""
+    config: ServiceConfig = request.app.state.config
+    if not config.verify_transport_enabled:
+        raise HTTPException(status_code=404, detail="verify transport is not enabled")
 
 
 def require_read_access(request: Request) -> None:

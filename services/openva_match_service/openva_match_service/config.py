@@ -15,6 +15,11 @@ DEFAULT_MAX_UPLOAD_BYTES = 5_000_000
 DEFAULT_MAX_ROWS = 500
 DEFAULT_MAX_ACTIVE_JOBS = 3
 DEFAULT_JOB_TTL_HOURS = 24
+# Hosted verify-mode row cap. Aligned to hosted-deployment.yaml
+# hosted_verify_limits.max_verify_rows and the job record schema's row_count
+# maximum (0..20). The verify limit is far smaller than the cached row cap
+# because each verify row drives real, serial, SSRF-safe live fetches.
+DEFAULT_MAX_VERIFY_ROWS = 20
 
 _COMMIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _TRUE_TOKENS = {"1", "true", "yes", "on"}
@@ -33,6 +38,14 @@ class ServiceConfig:
     max_rows: int = DEFAULT_MAX_ROWS
     max_active_jobs: int = DEFAULT_MAX_ACTIVE_JOBS
     job_ttl_hours: int = DEFAULT_JOB_TTL_HOURS
+    # Hosted verify-mode transport. When False (default) the verify endpoints
+    # return 404 and the service is exactly the current cached-only synchronous
+    # service (rollback posture). Verify mode introduces async jobs (a later
+    # slice ships the worker; WP-02A ships the transport only).
+    verify_transport_enabled: bool = False
+    # Maximum verify rows per request, enforced by the API before any job is
+    # created (over-limit is a pre-job rejection, never a job error_code).
+    max_verify_rows: int = DEFAULT_MAX_VERIFY_ROWS
     # Zero-install read access. When False (default) the new /v1 data endpoints
     # require the existing bearer key; when True they are public read-only. Public
     # mode never enables any write/submission/candidate-intake capability.
@@ -62,6 +75,8 @@ class ServiceConfig:
             max_rows=_positive_int_env("OPENVA_MAX_ROWS", DEFAULT_MAX_ROWS),
             max_active_jobs=_positive_int_env("OPENVA_MAX_ACTIVE_JOBS", DEFAULT_MAX_ACTIVE_JOBS),
             job_ttl_hours=_positive_int_env("OPENVA_JOB_TTL_HOURS", DEFAULT_JOB_TTL_HOURS),
+            verify_transport_enabled=_bool_env("OPENVA_VERIFY_TRANSPORT_ENABLED", False),
+            max_verify_rows=_positive_int_env("OPENVA_MAX_VERIFY_ROWS", DEFAULT_MAX_VERIFY_ROWS),
             public_read_enabled=_bool_env("OPENVA_PUBLIC_READ_ENABLED", False),
             allowed_origins=_origins_env("OPENVA_ALLOWED_ORIGINS"),
             catalog_commit_sha=_commit_sha_env("OPENVA_CATALOG_COMMIT_SHA"),
