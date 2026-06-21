@@ -18,6 +18,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import jsonschema
+import pytest
+import yaml
 from fastapi.testclient import TestClient
 
 sys.path.insert(0, str(Path("adapters/python/openva_pack_reader").resolve()))
@@ -33,9 +35,9 @@ from openva_match_service.app import (  # noqa: E402
     _iso_z,
     create_app,
 )
-from openva_match_service.config import ServiceConfig  # noqa: E402
+from openva_match_service.config import VERIFY_ROWS_HARD_CEILING, ServiceConfig  # noqa: E402
+from openva_match_service.models import MAX_VERIFY_SOURCE_TYPES  # noqa: E402
 from openva_match_service.verify_transport import (  # noqa: E402
-    DUMMY_TOKEN_DIGEST,
     JobRecord,
     digests_match,
     extract_bearer_token,
@@ -159,8 +161,8 @@ def test_poll_with_correct_token_returns_status():
     assert "request_ref" not in body
 
 
-# 4. Poll with NO Authorization -> 401 generic; wrong token -> identical-shape 401.
-def test_poll_missing_and_wrong_token_are_generic_401():
+# 4. Poll auth failures on an EXISTING job stay 401; an UNKNOWN job is 404.
+def test_poll_auth_failures_and_unknown_job():
     with TestClient(make_verify_app()) as client:
         created = create_job(client).json()
         job_id = created["job_id"]
@@ -168,6 +170,7 @@ def test_poll_missing_and_wrong_token_are_generic_401():
         no_auth = client.get(f"/v1/verify/{job_id}")
         wrong = client.get(f"/v1/verify/{job_id}", headers={"Authorization": "Bearer not-the-token"})
 
+    # Missing-token and wrong-token on an EXISTING live job stay generic 401.
     assert no_auth.status_code == 401
     assert wrong.status_code == 401
     assert_required_headers(no_auth)
@@ -176,15 +179,15 @@ def test_poll_missing_and_wrong_token_are_generic_401():
     for resp in (no_auth, wrong):
         assert resp.json()["error"] == "http_error"
         assert created["job_token"] not in json.dumps(resp.json())
-    # Wrong-token and not-found are indistinguishable in shape (same generic body).
-    unknown = None
+    # An UNKNOWN (or deleted) job is 404 — job_id is not a credential, so a 404 leaks
+    # nothing. It is checked before the token, so no token is echoed.
     with TestClient(make_verify_app()) as client:
         unknown = client.get(
             "/v1/verify/11111111-1111-1111-1111-111111111111",
             headers={"Authorization": "Bearer whatever"},
         )
-    assert unknown.status_code == 401
-    assert unknown.json() == wrong.json()
+    assert unknown.status_code == 404
+    assert "whatever" not in json.dumps(unknown.json())
 
 
 # 5. Token in the query string OR in the path does NOT authenticate (header-only).
@@ -195,12 +198,14 @@ def test_token_in_query_or_path_does_not_authenticate():
         job_id = created["job_id"]
 
         # As a query parameter (no Authorization header): must NOT authenticate.
+        # The job exists, but with no Bearer header the token in the query is ignored.
         via_query = client.get(f"/v1/verify/{job_id}?job_token={token}")
-        # As the path component (the token is not a job_id; also no header).
+        # As the path component: a token in the path is just an unknown (non-UUID) job
+        # id — it never authenticates and resolves to a content-free 404.
         via_path = client.get(f"/v1/verify/{token}")
 
     assert via_query.status_code == 401
-    assert via_path.status_code == 401
+    assert via_path.status_code == 404
 
 
 # 6. Row limit: max_verify_rows + 1 rows -> 413 row_limit_exceeded; no job created.
@@ -216,6 +221,7 @@ def test_row_limit_rejected_before_job_creation():
     assert_required_headers(response)
     body = response.json()
     assert "job_id" not in body
+    assert body["error"] == "row_limit_exceeded"
     assert "exceeds the maximum of 2 rows" in body["message"]
 
 
@@ -253,7 +259,6 @@ def test_digests_match_unit_and_poll_uses_digest():
     other = token_digest(new_job_token())
     assert digests_match(digest, digest) is True
     assert digests_match(digest, other) is False
-    assert digests_match(digest, DUMMY_TOKEN_DIGEST) is False
 
     # Seed a job directly in the in-memory store; poll with its token returns it.
     app = make_verify_app()
@@ -421,3 +426,76 @@ def test_extract_bearer_token_parsing():
     assert extract_bearer_token("Basic abc123") is None
     assert extract_bearer_token("abc123") is None
     assert extract_bearer_token("Bearer ") is None
+
+
+# 14. Public-read mode does NOT enable verify SUBMISSION (always needs the API key);
+#     cached read still works unauthenticated.
+def test_public_read_mode_does_not_allow_verify_submission():
+    app = make_verify_app(public_read_enabled=True)
+    with TestClient(app) as client:
+        # Verify submission with NO auth is rejected even in public-read mode.
+        no_auth = client.post("/v1/verify", json={"rows": [{"vendor_name": "Stripe"}]})
+        # With the API key it is accepted.
+        with_key = client.post(
+            "/v1/verify", headers=AUTH_HEADERS, json={"rows": [{"vendor_name": "Stripe"}]}
+        )
+        # Public cached read still works with no auth.
+        meta = client.get("/v1/catalog/meta")
+
+    assert no_auth.status_code == 401
+    assert with_key.status_code == 200
+    assert meta.status_code == 200
+
+
+# 15. Source types are capped at the hosted verify budget (4): >4 -> 422; 4 -> 200.
+def test_verify_source_types_capped_at_budget():
+    app = make_verify_app()
+    with TestClient(app) as client:
+        too_many = client.post(
+            "/v1/verify",
+            headers=AUTH_HEADERS,
+            json={
+                "rows": [{"vendor_name": "Stripe"}],
+                "source_types": ["a", "b", "c", "d", "e"],
+            },
+        )
+        at_budget = client.post(
+            "/v1/verify",
+            headers=AUTH_HEADERS,
+            json={
+                "rows": [{"vendor_name": "Stripe"}],
+                "source_types": ["a", "b", "c", "d"],
+            },
+        )
+
+    assert too_many.status_code == 422
+    assert at_budget.status_code == 200
+
+
+# 16. Config fails closed if OPENVA_MAX_VERIFY_ROWS exceeds the hard ceiling (20).
+def test_config_rejects_verify_rows_above_ceiling():
+    with pytest.raises(RuntimeError):
+        ServiceConfig(pack_path=Path("."), api_key=API_KEY, max_verify_rows=21)
+    # The ceiling itself is accepted.
+    accepted = ServiceConfig(pack_path=Path("."), api_key=API_KEY, max_verify_rows=20)
+    assert accepted.max_verify_rows == 20
+
+
+# 17. The active-job cap is NOT enforced in WP-02A (no worker => never wedge).
+def test_active_job_cap_not_enforced():
+    # Default max_active_jobs is 3; creating 5 jobs must all succeed (no 429).
+    app = make_verify_app()
+    with TestClient(app) as client:
+        for _ in range(5):
+            resp = create_job(client)
+            assert resp.status_code == 200
+
+
+# 18. The verify ceilings match the authoritative hosted-deployment contract.
+def test_verify_ceilings_match_contract():
+    contract = yaml.safe_load(
+        Path("docs/operations/contracts/hosted-deployment.yaml").read_text(encoding="utf-8")
+    )
+    limits = contract["hosted_verify_limits"]
+    assert VERIFY_ROWS_HARD_CEILING == limits["max_verify_rows"] == 20
+    assert MAX_VERIFY_SOURCE_TYPES == limits["max_source_types_per_verify_row"] == 4

@@ -18,8 +18,7 @@ Security posture (enforced here and at the route layer):
     is no query-string, path, cookie, or redirect acceptance anywhere.
   - Only the SHA-256 digest (``sha256:<hex>``) of the token is stored; the raw token
     is NEVER stored and NEVER logged.
-  - Token comparison is CONSTANT-TIME (``hmac.compare_digest`` on the digests),
-    performed even on not-found (a fixed dummy digest) to avoid existence/timing leaks.
+  - Token comparison is CONSTANT-TIME (``hmac.compare_digest`` on the digests).
 """
 
 from __future__ import annotations
@@ -39,11 +38,6 @@ FRESHNESS_MODE_VERIFY = "verify"
 # terminal_states. Used by active_count() for the optional concurrency cap.
 TERMINAL_STATES = frozenset({"completed", "failed"})
 NON_TERMINAL_STATES = frozenset({"received", "queued", "executing"})
-
-# Fixed dummy digest compared against on not-found so the constant-time compare
-# always runs and a missing job is indistinguishable (timing/shape) from a token
-# mismatch. 64 hex zeros — never a real token's digest.
-DUMMY_TOKEN_DIGEST = "sha256:" + ("0" * 64)
 
 
 # --- Token capability helpers (header-only, digest-only, constant-time) -------

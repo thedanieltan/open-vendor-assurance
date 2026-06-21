@@ -8,6 +8,12 @@ from pathlib import Path
 SERVICE_VERSION = "0.1.0"
 ADVISORY_BOUNDARY = "non_advisory"
 
+# Authoritative hard ceiling on the hosted verify row count. Matches
+# hosted-deployment.yaml hosted_verify_limits.max_verify_rows AND
+# hosted-job-record.schema row_count max. OPENVA_MAX_VERIFY_ROWS may be set lower
+# but NEVER higher; a value above this fails closed at config construction/startup.
+VERIFY_ROWS_HARD_CEILING = 20
+
 # Configurable launch defaults, not hard-coded product promises. Only the upload
 # and row caps are enforced today (the service is still synchronous); the job
 # limits are read-and-stored scaffolding for the later async resolver.
@@ -56,6 +62,16 @@ class ServiceConfig:
     # Optional deployment-supplied catalogue commit SHA (40-char lowercase hex).
     # Never fabricated; None when unavailable.
     catalog_commit_sha: str | None = None
+
+    def __post_init__(self) -> None:
+        # Clamp the configured verify row count to the authoritative budget. A value
+        # above VERIFY_ROWS_HARD_CEILING (the hosted-deployment.yaml + job-record
+        # schema maximum) fails closed at construction/startup; lower is allowed.
+        if not (1 <= self.max_verify_rows <= VERIFY_ROWS_HARD_CEILING):
+            raise RuntimeError(
+                f"max_verify_rows must be between 1 and {VERIFY_ROWS_HARD_CEILING} "
+                f"(hosted_verify_limits.max_verify_rows), got {self.max_verify_rows}"
+            )
 
     @classmethod
     def from_env(cls) -> "ServiceConfig":

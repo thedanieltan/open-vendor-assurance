@@ -19,6 +19,10 @@ MAX_IDENTITY_LEN = 512
 MAX_ROW_ID_LEN = 128
 MAX_SOURCE_TYPE_LEN = 128
 MAX_SOURCE_TYPES = 64
+# Hosted verify budget: at most 4 source types per verify row, matching
+# hosted-deployment.yaml hosted_verify_limits.max_source_types_per_verify_row.
+# This bounds the accepted live-fetch execution budget (>4 source types -> 422).
+MAX_VERIFY_SOURCE_TYPES = 4
 
 IdentityField = Annotated[str, Field(max_length=MAX_IDENTITY_LEN)]
 SourceTypeField = Annotated[str, Field(max_length=MAX_SOURCE_TYPE_LEN)]
@@ -314,8 +318,8 @@ class VerifyRequest(BaseModel):
     )
     source_types: list[SourceTypeField] | None = Field(
         default=None,
-        max_length=MAX_SOURCE_TYPES,
-        description="Optional. Omitted means the hosted verify default source types.",
+        max_length=MAX_VERIFY_SOURCE_TYPES,
+        description="Optional, ≤ 4 (the hosted verify budget). Omitted means the hosted verify default source types.",
     )
 
 

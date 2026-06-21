@@ -117,21 +117,27 @@ introduces async jobs (persistence) and, in a later slice, live source egress (t
 worker) per [ADR-0001](architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md).
 
 ### `POST /v1/verify`
-Create a verify job. Subject to the same public-read-or-API-key access policy as the other
-`/v1` endpoints. The body carries rows under a **`rows`** array; each row is a vendor
-**identity** (at least one of `vendor_name`, `domain`, `business_entity_name`,
-`registration_number`), optionally with a `row_id` and an optional top-level
-`source_types`. Rows accept identities only — a `url`/`candidate_url`/`source_url` (or any
-other undeclared field) is rejected with `422` (the SSRF boundary: verify takes
-identities, the resolver chooses what to fetch).
+Create a verify job. **This endpoint ALWAYS requires the bearer API key**
+(`Authorization: Bearer <OPENVA_SERVICE_API_KEY>`), even when
+`OPENVA_PUBLIC_READ_ENABLED=true` — public-read mode grants read-only access to the cached
+`/v1` data endpoints only and never enables submission. The body carries rows under a
+**`rows`** array; each row is a vendor **identity** (at least one of `vendor_name`,
+`domain`, `business_entity_name`, `registration_number`), optionally with a `row_id` and an
+optional top-level `source_types`. Rows accept identities only — a
+`url`/`candidate_url`/`source_url` (or any other undeclared field) is rejected with `422`
+(the SSRF boundary: verify takes identities, the resolver chooses what to fetch).
 
 ```json
 { "rows": [{ "row_id": "12", "vendor_name": "Stripe", "domain": "stripe.com" }] }
 ```
 
-`rows` is bounded by `OPENVA_MAX_VERIFY_ROWS` (default `20`); a request exceeding it
-returns `413 row_limit_exceeded` **before any job is created** (a pre-job rejection, never
-a job failure code). The response returns the `job_id`, a one-time high-entropy
+`rows` is bounded by `OPENVA_MAX_VERIFY_ROWS` (default and authoritative maximum `20`, the
+grounded verify budget) and `source_types` is bounded to `4` (the hosted verify budget);
+exceeding either bound is rejected. An over-`rows` request returns `413` with the stable
+`row_limit_exceeded` code **before any job is created** (a pre-job rejection, never a job
+failure code); too many `source_types` returns `422`. WP-02A enforces **no per-instance
+active-job cap** — concurrency/abuse control is deferred to the worker (WP-02C) and edge
+rate limiting (WP-02H). The response returns the `job_id`, a one-time high-entropy
 `job_token`, the initial `state` (`received`), `expires_at`, snapshot provenance, and
 `not_advice: true`:
 
@@ -147,11 +153,16 @@ again, never logged, and only its SHA-256 digest is persisted.
 Poll a verify job. The **`job_token` is the sole authorizer** — neither the API key nor
 public-read applies. The token must be sent in the `Authorization: Bearer <job_token>`
 header **only**; a token in the query string, the URL path, a cookie, or via a redirect
-does **not** authenticate. A missing token returns a generic `401`; a wrong token, an
-unknown `job_id`, or a non-UUID `job_id` all return the **same** generic `401`
-(content-free, no token echo, no existence disclosure — the digest comparison is
-constant-time and runs even on not-found). An expired job (now ≥ `expires_at`) returns a
-content-free `410`.
+does **not** authenticate. The lifecycle status codes are, in order:
+
+- **`404`** — unknown or deleted `job_id` (also a non-UUID id, e.g. a token mistakenly put
+  in the path). `job_id` is not a credential, so a `404` leaks nothing. Checked first, so
+  no token is echoed.
+- **`410`** — expired-but-retained job (now ≥ `expires_at`), content-free. Checked before
+  the token.
+- **`401`** — a missing or invalid `job_token` on a live job. Generic, content-free, no
+  token echo; the digest comparison is constant-time.
+- **`200`** — valid token on a live job.
 
 On success it returns the job `state`, `row_count`, `created_at`/`updated_at`/`expires_at`,
 snapshot, and `not_advice: true`. The `result` field is populated only when the job is

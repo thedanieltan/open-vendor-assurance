@@ -43,7 +43,6 @@ from .verify_transport import (  # noqa: E402
     new_job_token,
     new_ref,
     token_digest,
-    DUMMY_TOKEN_DIGEST,
 )
 
 HEADER_SERVICE_VERSION = "X-OpenVA-Service-Version"
@@ -57,7 +56,8 @@ HEADER_ADVISORY_BOUNDARY = "X-OpenVA-Advisory-Boundary"
 VENDOR_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,200}$")
 
 # A job_id is a canonical UUID. A non-UUID path param is never a real job and is
-# treated as not-found via the same generic 401 path (never a 500).
+# treated as not-found (404, content-free) — never a 500, and the job_id is not a
+# credential so 404 leaks nothing.
 JOB_ID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 
 V1_TAG = "v1"
@@ -277,20 +277,30 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
     async def v1_verify_create(
         payload: VerifyRequest,
         _enabled: None = Depends(require_verify_enabled),
-        _access: None = Depends(require_read_access),
+        _access: None = Depends(require_api_key),
     ) -> dict[str, Any]:
+        # Creating a verify job ALWAYS requires the bearer API key, even when
+        # OPENVA_PUBLIC_READ_ENABLED is true. Public-read mode grants read-only access
+        # to the cached /v1 data endpoints only — never submission.
+        #
         # Pre-job rejection: an over-limit request is rejected BEFORE any job
         # exists, so row_limit_exceeded is an API response, never a job error_code.
+        # The structured detail surfaces the stable row_limit_exceeded API code.
         if len(payload.rows) > service_config.max_verify_rows:
             raise HTTPException(
                 status_code=413,
-                detail=f"verify request exceeds the maximum of {service_config.max_verify_rows} rows",
+                detail={
+                    "error": "row_limit_exceeded",
+                    "message": f"verify request exceeds the maximum of {service_config.max_verify_rows} rows",
+                },
             )
         jobs = app.state.verify_jobs
         envelopes = app.state.verify_envelopes
-        # Optional concurrency cap (also a pre-job rejection).
-        if jobs.active_count() >= service_config.max_active_jobs:
-            raise HTTPException(status_code=429, detail="too many active verify jobs")
+        # No per-instance active-job cap here: WP-02A ships no worker, so jobs never
+        # leave `received` and an in-memory cap would wedge the service after
+        # max_active_jobs creations. Concurrency/abuse control is deferred to the
+        # worker slice (WP-02C) and edge rate limiting (WP-02H). max_active_jobs and
+        # JobStore.active_count() remain as scaffolding consumed by WP-02C.
 
         state = get_service_state(app)
         now = datetime.now(timezone.utc)
@@ -343,27 +353,29 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
     ) -> dict[str, Any]:
         # Poll is authorized SOLELY by the job_token (not the API key, not public
         # read). The token is header-only — there is no query/path/cookie fallback.
-        token = extract_bearer_token(request.headers.get("authorization"))
-        if token is None:
-            raise HTTPException(status_code=401, detail="authentication required")
-
-        provided_digest = token_digest(token)
+        # Lifecycle ordering per hosted-deployment.yaml `expiry`:
+        #   unknown/deleted -> 404 (job_id is NOT a credential, so 404 leaks nothing)
+        #   expired-but-retained -> 410 (content-free, checked before the token)
+        #   missing/invalid job_token on a live job -> 401
+        #   else -> 200
         jobs = app.state.verify_jobs
         # A non-UUID path param can never be a real job; resolve to None so it takes
-        # the same generic 401 path (never a 500, never an existence signal).
+        # the same not-found path (never a 500, never an existence signal beyond 404).
         record = jobs.get(job_id) if JOB_ID_RE.fullmatch(job_id) else None
-
-        # ALWAYS run the constant-time compare — against the record's digest when
-        # found, else a fixed dummy digest — so a missing job and a token mismatch
-        # are indistinguishable in timing and response shape. No token is echoed.
-        stored_digest = record.job_token_digest if record is not None else DUMMY_TOKEN_DIGEST
-        if record is None or not digests_match(provided_digest, stored_digest):
-            raise HTTPException(status_code=401, detail="invalid credentials")
+        if record is None:
+            # Unknown or deleted (covers non-UUID too). job_id is not a credential.
+            raise HTTPException(status_code=404, detail="job not found")
 
         now = datetime.now(timezone.utc)
         if now >= _parse_iso_z(record.expires_at):
             # Expired-but-retained: content-free 410 (no status, no token echo).
             raise HTTPException(status_code=410, detail="job expired")
+
+        # Token check last, constant-time, with no token echo. A missing or wrong
+        # token on a live job is an indistinguishable generic 401.
+        token = extract_bearer_token(request.headers.get("authorization"))
+        if token is None or not digests_match(token_digest(token), record.job_token_digest):
+            raise HTTPException(status_code=401, detail="invalid credentials")
 
         state = get_service_state(app)
         result = None
@@ -406,10 +418,14 @@ def install_middleware_and_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(StarletteHTTPException)
     async def http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
-        response = JSONResponse(
-            status_code=exc.status_code,
-            content={"error": "http_error", "message": str(exc.detail)},
-        )
+        # A structured detail ({"error", "message"}) surfaces a stable API code such as
+        # row_limit_exceeded; a plain string detail keeps the generic http_error shape.
+        detail = exc.detail
+        if isinstance(detail, dict) and "error" in detail and "message" in detail:
+            content = {"error": detail["error"], "message": detail["message"]}
+        else:
+            content = {"error": "http_error", "message": str(detail)}
+        response = JSONResponse(status_code=exc.status_code, content=content)
         apply_headers(response.headers, request.app)
         return response
 

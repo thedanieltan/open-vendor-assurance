@@ -67,21 +67,34 @@ inventory content, no vendor identity strings, and no request bodies (the submit
 live in a separate transient request envelope). See
 [`schemas/openva/hosted-job-record.schema.json`](../schemas/openva/hosted-job-record.schema.json).
 
+**Submission access.** `POST /v1/verify` **always** requires the bearer API key, even when
+`OPENVA_PUBLIC_READ_ENABLED=true`. Public-read mode grants read-only access to the cached
+`/v1` data endpoints only; it never enables verify submission. The poll endpoint
+(`GET /v1/verify/{job_id}`) is authorized **solely** by the `job_token`, not the API key.
+
 **Token transport (capability).** Job creation returns a high-entropy `job_token`
 **once**. Polling/retrieval requires that token, carried **only** in the
 `Authorization: Bearer <job_token>` header — never in a query string, URL path, cookie,
 or redirect. `job_id` is a loggable correlation id, not a credential. The raw token is
 **never logged and never stored**; only its SHA-256 digest (`job_token_digest`) persists,
-and comparison is **constant-time**. Authentication failures are generic and content-free
-and never echo the token.
+and comparison is **constant-time**. The poll endpoint resolves the lifecycle in order:
+`404` for an unknown/deleted (or non-UUID) `job_id` (checked first; `job_id` is not a
+credential so it leaks nothing), `410` for an expired-but-retained job (checked before the
+token), `401` for a missing/invalid `job_token` on a live job (generic, content-free, no
+token echo), and `200` otherwise.
 
-**Limit.** Verify requests are bounded by `OPENVA_MAX_VERIFY_ROWS` (default `20`, aligned
-to the hosted-deployment contract's `hosted_verify_limits.max_verify_rows`). This is far
-smaller than the cached `OPENVA_MAX_ROWS` cap because each verify row would drive real,
-serial, SSRF-safe live fetches in the later worker slice. An over-limit request is
-rejected by the API with `413` **before any job is created** — a pre-job rejection, never
-a job failure code. Verify rows accept vendor **identities only**; a fetch-target URL
-field is rejected with `422`.
+**Limit.** Verify requests are bounded by `OPENVA_MAX_VERIFY_ROWS` (default and
+authoritative maximum `20`, aligned to the hosted-deployment contract's
+`hosted_verify_limits.max_verify_rows`; a configured value above it fails closed at
+startup). `source_types` is bounded to `4` (the grounded verify budget, aligned to
+`hosted_verify_limits.max_source_types_per_verify_row`). These are far smaller than the
+cached `OPENVA_MAX_ROWS` cap because each verify row would drive real, serial, SSRF-safe
+live fetches in the later worker slice. An over-`rows` request is rejected by the API with
+`413` and the stable `row_limit_exceeded` code **before any job is created** — a pre-job
+rejection, never a job failure code; too many `source_types` returns `422`. Verify rows
+accept vendor **identities only**; a fetch-target URL field is rejected with `422`.
+Concurrency/abuse control is deferred to the worker (WP-02C) and edge rate limiting
+(WP-02H) — WP-02A enforces no per-instance active-job cap.
 
 ## `GET /pack/meta`
 
