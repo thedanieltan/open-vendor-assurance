@@ -10,6 +10,7 @@ required_status_contexts:
   - validate / full-suite
   - validate / mcp-integration
   - validate / google-sheets-integration
+  - validate / pr-scope-guard
 jobs:
   repository-integrity:
     owner_loop: repository_integrity
@@ -110,3 +111,12 @@ jobs:
     protects:
       - integrations/google-sheets/**
       - tests/test_google_sheets_integration.py
+  pr-scope-guard:
+    owner_loop: pr_safety
+    purpose: Enforce the PR work-package scope guard — every changed path must fall within the PR's declared work package, evaluated with the guard code and manifest from the trusted base revision so a PR cannot weaken its own gate. PR-only.
+    commands:
+      - python -m tools.openva.pr_scope_guard --declaration-file /tmp/pr-body.txt --changed-paths-file /tmp/changed-paths.txt
+    protects:
+      - docs/operations/contracts/work-package-scope.yaml
+      - tools/openva/pr_scope_guard.py
+      - docs/operations/pr-scope-guard.md

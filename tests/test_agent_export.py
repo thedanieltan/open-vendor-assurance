@@ -60,11 +60,20 @@ def write_legal_entity(
     entity_id: str = "example-vendor-le",
     registration_number: str = "RC-123456",
     jurisdiction: str = "GB",
-    catalog_status: str = "stub",
+    catalog_status: str = "canonical",
+    verification_source_id: str = "example-vendor-dpa",
 ) -> Path:
+    # Default to a VERIFIED (canonical) record carrying a verification source, since the
+    # agent export only projects verified legal entities. catalog_status="stub" yields an
+    # unverified record (excluded from the export).
     entity_dir = tmp_path / "data" / "vendors" / vendor_id / "legal_entities"
     entity_dir.mkdir(parents=True, exist_ok=True)
     path = entity_dir / f"{entity_id}.yaml"
+    verification = (
+        "verification_source_ids: []\n"
+        if catalog_status != "canonical"
+        else f"verification_source_ids:\n  - {verification_source_id}\n"
+    )
     path.write_text(
         "schema_version: 0.1.0\n"
         f"entity_id: {entity_id}\n"
@@ -72,7 +81,7 @@ def write_legal_entity(
         "legal_name: Example Vendor Ltd\n"
         f"jurisdiction: {jurisdiction}\n"
         f"registration_number: {registration_number}\n"
-        "verification_source_ids: []\n"
+        f"{verification}"
         f"catalog_status: {catalog_status}\n"
         "not_advice: true\n",
         encoding="utf-8",

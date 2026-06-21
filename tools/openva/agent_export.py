@@ -262,9 +262,16 @@ def build_agent_exports(
     for source in sources:
         sources_by_vendor.setdefault(str(source.get("vendor_id") or ""), []).append(source)
 
+    # Only VERIFIED (canonical) legal entities are exported. Canonical entities carry
+    # at least one verification_source_id by schema invariant, so the export stays
+    # public-source-backed; unverified stubs are excluded (consistent with their
+    # exclusion from contracting-entity-resolution). This keeps the export's
+    # public_sources_only guarantee honest.
     legal_entities = load_records(root, "data/vendors/*/legal_entities/*.yaml")
     legal_entities_by_vendor: dict[str, list[dict[str, Any]]] = {}
     for entity in legal_entities:
+        if entity.get("catalog_status") != "canonical":
+            continue
         legal_entities_by_vendor.setdefault(str(entity.get("vendor_id") or ""), []).append(entity)
 
     ledger_baseline = load_ledger_baseline(ledger_dir)
