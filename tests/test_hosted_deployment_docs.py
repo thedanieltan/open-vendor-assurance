@@ -221,6 +221,50 @@ def test_implementation_plan_covers_every_contract_slice():
         assert short in plan or slice_id in plan, f"impl plan missing slice {slice_id}"
 
 
+def _infra_gated_slice_labels() -> set[str]:
+    """Slices whose depends_on closure reaches the infrastructure roots (WP-02F
+    staging / WP-02G production), which need maintainer-accepted external deployment
+    choices. Returned as both label forms (e.g. {"WP-02F", "02F"})."""
+    deps = {s["id"]: list(s.get("depends_on") or []) for s in _contract()["implementation_slices"]}
+    infra_roots = {"WP-02F-staging-environment", "WP-02G-production-infrastructure"}
+
+    def closure(node: str, seen: set[str]) -> set[str]:
+        for parent in deps.get(node, ()):
+            if parent not in seen:
+                seen.add(parent)
+                closure(parent, seen)
+        return seen
+
+    labels: set[str] = set()
+    for slice_id in deps:
+        if ({slice_id} | closure(slice_id, set())) & infra_roots:
+            prefix = "-".join(slice_id.split("-")[:2])  # WP-02F-... -> WP-02F
+            labels.add(prefix)
+            labels.add(prefix.removeprefix("WP-"))       # also the bare 02F form
+    return labels
+
+
+def test_roadmap_does_not_label_infra_gated_slices_currently_buildable():
+    # Regression lock (PR #407 re-review): the roadmap must not call a transitively
+    # infra-gated slice "buildable/startable now". The sequencing contradiction escaped
+    # #406 and the first #407 head; this validates roadmap readiness claims against the
+    # contract's implementation_slices.depends_on closure rather than prose review.
+    gated = _infra_gated_slice_labels()
+    assert {"WP-02F", "WP-02G", "WP-02H", "WP-02I", "WP-02J", "WP-02K"} <= gated, gated
+
+    roadmap = _read(ROOT / "docs" / "roadmap.md")
+    readiness_markers = ("buildable now", "startable now", "startable at merge", "are buildable")
+    flagged: list[tuple[str, str]] = []
+    for sentence in re.split(r"(?<=\.)\s+", roadmap):
+        low = sentence.lower()
+        if not any(marker in low for marker in readiness_markers):
+            continue
+        for label in sorted(gated):
+            if re.search(rf"(?<![0-9A-Za-z]){re.escape(label)}(?![0-9A-Za-z])", sentence):
+                flagged.append((label, " ".join(sentence.split())))
+    assert not flagged, f"roadmap labels infra-gated slice(s) as currently buildable: {flagged}"
+
+
 def test_threat_model_extends_existing_security_boundaries():
     text = _read(ROOT / "docs" / "security" / "hosted-deployment-threat-model.md")
     assert "ssrf-fetch-boundary.md" in text

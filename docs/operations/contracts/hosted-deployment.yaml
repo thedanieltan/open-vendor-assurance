@@ -437,10 +437,18 @@ maintainer_decisions:
   - id: public_traffic_enablement
     recommended: enabled only after staging smokes pass
   - id: adr0006_acceptance
-    recommended: maintainer merges a subsequent ADR-0006 status-change PR to accept the architecture and external deployment decisions
+    recommended: maintainer merges a subsequent ADR-0006 status-change PR to accept the architecture only; the external deployment decisions (provider, region, domain, credentials, spend) remain separate maintainer decisions made at provisioning
 
 # Follow-on implementation slices (dependency-ordered). Specified in the
-# implementation plan; each becomes executable after maintainer acceptance.
+# implementation plan. Executability is gated by THREE independent conditions, ALL
+# required — ADR-0006 being Accepted does NOT by itself make a slice executable:
+#   (1) ADR-0006 architecture acceptance (done) authorises the IN-REPO sequence only;
+#   (2) the infrastructure slices (WP-02F, WP-02G, and the infra parts of WP-02H/02K)
+#       additionally require maintainer acceptance of the external deployment
+#       decisions (provider, region, domain, credentials, spend);
+#   (3) every slice additionally requires predecessor completion per its `depends_on`.
+# So at acceptance only WP-02A is startable; 02B-02D follow predecessors, 02E/02L
+# follow 02A, and 02H/02I/02J/02K follow the staging/production infrastructure chain.
 implementation_slices:
   - id: WP-02A-hosted-transport-api
     depends_on: []

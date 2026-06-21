@@ -2,11 +2,14 @@
 
 - **Status:** Accepted — authoritative as of this **status-change PR's** merge (see
   the ADR lifecycle in [`README.md`](README.md)). A maintainer accepts the deployment
-  **architecture** and the recommended **baseline** (Google Cloud Run) recorded here.
-  **Acceptance authorises the architecture, not provisioning:** the concrete external
-  resources and decisions (provider account, region, domain, DNS/TLS, production
-  secrets, spend ceiling) are **not** created here and remain maintainer-gated in the
-  WP-02 implementation slices (staging WP-02F, production WP-02G).
+  **architecture** (topology, async/TTL job model, honest-degradation static fallback)
+  recorded here. **Google Cloud Run remains the recommended baseline — a recommendation,
+  not an accepted provider commitment.** **Acceptance authorises the architecture, not
+  provisioning, and accepts no external deployment choice:** the provider, region,
+  domain, DNS/TLS, production secrets, and spend ceiling are **not** accepted or created
+  here and remain maintainer-gated in the WP-02 implementation slices (staging WP-02F,
+  production WP-02G) — consistent with the contract's `provider_accepted_by_maintainer:
+  false`.
   **No production infrastructure is provisioned, no provider account is created, no
   DNS/TLS is configured, no production secret exists, and no hosted OpenVA endpoint
   is live.**
@@ -185,9 +188,11 @@ roll back to the prior immutable image, keep the read-only catalogue available.
 
 ## Sign-off
 
-- [x] Maintainer accepted the deployment architecture and the recommended baseline
-      via this **status-change PR**, which flips this ADR's Status and the README
-      index row to Accepted (and updates the acceptance-count test).
+- [x] Maintainer accepted the deployment **architecture** via this **status-change
+      PR**, which flips this ADR's Status and the README index row to Accepted (and
+      updates the acceptance-count test). The recommended provider baseline and the
+      other external deployment choices remain separate, unaccepted maintainer
+      decisions made at provisioning.
 
 Merging the ADR's introducing PR recorded it as a **non-authoritative proposal**;
 this **status-change PR** makes ADR-0006 **Accepted** and authoritative. Acceptance
