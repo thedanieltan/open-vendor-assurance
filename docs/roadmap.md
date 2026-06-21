@@ -96,8 +96,11 @@ and Azure Container Apps), an async `verify`-worker, a TTL-deleted job/result st
 and an always-on static fallback. ADR-0006 is **Accepted** (the architecture decision)
 and remains decision-only — acceptance provisions nothing, creates no provider account,
 and OpenVA still does not operate a production hosted endpoint. The dependency-ordered implementation slices are in
-[`docs/operations/hosted-deployment-implementation-plan.md`](operations/hosted-deployment-implementation-plan.md);
-they become executable only after a maintainer accepts the external deployment choices.
+[`docs/operations/hosted-deployment-implementation-plan.md`](operations/hosted-deployment-implementation-plan.md):
+with ADR-0006 accepted, the in-repo **code/CI slices (WP-02A–02E, WP-02I, WP-02J, WP-02L)**
+are buildable now; the **infrastructure slices (WP-02F staging, WP-02G production, and the
+infra parts of WP-02H/02K)** become executable only after a maintainer accepts the external
+deployment choices (provider, region, domain, credentials, spend).
 
 ## Current state
 

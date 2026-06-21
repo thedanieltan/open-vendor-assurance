@@ -437,7 +437,7 @@ maintainer_decisions:
   - id: public_traffic_enablement
     recommended: enabled only after staging smokes pass
   - id: adr0006_acceptance
-    recommended: maintainer merges a subsequent ADR-0006 status-change PR to accept the architecture and external deployment decisions
+    recommended: maintainer merges a subsequent ADR-0006 status-change PR to accept the architecture only; the external deployment decisions (provider, region, domain, credentials, spend) remain separate maintainer decisions made at provisioning
 
 # Follow-on implementation slices (dependency-ordered). Specified in the
 # implementation plan; each becomes executable after maintainer acceptance.

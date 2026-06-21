@@ -28,7 +28,8 @@ ADR-0001 remains authoritative for the hosted live-verification transport;
 ADR-0002–0005 govern agent-composed distribution and the remote read-only MCP
 surface, and do not themselves claim a production hosted deployment. **ADR-0006 is
 *Accepted*** (via a maintainer status-change PR): it records *how* ADR-0001's accepted
-hosted posture should be deployed (topology + a provider baseline). Acceptance
-authorises the architecture, not provisioning — it provisions no infrastructure,
-creates no provider account, and claims no live endpoint; the concrete external
-decisions and resources remain maintainer-gated in the WP-02 implementation slices.
+hosted posture should be deployed (topology + the async/TTL job model). Acceptance
+authorises the architecture, not provisioning, and accepts no external deployment
+choice — Google Cloud Run stays the recommended baseline (not a committed provider),
+and the provider, region, domain, credentials, and spend remain maintainer-gated in
+the WP-02 implementation slices.
