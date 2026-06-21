@@ -321,7 +321,7 @@ openva-inventory-template.csv
 
 `openva-csv.zip` contains curated CSV exports for vendors, sources, artifacts, observations, candidate sources, unavailable sources, and source coverage. The sample and template inventory files show simple `vendor_name`, `business_entity_name`, optional `domain`, optional `jurisdiction`, optional `registration_number`, and optional `registered_address` columns for matching a vendor list against OpenVA.
 
-These files are generated from the tagged repository state. OpenVA does not operate a public upload service or central hosted matching service; users keep their vendor inventories local unless they choose to run their own tooling.
+These files are generated from the tagged repository state. OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository now ships an optional, API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default, and this release does not include the durable backend, worker, production infrastructure, or public verify endpoint required for an operated hosted service. Users keep their vendor inventories local unless they choose to run their own tooling.
 
 See `docs/release-downloads.md` for a plain-language walkthrough of the release assets.
 
@@ -381,4 +381,4 @@ python -m openva_jsonl_export --pack . --out ./openva-jsonl
 python -m openva_vendor_inventory_matcher --pack . --input customer_vendors.csv --out matched_vendors.csv
 ```
 
-The optional match service in `services/openva_match_service/` wraps the pack reader and inventory matcher as a self-hosted HTTP service. OpenVA does not operate a central hosted service. It also exposes a read-only, cached-pack enrichment API under `/v1` for zero-install spreadsheet and document clients — see [`docs/resolver-api.md`](docs/resolver-api.md).
+The optional match service in `services/openva_match_service/` wraps the pack reader and inventory matcher as a self-hosted HTTP service. OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository now ships an optional, API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default, and this release does not include the durable backend, worker, production infrastructure, or public verify endpoint required for an operated hosted service. Until those later deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment. It also exposes a read-only, cached-pack enrichment API under `/v1` for zero-install spreadsheet and document clients — see [`docs/resolver-api.md`](docs/resolver-api.md).

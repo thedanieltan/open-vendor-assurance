@@ -123,7 +123,7 @@ workflows, matching public vendor assurance references, and contributing
 public-source metadata, but it should not be treated as complete vendor
 assurance coverage.
 
-OpenVA does not operate a hosted private inventory upload service or central hosted matching service. The hosted site may offer a read-only viewer and browser-local matcher, but private inventory data should remain inside the user's browser session, local environment, or self-hosted environment.
+OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository now ships an optional, API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default, and this release does not include the durable backend, worker, production infrastructure, or public verify endpoint required for an operated hosted service. Until those later deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment. The hosted site may offer a read-only viewer and browser-local matcher, but private inventory data should remain inside the user's browser session, local environment, or self-hosted environment.
 ```
 
 Do not describe OpenVA as:

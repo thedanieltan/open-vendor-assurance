@@ -2,7 +2,7 @@
 
 The OpenVA match service is an optional self-hosted HTTP wrapper around the pack reader and vendor inventory matcher. It serves public metadata enrichment only. It does not make risk, compliance, approval, or suitability assertions.
 
-OpenVA does not operate a central hosted service. Consumers that want HTTP access should run their own service instance from a pinned repository commit or release.
+OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository now ships an optional, API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default, and this release does not include the durable backend, worker, production infrastructure, or public verify endpoint required for an operated hosted service. Until those later deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment. Consumers that want HTTP access should run their own service instance from a pinned repository commit or release. When OPENVA_VERIFY_TRANSPORT_ENABLED=true, the service exposes the transport-only verify API; accepted jobs remain received because durable persistence and worker execution are later slices.
 
 ## Pack Strategy
 

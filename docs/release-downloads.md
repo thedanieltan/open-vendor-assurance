@@ -120,10 +120,14 @@ Use `candidate_sources.csv` and `unavailable_sources.csv` carefully:
 
 ## Matching your own vendor list
 
-OpenVA does not operate a public upload service or central hosted matching
-service. HTTP access is available only through the optional self-hosted match
-service. Users should keep private vendor inventories inside their own
-environment.
+OpenVA does not currently operate a production central matching service or a
+hosted private-inventory upload service. The repository now ships an optional,
+API-key-gated verify transport for self-hosted use and future hosted deployment.
+The transport is disabled by default, and this release does not include the
+durable backend, worker, production infrastructure, or public verify endpoint
+required for an operated hosted service. Until those later deployment gates are
+completed, private vendor inventories should remain browser-local, local, or
+inside a consumer-controlled self-hosted environment.
 
 If you want to match a vendor list against OpenVA today:
 
