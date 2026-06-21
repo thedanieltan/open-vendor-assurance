@@ -77,12 +77,14 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
     async def lifespan(app: FastAPI):
         app.state.config = service_config
         app.state.service_state = load_service_state(str(service_config.pack_path))
-        # In-memory, NON-DURABLE verify-transport stores (WP-02A). They exist
-        # regardless of the flag (cheap, empty) but are only reachable through the
-        # flag-gated /v1/verify endpoints. The durable backend is WP-02B.
-        app.state.verify_jobs = InMemoryJobStore()
-        app.state.verify_envelopes = InMemoryRequestEnvelopeStore()
-        app.state.verify_results = InMemoryResultStore()
+        # In-memory, NON-DURABLE verify-transport stores (WP-02A), created ONLY when
+        # the verify transport is enabled, so a flag-off deployment keeps exactly the
+        # current cached-only service state (no extra app.state). The verify endpoints
+        # 404 before reaching these when the flag is off. The durable backend is WP-02B.
+        if service_config.verify_transport_enabled:
+            app.state.verify_jobs = InMemoryJobStore()
+            app.state.verify_envelopes = InMemoryRequestEnvelopeStore()
+            app.state.verify_results = InMemoryResultStore()
         yield
 
     app = FastAPI(
