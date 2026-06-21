@@ -84,12 +84,27 @@ work_packages:
   # MINUS the WP-ADR-0006-STATUS-CHANGE governance edge mirrors that slice's
   # `depends_on` in hosted-deployment.yaml.
   WP-ADR-0006-STATUS-CHANGE:
-    description: Flip ADR-0006 (hosted public-read deployment) from Proposed to Accepted — the decision-record status change, its index row, and the acceptance-count test. NO service/schema/worker/infra paths.
+    description: >-
+      Flip ADR-0006 (hosted public-read deployment) from Proposed to Accepted — the
+      decision-record status change, its index row, the acceptance-count/lifecycle
+      tests, and the narrative docs that state the ADR's status (so none keeps saying
+      "Proposed" after acceptance). Status reconciliation ONLY — no service, schema,
+      worker, persistence, deployment-artifact, or infrastructure paths, and the
+      decision-only deployment contract's posture flags are NOT flipped here
+      (acceptance authorises the architecture, not provisioning).
     depends_on: []
     allowed_paths:
       - docs/architecture/decisions/ADR-0006-hosted-public-read-deployment.md
       - docs/architecture/decisions/README.md
       - tests/test_ai_native_distribution_docs.py
+      # Lifecycle test that pins ADR-0006's Proposed status (must flip on acceptance).
+      - tests/test_hosted_deployment_docs.py
+      # Narrative docs that state "ADR-0006 is Proposed" — reconciled to Accepted
+      # without changing the decision-only posture they describe.
+      - docs/roadmap.md
+      - docs/public-launch-checklist.md
+      - docs/operations/hosted-deployment-runbook.md
+      - docs/operations/contracts/hosted-deployment.yaml
 
   WP-02A-HOSTED-TRANSPORT:
     description: Hosted transport/API for the match service (WP-02A).
