@@ -3,8 +3,10 @@
 # Single machine-readable source of truth for the hosted-deployment DECISION
 # package. It records a deployment RECOMMENDATION and an implementation-ready
 # architecture; it does NOT provision infrastructure, accept a provider, or
-# claim a hosted endpoint is live. The deployment ADR (ADR-0006) is Proposed
-# until a maintainer accepts it. Authority order applies: ADR-0001 governs the
+# claim a hosted endpoint is live. The deployment ADR (ADR-0006) is Accepted (the
+# architecture decision); the posture below remains decision-only — acceptance
+# authorises the architecture, not provisioning, so no provider account or
+# infrastructure is created here. Authority order applies: ADR-0001 governs the
 # product posture; this contract and ADR-0006 govern how that posture deploys.
 #
 # Operational metadata only. Not legal, compliance, procurement, security, KYC,

@@ -150,8 +150,10 @@ These external decisions are **maintainer-controlled** (human authority per
   kill-switch — no vendor hard cap exists)
 - Production permissions (least-privilege; staging ≠ production)
 - Public-traffic enablement (only after staging smokes pass)
-- ADR-0006 acceptance (maintainer merges to accept the architecture)
+- ADR-0006 acceptance — **accepted** (the architecture decision is recorded as
+  Accepted; the other decisions above remain pending)
 
-Until the maintainer accepts these, ADR-0006 is **Proposed** and authorises no
-provisioning; the rollback posture of ADR-0001 (static layer always serving)
-remains the standing safe state.
+ADR-0006 is now **Accepted** (the architecture decision); the remaining external
+decisions above are still maintainer-gated, and acceptance authorises no provisioning
+by itself. The rollback posture of ADR-0001 (static layer always serving) remains the
+standing safe state.
