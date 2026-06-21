@@ -64,10 +64,14 @@ The first independent review of this ratification PR (NOT_READY) found two genui
 correctness gaps in the bundled functionality and two guard-enforcement gaps. All were
 addressed on a new head:
 
-1. **Scope guard not enforced (finding 1).** Added `.github/workflows/pr-scope-guard.yml`
-   — a required PR check that derives exactly one `Work-Package: WP-...` declaration from
-   the PR body (fails closed on zero/multiple/unknown) and runs the guard against the
-   exact base→head diff.
+1. **Scope guard not enforced (finding 1).** Added a `pr-scope-guard` job to the core
+   `validate.yml` workflow (registered in `.github/validation-ownership.yaml` as the
+   required `validate / pr-scope-guard` status context) — a PR-only check that derives
+   exactly one `Work-Package: WP-...` declaration from the PR body (fails closed on
+   zero/multiple/unknown) and runs the guard against the exact base→head diff. It is a
+   job on the existing workflow rather than a new top-level workflow file, so it does not
+   perturb the workflow-surface governance contracts (inventory, operating-model,
+   retirement evidence, calibration).
 2. **Conflicting-identity false attribution (finding 2).** `select_with_legal_fallback`
    now fails closed when domain/name selects vendor A but the registration resolves to
    vendor B's entity — it attributes to neither and cross-links nothing

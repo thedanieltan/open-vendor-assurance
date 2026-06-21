@@ -43,7 +43,21 @@ unrelated work packages — that disjointness is what makes ancestor-bleed detec
 
 ## CI integration
 
-Run the CLI as a required check on pull requests, passing the PR's declared work
-package. Because the guard fails closed on an undeclared work package, every core-lane
-PR must name its work package and keep its changes within that scope (or extend the
-manifest in the same PR when the scope legitimately grows).
+Enforced as the `pr-scope-guard` job in the core [`validate.yml`](../../.github/workflows/validate.yml)
+workflow (PR-only), registered in [`validation-ownership.yaml`](../../.github/validation-ownership.yaml)
+as the required `validate / pr-scope-guard` status context. The job:
+
+- declares the work package from a single `Work-Package: WP-...` line in the PR body
+  (via `--declaration-file`); **zero/multiple/unknown** declarations fail closed;
+- checks out the guard **code and manifest from the base revision** (a `git worktree`
+  at `pull_request.base.sha`) and runs *that* copy, so a PR cannot weaken its own gate
+  or widen its own allowlist in the same change — manifest changes take effect only for
+  later, human-reviewed PRs;
+- runs the guard against the exact `base→head` diff (`git diff --name-only`).
+
+It is a job on the existing workflow, not a new top-level workflow file, so it does not
+perturb the workflow-surface governance contracts. Because the guard fails closed on an
+undeclared work package, every core-lane PR must name its work package and keep its
+changes within that scope (or extend the manifest in the same PR when the scope
+legitimately grows). The base-evaluation means the guard self-bootstraps: on the PR that
+first introduces it (base = `main`, which lacks the guard) the job skips.

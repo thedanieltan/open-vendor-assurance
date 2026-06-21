@@ -89,9 +89,10 @@ def test_this_ratification_prs_files_are_in_its_declared_scope():
         "tools/openva/agent_export.py",
         "integrations/mcp/openva_mcp/openva_mcp/matching.py",
         "tests/test_agent_export.py",
-        # CI enforcement of the guard (findings 1/4).
-        ".github/workflows/pr-scope-guard.yml",
-        "docs/operations/contracts/workflow-inventory.yaml",
+        # CI enforcement of the guard (findings 1/4): a pull_request-only job in the
+        # core validate workflow, registered in the validation-ownership contract.
+        ".github/workflows/validate.yml",
+        ".github/validation-ownership.yaml",
         # The scope machinery itself (shared_allowed).
         "docs/operations/contracts/work-package-scope.yaml",
         "tools/openva/pr_scope_guard.py",

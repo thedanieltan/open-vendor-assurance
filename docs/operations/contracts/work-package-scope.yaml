@@ -32,9 +32,10 @@ work_packages:
       - tools/openva/agent_export.py
       - integrations/mcp/openva_mcp/openva_mcp/matching.py
       - tests/test_agent_export.py
-      # CI enforcement of the scope guard (finding 1/4).
-      - .github/workflows/pr-scope-guard.yml
-      - docs/operations/contracts/workflow-inventory.yaml
+      # CI enforcement of the scope guard (finding 1/4): a pull_request-only job in the
+      # core validate workflow, registered in the validation-ownership contract.
+      - .github/workflows/validate.yml
+      - .github/validation-ownership.yaml
 
   WP-OPENVA-AI-NATIVE-DISTRIBUTION-LEGAL-ENTITY:
     description: Legal-entity export projection + shared registration-number matching (the change set bundled into PR #400).
