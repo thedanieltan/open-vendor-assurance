@@ -58,21 +58,22 @@ def _contract() -> dict:
 # --- ADR-0006 -----------------------------------------------------------------
 
 
-def test_adr_0006_exists_proposed_and_references_adr_0001():
+def test_adr_0006_accepted_and_references_adr_0001():
     text = _read(ADR_0006)
-    assert "**Status:** Proposed" in text
-    assert "**Status:** Accepted" not in text
+    assert "**Status:** Accepted" in text
+    assert "**Status:** Proposed" not in text
     assert "ADR-0001" in text
-    # Decision-only posture is explicit.
+    # Acceptance authorises the architecture, not provisioning — the decision-only
+    # posture stays explicit.
     assert "No production infrastructure is provisioned" in text
 
 
-def test_adr_index_adds_0006_as_proposed_and_keeps_accepted_count():
+def test_adr_index_lists_0006_as_accepted():
     index = _read(DECISIONS / "README.md")
     assert "ADR-0006" in index
-    # The existing five ADRs remain Accepted; ADR-0006 is the only Proposed row.
-    assert index.count("| Accepted |") == 5
-    assert index.count("| Proposed |") == 1
+    # ADR-0006 is now Accepted via its status-change PR; no ADR row remains Proposed.
+    assert index.count("| Accepted |") == 6
+    assert index.count("| Proposed |") == 0
 
 
 # --- contract -----------------------------------------------------------------

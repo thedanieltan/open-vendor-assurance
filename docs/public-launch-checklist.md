@@ -69,10 +69,10 @@ Use this checklist before making OpenVA public or announcing broader contributio
 
 ## Hosted deployment readiness (ADR-0006, decision-ready — not yet live)
 
-The hosted deployment is **specified, not provisioned**. ADR-0006 is Proposed; no
-provider is accepted and no endpoint is live. Before any hosted launch:
+The hosted deployment is **specified, not provisioned**. ADR-0006 is Accepted (the
+architecture decision); no provider account is created and no endpoint is live. Before any hosted launch:
 
-- [ ] ADR-0006 (`docs/architecture/decisions/ADR-0006-hosted-public-read-deployment.md`) is accepted by a maintainer and recorded as Accepted in the ADR index.
+- [x] ADR-0006 (`docs/architecture/decisions/ADR-0006-hosted-public-read-deployment.md`) is accepted by a maintainer and recorded as Accepted in the ADR index.
 - [ ] The maintainer external decisions (provider, region, domain, DNS/TLS, registry, secrets/identity, spend ceiling, production permissions) are made — see `docs/operations/hosted-deployment-decision.md` §13.
 - [ ] The engineered cost ceiling (instance/concurrency cap + edge rate limit + budget-alert kill-switch) is configured — no vendor offers a hard spend cap.
 - [ ] The GitHub App key lives only in a managed secret store (never repo/browser/artifacts/logs); least-privilege App (no merge); break-glass revocation tested.

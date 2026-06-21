@@ -1,16 +1,18 @@
 # ADR-0006: Hosted Public-Read Deployment Architecture
 
-- **Status:** Proposed — a recorded, **non-authoritative proposal** (see the ADR
-  lifecycle in [`README.md`](README.md)). Merging the PR that introduces this ADR
-  records the proposal but does **not** make it authoritative and authorises no
-  deployment. It becomes Accepted only through a subsequent **status-change PR** in
-  which a maintainer accepts the deployment baseline and the external decisions
-  (that PR flips this Status and the index row to Accepted and updates the
-  acceptance-count test). **No production infrastructure is provisioned, no provider
-  is accepted, no DNS/TLS is configured, no production secret exists, and no hosted
-  OpenVA endpoint is live.** This ADR records *how* the already-accepted hosted
-  posture should be deployed; it does not itself deploy anything.
-- **Date:** 2026-06-19 (proposed)
+- **Status:** Accepted — authoritative as of this **status-change PR's** merge (see
+  the ADR lifecycle in [`README.md`](README.md)). A maintainer accepts the deployment
+  **architecture** and the recommended **baseline** (Google Cloud Run) recorded here.
+  **Acceptance authorises the architecture, not provisioning:** the concrete external
+  resources and decisions (provider account, region, domain, DNS/TLS, production
+  secrets, spend ceiling) are **not** created here and remain maintainer-gated in the
+  WP-02 implementation slices (staging WP-02F, production WP-02G).
+  **No production infrastructure is provisioned, no provider account is created, no
+  DNS/TLS is configured, no production secret exists, and no hosted OpenVA endpoint
+  is live.**
+  This ADR records *how* ADR-0001's accepted hosted posture should be deployed; the
+  architecture is now authoritative, but it deploys nothing by itself.
+- **Date:** 2026-06-19 (proposed); 2026-06-21 (accepted)
 - **Decision owners:** OpenVA maintainers. Provider, region, domain, credentials,
   spend, production permissions, and public positioning remain human authority
   (`GOVERNANCE.md`).
@@ -183,11 +185,12 @@ roll back to the prior immutable image, keep the read-only catalogue available.
 
 ## Sign-off
 
-- [ ] Maintainer accepts the deployment architecture, the recommended baseline, and
-      the external decisions in the decision table via a **status-change PR** that
-      flips this ADR's Status and the README index row to Accepted (and updates the
-      acceptance-count test). Merging the introducing PR only *records* this
-      proposal.
+- [x] Maintainer accepted the deployment architecture and the recommended baseline
+      via this **status-change PR**, which flips this ADR's Status and the README
+      index row to Accepted (and updates the acceptance-count test).
 
-Until that status-change PR, this ADR is **Proposed**, non-authoritative, and
-authorises no provisioning.
+Merging the ADR's introducing PR recorded it as a **non-authoritative proposal**;
+this **status-change PR** makes ADR-0006 **Accepted** and authoritative. Acceptance
+authorises the architecture only; it provisions nothing, creates no provider account,
+and the concrete external decisions (provider account, region, domain, DNS/TLS,
+secrets, spend ceiling) remain maintainer-gated in the WP-02 implementation slices.

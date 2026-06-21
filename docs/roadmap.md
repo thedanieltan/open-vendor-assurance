@@ -93,9 +93,9 @@ The deployment architecture for ADR-0001's accepted hosted posture is specified 
 [`docs/operations/hosted-deployment-decision.md`](operations/hosted-deployment-decision.md):
 a portable container (recommended baseline Google Cloud Run; alternatives AWS Lambda
 and Azure Container Apps), an async `verify`-worker, a TTL-deleted job/result store,
-and an always-on static fallback. ADR-0006 is **Proposed** and decision-only — it
-provisions nothing, accepts no provider, and OpenVA still does not operate a production
-hosted endpoint. The dependency-ordered implementation slices are in
+and an always-on static fallback. ADR-0006 is **Accepted** (the architecture decision)
+and remains decision-only — acceptance provisions nothing, creates no provider account,
+and OpenVA still does not operate a production hosted endpoint. The dependency-ordered implementation slices are in
 [`docs/operations/hosted-deployment-implementation-plan.md`](operations/hosted-deployment-implementation-plan.md);
 they become executable only after a maintainer accepts the external deployment choices.
 
