@@ -26,6 +26,27 @@ from tools.openva.pr_scope_guard import (
 ROOT = Path(__file__).resolve().parents[1]
 HOSTED_DEPLOYMENT = ROOT / "docs" / "operations" / "contracts" / "hosted-deployment.yaml"
 
+# Composite LOCKSTEP work package: the atomic first hosted-transport activation bundled
+# with the seven ADR-0001 positioning files (WP-02A + WP-02L in one merge). It is a
+# manifest-only wrapper (no slice_id); for the dependency mirror it stands in for WP-02A's
+# hosted-deployment slice.
+COMPOSITE_LOCKSTEP_WP = "WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP"
+COMPOSITE_LOCKSTEP_STANDS_IN_FOR = "WP-02A-hosted-transport-api"
+
+# The seven ADR-0001 positioning files. Six are OUTSIDE standalone WP-02A's scope
+# (openva-match-service-contract.md is already a WP-02A doc), so they can only ride with
+# the transport via the composite lockstep package.
+ADR0001_POSITIONING_FILES = [
+    "README.md",
+    "docs/openva-match-service-contract.md",
+    "docs/openva-match-service-deployment.md",
+    "docs/public-launch-checklist.md",
+    "docs/release-downloads.md",
+    "docs/v0.1.0-public-launch-readiness.md",
+    "docs/agent-export-contract.md",
+]
+POSITIONING_FILES_OUTSIDE_WP_02A = [f for f in ADR0001_POSITIONING_FILES if f != "docs/openva-match-service-contract.md"]
+
 # The scope-policy machinery — governed SOLELY by WP-PR-SCOPE-POLICY-01.
 SCOPE_POLICY_FILES = [
     "docs/operations/contracts/work-package-scope.yaml",
@@ -248,6 +269,12 @@ def test_depends_on_integrity_and_mirrors_hosted_deployment():
         for dep in manifest_deps[wp_id]:
             if dep == "WP-ADR-0006-STATUS-CHANGE":
                 continue
+            if dep == COMPOSITE_LOCKSTEP_WP:
+                # The lockstep composite is a manifest-only wrapper (no slice_id); for the
+                # dependency mirror it stands in for WP-02A's hosted-deployment slice (the
+                # first hosted-transport activation it carries).
+                mapped.append(COMPOSITE_LOCKSTEP_STANDS_IN_FOR)
+                continue
             assert dep in slice_id_of, f"{wp_id} depends_on {dep} which has no slice_id"
             mapped.append(slice_id_of[dep])
         assert sorted(mapped) == sorted(hosted[slice_id]), (
@@ -323,3 +350,54 @@ def test_guard_would_have_caught_pr_400_contamination():
     )
     # And those same files ARE in scope for the legal-entity work package.
     assert out_of_scope_paths(legal_entity_paths, "WP-OPENVA-AI-NATIVE-DISTRIBUTION-LEGAL-ENTITY", manifest) == []
+
+
+# --- Composite lockstep work package (WP-02A + WP-02L, atomic first activation) -------
+
+
+def test_composite_lockstep_accepts_transport_and_positioning_files():
+    # The composite accepts PRECISELY the WP-02A transport surface + the seven ADR-0001
+    # positioning files under one declaration (the atomic lockstep merge).
+    manifest = load_manifest()
+    files = [
+        "services/openva_match_service/openva_match_service/app.py",
+        "docs/resolver-api.md",
+        "tests/test_openva_match_service_verify.py",
+        *ADR0001_POSITIONING_FILES,
+    ]
+    assert out_of_scope_paths(files, COMPOSITE_LOCKSTEP_WP, manifest) == []
+
+
+def test_composite_lockstep_rejects_unrelated_documentation():
+    # The composite uses EXACT positioning paths, not docs/** — unrelated docs stay out.
+    manifest = load_manifest()
+    unrelated = ["docs/roadmap.md", "docs/operations/contracts/hosted-deployment.yaml"]
+    assert out_of_scope_paths(unrelated, COMPOSITE_LOCKSTEP_WP, manifest) == sorted(unrelated)
+
+
+def test_standalone_wp_02a_still_rejects_positioning_files():
+    # Standalone WP-02A is NOT independently mergeable for the first activation: it cannot
+    # carry the six positioning files outside its scope, so it cannot be the lockstep merge.
+    manifest = load_manifest()
+    flagged = out_of_scope_paths(POSITIONING_FILES_OUTSIDE_WP_02A, "WP-02A-HOSTED-TRANSPORT", manifest)
+    assert set(flagged) == set(POSITIONING_FILES_OUTSIDE_WP_02A)
+
+
+def test_composite_lockstep_declaration_is_a_single_work_package():
+    body = f"Combined lockstep slice.\n\nWork-Package: {COMPOSITE_LOCKSTEP_WP}\n\nmore text."
+    assert declared_work_package(body) == COMPOSITE_LOCKSTEP_WP
+
+
+def test_composite_lockstep_dependency_edges():
+    # The composite depends on the ADR governance gate; the downstream code/CI slices that
+    # previously depended on standalone WP-02A now depend on the composite (the real first
+    # hosted-transport activation). The composite is a manifest-only wrapper (no slice_id).
+    manifest = load_manifest()
+    wps = manifest["work_packages"]
+    assert COMPOSITE_LOCKSTEP_WP in wps
+    assert "WP-ADR-0006-STATUS-CHANGE" in (wps[COMPOSITE_LOCKSTEP_WP].get("depends_on") or [])
+    assert "slice_id" not in wps[COMPOSITE_LOCKSTEP_WP]
+    for downstream in ("WP-02B-ASYNC-PERSISTENCE", "WP-02E-SUPPLY-CHAIN"):
+        deps = wps[downstream].get("depends_on") or []
+        assert COMPOSITE_LOCKSTEP_WP in deps, f"{downstream} must depend on the composite"
+        assert "WP-02A-HOSTED-TRANSPORT" not in deps, f"{downstream} must not depend on standalone WP-02A"
