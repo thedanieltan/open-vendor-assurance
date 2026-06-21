@@ -21,6 +21,7 @@ from pathlib import Path
 
 import jsonschema
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 for _src in (
@@ -52,6 +53,7 @@ from tests.test_agent_export import (  # noqa: E402
     make_repo,
     run_artifact,
     write_ledger_event,
+    write_legal_entity,
 )
 
 AGENT_SCHEMA = json.loads((ROOT / "schemas/openva/agent-export.schema.json").read_text(encoding="utf-8"))
@@ -75,27 +77,37 @@ def _def_for(rel: str) -> str:
     }.get(rel, "vendor_export")
 
 
+LEGAL_ENTITY_SCHEMA = json.loads((ROOT / "schemas/openva/legal-entity.schema.json").read_text(encoding="utf-8"))
+
+# A VERIFIED (canonical) legal-entity record whose verification and registered-address
+# evidence reference a real source the fixture vendor carries (example-vendor-dpa, created
+# by make_repo). It is valid under the RAW legal-entity schema — establishing that the
+# exported metadata is public-source-backed, not merely schema-shaped.
+_CANONICAL_ENTITY_YAML = (
+    "schema_version: 0.1.0\n"
+    "entity_id: example-vendor-le\n"
+    "vendor_id: example-vendor\n"
+    "legal_name: Example Vendor Ltd\n"
+    "jurisdiction: GB\n"
+    "registration_number: RC-555123\n"
+    "verification_source_ids:\n"
+    "  - example-vendor-dpa\n"
+    "catalog_status: canonical\n"
+    "registered_address:\n"
+    "  address_lines:\n"
+    "    - 1 Example Way\n"
+    "  locality: London\n"
+    "  country: GB\n"
+    "  source_ids:\n"
+    "    - example-vendor-dpa\n"
+    "not_advice: true\n"
+)
+
+
 def _write_entity_with_address(tmp_path: Path) -> None:
     entity_dir = tmp_path / "data" / "vendors" / "example-vendor" / "legal_entities"
     entity_dir.mkdir(parents=True, exist_ok=True)
-    (entity_dir / "example-vendor-le.yaml").write_text(
-        "schema_version: 0.1.0\n"
-        "entity_id: example-vendor-le\n"
-        "vendor_id: example-vendor\n"
-        "legal_name: Example Vendor Ltd\n"
-        "jurisdiction: GB\n"
-        "registration_number: RC-555123\n"
-        "verification_source_ids: []\n"
-        "catalog_status: stub\n"
-        "registered_address:\n"
-        "  address_lines:\n"
-        "    - 1 Example Way\n"
-        "  locality: London\n"
-        "  country: GB\n"
-        "  source_ids: []\n"
-        "not_advice: true\n",
-        encoding="utf-8",
-    )
+    (entity_dir / "example-vendor-le.yaml").write_text(_CANONICAL_ENTITY_YAML, encoding="utf-8")
 
 
 def _build_with_legal_entity(tmp_path: Path, out_name: str = "out") -> Path:
@@ -148,6 +160,28 @@ def test_vendor_without_legal_entities_is_backward_compatible(tmp_path):
     out = build(tmp_path, latest_observations=run_artifact())
     vendor = json.loads((out / "vendors/example-vendor.json").read_text(encoding="utf-8"))
     assert "legal_entities" not in vendor
+
+
+def test_exported_entity_is_valid_under_the_raw_legal_entity_schema():
+    # Property 7 (public-source-backed): the exported entity is a VALID canonical
+    # legal-entity record under the RAW schema — it carries verification source ids and
+    # registered-address source ids, so the export is source-backed, not just shaped.
+    record = yaml.safe_load(_CANONICAL_ENTITY_YAML)
+    jsonschema.validate(record, LEGAL_ENTITY_SCHEMA)
+    assert record["catalog_status"] == "canonical"
+    assert record["verification_source_ids"] == ["example-vendor-dpa"]
+    assert record["registered_address"]["source_ids"] == ["example-vendor-dpa"]
+
+
+def test_unverified_stub_entities_are_not_exported(tmp_path):
+    # Property 7: only verified (canonical) entities are exported; an unverified stub
+    # must be excluded so the public_sources_only guarantee stays honest.
+    make_repo(tmp_path)
+    write_ledger_event(tmp_path, observed_at="2026-06-01T05:30:00Z")
+    write_legal_entity(tmp_path, entity_id="example-vendor-stub", registration_number="RC-STUB", catalog_status="stub")
+    out = build(tmp_path, latest_observations=run_artifact())
+    vendor = json.loads((out / "vendors/example-vendor.json").read_text(encoding="utf-8"))
+    assert "legal_entities" not in vendor, "an unverified stub legal entity must not be exported"
 
 
 # --- registration matching: safety / fail-closed ------------------------------
@@ -218,6 +252,68 @@ def test_entity_pointing_at_absent_vendor_is_a_safe_no_match():
 def test_empty_legal_index_preserves_pre_enhancement_behaviour():
     vendor_id, resolution = _resolve(_vendors(), {"registration_number": "RC-555123", "jurisdiction": ""}, {}, {})
     assert vendor_id is None and resolution.method == "unresolved"
+
+
+def test_conflicting_domain_and_registration_fails_closed_in_core():
+    # Finding 2: domain/name -> vendor A, registration -> vendor B's entity. The shared
+    # core must fail closed: neither attribute to A nor cross-link B's entity.
+    from openva_vendor_inventory_matcher.core import normalize_domain
+
+    by_reg, by_id = _indexes([
+        {"entity_id": "beta-le", "vendor_id": "beta", "legal_name": "Beta Ltd", "jurisdiction": "US", "registration_number": "RC-BETA", "catalog_status": "canonical"},
+    ])
+    vendors = _vendors()
+    candidates = match_candidates(vendors, normalize_domain("acme.example"), "")  # selects acme
+    vendors_by_id = {v.vendor_id: v for v in vendors}
+    selected, resolution = select_with_legal_fallback(
+        vendors_by_id, candidates,
+        {"registration_number": "RC-BETA", "jurisdiction": ""},
+        by_registration=by_reg, by_id=by_id, contracting_by_key={},
+    )
+    assert selected is None, "must not attribute to vendor A when the registration belongs to vendor B"
+    assert resolution.method == "registration_vendor_conflict"
+    assert resolution.matched_entity is None, "must not cross-link vendor B's entity"
+
+
+def test_conflicting_evidence_is_not_a_match_on_the_mcp_surface():
+    # Same conflict via the MCP adapter: ambiguous (no matched vendor), conflict noted,
+    # no cross-linked legal entity id.
+    from openva_mcp import matching as mcp_matching
+
+    by_reg, by_id = _indexes([
+        {"entity_id": "beta-le", "vendor_id": "beta", "legal_name": "Beta Ltd", "jurisdiction": "US", "registration_number": "RC-BETA", "catalog_status": "canonical"},
+    ])
+    vendor_rows = [
+        {"vendor_id": "acme", "canonical_name": "Acme", "domains": ["acme.example"]},
+        {"vendor_id": "beta", "canonical_name": "Beta", "domains": ["beta.example"]},
+    ]
+    out = mcp_matching.match_row(
+        vendor_rows,
+        {"domain": "acme.example", "registration_number": "RC-BETA"},
+        legal_by_registration=by_reg, legal_by_id=by_id,
+    )
+    assert out["matched_vendor_id"] is None
+    assert out["match_status"] == "ambiguous"
+    assert out["legal_entity_resolution"]["method"] == "registration_vendor_conflict"
+    assert out["legal_entity_resolution"]["matched_entity_id"] is None
+
+
+def test_consistent_domain_and_registration_still_matches():
+    # The complement: when registration resolves to the SAME vendor the domain selects,
+    # the match stands (no false negative from the conflict guard).
+    from openva_vendor_inventory_matcher.core import normalize_domain
+
+    by_reg, by_id = _indexes([
+        {"entity_id": "acme-le", "vendor_id": "acme", "legal_name": "Acme Ltd", "jurisdiction": "GB", "registration_number": "RC-ACME", "catalog_status": "canonical"},
+    ])
+    vendors = _vendors()
+    candidates = match_candidates(vendors, normalize_domain("acme.example"), "")
+    selected, _ = select_with_legal_fallback(
+        {v.vendor_id: v for v in vendors}, candidates,
+        {"registration_number": "RC-ACME", "jurisdiction": ""},
+        by_registration=by_reg, by_id=by_id, contracting_by_key={},
+    )
+    assert selected is not None and selected.vendor.vendor_id == "acme"
 
 
 # --- cross-surface consistency + no new authority -----------------------------

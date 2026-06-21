@@ -6,9 +6,12 @@ adapter uses — so both agree for the same evidence and share one vocabulary:
 ``match_status`` is ``matched``, ``ambiguous``, or ``no_match``. This module only
 adapts the verified vendor-index rows into core records and shapes a result.
 
-The hosted export tree carries no legal-entity data, so legal-entity resolution
-here is always ``unresolved``; that is the same result the core produces from an
-empty legal-entity set.
+When the export carries verified legal entities (``vendor_export.legal_entities``),
+``build_legal_indexes`` collects them and registration-number resolution runs through
+the same ``core.select_with_legal_fallback`` authority the pack matcher uses. When the
+export carries none (the shipped catalogue today), the indexes are empty and a
+registration-only row stays ``unresolved`` / ``no_match`` — the same result the core
+produces from an empty legal-entity set.
 """
 
 from __future__ import annotations

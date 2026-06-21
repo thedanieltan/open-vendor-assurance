@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -29,6 +30,29 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "docs" / "operations" / "contracts" / "work-package-scope.yaml"
+
+# A PR declares its work package with a single `Work-Package: WP-...` line in its body.
+_DECLARATION_RE = re.compile(r"^\s*Work-Package:\s*(WP-[A-Z0-9][A-Z0-9-]*)\s*$", re.MULTILINE)
+
+
+class DeclarationError(ValueError):
+    """The PR did not declare exactly one work package."""
+
+
+def declared_work_package(text: str) -> str:
+    """Parse exactly one `Work-Package: WP-...` declaration from a PR body/title.
+
+    Fails closed: zero or multiple distinct declarations raise DeclarationError, so a PR
+    can neither skip the guard (no declaration) nor straddle work packages (several)."""
+    found: list[str] = []
+    for match in _DECLARATION_RE.finditer(text or ""):
+        if match.group(1) not in found:
+            found.append(match.group(1))
+    if len(found) != 1:
+        raise DeclarationError(
+            f"a PR must declare exactly one 'Work-Package: WP-...' line (found {len(found)}: {found})"
+        )
+    return found[0]
 
 
 def load_manifest(path: str | Path = DEFAULT_MANIFEST) -> dict[str, Any]:
@@ -73,7 +97,12 @@ def main(argv: list[str] | None = None) -> int:
         prog="pr_scope_guard",
         description="Assert a PR's changed paths stay within its declared work-package scope.",
     )
-    parser.add_argument("--work-package", required=True, help="The declared work-package id (must exist in the manifest).")
+    parser.add_argument("--work-package", help="The declared work-package id (must exist in the manifest).")
+    parser.add_argument(
+        "--declaration-file",
+        help="Path to a file (e.g. the PR body) carrying a single 'Work-Package: WP-...' line; "
+        "fails closed on zero or multiple declarations.",
+    )
     parser.add_argument("--base", default="origin/main", help="Base ref to diff against (default: origin/main).")
     parser.add_argument("--manifest", default=str(DEFAULT_MANIFEST), help="Path to the work-package-scope manifest.")
     parser.add_argument(
@@ -82,15 +111,36 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Explicit changed path (repeatable); overrides the git diff (for testing/CI).",
     )
+    parser.add_argument(
+        "--changed-paths-file",
+        help="Path to a newline-separated list of changed paths; overrides the git diff (for CI).",
+    )
     args = parser.parse_args(argv)
 
+    if args.declaration_file:
+        try:
+            work_package = declared_work_package(Path(args.declaration_file).read_text(encoding="utf-8"))
+        except DeclarationError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+    elif args.work_package:
+        work_package = args.work_package
+    else:
+        print("provide --work-package or --declaration-file", file=sys.stderr)
+        return 2
+
     manifest = load_manifest(args.manifest)
-    changed = args.changed_path if args.changed_path is not None else changed_paths_from_git(args.base)
+    if args.changed_paths_file is not None:
+        changed = [line.strip() for line in Path(args.changed_paths_file).read_text(encoding="utf-8").splitlines() if line.strip()]
+    elif args.changed_path is not None:
+        changed = args.changed_path
+    else:
+        changed = changed_paths_from_git(args.base)
     try:
-        violations = out_of_scope_paths(changed, args.work_package, manifest)
+        violations = out_of_scope_paths(changed, work_package, manifest)
     except KeyError:
         print(
-            f"unknown work package {args.work_package!r}: declare its allowed_paths in {args.manifest} "
+            f"unknown work package {work_package!r}: declare its allowed_paths in {args.manifest} "
             "before opening the PR",
             file=sys.stderr,
         )
@@ -98,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if violations:
         print(
-            f"{len(violations)} changed path(s) outside the declared scope of {args.work_package}:",
+            f"{len(violations)} changed path(s) outside the declared scope of {work_package}:",
             file=sys.stderr,
         )
         for path in violations:
@@ -110,7 +160,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    print(f"all {len(changed)} changed path(s) within scope of {args.work_package}")
+    print(f"all {len(changed)} changed path(s) within scope of {work_package}")
     return 0
 
 

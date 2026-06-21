@@ -278,6 +278,12 @@ def select_with_legal_fallback(
     carries legal-entity data matches the same way regardless of transport. When the
     legal-entity indexes are empty (no legal data), this behaves exactly like
     ``select_match``: a registration-only row stays unmatched.
+
+    Conflicting strong identity fails closed: if domain/name selects one vendor but the
+    supplied registration number resolves to a DIFFERENT vendor's legal entity, neither
+    is returned (no false attribution and no cross-link to the other vendor's entity) —
+    the resolution is reported as ``registration_vendor_conflict`` and the row is left
+    unmatched (``ambiguous`` once the domain/name candidate is considered).
     """
     selected = select_match(candidates)
     resolution = resolve_legal_entity(
@@ -291,4 +297,15 @@ def select_with_legal_fallback(
         vendor = vendors_by_id.get(resolution.matched_entity.vendor_id)
         if vendor is not None:
             selected = MatchCandidate(vendor, 1.00, "registration_number_exact")
+    elif (
+        selected is not None
+        and resolution.matched_entity is not None
+        and resolution.matched_entity.vendor_id != selected.vendor.vendor_id
+    ):
+        # Domain/name -> vendor A, registration -> vendor B's entity. Contradictory
+        # strong identity evidence: do not attribute to A and do not cross-link B.
+        selected = None
+        resolution = LegalEntityResolution(
+            "registration_vendor_conflict", "conflict", None, resolution.candidates
+        )
     return selected, resolution

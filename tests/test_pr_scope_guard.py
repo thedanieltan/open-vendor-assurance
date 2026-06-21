@@ -14,7 +14,9 @@ from pathlib import Path
 import pytest
 
 from tools.openva.pr_scope_guard import (
+    DeclarationError,
     allowed_globs,
+    declared_work_package,
     load_manifest,
     out_of_scope_paths,
 )
@@ -75,18 +77,52 @@ def test_committed_manifest_is_well_formed():
 
 
 def test_this_ratification_prs_files_are_in_its_declared_scope():
-    # Dogfood: every file this ratification PR adds must be within its own declared scope.
+    # Dogfood: every file this ratification PR changes must be within its own declared
+    # scope (the guard passes on itself).
     manifest = load_manifest()
     this_pr_paths = [
+        # Evidence + regression tests.
         "docs/operations/legal-entity-export-ratification.md",
         "tests/test_legal_entity_export_ratification.py",
-        # The scope machinery is shared_allowed.
+        # Required corrections (findings 2/3 + non-blocking docstring) and their tests.
+        "adapters/python/openva_vendor_inventory_matcher/openva_vendor_inventory_matcher/core.py",
+        "tools/openva/agent_export.py",
+        "integrations/mcp/openva_mcp/openva_mcp/matching.py",
+        "tests/test_agent_export.py",
+        # CI enforcement of the guard (findings 1/4).
+        ".github/workflows/pr-scope-guard.yml",
+        "docs/operations/contracts/workflow-inventory.yaml",
+        # The scope machinery itself (shared_allowed).
         "docs/operations/contracts/work-package-scope.yaml",
         "tools/openva/pr_scope_guard.py",
         "tests/test_pr_scope_guard.py",
         "docs/operations/pr-scope-guard.md",
     ]
     assert out_of_scope_paths(this_pr_paths, "WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01", manifest) == []
+
+
+# --- work-package declaration (fail-closed) ----------------------------------
+
+
+def test_declared_work_package_accepts_exactly_one():
+    body = "Some PR description.\n\nWork-Package: WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01\n\nMore text."
+    assert declared_work_package(body) == "WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01"
+
+
+def test_declared_work_package_fails_closed_on_zero():
+    with pytest.raises(DeclarationError):
+        declared_work_package("A PR body with no declaration line.")
+
+
+def test_declared_work_package_fails_closed_on_multiple():
+    body = "Work-Package: WP-ONE\nWork-Package: WP-TWO\n"
+    with pytest.raises(DeclarationError):
+        declared_work_package(body)
+
+
+def test_declared_work_package_repeated_same_id_is_one():
+    body = "Work-Package: WP-ONE\n...\nWork-Package: WP-ONE\n"
+    assert declared_work_package(body) == "WP-ONE"
 
 
 def test_guard_would_have_caught_pr_400_contamination():

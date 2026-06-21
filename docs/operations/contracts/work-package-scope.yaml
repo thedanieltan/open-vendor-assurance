@@ -22,10 +22,19 @@ shared_allowed:
 
 work_packages:
   WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01:
-    description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400.
+    description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400 (audit evidence, required corrections, regression tests, and the PR scope guard's CI enforcement).
     allowed_paths:
       - docs/operations/legal-entity-export-ratification.md
       - tests/test_legal_entity_export_ratification.py
+      # Required corrections found by the audit (finding 2 conflict fail-closed;
+      # finding 3 verified-only export; non-blocking stale docstring) and their tests.
+      - adapters/python/openva_vendor_inventory_matcher/openva_vendor_inventory_matcher/core.py
+      - tools/openva/agent_export.py
+      - integrations/mcp/openva_mcp/openva_mcp/matching.py
+      - tests/test_agent_export.py
+      # CI enforcement of the scope guard (finding 1/4).
+      - .github/workflows/pr-scope-guard.yml
+      - docs/operations/contracts/workflow-inventory.yaml
 
   WP-OPENVA-AI-NATIVE-DISTRIBUTION-LEGAL-ENTITY:
     description: Legal-entity export projection + shared registration-number matching (the change set bundled into PR #400).

@@ -10,6 +10,14 @@ public_workflows:
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
+  - name: pr-scope-guard.yml
+    loop: pr_safety
+    status: core
+    triggers: [pull_request]
+    permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
   - name: catalog-pr-guard.yml
     loop: pr_safety
     status: core
