@@ -25,15 +25,28 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import json
 import secrets
+import threading
 import uuid
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timedelta
+from functools import lru_cache
+from pathlib import Path
 from typing import Any
+
+import jsonschema
 
 SCHEMA_VERSION = "0.1.0"
 FRESHNESS_MODE_VERIFY = "verify"
+
+# Allowed JOB error_code vocabulary (schemas/openva/hosted-job-record.schema.json
+# `error_code` enum, minus null). Enforced at the transition boundary (defence in
+# depth) AND by the persistence-layer schema validation (the backstop).
+ERROR_CODES = frozenset(
+    {"execution_timeout", "upstream_unavailable", "rate_limited", "internal_error"}
+)
 
 # Non-terminal (active) job states, per hosted-deployment.yaml job_states /
 # terminal_states. Used by active_count() for the optional concurrency cap.
@@ -125,6 +138,18 @@ class JobRecord:
     def is_terminal(self) -> bool:
         return self.state in TERMINAL_STATES
 
+    def to_storage_dict(self) -> dict[str, Any]:
+        """Emit the FAITHFUL raw dataclass field values (no per-state nulling).
+
+        Unlike ``to_record_dict`` (which PROJECTS the nullable fields per state for the
+        poll/schema-shape view), this dumps exactly what is stored, including ``version``
+        and the raw lease/ref/error fields. The persistence layer validates THIS dict
+        against the schema's state-dependent invariants BEFORE writing, so a record that
+        violates them (e.g. a terminal record still carrying a raw request_ref, or a
+        received record with a raw lease) is rejected at persistence rather than silently
+        normalised away. The raw job_token is never part of this dict — only the digest."""
+        return asdict(self)
+
     def to_record_dict(self) -> dict[str, Any]:
         """Emit a schema-valid record dict for the current state.
 
@@ -176,6 +201,65 @@ class JobRecord:
             record["lease_expires_at"] = None
 
         return record
+
+
+# --- Schema-enforced persistence boundary -------------------------------------
+
+
+class InvalidRecord(Exception):
+    """A record violates the hosted-job-record schema's state invariants and must NOT be
+    persisted (e.g. a terminal record still carrying a raw request_ref, a received record
+    with a raw lease/result/error, an error_code outside the enum, or a malformed
+    timestamp). Raised by the persistence layer (create/cas_update) on the FAITHFUL
+    serialization, so the durable record can never drift from the schema."""
+
+
+_SCHEMA_PATH = Path(__file__).resolve().parents[3] / "schemas" / "openva" / "hosted-job-record.schema.json"
+
+
+@lru_cache(maxsize=1)
+def _record_validator() -> jsonschema.protocols.Validator:
+    """Build (once) a format-checking validator for the hosted-job-record schema.
+
+    Cached so the schema file is read and compiled a single time per process. The
+    persistence layer validates the FAITHFUL (``to_storage_dict``) record against this
+    BEFORE every write."""
+    schema = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
+    return jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
+
+
+def validate_record_for_persistence(record: JobRecord) -> None:
+    """Validate the record's FAITHFUL serialization against the schema's state invariants.
+
+    Raises ``InvalidRecord`` (wrapping the first jsonschema error message) when the raw
+    record would violate the schema — so the persistence boundary is FAITHFUL (it rejects
+    the bad record) rather than relying on the projected ``to_record_dict`` to hide the
+    violation. Called inside every backend's ``create`` and ``cas_update`` before writing.
+
+    A malformed ``date-time`` field is rejected DETERMINISTICALLY here even though the
+    jsonschema ``date-time`` format check is a no-op without the optional rfc3339-validator
+    package — regulatory-grade determinism must not depend on an optional dependency being
+    installed, so the timestamp fields are explicitly parsed as a backstop."""
+    errors = sorted(_record_validator().iter_errors(record.to_storage_dict()), key=str)
+    if errors:
+        raise InvalidRecord(
+            f"job {record.job_id} violates the hosted-job-record schema: {errors[0].message}"
+        )
+    # Deterministic timestamp backstop (the schema's date-time format check is advisory).
+    for field, value in (
+        ("created_at", record.created_at),
+        ("updated_at", record.updated_at),
+        ("expires_at", record.expires_at),
+        ("lease_expires_at", record.lease_expires_at),
+    ):
+        if value is None:
+            continue
+        try:
+            _parse_iso_z(value)
+        except (ValueError, TypeError) as exc:
+            raise InvalidRecord(
+                f"job {record.job_id} has a malformed {field}: {value!r}"
+            ) from exc
 
 
 # --- Store interfaces + in-memory (non-durable) implementations ---------------
@@ -257,46 +341,66 @@ class InMemoryJobStore(JobStore):
 
     def __init__(self) -> None:
         self._records: dict[str, JobRecord] = {}
+        # A reentrant lock makes the read-check-write of cas_update atomic across threads,
+        # so exactly one of two concurrent cas_update calls at the same expected_version
+        # wins (mirroring the SQLite backend's WHERE version=? + rowcount semantics). All
+        # public methods take it so a sweep/enumeration never observes a torn write.
+        self._lock = threading.RLock()
 
     def create(self, record: JobRecord) -> None:
-        # Store a snapshot copy so the caller's reference cannot mutate the stored
-        # record without going through cas_update (mirrors a durable backend, where the
-        # in-process object is never the stored row).
-        self._records[record.job_id] = replace(record)
+        # Reject a schema-invalid record at the persistence boundary BEFORE storing it
+        # (Blocker 4: the durable record can never drift from the schema's state
+        # invariants — terminal w/ request_ref, received w/ lease, bad error_code, etc.).
+        validate_record_for_persistence(record)
+        with self._lock:
+            # Store a snapshot copy so the caller's reference cannot mutate the stored
+            # record without going through cas_update (mirrors a durable backend, where
+            # the in-process object is never the stored row).
+            self._records[record.job_id] = replace(record)
 
     def get(self, job_id: str) -> JobRecord | None:
-        stored = self._records.get(job_id)
-        # Hand back a fresh copy so mutations by the caller do not retroactively change
-        # the stored row except through cas_update (the version-CAS gate).
-        return replace(stored) if stored is not None else None
+        with self._lock:
+            stored = self._records.get(job_id)
+            # Hand back a fresh copy so mutations by the caller do not retroactively
+            # change the stored row except through cas_update (the version-CAS gate).
+            return replace(stored) if stored is not None else None
 
     def cas_update(self, record: JobRecord, expected_version: int) -> bool:
-        stored = self._records.get(record.job_id)
-        if stored is None or stored.version != expected_version:
-            return False
-        self._records[record.job_id] = replace(record)
-        return True
+        # Validate OUTSIDE the lock (pure function of the record) to keep the critical
+        # section to the read-check-write; an invalid record is rejected regardless of
+        # the CAS outcome.
+        validate_record_for_persistence(record)
+        with self._lock:
+            stored = self._records.get(record.job_id)
+            if stored is None or stored.version != expected_version:
+                return False
+            self._records[record.job_id] = replace(record)
+            return True
 
     def active_count(self) -> int:
-        return sum(1 for record in self._records.values() if not record.is_terminal())
+        with self._lock:
+            return sum(1 for record in self._records.values() if not record.is_terminal())
 
     def iter_records(self) -> list[JobRecord]:
-        return [replace(record) for record in self._records.values()]
+        with self._lock:
+            return [replace(record) for record in self._records.values()]
 
     def expired_request_refs(self, now: datetime) -> list[str]:
-        return [
-            record.request_ref
-            for record in self._records.values()
-            if record.request_ref is not None and now >= _parse_iso_z(record.expires_at)
-        ]
+        with self._lock:
+            return [
+                record.request_ref
+                for record in self._records.values()
+                if record.request_ref is not None and now >= _parse_iso_z(record.expires_at)
+            ]
 
     def purge_expired(self, now: datetime, retained_window: timedelta) -> list[JobRecord]:
-        purged: list[JobRecord] = []
-        for job_id, record in list(self._records.items()):
-            if now >= _parse_iso_z(record.expires_at) + retained_window:
-                del self._records[job_id]
-                purged.append(record)
-        return purged
+        with self._lock:
+            purged: list[JobRecord] = []
+            for job_id, record in list(self._records.items()):
+                if now >= _parse_iso_z(record.expires_at) + retained_window:
+                    del self._records[job_id]
+                    purged.append(record)
+            return purged
 
 
 class RequestEnvelopeStore(ABC):
@@ -310,13 +414,26 @@ class RequestEnvelopeStore(ABC):
     queue (which carries job_id only)."""
 
     @abstractmethod
-    def put(self, ref: str, envelope: Any) -> None: ...
+    def put(self, ref: str, envelope: Any, expires_at: str) -> None:
+        """Store ``envelope`` under ``ref`` with an ISO-8601 Z ``expires_at``.
+
+        The blob carries its OWN expiry so it is lifecycle-addressable independently of any
+        surviving job record: ``purge_expired`` reaps it even when no record references it
+        (the after-envelope-before-job and skipped-delete crash points)."""
+        ...
 
     @abstractmethod
     def get(self, ref: str) -> Any | None: ...
 
     @abstractmethod
     def delete(self, ref: str) -> None: ...
+
+    @abstractmethod
+    def purge_expired(self, now: datetime) -> list[str]:
+        """Delete and return every ref whose ``expires_at <= now``, INDEPENDENT of any job
+        record. This is the orphan-blob backstop: a blob written before its job record (or
+        whose record-pointer delete was skipped) is still reaped by its own expiry."""
+        ...
 
 
 class InMemoryRequestEnvelopeStore(RequestEnvelopeStore):
@@ -325,16 +442,34 @@ class InMemoryRequestEnvelopeStore(RequestEnvelopeStore):
     deployment/infra concern (WP-02F/G)."""
 
     def __init__(self) -> None:
-        self._envelopes: dict[str, Any] = {}
+        # ref -> (value, expires_at). The lock makes put/get/delete/purge_expired atomic
+        # across threads (Blocker 5), matching the durable backend's single-writer file lock.
+        self._envelopes: dict[str, tuple[Any, str]] = {}
+        self._lock = threading.RLock()
 
-    def put(self, ref: str, envelope: Any) -> None:
-        self._envelopes[ref] = envelope
+    def put(self, ref: str, envelope: Any, expires_at: str) -> None:
+        with self._lock:
+            self._envelopes[ref] = (envelope, expires_at)
 
     def get(self, ref: str) -> Any | None:
-        return self._envelopes.get(ref)
+        with self._lock:
+            entry = self._envelopes.get(ref)
+            return entry[0] if entry is not None else None
 
     def delete(self, ref: str) -> None:
-        self._envelopes.pop(ref, None)
+        with self._lock:
+            self._envelopes.pop(ref, None)
+
+    def purge_expired(self, now: datetime) -> list[str]:
+        with self._lock:
+            reaped = [
+                ref
+                for ref, (_value, expires_at) in self._envelopes.items()
+                if _parse_iso_z(expires_at) <= now
+            ]
+            for ref in reaped:
+                del self._envelopes[ref]
+            return reaped
 
 
 class ResultStore(ABC):
@@ -342,7 +477,13 @@ class ResultStore(ABC):
     durable/TTL backend behind this interface."""
 
     @abstractmethod
-    def put(self, ref: str, result: Any) -> None: ...
+    def put(self, ref: str, result: Any, expires_at: str) -> None:
+        """Store ``result`` under ``ref`` with an ISO-8601 Z ``expires_at``.
+
+        Like the envelope store, the result blob carries its OWN expiry so it can be reaped
+        independently of the terminal job record that references it (the result-written-
+        before-the-terminal-CAS crash point)."""
+        ...
 
     @abstractmethod
     def get(self, ref: str) -> Any | None: ...
@@ -350,22 +491,45 @@ class ResultStore(ABC):
     @abstractmethod
     def delete(self, ref: str) -> None: ...
 
+    @abstractmethod
+    def purge_expired(self, now: datetime) -> list[str]:
+        """Delete and return every ref whose ``expires_at <= now``, INDEPENDENT of any job
+        record (orphan-result backstop)."""
+        ...
+
 
 class InMemoryResultStore(ResultStore):
     """In-memory, NON-DURABLE, transient result-blob store. The durable, TTL
     backend is WP-02B."""
 
     def __init__(self) -> None:
-        self._results: dict[str, Any] = {}
+        # ref -> (value, expires_at); lock makes the operations atomic across threads.
+        self._results: dict[str, tuple[Any, str]] = {}
+        self._lock = threading.RLock()
 
-    def put(self, ref: str, result: Any) -> None:
-        self._results[ref] = result
+    def put(self, ref: str, result: Any, expires_at: str) -> None:
+        with self._lock:
+            self._results[ref] = (result, expires_at)
 
     def get(self, ref: str) -> Any | None:
-        return self._results.get(ref)
+        with self._lock:
+            entry = self._results.get(ref)
+            return entry[0] if entry is not None else None
 
     def delete(self, ref: str) -> None:
-        self._results.pop(ref, None)
+        with self._lock:
+            self._results.pop(ref, None)
+
+    def purge_expired(self, now: datetime) -> list[str]:
+        with self._lock:
+            reaped = [
+                ref
+                for ref, (_value, expires_at) in self._results.items()
+                if _parse_iso_z(expires_at) <= now
+            ]
+            for ref in reaped:
+                del self._results[ref]
+            return reaped
 
 
 # --- Expiry / purge coordination ----------------------------------------------
@@ -401,7 +565,14 @@ def purge_expired_jobs(
 
     In production the store-native TTL + object-lifecycle does both; the SQLite reference
     backend (sqlite_stores.py) demonstrates the same semantics durably. Returns the
-    job_ids physically deleted in phase 3."""
+    job_ids physically deleted in phase 3.
+
+    ORPHAN SWEEP (Blocker 1): the blob stores are reaped by their OWN ``expires_at`` too,
+    independent of any surviving job record. This reaps the crash-window orphans the
+    record-driven deletes above can never reach: an envelope written before its job record
+    was created; a result written before the terminal CAS referenced it; an envelope whose
+    in-record pointer was cleared but whose physical delete was skipped. Each blob carries
+    its expiry, so this runs regardless of whether a record points at it."""
     # Phase 2: minimise expired-but-retained input (delete the envelope at TTL).
     for ref in jobs.expired_request_refs(now):
         envelopes.delete(ref)
@@ -412,6 +583,10 @@ def purge_expired_jobs(
             envelopes.delete(record.request_ref)
         if record.result_ref is not None:
             results.delete(record.result_ref)
+    # Orphan sweep: reap any envelope/result blob past its own expires_at, even with no
+    # referencing record (the create-before-record and skipped-delete crash points).
+    envelopes.purge_expired(now)
+    results.purge_expired(now)
     return [record.job_id for record in purged]
 
 

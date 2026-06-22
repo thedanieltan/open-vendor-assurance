@@ -317,7 +317,9 @@ def test_completed_job_poll_returns_result():
             expires_at=_iso_z(now + timedelta(hours=1)),
         )
         client.app.state.verify_jobs.create(record)
-        client.app.state.verify_results.put(result_ref, {"rows": [{"status": "ok"}]})
+        client.app.state.verify_results.put(
+            result_ref, {"rows": [{"status": "ok"}]}, _iso_z(now + timedelta(hours=1))
+        )
         response = client.get(
             f"/v1/verify/{record.job_id}",
             headers={"Authorization": f"Bearer {token}"},
@@ -561,8 +563,9 @@ def test_verify_create_does_not_retain_submitted_identities():
 
     assert secret_name not in serialized
     assert secret_domain not in serialized
-    # The minimised envelope retains only row_count (no identities, no raw rows).
-    assert list(envelopes._envelopes.values()) == [{"row_count": 1}]
+    # The minimised envelope retains only row_count (no identities, no raw rows). The
+    # in-memory store keeps (value, expires_at) tuples, so unwrap the value for the check.
+    assert [value for value, _expires_at in envelopes._envelopes.values()] == [{"row_count": 1}]
     # The job record still carries its non-null request_ref (schema requires it for
     # `received`) and the row_count, but no identity content.
     assert job_records and job_records[0]["request_ref"] is not None
@@ -594,19 +597,21 @@ def test_expired_retained_then_physically_deleted_lifecycle():
             expires_at=_iso_z(now - timedelta(minutes=5)),
         )
         jobs.create(retained)
-        envelopes.put(retained_ref, {"row_count": 1})
+        envelopes.put(retained_ref, {"row_count": 1}, _iso_z(now - timedelta(minutes=5)))
 
-        # (b) Deleted: expired older than expires_at + VERIFY_RETAINED_WINDOW. Carry BOTH
-        # a request_ref and a result_ref so the purge is shown to delete the record AND
-        # both its referenced transient blobs (the helper reads the refs off the record).
+        # (b) Deleted: expired older than expires_at + VERIFY_RETAINED_WINDOW. A COMPLETED
+        # record legitimately carries a result_ref (request_ref nulled on terminalization),
+        # so the phase-3 purge deletes the record + its result blob via the record pointer.
+        # The matching envelope (orphaned: its in-record pointer was already cleared on
+        # completion) is reaped by its OWN expires_at via the orphan sweep (Blocker 1).
         deleted_token = new_job_token()
         deleted_ref = new_ref()
         deleted_result_ref = new_ref()
         deleted = JobRecord(
             job_id=new_job_id(),
             job_token_digest=token_digest(deleted_token),
-            state="received",
-            request_ref=deleted_ref,
+            state="completed",
+            request_ref=None,
             result_ref=deleted_result_ref,
             row_count=1,
             created_at=_iso_z(now - timedelta(hours=5)),
@@ -614,8 +619,11 @@ def test_expired_retained_then_physically_deleted_lifecycle():
             expires_at=_iso_z(now - timedelta(hours=VERIFY_RETAINED_WINDOW_HOURS, minutes=5)),
         )
         jobs.create(deleted)
-        envelopes.put(deleted_ref, {"row_count": 1})
-        results.put(deleted_result_ref, {"rows": [{"status": "ok"}]})
+        deleted_expiry = _iso_z(now - timedelta(hours=VERIFY_RETAINED_WINDOW_HOURS, minutes=5))
+        # The envelope blob still physically exists (delete-pointer cleared, blob not yet
+        # reaped) and carries its own expiry — the orphan sweep deletes it independently.
+        envelopes.put(deleted_ref, {"row_count": 1}, deleted_expiry)
+        results.put(deleted_result_ref, {"rows": [{"status": "ok"}]}, deleted_expiry)
 
         retained_resp = client.get(
             f"/v1/verify/{retained.job_id}",

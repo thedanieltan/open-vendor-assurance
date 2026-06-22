@@ -325,8 +325,12 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
         # ADR-0001 boundary 4 (transient unpublished inputs). The durable, encrypted,
         # TTL-deleted request envelope holding the actual input arrives in WP-02B.
         # request_ref is still generated and set on the record (the schema requires a
-        # non-null request_ref for `received`) and points at this minimised envelope.
-        envelopes.put(request_ref, {"row_count": len(payload.rows)})
+        # non-null request_ref for `received`) and points at this minimised envelope. The
+        # envelope carries the job's own expires_at so it is reaped independently of the
+        # record even if the process crashes after this put but before jobs.create below
+        # (the after-envelope-before-job crash point); see purge_expired_jobs' orphan sweep.
+        expires_at_iso = _iso_z(expires_at)
+        envelopes.put(request_ref, {"row_count": len(payload.rows)}, expires_at_iso)
 
         record = JobRecord(
             job_id=job_id,
@@ -336,7 +340,7 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
             row_count=len(payload.rows),
             created_at=_iso_z(now),
             updated_at=_iso_z(now),
-            expires_at=_iso_z(expires_at),
+            expires_at=expires_at_iso,
         )
         jobs.create(record)
 

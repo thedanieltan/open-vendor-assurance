@@ -28,6 +28,8 @@ from openva_match_service import job_lifecycle as jl  # noqa: E402
 from openva_match_service.job_lifecycle import (  # noqa: E402
     Actor,
     IllegalTransition,
+    InvalidErrorCode,
+    InvalidLease,
     LifecycleError,
     LivePreemption,
     StaleVersion,
@@ -55,6 +57,7 @@ from openva_match_service.verify_transport import (  # noqa: E402
     InMemoryJobStore,
     InMemoryRequestEnvelopeStore,
     InMemoryResultStore,
+    InvalidRecord,
     JobRecord,
     new_job_id,
     new_job_token,
@@ -105,6 +108,7 @@ def make_received(jobs, envelopes, *, now=None, expires_in=timedelta(hours=24), 
     now = now or _now()
     token = new_job_token()
     request_ref = new_ref()
+    expires_at = _iso(now + expires_in)
     record = JobRecord(
         job_id=new_job_id(),
         job_token_digest=token_digest(token),
@@ -113,10 +117,12 @@ def make_received(jobs, envelopes, *, now=None, expires_in=timedelta(hours=24), 
         row_count=rows,
         created_at=_iso(now),
         updated_at=_iso(now),
-        expires_at=_iso(now + expires_in),
+        expires_at=expires_at,
     )
     jobs.create(record)
-    envelopes.put(request_ref, {"row_count": rows, "rows": [{"vendor_name": "Acme"}]})
+    # The envelope carries the job's own expires_at so it is independently lifecycle-
+    # addressable (Blocker 1): purge_expired reaps it even with no referencing record.
+    envelopes.put(request_ref, {"row_count": rows, "rows": [{"vendor_name": "Acme"}]}, expires_at)
     return record, token
 
 
@@ -334,16 +340,19 @@ def test_expired_lease_redelivery_defers_to_watchdog_not_preempt(stores):
     now = _now()
     record, _ = make_received(jobs, envelopes, now=now)
     queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    # Acquire a lease that is LIVE at acquisition (the acquisition guard requires a strictly
+    # future deadline), then evaluate the redelivery at a LATER `now` where it has gone stale.
     worker_queued_to_executing(
         jobs, record.job_id, queued.version, lease_owner="worker-1",
-        lease_expires_at=_iso(now - timedelta(minutes=1)), now=now,  # already expired
+        lease_expires_at=_iso(now + timedelta(minutes=1)), now=now,
     )
+    later = now + timedelta(minutes=2)  # the worker-1 lease is now expired
     # A redelivery whose record is executing with an EXPIRED lease must NOT preempt; it
     # defers to the watchdog (still LivePreemption from the worker's perspective).
     with pytest.raises(LivePreemption):
         worker_queued_to_executing(
             jobs, record.job_id, queued.version + 1, lease_owner="worker-2",
-            lease_expires_at=_iso(now + timedelta(minutes=5)), now=now,
+            lease_expires_at=_iso(later + timedelta(minutes=5)), now=later,
         )
 
 
@@ -400,7 +409,7 @@ def test_executing_to_completed_deletes_envelope_and_validates(stores):
     )
     # Terminalization order: write result blob first, then CAS, then envelope delete.
     result_ref = new_ref()
-    results.put(result_ref, {"rows": [{"status": "ok"}]})
+    results.put(result_ref, {"rows": [{"status": "ok"}]}, _iso(_now() + timedelta(hours=24)))
     completed = worker_executing_to_completed(
         jobs, envelopes, record.job_id, executing.version, result_ref=result_ref, now=_now()
     )
@@ -466,12 +475,15 @@ def test_watchdog_requeues_stale_lease_with_attempt_increment(stores):
     now = _now()
     record, _ = make_received(jobs, envelopes, now=now)
     queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    # Acquire a live lease, then run the watchdog at a later `now` where it has gone stale
+    # (acquisition requires a strictly-future deadline; staleness is a function of elapsed time).
     executing = worker_queued_to_executing(
         jobs, record.job_id, queued.version, lease_owner="w1",
-        lease_expires_at=_iso(now - timedelta(seconds=1)), now=now,  # stale
+        lease_expires_at=_iso(now + timedelta(seconds=1)), now=now,
     )
     assert executing.attempt == 0
-    requeued = watchdog_executing_to_queued(jobs, record.job_id, executing.version, now=now)
+    later = now + timedelta(seconds=2)  # the lease is now stale
+    requeued = watchdog_executing_to_queued(jobs, record.job_id, executing.version, now=later)
     assert requeued.state == "queued"
     assert requeued.attempt == 1
     assert requeued.lease_owner is None
@@ -487,9 +499,10 @@ def test_watchdog_terminalizes_at_attempt_max(stores):
     queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
     executing = worker_queued_to_executing(
         jobs, record.job_id, queued.version, lease_owner="w1",
-        lease_expires_at=_iso(now - timedelta(seconds=1)), now=now,
+        lease_expires_at=_iso(now + timedelta(seconds=1)), now=now,
     )
-    failed = watchdog_executing_to_failed(jobs, envelopes, record.job_id, executing.version, now=now)
+    later = now + timedelta(seconds=2)  # the lease is now stale
+    failed = watchdog_executing_to_failed(jobs, envelopes, record.job_id, executing.version, now=later)
     assert failed.state == "failed"
     assert failed.error_code == "execution_timeout"
     assert envelopes.get(request_ref) is None
@@ -514,34 +527,42 @@ def test_watchdog_never_touches_a_live_lease(stores):
 def test_recover_stale_leases_sweep(stores):
     jobs, envelopes, _results = stores
     now = _now()
+    # All leases are acquired LIVE (acquisition requires a strictly-future deadline) and the
+    # sweep runs at `later`, by which point A's and B's short leases have gone stale while
+    # C's long lease is still live. `later` stays well inside every job's expires_at (24h),
+    # so the sweep's job-expiry skip (Blocker 3) does not apply here.
+    short = _iso(now + timedelta(seconds=1))
     # job A: stale lease, attempt < max -> re-queued (attempt+1)
     a, _ = make_received(jobs, envelopes, now=now)
     qa = api_received_to_queued(jobs, a.job_id, 0, now=now)
     worker_queued_to_executing(
-        jobs, a.job_id, qa.version, lease_owner="w1", lease_expires_at=_iso(now - timedelta(seconds=1)), now=now
+        jobs, a.job_id, qa.version, lease_owner="w1", lease_expires_at=short, now=now
     )
     # job B: stale lease, attempt already at max -> failed(execution_timeout)
     b, _ = make_received(jobs, envelopes, now=now)
     qb = api_received_to_queued(jobs, b.job_id, 0, now=now)
     eb = worker_queued_to_executing(
-        jobs, b.job_id, qb.version, lease_owner="w1", lease_expires_at=_iso(now - timedelta(seconds=1)), now=now
+        jobs, b.job_id, qb.version, lease_owner="w1", lease_expires_at=short, now=now
     )
-    # Drive attempt up to the max by repeated stale requeue+reexecute is overkill; set it
-    # via a watchdog requeue then re-execute once so attempt==1, and use attempt_max=1.
-    rb = watchdog_executing_to_queued(jobs, b.job_id, eb.version, now=now)  # attempt -> 1
+    # Drive attempt up to the max: a watchdog requeue (at a later instant so the lease is
+    # stale) then re-execute once so attempt==1, and use attempt_max=1.
+    requeue_at = now + timedelta(seconds=2)
+    rb = watchdog_executing_to_queued(jobs, b.job_id, eb.version, now=requeue_at)  # attempt -> 1
     web = worker_queued_to_executing(
-        jobs, b.job_id, rb.version, lease_owner="w1", lease_expires_at=_iso(now - timedelta(seconds=1)), now=now
+        jobs, b.job_id, rb.version, lease_owner="w1",
+        lease_expires_at=_iso(requeue_at + timedelta(seconds=1)), now=requeue_at,
     )
     assert web.attempt == 1
-    # job C: LIVE lease -> untouched
+    # job C: LIVE lease (still live at the sweep instant) -> untouched
     c, _ = make_received(jobs, envelopes, now=now)
     qc = api_received_to_queued(jobs, c.job_id, 0, now=now)
     worker_queued_to_executing(
         jobs, c.job_id, qc.version, lease_owner="w1", lease_expires_at=_iso(now + timedelta(minutes=10)), now=now
     )
 
+    later = now + timedelta(seconds=5)  # A and B leases stale; C still live
     b_ref = jobs.get(b.job_id).request_ref  # capture before terminalization nulls it
-    acted = recover_stale_leases(jobs, envelopes, now, attempt_max=1)
+    acted = recover_stale_leases(jobs, envelopes, later, attempt_max=1)
     assert set(acted) == {a.job_id, b.job_id}
     assert jobs.get(a.job_id).state == "queued" and jobs.get(a.job_id).attempt == 1
     assert jobs.get(b.job_id).state == "failed" and jobs.get(b.job_id).error_code == "execution_timeout"
@@ -594,12 +615,21 @@ def test_recover_undispatched_sweep_is_bounded(stores):
         v = bumped.version
     assert jobs.get(exhausted.job_id).dispatch_attempt == 2
 
-    acted = recover_undispatched(jobs, now, dispatch_max=2, grace=grace)
+    # Injected enqueue succeeds (records the recovery generation it was called with).
+    enqueue_calls: list[tuple[str, int]] = []
+
+    def enqueue(job_id, dispatch_attempt):
+        enqueue_calls.append((job_id, dispatch_attempt))
+        return True
+
+    acted = recover_undispatched(jobs, now, dispatch_max=2, grace=grace, enqueue=enqueue)
     assert acted == [old.job_id]
     assert jobs.get(old.job_id).state == "queued"
     assert jobs.get(old.job_id).dispatch_attempt == 1
     assert jobs.get(fresh.job_id).state == "received"  # still within grace
     assert jobs.get(exhausted.job_id).state == "received"  # exhausted, not re-dispatched
+    # Only the eligible job was enqueued, named with its fresh recovery generation (r1).
+    assert enqueue_calls == [(old.job_id, 1)]
 
 
 # --- Three-phase TTL expiry + terminal deletion -------------------------------
@@ -634,7 +664,7 @@ def test_three_phase_expiry_pre_expiry_retained_then_physical(stores):
         lease_expires_at=_iso(now - timedelta(hours=4)), now=now - timedelta(hours=5),
     )
     deleted_result_ref = new_ref()
-    results.put(deleted_result_ref, {"rows": []})
+    results.put(deleted_result_ref, {"rows": []}, _iso(now - timedelta(hours=2)))
     dc = worker_executing_to_completed(
         jobs, envelopes, deleted.job_id, de.version, result_ref=deleted_result_ref, now=now - timedelta(hours=5)
     )
@@ -686,7 +716,7 @@ def test_sqlite_round_trips_record_envelope_result(tmp_path):
     assert fetched.job_token_digest == token_digest(token)
     assert fetched.version == 0
     assert envelopes.get(record.request_ref)["rows"][0]["vendor_name"] == "Acme"
-    results.put("result/1", {"ok": True})
+    results.put("result/1", {"ok": True}, _iso(_now() + timedelta(hours=24)))
     assert results.get("result/1") == {"ok": True}
     # Round-trips through to_record_dict + schema.
     _validate(fetched)
@@ -697,12 +727,17 @@ def test_sqlite_version_cas_rejects_stale_update(tmp_path):
 
     jobs, envelopes, _results = _sqlite_stores(tmp_path)
     record, _ = make_received(jobs, envelopes)
-    # A CAS at the correct version wins; the same expected_version then loses.
+    # A CAS at the correct version wins; the same (now stale) expected_version then loses.
+    # Both target records are schema-VALID (queued preserves request_ref, no lease) so the
+    # CAS-version check — not the persistence validation — is what decides win vs lose.
     won = jobs.cas_update(dataclasses.replace(record, state="queued", version=1), 0)
     assert won is True
-    lost = jobs.cas_update(dataclasses.replace(record, state="failed", version=1), 0)
+    lost = jobs.cas_update(
+        dataclasses.replace(record, state="queued", row_count=2, version=1), 0
+    )
     assert lost is False
     assert jobs.get(record.job_id).state == "queued"
+    assert jobs.get(record.job_id).row_count == record.row_count  # losing write did not land
 
 
 def test_sqlite_durable_across_reopen(tmp_path):
@@ -731,7 +766,7 @@ def test_sqlite_full_lifecycle_matches_in_memory(tmp_path):
         lease_expires_at=_iso(now + timedelta(minutes=5)), now=now,
     )
     result_ref = new_ref()
-    results.put(result_ref, {"rows": [{"status": "ok"}]})
+    results.put(result_ref, {"rows": [{"status": "ok"}]}, _iso(now + timedelta(hours=24)))
     completed = worker_executing_to_completed(
         jobs, envelopes, record.job_id, executing.version, result_ref=result_ref, now=now
     )
@@ -760,5 +795,507 @@ def test_identities_never_appear_in_the_job_record(stores):
 
 
 def test_lifecycle_error_hierarchy():
-    for exc in (IllegalTransition, UnauthorizedActor, StaleVersion, LivePreemption):
+    for exc in (
+        IllegalTransition,
+        UnauthorizedActor,
+        StaleVersion,
+        LivePreemption,
+        InvalidLease,
+        InvalidErrorCode,
+    ):
         assert issubclass(exc, LifecycleError)
+
+
+# =============================================================================
+# Blocker remediation tests (PR #410 protocol-correctness)
+# =============================================================================
+
+import dataclasses  # noqa: E402
+import threading  # noqa: E402
+
+
+# --- Blocker 1: independent orphan blob cleanup (envelope + result) ------------
+
+
+def test_orphan_envelope_with_no_job_record_is_reaped(stores):
+    """(a) An envelope written but whose job record was never created (the
+    after-envelope-before-job crash point) is reaped by its OWN expires_at via
+    purge_expired — independent of any record."""
+    jobs, envelopes, results = stores
+    now = _now()
+    orphan_ref = new_ref()
+    envelopes.put(orphan_ref, {"row_count": 1}, _iso(now - timedelta(minutes=1)))  # already expired
+    assert envelopes.get(orphan_ref) is not None
+    # No job record references this envelope at all.
+    assert jobs.iter_records() == []
+    reaped = envelopes.purge_expired(now)
+    assert orphan_ref in reaped
+    assert envelopes.get(orphan_ref) is None
+    # A not-yet-expired orphan survives the same sweep.
+    live_ref = new_ref()
+    envelopes.put(live_ref, {"row_count": 1}, _iso(now + timedelta(hours=1)))
+    assert envelopes.purge_expired(now) == []
+    assert envelopes.get(live_ref) is not None
+
+
+def test_orphan_result_with_no_referencing_record_is_reaped(stores):
+    """(b) A result blob written before any terminal record references it is reaped by its
+    own expires_at, independent of a record."""
+    jobs, envelopes, results = stores
+    now = _now()
+    orphan_result = new_ref()
+    results.put(orphan_result, {"rows": []}, _iso(now - timedelta(minutes=1)))
+    assert results.get(orphan_result) is not None
+    reaped = results.purge_expired(now)
+    assert orphan_result in reaped
+    assert results.get(orphan_result) is None
+
+
+def test_terminal_record_skipped_envelope_delete_orphan_still_reaped(stores):
+    """(c) A record is terminalized (request_ref cleared) but the physical envelope delete
+    was SKIPPED (worker crashed between the CAS and the delete). The orphan envelope has no
+    in-record pointer, yet purge_expired_jobs' orphan sweep still reaps it by its own
+    expires_at."""
+    jobs, envelopes, results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now)
+    skipped_ref = record.request_ref
+    # Re-seed the envelope's expiry to the job's expiry so it is past-TTL at `now+later`.
+    envelopes.put(skipped_ref, {"row_count": 1}, _iso(now - timedelta(minutes=1)))
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    executing = worker_queued_to_executing(
+        jobs, record.job_id, queued.version, lease_owner="w1",
+        lease_expires_at=_iso(now + timedelta(minutes=5)), now=now,
+    )
+    result_ref = new_ref()
+    results.put(result_ref, {"rows": []}, _iso(now + timedelta(hours=24)))
+    # Terminalize via a CAS that clears request_ref but DO NOT delete the physical envelope
+    # (simulate the skipped/ failed delete). We CAS directly to a valid completed record.
+    completed = dataclasses.replace(
+        executing,
+        state="completed",
+        request_ref=None,
+        result_ref=result_ref,
+        lease_owner=None,
+        lease_expires_at=None,
+        error_code=None,
+        version=executing.version + 1,
+    )
+    assert jobs.cas_update(completed, executing.version) is True
+    # The record no longer points at the envelope, yet the physical blob is still present.
+    assert jobs.get(record.job_id).request_ref is None
+    assert envelopes.get(skipped_ref) is not None
+    # The orphan sweep inside purge_expired_jobs reaps it by its OWN expires_at.
+    purge_expired_jobs(jobs, envelopes, results, now, timedelta(hours=1))
+    assert envelopes.get(skipped_ref) is None
+
+
+# --- Blocker 2: reconciler two-phase dispatch (no queued without an enqueue) ----
+
+
+def test_recover_undispatched_enqueue_success_moves_to_queued(stores):
+    jobs, envelopes, _results = stores
+    now = _now()
+    grace = timedelta(minutes=1)
+    job, _ = make_received(jobs, envelopes, now=now - timedelta(minutes=10))
+    calls: list[tuple[str, int]] = []
+
+    def enqueue(job_id, dispatch_attempt):
+        calls.append((job_id, dispatch_attempt))
+        return True
+
+    acted = recover_undispatched(jobs, now, dispatch_max=10, grace=grace, enqueue=enqueue)
+    assert acted == [job.job_id]
+    stored = jobs.get(job.job_id)
+    assert stored.state == "queued"
+    assert stored.dispatch_attempt == 1  # bumped before the enqueue
+    assert calls == [(job.job_id, 1)]
+
+
+def test_recover_undispatched_enqueue_failure_stays_received(stores):
+    """A False return from enqueue must leave the record `received` (recoverable) with the
+    dispatch_attempt bumped — NEVER queued."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    grace = timedelta(minutes=1)
+    job, _ = make_received(jobs, envelopes, now=now - timedelta(minutes=10))
+
+    def enqueue(job_id, dispatch_attempt):
+        return False  # enqueue failed
+
+    acted = recover_undispatched(jobs, now, dispatch_max=10, grace=grace, enqueue=enqueue)
+    assert acted == []
+    stored = jobs.get(job.job_id)
+    assert stored.state == "received"  # NOT queued
+    assert stored.dispatch_attempt == 1  # the generation bump persists for the next sweep
+
+
+def test_recover_undispatched_enqueue_raising_stays_received(stores):
+    """A RAISING enqueue is also a failure: the record stays `received`, never queued."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    grace = timedelta(minutes=1)
+    job, _ = make_received(jobs, envelopes, now=now - timedelta(minutes=10))
+
+    def enqueue(job_id, dispatch_attempt):
+        raise RuntimeError("queue unavailable")
+
+    acted = recover_undispatched(jobs, now, dispatch_max=10, grace=grace, enqueue=enqueue)
+    assert acted == []
+    stored = jobs.get(job.job_id)
+    assert stored.state == "received"
+    assert stored.dispatch_attempt == 1
+
+
+def test_recover_undispatched_enqueue_never_called_when_exhausted(stores):
+    """A job at dispatch_max is not enqueued and is not moved to queued."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    grace = timedelta(minutes=1)
+    job, _ = make_received(jobs, envelopes, now=now - timedelta(minutes=10))
+    v = jobs.get(job.job_id).version
+    for _ in range(2):
+        bumped = increment_dispatch_attempt(jobs, job.job_id, v, now=now)
+        v = bumped.version
+    calls: list[tuple[str, int]] = []
+
+    def enqueue(job_id, dispatch_attempt):
+        calls.append((job_id, dispatch_attempt))
+        return True
+
+    acted = recover_undispatched(jobs, now, dispatch_max=2, grace=grace, enqueue=enqueue)
+    assert acted == []
+    assert calls == []  # exhausted -> enqueue never attempted
+    assert jobs.get(job.job_id).state == "received"
+
+
+def test_recover_undispatched_concurrent_reconcilers_one_wins(stores):
+    """Two reconcilers sweeping the same stuck job: exactly one wins a generation; the loser
+    sees StaleVersion on the dispatch_attempt CAS and is skipped (no enqueue, no flip)."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    grace = timedelta(minutes=1)
+    job, _ = make_received(jobs, envelopes, now=now - timedelta(minutes=10))
+
+    def enqueue(job_id, dispatch_attempt):
+        return True
+
+    # Both reconcilers enumerate the SAME version-0 snapshot, then race the CAS. Run them
+    # sequentially against the shared store: the first wins (received->queued), the second
+    # finds the job no longer `received` (or version-advanced) and acts on nothing.
+    acted_a = recover_undispatched(jobs, now, dispatch_max=10, grace=grace, enqueue=enqueue)
+    acted_b = recover_undispatched(jobs, now, dispatch_max=10, grace=grace, enqueue=enqueue)
+    assert acted_a == [job.job_id]
+    assert acted_b == []  # the job already left `received`
+    assert jobs.get(job.job_id).state == "queued"
+    assert jobs.get(job.job_id).dispatch_attempt == 1  # exactly one generation bump
+
+
+# --- Blocker 3: lease + job-expiry guards --------------------------------------
+
+
+def test_acquire_lease_rejects_non_future_deadline(stores):
+    jobs, envelopes, _results = stores
+    now = _now()
+    # Expired deadline.
+    a, _ = make_received(jobs, envelopes, now=now)
+    qa = api_received_to_queued(jobs, a.job_id, 0, now=now)
+    with pytest.raises(InvalidLease):
+        worker_queued_to_executing(
+            jobs, a.job_id, qa.version, lease_owner="w1",
+            lease_expires_at=_iso(now - timedelta(seconds=1)), now=now,
+        )
+    # Exactly now (not STRICTLY future) is rejected.
+    with pytest.raises(InvalidLease):
+        worker_queued_to_executing(
+            jobs, a.job_id, qa.version, lease_owner="w1",
+            lease_expires_at=_iso(now), now=now,
+        )
+    # Malformed deadline is rejected.
+    with pytest.raises(InvalidLease):
+        worker_queued_to_executing(
+            jobs, a.job_id, qa.version, lease_owner="w1",
+            lease_expires_at="not-a-timestamp", now=now,
+        )
+    # The job is still queued (no partial acquisition landed).
+    assert jobs.get(a.job_id).state == "queued"
+
+
+def test_heartbeat_rejects_expired_lease(stores):
+    """An already-expired lease cannot be revived by a heartbeat."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now)
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    executing = worker_queued_to_executing(
+        jobs, record.job_id, queued.version, lease_owner="w1",
+        lease_expires_at=_iso(now + timedelta(seconds=1)), now=now,
+    )
+    later = now + timedelta(seconds=2)  # the lease is now expired
+    with pytest.raises(InvalidLease):
+        worker_heartbeat(
+            jobs, record.job_id, executing.version, lease_owner="w1",
+            new_lease_expires_at=_iso(later + timedelta(minutes=5)), now=later,
+        )
+
+
+def test_heartbeat_rejects_non_advancing_deadline(stores):
+    """A heartbeat must push the deadline strictly forward past both now and the existing
+    deadline: an earlier/equal/past-dated new deadline is rejected."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now)
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    existing_deadline = now + timedelta(minutes=5)
+    executing = worker_queued_to_executing(
+        jobs, record.job_id, queued.version, lease_owner="w1",
+        lease_expires_at=_iso(existing_deadline), now=now,
+    )
+    # Equal to the existing deadline -> rejected (no extension).
+    with pytest.raises(InvalidLease):
+        worker_heartbeat(
+            jobs, record.job_id, executing.version, lease_owner="w1",
+            new_lease_expires_at=_iso(existing_deadline), now=now,
+        )
+    # Earlier than the existing deadline (shortening) -> rejected.
+    with pytest.raises(InvalidLease):
+        worker_heartbeat(
+            jobs, record.job_id, executing.version, lease_owner="w1",
+            new_lease_expires_at=_iso(existing_deadline - timedelta(minutes=1)), now=now,
+        )
+    # In the past relative to now -> rejected.
+    with pytest.raises(InvalidLease):
+        worker_heartbeat(
+            jobs, record.job_id, executing.version, lease_owner="w1",
+            new_lease_expires_at=_iso(now - timedelta(minutes=1)), now=now,
+        )
+    # Malformed -> rejected.
+    with pytest.raises(InvalidLease):
+        worker_heartbeat(
+            jobs, record.job_id, executing.version, lease_owner="w1",
+            new_lease_expires_at="garbage", now=now,
+        )
+
+
+def test_heartbeat_owner_strictly_later_deadline_ok(stores):
+    """The owner heartbeating a LIVE lease with a strictly-later deadline succeeds."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now)
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    executing = worker_queued_to_executing(
+        jobs, record.job_id, queued.version, lease_owner="w1",
+        lease_expires_at=_iso(now + timedelta(minutes=1)), now=now,
+    )
+    new_deadline = _iso(now + timedelta(minutes=10))
+    extended = worker_heartbeat(
+        jobs, record.job_id, executing.version, lease_owner="w1",
+        new_lease_expires_at=new_deadline, now=now,
+    )
+    assert extended.lease_expires_at == new_deadline
+    assert extended.version == executing.version + 1
+    _validate(extended)
+
+
+def test_recovery_sweeps_skip_jobs_past_expires_at(stores):
+    """A record past its own expires_at is skipped by BOTH recovery sweeps — recovery must
+    not resurrect an expired job; time-based expiry/purge owns it."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    # An executing job with a stale lease BUT past its expires_at: the stale-lease sweep
+    # skips it.
+    stale_expired, _ = make_received(jobs, envelopes, now=now - timedelta(hours=2), expires_in=timedelta(hours=1))
+    qse = api_received_to_queued(jobs, stale_expired.job_id, 0, now=now - timedelta(hours=2))
+    worker_queued_to_executing(
+        jobs, stale_expired.job_id, qse.version, lease_owner="w1",
+        lease_expires_at=_iso(now - timedelta(minutes=30)), now=now - timedelta(hours=2),
+    )
+    # now (the sweep instant) is past expires_at (= created + 1h).
+    assert now >= _parse_iso(jobs.get(stale_expired.job_id).expires_at)
+    acted_leases = recover_stale_leases(jobs, envelopes, now, attempt_max=5)
+    assert stale_expired.job_id not in acted_leases
+    assert jobs.get(stale_expired.job_id).state == "executing"  # untouched
+
+    # A received job older than grace BUT past its expires_at: the dispatch sweep skips it.
+    recv_expired, _ = make_received(
+        jobs, envelopes, now=now - timedelta(hours=2), expires_in=timedelta(hours=1)
+    )
+    enqueue_calls: list[str] = []
+
+    def enqueue(job_id, dispatch_attempt):
+        enqueue_calls.append(job_id)
+        return True
+
+    acted_dispatch = recover_undispatched(
+        jobs, now, dispatch_max=10, grace=timedelta(minutes=1), enqueue=enqueue
+    )
+    assert recv_expired.job_id not in acted_dispatch
+    assert recv_expired.job_id not in enqueue_calls  # enqueue not even attempted
+    assert jobs.get(recv_expired.job_id).state == "received"
+
+
+def _parse_iso(value: str) -> datetime:
+    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+# --- Blocker 4: schema-enforced persistence boundary (faithful, not projected) -
+
+
+def _valid_received(now=None) -> JobRecord:
+    now = now or _now()
+    return JobRecord(
+        job_id=new_job_id(),
+        job_token_digest=token_digest(new_job_token()),
+        state="received",
+        request_ref=new_ref(),
+        row_count=1,
+        created_at=_iso(now),
+        updated_at=_iso(now),
+        expires_at=_iso(now + timedelta(hours=24)),
+    )
+
+
+def test_create_rejects_terminal_record_still_carrying_request_ref(stores):
+    """A completed record that still carries a RAW request_ref violates the schema's
+    terminal invariant and is rejected at persistence (the faithful serializer is validated,
+    not the state-normalised projection)."""
+    jobs, _envelopes, _results = stores
+    bad = dataclasses.replace(
+        _valid_received(), state="completed", result_ref=new_ref()
+    )  # request_ref still set (raw)
+    assert bad.request_ref is not None
+    with pytest.raises(InvalidRecord):
+        jobs.create(bad)
+
+
+def test_create_rejects_received_record_with_a_raw_lease(stores):
+    """A received record carrying a raw lease is rejected at persistence."""
+    jobs, _envelopes, _results = stores
+    bad = dataclasses.replace(
+        _valid_received(), lease_owner="w1", lease_expires_at=_iso(_now() + timedelta(minutes=5))
+    )
+    with pytest.raises(InvalidRecord):
+        jobs.create(bad)
+
+
+def test_create_rejects_arbitrary_error_code(stores):
+    """An error_code outside the schema enum is rejected at persistence."""
+    jobs, _envelopes, _results = stores
+    bad = dataclasses.replace(
+        _valid_received(),
+        state="failed",
+        request_ref=None,
+        result_ref=None,
+        error_code="teapot",  # not in the enum
+    )
+    with pytest.raises(InvalidRecord):
+        jobs.create(bad)
+
+
+def test_create_rejects_malformed_timestamp(stores):
+    """A malformed date-time field is rejected at persistence."""
+    jobs, _envelopes, _results = stores
+    bad = dataclasses.replace(_valid_received(), created_at="not-a-date")
+    with pytest.raises(InvalidRecord):
+        jobs.create(bad)
+
+
+def test_cas_update_rejects_invalid_record(stores):
+    """cas_update applies the SAME persistence validation as create: a CAS that would write
+    a schema-invalid record (terminal w/ request_ref) is rejected, not silently normalised."""
+    jobs, envelopes, _results = stores
+    record, _ = make_received(jobs, envelopes)
+    bad = dataclasses.replace(
+        record, state="completed", result_ref=new_ref(), version=record.version + 1
+    )  # request_ref still set
+    with pytest.raises(InvalidRecord):
+        jobs.cas_update(bad, record.version)
+    # The stored record is unchanged (still the valid received record).
+    assert jobs.get(record.job_id).state == "received"
+
+
+def test_transition_helpers_reject_error_code_outside_enum(stores):
+    """Defence in depth: the transition helpers reject a bad error_code at the boundary
+    (InvalidErrorCode) before any persistence."""
+    jobs, envelopes, _results = stores
+    record, _ = make_received(jobs, envelopes)
+    with pytest.raises(InvalidErrorCode):
+        api_received_to_failed(
+            jobs, envelopes, record.job_id, 0, error_code="teapot", now=_now()
+        )
+    # The job is untouched.
+    assert jobs.get(record.job_id).state == "received"
+
+
+def test_valid_transition_still_round_trips(stores):
+    """A valid lifecycle transition still persists and round-trips (the validation is a
+    backstop, not a regression to the happy path)."""
+    jobs, envelopes, results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now)
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    executing = worker_queued_to_executing(
+        jobs, record.job_id, queued.version, lease_owner="w1",
+        lease_expires_at=_iso(now + timedelta(minutes=5)), now=now,
+    )
+    result_ref = new_ref()
+    results.put(result_ref, {"rows": [{"status": "ok"}]}, _iso(now + timedelta(hours=24)))
+    completed = worker_executing_to_completed(
+        jobs, envelopes, record.job_id, executing.version, result_ref=result_ref, now=now
+    )
+    assert completed.state == "completed"
+    _validate(completed)
+    assert jobs.get(record.job_id).state == "completed"
+
+
+# --- Blocker 5: atomic in-memory CAS (thread safety) ---------------------------
+
+
+def test_in_memory_cas_exactly_one_concurrent_winner():
+    """Two threads doing cas_update at the SAME expected_version concurrently: EXACTLY ONE
+    returns True, the other False (the read-check-write is guarded by a lock)."""
+    jobs = InMemoryJobStore()
+    envelopes = InMemoryRequestEnvelopeStore()
+    record, _ = make_received(jobs, envelopes)
+    base = jobs.get(record.job_id)
+    assert base.version == 0
+
+    barrier = threading.Barrier(2)
+    results_map: dict[str, bool] = {}
+
+    def attempt(name, row_count):
+        candidate = dataclasses.replace(base, row_count=row_count, version=1)
+        barrier.wait()  # maximise the race on the read-check-write
+        results_map[name] = jobs.cas_update(candidate, 0)
+
+    threads = [
+        threading.Thread(target=attempt, args=("a", 5)),
+        threading.Thread(target=attempt, args=("b", 9)),
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert sorted(results_map.values()) == [False, True]  # exactly one winner
+    assert jobs.get(record.job_id).version == 1
+
+
+def test_sqlite_cas_exactly_one_winner_two_connections(tmp_path):
+    """The SQLite equivalent: TWO independent SqliteJobStore connections against the SAME
+    db file race a CAS at the same expected_version; exactly one wins (WHERE version=? +
+    rowcount)."""
+    db = str(tmp_path / "cas_race.db")
+    writer = SqliteJobStore(db)
+    envelopes = SqliteRequestEnvelopeStore(db)
+    record, _ = make_received(writer, envelopes)
+    base = writer.get(record.job_id)
+    assert base.version == 0
+
+    # Two independent connections to the SAME file.
+    conn_a = SqliteJobStore(db)
+    conn_b = SqliteJobStore(db)
+    won_a = conn_a.cas_update(dataclasses.replace(base, row_count=5, version=1), 0)
+    won_b = conn_b.cas_update(dataclasses.replace(base, row_count=9, version=1), 0)
+    assert sorted([won_a, won_b]) == [False, True]  # exactly one CAS landed
+    assert writer.get(record.job_id).version == 1

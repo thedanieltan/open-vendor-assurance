@@ -34,11 +34,13 @@ recovery counter — they are kept strictly distinct.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import replace
 from datetime import datetime
 from enum import Enum
 
 from .verify_transport import (
+    ERROR_CODES,
     JobRecord,
     JobStore,
     RequestEnvelopeStore,
@@ -87,6 +89,20 @@ class LivePreemption(LifecycleError):
     """An attempt to preempt a LIVE execution lease (forbidden). A redelivered task whose
     record is executing with a live lease is acked-and-dropped by the caller; with an
     EXPIRED lease it defers to the watchdog (never preempts)."""
+
+
+class InvalidLease(LifecycleError):
+    """A lease deadline is malformed, in the past, or not strictly later than required
+    (Blocker 3). Acquisition must create a STRICTLY-future lease; a heartbeat may only
+    extend a currently-LIVE lease to a deadline strictly later than both ``now`` and the
+    existing ``lease_expires_at`` (no reviving an expired lease, no shortening/past-dating)."""
+
+
+class InvalidErrorCode(LifecycleError):
+    """A terminalizing error_code is outside the schema enum
+    (execution_timeout|upstream_unavailable|rate_limited|internal_error). Rejected at the
+    transition boundary (defence in depth; the persistence schema validation is the
+    backstop)."""
 
 
 # --- Edge + actor authority tables (mirrors the contract) ---------------------
@@ -186,6 +202,24 @@ def _iso_z(value: datetime) -> str:
     return value.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def _parse_lease(value: str, *, what: str) -> datetime:
+    """Parse a lease/timestamp string, raising ``InvalidLease`` (not a bare ValueError) on
+    a malformed value so the boundary rejects it cleanly (Blocker 3)."""
+    try:
+        return _parse_iso_z(value)
+    except (ValueError, TypeError) as exc:
+        raise InvalidLease(f"{what} is malformed: {value!r}") from exc
+
+
+def _require_valid_error_code(error_code: str) -> None:
+    """Reject a terminalizing error_code outside the schema enum (Blocker 4 boundary
+    check; the persistence schema validation is the backstop)."""
+    if error_code not in ERROR_CODES:
+        raise InvalidErrorCode(
+            f"error_code {error_code!r} is not one of {sorted(ERROR_CODES)}"
+        )
+
+
 # --- Typed transition functions (one per declared edge + recovery variants) ---
 
 
@@ -214,7 +248,10 @@ def api_received_to_failed(
 
     transition_mutations.api__received_to_failed: set failed + error_code; null
     request_ref/result_ref/lease; THEN delete the request envelope. The CAS clears the
-    in-record pointer; the physical envelope delete is the separate `then` step."""
+    in-record pointer; the physical envelope delete is the separate `then` step.
+
+    Rejects an error_code outside the schema enum (InvalidErrorCode) at the boundary."""
+    _require_valid_error_code(error_code)
     record = jobs.get(job_id)
     request_ref = record.request_ref if record is not None else None
     mutated = _guarded_transition(
@@ -266,7 +303,16 @@ def worker_queued_to_executing(
     Duplicate-delivery handling (handoff.duplicate_delivery): if the record is ALREADY
     executing with a LIVE lease, raise LivePreemption — the caller acks-and-drops. If it
     is executing with an EXPIRED lease, raise LivePreemption too (the redelivery defers
-    to the watchdog; it must NOT preempt). Only a genuinely `queued` record proceeds."""
+    to the watchdog; it must NOT preempt). Only a genuinely `queued` record proceeds.
+
+    LEASE GUARD (Blocker 3): acquisition must create a STRICTLY-future lease. The supplied
+    ``lease_expires_at`` is parsed and rejected (InvalidLease) if malformed or not strictly
+    later than ``now`` (<= now), so a worker can never take a lease that is already stale."""
+    deadline = _parse_lease(lease_expires_at, what="lease_expires_at")
+    if deadline <= now:
+        raise InvalidLease(
+            f"acquired lease_expires_at {lease_expires_at!r} must be strictly after now"
+        )
     record = jobs.get(job_id)
     if record is not None and record.state == "executing":
         # Already executing: never preempt. Live -> ack-and-drop; expired -> watchdog.
@@ -301,7 +347,13 @@ def worker_heartbeat(
     CAS-bumps version (version-gated like every mutation), but it is an executing ->
     executing self-edge (not a state change). Raises UnauthorizedActor if the record is
     not executing or the caller is not the current lease_owner; StaleVersion on a version
-    mismatch."""
+    mismatch.
+
+    LEASE GUARD (Blocker 3): a heartbeat may only extend a currently-LIVE lease and may
+    only push the deadline FORWARD. It raises InvalidLease if the existing
+    ``lease_expires_at`` is malformed or already expired (existing <= now: no reviving a
+    dead lease), or if the new deadline is malformed or not strictly later than BOTH
+    ``now`` AND the existing deadline (no shortening, no past-dating)."""
     record = jobs.get(job_id)
     if record is None:
         raise StaleVersion(f"job {job_id} not found (re-read required)")
@@ -316,6 +368,20 @@ def worker_heartbeat(
     if record.lease_owner != lease_owner:
         raise UnauthorizedActor(
             "only the current lease_owner may heartbeat the lease"
+        )
+    # The existing lease must be currently LIVE — an already-expired lease (existing <= now)
+    # cannot be revived by a heartbeat; it defers to the watchdog.
+    existing = _parse_lease(record.lease_expires_at, what="existing lease_expires_at")
+    if existing <= now:
+        raise InvalidLease(
+            f"lease {record.lease_expires_at!r} is already expired; cannot heartbeat (defer to watchdog)"
+        )
+    # The new deadline must move strictly forward past BOTH now and the existing deadline.
+    new_deadline = _parse_lease(new_lease_expires_at, what="new_lease_expires_at")
+    if new_deadline <= now or new_deadline <= existing:
+        raise InvalidLease(
+            f"new lease_expires_at {new_lease_expires_at!r} must be strictly after both now "
+            f"and the existing lease {record.lease_expires_at!r}"
         )
     mutated = replace(
         record,
@@ -380,7 +446,10 @@ def worker_executing_to_failed(
     """Worker internal-failure terminalization: executing -> failed.
 
     transition_mutations.worker__executing_to_failed: set failed + error_code; null
-    request_ref/result_ref/lease; THEN delete the request envelope."""
+    request_ref/result_ref/lease; THEN delete the request envelope.
+
+    Rejects an error_code outside the schema enum (InvalidErrorCode) at the boundary."""
+    _require_valid_error_code(error_code)
     record = jobs.get(job_id)
     request_ref = record.request_ref if record is not None else None
     mutated = _guarded_transition(
@@ -447,7 +516,10 @@ def watchdog_executing_to_failed(
     Uses the worker__executing_to_failed mutation set (the watchdog co-owns
     executing->failed): set failed + error_code (default execution_timeout); null
     request_ref/result_ref/lease; THEN delete the request envelope. ONLY valid when the
-    lease is STALE — a LIVE lease is never preempted (LivePreemption)."""
+    lease is STALE — a LIVE lease is never preempted (LivePreemption).
+
+    Rejects an error_code outside the schema enum (InvalidErrorCode) at the boundary."""
+    _require_valid_error_code(error_code)
     record = jobs.get(job_id)
     if record is None:
         raise StaleVersion(f"job {job_id} not found (re-read required)")
@@ -562,10 +634,17 @@ def recover_stale_leases(
     The request-envelope store is used for the terminalizing (executing->failed) edge so
     the envelope is physically deleted on terminalization per `deleted_on` (re-queue
     preserves the envelope for the retry). The sweep enumerates via the store's snapshot,
-    so a stale-version CAS during the sweep is tolerated (skipped this pass, retried next)."""
+    so a stale-version CAS during the sweep is tolerated (skipped this pass, retried next).
+
+    JOB-EXPIRY GUARD (Blocker 3): a record already past its own ``expires_at``
+    (now >= job.expires_at) is SKIPPED — recovery must not resurrect an expired job; the
+    time-based expiry/purge owns it (410 -> 404)."""
     acted: list[str] = []
     for record in _snapshot(jobs):
         if record.state != "executing" or _lease_is_live(record, now):
+            continue
+        if now >= _parse_iso_z(record.expires_at):
+            # Past its TTL: let expiry/purge own it; do not re-dispatch an expired job.
             continue
         try:
             if record.attempt < attempt_max:
@@ -589,39 +668,77 @@ def recover_undispatched(
     dispatch_max: int,
     *,
     grace: object,
+    enqueue: Callable[[str, int], bool],
 ) -> list[str]:
     """Reconciler sweep over the job store (handoff.reconciler dispatch recovery).
 
-    For each `received` record older than a small grace (created_at + grace <= now) that
-    is still `received`:
-      - dispatch_attempt < dispatch_max -> increment dispatch_attempt (CAS WHILE received)
-        then reconciler_received_to_queued (re-dispatch).
+    TWO-PHASE DISPATCH (Blocker 2): the reconciler must NEVER flip received->queued without
+    a SUCCESSFUL enqueue. For each `received` record older than a small grace
+    (created_at + grace <= now) that is still `received`:
+      1. ``increment_dispatch_attempt`` (CAS WHILE received) — names the fresh, never-yet-
+         tombstoned recovery generation ({job_id}-r{dispatch_attempt}).
+      2. call the injected ``enqueue(job_id, dispatch_attempt)`` — True means the task was
+         enqueued (or a valid ALREADY_EXISTS for a still-pending task); False or a raised
+         exception means the enqueue FAILED.
+      3. ONLY on a successful/accepted-existing enqueue, ``reconciler_received_to_queued``
+         (received->queued). On enqueue failure/exception the record is LEFT `received`
+         (recoverable on the next sweep) and is NOT moved to queued — so a `queued` record
+         always corresponds to a real enqueue.
+
+    Bounds/skips:
       - dispatch_attempt >= dispatch_max -> STOP re-enqueueing (the job terminates by
         time-based expiry 410 -> 404; on_dispatch_exhausted). Left untouched.
-    There is no real queue in WP-02B, so dispatch recovery is modelled as the record-level
-    CAS only (the Cloud Tasks adapter is WP-02C). Returns the job_ids re-dispatched.
+      - now >= job.expires_at -> SKIP (Blocker 3): recovery must not resurrect an expired
+        job; the time-based expiry/purge owns it.
+
+    Returns the job_ids actually re-dispatched (enqueued AND CAS'd to queued).
 
     ``grace`` is a timedelta (typed loosely to avoid importing datetime symbols into the
-    signature); a record is eligible once created_at + grace <= now."""
+    signature); a record is eligible once created_at + grace <= now. ``enqueue`` is injected
+    so the queue adapter (Cloud Tasks, WP-02C) is decoupled from the record-CAS protocol;
+    concurrent reconcilers serialize on the version CAS so exactly one wins a generation
+    (the loser sees StaleVersion and is skipped without enqueueing or flipping state)."""
     acted: list[str] = []
     for record in _snapshot(jobs):
         if record.state != "received":
             continue
         if _parse_iso_z(record.created_at) + grace > now:  # type: ignore[operator]
             continue
+        if now >= _parse_iso_z(record.expires_at):
+            # Past its TTL: let expiry/purge own it; do not re-dispatch an expired job.
+            continue
         if record.dispatch_attempt >= dispatch_max:
             # Exhausted: stop re-enqueueing; time-based expiry terminates the job.
             continue
         try:
-            # CAS the dispatch_attempt while STILL received (fresh, never-tombstoned
-            # generation), then re-dispatch via the declared received->queued edge.
+            # Phase 1: CAS the dispatch_attempt while STILL received (fresh, never-
+            # tombstoned generation). A concurrent reconciler that won this generation
+            # makes this raise StaleVersion -> the loser is skipped (no enqueue, no flip).
             bumped = increment_dispatch_attempt(jobs, record.job_id, record.version, now=now)
-            reconciler_received_to_queued(jobs, record.job_id, bumped.version, now=now)
-            acted.append(record.job_id)
         except (StaleVersion, UnauthorizedActor):
             # Another reconciler won this generation, or the job left `received` between
             # the snapshot and the CAS: skip; the next sweep re-evaluates.
             continue
+        # Phase 2: attempt the actual enqueue. A False return OR any raised exception is a
+        # failure: leave the record `received` (it stays recoverable) and do NOT queue it.
+        try:
+            enqueued = enqueue(record.job_id, bumped.dispatch_attempt)
+        except Exception:
+            # Enqueue raised: treat as a failed dispatch; the bumped dispatch_attempt
+            # persists (so the next sweep uses a fresh generation name) but the record
+            # remains `received`.
+            continue
+        if not enqueued:
+            continue
+        # Phase 3: enqueue succeeded (or accepted an existing pending task) -> only NOW
+        # flip received->queued via the declared edge.
+        try:
+            reconciler_received_to_queued(jobs, record.job_id, bumped.version, now=now)
+        except (StaleVersion, UnauthorizedActor):
+            # The job left `received` between the enqueue and this CAS (e.g. a worker
+            # recovered it): skip; the enqueued task is deduped by the worker's CAS.
+            continue
+        acted.append(record.job_id)
     return acted
 
 

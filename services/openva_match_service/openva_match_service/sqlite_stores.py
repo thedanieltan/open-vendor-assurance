@@ -34,6 +34,7 @@ from .verify_transport import (
     RequestEnvelopeStore,
     ResultStore,
     _parse_iso_z,
+    validate_record_for_persistence,
 )
 
 # Columns persisted for a job record, in JobRecord field order (version included).
@@ -133,6 +134,9 @@ class SqliteJobStore(JobStore):
         self._conn.commit()
 
     def create(self, record: JobRecord) -> None:
+        # Reject a schema-invalid record at the persistence boundary BEFORE writing
+        # (Blocker 4: same faithful schema check as the in-memory backend).
+        validate_record_for_persistence(record)
         placeholders = ", ".join("?" for _ in _JOB_COLUMNS)
         columns = ", ".join(_JOB_COLUMNS)
         self._conn.execute(
@@ -147,6 +151,8 @@ class SqliteJobStore(JobStore):
         return _row_to_record(row) if row is not None else None
 
     def cas_update(self, record: JobRecord, expected_version: int) -> bool:
+        # Reject a schema-invalid record before the version-guarded write (Blocker 4).
+        validate_record_for_persistence(record)
         # The version-guarded write: only the row whose stored version equals the value
         # the caller read is updated. rowcount == 1 means the CAS won; 0 means a
         # concurrent writer advanced the version and the actor must re-read.
@@ -196,7 +202,10 @@ class _SqliteBlobStore:
     """Shared durable key->JSON-blob store for the transient envelope/result stores.
 
     The value is JSON-serialised on put and parsed on get; deleting an absent key is a
-    no-op (idempotent), matching the in-memory stores and the TTL purge's expectations."""
+    no-op (idempotent), matching the in-memory stores and the TTL purge's expectations.
+    Each blob persists its OWN ``expires_at`` (an ISO-8601 Z string) so it is
+    lifecycle-addressable independently of any job record: ``purge_expired`` reaps every
+    blob past its expiry regardless of whether a record still points at it (Blocker 1)."""
 
     _TABLE = "blobs"
 
@@ -204,14 +213,15 @@ class _SqliteBlobStore:
         self._conn = _connect(db_path)
         self._TABLE = table
         self._conn.execute(
-            f"CREATE TABLE IF NOT EXISTS {self._TABLE} (ref TEXT PRIMARY KEY, payload TEXT NOT NULL)"
+            f"CREATE TABLE IF NOT EXISTS {self._TABLE} "
+            f"(ref TEXT PRIMARY KEY, payload TEXT NOT NULL, expires_at TEXT NOT NULL)"
         )
         self._conn.commit()
 
-    def put(self, ref: str, value: Any) -> None:
+    def put(self, ref: str, value: Any, expires_at: str) -> None:
         self._conn.execute(
-            f"INSERT OR REPLACE INTO {self._TABLE} (ref, payload) VALUES (?, ?)",
-            (ref, json.dumps(value)),
+            f"INSERT OR REPLACE INTO {self._TABLE} (ref, payload, expires_at) VALUES (?, ?, ?)",
+            (ref, json.dumps(value), expires_at),
         )
         self._conn.commit()
 
@@ -226,6 +236,23 @@ class _SqliteBlobStore:
         self._conn.execute(f"DELETE FROM {self._TABLE} WHERE ref = ?", (ref,))
         self._conn.commit()
 
+    def purge_expired(self, now: datetime) -> list[str]:
+        # Reap every blob whose expires_at <= now, independent of any job record. Compare
+        # in Python (via _parse_iso_z) so mixed Z/offset suffixes are handled consistently
+        # with the in-memory backend rather than relying on lexical SQL string comparison.
+        reaped = [
+            row["ref"]
+            for row in self._conn.execute(
+                f"SELECT ref, expires_at FROM {self._TABLE}"
+            ).fetchall()
+            if _parse_iso_z(row["expires_at"]) <= now
+        ]
+        for ref in reaped:
+            self._conn.execute(f"DELETE FROM {self._TABLE} WHERE ref = ?", (ref,))
+        if reaped:
+            self._conn.commit()
+        return reaped
+
     def close(self) -> None:  # pragma: no cover - lifecycle convenience
         self._conn.close()
 
@@ -238,14 +265,17 @@ class SqliteRequestEnvelopeStore(RequestEnvelopeStore):
     def __init__(self, db_path: str) -> None:
         self._store = _SqliteBlobStore(db_path, "request_envelopes")
 
-    def put(self, ref: str, envelope: Any) -> None:
-        self._store.put(ref, envelope)
+    def put(self, ref: str, envelope: Any, expires_at: str) -> None:
+        self._store.put(ref, envelope, expires_at)
 
     def get(self, ref: str) -> Any | None:
         return self._store.get(ref)
 
     def delete(self, ref: str) -> None:
         self._store.delete(ref)
+
+    def purge_expired(self, now: datetime) -> list[str]:
+        return self._store.purge_expired(now)
 
     def close(self) -> None:  # pragma: no cover - lifecycle convenience
         self._store.close()
@@ -258,14 +288,17 @@ class SqliteResultStore(ResultStore):
     def __init__(self, db_path: str) -> None:
         self._store = _SqliteBlobStore(db_path, "result_blobs")
 
-    def put(self, ref: str, result: Any) -> None:
-        self._store.put(ref, result)
+    def put(self, ref: str, result: Any, expires_at: str) -> None:
+        self._store.put(ref, result, expires_at)
 
     def get(self, ref: str) -> Any | None:
         return self._store.get(ref)
 
     def delete(self, ref: str) -> None:
         self._store.delete(ref)
+
+    def purge_expired(self, now: datetime) -> list[str]:
+        return self._store.purge_expired(now)
 
     def close(self) -> None:  # pragma: no cover - lifecycle convenience
         self._store.close()
