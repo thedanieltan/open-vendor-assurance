@@ -25,10 +25,12 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import threading
 from datetime import datetime, timedelta
 from typing import Any
 
 from .verify_transport import (
+    JobAlreadyExists,
     JobRecord,
     JobStore,
     RequestEnvelopeStore,
@@ -36,6 +38,7 @@ from .verify_transport import (
     _parse_iso_z,
     _require_create_version,
     _require_monotonic_cas,
+    _validate_blob_expires_at,
     validate_record_for_persistence,
 )
 
@@ -125,6 +128,15 @@ class SqliteJobStore(JobStore):
 
     def __init__(self, db_path: str) -> None:
         self._conn = _connect(db_path)
+        # The connection is opened ``check_same_thread=False`` so ONE sqlite3.Connection
+        # backs the FastAPI threadpool. SQLite's FILE lock serializes writers across
+        # DIFFERENT connections, but it does NOT serialize Python execute/commit/rowcount
+        # sequences nor transaction state on the SAME connection object — so two threads
+        # could interleave a CAS UPDATE+commit+rowcount with another write and corrupt
+        # atomicity / misreport rowcount (Blocker 1). A per-store RLock serializes the FULL
+        # operation (execute -> commit -> rowcount/fetch read) of every runtime method as one
+        # atomic unit. Each store instance owns its own connection, so each gets its own lock.
+        self._lock = threading.RLock()
         self._ensure_schema()
 
     def _ensure_schema(self) -> None:
@@ -144,16 +156,28 @@ class SqliteJobStore(JobStore):
         validate_record_for_persistence(record)
         placeholders = ", ".join("?" for _ in _JOB_COLUMNS)
         columns = ", ".join(_JOB_COLUMNS)
-        self._conn.execute(
-            f"INSERT INTO jobs ({columns}) VALUES ({placeholders})",
-            _record_values(record),
-        )
-        self._conn.commit()
+        with self._lock:
+            try:
+                self._conn.execute(
+                    f"INSERT INTO jobs ({columns}) VALUES ({placeholders})",
+                    _record_values(record),
+                )
+            except sqlite3.IntegrityError as exc:
+                # job_id is the PRIMARY KEY: a duplicate create violates it. Re-raise as the
+                # SAME JobAlreadyExists the in-memory backend raises, so the v0-genesis /
+                # one-winner create boundary is identical across backends (Blocker 3). The
+                # existing row is left untouched (the failed INSERT changes nothing).
+                raise JobAlreadyExists(
+                    f"job {record.job_id} already exists; create is the v0 genesis "
+                    "and must not overwrite an existing record"
+                ) from exc
+            self._conn.commit()
 
     def get(self, job_id: str) -> JobRecord | None:
-        cur = self._conn.execute("SELECT * FROM jobs WHERE job_id = ?", (job_id,))
-        row = cur.fetchone()
-        return _row_to_record(row) if row is not None else None
+        with self._lock:
+            cur = self._conn.execute("SELECT * FROM jobs WHERE job_id = ?", (job_id,))
+            row = cur.fetchone()
+            return _row_to_record(row) if row is not None else None
 
     def cas_update(self, record: JobRecord, expected_version: int) -> bool:
         # MONOTONIC one-winner guard (Blocker 2): the candidate MUST advance the version by
@@ -168,41 +192,53 @@ class SqliteJobStore(JobStore):
         # concurrent writer advanced the version and the actor must re-read.
         assignments = ", ".join(f"{name} = ?" for name in _JOB_COLUMNS)
         values = _record_values(record) + (record.job_id, expected_version)
-        cur = self._conn.execute(
-            f"UPDATE jobs SET {assignments} WHERE job_id = ? AND version = ?",
-            values,
-        )
-        self._conn.commit()
-        return cur.rowcount == 1
+        with self._lock:
+            # The execute -> commit -> rowcount read is ONE atomic unit: another thread
+            # cannot interleave a write between the version-guarded UPDATE and the rowcount
+            # check, so rowcount faithfully reports whether THIS CAS won.
+            cur = self._conn.execute(
+                f"UPDATE jobs SET {assignments} WHERE job_id = ? AND version = ?",
+                values,
+            )
+            self._conn.commit()
+            return cur.rowcount == 1
 
     def active_count(self) -> int:
-        cur = self._conn.execute(
-            "SELECT COUNT(*) AS n FROM jobs WHERE state NOT IN ('completed', 'failed')"
-        )
-        return int(cur.fetchone()["n"])
+        with self._lock:
+            cur = self._conn.execute(
+                "SELECT COUNT(*) AS n FROM jobs WHERE state NOT IN ('completed', 'failed')"
+            )
+            return int(cur.fetchone()["n"])
 
     def iter_records(self) -> list[JobRecord]:
-        cur = self._conn.execute("SELECT * FROM jobs")
-        return [_row_to_record(row) for row in cur.fetchall()]
+        with self._lock:
+            cur = self._conn.execute("SELECT * FROM jobs")
+            return [_row_to_record(row) for row in cur.fetchall()]
 
     def expired_request_refs(self, now: datetime) -> list[str]:
-        refs: list[str] = []
-        for row in self._conn.execute(
-            "SELECT request_ref, expires_at FROM jobs WHERE request_ref IS NOT NULL"
-        ).fetchall():
-            if now >= _parse_iso_z(row["expires_at"]):
-                refs.append(row["request_ref"])
-        return refs
+        with self._lock:
+            refs: list[str] = []
+            for row in self._conn.execute(
+                "SELECT request_ref, expires_at FROM jobs WHERE request_ref IS NOT NULL"
+            ).fetchall():
+                if now >= _parse_iso_z(row["expires_at"]):
+                    refs.append(row["request_ref"])
+            return refs
 
     def purge_expired(self, now: datetime, retained_window: timedelta) -> list[JobRecord]:
-        purged: list[JobRecord] = []
-        for record in self.iter_records():
-            if now >= _parse_iso_z(record.expires_at) + retained_window:
-                self._conn.execute("DELETE FROM jobs WHERE job_id = ?", (record.job_id,))
-                purged.append(record)
-        if purged:
-            self._conn.commit()
-        return purged
+        # The RLock is reentrant, so the iter_records() call below re-acquires it safely; the
+        # whole enumerate -> delete -> commit runs as one atomic unit under the same lock.
+        with self._lock:
+            purged: list[JobRecord] = []
+            for record in self.iter_records():
+                if now >= _parse_iso_z(record.expires_at) + retained_window:
+                    self._conn.execute(
+                        "DELETE FROM jobs WHERE job_id = ?", (record.job_id,)
+                    )
+                    purged.append(record)
+            if purged:
+                self._conn.commit()
+            return purged
 
     def close(self) -> None:  # pragma: no cover - lifecycle convenience
         self._conn.close()
@@ -221,6 +257,10 @@ class _SqliteBlobStore:
 
     def __init__(self, db_path: str, table: str) -> None:
         self._conn = _connect(db_path)
+        # Per-store RLock: like SqliteJobStore, the shared check_same_thread=False connection
+        # is not Python-call-serialized by SQLite's file lock, so every runtime method guards
+        # its FULL execute -> commit (and any fetch) as one atomic unit (Blocker 1).
+        self._lock = threading.RLock()
         self._TABLE = table
         self._conn.execute(
             f"CREATE TABLE IF NOT EXISTS {self._TABLE} "
@@ -229,39 +269,48 @@ class _SqliteBlobStore:
         self._conn.commit()
 
     def put(self, ref: str, value: Any, expires_at: str) -> None:
-        self._conn.execute(
-            f"INSERT OR REPLACE INTO {self._TABLE} (ref, payload, expires_at) VALUES (?, ?, ?)",
-            (ref, json.dumps(value), expires_at),
-        )
-        self._conn.commit()
+        # Validate + normalize the blob expiry BEFORE storage (Blocker 4): a malformed/naive
+        # expires_at is rejected (InvalidRecord) here rather than persisting and later raising
+        # during purge_expired and stranding other expired blobs.
+        normalized = _validate_blob_expires_at(expires_at)
+        with self._lock:
+            self._conn.execute(
+                f"INSERT OR REPLACE INTO {self._TABLE} (ref, payload, expires_at) "
+                f"VALUES (?, ?, ?)",
+                (ref, json.dumps(value), normalized),
+            )
+            self._conn.commit()
 
     def get(self, ref: str) -> Any | None:
-        cur = self._conn.execute(
-            f"SELECT payload FROM {self._TABLE} WHERE ref = ?", (ref,)
-        )
-        row = cur.fetchone()
-        return json.loads(row["payload"]) if row is not None else None
+        with self._lock:
+            cur = self._conn.execute(
+                f"SELECT payload FROM {self._TABLE} WHERE ref = ?", (ref,)
+            )
+            row = cur.fetchone()
+            return json.loads(row["payload"]) if row is not None else None
 
     def delete(self, ref: str) -> None:
-        self._conn.execute(f"DELETE FROM {self._TABLE} WHERE ref = ?", (ref,))
-        self._conn.commit()
+        with self._lock:
+            self._conn.execute(f"DELETE FROM {self._TABLE} WHERE ref = ?", (ref,))
+            self._conn.commit()
 
     def purge_expired(self, now: datetime) -> list[str]:
         # Reap every blob whose expires_at <= now, independent of any job record. Compare
         # in Python (via _parse_iso_z) so mixed Z/offset suffixes are handled consistently
         # with the in-memory backend rather than relying on lexical SQL string comparison.
-        reaped = [
-            row["ref"]
-            for row in self._conn.execute(
-                f"SELECT ref, expires_at FROM {self._TABLE}"
-            ).fetchall()
-            if _parse_iso_z(row["expires_at"]) <= now
-        ]
-        for ref in reaped:
-            self._conn.execute(f"DELETE FROM {self._TABLE} WHERE ref = ?", (ref,))
-        if reaped:
-            self._conn.commit()
-        return reaped
+        with self._lock:
+            reaped = [
+                row["ref"]
+                for row in self._conn.execute(
+                    f"SELECT ref, expires_at FROM {self._TABLE}"
+                ).fetchall()
+                if _parse_iso_z(row["expires_at"]) <= now
+            ]
+            for ref in reaped:
+                self._conn.execute(f"DELETE FROM {self._TABLE} WHERE ref = ?", (ref,))
+            if reaped:
+                self._conn.commit()
+            return reaped
 
     def close(self) -> None:  # pragma: no cover - lifecycle convenience
         self._conn.close()

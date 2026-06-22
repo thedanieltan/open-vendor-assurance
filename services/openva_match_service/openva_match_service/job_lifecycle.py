@@ -105,6 +105,20 @@ class InvalidErrorCode(LifecycleError):
     backstop)."""
 
 
+class JobExpired(LifecycleError):
+    """A job past its own ``expires_at`` may make NO forward progress and publish NO result.
+
+    Once ``now >= expires_at`` the record is in the expiry-owned ``410 -> 404`` path: the
+    time-based expiry/purge owns the record + its transient blobs, and NO actor may advance
+    it (worker recovery received->queued; queued->executing with a future lease; a heartbeat
+    while the lease is still live; executing->completed/failed — publishing a result AFTER the
+    poll has gone 410 Gone is contractually forbidden). Enforced fail-closed at the lifecycle
+    boundary (``_guarded_transition`` and ``worker_heartbeat``) so EVERY edge through the
+    central path refuses an expired record. The recovery sweeps already skip expired jobs, so
+    they never drive a transition here; ``purge_expired_jobs`` reaps the record via direct
+    store deletes (not transitions)."""
+
+
 # --- Edge + actor authority tables (mirrors the contract) ---------------------
 #
 # transitions: actor-scoped edges, hosted-deployment.yaml `transitions`.
@@ -173,6 +187,10 @@ def _guarded_transition(
         # Treated as a stale read: the actor must re-read (the record may have been
         # purged by expiry between the actor's prior read and this mutation).
         raise StaleVersion(f"job {job_id} not found (re-read required)")
+    # Fail closed on an expired record (Blocker 2): EVERY edge through this central path
+    # refuses to advance a job past its own expires_at — expiry/purge owns the 410 -> 404
+    # path. Checked right after the load so it applies before the version/edge gates.
+    _reject_if_expired(record, now)
     if record.version != expected_version:
         raise StaleVersion(
             f"expected version {expected_version}, stored version is {record.version}"
@@ -209,6 +227,19 @@ def _parse_lease(value: str, *, what: str) -> datetime:
         return _parse_iso_z(value)
     except (ValueError, TypeError) as exc:
         raise InvalidLease(f"{what} is malformed: {value!r}") from exc
+
+
+def _reject_if_expired(record: JobRecord, now: datetime) -> None:
+    """Fail closed if the record is past its own ``expires_at`` (``now >= expires_at``).
+
+    A job at/after its TTL is in the expiry-owned ``410 -> 404`` path: no actor may advance it
+    or publish a result. Enforced at the central transition boundary so EVERY edge fails
+    closed on an expired record (Blocker 2)."""
+    if now >= _parse_iso_z(record.expires_at):
+        raise JobExpired(
+            f"job {record.job_id} is past its expires_at {record.expires_at!r}; "
+            "no forward progress (expiry/purge owns the 410 -> 404 path)"
+        )
 
 
 def _require_valid_error_code(error_code: str) -> None:
@@ -357,6 +388,11 @@ def worker_heartbeat(
     record = jobs.get(job_id)
     if record is None:
         raise StaleVersion(f"job {job_id} not found (re-read required)")
+    # Fail closed on an expired job (Blocker 2): a heartbeat while the lease is still live but
+    # the JOB itself is past its expires_at must not extend it — the expiry/purge path owns it.
+    # worker_heartbeat has its own inline CAS (not _guarded_transition), so it enforces this
+    # itself, after the record is loaded.
+    _reject_if_expired(record, now)
     if record.version != expected_version:
         raise StaleVersion(
             f"expected version {expected_version}, stored version is {record.version}"

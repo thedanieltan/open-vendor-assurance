@@ -30,6 +30,7 @@ from openva_match_service.job_lifecycle import (  # noqa: E402
     IllegalTransition,
     InvalidErrorCode,
     InvalidLease,
+    JobExpired,
     LifecycleError,
     LivePreemption,
     StaleVersion,
@@ -58,6 +59,7 @@ from openva_match_service.verify_transport import (  # noqa: E402
     InMemoryRequestEnvelopeStore,
     InMemoryResultStore,
     InvalidRecord,
+    JobAlreadyExists,
     JobRecord,
     _parse_iso_z as _vt_parse_iso_z,
     load_packaged_schema,
@@ -1613,3 +1615,480 @@ def test_non_utc_offset_is_accepted_and_normalized():
     )
     jobs.create(record)
     assert jobs.get(record.job_id) is not None
+
+
+# =============================================================================
+# PR #410 round-3 blocker remediation tests (async-persistence protocol-critical)
+# =============================================================================
+
+
+# --- Blocker 1: shared-connection SQLite concurrency safety (per-store RLock) ---
+#
+# These race the SAME SqliteJobStore / blob-store INSTANCE (one shared connection backing the
+# threadpool), NOT two connections — exercising the gap the existing two-connection CAS test
+# never touches. All are barrier-controlled so the guarded ops truly overlap.
+
+
+def test_sqlite_cas_one_winner_same_instance_concurrent(tmp_path):
+    """Barrier-controlled: N threads issue cas_update on ONE shared SqliteJobStore instance at
+    the SAME expected_version. Exactly one wins; the stored version is EXACTLY expected+1; no
+    sqlite3 error/exception escapes; rowcount is not misreported (no >1 winner)."""
+    db = str(tmp_path / "cas_same_instance.db")
+    jobs = SqliteJobStore(db)
+    envelopes = SqliteRequestEnvelopeStore(db)
+    record, _ = make_received(jobs, envelopes)
+    base = jobs.get(record.job_id)
+    assert base.version == 0
+
+    n = 16
+    barrier = threading.Barrier(n)
+    outcomes: list[bool] = []
+    errors: list[BaseException] = []
+    lock = threading.Lock()
+
+    def attempt(row_count):
+        candidate = dataclasses.replace(base, row_count=row_count, version=1)
+        try:
+            barrier.wait()  # release all threads together onto the shared connection
+            won = jobs.cas_update(candidate, 0)
+            with lock:
+                outcomes.append(won)
+        except BaseException as exc:  # noqa: BLE001 - we assert none occurred
+            with lock:
+                errors.append(exc)
+
+    threads = [threading.Thread(target=attempt, args=(i + 2,)) for i in range(n)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert errors == []  # no sqlite3 error / torn transaction state on the shared connection
+    assert outcomes.count(True) == 1  # EXACTLY one winner (rowcount not misreported)
+    assert outcomes.count(False) == n - 1
+    stored = jobs.get(record.job_id)
+    assert stored.version == 1  # exactly expected+1, not skipped/double-bumped
+
+
+def test_sqlite_concurrent_create_and_get_same_instance(tmp_path):
+    """Barrier-controlled concurrent create + get on ONE shared SqliteJobStore instance:
+    creates of DISTINCT job_ids and concurrent reads all complete with no sqlite3 errors and
+    consistent reads (a created record is fully present when read back)."""
+    db = str(tmp_path / "create_get_same_instance.db")
+    jobs = SqliteJobStore(db)
+
+    n = 12
+    barrier = threading.Barrier(n)
+    errors: list[BaseException] = []
+    created_ids: list[str] = []
+    lock = threading.Lock()
+
+    def worker(i):
+        rec = _valid_received()
+        try:
+            barrier.wait()
+            jobs.create(rec)
+            # Immediately read it back through the same shared connection.
+            fetched = jobs.get(rec.job_id)
+            with lock:
+                created_ids.append(rec.job_id)
+                assert fetched is not None and fetched.version == 0
+                # A concurrent read of another (or absent) id never tears.
+                _ = jobs.get(new_job_id())
+        except BaseException as exc:  # noqa: BLE001
+            with lock:
+                errors.append(exc)
+
+    threads = [threading.Thread(target=worker, args=(i,)) for i in range(n)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert errors == []
+    assert len(created_ids) == n
+    # Every created record is present and consistent.
+    for jid in created_ids:
+        assert jobs.get(jid) is not None
+    assert len(jobs.iter_records()) == n
+
+
+def test_sqlite_concurrent_purge_while_writing_same_instance(tmp_path):
+    """Barrier-controlled: while writer threads create fresh (non-expired) records on a shared
+    SqliteJobStore instance, a sweeper thread runs purge_expired concurrently. No sqlite3
+    errors, and the non-expired writes survive (purge only reaps past-window records)."""
+    db = str(tmp_path / "purge_while_writing.db")
+    jobs = SqliteJobStore(db)
+    envelopes = SqliteRequestEnvelopeStore(db)
+    now = _now()
+
+    # Seed one already-past-window record the sweeper is entitled to reap.
+    doomed, _ = make_received(jobs, envelopes, now=now - timedelta(hours=5))
+    dr = jobs.get(doomed.job_id)
+    jobs.cas_update(
+        dataclasses.replace(dr, expires_at=_iso(now - timedelta(hours=2)), version=dr.version + 1),
+        dr.version,
+    )
+
+    writers = 10
+    barrier = threading.Barrier(writers + 1)
+    errors: list[BaseException] = []
+    fresh_ids: list[str] = []
+    lock = threading.Lock()
+
+    def write_one():
+        rec = _valid_received(now=now)  # expires in 24h: never reaped this pass
+        try:
+            barrier.wait()
+            jobs.create(rec)
+            with lock:
+                fresh_ids.append(rec.job_id)
+        except BaseException as exc:  # noqa: BLE001
+            with lock:
+                errors.append(exc)
+
+    def sweep():
+        try:
+            barrier.wait()
+            jobs.purge_expired(now, timedelta(hours=1))
+        except BaseException as exc:  # noqa: BLE001
+            with lock:
+                errors.append(exc)
+
+    threads = [threading.Thread(target=write_one) for _ in range(writers)]
+    threads.append(threading.Thread(target=sweep))
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert errors == []
+    # All non-expired writes survived the concurrent purge.
+    assert len(fresh_ids) == writers
+    for jid in fresh_ids:
+        assert jobs.get(jid) is not None
+
+
+def test_sqlite_blob_store_concurrent_put_get_purge_same_instance(tmp_path):
+    """Barrier-controlled concurrency over ONE shared blob store (the _SqliteBlobStore behind
+    SqliteResultStore): concurrent put + get while a sweeper purges, no sqlite3 errors,
+    non-expired blobs survive."""
+    db = str(tmp_path / "blob_concurrency.db")
+    results = SqliteResultStore(db)
+    now = _now()
+    # Seed an already-expired blob the sweeper may reap.
+    doomed_ref = new_ref()
+    results.put(doomed_ref, {"rows": []}, _iso(now - timedelta(minutes=1)))
+
+    writers = 10
+    barrier = threading.Barrier(writers + 1)
+    errors: list[BaseException] = []
+    live_refs: list[str] = []
+    lock = threading.Lock()
+
+    def write_one():
+        ref = new_ref()
+        try:
+            barrier.wait()
+            results.put(ref, {"ok": True}, _iso(now + timedelta(hours=1)))  # not expired
+            assert results.get(ref) == {"ok": True}
+            with lock:
+                live_refs.append(ref)
+        except BaseException as exc:  # noqa: BLE001
+            with lock:
+                errors.append(exc)
+
+    def sweep():
+        try:
+            barrier.wait()
+            results.purge_expired(now)
+        except BaseException as exc:  # noqa: BLE001
+            with lock:
+                errors.append(exc)
+
+    threads = [threading.Thread(target=write_one) for _ in range(writers)]
+    threads.append(threading.Thread(target=sweep))
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert errors == []
+    assert len(live_refs) == writers
+    for ref in live_refs:
+        assert results.get(ref) == {"ok": True}
+
+
+# --- Blocker 2: fail-closed job-expiry guard at the lifecycle boundary ----------
+#
+# All parametrized over both backends via `stores`.
+
+
+def test_worker_received_to_queued_rejected_when_job_expired(stores):
+    """A worker recovery received->queued on a job past its expires_at fails closed
+    (JobExpired) and the job stays `received` — recovery cannot resurrect an expired job."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now, expires_in=timedelta(minutes=10))
+    later = now + timedelta(minutes=11)  # past expires_at
+    with pytest.raises(JobExpired):
+        worker_received_to_queued(jobs, record.job_id, 0, now=later)
+    assert jobs.get(record.job_id).state == "received"
+    assert jobs.get(record.job_id).version == 0  # no forward progress
+
+
+def test_queued_to_executing_rejected_when_job_expired_even_with_future_lease(stores):
+    """A queued->executing acquisition on an EXPIRED job WITH a strictly-future lease deadline
+    still fails closed (JobExpired) — the lease being valid does not override job expiry."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now, expires_in=timedelta(minutes=10))
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    later = now + timedelta(minutes=11)  # job is past expires_at
+    future_lease = _iso(later + timedelta(minutes=5))  # strictly future (valid lease)
+    with pytest.raises(JobExpired):
+        worker_queued_to_executing(
+            jobs, record.job_id, queued.version, lease_owner="w1",
+            lease_expires_at=future_lease, now=later,
+        )
+    assert jobs.get(record.job_id).state == "queued"  # stays queued, no acquisition
+
+
+def test_heartbeat_rejected_when_job_expired_while_lease_live(stores):
+    """A heartbeat after the JOB's TTL while the LEASE is still live fails closed (JobExpired):
+    the live lease does not let a worker extend an expired job."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now, expires_in=timedelta(minutes=10))
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    # Acquire a lease that stays live well past the job's TTL.
+    executing = worker_queued_to_executing(
+        jobs, record.job_id, queued.version, lease_owner="w1",
+        lease_expires_at=_iso(now + timedelta(hours=1)), now=now,
+    )
+    later = now + timedelta(minutes=11)  # past job expires_at, lease still live
+    # Sanity: the lease is genuinely still live at `later`.
+    assert jl._lease_is_live(jobs.get(record.job_id), later)
+    with pytest.raises(JobExpired):
+        worker_heartbeat(
+            jobs, record.job_id, executing.version, lease_owner="w1",
+            new_lease_expires_at=_iso(later + timedelta(hours=2)), now=later,
+        )
+    assert jobs.get(record.job_id).state == "executing"
+    assert jobs.get(record.job_id).version == executing.version  # no version bump
+
+
+def test_executing_to_completed_rejected_after_ttl_and_purge_reaps(stores):
+    """An executing->completed publish AFTER the job TTL fails closed (JobExpired): the record
+    is NOT completed and serves NO result_ref (no post-expiry result is committed). A
+    subsequent purge_expired_jobs reaps the record AND the orphan result blob."""
+    jobs, envelopes, results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now, expires_in=timedelta(minutes=10))
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    executing = worker_queued_to_executing(
+        jobs, record.job_id, queued.version, lease_owner="w1",
+        lease_expires_at=_iso(now + timedelta(hours=1)), now=now,
+    )
+    later = now + timedelta(minutes=11)  # past job expires_at
+    # The worker wrote the result blob first (terminalization order), then attempts the CAS.
+    result_ref = new_ref()
+    results.put(result_ref, {"rows": [{"status": "ok"}]}, _iso(later + timedelta(hours=1)))
+    with pytest.raises(JobExpired):
+        worker_executing_to_completed(
+            jobs, envelopes, record.job_id, executing.version, result_ref=result_ref, now=later
+        )
+    # The record did NOT complete and serves no result_ref (no post-expiry result committed).
+    after = jobs.get(record.job_id)
+    assert after.state != "completed"
+    assert after.result_ref is None
+    # A subsequent purge reaps the record (past window) AND the orphan result blob by its own
+    # expiry. Run purge well past the retained window so the record is physically deleted, and
+    # age the orphan result blob's expiry into the past so the orphan sweep reaps it too.
+    results.put(result_ref, {"rows": [{"status": "ok"}]}, _iso(now - timedelta(minutes=1)))
+    sweep_now = now + timedelta(hours=2)
+    purged = purge_expired_jobs(jobs, envelopes, results, sweep_now, timedelta(hours=1))
+    assert record.job_id in purged
+    assert jobs.get(record.job_id) is None
+    assert results.get(result_ref) is None  # orphan result blob reaped
+
+
+def test_expiry_guard_does_not_regress_recovery_sweeps(stores):
+    """The expiry guard must NOT break the sweeps: a NON-expired stale-lease job is still
+    re-dispatched by the watchdog, and a NON-expired stuck `received` job is still
+    re-dispatched by the reconciler (the sweeps skip ONLY expired jobs)."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    # Non-expired stale-lease job -> watchdog re-queues it (attempt+1).
+    a, _ = make_received(jobs, envelopes, now=now, expires_in=timedelta(hours=24))
+    qa = api_received_to_queued(jobs, a.job_id, 0, now=now)
+    worker_queued_to_executing(
+        jobs, a.job_id, qa.version, lease_owner="w1",
+        lease_expires_at=_iso(now + timedelta(seconds=1)), now=now,
+    )
+    later = now + timedelta(seconds=5)  # lease stale, job NOT expired (24h TTL)
+    acted = recover_stale_leases(jobs, envelopes, later, attempt_max=5)
+    assert a.job_id in acted
+    assert jobs.get(a.job_id).state == "queued" and jobs.get(a.job_id).attempt == 1
+
+    # Non-expired stuck received job -> reconciler re-dispatches it.
+    b, _ = make_received(jobs, envelopes, now=now - timedelta(minutes=10), expires_in=timedelta(hours=24))
+
+    def enqueue(job_id, dispatch_attempt):
+        return True
+
+    acted_d = recover_undispatched(
+        jobs, now, dispatch_max=10, grace=timedelta(minutes=1), enqueue=enqueue
+    )
+    assert b.job_id in acted_d
+    assert jobs.get(b.job_id).state == "queued"
+
+
+# --- Blocker 3: reject duplicate create consistently across both backends -------
+
+
+def test_duplicate_create_rejected_and_record_unchanged(stores):
+    """A sequential second create for an existing job_id raises JobAlreadyExists in BOTH
+    backends, and the stored record is UNCHANGED (state/version/token_digest not reset)."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now)
+    # Advance the record so a silent reset-to-v0 would be observable.
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    assert queued.version == 1
+    before = jobs.get(record.job_id)
+
+    # A second create for the SAME job_id (even a fresh v0 record) is rejected.
+    duplicate = dataclasses.replace(
+        _valid_received(now=now),
+        job_id=record.job_id,  # collide on the id
+    )
+    with pytest.raises(JobAlreadyExists):
+        jobs.create(duplicate)
+    # The stored record is intact: NOT reset to received/v0, token_digest preserved.
+    after = jobs.get(record.job_id)
+    assert after.state == before.state == "queued"
+    assert after.version == before.version == 1
+    assert after.job_token_digest == before.job_token_digest
+
+
+def test_concurrent_create_same_job_id_one_winner(stores):
+    """Barrier-controlled: N threads create the SAME job_id concurrently. Exactly one succeeds;
+    the rest raise JobAlreadyExists; the winner's record cannot be reset/replaced."""
+    jobs, _envelopes, _results = stores
+    job_id = new_job_id()
+    n = 12
+    barrier = threading.Barrier(n)
+    successes: list[int] = []
+    already: list[int] = []
+    other_errors: list[BaseException] = []
+    lock = threading.Lock()
+
+    def attempt(i):
+        # Each thread proposes a DISTINCT record sharing the colliding job_id; if overwrite
+        # were possible, a loser's row_count would clobber the winner's.
+        candidate = dataclasses.replace(_valid_received(), job_id=job_id, row_count=i + 1)
+        try:
+            barrier.wait()
+            jobs.create(candidate)
+            with lock:
+                successes.append(i + 1)
+        except JobAlreadyExists:
+            with lock:
+                already.append(i)
+        except BaseException as exc:  # noqa: BLE001
+            with lock:
+                other_errors.append(exc)
+
+    threads = [threading.Thread(target=attempt, args=(i,)) for i in range(n)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert other_errors == []  # no sqlite3 error / unexpected exception
+    assert len(successes) == 1  # exactly one create won
+    assert len(already) == n - 1  # the rest were rejected as duplicates
+    stored = jobs.get(job_id)
+    assert stored is not None
+    assert stored.version == 0
+    # The winner's row_count is the one that landed; no loser overwrote it.
+    assert stored.row_count == successes[0]
+
+
+# --- Blocker 4: validate + normalize blob expires_at at put time ----------------
+
+
+def test_envelope_put_rejects_naive_expiry_and_stores_nothing(stores):
+    """envelope.put with a naive (no tz) or date-only expires_at raises InvalidRecord and
+    stores nothing (a subsequent get is None), in BOTH backends."""
+    jobs, envelopes, _results = stores
+    ref_naive = new_ref()
+    with pytest.raises(InvalidRecord):
+        envelopes.put(ref_naive, {"row_count": 1}, "2026-06-22T12:00:00")  # naive
+    assert envelopes.get(ref_naive) is None
+    ref_dateonly = new_ref()
+    with pytest.raises(InvalidRecord):
+        envelopes.put(ref_dateonly, {"row_count": 1}, "2026-06-22")  # date-only
+    assert envelopes.get(ref_dateonly) is None
+
+
+def test_result_put_rejects_naive_expiry_and_stores_nothing(stores):
+    """result.put with a naive or date-only expires_at raises InvalidRecord and stores
+    nothing, in BOTH backends."""
+    jobs, _envelopes, results = stores
+    ref_naive = new_ref()
+    with pytest.raises(InvalidRecord):
+        results.put(ref_naive, {"rows": []}, "2026-06-22T12:00:00")  # naive
+    assert results.get(ref_naive) is None
+    ref_dateonly = new_ref()
+    with pytest.raises(InvalidRecord):
+        results.put(ref_dateonly, {"rows": []}, "2026-06-22")  # date-only
+    assert results.get(ref_dateonly) is None
+
+
+def test_rejected_blob_put_cannot_poison_a_later_sweep(stores):
+    """A rejected bad put must not poison a later purge: after a rejected naive put, a good
+    (already-expired) blob is reaped by purge_expired(now) WITHOUT raising, in BOTH backends."""
+    jobs, envelopes, results = stores
+    now = _now()
+    # Bad put is rejected and stores nothing.
+    with pytest.raises(InvalidRecord):
+        envelopes.put(new_ref(), {"row_count": 1}, "2026-06-22T12:00:00")
+    with pytest.raises(InvalidRecord):
+        results.put(new_ref(), {"rows": []}, "2026-06-22T12:00:00")
+    # A good, already-expired blob is stored and reaped cleanly (no malformed value strands it).
+    env_ref = new_ref()
+    res_ref = new_ref()
+    envelopes.put(env_ref, {"row_count": 1}, _iso(now - timedelta(minutes=1)))
+    results.put(res_ref, {"rows": []}, _iso(now - timedelta(minutes=1)))
+    reaped_env = envelopes.purge_expired(now)  # must not raise
+    reaped_res = results.purge_expired(now)
+    assert env_ref in reaped_env
+    assert res_ref in reaped_res
+    assert envelopes.get(env_ref) is None
+    assert results.get(res_ref) is None
+
+
+def test_blob_put_accepts_and_normalizes_non_utc_offset(stores):
+    """A non-UTC offset (+05:00) expiry is ACCEPTED and normalized to a canonical ...Z instant
+    at put time, in BOTH backends. The blob is stored and reaped at the normalized instant."""
+    jobs, envelopes, results = stores
+    # 2026-06-22T12:00:00+05:00 == 2026-06-22T07:00:00Z.
+    offset_expiry = "2026-06-22T12:00:00+05:00"
+    normalized_instant = _vt_parse_iso_z(offset_expiry)  # 07:00Z
+    env_ref = new_ref()
+    res_ref = new_ref()
+    envelopes.put(env_ref, {"row_count": 1}, offset_expiry)
+    results.put(res_ref, {"rows": []}, offset_expiry)
+    # Stored (the offset was accepted as tz-aware).
+    assert envelopes.get(env_ref) is not None
+    assert results.get(res_ref) is not None
+    # Just BEFORE the normalized instant: not yet reaped.
+    before = normalized_instant - timedelta(seconds=1)
+    assert envelopes.purge_expired(before) == []
+    assert results.purge_expired(before) == []
+    # At/after the normalized instant: reaped (proves it normalized to 07:00Z, not 12:00).
+    at = normalized_instant
+    assert env_ref in envelopes.purge_expired(at)
+    assert res_ref in results.purge_expired(at)

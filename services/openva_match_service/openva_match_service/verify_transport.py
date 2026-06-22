@@ -214,6 +214,17 @@ class InvalidRecord(Exception):
     serialization, so the durable record can never drift from the schema."""
 
 
+class JobAlreadyExists(Exception):
+    """A ``create`` was issued for a job_id that already exists in the store.
+
+    ``create`` is the v0-genesis / one-winner boundary: a record is created EXACTLY ONCE and
+    thereafter advanced only by the monotonic version-CAS. A second create for an existing
+    job_id must NOT silently overwrite/reset state/token/refs/counters/version to 0 — it is
+    rejected. Both backends raise this SAME type: the in-memory store checks existence under
+    its lock; the SQLite store maps the primary-key ``sqlite3.IntegrityError`` onto it, so the
+    one-winner create boundary is identical across backends (Blocker 3)."""
+
+
 # The hosted-job-record schema is shipped AS PACKAGE DATA (services/openva_match_service/
 # openva_match_service/schemas/hosted-job-record.schema.json) and loaded via
 # importlib.resources, NOT a repo-layout ``parents[N]`` path. The repo path is absent from
@@ -409,6 +420,17 @@ class InMemoryJobStore(JobStore):
         # terminal w/ request_ref, received w/ lease, bad error_code, malformed timestamp).
         validate_record_for_persistence(record)
         with self._lock:
+            # One-winner create boundary (Blocker 3): a create for an already-existing job_id
+            # must NOT silently reset the stored record to v0. The existence check + insert
+            # are done ATOMICALLY under the lock so two concurrent creates for the same
+            # job_id cannot both insert — exactly one wins, the rest raise JobAlreadyExists.
+            # SQLite rejects the equivalent via its primary key (IntegrityError -> the SAME
+            # JobAlreadyExists), so the backends are consistent.
+            if record.job_id in self._records:
+                raise JobAlreadyExists(
+                    f"job {record.job_id} already exists; create is the v0 genesis "
+                    "and must not overwrite an existing record"
+                )
             # Store a snapshot copy so the caller's reference cannot mutate the stored
             # record without going through cas_update (mirrors a durable backend, where
             # the in-process object is never the stored row).
@@ -510,8 +532,11 @@ class InMemoryRequestEnvelopeStore(RequestEnvelopeStore):
         self._lock = threading.RLock()
 
     def put(self, ref: str, envelope: Any, expires_at: str) -> None:
+        # Reject + normalize the blob expiry BEFORE storage (Blocker 4) so a malformed/naive
+        # value can never persist and later abort a purge sweep. Store the normalized string.
+        normalized = _validate_blob_expires_at(expires_at)
         with self._lock:
-            self._envelopes[ref] = (envelope, expires_at)
+            self._envelopes[ref] = (envelope, normalized)
 
     def get(self, ref: str) -> Any | None:
         with self._lock:
@@ -570,8 +595,11 @@ class InMemoryResultStore(ResultStore):
         self._lock = threading.RLock()
 
     def put(self, ref: str, result: Any, expires_at: str) -> None:
+        # Reject + normalize the blob expiry BEFORE storage (Blocker 4) so a malformed/naive
+        # value can never persist and later abort a purge sweep. Store the normalized string.
+        normalized = _validate_blob_expires_at(expires_at)
         with self._lock:
-            self._results[ref] = (result, expires_at)
+            self._results[ref] = (result, normalized)
 
     def get(self, ref: str) -> Any | None:
         with self._lock:
@@ -619,6 +647,25 @@ def _parse_iso_z(value: str) -> datetime:
     # Normalize any valid offset (e.g. +05:00) to UTC so all downstream comparisons are
     # against a single canonical zone.
     return parsed.astimezone(timezone.utc)
+
+
+def _validate_blob_expires_at(expires_at: str) -> str:
+    """Validate + NORMALIZE a transient-blob ``expires_at`` at PUT time (Blocker 4).
+
+    The envelope/result blobs carry their own ``expires_at`` so the purge paths can reap
+    them by it (via the strict ``_parse_iso_z``). A malformed/naive/date-only value that
+    slipped into storage would later RAISE inside ``purge_expired`` and abort the whole sweep,
+    stranding other expired blobs. So a bad expiry is rejected (``InvalidRecord``) BEFORE
+    storage; the returned value is the parsed instant re-rendered as a canonical UTC ``...Z``
+    string (a non-UTC offset such as ``+05:00`` is accepted and normalized to UTC), so every
+    stored blob expiry is uniform and purge-safe."""
+    try:
+        parsed = _parse_iso_z(expires_at)
+    except (ValueError, TypeError) as exc:
+        raise InvalidRecord(
+            f"blob expires_at {expires_at!r} must be a timezone-aware ISO-8601 timestamp"
+        ) from exc
+    return parsed.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def purge_expired_jobs(
