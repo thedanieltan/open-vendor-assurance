@@ -672,9 +672,9 @@ def recover_undispatched(
 ) -> list[str]:
     """Reconciler sweep over the job store (handoff.reconciler dispatch recovery).
 
-    TWO-PHASE DISPATCH (Blocker 2): the reconciler must NEVER flip received->queued without
-    a SUCCESSFUL enqueue. For each `received` record older than a small grace
-    (created_at + grace <= now) that is still `received`:
+    TWO-PHASE DISPATCH: the reconciler must NEVER flip received->queued without a SUCCESSFUL
+    enqueue. For each `received` record whose last mutation is older than a small grace
+    (updated_at + grace <= now) that is still `received`:
       1. ``increment_dispatch_attempt`` (CAS WHILE received) — names the fresh, never-yet-
          tombstoned recovery generation ({job_id}-r{dispatch_attempt}).
       2. call the injected ``enqueue(job_id, dispatch_attempt)`` — True means the task was
@@ -693,8 +693,19 @@ def recover_undispatched(
 
     Returns the job_ids actually re-dispatched (enqueued AND CAS'd to queued).
 
+    DISPATCH CLAIM / BACKOFF (Blocker 3): eligibility is keyed on ``updated_at + grace <= now``,
+    NOT ``created_at``. ``increment_dispatch_attempt`` (phase 1) advances ``updated_at`` to
+    ``now``, so a record JUST bumped by one reconciler is not eligible again until the grace
+    window elapses. This is a time-based dispatch claim that closes the bump->enqueue->queued
+    race: after reconciler A bumps a record (which stays `received` while phase 2 runs), a
+    concurrent reconciler B sweeping the same `received` record finds ``updated_at`` is now
+    `now` and skips it for the grace window — so B cannot start a SECOND dispatch generation
+    before A finishes (or backs off). The version CAS in phase 1 is the hard one-winner gate;
+    this backoff additionally prevents a needless second generation while the first is in
+    flight.
+
     ``grace`` is a timedelta (typed loosely to avoid importing datetime symbols into the
-    signature); a record is eligible once created_at + grace <= now. ``enqueue`` is injected
+    signature); a record is eligible once updated_at + grace <= now. ``enqueue`` is injected
     so the queue adapter (Cloud Tasks, WP-02C) is decoupled from the record-CAS protocol;
     concurrent reconcilers serialize on the version CAS so exactly one wins a generation
     (the loser sees StaleVersion and is skipped without enqueueing or flipping state)."""
@@ -702,7 +713,7 @@ def recover_undispatched(
     for record in _snapshot(jobs):
         if record.state != "received":
             continue
-        if _parse_iso_z(record.created_at) + grace > now:  # type: ignore[operator]
+        if _parse_iso_z(record.updated_at) + grace > now:  # type: ignore[operator]
             continue
         if now >= _parse_iso_z(record.expires_at):
             # Past its TTL: let expiry/purge own it; do not re-dispatch an expired job.

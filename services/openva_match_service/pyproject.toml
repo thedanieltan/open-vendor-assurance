@@ -10,6 +10,7 @@ requires-python = ">=3.11"
 license = "MIT"
 dependencies = [
   "fastapi>=0.115.0",
+  "jsonschema>=4.22.0",
   "python-multipart>=0.0.9",
   "uvicorn>=0.30.0"
 ]
@@ -25,3 +26,13 @@ openva-match-service = "openva_match_service.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["openva_match_service"]
+# Ship the hosted-job-record schema AS PACKAGE DATA so the persistence-layer
+# validation in verify_transport.py can load it via importlib.resources from the
+# installed wheel / Docker image (NOT a repo-layout parents[N] path, which is absent
+# from the built artifact). Explicit so the JSON is shipped regardless of VCS/ignore
+# rules; verify_transport reads it with
+# importlib.resources.files("openva_match_service").joinpath("schemas/...").
+artifacts = ["openva_match_service/schemas/*.json"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"openva_match_service/schemas/hosted-job-record.schema.json" = "openva_match_service/schemas/hosted-job-record.schema.json"

@@ -25,15 +25,15 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import importlib.resources
 import json
 import secrets
 import threading
 import uuid
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass, replace
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from functools import lru_cache
-from pathlib import Path
 from typing import Any
 
 import jsonschema
@@ -214,7 +214,27 @@ class InvalidRecord(Exception):
     serialization, so the durable record can never drift from the schema."""
 
 
-_SCHEMA_PATH = Path(__file__).resolve().parents[3] / "schemas" / "openva" / "hosted-job-record.schema.json"
+# The hosted-job-record schema is shipped AS PACKAGE DATA (services/openva_match_service/
+# openva_match_service/schemas/hosted-job-record.schema.json) and loaded via
+# importlib.resources, NOT a repo-layout ``parents[N]`` path. The repo path is absent from
+# the built wheel / Docker image, so a path-based load would crash the persistence
+# validation in the packaged service; the packaged copy is kept byte-identical to the
+# canonical schemas/openva/hosted-job-record.schema.json by a drift-lock test.
+_PACKAGED_SCHEMA_RESOURCE = "schemas/hosted-job-record.schema.json"
+
+
+def load_packaged_schema() -> dict[str, Any]:
+    """Load the packaged hosted-job-record schema via importlib.resources.
+
+    Resolves the schema from the INSTALLED package (``openva_match_service`` package data),
+    so it works from a wheel / Docker image with no repository ``schemas/`` tree on disk.
+    Returns the parsed JSON document."""
+    text = (
+        importlib.resources.files("openva_match_service")
+        .joinpath(_PACKAGED_SCHEMA_RESOURCE)
+        .read_text(encoding="utf-8")
+    )
+    return json.loads(text)
 
 
 @lru_cache(maxsize=1)
@@ -223,9 +243,11 @@ def _record_validator() -> jsonschema.protocols.Validator:
 
     Cached so the schema file is read and compiled a single time per process. The
     persistence layer validates the FAITHFUL (``to_storage_dict``) record against this
-    BEFORE every write."""
-    schema = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
-    return jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
+    BEFORE every write. The schema is loaded from the PACKAGED copy via importlib.resources
+    so the validation is installable in the wheel / Docker image (Blocker 1)."""
+    return jsonschema.Draft202012Validator(
+        load_packaged_schema(), format_checker=jsonschema.FormatChecker()
+    )
 
 
 def validate_record_for_persistence(record: JobRecord) -> None:
@@ -260,6 +282,35 @@ def validate_record_for_persistence(record: JobRecord) -> None:
             raise InvalidRecord(
                 f"job {record.job_id} has a malformed {field}: {value!r}"
             ) from exc
+
+
+def _require_create_version(record: JobRecord) -> None:
+    """Reject a ``create`` whose record version is not 0 (Blocker 2).
+
+    ``create`` is the version-0 genesis of a record; the version is only ever advanced by a
+    monotonic single-step CAS thereafter. Accepting an arbitrary version on create would let
+    a caller forge a record at a chosen version and slip past the one-winner CAS invariant."""
+    if record.version != 0:
+        raise InvalidRecord(
+            f"job {record.job_id} must be created at version 0, not {record.version}"
+        )
+
+
+def _require_monotonic_cas(record: JobRecord, expected_version: int) -> None:
+    """Reject a CAS candidate that does not advance the version by EXACTLY one (Blocker 2).
+
+    Enforced at the persistence boundary in BOTH backends BEFORE the stored-version guard, so
+    a write that leaves the version unchanged, decreases it, or skips a generation is rejected
+    even when the stored version still equals ``expected_version``. Combined with the existing
+    stored-version guard (in-memory ``stored.version == expected_version`` / SQLite
+    ``WHERE version = expected_version``), this makes the version a strictly monotonic,
+    one-winner-per-generation counter: of two writers at the same expected_version, at most one
+    can land, and every landed write moves the version forward by one and only one step."""
+    if record.version != expected_version + 1:
+        raise InvalidRecord(
+            f"job {record.job_id} CAS must advance the version to {expected_version + 1} "
+            f"(expected_version {expected_version} + 1), not {record.version}"
+        )
 
 
 # --- Store interfaces + in-memory (non-durable) implementations ---------------
@@ -348,9 +399,14 @@ class InMemoryJobStore(JobStore):
         self._lock = threading.RLock()
 
     def create(self, record: JobRecord) -> None:
+        # A newly created record MUST start at version 0 — the version is a monotonic,
+        # CAS-advanced counter and create is the v0 genesis. A non-zero version on create
+        # would let a caller forge a record at an arbitrary version and defeat the
+        # one-winner CAS invariant (Blocker 2).
+        _require_create_version(record)
         # Reject a schema-invalid record at the persistence boundary BEFORE storing it
-        # (Blocker 4: the durable record can never drift from the schema's state
-        # invariants — terminal w/ request_ref, received w/ lease, bad error_code, etc.).
+        # (the durable record can never drift from the schema's state invariants —
+        # terminal w/ request_ref, received w/ lease, bad error_code, malformed timestamp).
         validate_record_for_persistence(record)
         with self._lock:
             # Store a snapshot copy so the caller's reference cannot mutate the stored
@@ -366,6 +422,12 @@ class InMemoryJobStore(JobStore):
             return replace(stored) if stored is not None else None
 
     def cas_update(self, record: JobRecord, expected_version: int) -> bool:
+        # MONOTONIC one-winner guard (Blocker 2): the candidate MUST advance the version by
+        # EXACTLY one past expected_version, BEFORE the stored-version CAS. A write that does
+        # not advance the version by exactly one (unchanged / decreased / skipped) is rejected
+        # even if the stored version still matches expected_version — so a malformed candidate
+        # can never bypass the monotonic single-step invariant via a matching stored version.
+        _require_monotonic_cas(record, expected_version)
         # Validate OUTSIDE the lock (pure function of the record) to keep the critical
         # section to the read-check-write; an invalid record is rejected regardless of
         # the CAS outcome.
@@ -536,11 +598,27 @@ class InMemoryResultStore(ResultStore):
 
 
 def _parse_iso_z(value: str) -> datetime:
-    """Parse an ISO-8601 timestamp (with Z or offset) to a timezone-aware datetime.
+    """Parse a STRICT, timezone-aware ISO-8601 timestamp and normalize it to UTC.
 
     Local to the transport so the job store can decide its own retained-window
-    physical-deletion boundary without importing the route layer."""
-    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    physical-deletion boundary without importing the route layer.
+
+    STRICTNESS (Blocker 4): the value MUST carry an explicit UTC designator (``Z``) or a
+    numeric UTC offset. A NAIVE timestamp (``2026-06-22T12:00:00``) or a DATE-ONLY value
+    (``2026-06-22``) is rejected with ``ValueError`` — a naive value would otherwise persist
+    and then raise ``TypeError`` when compared against the tz-aware ``now``, a latent
+    determinism/integrity bug. ``datetime.fromisoformat`` is lenient (it accepts naive and
+    date-only inputs), so the result's ``tzinfo`` is checked explicitly and any non-UTC
+    offset is converted to UTC. Produced timestamps from ``_iso_z`` always carry ``Z``, so
+    this only ever rejects bad INPUT, never our own serialization."""
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.tzinfo.utcoffset(parsed) is None:
+        raise ValueError(
+            f"timestamp {value!r} must be timezone-aware (explicit Z or UTC offset)"
+        )
+    # Normalize any valid offset (e.g. +05:00) to UTC so all downstream comparisons are
+    # against a single canonical zone.
+    return parsed.astimezone(timezone.utc)
 
 
 def purge_expired_jobs(

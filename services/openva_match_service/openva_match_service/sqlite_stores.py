@@ -34,6 +34,8 @@ from .verify_transport import (
     RequestEnvelopeStore,
     ResultStore,
     _parse_iso_z,
+    _require_create_version,
+    _require_monotonic_cas,
     validate_record_for_persistence,
 )
 
@@ -134,8 +136,11 @@ class SqliteJobStore(JobStore):
         self._conn.commit()
 
     def create(self, record: JobRecord) -> None:
+        # A newly created record MUST start at version 0 (Blocker 2: same monotonic genesis
+        # guard as the in-memory backend) — create is the v0 origin of the CAS counter.
+        _require_create_version(record)
         # Reject a schema-invalid record at the persistence boundary BEFORE writing
-        # (Blocker 4: same faithful schema check as the in-memory backend).
+        # (same faithful schema check as the in-memory backend).
         validate_record_for_persistence(record)
         placeholders = ", ".join("?" for _ in _JOB_COLUMNS)
         columns = ", ".join(_JOB_COLUMNS)
@@ -151,7 +156,12 @@ class SqliteJobStore(JobStore):
         return _row_to_record(row) if row is not None else None
 
     def cas_update(self, record: JobRecord, expected_version: int) -> bool:
-        # Reject a schema-invalid record before the version-guarded write (Blocker 4).
+        # MONOTONIC one-winner guard (Blocker 2): the candidate MUST advance the version by
+        # EXACTLY one past expected_version, checked BEFORE the version-guarded SQL write — so
+        # an unchanged/decreased/skipped version is rejected even if the stored row still
+        # matches expected_version.
+        _require_monotonic_cas(record, expected_version)
+        # Reject a schema-invalid record before the version-guarded write.
         validate_record_for_persistence(record)
         # The version-guarded write: only the row whose stored version equals the value
         # the caller read is updated. rowcount == 1 means the CAS won; 0 means a

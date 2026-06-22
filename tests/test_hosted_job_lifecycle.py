@@ -59,6 +59,8 @@ from openva_match_service.verify_transport import (  # noqa: E402
     InMemoryResultStore,
     InvalidRecord,
     JobRecord,
+    _parse_iso_z as _vt_parse_iso_z,
+    load_packaged_schema,
     new_job_id,
     new_job_token,
     new_ref,
@@ -1299,3 +1301,315 @@ def test_sqlite_cas_exactly_one_winner_two_connections(tmp_path):
     won_b = conn_b.cas_update(dataclasses.replace(base, row_count=9, version=1), 0)
     assert sorted([won_a, won_b]) == [False, True]  # exactly one CAS landed
     assert writer.get(record.job_id).version == 1
+
+
+# =============================================================================
+# PR #410 round-2 blocker remediation tests (protocol-critical)
+# =============================================================================
+
+import importlib.resources  # noqa: E402
+
+
+# --- Blocker 1: packaged schema (drift-lock + importlib.resources isolation) ----
+
+
+def test_packaged_schema_is_drift_locked_to_canonical():
+    """The schema shipped AS SERVICE PACKAGE DATA must be json-equal to the canonical
+    schemas/openva/hosted-job-record.schema.json. A drift between the two would let the
+    packaged service validate records against a different contract than the repo's source of
+    truth — so this lock fails the moment they diverge."""
+    canonical = json.loads(
+        Path("schemas/openva/hosted-job-record.schema.json").read_text(encoding="utf-8")
+    )
+    packaged = load_packaged_schema()
+    assert packaged == canonical
+    # Byte-identical too (the copy is a verbatim copy, not a re-serialization), so a
+    # whitespace/ordering drift is also caught.
+    canonical_bytes = Path(
+        "schemas/openva/hosted-job-record.schema.json"
+    ).read_bytes()
+    packaged_bytes = (
+        importlib.resources.files("openva_match_service")
+        .joinpath("schemas/hosted-job-record.schema.json")
+        .read_bytes()
+    )
+    assert packaged_bytes == canonical_bytes
+
+
+def test_persistence_validation_loads_schema_without_repo_tree(monkeypatch, tmp_path):
+    """Package-isolation proof: the persistence validation loads its schema via
+    importlib.resources from the INSTALLED package, NOT a repository-root ``schemas/`` tree.
+
+    We run from a clean cwd with no ``schemas/`` directory on disk and clear the cached
+    validator, then exercise InMemoryJobStore.create(valid_record). If the loader still
+    depended on a ``parents[N]`` repo path it would raise FileNotFoundError here; instead it
+    resolves the packaged copy and the create succeeds. This is the in-repo stand-in for the
+    clean-wheel/Docker build (a CI-infra concern)."""
+    import openva_match_service.verify_transport as vt
+
+    # Prove the loader itself works with no repository schemas/ tree reachable from cwd.
+    monkeypatch.chdir(tmp_path)
+    assert not (tmp_path / "schemas").exists()
+    # Drop the cached validator so it is rebuilt via the importlib.resources loader now.
+    vt._record_validator.cache_clear()
+
+    schema = vt.load_packaged_schema()
+    assert schema["title"] == "OpenVA Hosted Job Record"
+
+    jobs = InMemoryJobStore()
+    record = _valid_received()
+    jobs.create(record)  # exercises validate_record_for_persistence -> packaged schema
+    assert jobs.get(record.job_id) is not None
+    # Restore the cache for the rest of the session (cleanly rebuilt).
+    vt._record_validator.cache_clear()
+
+
+# --- Blocker 2: monotonic one-winner version CAS (both backends) ----------------
+
+
+def test_create_rejects_nonzero_version(stores):
+    """create must require version == 0 (the CAS counter's genesis); any other version is a
+    forged record and is rejected in BOTH backends."""
+    jobs, _envelopes, _results = stores
+    bad = dataclasses.replace(_valid_received(), version=3)
+    with pytest.raises(InvalidRecord):
+        jobs.create(bad)
+    # version 0 still creates cleanly.
+    ok = _valid_received()
+    assert ok.version == 0
+    jobs.create(ok)
+    assert jobs.get(ok.job_id).version == 0
+
+
+def test_cas_update_requires_exactly_expected_plus_one(stores):
+    """cas_update must advance the version by EXACTLY one past expected_version, BEFORE the
+    stored-version guard, in BOTH backends: unchanged / decreased / skipped are rejected;
+    expected+1 is accepted."""
+    jobs, envelopes, _results = stores
+    record, _ = make_received(jobs, envelopes)  # version 0 stored
+    base = jobs.get(record.job_id)
+    assert base.version == 0
+
+    # candidate.version == expected (unchanged) -> rejected.
+    with pytest.raises(InvalidRecord):
+        jobs.cas_update(dataclasses.replace(base, state="queued", version=0), 0)
+    # candidate.version < expected (decreased) -> rejected. Use expected=1 so the candidate
+    # version 0 is strictly below it; the stored version is still 0 (the monotonic check
+    # fires first, before the stored-version guard ever runs).
+    with pytest.raises(InvalidRecord):
+        jobs.cas_update(dataclasses.replace(base, state="queued", version=0), 1)
+    # candidate.version == expected + 2 (skipped) -> rejected.
+    with pytest.raises(InvalidRecord):
+        jobs.cas_update(dataclasses.replace(base, state="queued", version=2), 0)
+    # Nothing landed: the stored record is still the version-0 received record.
+    assert jobs.get(record.job_id).state == "received"
+    assert jobs.get(record.job_id).version == 0
+
+    # candidate.version == expected + 1 -> accepted (and lands).
+    won = jobs.cas_update(dataclasses.replace(base, state="queued", version=1), 0)
+    assert won is True
+    assert jobs.get(record.job_id).state == "queued"
+    assert jobs.get(record.job_id).version == 1
+
+
+def test_monotonic_cas_two_writes_same_expected_cannot_both_land(stores):
+    """Direct-store concurrency proof: two candidates at the SAME expected_version (each a
+    valid expected+1 advance) cannot both land — the first wins the stored-version CAS, the
+    second loses (stored version already advanced). Combined with the monotonic guard, the
+    version is a strictly monotonic one-winner counter in BOTH backends."""
+    jobs, envelopes, _results = stores
+    record, _ = make_received(jobs, envelopes)
+    base = jobs.get(record.job_id)
+    assert base.version == 0
+
+    # Run sequentially against the shared store: the FIRST wins the stored-version CAS
+    # (lands row_count=5 at version 1); the SECOND, at the same now-stale expected_version 0,
+    # loses (stored version already advanced to 1). Both are valid expected+1 candidates, so
+    # it is the stored-version guard — not the monotonic check — that decides win vs lose here.
+    first = jobs.cas_update(dataclasses.replace(base, state="queued", row_count=5, version=1), 0)
+    second = jobs.cas_update(dataclasses.replace(base, state="queued", row_count=9, version=1), 0)
+    assert [first, second] == [True, False]  # exactly one landed, and it was the first
+    assert jobs.get(record.job_id).version == 1
+    # The LOSING write's row_count (9) never persisted; the winner's (5) did.
+    assert jobs.get(record.job_id).row_count == 5
+
+
+# --- Blocker 3: reconciler dispatch claim / backoff (updated_at eligibility) -----
+
+
+def test_recover_undispatched_eligibility_is_keyed_on_updated_at(stores):
+    """A record CREATED long ago but whose updated_at was just advanced (e.g. by a prior
+    dispatch_attempt bump) is NOT eligible until the grace window elapses past updated_at —
+    even though created_at is well past grace. This is the time-based dispatch claim."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    grace = timedelta(minutes=5)
+    # created 1h ago (well past grace) but updated_at bumped to ~now via a dispatch bump.
+    job, _ = make_received(jobs, envelopes, now=now - timedelta(hours=1))
+    increment_dispatch_attempt(jobs, job.job_id, 0, now=now)  # advances updated_at to now
+    assert jobs.get(job.job_id).state == "received"
+
+    calls: list[tuple[str, int]] = []
+
+    def enqueue(job_id, dispatch_attempt):
+        calls.append((job_id, dispatch_attempt))
+        return True
+
+    # Within the grace window of the fresh updated_at: NOT eligible (backoff in effect).
+    acted = recover_undispatched(jobs, now, dispatch_max=10, grace=grace, enqueue=enqueue)
+    assert acted == []
+    assert calls == []
+    assert jobs.get(job.job_id).state == "received"
+
+    # Once the grace window elapses past updated_at, it becomes eligible again.
+    later = now + grace + timedelta(seconds=1)
+    acted_later = recover_undispatched(jobs, later, dispatch_max=10, grace=grace, enqueue=enqueue)
+    assert acted_later == [job.job_id]
+    assert jobs.get(job.job_id).state == "queued"
+
+
+def test_recover_undispatched_barrier_no_second_generation_in_grace_window(stores):
+    """Barrier-controlled concurrent race: reconciler A is PAUSED after its
+    increment_dispatch_attempt (via an enqueue callback that blocks on a barrier) while
+    reconciler B runs a full sweep concurrently. Because the bump advanced updated_at to
+    `now`, B finds the just-bumped record inside its grace window and does NOT start a second
+    dispatch generation: only ONE generation is in flight, dispatch_attempt advances by
+    exactly one, and B re-dispatches nothing."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    grace = timedelta(minutes=5)
+    job, _ = make_received(jobs, envelopes, now=now - timedelta(hours=1))
+
+    a_in_enqueue = threading.Event()
+    release_a = threading.Event()
+    a_enqueue_calls: list[tuple[str, int]] = []
+    b_enqueue_calls: list[tuple[str, int]] = []
+
+    def enqueue_a(job_id, dispatch_attempt):
+        # A has already done phase-1 increment_dispatch_attempt (updated_at now == `now`);
+        # it is paused here BEFORE its phase-3 received->queued flip.
+        a_enqueue_calls.append((job_id, dispatch_attempt))
+        a_in_enqueue.set()
+        release_a.wait(timeout=5)
+        return True
+
+    def enqueue_b(job_id, dispatch_attempt):
+        b_enqueue_calls.append((job_id, dispatch_attempt))
+        return True
+
+    def run_a():
+        recover_undispatched(jobs, now, dispatch_max=10, grace=grace, enqueue=enqueue_a)
+
+    ta = threading.Thread(target=run_a)
+    ta.start()
+    assert a_in_enqueue.wait(timeout=5)  # A is paused mid-enqueue, having bumped updated_at
+
+    # While A is paused (record still `received`, updated_at == now), B sweeps. B must NOT
+    # start a second generation: the record is within its grace window of the fresh
+    # updated_at, so B skips it entirely (no enqueue, no bump).
+    acted_b = recover_undispatched(jobs, now, dispatch_max=10, grace=grace, enqueue=enqueue_b)
+    assert acted_b == []
+    assert b_enqueue_calls == []  # B re-dispatched nothing
+    assert jobs.get(job.job_id).dispatch_attempt == 1  # exactly one generation bump
+
+    # Let A finish its phase-3 flip.
+    release_a.set()
+    ta.join(timeout=5)
+    assert not ta.is_alive()
+    assert a_enqueue_calls == [(job.job_id, 1)]  # only A's single generation
+    assert jobs.get(job.job_id).state == "queued"
+    assert jobs.get(job.job_id).dispatch_attempt == 1  # still exactly one generation
+
+
+# --- Blocker 4: strict timezone-aware timestamp parsing ------------------------
+
+
+def test_persistence_rejects_timezone_less_timestamps(stores):
+    """A naive (timezone-less) created_at / expires_at / lease_expires_at is rejected at the
+    persistence boundary (InvalidRecord), in BOTH backends — a naive value would otherwise
+    persist and later raise TypeError against the tz-aware now."""
+    jobs, envelopes, _results = stores
+    # naive created_at
+    with pytest.raises(InvalidRecord):
+        jobs.create(dataclasses.replace(_valid_received(), created_at="2026-06-22T12:00:00"))
+    # naive expires_at
+    with pytest.raises(InvalidRecord):
+        jobs.create(dataclasses.replace(_valid_received(), expires_at="2026-06-22T12:00:00"))
+    # naive lease_expires_at on an executing record (the only state carrying a lease).
+    now = _now()
+    rec, _ = make_received(jobs, envelopes, now=now)
+    # Build a would-be executing record with a tz-LESS lease deadline and CAS it: rejected.
+    queued = api_received_to_queued(jobs, rec.job_id, 0, now=now)
+    bad_executing = dataclasses.replace(
+        jobs.get(rec.job_id),
+        state="executing",
+        lease_owner="w1",
+        lease_expires_at="2026-06-22T12:00:00",  # tz-less
+        version=queued.version + 1,
+    )
+    with pytest.raises(InvalidRecord):
+        jobs.cas_update(bad_executing, queued.version)
+
+
+def test_lease_acquisition_rejects_tz_less_deadline(stores):
+    """Lease acquisition rejects a timezone-less lease deadline (InvalidLease via the strict
+    parser), distinct from a well-formed but past deadline."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now)
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    with pytest.raises(InvalidLease):
+        worker_queued_to_executing(
+            jobs, record.job_id, queued.version, lease_owner="w1",
+            lease_expires_at="2026-06-22T12:00:00", now=now,  # tz-less
+        )
+    assert jobs.get(record.job_id).state == "queued"  # no acquisition landed
+
+
+def test_heartbeat_rejects_tz_less_new_deadline(stores):
+    """A heartbeat with a timezone-less new deadline is rejected (InvalidLease)."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now)
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    executing = worker_queued_to_executing(
+        jobs, record.job_id, queued.version, lease_owner="w1",
+        lease_expires_at=_iso(now + timedelta(minutes=5)), now=now,
+    )
+    with pytest.raises(InvalidLease):
+        worker_heartbeat(
+            jobs, record.job_id, executing.version, lease_owner="w1",
+            new_lease_expires_at="2026-06-22T12:00:00", now=now,  # tz-less
+        )
+
+
+def test_valid_z_timestamp_round_trips():
+    """A well-formed ...Z timestamp parses to a tz-aware UTC datetime and a record carrying
+    only ...Z timestamps persists + round-trips cleanly (the strictness only rejects bad
+    input, never our own serialization)."""
+    parsed = _vt_parse_iso_z("2026-06-22T12:00:00Z")
+    assert parsed.tzinfo == timezone.utc
+    jobs = InMemoryJobStore()
+    record = _valid_received()
+    jobs.create(record)
+    assert jobs.get(record.job_id) is not None
+
+
+def test_non_utc_offset_is_accepted_and_normalized():
+    """A non-UTC offset (e.g. +05:00) is ACCEPTED and normalized to UTC: 12:00+05:00 is
+    07:00Z. The parser does not require a literal Z, only an explicit, tz-aware designator."""
+    parsed = _vt_parse_iso_z("2026-06-22T12:00:00+05:00")
+    assert parsed.tzinfo == timezone.utc
+    assert parsed.hour == 7 and parsed.minute == 0
+    # A record whose timestamps carry a non-UTC offset still persists (it is tz-aware).
+    now_offset = "2026-06-22T12:00:00+05:00"
+    later_offset = "2026-06-23T12:00:00+05:00"
+    jobs = InMemoryJobStore()
+    record = dataclasses.replace(
+        _valid_received(),
+        created_at=now_offset,
+        updated_at=now_offset,
+        expires_at=later_offset,
+    )
+    jobs.create(record)
+    assert jobs.get(record.job_id) is not None
