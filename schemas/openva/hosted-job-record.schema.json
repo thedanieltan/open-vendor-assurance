@@ -77,6 +77,12 @@
     "created_at": { "type": "string", "format": "date-time" },
     "updated_at": { "type": "string", "format": "date-time" },
     "expires_at": { "type": "string", "format": "date-time" },
+    "version": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Optimistic-concurrency record version (WP-02B). OPTIONAL and not in `required`, so WP-02A records (which omit it) still validate; absent is treated as 0. CAS is on this version: a guarded mutation reads the record, compares the expected version, applies the atomic transition_mutations field set, and increments version, persisting with UPDATE ... WHERE version = expected. A stale-version CAS fails and the actor re-reads. It is operational concurrency metadata only and carries no submitted content."
+    },
     "not_advice": { "const": true }
   },
   "additionalProperties": false,

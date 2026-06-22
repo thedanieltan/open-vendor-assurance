@@ -28,7 +28,7 @@ import hmac
 import secrets
 import uuid
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from typing import Any
 
@@ -115,6 +115,11 @@ class JobRecord:
     dispatch_attempt: int = 0
     lease_owner: str | None = None
     lease_expires_at: str | None = None
+    # Optimistic-concurrency version (WP-02B). CAS is on this version: every successful
+    # guarded mutation increments it and persists with a version-guarded write; a stale
+    # expected_version fails the CAS and the actor re-reads. Defaults to 0 so WP-02A
+    # records (which never set it) round-trip unchanged.
+    version: int = 0
     not_advice: bool = True
 
     def is_terminal(self) -> bool:
@@ -138,6 +143,7 @@ class JobRecord:
             "expires_at": self.expires_at,
             "attempt": self.attempt,
             "dispatch_attempt": self.dispatch_attempt,
+            "version": self.version,
             "not_advice": self.not_advice,
         }
 
@@ -186,20 +192,62 @@ class JobStore(ABC):
     def get(self, job_id: str) -> JobRecord | None: ...
 
     @abstractmethod
+    def cas_update(self, record: JobRecord, expected_version: int) -> bool:
+        """Optimistic-concurrency persist (WP-02B). Atomically replace the stored
+        record for ``record.job_id`` ONLY IF its currently-stored version equals
+        ``expected_version`` (the value the caller read before mutating). The caller
+        has already set ``record.version`` to ``expected_version + 1`` and applied the
+        mutated fields. Returns True when the write landed (one row matched) and False
+        when the version did not match (a concurrent writer won — the actor must
+        re-read). Durable backends realize this as ``UPDATE ... WHERE job_id=? AND
+        version=?`` and check the affected rowcount.
+
+        This is the SINGLE persistence primitive the job_lifecycle CAS protocol uses,
+        so the version-CAS semantics are identical across the in-memory and durable
+        backends."""
+        ...
+
+    @abstractmethod
     def active_count(self) -> int: ...
+
+    @abstractmethod
+    def iter_records(self) -> list[JobRecord]:
+        """Return a stable snapshot list of the store's current records.
+
+        Used by the watchdog/reconciler sweeps (job_lifecycle) as an ENUMERATION source
+        only — each sweep mutation re-reads via ``get`` inside its guarded transition and
+        persists with a version-guarded CAS, so a record that changed between the
+        snapshot and the CAS is simply skipped this pass. The list contains copies, so a
+        caller cannot mutate stored rows by holding a reference."""
+        ...
+
+    @abstractmethod
+    def expired_request_refs(self, now: datetime) -> list[str]:
+        """Return the request_ref of every record that is EXPIRED (``now >=
+        expires_at``) but still carries a non-null request_ref — i.e. the submitted
+        input is still present at/after TTL.
+
+        This realizes the contract's `expiry` minimisation phase: the REQUEST ENVELOPE
+        is deleted at/after ``expires_at`` (submitted input gone at TTL), strictly
+        BEFORE the record's retained window elapses and the record is physically
+        removed. The job store does not delete the envelope itself (that is a separate
+        physical store); the caller (purge_expired_jobs) deletes by these refs and then
+        clears the in-record pointer is unnecessary because the record is content-free
+        operational metadata and is itself purged once the retained window elapses."""
+        ...
 
     @abstractmethod
     def purge_expired(self, now: datetime, retained_window: timedelta) -> list[JobRecord]:
         """Physically delete every job record whose retained window has fully elapsed
         (``now >= expires_at + retained_window``) and return the deleted RECORDS.
 
-        This realizes the hosted-deployment.yaml `expiry` model in the in-memory
-        transport: a record stays retained (poll -> 410) for ``retained_window`` past
-        ``expires_at``, then is physically removed (poll -> 404). In production the
-        store-native TTL + object-lifecycle does this; WP-02B swaps that backend in.
-        The job store removes ONLY the job records here; the caller (purge_expired_jobs)
-        uses the returned records' request_ref/result_ref to delete the matching
-        transient envelope/result blobs."""
+        This realizes the hosted-deployment.yaml `expiry` model in the transport: a
+        record stays retained (poll -> 410) for ``retained_window`` past ``expires_at``,
+        then is physically removed (poll -> 404). In production the store-native TTL +
+        object-lifecycle does this; the SQLite reference backend (sqlite_stores.py)
+        demonstrates the same semantics durably. The job store removes ONLY the job
+        records here; the caller (purge_expired_jobs) uses the returned records'
+        request_ref/result_ref to delete the matching transient envelope/result blobs."""
         ...
 
 
@@ -211,13 +259,36 @@ class InMemoryJobStore(JobStore):
         self._records: dict[str, JobRecord] = {}
 
     def create(self, record: JobRecord) -> None:
-        self._records[record.job_id] = record
+        # Store a snapshot copy so the caller's reference cannot mutate the stored
+        # record without going through cas_update (mirrors a durable backend, where the
+        # in-process object is never the stored row).
+        self._records[record.job_id] = replace(record)
 
     def get(self, job_id: str) -> JobRecord | None:
-        return self._records.get(job_id)
+        stored = self._records.get(job_id)
+        # Hand back a fresh copy so mutations by the caller do not retroactively change
+        # the stored row except through cas_update (the version-CAS gate).
+        return replace(stored) if stored is not None else None
+
+    def cas_update(self, record: JobRecord, expected_version: int) -> bool:
+        stored = self._records.get(record.job_id)
+        if stored is None or stored.version != expected_version:
+            return False
+        self._records[record.job_id] = replace(record)
+        return True
 
     def active_count(self) -> int:
         return sum(1 for record in self._records.values() if not record.is_terminal())
+
+    def iter_records(self) -> list[JobRecord]:
+        return [replace(record) for record in self._records.values()]
+
+    def expired_request_refs(self, now: datetime) -> list[str]:
+        return [
+            record.request_ref
+            for record in self._records.values()
+            if record.request_ref is not None and now >= _parse_iso_z(record.expires_at)
+        ]
 
     def purge_expired(self, now: datetime, retained_window: timedelta) -> list[JobRecord]:
         purged: list[JobRecord] = []
@@ -231,11 +302,12 @@ class InMemoryJobStore(JobStore):
 class RequestEnvelopeStore(ABC):
     """Transient request-envelope store interface (keyed by request_ref).
 
-    In WP-02A this holds only minimised, non-identifying metadata (row_count) — the
-    submitted vendor identities are validated then DISCARDED, never retained. The
-    durable, encrypted-at-rest envelope holding the actual submitted input for the
-    worker to read arrives in WP-02B. The envelope is never carried in the job record
-    or the queue."""
+    WP-02B persists the submitted verify rows here so the worker (WP-02C) can read them;
+    minimisation is provided by the deployment-managed encryption-at-rest plus the
+    three-phase TTL deletion (the envelope is deleted at/after ``expires_at``) and the
+    terminal deletion (deleted on completion/failure). The envelope is never carried in
+    the job record (which holds only a request_ref pointer + minimised metadata) or the
+    queue (which carries job_id only)."""
 
     @abstractmethod
     def put(self, ref: str, envelope: Any) -> None: ...
@@ -248,8 +320,9 @@ class RequestEnvelopeStore(ABC):
 
 
 class InMemoryRequestEnvelopeStore(RequestEnvelopeStore):
-    """In-memory, NON-DURABLE, transient request-envelope store. The durable,
-    encrypted-at-rest backend is WP-02B."""
+    """In-memory, NON-DURABLE, transient request-envelope store. A durable reference
+    backend (SQLite) is in ``sqlite_stores.py``; production encryption-at-rest is a
+    deployment/infra concern (WP-02F/G)."""
 
     def __init__(self) -> None:
         self._envelopes: dict[str, Any] = {}
@@ -313,15 +386,26 @@ def purge_expired_jobs(
     now: datetime,
     retained_window: timedelta,
 ) -> list[str]:
-    """Opportunistically advance the expiry lifecycle by PHYSICALLY deleting every job
-    whose retained window has fully elapsed, together with its transient request
-    envelope (request_ref) and any result blob (result_ref).
+    """Opportunistically advance the THREE-PHASE expiry lifecycle on the stores.
 
-    This is the in-memory realization of the hosted-deployment.yaml `expiry.deletes`
-    set (job_record + transient_request_envelope + result_blob): the 410-while-retained
-    -> 404-after-deletion transition is PHYSICAL, not a status-only flag. The job store
-    returns the records it removed, so the envelope/result deletes run by ref.
-    Returns the deleted job_ids. Idempotent: deleting an absent ref is a no-op."""
+    Realizes the hosted-deployment.yaml `expiry` model:
+      Phase 2 (expired-but-retained, ``expires_at <= now < expires_at + retained_window``):
+        the REQUEST ENVELOPE is deleted at/after ``expires_at`` for data minimisation —
+        the submitted input is gone at TTL even though the (content-free) record is
+        retained so the poll can still return 410. Idempotent: re-deleting an
+        already-deleted envelope is a no-op, so repeated opportunistic sweeps are safe.
+      Phase 3 (physically deleted, ``now >= expires_at + retained_window``): the record,
+        its envelope (if any pointer remains), and its result blob are all removed, so a
+        later poll is a content-free 404. This is the `expiry.deletes` set
+        (job_record + transient_request_envelope + result_blob).
+
+    In production the store-native TTL + object-lifecycle does both; the SQLite reference
+    backend (sqlite_stores.py) demonstrates the same semantics durably. Returns the
+    job_ids physically deleted in phase 3."""
+    # Phase 2: minimise expired-but-retained input (delete the envelope at TTL).
+    for ref in jobs.expired_request_refs(now):
+        envelopes.delete(ref)
+    # Phase 3: physical deletion of the record + any remaining envelope/result.
     purged = jobs.purge_expired(now, retained_window)
     for record in purged:
         if record.request_ref is not None:
