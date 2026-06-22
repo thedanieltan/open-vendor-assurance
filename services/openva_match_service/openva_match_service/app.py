@@ -37,6 +37,7 @@ from .verify_transport import (  # noqa: E402
     InMemoryRequestEnvelopeStore,
     InMemoryResultStore,
     JobRecord,
+    _parse_iso_z,
     extract_bearer_token,
     digests_match,
     new_job_id,
@@ -432,9 +433,11 @@ def _iso_z(value: datetime) -> str:
     return value.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _parse_iso_z(value: str) -> datetime:
-    """Parse an ISO-8601 timestamp (with Z or offset) to a timezone-aware datetime."""
-    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+# NOTE (round-3 Blocker D): app.py no longer defines its own lenient _parse_iso_z. The poll
+# path (v1_verify_status) uses the SINGLE strict parser imported from verify_transport, so
+# the service has ONE deterministic RFC3339 validation boundary. The only timestamps the poll
+# path parses are self-produced canonical ``...Z`` values (record.expires_at), which the strict
+# parser accepts unchanged.
 
 
 def install_middleware_and_handlers(app: FastAPI) -> None:

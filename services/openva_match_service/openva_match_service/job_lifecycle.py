@@ -622,6 +622,13 @@ def increment_dispatch_attempt(
     record = jobs.get(job_id)
     if record is None:
         raise StaleVersion(f"job {job_id} not found (re-read required)")
+    # Fail closed on an expired job (round-3 Blocker B): increment_dispatch_attempt has its own
+    # inline CAS (not _guarded_transition), so — like worker_heartbeat — it must enforce the
+    # expiry guard itself, right after the load. A job past its own expires_at is in the
+    # expiry-owned 410 -> 404 path and may make NO forward progress (not even a dispatch_attempt
+    # bump while still received). This does NOT regress the reconciler: recover_undispatched
+    # already skips now >= expires_at before ever calling this, so the happy path is unaffected.
+    _reject_if_expired(record, now)
     if record.version != expected_version:
         raise StaleVersion(
             f"expected version {expected_version}, stored version is {record.version}"

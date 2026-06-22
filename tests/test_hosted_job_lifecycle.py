@@ -2092,3 +2092,234 @@ def test_blob_put_accepts_and_normalizes_non_utc_offset(stores):
     at = normalized_instant
     assert env_ref in envelopes.purge_expired(at)
     assert res_ref in results.purge_expired(at)
+
+
+# =============================================================================
+# PR #410 round-4 blocker remediation tests (async-persistence protocol-critical)
+# =============================================================================
+
+
+# --- Blocker A: rejected duplicate SQLite create rolls back its transaction -----
+#
+# sqlite-only: with sqlite3's default isolation, the failed duplicate INSERT opens an
+# IMPLICIT transaction. Without an explicit rollback it is left OPEN, holding a write lock on
+# the shared connection and wedging every later operation.
+
+
+def test_sqlite_duplicate_create_rolls_back_open_transaction(tmp_path):
+    """After a rejected duplicate create, the connection has NO open transaction
+    (in_transaction is False) and the SAME store can immediately create + read a DIFFERENT
+    job back (no lingering 'database is locked')."""
+    db = str(tmp_path / "dup_rollback.db")
+    jobs = SqliteJobStore(db)
+    envelopes = SqliteRequestEnvelopeStore(db)
+    record, _ = make_received(jobs, envelopes)
+
+    # A duplicate create on the SAME job_id is rejected.
+    duplicate = dataclasses.replace(_valid_received(), job_id=record.job_id)
+    with pytest.raises(JobAlreadyExists):
+        jobs.create(duplicate)
+
+    # The failed INSERT's implicit transaction must have been rolled back: no open txn.
+    assert jobs._conn.in_transaction is False
+
+    # And the SAME store can immediately create + read back a DIFFERENT job (the connection
+    # is not wedged by a lingering write lock).
+    other = _valid_received()
+    jobs.create(other)  # would raise "database is locked" if the txn were still open
+    assert jobs.get(other.job_id) is not None
+    assert jobs.get(other.job_id).version == 0
+
+
+def test_sqlite_concurrent_duplicate_create_then_writes_unwedged(tmp_path):
+    """Concurrent variant: N threads create the SAME job_id; exactly one wins, the rest are
+    rejected — and crucially, after all the rejected creates rolled back, the store is NOT
+    wedged: a fresh DIFFERENT job creates and reads back cleanly."""
+    db = str(tmp_path / "dup_rollback_concurrent.db")
+    jobs = SqliteJobStore(db)
+    job_id = new_job_id()
+    n = 8
+    barrier = threading.Barrier(n)
+    successes: list[int] = []
+    already: list[int] = []
+    other_errors: list[BaseException] = []
+    lock = threading.Lock()
+
+    def attempt(i):
+        candidate = dataclasses.replace(_valid_received(), job_id=job_id, row_count=i + 1)
+        try:
+            barrier.wait()
+            jobs.create(candidate)
+            with lock:
+                successes.append(i + 1)
+        except JobAlreadyExists:
+            with lock:
+                already.append(i)
+        except BaseException as exc:  # noqa: BLE001
+            with lock:
+                other_errors.append(exc)
+
+    threads = [threading.Thread(target=attempt, args=(i,)) for i in range(n)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert other_errors == []  # no "database is locked" / sqlite3 error escaped
+    assert len(successes) == 1
+    assert len(already) == n - 1
+    assert jobs._conn.in_transaction is False  # no lingering open transaction
+    # The store is not wedged: a new, distinct job creates + reads back.
+    other = _valid_received()
+    jobs.create(other)
+    assert jobs.get(other.job_id) is not None
+
+
+# --- Blocker B: increment_dispatch_attempt fails closed on an expired job --------
+#
+# Parametrized over both backends via `stores`.
+
+
+def test_increment_dispatch_attempt_rejected_when_job_expired(stores):
+    """increment_dispatch_attempt on a job past its own expires_at fails closed (JobExpired)
+    and does NOT mutate dispatch_attempt or version — consistent with every other lifecycle
+    entry point (worker_heartbeat, the central guarded transition)."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now, expires_in=timedelta(minutes=10))
+    before = jobs.get(record.job_id)
+    assert before.dispatch_attempt == 0
+    assert before.version == 0
+    later = now + timedelta(minutes=11)  # past expires_at
+    with pytest.raises(JobExpired):
+        increment_dispatch_attempt(jobs, record.job_id, before.version, now=later)
+    after = jobs.get(record.job_id)
+    assert after.dispatch_attempt == 0  # unchanged
+    assert after.version == 0  # no forward progress
+    assert after.state == "received"
+
+
+# --- Blocker C: in-memory blob stores return snapshots, not live references ------
+#
+# Parametrized over both backends so they assert PARITY with the JSON-round-tripping SQLite
+# blob stores: mutating the original (post-put) or a returned (post-get) object must never
+# change stored state.
+
+
+def test_envelope_store_put_get_are_snapshots(stores):
+    jobs, envelopes, _results = stores
+    now = _now()
+    expires = _iso(now + timedelta(hours=1))
+    original = {"row_count": 1, "rows": [{"vendor_name": "Acme"}]}
+    ref = new_ref()
+    envelopes.put(ref, original, expires)
+    # Mutating the ORIGINAL after put must not change stored state.
+    original["row_count"] = 999
+    original["rows"][0]["vendor_name"] = "Mutated"
+    got = envelopes.get(ref)
+    assert got["row_count"] == 1
+    assert got["rows"][0]["vendor_name"] == "Acme"
+    # Mutating a RETURNED get object must not change a subsequent get.
+    got["row_count"] = -1
+    got["rows"][0]["vendor_name"] = "AlsoMutated"
+    again = envelopes.get(ref)
+    assert again["row_count"] == 1
+    assert again["rows"][0]["vendor_name"] == "Acme"
+
+
+def test_result_store_put_get_are_snapshots(stores):
+    jobs, _envelopes, results = stores
+    now = _now()
+    expires = _iso(now + timedelta(hours=1))
+    original = {"rows": [{"status": "ok", "detail": {"score": 1}}]}
+    ref = new_ref()
+    results.put(ref, original, expires)
+    # Mutating the ORIGINAL after put must not change stored state.
+    original["rows"][0]["status"] = "tampered"
+    original["rows"][0]["detail"]["score"] = 99
+    got = results.get(ref)
+    assert got["rows"][0]["status"] == "ok"
+    assert got["rows"][0]["detail"]["score"] == 1
+    # Mutating a RETURNED get object must not change a subsequent get.
+    got["rows"][0]["status"] = "tampered-again"
+    got["rows"][0]["detail"]["score"] = -1
+    again = results.get(ref)
+    assert again["rows"][0]["status"] == "ok"
+    assert again["rows"][0]["detail"]["score"] == 1
+
+
+def test_blob_get_of_absent_ref_is_none(stores):
+    """A get of an absent ref returns None (the snapshot copy never turns a miss into a {})."""
+    jobs, envelopes, results = stores
+    assert envelopes.get(new_ref()) is None
+    assert results.get(new_ref()) is None
+
+
+# --- Blocker D: _parse_iso_z is deterministically RFC3339-strict -----------------
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        "2026-06-22 12:00:00Z",  # space separator (with Z)
+        "2026-06-22 12:00:00+00:00",  # space separator (with offset)
+        "2026-06-22T12:00:00+0000",  # offset without a colon
+        "2026-06-22T12:00Z",  # missing seconds
+        "2026-06-22t12:00:00Z",  # lowercase t
+        "2026-06-22",  # date-only
+        "2026-06-22T12:00:00",  # naive (no designator)
+    ],
+)
+def test_parse_iso_z_rejects_non_rfc3339(bad):
+    with pytest.raises(ValueError):
+        _vt_parse_iso_z(bad)
+
+
+def test_parse_iso_z_accepts_and_normalizes_rfc3339():
+    # Canonical Z.
+    z = _vt_parse_iso_z("2026-06-22T12:00:00Z")
+    assert z.tzinfo == timezone.utc and z.hour == 12
+    # Non-UTC offset, normalized to UTC (12:00+05:00 -> 07:00Z).
+    off = _vt_parse_iso_z("2026-06-22T12:00:00+05:00")
+    assert off.tzinfo == timezone.utc and off.hour == 7
+    # Fractional seconds with Z.
+    frac = _vt_parse_iso_z("2026-06-22T12:00:00.123Z")
+    assert frac.tzinfo == timezone.utc and frac.microsecond == 123000
+
+
+def test_create_rejects_space_separated_created_at(stores):
+    """A record with a space-separated created_at is rejected at the persistence boundary
+    (InvalidRecord) in BOTH backends — the strict parser is the backstop behind the schema."""
+    jobs, _envelopes, _results = stores
+    bad = dataclasses.replace(_valid_received(), created_at="2026-06-22 12:00:00Z")
+    with pytest.raises(InvalidRecord):
+        jobs.create(bad)
+
+
+def test_lease_deadline_offset_without_colon_is_invalid_lease(stores):
+    """A lease deadline with an offset that omits the colon (+0000) is rejected as
+    InvalidLease (via the strict parser), in BOTH backends."""
+    jobs, envelopes, _results = stores
+    now = _now()
+    record, _ = make_received(jobs, envelopes, now=now)
+    queued = api_received_to_queued(jobs, record.job_id, 0, now=now)
+    with pytest.raises(InvalidLease):
+        worker_queued_to_executing(
+            jobs, record.job_id, queued.version, lease_owner="w1",
+            lease_expires_at="2026-06-22T12:00:00+0000", now=now,  # offset without colon
+        )
+    assert jobs.get(record.job_id).state == "queued"  # no acquisition landed
+
+
+def test_blob_expires_at_space_separator_is_invalid_record(stores):
+    """A blob expires_at with a space separator is rejected at put time (InvalidRecord) and
+    stores nothing, in BOTH backends (envelope + result)."""
+    jobs, envelopes, results = stores
+    env_ref = new_ref()
+    with pytest.raises(InvalidRecord):
+        envelopes.put(env_ref, {"row_count": 1}, "2026-06-22 12:00:00Z")
+    assert envelopes.get(env_ref) is None
+    res_ref = new_ref()
+    with pytest.raises(InvalidRecord):
+        results.put(res_ref, {"rows": []}, "2026-06-22 12:00:00Z")
+    assert results.get(res_ref) is None

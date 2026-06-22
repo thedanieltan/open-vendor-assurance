@@ -23,10 +23,12 @@ Security posture (enforced here and at the route layer):
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import hmac
 import importlib.resources
 import json
+import re
 import secrets
 import threading
 import uuid
@@ -535,13 +537,20 @@ class InMemoryRequestEnvelopeStore(RequestEnvelopeStore):
         # Reject + normalize the blob expiry BEFORE storage (Blocker 4) so a malformed/naive
         # value can never persist and later abort a purge sweep. Store the normalized string.
         normalized = _validate_blob_expires_at(expires_at)
+        # Store a deep SNAPSHOT (round-3 Blocker C): the durable _SqliteBlobStore JSON
+        # round-trips on put+get, so a caller can never reach into stored state. Match that
+        # here by deep-copying on put so a later mutation of the ORIGINAL object cannot
+        # retroactively change what was stored.
         with self._lock:
-            self._envelopes[ref] = (envelope, normalized)
+            self._envelopes[ref] = (copy.deepcopy(envelope), normalized)
 
     def get(self, ref: str) -> Any | None:
         with self._lock:
             entry = self._envelopes.get(ref)
-            return entry[0] if entry is not None else None
+            # Hand back a deep COPY (round-3 Blocker C): mutating the returned object must not
+            # change stored state (parity with the SQLite backend's per-get JSON parse). None
+            # stays None.
+            return copy.deepcopy(entry[0]) if entry is not None else None
 
     def delete(self, ref: str) -> None:
         with self._lock:
@@ -598,13 +607,17 @@ class InMemoryResultStore(ResultStore):
         # Reject + normalize the blob expiry BEFORE storage (Blocker 4) so a malformed/naive
         # value can never persist and later abort a purge sweep. Store the normalized string.
         normalized = _validate_blob_expires_at(expires_at)
+        # Store a deep SNAPSHOT (round-3 Blocker C): parity with the JSON-round-tripping
+        # SQLite result store — a later mutation of the ORIGINAL cannot alter stored state.
         with self._lock:
-            self._results[ref] = (result, normalized)
+            self._results[ref] = (copy.deepcopy(result), normalized)
 
     def get(self, ref: str) -> Any | None:
         with self._lock:
             entry = self._results.get(ref)
-            return entry[0] if entry is not None else None
+            # Hand back a deep COPY (round-3 Blocker C): mutating the returned object must not
+            # change stored state. None stays None.
+            return copy.deepcopy(entry[0]) if entry is not None else None
 
     def delete(self, ref: str) -> None:
         with self._lock:
@@ -625,22 +638,50 @@ class InMemoryResultStore(ResultStore):
 # --- Expiry / purge coordination ----------------------------------------------
 
 
+# Strict RFC3339 shape, compiled ONCE at module scope (round-3 Blocker D). Enforced BEFORE
+# any parse so strictness is DETERMINISTIC and does NOT depend on the optional jsonschema
+# ``format`` checker / rfc3339-validator being installed. Requires: full date, a mandatory
+# uppercase ``T`` separator, mandatory seconds, optional fractional seconds, and an explicit
+# UTC designator — literal ``Z`` or a numeric ``±HH:MM`` offset (the colon is mandatory).
+# This rejects everything datetime.fromisoformat would otherwise wave through: a space
+# separator, a lowercase ``t``, an offset without a colon (``+0000``), missing seconds, a
+# date-only value, and a naive (tz-less) value.
+_RFC3339_RE = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$"
+)
+
+
 def _parse_iso_z(value: str) -> datetime:
-    """Parse a STRICT, timezone-aware ISO-8601 timestamp and normalize it to UTC.
+    """Parse a STRICT, RFC3339, timezone-aware timestamp and normalize it to UTC.
 
     Local to the transport so the job store can decide its own retained-window
-    physical-deletion boundary without importing the route layer.
+    physical-deletion boundary without importing the route layer. This is the single
+    validation boundary used by ``validate_record_for_persistence``, ``_parse_lease``,
+    ``_validate_blob_expires_at`` and ``_reject_if_expired``, and (round-3 Blocker D) by
+    ``app.py`` (it imports this one strict parser rather than defining a lenient local copy).
 
-    STRICTNESS (Blocker 4): the value MUST carry an explicit UTC designator (``Z``) or a
-    numeric UTC offset. A NAIVE timestamp (``2026-06-22T12:00:00``) or a DATE-ONLY value
-    (``2026-06-22``) is rejected with ``ValueError`` — a naive value would otherwise persist
-    and then raise ``TypeError`` when compared against the tz-aware ``now``, a latent
-    determinism/integrity bug. ``datetime.fromisoformat`` is lenient (it accepts naive and
-    date-only inputs), so the result's ``tzinfo`` is checked explicitly and any non-UTC
-    offset is converted to UTC. Produced timestamps from ``_iso_z`` always carry ``Z``, so
-    this only ever rejects bad INPUT, never our own serialization."""
+    STRICTNESS (Blocker 4 + round-3 Blocker D): the value is matched against a strict RFC3339
+    regex BEFORE parsing, so strictness is DETERMINISTIC and independent of the optional
+    jsonschema ``date-time`` format checker. ``datetime.fromisoformat`` is far laxer than
+    RFC3339 — it accepts a space separator, a lowercase ``t``, an offset without a colon,
+    missing seconds, date-only, and naive values — so the regex is the real gate; only after
+    it matches do we parse (which additionally rejects out-of-range calendar values, e.g.
+    month 13). The value MUST carry an explicit UTC designator (``Z``) or a numeric ``±HH:MM``
+    offset; a naive value would otherwise persist and then raise ``TypeError`` when compared
+    against the tz-aware ``now``, a latent determinism/integrity bug. Produced timestamps from
+    ``_iso_z`` are canonical second-precision ``...Z``, so this only ever rejects bad INPUT,
+    never our own serialization."""
+    if not isinstance(value, str) or not _RFC3339_RE.match(value):
+        raise ValueError(
+            f"timestamp {value!r} is not strict RFC3339 (need YYYY-MM-DDTHH:MM:SS[.fff]"
+            "(Z|±HH:MM))"
+        )
+    # The regex guarantees an explicit Z/offset; parsing rejects out-of-range calendar values.
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None or parsed.tzinfo.utcoffset(parsed) is None:
+        # Defence in depth: the regex already requires an explicit designator, but keep the
+        # tz-aware invariant explicit so a future regex change cannot silently let a naive
+        # value through.
         raise ValueError(
             f"timestamp {value!r} must be timezone-aware (explicit Z or UTC offset)"
         )

@@ -167,6 +167,13 @@ class SqliteJobStore(JobStore):
                 # SAME JobAlreadyExists the in-memory backend raises, so the v0-genesis /
                 # one-winner create boundary is identical across backends (Blocker 3). The
                 # existing row is left untouched (the failed INSERT changes nothing).
+                #
+                # ROLL BACK FIRST (round-3 Blocker A): under sqlite3's default isolation the
+                # failed INSERT already opened an IMPLICIT transaction. Without an explicit
+                # rollback that transaction is left OPEN, holding a write lock on the shared
+                # connection and wedging every later operation ("database is locked"). Roll it
+                # back BEFORE raising so the connection is clean for the next caller.
+                self._conn.rollback()
                 raise JobAlreadyExists(
                     f"job {record.job_id} already exists; create is the v0 genesis "
                     "and must not overwrite an existing record"
