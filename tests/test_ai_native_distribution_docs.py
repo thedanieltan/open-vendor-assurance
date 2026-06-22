@@ -81,8 +81,9 @@ def test_google_sheets_is_positioned_as_secondary_reference_fallback():
 def test_agent_export_contract_no_longer_denies_mcp_server():
     text = read("docs/agent-export-contract.md")
     assert "No hosted API and no MCP server" not in text
-    # determinism and non-advisory guarantees remain.
-    assert "static, digest-verifiable files" in text
+    # determinism and non-advisory guarantees remain (the verify-transport lockstep
+    # reconciliation reads "static, deterministic, digest-verifiable files").
+    assert "static, deterministic, digest-verifiable files" in text
     assert "no vendor risk scores" in text.lower()
 
 

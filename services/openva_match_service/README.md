@@ -4,10 +4,14 @@ A small, self-hostable FastAPI service that wraps the OpenVA pack reader and ven
 inventory matcher as a read-only HTTP API. It loads one published catalogue pack at
 startup and answers identity-match and source-enrichment requests against it.
 
-OpenVA does not operate a central hosted service. This is **cached catalogue
-enrichment** — every response reflects the pack loaded at startup. **No source is
-fetched or verified live during a request.** Output is non-advisory metadata, not a
-compliance, vendor-risk, legal, procurement, or security conclusion.
+OpenVA does not currently operate a production central matching service. The default
+surface is **cached catalogue enrichment** — every cached response reflects the pack
+loaded at startup, and **no source is fetched or verified live during a cached request.**
+The service also ships an optional, API-key-gated **verify transport** (`/v1/verify`),
+**disabled by default** (`OPENVA_VERIFY_TRANSPORT_ENABLED`); this release is transport-only
+— there is no worker or network egress, so accepted verify jobs stay `received`. Output is
+non-advisory metadata, not a compliance, vendor-risk, legal, procurement, or security
+conclusion.
 
 ## Endpoints
 
@@ -22,6 +26,8 @@ compliance, vendor-risk, legal, procurement, or security conclusion.
 | GET | `/v1/vendors/{vendor_id}/sources` | read | Canonical sources, optional `?source_type=` filter (repeatable) |
 | POST | `/v1/match` | read | Resolve one vendor identity (JSON) |
 | POST | `/v1/enrich` | read | Enrich a bounded batch of vendor rows (the spreadsheet/document endpoint) |
+| POST | `/v1/verify` | bearer | Create an async verify job → `job_id` + one-time `job_token` (flag-gated; `404` when off) |
+| GET | `/v1/verify/{job_id}` | job_token | Poll a verify job; `job_token` via `Authorization: Bearer` only; content-free `404`/`410`/`401` |
 
 `read` means: the existing bearer key **unless** `OPENVA_PUBLIC_READ_ENABLED=true`, in
 which case the `/v1` read-only endpoints are public. Interactive API docs are at `/docs`
@@ -36,6 +42,10 @@ and the schema at `/openapi.json`.
 | `OPENVA_MAX_UPLOAD_BYTES` | `5000000` | CSV upload byte cap (`/match`) |
 | `OPENVA_MAX_REQUEST_BYTES` | = `OPENVA_MAX_UPLOAD_BYTES` | JSON request-body cap for the `/v1` endpoints, enforced at the ASGI boundary before parsing (chunked / no-Content-Length included). Independent of the CSV cap; `/match` is exempt and keeps its own cap. Over-limit → stable `413`. |
 | `OPENVA_MAX_ROWS` | `500` | Row cap for `/match` and `/v1/enrich` |
+| `OPENVA_VERIFY_TRANSPORT_ENABLED` | `false` | Gates the optional async verify transport. Off ⇒ cached-only; the verify routes are registered (listed on the OpenAPI surface) but return `404`. |
+| `OPENVA_MAX_VERIFY_ROWS` | `20` | Max rows per `/v1/verify` request (hard-capped at 20 — the grounded live-verify budget). Over-limit → `413 row_limit_exceeded`. |
+| `OPENVA_JOB_TTL_HOURS` | `24` | Verify job TTL when the transport is enabled: the job `expires_at`; past it the poll returns `410`, then the record is physically purged (`404`). |
+| `OPENVA_MAX_ACTIVE_JOBS` | `3` | Reserved; not enforced in this release (verify concurrency control arrives with the worker, WP-02C). |
 | `OPENVA_PUBLIC_READ_ENABLED` | `false` | When true, `/v1` read endpoints need no key. Read-only only; never enables any write/submission/candidate-intake capability. |
 | `OPENVA_ALLOWED_ORIGINS` | _empty_ | Comma-separated CORS origins for browser clients. Empty means no cross-origin origins (never an implicit `*`). Methods limited to GET/POST/OPTIONS; headers to Authorization/Content-Type; credentials disabled. |
 | `OPENVA_CATALOG_COMMIT_SHA` | _unset_ | Optional 40-char lowercase hex commit SHA surfaced in `snapshot.catalog_commit_sha`; `null` when unset. Never fabricated. |
@@ -50,10 +60,15 @@ computed once at startup — **not** a git commit SHA), and `catalog_commit_sha`
 
 ## Privacy
 
-The service has no database and persists nothing. Submitted vendor names, domains,
-business-entity names, registration numbers, row IDs, source-type selections, and
-generated results are used only to answer the request and are never written to disk,
-stored in process state, logged in full, or sent to analytics.
+The service has no database and writes nothing to disk; the cached endpoints persist
+nothing. The optional verify transport, when enabled, holds only transient job
+**metadata** in process memory — a job id, the `sha256` token digest, a `row_count`, and
+timestamps — which is TTL-reaped (`OPENVA_JOB_TTL_HOURS` plus a short retained window).
+The submitted vendor names, domains, business-entity names, registration numbers, row IDs,
+and source-type selections themselves are **never retained**: a verify request validates
+them and discards them (only `row_count` is kept), and across every surface they are used
+only to answer the request and are never written to disk, stored in process state, logged
+in full, or sent to analytics.
 
 Because `/v1/vendors/{vendor_id}` carries a submitted vendor identity in its path, the
 bundled launcher disables Uvicorn's request access log by default (`OPENVA_ACCESS_LOG_ENABLED`,

@@ -2,7 +2,7 @@
 
 The OpenVA match service is an optional self-hosted HTTP wrapper around the OpenVA pack reader and vendor inventory matcher. It returns public metadata references only. It does not make risk, compliance, approval, or suitability assertions.
 
-OpenVA does not operate a central hosted service. Consumers that want HTTP access run their own service instance from a pinned repository commit or release.
+OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository now ships an optional, API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default, and this release does not include the durable backend, worker, production infrastructure, or public verify endpoint required for an operated hosted service. Until those later deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment. Consumers that want HTTP access run their own service instance from a pinned repository commit or release.
 
 ## Startup
 
@@ -40,7 +40,70 @@ Unauthenticated probes for orchestrators. `GET /healthz` returns `200 {"status":
 
 ## Request limits
 
-`POST /match` is bounded by configurable limits (defaults `OPENVA_MAX_UPLOAD_BYTES=5000000`, `OPENVA_MAX_ROWS=500`). An upload larger than `OPENVA_MAX_UPLOAD_BYTES` is rejected with `413` and the stable `http_error` shape; an inventory with more than `OPENVA_MAX_ROWS` rows is rejected with `400`. The service remains synchronous with no persistence and no verification in this version; `OPENVA_MAX_ACTIVE_JOBS` and `OPENVA_JOB_TTL_HOURS` are read-and-stored scaffolding for a future async resolver and are not enforced today.
+`POST /match` is bounded by configurable limits (defaults `OPENVA_MAX_UPLOAD_BYTES=5000000`, `OPENVA_MAX_ROWS=500`). An upload larger than `OPENVA_MAX_UPLOAD_BYTES` is rejected with `413` and the stable `http_error` shape; an inventory with more than `OPENVA_MAX_ROWS` rows is rejected with `400`. The cached `/match` and `/v1` read path is synchronous with no persistence. The optional, flag-gated verify transport adds an async job lifecycle: `OPENVA_JOB_TTL_HOURS` is enforced (the verify job `expires_at`, plus a retained-window purge that physically deletes the record), while `OPENVA_MAX_ACTIVE_JOBS` remains reserved and unenforced (verify concurrency control is deferred to the worker, WP-02C).
+
+## Verify transport (async, WP-02A)
+
+A hosted **verify** transport is available behind the `OPENVA_VERIFY_TRANSPORT_ENABLED`
+feature flag. It is **off by default**: when off, both verify endpoints return `404`
+(the rollback posture). Disabling the flag does not change the existing cached-endpoint
+behaviour or the loaded app state; the verify routes are still *registered* (so they
+appear on the OpenAPI surface) but return `404` until the flag is enabled. Enabling it
+adds the verify behaviour only — it does not change any existing endpoint.
+
+Unlike the cached path (synchronous, no persistence, no source fetch), verify mode is an
+**async job** model: it acknowledges that verify introduces durable jobs and, in a later
+slice, live source egress (the resolver worker) per
+[ADR-0001](architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md) and
+the [hosted-deployment contract](operations/contracts/hosted-deployment.yaml). **WP-02A
+ships the transport and API contract only — there is no worker, no queue, and no durable
+backend in this slice.** A created job therefore stays in state `received` and never
+executes; that is the correct behaviour for this slice. The in-memory stores are
+non-durable scaffolding that WP-02B replaces with the durable backend.
+
+**Job model.** A verify job moves through `received` → `queued` → `executing` →
+`completed` | `failed` (`completed`/`failed` are terminal). In WP-02A only `received` is
+ever reached. The durable record is operational metadata only: it carries no submitted
+inventory content, no vendor identity strings, and no request bodies. In WP-02A the
+submitted rows are NOT retained at all — they are validated then discarded, and the
+transient request envelope holds only minimised metadata (`row_count`); the durable,
+encrypted, TTL-deleted envelope holding the actual submitted input arrives in WP-02B. See
+[`schemas/openva/hosted-job-record.schema.json`](../schemas/openva/hosted-job-record.schema.json).
+
+**Submission access.** `POST /v1/verify` **always** requires the bearer API key, even when
+`OPENVA_PUBLIC_READ_ENABLED=true`. Public-read mode grants read-only access to the cached
+`/v1` data endpoints only; it never enables verify submission. The poll endpoint
+(`GET /v1/verify/{job_id}`) is authorized **solely** by the `job_token`, not the API key.
+
+**Token transport (capability).** Job creation returns a high-entropy `job_token`
+**once**. Polling/retrieval requires that token, carried **only** in the
+`Authorization: Bearer <job_token>` header — never in a query string, URL path, cookie,
+or redirect. `job_id` is a loggable correlation id, not a credential. The raw token is
+**never logged and never stored**; only its SHA-256 digest (`job_token_digest`) persists,
+and comparison is **constant-time**. The poll endpoint resolves the lifecycle in order:
+`404` for an unknown/deleted (or non-UUID) `job_id` (checked first; `job_id` is not a
+credential so it leaks nothing), `410` for an expired-but-retained job (checked before the
+token), `401` for a missing/invalid `job_token` on a live job (generic, no token echo),
+and `200` otherwise. The `401`, `404`, and `410` responses are all **content-free** (an
+empty body) — they carry the `X-OpenVA-*` and `X-OpenVA-Advisory-Boundary: non_advisory`
+headers but no JSON. `not_advice: true` appears in the body of **successful** payloads
+only (creation and the `200` poll); every response, including the content-free errors,
+still carries the advisory-boundary header. The expired-but-retained `410` window is
+bounded: after it elapses the record (with its `expires_at` + `job_token_digest`) is
+physically deleted, so a later poll is a content-free `404`.
+
+**Limit.** Verify requests are bounded by `OPENVA_MAX_VERIFY_ROWS` (default and
+authoritative maximum `20`, aligned to the hosted-deployment contract's
+`hosted_verify_limits.max_verify_rows`; a configured value above it fails closed at
+startup). `source_types` is bounded to `4` (the grounded verify budget, aligned to
+`hosted_verify_limits.max_source_types_per_verify_row`). These are far smaller than the
+cached `OPENVA_MAX_ROWS` cap because each verify row would drive real, serial, SSRF-safe
+live fetches in the later worker slice. An over-`rows` request is rejected by the API with
+`413` and the stable `row_limit_exceeded` code **before any job is created** — a pre-job
+rejection, never a job failure code; too many `source_types` returns `422`. Verify rows
+accept vendor **identities only**; a fetch-target URL field is rejected with `422`.
+Concurrency/abuse control is deferred to the worker (WP-02C) and edge rate limiting
+(WP-02H) — WP-02A enforces no per-instance active-job cap.
 
 ## `GET /pack/meta`
 

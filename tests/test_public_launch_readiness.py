@@ -162,7 +162,7 @@ def test_public_launch_copy_positions_v010_as_infrastructure_launch():
         "infrastructure launch",
         "seed dataset",
         "not a completeness claim",
-        "does not operate a public upload service",
-        "optional self-hosted match service",
+        "does not currently operate a production central matching service",
+        "optional, api-key-gated verify transport for self-hosted use",
     ]:
         assert phrase in text

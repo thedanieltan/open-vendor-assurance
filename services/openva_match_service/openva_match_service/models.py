@@ -19,6 +19,10 @@ MAX_IDENTITY_LEN = 512
 MAX_ROW_ID_LEN = 128
 MAX_SOURCE_TYPE_LEN = 128
 MAX_SOURCE_TYPES = 64
+# Hosted verify budget: at most 4 source types per verify row, matching
+# hosted-deployment.yaml hosted_verify_limits.max_source_types_per_verify_row.
+# This bounds the accepted live-fetch execution budget (>4 source types -> 422).
+MAX_VERIFY_SOURCE_TYPES = 4
 
 IdentityField = Annotated[str, Field(max_length=MAX_IDENTITY_LEN)]
 SourceTypeField = Annotated[str, Field(max_length=MAX_SOURCE_TYPE_LEN)]
@@ -245,5 +249,106 @@ class EnrichResultModel(BaseModel):
 
 class EnrichResponse(BaseModel):
     results: list[EnrichResultModel]
+    snapshot: Snapshot
+    not_advice: bool = True
+
+
+# --- Hosted verify transport models (WP-02A) ---------------------------------
+#
+# Verify mode takes vendor IDENTITIES only (never a fetch target URL). The SSRF
+# boundary is enforced structurally: VerifyRowItem subclasses MatchInput, so it
+# inherits the four identity fields, the "at least one identity" validator, and
+# extra="forbid". A url/candidate_url/source_url (or any other non-identity field)
+# is therefore rejected with 422 before any job is created — the resolver chooses
+# what to fetch from the catalogue, never the caller.
+
+
+class VerifyRowItem(MatchInput):
+    # Inherits extra="forbid" + the identity fields + the identity validator from
+    # MatchInput. Adds an optional row_id (same contract as EnrichVendorItem). It
+    # intentionally declares NO url field: extra="forbid" makes any url/candidate_url/
+    # source_url a 422, which is the SSRF boundary — verify takes identities only.
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={
+            "example": {
+                "row_id": "12",
+                "vendor_name": "Stripe",
+                "domain": "stripe.com",
+                "business_entity_name": None,
+                "registration_number": None,
+            }
+        },
+    )
+
+    row_id: str | int | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _check_row_id(cls, data: Any) -> Any:
+        if isinstance(data, dict) and "row_id" in data:
+            data = dict(data)
+            data["row_id"] = _normalize_row_id(data["row_id"])
+        return data
+
+
+class VerifyRequest(BaseModel):
+    # extra="forbid" closes the envelope: an undeclared top-level field is rejected
+    # with 422 rather than silently discarded, matching the other /v1 surfaces.
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={
+            "example": {
+                "rows": [
+                    {"row_id": "12", "vendor_name": "Stripe", "domain": "stripe.com"}
+                ],
+                "source_types": [
+                    "dpa",
+                    "subprocessors_list",
+                    "privacy_notice",
+                    "security_page",
+                ],
+            }
+        },
+    )
+
+    rows: list[VerifyRowItem] = Field(
+        min_length=1,
+        description="Bounded by OPENVA_MAX_VERIFY_ROWS. Identity rows only; no fetch-target URL is accepted.",
+    )
+    source_types: list[SourceTypeField] | None = Field(
+        default=None,
+        max_length=MAX_VERIFY_SOURCE_TYPES,
+        description="Optional, ≤ 4 (the hosted verify budget). Omitted means the hosted verify default source types.",
+    )
+
+
+class VerifyCreatedResponse(BaseModel):
+    """Returned once at job creation. ``job_token`` is the one-time capability and is
+    returned HERE ONLY — never on poll, never logged, never stored in plaintext."""
+
+    job_id: str
+    job_token: str = Field(description="One-time capability. Sent on poll via Authorization: Bearer only. Not returned again.")
+    state: str
+    expires_at: str
+    snapshot: Snapshot
+    not_advice: bool = True
+
+
+class VerifyStatusResponse(BaseModel):
+    """Poll/status projection of a job record.
+
+    MUST NOT include the job_token, the job_token_digest, the submitted request
+    content, or the lease fields — only operational status plus the result when
+    completed and the generic error_code when failed."""
+
+    job_id: str
+    state: str
+    row_count: int
+    created_at: str
+    updated_at: str
+    expires_at: str
+    result: dict[str, Any] | None = None
+    error_code: str | None = None
     snapshot: Snapshot
     not_advice: bool = True

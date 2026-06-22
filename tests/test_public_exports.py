@@ -114,7 +114,7 @@ def test_contract_doc_states_doctrine_and_exclusions():
     assert "schema_version" in text
     assert "commit_sha" in text
     assert "sha256" in text
-    assert "No hosted API" in text or "no hosted API" in text or "No API" in text
+    assert "no embedded API or server" in text
     assert "MCP server" in text
     assert "risk scores" in text or "risk scoring" in text
     assert "Null means not yet observed" in text

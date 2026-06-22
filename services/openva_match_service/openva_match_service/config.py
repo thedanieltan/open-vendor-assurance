@@ -8,13 +8,35 @@ from pathlib import Path
 SERVICE_VERSION = "0.1.0"
 ADVISORY_BOUNDARY = "non_advisory"
 
-# Configurable launch defaults, not hard-coded product promises. Only the upload
-# and row caps are enforced today (the service is still synchronous); the job
-# limits are read-and-stored scaffolding for the later async resolver.
+# Authoritative hard ceiling on the hosted verify row count. Matches
+# hosted-deployment.yaml hosted_verify_limits.max_verify_rows AND
+# hosted-job-record.schema row_count max. OPENVA_MAX_VERIFY_ROWS may be set lower
+# but NEVER higher; a value above this fails closed at config construction/startup.
+VERIFY_ROWS_HARD_CEILING = 20
+
+# Configurable launch defaults, not hard-coded product promises. The cached path is
+# synchronous (upload + row caps enforced). When the optional verify transport is
+# enabled, OPENVA_JOB_TTL_HOURS is enforced (the verify job expires_at + a retained-window
+# purge); OPENVA_MAX_ACTIVE_JOBS remains reserved/unenforced scaffolding (verify
+# concurrency control is deferred to the worker, WP-02C).
 DEFAULT_MAX_UPLOAD_BYTES = 5_000_000
 DEFAULT_MAX_ROWS = 500
 DEFAULT_MAX_ACTIVE_JOBS = 3
 DEFAULT_JOB_TTL_HOURS = 24
+# Hosted verify-mode row cap. Aligned to hosted-deployment.yaml
+# hosted_verify_limits.max_verify_rows and the job record schema's row_count
+# maximum (0..20). The verify limit is far smaller than the cached row cap
+# because each verify row drives real, serial, SSRF-safe live fetches.
+DEFAULT_MAX_VERIFY_ROWS = 20
+
+# The expired-but-retained window: the time after `expires_at` during which a job
+# record is kept (so a poll returns a content-free 410) before it is physically
+# deleted (after which a poll returns a content-free 404). This realizes the
+# hosted-deployment.yaml `expiry` model
+# (expires_at_then_410_while_retained_then_404_after_deletion): in production this is
+# the store-native TTL + object-lifecycle delete; in the WP-02A in-memory transport it
+# is enforced by an opportunistic purge on access. Not env-overridable in WP-02A.
+VERIFY_RETAINED_WINDOW_HOURS = 1
 
 _COMMIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _TRUE_TOKENS = {"1", "true", "yes", "on"}
@@ -33,6 +55,14 @@ class ServiceConfig:
     max_rows: int = DEFAULT_MAX_ROWS
     max_active_jobs: int = DEFAULT_MAX_ACTIVE_JOBS
     job_ttl_hours: int = DEFAULT_JOB_TTL_HOURS
+    # Hosted verify-mode transport. When False (default) the verify endpoints
+    # return 404; the cached endpoints and app state are unchanged (the verify routes
+    # are registered but inert). Verify mode introduces async jobs (a later
+    # slice ships the worker; WP-02A ships the transport only).
+    verify_transport_enabled: bool = False
+    # Maximum verify rows per request, enforced by the API before any job is
+    # created (over-limit is a pre-job rejection, never a job error_code).
+    max_verify_rows: int = DEFAULT_MAX_VERIFY_ROWS
     # Zero-install read access. When False (default) the new /v1 data endpoints
     # require the existing bearer key; when True they are public read-only. Public
     # mode never enables any write/submission/candidate-intake capability.
@@ -43,6 +73,16 @@ class ServiceConfig:
     # Optional deployment-supplied catalogue commit SHA (40-char lowercase hex).
     # Never fabricated; None when unavailable.
     catalog_commit_sha: str | None = None
+
+    def __post_init__(self) -> None:
+        # Clamp the configured verify row count to the authoritative budget. A value
+        # above VERIFY_ROWS_HARD_CEILING (the hosted-deployment.yaml + job-record
+        # schema maximum) fails closed at construction/startup; lower is allowed.
+        if not (1 <= self.max_verify_rows <= VERIFY_ROWS_HARD_CEILING):
+            raise RuntimeError(
+                f"max_verify_rows must be between 1 and {VERIFY_ROWS_HARD_CEILING} "
+                f"(hosted_verify_limits.max_verify_rows), got {self.max_verify_rows}"
+            )
 
     @classmethod
     def from_env(cls) -> "ServiceConfig":
@@ -62,6 +102,8 @@ class ServiceConfig:
             max_rows=_positive_int_env("OPENVA_MAX_ROWS", DEFAULT_MAX_ROWS),
             max_active_jobs=_positive_int_env("OPENVA_MAX_ACTIVE_JOBS", DEFAULT_MAX_ACTIVE_JOBS),
             job_ttl_hours=_positive_int_env("OPENVA_JOB_TTL_HOURS", DEFAULT_JOB_TTL_HOURS),
+            verify_transport_enabled=_bool_env("OPENVA_VERIFY_TRANSPORT_ENABLED", False),
+            max_verify_rows=_positive_int_env("OPENVA_MAX_VERIFY_ROWS", DEFAULT_MAX_VERIFY_ROWS),
             public_read_enabled=_bool_env("OPENVA_PUBLIC_READ_ENABLED", False),
             allowed_origins=_origins_env("OPENVA_ALLOWED_ORIGINS"),
             catalog_commit_sha=_commit_sha_env("OPENVA_CATALOG_COMMIT_SHA"),
