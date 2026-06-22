@@ -14,9 +14,11 @@ ADVISORY_BOUNDARY = "non_advisory"
 # but NEVER higher; a value above this fails closed at config construction/startup.
 VERIFY_ROWS_HARD_CEILING = 20
 
-# Configurable launch defaults, not hard-coded product promises. Only the upload
-# and row caps are enforced today (the service is still synchronous); the job
-# limits are read-and-stored scaffolding for the later async resolver.
+# Configurable launch defaults, not hard-coded product promises. The cached path is
+# synchronous (upload + row caps enforced). When the optional verify transport is
+# enabled, OPENVA_JOB_TTL_HOURS is enforced (the verify job expires_at + a retained-window
+# purge); OPENVA_MAX_ACTIVE_JOBS remains reserved/unenforced scaffolding (verify
+# concurrency control is deferred to the worker, WP-02C).
 DEFAULT_MAX_UPLOAD_BYTES = 5_000_000
 DEFAULT_MAX_ROWS = 500
 DEFAULT_MAX_ACTIVE_JOBS = 3
@@ -54,8 +56,8 @@ class ServiceConfig:
     max_active_jobs: int = DEFAULT_MAX_ACTIVE_JOBS
     job_ttl_hours: int = DEFAULT_JOB_TTL_HOURS
     # Hosted verify-mode transport. When False (default) the verify endpoints
-    # return 404 and the service is exactly the current cached-only synchronous
-    # service (rollback posture). Verify mode introduces async jobs (a later
+    # return 404; the cached endpoints and app state are unchanged (the verify routes
+    # are registered but inert). Verify mode introduces async jobs (a later
     # slice ships the worker; WP-02A ships the transport only).
     verify_transport_enabled: bool = False
     # Maximum verify rows per request, enforced by the API before any job is

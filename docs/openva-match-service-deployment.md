@@ -56,10 +56,12 @@ Optional environment variables bound request size and shape (defaults shown). An
 | --- | --- | --- |
 | `OPENVA_MAX_UPLOAD_BYTES` | `5000000` | `POST /match` rejects an upload larger than this with `413` (the in-memory read is bounded). |
 | `OPENVA_MAX_ROWS` | `500` | `POST /match` rejects an inventory with more rows than this with `400`. |
-| `OPENVA_MAX_ACTIVE_JOBS` | `3` | Read-and-stored scaffolding for the future async resolver; not enforced while the service is synchronous. |
-| `OPENVA_JOB_TTL_HOURS` | `24` | Read-and-stored scaffolding for the future async resolver; not enforced while the service is synchronous. |
+| `OPENVA_MAX_ACTIVE_JOBS` | `3` | Reserved; not enforced in WP-02A (verify concurrency control is deferred to the worker, WP-02C). |
+| `OPENVA_JOB_TTL_HOURS` | `24` | Verify job TTL when the verify transport is enabled: the job `expires_at`, after which the poll returns `410` and the record is physically purged (`404`). |
+| `OPENVA_VERIFY_TRANSPORT_ENABLED` | `false` | Gates the optional async verify transport. Off ⇒ cached-only; verify routes return `404`. |
+| `OPENVA_MAX_VERIFY_ROWS` | `20` | Max rows per `/v1/verify` request (hard-capped at 20). |
 
-The service remains synchronous with no persistence and no network egress in this version.
+The cached `/match` and `/v1` read path is synchronous with no persistence and no network egress. The optional, flag-gated verify transport (`OPENVA_VERIFY_TRANSPORT_ENABLED`, default off) adds an in-memory async job lifecycle: transient job metadata only (no submitted identities — those are discarded), TTL-reaped; no worker or network egress in this release (WP-02C).
 
 ## Smoke Tests
 

@@ -639,3 +639,48 @@ def test_expired_retained_then_physically_deleted_lifecycle():
         assert jobs.get(deleted.job_id) is None
         assert envelopes.get(deleted_ref) is None
         assert results.get(deleted_result_ref) is None
+
+
+# --- Documentation regression pins (operational docs must match the code) -------
+
+
+def _collapsed(rel: str) -> str:
+    return " ".join(Path(rel).read_text(encoding="utf-8").split())
+
+
+def test_service_readme_documents_verify_transport():
+    text = Path("services/openva_match_service/README.md").read_text(encoding="utf-8")
+    assert "/v1/verify" in text
+    assert "OPENVA_VERIFY_TRANSPORT_ENABLED" in text
+
+
+def test_contract_doc_reflects_verify_lifecycle_not_synchronous_only():
+    text = _collapsed("docs/openva-match-service-contract.md")
+    # Superseded claims must be gone.
+    assert "no verification in this version" not in text
+    assert "OPENVA_JOB_TTL_HOURS` are read-and-stored scaffolding" not in text
+    # The verify transport + its enforced TTL are now documented.
+    assert "/v1/verify" in text or "verify transport" in text
+    assert "OPENVA_JOB_TTL_HOURS` is enforced" in text
+
+
+def test_contract_doc_does_not_claim_envelope_retains_submitted_rows():
+    text = _collapsed("docs/openva-match-service-contract.md")
+    assert "submitted rows live in a separate transient request envelope" not in text
+    # WP-02A discards identities; only row_count is retained.
+    assert "validated then discarded" in text
+    assert "row_count" in text
+
+
+def test_deployment_doc_reflects_verify_lifecycle():
+    text = _collapsed("docs/openva-match-service-deployment.md")
+    assert "remains synchronous with no persistence and no network egress in this version" not in text
+    # JOB_TTL is now the verify job TTL (enforced when the transport is enabled).
+    assert "Verify job TTL" in text or "verify transport" in text
+
+
+def test_service_code_comments_have_no_superseded_language():
+    for module in ("config.py", "app.py", "verify_transport.py"):
+        text = Path(f"services/openva_match_service/openva_match_service/{module}").read_text(encoding="utf-8")
+        assert "exactly the current cached-only synchronous service" not in text, module
+        assert "Holds the submitted verify rows" not in text, module

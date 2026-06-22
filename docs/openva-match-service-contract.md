@@ -40,7 +40,7 @@ Unauthenticated probes for orchestrators. `GET /healthz` returns `200 {"status":
 
 ## Request limits
 
-`POST /match` is bounded by configurable limits (defaults `OPENVA_MAX_UPLOAD_BYTES=5000000`, `OPENVA_MAX_ROWS=500`). An upload larger than `OPENVA_MAX_UPLOAD_BYTES` is rejected with `413` and the stable `http_error` shape; an inventory with more than `OPENVA_MAX_ROWS` rows is rejected with `400`. The service remains synchronous with no persistence and no verification in this version; `OPENVA_MAX_ACTIVE_JOBS` and `OPENVA_JOB_TTL_HOURS` are read-and-stored scaffolding for a future async resolver and are not enforced today.
+`POST /match` is bounded by configurable limits (defaults `OPENVA_MAX_UPLOAD_BYTES=5000000`, `OPENVA_MAX_ROWS=500`). An upload larger than `OPENVA_MAX_UPLOAD_BYTES` is rejected with `413` and the stable `http_error` shape; an inventory with more than `OPENVA_MAX_ROWS` rows is rejected with `400`. The cached `/match` and `/v1` read path is synchronous with no persistence. The optional, flag-gated verify transport adds an async job lifecycle: `OPENVA_JOB_TTL_HOURS` is enforced (the verify job `expires_at`, plus a retained-window purge that physically deletes the record), while `OPENVA_MAX_ACTIVE_JOBS` remains reserved and unenforced (verify concurrency control is deferred to the worker, WP-02C).
 
 ## Verify transport (async, WP-02A)
 
@@ -64,8 +64,10 @@ non-durable scaffolding that WP-02B replaces with the durable backend.
 **Job model.** A verify job moves through `received` → `queued` → `executing` →
 `completed` | `failed` (`completed`/`failed` are terminal). In WP-02A only `received` is
 ever reached. The durable record is operational metadata only: it carries no submitted
-inventory content, no vendor identity strings, and no request bodies (the submitted rows
-live in a separate transient request envelope). See
+inventory content, no vendor identity strings, and no request bodies. In WP-02A the
+submitted rows are NOT retained at all — they are validated then discarded, and the
+transient request envelope holds only minimised metadata (`row_count`); the durable,
+encrypted, TTL-deleted envelope holding the actual submitted input arrives in WP-02B. See
 [`schemas/openva/hosted-job-record.schema.json`](../schemas/openva/hosted-job-record.schema.json).
 
 **Submission access.** `POST /v1/verify` **always** requires the bearer API key, even when

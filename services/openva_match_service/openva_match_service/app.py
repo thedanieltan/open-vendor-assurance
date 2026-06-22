@@ -483,9 +483,9 @@ def require_verify_enabled(request: Request) -> None:
     """Gate the hosted verify transport behind the feature flag.
 
     When OPENVA_VERIFY_TRANSPORT_ENABLED is False (default) both verify endpoints
-    return 404 and the service is exactly the current cached-only synchronous
-    service (rollback posture). A 404 (rather than 403) leaks nothing about whether
-    the capability exists for this deployment."""
+    return 404; the cached endpoints and app state are unchanged (the routes are
+    registered but inert). A 404 (rather than 403) leaks nothing about whether the
+    capability exists for this deployment."""
     config: ServiceConfig = request.app.state.config
     if not config.verify_transport_enabled:
         raise HTTPException(status_code=404, detail="verify transport is not enabled")

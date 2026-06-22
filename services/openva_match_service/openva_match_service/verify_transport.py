@@ -229,11 +229,13 @@ class InMemoryJobStore(JobStore):
 
 
 class RequestEnvelopeStore(ABC):
-    """Transient submitted-input envelope store interface (keyed by request_ref).
+    """Transient request-envelope store interface (keyed by request_ref).
 
-    Holds the submitted verify rows transiently for the worker to read. The
-    envelope is never carried in the job record or the queue. WP-02B swaps a
-    durable/encrypted-at-rest backend behind this interface."""
+    In WP-02A this holds only minimised, non-identifying metadata (row_count) — the
+    submitted vendor identities are validated then DISCARDED, never retained. The
+    durable, encrypted-at-rest envelope holding the actual submitted input for the
+    worker to read arrives in WP-02B. The envelope is never carried in the job record
+    or the queue."""
 
     @abstractmethod
     def put(self, ref: str, envelope: Any) -> None: ...
