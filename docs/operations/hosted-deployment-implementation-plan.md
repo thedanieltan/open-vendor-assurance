@@ -21,13 +21,15 @@ role only; decision and merge stay with the existing independent components.
 
 The decision package (issue #401, WP-OPENVA-AI-NATIVE-DISTRIBUTION-02) is complete and
 [ADR-0006](../architecture/decisions/ADR-0006-hosted-public-read-deployment.md) is
-**Accepted**. The merged in-repo slices are **WP-02A** (hosted transport), **WP-02L**
-(positioning, in lockstep with WP-02A — PR #408), and **WP-02B** (async persistence —
-PR #410). These are complete, not "startable". The remaining provider-neutral
-application slices (**WP-02C**, **WP-02E** startable now; then **WP-02D**/**WP-02H**;
-then **WP-02I**; then **WP-02J**) run entirely before the maintainer-gated
-infrastructure chain (**WP-02F** staging → **WP-02G** production → **WP-02K** launch
-evidence + programme closeout).
+**Accepted**. The entire provider-neutral application path is now **complete and
+merged**: **WP-02A** (hosted transport) and **WP-02L** (positioning, in lockstep —
+PR #408), **WP-02B** (async persistence — PR #410), **WP-02C** (worker + queue —
+PR #415), **WP-02D** (candidate ingress — PR #416), **WP-02H** (application hardening —
+PR #417), **WP-02I** (remote MCP — PR #418), and **WP-02J** (live `/check` — PR #419).
+The only remaining startable provider-neutral slice is **WP-02E** (deployment artifact +
+supply-chain), which depends only on WP-02A and needs no host. After WP-02E, the
+maintainer-gated infrastructure chain (**WP-02F** staging → **WP-02G** production →
+**WP-02K** launch evidence + programme closeout) begins.
 
 ## Slice summary
 
@@ -36,12 +38,12 @@ evidence + programme closeout).
 | WP-02A hosted transport + API contract | — | 1 | No (code) | completed |
 | WP-02L positioning reconciliation | 02A | 1 (human-reviewed) | No (docs) | completed |
 | WP-02B async job/result persistence | 02A | 1 | No (code) | completed |
-| WP-02C worker + queue execution | 02B | 1 | No (code) | startable now |
+| WP-02C worker + queue execution | 02B | 1 | No (code) | completed |
 | WP-02E deployment artifact + supply-chain | 02A | 1 | No (CI/artifact) | startable now |
-| WP-02D candidate-ingress integration | 02C | 1 | No (code) | blocked (02C) |
-| WP-02H application hardening (provider-neutral) | 02C | 1 | No (code) | blocked (02C) |
-| WP-02I remote MCP resolver activation | 02D, 02H | 1 | No (code) | blocked |
-| WP-02J live `/check` integration | 02I | 1 | No (code) | blocked |
+| WP-02D candidate-ingress integration | 02C | 1 | No (code) | completed |
+| WP-02H application hardening (provider-neutral) | 02C | 1 | No (code) | completed |
+| WP-02I remote MCP resolver activation | 02D, 02H | 1 | No (code) | completed |
+| WP-02J live `/check` integration | 02I | 1 | No (code) | completed |
 | WP-02F staging environment | 02E, 02J | maintainer | **Yes (staging)** | infra-gated |
 | WP-02G production infrastructure | 02F | maintainer | **Yes (prod)** | infra-gated |
 | WP-02K production smokes + launch evidence + closeout | 02G | maintainer | evidence | infra-gated |
@@ -234,11 +236,11 @@ built, not a separate work package or operating mode; the machine-readable form 
 
 ## Sequencing
 
-02A (+02L in lockstep) and 02B are **complete**. The provider-neutral application path
-runs next and entirely before any infrastructure: 02C and 02E start now; 02D and 02H
-(application hardening) follow 02C and may run in parallel; 02I follows 02D + 02H; 02J
-lights up the live `/check`. Only then does the maintainer-gated infrastructure chain
-begin: staging 02F (after 02E + 02J) → production 02G → 02K (production smokes, launch
-evidence, and programme closeout). The single maintainer external-decision block is
-requested once, immediately before 02F. No slice claims the service is live until
-WP-02K's evidence exists.
+The full provider-neutral application path is **complete and merged**: 02A (+02L in
+lockstep), 02B, 02C, 02D, 02H (application hardening), 02I, and 02J (live `/check`).
+The only remaining startable provider-neutral slice is 02E (deployment artifact +
+supply-chain), which depends only on 02A and needs no host. Only after 02E does the
+maintainer-gated infrastructure chain begin: staging 02F (after 02E + 02J) → production
+02G → 02K (production smokes, launch evidence, and programme closeout). The single
+maintainer external-decision block is requested once, immediately before 02F. No slice
+claims the service is live until WP-02K's evidence exists.
