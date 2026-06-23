@@ -443,34 +443,85 @@ maintainer_decisions:
 # implementation plan. Executability is gated by THREE independent conditions, ALL
 # required — ADR-0006 being Accepted does NOT by itself make a slice executable:
 #   (1) ADR-0006 architecture acceptance (done) authorises the IN-REPO sequence only;
-#   (2) the infrastructure slices (WP-02F, WP-02G, and the infra parts of WP-02H/02K)
+#   (2) the infrastructure slices (WP-02F, WP-02G, and the infra parts of WP-02K)
 #       additionally require maintainer acceptance of the external deployment
-#       decisions (provider, region, domain, credentials, spend);
+#       decisions (provider, region, domain, credentials, spend), requested ONCE
+#       before staging (WP-02F) — see cross_cutting_execution_constraints;
 #   (3) every slice additionally requires predecessor completion per its `depends_on`.
-# So at acceptance only WP-02A is startable; 02B-02D follow predecessors, 02E/02L
-# follow 02A, and 02H/02I/02J/02K follow the staging/production infrastructure chain.
+#
+# Current state (after the merged in-repo slices):
+#   - WP-02A (transport), WP-02L (positioning, in lockstep with WP-02A), and WP-02B
+#     (async persistence) are COMPLETE (merged: PR #408, PR #410). They are no longer
+#     "startable" — they are done.
+#   - The provider-NEUTRAL application sequence now runs entirely before any
+#     infrastructure: WP-02C and WP-02E are startable now; WP-02D and WP-02H follow
+#     WP-02C (and may run in parallel); WP-02I follows WP-02D + WP-02H; WP-02J follows
+#     WP-02I. Only then does the maintainer-gated infrastructure chain begin — staging
+#     (WP-02F) follows WP-02E + WP-02J, production (WP-02G) follows WP-02F, and launch
+#     evidence + programme closeout (WP-02K) follows WP-02G.
+# `status` is advisory metadata for readers/tools: completed | startable_now | blocked
+# | infra_gated. infra_gated == the depends_on closure reaches WP-02F/WP-02G (the
+# maintainer external-decision roots); a drift test recomputes this from depends_on.
 implementation_slices:
   - id: WP-02A-hosted-transport-api
     depends_on: []
+    status: completed
   - id: WP-02B-async-job-persistence
     depends_on: [WP-02A-hosted-transport-api]
+    status: completed
   - id: WP-02C-worker-and-queue
     depends_on: [WP-02B-async-job-persistence]
+    status: startable_now
   - id: WP-02D-candidate-ingress-integration
     depends_on: [WP-02C-worker-and-queue]
+    status: blocked
   - id: WP-02E-artifact-and-supply-chain
     depends_on: [WP-02A-hosted-transport-api]
+    status: startable_now
   - id: WP-02F-staging-environment
-    depends_on: [WP-02E-artifact-and-supply-chain, WP-02C-worker-and-queue]
+    depends_on: [WP-02E-artifact-and-supply-chain, WP-02J-live-check-integration]
+    status: infra_gated
   - id: WP-02G-production-infrastructure
     depends_on: [WP-02F-staging-environment]
+    status: infra_gated
   - id: WP-02H-observability-and-abuse-controls
-    depends_on: [WP-02F-staging-environment]
+    depends_on: [WP-02C-worker-and-queue]
+    status: blocked
   - id: WP-02I-remote-mcp-resolver-activation
     depends_on: [WP-02D-candidate-ingress-integration, WP-02H-observability-and-abuse-controls]
+    status: blocked
   - id: WP-02J-live-check-integration
     depends_on: [WP-02I-remote-mcp-resolver-activation]
+    status: blocked
   - id: WP-02K-production-smokes-and-launch-evidence
-    depends_on: [WP-02G-production-infrastructure, WP-02J-live-check-integration]
+    depends_on: [WP-02G-production-infrastructure]
+    status: infra_gated
   - id: WP-02L-positioning-reconciliation
     depends_on: [WP-02A-hosted-transport-api]
+    status: completed
+
+# Cross-cutting execution constraints for the WP-02 programme. These are properties of
+# HOW the remaining slices are built, not a separate work package or operating mode.
+# They hold across every slice; the infrastructure boundary (no external provisioning
+# before WP-02F) is the same fail-closed boundary as maintainer_decisions above.
+cross_cutting_execution_constraints:
+  provider_neutral_code_before_infrastructure: true   # all WP-02C..J app code lands before any provisioning
+  hosted_capabilities_disabled_by_default: true       # the verify/worker/transport paths ship behind an off-by-default flag
+  deterministic_local_test_paths: true                # local/in-memory/SQLite paths so tests need no cloud provider
+  provider_interfaces:                                 # queue, store, and telemetry are behind interfaces (one in-memory impl + provider impl)
+    - queue
+    - store
+    - telemetry
+  no_external_provisioning_before_staging:             # none of these may happen before WP-02F (maintainer-gated)
+    - provider_account
+    - dns
+    - tls
+    - production_secrets
+    - paid_registry_publication
+    - public_endpoint
+  static_layer_unaffected:                             # static catalogue, static MCP, and cached operation keep working throughout
+    - static_catalogue
+    - static_mcp
+    - cached_operation
+  external_decisions_maintainer_controlled: true       # provider/region/domain/credentials/spend stay maintainer-owned
+  external_decisions_requested_once_before: WP-02F-staging-environment
