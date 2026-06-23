@@ -63,6 +63,15 @@ class ServiceConfig:
     # Maximum verify rows per request, enforced by the API before any job is
     # created (over-limit is a pre-job rejection, never a job error_code).
     max_verify_rows: int = DEFAULT_MAX_VERIFY_ROWS
+    # WP-02D candidate-ingress (discovery role only). When False (default) the worker
+    # proposes NO candidates and behaves exactly as the WP-02C worker. When True (only
+    # meaningful when verify_transport_enabled is also True) genuinely newly-discovered
+    # public sources surfaced by a verify job are STAGED into the EXISTING durable candidate
+    # ingress AFTER the job is terminalized — discovery never gates the verify result. The
+    # hosted service holds NO GitHub credential; the credentialed PR-opening remains the
+    # existing, infra-gated candidate_ingress component. Enabling this without the verify
+    # transport is inert (no worker runs).
+    candidate_ingress_enabled: bool = False
     # Zero-install read access. When False (default) the new /v1 data endpoints
     # require the existing bearer key; when True they are public read-only. Public
     # mode never enables any write/submission/candidate-intake capability.
@@ -104,6 +113,7 @@ class ServiceConfig:
             job_ttl_hours=_positive_int_env("OPENVA_JOB_TTL_HOURS", DEFAULT_JOB_TTL_HOURS),
             verify_transport_enabled=_bool_env("OPENVA_VERIFY_TRANSPORT_ENABLED", False),
             max_verify_rows=_positive_int_env("OPENVA_MAX_VERIFY_ROWS", DEFAULT_MAX_VERIFY_ROWS),
+            candidate_ingress_enabled=_bool_env("OPENVA_CANDIDATE_INGRESS_ENABLED", False),
             public_read_enabled=_bool_env("OPENVA_PUBLIC_READ_ENABLED", False),
             allowed_origins=_origins_env("OPENVA_ALLOWED_ORIGINS"),
             catalog_commit_sha=_commit_sha_env("OPENVA_CATALOG_COMMIT_SHA"),
