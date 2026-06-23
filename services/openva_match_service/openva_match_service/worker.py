@@ -62,6 +62,7 @@ from .candidate_ingress import (
 )
 from .config import VERIFY_RETAINED_WINDOW_HOURS
 from .queue import Delivery, Queue
+from .telemetry import NullTelemetry, Telemetry
 from .verify_transport import (
     JobRecord,
     JobStore,
@@ -194,6 +195,7 @@ class VerifyWorker:
         now: Callable[[], datetime] | None = None,
         result_ttl_hours: int = 24,
         proposer: CandidateProposer | None = None,
+        telemetry: Telemetry | None = None,
     ) -> None:
         self.jobs = jobs
         self.envelopes = envelopes
@@ -209,6 +211,11 @@ class VerifyWorker:
         # output that never gates the verify result. The worker still holds NO GitHub
         # credential: the proposer only stages records into the existing ingress path.
         self._proposer = proposer
+        # Provider-neutral telemetry (WP-02H). Defaults to the no-op sink so the worker's
+        # behaviour is unchanged unless a sink is injected. Every emission is redacted by
+        # the sink; the worker only ever passes job_id (a correlation id, not a credential)
+        # and an outcome token — never identities, rows, or the request envelope.
+        self.telemetry = telemetry or NullTelemetry()
         # The resolver entry point. Defaults to the real, SSRF-safe resolver; tests inject a
         # fake. The worker ALWAYS passes the SSRF-safe fetcher_factory (never an arbitrary
         # fetcher) so a malicious/loopback target is rejected at the safe boundary.
@@ -225,7 +232,12 @@ class VerifyWorker:
         (success, fail-closed, or ack-and-drop) so the task name is tombstoned — the
         reconciler re-dispatches under a fresh name if needed."""
         try:
-            return self._process(delivery)
+            outcome = self._process(delivery)
+            # Outcome counter keyed only on a bounded low-cardinality label, plus a
+            # structured event with job_id (correlation id). No identities/rows ever.
+            self.telemetry.increment("verify_jobs_total", outcome=outcome)
+            self.telemetry.log("verify_job_processed", job_id=delivery.job_id, outcome=outcome)
+            return outcome
         finally:
             # Ack-and-drop / terminalize both ack the task (handoff.duplicate_delivery:
             # ack_and_drop_if_cas_to_executing_fails; a 2xx handler return acks in Cloud

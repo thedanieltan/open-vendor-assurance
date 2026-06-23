@@ -23,6 +23,20 @@ DEFAULT_MAX_UPLOAD_BYTES = 5_000_000
 DEFAULT_MAX_ROWS = 500
 DEFAULT_MAX_ACTIVE_JOBS = 3
 DEFAULT_JOB_TTL_HOURS = 24
+
+# WP-02H provider-neutral application-hardening defaults. All are OFF or GENEROUS so the
+# default build behaviour is UNCHANGED; only a deployment that opts in changes anything.
+#
+# Concurrency cap: 0 means UNBOUNDED (the default). A positive value bounds the number of
+# concurrently-executing verify jobs in this process (cost-exhaustion protection) so a
+# flood cannot run away before edge/budget controls exist (those are WP-02F/02G).
+DEFAULT_VERIFY_CONCURRENCY_LIMIT = 0
+# Application-layer rate-limit POLICY (a per-client token bucket the app consults — NOT an
+# edge/WAF). Disabled by default; even enabled, the defaults are generous. The edge
+# realisation is WP-02F/02G.
+DEFAULT_RATE_LIMIT_ENABLED = False
+DEFAULT_RATE_LIMIT_CAPACITY = 60
+DEFAULT_RATE_LIMIT_REFILL_PER_SECOND = 1.0
 # Hosted verify-mode row cap. Aligned to hosted-deployment.yaml
 # hosted_verify_limits.max_verify_rows and the job record schema's row_count
 # maximum (0..20). The verify limit is far smaller than the cached row cap
@@ -82,6 +96,18 @@ class ServiceConfig:
     # Optional deployment-supplied catalogue commit SHA (40-char lowercase hex).
     # Never fabricated; None when unavailable.
     catalog_commit_sha: str | None = None
+    # --- WP-02H application-hardening controls (provider-neutral; off/generous) ---
+    # Kill-switch: when True the verify/worker path fail-closes to CACHED-ONLY — verify
+    # returns a clean disabled/anonymous response and no job is created; the cached/static
+    # endpoints are unaffected. Default False = normal operation. This is an application
+    # flag (no infra); the provider edge/automation that ARMS it lives in WP-02F/02G.
+    verify_kill_switch: bool = False
+    # In-process concurrency cap on executing verify jobs (0 = unbounded, the default).
+    verify_concurrency_limit: int = DEFAULT_VERIFY_CONCURRENCY_LIMIT
+    # Application-layer rate-limit policy (per opaque client key). Off by default.
+    rate_limit_enabled: bool = DEFAULT_RATE_LIMIT_ENABLED
+    rate_limit_capacity: int = DEFAULT_RATE_LIMIT_CAPACITY
+    rate_limit_refill_per_second: float = DEFAULT_RATE_LIMIT_REFILL_PER_SECOND
 
     def __post_init__(self) -> None:
         # Clamp the configured verify row count to the authoritative budget. A value
@@ -117,6 +143,17 @@ class ServiceConfig:
             public_read_enabled=_bool_env("OPENVA_PUBLIC_READ_ENABLED", False),
             allowed_origins=_origins_env("OPENVA_ALLOWED_ORIGINS"),
             catalog_commit_sha=_commit_sha_env("OPENVA_CATALOG_COMMIT_SHA"),
+            verify_kill_switch=_bool_env("OPENVA_VERIFY_KILL_SWITCH", False),
+            verify_concurrency_limit=_nonneg_int_env(
+                "OPENVA_VERIFY_CONCURRENCY_LIMIT", DEFAULT_VERIFY_CONCURRENCY_LIMIT
+            ),
+            rate_limit_enabled=_bool_env("OPENVA_RATE_LIMIT_ENABLED", DEFAULT_RATE_LIMIT_ENABLED),
+            rate_limit_capacity=_positive_int_env(
+                "OPENVA_RATE_LIMIT_CAPACITY", DEFAULT_RATE_LIMIT_CAPACITY
+            ),
+            rate_limit_refill_per_second=_positive_float_env(
+                "OPENVA_RATE_LIMIT_REFILL_PER_SECOND", DEFAULT_RATE_LIMIT_REFILL_PER_SECOND
+            ),
         )
 
 
@@ -130,6 +167,32 @@ def _positive_int_env(name: str, default: int) -> int:
         raise RuntimeError(f"{name} must be a positive integer") from exc
     if value <= 0:
         raise RuntimeError(f"{name} must be a positive integer")
+    return value
+
+
+def _nonneg_int_env(name: str, default: int) -> int:
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise RuntimeError(f"{name} must be a non-negative integer") from exc
+    if value < 0:
+        raise RuntimeError(f"{name} must be a non-negative integer")
+    return value
+
+
+def _positive_float_env(name: str, default: float) -> float:
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = float(raw)
+    except ValueError as exc:
+        raise RuntimeError(f"{name} must be a positive number") from exc
+    if value <= 0:
+        raise RuntimeError(f"{name} must be a positive number")
     return value
 
 

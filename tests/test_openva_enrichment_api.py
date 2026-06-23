@@ -446,8 +446,12 @@ def test_enrich_does_not_persist_request_data_or_mutate_state(tmp_path):
         before = set(client.app.state._state.keys())
         client.post("/v1/enrich", headers=AUTH, json=payload)
         after = set(client.app.state._state.keys())
-    # No per-request attributes accumulate on app.state.
-    assert before == after == {"config", "service_state"}
+    # No per-request attributes accumulate on app.state (the invariant). The baseline is
+    # the app-LEVEL state set up once at startup: config + service_state plus the WP-02H
+    # provider-neutral controls (telemetry sink, rate-limit policy, concurrency limiter),
+    # all constructed at app build time and never mutated per request.
+    assert before == after
+    assert after == {"config", "service_state", "telemetry", "rate_limiter", "verify_concurrency"}
     # No request payload is written into the service modules / no DB or store is created.
     for module in ("app", "enrichment", "service_state"):
         text = Path(f"services/openva_match_service/openva_match_service/{module}.py").read_text(encoding="utf-8")
