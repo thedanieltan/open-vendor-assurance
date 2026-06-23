@@ -54,6 +54,12 @@ from tools.openva.vendor_resolution import (
 )
 
 from . import job_lifecycle as jl
+from .candidate_ingress import (
+    CandidateProposer,
+    captured_records,
+    is_proposable_resolution,
+    new_session_emitter,
+)
 from .config import VERIFY_RETAINED_WINDOW_HOURS
 from .queue import Delivery, Queue
 from .verify_transport import (
@@ -142,6 +148,26 @@ def _iso_z(value: datetime) -> str:
     return value.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def build_proposer_if_enabled(config: Any) -> CandidateProposer | None:
+    """Construct the off-by-default candidate proposer from a ServiceConfig.
+
+    Returns the default durable-ingress proposer ONLY when BOTH the verify transport AND
+    candidate ingress are explicitly enabled; otherwise None (the worker proposes nothing
+    and behaves exactly as the WP-02C worker). This is the single place the off-by-default
+    policy lives, so whatever explicitly constructs the worker (the worker is never
+    constructed in ``app.create_app``) opts in identically. The proposer holds NO GitHub
+    credential — it only stages into the existing durable ingress path."""
+    if not (
+        getattr(config, "verify_transport_enabled", False)
+        and getattr(config, "candidate_ingress_enabled", False)
+    ):
+        return None
+    # Import lazily so the default (off) path never touches the durable-ingress module.
+    from .candidate_ingress import DurableIngressProposer
+
+    return DurableIngressProposer()
+
+
 # --- The async worker ----------------------------------------------------------
 
 
@@ -167,6 +193,7 @@ class VerifyWorker:
         fetcher_factory: Callable[[list[str]], Any] = default_fetcher_factory,
         now: Callable[[], datetime] | None = None,
         result_ttl_hours: int = 24,
+        proposer: CandidateProposer | None = None,
     ) -> None:
         self.jobs = jobs
         self.envelopes = envelopes
@@ -174,6 +201,14 @@ class VerifyWorker:
         self.queue = queue
         self.catalog = catalog
         self.config = config or WorkerConfig()
+        # OPTIONAL, off-by-default discovery boundary (WP-02D). When None (default), the
+        # worker behaves exactly as the WP-02C worker: it proposes NO candidates. When
+        # present (only when the verify transport is enabled AND ingress is explicitly turned
+        # on), genuinely newly-discovered public sources are proposed into the EXISTING
+        # durable candidate ingress AFTER the job is terminalized — discovery is a side
+        # output that never gates the verify result. The worker still holds NO GitHub
+        # credential: the proposer only stages records into the existing ingress path.
+        self._proposer = proposer
         # The resolver entry point. Defaults to the real, SSRF-safe resolver; tests inject a
         # fake. The worker ALWAYS passes the SSRF-safe fetcher_factory (never an arbitrary
         # fetcher) so a malicious/loopback target is rejected at the safe boundary.
@@ -251,9 +286,16 @@ class VerifyWorker:
             # publish an empty/ambiguous result.
             return self._fail(job_id, record.version, "internal_error", now=now)
 
+        # WP-02D: capture discovered candidate records during execution ONLY when a proposer
+        # is wired (off by default). When off, the resolver is called exactly as in WP-02C
+        # and nothing is captured; the verify result is byte-identical either way.
+        capture = self._proposer is not None
+
         # Execute the verify bounded by the hosted limits + the per-job budget.
         try:
-            result_payload, record = self._execute(record, rows, source_types)
+            result_payload, record, discovered = self._execute(
+                record, rows, source_types, capture=capture
+            )
         except _JobTimeout:
             # Over the per-job budget: leave the lease to expire and let the watchdog path
             # apply (executing->queued re-dispatch / executing->failed execution_timeout).
@@ -286,19 +328,58 @@ class VerifyWorker:
             # No partial `completed` is ever written — the CAS is the single atomic step.
             self.results.delete(result_ref)
             return "dropped"
+
+        # Discovery side output (WP-02D): the job is now terminal (completed). ONLY now —
+        # never before, never as a precondition — propose any genuinely newly-discovered
+        # public sources into the EXISTING durable candidate ingress. This NEVER changes the
+        # verify result and a proposer failure NEVER fails the verify job (the result blob is
+        # already written and the record is already `completed`).
+        if self._proposer is not None:
+            self._propose_discoveries(discovered, result_payload)
         return "completed"
+
+    def _propose_discoveries(
+        self, discovered: list[dict[str, Any]], result_payload: dict[str, Any]
+    ) -> None:
+        """Best-effort: stage discovered candidates into the existing durable ingress.
+
+        Runs AFTER terminalization. Only when at least one row surfaced a genuinely-new
+        discovery (an already-catalogued / current / not-found / ambiguous resolution
+        proposes nothing) are the captured candidate records — the resolver's own
+        deterministic builds — handed to the existing ingress. Every failure is swallowed:
+        discovery is a side output that must never gate or fail the (already terminal) verify
+        result. The worker holds no GitHub credential — the proposer only enqueues into the
+        existing ingress path."""
+        try:
+            rows = result_payload.get("rows") if isinstance(result_payload, dict) else None
+            if not isinstance(rows, list):
+                return
+            if not any(is_proposable_resolution(row) for row in rows):
+                return
+            if discovered:
+                self._proposer.propose(discovered)
+        except Exception:  # noqa: BLE001 - discovery must never fail a terminal verify job
+            return
 
     # -- execution --------------------------------------------------------------
 
     def _execute(
-        self, record: JobRecord, rows: list[dict[str, Any]], source_types: list[str]
-    ) -> tuple[dict[str, Any], JobRecord]:
+        self,
+        record: JobRecord,
+        rows: list[dict[str, Any]],
+        source_types: list[str],
+        *,
+        capture: bool = False,
+    ) -> tuple[dict[str, Any], JobRecord, list[dict[str, Any]]]:
         """Resolve every row via the SSRF-safe resolver, bounded by the hosted limits and
         the per-job execution budget, heartbeating the lease throughout.
 
         Rows may run at ``verify_row_concurrency``; source types within a row are serial
-        (the resolver iterates them serially). Returns ``(result_payload, latest_record)``.
-        Raises ``_JobTimeout`` if the per-job budget is exceeded (the watchdog path applies)."""
+        (the resolver iterates them serially). Returns
+        ``(result_payload, latest_record, discovered_records)`` — ``discovered_records`` is
+        the deduplicated set of candidate records the resolver built during execution (empty
+        unless ``capture`` is set; WP-02D). Raises ``_JobTimeout`` if the per-job budget is
+        exceeded (the watchdog path applies)."""
         # Enforce the row cap defensively (the API already rejects > max_verify_rows).
         if len(rows) > MAX_VERIFY_ROWS:
             raise ValueError(f"verify job has {len(rows)} rows; max is {MAX_VERIFY_ROWS}")
@@ -308,23 +389,33 @@ class VerifyWorker:
         last_heartbeat = time.monotonic()
         lease_owner = self.config.lease_owner
 
-        def _resolve_row(row: dict[str, Any]) -> dict[str, Any]:
+        def _resolve_row(row: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]]]:
             request = {
                 "vendor": _identity_only(row),
                 "required_source_types": bounded_source_types,
                 "freshness_mode": FRESHNESS_VERIFY,
                 "channel": DEFAULT_CHANNEL,
             }
+            # WP-02D: a PER-ROW capture-only emitter (never shared across the concurrent
+            # rows, so no cross-thread mutation of emitter state) lets the resolver build
+            # candidate records in memory; durable staging happens later, AFTER
+            # terminalization. Present only when a proposer is wired; otherwise the call is
+            # exactly the WP-02C call and nothing is captured.
+            emitter = new_session_emitter() if capture else None
             # SSRF boundary: the worker ALWAYS passes the safe fetcher_factory and NEVER an
             # arbitrary `fetcher`, so every fetch is DNS-pinned + private/loopback-rejecting.
+            extra: dict[str, Any] = {"emitter": emitter} if emitter is not None else {}
             resolution = self._resolve(
                 request,
                 catalog=self.catalog,
                 fetcher_factory=self._fetcher_factory,
+                **extra,
             )
-            return _row_result(row, resolution)
+            captured = captured_records(emitter) if emitter is not None else []
+            return _row_result(row, resolution), captured
 
         results: list[dict[str, Any]] = []
+        discovered: dict[str, dict[str, Any]] = {}
         # Rows run at up to verify_row_concurrency (never more than the contract cap, never
         # more than the row count). A one-row job runs effectively serially.
         concurrency = max(1, min(VERIFY_ROW_CONCURRENCY, len(rows)))
@@ -333,7 +424,13 @@ class VerifyWorker:
             for future in as_completed(futures):
                 if time.monotonic() > deadline:
                     raise _JobTimeout()
-                results.append(future.result())
+                row_result, captured = future.result()
+                results.append(row_result)
+                # Dedup captured candidates by deterministic candidate id across rows so a
+                # discovery surfaced by two rows proposes one candidate (the durable ingress
+                # also dedups; this keeps the proposed set minimal).
+                for candidate in captured:
+                    discovered[candidate["candidate_id"]] = candidate
                 # Heartbeat the lease during long execution so the watchdog does not preempt
                 # a live, progressing job.
                 if time.monotonic() - last_heartbeat >= self.config.heartbeat_after_seconds:
@@ -352,7 +449,9 @@ class VerifyWorker:
             "rows": results,
             "not_advice": True,
         }
-        return payload, record
+        # Deterministic candidate order (by candidate id) for the discovered set.
+        discovered_records = [discovered[cid] for cid in sorted(discovered)]
+        return payload, record, discovered_records
 
     def _heartbeat(self, record: JobRecord, lease_owner: str) -> JobRecord:
         """Extend the lease via the lifecycle heartbeat; re-read on a lost CAS so the next
