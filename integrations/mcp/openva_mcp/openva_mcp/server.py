@@ -176,6 +176,94 @@ TOOL_SPECS: list[ToolSpec] = [
 SPEC_BY_NAME = {spec.name: spec for spec in TOOL_SPECS}
 
 
+# --- WP-02I: live resolve_* tool over the hosted transport (OFF BY DEFAULT) ---
+#
+# The live tool resolves vendors by submitting bounded vendor IDENTITIES to the
+# hosted /v1 verify transport (create+poll) — it never fetches a caller-supplied
+# URL. It is registered ONLY when an operator explicitly configures a hosted
+# endpoint (OPENVA_MCP_HOSTED_ENDPOINT). With no endpoint configured (the default)
+# it is not registered and the static MCP surface is byte-for-byte unchanged.
+#
+# The live tool reuses the EXISTING bounded-identity row schema (no new row shape,
+# no URL/fetch-target parameter — the absence of any url field IS the threat-model
+# lock). Its row/source-type caps mirror the hosted verify budget.
+_LIVE_RESOLVE_MAX_ROWS = 20  # hosted_verify_limits.max_verify_rows
+_LIVE_RESOLVE_MAX_SOURCE_TYPES = 4  # hosted_verify_limits.max_source_types_per_verify_row
+LIVE_RESOLVE_TOOL_NAME = "resolve_vendor_sources"
+
+_LIVE_RESOLVE_INPUT_SCHEMA = _obj(
+    {
+        "rows": {
+            "type": "array",
+            "items": _ENRICH_ROW_SCHEMA,
+            "minItems": 1,
+            "maxItems": _LIVE_RESOLVE_MAX_ROWS,
+        },
+        "source_types": {
+            "type": ["array", "null"],
+            "items": {"type": "string", "maxLength": 128},
+            "maxItems": _LIVE_RESOLVE_MAX_SOURCE_TYPES,
+        },
+    },
+    ["rows"],
+)
+
+_LIVE_RESOLVE_DESCRIPTION = (
+    "Resolve a bounded batch of vendor-identity rows (row_id / vendor_name / domain / "
+    "business_entity_name / registration_number) over the hosted OpenVA transport "
+    "(read-only, bounded). Send vendor IDENTITIES only: there is no URL or fetch-target "
+    "parameter and the tool never fetches a caller-supplied URL — it submits the "
+    "identities to the hosted verify endpoint, which performs any public-source resolution "
+    "server-side. Each row must carry at least one identity field. Bounded to "
+    f"{_LIVE_RESOLVE_MAX_ROWS} rows and {_LIVE_RESOLVE_MAX_SOURCE_TYPES} source types (the "
+    "hosted verify budget). Read-only; not advice; no scoring, ranking, or advisory verdict."
+)
+
+
+def build_live_resolve_spec(client: Any) -> ToolSpec:
+    """Build the live resolve_* ToolSpec bound to a hosted-transport ``client``.
+
+    The bound client is the ONLY thing that talks to the hosted endpoint; the tool
+    func keeps the standard ``(snapshot, args)`` signature so it registers in the
+    existing registry with no special dispatch path."""
+    return ToolSpec(
+        LIVE_RESOLVE_TOOL_NAME,
+        _LIVE_RESOLVE_DESCRIPTION,
+        _LIVE_RESOLVE_INPUT_SCHEMA,
+        lambda snapshot, args: tools.resolve_vendor_sources(
+            snapshot, client, list(args["rows"]), args.get("source_types")
+        ),
+    )
+
+
+def hosted_endpoint_from_env() -> str | None:
+    """The explicitly-configured hosted endpoint, or None (the default = off).
+
+    A blank/unset OPENVA_MCP_HOSTED_ENDPOINT means the live tool is not registered."""
+    endpoint = os.environ.get("OPENVA_MCP_HOSTED_ENDPOINT", "").strip()
+    return endpoint or None
+
+
+def build_hosted_client_from_env() -> Any | None:
+    """Construct the hosted-transport client iff an endpoint is configured (else None).
+
+    The hosted API key (when set) authorises verify submission; it is never logged.
+    Importing the client lazily keeps the default build free of the dependency."""
+    endpoint = hosted_endpoint_from_env()
+    if endpoint is None:
+        return None
+    from openva_mcp.hosted_transport import HostedTransportClient
+
+    api_key = os.environ.get("OPENVA_MCP_HOSTED_API_KEY", "").strip() or None
+    return HostedTransportClient(endpoint=endpoint, api_key=api_key)
+
+
+def active_tool_specs(extra_specs: list[ToolSpec] | None = None) -> list[ToolSpec]:
+    """The static registry plus any explicitly-activated extra specs (e.g. the live
+    resolve tool). With no extras this is exactly ``TOOL_SPECS`` (the default)."""
+    return list(TOOL_SPECS) + list(extra_specs or [])
+
+
 def resolve_snapshot(args: argparse.Namespace) -> Snapshot:
     if args.snapshot:
         return Snapshot.load(LocalSnapshotSource(args.snapshot))
@@ -190,19 +278,25 @@ def _tool_error(message: str):
     return types.CallToolResult(content=[types.TextContent(type="text", text=message)], isError=True)
 
 
-def build_server(snapshot: Snapshot):
-    """Build a low-level MCP server exposing the read-only tools (SDK imported lazily)."""
+def build_server(snapshot: Snapshot, extra_specs: list[ToolSpec] | None = None):
+    """Build a low-level MCP server exposing the read-only tools (SDK imported lazily).
+
+    ``extra_specs`` activates additional tools (e.g. the WP-02I live resolve tool) on
+    top of the static registry. With no extras (the default) the published surface is
+    exactly ``TOOL_SPECS`` and is byte-for-byte unchanged."""
     import jsonschema
     from mcp import types
     from mcp.server.lowlevel import Server
 
     server: Server = Server("openva")
+    specs = active_tool_specs(extra_specs)
+    spec_by_name = {spec.name: spec for spec in specs}
 
     @server.list_tools()
     async def list_tools() -> list[types.Tool]:
         return [
             types.Tool(name=spec.name, description=spec.description, inputSchema=spec.input_schema)
-            for spec in TOOL_SPECS
+            for spec in specs
         ]
 
     # validate_input=False: this handler is the single authoritative validation
@@ -211,7 +305,7 @@ def build_server(snapshot: Snapshot):
     # than an uncaught exception or a silently accepted bad argument.
     @server.call_tool(validate_input=False)
     async def call_tool(name: str, arguments: dict[str, Any]):
-        spec = SPEC_BY_NAME.get(name)
+        spec = spec_by_name.get(name)
         if spec is None:
             return _tool_error(f"unknown tool: {name}")
         try:
@@ -461,7 +555,11 @@ class _BodyLimit:
         )(scope, _empty_receive, send)
 
 
-def build_streamable_http_app(snapshot: Snapshot | None, config: TransportConfig):
+def build_streamable_http_app(
+    snapshot: Snapshot | None,
+    config: TransportConfig,
+    extra_specs: list[ToolSpec] | None = None,
+):
     """Build the Starlette ASGI app exposing the read-only MCP tools over Streamable HTTP.
 
     The same ``TOOL_SPECS`` registry and ``build_server`` wiring back this transport
@@ -479,7 +577,7 @@ def build_streamable_http_app(snapshot: Snapshot | None, config: TransportConfig
     from starlette.routing import Mount, Route
 
     state = {"ready": False, "detail": "starting"}
-    server = build_server(snapshot) if snapshot is not None else None
+    server = build_server(snapshot, extra_specs) if snapshot is not None else None
 
     security = TransportSecuritySettings(
         enable_dns_rebinding_protection=True,
@@ -544,10 +642,14 @@ def build_streamable_http_app(snapshot: Snapshot | None, config: TransportConfig
     )
 
 
-def serve_streamable_http(snapshot: Snapshot, config: TransportConfig) -> None:
+def serve_streamable_http(
+    snapshot: Snapshot,
+    config: TransportConfig,
+    extra_specs: list[ToolSpec] | None = None,
+) -> None:
     import uvicorn
 
-    app = build_streamable_http_app(snapshot, config)
+    app = build_streamable_http_app(snapshot, config, extra_specs)
     # access_log defaults False so request lines (and any query) are never logged;
     # the MCP path carries no vendor identity, and bodies are never logged.
     uvicorn.run(app, host=config.host, port=config.port, access_log=config.access_log, log_level="warning")
@@ -571,10 +673,15 @@ def main(argv: list[str] | None = None) -> int:
     except SnapshotError as exc:
         print(f"snapshot error: {exc}", file=sys.stderr)
         return 1
+    # WP-02I: activate the live resolve_* tool ONLY when a hosted endpoint is
+    # explicitly configured. With none (the default) extra_specs is empty and the
+    # served surface is exactly the static registry.
+    hosted_client = build_hosted_client_from_env()
+    extra_specs = [build_live_resolve_spec(hosted_client)] if hosted_client is not None else None
     if transport_config.transport == TRANSPORT_STREAMABLE_HTTP:
-        serve_streamable_http(snapshot, transport_config)
+        serve_streamable_http(snapshot, transport_config, extra_specs)
     else:
-        run_stdio(build_server(snapshot))
+        run_stdio(build_server(snapshot, extra_specs))
     return 0
 
 
