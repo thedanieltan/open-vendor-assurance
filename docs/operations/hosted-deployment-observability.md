@@ -159,6 +159,44 @@ deliberate low instance/concurrency cap **+** edge rate limiting **+** a
   in [`hosted-deployment-cost-envelope.md`](hosted-deployment-cost-envelope.md); the
   instance cap + edge rate limit are what actually bound it.
 
+## 6a. Application-layer hardening controls (WP-02H, provider-neutral)
+
+**Decision/specification only; nothing here is provisioned.** This section documents
+the **provider-neutral application-layer** controls that land in the service code
+**before** any staging or infrastructure. They are off or generous by default, so the
+default build's runtime behaviour is unchanged. The provider-specific edge enforcement,
+alert routing, and SLO dashboards that build on them are **WP-02F/WP-02G** (not this
+slice). These controls honour ADR-0001 (transient-input / minimal-leakage boundary) and
+ADR-0006 (hosted public-read deployment).
+
+- **Telemetry interface + always-on redaction.** A provider-neutral structured-logging +
+  metrics interface (`telemetry.Telemetry`) with one in-memory/stdout implementation; a
+  provider exporter is a later infra slice. A deterministic **redactor** is always on (it
+  only removes data) and makes it impossible to emit any `prohibited_telemetry_fields`
+  (§2): it drops request bodies, vendor identities, inventory rows, the `Authorization`
+  header, and the `job_token` from every log line, metric label, and trace attribute, and
+  masks any `Authorization: Bearer` value wherever it appears. `job_id` remains the only
+  permitted correlation id; it is **never** a metric label (unbounded cardinality).
+- **Application request + concurrency limits.** The existing body/row caps are retained,
+  plus an in-process cap on concurrently-active verify jobs (default unbounded). This is
+  **cost-exhaustion protection**: a flood is rejected (a stable, content-free 429/503),
+  never queued as unbounded work, bounding worst-case spend before edge/budget controls
+  exist.
+- **Rate-limit / abuse-control policy.** A provider-neutral token-bucket policy keyed on an
+  **opaque** per-client key (a digest of the presented credential — never the raw token,
+  never a prohibited field). This is the application-layer **policy + enforcement hook**,
+  not an edge/WAF; the edge realisation is WP-02F/WP-02G. Disabled by default.
+- **Kill-switch (application flag).** An application flag fail-closes the verify/worker path
+  to **cached-only**: verify returns a clean disabled/anonymous response, no job is
+  created, and the static/cached read layer is unaffected (it is the always-on floor). The
+  provider automation that *arms* the switch from a budget alert is WP-02F/WP-02G; the
+  in-app behaviour is shipped here. Default off means normal operation.
+
+The result-token transport guarantees above still hold: the `job_token` capability is
+carried **header-only** (`Authorization: Bearer <job_token>`), the `Authorization` header
+is redacted, and digest comparison is **constant-time** — so neither the header nor the
+bearer value can appear in any log line, metric label, or trace attribute.
+
 ## 7. Dashboards and SLO-breach → kill-switch
 
 A single maintainer dashboard (future) would surface:

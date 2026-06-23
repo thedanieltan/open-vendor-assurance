@@ -31,8 +31,14 @@ from .models import (  # noqa: E402
     VerifyRequest,
     VerifyStatusResponse,
 )
+from .hardening import (  # noqa: E402
+    ConcurrencyLimiter,
+    RateLimitPolicy,
+    client_key,
+)
 from .queue import InMemoryQueue  # noqa: E402
 from .service_state import ServiceState, load_service_state  # noqa: E402
+from .telemetry import NullTelemetry, Telemetry  # noqa: E402
 from .verify_transport import (  # noqa: E402
     InMemoryJobStore,
     InMemoryRequestEnvelopeStore,
@@ -73,12 +79,31 @@ V1_DESCRIPTION = (
 )
 
 
-def create_app(config: ServiceConfig | None = None) -> FastAPI:
+def create_app(
+    config: ServiceConfig | None = None,
+    *,
+    telemetry: Telemetry | None = None,
+) -> FastAPI:
     service_config = config or ServiceConfig.from_env()
+    # Telemetry is provider-neutral. The DEFAULT is the no-op sink so the default build
+    # emits nothing and behaves exactly as before; a deployment (or a test) may inject the
+    # in-memory/stdout impl. The always-on REDACTOR lives inside every Telemetry impl, so
+    # no wiring can ever leak a prohibited field. A provider exporter is WP-02F/02G.
+    service_telemetry: Telemetry = telemetry or NullTelemetry()
+    # Application-layer abuse / cost controls (provider-neutral; off/generous by default).
+    rate_limiter = RateLimitPolicy(
+        capacity=service_config.rate_limit_capacity,
+        refill_per_second=service_config.rate_limit_refill_per_second,
+        enabled=service_config.rate_limit_enabled,
+    )
+    concurrency_limiter = ConcurrencyLimiter(service_config.verify_concurrency_limit)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         app.state.config = service_config
+        app.state.telemetry = service_telemetry
+        app.state.rate_limiter = rate_limiter
+        app.state.verify_concurrency = concurrency_limiter
         app.state.service_state = load_service_state(str(service_config.pack_path))
         # In-memory, NON-DURABLE verify-transport stores (WP-02A), created ONLY when
         # the verify transport is enabled, so a flag-off deployment keeps exactly the
@@ -286,13 +311,52 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
     )
     async def v1_verify_create(
         payload: VerifyRequest,
+        request: Request,
         _enabled: None = Depends(require_verify_enabled),
         _access: None = Depends(require_api_key),
     ) -> dict[str, Any]:
         # Creating a verify job ALWAYS requires the bearer API key, even when
         # OPENVA_PUBLIC_READ_ENABLED is true. Public-read mode grants read-only access
         # to the cached /v1 data endpoints only — never submission.
-        #
+        telemetry: Telemetry = request.app.state.telemetry
+        state = get_service_state(app)
+
+        # Kill-switch (WP-02H): when armed, the verify path FAIL-CLOSES to cached-only.
+        # No job is created, NO submitted content is read beyond the already-parsed body,
+        # and a clean disabled/anonymous response is returned. The cached/static endpoints
+        # are unaffected (this gate is verify-only). The response carries no job_id/token.
+        if service_config.verify_kill_switch:
+            telemetry.increment("verify_requests_total", outcome="kill_switch_disabled")
+            # A clean disabled/anonymous response (no job_id/token); bypass the
+            # VerifyCreatedResponse model since no job exists. Headers are applied by the
+            # add_openva_headers middleware on the way out.
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "state": "disabled",
+                    "verify_enabled": False,
+                    "snapshot": build_snapshot(state, service_config),
+                    "not_advice": True,
+                },
+            )
+
+        # Application-layer rate-limit POLICY (provider-neutral; off by default). The
+        # client is reduced to an opaque key derived from the credential digest — never the
+        # raw token. Edge enforcement is WP-02F/02G; this is the in-app backstop.
+        rate_limiter: RateLimitPolicy = request.app.state.rate_limiter
+        decision = rate_limiter.check(client_key(request.headers.get("authorization")))
+        if not decision.allowed:
+            telemetry.increment("verify_requests_total", outcome="rate_limited")
+            retry_after = max(1, int(round(decision.retry_after_seconds)))
+            raise HTTPException(
+                status_code=429,
+                detail={
+                    "error": "rate_limited",
+                    "message": "verify request rate limit exceeded; retry later",
+                },
+                headers={"Retry-After": str(retry_after)},
+            )
+
         # Pre-job rejection: an over-limit request is rejected BEFORE any job
         # exists, so row_limit_exceeded is an API response, never a job error_code.
         # The structured detail surfaces the stable row_limit_exceeded API code.
@@ -306,20 +370,26 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
             )
         jobs = app.state.verify_jobs
         envelopes = app.state.verify_envelopes
-        # No per-instance active-job cap here: WP-02A ships no worker, so jobs never
-        # leave `received` and an in-memory cap would wedge the service after
-        # max_active_jobs creations. Concurrency/abuse control is deferred to the
-        # worker slice (WP-02C) and edge rate limiting (WP-02H). max_active_jobs and
-        # JobStore.active_count() remain as scaffolding consumed by WP-02C.
-
-        state = get_service_state(app)
         now = datetime.now(timezone.utc)
-        # Opportunistically advance the expiry lifecycle on access (no background
-        # thread): physically delete any job whose retained window has fully elapsed,
-        # plus its envelope/result. Keeps the in-memory stores bounded over time.
+        # Cost-exhaustion protection (WP-02H): bound the number of concurrently-active
+        # (non-terminal) verify jobs in this process so a flood cannot run away before the
+        # edge/budget controls exist (those are WP-02F/02G). 0 = unbounded (the default).
+        # Enforced AFTER an opportunistic purge so expired jobs never count against the cap.
         purge_expired_jobs(
             jobs, envelopes, app.state.verify_results, now, timedelta(hours=VERIFY_RETAINED_WINDOW_HOURS)
         )
+        concurrency: ConcurrencyLimiter = request.app.state.verify_concurrency
+        if concurrency.bounded and jobs.active_count() >= concurrency.limit:
+            telemetry.increment("verify_requests_total", outcome="concurrency_limited")
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "error": "rate_limited",
+                    "message": "verify capacity is full; retry later",
+                },
+                headers={"Retry-After": "5"},
+            )
+
         expires_at = now + timedelta(hours=service_config.job_ttl_hours)
 
         job_id = new_job_id()
@@ -352,6 +422,12 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
             expires_at=expires_at_iso,
         )
         jobs.create(record)
+
+        # Telemetry: structured creation event + counter. The job_token and any vendor
+        # identity are NEVER passed here; the redactor would drop them regardless. job_id
+        # is a loggable (non-credential) correlation id; row_count is an aggregate.
+        telemetry.log("verify_job_created", job_id=job_id, state=record.state, row_count=record.row_count)
+        telemetry.increment("verify_requests_total", outcome="created")
 
         # WP-02A ships no worker, so the job stays `received` and never executes.
         # That is correct for this slice. The token is returned ONLY here.
@@ -465,6 +541,10 @@ def install_middleware_and_handlers(app: FastAPI) -> None:
         else:
             content = {"error": "http_error", "message": str(detail)}
         response = JSONResponse(status_code=exc.status_code, content=content)
+        # Preserve any advisory headers set on the exception (e.g. Retry-After on a 429
+        # rate-limit rejection); they carry no submitted content.
+        for name, value in (getattr(exc, "headers", None) or {}).items():
+            response.headers[name] = value
         apply_headers(response.headers, request.app)
         return response
 
