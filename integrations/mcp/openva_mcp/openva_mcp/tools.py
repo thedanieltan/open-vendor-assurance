@@ -265,6 +265,76 @@ def enrich_inventory(
     )
 
 
+def resolve_vendor_sources(
+    snapshot: Snapshot,
+    client: Any,
+    rows: list[dict[str, Any]],
+    source_types: list[str] | None = None,
+) -> dict[str, Any]:
+    """Resolve a bounded batch of vendor-identity rows over the hosted transport.
+
+    This is the WP-02I live ``resolve_*`` tool. It is registered ONLY when an
+    operator has explicitly configured a hosted endpoint (off by default); when no
+    endpoint is configured the tool is not registered at all and the static MCP
+    surface is unchanged.
+
+    Unlike the snapshot-backed tools, this one does not read the local snapshot for
+    its answer — it submits the SAME bounded vendor-identity rows the static tools
+    accept (vendor_name / domain / business_entity_name / registration_number, never
+    a fetch-target URL) to the hosted ``/v1`` verify create+poll transport via the
+    injected ``client`` and returns that transport's terminal result. The snapshot
+    identity is still disclosed on the envelope (the live result is read in the
+    context of the snapshot the server loaded), and the result carries the
+    non-advisory boundary: OpenVA performs no workspace write and makes no
+    compliance, suitability, or risk conclusion.
+
+    Bounds: each row must carry at least one identity field (an identity-empty row is
+    a controlled invalid-input ValueError, never a silent pass). The row count and
+    source-type count are bounded by the tool's declared input schema before dispatch;
+    the hosted endpoint independently re-bounds them. A transport failure (endpoint
+    unavailable, kill-switched, unauthorised, or non-terminal) becomes a controlled
+    tool error with a generic message that never carries the job_token or the
+    submitted identities.
+    """
+    from openva_mcp.hosted_transport import HostedTransportError
+
+    for row in rows:
+        if not _has_identity(row or {}):
+            raise ValueError(
+                "each row requires at least one of vendor_name, domain, "
+                "business_entity_name, registration_number"
+            )
+
+    # Forward only the bounded identity fields and optional row_id; never any other
+    # caller-supplied key (additionalProperties=False on the schema already rejects
+    # them, but we re-project defensively so nothing extra reaches the transport).
+    forwarded = [
+        {
+            key: row[key]
+            for key in ("row_id", *_IDENTITY_FIELDS)
+            if key in (row or {}) and row.get(key) is not None
+        }
+        for row in rows
+    ]
+
+    try:
+        resolution = client.resolve(forwarded, source_types)
+    except HostedTransportError as exc:
+        # Generic, identity-free message; the dispatcher turns ValueError into a tool
+        # error, so re-raise as ValueError to take the same controlled-error path.
+        raise ValueError(f"hosted resolve unavailable: {exc}") from exc
+
+    # The hosted projection already carries its own snapshot/not_advice; we wrap it in
+    # OUR snapshot envelope (the snapshot the server loaded) and re-assert not_advice
+    # so the boundary is present regardless of the transport's payload.
+    return _envelope(
+        snapshot,
+        count=len(forwarded),
+        source_types=source_types,
+        resolution=resolution,
+    )
+
+
 def get_snapshot_metadata(snapshot: Snapshot) -> dict[str, Any]:
     index = snapshot.agent_index
     return _envelope(
