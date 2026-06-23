@@ -453,12 +453,15 @@ maintainer_decisions:
 #   - WP-02A (transport), WP-02L (positioning, in lockstep with WP-02A), and WP-02B
 #     (async persistence) are COMPLETE (merged: PR #408, PR #410). They are no longer
 #     "startable" — they are done.
-#   - The provider-NEUTRAL application sequence now runs entirely before any
-#     infrastructure: WP-02C and WP-02E are startable now; WP-02D and WP-02H follow
-#     WP-02C (and may run in parallel); WP-02I follows WP-02D + WP-02H; WP-02J follows
-#     WP-02I. Only then does the maintainer-gated infrastructure chain begin — staging
-#     (WP-02F) follows WP-02E + WP-02J, production (WP-02G) follows WP-02F, and launch
-#     evidence + programme closeout (WP-02K) follows WP-02G.
+#   - The ENTIRE provider-NEUTRAL application path is now COMPLETE and merged:
+#     WP-02C worker+queue (PR #415), WP-02D candidate-ingress (PR #416), WP-02H
+#     application hardening (PR #417), WP-02I remote-MCP activation (PR #418), and
+#     WP-02J live /check (PR #419). All shipped off-by-default; nothing is provisioned.
+#   - WP-02E (deployment artifact + supply-chain) is the ONLY remaining startable
+#     provider-neutral slice (it depends only on WP-02A and needs no host). Once it
+#     merges, the maintainer-gated infrastructure chain begins — staging (WP-02F)
+#     follows WP-02E + WP-02J, production (WP-02G) follows WP-02F, and launch evidence
+#     + programme closeout (WP-02K) follows WP-02G.
 # `status` is advisory metadata for readers/tools: completed | startable_now | blocked
 # | infra_gated. infra_gated == the depends_on closure reaches WP-02F/WP-02G (the
 # maintainer external-decision roots); a drift test recomputes this from depends_on.
@@ -471,10 +474,10 @@ implementation_slices:
     status: completed
   - id: WP-02C-worker-and-queue
     depends_on: [WP-02B-async-job-persistence]
-    status: startable_now
+    status: completed
   - id: WP-02D-candidate-ingress-integration
     depends_on: [WP-02C-worker-and-queue]
-    status: blocked
+    status: completed
   - id: WP-02E-artifact-and-supply-chain
     depends_on: [WP-02A-hosted-transport-api]
     status: startable_now
@@ -486,13 +489,13 @@ implementation_slices:
     status: infra_gated
   - id: WP-02H-observability-and-abuse-controls
     depends_on: [WP-02C-worker-and-queue]
-    status: blocked
+    status: completed
   - id: WP-02I-remote-mcp-resolver-activation
     depends_on: [WP-02D-candidate-ingress-integration, WP-02H-observability-and-abuse-controls]
-    status: blocked
+    status: completed
   - id: WP-02J-live-check-integration
     depends_on: [WP-02I-remote-mcp-resolver-activation]
-    status: blocked
+    status: completed
   - id: WP-02K-production-smokes-and-launch-evidence
     depends_on: [WP-02G-production-infrastructure]
     status: infra_gated
