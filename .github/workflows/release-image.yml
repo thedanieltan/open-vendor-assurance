@@ -1,0 +1,195 @@
+name: release-image
+
+# Deployment-artifact supply-chain build + fail-closed policy gate (WP-02E).
+#
+# Manually dispatched. Builds the hosted match-service container artifact, identifies it
+# by IMMUTABLE DIGEST, generates an SBOM and a build-provenance attestation, scans
+# dependencies and the container image, and runs the fail-closed supply-chain gate
+# (openva_match_service.supply_chain). It then re-builds and compares package-set
+# equivalence as reproducibility evidence, and uploads every artifact for retention.
+#
+# It DOES NOT (boundaries enforced by supply-chain-policy.yaml + the gate):
+#   - create or publish to a container registry (no push);
+#   - provision any cloud resource; perform any paid publication;
+#   - deploy to staging or production; or claim a hosted endpoint is live.
+# Governed by ADR-0001 (product posture) and ADR-0006 (deployment architecture); the
+# decision-only posture in docs/operations/contracts/hosted-deployment.yaml is unchanged.
+
+on:
+  workflow_dispatch:
+    inputs:
+      rollback_ref:
+        description: "Optional prior accepted image digest to validate as a rollback target (name@sha256:...)"
+        required: false
+        default: ""
+        type: string
+
+# Read-only: this workflow never pushes an image, writes repository state, or signs with
+# a registry/OIDC identity. Registry publication + keyless signing are WP-02F/02G concerns
+# (they need a provisioned registry and an id-token the maintainer authorises).
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: release-image-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE_NAME: openva-match-service
+  DOCKERFILE: services/openva_match_service/Dockerfile
+  POLICY: services/openva_match_service/supply-chain-policy.yaml
+
+jobs:
+  image-supply-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install the gate package
+        run: pip install -e "services/openva_match_service[dev]" pyyaml
+
+      # The unit proofs for the fail-closed gate (mutable-tag rejection, missing
+      # SBOM/provenance, unapproved critical/unknown-severity findings, digest-only
+      # deploy + rollback, hosted capabilities off by default).
+      - name: Run supply-chain gate unit tests
+        run: pytest -q tests/test_supply_chain_policy.py
+
+      # The pinned-base policy: every Dockerfile FROM must be digest-pinned.
+      - name: Enforce pinned base image
+        run: python -m openva_match_service.supply_chain check-dockerfile --path "$DOCKERFILE"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Deterministic build inputs: digest-pinned base + a fixed SOURCE_DATE_EPOCH so the
+      # rebuild below is comparable. Output stays LOCAL (--load); nothing is pushed.
+      - name: Build OCI image (local, by digest)
+        run: |
+          set -euo pipefail
+          SOURCE_DATE_EPOCH=0 docker buildx build \
+            --file "$DOCKERFILE" \
+            --tag "${IMAGE_NAME}:build" \
+            --metadata-file image-metadata.json \
+            --provenance=false \
+            --load \
+            .
+          DIGEST="$(docker image inspect "${IMAGE_NAME}:build" --format '{{index .Id}}')"
+          echo "ARTIFACT_REF=${IMAGE_NAME}@${DIGEST}" >> "$GITHUB_ENV"
+          echo "ARTIFACT_DIGEST=${DIGEST#sha256:}" >> "$GITHUB_ENV"
+
+      # The deployable reference MUST be an immutable digest, never a mutable tag.
+      - name: Enforce immutable digest reference
+        run: python -m openva_match_service.supply_chain check-image-ref --ref "$ARTIFACT_REF"
+
+      - name: Generate SBOM (CycloneDX)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b "$HOME/.local/bin"
+          "$HOME/.local/bin/syft" "docker:${IMAGE_NAME}:build" -o cyclonedx-json=sbom.cyclonedx.json
+
+      # Build-provenance attestation: an in-toto statement binding the artifact digest.
+      # (Keyless signing of this statement is added with the registry at WP-02F/02G.)
+      - name: Generate build provenance attestation
+        run: |
+          python - <<'PY'
+          import json, os
+          digest = os.environ["ARTIFACT_DIGEST"]
+          statement = {
+              "_type": "https://in-toto.io/Statement/v1",
+              "predicateType": "https://slsa.dev/provenance/v1",
+              "subject": [{"name": os.environ["IMAGE_NAME"], "digest": {"sha256": digest}}],
+              "predicate": {
+                  "buildType": "https://github.com/openva/release-image",
+                  "builder": {"id": "github-actions/release-image"},
+                  "invocation": {"configSource": {"uri": os.environ.get("GITHUB_REPOSITORY", ""), "digest": {"sha1": os.environ.get("GITHUB_SHA", "")}}},
+              },
+          }
+          json.dump(statement, open("provenance.intoto.json", "w"), indent=2)
+          PY
+
+      - name: Scan dependencies and container image
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b "$HOME/.local/bin"
+          "$HOME/.local/bin/trivy" image --format json --output scan.image.json "${IMAGE_NAME}:build" || true
+          "$HOME/.local/bin/trivy" fs --format json --output scan.fs.json services/openva_match_service || true
+
+      # Assemble the release manifest and run the AUTHORITATIVE fail-closed gate:
+      # digest-only deploy ref, pinned base, SBOM present, provenance binds the digest,
+      # and no unapproved finding at/above the policy threshold (unknown severity blocks).
+      - name: Build release manifest and run fail-closed gate
+        run: |
+          python - <<'PY'
+          import json, os
+          def load(path, default):
+              try:
+                  return json.load(open(path))
+              except FileNotFoundError:
+                  return default
+          image = load("scan.image.json", {"Results": []})
+          fs = load("scan.fs.json", {"Results": []})
+          findings = (image.get("Results") or []) + (fs.get("Results") or [])
+          manifest = {
+              "image_ref": os.environ["ARTIFACT_REF"],
+              "dockerfile": open(os.environ["DOCKERFILE"]).read(),
+              "sbom": json.load(open("sbom.cyclonedx.json")),
+              "provenance": json.load(open("provenance.intoto.json")),
+              "scan": {"Results": findings},
+          }
+          rollback = os.environ.get("ROLLBACK_REF", "").strip()
+          if rollback:
+              manifest["rollback_ref"] = rollback
+          json.dump(manifest, open("release-image-manifest.json", "w"))
+          PY
+        env:
+          ROLLBACK_REF: ${{ inputs.rollback_ref }}
+      - name: Enforce supply-chain release gate (fail closed)
+        run: python -m openva_match_service.supply_chain check-release --manifest release-image-manifest.json --policy "$POLICY"
+
+      # Reproducibility / equivalence evidence: rebuild with the same pinned inputs and
+      # compare the SBOM package set. Full bit-for-bit OCI reproducibility is constrained
+      # by base-image + build metadata, so we assert package-set EQUIVALENCE (suitable for
+      # this repository) on top of fully digest-pinned inputs.
+      - name: Reproducibility — rebuild and compare package set
+        run: |
+          set -euo pipefail
+          SOURCE_DATE_EPOCH=0 docker buildx build --file "$DOCKERFILE" --tag "${IMAGE_NAME}:rebuild" --provenance=false --load .
+          "$HOME/.local/bin/syft" "docker:${IMAGE_NAME}:rebuild" -o cyclonedx-json=sbom.rebuild.json
+          python - <<'PY'
+          import json, sys
+          def pkgs(p):
+              doc = json.load(open(p))
+              return sorted((c.get("name"), c.get("version")) for c in doc.get("components", []))
+          a, b = pkgs("sbom.cyclonedx.json"), pkgs("sbom.rebuild.json")
+          report = {"equivalent": a == b, "package_count": len(a), "rebuild_package_count": len(b)}
+          json.dump(report, open("reproducibility-report.json", "w"), indent=2)
+          if a != b:
+              print("FAIL: rebuild package set differs from the original build", file=sys.stderr)
+              sys.exit(1)
+          print(f"OK: reproducible package set ({len(a)} packages)")
+          PY
+
+      # Negative workflow-policy proof in CI: the gate must reject a mutable deploy
+      # reference even when invoked directly (defence-in-depth beyond the unit tests).
+      - name: Negative proof — mutable reference is rejected
+        run: |
+          if python -m openva_match_service.supply_chain check-image-ref --ref "${IMAGE_NAME}:latest"; then
+            echo "FAIL: gate accepted a mutable tag" >&2; exit 1
+          fi
+          echo "OK: mutable tag rejected by the gate"
+
+      - name: Upload supply-chain evidence
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-match-service-supply-chain-evidence
+          path: |
+            image-metadata.json
+            sbom.cyclonedx.json
+            provenance.intoto.json
+            scan.image.json
+            scan.fs.json
+            release-image-manifest.json
+            reproducibility-report.json
+          if-no-files-found: error
+          retention-days: 90

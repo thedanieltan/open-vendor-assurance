@@ -233,6 +233,18 @@ workflows:
     required_retirement_evidence: [replacement release candidate artifact path, release operator approval]
     allowed_triggers_until_retired: [workflow_dispatch]
     write_permissions_allowed_until_retired: false
+  - name: release-image.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: publication
+    replacement_owner: release-image.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns the deployment-artifact supply-chain build and fail-closed gate]
+    required_retirement_evidence: [replacement artifact supply-chain pipeline proof, release operator approval]
+    allowed_triggers_until_retired: [workflow_dispatch]
+    write_permissions_allowed_until_retired: false
   - name: site-pages.yml
     current_status: active
     inventory_status: core
