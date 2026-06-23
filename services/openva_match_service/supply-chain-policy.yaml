@@ -27,24 +27,35 @@ require:
   vulnerability_scan: true            # dependency + container-image scan
   reproducibility_evidence: true      # rebuild-and-compare digest equivalence record
 
+# Pinned supply-chain TOOLING. The scanners/SBOM tools are themselves part of the
+# supply chain, so they are version-pinned (not fetched from a project's mutable `main`)
+# and their versions are recorded in the retained evidence. The release-image workflow
+# installs exactly these versions.
+supply_chain_tools:
+  syft: v1.18.1
+  trivy: v0.58.1
+
 # Fail-closed vulnerability policy. Findings at/above fail_on_severity (and any finding
 # of UNKNOWN severity) block the release unless covered by a documented, UNEXPIRED
-# exception below. Expired exceptions stop suppressing their finding and are reported.
+# exception below. Unknown severity can NEVER be exempted. Every exception REQUIRES an
+# `expires` date; expired exceptions stop suppressing their finding and are reported.
 vulnerability_policy:
   fail_on_severity: high              # high and critical block
-  unknown_severity: block             # enforced in code: unknown severity always blocks
-  exceptions: []                      # e.g. {id: CVE-XXXX-NNNN, reason: "...", expires: 2026-12-31}
+  unknown_severity: block             # enforced in code: unknown severity always blocks, no exception
+  exceptions: []                      # each REQUIRES {id, reason, expires}; e.g. {id: CVE-XXXX-NNNN, reason: "...", expires: 2026-12-31}
 
 # CI artifact retention for the produced evidence (SBOM, provenance, scan, gate report,
 # reproducibility record), per repository policy.
 artifact_retention_days: 90
 
 # Rollback is by a PRIOR ACCEPTED immutable digest — never by re-tagging or by a mutable
-# reference. The release-image workflow records the deployed digest so a prior one can be
-# re-selected without a rebuild.
+# reference. A rollback target must be an immutable digest whose manifest digest appears
+# in the accepted-release ledger; digest syntax alone is rejected (fail closed until a
+# release is accepted and recorded). The ledger is in-repo; it provisions nothing.
 rollback:
   by: prior_accepted_image_digest
   mutable_rollback_forbidden: true
+  accepted_release_ledger: services/openva_match_service/accepted-releases.yaml
 
 # Hard boundaries (NOT performed by this policy or its workflow):
 #   - no container registry is created

@@ -1,0 +1,16 @@
+# Accepted-release ledger for the hosted match-service artifact (WP-02E).
+#
+# The ONLY rollback targets the supply-chain gate will accept. A rollback reference must
+# be an immutable digest whose manifest digest appears here; digest syntax alone is not
+# sufficient (openva_match_service.supply_chain.assert_rollback_target). This proves a
+# rollback goes to a PRIOR ACCEPTED release, not an arbitrary well-formed digest.
+#
+# Empty by design: no release has been accepted yet, so rollback fails closed. A digest
+# is appended here (in a reviewed PR) only after its release has completed acceptance
+# review. This is an in-repo ledger — it provisions nothing and publishes nothing.
+version: 1
+accepted_releases: []
+  # - manifest_digest: sha256:<64 hex OCI manifest digest>
+  #   accepted_at: 2026-01-01
+  #   pr: "#NNN"
+  #   note: "first accepted hosted match-service image"

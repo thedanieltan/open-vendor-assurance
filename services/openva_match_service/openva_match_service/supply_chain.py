@@ -8,18 +8,10 @@ posture are governed by ADR-0001 and ADR-0006; nothing here makes the hosted end
 live (the decision-only posture in docs/operations/contracts/hosted-deployment.yaml is
 untouched).
 
-The release flow it gates enforces, fail-closed:
-  - the deployable artifact reference is an IMMUTABLE digest (``...@sha256:<64hex>``),
-    never a mutable tag (``:latest``, ``:v1``, an untagged name);
-  - every Dockerfile ``FROM`` is digest-pinned (pinned base-image policy);
-  - an SBOM is present and non-empty;
-  - build provenance / attestation is present and binds the artifact digest;
-  - dependency + container-image vulnerability scan findings at/above the policy
-    threshold fail the release UNLESS covered by a documented, unexpired exception;
-    a finding of unknown severity is treated as blocking (fail closed).
-
-The core functions operate on plain dicts/lists so they are dependency-free and unit
-testable; YAML/JSON parsing happens only at the CLI boundary.
+Fail-closed throughout: missing, malformed, or unrecognised evidence raises
+SupplyChainViolation rather than normalising to a pass. The core functions operate on
+plain dicts/lists so they are dependency-free and unit testable; YAML/JSON parsing
+happens only at the CLI boundary.
 """
 
 from __future__ import annotations
@@ -34,6 +26,8 @@ from typing import Any, Iterable
 
 # An immutable OCI reference pins the manifest by digest: name[:tag]@sha256:<64 hex>.
 _DIGEST_RE = re.compile(r"@sha256:[0-9a-f]{64}$")
+# A bare manifest digest (sha256:<64 hex>), as emitted by BuildKit containerimage.digest.
+_BARE_DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 # A Dockerfile FROM line, capturing the image reference (ignoring "AS <stage>").
 _FROM_RE = re.compile(r"^\s*FROM\s+(?P<ref>\S+)(?:\s+AS\s+\S+)?\s*$", re.IGNORECASE)
 # Severities ranked; anything not in this map is unknown and blocks (fail closed).
@@ -48,17 +42,17 @@ class SupplyChainViolation(ValueError):
 
 
 def is_digest_pinned(image_ref: str) -> bool:
-    """True iff the reference pins the image by an ``@sha256:<64 hex>`` digest.
-
-    A bare name, a tag (``:latest``/``:v1``), or a malformed digest is NOT pinned."""
+    """True iff the reference pins the image by an ``@sha256:<64 hex>`` digest."""
     return bool(image_ref) and bool(_DIGEST_RE.search(image_ref.strip()))
 
 
-def assert_immutable_image_ref(image_ref: str, *, field_name: str = "image reference") -> str:
-    """Return the reference if it is digest-pinned; otherwise fail closed.
+def manifest_digest_of(image_ref: str) -> str:
+    """The bare ``sha256:<hex>`` manifest digest from a digest-pinned reference."""
+    return "sha256:" + image_ref.strip().split("@sha256:")[-1]
 
-    This is the check that prevents the release flow from ever silently deploying a
-    mutable tag — the deployed artifact reference MUST be a digest."""
+
+def assert_immutable_image_ref(image_ref: str, *, field_name: str = "image reference") -> str:
+    """Return the reference if it is digest-pinned; otherwise fail closed."""
     ref = (image_ref or "").strip()
     if not is_digest_pinned(ref):
         raise SupplyChainViolation(
@@ -72,7 +66,6 @@ def assert_immutable_image_ref(image_ref: str, *, field_name: str = "image refer
 
 
 def dockerfile_base_refs(dockerfile_text: str) -> list[str]:
-    """Every ``FROM`` image reference in a Dockerfile, in order."""
     refs: list[str] = []
     for line in dockerfile_text.splitlines():
         match = _FROM_RE.match(line)
@@ -82,7 +75,6 @@ def dockerfile_base_refs(dockerfile_text: str) -> list[str]:
 
 
 def unpinned_base_refs(dockerfile_text: str) -> list[str]:
-    """``FROM`` references that are NOT digest-pinned (a ``scratch`` base is exempt)."""
     return [
         ref
         for ref in dockerfile_base_refs(dockerfile_text)
@@ -90,26 +82,34 @@ def unpinned_base_refs(dockerfile_text: str) -> list[str]:
     ]
 
 
-def assert_dockerfile_base_pinned(dockerfile_text: str) -> list[str]:
-    """Return the pinned base refs; fail closed if any ``FROM`` is not digest-pinned."""
-    if not dockerfile_base_refs(dockerfile_text):
+def assert_dockerfile_base_pinned(
+    dockerfile_text: str, *, allowed_bases: Iterable[str] | None = None
+) -> list[str]:
+    """Return the pinned base refs; fail closed if any ``FROM`` is not digest-pinned, or
+    (when ``allowed_bases`` is given) if any ``FROM`` is not in the approved pin list."""
+    refs = dockerfile_base_refs(dockerfile_text)
+    if not refs:
         raise SupplyChainViolation("Dockerfile declares no FROM base image")
     unpinned = unpinned_base_refs(dockerfile_text)
     if unpinned:
         raise SupplyChainViolation(
             "every Dockerfile FROM must be digest-pinned; unpinned base(s): " + ", ".join(unpinned)
         )
-    return dockerfile_base_refs(dockerfile_text)
+    if allowed_bases is not None:
+        allowed = set(allowed_bases)
+        unapproved = [r for r in refs if r.lower() != "scratch" and r not in allowed]
+        if unapproved:
+            raise SupplyChainViolation(
+                "Dockerfile FROM not in the approved pinned_base_images policy: "
+                + ", ".join(unapproved)
+            )
+    return refs
 
 
 # --- SBOM + provenance presence -----------------------------------------------
 
 
 def assert_sbom_present(sbom: dict[str, Any]) -> None:
-    """Fail closed unless the SBOM declares at least one component/package.
-
-    Accepts CycloneDX (``components``) or SPDX (``packages``) shapes; an empty or
-    missing component list is a missing-SBOM failure."""
     if not isinstance(sbom, dict):
         raise SupplyChainViolation("SBOM is missing or not an object")
     components = sbom.get("components")
@@ -120,11 +120,6 @@ def assert_sbom_present(sbom: dict[str, Any]) -> None:
 
 
 def assert_provenance_present(provenance: dict[str, Any], *, artifact_digest: str | None = None) -> None:
-    """Fail closed unless an attestation is present and (if given) binds the digest.
-
-    Accepts an in-toto / SLSA-style statement: a ``predicateType`` and a ``subject``
-    whose entries carry a ``sha256`` digest. When ``artifact_digest`` is provided, at
-    least one subject digest must match it (the provenance must describe THIS image)."""
     if not isinstance(provenance, dict):
         raise SupplyChainViolation("build provenance/attestation is missing or not an object")
     if not provenance.get("predicateType"):
@@ -151,27 +146,23 @@ def assert_provenance_present(provenance: dict[str, Any], *, artifact_digest: st
 
 
 @dataclass(frozen=True)
-class VulnPolicy:
-    """Fail-closed vulnerability policy. Findings whose severity rank is >= the
-    threshold block the release unless a documented, unexpired exception covers the
-    vulnerability id. Unknown severities always block."""
+class VulnException:
+    vuln_id: str
+    reason: str
+    expires: date  # required; an exception with no expiry is rejected at load time
 
-    fail_on_severity: str = "high"  # high and above (high, critical) block by default
-    exceptions: dict[str, "VulnException"] = field(default_factory=dict)
+    def active_on(self, on: date) -> bool:
+        return on <= self.expires
+
+
+@dataclass(frozen=True)
+class VulnPolicy:
+    fail_on_severity: str = "high"
+    exceptions: dict[str, VulnException] = field(default_factory=dict)
 
     @property
     def threshold_rank(self) -> int:
         return _SEVERITY_RANK[self.fail_on_severity.lower()]
-
-
-@dataclass(frozen=True)
-class VulnException:
-    vuln_id: str
-    reason: str
-    expires: date | None  # None == never expires (discouraged; flagged in summary)
-
-    def active_on(self, on: date) -> bool:
-        return self.expires is None or on <= self.expires
 
 
 @dataclass(frozen=True)
@@ -190,6 +181,24 @@ def _finding_rank(finding: dict[str, Any]) -> int | None:
     return _SEVERITY_RANK.get(sev)  # None == unknown severity (blocks, fail closed)
 
 
+def assert_scan_evidence(scan: dict[str, Any]) -> None:
+    """Fail closed unless ``scan`` is a recognised scanner envelope with correctly typed
+    lists. An empty/unknown object (e.g. a missing report defaulted to ``{}``) or a
+    malformed envelope (``Results: null``) must raise, not normalise to zero findings."""
+    if not isinstance(scan, dict):
+        raise SupplyChainViolation("scan report is missing or not an object")
+    recognised = False
+    for key in ("Results", "matches", "findings"):
+        if key in scan:
+            if not isinstance(scan[key], list):
+                raise SupplyChainViolation(f"scan report field {key!r} must be a list (malformed report)")
+            recognised = True
+    if not recognised:
+        raise SupplyChainViolation(
+            "unrecognised scan envelope (expected Trivy 'Results', Grype 'matches', or 'findings')"
+        )
+
+
 def evaluate_scan(
     findings: Iterable[dict[str, Any]],
     policy: VulnPolicy,
@@ -198,17 +207,19 @@ def evaluate_scan(
 ) -> ScanDecision:
     """Partition scan findings into blocking vs documented-exception, fail-closed.
 
-    A finding blocks when its severity rank >= the policy threshold (or is unknown),
-    UNLESS an unexpired exception covers its id. Expired exceptions do NOT suppress a
-    finding (they are reported so the allowlist cannot rot silently)."""
+    Unknown severity ALWAYS blocks and can never be exempted. Only KNOWN severities at or
+    above the threshold are eligible for an unexpired documented exception."""
     today = on or datetime.now(timezone.utc).date()
     blocking: list[dict[str, Any]] = []
     exempted: list[dict[str, Any]] = []
     expired: list[str] = []
     for finding in findings:
         rank = _finding_rank(finding)
-        is_at_threshold = rank is None or rank >= policy.threshold_rank
-        if not is_at_threshold:
+        if rank is None:
+            # Unknown severity: always blocks; exceptions do not apply.
+            blocking.append(finding)
+            continue
+        if rank < policy.threshold_rank:
             continue
         vuln_id = str(finding.get("id", "")).strip()
         exc = policy.exceptions.get(vuln_id)
@@ -229,17 +240,81 @@ def assert_scan_passes(
         ids = ", ".join(sorted({str(f.get("id", "?")) for f in decision.blocking}))
         raise SupplyChainViolation(
             f"{len(decision.blocking)} unapproved vulnerability finding(s) at/above "
-            f"'{policy.fail_on_severity}' fail the release closed: {ids}"
+            f"'{policy.fail_on_severity}' (or of unknown severity) fail the release closed: {ids}"
         )
     return decision
 
 
-# --- rollback by prior accepted digest ----------------------------------------
+# --- reproducibility / equivalence evidence -----------------------------------
 
 
-def assert_rollback_target(image_ref: str) -> str:
-    """A rollback target must itself be a prior accepted immutable digest."""
-    return assert_immutable_image_ref(image_ref, field_name="rollback target")
+def assert_reproducibility_evidence(report: dict[str, Any], *, artifact_digest: str | None = None) -> None:
+    """Fail closed unless the rebuild produced the SAME OCI manifest digest as the build.
+
+    Package-set equivalence is supplementary, not a substitute: the primary proof is
+    digest-to-digest equality of two independent builds from the same pinned inputs."""
+    if not isinstance(report, dict):
+        raise SupplyChainViolation("reproducibility evidence is missing or not an object")
+    required = (
+        "manifest_digest",
+        "rebuild_manifest_digest",
+        "digests_match",
+        "equivalent",
+        "package_count",
+        "rebuild_package_count",
+    )
+    missing = [k for k in required if k not in report]
+    if missing:
+        raise SupplyChainViolation(f"reproducibility evidence missing field(s): {', '.join(missing)}")
+    for key in ("manifest_digest", "rebuild_manifest_digest"):
+        if not _BARE_DIGEST_RE.fullmatch(str(report[key])):
+            raise SupplyChainViolation(f"reproducibility {key} is not a sha256 manifest digest")
+    if report["manifest_digest"] != report["rebuild_manifest_digest"] or report["digests_match"] is not True:
+        raise SupplyChainViolation(
+            "build is not reproducible: rebuilt OCI manifest digest differs from the original "
+            f"({report['manifest_digest']} != {report['rebuild_manifest_digest']})"
+        )
+    if report["equivalent"] is not True:
+        raise SupplyChainViolation("reproducibility package set is not equivalent across rebuilds")
+    pc, rpc = report["package_count"], report["rebuild_package_count"]
+    if not isinstance(pc, int) or pc <= 0:
+        raise SupplyChainViolation("reproducibility package_count must be a positive integer")
+    if pc != rpc:
+        raise SupplyChainViolation(f"reproducibility package counts differ ({pc} != {rpc})")
+    if artifact_digest is not None and report["manifest_digest"] != artifact_digest:
+        raise SupplyChainViolation(
+            "reproducibility evidence does not describe the deployed artifact digest "
+            f"({report['manifest_digest']} != {artifact_digest})"
+        )
+
+
+# --- rollback by prior ACCEPTED digest ----------------------------------------
+
+
+def load_accepted_digests(mapping: dict[str, Any]) -> set[str]:
+    """The set of accepted prior-release manifest digests from the accepted-release
+    ledger (``accepted_releases: [{manifest_digest: sha256:...}]``)."""
+    out: set[str] = set()
+    for entry in (mapping or {}).get("accepted_releases") or []:
+        digest = str((entry or {}).get("manifest_digest", "")).strip()
+        if not _BARE_DIGEST_RE.fullmatch(digest):
+            raise SupplyChainViolation(f"accepted-release ledger has a malformed manifest_digest: {digest!r}")
+        out.add(digest)
+    return out
+
+
+def assert_rollback_target(image_ref: str, accepted_digests: set[str] | None) -> str:
+    """A rollback target must be a digest reference AND a prior ACCEPTED release digest.
+
+    Digest syntax alone is insufficient: the manifest digest must appear in the accepted
+    -release ledger, so an arbitrary (even well-formed) digest cannot be rolled back to."""
+    ref = assert_immutable_image_ref(image_ref, field_name="rollback target")
+    digest = manifest_digest_of(ref)
+    if not accepted_digests or digest not in accepted_digests:
+        raise SupplyChainViolation(
+            f"rollback target {digest} is not a prior accepted release (not in the accepted-release ledger)"
+        )
+    return ref
 
 
 # --- policy loading + composite release gate ----------------------------------
@@ -256,17 +331,25 @@ def policy_from_mapping(mapping: dict[str, Any]) -> VulnPolicy:
         reason = str(raw.get("reason", "")).strip()
         if not vuln_id or not reason:
             raise SupplyChainViolation("each vulnerability exception requires 'id' and 'reason'")
+        if vuln_id in exceptions:
+            raise SupplyChainViolation(f"duplicate vulnerability exception id: {vuln_id}")
         expires_raw = raw.get("expires")
-        expires = date.fromisoformat(str(expires_raw)) if expires_raw else None
+        if not expires_raw:
+            raise SupplyChainViolation(f"vulnerability exception {vuln_id} requires an 'expires' date")
+        try:
+            expires = date.fromisoformat(str(expires_raw))
+        except ValueError as exc:
+            raise SupplyChainViolation(
+                f"vulnerability exception {vuln_id} has an invalid 'expires' date: {expires_raw!r}"
+            ) from exc
         exceptions[vuln_id] = VulnException(vuln_id=vuln_id, reason=reason, expires=expires)
     return VulnPolicy(fail_on_severity=fail_on, exceptions=exceptions)
 
 
 def _scan_findings(scan: dict[str, Any]) -> list[dict[str, Any]]:
-    """Normalise a scanner report into a list of ``{id, severity}`` findings.
+    """Normalise a recognised scanner report into ``{id, severity}`` findings.
 
-    Accepts a Trivy-style ``Results[].Vulnerabilities[]`` or a Grype-style
-    ``matches[].vulnerability`` document, or a plain ``findings`` list."""
+    Call ``assert_scan_evidence`` first; this assumes a recognised, well-typed envelope."""
     if "findings" in scan:
         return list(scan["findings"] or [])
     out: list[dict[str, Any]] = []
@@ -279,31 +362,51 @@ def _scan_findings(scan: dict[str, Any]) -> list[dict[str, Any]]:
     return out
 
 
-def evaluate_release(manifest: dict[str, Any], policy_mapping: dict[str, Any], *, on: date | None = None) -> list[str]:
-    """Run every release gate against a manifest; return a list of failure messages
-    (empty == the release passes). The manifest carries the artifact evidence:
+def evaluate_release(
+    manifest: dict[str, Any],
+    policy_mapping: dict[str, Any],
+    *,
+    accepted_digests: set[str] | None = None,
+    on: date | None = None,
+) -> list[str]:
+    """Run every release gate against a manifest; return failure messages (empty == pass).
 
-        image_ref:   the deployable digest reference (required)
-        dockerfile:  Dockerfile text (optional; base-pin checked when present)
-        sbom:        SBOM document (required)
-        provenance:  attestation document (required)
-        scan:        scanner report (required)
-        rollback_ref: prior accepted digest (optional; checked when present)
-    """
+    The policy's ``require`` flags and ``pinned_base_images`` are CONSUMED here (not
+    documentary): a required-but-missing piece of evidence fails closed.
+
+    manifest keys: image_ref (digest, required), dockerfile, sbom, provenance, scan,
+    reproducibility, rollback_ref."""
     failures: list[str] = []
-    artifact_digest = None
+    require = (policy_mapping or {}).get("require") or {}
+    pinned_bases = (policy_mapping or {}).get("pinned_base_images")
+
+    artifact_digest: str | None = None
     try:
-        artifact_digest = assert_immutable_image_ref(manifest.get("image_ref", ""), field_name="deployed artifact")
+        artifact_ref = assert_immutable_image_ref(manifest.get("image_ref", ""), field_name="deployed artifact")
+        artifact_digest = manifest_digest_of(artifact_ref)
     except SupplyChainViolation as exc:
         failures.append(str(exc))
+
+    # Pinned base image (enforced against the policy's approved list when present).
     if "dockerfile" in manifest:
         try:
-            assert_dockerfile_base_pinned(manifest["dockerfile"])
+            assert_dockerfile_base_pinned(manifest["dockerfile"], allowed_bases=pinned_bases)
         except SupplyChainViolation as exc:
             failures.append(str(exc))
-    for required in ("sbom", "provenance", "scan"):
-        if required not in manifest:
-            failures.append(f"release manifest is missing required '{required}' evidence")
+    elif pinned_bases is not None:
+        failures.append("release manifest is missing the 'dockerfile' needed to verify the pinned base policy")
+
+    # Required evidence (policy.require consumed). Map require flags -> manifest keys.
+    required_map = {
+        "sbom": require.get("sbom"),
+        "provenance": require.get("provenance"),
+        "scan": require.get("vulnerability_scan"),
+        "reproducibility": require.get("reproducibility_evidence"),
+    }
+    for manifest_key, is_required in required_map.items():
+        if is_required and manifest_key not in manifest:
+            failures.append(f"release manifest is missing required '{manifest_key}' evidence")
+
     if "sbom" in manifest:
         try:
             assert_sbom_present(manifest["sbom"])
@@ -316,12 +419,18 @@ def evaluate_release(manifest: dict[str, Any], policy_mapping: dict[str, Any], *
             failures.append(str(exc))
     if "scan" in manifest:
         try:
+            assert_scan_evidence(manifest["scan"])
             assert_scan_passes(_scan_findings(manifest["scan"]), policy_from_mapping(policy_mapping), on=on)
+        except SupplyChainViolation as exc:
+            failures.append(str(exc))
+    if "reproducibility" in manifest:
+        try:
+            assert_reproducibility_evidence(manifest["reproducibility"], artifact_digest=artifact_digest)
         except SupplyChainViolation as exc:
             failures.append(str(exc))
     if manifest.get("rollback_ref"):
         try:
-            assert_rollback_target(manifest["rollback_ref"])
+            assert_rollback_target(manifest["rollback_ref"], accepted_digests)
         except SupplyChainViolation as exc:
             failures.append(str(exc))
     return failures
@@ -352,10 +461,12 @@ def main(argv: list[str] | None = None) -> int:
 
     p_df = sub.add_parser("check-dockerfile", help="fail unless every FROM is digest-pinned")
     p_df.add_argument("--path", required=True)
+    p_df.add_argument("--policy", help="optional policy YAML/JSON to enforce the pinned_base_images list")
 
     p_rel = sub.add_parser("check-release", help="run every release gate against a manifest")
     p_rel.add_argument("--manifest", required=True, help="release manifest JSON")
     p_rel.add_argument("--policy", required=True, help="supply-chain policy YAML/JSON")
+    p_rel.add_argument("--accepted-releases", help="accepted-release ledger YAML/JSON (for rollback validation)")
 
     args = parser.parse_args(argv)
     try:
@@ -364,11 +475,15 @@ def main(argv: list[str] | None = None) -> int:
             print(f"OK: immutable digest reference {ref}")
             return 0
         if args.cmd == "check-dockerfile":
-            refs = assert_dockerfile_base_pinned(open(args.path, encoding="utf-8").read())
+            allowed = _load(args.policy).get("pinned_base_images") if args.policy else None
+            refs = assert_dockerfile_base_pinned(
+                open(args.path, encoding="utf-8").read(), allowed_bases=allowed
+            )
             print(f"OK: {len(refs)} digest-pinned base image(s): {', '.join(refs)}")
             return 0
         if args.cmd == "check-release":
-            failures = evaluate_release(_load(args.manifest), _load(args.policy))
+            accepted = load_accepted_digests(_load(args.accepted_releases)) if args.accepted_releases else None
+            failures = evaluate_release(_load(args.manifest), _load(args.policy), accepted_digests=accepted)
             if failures:
                 print(f"FAIL: {len(failures)} supply-chain gate violation(s):", file=sys.stderr)
                 for msg in failures:
