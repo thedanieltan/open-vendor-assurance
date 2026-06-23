@@ -31,6 +31,7 @@ from .models import (  # noqa: E402
     VerifyRequest,
     VerifyStatusResponse,
 )
+from .queue import InMemoryQueue  # noqa: E402
 from .service_state import ServiceState, load_service_state  # noqa: E402
 from .verify_transport import (  # noqa: E402
     InMemoryJobStore,
@@ -87,6 +88,13 @@ def create_app(config: ServiceConfig | None = None) -> FastAPI:
             app.state.verify_jobs = InMemoryJobStore()
             app.state.verify_envelopes = InMemoryRequestEnvelopeStore()
             app.state.verify_results = InMemoryResultStore()
+            # WP-02C: the provider-neutral queue interface, created ONLY behind the verify
+            # flag. The in-memory impl is faithful to the Cloud-Tasks dedup/tombstone
+            # semantics the reconciler relies on; a real Cloud Tasks adapter is a later,
+            # infra-gated slice. NO worker LOOP and NO network egress is started here — the
+            # worker is constructed/driven explicitly (off by default); this only makes the
+            # queue available so the API/reconciler can enqueue when wired in a later slice.
+            app.state.verify_queue = InMemoryQueue()
         yield
 
     app = FastAPI(
