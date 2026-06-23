@@ -97,22 +97,22 @@ and an always-on static fallback. ADR-0006 is **Accepted** and the decision pack
 complete; acceptance authorises the architecture only — it provisions nothing, creates
 no provider account, and **OpenVA still does not operate a production hosted endpoint**.
 
-The merged in-repo slices are **WP-02A** (hosted transport) and **WP-02L** (positioning,
-in lockstep with WP-02A) and **WP-02B** (durable async job/result persistence) — these
-are **complete**, having shipped only provider-neutral, off-by-default application code.
-The dependency-ordered remaining slices are in
+The entire provider-neutral application path is now **complete and merged**, having
+shipped only provider-neutral, off-by-default application code: **WP-02A** (hosted
+transport) with **WP-02L** (positioning, in lockstep), **WP-02B** (durable async
+job/result persistence), **WP-02C** (worker + queue), **WP-02D** (candidate ingress),
+**WP-02H** (provider-neutral application hardening), **WP-02I** (remote MCP resolver
+activation), and **WP-02J** (live `/check`). The dependency-ordered remaining slices are
+in
 [`docs/operations/hosted-deployment-implementation-plan.md`](operations/hosted-deployment-implementation-plan.md).
-The provider-neutral application path runs entirely before any infrastructure:
-**WP-02C** (worker + queue) and **WP-02E** (deployment artifact + supply-chain) are
-startable now; **WP-02D** (candidate ingress) and **WP-02H** (provider-neutral
-application hardening) follow WP-02C and may run in parallel; **WP-02I** (remote MCP)
-follows WP-02D + WP-02H; and **WP-02J** (live `/check`) follows WP-02I. Only then does
-the maintainer-gated infrastructure chain begin: **WP-02F (staging)** follows WP-02E +
-WP-02J, **WP-02G (production)** follows WP-02F, and **WP-02K** (production smokes,
-launch evidence, and programme closeout) follows WP-02G. WP-02F, WP-02G, and the infra
-parts of WP-02K require the maintainer-accepted external deployment choices (provider,
-region, domain, credentials, spend), requested once before staging. No slice claims the
-service is live until WP-02K's evidence exists.
+**WP-02E** (deployment artifact + supply-chain) is the only remaining startable
+provider-neutral slice; it depends only on WP-02A and needs no host. Only after WP-02E
+does the maintainer-gated infrastructure chain begin: **WP-02F (staging)** follows
+WP-02E + WP-02J, **WP-02G (production)** follows WP-02F, and **WP-02K** (production
+smokes, launch evidence, and programme closeout) follows WP-02G. WP-02F, WP-02G, and the
+infra parts of WP-02K require the maintainer-accepted external deployment choices
+(provider, region, domain, credentials, spend), requested once before staging. No slice
+claims the service is live until WP-02K's evidence exists.
 
 ## Current state
 
