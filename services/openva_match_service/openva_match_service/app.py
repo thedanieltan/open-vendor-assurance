@@ -18,9 +18,12 @@ ensure_adapter_paths()
 
 from .config import ADVISORY_BOUNDARY, VERIFY_RETAINED_WINDOW_HOURS, ServiceConfig  # noqa: E402
 from .conversion import match_csv_bytes  # noqa: E402
+from .check_service import VerifyRunner, run_check  # noqa: E402
 from .enrichment import build_snapshot, enrich_one, match_one, vendor_detail, vendor_sources  # noqa: E402
 from .models import (  # noqa: E402
     CatalogMetaResponse,
+    CheckRequest,
+    CheckResponse,
     EnrichRequest,
     EnrichResponse,
     MatchInput,
@@ -83,7 +86,15 @@ def create_app(
     config: ServiceConfig | None = None,
     *,
     telemetry: Telemetry | None = None,
+    verify_runner_factory: Any | None = None,
 ) -> FastAPI:
+    # ``verify_runner_factory`` (off by default; ``create_app`` constructs none) wires the
+    # SYNCHRONOUS live-verify driver for /v1/check. It is the single opt-in for the live
+    # path: a deployment/test that wants /check to perform live verification passes a
+    # callable ``(app) -> VerifyRunner`` that owns the existing verify worker over the
+    # existing TTL stores. When None (the default) /check serves the cached read only —
+    # which is also the rollback posture for the live path. The actual hosted endpoint
+    # serving /check live to the public is infra-gated (WP-02F/02G/02K), not built here.
     service_config = config or ServiceConfig.from_env()
     # Telemetry is provider-neutral. The DEFAULT is the no-op sink so the default build
     # emits nothing and behaves exactly as before; a deployment (or a test) may inject the
@@ -120,6 +131,17 @@ def create_app(
             # worker is constructed/driven explicitly (off by default); this only makes the
             # queue available so the API/reconciler can enqueue when wired in a later slice.
             app.state.verify_queue = InMemoryQueue()
+            # WP-02J: the SYNCHRONOUS live-verify runner for /v1/check. Set ONLY inside the
+            # verify-transport-enabled branch (so a flag-OFF deployment keeps exactly the
+            # current cached-only app.state — no extra attribute). Built only when a factory
+            # was ALSO injected AND the kill-switch is NOT armed — otherwise it stays None
+            # and /check serves the cached read (honest degradation / rollback). create_app
+            # injects no factory by default, so the default build's live path is inert.
+            app.state.verify_runner = (
+                verify_runner_factory(app)
+                if (verify_runner_factory is not None and not service_config.verify_kill_switch)
+                else None
+            )
         yield
 
     app = FastAPI(
@@ -299,6 +321,65 @@ def create_app(
         ]
         return {
             "results": results,
+            "snapshot": build_snapshot(state, service_config),
+            "not_advice": True,
+        }
+
+    @app.post(
+        "/v1/check",
+        response_model=CheckResponse,
+        tags=[V1_TAG],
+        summary="Resolve vendor identities, labelling each result cached vs verify (live-verify mode, off by default)",
+    )
+    async def v1_check(payload: CheckRequest, request: Request, _: None = Depends(require_read_access)) -> dict[str, Any]:
+        # /v1/check ALWAYS serves the cached answer; it ADDS a live verification (labelled
+        # `verify`) only when the live path is enabled, not kill-switched, AND a runner is
+        # wired. Otherwise it degrades HONESTLY to the cached read (labelled `cached`) — the
+        # cached/static path always works, which is also the live-path rollback posture.
+        state = get_service_state(app)
+        telemetry: Telemetry = request.app.state.telemetry
+
+        # Bounded like the verify transport (each live row drives real, SSRF-safe fetches):
+        # over-limit is a pre-work rejection with the stable row_limit_exceeded code.
+        if len(payload.rows) > service_config.max_verify_rows:
+            raise HTTPException(
+                status_code=413,
+                detail={
+                    "error": "row_limit_exceeded",
+                    "message": f"check request exceeds the maximum of {service_config.max_verify_rows} rows",
+                },
+            )
+
+        # The live runner is present only when the transport is on, the kill-switch is off,
+        # AND a runner was wired (see lifespan). The kill-switch fail-closes /check to the
+        # cached read (the runner is never built), so it degrades honestly to `cached`.
+        runner: VerifyRunner | None = getattr(request.app.state, "verify_runner", None)
+
+        # When the live path will actually run, apply the same application-layer rate-limit
+        # backstop the verify-create path uses (provider-neutral; off by default). The
+        # cached-only path is a read and is not rate-limited here (parity with /v1/match).
+        if runner is not None:
+            rate_limiter: RateLimitPolicy = request.app.state.rate_limiter
+            decision = rate_limiter.check(client_key(request.headers.get("authorization")))
+            if not decision.allowed:
+                telemetry.increment("check_requests_total", outcome="rate_limited")
+                retry_after = max(1, int(round(decision.retry_after_seconds)))
+                raise HTTPException(
+                    status_code=429,
+                    detail={"error": "rate_limited", "message": "check request rate limit exceeded; retry later"},
+                    headers={"Retry-After": str(retry_after)},
+                )
+
+        result = run_check(
+            state,
+            service_config,
+            [item.model_dump() for item in payload.rows],
+            payload.source_types,
+            runner=runner,
+        )
+        telemetry.increment("check_requests_total", outcome=result["freshness_mode"])
+        return {
+            **result,
             "snapshot": build_snapshot(state, service_config),
             "not_advice": True,
         }

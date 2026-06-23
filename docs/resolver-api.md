@@ -185,6 +185,62 @@ elapses, the record (with its `expires_at` + `job_token_digest`) and its transie
 envelope/result are deleted, so the `410`-while-retained state advances to a content-free
 `404` — it is not a status-only flag.
 
+## Check (`/v1/check`, live-verify mode, WP-02J)
+
+`POST /v1/check` is a **synchronous** vendor-resolution check that **always** serves the
+cached answer and **explicitly labels** each result's freshness as `cached` vs `verify`,
+so a consumer always knows whether the answer came from the static cached snapshot or a
+live verification. It is the public `/check` live verify mode over `/v1`.
+
+The cached answer is **always available**: `/check` reuses the same cached match path as
+`/v1/match` / `/v1/enrich`. The **live-verify** augmentation runs only when the verify
+transport is enabled (`OPENVA_VERIFY_TRANSPORT_ENABLED`), the kill-switch is **not** armed,
+**and** the live runner is wired for the deployment. The live path uses the **existing**
+async `/v1/verify` transport + worker over the **existing** TTL job/result store — there is
+**no new persistence**. When the live path is unavailable (transport off, kill-switched, or
+no runner) `/check` **degrades honestly** to the cached answer, clearly labelled `cached` —
+it never presents stale cached data as a live result. Disabling the live path is the
+**rollback**: `/check` still serves the cached read.
+
+The body carries rows under a **`rows`** array; each row is a vendor **identity** (at least
+one of `vendor_name`, `domain`, `business_entity_name`, `registration_number`), optionally
+with a `row_id` and an optional top-level `source_types`. Rows accept **identities only** —
+a `url`/`candidate_url`/`source_url` (or any other undeclared field) is rejected with `422`.
+This is the SSRF boundary: `/check` exposes **no fetch-target URL**; the live verification
+goes through the worker/resolver's SSRF-safe boundary, and the resolver chooses what to
+fetch — the caller cannot supply a fetch target.
+
+```json
+{ "rows": [{ "row_id": "12", "vendor_name": "Stripe", "domain": "stripe.com" }] }
+```
+
+`rows` is bounded by `OPENVA_MAX_VERIFY_ROWS` (default and authoritative maximum `20`, the
+grounded verify budget); exceeding it returns `413` with the stable `row_limit_exceeded`
+code **before any work**. `source_types` is bounded to `4` (the hosted verify budget); too
+many returns `422`. Access matches the other `/v1` read endpoints: the bearer API key is
+required unless `OPENVA_PUBLIC_READ_ENABLED=true`, in which case the cached read is public.
+
+Each result is **non-advisory** (`not_advice: true`; no scoring/ranking/verdict) and carries
+its `freshness` label, the cached `match`, canonical `sources`, and — when `freshness` is
+`verify` — the live `verification` payload:
+
+```json
+{
+  "results": [
+    { "row_id": "12", "freshness": "verify", "match": { … }, "sources": [ … ],
+      "verification": { … }, "not_advice": true }
+  ],
+  "freshness_mode": "verify",
+  "verify_enabled": true,
+  "snapshot": { … },
+  "not_advice": true
+}
+```
+
+The actual hosted endpoint serving `/check` live to the public is infrastructure-gated
+(WP-02F/02G/02K); this slice ships the provider-neutral application code with the live path
+**off by default**.
+
 ## Snapshot and refresh
 
 `snapshot.snapshot_digest` is a deterministic `sha256:` digest of the loaded pack;
