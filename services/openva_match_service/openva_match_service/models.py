@@ -335,6 +335,114 @@ class VerifyCreatedResponse(BaseModel):
     not_advice: bool = True
 
 
+# --- /check live-verify mode (WP-02J) ----------------------------------------
+#
+# /v1/check is a SYNCHRONOUS vendor-resolution check that ALWAYS returns the cached
+# answer and EXPLICITLY LABELS each result's freshness as `cached` vs `verify`. The
+# cached answer is always available (the existing cached match/source path); the live
+# `verify` augmentation runs only when the verify transport is enabled, not
+# kill-switched, and a worker is wired — otherwise the endpoint degrades HONESTLY to the
+# cached answer, clearly labelled `cached` (never stale-as-live). It takes vendor
+# IDENTITIES only (no fetch-target URL): the live path goes through the existing
+# worker/resolver SSRF boundary, never an arbitrary-URL fetch.
+
+# The freshness label vocabulary, mirrored from the resolver's FRESHNESS_MODES so the
+# label can never drift from the transport's own cached/verify vocabulary.
+FRESHNESS_CACHED = "cached"
+FRESHNESS_VERIFY = "verify"
+
+
+class CheckRowItem(MatchInput):
+    # Inherits extra="forbid" + the four identity fields + the "at least one identity"
+    # validator from MatchInput. Declares NO url field: extra="forbid" makes any
+    # url/candidate_url/source_url a 422 — the SSRF boundary (check takes identities only).
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={
+            "example": {
+                "row_id": "12",
+                "vendor_name": "Stripe",
+                "domain": "stripe.com",
+                "business_entity_name": None,
+                "registration_number": None,
+            }
+        },
+    )
+
+    row_id: str | int | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _check_row_id(cls, data: Any) -> Any:
+        if isinstance(data, dict) and "row_id" in data:
+            data = dict(data)
+            data["row_id"] = _normalize_row_id(data["row_id"])
+        return data
+
+
+class CheckRequest(BaseModel):
+    # extra="forbid" closes the envelope: an undeclared top-level field (e.g. a
+    # fetch-target URL or a workspace token) is rejected with 422 rather than silently
+    # discarded, matching the other /v1 surfaces and the SSRF boundary.
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={
+            "example": {
+                "rows": [
+                    {"row_id": "12", "vendor_name": "Stripe", "domain": "stripe.com"}
+                ],
+                "source_types": [
+                    "dpa",
+                    "subprocessors_list",
+                    "privacy_notice",
+                    "security_page",
+                ],
+            }
+        },
+    )
+
+    rows: list[CheckRowItem] = Field(
+        min_length=1,
+        description="Bounded by OPENVA_MAX_VERIFY_ROWS. Identity rows only; no fetch-target URL is accepted.",
+    )
+    source_types: list[SourceTypeField] | None = Field(
+        default=None,
+        max_length=MAX_VERIFY_SOURCE_TYPES,
+        description="Optional, ≤ 4 (the hosted verify budget). Omitted means the cached canonical source types.",
+    )
+
+
+class CheckRowResult(BaseModel):
+    """One row's resolution check.
+
+    ``freshness`` is ALWAYS present and accurate: ``cached`` when served from the loaded
+    snapshot, ``verify`` when a live verification was performed for this row. ``cached``
+    carries the cached match + canonical sources; ``verify`` additionally carries the live
+    ``verification`` payload. Non-advisory: no scoring/ranking/verdict is emitted."""
+
+    row_id: str | int | None = None
+    input: MatchInput
+    freshness: str = Field(description="One of cached, verify. Always present and accurate.")
+    match: MatchResultModel
+    sources: list[SourceModel] = Field(default_factory=list)
+    verification: dict[str, Any] | None = Field(
+        default=None,
+        description="The live verification payload, present only when freshness == verify.",
+    )
+    not_advice: bool = True
+
+
+class CheckResponse(BaseModel):
+    results: list[CheckRowResult]
+    # The freshness mode the request RESOLVED to (after honest degradation): `verify` when
+    # the live path ran, `cached` when the endpoint served the cached read (transport off /
+    # kill-switched / no worker). Per-row `freshness` is the authoritative label.
+    freshness_mode: str = Field(description="One of cached, verify — the mode the request resolved to.")
+    verify_enabled: bool = Field(description="Whether the live verify path was available for this request.")
+    snapshot: Snapshot
+    not_advice: bool = True
+
+
 class VerifyStatusResponse(BaseModel):
     """Poll/status projection of a job record.
 
