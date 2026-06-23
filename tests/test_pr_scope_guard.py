@@ -401,3 +401,49 @@ def test_composite_lockstep_dependency_edges():
         deps = wps[downstream].get("depends_on") or []
         assert COMPOSITE_LOCKSTEP_WP in deps, f"{downstream} must depend on the composite"
         assert "WP-02A-HOSTED-TRANSPORT" not in deps, f"{downstream} must not depend on standalone WP-02A"
+
+
+# --- Roadmap/contract reconciliation lane (WP-02-ROADMAP-RECONCILIATION-01) ----
+
+RECONCILIATION_WP = "WP-02-ROADMAP-RECONCILIATION-01"
+
+# Scope-policy MACHINERY (everything except work-package-scope.yaml itself) stays SOLELY
+# under WP-PR-SCOPE-POLICY-01; the reconciliation lane must NOT be able to touch it.
+SCOPE_POLICY_MACHINERY = [f for f in SCOPE_POLICY_FILES if f != "docs/operations/contracts/work-package-scope.yaml"]
+
+
+def test_reconciliation_lane_covers_its_doc_and_contract_surface():
+    # The reconciliation lane may edit the roadmap, impl-plan, hosted-deployment contract,
+    # the manifest (for the mirrored depends_on edges only), and the two drift tests.
+    manifest = load_manifest()
+    reconciliation_files = [
+        "docs/roadmap.md",
+        "docs/operations/hosted-deployment-implementation-plan.md",
+        "docs/operations/contracts/hosted-deployment.yaml",
+        "docs/operations/contracts/work-package-scope.yaml",
+        "tests/test_hosted_deployment_docs.py",
+        "tests/test_ai_native_distribution_docs.py",
+    ]
+    assert out_of_scope_paths(reconciliation_files, RECONCILIATION_WP, manifest) == []
+
+
+def test_reconciliation_lane_cannot_touch_scope_policy_machinery():
+    # The carve-out is narrow: the lane edits the manifest in lockstep with the contract,
+    # but the guard/tests/doc/CI workflow/ownership map remain governed only by the policy WP.
+    manifest = load_manifest()
+    violations = out_of_scope_paths(SCOPE_POLICY_MACHINERY, RECONCILIATION_WP, manifest)
+    assert set(violations) == set(SCOPE_POLICY_MACHINERY)
+
+
+def test_reconciliation_lane_cannot_touch_service_or_infra_code():
+    # Documentation/contract/drift-test reconciliation only — no service, schema, worker,
+    # deployment-artifact, or infrastructure paths.
+    manifest = load_manifest()
+    intrusions = [
+        "services/openva_match_service/app.py",
+        "schemas/openva/hosted-job-record.schema.json",
+        "tools/openva/worker.py",
+        "infra/main.tf",
+        ".github/workflows/deploy.yml",
+    ]
+    assert out_of_scope_paths(intrusions, RECONCILIATION_WP, manifest) == sorted(intrusions)
