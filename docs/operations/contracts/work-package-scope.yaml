@@ -173,7 +173,7 @@ work_packages:
       - tests/*
 
   WP-02E-SUPPLY-CHAIN:
-    description: Artifact build and supply-chain controls for the hosted service (WP-02E).
+    description: Artifact build and supply-chain controls for the hosted service (WP-02E). Includes tests/* (consistent with the other WP-02 application slices) so the supply-chain gate's pytest proofs and the workflow-inventory registration test land with the slice.
     slice_id: WP-02E-artifact-and-supply-chain
     depends_on:
       - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
@@ -181,6 +181,7 @@ work_packages:
       - services/openva_match_service/*
       - .github/workflows/*
       - docs/operations/*
+      - tests/*
 
   WP-02F-STAGING:
     description: Staging environment for the hosted service (WP-02F). Provider-specific edge enforcement, alert routing, dashboards, and cloud configuration are accepted HERE (moved from WP-02H, which is now provider-neutral application hardening). Maintainer-gated.
