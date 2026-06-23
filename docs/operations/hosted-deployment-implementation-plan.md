@@ -1,40 +1,79 @@
 # Hosted deployment implementation plan
 
-The dependency-ordered follow-on slices that become executable after a maintainer
-accepts [ADR-0006](../architecture/decisions/ADR-0006-hosted-public-read-deployment.md)
-(governed by [ADR-0001](../architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md)).
+The dependency-ordered follow-on slices for the accepted
+[ADR-0006](../architecture/decisions/ADR-0006-hosted-public-read-deployment.md)
+deployment architecture (governed by [ADR-0001](../architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md)).
 Each slice is independently reviewable. The machine-readable slice list +
-dependencies live in [`contracts/hosted-deployment.yaml`](contracts/hosted-deployment.yaml).
+dependencies (and the per-slice `status`) live in
+[`contracts/hosted-deployment.yaml`](contracts/hosted-deployment.yaml).
 
-**Decision-only.** Nothing here is built or provisioned. Each slice carries its
-own acceptance tests and rollback. OpenVA stays non-advisory (`not_advice: true`),
-public-source-only, and metadata-first; it does not provide legal or vendor-risk
-advice and stores no raw vendor documents.
+**Decision-only for the un-provisioned infrastructure.** No infrastructure is
+provisioned by this plan; no production endpoint is live. The completed in-repo
+slices below shipped only provider-neutral, off-by-default application code. OpenVA
+stays non-advisory (`not_advice: true`), public-source-only, and metadata-first; it
+does not provide legal or vendor-risk advice and stores no raw vendor documents.
 
 Authority levels follow `docs/operations/contracts/bot-authority.yaml` (0 report-only,
 1 evidence-authorship/PR, 4 merge). The hosted service operates in the **discovery**
 role only; decision and merge stay with the existing independent components.
 
+## Programme state
+
+The decision package (issue #401, WP-OPENVA-AI-NATIVE-DISTRIBUTION-02) is complete and
+[ADR-0006](../architecture/decisions/ADR-0006-hosted-public-read-deployment.md) is
+**Accepted**. The merged in-repo slices are **WP-02A** (hosted transport), **WP-02L**
+(positioning, in lockstep with WP-02A — PR #408), and **WP-02B** (async persistence —
+PR #410). These are complete, not "startable". The remaining provider-neutral
+application slices (**WP-02C**, **WP-02E** startable now; then **WP-02D**/**WP-02H**;
+then **WP-02I**; then **WP-02J**) run entirely before the maintainer-gated
+infrastructure chain (**WP-02F** staging → **WP-02G** production → **WP-02K** launch
+evidence + programme closeout).
+
 ## Slice summary
 
-| Slice | Depends on | Authority | Provisions infra? |
-| --- | --- | --- | --- |
-| WP-02A hosted transport + API contract | — | 1 | No (code) |
-| WP-02B async job/result persistence | 02A | 1 | No (code) |
-| WP-02C worker + queue execution | 02B | 1 | No (code) |
-| WP-02D candidate-ingress integration | 02C | 1 | No (code) |
-| WP-02E deployment artifact + supply-chain | 02A | 1 | No (CI/artifact) |
-| WP-02F staging environment | 02E, 02C | maintainer | **Yes (staging)** |
-| WP-02G production infrastructure | 02F | maintainer | **Yes (prod)** |
-| WP-02H observability + abuse controls | 02F | 1 / maintainer | partial |
-| WP-02I remote MCP resolver activation | 02D, 02H | 1 | No (code) |
-| WP-02J live `/check` integration | 02I | 1 | No (code) |
-| WP-02K production smokes + launch evidence | 02G, 02J | maintainer | evidence |
-| WP-02L positioning reconciliation | 02A | 1 (human-reviewed) | No (docs) |
+| Slice | Depends on | Authority | Provisions infra? | Status |
+| --- | --- | --- | --- | --- |
+| WP-02A hosted transport + API contract | — | 1 | No (code) | completed |
+| WP-02L positioning reconciliation | 02A | 1 (human-reviewed) | No (docs) | completed |
+| WP-02B async job/result persistence | 02A | 1 | No (code) | completed |
+| WP-02C worker + queue execution | 02B | 1 | No (code) | startable now |
+| WP-02E deployment artifact + supply-chain | 02A | 1 | No (CI/artifact) | startable now |
+| WP-02D candidate-ingress integration | 02C | 1 | No (code) | blocked (02C) |
+| WP-02H application hardening (provider-neutral) | 02C | 1 | No (code) | blocked (02C) |
+| WP-02I remote MCP resolver activation | 02D, 02H | 1 | No (code) | blocked |
+| WP-02J live `/check` integration | 02I | 1 | No (code) | blocked |
+| WP-02F staging environment | 02E, 02J | maintainer | **Yes (staging)** | infra-gated |
+| WP-02G production infrastructure | 02F | maintainer | **Yes (prod)** | infra-gated |
+| WP-02K production smokes + launch evidence + closeout | 02G | maintainer | evidence | infra-gated |
 
-Slices WP-02F, WP-02G, and the infra parts of WP-02H/WP-02K **require the
+Slices WP-02F, WP-02G, and the infra parts of WP-02K **require the
 maintainer-accepted external decisions** (provider, region, domain, credentials,
-spend ceiling, permissions). They fail closed until those are made.
+spend ceiling, permissions), requested **once** before staging (WP-02F). They fail
+closed until those are made. WP-02H is now **provider-neutral application hardening**
+that lands before staging — its provider-specific edge enforcement, alert routing,
+dashboards, and cloud configuration moved to WP-02F/WP-02G acceptance.
+
+## Cross-cutting execution constraints
+
+These hold across every remaining slice (they are properties of *how* the work is
+built, not a separate work package or operating mode; the machine-readable form is
+`cross_cutting_execution_constraints` in the contract):
+
+- **Provider-neutral code before infrastructure.** All WP-02C..02J application code
+  lands and is reviewed before any external provisioning (WP-02F onward).
+- **Hosted capabilities disabled by default.** The verify/worker/transport paths ship
+  behind an off-by-default flag; the default build changes no runtime behaviour.
+- **Deterministic local test paths.** Local/in-memory/SQLite implementations let every
+  test run with no cloud provider, account, or network egress.
+- **Queue, store, and telemetry behind provider interfaces** — one in-memory
+  implementation plus a provider implementation, selected by configuration.
+- **No external provisioning before WP-02F:** no provider account, DNS, TLS, production
+  secrets, paid registry publication, or public endpoint before staging.
+- **The static layer is unaffected** — the static catalogue, static MCP, and cached
+  operation keep working throughout, including when the hosted service is absent.
+- **External decisions stay maintainer-controlled** — provider, region, domain,
+  credentials, and spend are a single maintainer decision block requested once,
+  immediately before WP-02F.
 
 ## Per-slice specification
 
@@ -89,32 +128,57 @@ spend ceiling, permissions). They fail closed until those are made.
 - **Acceptance evidence:** CI green; SBOM + provenance artifacts produced.
 
 ### WP-02F — Staging environment
-- **Inputs:** WP-02E, WP-02C; **maintainer external decisions** (provider, region, staging domain, staging secrets).
-- **Outputs:** a deployed staging service on a maintainer-owned staging host.
+- **Inputs:** WP-02E, WP-02J (the full provider-neutral application path is complete
+  and hardened before any host exists); **the single maintainer external-decision
+  block** (provider, region, staging domain, staging secrets), requested once here.
+- **Outputs:** a deployed staging service on a maintainer-owned staging host, plus the
+  **provider-specific controls moved out of WP-02H**: edge/WAF rate-limit enforcement,
+  alert routing, and SLO dashboards wired to the application's metrics/log interfaces,
+  and the cloud configuration that realises them in staging.
 - **Allowed paths:** infra config (maintainer-owned), `docs/operations/**`.
 - **Authority:** maintainer (provisions infra, creates staging secrets).
 - **Non-goals:** production; public traffic.
-- **Tests:** staging smokes A/B/C; kill-switch; degradation.
+- **Tests:** staging smokes A/B/C; kill-switch; degradation; edge rate-limit enforced;
+  alerts route; dashboards populated from the application signals.
 - **Rollback:** tear down staging; static layer unaffected.
-- **Acceptance evidence:** staging smoke evidence recorded.
+- **Acceptance evidence:** staging smoke evidence recorded; edge enforcement + alert
+  routing + dashboards demonstrated in staging.
 
 ### WP-02G — Production infrastructure
 - **Inputs:** WP-02F; **maintainer external decisions** (production provider/region/domain/secrets/permissions/spend ceiling).
-- **Outputs:** production service (not yet public), separate prod secrets/identity with the GitHub App key **isolated to the candidate-ingress component** (API/worker hold none), explicit **regional log buckets + `_Default` sink** so logs stay in the primary region (not automatic on GCP), and the engineered cost ceiling (instance cap + rate limit + budget-alert kill-switch).
+- **Outputs:** production service (not yet public), separate prod secrets/identity with the GitHub App key **isolated to the candidate-ingress component** (API/worker hold none), explicit **regional log buckets + `_Default` sink** so logs stay in the primary region (not automatic on GCP), the engineered cost ceiling (instance cap + rate limit + budget-alert kill-switch), and the **production realisation of the provider-specific edge enforcement, alert routing, and SLO dashboards** (same controls proven in staging, now in production).
 - **Authority:** maintainer.
 - **Non-goals:** enabling public traffic (WP-02K).
-- **Tests:** prod health/readiness; least-privilege + credential-isolation check (API/worker have no GitHub credential); log-residency check; cost-ceiling controls present.
+- **Tests:** prod health/readiness; least-privilege + credential-isolation check (API/worker have no GitHub credential); log-residency check; cost-ceiling controls present; edge enforcement + alert routing + dashboards live in production.
 - **Rollback:** disable transport; revoke credentials; static layer serving.
-- **Acceptance evidence:** prod stood up, traffic disabled, credential isolation + regional logs + cost controls verified.
+- **Acceptance evidence:** prod stood up, traffic disabled, credential isolation + regional logs + cost controls + edge/alert/dashboard controls verified.
 
-### WP-02H — Observability + abuse controls
-- **Inputs:** WP-02F; the observability spec.
-- **Outputs:** logs/metrics/traces/alerts honouring `prohibited_telemetry_fields`; rate limiting; SLO dashboards; cost/abuse alerts → kill-switch.
-- **Allowed paths:** `services/openva_match_service/**`, infra config, `docs/operations/**`, `tests/**`.
-- **Non-goals:** advisory analytics; content logging.
-- **Tests:** **leakage tests** (no prohibited field in any signal); rate-limit; alert routing.
-- **Rollback:** alerting/limits are additive; disabling reverts to prior caps.
-- **Acceptance evidence:** leakage tests green; alerts fire in staging.
+### WP-02H — Application hardening (provider-neutral)
+- **Inputs:** WP-02C; the observability spec. **Depends on WP-02C and may run in
+  parallel with WP-02D.** Lands BEFORE staging.
+- **Outputs:** the provider-neutral application controls, all behind interfaces so no
+  cloud provider is required to build or test them:
+  - telemetry field **prohibition + redaction** honouring `prohibited_telemetry_fields`
+    (request body, vendor identity, inventory row, `Authorization` header, `job_token`, …);
+  - **structured logging and metrics interfaces** (one in-memory/stdout implementation;
+    a provider exporter is wired at WP-02F/02G);
+  - **application request and concurrency limits** (body/row caps, in-process concurrency);
+  - a **rate-limit / abuse-control policy** expressed at the application layer;
+  - **cost-exhaustion protection behaviour** (bounded work per job/instance so a flood
+    cannot run away before the edge/budget controls exist);
+  - **kill-switch behaviour** (an application flag that fail-closes verify/worker to
+    cached-only);
+  - **leakage and negative tests**.
+- **Allowed paths:** `services/openva_match_service/**`, `docs/operations/**`, `tests/**`.
+- **Non-goals:** advisory analytics; content logging; **provider-specific edge
+  enforcement, alert routing, SLO dashboards, and cloud configuration** — those are
+  WP-02F/WP-02G acceptance criteria, not this slice.
+- **Tests:** **leakage tests** (no prohibited field in any signal, deterministic/local);
+  request + concurrency limits enforced; rate-limit policy unit tests; kill-switch
+  fail-closes to cached-only; cost-exhaustion bound holds.
+- **Rollback:** controls are additive and default-off where they change behaviour;
+  disabling reverts to the prior caps; cached mode unaffected.
+- **Acceptance evidence:** CI green; leakage tests green with no provider dependency.
 
 ### WP-02I — Remote MCP resolver activation
 - **Inputs:** WP-02D, WP-02H; ADR-0003 remote MCP surface.
@@ -134,14 +198,26 @@ spend ceiling, permissions). They fail closed until those are made.
 - **Rollback:** disable `/check` → cached read remains.
 - **Acceptance evidence:** CI green; labelling explicit.
 
-### WP-02K — Production smokes + launch evidence
-- **Inputs:** WP-02G, WP-02J; **maintainer** enables public traffic.
-- **Outputs:** recorded production smoke evidence (A/B/C), then public traffic enabled.
+### WP-02K — Production smokes + launch evidence + programme closeout
+- **Inputs:** WP-02G (WP-02J — the live `/check` path — is already in WP-02G's
+  dependency closure); **maintainer** enables public traffic.
+- **Outputs:** the launch-evidence-then-go-live sequence AND the WP-02 programme
+  closeout:
+  - recorded **production smoke evidence** (A/B/C);
+  - **rollback and kill-switch drills** performed and recorded;
+  - **public-traffic enablement only after** the evidence exists (never before);
+  - the **hosted-live positioning update** (the docs/READMEs may state the service is
+    live only once smoke evidence exists — the inverse of today's "no production
+    endpoint" wording);
+  - **release/tag evidence** for the deployed build (digest-pinned);
+  - the **roadmap final-state update** recording the hosted service as live; and
+  - **closure of the hosted-deployment programme** (WP-OPENVA-AI-NATIVE-DISTRIBUTION-02).
 - **Authority:** maintainer.
 - **Non-goals:** any live claim before evidence exists.
 - **Tests:** production smokes A/B/C; rollback drill; kill-switch drill.
 - **Rollback:** disable public traffic; static layer serving.
-- **Acceptance evidence:** smoke evidence record; only then may docs state the service is live.
+- **Acceptance evidence:** smoke evidence record + drills; only then may docs state the
+  service is live; release/tag + roadmap final-state recorded; programme closed.
 
 ### WP-02L — Positioning reconciliation
 - **Inputs:** WP-02A (first transport merge); ADR-0001 positioning table.
@@ -158,7 +234,11 @@ spend ceiling, permissions). They fail closed until those are made.
 
 ## Sequencing
 
-02A→02B→02C→02D unlock the code path; 02E→02F→02G stand up infra (maintainer-gated);
-02H hardens; 02I→02J light up MCP + live `/check`; 02K records launch evidence;
-02L reconciles positioning in lockstep with 02A's merge. No slice claims the
-service is live until WP-02K's evidence exists.
+02A (+02L in lockstep) and 02B are **complete**. The provider-neutral application path
+runs next and entirely before any infrastructure: 02C and 02E start now; 02D and 02H
+(application hardening) follow 02C and may run in parallel; 02I follows 02D + 02H; 02J
+lights up the live `/check`. Only then does the maintainer-gated infrastructure chain
+begin: staging 02F (after 02E + 02J) → production 02G → 02K (production smokes, launch
+evidence, and programme closeout). The single maintainer external-decision block is
+requested once, immediately before 02F. No slice claims the service is live until
+WP-02K's evidence exists.

@@ -249,8 +249,14 @@ def test_roadmap_does_not_label_infra_gated_slices_currently_buildable():
     # infra-gated slice "buildable/startable now". The sequencing contradiction escaped
     # #406 and the first #407 head; this validates roadmap readiness claims against the
     # contract's implementation_slices.depends_on closure rather than prose review.
+    #
+    # After the WP-02 sequence reconciliation the provider-neutral application slices
+    # (WP-02H application hardening, WP-02I, WP-02J) run BEFORE staging, so their
+    # depends_on closure no longer reaches the infra roots — only WP-02F/02G/02K do.
     gated = _infra_gated_slice_labels()
-    assert {"WP-02F", "WP-02G", "WP-02H", "WP-02I", "WP-02J", "WP-02K"} <= gated, gated
+    assert {"WP-02F", "WP-02G", "WP-02K"} <= gated, gated
+    # The application-hardening / MCP / live-check slices are NOT infra-gated anymore.
+    assert not ({"WP-02H", "WP-02I", "WP-02J"} & gated), gated
 
     roadmap = _read(ROOT / "docs" / "roadmap.md")
     readiness_markers = ("buildable now", "startable now", "startable at merge", "are buildable")
@@ -263,6 +269,61 @@ def test_roadmap_does_not_label_infra_gated_slices_currently_buildable():
             if re.search(rf"(?<![0-9A-Za-z]){re.escape(label)}(?![0-9A-Za-z])", sentence):
                 flagged.append((label, " ".join(sentence.split())))
     assert not flagged, f"roadmap labels infra-gated slice(s) as currently buildable: {flagged}"
+
+
+def test_slice_status_is_consistent_with_dependency_closure():
+    # Lock the reconciled WP-02 state (items 1/2/4): the merged in-repo slices are
+    # `completed`, infra-gated slices match the depends_on closure, and a `startable_now`
+    # slice has no incomplete predecessor and is not infra-gated.
+    c = _contract()
+    slices = {s["id"]: s for s in c["implementation_slices"]}
+    status = {sid: s.get("status") for sid, s in slices.items()}
+
+    # The transport (02A), positioning (02L), and async-persistence (02B) slices merged.
+    for completed in (
+        "WP-02A-hosted-transport-api",
+        "WP-02B-async-job-persistence",
+        "WP-02L-positioning-reconciliation",
+    ):
+        assert status[completed] == "completed", f"{completed} must be recorded completed"
+
+    infra_labels = _infra_gated_slice_labels()
+
+    def is_infra(sid: str) -> bool:
+        prefix = "-".join(sid.split("-")[:2])  # WP-02F-... -> WP-02F
+        return prefix in infra_labels
+
+    completed_ids = {sid for sid, st in status.items() if st == "completed"}
+    for sid, st in status.items():
+        assert st in {"completed", "startable_now", "blocked", "infra_gated"}, f"{sid}: bad status {st}"
+        if st == "infra_gated":
+            assert is_infra(sid), f"{sid} is infra_gated but its closure does not reach an infra root"
+        if st == "startable_now":
+            assert not is_infra(sid), f"{sid} cannot be startable_now and infra-gated"
+            deps = slices[sid].get("depends_on") or []
+            assert all(d in completed_ids for d in deps), (
+                f"{sid} is startable_now but has an incomplete predecessor"
+            )
+    # Every infra-gated slice is marked infra_gated (no infra slice mislabelled buildable).
+    for sid in slices:
+        if is_infra(sid):
+            assert status[sid] == "infra_gated", f"{sid} reaches infra but is not infra_gated"
+
+
+def test_cross_cutting_execution_constraints_are_recorded():
+    # Item 6: the WP-02 execution constraints are encoded WITHOUT a separate
+    # operating-mode work package — they live in the contract as cross-cutting properties.
+    cc = _contract()["cross_cutting_execution_constraints"]
+    assert cc["provider_neutral_code_before_infrastructure"] is True
+    assert cc["hosted_capabilities_disabled_by_default"] is True
+    assert cc["deterministic_local_test_paths"] is True
+    assert {"queue", "store", "telemetry"} <= set(cc["provider_interfaces"])
+    assert {"provider_account", "dns", "tls", "production_secrets", "paid_registry_publication", "public_endpoint"} <= set(
+        cc["no_external_provisioning_before_staging"]
+    )
+    assert {"static_catalogue", "static_mcp", "cached_operation"} <= set(cc["static_layer_unaffected"])
+    assert cc["external_decisions_maintainer_controlled"] is True
+    assert cc["external_decisions_requested_once_before"] == "WP-02F-staging-environment"
 
 
 def test_threat_model_extends_existing_security_boundaries():

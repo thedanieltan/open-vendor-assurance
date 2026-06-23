@@ -183,17 +183,17 @@ work_packages:
       - docs/operations/*
 
   WP-02F-STAGING:
-    description: Staging environment for the hosted service (WP-02F).
+    description: Staging environment for the hosted service (WP-02F). Provider-specific edge enforcement, alert routing, dashboards, and cloud configuration are accepted HERE (moved from WP-02H, which is now provider-neutral application hardening). Maintainer-gated.
     slice_id: WP-02F-staging-environment
     depends_on:
       - WP-02E-SUPPLY-CHAIN
-      - WP-02C-WORKER-QUEUE
+      - WP-02J-LIVE-CHECK
     allowed_paths:
       - infra/*
       - docs/operations/*
 
   WP-02G-PRODUCTION-INFRA:
-    description: Production infrastructure for the hosted service (WP-02G).
+    description: Production infrastructure for the hosted service (WP-02G). Production edge enforcement, alert routing, dashboards, and cloud configuration (regional log buckets + _Default sink, cost ceiling) are accepted here. Maintainer-gated.
     slice_id: WP-02G-production-infrastructure
     depends_on:
       - WP-02F-STAGING
@@ -201,13 +201,12 @@ work_packages:
       - infra/*
 
   WP-02H-OBSERVABILITY:
-    description: Observability and abuse controls for the hosted service (WP-02H).
+    description: Provider-NEUTRAL application hardening for the hosted service (WP-02H) — telemetry-field prohibition + redaction, structured logging/metrics interfaces, application request + concurrency limits, rate-limit/abuse-control policy, cost-exhaustion protection behaviour, kill-switch behaviour, and leakage + negative tests. Lands BEFORE staging (depends on WP-02C, may run in parallel with WP-02D). No infra paths — provider-specific edge enforcement, alert routing, dashboards, and cloud config move to WP-02F/WP-02G acceptance.
     slice_id: WP-02H-observability-and-abuse-controls
     depends_on:
-      - WP-02F-STAGING
+      - WP-02C-WORKER-QUEUE
     allowed_paths:
       - services/openva_match_service/*
-      - infra/*
       - docs/operations/*
       - tests/*
 
@@ -233,11 +232,10 @@ work_packages:
       - tests/*
 
   WP-02K-LAUNCH-EVIDENCE:
-    description: Production smokes and launch evidence for the hosted service (WP-02K).
+    description: Production smokes, launch evidence, and WP-02 programme closeout for the hosted service (WP-02K) — production smoke evidence, rollback + kill-switch drills, public-traffic enablement only after evidence, hosted-live positioning update, release/tag evidence, roadmap final-state update, and closure of the hosted-deployment programme. Maintainer-gated; depends on WP-02G (WP-02J is already in WP-02G's closure).
     slice_id: WP-02K-production-smokes-and-launch-evidence
     depends_on:
       - WP-02G-PRODUCTION-INFRA
-      - WP-02J-LIVE-CHECK
     allowed_paths:
       - docs/operations/*
       - infra/*
