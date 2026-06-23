@@ -251,3 +251,35 @@ work_packages:
       - docs/*
       - README.md
       - integrations/*/README.md
+
+  # Roadmap/contract reconciliation lane for the WP-02 programme. Records the merged
+  # in-repo slices (WP-02A transport + WP-02L positioning via the lockstep, and WP-02B
+  # async persistence) as complete, removes stale "startable now" readiness wording,
+  # and re-encodes the remaining WP-02C..K dependency sequence in BOTH the machine-
+  # readable contract (hosted-deployment.yaml) and this manifest TOGETHER, so the
+  # depends_on mirror (tests/test_pr_scope_guard.py) stays coherent. This is the ONLY
+  # non-policy lane permitted to edit work-package-scope.yaml, and only for the WP-02
+  # depends_on edges it must move in lockstep with the contract; the scope-policy
+  # MACHINERY (guard, its tests, doc, CI workflow, ownership map) stays SOLELY under
+  # WP-PR-SCOPE-POLICY-01. Documentation/contract/drift-test reconciliation only — no
+  # service, schema, worker, deployment-artifact, or infrastructure paths, and the
+  # decision-only posture flags are NOT flipped (no provisioning, no live endpoint).
+  WP-02-ROADMAP-RECONCILIATION-01:
+    description: >-
+      Roadmap, implementation-plan, hosted-deployment contract, and drift-test
+      reconciliation after WP-02A/02L/02B merged: mark those slices complete, drop
+      stale "startable now" wording, re-encode the WP-02C..K dependency sequence
+      (lockstep across hosted-deployment.yaml and this manifest), revise WP-02H to
+      provider-neutral application hardening before staging, extend WP-02K with
+      programme closeout, and record the cross-cutting execution constraints. No
+      provisioning; decision-only posture preserved.
+    depends_on:
+      - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
+      - WP-02B-ASYNC-PERSISTENCE
+    allowed_paths:
+      - docs/roadmap.md
+      - docs/operations/hosted-deployment-implementation-plan.md
+      - docs/operations/contracts/hosted-deployment.yaml
+      - docs/operations/contracts/work-package-scope.yaml
+      - tests/test_hosted_deployment_docs.py
+      - tests/test_ai_native_distribution_docs.py
