@@ -86,24 +86,33 @@ describes priority and transport capability; OpenVA does not operate a productio
 hosted endpoint, and live `verify`-mode over remote MCP remains future work governed
 by [ADR-0001](architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md).
 
-### Hosted public-read deployment (decision-ready)
+### Hosted public-read deployment
 
 The deployment architecture for ADR-0001's accepted hosted posture is specified in
 [ADR-0006](architecture/decisions/ADR-0006-hosted-public-read-deployment.md) and
 [`docs/operations/hosted-deployment-decision.md`](operations/hosted-deployment-decision.md):
 a portable container (recommended baseline Google Cloud Run; alternatives AWS Lambda
 and Azure Container Apps), an async `verify`-worker, a TTL-deleted job/result store,
-and an always-on static fallback. ADR-0006 is **Accepted** (the architecture decision)
-and remains decision-only — acceptance provisions nothing, creates no provider account,
-and OpenVA still does not operate a production hosted endpoint. The dependency-ordered implementation slices are in
-[`docs/operations/hosted-deployment-implementation-plan.md`](operations/hosted-deployment-implementation-plan.md):
-with ADR-0006 accepted, the in-repo sequence **WP-02A–02E and WP-02L** is authorised
-with no external-infrastructure gate — but the slices are not all simultaneously
-executable. **WP-02A is startable now**; 02B→02C→02D follow predecessor completion,
-and 02E and 02L follow 02A. The remaining slices wait on infrastructure: **WP-02F
-(staging) and WP-02G (production)** require the maintainer-accepted external deployment
-choices (provider, region, domain, credentials, spend), and **WP-02H, WP-02I, WP-02J,
-and WP-02K** depend on that staging/production infrastructure and follow it.
+and an always-on static fallback. ADR-0006 is **Accepted** and the decision package is
+complete; acceptance authorises the architecture only — it provisions nothing, creates
+no provider account, and **OpenVA still does not operate a production hosted endpoint**.
+
+The merged in-repo slices are **WP-02A** (hosted transport) and **WP-02L** (positioning,
+in lockstep with WP-02A) and **WP-02B** (durable async job/result persistence) — these
+are **complete**, having shipped only provider-neutral, off-by-default application code.
+The dependency-ordered remaining slices are in
+[`docs/operations/hosted-deployment-implementation-plan.md`](operations/hosted-deployment-implementation-plan.md).
+The provider-neutral application path runs entirely before any infrastructure:
+**WP-02C** (worker + queue) and **WP-02E** (deployment artifact + supply-chain) are
+startable now; **WP-02D** (candidate ingress) and **WP-02H** (provider-neutral
+application hardening) follow WP-02C and may run in parallel; **WP-02I** (remote MCP)
+follows WP-02D + WP-02H; and **WP-02J** (live `/check`) follows WP-02I. Only then does
+the maintainer-gated infrastructure chain begin: **WP-02F (staging)** follows WP-02E +
+WP-02J, **WP-02G (production)** follows WP-02F, and **WP-02K** (production smokes,
+launch evidence, and programme closeout) follows WP-02G. WP-02F, WP-02G, and the infra
+parts of WP-02K require the maintainer-accepted external deployment choices (provider,
+region, domain, credentials, spend), requested once before staging. No slice claims the
+service is live until WP-02K's evidence exists.
 
 ## Current state
 
