@@ -470,6 +470,13 @@ def load_base_baseline(mapping: dict[str, Any]) -> dict[str, Any]:
     ref = str(bi.get("ref", "")).strip()
     if not ref:
         raise SupplyChainViolation("base baseline base_image.ref is required (must match the pinned base)")
+    if not is_digest_pinned(ref):
+        raise SupplyChainViolation("base baseline base_image.ref must be digest-pinned (name@sha256:<64 hex>)")
+    if manifest_digest_of(ref) != digest:
+        raise SupplyChainViolation(
+            "base baseline base_image.ref embeds a different digest than base_image.digest "
+            f"({manifest_digest_of(ref)} != {digest})"
+        )
     default_expiry_raw = bi.get("valid_until")
     entries: dict[tuple, date] = {}
     for raw in (mapping or {}).get("accepted_inherited_findings") or []:
@@ -736,18 +743,33 @@ def evaluate_release(
             base_image = manifest.get("base_image") or {}
             base_digest = str(base_image.get("digest", ""))
             base_ref = str(base_image.get("ref", ""))
-            # Bind the base evidence: the manifest base ref must be the policy-pinned base,
-            # the reviewed baseline must name that same ref, and scan.base.json must itself
-            # identify the pinned digest — so a substituted base cannot launder attribution.
-            if pinned_bases and base_ref and base_ref not in pinned_bases:
-                failures.append(
-                    f"manifest base_image.ref {base_ref!r} is not in the policy pinned_base_images"
-                )
+            # Base ref/digest coherence — fail closed, NO empty-string bypass. The manifest
+            # base ref must be a digest-pinned reference that is the policy-pinned base, its
+            # embedded digest must equal the manifest digest field, the reviewed baseline must
+            # agree on both ref and digest, and scan.base.json must itself identify that
+            # digest. This denies a malformed evidence set that presents policy ref A while
+            # separately claiming digest B.
+            if not is_digest_pinned(base_ref):
+                failures.append("manifest base_image.ref must be a digest-pinned reference (name@sha256:<64 hex>)")
+            else:
+                if pinned_bases and base_ref not in pinned_bases:
+                    failures.append(f"manifest base_image.ref {base_ref!r} is not the policy-pinned base")
+                ref_digest = manifest_digest_of(base_ref)
+                if base_digest != ref_digest:
+                    failures.append(
+                        f"manifest base_image.digest {base_digest!r} does not match the digest embedded in "
+                        f"base_image.ref ({ref_digest})"
+                    )
             if base_baseline:
                 bl_ref = str(base_baseline.get("base_ref", ""))
-                if base_ref and bl_ref and bl_ref != base_ref:
+                bl_digest = str(base_baseline.get("base_digest", ""))
+                if bl_ref != base_ref:
                     failures.append(
                         f"base baseline base_image.ref {bl_ref!r} does not match the manifest base ref {base_ref!r}"
+                    )
+                if bl_digest != base_digest:
+                    failures.append(
+                        f"base baseline digest {bl_digest!r} does not match the manifest base digest {base_digest!r}"
                     )
             assert_base_report_identifies_digest(manifest["base_scan"], base_digest)
             decision = evaluate_image_vulnerabilities(

@@ -689,10 +689,11 @@ def test_release_fails_when_baseline_base_digest_mismatches_image_base():
     manifest = _valid_manifest(
         image_scan=_trivy_report([v]), base_scan=_base_report([v]),
     )
-    # Baseline pinned to a DIFFERENT digest than the manifest's base image -> mismatch blocks.
-    other = _base_baseline([_entry()], digest="sha256:" + "f" * 64, ref=_PINNED_BASE)
+    # Baseline internally coherent but pinned to a DIFFERENT digest than the manifest's base
+    # image -> mismatch blocks. (ref embeds the same digest the baseline claims.)
+    other = _base_baseline([_entry()], digest="sha256:" + "f" * 64, ref="python:3.12-slim-bookworm@sha256:" + "f" * 64)
     failures = sc.evaluate_release(manifest, _policy(), base_baseline=other)
-    assert any("vulnerability" in f.lower() or "digest" in f.lower() for f in failures)
+    assert any("digest" in f.lower() for f in failures)
 
 
 # --- finding 1: filesystem/app dependency scan evaluated via the ordinary policy ----
@@ -808,7 +809,7 @@ def test_release_rejects_substituted_base_report_without_digest():
 def test_release_rejects_base_ref_not_in_pinned_policy():
     manifest = _valid_manifest(base_image={"ref": "evil:latest@" + _PINNED_BASE_DIGEST, "digest": _PINNED_BASE_DIGEST})
     failures = sc.evaluate_release(manifest, _policy())
-    assert any("pinned_base_images" in f for f in failures)
+    assert any("is not the policy-pinned base" in f for f in failures)
 
 
 def test_release_rejects_baseline_ref_mismatch():
@@ -818,6 +819,33 @@ def test_release_rejects_baseline_ref_mismatch():
     baseline = _base_baseline([_entry()], digest=_PINNED_BASE_DIGEST, ref="python:3.12-slim-bookworm@" + _PINNED_BASE_DIGEST)
     failures = sc.evaluate_release(manifest, _policy(), base_baseline=baseline)
     assert any("does not match the manifest base ref" in f for f in failures)
+
+
+def test_release_rejects_empty_manifest_base_ref():
+    # No empty-string bypass: a missing base ref fails closed.
+    manifest = _valid_manifest(base_image={"ref": "", "digest": _PINNED_BASE_DIGEST})
+    failures = sc.evaluate_release(manifest, _policy())
+    assert any("digest-pinned reference" in f for f in failures)
+
+
+def test_release_rejects_manifest_ref_digest_disagreement():
+    # base_image.ref embeds digest A; base_image.digest claims B -> fail closed.
+    manifest = _valid_manifest(base_image={"ref": _PINNED_BASE, "digest": "sha256:" + "d" * 64})
+    failures = sc.evaluate_release(manifest, _policy())
+    assert any("does not match the digest embedded in base_image.ref" in f for f in failures)
+
+
+def test_load_base_baseline_rejects_non_digest_pinned_ref():
+    with pytest.raises(sc.SupplyChainViolation):
+        sc.load_base_baseline({"base_image": {"ref": "python:3.12-slim-bookworm", "digest": _BASE_DIGEST, "valid_until": "2099-01-01"}})
+
+
+def test_load_base_baseline_rejects_ref_digest_disagreement():
+    # baseline ref embeds a different digest than the base_image.digest field.
+    with pytest.raises(sc.SupplyChainViolation):
+        sc.load_base_baseline({
+            "base_image": {"ref": "python:3.12-slim-bookworm@sha256:" + "d" * 64, "digest": _BASE_DIGEST, "valid_until": "2099-01-01"},
+        })
 
 
 # --- posture: hosted capabilities off by default; static layer unaffected -----
