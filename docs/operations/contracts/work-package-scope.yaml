@@ -282,3 +282,20 @@ work_packages:
       - docs/operations/contracts/work-package-scope.yaml
       - tests/test_hosted_deployment_docs.py
       - tests/test_ai_native_distribution_docs.py
+
+  # Site/export rendering-invariant reconciliation with the status-only quarantine model.
+  # A canonical source may be review_state=quarantined (a reversible, status-only transition
+  # in tools/openva/source_quarantine.py that leaves record_class=canonical and
+  # catalog_tier=human_reviewed). Registered retroactively for the fix merged in PR #429,
+  # which relaxed the two test invariants that assumed canonical => human_reviewed. No
+  # service, schema, deployment, or catalog-data paths.
+  WP-SITE-CANONICAL-QUARANTINE-INVARIANT-01:
+    description: >-
+      Reconcile the site build and SQLite export canonical-source invariant with the
+      status-only quarantine model — a canonical source may be review_state=quarantined
+      (reversible, status-only; record_class/catalog_tier unchanged). Covers the affected
+      site/export tests and the site build. Registered retroactively for PR #429.
+    allowed_paths:
+      - tests/test_site.py
+      - tests/test_openva_sqlite_export.py
+      - site/*
