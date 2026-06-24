@@ -492,37 +492,45 @@ def evaluate_image_vulnerabilities(
     expired finding blocks."""
     today = on or datetime.now(timezone.utc).date()
     threshold = _SEVERITY_RANK[fail_on_severity.lower()]
-    base_keys = {_finding_key(f) for f in trivy_vulnerabilities(base_report)}
+    base_vulns = trivy_vulnerabilities(base_report)
+    base_keys = {_finding_key(f) for f in base_vulns}
+    # CVE+package presence in the base (severity-agnostic) — used only to annotate blocking
+    # findings so a reviewer can see whether a blocker is inherited from the base or
+    # app-introduced, independent of whether its exact tuple matched.
+    base_idpkg = {(f.get("id"), f.get("package")) for f in base_vulns}
     bl_digest = baseline.get("base_digest")
     bl_entries: dict[tuple, date] = baseline.get("entries") or {}
+
+    def _block(finding: dict[str, Any], reason: str) -> dict[str, Any]:
+        return {**finding, "block_reason": reason, "in_base": (finding.get("id"), finding.get("package")) in base_idpkg}
 
     blocking: list[dict[str, Any]] = []
     accepted: list[dict[str, Any]] = []
     for f in trivy_vulnerabilities(image_report):
         rank = _SEVERITY_RANK.get(f["severity"])
         if rank is None:
-            blocking.append({**f, "block_reason": "unknown_severity"})
+            blocking.append(_block(f, "unknown_severity"))
             continue
         if rank < threshold:
             continue
         if f["fixed_version"]:
-            blocking.append({**f, "block_reason": "fix_available"})
+            blocking.append(_block(f, "fix_available"))
             continue
         if f["status"] not in _ACCEPTABLE_NOFIX_STATUSES:
-            blocking.append({**f, "block_reason": "unknown_or_unacceptable_status"})
+            blocking.append(_block(f, "unknown_or_unacceptable_status"))
             continue
         key = _finding_key(f)
         if key not in base_keys:
-            blocking.append({**f, "block_reason": "app_introduced"})
+            blocking.append(_block(f, "app_introduced"))
             continue
         if bl_digest != base_digest:
-            blocking.append({**f, "block_reason": "base_digest_mismatch"})
+            blocking.append(_block(f, "base_digest_mismatch"))
             continue
         if key not in bl_entries:
-            blocking.append({**f, "block_reason": "not_in_reviewed_baseline"})
+            blocking.append(_block(f, "not_in_reviewed_baseline"))
             continue
         if bl_entries[key] < today:
-            blocking.append({**f, "block_reason": "baseline_expired"})
+            blocking.append(_block(f, "baseline_expired"))
             continue
         accepted.append(f)
     return ImageScanDecision(blocking=blocking, accepted_inherited=accepted)
@@ -653,10 +661,18 @@ def evaluate_release(
                 for b in decision.blocking:
                     reasons[b.get("block_reason", "?")] = reasons.get(b.get("block_reason", "?"), 0) + 1
                 detail = ", ".join(f"{r}={n}" for r, n in sorted(reasons.items()))
-                ids = ", ".join(sorted({str(b.get("id")) for b in decision.blocking})[:20])
+                # Per-finding breakdown (id package@version severity status reason in_base),
+                # sorted, so a blocked release is diagnosable from the gate output alone.
+                lines = sorted(
+                    f"{b.get('id')} {b.get('package')}@{b.get('installed_version')} "
+                    f"sev={b.get('severity') or '?'} status={b.get('status') or '?'} "
+                    f"reason={b.get('block_reason')} in_base={'Y' if b.get('in_base') else 'N'}"
+                    for b in decision.blocking
+                )
                 failures.append(
                     f"{len(decision.blocking)} unapproved image vulnerability finding(s) at/above "
-                    f"'{fail_on}' fail closed ({detail}); ids: {ids}"
+                    f"'{fail_on}' fail closed ({detail}):\n      "
+                    + "\n      ".join(lines)
                 )
         except SupplyChainViolation as exc:
             failures.append(str(exc))

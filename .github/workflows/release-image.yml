@@ -257,7 +257,10 @@ jobs:
           fi
           echo "OK: mutable tag rejected by the gate"
 
+      # Retain the produced evidence even when the gate blocks the release (if: always()),
+      # so a blocked run still yields the SBOM/provenance/scan/decision record for review.
       - name: Upload supply-chain evidence
+        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: openva-match-service-supply-chain-evidence
@@ -274,5 +277,5 @@ jobs:
             release-image-manifest.json
             reproducibility-report.json
             scan-decision.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 90
