@@ -1,11 +1,14 @@
 """WP-02E deployment-artifact + supply-chain policy tests.
 
 Negative + positive proofs that the release gate fails closed, including the
-independent-review remediations (fail-closed scanner evidence, unknown-severity always
-blocks, mandatory exception expiry, gate consumes its own policy, OCI-manifest-digest
-reproducibility, accepted-ledger rollback). The gate logic lives in the service package
-(openva_match_service.supply_chain) and is exercised here in the standard suite and by
-the release-image workflow.
+independent-review remediations: fail-closed scanner evidence; the filesystem/app scan
+evaluated through the ordinary policy (never the base baseline); the unknown_severity
+policy enum (block vs block_unless_reviewed_inherited_baseline) as the single source of
+truth; finding identity bound to the Trivy result class/type and the base report bound to
+the pinned digest; mandatory exception expiry; gate consumes its own policy;
+OCI-manifest-digest reproducibility; accepted-ledger rollback. The gate logic lives in the
+service package (openva_match_service.supply_chain) and is exercised here in the standard
+suite and by the release-image workflow.
 """
 
 from __future__ import annotations
@@ -31,6 +34,7 @@ _BARE = f"sha256:{_HEX}"
 _PINNED_BASE = (
     "python:3.12-slim@sha256:9d3abd9fc11d06998ccdbdd93b4dd49b5ad7d67fcbbc11c016eb0eb2c2194891"
 )
+_PINNED_BASE_DIGEST = "sha256:" + _PINNED_BASE.split("@sha256:")[1]
 
 _TOOLS_POLICY = {
     "syft": {"version": "v1.18.1", "binary": "syft", "archive_url": "https://x", "archive_sha256": "0" * 64},
@@ -45,8 +49,20 @@ _TOOLS_EVIDENCE = {
 _BASE_DIGEST = "sha256:" + "e" * 64
 
 
-def _trivy_report(vulns=()):
-    return {"SchemaVersion": 2, "Results": [{"Target": "debian", "Vulnerabilities": list(vulns)}]}
+def _trivy_report(vulns=(), *, cls="os-pkgs", typ="debian", artifact=None, repo_digests=None):
+    result = {"Target": "debian", "Class": cls, "Type": typ, "Vulnerabilities": list(vulns)}
+    report = {"SchemaVersion": 2, "Results": [result]}
+    if artifact is not None:
+        report["ArtifactName"] = artifact
+    if repo_digests is not None:
+        report["Metadata"] = {"RepoDigests": list(repo_digests)}
+    return report
+
+
+def _base_report(vulns=(), *, digest=_PINNED_BASE_DIGEST, **kw):
+    """A base Trivy report that identifies its digest (ArtifactName), as Trivy emits for a
+    by-ref image scan — required by assert_base_report_identifies_digest."""
+    return _trivy_report(vulns, artifact="python:3.12-slim@" + digest, **kw)
 
 
 def _vuln(cve, pkg, version, severity, status="affected", fixed=""):
@@ -56,9 +72,13 @@ def _vuln(cve, pkg, version, severity, status="affected", fixed=""):
     }
 
 
-def _base_baseline(entries=(), digest=_BASE_DIGEST, valid_until="2099-01-01"):
+def _base_baseline(entries=(), digest=_BASE_DIGEST, valid_until="2099-01-01", ref=None):
     return sc.load_base_baseline({
-        "base_image": {"ref": "python:3.12-slim-bookworm@" + digest, "digest": digest, "valid_until": valid_until},
+        "base_image": {
+            "ref": ref or ("python:3.12-slim-bookworm@" + digest),
+            "digest": digest,
+            "valid_until": valid_until,
+        },
         "accepted_inherited_findings": list(entries),
     })
 
@@ -85,10 +105,12 @@ def _valid_manifest(**overrides):
             "predicateType": "https://slsa.dev/provenance/v1",
             "subject": [{"name": "openva-match-service", "digest": {"sha256": _HEX}}],
         },
-        # No HIGH/CRITICAL by default -> the base-attribution gate passes cleanly.
+        # No HIGH/CRITICAL by default -> the base-attribution gate passes cleanly. The base
+        # ref/digest agree with the policy-pinned base, and the base scan identifies its digest.
         "image_scan": _trivy_report([_vuln("CVE-0000-1", "libx", "1", "LOW")]),
-        "base_scan": _trivy_report([]),
-        "base_image": {"ref": "python:3.12-slim-bookworm@" + _BASE_DIGEST, "digest": _BASE_DIGEST},
+        "base_scan": _base_report([]),
+        "fs_scan": _trivy_report([], cls="lang-pkgs", typ="python-pkg"),
+        "base_image": {"ref": _PINNED_BASE, "digest": _PINNED_BASE_DIGEST},
         "reproducibility": _repro(),
         "tools": {k: dict(v) for k, v in _TOOLS_EVIDENCE.items()},
     }
@@ -501,7 +523,7 @@ def test_real_policy_pins_checksummed_tools():
 
 # --- base-image risk baseline / inherited-finding attribution -----------------
 
-_INHERITED = {"id": "CVE-9", "package": "perl-base", "installed_version": "5.36", "severity": "HIGH", "status": "affected"}
+_INHERITED = {"id": "CVE-9", "package": "perl-base", "installed_version": "5.36", "severity": "HIGH", "status": "affected", "class": "os-pkgs", "type": "debian"}
 
 
 def _entry(**o):
@@ -613,13 +635,26 @@ def test_below_threshold_image_findings_ignored():
     assert dec.passed
 
 
+def _bl_entry(**o):
+    e = {"id": "C", "package": "p", "installed_version": "1", "severity": "HIGH",
+         "status": "affected", "class": "os-pkgs", "type": "debian"}
+    e.update(o)
+    return e
+
+
+_REF = "python:3.12-slim-bookworm@" + _BASE_DIGEST
+
+
 @pytest.mark.parametrize(
     "mapping",
     [
-        {"base_image": {"digest": "not-a-digest"}},
-        {"base_image": {"digest": _BASE_DIGEST}, "accepted_inherited_findings": [{"id": "C", "package": "p", "installed_version": "1", "severity": "HIGH", "status": "affected"}]},  # no expires + no valid_until
-        {"base_image": {"digest": _BASE_DIGEST, "valid_until": "2099-01-01"}, "accepted_inherited_findings": [{"id": "C", "package": "p", "installed_version": "1", "severity": "HIGH", "status": "fixed"}]},  # bad status
-        {"base_image": {"digest": _BASE_DIGEST, "valid_until": "2099-01-01"}, "accepted_inherited_findings": [{"id": "C", "package": "p", "installed_version": "1", "severity": "HIGH", "status": "affected", "fixed_version": "1.1"}]},  # has fix
+        {"base_image": {"ref": _REF, "digest": "not-a-digest"}},                                          # bad digest
+        {"base_image": {"digest": _BASE_DIGEST, "valid_until": "2099-01-01"}},                            # missing ref
+        {"base_image": {"ref": _REF, "digest": _BASE_DIGEST}, "accepted_inherited_findings": [_bl_entry()]},  # no expires + no valid_until
+        {"base_image": {"ref": _REF, "digest": _BASE_DIGEST, "valid_until": "2099-01-01"}, "accepted_inherited_findings": [_bl_entry(status="fixed")]},  # bad status
+        {"base_image": {"ref": _REF, "digest": _BASE_DIGEST, "valid_until": "2099-01-01"}, "accepted_inherited_findings": [_bl_entry(fixed_version="1.1")]},  # has fix
+        {"base_image": {"ref": _REF, "digest": _BASE_DIGEST, "valid_until": "2099-01-01"}, "accepted_inherited_findings": [{"id": "C", "package": "p", "installed_version": "1", "severity": "HIGH", "status": "affected"}]},  # missing class/type
+        {"base_image": {"ref": _REF, "digest": _BASE_DIGEST, "valid_until": "2099-01-01"}, "accepted_inherited_findings": [_bl_entry(), _bl_entry()]},  # duplicate tuple
     ],
 )
 def test_load_base_baseline_rejects_malformed(mapping):
@@ -632,29 +667,157 @@ def test_committed_base_baseline_matches_policy_pinned_base():
     baseline = yaml.safe_load((SERVICE_ROOT / "accepted-base-findings.yaml").read_text(encoding="utf-8"))
     pinned = policy["pinned_base_images"][0]
     assert baseline["base_image"]["digest"] == "sha256:" + pinned.split("@sha256:")[-1]
+    # The reviewed baseline ref must be the EXACT policy-pinned base (ref + digest).
+    assert baseline["base_image"]["ref"] == pinned
     loaded = sc.load_base_baseline(baseline)
     assert loaded["base_digest"] == baseline["base_image"]["digest"]
+    assert loaded["base_ref"] == pinned
     assert len(loaded["entries"]) == len(baseline["accepted_inherited_findings"]) >= 1
 
 
 def test_release_passes_with_baselined_inherited_high():
     v = _vuln("CVE-9", "perl-base", "5.36", "HIGH", "affected")
     manifest = _valid_manifest(
-        image_scan=_trivy_report([v]), base_scan=_trivy_report([v]),
-        base_image={"ref": "x@" + _BASE_DIGEST, "digest": _BASE_DIGEST},
+        image_scan=_trivy_report([v]), base_scan=_base_report([v]),
     )
-    assert sc.evaluate_release(manifest, _policy(), base_baseline=_base_baseline([_entry()])) == []
+    baseline = _base_baseline([_entry()], digest=_PINNED_BASE_DIGEST, ref=_PINNED_BASE)
+    assert sc.evaluate_release(manifest, _policy(), base_baseline=baseline) == []
 
 
 def test_release_fails_when_baseline_base_digest_mismatches_image_base():
     v = _vuln("CVE-9", "perl-base", "5.36", "HIGH", "affected")
     manifest = _valid_manifest(
-        image_scan=_trivy_report([v]), base_scan=_trivy_report([v]),
-        base_image={"ref": "x@" + _BASE_DIGEST, "digest": _BASE_DIGEST},
+        image_scan=_trivy_report([v]), base_scan=_base_report([v]),
     )
-    other = _base_baseline([_entry()], digest="sha256:" + "f" * 64)
+    # Baseline pinned to a DIFFERENT digest than the manifest's base image -> mismatch blocks.
+    other = _base_baseline([_entry()], digest="sha256:" + "f" * 64, ref=_PINNED_BASE)
     failures = sc.evaluate_release(manifest, _policy(), base_baseline=other)
+    assert any("vulnerability" in f.lower() or "digest" in f.lower() for f in failures)
+
+
+# --- finding 1: filesystem/app dependency scan evaluated via the ordinary policy ----
+
+
+def test_release_requires_fs_scan_when_vuln_scan_required():
+    manifest = _valid_manifest()
+    del manifest["fs_scan"]
+    failures = sc.evaluate_release(manifest, _policy())
+    assert any("fs_scan" in f for f in failures)
+
+
+def test_release_rejects_malformed_fs_scan():
+    manifest = _valid_manifest(fs_scan={})  # no SchemaVersion -> unrecognised
+    failures = sc.evaluate_release(manifest, _policy())
+    assert any("filesystem" in f.lower() for f in failures)
+
+
+@pytest.mark.parametrize("sev", ["HIGH", "CRITICAL", "UNKNOWN"])
+def test_release_blocks_on_fs_application_finding(sev):
+    # A High/Critical/Unknown application-dependency finding in scan.fs.json must block,
+    # via the ORDINARY policy — it must never be laundered through the base baseline.
+    fs = _trivy_report([_vuln("CVE-APP-1", "requests", "2.0", sev)], cls="lang-pkgs", typ="python-pkg")
+    manifest = _valid_manifest(fs_scan=fs)
+    failures = sc.evaluate_release(
+        manifest, _policy(unknown_severity="block_unless_reviewed_inherited_baseline")
+    )
+    assert any("filesystem" in f.lower() for f in failures)
+
+
+def test_release_fs_high_finding_passes_with_documented_exception():
+    fs = _trivy_report([_vuln("CVE-APP-2", "requests", "2.0", "HIGH")], cls="lang-pkgs", typ="python-pkg")
+    manifest = _valid_manifest(fs_scan=fs)
+    policy = _policy(exceptions=[{"id": "CVE-APP-2", "reason": "patched downstream", "expires": "2099-01-01"}])
+    assert sc.evaluate_release(manifest, policy) == []
+
+
+def test_release_clean_fs_scan_passes():
+    assert sc.evaluate_release(_valid_manifest(), _policy()) == []
+
+
+# --- finding 2: unknown_severity policy enum is the source of truth ------------
+
+
+def test_policy_rejects_invalid_unknown_severity_mode():
+    with pytest.raises(sc.SupplyChainViolation):
+        sc.policy_from_mapping({"vulnerability_policy": {"unknown_severity": "ignore"}})
+
+
+def test_unknown_block_mode_rejects_even_exact_inherited_tuple():
+    # allow_inherited_unknown=False (policy 'block') => unknown blocks despite an exact match.
+    v = _vuln("CVE-U", "util-linux", "2.38", "UNKNOWN", "affected")
+    entry = _entry(id="CVE-U", package="util-linux", installed_version="2.38", severity="unknown")
+    dec = sc.evaluate_image_vulnerabilities(
+        _trivy_report([v]), _trivy_report([v]), _base_baseline([entry]),
+        base_digest=_BASE_DIGEST, allow_inherited_unknown=False,
+    )
+    assert not dec.passed and dec.blocking[0]["block_reason"] == "unknown_severity"
+
+
+def test_release_unknown_block_mode_rejects_inherited_unknown():
+    v = _vuln("CVE-U", "util-linux", "2.38", "UNKNOWN", "affected")
+    manifest = _valid_manifest(image_scan=_trivy_report([v]), base_scan=_base_report([v]))
+    entry = _entry(id="CVE-U", package="util-linux", installed_version="2.38", severity="unknown")
+    baseline = _base_baseline([entry], digest=_PINNED_BASE_DIGEST, ref=_PINNED_BASE)
+    failures = sc.evaluate_release(manifest, _policy(unknown_severity="block"), base_baseline=baseline)
     assert any("vulnerability" in f.lower() for f in failures)
+
+
+def test_release_unknown_baseline_mode_accepts_exact_inherited_only():
+    v = _vuln("CVE-U", "util-linux", "2.38", "UNKNOWN", "affected")
+    manifest = _valid_manifest(image_scan=_trivy_report([v]), base_scan=_base_report([v]))
+    entry = _entry(id="CVE-U", package="util-linux", installed_version="2.38", severity="unknown")
+    baseline = _base_baseline([entry], digest=_PINNED_BASE_DIGEST, ref=_PINNED_BASE)
+    policy = _policy(unknown_severity="block_unless_reviewed_inherited_baseline")
+    assert sc.evaluate_release(manifest, policy, base_baseline=baseline) == []
+
+
+def test_committed_policy_uses_unknown_baseline_enum():
+    policy = yaml.safe_load(POLICY.read_text(encoding="utf-8"))
+    assert policy["vulnerability_policy"]["unknown_severity"] == "block_unless_reviewed_inherited_baseline"
+
+
+# --- finding 3: identity bound to class/type + base report bound to digest -----
+
+
+def test_cross_result_class_does_not_inherit_acceptance():
+    # Same id/package/version/severity/status but a DIFFERENT result class/type (lang vs os)
+    # must NOT match an os-pkgs baseline tuple.
+    v = _vuln("CVE-9", "perl-base", "5.36", "HIGH", "affected")
+    img = _trivy_report([v], cls="lang-pkgs", typ="python-pkg")
+    base = _trivy_report([v], cls="lang-pkgs", typ="python-pkg")
+    dec = sc.evaluate_image_vulnerabilities(img, base, _base_baseline([_entry()]), base_digest=_BASE_DIGEST)
+    assert not dec.passed and dec.blocking[0]["block_reason"] == "not_in_reviewed_baseline"
+
+
+def test_base_report_must_identify_pinned_digest():
+    with pytest.raises(sc.SupplyChainViolation):
+        sc.assert_base_report_identifies_digest(_trivy_report([]), _PINNED_BASE_DIGEST)
+    # A report whose ArtifactName carries the digest is accepted.
+    sc.assert_base_report_identifies_digest(_base_report([]), _PINNED_BASE_DIGEST)
+
+
+def test_release_rejects_substituted_base_report_without_digest():
+    v = _vuln("CVE-9", "perl-base", "5.36", "HIGH", "affected")
+    # base_scan does NOT identify the pinned digest (plain _trivy_report, no ArtifactName).
+    manifest = _valid_manifest(image_scan=_trivy_report([v]), base_scan=_trivy_report([v]))
+    baseline = _base_baseline([_entry()], digest=_PINNED_BASE_DIGEST, ref=_PINNED_BASE)
+    failures = sc.evaluate_release(manifest, _policy(), base_baseline=baseline)
+    assert any("identify the pinned base digest" in f for f in failures)
+
+
+def test_release_rejects_base_ref_not_in_pinned_policy():
+    manifest = _valid_manifest(base_image={"ref": "evil:latest@" + _PINNED_BASE_DIGEST, "digest": _PINNED_BASE_DIGEST})
+    failures = sc.evaluate_release(manifest, _policy())
+    assert any("pinned_base_images" in f for f in failures)
+
+
+def test_release_rejects_baseline_ref_mismatch():
+    v = _vuln("CVE-9", "perl-base", "5.36", "HIGH", "affected")
+    manifest = _valid_manifest(image_scan=_trivy_report([v]), base_scan=_base_report([v]))
+    # Baseline ref differs from the manifest/policy base ref (digest still matches).
+    baseline = _base_baseline([_entry()], digest=_PINNED_BASE_DIGEST, ref="python:3.12-slim-bookworm@" + _PINNED_BASE_DIGEST)
+    failures = sc.evaluate_release(manifest, _policy(), base_baseline=baseline)
+    assert any("does not match the manifest base ref" in f for f in failures)
 
 
 # --- posture: hosted capabilities off by default; static layer unaffected -----

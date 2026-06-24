@@ -163,14 +163,28 @@ class VulnException:
         return on <= self.expires
 
 
+# How the gate treats UNKNOWN-severity findings, declared by the policy:
+#   block                                   -> UNKNOWN always blocks; never accepted, even
+#                                              for an exact inherited baseline tuple.
+#   block_unless_reviewed_inherited_baseline -> UNKNOWN blocks everywhere EXCEPT the image
+#                                              path, where an exact inherited baseline tuple
+#                                              may accept it (ordinary/app findings still block).
+_UNKNOWN_SEVERITY_MODES = {"block", "block_unless_reviewed_inherited_baseline"}
+
+
 @dataclass(frozen=True)
 class VulnPolicy:
     fail_on_severity: str = "high"
     exceptions: dict[str, VulnException] = field(default_factory=dict)
+    unknown_severity: str = "block"
 
     @property
     def threshold_rank(self) -> int:
         return _SEVERITY_RANK[self.fail_on_severity.lower()]
+
+    @property
+    def allow_inherited_unknown(self) -> bool:
+        return self.unknown_severity == "block_unless_reviewed_inherited_baseline"
 
 
 @dataclass(frozen=True)
@@ -243,8 +257,12 @@ def evaluate_scan(
 ) -> ScanDecision:
     """Partition scan findings into blocking vs documented-exception, fail-closed.
 
-    Unknown severity ALWAYS blocks and can never be exempted. Only KNOWN severities at or
-    above the threshold are eligible for an unexpired documented exception."""
+    This is the ORDINARY policy path (used for the filesystem/app dependency scan): unknown
+    severity ALWAYS blocks here and can never be exempted, and only KNOWN severities at or
+    above the threshold are eligible for an unexpired documented exception. The ONLY place an
+    unknown-severity finding may be accepted is the image base-attribution path
+    (evaluate_image_vulnerabilities), and only via an exact reviewed-baseline tuple when the
+    policy's unknown_severity mode authorises it — never through an exception here."""
     today = on or datetime.now(timezone.utc).date()
     blocking: list[dict[str, Any]] = []
     exempted: list[dict[str, Any]] = []
@@ -394,13 +412,18 @@ _ACCEPTABLE_NOFIX_STATUSES = {"affected", "fix_deferred", "will_not_fix"}
 
 
 def trivy_vulnerabilities(report: dict[str, Any]) -> list[dict[str, Any]]:
-    """Normalised vulnerability records from a Trivy report (``Results[].Vulnerabilities``)."""
+    """Normalised vulnerability records from a Trivy report (``Results[].Vulnerabilities``).
+
+    ``class``/``type`` come from the enclosing Result (e.g. ``os-pkgs``/``debian`` vs
+    ``lang-pkgs``/``python-pkg``) and are part of a finding's identity: they keep an
+    OS-package finding from being conflated with a same-named language-package finding."""
     out: list[dict[str, Any]] = []
     if not isinstance(report, dict):
         return out
     for result in report.get("Results") or []:
-        target = (result or {}).get("Target")
-        for v in (result or {}).get("Vulnerabilities") or []:
+        r = result or {}
+        target, cls, typ = r.get("Target"), r.get("Class"), r.get("Type")
+        for v in r.get("Vulnerabilities") or []:
             out.append(
                 {
                     "id": v.get("VulnerabilityID"),
@@ -410,18 +433,26 @@ def trivy_vulnerabilities(report: dict[str, Any]) -> list[dict[str, Any]]:
                     "status": v.get("Status"),
                     "fixed_version": v.get("FixedVersion") or "",
                     "target": target,
+                    "class": cls,
+                    "type": typ,
                 }
             )
     return out
 
 
 def _finding_key(finding: dict[str, Any]) -> tuple:
+    # Identity tuple bound to the reviewed base: CVE, package, version, severity, status,
+    # AND the Trivy result class/type (os-pkgs/debian vs lang-pkgs/python-pkg). The raw
+    # display target is deliberately excluded — it differs between a by-ref base scan and
+    # an OCI-layout image scan, so it is not a stable identity component.
     return (
         finding.get("id"),
         finding.get("package"),
         str(finding.get("installed_version")),
         str(finding.get("severity", "")).lower(),
         finding.get("status"),
+        str(finding.get("class", "")).lower(),
+        str(finding.get("type", "")).lower(),
     )
 
 
@@ -436,10 +467,16 @@ def load_base_baseline(mapping: dict[str, Any]) -> dict[str, Any]:
     digest = str(bi.get("digest", "")).strip()
     if not _BARE_DIGEST_RE.fullmatch(digest):
         raise SupplyChainViolation("base baseline base_image.digest is not a sha256 manifest digest")
+    ref = str(bi.get("ref", "")).strip()
+    if not ref:
+        raise SupplyChainViolation("base baseline base_image.ref is required (must match the pinned base)")
     default_expiry_raw = bi.get("valid_until")
     entries: dict[tuple, date] = {}
     for raw in (mapping or {}).get("accepted_inherited_findings") or []:
-        for field in ("id", "package", "installed_version", "severity", "status"):
+        # class/type are part of the identity (see _finding_key): an accepted tuple must
+        # name the Trivy result class/type it was reviewed under, so a same-id/package
+        # finding from a different result class cannot inherit its acceptance.
+        for field in ("id", "package", "installed_version", "severity", "status", "class", "type"):
             if not str(raw.get(field, "")).strip():
                 raise SupplyChainViolation(f"accepted_inherited_findings entry missing '{field}'")
         if str(raw.get("status")) not in _ACCEPTABLE_NOFIX_STATUSES:
@@ -455,15 +492,31 @@ def load_base_baseline(mapping: dict[str, Any]) -> dict[str, Any]:
             expires = date.fromisoformat(str(expires_raw))
         except ValueError as exc:
             raise SupplyChainViolation(f"accepted_inherited_findings invalid expires: {expires_raw!r}") from exc
-        key = (
-            raw.get("id"),
-            raw.get("package"),
-            str(raw.get("installed_version")),
-            str(raw.get("severity", "")).lower(),
-            raw.get("status"),
-        )
+        key = _finding_key(raw)
+        if key in entries:
+            raise SupplyChainViolation(f"duplicate accepted_inherited_findings tuple: {key}")
         entries[key] = expires
-    return {"base_digest": digest, "entries": entries}
+    return {"base_digest": digest, "base_ref": ref, "entries": entries}
+
+
+def assert_base_report_identifies_digest(base_report: dict[str, Any], base_digest: str) -> None:
+    """Fail closed unless ``base_report`` actually describes the pinned base digest.
+
+    Binds ``scan.base.json`` to the reviewed digest: Trivy records the scanned image's
+    digest in ``ArtifactName`` (when scanned by ``name@sha256:...``) and/or
+    ``Metadata.RepoDigests``. If neither carries the expected digest, a substituted base
+    report cannot stand in for the reviewed base."""
+    bare = str(base_digest).split("sha256:")[-1].lower()
+    if not bare:
+        raise SupplyChainViolation("no base digest to bind the base scan report to")
+    artifact = str((base_report or {}).get("ArtifactName", ""))
+    repo_digests = ((base_report or {}).get("Metadata") or {}).get("RepoDigests") or []
+    haystack = (artifact + " " + " ".join(str(d) for d in repo_digests)).lower()
+    if bare not in haystack:
+        raise SupplyChainViolation(
+            "base scan report does not identify the pinned base digest "
+            f"(ArtifactName/RepoDigests do not contain sha256:{bare})"
+        )
 
 
 @dataclass(frozen=True)
@@ -483,6 +536,7 @@ def evaluate_image_vulnerabilities(
     *,
     base_digest: str,
     fail_on_severity: str = "high",
+    allow_inherited_unknown: bool = True,
     on: date | None = None,
 ) -> ImageScanDecision:
     """Attribute every at/above-threshold image finding and decide pass/fail per finding.
@@ -491,14 +545,16 @@ def evaluate_image_vulnerabilities(
     fixable, app-introduced, non-no-fix-status, base-digest-mismatched, new, or expired
     finding blocks.
 
-    UNKNOWN severity is NOT auto-passed (we cannot prove it is below threshold) and NOT
-    auto-blocked: it is routed through the SAME inherited-risk attribution as a finding at
-    or above the threshold. So an unknown-severity finding is accepted ONLY when it is an
-    exact-tuple match in both the standalone base scan and the reviewed baseline, is
-    unfixable, and is unexpired — exactly like any other inherited finding. An
-    app-introduced, fixable, or unreviewed unknown-severity finding still blocks. (A blanket
-    CVE-id exception can never suppress an unknown-severity finding; that is the separate
-    evaluate_scan path. Acceptance is only ever through the explicit, reviewed baseline.)"""
+    UNKNOWN severity is handled per ``allow_inherited_unknown`` (the policy's
+    ``unknown_severity`` mode):
+      - False (``block``): UNKNOWN always blocks here, even for an exact inherited tuple.
+      - True (``block_unless_reviewed_inherited_baseline``): UNKNOWN is routed through the
+        SAME inherited-risk attribution as an at/above-threshold finding, so it is accepted
+        ONLY when it is an exact-tuple match in both the standalone base scan and the
+        reviewed baseline, unfixable, and unexpired. App-introduced, fixable, or unreviewed
+        UNKNOWN still blocks.
+    A blanket CVE-id exception can never suppress UNKNOWN (that is the separate
+    evaluate_scan path); acceptance is only ever through the explicit, reviewed baseline."""
     today = on or datetime.now(timezone.utc).date()
     threshold = _SEVERITY_RANK[fail_on_severity.lower()]
     base_vulns = trivy_vulnerabilities(base_report)
@@ -517,9 +573,13 @@ def evaluate_image_vulnerabilities(
     accepted: list[dict[str, Any]] = []
     for f in trivy_vulnerabilities(image_report):
         rank = _SEVERITY_RANK.get(f["severity"])
-        # Known severity below the threshold is ignored. Unknown severity (rank is None) is
-        # NOT below the threshold for our purposes — it must be attributed, not skipped.
-        if rank is not None and rank < threshold:
+        if rank is None:
+            # Unknown severity. Under 'block' it is an unconditional block; otherwise it is
+            # attributed exactly like an at/above-threshold finding (reviewed-baseline route).
+            if not allow_inherited_unknown:
+                blocking.append(_block(f, "unknown_severity"))
+                continue
+        elif rank < threshold:
             continue
         if f["fixed_version"]:
             blocking.append(_block(f, "fix_available"))
@@ -552,6 +612,12 @@ def policy_from_mapping(mapping: dict[str, Any]) -> VulnPolicy:
     fail_on = str(vuln.get("fail_on_severity", "high")).lower()
     if fail_on not in _SEVERITY_RANK:
         raise SupplyChainViolation(f"vulnerability_policy.fail_on_severity invalid: {fail_on!r}")
+    unknown_severity = str(vuln.get("unknown_severity", "block")).lower()
+    if unknown_severity not in _UNKNOWN_SEVERITY_MODES:
+        raise SupplyChainViolation(
+            f"vulnerability_policy.unknown_severity invalid: {unknown_severity!r} "
+            f"(expected one of {sorted(_UNKNOWN_SEVERITY_MODES)})"
+        )
     exceptions: dict[str, VulnException] = {}
     for raw in vuln.get("exceptions") or []:
         vuln_id = str(raw.get("id", "")).strip()
@@ -570,7 +636,7 @@ def policy_from_mapping(mapping: dict[str, Any]) -> VulnPolicy:
                 f"vulnerability exception {vuln_id} has an invalid 'expires' date: {expires_raw!r}"
             ) from exc
         exceptions[vuln_id] = VulnException(vuln_id=vuln_id, reason=reason, expires=expires)
-    return VulnPolicy(fail_on_severity=fail_on, exceptions=exceptions)
+    return VulnPolicy(fail_on_severity=fail_on, exceptions=exceptions, unknown_severity=unknown_severity)
 
 
 def _scan_findings(scan: dict[str, Any]) -> list[dict[str, Any]]:
@@ -609,7 +675,8 @@ def evaluate_release(
     require = (policy_mapping or {}).get("require") or {}
     pinned_bases = (policy_mapping or {}).get("pinned_base_images")
     pinned_tools = (policy_mapping or {}).get("supply_chain_tools")
-    fail_on = policy_from_mapping(policy_mapping).fail_on_severity
+    policy = policy_from_mapping(policy_mapping)
+    fail_on = policy.fail_on_severity
 
     artifact_digest: str | None = None
     try:
@@ -637,7 +704,9 @@ def evaluate_release(
         if is_required and manifest_key not in manifest:
             failures.append(f"release manifest is missing required '{manifest_key}' evidence")
     if require.get("vulnerability_scan"):
-        for needed in ("image_scan", "base_scan", "base_image"):
+        # fs_scan (the application/dependency filesystem scan) is required evidence too — it
+        # is evaluated through the ORDINARY policy below, not the inherited-base baseline.
+        for needed in ("image_scan", "base_scan", "base_image", "fs_scan"):
             if needed not in manifest:
                 failures.append(f"release manifest is missing required '{needed}' vulnerability evidence")
 
@@ -651,17 +720,43 @@ def evaluate_release(
             assert_provenance_present(manifest["provenance"], artifact_digest=artifact_digest)
         except SupplyChainViolation as exc:
             failures.append(str(exc))
+    # Application/dependency filesystem scan — evaluated through the ORDINARY vulnerability
+    # policy (exceptions apply; UNKNOWN always blocks), NEVER the inherited-base baseline.
+    if "fs_scan" in manifest:
+        try:
+            fs_report = merge_trivy_reports(manifest["fs_scan"])  # tolerate Trivy's null Results
+            assert_scan_evidence(fs_report)
+            assert_scan_passes(_scan_findings(fs_report), policy, on=on)
+        except SupplyChainViolation as exc:
+            failures.append(f"filesystem/dependency scan: {exc}")
     if "image_scan" in manifest and "base_scan" in manifest:
         try:
             assert_scan_evidence(manifest["image_scan"])
             assert_scan_evidence(manifest["base_scan"])
-            base_digest = str((manifest.get("base_image") or {}).get("digest", ""))
+            base_image = manifest.get("base_image") or {}
+            base_digest = str(base_image.get("digest", ""))
+            base_ref = str(base_image.get("ref", ""))
+            # Bind the base evidence: the manifest base ref must be the policy-pinned base,
+            # the reviewed baseline must name that same ref, and scan.base.json must itself
+            # identify the pinned digest — so a substituted base cannot launder attribution.
+            if pinned_bases and base_ref and base_ref not in pinned_bases:
+                failures.append(
+                    f"manifest base_image.ref {base_ref!r} is not in the policy pinned_base_images"
+                )
+            if base_baseline:
+                bl_ref = str(base_baseline.get("base_ref", ""))
+                if base_ref and bl_ref and bl_ref != base_ref:
+                    failures.append(
+                        f"base baseline base_image.ref {bl_ref!r} does not match the manifest base ref {base_ref!r}"
+                    )
+            assert_base_report_identifies_digest(manifest["base_scan"], base_digest)
             decision = evaluate_image_vulnerabilities(
                 manifest["image_scan"],
                 manifest["base_scan"],
-                base_baseline or {"base_digest": None, "entries": {}},
+                base_baseline or {"base_digest": None, "base_ref": "", "entries": {}},
                 base_digest=base_digest,
                 fail_on_severity=fail_on,
+                allow_inherited_unknown=policy.allow_inherited_unknown,
                 on=on,
             )
             if not decision.passed:
@@ -669,10 +764,12 @@ def evaluate_release(
                 for b in decision.blocking:
                     reasons[b.get("block_reason", "?")] = reasons.get(b.get("block_reason", "?"), 0) + 1
                 detail = ", ".join(f"{r}={n}" for r, n in sorted(reasons.items()))
-                # Per-finding breakdown (id package@version severity status reason in_base),
-                # sorted, so a blocked release is diagnosable from the gate output alone.
+                # Per-finding breakdown (id package@version class/type severity status reason
+                # in_base), sorted, so a blocked release is diagnosable from the gate output
+                # alone (class/type included so a tuple mismatch reveals the actual values).
                 lines = sorted(
                     f"{b.get('id')} {b.get('package')}@{b.get('installed_version')} "
+                    f"{b.get('class') or '?'}/{b.get('type') or '?'} "
                     f"sev={b.get('severity') or '?'} status={b.get('status') or '?'} "
                     f"reason={b.get('block_reason')} in_base={'Y' if b.get('in_base') else 'N'}"
                     for b in decision.blocking
@@ -763,10 +860,12 @@ def main(argv: list[str] | None = None) -> int:
                     print(f"  - {msg}", file=sys.stderr)
                 return 1
             if "image_scan" in manifest and "base_scan" in manifest and base_baseline is not None:
+                _policy = policy_from_mapping(policy_mapping)
                 decision = evaluate_image_vulnerabilities(
                     manifest["image_scan"], manifest["base_scan"], base_baseline,
                     base_digest=str((manifest.get("base_image") or {}).get("digest", "")),
-                    fail_on_severity=policy_from_mapping(policy_mapping).fail_on_severity,
+                    fail_on_severity=_policy.fail_on_severity,
+                    allow_inherited_unknown=_policy.allow_inherited_unknown,
                 )
                 acc = decision.accepted_inherited
                 summary = {

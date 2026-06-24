@@ -33,8 +33,10 @@ public-source-only, and metadata-first.
 | Pinned base image | every Dockerfile `FROM` must be digest-pinned **and** present in the policy's `pinned_base_images` list (`scratch` exempt) | `assert_dockerfile_base_pinned` / `check-dockerfile --policy` |
 | SBOM | a CycloneDX/SPDX SBOM must be present and non-empty | `assert_sbom_present` |
 | Build provenance | an in-toto/SLSA attestation must be present and bind the artifact's manifest digest | `assert_provenance_present` |
-| Vulnerability scan (fail-closed evidence) | the scan report must be a recognised, well-typed envelope (a missing/`{}`/malformed report is rejected, never normalised to zero findings); the scanners run with **no `\|\| true`** | `assert_scan_evidence` + `release-image.yml` |
-| Vulnerability policy | findings at/above `fail_on_severity` fail unless covered by a documented unexpired exception; **unknown severity always blocks and can never be exempted** | `evaluate_scan` / `assert_scan_passes` |
+| Vulnerability scan (fail-closed evidence) | the image, base, and filesystem scan reports must each be a recognised, well-typed envelope (a missing/`{}`/malformed report is rejected, never normalised to zero findings); the scanners run with **no `\|\| true`** | `assert_scan_evidence` + `release-image.yml` |
+| Filesystem/app dependency policy | the application/dependency scan (`fs_scan`) is **required** and evaluated through the **ordinary** policy — at/above-threshold findings fail unless covered by a documented unexpired exception, and **unknown severity always blocks**; it is **never** routed through the base baseline | `evaluate_scan` / `assert_scan_passes` (via `evaluate_release`) |
+| Image base-attribution policy | an at/above-threshold (or unknown) **image** finding passes only as an exact inherited tuple (id, package, version, severity, status, **Trivy class/type**) present in both the standalone base scan and the reviewed baseline, unfixable and unexpired; app-introduced/fixable/new/changed/expired/non-no-fix block | `evaluate_image_vulnerabilities` + `accepted-base-findings.yaml` |
+| Base evidence binding | the manifest base ref must be the policy-pinned base, the baseline must name that same ref, and `scan.base.json` must itself identify the pinned digest (`ArtifactName`/`RepoDigests`) — a substituted base cannot launder attribution | `assert_base_report_identifies_digest` + ref/digest checks in `evaluate_release` |
 | Reproducibility | rebuild from the same pinned inputs and require **OCI manifest digest equality** (digest-to-digest); package-set equivalence is supplementary | `assert_reproducibility_evidence` |
 | Pinned + checksum-verified tooling | Syft/Trivy are downloaded as **versioned release archives** from immutable URLs and verified against reviewed-literal SHA-256 digests (`sha256sum -c`) **before execution** — never a mutable `main` installer piped into a shell; the gate (`assert_tool_identity`) requires the recorded `{version, archive_sha256}` to match the policy | `supply_chain_tools` in the policy + `assert_tool_identity` + `release-image.yml` |
 | Strict raw-scan merge | the workflow combines the raw Trivy reports via `merge_trivy_reports`, which rejects a missing/`null`/non-list `Results` instead of coercing it to `[]` (so a malformed raw report can't become a clean envelope) | `merge_trivy_reports` |
@@ -70,6 +72,41 @@ Rules, enforced by code (not just documented):
   to known severities at/above the threshold.
 
 Adding or extending an exception is a reviewed change to `supply-chain-policy.yaml`.
+
+## Base-image risk baseline (inherited findings)
+
+A fail-closed gate over a real Debian base would block on inherited OS CVEs that have **no
+fix available**. Rather than `--ignore-unfixed` or blanket CVE-id exceptions, the **image**
+scan is attributed against a **separate** scan of the pinned base. An at/above-threshold
+image finding is accepted **only** when it is an exact tuple — id, package,
+`installed_version`, severity, status, **and the Trivy result class/type** (e.g.
+`os-pkgs`/`debian` vs `lang-pkgs`/`python-pkg`) — present in **both** the standalone base
+scan **and** the reviewed `accepted-base-findings.yaml`, is **unfixable** (`status` ∈
+`affected`/`fix_deferred`/`will_not_fix`, no `fixed_version`), and is **unexpired**, under
+the matching base digest. App-introduced, fixable, new, changed, expired,
+base-digest-mismatched, or non-no-fix-status findings **fail closed**. The full base and
+image reports are retained in the evidence (nothing is suppressed); each acceptance is an
+explicit reviewed tuple. The baseline is changed only by an independent PR.
+
+The base evidence is bound to the reviewed base: the manifest base ref must equal the
+policy-pinned base, the baseline must name that same ref, and `scan.base.json` must itself
+identify the pinned digest (via `ArtifactName`/`Metadata.RepoDigests`) — so a substituted
+base report cannot stand in for the reviewed base.
+
+### Unknown-severity findings
+
+Trivy reports `UNKNOWN` severity for very recently disclosed CVEs that neither NVD nor the
+distro has scored yet. The policy key `vulnerability_policy.unknown_severity` is the single
+source of truth for how these are treated (parsed and enforced in code):
+
+- `block` — unknown severity always blocks, everywhere (including an exact inherited tuple).
+- `block_unless_reviewed_inherited_baseline` — unknown still blocks for ordinary/exception
+  and **filesystem/app** findings, but an **image** finding that is an exact inherited tuple
+  in the reviewed baseline (`severity: unknown`) may be accepted. A blanket CVE-id exception
+  can **never** suppress an unknown-severity finding.
+
+The gate emits a `pass_with_accepted_inherited_risk` decision record that counts every
+accepted inherited finding (high, critical, **and** unknown).
 
 ## Reproducibility evidence
 
