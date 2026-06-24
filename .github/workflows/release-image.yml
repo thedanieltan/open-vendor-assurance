@@ -171,7 +171,10 @@ jobs:
             .
           REBUILD_DIGEST="$(jq -er '."containerimage.digest" | select(test("^sha256:[0-9a-f]{64}$"))' rebuild-metadata.json)"
           "$HOME/.local/bin/syft" oci-archive:image.rebuild.oci.tar -o cyclonedx-json=sbom.rebuild.json
-          echo "REBUILD_DIGEST=${REBUILD_DIGEST}" >> "$GITHUB_ENV"
+          # export (not $GITHUB_ENV) so the SAME-step Python heredoc below inherits it;
+          # $GITHUB_ENV only propagates to later steps. ARTIFACT_DIGEST comes from an
+          # earlier step, so it is already present.
+          export REBUILD_DIGEST
           python - <<'PY'
           import json, os
           def pkgs(p):
