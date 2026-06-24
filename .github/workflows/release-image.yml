@@ -146,7 +146,13 @@ jobs:
       - name: Scan dependencies and the container image (fail closed)
         run: |
           set -euo pipefail
-          "$HOME/.local/bin/trivy" image --format json --output scan.image.json --input image.oci.tar
+          # Trivy's --input cannot read a BuildKit type=oci TAR; it expects an OCI
+          # LAYOUT DIRECTORY (it stats <input>/index.json). Extract the OCI archive and
+          # scan the directory. Fail-closed: any scanner/runtime error stops the job.
+          mkdir -p image.oci.layout
+          tar -xf image.oci.tar -C image.oci.layout
+          test -f image.oci.layout/index.json
+          "$HOME/.local/bin/trivy" image --format json --output scan.image.json --input image.oci.layout
           "$HOME/.local/bin/trivy" fs --format json --output scan.fs.json services/openva_match_service
           test -s scan.image.json
           test -s scan.fs.json

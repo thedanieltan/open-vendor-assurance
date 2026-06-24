@@ -48,7 +48,10 @@ def test_scanning_is_fail_closed():
     assert "|| true" not in text
     assert "test -s scan.image.json" in text
     assert "test -s scan.fs.json" in text
-    assert "--input image.oci.tar" in text  # image scan runs on the built OCI archive
+    # Trivy reads an OCI LAYOUT DIRECTORY (extracted from the OCI archive), not the
+    # OCI tar directly (which Trivy --input cannot parse).
+    assert "--input image.oci.layout" in text
+    assert "tar -xf image.oci.tar -C image.oci.layout" in text
 
 
 def test_reproducibility_is_digest_to_digest():
