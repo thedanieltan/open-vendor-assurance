@@ -1,0 +1,81 @@
+# Hosted match-service deployment-artifact supply-chain policy (WP-02E).
+#
+# Declarative, fail-closed policy consumed by openva_match_service.supply_chain and the
+# release-image workflow. It evaluates artifact EVIDENCE only — it builds nothing,
+# pushes nothing, provisions nothing, and deploys nothing. The decision-only posture in
+# docs/operations/contracts/hosted-deployment.yaml is unchanged; no hosted endpoint is
+# live. Governed by ADR-0001 (product posture) and ADR-0006 (deployment architecture).
+version: 1
+artifact: openva-match-service
+
+# Pinned base-image policy. Every Dockerfile FROM must be digest-pinned; these are the
+# expected, reviewed base digests (mirrors services/openva_match_service/Dockerfile).
+# Updating a base image is a reviewed change to BOTH the Dockerfile and this list.
+pinned_base_images:
+  - python:3.12-slim@sha256:9d3abd9fc11d06998ccdbdd93b4dd49b5ad7d67fcbbc11c016eb0eb2c2194891
+
+# The deployable artifact MUST be referenced by an immutable digest (name@sha256:...),
+# never a mutable tag. The release flow refuses to emit a mutable deploy reference.
+deploy_reference:
+  must_be_digest: true
+  mutable_tags_forbidden: true        # :latest, :v1, untagged names are rejected
+
+# Required supply-chain evidence for every release. Missing any of these fails closed.
+require:
+  sbom: true                          # CycloneDX/SPDX SBOM, non-empty
+  provenance: true                    # SLSA/in-toto attestation binding the artifact digest
+  vulnerability_scan: true            # dependency + container-image scan
+  reproducibility_evidence: true      # rebuild-and-compare digest equivalence record
+
+# Pinned supply-chain TOOLING. The scanners/SBOM tools are themselves part of the supply
+# chain, so the release-image workflow downloads these EXACT versioned release archives
+# from immutable release URLs and verifies each against the reviewed-literal archive_sha256
+# below (sha256sum -c) BEFORE executing it — it never pipes a mutable `main` installer
+# script into a shell. The gate (assert_tool_identity) requires the recorded tool evidence
+# to match these pins, and the identities are recorded in the retained evidence.
+supply_chain_tools:
+  syft:
+    version: v1.18.1
+    binary: syft
+    archive_url: https://github.com/anchore/syft/releases/download/v1.18.1/syft_1.18.1_linux_amd64.tar.gz
+    archive_sha256: 066c251652221e4d44fcc4d115ce3df33a91769da38c830a8533199db2f65aab
+  trivy:
+    version: v0.71.2
+    binary: trivy
+    archive_url: https://github.com/aquasecurity/trivy/releases/download/v0.71.2/trivy_0.71.2_Linux-64bit.tar.gz
+    archive_sha256: 0510e71e2fd39bf863856d499c8dc19feb4e7336546394c502a8f5cc7ab27460
+
+# Fail-closed vulnerability policy. Findings at/above fail_on_severity (and any finding
+# of UNKNOWN severity) block the release unless covered by a documented, UNEXPIRED
+# exception below. Unknown severity can NEVER be exempted. Every exception REQUIRES an
+# `expires` date; expired exceptions stop suppressing their finding and are reported.
+vulnerability_policy:
+  fail_on_severity: high              # high and critical block
+  unknown_severity: block             # enforced in code: unknown severity always blocks, no exception
+  exceptions: []                      # each REQUIRES {id, reason, expires}; e.g. {id: CVE-XXXX-NNNN, reason: "...", expires: 2026-12-31}
+
+# CI artifact retention for the produced evidence (SBOM, provenance, scan, gate report,
+# reproducibility record), per repository policy.
+artifact_retention_days: 90
+
+# Rollback is by a PRIOR ACCEPTED immutable digest — never by re-tagging or by a mutable
+# reference. A rollback target must be an immutable digest whose manifest digest appears
+# in the accepted-release ledger; digest syntax alone is rejected (fail closed until a
+# release is accepted and recorded). The ledger is in-repo; it provisions nothing.
+rollback:
+  by: prior_accepted_image_digest
+  mutable_rollback_forbidden: true
+  accepted_release_ledger: services/openva_match_service/accepted-releases.yaml
+
+# Hard boundaries (NOT performed by this policy or its workflow):
+#   - no container registry is created
+#   - no cloud resource is provisioned
+#   - no paid publication
+#   - no staging or production deployment
+#   - no claim that a hosted endpoint is live
+boundaries:
+  registry_creation: false
+  cloud_provisioning: false
+  paid_publication: false
+  deployment: false
+  hosted_endpoint_live: false

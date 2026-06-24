@@ -24,6 +24,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "observation-ledger-append-pr.yml",
     "observe-report.yml",
     "release-candidate.yml",
+    "release-image.yml",
     "release-downloads.yml",
     "site-live-feed.yml",
     "site-pages.yml",

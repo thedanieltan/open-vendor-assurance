@@ -146,6 +146,14 @@ public_workflows:
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
+  - name: release-image.yml
+    loop: publication
+    status: core
+    triggers: [workflow_dispatch]
+    permissions: {contents: read, actions: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
   - name: site-pages.yml
     loop: publication
     status: core
