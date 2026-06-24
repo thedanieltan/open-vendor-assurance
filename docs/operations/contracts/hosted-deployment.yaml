@@ -457,7 +457,12 @@ maintainer_decisions:
 #     WP-02C worker+queue (PR #415), WP-02D candidate-ingress (PR #416), WP-02H
 #     application hardening (PR #417), WP-02I remote-MCP activation (PR #418),
 #     WP-02J live /check (PR #419), and WP-02E deployment artifact + supply-chain
-#     (PR #422). All shipped off-by-default; nothing is provisioned.
+#     (PR #422 initial implementation; PR #426 made the release-image gate executable
+#     and added base-image inherited-risk attribution). All shipped off-by-default;
+#     nothing is provisioned. WP-02E is evidence-bound: the post-merge release-image run
+#     on main commit d429f55 (run 28112202864) passed the authoritative gate
+#     (pass_with_accepted_inherited_risk; 0 blocking; 9 HIGH/4 CRITICAL/17 UNKNOWN
+#     accepted-inherited) with retained evidence artifact 7855305963 (90-day retention).
 #   - No provider-neutral slice remains startable. The next slices are the
 #     maintainer-gated infrastructure chain — staging (WP-02F) follows WP-02E + WP-02J,
 #     production (WP-02G) follows WP-02F, and launch evidence + programme closeout
