@@ -97,8 +97,13 @@ def test_export_preserves_adapter_annotations_and_record_classes(tmp_path):
     db_path = export_sqlite(".", tmp_path / "openva.sqlite")
 
     with connect(db_path) as connection:
+        # Pick a human_reviewed canonical source deterministically: a canonical source may
+        # also be quarantined (reversible, status-only review_state flip), so an unfiltered
+        # `limit 1` would non-deterministically select a quarantined source. The annotation
+        # shape under test is the human_reviewed canonical case.
         source = connection.execute(
-            "select record_class, canonical, catalog_tier, review_state, advisory_boundary from canonical_sources limit 1"
+            "select record_class, canonical, catalog_tier, review_state, advisory_boundary "
+            "from canonical_sources where review_state = 'human_reviewed' limit 1"
         ).fetchone()
         assert dict(source) == {
             "record_class": "canonical",
