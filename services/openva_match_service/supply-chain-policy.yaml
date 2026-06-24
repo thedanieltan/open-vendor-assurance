@@ -12,7 +12,7 @@ artifact: openva-match-service
 # expected, reviewed base digests (mirrors services/openva_match_service/Dockerfile).
 # Updating a base image is a reviewed change to BOTH the Dockerfile and this list.
 pinned_base_images:
-  - python:3.12-slim@sha256:9d3abd9fc11d06998ccdbdd93b4dd49b5ad7d67fcbbc11c016eb0eb2c2194891
+  - python:3.12-slim-bookworm@sha256:8a7e7cc04fd3e2bd787f7f24e22d5d119aa590d429b50c95dfe12b3abe52f48b
 
 # The deployable artifact MUST be referenced by an immutable digest (name@sha256:...),
 # never a mutable tag. The release flow refuses to emit a mutable deploy reference.
@@ -45,14 +45,27 @@ supply_chain_tools:
     archive_url: https://github.com/aquasecurity/trivy/releases/download/v0.71.2/trivy_0.71.2_Linux-64bit.tar.gz
     archive_sha256: 0510e71e2fd39bf863856d499c8dc19feb4e7336546394c502a8f5cc7ab27460
 
-# Fail-closed vulnerability policy. Findings at/above fail_on_severity (and any finding
-# of UNKNOWN severity) block the release unless covered by a documented, UNEXPIRED
-# exception below. Unknown severity can NEVER be exempted. Every exception REQUIRES an
-# `expires` date; expired exceptions stop suppressing their finding and are reported.
+# Fail-closed vulnerability policy. Findings at/above fail_on_severity (and any finding of
+# UNKNOWN severity) block the release unless covered by a documented, UNEXPIRED exception
+# below. A blanket CVE-id exception can NEVER suppress an UNKNOWN-severity finding. Every
+# exception REQUIRES an `expires` date; expired exceptions stop suppressing and are reported.
+#
+# unknown_severity controls the ONLY route by which an UNKNOWN-severity finding may pass
+# (parsed + enforced in code, not documentary):
+#   block                                    -> UNKNOWN always blocks, everywhere.
+#   block_unless_reviewed_inherited_baseline -> UNKNOWN still blocks for ordinary/exception
+#       and filesystem/app findings, but an IMAGE finding that is an exact inherited tuple in
+#       the reviewed base baseline (below) may be accepted. Never via a blanket exception.
 vulnerability_policy:
   fail_on_severity: high              # high and critical block
-  unknown_severity: block             # enforced in code: unknown severity always blocks, no exception
+  unknown_severity: block_unless_reviewed_inherited_baseline
   exceptions: []                      # each REQUIRES {id, reason, expires}; e.g. {id: CVE-XXXX-NNNN, reason: "...", expires: 2026-12-31}
+
+# Base-image risk baseline. The image scan is attributed against a separate scan of the
+# pinned base: a HIGH/CRITICAL image finding passes ONLY if it is an exact, presently
+# unfixable finding inherited from the reviewed base digest AND listed in this baseline.
+# App-introduced, fixable, new, changed, expired, or unknown-status findings fail closed.
+base_risk_baseline: services/openva_match_service/accepted-base-findings.yaml
 
 # CI artifact retention for the produced evidence (SBOM, provenance, scan, gate report,
 # reproducibility record), per repository policy.

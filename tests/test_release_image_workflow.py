@@ -48,7 +48,10 @@ def test_scanning_is_fail_closed():
     assert "|| true" not in text
     assert "test -s scan.image.json" in text
     assert "test -s scan.fs.json" in text
-    assert "--input image.oci.tar" in text  # image scan runs on the built OCI archive
+    # Trivy reads an OCI LAYOUT DIRECTORY (extracted from the OCI archive), not the
+    # OCI tar directly (which Trivy --input cannot parse).
+    assert "--input image.oci.layout" in text
+    assert "tar -xf image.oci.tar -C image.oci.layout" in text
 
 
 def test_reproducibility_is_digest_to_digest():
@@ -87,6 +90,17 @@ def test_authoritative_gate_runs_after_all_evidence_and_uses_ledger():
     assert text.index("sbom.cyclonedx.json") < gate
     assert text.index("provenance.intoto.json") < gate
     assert "--accepted-releases" in text
+
+
+def test_base_attribution_is_wired():
+    text = _text()
+    # The base is scanned separately and the gate consumes the reviewed base baseline.
+    assert "scan.base.json" in text
+    assert "Scan the pinned base image" in text
+    assert "--base-baseline" in text
+    assert "accepted-base-findings.yaml" in text  # via the BASE_BASELINE env
+    # The base scan precedes the authoritative gate.
+    assert text.index("scan.base.json") < text.index("check-release")
 
 
 def test_no_push_registry_deploy_or_live_surface():

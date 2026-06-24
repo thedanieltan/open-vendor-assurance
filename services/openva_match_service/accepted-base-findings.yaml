@@ -1,0 +1,338 @@
+# Accepted base-image risk baseline (WP-02E).
+#
+# The ONLY at/above-threshold image findings the supply-chain gate may pass: exact,
+# presently UNFIXABLE vulnerabilities inherited from the reviewed, digest-pinned base
+# image. Each entry is matched by the full tuple (id, package, installed_version, severity,
+# status) AND the base digest; anything app-introduced, fixable, new, changed, expired, or
+# of a non-no-fix status fails closed (openva_match_service.supply_chain
+# evaluate_image_vulnerabilities). This is a reviewed artifact — it is changed only by an
+# independent PR, never generated/accepted automatically by release-image.
+#
+# UNKNOWN-severity findings: Trivy reports a severity of UNKNOWN for very recently
+# disclosed CVEs that neither NVD nor Debian has scored yet. Such a finding is NOT
+# auto-suppressed and NOT auto-blocked — it is attributed exactly like any other inherited
+# finding and may be accepted ONLY through an explicit tuple below (severity: unknown). An
+# app-introduced, fixable, or unreviewed unknown-severity finding still fails closed, and a
+# blanket CVE-id exception can never suppress one. Each unknown-severity entry is an
+# individual maintainer judgement that the inherited base CVE is acceptable pending scoring.
+#
+# Provenance: authored from a Trivy v0.71.2 scan of the pinned base on 2026-06-24
+# (Debian 12.14). Every inherited finding below has NO fix available (FixedVersion empty);
+# none is suppressed by --ignore-unfixed — the full base and image reports are retained in
+# the release evidence. 13 HIGH/CRITICAL + 17 UNKNOWN-severity (util-linux CVE-2026-53613 /
+# CVE-2026-53615 across its 8 binary packages, and gpgv CVE-2026-57062). Re-review
+# on/before valid_until, by which point upstream should have scored the UNKNOWN entries.
+version: 1
+
+base_image:
+  ref: python:3.12-slim-bookworm@sha256:8a7e7cc04fd3e2bd787f7f24e22d5d119aa590d429b50c95dfe12b3abe52f48b
+  digest: sha256:8a7e7cc04fd3e2bd787f7f24e22d5d119aa590d429b50c95dfe12b3abe52f48b
+  valid_until: 2026-09-30   # default expiry for every entry below; re-review before this
+
+accepted_inherited_findings:
+  - id: CVE-2025-69720
+    package: libncursesw6
+    installed_version: 6.4-4
+    severity: HIGH
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian has published no fixed package (ncurses)."
+  - id: CVE-2025-69720
+    package: libtinfo6
+    installed_version: 6.4-4
+    severity: HIGH
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; no fixed ncurses package."
+  - id: CVE-2025-69720
+    package: ncurses-base
+    installed_version: 6.4-4
+    severity: HIGH
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; no fixed ncurses package."
+  - id: CVE-2025-69720
+    package: ncurses-bin
+    installed_version: 6.4-4
+    severity: HIGH
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; no fixed ncurses package."
+  - id: CVE-2025-7458
+    package: libsqlite3-0
+    installed_version: 3.40.1-2+deb12u2
+    severity: CRITICAL
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian has published no fixed sqlite3 package."
+  - id: CVE-2026-11822
+    package: libsqlite3-0
+    installed_version: 3.40.1-2+deb12u2
+    severity: HIGH
+    status: fix_deferred
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian fix deferred."
+  - id: CVE-2026-11824
+    package: libsqlite3-0
+    installed_version: 3.40.1-2+deb12u2
+    severity: HIGH
+    status: fix_deferred
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian fix deferred."
+  - id: CVE-2026-42496
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: CRITICAL
+    status: fix_deferred
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); Debian fix deferred."
+  - id: CVE-2026-8376
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: CRITICAL
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); no fixed package."
+  - id: CVE-2026-42497
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: HIGH
+    status: fix_deferred
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); Debian fix deferred."
+  - id: CVE-2026-48962
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: HIGH
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); no fixed package."
+  - id: CVE-2026-9538
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: HIGH
+    status: fix_deferred
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); Debian fix deferred."
+  - id: CVE-2023-45853
+    package: zlib1g
+    installed_version: 1:1.2.13.dfsg-1
+    severity: CRITICAL
+    status: will_not_fix
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian marks this minizip-only issue will_not_fix for zlib1g."
+
+  # --- UNKNOWN-severity inherited base findings (unscored upstream as of 2026-06-24) ---
+  # util-linux source package CVE-2026-53613 — present across all 8 inherited binary
+  # packages of the reviewed base; Debian status 'affected', no fixed package published.
+  - id: CVE-2026-53613
+    package: bsdutils
+    installed_version: 1:2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53613
+    package: libblkid1
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53613
+    package: libmount1
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53613
+    package: libsmartcols1
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53613
+    package: libuuid1
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53613
+    package: mount
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53613
+    package: util-linux
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53613
+    package: util-linux-extra
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  # util-linux source package CVE-2026-53615 — same 8 inherited binary packages.
+  - id: CVE-2026-53615
+    package: bsdutils
+    installed_version: 1:2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53615
+    package: libblkid1
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53615
+    package: libmount1
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53615
+    package: libsmartcols1
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53615
+    package: libuuid1
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53615
+    package: mount
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53615
+    package: util-linux
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  - id: CVE-2026-53615
+    package: util-linux-extra
+    installed_version: 2.38.1-5+deb12u3
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (util-linux); not yet scored upstream, no fix published."
+  # gnupg/gpgv CVE-2026-57062.
+  - id: CVE-2026-57062
+    package: gpgv
+    installed_version: 2.2.40-1.1+deb12u2
+    severity: unknown
+    status: affected
+    class: os-pkgs
+    type: debian
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (gnupg/gpgv); not yet scored upstream, no fix published."

@@ -42,6 +42,7 @@ env:
   DOCKERFILE: services/openva_match_service/Dockerfile
   POLICY: services/openva_match_service/supply-chain-policy.yaml
   ACCEPTED_RELEASES: services/openva_match_service/accepted-releases.yaml
+  BASE_BASELINE: services/openva_match_service/accepted-base-findings.yaml
   # Pinned, checksum-verified supply-chain tooling (mirrors supply-chain-policy.yaml
   # supply_chain_tools). Downloaded from immutable versioned release URLs and verified
   # against these reviewed-literal SHA-256 digests BEFORE execution — no mutable `main`
@@ -143,10 +144,28 @@ jobs:
           echo "${TRIVY_SHA256}  trivy.tar.gz" | sha256sum -c -
           tar -xzf trivy.tar.gz -C "$HOME/.local/bin" trivy
           "$HOME/.local/bin/trivy" --version
+      # Scan the PINNED base image separately so image findings can be attributed as
+      # inherited-from-base (exact tuple) vs app-introduced. Scans the digest from the
+      # policy's pinned_base_images so it matches what the Dockerfile builds FROM.
+      - name: Scan the pinned base image (inherited-risk attribution)
+        run: |
+          set -euo pipefail
+          BASE_REF="$(python -c "import yaml; print(yaml.safe_load(open('$POLICY'))['pinned_base_images'][0])")"
+          echo "BASE_REF=${BASE_REF}" >> "$GITHUB_ENV"
+          echo "BASE_DIGEST=sha256:${BASE_REF##*@sha256:}" >> "$GITHUB_ENV"
+          "$HOME/.local/bin/trivy" image --format json --output scan.base.json "${BASE_REF}"
+          test -s scan.base.json
+
       - name: Scan dependencies and the container image (fail closed)
         run: |
           set -euo pipefail
-          "$HOME/.local/bin/trivy" image --format json --output scan.image.json --input image.oci.tar
+          # Trivy's --input cannot read a BuildKit type=oci TAR; it expects an OCI
+          # LAYOUT DIRECTORY (it stats <input>/index.json). Extract the OCI archive and
+          # scan the directory. Fail-closed: any scanner/runtime error stops the job.
+          mkdir -p image.oci.layout
+          tar -xf image.oci.tar -C image.oci.layout
+          test -f image.oci.layout/index.json
+          "$HOME/.local/bin/trivy" image --format json --output scan.image.json --input image.oci.layout
           "$HOME/.local/bin/trivy" fs --format json --output scan.fs.json services/openva_match_service
           test -s scan.image.json
           test -s scan.fs.json
@@ -165,7 +184,10 @@ jobs:
             .
           REBUILD_DIGEST="$(jq -er '."containerimage.digest" | select(test("^sha256:[0-9a-f]{64}$"))' rebuild-metadata.json)"
           "$HOME/.local/bin/syft" oci-archive:image.rebuild.oci.tar -o cyclonedx-json=sbom.rebuild.json
-          echo "REBUILD_DIGEST=${REBUILD_DIGEST}" >> "$GITHUB_ENV"
+          # export (not $GITHUB_ENV) so the SAME-step Python heredoc below inherits it;
+          # $GITHUB_ENV only propagates to later steps. ARTIFACT_DIGEST comes from an
+          # earlier step, so it is already present.
+          export REBUILD_DIGEST
           python - <<'PY'
           import json, os
           def pkgs(p):
@@ -195,15 +217,15 @@ jobs:
         run: |
           python - <<'PY'
           import json, os
-          from openva_match_service.supply_chain import merge_trivy_reports
-          # Strict merge: a missing/malformed raw report raises rather than coercing to [].
-          scan = merge_trivy_reports(json.load(open("scan.image.json")), json.load(open("scan.fs.json")))
           manifest = {
               "image_ref": os.environ["ARTIFACT_REF"],
               "dockerfile": open(os.environ["DOCKERFILE"]).read(),
               "sbom": json.load(open("sbom.cyclonedx.json")),
               "provenance": json.load(open("provenance.intoto.json")),
-              "scan": scan,
+              "image_scan": json.load(open("scan.image.json")),
+              "base_scan": json.load(open("scan.base.json")),
+              "fs_scan": json.load(open("scan.fs.json")),
+              "base_image": {"ref": os.environ["BASE_REF"], "digest": os.environ["BASE_DIGEST"]},
               "reproducibility": json.load(open("reproducibility-report.json")),
               "tools": {
                   "syft": {"version": os.environ["SYFT_VERSION"], "archive_sha256": os.environ["SYFT_SHA256"]},
@@ -218,7 +240,13 @@ jobs:
         env:
           ROLLBACK_REF: ${{ inputs.rollback_ref }}
       - name: Enforce supply-chain release gate (authoritative, fail closed)
-        run: python -m openva_match_service.supply_chain check-release --manifest release-image-manifest.json --policy "$POLICY" --accepted-releases "$ACCEPTED_RELEASES"
+        run: |
+          python -m openva_match_service.supply_chain check-release \
+            --manifest release-image-manifest.json \
+            --policy "$POLICY" \
+            --accepted-releases "$ACCEPTED_RELEASES" \
+            --base-baseline "$BASE_BASELINE" \
+            --decision-out scan-decision.json
 
       # Negative proof in CI: the gate must reject a mutable deploy reference even when
       # invoked directly (defence-in-depth beyond the unit tests).
@@ -229,7 +257,10 @@ jobs:
           fi
           echo "OK: mutable tag rejected by the gate"
 
+      # Retain the produced evidence even when the gate blocks the release (if: always()),
+      # so a blocked run still yields the SBOM/provenance/scan/decision record for review.
       - name: Upload supply-chain evidence
+        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: openva-match-service-supply-chain-evidence
@@ -241,8 +272,10 @@ jobs:
             sbom.rebuild.json
             provenance.intoto.json
             scan.image.json
+            scan.base.json
             scan.fs.json
             release-image-manifest.json
             reproducibility-report.json
-          if-no-files-found: error
+            scan-decision.json
+          if-no-files-found: warn
           retention-days: 90
