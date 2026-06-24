@@ -558,10 +558,44 @@ def test_inherited_but_baseline_expired_blocks():
     assert not dec.passed and dec.blocking[0]["block_reason"] == "baseline_expired"
 
 
-def test_unknown_severity_image_finding_blocks():
-    img = _trivy_report([_vuln("CVE-U", "p", "1", "weird")])
+def test_unknown_severity_app_introduced_blocks():
+    # Unknown severity is no longer an unconditional block: it is attributed. Not present in
+    # the base => app-introduced => blocks (unknown severity cannot pass as an app finding).
+    img = _trivy_report([_vuln("CVE-U", "p", "1", "UNKNOWN")])
     dec = sc.evaluate_image_vulnerabilities(img, _trivy_report([]), _base_baseline(), base_digest=_BASE_DIGEST)
-    assert not dec.passed and dec.blocking[0]["block_reason"] == "unknown_severity"
+    assert not dec.passed and dec.blocking[0]["block_reason"] == "app_introduced"
+
+
+def test_unknown_severity_inherited_and_reviewed_is_accepted():
+    # Exact-tuple inherited + unfixable + in the reviewed baseline => accepted, even with
+    # severity UNKNOWN (the only route by which an unknown-severity finding may pass).
+    v = _vuln("CVE-U", "util-linux", "2.38", "UNKNOWN", "affected")
+    dec = sc.evaluate_image_vulnerabilities(
+        _trivy_report([v]), _trivy_report([v]),
+        _base_baseline([_entry(id="CVE-U", package="util-linux", installed_version="2.38", severity="unknown")]),
+        base_digest=_BASE_DIGEST,
+    )
+    assert dec.passed and len(dec.accepted_inherited) == 1
+
+
+def test_unknown_severity_inherited_but_unreviewed_blocks():
+    # In the base but NOT in the reviewed baseline => blocks (no silent suppression).
+    v = _vuln("CVE-U", "util-linux", "2.38", "UNKNOWN", "affected")
+    dec = sc.evaluate_image_vulnerabilities(
+        _trivy_report([v]), _trivy_report([v]), _base_baseline(), base_digest=_BASE_DIGEST
+    )
+    assert not dec.passed and dec.blocking[0]["block_reason"] == "not_in_reviewed_baseline"
+
+
+def test_unknown_severity_fixable_inherited_blocks():
+    # A fix exists => blocks before any baseline acceptance, even at unknown severity.
+    v = _vuln("CVE-U", "util-linux", "2.38", "UNKNOWN", "affected", fixed="2.39")
+    dec = sc.evaluate_image_vulnerabilities(
+        _trivy_report([v]), _trivy_report([v]),
+        _base_baseline([_entry(id="CVE-U", package="util-linux", installed_version="2.38", severity="unknown")]),
+        base_digest=_BASE_DIGEST,
+    )
+    assert not dec.passed and dec.blocking[0]["block_reason"] == "fix_available"
 
 
 def test_non_nofix_status_inherited_blocks():

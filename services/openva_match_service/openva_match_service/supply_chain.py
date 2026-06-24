@@ -488,8 +488,17 @@ def evaluate_image_vulnerabilities(
     """Attribute every at/above-threshold image finding and decide pass/fail per finding.
 
     An inherited, presently-unfixable, reviewed-and-unexpired finding is accepted; a
-    fixable, app-introduced, unknown, non-no-fix-status, base-digest-mismatched, new, or
-    expired finding blocks."""
+    fixable, app-introduced, non-no-fix-status, base-digest-mismatched, new, or expired
+    finding blocks.
+
+    UNKNOWN severity is NOT auto-passed (we cannot prove it is below threshold) and NOT
+    auto-blocked: it is routed through the SAME inherited-risk attribution as a finding at
+    or above the threshold. So an unknown-severity finding is accepted ONLY when it is an
+    exact-tuple match in both the standalone base scan and the reviewed baseline, is
+    unfixable, and is unexpired — exactly like any other inherited finding. An
+    app-introduced, fixable, or unreviewed unknown-severity finding still blocks. (A blanket
+    CVE-id exception can never suppress an unknown-severity finding; that is the separate
+    evaluate_scan path. Acceptance is only ever through the explicit, reviewed baseline.)"""
     today = on or datetime.now(timezone.utc).date()
     threshold = _SEVERITY_RANK[fail_on_severity.lower()]
     base_vulns = trivy_vulnerabilities(base_report)
@@ -508,10 +517,9 @@ def evaluate_image_vulnerabilities(
     accepted: list[dict[str, Any]] = []
     for f in trivy_vulnerabilities(image_report):
         rank = _SEVERITY_RANK.get(f["severity"])
-        if rank is None:
-            blocking.append(_block(f, "unknown_severity"))
-            continue
-        if rank < threshold:
+        # Known severity below the threshold is ignored. Unknown severity (rank is None) is
+        # NOT below the threshold for our purposes — it must be attributed, not skipped.
+        if rank is not None and rank < threshold:
             continue
         if f["fixed_version"]:
             blocking.append(_block(f, "fix_available"))
