@@ -293,9 +293,10 @@ work_packages:
     description: >-
       Reconcile the site build and SQLite export canonical-source invariant with the
       status-only quarantine model — a canonical source may be review_state=quarantined
-      (reversible, status-only; record_class/catalog_tier unchanged). Covers the affected
-      site/export tests and the site build. Registered retroactively for PR #429.
+      (reversible, status-only; record_class/catalog_tier unchanged). Registered
+      retroactively for the exact two test files changed in PR #429. A future correction
+      that genuinely needs site IMPLEMENTATION changes must add its own narrowly-scoped,
+      independently-reviewed work package.
     allowed_paths:
       - tests/test_site.py
       - tests/test_openva_sqlite_export.py
-      - site/*
