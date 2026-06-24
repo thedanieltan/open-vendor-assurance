@@ -772,8 +772,13 @@ def main(argv: list[str] | None = None) -> int:
                 summary = {
                     "scan_decision": "pass_with_accepted_inherited_risk" if acc else "pass_no_findings",
                     "blocking_findings": 0,
+                    "accepted_inherited_total": len(acc),
                     "accepted_inherited_high": sum(1 for f in acc if f["severity"] == "high"),
                     "accepted_inherited_critical": sum(1 for f in acc if f["severity"] == "critical"),
+                    # Inherited findings upstream has not yet scored (Trivy severity UNKNOWN),
+                    # accepted only via an exact reviewed-baseline tuple — surfaced explicitly
+                    # so the decision record never silently omits them.
+                    "accepted_inherited_unknown": sum(1 for f in acc if f["severity"] == "unknown"),
                     "base_digest": base_baseline.get("base_digest"),
                 }
                 print(f"OK: supply-chain gates passed ({summary['scan_decision']}): {json.dumps(summary)}")
