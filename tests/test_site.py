@@ -198,7 +198,11 @@ def test_vendor_shards_preserve_counts_and_tier_annotations(tmp_path):
             assert source["record_class"] == "canonical"
             assert source["canonical"] is True
             assert source["catalog_tier"] == "human_reviewed"
-            assert source["review_state"] == "human_reviewed"
+            # A canonical source is human_reviewed, or quarantined: quarantine is a reversible,
+            # status-only transition (tools/openva/source_quarantine.py) that flips only
+            # review_state for a persistently not-found/gone source, leaving it canonical and
+            # human_reviewed-tier. Both are valid review states for a canonical source.
+            assert source["review_state"] in ("human_reviewed", "quarantined")
             assert source["advisory_boundary"] == "non_advisory"
         for candidate in shard["candidate_sources"]:
             assert candidate["record_class"] == "candidate"
