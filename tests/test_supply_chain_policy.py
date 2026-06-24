@@ -32,6 +32,15 @@ _PINNED_BASE = (
     "python:3.12-slim@sha256:9d3abd9fc11d06998ccdbdd93b4dd49b5ad7d67fcbbc11c016eb0eb2c2194891"
 )
 
+_TOOLS_POLICY = {
+    "syft": {"version": "v1.18.1", "binary": "syft", "archive_url": "https://x", "archive_sha256": "0" * 64},
+    "trivy": {"version": "v0.71.2", "binary": "trivy", "archive_url": "https://y", "archive_sha256": "1" * 64},
+}
+_TOOLS_EVIDENCE = {
+    "syft": {"version": "v1.18.1", "archive_sha256": "0" * 64},
+    "trivy": {"version": "v0.71.2", "archive_sha256": "1" * 64},
+}
+
 
 def _repro(**overrides):
     report = {
@@ -57,6 +66,7 @@ def _valid_manifest(**overrides):
         },
         "scan": {"Results": [{"Vulnerabilities": [{"VulnerabilityID": "CVE-0000-1", "Severity": "LOW"}]}]},
         "reproducibility": _repro(),
+        "tools": {k: dict(v) for k, v in _TOOLS_EVIDENCE.items()},
     }
     manifest.update(overrides)
     return manifest
@@ -67,6 +77,7 @@ def _policy(**vuln):
     vp.update(vuln)
     return {
         "pinned_base_images": [_PINNED_BASE],
+        "supply_chain_tools": {k: dict(v) for k, v in _TOOLS_POLICY.items()},
         "require": {
             "sbom": True,
             "provenance": True,
@@ -354,6 +365,89 @@ def test_real_policy_file_loads_and_requires_all_evidence():
         "reproducibility_evidence": True,
     }
     assert sc.policy_from_mapping(policy).fail_on_severity == "high"
+
+
+# --- strict SBOM evidence (review C) ------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "sbom",
+    [
+        {"components": "invalid"},        # truthy but not a list
+        {"components": []},               # empty
+        {"bomFormat": "CycloneDX", "components": "x"},
+        {"bomFormat": "CycloneDX", "components": []},
+        {"spdxVersion": "SPDX-2.3", "packages": []},
+        {"packages": [{"name": "x"}]},    # no recognised format marker
+        "not-an-object",
+        {},
+    ],
+)
+def test_malformed_or_empty_sbom_is_rejected(sbom):
+    with pytest.raises(sc.SupplyChainViolation):
+        sc.assert_sbom_present(sbom)
+
+
+def test_recognised_cyclonedx_and_spdx_sboms_pass():
+    sc.assert_sbom_present({"bomFormat": "CycloneDX", "components": [{"name": "fastapi"}]})
+    sc.assert_sbom_present({"spdxVersion": "SPDX-2.3", "packages": [{"name": "fastapi"}]})
+
+
+# --- strict raw-scan merge (review B) -----------------------------------------
+
+
+def test_merge_trivy_reports_combines_results():
+    merged = sc.merge_trivy_reports({"Results": [{"a": 1}]}, {"Results": [{"b": 2}]})
+    assert merged == {"Results": [{"a": 1}, {"b": 2}]}
+    sc.assert_scan_evidence(merged)
+
+
+@pytest.mark.parametrize("bad", [{}, {"Results": None}, {"Results": "x"}, "not-an-object", {"SchemaVersion": 2}])
+def test_merge_trivy_reports_rejects_malformed_raw_report(bad):
+    with pytest.raises(sc.SupplyChainViolation):
+        sc.merge_trivy_reports({"Results": []}, bad)
+
+
+# --- pinned tool identity (review A) ------------------------------------------
+
+
+def test_tool_identity_matches_pinned_policy():
+    sc.assert_tool_identity(_TOOLS_POLICY, _TOOLS_EVIDENCE)
+
+
+def test_tool_identity_rejects_mismatched_checksum():
+    bad = {"syft": {"version": "v1.18.1", "archive_sha256": "9" * 64}, "trivy": _TOOLS_EVIDENCE["trivy"]}
+    with pytest.raises(sc.SupplyChainViolation):
+        sc.assert_tool_identity(_TOOLS_POLICY, bad)
+
+
+def test_tool_identity_rejects_missing_tool_evidence():
+    with pytest.raises(sc.SupplyChainViolation):
+        sc.assert_tool_identity(_TOOLS_POLICY, {"syft": _TOOLS_EVIDENCE["syft"]})
+    with pytest.raises(sc.SupplyChainViolation):
+        sc.assert_tool_identity(_TOOLS_POLICY, {})
+
+
+def test_release_requires_tool_identity_evidence_when_policy_pins_tools():
+    manifest = _valid_manifest()
+    del manifest["tools"]
+    failures = sc.evaluate_release(manifest, _policy())
+    assert any("tool" in f.lower() for f in failures)
+
+
+def test_release_rejects_drifted_tool_identity():
+    manifest = _valid_manifest(tools={"syft": {"version": "v0.0.0", "archive_sha256": "0" * 64}, "trivy": _TOOLS_EVIDENCE["trivy"]})
+    failures = sc.evaluate_release(manifest, _policy())
+    assert any("tool" in f.lower() for f in failures)
+
+
+def test_real_policy_pins_checksummed_tools():
+    policy = yaml.safe_load(POLICY.read_text(encoding="utf-8"))
+    tools = policy["supply_chain_tools"]
+    for name in ("syft", "trivy"):
+        assert tools[name]["archive_url"].startswith("https://github.com/")
+        assert "/main/" not in tools[name]["archive_url"]
+        assert len(tools[name]["archive_sha256"]) == 64
 
 
 # --- posture: hosted capabilities off by default; static layer unaffected -----

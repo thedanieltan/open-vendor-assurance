@@ -27,13 +27,23 @@ require:
   vulnerability_scan: true            # dependency + container-image scan
   reproducibility_evidence: true      # rebuild-and-compare digest equivalence record
 
-# Pinned supply-chain TOOLING. The scanners/SBOM tools are themselves part of the
-# supply chain, so they are version-pinned (not fetched from a project's mutable `main`)
-# and their versions are recorded in the retained evidence. The release-image workflow
-# installs exactly these versions.
+# Pinned supply-chain TOOLING. The scanners/SBOM tools are themselves part of the supply
+# chain, so the release-image workflow downloads these EXACT versioned release archives
+# from immutable release URLs and verifies each against the reviewed-literal archive_sha256
+# below (sha256sum -c) BEFORE executing it — it never pipes a mutable `main` installer
+# script into a shell. The gate (assert_tool_identity) requires the recorded tool evidence
+# to match these pins, and the identities are recorded in the retained evidence.
 supply_chain_tools:
-  syft: v1.18.1
-  trivy: v0.58.1
+  syft:
+    version: v1.18.1
+    binary: syft
+    archive_url: https://github.com/anchore/syft/releases/download/v1.18.1/syft_1.18.1_linux_amd64.tar.gz
+    archive_sha256: 066c251652221e4d44fcc4d115ce3df33a91769da38c830a8533199db2f65aab
+  trivy:
+    version: v0.71.2
+    binary: trivy
+    archive_url: https://github.com/aquasecurity/trivy/releases/download/v0.71.2/trivy_0.71.2_Linux-64bit.tar.gz
+    archive_sha256: 0510e71e2fd39bf863856d499c8dc19feb4e7336546394c502a8f5cc7ab27460
 
 # Fail-closed vulnerability policy. Findings at/above fail_on_severity (and any finding
 # of UNKNOWN severity) block the release unless covered by a documented, UNEXPIRED

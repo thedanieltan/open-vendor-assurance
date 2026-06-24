@@ -42,9 +42,16 @@ env:
   DOCKERFILE: services/openva_match_service/Dockerfile
   POLICY: services/openva_match_service/supply-chain-policy.yaml
   ACCEPTED_RELEASES: services/openva_match_service/accepted-releases.yaml
-  # Pinned supply-chain tooling (mirrors supply-chain-policy.yaml supply_chain_tools).
+  # Pinned, checksum-verified supply-chain tooling (mirrors supply-chain-policy.yaml
+  # supply_chain_tools). Downloaded from immutable versioned release URLs and verified
+  # against these reviewed-literal SHA-256 digests BEFORE execution — no mutable `main`
+  # installer script is piped into a shell.
   SYFT_VERSION: v1.18.1
-  TRIVY_VERSION: v0.58.1
+  SYFT_URL: https://github.com/anchore/syft/releases/download/v1.18.1/syft_1.18.1_linux_amd64.tar.gz
+  SYFT_SHA256: 066c251652221e4d44fcc4d115ce3df33a91769da38c830a8533199db2f65aab
+  TRIVY_VERSION: v0.71.2
+  TRIVY_URL: https://github.com/aquasecurity/trivy/releases/download/v0.71.2/trivy_0.71.2_Linux-64bit.tar.gz
+  TRIVY_SHA256: 0510e71e2fd39bf863856d499c8dc19feb4e7336546394c502a8f5cc7ab27460
 
 jobs:
   image-supply-chain:
@@ -90,12 +97,15 @@ jobs:
       - name: Enforce immutable digest reference
         run: python -m openva_match_service.supply_chain check-image-ref --ref "$ARTIFACT_REF"
 
-      # Pinned Syft (recorded in the evidence). Not fetched from a mutable `main`.
-      - name: Install pinned Syft
+      # Pinned, checksum-verified Syft release archive (no mutable installer script). The
+      # archive is verified against the reviewed-literal SHA-256 BEFORE it is extracted/run.
+      - name: Install pinned, checksum-verified Syft
         run: |
           set -euo pipefail
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh \
-            | sh -s -- -b "$HOME/.local/bin" "$SYFT_VERSION"
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL "$SYFT_URL" -o syft.tar.gz
+          echo "${SYFT_SHA256}  syft.tar.gz" | sha256sum -c -
+          tar -xzf syft.tar.gz -C "$HOME/.local/bin" syft
           "$HOME/.local/bin/syft" version
 
       - name: Generate SBOM (CycloneDX) from the OCI archive
@@ -122,13 +132,16 @@ jobs:
           json.dump(statement, open("provenance.intoto.json", "w"), indent=2)
           PY
 
-      # Pinned Trivy. Fail-closed: a scanner/runtime failure stops the job (no error
+      # Pinned, checksum-verified Trivy release archive (no mutable installer script).
+      # Fail-closed scanning: a scanner/runtime failure stops the job (no error
       # suppression), and the reports must be non-empty (test -s).
-      - name: Install pinned Trivy
+      - name: Install pinned, checksum-verified Trivy
         run: |
           set -euo pipefail
-          curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
-            | sh -s -- -b "$HOME/.local/bin" "$TRIVY_VERSION"
+          mkdir -p "$HOME/.local/bin"
+          curl -sSfL "$TRIVY_URL" -o trivy.tar.gz
+          echo "${TRIVY_SHA256}  trivy.tar.gz" | sha256sum -c -
+          tar -xzf trivy.tar.gz -C "$HOME/.local/bin" trivy
           "$HOME/.local/bin/trivy" --version
       - name: Scan dependencies and the container image (fail closed)
         run: |
@@ -166,7 +179,10 @@ jobs:
               "equivalent": a == b,
               "package_count": len(a),
               "rebuild_package_count": len(b),
-              "tools": {"syft": os.environ["SYFT_VERSION"], "trivy": os.environ["TRIVY_VERSION"]},
+              "tools": {
+                  "syft": {"version": os.environ["SYFT_VERSION"], "archive_sha256": os.environ["SYFT_SHA256"]},
+                  "trivy": {"version": os.environ["TRIVY_VERSION"], "archive_sha256": os.environ["TRIVY_SHA256"]},
+              },
           }
           json.dump(report, open("reproducibility-report.json", "w"), indent=2)
           PY
@@ -179,16 +195,20 @@ jobs:
         run: |
           python - <<'PY'
           import json, os
-          image = json.load(open("scan.image.json"))
-          fs = json.load(open("scan.fs.json"))
-          findings = (image.get("Results") or []) + (fs.get("Results") or [])
+          from openva_match_service.supply_chain import merge_trivy_reports
+          # Strict merge: a missing/malformed raw report raises rather than coercing to [].
+          scan = merge_trivy_reports(json.load(open("scan.image.json")), json.load(open("scan.fs.json")))
           manifest = {
               "image_ref": os.environ["ARTIFACT_REF"],
               "dockerfile": open(os.environ["DOCKERFILE"]).read(),
               "sbom": json.load(open("sbom.cyclonedx.json")),
               "provenance": json.load(open("provenance.intoto.json")),
-              "scan": {"Results": findings},
+              "scan": scan,
               "reproducibility": json.load(open("reproducibility-report.json")),
+              "tools": {
+                  "syft": {"version": os.environ["SYFT_VERSION"], "archive_sha256": os.environ["SYFT_SHA256"]},
+                  "trivy": {"version": os.environ["TRIVY_VERSION"], "archive_sha256": os.environ["TRIVY_SHA256"]},
+              },
           }
           rollback = os.environ.get("ROLLBACK_REF", "").strip()
           if rollback:

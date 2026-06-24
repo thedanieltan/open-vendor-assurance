@@ -36,7 +36,8 @@ public-source-only, and metadata-first.
 | Vulnerability scan (fail-closed evidence) | the scan report must be a recognised, well-typed envelope (a missing/`{}`/malformed report is rejected, never normalised to zero findings); the scanners run with **no `\|\| true`** | `assert_scan_evidence` + `release-image.yml` |
 | Vulnerability policy | findings at/above `fail_on_severity` fail unless covered by a documented unexpired exception; **unknown severity always blocks and can never be exempted** | `evaluate_scan` / `assert_scan_passes` |
 | Reproducibility | rebuild from the same pinned inputs and require **OCI manifest digest equality** (digest-to-digest); package-set equivalence is supplementary | `assert_reproducibility_evidence` |
-| Pinned tooling | Syft/Trivy are version-pinned (not fetched from a mutable `main`) and recorded in the evidence | `supply_chain_tools` in the policy + `release-image.yml` |
+| Pinned + checksum-verified tooling | Syft/Trivy are downloaded as **versioned release archives** from immutable URLs and verified against reviewed-literal SHA-256 digests (`sha256sum -c`) **before execution** — never a mutable `main` installer piped into a shell; the gate (`assert_tool_identity`) requires the recorded `{version, archive_sha256}` to match the policy | `supply_chain_tools` in the policy + `assert_tool_identity` + `release-image.yml` |
+| Strict raw-scan merge | the workflow combines the raw Trivy reports via `merge_trivy_reports`, which rejects a missing/`null`/non-list `Results` instead of coercing it to `[]` (so a malformed raw report can't become a clean envelope) | `merge_trivy_reports` |
 | Rollback | a rollback target must be an immutable digest **whose manifest digest is in the accepted-release ledger**; syntax alone is rejected | `assert_rollback_target` + `accepted-releases.yaml` |
 
 The authoritative release decision is the composite `check-release` gate over a release

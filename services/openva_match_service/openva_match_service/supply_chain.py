@@ -110,13 +110,21 @@ def assert_dockerfile_base_pinned(
 
 
 def assert_sbom_present(sbom: dict[str, Any]) -> None:
+    """Fail closed unless ``sbom`` is a RECOGNISED, non-empty SBOM. A truthy-but-malformed
+    value (e.g. ``{"components": "invalid"}``) must NOT pass as a non-empty SBOM."""
     if not isinstance(sbom, dict):
         raise SupplyChainViolation("SBOM is missing or not an object")
-    components = sbom.get("components")
-    packages = sbom.get("packages")
-    count = len(components or []) + len(packages or [])
-    if count <= 0:
-        raise SupplyChainViolation("SBOM contains no components/packages (missing or empty SBOM)")
+    if sbom.get("bomFormat") == "CycloneDX":
+        components = sbom.get("components")
+        if not isinstance(components, list) or not components:
+            raise SupplyChainViolation("CycloneDX SBOM components must be a non-empty list")
+        return
+    if isinstance(sbom.get("spdxVersion"), str):
+        packages = sbom.get("packages")
+        if not isinstance(packages, list) or not packages:
+            raise SupplyChainViolation("SPDX SBOM packages must be a non-empty list")
+        return
+    raise SupplyChainViolation("unrecognised or empty SBOM evidence (expected CycloneDX or SPDX)")
 
 
 def assert_provenance_present(provenance: dict[str, Any], *, artifact_digest: str | None = None) -> None:
@@ -197,6 +205,23 @@ def assert_scan_evidence(scan: dict[str, Any]) -> None:
         raise SupplyChainViolation(
             "unrecognised scan envelope (expected Trivy 'Results', Grype 'matches', or 'findings')"
         )
+
+
+def merge_trivy_reports(*reports: dict[str, Any]) -> dict[str, Any]:
+    """Strictly combine raw Trivy reports into one ``{"Results": [...]}`` envelope.
+
+    Fail-closed: a report that is not an object, or lacks a list-valued ``Results``, raises
+    rather than being coerced to ``[]``. This prevents the workflow from re-wrapping a
+    malformed/empty raw report into a clean recognised envelope that bypasses
+    ``assert_scan_evidence``."""
+    combined: list[dict[str, Any]] = []
+    for index, report in enumerate(reports):
+        if not isinstance(report, dict):
+            raise SupplyChainViolation(f"Trivy report {index} is not an object")
+        if "Results" not in report or not isinstance(report["Results"], list):
+            raise SupplyChainViolation(f"Trivy report {index} must contain a list-valued 'Results' field")
+        combined.extend(report["Results"])
+    return {"Results": combined}
 
 
 def evaluate_scan(
@@ -317,6 +342,34 @@ def assert_rollback_target(image_ref: str, accepted_digests: set[str] | None) ->
     return ref
 
 
+# --- supply-chain tool identity (pinned, checksum-verified) --------------------
+
+
+def assert_tool_identity(policy_tools: dict[str, Any], evidence_tools: dict[str, Any]) -> None:
+    """Fail closed unless the recorded tool evidence matches the policy's pinned tools.
+
+    For every tool the policy pins (``supply_chain_tools``), the evidence must record the
+    same ``version`` and ``archive_sha256``; a missing or mismatched tool identity raises.
+    This binds the actually-installed scanner/SBOM tooling to the reviewed, checksummed
+    pins so the gate cannot drift to unpinned tooling."""
+    if not isinstance(policy_tools, dict) or not policy_tools:
+        raise SupplyChainViolation("policy declares no pinned supply_chain_tools")
+    if not isinstance(evidence_tools, dict):
+        raise SupplyChainViolation("release evidence carries no tool identity record")
+    for name, pinned in policy_tools.items():
+        got = evidence_tools.get(name)
+        if not isinstance(got, dict):
+            raise SupplyChainViolation(f"release evidence is missing tool identity for {name!r}")
+        for key in ("version", "archive_sha256"):
+            if str(got.get(key, "")) != str((pinned or {}).get(key, "")):
+                raise SupplyChainViolation(
+                    f"tool {name!r} {key} evidence {got.get(key)!r} does not match the pinned policy "
+                    f"value {(pinned or {}).get(key)!r}"
+                )
+        if not _BARE_DIGEST_RE.fullmatch("sha256:" + str((pinned or {}).get("archive_sha256", ""))):
+            raise SupplyChainViolation(f"tool {name!r} archive_sha256 is not a 64-hex sha256 in the policy")
+
+
 # --- policy loading + composite release gate ----------------------------------
 
 
@@ -379,6 +432,7 @@ def evaluate_release(
     failures: list[str] = []
     require = (policy_mapping or {}).get("require") or {}
     pinned_bases = (policy_mapping or {}).get("pinned_base_images")
+    pinned_tools = (policy_mapping or {}).get("supply_chain_tools")
 
     artifact_digest: str | None = None
     try:
@@ -426,6 +480,11 @@ def evaluate_release(
     if "reproducibility" in manifest:
         try:
             assert_reproducibility_evidence(manifest["reproducibility"], artifact_digest=artifact_digest)
+        except SupplyChainViolation as exc:
+            failures.append(str(exc))
+    if pinned_tools:
+        try:
+            assert_tool_identity(pinned_tools, manifest.get("tools") or {})
         except SupplyChainViolation as exc:
             failures.append(str(exc))
     if manifest.get("rollback_ref"):

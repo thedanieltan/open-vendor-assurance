@@ -58,14 +58,26 @@ def test_reproducibility_is_digest_to_digest():
     assert "reproducibility-report.json" in text
 
 
-def test_supply_chain_tools_are_version_pinned():
+def test_supply_chain_tools_are_pinned_and_checksum_verified():
     text = _text()
-    workflow = _workflow()
-    env = workflow.get("env", {})
-    assert env.get("SYFT_VERSION") and env.get("TRIVY_VERSION")
-    # Installed at the pinned version, not implicitly from latest.
-    assert '"$SYFT_VERSION"' in text
-    assert '"$TRIVY_VERSION"' in text
+    env = _workflow().get("env", {})
+    # Pinned versioned release archives + reviewed-literal checksums in env.
+    for key in ("SYFT_VERSION", "SYFT_URL", "SYFT_SHA256", "TRIVY_VERSION", "TRIVY_URL", "TRIVY_SHA256"):
+        assert env.get(key), f"missing pinned tool env {key}"
+    # The archives are verified before execution.
+    assert "sha256sum -c -" in text
+
+
+def test_no_mutable_installer_bootstrap():
+    text = _text()
+    # The prior fail-open bootstrap (mutable `main` installer piped into a shell) must not reappear.
+    for forbidden in (
+        "raw.githubusercontent.com/anchore/syft/main/install.sh",
+        "raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh",
+        "| sh -s --",
+    ):
+        assert forbidden not in text
+    assert "/main/" not in text  # no mutable-branch dependency anywhere
 
 
 def test_authoritative_gate_runs_after_all_evidence_and_uses_ledger():
