@@ -92,6 +92,17 @@ def test_authoritative_gate_runs_after_all_evidence_and_uses_ledger():
     assert "--accepted-releases" in text
 
 
+def test_base_attribution_is_wired():
+    text = _text()
+    # The base is scanned separately and the gate consumes the reviewed base baseline.
+    assert "scan.base.json" in text
+    assert "Scan the pinned base image" in text
+    assert "--base-baseline" in text
+    assert "accepted-base-findings.yaml" in text  # via the BASE_BASELINE env
+    # The base scan precedes the authoritative gate.
+    assert text.index("scan.base.json") < text.index("check-release")
+
+
 def test_no_push_registry_deploy_or_live_surface():
     low = _text().lower()
     # Real push / registry-output / write indicators (the word "registry" appears only in

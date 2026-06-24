@@ -1,4 +1,9 @@
-FROM python:3.12-slim@sha256:9d3abd9fc11d06998ccdbdd93b4dd49b5ad7d67fcbbc11c016eb0eb2c2194891
+# Explicit Debian variant (slim-bookworm) pinned by digest. The generic `3.12-slim` tag
+# has rolled to Debian 13 (trixie), which currently carries materially more high/critical
+# OS CVEs; slim-bookworm's inherited high/criticals are all presently unfixable and are
+# captured in services/openva_match_service/accepted-base-findings.yaml. Refresh both
+# together (WP-02E).
+FROM python:3.12-slim-bookworm@sha256:8a7e7cc04fd3e2bd787f7f24e22d5d119aa590d429b50c95dfe12b3abe52f48b
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1

@@ -1,0 +1,126 @@
+# Accepted base-image risk baseline (WP-02E).
+#
+# The ONLY HIGH/CRITICAL findings the supply-chain gate may pass: exact, presently
+# UNFIXABLE vulnerabilities inherited from the reviewed, digest-pinned base image. Each
+# entry is matched by the full tuple (id, package, installed_version, severity, status)
+# AND the base digest; anything app-introduced, fixable, new, changed, expired, or of an
+# unknown/non-no-fix status fails closed (openva_match_service.supply_chain
+# evaluate_image_vulnerabilities). This is a reviewed artifact — it is changed only by an
+# independent PR, never generated/accepted automatically by release-image.
+#
+# Provenance: authored from a Trivy v0.71.2 scan of the pinned base on 2026-06-24
+# (Debian 12.14). All 13 inherited HIGH/CRITICAL findings have NO fix available
+# (FixedVersion empty); none is suppressed by --ignore-unfixed — the full reports are
+# retained in the release evidence. Re-review on/before valid_until.
+version: 1
+
+base_image:
+  ref: python:3.12-slim-bookworm
+  digest: sha256:8a7e7cc04fd3e2bd787f7f24e22d5d119aa590d429b50c95dfe12b3abe52f48b
+  valid_until: 2026-09-30   # default expiry for every entry below; re-review before this
+
+accepted_inherited_findings:
+  - id: CVE-2025-69720
+    package: libncursesw6
+    installed_version: 6.4-4
+    severity: HIGH
+    status: affected
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian has published no fixed package (ncurses)."
+  - id: CVE-2025-69720
+    package: libtinfo6
+    installed_version: 6.4-4
+    severity: HIGH
+    status: affected
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; no fixed ncurses package."
+  - id: CVE-2025-69720
+    package: ncurses-base
+    installed_version: 6.4-4
+    severity: HIGH
+    status: affected
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; no fixed ncurses package."
+  - id: CVE-2025-69720
+    package: ncurses-bin
+    installed_version: 6.4-4
+    severity: HIGH
+    status: affected
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; no fixed ncurses package."
+  - id: CVE-2025-7458
+    package: libsqlite3-0
+    installed_version: 3.40.1-2+deb12u2
+    severity: CRITICAL
+    status: affected
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian has published no fixed sqlite3 package."
+  - id: CVE-2026-11822
+    package: libsqlite3-0
+    installed_version: 3.40.1-2+deb12u2
+    severity: HIGH
+    status: fix_deferred
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian fix deferred."
+  - id: CVE-2026-11824
+    package: libsqlite3-0
+    installed_version: 3.40.1-2+deb12u2
+    severity: HIGH
+    status: fix_deferred
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian fix deferred."
+  - id: CVE-2026-42496
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: CRITICAL
+    status: fix_deferred
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); Debian fix deferred."
+  - id: CVE-2026-8376
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: CRITICAL
+    status: affected
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); no fixed package."
+  - id: CVE-2026-42497
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: HIGH
+    status: fix_deferred
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); Debian fix deferred."
+  - id: CVE-2026-48962
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: HIGH
+    status: affected
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); no fixed package."
+  - id: CVE-2026-9538
+    package: perl-base
+    installed_version: 5.36.0-7+deb12u3
+    severity: HIGH
+    status: fix_deferred
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base (essential perl-base); Debian fix deferred."
+  - id: CVE-2023-45853
+    package: zlib1g
+    installed_version: 1:1.2.13.dfsg-1
+    severity: CRITICAL
+    status: will_not_fix
+    fixed_version: null
+    source: debian
+    reason: "Inherited from reviewed base; Debian marks this minizip-only issue will_not_fix for zlib1g."
