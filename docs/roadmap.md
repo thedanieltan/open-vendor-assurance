@@ -101,18 +101,17 @@ The entire provider-neutral application path is now **complete and merged**, hav
 shipped only provider-neutral, off-by-default application code: **WP-02A** (hosted
 transport) with **WP-02L** (positioning, in lockstep), **WP-02B** (durable async
 job/result persistence), **WP-02C** (worker + queue), **WP-02D** (candidate ingress),
-**WP-02H** (provider-neutral application hardening), **WP-02I** (remote MCP resolver
-activation), and **WP-02J** (live `/check`). The dependency-ordered remaining slices are
-in
+**WP-02E** (deployment artifact + supply-chain), **WP-02H** (provider-neutral application
+hardening), **WP-02I** (remote MCP resolver activation), and **WP-02J** (live `/check`).
+The dependency-ordered remaining slices are in
 [`docs/operations/hosted-deployment-implementation-plan.md`](operations/hosted-deployment-implementation-plan.md).
-**WP-02E** (deployment artifact + supply-chain) is the only remaining startable
-provider-neutral slice; it depends only on WP-02A and needs no host. Only after WP-02E
-does the maintainer-gated infrastructure chain begin: **WP-02F (staging)** follows
-WP-02E + WP-02J, **WP-02G (production)** follows WP-02F, and **WP-02K** (production
-smokes, launch evidence, and programme closeout) follows WP-02G. WP-02F, WP-02G, and the
-infra parts of WP-02K require the maintainer-accepted external deployment choices
-(provider, region, domain, credentials, spend), requested once before staging. No slice
-claims the service is live until WP-02K's evidence exists.
+**No provider-neutral slice remains startable.** What remains is the maintainer-gated
+infrastructure chain: **WP-02F (staging)** follows WP-02E + WP-02J, **WP-02G (production)**
+follows WP-02F, and **WP-02K** (production smokes, launch evidence, and programme closeout)
+follows WP-02G. WP-02F, WP-02G, and the infra parts of WP-02K require the
+maintainer-accepted external deployment choices (provider, region, domain, credentials,
+spend), requested once before staging, plus real provisioning. No slice claims the service
+is live until WP-02K's evidence exists.
 
 ## Current state
 
