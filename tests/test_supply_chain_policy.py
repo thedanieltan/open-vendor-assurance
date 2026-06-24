@@ -397,15 +397,39 @@ def test_recognised_cyclonedx_and_spdx_sboms_pass():
 
 
 def test_merge_trivy_reports_combines_results():
-    merged = sc.merge_trivy_reports({"Results": [{"a": 1}]}, {"Results": [{"b": 2}]})
+    merged = sc.merge_trivy_reports(
+        {"SchemaVersion": 2, "Results": [{"a": 1}]},
+        {"SchemaVersion": 2, "Results": [{"b": 2}]},
+    )
     assert merged == {"Results": [{"a": 1}, {"b": 2}]}
     sc.assert_scan_evidence(merged)
 
 
-@pytest.mark.parametrize("bad", [{}, {"Results": None}, {"Results": "x"}, "not-an-object", {"SchemaVersion": 2}])
-def test_merge_trivy_reports_rejects_malformed_raw_report(bad):
+def test_merge_trivy_reports_accepts_recognised_empty_report():
+    # Trivy emits Results: null (or omits it) for a target with no findings; a recognised
+    # Trivy report (has SchemaVersion) is a VALID empty scan, not malformed.
+    merged = sc.merge_trivy_reports(
+        {"SchemaVersion": 2, "Results": [{"a": 1}]},
+        {"SchemaVersion": 2, "Results": None},
+        {"SchemaVersion": 2},
+    )
+    assert merged == {"Results": [{"a": 1}]}
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        {},                                  # no SchemaVersion (e.g. a defaulted missing file)
+        {"Results": None},                   # no SchemaVersion
+        {"Results": []},                     # no SchemaVersion
+        {"Results": "x"},                    # no SchemaVersion
+        "not-an-object",
+        {"SchemaVersion": 2, "Results": "x"},  # recognised but Results wrong type
+    ],
+)
+def test_merge_trivy_reports_rejects_unrecognised_or_malformed(bad):
     with pytest.raises(sc.SupplyChainViolation):
-        sc.merge_trivy_reports({"Results": []}, bad)
+        sc.merge_trivy_reports({"SchemaVersion": 2, "Results": []}, bad)
 
 
 # --- pinned tool identity (review A) ------------------------------------------

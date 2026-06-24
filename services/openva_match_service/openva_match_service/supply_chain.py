@@ -210,17 +210,28 @@ def assert_scan_evidence(scan: dict[str, Any]) -> None:
 def merge_trivy_reports(*reports: dict[str, Any]) -> dict[str, Any]:
     """Strictly combine raw Trivy reports into one ``{"Results": [...]}`` envelope.
 
-    Fail-closed: a report that is not an object, or lacks a list-valued ``Results``, raises
-    rather than being coerced to ``[]``. This prevents the workflow from re-wrapping a
-    malformed/empty raw report into a clean recognised envelope that bypasses
-    ``assert_scan_evidence``."""
+    Fail-closed but Trivy-accurate: each report MUST be a recognised Trivy report (it
+    carries ``SchemaVersion`` — Trivy always emits it). For such a report, ``Results``
+    that is absent or ``null`` is a VALID empty scan (Trivy emits ``Results: null`` when a
+    target yields no findings, e.g. a directory with no lockfile) and contributes no
+    findings; ``Results`` present-but-not-a-list is malformed and raises. A non-object or
+    a report WITHOUT ``SchemaVersion`` (e.g. ``{}``, ``{"Results": null}`` from a defaulted
+    missing file, or arbitrary JSON) is unrecognised and raises — so a missing/failed scan
+    can never be re-wrapped into a clean envelope that bypasses ``assert_scan_evidence``."""
     combined: list[dict[str, Any]] = []
     for index, report in enumerate(reports):
         if not isinstance(report, dict):
             raise SupplyChainViolation(f"Trivy report {index} is not an object")
-        if "Results" not in report or not isinstance(report["Results"], list):
-            raise SupplyChainViolation(f"Trivy report {index} must contain a list-valued 'Results' field")
-        combined.extend(report["Results"])
+        if "SchemaVersion" not in report:
+            raise SupplyChainViolation(
+                f"Trivy report {index} is not a recognised Trivy report (no SchemaVersion)"
+            )
+        results = report.get("Results")
+        if results is None:
+            results = []  # a recognised Trivy report with no findings
+        if not isinstance(results, list):
+            raise SupplyChainViolation(f"Trivy report {index} 'Results' must be a list when present")
+        combined.extend(results)
     return {"Results": combined}
 
 
