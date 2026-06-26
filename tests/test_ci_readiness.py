@@ -35,6 +35,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "source-refinement-scan.yml",
     "submitted-source-verification.yml",
     "validate.yml",
+    "validate-pr-metadata.yml",
 }
 
 
@@ -66,37 +67,47 @@ def test_validate_workflow_uses_read_only_permissions_and_expected_triggers():
     assert triggers["push"]["branches"] == ["main"]
 
 
-def test_validate_pull_request_types_rerun_on_pr_body_edits():
-    """The pull_request trigger must list explicit event types including `edited` and
-    `ready_for_review`, while preserving the standard code-change events. `edited` fires
-    on PR title/body/base edits, so a `Work-Package:` change in the PR body reruns the
-    pr-scope-guard job — a PR-body edit therefore cannot leave a stale green scope-guard
-    result."""
+def test_validate_pull_request_types_are_code_change_events_without_metadata_edits():
+    """The pull_request trigger lists explicit code-change event types and `ready_for_review`,
+    while preserving the standard code-change events. `edited` (PR title/body/base edits) is
+    intentionally NOT here: it would rerun the entire validation matrix on every metadata
+    edit. PR-body `Work-Package:` re-validation is delegated to validate-pr-metadata.yml,
+    which reruns only pr-scope-guard (see the metadata-workflow tests below)."""
     workflow = load_workflow("validate.yml")
     triggers = workflow_triggers(workflow)
     pull_request_types = set(triggers["pull_request"]["types"])
-    assert "edited" in pull_request_types
+    assert "edited" not in pull_request_types
     assert "ready_for_review" in pull_request_types
     assert {"opened", "synchronize", "reopened"} <= pull_request_types
 
 
-def test_validate_edited_trigger_reruns_scope_guard_on_pr_body_change():
-    """Focused guarantee that `edited` specifically is present. The pr-scope-guard job
-    reads the current PR body; a GitHub `edited` event fires on PR-body edits, so the
-    guard reruns against the new declaration. Without `edited` a PR could change its
-    `Work-Package:` line after a green run and keep a stale-green scope-guard result —
-    this asserts that cannot happen."""
-    workflow = load_workflow("validate.yml")
+def test_pr_metadata_workflow_reruns_scope_guard_on_pr_body_edit():
+    """Stale-green prevention is preserved after `edited` is removed from validate.yml. The
+    dedicated validate-pr-metadata.yml workflow runs ONLY on `edited` and runs ONLY the
+    pr-scope-guard job, which reads the current PR body. A PR that changes its
+    `Work-Package:` line after a green run therefore still reruns the guard against the new
+    declaration and cannot keep a stale-green scope-guard result — at the cost of one short
+    job instead of the whole suite."""
+    workflow = load_workflow("validate-pr-metadata.yml")
     triggers = workflow_triggers(workflow)
-    assert "edited" in triggers["pull_request"]["types"]
+    assert set(triggers.keys()) == {"pull_request"}
+    assert triggers["pull_request"]["types"] == ["edited"]
+    assert set(workflow["jobs"]) == {"pr-scope-guard"}
+    run_text = "\n".join(
+        str(step.get("run", "")) for step in workflow["jobs"]["pr-scope-guard"]["steps"]
+    )
+    assert "python -m tools.openva.pr_scope_guard" in run_text
+    assert 'git worktree add /tmp/base-guard "$BASE_SHA"' in run_text
+    assert workflow["permissions"] == {"contents": "read"}
 
 
 def test_validate_push_trigger_on_main_is_preserved_with_explicit_pr_types():
-    """Adding explicit pull_request `types` must not disturb push validation on main."""
+    """Adding explicit pull_request `types` and the manual `workflow_dispatch` entry point
+    must not disturb push validation on main."""
     workflow = load_workflow("validate.yml")
     triggers = workflow_triggers(workflow)
     assert triggers["push"]["branches"] == ["main"]
-    assert set(triggers.keys()) == {"pull_request", "push"}
+    assert set(triggers.keys()) == {"pull_request", "push", "workflow_dispatch"}
 
 
 def test_validate_workflow_checks_generated_pack_and_indexes():
