@@ -2,13 +2,17 @@ name: validate
 
 on:
   pull_request:
-    # `edited` fires on PR title/body/base edits, so a PR-body `Work-Package:` change
-    # reruns the pr-scope-guard job and cannot leave a stale-green scope-guard result;
-    # opened/synchronize/reopened/ready_for_review preserve normal code-change validation.
-    types: [opened, synchronize, reopened, edited, ready_for_review]
+    # Code-change events only. `edited` (PR title/body/base edits) is intentionally
+    # NOT here: it would rerun the entire validation suite on every metadata edit.
+    # PR-body `Work-Package:` re-validation is handled by the dedicated, single-job
+    # `validate-pr-metadata.yml` workflow, which reruns ONLY pr-scope-guard on `edited`
+    # so a body edit still cannot leave a stale-green scope-guard result.
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     # push validation on main is unchanged.
     branches: [main]
+  # Manual full-regression entry point (runs repository-integrity + full-suite).
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,9 +21,19 @@ concurrency:
   group: validate-${{ github.ref }}
   cancel-in-progress: true
 
+# CI-minutes posture: jobs are gated by event. Pull requests run repository-integrity,
+# pr-scope-guard, the targeted subsystem jobs and the integration jobs; pushes to main
+# and manual dispatch run repository-integrity plus the global full-suite instead. A job
+# whose `if` is false for the current event is SKIPPED, which consumes no runner minutes
+# and reports its required status context as successful — so this gating saves minutes
+# without weakening branch protection or changing the set of required `validate / ...`
+# status checks.
+
 jobs:
   repository-integrity:
     name: repository-integrity
+    # Runs on every event: canonical records and deterministic generated outputs must be
+    # checked on PRs, on pushes to main, and on manual dispatch.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -60,7 +74,8 @@ jobs:
     # the BASE revision (trusted), so a PR cannot weaken its own gate or expand its own
     # allowlist in the same change — new policy applies only to later, human-reviewed
     # PRs. The PR declares its work package with a single `Work-Package: WP-...` line in
-    # its body; zero/multiple/unknown fails closed.
+    # its body; zero/multiple/unknown fails closed. PR-body edits rerun this same guard
+    # via validate-pr-metadata.yml.
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
@@ -94,6 +109,9 @@ jobs:
   workflow-operating-model:
     name: workflow-operating-model
     runs-on: ubuntu-latest
+    # PR-only targeted coverage. On pushes to main and manual dispatch the full-suite job
+    # runs every test, so re-running this subset there is redundant.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -113,6 +131,8 @@ jobs:
   catalog-growth:
     name: catalog-growth
     runs-on: ubuntu-latest
+    # PR-only targeted coverage; superseded by full-suite on pushes to main and dispatch.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -132,6 +152,8 @@ jobs:
   source-maintenance:
     name: source-maintenance
     runs-on: ubuntu-latest
+    # PR-only targeted coverage; superseded by full-suite on pushes to main and dispatch.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -149,6 +171,8 @@ jobs:
   catalog-quality:
     name: catalog-quality
     runs-on: ubuntu-latest
+    # PR-only targeted coverage; superseded by full-suite on pushes to main and dispatch.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -162,6 +186,8 @@ jobs:
   release-site:
     name: release-site
     runs-on: ubuntu-latest
+    # PR-only targeted coverage; superseded by full-suite on pushes to main and dispatch.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -175,6 +201,10 @@ jobs:
   mcp-integration:
     name: mcp-integration
     runs-on: ubuntu-latest
+    # PR-only: installs the real MCP SDK and the local adapter/MCP dependency chain so the
+    # protocol tests are authoritative and never skipped. The push-to-main full-suite
+    # re-runs the Python tests (MCP protocol tests self-skip there without the SDK).
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -206,6 +236,9 @@ jobs:
   google-sheets-integration:
     name: google-sheets-integration
     runs-on: ubuntu-latest
+    # PR-only targeted coverage on the Node runtime; superseded by full-suite on pushes to
+    # main and dispatch.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
@@ -217,6 +250,10 @@ jobs:
   full-suite:
     name: full-suite
     runs-on: ubuntu-latest
+    # Global regression signal. Runs on pushes to main and manual dispatch only — NOT on
+    # pull requests, where the targeted subsystem and integration jobs above provide the
+    # same coverage without re-running the entire suite on every push to a PR branch.
+    if: github.event_name != 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
