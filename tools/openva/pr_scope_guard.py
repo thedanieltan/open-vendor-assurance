@@ -35,6 +35,13 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "docs" / "operations" / "contracts" / "work-package-scope.yaml"
 
+# The scope-policy machinery is governed SOLELY by this work package. Its exact
+# allowed_paths are exclusive: no OTHER declared work package may change them, even if one
+# of its broad globs (e.g. another package's `.github/workflows/*`, `docs/operations/*`,
+# or `tools/openva/*`) would otherwise match. This keeps the policy that judges every PR
+# un-editable under an unrelated declaration, without having to narrow every broad glob.
+POLICY_WORK_PACKAGE = "WP-PR-SCOPE-POLICY-01"
+
 # A PR declares its work package with a single `Work-Package: WP-...` line in its body.
 _DECLARATION_RE = re.compile(r"^\s*Work-Package:\s*(WP-[A-Z0-9][A-Z0-9-]*)\s*$", re.MULTILINE)
 
@@ -76,14 +83,42 @@ def allowed_globs(manifest: dict[str, Any], work_package: str) -> list[str]:
     return shared + declared
 
 
+def policy_exclusive_paths(manifest: dict[str, Any]) -> set[str]:
+    """Exact paths reserved to POLICY_WORK_PACKAGE (the scope-policy machinery).
+
+    Returns an empty set if that work package is absent (e.g. in unit-test fixtures), so
+    the exclusivity rule only bites when the real scope-policy package is present."""
+    work_packages = manifest.get("work_packages") or {}
+    policy = work_packages.get(POLICY_WORK_PACKAGE) or {}
+    return set(policy.get("allowed_paths") or [])
+
+
 def out_of_scope_paths(changed_paths: list[str], work_package: str, manifest: dict[str, Any]) -> list[str]:
-    """Paths that match none of the work package's allowed globs (sorted, deterministic)."""
+    """Paths a work package may not change (sorted, deterministic).
+
+    A path is allowed (in scope) if, in order:
+      1. it is listed EXACTLY in the work package's allowed globs — a deliberate, reviewed
+         grant, e.g. the reconciliation lane's explicit `work-package-scope.yaml`; else
+      2. it is a scope-policy file and the declared package is not POLICY_WORK_PACKAGE —
+         then it is OUT of scope: a broad glob (another package's `.github/workflows/*`,
+         `docs/operations/*`, `tools/openva/*`, ...) must not reach the policy that judges
+         the PR; else
+      3. it matches one of the work package's allowed globs.
+
+    Only step 2 is new behaviour; an exact grant (step 1) still wins, so documented
+    carve-outs are preserved while glob-reach into the scope-policy machinery is blocked."""
     globs = allowed_globs(manifest, work_package)
-    return sorted(
-        path
-        for path in changed_paths
-        if not any(fnmatch.fnmatchcase(path, glob) for glob in globs)
-    )
+    explicit = set(globs)
+    exclusive = set() if work_package == POLICY_WORK_PACKAGE else policy_exclusive_paths(manifest)
+
+    def allowed(path: str) -> bool:
+        if path in explicit:
+            return True
+        if path in exclusive:
+            return False
+        return any(fnmatch.fnmatchcase(path, glob) for glob in globs)
+
+    return sorted(path for path in changed_paths if not allowed(path))
 
 
 def changed_paths_from_git(base: str = "origin/main") -> list[str]:
