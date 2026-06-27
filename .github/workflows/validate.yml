@@ -2,10 +2,11 @@ name: validate
 
 on:
   pull_request:
-    # `edited` fires on PR title/body/base edits, so a PR-body `Work-Package:` change
-    # reruns the pr-scope-guard job and cannot leave a stale-green scope-guard result;
-    # opened/synchronize/reopened/ready_for_review preserve normal code-change validation.
-    types: [opened, synchronize, reopened, edited, ready_for_review]
+    # Code-change events only. PR title/body/base `edited` events are handled by the
+    # dedicated validate-pr-metadata.yml workflow, which reruns ONLY pr-scope-guard on an
+    # edit. Keeping `edited` off this workflow means no validate job is ever skipped on an
+    # edit, so a metadata edit cannot flip a failing required check to skipped/passing.
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     # push validation on main is unchanged.
     branches: [main]
@@ -21,10 +22,7 @@ jobs:
   repository-integrity:
     name: repository-integrity
     runs-on: ubuntu-latest
-    # Runs on PR code events and on pushes to main. Skipped on PR metadata-only edits
-    # (title/body/base) — nothing here depends on the PR body, so a stale-green is
-    # impossible and we avoid rerunning validation on every edit.
-    if: github.event.action != 'edited'
+    # Runs on every triggering event: PR code events and pushes to main.
     steps:
       - uses: actions/checkout@v5
         with:
@@ -98,9 +96,9 @@ jobs:
   workflow-operating-model:
     name: workflow-operating-model
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on PR code events only. Skipped on metadata-only edits
-    # and on pushes to main, where full-suite reruns every test.
-    if: github.event_name == 'pull_request' && github.event.action != 'edited'
+    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
+    # where full-suite reruns every test.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -120,9 +118,9 @@ jobs:
   catalog-growth:
     name: catalog-growth
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on PR code events only. Skipped on metadata-only edits
-    # and on pushes to main, where full-suite reruns every test.
-    if: github.event_name == 'pull_request' && github.event.action != 'edited'
+    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
+    # where full-suite reruns every test.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -142,9 +140,9 @@ jobs:
   source-maintenance:
     name: source-maintenance
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on PR code events only. Skipped on metadata-only edits
-    # and on pushes to main, where full-suite reruns every test.
-    if: github.event_name == 'pull_request' && github.event.action != 'edited'
+    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
+    # where full-suite reruns every test.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -162,9 +160,9 @@ jobs:
   catalog-quality:
     name: catalog-quality
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on PR code events only. Skipped on metadata-only edits
-    # and on pushes to main, where full-suite reruns every test.
-    if: github.event_name == 'pull_request' && github.event.action != 'edited'
+    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
+    # where full-suite reruns every test.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -178,9 +176,9 @@ jobs:
   release-site:
     name: release-site
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on PR code events only. Skipped on metadata-only edits
-    # and on pushes to main, where full-suite reruns every test.
-    if: github.event_name == 'pull_request' && github.event.action != 'edited'
+    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
+    # where full-suite reruns every test.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -194,9 +192,9 @@ jobs:
   mcp-integration:
     name: mcp-integration
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on PR code events only. Skipped on metadata-only edits
-    # and on pushes to main, where full-suite reruns the Python tests.
-    if: github.event_name == 'pull_request' && github.event.action != 'edited'
+    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
+    # where full-suite reruns the Python tests.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -228,9 +226,9 @@ jobs:
   google-sheets-integration:
     name: google-sheets-integration
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on PR code events only. Skipped on metadata-only edits
-    # and on pushes to main, where full-suite reruns every test.
-    if: github.event_name == 'pull_request' && github.event.action != 'edited'
+    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
+    # where full-suite reruns every test.
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
