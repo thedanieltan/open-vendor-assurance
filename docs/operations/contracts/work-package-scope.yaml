@@ -35,6 +35,24 @@ work_packages:
       - .github/workflows/validate.yml
       - .github/validation-ownership.yaml
 
+  WP-WORKFLOW-CONTROL-PLANE-01:
+    description: Autonomous maintenance of the workflow operating-model control plane — the machine-readable workflow inventory and retirement contracts, the workflow-operating-model docs and their contract tests, the CI-readiness test, and the metadata-only PR-validation companion workflow (validate-pr-metadata.yml, which reruns ONLY pr-scope-guard on PR title/body edits). Bounded so bots can keep the workflow control plane coherent without a human admin-bypass, while the trusted scope-policy machinery (this manifest, the guard, validate.yml, and the ownership map) stays EXCLUSIVELY under WP-PR-SCOPE-POLICY-01. The companion workflow only INVOKES the guard; it does not define policy, so it lives here rather than in the policy lane. Exact paths only — no broad tests/** or .github/workflows/** access.
+    allowed_paths:
+      - .github/workflows/validate-pr-metadata.yml
+      - docs/operations/contracts/workflow-inventory.yaml
+      - docs/operations/contracts/workflow-retirement.yaml
+      - docs/operations/WORKFLOW_OPERATING_MODEL.md
+      - docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md
+      - docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md
+      - docs/operations/WORKFLOW_RETIREMENT_PLAN.md
+      - tests/test_ci_readiness.py
+      - tests/test_workflow_operating_model.py
+      - tests/test_workflow_contracts.py
+      - tests/test_workflow_retirement.py
+      - tests/test_workflow_retirement_enforcement.py
+      - tests/test_workflow_retirement_evidence.py
+      - tests/test_future_operations_specs.py
+
   WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01:
     description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400 (audit evidence, required corrections, and regression tests). Scope-policy files are NOT included here — they live in WP-PR-SCOPE-POLICY-01.
     allowed_paths:
