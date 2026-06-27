@@ -152,6 +152,29 @@ def test_policy_wp_may_change_all_scope_policy_files():
     assert out_of_scope_paths(SCOPE_POLICY_FILES, "WP-PR-SCOPE-POLICY-01", manifest) == []
 
 
+def test_scope_policy_files_are_exclusive_against_broad_globs():
+    # 4b. The scope-policy files are EXCLUSIVE to WP-PR-SCOPE-POLICY-01: a non-policy work
+    # package whose broad glob would otherwise match one (e.g. WP-02E declares
+    # `.github/workflows/*`, `docs/operations/*`, and `tests/*`) is still blocked. This
+    # keeps the policy that judges every PR un-editable under an unrelated declaration,
+    # without having to narrow every broad glob in the manifest.
+    manifest = load_manifest()
+    # validate.yml and the manifest itself DO match WP-02E's broad globs, yet exclusivity
+    # blocks them anyway (a plain glob check would let them through).
+    glob_matched = [
+        ".github/workflows/validate.yml",
+        "docs/operations/contracts/work-package-scope.yaml",
+    ]
+    assert out_of_scope_paths(glob_matched, "WP-02E-SUPPLY-CHAIN", manifest) == sorted(glob_matched)
+    # All six scope-policy files are out of scope for WP-02E.
+    assert out_of_scope_paths(SCOPE_POLICY_FILES, "WP-02E-SUPPLY-CHAIN", manifest) == sorted(SCOPE_POLICY_FILES)
+    # WP-02E may still change its own non-policy workflow + service surface.
+    legit = [".github/workflows/release-image.yml", "services/openva_match_service/app.py"]
+    assert out_of_scope_paths(legit, "WP-02E-SUPPLY-CHAIN", manifest) == []
+    # The policy work package itself is unaffected by the exclusivity rule.
+    assert out_of_scope_paths(SCOPE_POLICY_FILES, "WP-PR-SCOPE-POLICY-01", manifest) == []
+
+
 def test_pr_cannot_self_authorize_a_manifest_widening():
     # 5. A PR declaring any non-policy WP that edits the manifest (to widen its own
     # allowlist) is flagged. The trusted-base evaluation in CI is what enforces this at
