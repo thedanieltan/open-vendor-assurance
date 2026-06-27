@@ -5,15 +5,7 @@ public_workflows:
   - name: validate.yml
     loop: pr_safety
     status: core
-    triggers: [pull_request, push, workflow_dispatch]
-    permissions: {contents: read}
-    writes_repository_state: false
-    creates_prs: false
-    merges_prs: false
-  - name: validate-pr-metadata.yml
-    loop: pr_safety
-    status: core
-    triggers: [pull_request]
+    triggers: [pull_request, push]
     permissions: {contents: read}
     writes_repository_state: false
     creates_prs: false
