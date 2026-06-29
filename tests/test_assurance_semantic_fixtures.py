@@ -71,6 +71,7 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
 @pytest.mark.parametrize("case_id, expected", [
     # --- ASSURANCE_SOURCE_UNKNOWN cases ---
     ("valid/known-source", []),
+    ("valid/primary-source-in-evidence", []),
     ("invalid/unknown-source", [
         {
             "code": "ASSURANCE_SOURCE_UNKNOWN",
@@ -125,6 +126,17 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "record_id": "acme-iso-2026",
             "instance_path": "/evidence/source_ids/0",
             "related_ids": ["beta-source", "beta-vendor", "acme"],
+        }
+    ]),
+
+    # --- ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET case ---
+    ("invalid/primary-source-not-in-evidence-set", [
+        {
+            "code": "ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET",
+            "record_kind": "assurance",
+            "record_id": "acme-regulatory",
+            "instance_path": "/evidence/primary_source_id",
+            "related_ids": ["acme-primary"],
         }
     ]),
 ])

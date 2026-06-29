@@ -45,6 +45,7 @@ RECORD_KIND_SPEC_BY_SCHEMA_KIND = {spec.schema_kind: spec for spec in RECORD_KIN
 REPOSITORY_DUPLICATE_ID = "REPOSITORY_DUPLICATE_ID"
 ASSURANCE_VENDOR_UNKNOWN = "ASSURANCE_VENDOR_UNKNOWN"
 ASSURANCE_SOURCE_UNKNOWN = "ASSURANCE_SOURCE_UNKNOWN"
+ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET = "ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET"
 
 
 @dataclass(frozen=True, slots=True)
@@ -271,8 +272,27 @@ def validate_assurance_record_semantics(
             )
         )
 
+    # Rule: ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET
+    evidence = record.data["evidence"]
+    source_ids = evidence["source_ids"]
+    primary_source_id = evidence.get("primary_source_id")
+    if isinstance(primary_source_id, str) and primary_source_id not in source_ids:
+        diagnostics.append(
+            SemanticDiagnostic(
+                code=ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET,
+                record_kind="assurance",
+                record_id=record.record_id,
+                record_path=record.path,
+                instance_path="/evidence/primary_source_id",
+                message=(
+                    f"Primary source {primary_source_id!r} is not present "
+                    "in evidence.source_ids."
+                ),
+                related_ids=(primary_source_id,),
+            )
+        )
+
     # Rule: ASSURANCE_SOURCE_UNKNOWN & ASSURANCE_SOURCE_VENDOR_MISMATCH
-    source_ids = record.data["evidence"]["source_ids"]
     for index, source_id in enumerate(source_ids):
         source_record = repository.get_source(source_id)
 
