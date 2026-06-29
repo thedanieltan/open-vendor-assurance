@@ -88,6 +88,13 @@ class RepositoryRecord:
     def path(self) -> str | None:
         return self.source_path
 
+    @property
+    def vendor_id(self) -> str:
+        value = self.data.get("vendor_id")
+        if not isinstance(value, str):
+            raise KeyError("vendor_id")
+        return value
+
     @classmethod
     def from_raw(
         cls,
@@ -264,7 +271,7 @@ def validate_assurance_record_semantics(
             )
         )
 
-    # Rule: ASSURANCE_SOURCE_UNKNOWN
+    # Rule: ASSURANCE_SOURCE_UNKNOWN & ASSURANCE_SOURCE_VENDOR_MISMATCH
     source_ids = record.data["evidence"]["source_ids"]
     for index, source_id in enumerate(source_ids):
         source_record = repository.get_source(source_id)
@@ -283,8 +290,30 @@ def validate_assurance_record_semantics(
             )
             continue
 
-        # Future: ASSURANCE_SOURCE_VENDOR_MISMATCH will be guarded here by:
-        # if vendor_record is not None and source_record is not None: ...
+        # Rule: ASSURANCE_SOURCE_VENDOR_MISMATCH
+        if (
+            vendor_record is not None
+            and source_record.vendor_id != record.vendor_id
+        ):
+            diagnostics.append(
+                SemanticDiagnostic(
+                    code="ASSURANCE_SOURCE_VENDOR_MISMATCH",
+                    record_kind="assurance",
+                    record_id=record.record_id,
+                    record_path=record.path,
+                    instance_path=f"/evidence/source_ids/{index}",
+                    message=(
+                        f"Source {source_id!r} belongs to vendor "
+                        f"{source_record.vendor_id!r}, but assurance "
+                        f"belongs to vendor {record.vendor_id!r}."
+                    ),
+                    related_ids=(
+                        source_id,
+                        source_record.vendor_id,
+                        record.vendor_id,
+                    ),
+                )
+            )
 
     return diagnostics
 

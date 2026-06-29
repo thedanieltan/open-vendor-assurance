@@ -116,6 +116,17 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "related_ids": ["ghost-vendor"],
         }
     ]),
+
+    # --- ASSURANCE_SOURCE_VENDOR_MISMATCH case ---
+    ("invalid/source-vendor-mismatch", [
+        {
+            "code": "ASSURANCE_SOURCE_VENDOR_MISMATCH",
+            "record_kind": "assurance",
+            "record_id": "acme-iso-2026",
+            "instance_path": "/evidence/source_ids/0",
+            "related_ids": ["beta-source", "beta-vendor", "acme"],
+        }
+    ]),
 ])
 def test_assurance_semantic_matrix(case_id: str, expected: list[dict[str, Any]]) -> None:
     root = Path(f"tests/fixtures/assurance/semantic/{case_id}/repository")
