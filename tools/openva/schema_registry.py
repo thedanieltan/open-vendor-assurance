@@ -13,9 +13,13 @@ ROOT = Path(__file__).resolve().parents[2]
 
 ASSURANCE_SCHEMA_PATHS: tuple[Path, ...] = (
     ROOT / "schemas/openva/vocabularies/assurance-v1.schema.json",
+    ROOT / "schemas/openva/vocabularies/assurance-projection-v1.schema.json",
     ROOT / "schemas/openva/assurance-record.schema.json",
     ROOT / "schemas/openva/assurance-observation.schema.json",
     ROOT / "schemas/openva/assurance-change-event.schema.json",
+    ROOT / "schemas/openva/assurance-projection-request.schema.json",
+    ROOT / "schemas/openva/assurance-projection.schema.json",
+    ROOT / "schemas/openva/assurance-projection-policy.schema.json",
 )
 
 

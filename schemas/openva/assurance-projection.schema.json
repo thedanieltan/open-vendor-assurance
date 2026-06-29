@@ -1,0 +1,288 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-projection.schema.json",
+  "title": "OpenVA Assurance Projection",
+  "description": "Structural output contract for assurance lifecycle projection. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "assurance_id",
+    "vendor_id",
+    "effective_at",
+    "knowledge_cutoff",
+    "projected_at",
+    "policy",
+    "input_digest",
+    "projection_profile",
+    "implemented_axes",
+    "axes",
+    "next_reevaluation_at",
+    "advisory_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "assurance_id": { "$ref": "#/$defs/openvaSlug" },
+    "vendor_id": { "$ref": "#/$defs/openvaSlug" },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "knowledge_cutoff": { "type": "string", "format": "date-time" },
+    "projected_at": { "type": "string", "format": "date-time" },
+    "policy": { "$ref": "#/$defs/policyRef" },
+    "input_digest": { "$ref": "#/$defs/sha256Digest" },
+    "projection_profile": { "const": "openva.assurance-lifecycle.v1" },
+    "implemented_axes": {
+      "type": "array",
+      "prefixItems": [
+        { "const": "instrument_state" },
+        { "const": "supersession_state" }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "axes": {
+      "type": "object",
+      "required": ["instrument_state", "supersession_state"],
+      "properties": {
+        "instrument_state": { "$ref": "#/$defs/instrumentStateAxis" },
+        "supersession_state": { "$ref": "#/$defs/supersessionStateAxis" }
+      },
+      "additionalProperties": false
+    },
+    "next_reevaluation_at": {
+      "anyOf": [
+        { "type": "string", "format": "date-time" },
+        { "type": "null" }
+      ]
+    },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "openvaSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sha256Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "dateOrNull": {
+      "anyOf": [
+        { "type": "string", "format": "date" },
+        { "type": "null" }
+      ]
+    },
+    "dateTimeOrNull": {
+      "anyOf": [
+        { "type": "string", "format": "date-time" },
+        { "type": "null" }
+      ]
+    },
+    "policyRef": {
+      "type": "object",
+      "required": ["id", "version", "digest"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "version": { "$ref": "#/$defs/nonEmptyString" },
+        "digest": { "$ref": "#/$defs/sha256Digest" }
+      },
+      "additionalProperties": false
+    },
+    "causedBy": {
+      "type": "object",
+      "required": ["assurance_ids"],
+      "properties": {
+        "assurance_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/openvaSlug" }
+        },
+        "assurance_observation_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/openvaSlug" }
+        },
+        "source_observation_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/openvaSlug" }
+        },
+        "change_event_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/openvaSlug" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "instrumentStateAxisBase": {
+      "type": "object",
+      "required": [
+        "determination",
+        "value",
+        "temporal_model",
+        "reason_codes",
+        "caused_by",
+        "stated_valid_from",
+        "stated_valid_until",
+        "interval_start_at",
+        "interval_end_exclusive_at",
+        "stated_as_of_date",
+        "as_of_at",
+        "stated_reporting_period_start",
+        "stated_reporting_period_end",
+        "reporting_period_start_at",
+        "reporting_period_end_exclusive_at",
+        "stated_effective_from_claimed",
+        "stated_effective_until_claimed",
+        "claimed_interval_start_at",
+        "claimed_interval_end_exclusive_at"
+      ],
+      "properties": {
+        "determination": {
+          "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/determination"
+        },
+        "value": true,
+        "temporal_model": {
+          "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/temporalModel"
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentStateReasonCode"
+          }
+        },
+        "caused_by": { "$ref": "#/$defs/causedBy" },
+        "stated_valid_from": { "$ref": "#/$defs/dateOrNull" },
+        "stated_valid_until": { "$ref": "#/$defs/dateOrNull" },
+        "interval_start_at": { "$ref": "#/$defs/dateTimeOrNull" },
+        "interval_end_exclusive_at": { "$ref": "#/$defs/dateTimeOrNull" },
+        "stated_as_of_date": { "$ref": "#/$defs/dateOrNull" },
+        "as_of_at": { "$ref": "#/$defs/dateTimeOrNull" },
+        "stated_reporting_period_start": { "$ref": "#/$defs/dateOrNull" },
+        "stated_reporting_period_end": { "$ref": "#/$defs/dateOrNull" },
+        "reporting_period_start_at": { "$ref": "#/$defs/dateTimeOrNull" },
+        "reporting_period_end_exclusive_at": { "$ref": "#/$defs/dateTimeOrNull" },
+        "stated_effective_from_claimed": { "$ref": "#/$defs/dateOrNull" },
+        "stated_effective_until_claimed": { "$ref": "#/$defs/dateOrNull" },
+        "claimed_interval_start_at": { "$ref": "#/$defs/dateTimeOrNull" },
+        "claimed_interval_end_exclusive_at": { "$ref": "#/$defs/dateTimeOrNull" }
+      },
+      "additionalProperties": false
+    },
+    "instrumentStateAxis": {
+      "allOf": [
+        { "$ref": "#/$defs/instrumentStateAxisBase" },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "determination": { "const": "determined" },
+                "value": {
+                  "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentState"
+                }
+              }
+            },
+            {
+              "properties": {
+                "determination": { "const": "indeterminate" },
+                "value": { "type": "null" }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "supersessionStateAxisBase": {
+      "type": "object",
+      "required": [
+        "determination",
+        "value",
+        "topology",
+        "predecessor_assurance_id",
+        "successor_assurance_ids",
+        "reason_codes",
+        "caused_by"
+      ],
+      "properties": {
+        "determination": { "const": "determined" },
+        "value": {
+          "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionState"
+        },
+        "topology": {
+          "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionTopology"
+        },
+        "predecessor_assurance_id": {
+          "anyOf": [
+            { "$ref": "#/$defs/openvaSlug" },
+            { "type": "null" }
+          ]
+        },
+        "successor_assurance_ids": {
+          "type": "array",
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/openvaSlug" }
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionStateReasonCode"
+          }
+        },
+        "caused_by": { "$ref": "#/$defs/causedBy" }
+      },
+      "additionalProperties": false
+    },
+    "supersessionStateAxis": {
+      "allOf": [
+        { "$ref": "#/$defs/supersessionStateAxisBase" },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "topology": { "const": "standalone" },
+                "predecessor_assurance_id": { "type": "null" },
+                "successor_assurance_ids": { "maxItems": 0 },
+                "value": { "const": "current" }
+              }
+            },
+            {
+              "properties": {
+                "topology": { "const": "chain_root" },
+                "predecessor_assurance_id": { "type": "null" },
+                "successor_assurance_ids": { "minItems": 1, "maxItems": 1 },
+                "value": { "const": "superseded" }
+              }
+            },
+            {
+              "properties": {
+                "topology": { "const": "chain_intermediate" },
+                "predecessor_assurance_id": { "$ref": "#/$defs/openvaSlug" },
+                "successor_assurance_ids": { "minItems": 1, "maxItems": 1 },
+                "value": { "const": "superseded" }
+              }
+            },
+            {
+              "properties": {
+                "topology": { "const": "chain_tip" },
+                "predecessor_assurance_id": { "$ref": "#/$defs/openvaSlug" },
+                "successor_assurance_ids": { "maxItems": 0 },
+                "value": { "const": "current" }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

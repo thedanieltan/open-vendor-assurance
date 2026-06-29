@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-projection-policy.schema.json",
+  "title": "OpenVA Assurance Projection Policy",
+  "description": "Normative policy contract for assurance lifecycle projection.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "policy_id",
+    "policy_version",
+    "projection_profile",
+    "date_semantics",
+    "class_rules",
+    "supersession",
+    "advisory_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "policy_id": { "const": "openva-assurance-projection-policy" },
+    "policy_version": { "const": "0.1.0" },
+    "projection_profile": { "const": "openva.assurance-lifecycle.v1" },
+    "date_semantics": {
+      "type": "object",
+      "required": ["calendar_basis", "interval_start", "interval_end"],
+      "properties": {
+        "calendar_basis": {
+          "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/calendarBasis"
+        },
+        "interval_start": {
+          "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/intervalBoundary"
+        },
+        "interval_end": { "const": "exclusive" }
+      },
+      "additionalProperties": false
+    },
+    "class_rules": {
+      "type": "object",
+      "required": [
+        "accredited_certification",
+        "attestation_report",
+        "regulatory_assertion",
+        "contractual_capability"
+      ],
+      "properties": {
+        "accredited_certification": {
+          "$ref": "#/$defs/classRuleBoundedInterval"
+        },
+        "attestation_report": {
+          "$ref": "#/$defs/classRulePointOrPeriod"
+        },
+        "regulatory_assertion": {
+          "$ref": "#/$defs/classRuleOptionalClaimedScope"
+        },
+        "contractual_capability": {
+          "$ref": "#/$defs/classRuleOptionalClaimedInterval"
+        }
+      },
+      "additionalProperties": false
+    },
+    "supersession": {
+      "type": "object",
+      "required": [
+        "explicit_links_only",
+        "infer_from_dates",
+        "infer_from_framework_match",
+        "infer_from_identifier_similarity"
+      ],
+      "properties": {
+        "explicit_links_only": { "const": true },
+        "infer_from_dates": { "const": false },
+        "infer_from_framework_match": { "const": false },
+        "infer_from_identifier_similarity": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "classRuleBoundedInterval": {
+      "type": "object",
+      "required": ["temporal_model"],
+      "properties": {
+        "temporal_model": { "const": "bounded_interval" }
+      },
+      "additionalProperties": false
+    },
+    "classRulePointOrPeriod": {
+      "type": "object",
+      "required": ["temporal_model"],
+      "properties": {
+        "temporal_model": { "const": "point_or_period" }
+      },
+      "additionalProperties": false
+    },
+    "classRuleOptionalClaimedScope": {
+      "type": "object",
+      "required": ["temporal_model"],
+      "properties": {
+        "temporal_model": { "const": "optional_claimed_scope" }
+      },
+      "additionalProperties": false
+    },
+    "classRuleOptionalClaimedInterval": {
+      "type": "object",
+      "required": ["temporal_model"],
+      "properties": {
+        "temporal_model": { "const": "optional_claimed_interval" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
