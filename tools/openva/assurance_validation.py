@@ -311,7 +311,11 @@ def _supersession_cycle_diagnostics(repository: RepositoryView) -> list[Semantic
     edges: dict[str, str] = {}
     for assurance_id, record in repository.assurances.items():
         supersedes_assurance_id = record.data.get("supersedes_assurance_id")
-        if isinstance(supersedes_assurance_id, str) and supersedes_assurance_id in repository.assurances:
+        if (
+            isinstance(supersedes_assurance_id, str)
+            and supersedes_assurance_id != assurance_id
+            and supersedes_assurance_id in repository.assurances
+        ):
             edges[assurance_id] = supersedes_assurance_id
 
     cycles: set[tuple[str, ...]] = set()

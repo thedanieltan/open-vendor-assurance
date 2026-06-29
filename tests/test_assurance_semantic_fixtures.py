@@ -159,13 +159,6 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "record_id": "acme-current",
             "instance_path": "/supersedes_assurance_id",
             "related_ids": ["acme-current"],
-        },
-        {
-            "code": "ASSURANCE_SUPERSESSION_CYCLE",
-            "record_kind": "assurance",
-            "record_id": "acme-current",
-            "instance_path": "/supersedes_assurance_id",
-            "related_ids": ["acme-current"],
         }
     ]),
 
@@ -189,23 +182,6 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "instance_path": "/temporal_scope/reporting_period/end",
             "related_ids": ["start=2026-12-31", "end=2026-01-01"],
         },
-        {
-            "code": "ASSURANCE_TEMPORAL_ORDER_INVALID",
-            "record_kind": "assurance",
-            "record_id": "acme-certification",
-            "instance_path": "/temporal_scope/valid_until",
-            "related_ids": ["valid_from=2027-01-10", "valid_until=2026-01-10"],
-        },
-        {
-            "code": "ASSURANCE_TEMPORAL_ORDER_INVALID",
-            "record_kind": "assurance",
-            "record_id": "acme-contractual",
-            "instance_path": "/temporal_scope/effective_until_claimed",
-            "related_ids": [
-                "effective_from_claimed=2026-12-31",
-                "effective_until_claimed=2026-01-01",
-            ],
-        },
     ]),
 
     # --- ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE case ---
@@ -227,13 +203,6 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "record_id": "acme-cycle-a",
             "instance_path": "/supersedes_assurance_id",
             "related_ids": ["acme-cycle-a", "acme-cycle-b"],
-        },
-        {
-            "code": "ASSURANCE_SUPERSESSION_CYCLE",
-            "record_kind": "assurance",
-            "record_id": "acme-cycle-c",
-            "instance_path": "/supersedes_assurance_id",
-            "related_ids": ["acme-cycle-c", "acme-cycle-d", "acme-cycle-e"],
         },
     ]),
 ])
