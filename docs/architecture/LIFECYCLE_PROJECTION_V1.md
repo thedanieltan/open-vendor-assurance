@@ -127,6 +127,62 @@ event envelope. Changing only the reason, provenance, policy, stated dates,
 normalized boundaries, or supersession topology without changing the axis state
 value does not itself create a lifecycle transition event.
 
+## Materialization
+
+Latest lifecycle projections are derivative, rebuildable repository artifacts.
+They do not make projected state canonical, and they do not modify immutable
+assurance records. Canonical inputs remain vendor records, source records,
+assurance records, assurance observations, source observations, and the
+projection policy.
+
+Slice 3F materializes three derivative artifact families:
+
+- latest projection documents;
+- immutable lifecycle change-event documents;
+- a deterministic latest-projection index.
+
+The latest-projection index is the visible commit pointer. Persistent
+materialization validates all planned documents and paths first, then writes any
+new immutable events, then writes or replaces the latest projection, and updates
+the latest index last. This index-last order makes reruns after interrupted
+writes safe and idempotent without claiming multi-file transactional atomicity.
+
+Materialization modes are explicit:
+
+- `current`: project the supplied current-state request, diff against the latest
+  projection when present, write lifecycle events for axis state-value changes,
+  then update latest projection and index when persistent projection content
+  changes.
+- `rebuild`: recompute derivative state from canonical inputs, including policy
+  changes. Rebuilds use the same projection and diff semantics; policy, digest,
+  provenance, topology, boundary, or other non-state changes update the latest
+  projection and index but do not create lifecycle events.
+- `scheduled_reevaluation`: execute a caller-requested reevaluation that was
+  previously identified as due. It does not infer the current time and does not
+  create a scheduler.
+- `historical`: compute an on-demand projection without reading or modifying
+  latest materialized state. Historical mode writes no projection, no events,
+  and no index.
+
+Only `projected_at` changing is a semantic no-op rebuild: the stored projection,
+events, and latest index are left unchanged. A policy-only rebuild with
+unchanged axis state updates the latest projection and index but emits no event.
+When an axis state value changes, the materializer persists the updated latest
+projection, the deterministic lifecycle change event or events, and the latest
+index.
+
+Latest-state replacement is monotonic for persistent modes. A new latest
+projection must not move `effective_at` or `knowledge_cutoff` backward relative
+to the existing latest projection. `projected_at` is operational metadata and is
+not used for latest-state ordering.
+
+`next_reevaluation_at` is a planning hint, not a scheduled job. Due planning is
+pure: a caller supplies an explicit `as_of`, and entries with
+`next_reevaluation_at <= as_of` are returned in deterministic order. The planner
+does not sleep, poll, enqueue work, update the index, or mark anything complete.
+A later knowledge input can still require materialization independently of
+`next_reevaluation_at`.
+
 ## Out Of Scope
 
 Slice 3A does not add:
