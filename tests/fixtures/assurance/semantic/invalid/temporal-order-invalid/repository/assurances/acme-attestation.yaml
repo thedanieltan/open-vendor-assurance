@@ -1,0 +1,23 @@
+schema_version: "0.1.0"
+assurance_id: acme-attestation
+vendor_id: acme
+assurance_class: attestation_report
+framework:
+  framework_id: soc-2
+  display_name: SOC 2
+subject:
+  entity_name: Acme Example Pte. Ltd.
+  scope_description: Example public attestation.
+issuer:
+  name: Example CPA Firm
+  authority_type: audit_firm
+  country: SG
+temporal_scope:
+  issued_at: "2026-02-01"
+  reporting_period:
+    start: "2026-12-31"
+    end: "2026-01-01"
+evidence:
+  source_ids:
+    - acme-trust-center
+advisory_boundary: non_advisory

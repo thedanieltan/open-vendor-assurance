@@ -49,6 +49,31 @@ ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET = "ASSURANCE_PRIMARY_SOURCE_NOT_IN_
 ASSURANCE_SUPERSEDES_UNKNOWN = "ASSURANCE_SUPERSEDES_UNKNOWN"
 ASSURANCE_SUPERSEDES_SELF = "ASSURANCE_SUPERSEDES_SELF"
 ASSURANCE_SUPERSEDES_VENDOR_MISMATCH = "ASSURANCE_SUPERSEDES_VENDOR_MISMATCH"
+ASSURANCE_TEMPORAL_ORDER_INVALID = "ASSURANCE_TEMPORAL_ORDER_INVALID"
+
+TEMPORAL_ORDER_RULES: Mapping[str, tuple[tuple[str, str, str, str], ...]] = MappingProxyType(
+    {
+        "accredited_certification": (
+            ("valid_from", "valid_until", "/temporal_scope/valid_until", "valid_from"),
+        ),
+        "attestation_report": (
+            (
+                "reporting_period.start",
+                "reporting_period.end",
+                "/temporal_scope/reporting_period/end",
+                "start",
+            ),
+        ),
+        "contractual_capability": (
+            (
+                "effective_from_claimed",
+                "effective_until_claimed",
+                "/temporal_scope/effective_until_claimed",
+                "effective_from_claimed",
+            ),
+        ),
+    }
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -213,6 +238,40 @@ def _materialize_collection(
     return MappingProxyType(dict(sorted(by_id.items()))), diagnostics
 
 
+def _nested_string(mapping: Mapping[str, Any], dotted_path: str) -> str | None:
+    current: Any = mapping
+    for part in dotted_path.split("."):
+        if not isinstance(current, Mapping):
+            return None
+        current = current.get(part)
+    return current if isinstance(current, str) else None
+
+
+def _temporal_order_diagnostics(record: RepositoryRecord) -> list[SemanticDiagnostic]:
+    assurance_class = record.data["assurance_class"]
+    rules = TEMPORAL_ORDER_RULES.get(assurance_class, ())
+    temporal_scope = record.data["temporal_scope"]
+    diagnostics: list[SemanticDiagnostic] = []
+    for start_path, end_path, instance_path, start_label in rules:
+        start = _nested_string(temporal_scope, start_path)
+        end = _nested_string(temporal_scope, end_path)
+        if start is None or end is None or start <= end:
+            continue
+        end_label = end_path.rsplit(".", maxsplit=1)[-1]
+        diagnostics.append(
+            SemanticDiagnostic(
+                code=ASSURANCE_TEMPORAL_ORDER_INVALID,
+                record_kind="assurance",
+                record_id=record.record_id,
+                record_path=record.path,
+                instance_path=instance_path,
+                message=f"Temporal start {start!r} must not be after end {end!r}.",
+                related_ids=(f"{start_label}={start}", f"{end_label}={end}"),
+            )
+        )
+    return diagnostics
+
+
 def build_repository_snapshot(
     records_by_kind: Mapping[str, Iterable[RepositoryRecord]],
 ) -> RepositoryBuildResult:
@@ -349,6 +408,8 @@ def validate_assurance_record_semantics(
                     related_ids=(supersedes_assurance_id, superseded_vendor_id, record.vendor_id),
                 )
             )
+
+    diagnostics.extend(_temporal_order_diagnostics(record))
 
     # Rule: ASSURANCE_SOURCE_UNKNOWN & ASSURANCE_SOURCE_VENDOR_MISMATCH
     for index, source_id in enumerate(source_ids):

@@ -172,6 +172,34 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "related_ids": ["beta-prior", "beta-vendor", "acme"],
         }
     ]),
+
+    # --- ASSURANCE_TEMPORAL_ORDER_INVALID cases ---
+    ("invalid/temporal-order-invalid", [
+        {
+            "code": "ASSURANCE_TEMPORAL_ORDER_INVALID",
+            "record_kind": "assurance",
+            "record_id": "acme-attestation",
+            "instance_path": "/temporal_scope/reporting_period/end",
+            "related_ids": ["start=2026-12-31", "end=2026-01-01"],
+        },
+        {
+            "code": "ASSURANCE_TEMPORAL_ORDER_INVALID",
+            "record_kind": "assurance",
+            "record_id": "acme-certification",
+            "instance_path": "/temporal_scope/valid_until",
+            "related_ids": ["valid_from=2027-01-10", "valid_until=2026-01-10"],
+        },
+        {
+            "code": "ASSURANCE_TEMPORAL_ORDER_INVALID",
+            "record_kind": "assurance",
+            "record_id": "acme-contractual",
+            "instance_path": "/temporal_scope/effective_until_claimed",
+            "related_ids": [
+                "effective_from_claimed=2026-12-31",
+                "effective_until_claimed=2026-01-01",
+            ],
+        },
+    ]),
 ])
 def test_assurance_semantic_matrix(case_id: str, expected: list[dict[str, Any]]) -> None:
     root = Path(f"tests/fixtures/assurance/semantic/{case_id}/repository")
