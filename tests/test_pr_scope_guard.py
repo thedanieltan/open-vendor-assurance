@@ -57,6 +57,22 @@ SCOPE_POLICY_FILES = [
     ".github/validation-ownership.yaml",
 ]
 
+ASSURANCE_SLICE1_FILES = [
+    "docs/architecture/TEMPORAL_ASSURANCE_SCHEMA_V1.md",
+    "schemas/openva/assurance-record.schema.json",
+    "schemas/openva/assurance-observation.schema.json",
+    "schemas/openva/assurance-change-event.schema.json",
+    "schemas/openva/vocabularies/assurance-v1.schema.json",
+    "tools/openva/schema_registry.py",
+    "tools/openva/validate.py",
+    "tests/support/__init__.py",
+    "tests/support/assurance_fixture_runner.py",
+    "tests/test_assurance_schema_fixtures.py",
+    "tests/fixtures/assurance/schema/valid/accredited-certification.json",
+    "tests/fixtures/assurance/schema/invalid/accredited-certification-with-as-of-date.json",
+    "tests/fixtures/assurance/schema/expectations.json",
+]
+
 # This PR (#403) is the bootstrap PR. It physically spans TWO work packages: the
 # legal-entity ratification files and the scope-policy machinery. It escapes the guard
 # only via the one-time self-bootstrap skip (base=main lacks the guard).
@@ -202,6 +218,24 @@ def test_bootstrap_cannot_recur_for_legal_entity_wp():
     manifest = load_manifest()
     violations = out_of_scope_paths(SCOPE_POLICY_FILES, "WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01", manifest)
     assert set(violations) == set(SCOPE_POLICY_FILES)
+
+
+def test_assurance_slice1_scope_covers_only_structural_schema_surface():
+    manifest = load_manifest()
+    assert out_of_scope_paths(ASSURANCE_SLICE1_FILES, "WP-ASSURANCE-01-SLICE1", manifest) == []
+
+
+def test_assurance_slice1_scope_rejects_catalog_workflows_and_semantic_code():
+    manifest = load_manifest()
+    out_of_scope = [
+        "data/vendors/example/vendor.yaml",
+        "examples/vendors/example/assurances/example.yaml",
+        ".github/workflows/validate.yml",
+        "tools/openva/pr_scope_guard.py",
+        "tools/openva/source_observer.py",
+        "docs/operations/contracts/work-package-scope.yaml",
+    ]
+    assert out_of_scope_paths(out_of_scope, "WP-ASSURANCE-01-SLICE1", manifest) == sorted(out_of_scope)
 
 
 # --- Task B: ADR-0006 acceptance vs WP-02 implementation split ----------------

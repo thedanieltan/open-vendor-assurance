@@ -53,6 +53,21 @@ work_packages:
       - tests/test_workflow_retirement_evidence.py
       - tests/test_future_operations_specs.py
 
+  WP-ASSURANCE-01-SLICE1:
+    description: Temporal assurance structural schema contracts, offline schema registry wiring, structural fixture infrastructure, and architecture note. Slice 1 is schema/fixture/test/docs only; no acquisition, extraction, lifecycle projection, cross-record semantic validation, workflow changes, policy-threshold changes, or catalog-data migration.
+    allowed_paths:
+      - docs/architecture/TEMPORAL_ASSURANCE_SCHEMA_V1.md
+      - schemas/openva/assurance-record.schema.json
+      - schemas/openva/assurance-observation.schema.json
+      - schemas/openva/assurance-change-event.schema.json
+      - schemas/openva/vocabularies/assurance-v1.schema.json
+      - tools/openva/schema_registry.py
+      - tools/openva/validate.py
+      - tests/support/__init__.py
+      - tests/support/assurance_fixture_runner.py
+      - tests/test_assurance_schema_fixtures.py
+      - tests/fixtures/assurance/schema/**
+
   WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01:
     description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400 (audit evidence, required corrections, and regression tests). Scope-policy files are NOT included here — they live in WP-PR-SCOPE-POLICY-01.
     allowed_paths:
