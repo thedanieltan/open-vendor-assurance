@@ -20,6 +20,10 @@ Projection requests carry three distinct times:
 questions. `projected_at` is operational materialization time and must not alter
 the semantic result.
 
+`next_reevaluation_at` records the next known time at which a deterministic
+projection may change because of stated date boundaries. It is nullable when the
+contract has no known future boundary.
+
 ## Projection Axes
 
 The v1 projection profile implements exactly two axes:
@@ -90,10 +94,15 @@ Normalized boundaries use separate date-time fields such as
 `interval_start_at` and `interval_end_exclusive_at`. This avoids turning a
 source date into a misleading midnight timestamp under the same field name.
 
+Inclusive date-only end dates normalize to the next day's midnight UTC as an
+exclusive boundary. For example, `stated_valid_until: 2027-01-09` corresponds to
+`interval_end_exclusive_at: 2027-01-10T00:00:00Z`.
+
 ## Supersession Time
 
-Supersession state is graph-topological in v1. It is derived from admitted
-explicit links under the knowledge cutoff, not from `effective_at` date ordering.
+Supersession state is graph-topological in v1. It is derived from records and
+explicit links admitted by `knowledge_cutoff`, not from `effective_at` date
+ordering. Supersession state is therefore independent of `effective_at`.
 
 ## Out Of Scope
 

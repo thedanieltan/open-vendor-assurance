@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from copy import deepcopy
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -296,6 +297,36 @@ def test_semantic_no_op_rebuild_projections_differ_only_by_projected_at() -> Non
     comparable_a = {key: value for key, value in projection_a.items() if key != "projected_at"}
     comparable_b = {key: value for key, value in projection_b.items() if key != "projected_at"}
     assert comparable_a == comparable_b
+
+
+@pytest.mark.parametrize(
+    "case_name,updates",
+    [
+        ("standalone-with-predecessor", {"topology": "standalone", "predecessor_assurance_id": "acme-prior"}),
+        ("standalone-with-successor", {"topology": "standalone", "successor_assurance_ids": ["acme-next"]}),
+        ("chain-root-with-predecessor", {"topology": "chain_root", "predecessor_assurance_id": "acme-prior"}),
+        ("chain-root-without-successor", {"topology": "chain_root", "successor_assurance_ids": []}),
+        (
+            "chain-intermediate-without-predecessor",
+            {"topology": "chain_intermediate", "predecessor_assurance_id": None},
+        ),
+        ("chain-intermediate-without-successor", {"topology": "chain_intermediate", "successor_assurance_ids": []}),
+        ("chain-tip-without-predecessor", {"topology": "chain_tip", "predecessor_assurance_id": None}),
+        ("chain-tip-with-successor", {"topology": "chain_tip", "successor_assurance_ids": ["acme-next"]}),
+        ("current-chain-root", {"topology": "chain_root", "successor_assurance_ids": ["acme-next"], "value": "current"}),
+        ("superseded-standalone", {"topology": "standalone", "value": "superseded"}),
+    ],
+)
+def test_supersession_topology_contradictions_are_rejected(
+    case_name: str,
+    updates: dict[str, Any],
+) -> None:
+    expectation = load_json(PROJECTION_ROOT / "semantic-no-op-rebuild/expectations.json")
+    projection = deepcopy(expectation["projection_a"])
+    projection["axes"]["supersession_state"].update(updates)
+
+    validator = build_openva_validator(ROOT / "schemas/openva/assurance-projection.schema.json")
+    assert list(validator.iter_errors(projection)), case_name
 
 
 def test_legacy_vocabulary_deprecates_only_superseded_instrument_state() -> None:
