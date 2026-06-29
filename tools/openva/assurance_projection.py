@@ -315,6 +315,81 @@ def project_instrument_state(
     )
 
 
+def project_supersession_state(
+    assurance_record: Mapping[str, Any],
+    assurance_records: Iterable[Mapping[str, Any]],
+    policy: AssuranceProjectionPolicy | Mapping[str, Any],
+    knowledge_cutoff: datetime | str,
+) -> SupersessionStateResult:
+    projection_policy = coerce_projection_policy(policy)
+    try:
+        projection_policy.require_explicit_supersession_policy()
+    except Exception as exc:
+        code = getattr(exc, "code", ASSURANCE_PROJECTION_POLICY_INVALID)
+        instance_path = getattr(exc, "instance_path", "")
+        related_ids = getattr(exc, "related_ids", ())
+        raise AssuranceProjectionError(
+            code=code,
+            instance_path=instance_path,
+            message=str(exc),
+            related_ids=tuple(related_ids),
+        ) from exc
+
+    knowledge_cutoff_utc = normalize_aware_datetime(knowledge_cutoff, field_name="knowledge_cutoff")
+    target_id = assurance_id_for(assurance_record)
+    admitted_records = admitted_assurance_records(
+        assurance_record,
+        assurance_records,
+        knowledge_cutoff=knowledge_cutoff_utc,
+    )
+    repository = build_projection_repository_snapshot(admitted_records)
+    admitted_edges = admitted_supersession_edges_or_raise(repository)
+
+    predecessor_ids = sorted(
+        edge.predecessor_id for edge in admitted_edges if edge.successor_id == target_id
+    )
+    successor_ids = sorted(
+        edge.successor_id for edge in admitted_edges if edge.predecessor_id == target_id
+    )
+    predecessor_id = predecessor_ids[0] if predecessor_ids else None
+
+    if predecessor_id is None and not successor_ids:
+        return finish_supersession_axis(
+            target_id=target_id,
+            predecessor_id=None,
+            successor_ids=(),
+            topology="standalone",
+            value="current",
+            reason_code="no_explicit_successor_admitted",
+        )
+    if predecessor_id is None:
+        return finish_supersession_axis(
+            target_id=target_id,
+            predecessor_id=None,
+            successor_ids=successor_ids,
+            topology="chain_root",
+            value="superseded",
+            reason_code="explicit_successor_admitted",
+        )
+    if successor_ids:
+        return finish_supersession_axis(
+            target_id=target_id,
+            predecessor_id=predecessor_id,
+            successor_ids=successor_ids,
+            topology="chain_intermediate",
+            value="superseded",
+            reason_code="explicit_successor_admitted",
+        )
+    return finish_supersession_axis(
+        target_id=target_id,
+        predecessor_id=predecessor_id,
+        successor_ids=(),
+        topology="chain_tip",
+        value="current",
+        reason_code="no_explicit_successor_admitted",
+    )
+
+
 def coerce_projection_policy(
     policy: AssuranceProjectionPolicy | Mapping[str, Any],
 ) -> AssuranceProjectionPolicy:
@@ -493,6 +568,38 @@ def finish_axis(
     axis["value"] = value
     axis["reason_codes"] = [reason_code]
     return InstrumentStateResult(axis=axis, next_reevaluation_at=next_reevaluation_at)
+
+
+def finish_supersession_axis(
+    *,
+    target_id: str,
+    predecessor_id: str | None,
+    successor_ids: Iterable[str],
+    topology: str,
+    value: str,
+    reason_code: str,
+) -> SupersessionStateResult:
+    successor_list = sorted(successor_ids)
+    causal_ids = [target_id]
+    if predecessor_id is not None:
+        causal_ids.append(predecessor_id)
+    causal_ids.extend(successor_list)
+    causal_ids = list(dict.fromkeys(causal_ids))
+    return SupersessionStateResult(
+        axis={
+            "determination": "determined",
+            "value": value,
+            "topology": topology,
+            "predecessor_assurance_id": predecessor_id,
+            "successor_assurance_ids": successor_list,
+            "reason_codes": [reason_code],
+            "caused_by": {
+                "assurance_ids": causal_ids,
+                "assurance_observation_ids": [],
+                "source_observation_ids": [],
+            },
+        }
+    )
 
 
 def require_mapping(record: Mapping[str, Any], field_name: str) -> Mapping[str, Any]:
