@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -20,6 +21,35 @@ def load_case(name: str):
     )
 
 
+def run_semantic_fixture_case(root: Path):
+    return load_assurance_fixture_repository(
+        root,
+        validator_factory=build_validator_for_record_kind,
+    )
+
+
+def semantic_diagnostic_contract(
+    diagnostic: assurance_validation.ValidationDiagnostic,
+) -> dict[str, Any]:
+    return {
+        "code": diagnostic.code,
+        "record_kind": diagnostic.record_kind,
+        "record_id": diagnostic.record_id,
+        "instance_path": diagnostic.instance_path,
+        "related_ids": list(diagnostic.related_ids),
+    }
+
+
+def expected_semantic_contract(expected: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "code": expected["code"],
+        "record_kind": expected["record_kind"],
+        "record_id": expected["record_id"],
+        "instance_path": expected["instance_path"],
+        "related_ids": list(expected["related_ids"]),
+    }
+
+
 def diagnostic_signature(diagnostic: assurance_validation.ValidationDiagnostic) -> tuple[str, str, str, str, tuple[str, ...]]:
     return (
         diagnostic.code,
@@ -36,6 +66,71 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
     assert result.build_result is not None
     assert result.build_result.diagnostics == ()
     return [diagnostic_signature(diagnostic) for diagnostic in result.semantic_diagnostics]
+
+
+@pytest.mark.parametrize("case_id, expected", [
+    # --- ASSURANCE_SOURCE_UNKNOWN cases ---
+    ("valid/known-source", []),
+    ("invalid/unknown-source", [
+        {
+            "code": "ASSURANCE_SOURCE_UNKNOWN",
+            "record_kind": "assurance",
+            "record_id": "acme-iso-2026",
+            "instance_path": "/evidence/source_ids/0",
+            "related_ids": ["acme-missing-source"],
+        }
+    ]),
+    ("invalid/mixed-known-unknown", [
+        {
+            "code": "ASSURANCE_SOURCE_UNKNOWN",
+            "record_kind": "assurance",
+            "record_id": "acme-iso-2026",
+            "instance_path": "/evidence/source_ids/1",
+            "related_ids": ["acme-missing-source"],
+        }
+    ]),
+    ("invalid/multiple-unknown", [
+        {
+            "code": "ASSURANCE_SOURCE_UNKNOWN",
+            "record_kind": "assurance",
+            "record_id": "acme-iso-2026",
+            "instance_path": "/evidence/source_ids/0",
+            "related_ids": ["acme-missing-alpha"],
+        },
+        {
+            "code": "ASSURANCE_SOURCE_UNKNOWN",
+            "record_kind": "assurance",
+            "record_id": "acme-iso-2026",
+            "instance_path": "/evidence/source_ids/1",
+            "related_ids": ["acme-missing-beta"],
+        }
+    ]),
+
+    # --- ASSURANCE_VENDOR_UNKNOWN case ---
+    ("invalid/unknown-vendor", [
+        {
+            "code": "ASSURANCE_VENDOR_UNKNOWN",
+            "record_kind": "assurance",
+            "record_id": "acme-iso-2026",
+            "instance_path": "/vendor_id",
+            "related_ids": ["ghost-vendor"],
+        }
+    ]),
+])
+def test_assurance_semantic_matrix(case_id: str, expected: list[dict[str, Any]]) -> None:
+    root = Path(f"tests/fixtures/assurance/semantic/{case_id}/repository")
+    result = run_semantic_fixture_case(root)
+
+    assert not result.structural_failures
+    assert not result.repository_build_diagnostics
+
+    actual = [semantic_diagnostic_contract(d) for d in result.semantic_diagnostics]
+    expected_contract = [expected_semantic_contract(e) for e in expected]
+
+    # The validator sorts diagnostics by (record_path, instance_path, code).
+    # String comparison means "/evidence/..." sorts before "/vendor_id".
+    # Therefore, if a fixture emits both, the source diagnostic will appear first.
+    assert actual == expected_contract
 
 
 def test_known_source_has_no_semantic_diagnostics() -> None:

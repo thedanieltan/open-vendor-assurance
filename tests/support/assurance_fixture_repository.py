@@ -44,6 +44,16 @@ class FixtureRepositoryResult:
     build_result: assurance_validation.RepositoryBuildResult | None
     semantic_diagnostics: tuple[assurance_validation.ValidationDiagnostic, ...]
 
+    @property
+    def structural_failures(self) -> tuple[FixtureStructuralError, ...]:
+        return self.structural_errors
+
+    @property
+    def repository_build_diagnostics(self) -> tuple[assurance_validation.ValidationDiagnostic, ...]:
+        if self.build_result is None:
+            return ()
+        return self.build_result.diagnostics
+
 
 def _load_document(path: Path) -> Any:
     if path.suffix == ".json":

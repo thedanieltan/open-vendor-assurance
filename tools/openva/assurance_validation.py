@@ -43,18 +43,26 @@ RECORD_KIND_SPEC_BY_KIND = {spec.kind: spec for spec in RECORD_KIND_SPECS}
 RECORD_KIND_SPEC_BY_SCHEMA_KIND = {spec.schema_kind: spec for spec in RECORD_KIND_SPECS}
 
 REPOSITORY_DUPLICATE_ID = "REPOSITORY_DUPLICATE_ID"
+ASSURANCE_VENDOR_UNKNOWN = "ASSURANCE_VENDOR_UNKNOWN"
 ASSURANCE_SOURCE_UNKNOWN = "ASSURANCE_SOURCE_UNKNOWN"
 
 
 @dataclass(frozen=True, slots=True)
-class ValidationDiagnostic:
+class SemanticDiagnostic:
     code: str
     record_kind: str
     record_id: str
     instance_path: str
     message: str
     related_ids: tuple[str, ...] = ()
-    source_path: str | None = None
+    record_path: str | None = None
+
+    @property
+    def source_path(self) -> str | None:
+        return self.record_path
+
+
+ValidationDiagnostic = SemanticDiagnostic
 
 
 def deep_freeze_json(value: Any) -> JsonFrozen:
@@ -71,6 +79,14 @@ class RepositoryRecord:
     record_id: str
     payload: Mapping[str, Any]
     source_path: str | None = None
+
+    @property
+    def data(self) -> Mapping[str, Any]:
+        return self.payload
+
+    @property
+    def path(self) -> str | None:
+        return self.source_path
 
     @classmethod
     def from_raw(
@@ -103,6 +119,8 @@ class RepositoryView(Protocol):
     assurance_change_events: Mapping[str, RepositoryRecord]
 
     def records_for_kind(self, kind: str) -> Mapping[str, RepositoryRecord]: ...
+    def get_vendor(self, vendor_id: str) -> RepositoryRecord | None: ...
+    def get_source(self, source_id: str) -> RepositoryRecord | None: ...
 
 
 @dataclass(frozen=True, slots=True)
@@ -129,6 +147,12 @@ class RepositorySnapshot:
             return self.assurance_change_events
         raise KeyError(kind)
 
+    def get_vendor(self, vendor_id: str) -> RepositoryRecord | None:
+        return self.vendors.get(vendor_id)
+
+    def get_source(self, source_id: str) -> RepositoryRecord | None:
+        return self.sources.get(source_id)
+
 
 @dataclass(frozen=True, slots=True)
 class RepositoryBuildResult:
@@ -150,7 +174,7 @@ def _duplicate_diagnostic(
         instance_path=f"/{spec.id_field}",
         related_ids=related,
         message=f"duplicate {spec.kind} id {record_id}",
-        source_path=related[0] if related else None,
+        record_path=related[0] if related else None,
     )
 
 
@@ -214,41 +238,67 @@ def build_repository_snapshot(
 def validate_assurance_record_semantics(
     record: RepositoryRecord,
     repository: RepositoryView,
-) -> tuple[ValidationDiagnostic, ...]:
-    if record.kind != ASSURANCE.kind:
-        raise TypeError(f"expected assurance record, got {record.kind}")
+) -> list[SemanticDiagnostic]:
+    if record.kind != "assurance":
+        raise ValueError(
+            f"validate_assurance_record_semantics requires an assurance record, "
+            f"received {record.kind!r}"
+        )
 
-    evidence = record.payload.get("evidence")
-    source_ids = evidence.get("source_ids") if isinstance(evidence, Mapping) else ()
-    diagnostics: list[ValidationDiagnostic] = []
-    if not isinstance(source_ids, tuple):
-        return ()
+    diagnostics: list[SemanticDiagnostic] = []
+
+    # Rule: ASSURANCE_VENDOR_UNKNOWN
+    vendor_id = record.data["vendor_id"]
+    vendor_record = repository.get_vendor(vendor_id)
+
+    if vendor_record is None:
+        diagnostics.append(
+            SemanticDiagnostic(
+                code="ASSURANCE_VENDOR_UNKNOWN",
+                record_kind="assurance",
+                record_id=record.record_id,
+                record_path=record.path,
+                instance_path="/vendor_id",
+                message=f"Referenced vendor {vendor_id!r} does not exist.",
+                related_ids=(vendor_id,),
+            )
+        )
+
+    # Rule: ASSURANCE_SOURCE_UNKNOWN
+    source_ids = record.data["evidence"]["source_ids"]
     for index, source_id in enumerate(source_ids):
-        if isinstance(source_id, str) and source_id not in repository.sources:
+        source_record = repository.get_source(source_id)
+
+        if source_record is None:
             diagnostics.append(
-                ValidationDiagnostic(
-                    code=ASSURANCE_SOURCE_UNKNOWN,
-                    record_kind=record.kind,
+                SemanticDiagnostic(
+                    code="ASSURANCE_SOURCE_UNKNOWN",
+                    record_kind="assurance",
                     record_id=record.record_id,
+                    record_path=record.path,
                     instance_path=f"/evidence/source_ids/{index}",
+                    message=f"Referenced source {source_id!r} does not exist.",
                     related_ids=(source_id,),
-                    message=f"assurance evidence references unknown source_id {source_id}",
-                    source_path=record.source_path,
                 )
             )
-    return tuple(diagnostics)
+            continue
+
+        # Future: ASSURANCE_SOURCE_VENDOR_MISMATCH will be guarded here by:
+        # if vendor_record is not None and source_record is not None: ...
+
+    return diagnostics
 
 
 def sorted_diagnostics(diagnostics: Iterable[ValidationDiagnostic]) -> list[ValidationDiagnostic]:
     return sorted(
         diagnostics,
         key=lambda diagnostic: (
+            diagnostic.record_path or "",
+            diagnostic.instance_path,
             diagnostic.code,
             diagnostic.record_kind,
             diagnostic.record_id,
-            diagnostic.instance_path,
             diagnostic.related_ids,
-            diagnostic.source_path or "",
         ),
     )
 
