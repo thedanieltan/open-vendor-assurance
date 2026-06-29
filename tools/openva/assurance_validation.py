@@ -48,6 +48,7 @@ ASSURANCE_SOURCE_UNKNOWN = "ASSURANCE_SOURCE_UNKNOWN"
 ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET = "ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET"
 ASSURANCE_SUPERSEDES_UNKNOWN = "ASSURANCE_SUPERSEDES_UNKNOWN"
 ASSURANCE_SUPERSEDES_SELF = "ASSURANCE_SUPERSEDES_SELF"
+ASSURANCE_SUPERSEDES_VENDOR_MISMATCH = "ASSURANCE_SUPERSEDES_VENDOR_MISMATCH"
 
 
 @dataclass(frozen=True, slots=True)
@@ -324,6 +325,30 @@ def validate_assurance_record_semantics(
                 related_ids=(supersedes_assurance_id,),
             )
         )
+    if isinstance(supersedes_assurance_id, str) and supersedes_assurance_id in repository.assurances:
+        superseded_record = repository.assurances[supersedes_assurance_id]
+        superseded_vendor_id = superseded_record.vendor_id
+        superseded_vendor_record = repository.get_vendor(superseded_vendor_id)
+        if (
+            vendor_record is not None
+            and superseded_vendor_record is not None
+            and superseded_vendor_id != record.vendor_id
+        ):
+            diagnostics.append(
+                SemanticDiagnostic(
+                    code=ASSURANCE_SUPERSEDES_VENDOR_MISMATCH,
+                    record_kind="assurance",
+                    record_id=record.record_id,
+                    record_path=record.path,
+                    instance_path="/supersedes_assurance_id",
+                    message=(
+                        f"Superseded assurance {supersedes_assurance_id!r} belongs to vendor "
+                        f"{superseded_vendor_id!r}, but current assurance belongs to "
+                        f"{record.vendor_id!r}."
+                    ),
+                    related_ids=(supersedes_assurance_id, superseded_vendor_id, record.vendor_id),
+                )
+            )
 
     # Rule: ASSURANCE_SOURCE_UNKNOWN & ASSURANCE_SOURCE_VENDOR_MISMATCH
     for index, source_id in enumerate(source_ids):
