@@ -151,7 +151,15 @@ def validation_instance_path(error: Any) -> str:
 
 def validate_projection_request(request: Mapping[str, Any]) -> None:
     validator = build_openva_validator(PROJECTION_REQUEST_SCHEMA_PATH)
-    errors = sorted(validator.iter_errors(request), key=lambda error: list(error.path))
+    errors = [
+        error
+        for error in validator.iter_errors(request)
+        if not (
+            error.validator == "format"
+            and list(error.path) in (["effective_at"], ["knowledge_cutoff"])
+        )
+    ]
+    errors = sorted(errors, key=lambda error: list(error.path))
     if not errors:
         return
     error = errors[0]
@@ -302,6 +310,105 @@ def projection_input_manifest(
 
 def projection_input_digest(input_manifest: Mapping[str, Any]) -> str:
     return sha256_bytes(canonical_json(json_material(input_manifest)))
+
+
+def resolve_target_assurance(
+    repository: Mapping[str, Any],
+    assurance_id: str,
+) -> Mapping[str, Any]:
+    for record in repository_assurance_records(repository):
+        if record.get("assurance_id") == assurance_id:
+            return record
+    raise AssuranceProjectionError(
+        code=ASSURANCE_TARGET_UNKNOWN,
+        instance_path="/assurance_id",
+        message=f"Target assurance {assurance_id!r} does not exist.",
+        related_ids=(assurance_id,),
+    )
+
+
+def compact_axis_for_projection(axis: Mapping[str, Any]) -> dict[str, Any]:
+    material = json_material(axis)
+    caused_by = material.get("caused_by")
+    if isinstance(caused_by, dict):
+        for optional_field in (
+            "assurance_observation_ids",
+            "source_observation_ids",
+            "change_event_ids",
+        ):
+            if caused_by.get(optional_field) == []:
+                caused_by.pop(optional_field)
+    return material
+
+
+def validate_projection_output(projection: Mapping[str, Any]) -> None:
+    validator = build_openva_validator(PROJECTION_SCHEMA_PATH)
+    errors = sorted(validator.iter_errors(projection), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceProjectionError(
+        code=ASSURANCE_PROJECTION_OUTPUT_INVALID,
+        instance_path=validation_instance_path(error),
+        message=f"Assurance projection output is invalid: {error.message}",
+    )
+
+
+def project_assurance(
+    request: Mapping[str, Any],
+    repository: Mapping[str, Any],
+    policy: AssuranceProjectionPolicy | Mapping[str, Any],
+    projected_at: datetime | str,
+) -> Mapping[str, Any]:
+    validate_projection_request(request)
+    projection_policy, policy_identity = projection_policy_identity(policy)
+    verify_request_policy_identity(request, policy_identity)
+    effective_at, knowledge_cutoff, projected_at_utc = projection_datetimes(request, projected_at)
+
+    assurance_id = require_string(request, "assurance_id")
+    target = resolve_target_assurance(repository, assurance_id)
+    assurance_records = repository_assurance_records(repository)
+
+    instrument_result = project_instrument_state(
+        assurance_record=target,
+        policy=projection_policy,
+        effective_at=effective_at,
+        knowledge_cutoff=knowledge_cutoff,
+    )
+    supersession_result = project_supersession_state(
+        assurance_record=target,
+        assurance_records=assurance_records,
+        policy=projection_policy,
+        knowledge_cutoff=knowledge_cutoff,
+    )
+
+    input_manifest = projection_input_manifest(
+        request=request,
+        repository=repository,
+        policy_identity=policy_identity,
+        effective_at=effective_at,
+        knowledge_cutoff=knowledge_cutoff,
+    )
+    projection = {
+        "schema_version": "0.1.0",
+        "assurance_id": assurance_id,
+        "vendor_id": require_string(target, "vendor_id"),
+        "effective_at": format_utc_datetime(effective_at),
+        "knowledge_cutoff": format_utc_datetime(knowledge_cutoff),
+        "projected_at": format_utc_datetime(projected_at_utc),
+        "policy": policy_identity.as_mapping(),
+        "input_digest": projection_input_digest(input_manifest),
+        "projection_profile": PROJECTION_PROFILE,
+        "implemented_axes": list(IMPLEMENTED_AXES),
+        "axes": {
+            "instrument_state": compact_axis_for_projection(instrument_result.axis),
+            "supersession_state": compact_axis_for_projection(supersession_result.axis),
+        },
+        "next_reevaluation_at": format_utc_datetime(instrument_result.next_reevaluation_at),
+        "advisory_boundary": "non_advisory",
+    }
+    validate_projection_output(projection)
+    return projection
 
 
 def empty_instrument_axis(*, assurance_id: str, temporal_model: str) -> dict[str, Any]:
