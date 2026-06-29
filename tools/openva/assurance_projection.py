@@ -17,12 +17,22 @@ from tools.openva.assurance_validation import SupersessionEdge
 from tools.openva.assurance_validation import ValidationDiagnostic
 from tools.openva.assurance_validation import _admissible_supersession_edges
 from tools.openva.assurance_validation import validate_assurance_repository
+from tools.openva.pack import canonical_json, sha256_bytes
+from tools.openva.schema_registry import ROOT, build_openva_validator
 
 ASSURANCE_TARGET_NOT_KNOWN_AT_CUTOFF = "ASSURANCE_TARGET_NOT_KNOWN_AT_CUTOFF"
 ASSURANCE_PROJECTION_DATETIME_NAIVE = "ASSURANCE_PROJECTION_DATETIME_NAIVE"
 ASSURANCE_PROJECTION_POLICY_INVALID = "ASSURANCE_PROJECTION_POLICY_INVALID"
 ASSURANCE_PROJECTION_CLASS_RULE_MISSING = "ASSURANCE_PROJECTION_CLASS_RULE_MISSING"
 ASSURANCE_PROJECTION_INPUT_INVALID = "ASSURANCE_PROJECTION_INPUT_INVALID"
+ASSURANCE_PROJECTION_REQUEST_INVALID = "ASSURANCE_PROJECTION_REQUEST_INVALID"
+ASSURANCE_PROJECTION_POLICY_MISMATCH = "ASSURANCE_PROJECTION_POLICY_MISMATCH"
+ASSURANCE_TARGET_UNKNOWN = "ASSURANCE_TARGET_UNKNOWN"
+ASSURANCE_PROJECTION_OUTPUT_INVALID = "ASSURANCE_PROJECTION_OUTPUT_INVALID"
+PROJECTION_PROFILE = "openva.assurance-lifecycle.v1"
+IMPLEMENTED_AXES = ("instrument_state", "supersession_state")
+PROJECTION_REQUEST_SCHEMA_PATH = ROOT / "schemas/openva/assurance-projection-request.schema.json"
+PROJECTION_SCHEMA_PATH = ROOT / "schemas/openva/assurance-projection.schema.json"
 
 
 class AssuranceProjectionError(Exception):
@@ -47,6 +57,20 @@ class ProjectionInputInvalidError(AssuranceProjectionError):
             message="Projection input failed assurance semantic validation.",
         )
         self.diagnostics = diagnostics
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectionPolicyIdentity:
+    id: str
+    version: str
+    digest: str
+
+    def as_mapping(self) -> dict[str, str]:
+        return {
+            "id": self.id,
+            "version": self.version,
+            "digest": self.digest,
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -111,6 +135,173 @@ def format_utc_datetime(value: datetime | None) -> str | None:
     if value is None:
         return None
     return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
+
+
+def json_material(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): json_material(nested) for key, nested in value.items()}
+    if isinstance(value, tuple | list):
+        return [json_material(nested) for nested in value]
+    return value
+
+
+def validation_instance_path(error: Any) -> str:
+    return "/" + "/".join(str(part) for part in error.path) if error.path else ""
+
+
+def validate_projection_request(request: Mapping[str, Any]) -> None:
+    validator = build_openva_validator(PROJECTION_REQUEST_SCHEMA_PATH)
+    errors = sorted(validator.iter_errors(request), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceProjectionError(
+        code=ASSURANCE_PROJECTION_REQUEST_INVALID,
+        instance_path=validation_instance_path(error),
+        message=f"Projection request is invalid: {error.message}",
+    )
+
+
+def projection_policy_identity(
+    policy: AssuranceProjectionPolicy | Mapping[str, Any],
+) -> tuple[AssuranceProjectionPolicy, ProjectionPolicyIdentity]:
+    projection_policy = coerce_projection_policy(policy)
+    policy_material = json_material(projection_policy.data)
+    digest = sha256_bytes(canonical_json(policy_material))
+    return projection_policy, ProjectionPolicyIdentity(
+        id=projection_policy.policy_id,
+        version=projection_policy.policy_version,
+        digest=digest,
+    )
+
+
+def verify_request_policy_identity(
+    request: Mapping[str, Any],
+    policy_identity: ProjectionPolicyIdentity,
+) -> None:
+    policy_reference = request.get("policy")
+    if not isinstance(policy_reference, Mapping):
+        raise AssuranceProjectionError(
+            code=ASSURANCE_PROJECTION_REQUEST_INVALID,
+            instance_path="/policy",
+            message="Projection request policy reference must be an object.",
+        )
+    expected = policy_identity.as_mapping()
+    for key, expected_value in expected.items():
+        if policy_reference.get(key) == expected_value:
+            continue
+        raise AssuranceProjectionError(
+            code=ASSURANCE_PROJECTION_POLICY_MISMATCH,
+            instance_path=f"/policy/{key}",
+            message="Projection request policy identity does not match supplied policy.",
+            related_ids=(str(policy_reference.get(key)), expected_value),
+        )
+
+
+def projection_datetimes(
+    request: Mapping[str, Any],
+    projected_at: datetime | str,
+) -> tuple[datetime, datetime, datetime]:
+    effective_at = normalize_aware_datetime(request["effective_at"], field_name="effective_at")
+    knowledge_cutoff = normalize_aware_datetime(request["knowledge_cutoff"], field_name="knowledge_cutoff")
+    projected_at_utc = normalize_aware_datetime(projected_at, field_name="projected_at")
+    return effective_at, knowledge_cutoff, projected_at_utc
+
+
+def repository_collection(
+    repository: Mapping[str, Any],
+    collection_name: str,
+) -> tuple[Mapping[str, Any], ...]:
+    collection = repository.get(collection_name, ())
+    if isinstance(collection, Mapping):
+        values = collection.values()
+    elif isinstance(collection, list | tuple):
+        values = collection
+    else:
+        raise AssuranceProjectionError(
+            code=ASSURANCE_PROJECTION_INPUT_INVALID,
+            instance_path=f"/repository/{collection_name}",
+            message=f"Repository collection {collection_name!r} must be a mapping or list.",
+        )
+
+    records: list[Mapping[str, Any]] = []
+    for record in values:
+        if not isinstance(record, Mapping):
+            raise AssuranceProjectionError(
+                code=ASSURANCE_PROJECTION_INPUT_INVALID,
+                instance_path=f"/repository/{collection_name}",
+                message=f"Repository collection {collection_name!r} contains a non-object record.",
+            )
+        records.append(record)
+    return tuple(records)
+
+
+def repository_assurance_records(repository: Mapping[str, Any]) -> tuple[Mapping[str, Any], ...]:
+    return repository_collection(repository, "assurances")
+
+
+def repository_record_id(record: Mapping[str, Any], id_field: str) -> str:
+    value = record.get(id_field)
+    if not isinstance(value, str):
+        raise AssuranceProjectionError(
+            code=ASSURANCE_PROJECTION_INPUT_INVALID,
+            instance_path=f"/{id_field}",
+            message=f"Repository record must define string {id_field}.",
+        )
+    return value
+
+
+def sort_records_by_id(records: Iterable[Mapping[str, Any]], id_field: str) -> list[dict[str, Any]]:
+    return [
+        json_material(record)
+        for record in sorted(records, key=lambda record: repository_record_id(record, id_field))
+    ]
+
+
+def admitted_repository_records_for_manifest(
+    repository: Mapping[str, Any],
+    *,
+    knowledge_cutoff: datetime,
+) -> dict[str, list[dict[str, Any]]]:
+    admitted_assurances = [
+        record
+        for record in repository_assurance_records(repository)
+        if assurance_recorded_at(
+            record,
+            field_name=f"assurances/{repository_record_id(record, 'assurance_id')}/recorded_at",
+        )
+        <= knowledge_cutoff
+    ]
+    return {
+        "vendors": sort_records_by_id(repository_collection(repository, "vendors"), "vendor_id"),
+        "sources": sort_records_by_id(repository_collection(repository, "sources"), "source_id"),
+        "assurances": sort_records_by_id(admitted_assurances, "assurance_id"),
+    }
+
+
+def projection_input_manifest(
+    *,
+    request: Mapping[str, Any],
+    repository: Mapping[str, Any],
+    policy_identity: ProjectionPolicyIdentity,
+    effective_at: datetime,
+    knowledge_cutoff: datetime,
+) -> dict[str, Any]:
+    return {
+        "projection_profile": PROJECTION_PROFILE,
+        "target_assurance_id": request["assurance_id"],
+        "effective_at": format_utc_datetime(effective_at),
+        "knowledge_cutoff": format_utc_datetime(knowledge_cutoff),
+        "policy": policy_identity.as_mapping(),
+        "repository": admitted_repository_records_for_manifest(
+            repository,
+            knowledge_cutoff=knowledge_cutoff,
+        ),
+    }
+
+
+def projection_input_digest(input_manifest: Mapping[str, Any]) -> str:
+    return sha256_bytes(canonical_json(json_material(input_manifest)))
 
 
 def empty_instrument_axis(*, assurance_id: str, temporal_model: str) -> dict[str, Any]:
