@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: 0.1.1
 assurance_id: acme-contractual
 vendor_id: acme
 assurance_class: contractual_capability
@@ -9,9 +9,10 @@ subject:
   entity_name: Acme Example Pte. Ltd.
   scope_description: Example contractual capability.
 temporal_scope:
-  effective_from_claimed: "2026-12-31"
-  effective_until_claimed: "2026-01-01"
+  effective_from_claimed: '2026-12-31'
+  effective_until_claimed: '2026-01-01'
 evidence:
   source_ids:
-    - acme-trust-center
+  - acme-trust-center
 advisory_boundary: non_advisory
+recorded_at: '2026-04-10T00:00:00Z'

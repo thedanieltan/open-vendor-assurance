@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: 0.1.1
 assurance_id: acme-hipaa-certification
 vendor_id: acme
 assurance_class: accredited_certification
@@ -16,10 +16,11 @@ issuer:
 identifiers:
   certificate_number: ACME-HIPAA-2026
 temporal_scope:
-  issued_at: "2026-01-10"
-  valid_from: "2026-01-10"
-  valid_until: "2027-01-09"
+  issued_at: '2026-01-10'
+  valid_from: '2026-01-10'
+  valid_until: '2027-01-09'
 evidence:
   source_ids:
-    - acme-trust-center
+  - acme-trust-center
 advisory_boundary: non_advisory
+recorded_at: '2026-01-22T00:00:00Z'
