@@ -30,7 +30,9 @@
     "supersession_state": {
       "caused_by": {
         "assurance_ids": [
-          "acme-chain-b"
+          "acme-chain-b",
+          "acme-chain-a",
+          "acme-chain-c"
         ]
       },
       "determination": "determined",
@@ -80,7 +82,9 @@
       "supersession_state": {
         "caused_by": {
           "assurance_ids": [
-            "acme-chain-b"
+            "acme-chain-b",
+            "acme-chain-a",
+            "acme-chain-c"
           ]
         },
         "determination": "determined",
@@ -100,7 +104,7 @@
       "instrument_state",
       "supersession_state"
     ],
-    "input_digest": "sha256:63f3cbd0e6471bb4c8ace016e1a18f9d1136697b63bbb659560b25249dced935",
+    "input_digest": "sha256:7f721403f8a115746d75869ea763455adcbb794d6f46a7fe14016266f773b2fd",
     "knowledge_cutoff": "2026-06-30T00:00:00Z",
     "next_reevaluation_at": null,
     "policy": {
