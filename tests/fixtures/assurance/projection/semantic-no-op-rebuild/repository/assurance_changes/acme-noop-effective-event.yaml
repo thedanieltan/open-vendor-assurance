@@ -11,7 +11,7 @@ transition:
   axis: instrument_state
   from: null
   to: effective
-reason_code: authoritative_status_confirmed
+reason_code: effective_at_within_stated_interval
 caused_by:
   assurance_ids:
   - acme-noop
