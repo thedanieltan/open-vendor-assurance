@@ -1,0 +1,23 @@
+{
+  "expected_diagnostics": [
+    {
+      "code": "ASSURANCE_SUPERSEDES_VENDOR_MISMATCH",
+      "record_ids": [
+        "acme-current"
+      ]
+    }
+  ],
+  "expected_result": "projection_input_invalid",
+  "fixture": "cross-vendor-supersession",
+  "request": {
+    "assurance_id": "acme-current",
+    "effective_at": "2026-06-30T00:00:00Z",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "policy": {
+      "digest": "sha256:e98b54e6caec1cc659290b0e41588847595467fa6ac6271bc2e15a69d1f38746",
+      "id": "openva-assurance-projection-policy",
+      "version": "0.1.0"
+    },
+    "schema_version": "0.1.0"
+  }
+}

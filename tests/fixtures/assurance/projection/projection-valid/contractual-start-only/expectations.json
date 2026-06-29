@@ -1,0 +1,125 @@
+{
+  "expected_axes": {
+    "instrument_state": {
+      "as_of_at": null,
+      "caused_by": {
+        "assurance_ids": [
+          "acme-contractual-start"
+        ]
+      },
+      "claimed_interval_end_exclusive_at": null,
+      "claimed_interval_start_at": "2026-01-01T00:00:00Z",
+      "determination": "determined",
+      "interval_end_exclusive_at": null,
+      "interval_start_at": null,
+      "reason_codes": [
+        "no_stated_end_date"
+      ],
+      "reporting_period_end_exclusive_at": null,
+      "reporting_period_start_at": null,
+      "stated_as_of_date": null,
+      "stated_effective_from_claimed": "2026-01-01",
+      "stated_effective_until_claimed": null,
+      "stated_reporting_period_end": null,
+      "stated_reporting_period_start": null,
+      "stated_valid_from": null,
+      "stated_valid_until": null,
+      "temporal_model": "optional_claimed_interval",
+      "value": "effective"
+    },
+    "supersession_state": {
+      "caused_by": {
+        "assurance_ids": [
+          "acme-contractual-start"
+        ]
+      },
+      "determination": "determined",
+      "predecessor_assurance_id": null,
+      "reason_codes": [
+        "no_explicit_successor_admitted"
+      ],
+      "successor_assurance_ids": [],
+      "topology": "standalone",
+      "value": "current"
+    }
+  },
+  "expected_next_reevaluation_at": null,
+  "expected_projection": {
+    "advisory_boundary": "non_advisory",
+    "assurance_id": "acme-contractual-start",
+    "axes": {
+      "instrument_state": {
+        "as_of_at": null,
+        "caused_by": {
+          "assurance_ids": [
+            "acme-contractual-start"
+          ]
+        },
+        "claimed_interval_end_exclusive_at": null,
+        "claimed_interval_start_at": "2026-01-01T00:00:00Z",
+        "determination": "determined",
+        "interval_end_exclusive_at": null,
+        "interval_start_at": null,
+        "reason_codes": [
+          "no_stated_end_date"
+        ],
+        "reporting_period_end_exclusive_at": null,
+        "reporting_period_start_at": null,
+        "stated_as_of_date": null,
+        "stated_effective_from_claimed": "2026-01-01",
+        "stated_effective_until_claimed": null,
+        "stated_reporting_period_end": null,
+        "stated_reporting_period_start": null,
+        "stated_valid_from": null,
+        "stated_valid_until": null,
+        "temporal_model": "optional_claimed_interval",
+        "value": "effective"
+      },
+      "supersession_state": {
+        "caused_by": {
+          "assurance_ids": [
+            "acme-contractual-start"
+          ]
+        },
+        "determination": "determined",
+        "predecessor_assurance_id": null,
+        "reason_codes": [
+          "no_explicit_successor_admitted"
+        ],
+        "successor_assurance_ids": [],
+        "topology": "standalone",
+        "value": "current"
+      }
+    },
+    "effective_at": "2026-06-30T00:00:00Z",
+    "implemented_axes": [
+      "instrument_state",
+      "supersession_state"
+    ],
+    "input_digest": "sha256:f7abd11a98f8c566f9bef0f505f1e97f7c17bdcecbe7e3a04e62a9b17ddbf30d",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "next_reevaluation_at": null,
+    "policy": {
+      "digest": "sha256:e98b54e6caec1cc659290b0e41588847595467fa6ac6271bc2e15a69d1f38746",
+      "id": "openva-assurance-projection-policy",
+      "version": "0.1.0"
+    },
+    "projected_at": "2026-07-01T00:00:00Z",
+    "projection_profile": "openva.assurance-lifecycle.v1",
+    "schema_version": "0.1.0",
+    "vendor_id": "acme"
+  },
+  "expected_result": "projection",
+  "fixture": "contractual-start-only",
+  "request": {
+    "assurance_id": "acme-contractual-start",
+    "effective_at": "2026-06-30T00:00:00Z",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "policy": {
+      "digest": "sha256:e98b54e6caec1cc659290b0e41588847595467fa6ac6271bc2e15a69d1f38746",
+      "id": "openva-assurance-projection-policy",
+      "version": "0.1.0"
+    },
+    "schema_version": "0.1.0"
+  }
+}

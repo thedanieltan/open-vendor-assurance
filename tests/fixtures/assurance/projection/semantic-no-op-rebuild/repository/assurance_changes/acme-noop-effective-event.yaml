@@ -1,0 +1,23 @@
+schema_version: 0.1.0
+change_event_id: acme-noop-effective-event
+assurance_id: acme-noop
+vendor_id: acme
+detected_at: '2026-01-21T00:00:00Z'
+effective_at: '2026-01-01T00:00:00Z'
+knowledge_cutoff: '2026-01-20T00:00:00Z'
+input_digest: sha256:d6f74a02a0c155d2e2bee27353ed22a9f63f7f00b1896eff26ab8a2b0b61b8a0
+change_type: instrument_state_changed
+transition:
+  axis: instrument_state
+  from: null
+  to: effective
+reason_code: authoritative_status_confirmed
+caused_by:
+  assurance_ids:
+  - acme-noop
+  assurance_observation_ids:
+  - acme-noop-observation
+policy:
+  id: openva-assurance-projection-policy
+  version: 0.1.0
+advisory_boundary: non_advisory
