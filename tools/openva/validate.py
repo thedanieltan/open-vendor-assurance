@@ -15,6 +15,7 @@ from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.indexes import build_indexes, check_generated_current, records_for
 from tools.openva.pack import verify_pack_integrity
 from tools.openva.paths import relative_repo_path
+from tools.openva.schema_registry import build_openva_validator
 from tools.openva.url_safety import validate_url_safety
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -31,6 +32,9 @@ SCHEMA_MAP = {
     "field_provenance": ROOT / "schemas/openva/field-provenance.schema.json",
     "candidate_source": ROOT / "schemas/openva/candidate-source.schema.json",
     "unavailable_source": ROOT / "schemas/openva/unavailable-source.schema.json",
+    "assurance": ROOT / "schemas/openva/assurance-record.schema.json",
+    "assurance_observation": ROOT / "schemas/openva/assurance-observation.schema.json",
+    "assurance_change": ROOT / "schemas/openva/assurance-change-event.schema.json",
     "pack": ROOT / "schemas/openva/openva-pack.schema.json",
 }
 ADAPTER_NORMALIZED_RECORD_SCHEMA = ROOT / "schemas/openva/adapter-normalized-record.schema.json"
@@ -46,6 +50,15 @@ FIXTURE_GLOBS = {
     "field_provenance": ["examples/vendors/*/provenance/*.yaml", "data/vendors/*/provenance/*.yaml"],
     "candidate_source": ["examples/vendors/*/candidate_sources/*.yaml", "data/vendors/*/candidate_sources/*.yaml"],
     "unavailable_source": ["examples/vendors/*/unavailable_sources/*.yaml", "data/vendors/*/unavailable_sources/*.yaml"],
+    "assurance": ["examples/vendors/*/assurances/*.yaml", "data/vendors/*/assurances/*.yaml"],
+    "assurance_observation": [
+        "examples/vendors/*/assurance_observations/*.yaml",
+        "data/vendors/*/assurance_observations/*.yaml",
+    ],
+    "assurance_change": [
+        "examples/vendors/*/assurance_changes/*.yaml",
+        "data/vendors/*/assurance_changes/*.yaml",
+    ],
 }
 
 RECORD_TEXT_FILE_GLOBS = ["examples/**/*.yaml", "data/**/*.yaml"]
@@ -93,7 +106,10 @@ def iter_paths(patterns: list[str]) -> list[Path]:
 
 def validate_schema(kind: str) -> list[str]:
     schema = load_json(SCHEMA_MAP[kind])
-    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    if kind.startswith("assurance"):
+        validator = build_openva_validator(SCHEMA_MAP[kind])
+    else:
+        validator = Draft202012Validator(schema, format_checker=FormatChecker())
     failures: list[str] = []
 
     if kind == "pack":

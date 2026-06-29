@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-change-event.schema.json",
+  "title": "OpenVA Assurance Change Event",
+  "description": "Append-only lifecycle projector transition for an assurance record. This schema defines structure only and does not infer legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk status.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "change_event_id",
+    "assurance_id",
+    "vendor_id",
+    "detected_at",
+    "change_type",
+    "transition",
+    "reason_code",
+    "caused_by",
+    "policy",
+    "advisory_boundary"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "change_event_id": { "$ref": "#/$defs/openvaSlug" },
+    "assurance_id": { "$ref": "#/$defs/openvaSlug" },
+    "vendor_id": { "$ref": "#/$defs/openvaSlug" },
+    "detected_at": { "type": "string", "format": "date-time" },
+    "change_type": {
+      "$ref": "vocabularies/assurance-v1.schema.json#/$defs/assuranceChangeType"
+    },
+    "transition": { "$ref": "#/$defs/transition" },
+    "reason_code": {
+      "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode"
+    },
+    "caused_by": { "$ref": "#/$defs/causedBy" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "openvaSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "idArray": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/openvaSlug" }
+    },
+    "policy": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "version": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "additionalProperties": false
+    },
+    "causedBy": {
+      "type": "object",
+      "properties": {
+        "assurance_observation_ids": { "$ref": "#/$defs/idArray" },
+        "source_observation_ids": { "$ref": "#/$defs/idArray" },
+        "assurance_ids": { "$ref": "#/$defs/idArray" }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["assurance_observation_ids"] },
+        { "required": ["source_observation_ids"] },
+        { "required": ["assurance_ids"] }
+      ]
+    },
+    "evidenceSet": {
+      "type": "object",
+      "required": ["source_ids"],
+      "properties": {
+        "source_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/openvaSlug" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "transition": {
+      "type": "object",
+      "required": ["axis", "from", "to"],
+      "properties": {
+        "axis": { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionAxis" },
+        "from": true,
+        "to": true
+      },
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": ["axis", "from", "to"],
+          "properties": {
+            "axis": { "const": "instrument_state" },
+            "from": {
+              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/instrumentState"
+            },
+            "to": {
+              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/instrumentState"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "required": ["axis", "from", "to"],
+          "properties": {
+            "axis": { "const": "verification_state" },
+            "from": {
+              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationState"
+            },
+            "to": {
+              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationState"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "required": ["axis", "from", "to"],
+          "properties": {
+            "axis": { "const": "verification_freshness" },
+            "from": {
+              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationFreshness"
+            },
+            "to": {
+              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationFreshness"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "required": ["axis", "from", "to"],
+          "properties": {
+            "axis": { "const": "evidence_set" },
+            "from": { "$ref": "#/$defs/evidenceSet" },
+            "to": { "$ref": "#/$defs/evidenceSet" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
