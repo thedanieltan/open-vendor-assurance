@@ -104,6 +104,29 @@ Supersession state is graph-topological in v1. It is derived from records and
 explicit links admitted by `knowledge_cutoff`, not from `effective_at` date
 ordering. Supersession state is therefore independent of `effective_at`.
 
+## Lifecycle Change-Event Reasons
+
+Lifecycle change events retain the singular `reason_code` field. The reason
+records why the newly established axis state was derived, and it is taken from
+the new projection axis result.
+
+Reason validation is discriminated by `transition.axis`:
+
+- `instrument_state` events use `instrumentStateReasonCode` from
+  `assurance-projection-v1.schema.json`.
+- `supersession_state` events use `supersessionStateReasonCode` from
+  `assurance-projection-v1.schema.json`.
+- Legacy `verification_state`, `verification_freshness`, and `evidence_set`
+  events continue to use the legacy event reason vocabulary from
+  `assurance-v1.schema.json`.
+
+The current v1 instrument and supersession evaluators produce exactly one
+reason code per axis result. A later diff constructor must fail closed if an
+axis result has zero or multiple reasons while constructing this singular-reason
+event envelope. Changing only the reason, provenance, policy, stated dates,
+normalized boundaries, or supersession topology without changing the axis state
+value does not itself create a lifecycle transition event.
+
 ## Out Of Scope
 
 Slice 3A does not add:

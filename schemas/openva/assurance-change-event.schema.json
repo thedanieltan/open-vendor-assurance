@@ -34,13 +34,16 @@
     },
     "transition": { "$ref": "#/$defs/transition" },
     "reason_code": {
-      "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode"
+      "$ref": "#/$defs/axisReasonCode"
     },
     "caused_by": { "$ref": "#/$defs/causedBy" },
     "policy": { "$ref": "#/$defs/policy" },
     "advisory_boundary": { "const": "non_advisory" }
   },
   "additionalProperties": false,
+  "allOf": [
+    { "$ref": "#/$defs/axisReasonCoupling" }
+  ],
   "$defs": {
     "openvaSlug": {
       "type": "string",
@@ -95,6 +98,140 @@
       },
       "additionalProperties": false
     },
+    "axisReasonCode": {
+      "anyOf": [
+        { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentStateReasonCode" },
+        { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionStateReasonCode" },
+        { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode" }
+      ]
+    },
+    "axisReasonCoupling": {
+      "oneOf": [
+        {
+          "properties": {
+            "transition": { "$ref": "#/$defs/instrumentStateTransition" },
+            "reason_code": {
+              "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentStateReasonCode"
+            }
+          }
+        },
+        {
+          "properties": {
+            "transition": { "$ref": "#/$defs/supersessionStateTransition" },
+            "reason_code": {
+              "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionStateReasonCode"
+            }
+          }
+        },
+        {
+          "properties": {
+            "transition": { "$ref": "#/$defs/verificationStateTransition" },
+            "reason_code": {
+              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode"
+            }
+          }
+        },
+        {
+          "properties": {
+            "transition": { "$ref": "#/$defs/verificationFreshnessTransition" },
+            "reason_code": {
+              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode"
+            }
+          }
+        },
+        {
+          "properties": {
+            "transition": { "$ref": "#/$defs/evidenceSetTransition" },
+            "reason_code": {
+              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode"
+            }
+          }
+        }
+      ]
+    },
+    "instrumentStateTransition": {
+      "type": "object",
+      "required": ["axis", "from", "to"],
+      "properties": {
+        "axis": { "const": "instrument_state" },
+        "from": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentState" },
+            { "type": "null" }
+          ]
+        },
+        "to": {
+          "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentState"
+        }
+      },
+      "additionalProperties": false
+    },
+    "supersessionStateTransition": {
+      "type": "object",
+      "required": ["axis", "from", "to"],
+      "properties": {
+        "axis": { "const": "supersession_state" },
+        "from": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionState" },
+            { "type": "null" }
+          ]
+        },
+        "to": {
+          "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionState"
+        }
+      },
+      "additionalProperties": false
+    },
+    "verificationStateTransition": {
+      "type": "object",
+      "required": ["axis", "from", "to"],
+      "properties": {
+        "axis": { "const": "verification_state" },
+        "from": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationState" },
+            { "type": "null" }
+          ]
+        },
+        "to": {
+          "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationState"
+        }
+      },
+      "additionalProperties": false
+    },
+    "verificationFreshnessTransition": {
+      "type": "object",
+      "required": ["axis", "from", "to"],
+      "properties": {
+        "axis": { "const": "verification_freshness" },
+        "from": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationFreshness" },
+            { "type": "null" }
+          ]
+        },
+        "to": {
+          "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationFreshness"
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidenceSetTransition": {
+      "type": "object",
+      "required": ["axis", "from", "to"],
+      "properties": {
+        "axis": { "const": "evidence_set" },
+        "from": {
+          "anyOf": [
+            { "$ref": "#/$defs/evidenceSet" },
+            { "type": "null" }
+          ]
+        },
+        "to": { "$ref": "#/$defs/evidenceSet" }
+      },
+      "additionalProperties": false
+    },
     "transition": {
       "type": "object",
       "required": ["axis", "from", "to"],
@@ -113,84 +250,11 @@
       },
       "additionalProperties": false,
       "oneOf": [
-        {
-          "required": ["axis", "from", "to"],
-          "properties": {
-            "axis": { "const": "instrument_state" },
-            "from": {
-              "anyOf": [
-                { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentState" },
-                { "type": "null" }
-              ]
-            },
-            "to": {
-              "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentState"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "required": ["axis", "from", "to"],
-          "properties": {
-            "axis": { "const": "supersession_state" },
-            "from": {
-              "anyOf": [
-                { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionState" },
-                { "type": "null" }
-              ]
-            },
-            "to": {
-              "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionState"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "required": ["axis", "from", "to"],
-          "properties": {
-            "axis": { "const": "verification_state" },
-            "from": {
-              "anyOf": [
-                { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationState" },
-                { "type": "null" }
-              ]
-            },
-            "to": {
-              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationState"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "required": ["axis", "from", "to"],
-          "properties": {
-            "axis": { "const": "verification_freshness" },
-            "from": {
-              "anyOf": [
-                { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationFreshness" },
-                { "type": "null" }
-              ]
-            },
-            "to": {
-              "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationFreshness"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "required": ["axis", "from", "to"],
-          "properties": {
-            "axis": { "const": "evidence_set" },
-            "from": {
-              "anyOf": [
-                { "$ref": "#/$defs/evidenceSet" },
-                { "type": "null" }
-              ]
-            },
-            "to": { "$ref": "#/$defs/evidenceSet" }
-          },
-          "additionalProperties": false
-        }
+        { "$ref": "#/$defs/instrumentStateTransition" },
+        { "$ref": "#/$defs/supersessionStateTransition" },
+        { "$ref": "#/$defs/verificationStateTransition" },
+        { "$ref": "#/$defs/verificationFreshnessTransition" },
+        { "$ref": "#/$defs/evidenceSetTransition" }
       ]
     }
   }
