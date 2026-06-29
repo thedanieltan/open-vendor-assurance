@@ -12,6 +12,14 @@ from tools.openva.schema_registry import ROOT, build_openva_validator
 
 ASSURANCE_PROJECTION_POLICY_INVALID = "ASSURANCE_PROJECTION_POLICY_INVALID"
 ASSURANCE_PROJECTION_CLASS_RULE_MISSING = "ASSURANCE_PROJECTION_CLASS_RULE_MISSING"
+EXPLICIT_SUPERSESSION_POLICY = MappingProxyType(
+    {
+        "explicit_links_only": True,
+        "infer_from_dates": False,
+        "infer_from_framework_match": False,
+        "infer_from_identifier_similarity": False,
+    }
+)
 
 DEFAULT_POLICY_PATH = ROOT / "config/assurance-projection-policy.yaml"
 POLICY_SCHEMA_PATH = ROOT / "schemas/openva/assurance-projection-policy.schema.json"
@@ -98,6 +106,31 @@ class AssuranceProjectionPolicy:
                 related_ids=(assurance_class,),
             )
         return temporal_model
+
+    @property
+    def supersession(self) -> Mapping[str, Any]:
+        value = self.data.get("supersession")
+        if not isinstance(value, Mapping):
+            raise AssuranceProjectionPolicyError(
+                code=ASSURANCE_PROJECTION_POLICY_INVALID,
+                instance_path="/supersession",
+                message="Projection policy must define supersession rules.",
+            )
+        return value
+
+    def require_explicit_supersession_policy(self) -> None:
+        supersession = self.supersession
+        for key, expected in EXPLICIT_SUPERSESSION_POLICY.items():
+            if supersession.get(key) is expected:
+                continue
+            raise AssuranceProjectionPolicyError(
+                code=ASSURANCE_PROJECTION_POLICY_INVALID,
+                instance_path=f"/supersession/{key}",
+                message=(
+                    "Supersession projection v1 requires explicit links only "
+                    "and disables inference rules."
+                ),
+            )
 
 
 def build_assurance_projection_policy(raw_policy: Mapping[str, Any]) -> AssuranceProjectionPolicy:

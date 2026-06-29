@@ -1,17 +1,28 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, time, timedelta
+from types import MappingProxyType
 from typing import Any
 
 from tools.openva.assurance_projection_policy import AssuranceProjectionPolicy
 from tools.openva.assurance_projection_policy import build_assurance_projection_policy
+from tools.openva.assurance_validation import ASSURANCE
+from tools.openva.assurance_validation import SOURCE
+from tools.openva.assurance_validation import VENDOR
+from tools.openva.assurance_validation import RepositoryRecord
+from tools.openva.assurance_validation import RepositorySnapshot
+from tools.openva.assurance_validation import SupersessionEdge
+from tools.openva.assurance_validation import ValidationDiagnostic
+from tools.openva.assurance_validation import _admissible_supersession_edges
+from tools.openva.assurance_validation import validate_assurance_repository
 
 ASSURANCE_TARGET_NOT_KNOWN_AT_CUTOFF = "ASSURANCE_TARGET_NOT_KNOWN_AT_CUTOFF"
 ASSURANCE_PROJECTION_DATETIME_NAIVE = "ASSURANCE_PROJECTION_DATETIME_NAIVE"
 ASSURANCE_PROJECTION_POLICY_INVALID = "ASSURANCE_PROJECTION_POLICY_INVALID"
 ASSURANCE_PROJECTION_CLASS_RULE_MISSING = "ASSURANCE_PROJECTION_CLASS_RULE_MISSING"
+ASSURANCE_PROJECTION_INPUT_INVALID = "ASSURANCE_PROJECTION_INPUT_INVALID"
 
 
 class AssuranceProjectionError(Exception):
@@ -29,10 +40,24 @@ class AssuranceProjectionError(Exception):
         self.related_ids = related_ids
 
 
+class ProjectionInputInvalidError(AssuranceProjectionError):
+    def __init__(self, diagnostics: tuple[ValidationDiagnostic, ...]) -> None:
+        super().__init__(
+            code=ASSURANCE_PROJECTION_INPUT_INVALID,
+            message="Projection input failed assurance semantic validation.",
+        )
+        self.diagnostics = diagnostics
+
+
 @dataclass(frozen=True, slots=True)
 class InstrumentStateResult:
     axis: Mapping[str, Any]
     next_reevaluation_at: datetime | None
+
+
+@dataclass(frozen=True, slots=True)
+class SupersessionStateResult:
+    axis: Mapping[str, Any]
 
 
 def normalize_aware_datetime(value: datetime | str, *, field_name: str) -> datetime:
@@ -138,6 +163,103 @@ def ensure_target_known_at_cutoff(
             message="Assurance record is not known at the supplied knowledge cutoff.",
             related_ids=(assurance_id,) if isinstance(assurance_id, str) else (),
         )
+
+
+def assurance_id_for(assurance_record: Mapping[str, Any]) -> str:
+    return require_string(assurance_record, "assurance_id")
+
+
+def assurance_recorded_at(
+    assurance_record: Mapping[str, Any],
+    *,
+    field_name: str = "recorded_at",
+) -> datetime:
+    recorded_at = assurance_record.get("recorded_at")
+    if not isinstance(recorded_at, str):
+        raise AssuranceProjectionError(
+            code=ASSURANCE_TARGET_NOT_KNOWN_AT_CUTOFF,
+            instance_path="/recorded_at",
+            message="Assurance record has no usable recorded_at timestamp.",
+            related_ids=(
+                str(assurance_record.get("assurance_id")),
+            )
+            if isinstance(assurance_record.get("assurance_id"), str)
+            else (),
+        )
+    return normalize_aware_datetime(recorded_at, field_name=field_name)
+
+
+def admitted_assurance_records(
+    target_record: Mapping[str, Any],
+    assurance_records: Iterable[Mapping[str, Any]],
+    *,
+    knowledge_cutoff: datetime,
+) -> tuple[Mapping[str, Any], ...]:
+    target_id = assurance_id_for(target_record)
+    records_by_id: dict[str, Mapping[str, Any]] = {}
+    for record in assurance_records:
+        record_id = assurance_id_for(record)
+        records_by_id[record_id] = record
+    records_by_id[target_id] = target_record
+
+    ensure_target_known_at_cutoff(target_record, knowledge_cutoff=knowledge_cutoff)
+    admitted = [
+        record
+        for record_id, record in sorted(records_by_id.items())
+        if assurance_recorded_at(record, field_name=f"assurance_records/{record_id}/recorded_at")
+        <= knowledge_cutoff
+    ]
+    return tuple(admitted)
+
+
+def build_projection_repository_snapshot(
+    assurance_records: Iterable[Mapping[str, Any]],
+) -> RepositorySnapshot:
+    assurance_repo_records: dict[str, RepositoryRecord] = {}
+    vendor_ids: set[str] = set()
+    source_payloads: dict[str, Mapping[str, Any]] = {}
+    for record in assurance_records:
+        repo_record = RepositoryRecord.from_raw(spec=ASSURANCE, payload=record)
+        assurance_repo_records[repo_record.record_id] = repo_record
+        vendor_id = require_string(record, "vendor_id")
+        vendor_ids.add(vendor_id)
+
+        evidence = record.get("evidence")
+        if isinstance(evidence, Mapping):
+            source_ids = evidence.get("source_ids")
+            if isinstance(source_ids, list | tuple):
+                for source_id in source_ids:
+                    if isinstance(source_id, str) and source_id not in source_payloads:
+                        source_payloads[source_id] = {
+                            "source_id": source_id,
+                            "vendor_id": vendor_id,
+                        }
+
+    vendor_records = {
+        vendor_id: RepositoryRecord.from_raw(spec=VENDOR, payload={"vendor_id": vendor_id})
+        for vendor_id in sorted(vendor_ids)
+    }
+    source_records = {
+        source_id: RepositoryRecord.from_raw(spec=SOURCE, payload=payload)
+        for source_id, payload in sorted(source_payloads.items())
+    }
+    return RepositorySnapshot(
+        vendors=MappingProxyType(vendor_records),
+        sources=MappingProxyType(source_records),
+        source_observations=MappingProxyType({}),
+        assurances=MappingProxyType(dict(sorted(assurance_repo_records.items()))),
+        assurance_observations=MappingProxyType({}),
+        assurance_change_events=MappingProxyType({}),
+    )
+
+
+def admitted_supersession_edges_or_raise(
+    repository: RepositorySnapshot,
+) -> tuple[SupersessionEdge, ...]:
+    diagnostics = validate_assurance_repository(repository)
+    if diagnostics:
+        raise ProjectionInputInvalidError(diagnostics)
+    return _admissible_supersession_edges(repository)
 
 
 def temporal_model_for_record(
