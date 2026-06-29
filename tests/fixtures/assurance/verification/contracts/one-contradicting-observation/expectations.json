@@ -1,0 +1,43 @@
+{
+  "expected_result": "verification_state",
+  "expected_state": {
+    "advisory_boundary": "non_advisory",
+    "assurance_id": "acme-iso-2026",
+    "caused_by": {
+      "assurance_ids": [
+        "acme-iso-2026"
+      ],
+      "assurance_observation_ids": [
+        "contradicting-observation"
+      ],
+      "source_observation_ids": []
+    },
+    "determination": "determined",
+    "effective_at": "2026-06-30T00:00:00Z",
+    "input_digest": "sha256:12960511277acad25357e0ba35adb2e6ca853655fd957e8ee64f2b443ae54a53",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "policy": {
+      "digest": "sha256:0d6fb57cf7e0bae4a83ff10dcff6ffc05f17d2472bf5df9686c67c5a6be982c7",
+      "id": "openva-assurance-verification-policy",
+      "version": "0.1.0"
+    },
+    "reason_codes": [
+      "decisive_observations_contradict"
+    ],
+    "schema_version": "0.1.0",
+    "value": "contradicted",
+    "vendor_id": "acme"
+  },
+  "fixture": "one-contradicting-observation",
+  "request": {
+    "assurance_id": "acme-iso-2026",
+    "effective_at": "2026-06-30T00:00:00Z",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "policy": {
+      "digest": "sha256:0d6fb57cf7e0bae4a83ff10dcff6ffc05f17d2472bf5df9686c67c5a6be982c7",
+      "id": "openva-assurance-verification-policy",
+      "version": "0.1.0"
+    },
+    "schema_version": "0.1.0"
+  }
+}

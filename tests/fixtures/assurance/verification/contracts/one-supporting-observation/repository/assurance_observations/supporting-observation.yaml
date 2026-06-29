@@ -1,0 +1,20 @@
+schema_version: 0.1.1
+assurance_observation_id: supporting-observation
+assurance_id: acme-iso-2026
+vendor_id: acme
+observed_at: '2026-01-20T00:00:00Z'
+recorded_at: '2026-01-20T00:00:00Z'
+source_observation_ids:
+- supporting-observation-source
+evaluation:
+  claim_presence: present
+  verification_outcome: authoritative_status_confirmed
+  reason_codes:
+  - authoritative_status_confirmed
+observed_fields:
+  stated_valid_from: '2026-01-10'
+  stated_valid_until: '2027-01-09'
+policy:
+  id: assurance-observation
+  version: 0.1.0
+advisory_boundary: non_advisory
