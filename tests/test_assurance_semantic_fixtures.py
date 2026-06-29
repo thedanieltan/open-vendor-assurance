@@ -150,6 +150,17 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "related_ids": ["acme-missing-prior"],
         }
     ]),
+
+    # --- ASSURANCE_SUPERSEDES_SELF case ---
+    ("invalid/supersedes-self", [
+        {
+            "code": "ASSURANCE_SUPERSEDES_SELF",
+            "record_kind": "assurance",
+            "record_id": "acme-current",
+            "instance_path": "/supersedes_assurance_id",
+            "related_ids": ["acme-current"],
+        }
+    ]),
 ])
 def test_assurance_semantic_matrix(case_id: str, expected: list[dict[str, Any]]) -> None:
     root = Path(f"tests/fixtures/assurance/semantic/{case_id}/repository")

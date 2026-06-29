@@ -47,6 +47,7 @@ ASSURANCE_VENDOR_UNKNOWN = "ASSURANCE_VENDOR_UNKNOWN"
 ASSURANCE_SOURCE_UNKNOWN = "ASSURANCE_SOURCE_UNKNOWN"
 ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET = "ASSURANCE_PRIMARY_SOURCE_NOT_IN_EVIDENCE_SET"
 ASSURANCE_SUPERSEDES_UNKNOWN = "ASSURANCE_SUPERSEDES_UNKNOWN"
+ASSURANCE_SUPERSEDES_SELF = "ASSURANCE_SUPERSEDES_SELF"
 
 
 @dataclass(frozen=True, slots=True)
@@ -295,6 +296,18 @@ def validate_assurance_record_semantics(
 
     # Rule: ASSURANCE_SUPERSEDES_UNKNOWN
     supersedes_assurance_id = record.data.get("supersedes_assurance_id")
+    if supersedes_assurance_id == record.record_id:
+        diagnostics.append(
+            SemanticDiagnostic(
+                code=ASSURANCE_SUPERSEDES_SELF,
+                record_kind="assurance",
+                record_id=record.record_id,
+                record_path=record.path,
+                instance_path="/supersedes_assurance_id",
+                message="Assurance cannot supersede itself.",
+                related_ids=(record.record_id,),
+            )
+        )
     if (
         isinstance(supersedes_assurance_id, str)
         and supersedes_assurance_id != record.record_id
