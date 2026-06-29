@@ -72,6 +72,10 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
     # --- ASSURANCE_SOURCE_UNKNOWN cases ---
     ("valid/known-source", []),
     ("valid/primary-source-in-evidence", []),
+    ("valid/regulatory-claimed-as-of-only", []),
+    ("valid/regulatory-effective-from-only", []),
+    ("valid/regulatory-no-temporal-bounds", []),
+    ("valid/contractual-with-both-bounds", []),
     ("invalid/unknown-source", [
         {
             "code": "ASSURANCE_SOURCE_UNKNOWN",
@@ -182,6 +186,20 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "instance_path": "/temporal_scope/reporting_period/end",
             "related_ids": ["start=2026-12-31", "end=2026-01-01"],
         },
+    ]),
+
+    # --- ASSURANCE_REGULATORY_TEMPORAL_SHAPE_AMBIGUOUS case ---
+    ("invalid/regulatory-temporal-shape-ambiguous", [
+        {
+            "code": "ASSURANCE_REGULATORY_TEMPORAL_SHAPE_AMBIGUOUS",
+            "record_kind": "assurance",
+            "record_id": "acme-regulatory-ambiguous",
+            "instance_path": "/temporal_scope",
+            "related_ids": [
+                "claimed_as_of=2026-03-01",
+                "effective_from_claimed=2026-03-01",
+            ],
+        }
     ]),
 
     # --- ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE case ---

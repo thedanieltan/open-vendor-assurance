@@ -52,6 +52,7 @@ ASSURANCE_SUPERSEDES_VENDOR_MISMATCH = "ASSURANCE_SUPERSEDES_VENDOR_MISMATCH"
 ASSURANCE_TEMPORAL_ORDER_INVALID = "ASSURANCE_TEMPORAL_ORDER_INVALID"
 ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE = "ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE"
 ASSURANCE_SUPERSESSION_CYCLE = "ASSURANCE_SUPERSESSION_CYCLE"
+ASSURANCE_REGULATORY_TEMPORAL_SHAPE_AMBIGUOUS = "ASSURANCE_REGULATORY_TEMPORAL_SHAPE_AMBIGUOUS"
 
 INCOMPATIBLE_FRAMEWORKS_BY_ASSURANCE_CLASS: Mapping[str, tuple[str, ...]] = MappingProxyType(
     {
@@ -302,6 +303,33 @@ def _class_framework_compatibility_diagnostics(record: RepositoryRecord) -> list
     ]
 
 
+def _regulatory_temporal_shape_diagnostics(record: RepositoryRecord) -> list[SemanticDiagnostic]:
+    if record.data["assurance_class"] != "regulatory_assertion":
+        return []
+    temporal_scope = record.data["temporal_scope"]
+    if not isinstance(temporal_scope.get("claimed_as_of"), str) or not isinstance(
+        temporal_scope.get("effective_from_claimed"), str
+    ):
+        return []
+    return [
+        SemanticDiagnostic(
+            code=ASSURANCE_REGULATORY_TEMPORAL_SHAPE_AMBIGUOUS,
+            record_kind="assurance",
+            record_id=record.record_id,
+            record_path=record.path,
+            instance_path="/temporal_scope",
+            message=(
+                "Regulatory assertions must not mix point-in-time claimed_as_of "
+                "with effective_from_claimed interval semantics."
+            ),
+            related_ids=(
+                f"claimed_as_of={temporal_scope['claimed_as_of']}",
+                f"effective_from_claimed={temporal_scope['effective_from_claimed']}",
+            ),
+        )
+    ]
+
+
 def _canonical_cycle(cycle: list[str]) -> tuple[str, ...]:
     rotations = [tuple(cycle[index:] + cycle[:index]) for index in range(len(cycle))]
     return min(rotations)
@@ -487,6 +515,7 @@ def validate_assurance_record_semantics(
 
     diagnostics.extend(_temporal_order_diagnostics(record))
     diagnostics.extend(_class_framework_compatibility_diagnostics(record))
+    diagnostics.extend(_regulatory_temporal_shape_diagnostics(record))
 
     # Rule: ASSURANCE_SOURCE_UNKNOWN & ASSURANCE_SOURCE_VENDOR_MISMATCH
     for index, source_id in enumerate(source_ids):
