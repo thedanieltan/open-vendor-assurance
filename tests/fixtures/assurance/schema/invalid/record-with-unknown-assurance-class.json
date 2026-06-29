@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.1.1",
   "assurance_id": "example-unknown-assurance",
   "vendor_id": "example-vendor",
   "assurance_class": "hipaa_certified",
@@ -14,7 +14,10 @@
   },
   "temporal_scope": {},
   "evidence": {
-    "source_ids": ["example-hipaa-source"]
+    "source_ids": [
+      "example-hipaa-source"
+    ]
   },
-  "advisory_boundary": "non_advisory"
+  "advisory_boundary": "non_advisory",
+  "recorded_at": "2026-06-01T00:00:00Z"
 }

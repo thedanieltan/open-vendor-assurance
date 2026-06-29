@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.1.1",
   "assurance_id": "example-regulatory-assertion",
   "vendor_id": "example-vendor",
   "assurance_class": "regulatory_assertion",
@@ -17,7 +17,10 @@
     "effective_from_claimed": null
   },
   "evidence": {
-    "source_ids": ["example-regulatory-source"]
+    "source_ids": [
+      "example-regulatory-source"
+    ]
   },
-  "advisory_boundary": "non_advisory"
+  "advisory_boundary": "non_advisory",
+  "recorded_at": "2026-03-05T00:00:00Z"
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.1.1",
   "assurance_id": "example-contractual-capability",
   "vendor_id": "example-vendor",
   "assurance_class": "contractual_capability",
@@ -11,15 +11,22 @@
   "subject": {
     "entity_name": "Example Vendor Inc.",
     "scope_description": "Example public contract availability statement",
-    "products_or_services": ["example platform"]
+    "products_or_services": [
+      "example platform"
+    ]
   },
   "temporal_scope": {
     "effective_from_claimed": null,
     "effective_until_claimed": null
   },
-  "conditions": ["Available by public standard terms"],
+  "conditions": [
+    "Available by public standard terms"
+  ],
   "evidence": {
-    "source_ids": ["example-contract-source"]
+    "source_ids": [
+      "example-contract-source"
+    ]
   },
-  "advisory_boundary": "non_advisory"
+  "advisory_boundary": "non_advisory",
+  "recorded_at": "2026-04-10T00:00:00Z"
 }

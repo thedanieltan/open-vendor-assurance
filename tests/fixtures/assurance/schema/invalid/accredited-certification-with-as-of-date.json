@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.1.1",
   "assurance_id": "example-iso27001-2026",
   "vendor_id": "example-vendor",
   "assurance_class": "accredited_certification",
@@ -26,8 +26,11 @@
     "as_of_date": "2026-06-01"
   },
   "evidence": {
-    "source_ids": ["example-cert-source"],
+    "source_ids": [
+      "example-cert-source"
+    ],
     "primary_source_id": "example-cert-source"
   },
-  "advisory_boundary": "non_advisory"
+  "advisory_boundary": "non_advisory",
+  "recorded_at": "2026-01-16T10:30:00Z"
 }
