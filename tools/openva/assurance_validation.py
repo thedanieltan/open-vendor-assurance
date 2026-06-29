@@ -53,6 +53,7 @@ ASSURANCE_TEMPORAL_ORDER_INVALID = "ASSURANCE_TEMPORAL_ORDER_INVALID"
 ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE = "ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE"
 ASSURANCE_SUPERSESSION_CYCLE = "ASSURANCE_SUPERSESSION_CYCLE"
 ASSURANCE_REGULATORY_TEMPORAL_SHAPE_AMBIGUOUS = "ASSURANCE_REGULATORY_TEMPORAL_SHAPE_AMBIGUOUS"
+ASSURANCE_SUPERSESSION_DIVERGENT = "ASSURANCE_SUPERSESSION_DIVERGENT"
 
 INCOMPATIBLE_FRAMEWORKS_BY_ASSURANCE_CLASS: Mapping[str, tuple[str, ...]] = MappingProxyType(
     {
@@ -101,6 +102,12 @@ class SemanticDiagnostic:
 
 
 ValidationDiagnostic = SemanticDiagnostic
+
+
+@dataclass(frozen=True, slots=True)
+class SupersessionEdge:
+    successor_id: str
+    predecessor_id: str
 
 
 def deep_freeze_json(value: Any) -> JsonFrozen:
@@ -335,16 +342,36 @@ def _canonical_cycle(cycle: list[str]) -> tuple[str, ...]:
     return min(rotations)
 
 
-def _supersession_cycle_diagnostics(repository: RepositoryView) -> list[SemanticDiagnostic]:
-    edges: dict[str, str] = {}
+def _admissible_supersession_edges(repository: RepositoryView) -> tuple[SupersessionEdge, ...]:
+    edges: list[SupersessionEdge] = []
     for assurance_id, record in repository.assurances.items():
         supersedes_assurance_id = record.data.get("supersedes_assurance_id")
         if (
-            isinstance(supersedes_assurance_id, str)
-            and supersedes_assurance_id != assurance_id
-            and supersedes_assurance_id in repository.assurances
+            not isinstance(supersedes_assurance_id, str)
+            or supersedes_assurance_id == assurance_id
+            or supersedes_assurance_id not in repository.assurances
         ):
-            edges[assurance_id] = supersedes_assurance_id
+            continue
+        superseded_record = repository.assurances[supersedes_assurance_id]
+        vendor_record = repository.get_vendor(record.vendor_id)
+        superseded_vendor_record = repository.get_vendor(superseded_record.vendor_id)
+        if (
+            vendor_record is None
+            or superseded_vendor_record is None
+            or superseded_record.vendor_id != record.vendor_id
+            or _class_framework_compatibility_diagnostics(record)
+            or _class_framework_compatibility_diagnostics(superseded_record)
+        ):
+            continue
+        edges.append(SupersessionEdge(successor_id=assurance_id, predecessor_id=supersedes_assurance_id))
+    return tuple(sorted(edges, key=lambda edge: (edge.successor_id, edge.predecessor_id)))
+
+
+def _supersession_cycle_diagnostics(
+    repository: RepositoryView,
+    admitted_edges: tuple[SupersessionEdge, ...],
+) -> list[SemanticDiagnostic]:
+    edges = {edge.successor_id: edge.predecessor_id for edge in admitted_edges}
 
     cycles: set[tuple[str, ...]] = set()
     for start_id in sorted(edges):
@@ -371,6 +398,37 @@ def _supersession_cycle_diagnostics(repository: RepositoryView) -> list[Semantic
                 instance_path="/supersedes_assurance_id",
                 message=f"Assurance supersession cycle detected: {' -> '.join(cycle)}.",
                 related_ids=cycle,
+            )
+        )
+    return diagnostics
+
+
+def _supersession_divergence_diagnostics(
+    repository: RepositoryView,
+    admitted_edges: tuple[SupersessionEdge, ...],
+) -> list[SemanticDiagnostic]:
+    successors_by_predecessor: dict[str, set[str]] = {}
+    for edge in admitted_edges:
+        successors_by_predecessor.setdefault(edge.predecessor_id, set()).add(edge.successor_id)
+
+    diagnostics: list[SemanticDiagnostic] = []
+    for predecessor_id, successor_ids in sorted(successors_by_predecessor.items()):
+        if len(successor_ids) <= 1:
+            continue
+        predecessor = repository.assurances[predecessor_id]
+        sorted_successor_ids = tuple(sorted(successor_ids))
+        diagnostics.append(
+            SemanticDiagnostic(
+                code=ASSURANCE_SUPERSESSION_DIVERGENT,
+                record_kind="assurance",
+                record_id=predecessor.record_id,
+                record_path=predecessor.path,
+                instance_path="/supersedes_assurance_id",
+                message=(
+                    f"Assurance {predecessor_id!r} has divergent direct successors: "
+                    f"{', '.join(sorted_successor_ids)}."
+                ),
+                related_ids=sorted_successor_ids,
             )
         )
     return diagnostics
@@ -583,5 +641,9 @@ def validate_assurance_repository(repository: RepositoryView) -> tuple[Validatio
         diagnostics.extend(
             validate_assurance_record_semantics(repository.assurances[assurance_id], repository)
         )
-    diagnostics.extend(_supersession_cycle_diagnostics(repository))
+    # Cycle and divergence checks must share the same admitted edges so rejected
+    # edge-level defects cannot leak into repository-level graph diagnostics.
+    admitted_edges = _admissible_supersession_edges(repository)
+    diagnostics.extend(_supersession_cycle_diagnostics(repository, admitted_edges))
+    diagnostics.extend(_supersession_divergence_diagnostics(repository, admitted_edges))
     return tuple(sorted_diagnostics(diagnostics))

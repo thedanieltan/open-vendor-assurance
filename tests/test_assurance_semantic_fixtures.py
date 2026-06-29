@@ -76,6 +76,9 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
     ("valid/regulatory-effective-from-only", []),
     ("valid/regulatory-no-temporal-bounds", []),
     ("valid/contractual-with-both-bounds", []),
+    ("valid/standalone-assurance", []),
+    ("valid/single-successor", []),
+    ("valid/linear-chain", []),
     ("invalid/unknown-source", [
         {
             "code": "ASSURANCE_SOURCE_UNKNOWN",
@@ -221,6 +224,44 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "record_id": "acme-cycle-a",
             "instance_path": "/supersedes_assurance_id",
             "related_ids": ["acme-cycle-a", "acme-cycle-b"],
+        },
+    ]),
+
+    # --- ASSURANCE_SUPERSESSION_DIVERGENT cases ---
+    ("invalid/supersession-divergent", [
+        {
+            "code": "ASSURANCE_SUPERSESSION_DIVERGENT",
+            "record_kind": "assurance",
+            "record_id": "acme-a",
+            "instance_path": "/supersedes_assurance_id",
+            "related_ids": ["acme-b", "acme-c"],
+        },
+    ]),
+    ("invalid/supersession-divergence-cross-vendor-edge", [
+        {
+            "code": "ASSURANCE_SUPERSEDES_VENDOR_MISMATCH",
+            "record_kind": "assurance",
+            "record_id": "beta-c",
+            "instance_path": "/supersedes_assurance_id",
+            "related_ids": ["acme-a", "acme", "beta-vendor"],
+        },
+    ]),
+    ("invalid/supersession-divergence-unknown-edge", [
+        {
+            "code": "ASSURANCE_SUPERSEDES_UNKNOWN",
+            "record_kind": "assurance",
+            "record_id": "acme-c",
+            "instance_path": "/supersedes_assurance_id",
+            "related_ids": ["acme-missing"],
+        },
+    ]),
+    ("invalid/supersession-divergence-incompatible-edge", [
+        {
+            "code": "ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE",
+            "record_kind": "assurance",
+            "record_id": "acme-c",
+            "instance_path": "/framework/framework_id",
+            "related_ids": ["accredited_certification", "hipaa"],
         },
     ]),
 ])

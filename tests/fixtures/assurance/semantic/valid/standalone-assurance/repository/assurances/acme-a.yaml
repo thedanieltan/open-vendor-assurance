@@ -1,0 +1,16 @@
+schema_version: "0.1.1"
+assurance_id: acme-a
+vendor_id: acme
+assurance_class: regulatory_assertion
+framework:
+  framework_id: example_regulatory_program
+  display_name: Example Regulatory Program
+subject:
+  entity_name: Acme Example Pte. Ltd.
+  scope_description: Example public assertion.
+temporal_scope: {}
+evidence:
+  source_ids:
+    - acme-trust-center
+advisory_boundary: non_advisory
+recorded_at: "2026-03-05T00:00:00Z"

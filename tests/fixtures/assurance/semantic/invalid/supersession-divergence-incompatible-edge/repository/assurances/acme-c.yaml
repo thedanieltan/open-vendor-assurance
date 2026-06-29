@@ -1,0 +1,27 @@
+schema_version: "0.1.1"
+assurance_id: acme-c
+vendor_id: acme
+assurance_class: accredited_certification
+framework:
+  framework_id: hipaa
+  display_name: HIPAA
+subject:
+  entity_name: Acme Example Pte. Ltd.
+  scope_description: Example certification successor C.
+issuer:
+  name: Example Certification Body
+  authority_type: certification_body
+  accreditation_body: Example Accreditation Authority
+  country: SG
+identifiers:
+  certificate_number: ACME-HIPAA-2026
+temporal_scope:
+  issued_at: "2026-03-03"
+  valid_from: "2026-03-03"
+  valid_until: "2027-03-02"
+evidence:
+  source_ids:
+    - acme-trust-center
+advisory_boundary: non_advisory
+supersedes_assurance_id: acme-a
+recorded_at: "2026-03-03T00:00:00Z"
