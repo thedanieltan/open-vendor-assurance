@@ -16,6 +16,7 @@ COMBINATOR_KEYWORDS = frozenset(
         "if",
         "then",
         "else",
+        "contains",
         "dependentSchemas",
     }
 )
