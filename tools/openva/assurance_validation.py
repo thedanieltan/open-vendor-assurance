@@ -51,6 +51,7 @@ ASSURANCE_SUPERSEDES_SELF = "ASSURANCE_SUPERSEDES_SELF"
 ASSURANCE_SUPERSEDES_VENDOR_MISMATCH = "ASSURANCE_SUPERSEDES_VENDOR_MISMATCH"
 ASSURANCE_TEMPORAL_ORDER_INVALID = "ASSURANCE_TEMPORAL_ORDER_INVALID"
 ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE = "ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE"
+ASSURANCE_SUPERSESSION_CYCLE = "ASSURANCE_SUPERSESSION_CYCLE"
 
 INCOMPATIBLE_FRAMEWORKS_BY_ASSURANCE_CLASS: Mapping[str, tuple[str, ...]] = MappingProxyType(
     {
@@ -301,6 +302,48 @@ def _class_framework_compatibility_diagnostics(record: RepositoryRecord) -> list
     ]
 
 
+def _canonical_cycle(cycle: list[str]) -> tuple[str, ...]:
+    rotations = [tuple(cycle[index:] + cycle[:index]) for index in range(len(cycle))]
+    return min(rotations)
+
+
+def _supersession_cycle_diagnostics(repository: RepositoryView) -> list[SemanticDiagnostic]:
+    edges: dict[str, str] = {}
+    for assurance_id, record in repository.assurances.items():
+        supersedes_assurance_id = record.data.get("supersedes_assurance_id")
+        if isinstance(supersedes_assurance_id, str) and supersedes_assurance_id in repository.assurances:
+            edges[assurance_id] = supersedes_assurance_id
+
+    cycles: set[tuple[str, ...]] = set()
+    for start_id in sorted(edges):
+        path: list[str] = []
+        path_indexes: dict[str, int] = {}
+        current_id = start_id
+        while current_id in edges:
+            if current_id in path_indexes:
+                cycles.add(_canonical_cycle(path[path_indexes[current_id] :]))
+                break
+            path_indexes[current_id] = len(path)
+            path.append(current_id)
+            current_id = edges[current_id]
+
+    diagnostics: list[SemanticDiagnostic] = []
+    for cycle in sorted(cycles):
+        record = repository.assurances[cycle[0]]
+        diagnostics.append(
+            SemanticDiagnostic(
+                code=ASSURANCE_SUPERSESSION_CYCLE,
+                record_kind="assurance",
+                record_id=record.record_id,
+                record_path=record.path,
+                instance_path="/supersedes_assurance_id",
+                message=f"Assurance supersession cycle detected: {' -> '.join(cycle)}.",
+                related_ids=cycle,
+            )
+        )
+    return diagnostics
+
+
 def build_repository_snapshot(
     records_by_kind: Mapping[str, Iterable[RepositoryRecord]],
 ) -> RepositoryBuildResult:
@@ -507,4 +550,5 @@ def validate_assurance_repository(repository: RepositoryView) -> tuple[Validatio
         diagnostics.extend(
             validate_assurance_record_semantics(repository.assurances[assurance_id], repository)
         )
+    diagnostics.extend(_supersession_cycle_diagnostics(repository))
     return tuple(sorted_diagnostics(diagnostics))

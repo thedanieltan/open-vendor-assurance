@@ -159,6 +159,13 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "record_id": "acme-current",
             "instance_path": "/supersedes_assurance_id",
             "related_ids": ["acme-current"],
+        },
+        {
+            "code": "ASSURANCE_SUPERSESSION_CYCLE",
+            "record_kind": "assurance",
+            "record_id": "acme-current",
+            "instance_path": "/supersedes_assurance_id",
+            "related_ids": ["acme-current"],
         }
     ]),
 
@@ -210,6 +217,24 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             "instance_path": "/framework/framework_id",
             "related_ids": ["accredited_certification", "hipaa"],
         }
+    ]),
+
+    # --- ASSURANCE_SUPERSESSION_CYCLE cases ---
+    ("invalid/supersession-cycle", [
+        {
+            "code": "ASSURANCE_SUPERSESSION_CYCLE",
+            "record_kind": "assurance",
+            "record_id": "acme-cycle-a",
+            "instance_path": "/supersedes_assurance_id",
+            "related_ids": ["acme-cycle-a", "acme-cycle-b"],
+        },
+        {
+            "code": "ASSURANCE_SUPERSESSION_CYCLE",
+            "record_kind": "assurance",
+            "record_id": "acme-cycle-c",
+            "instance_path": "/supersedes_assurance_id",
+            "related_ids": ["acme-cycle-c", "acme-cycle-d", "acme-cycle-e"],
+        },
     ]),
 ])
 def test_assurance_semantic_matrix(case_id: str, expected: list[dict[str, Any]]) -> None:
