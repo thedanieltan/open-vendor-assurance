@@ -281,7 +281,7 @@ def test_projection_change_event_bitemporal_invariants() -> None:
                 assert knowledge_cutoff >= assurance_recorded_at
             for observation_id in change_event["caused_by"].get("assurance_observation_ids", []):
                 observation_recorded_at = parse_datetime(
-                    records["assurance_observations"][observation_id]["observed_at"]
+                    records["assurance_observations"][observation_id]["recorded_at"]
                 )
                 assert knowledge_cutoff >= observation_recorded_at
 
