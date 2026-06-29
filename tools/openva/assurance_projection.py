@@ -29,10 +29,26 @@ ASSURANCE_PROJECTION_REQUEST_INVALID = "ASSURANCE_PROJECTION_REQUEST_INVALID"
 ASSURANCE_PROJECTION_POLICY_MISMATCH = "ASSURANCE_PROJECTION_POLICY_MISMATCH"
 ASSURANCE_TARGET_UNKNOWN = "ASSURANCE_TARGET_UNKNOWN"
 ASSURANCE_PROJECTION_OUTPUT_INVALID = "ASSURANCE_PROJECTION_OUTPUT_INVALID"
+ASSURANCE_PROJECTION_DIFF_INPUT_INVALID = "ASSURANCE_PROJECTION_DIFF_INPUT_INVALID"
+ASSURANCE_PROJECTION_DIFF_INCOMPATIBLE = "ASSURANCE_PROJECTION_DIFF_INCOMPATIBLE"
+ASSURANCE_PROJECTION_DIFF_NON_MONOTONIC = "ASSURANCE_PROJECTION_DIFF_NON_MONOTONIC"
+ASSURANCE_CHANGE_EVENT_TIME_INVALID = "ASSURANCE_CHANGE_EVENT_TIME_INVALID"
+ASSURANCE_CHANGE_EVENT_REASON_AMBIGUOUS = "ASSURANCE_CHANGE_EVENT_REASON_AMBIGUOUS"
+ASSURANCE_CHANGE_EVENT_OUTPUT_INVALID = "ASSURANCE_CHANGE_EVENT_OUTPUT_INVALID"
 PROJECTION_PROFILE = "openva.assurance-lifecycle.v1"
 IMPLEMENTED_AXES = ("instrument_state", "supersession_state")
 PROJECTION_REQUEST_SCHEMA_PATH = ROOT / "schemas/openva/assurance-projection-request.schema.json"
 PROJECTION_SCHEMA_PATH = ROOT / "schemas/openva/assurance-projection.schema.json"
+CHANGE_EVENT_SCHEMA_PATH = ROOT / "schemas/openva/assurance-change-event.schema.json"
+CHANGE_EVENT_ID_PREFIX = "assurance-change-"
+PROJECTION_DIFF_COMPATIBILITY_FIELDS = (
+    "assurance_id",
+    "vendor_id",
+    "schema_version",
+    "projection_profile",
+    "implemented_axes",
+    "advisory_boundary",
+)
 
 
 class AssuranceProjectionError(Exception):
@@ -352,6 +368,108 @@ def validate_projection_output(projection: Mapping[str, Any]) -> None:
         instance_path=validation_instance_path(error),
         message=f"Assurance projection output is invalid: {error.message}",
     )
+
+
+def validate_projection_for_diff(
+    projection: Mapping[str, Any],
+    *,
+    field_name: str,
+) -> None:
+    validator = build_openva_validator(PROJECTION_SCHEMA_PATH)
+    errors = sorted(validator.iter_errors(projection), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceProjectionError(
+        code=ASSURANCE_PROJECTION_DIFF_INPUT_INVALID,
+        instance_path=f"/{field_name}{validation_instance_path(error)}",
+        message=f"{field_name} projection is invalid: {error.message}",
+    )
+
+
+def validate_projection_diff_inputs(
+    previous_projection: Mapping[str, Any] | None,
+    new_projection: Mapping[str, Any],
+    detected_at: datetime | str,
+) -> datetime:
+    validate_projection_for_diff(new_projection, field_name="new_projection")
+    if previous_projection is not None:
+        validate_projection_for_diff(previous_projection, field_name="previous_projection")
+        validate_projection_compatibility(previous_projection, new_projection)
+        validate_projection_forward_order(previous_projection, new_projection)
+
+    detected_at_utc = normalize_aware_datetime(detected_at, field_name="detected_at")
+    knowledge_cutoff = normalize_aware_datetime(
+        require_string(new_projection, "knowledge_cutoff"),
+        field_name="knowledge_cutoff",
+    )
+    if detected_at_utc < knowledge_cutoff:
+        raise AssuranceProjectionError(
+            code=ASSURANCE_CHANGE_EVENT_TIME_INVALID,
+            instance_path="/detected_at",
+            message="detected_at must be greater than or equal to the new projection knowledge_cutoff.",
+        )
+    return detected_at_utc
+
+
+def validate_projection_compatibility(
+    previous_projection: Mapping[str, Any],
+    new_projection: Mapping[str, Any],
+) -> None:
+    for field_name in PROJECTION_DIFF_COMPATIBILITY_FIELDS:
+        if previous_projection.get(field_name) == new_projection.get(field_name):
+            continue
+        raise AssuranceProjectionError(
+            code=ASSURANCE_PROJECTION_DIFF_INCOMPATIBLE,
+            instance_path=f"/{field_name}",
+            message=f"Projection field {field_name!r} is incompatible.",
+            related_ids=(str(previous_projection.get(field_name)), str(new_projection.get(field_name))),
+        )
+
+
+def validate_projection_forward_order(
+    previous_projection: Mapping[str, Any],
+    new_projection: Mapping[str, Any],
+) -> None:
+    for field_name in ("effective_at", "knowledge_cutoff"):
+        previous_value = normalize_aware_datetime(
+            require_string(previous_projection, field_name),
+            field_name=field_name,
+        )
+        new_value = normalize_aware_datetime(
+            require_string(new_projection, field_name),
+            field_name=field_name,
+        )
+        if new_value >= previous_value:
+            continue
+        raise AssuranceProjectionError(
+            code=ASSURANCE_PROJECTION_DIFF_NON_MONOTONIC,
+            instance_path=f"/{field_name}",
+            message=f"New projection {field_name} must be greater than or equal to the previous value.",
+        )
+
+
+def event_identity_manifest(event: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": event["schema_version"],
+        "assurance_id": event["assurance_id"],
+        "vendor_id": event["vendor_id"],
+        "change_type": event["change_type"],
+        "transition": json_material(event["transition"]),
+        "effective_at": event["effective_at"],
+        "knowledge_cutoff": event["knowledge_cutoff"],
+        "input_digest": event["input_digest"],
+        "policy": json_material(event["policy"]),
+        "advisory_boundary": event["advisory_boundary"],
+        "reason_code": event["reason_code"],
+        "caused_by": json_material(event["caused_by"]),
+    }
+
+
+def change_event_id_for_manifest(manifest: Mapping[str, Any]) -> str:
+    digest = sha256_bytes(canonical_json(json_material(manifest)))
+    _, hex_digest = digest.split(":", 1)
+    return f"{CHANGE_EVENT_ID_PREFIX}{hex_digest}"
 
 
 def project_assurance(
