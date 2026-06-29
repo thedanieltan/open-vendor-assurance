@@ -200,6 +200,17 @@ def semantic_signatures(case_name: str) -> list[tuple[str, str, str, str, tuple[
             ],
         },
     ]),
+
+    # --- ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE case ---
+    ("invalid/class-framework-incompatible", [
+        {
+            "code": "ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE",
+            "record_kind": "assurance",
+            "record_id": "acme-hipaa-certification",
+            "instance_path": "/framework/framework_id",
+            "related_ids": ["accredited_certification", "hipaa"],
+        }
+    ]),
 ])
 def test_assurance_semantic_matrix(case_id: str, expected: list[dict[str, Any]]) -> None:
     root = Path(f"tests/fixtures/assurance/semantic/{case_id}/repository")

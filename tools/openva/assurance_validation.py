@@ -50,6 +50,13 @@ ASSURANCE_SUPERSEDES_UNKNOWN = "ASSURANCE_SUPERSEDES_UNKNOWN"
 ASSURANCE_SUPERSEDES_SELF = "ASSURANCE_SUPERSEDES_SELF"
 ASSURANCE_SUPERSEDES_VENDOR_MISMATCH = "ASSURANCE_SUPERSEDES_VENDOR_MISMATCH"
 ASSURANCE_TEMPORAL_ORDER_INVALID = "ASSURANCE_TEMPORAL_ORDER_INVALID"
+ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE = "ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE"
+
+INCOMPATIBLE_FRAMEWORKS_BY_ASSURANCE_CLASS: Mapping[str, tuple[str, ...]] = MappingProxyType(
+    {
+        "accredited_certification": ("hipaa",),
+    }
+)
 
 TEMPORAL_ORDER_RULES: Mapping[str, tuple[tuple[str, str, str, str], ...]] = MappingProxyType(
     {
@@ -272,6 +279,28 @@ def _temporal_order_diagnostics(record: RepositoryRecord) -> list[SemanticDiagno
     return diagnostics
 
 
+def _class_framework_compatibility_diagnostics(record: RepositoryRecord) -> list[SemanticDiagnostic]:
+    assurance_class = record.data["assurance_class"]
+    framework_id = record.data["framework"]["framework_id"]
+    incompatible_frameworks = INCOMPATIBLE_FRAMEWORKS_BY_ASSURANCE_CLASS.get(assurance_class, ())
+    if framework_id not in incompatible_frameworks:
+        return []
+    return [
+        SemanticDiagnostic(
+            code=ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE,
+            record_kind="assurance",
+            record_id=record.record_id,
+            record_path=record.path,
+            instance_path="/framework/framework_id",
+            message=(
+                f"Framework {framework_id!r} is not compatible with assurance class "
+                f"{assurance_class!r}."
+            ),
+            related_ids=(assurance_class, framework_id),
+        )
+    ]
+
+
 def build_repository_snapshot(
     records_by_kind: Mapping[str, Iterable[RepositoryRecord]],
 ) -> RepositoryBuildResult:
@@ -410,6 +439,7 @@ def validate_assurance_record_semantics(
             )
 
     diagnostics.extend(_temporal_order_diagnostics(record))
+    diagnostics.extend(_class_framework_compatibility_diagnostics(record))
 
     # Rule: ASSURANCE_SOURCE_UNKNOWN & ASSURANCE_SOURCE_VENDOR_MISMATCH
     for index, source_id in enumerate(source_ids):
