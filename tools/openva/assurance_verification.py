@@ -6,6 +6,7 @@ from datetime import UTC, date, datetime
 from types import MappingProxyType
 from typing import Any
 
+from tools.openva.assurance_projection import format_utc_datetime
 from tools.openva.assurance_projection import json_material
 from tools.openva.assurance_projection import validation_instance_path
 from tools.openva.assurance_validation import ASSURANCE
@@ -319,3 +320,233 @@ def validate_verification_output(state: Mapping[str, Any]) -> None:
         instance_path=validation_instance_path(error),
         message=f"Verification state output is invalid: {error.message}",
     )
+
+
+def observation_applicable_to_effective_at(
+    observation: Mapping[str, Any],
+    *,
+    effective_at: datetime,
+) -> bool:
+    observed_fields = observation.get("observed_fields")
+    if not isinstance(observed_fields, Mapping):
+        return True
+
+    effective_date = effective_at.date()
+    valid_from = parse_observed_date(observed_fields.get("stated_valid_from"))
+    valid_until = parse_observed_date(observed_fields.get("stated_valid_until"))
+    if valid_from is not None or valid_until is not None:
+        if valid_from is not None and effective_date < valid_from:
+            return False
+        return not (valid_until is not None and effective_date > valid_until)
+
+    as_of_date = parse_observed_date(observed_fields.get("stated_as_of_date"))
+    if as_of_date is not None:
+        return effective_date == as_of_date
+
+    reporting_period = observed_fields.get("stated_reporting_period")
+    if isinstance(reporting_period, Mapping):
+        start = parse_observed_date(reporting_period.get("start"))
+        end = parse_observed_date(reporting_period.get("end"))
+        if start is not None and effective_date < start:
+            return False
+        return not (end is not None and effective_date > end)
+
+    return True
+
+
+def target_observations(
+    observations: Iterable[Mapping[str, Any]],
+    *,
+    assurance_id: str,
+    effective_at: datetime,
+) -> tuple[Mapping[str, Any], ...]:
+    return tuple(
+        observation
+        for observation in observations
+        if observation.get("assurance_id") == assurance_id
+        and observation_applicable_to_effective_at(observation, effective_at=effective_at)
+    )
+
+
+def outcome_for_observation(observation: Mapping[str, Any]) -> str:
+    evaluation = observation.get("evaluation")
+    if not isinstance(evaluation, Mapping):
+        raise AssuranceVerificationError(
+            code=ASSURANCE_VERIFICATION_INPUT_INVALID,
+            instance_path="/evaluation",
+            message="Assurance observation must define an evaluation object.",
+        )
+    outcome = evaluation.get("verification_outcome")
+    if not isinstance(outcome, str):
+        raise AssuranceVerificationError(
+            code=ASSURANCE_VERIFICATION_INPUT_INVALID,
+            instance_path="/evaluation/verification_outcome",
+            message="Assurance observation must define string evaluation.verification_outcome.",
+        )
+    return outcome
+
+
+def top_authority_observations(
+    observations: Iterable[Mapping[str, Any]],
+    *,
+    policy: AssuranceVerificationPolicy,
+) -> tuple[tuple[str, str, Mapping[str, Any]], ...]:
+    classified: list[tuple[str, str, Mapping[str, Any]]] = []
+    for observation in observations:
+        outcome = outcome_for_observation(observation)
+        outcome_class = policy.outcome_class_by_outcome.get(outcome)
+        if outcome_class is None:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_VERIFICATION_INPUT_INVALID,
+                instance_path="/evaluation/verification_outcome",
+                message=f"Verification outcome {outcome!r} is not recognized by the supplied policy.",
+                related_ids=(outcome,),
+            )
+        if outcome_class == "ignored":
+            continue
+        authority_tier = policy.authority_tier_by_outcome.get(outcome)
+        if authority_tier is None:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_VERIFICATION_POLICY_INVALID,
+                instance_path="/authority_tiers",
+                message=f"Verification outcome {outcome!r} has no authority tier.",
+                related_ids=(outcome,),
+            )
+        classified.append((authority_tier, outcome_class, observation))
+
+    for tier_name in policy.authority_order:
+        tier_observations = tuple(item for item in classified if item[0] == tier_name)
+        if tier_observations:
+            return tuple(
+                sorted(
+                    tier_observations,
+                    key=lambda item: require_string(item[2], "assurance_observation_id"),
+                )
+            )
+    return ()
+
+
+def state_from_top_authority(
+    top_observations: tuple[tuple[str, str, Mapping[str, Any]], ...],
+) -> tuple[str, str, tuple[str, ...]]:
+    if not top_observations:
+        return (
+            "no_conclusion",
+            "no_admitted_verification_observation",
+            (),
+        )
+
+    outcome_classes = {outcome_class for _, outcome_class, _ in top_observations}
+    observation_ids = tuple(
+        sorted(require_string(observation, "assurance_observation_id") for _, _, observation in top_observations)
+    )
+    if "inconclusive" in outcome_classes:
+        return (
+            "inconclusive",
+            "decisive_observation_inconclusive",
+            observation_ids,
+        )
+    if outcome_classes == {"support"}:
+        return (
+            "confirmed",
+            "decisive_observations_support",
+            observation_ids,
+        )
+    if outcome_classes == {"contradict"}:
+        return (
+            "contradicted",
+            "decisive_observations_contradict",
+            observation_ids,
+        )
+    if outcome_classes == {"support", "contradict"}:
+        return (
+            "inconclusive",
+            "decisive_observations_conflict",
+            observation_ids,
+        )
+    raise AssuranceVerificationError(
+        code=ASSURANCE_VERIFICATION_INPUT_INVALID,
+        instance_path="/assurance_observations",
+        message="Verification observations did not map to a supported verification state.",
+    )
+
+
+def verification_input_digest(
+    *,
+    assurance_record: Mapping[str, Any],
+    observations: Iterable[Mapping[str, Any]],
+    policy_identity: VerificationPolicyIdentity,
+    effective_at: datetime,
+    knowledge_cutoff: datetime,
+) -> str:
+    manifest = {
+        "assurance_id": require_string(assurance_record, "assurance_id"),
+        "effective_at": format_utc_datetime(effective_at),
+        "knowledge_cutoff": format_utc_datetime(knowledge_cutoff),
+        "policy": policy_identity.as_mapping(),
+        "assurance_record": json_material(assurance_record),
+        "assurance_observations": [
+            json_material(observation)
+            for observation in sorted(
+                observations,
+                key=lambda observation: require_string(observation, "assurance_observation_id"),
+            )
+        ],
+    }
+    return sha256_bytes(canonical_json(manifest))
+
+
+def project_verification_state(
+    assurance_record: Mapping[str, Any],
+    assurance_observations: Iterable[Mapping[str, Any]],
+    policy: AssuranceVerificationPolicy | Mapping[str, Any],
+    effective_at: datetime | str,
+    knowledge_cutoff: datetime | str,
+) -> VerificationStateResult:
+    effective_at_utc = normalize_verification_datetime(effective_at, field_name="effective_at")
+    knowledge_cutoff_utc = normalize_verification_datetime(knowledge_cutoff, field_name="knowledge_cutoff")
+    verification_policy, policy_identity = verification_policy_identity(policy)
+
+    ensure_target_known_at_cutoff(assurance_record, knowledge_cutoff=knowledge_cutoff_utc)
+    admitted = admitted_observations(assurance_observations, knowledge_cutoff=knowledge_cutoff_utc)
+    diagnostics = observation_semantic_diagnostics(
+        assurance_record=assurance_record,
+        observations=admitted,
+    )
+    if diagnostics:
+        raise VerificationInputInvalidError(diagnostics)
+
+    target_id = require_string(assurance_record, "assurance_id")
+    relevant = target_observations(
+        admitted,
+        assurance_id=target_id,
+        effective_at=effective_at_utc,
+    )
+    top_observations = top_authority_observations(relevant, policy=verification_policy)
+    value, reason_code, decisive_observation_ids = state_from_top_authority(top_observations)
+    state = {
+        "schema_version": "0.1.0",
+        "assurance_id": target_id,
+        "vendor_id": require_string(assurance_record, "vendor_id"),
+        "effective_at": format_utc_datetime(effective_at_utc),
+        "knowledge_cutoff": format_utc_datetime(knowledge_cutoff_utc),
+        "policy": policy_identity.as_mapping(),
+        "input_digest": verification_input_digest(
+            assurance_record=assurance_record,
+            observations=relevant,
+            policy_identity=policy_identity,
+            effective_at=effective_at_utc,
+            knowledge_cutoff=knowledge_cutoff_utc,
+        ),
+        "value": value,
+        "determination": "determined",
+        "reason_codes": [reason_code],
+        "caused_by": {
+            "assurance_ids": [target_id],
+            "assurance_observation_ids": list(decisive_observation_ids),
+            "source_observation_ids": [],
+        },
+        "advisory_boundary": "non_advisory",
+    }
+    validate_verification_output(state)
+    return VerificationStateResult(state=MappingProxyType(state))
