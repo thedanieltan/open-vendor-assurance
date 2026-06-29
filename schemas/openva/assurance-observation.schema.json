@@ -10,6 +10,7 @@
     "assurance_id",
     "vendor_id",
     "observed_at",
+    "recorded_at",
     "source_observation_ids",
     "evaluation",
     "policy",
@@ -21,6 +22,12 @@
     "assurance_id": { "$ref": "#/$defs/openvaSlug" },
     "vendor_id": { "$ref": "#/$defs/openvaSlug" },
     "observed_at": { "type": "string", "format": "date-time" },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:Z|[+-][0-9]{2}:[0-9]{2})$",
+      "description": "Immutable timestamp recording when this assurance observation entered OpenVA's repository knowledge set."
+    },
     "source_observation_ids": {
       "type": "array",
       "minItems": 1,
