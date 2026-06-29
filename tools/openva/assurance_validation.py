@@ -54,6 +54,8 @@ ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE = "ASSURANCE_CLASS_FRAMEWORK_INCOMPATIBLE
 ASSURANCE_SUPERSESSION_CYCLE = "ASSURANCE_SUPERSESSION_CYCLE"
 ASSURANCE_REGULATORY_TEMPORAL_SHAPE_AMBIGUOUS = "ASSURANCE_REGULATORY_TEMPORAL_SHAPE_AMBIGUOUS"
 ASSURANCE_SUPERSESSION_DIVERGENT = "ASSURANCE_SUPERSESSION_DIVERGENT"
+ASSURANCE_OBSERVATION_ASSURANCE_UNKNOWN = "ASSURANCE_OBSERVATION_ASSURANCE_UNKNOWN"
+ASSURANCE_OBSERVATION_VENDOR_MISMATCH = "ASSURANCE_OBSERVATION_VENDOR_MISMATCH"
 
 INCOMPATIBLE_FRAMEWORKS_BY_ASSURANCE_CLASS: Mapping[str, tuple[str, ...]] = MappingProxyType(
     {
@@ -621,6 +623,54 @@ def validate_assurance_record_semantics(
     return diagnostics
 
 
+def validate_assurance_observation_semantics(
+    record: RepositoryRecord,
+    repository: RepositoryView,
+) -> list[SemanticDiagnostic]:
+    if record.kind != "assurance_observation":
+        raise ValueError(
+            f"validate_assurance_observation_semantics requires an assurance_observation record, "
+            f"received {record.kind!r}"
+        )
+
+    diagnostics: list[SemanticDiagnostic] = []
+    assurance_id = record.data["assurance_id"]
+    assurance_record = repository.assurances.get(assurance_id)
+
+    if assurance_record is None:
+        diagnostics.append(
+            SemanticDiagnostic(
+                code=ASSURANCE_OBSERVATION_ASSURANCE_UNKNOWN,
+                record_kind="assurance_observation",
+                record_id=record.record_id,
+                record_path=record.path,
+                instance_path="/assurance_id",
+                message=f"Referenced assurance {assurance_id!r} does not exist.",
+                related_ids=(assurance_id,),
+            )
+        )
+        return diagnostics
+
+    if record.vendor_id != assurance_record.vendor_id:
+        diagnostics.append(
+            SemanticDiagnostic(
+                code=ASSURANCE_OBSERVATION_VENDOR_MISMATCH,
+                record_kind="assurance_observation",
+                record_id=record.record_id,
+                record_path=record.path,
+                instance_path="/vendor_id",
+                message=(
+                    f"Assurance observation belongs to vendor {record.vendor_id!r}, "
+                    f"but assurance {assurance_id!r} belongs to "
+                    f"{assurance_record.vendor_id!r}."
+                ),
+                related_ids=(assurance_id, record.vendor_id, assurance_record.vendor_id),
+            )
+        )
+
+    return diagnostics
+
+
 def sorted_diagnostics(diagnostics: Iterable[ValidationDiagnostic]) -> list[ValidationDiagnostic]:
     return sorted(
         diagnostics,
@@ -640,6 +690,13 @@ def validate_assurance_repository(repository: RepositoryView) -> tuple[Validatio
     for assurance_id in sorted(repository.assurances):
         diagnostics.extend(
             validate_assurance_record_semantics(repository.assurances[assurance_id], repository)
+        )
+    for observation_id in sorted(repository.assurance_observations):
+        diagnostics.extend(
+            validate_assurance_observation_semantics(
+                repository.assurance_observations[observation_id],
+                repository,
+            )
         )
     # Cycle and divergence checks must share the same admitted edges so rejected
     # edge-level defects cannot leak into repository-level graph diagnostics.
