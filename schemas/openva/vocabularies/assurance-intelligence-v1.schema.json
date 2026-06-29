@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/vocabularies/assurance-intelligence-v1.schema.json",
+  "title": "OpenVA Assurance Intelligence Vocabulary v1",
+  "description": "Closed vocabulary definitions for non-advisory assurance intelligence contracts.",
+  "x-openva-vocabulary-version": "1.0.0",
+  "$defs": {
+    "verificationState": {
+      "type": "string",
+      "enum": [
+        "no_conclusion",
+        "confirmed",
+        "contradicted",
+        "inconclusive"
+      ]
+    },
+    "determination": {
+      "const": "determined"
+    },
+    "verificationStateReasonCode": {
+      "type": "string",
+      "enum": [
+        "no_admitted_verification_observation",
+        "decisive_observations_support",
+        "decisive_observations_contradict",
+        "decisive_observations_conflict",
+        "decisive_observation_inconclusive"
+      ]
+    },
+    "verificationAuthorityTier": {
+      "type": "string",
+      "enum": [
+        "authoritative",
+        "corroborating",
+        "first_party",
+        "indeterminate"
+      ]
+    },
+    "verificationOutcomeClass": {
+      "type": "string",
+      "enum": [
+        "support",
+        "contradict",
+        "inconclusive",
+        "ignored"
+      ]
+    }
+  }
+}
