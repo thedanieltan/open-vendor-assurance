@@ -37,6 +37,10 @@ ASSURANCE_CHANGE_EVENT_REASON_AMBIGUOUS = "ASSURANCE_CHANGE_EVENT_REASON_AMBIGUO
 ASSURANCE_CHANGE_EVENT_OUTPUT_INVALID = "ASSURANCE_CHANGE_EVENT_OUTPUT_INVALID"
 PROJECTION_PROFILE = "openva.assurance-lifecycle.v1"
 IMPLEMENTED_AXES = ("instrument_state", "supersession_state")
+CHANGE_TYPE_BY_AXIS = {
+    "instrument_state": "instrument_state_changed",
+    "supersession_state": "assurance_superseded",
+}
 PROJECTION_REQUEST_SCHEMA_PATH = ROOT / "schemas/openva/assurance-projection-request.schema.json"
 PROJECTION_SCHEMA_PATH = ROOT / "schemas/openva/assurance-projection.schema.json"
 CHANGE_EVENT_SCHEMA_PATH = ROOT / "schemas/openva/assurance-change-event.schema.json"
@@ -376,7 +380,21 @@ def validate_projection_for_diff(
     field_name: str,
 ) -> None:
     validator = build_openva_validator(PROJECTION_SCHEMA_PATH)
-    errors = sorted(validator.iter_errors(projection), key=lambda error: list(error.path))
+    errors = sorted(
+        (
+            error
+            for error in validator.iter_errors(projection)
+            if not (
+                field_name == "new_projection"
+                and error.validator == "minItems"
+                and len(error.path) == 3
+                and error.path[0] == "axes"
+                and error.path[1] in IMPLEMENTED_AXES
+                and error.path[2] == "reason_codes"
+            )
+        ),
+        key=lambda error: list(error.path),
+    )
     if not errors:
         return
     error = errors[0]
@@ -449,7 +467,11 @@ def validate_projection_forward_order(
         )
 
 
-def event_identity_manifest(event: Mapping[str, Any]) -> dict[str, Any]:
+def event_identity_manifest(
+    event: Mapping[str, Any],
+    *,
+    projection_policy: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     return {
         "schema_version": event["schema_version"],
         "assurance_id": event["assurance_id"],
@@ -459,7 +481,7 @@ def event_identity_manifest(event: Mapping[str, Any]) -> dict[str, Any]:
         "effective_at": event["effective_at"],
         "knowledge_cutoff": event["knowledge_cutoff"],
         "input_digest": event["input_digest"],
-        "policy": json_material(event["policy"]),
+        "policy": json_material(projection_policy or event["policy"]),
         "advisory_boundary": event["advisory_boundary"],
         "reason_code": event["reason_code"],
         "caused_by": json_material(event["caused_by"]),
@@ -470,6 +492,162 @@ def change_event_id_for_manifest(manifest: Mapping[str, Any]) -> str:
     digest = sha256_bytes(canonical_json(json_material(manifest)))
     _, hex_digest = digest.split(":", 1)
     return f"{CHANGE_EVENT_ID_PREFIX}{hex_digest}"
+
+
+def validate_change_event_output(event: Mapping[str, Any]) -> None:
+    validator = build_openva_validator(CHANGE_EVENT_SCHEMA_PATH)
+    errors = sorted(validator.iter_errors(event), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceProjectionError(
+        code=ASSURANCE_CHANGE_EVENT_OUTPUT_INVALID,
+        instance_path=validation_instance_path(error),
+        message=f"Assurance change event output is invalid: {error.message}",
+    )
+
+
+def projection_axes(projection: Mapping[str, Any]) -> Mapping[str, Any]:
+    return require_mapping(projection, "axes")
+
+
+def projection_axis(projection: Mapping[str, Any], axis: str) -> Mapping[str, Any]:
+    axes = projection_axes(projection)
+    value = axes.get(axis)
+    if not isinstance(value, Mapping):
+        raise AssuranceProjectionError(
+            code=ASSURANCE_PROJECTION_DIFF_INPUT_INVALID,
+            instance_path=f"/axes/{axis}",
+            message=f"Projection axis {axis!r} must be an object.",
+        )
+    return value
+
+
+def axis_state_value(axis: Mapping[str, Any], *, axis_name: str) -> str:
+    value = axis.get("value")
+    if not isinstance(value, str):
+        raise AssuranceProjectionError(
+            code=ASSURANCE_PROJECTION_DIFF_INPUT_INVALID,
+            instance_path=f"/axes/{axis_name}/value",
+            message=f"Projection axis {axis_name!r} must define a string state value.",
+        )
+    return value
+
+
+def singular_axis_reason(axis: Mapping[str, Any], *, axis_name: str) -> str:
+    reasons = axis.get("reason_codes")
+    if not isinstance(reasons, list) or len(reasons) != 1 or not isinstance(reasons[0], str):
+        raise AssuranceProjectionError(
+            code=ASSURANCE_CHANGE_EVENT_REASON_AMBIGUOUS,
+            instance_path=f"/axes/{axis_name}/reason_codes",
+            message="Event-producing projection axes must contain exactly one reason code.",
+        )
+    return reasons[0]
+
+
+def event_caused_by(axis: Mapping[str, Any], *, axis_name: str) -> dict[str, list[str]]:
+    caused_by = axis.get("caused_by")
+    if not isinstance(caused_by, Mapping):
+        raise AssuranceProjectionError(
+            code=ASSURANCE_PROJECTION_DIFF_INPUT_INVALID,
+            instance_path=f"/axes/{axis_name}/caused_by",
+            message="Projection axis caused_by must be an object.",
+        )
+    event_causality: dict[str, list[str]] = {}
+    for field_name in ("assurance_ids", "assurance_observation_ids", "source_observation_ids"):
+        values = caused_by.get(field_name, [])
+        if values == []:
+            continue
+        if not isinstance(values, list) or not all(isinstance(value, str) for value in values):
+            raise AssuranceProjectionError(
+                code=ASSURANCE_PROJECTION_DIFF_INPUT_INVALID,
+                instance_path=f"/axes/{axis_name}/caused_by/{field_name}",
+                message=f"Projection axis caused_by.{field_name} must be an array of IDs.",
+            )
+        event_causality[field_name] = list(dict.fromkeys(values))
+    if not event_causality:
+        raise AssuranceProjectionError(
+            code=ASSURANCE_CHANGE_EVENT_OUTPUT_INVALID,
+            instance_path="/caused_by",
+            message="Change event causality must cite at least one record.",
+        )
+    return event_causality
+
+
+def event_policy_ref(projection: Mapping[str, Any]) -> dict[str, str]:
+    policy = require_mapping(projection, "policy")
+    return {
+        "id": require_string(policy, "id"),
+        "version": require_string(policy, "version"),
+    }
+
+
+def build_lifecycle_change_event(
+    *,
+    axis_name: str,
+    previous_axis: Mapping[str, Any] | None,
+    new_axis: Mapping[str, Any],
+    new_projection: Mapping[str, Any],
+    detected_at: datetime,
+) -> dict[str, Any]:
+    from_value = None if previous_axis is None else axis_state_value(previous_axis, axis_name=axis_name)
+    to_value = axis_state_value(new_axis, axis_name=axis_name)
+    event = {
+        "schema_version": "0.1.0",
+        "change_event_id": "temporary-change-event-id",
+        "assurance_id": require_string(new_projection, "assurance_id"),
+        "vendor_id": require_string(new_projection, "vendor_id"),
+        "detected_at": format_utc_datetime(detected_at),
+        "effective_at": require_string(new_projection, "effective_at"),
+        "knowledge_cutoff": require_string(new_projection, "knowledge_cutoff"),
+        "input_digest": require_string(new_projection, "input_digest"),
+        "change_type": CHANGE_TYPE_BY_AXIS[axis_name],
+        "transition": {
+            "axis": axis_name,
+            "from": from_value,
+            "to": to_value,
+        },
+        "reason_code": singular_axis_reason(new_axis, axis_name=axis_name),
+        "caused_by": event_caused_by(new_axis, axis_name=axis_name),
+        "policy": event_policy_ref(new_projection),
+        "advisory_boundary": require_string(new_projection, "advisory_boundary"),
+    }
+    manifest = event_identity_manifest(
+        event,
+        projection_policy=require_mapping(new_projection, "policy"),
+    )
+    event["change_event_id"] = change_event_id_for_manifest(manifest)
+    return event
+
+
+def diff_assurance_projections(
+    previous_projection: Mapping[str, Any] | None,
+    new_projection: Mapping[str, Any],
+    detected_at: datetime | str,
+) -> tuple[Mapping[str, Any], ...]:
+    detected_at_utc = validate_projection_diff_inputs(previous_projection, new_projection, detected_at)
+    events: list[dict[str, Any]] = []
+    for axis_name in IMPLEMENTED_AXES:
+        new_axis = projection_axis(new_projection, axis_name)
+        previous_axis = None if previous_projection is None else projection_axis(previous_projection, axis_name)
+        if previous_axis is not None and axis_state_value(previous_axis, axis_name=axis_name) == axis_state_value(
+            new_axis,
+            axis_name=axis_name,
+        ):
+            continue
+        events.append(
+            build_lifecycle_change_event(
+                axis_name=axis_name,
+                previous_axis=previous_axis,
+                new_axis=new_axis,
+                new_projection=new_projection,
+                detected_at=detected_at_utc,
+            )
+        )
+
+    for event in events:
+        validate_change_event_output(event)
+    return tuple(events)
 
 
 def project_assurance(
