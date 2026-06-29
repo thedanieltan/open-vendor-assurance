@@ -1,33 +1,28 @@
-schema_version: "0.1.0"
+schema_version: 0.1.1
 assurance_id: acme-iso-2026
 vendor_id: acme
 assurance_class: accredited_certification
-
 framework:
   framework_id: iso-27001
   display_name: ISO/IEC 27001
-
 subject:
   entity_name: Acme Example Pte. Ltd.
-  scope_description: Acme example cloud service and supporting information-security management system.
-
+  scope_description: Acme example cloud service and supporting information-security
+    management system.
 issuer:
   name: Example Certification Body
   authority_type: certification_body
   accreditation_body: Example Accreditation Authority
   country: SG
-
 identifiers:
   certificate_number: ACME-ISO27001-2026
-
 temporal_scope:
-  issued_at: "2026-01-10"
-  valid_from: "2026-01-10"
-  valid_until: "2027-01-09"
-
+  issued_at: '2026-01-10'
+  valid_from: '2026-01-10'
+  valid_until: '2027-01-09'
 evidence:
   source_ids:
-    - acme-trust-center
-    - acme-missing-source
-
+  - acme-trust-center
+  - acme-missing-source
 advisory_boundary: non_advisory
+recorded_at: '2026-01-18T00:00:00Z'

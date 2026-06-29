@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: 0.1.1
 assurance_id: acme-regulatory
 vendor_id: acme
 assurance_class: regulatory_assertion
@@ -11,6 +11,7 @@ subject:
 temporal_scope: {}
 evidence:
   source_ids:
-    - acme-secondary
+  - acme-secondary
   primary_source_id: acme-primary
 advisory_boundary: non_advisory
+recorded_at: '2026-03-05T00:00:00Z'
