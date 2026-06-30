@@ -16,6 +16,7 @@ def test_artifact_paths_include_release_facing_files():
     assert "indexes/vendor-match-index.json" in paths
     assert "indexes/source-coverage.json" in paths
     assert any(path.startswith("dist/vendors/") for path in paths)
+    assert "public/assurance-intelligence.json" in release_artifacts.ARTIFACT_PATTERNS
     assert "schemas/openva/openva-pack.schema.json" in paths
     assert "fixtures/packs/minimal-valid/openva-pack.json" in paths
 
@@ -56,6 +57,7 @@ def test_release_artifacts_excludes_manifest_itself(monkeypatch, tmp_path):
     monkeypatch.setattr(release_artifacts, "ROOT", fake_root)
     monkeypatch.setattr(release_artifacts, "MANIFEST_PATH", fake_root / "release-artifacts.json")
     monkeypatch.setattr(release_artifacts, "ARTIFACT_PATTERNS", ["indexes/*.json", "release-artifacts.json"])
+    monkeypatch.setattr(release_artifacts, "REQUIRED_ARTIFACTS", [])
 
     paths = {path.relative_to(fake_root).as_posix() for path in release_artifacts.artifact_paths()}
 
@@ -67,7 +69,36 @@ def test_check_manifest_current_reports_missing_when_not_committed(monkeypatch, 
     monkeypatch.setattr(release_artifacts, "ROOT", fake_root)
     monkeypatch.setattr(release_artifacts, "MANIFEST_PATH", fake_root / "release-artifacts.json")
     monkeypatch.setattr(release_artifacts, "ARTIFACT_PATTERNS", [])
+    monkeypatch.setattr(release_artifacts, "REQUIRED_ARTIFACTS", [])
 
     assert release_artifacts.check_manifest_current() == [
         "release-artifacts.json is missing; run python -m tools.openva.release_artifacts build"
     ]
+
+
+def test_check_manifest_current_requires_assurance_intelligence_artifact(monkeypatch, tmp_path):
+    fake_root = tmp_path
+    monkeypatch.setattr(release_artifacts, "ROOT", fake_root)
+    monkeypatch.setattr(release_artifacts, "MANIFEST_PATH", fake_root / "release-artifacts.json")
+    monkeypatch.setattr(release_artifacts, "ARTIFACT_PATTERNS", ["public/assurance-intelligence.json"])
+    monkeypatch.setattr(release_artifacts, "REQUIRED_ARTIFACTS", ["public/assurance-intelligence.json"])
+
+    assert release_artifacts.check_manifest_current() == [
+        "required release artifact is missing: public/assurance-intelligence.json; "
+        "run python -m tools.openva.assurance_intelligence_publication build"
+    ]
+
+
+def test_build_manifest_includes_assurance_intelligence_when_present(monkeypatch, tmp_path):
+    fake_root = tmp_path
+    artifact = fake_root / "public" / "assurance-intelligence.json"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_text("{}\n", encoding="utf-8")
+    monkeypatch.setattr(release_artifacts, "ROOT", fake_root)
+    monkeypatch.setattr(release_artifacts, "MANIFEST_PATH", fake_root / "release-artifacts.json")
+    monkeypatch.setattr(release_artifacts, "ARTIFACT_PATTERNS", ["public/assurance-intelligence.json"])
+    monkeypatch.setattr(release_artifacts, "REQUIRED_ARTIFACTS", ["public/assurance-intelligence.json"])
+
+    manifest = release_artifacts.build_manifest()
+
+    assert [item["path"] for item in manifest["artifacts"]] == ["public/assurance-intelligence.json"]

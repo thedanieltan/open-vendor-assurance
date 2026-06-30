@@ -433,6 +433,53 @@ main {
   color: var(--muted);
 }
 
+.assurance-intelligence-list {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0.8rem 0;
+}
+
+.assurance-intelligence-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.76);
+  padding: 0.85rem;
+}
+
+.assurance-axis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 0.55rem;
+  margin: 0.65rem 0;
+}
+
+.assurance-axis-badge {
+  display: grid;
+  gap: 0.18rem;
+  min-height: 5rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 0.65rem;
+}
+
+.assurance-axis-badge strong,
+.assurance-axis-badge small,
+.assurance-axis-badge em {
+  display: block;
+}
+
+.assurance-axis-badge small {
+  color: var(--ink);
+  font-weight: 760;
+}
+
+.assurance-axis-badge em {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-style: normal;
+}
+
 .filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

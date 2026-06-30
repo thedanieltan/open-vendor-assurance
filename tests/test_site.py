@@ -1,6 +1,5 @@
+import importlib.util
 import json
-import subprocess
-import sys
 from pathlib import Path
 
 import yaml
@@ -8,33 +7,49 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
 WORKFLOWS = ROOT / ".github" / "workflows"
+SITE_BUILD_MODULE = None
+
+
+def site_build_module():
+    global SITE_BUILD_MODULE
+    if SITE_BUILD_MODULE is None:
+        spec = importlib.util.spec_from_file_location("openva_site_build", SITE / "build.py")
+        assert spec and spec.loader
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        SITE_BUILD_MODULE = module
+    return SITE_BUILD_MODULE
 
 
 def build_site(
     tmp_path: Path,
     source_health_snapshot: Path | None = None,
+    assurance_intelligence: Path | None = None,
     catalog_completeness: Path | None = None,
     entity_review: Path | None = None,
     field_provenance: Path | None = None,
 ) -> Path:
     out = tmp_path / "site-dist"
-    args = [sys.executable, "site/build.py", "--out", str(out)]
-    if source_health_snapshot:
-        args.extend(["--source-health-snapshot", str(source_health_snapshot)])
-    if catalog_completeness:
-        args.extend(["--catalog-completeness-report", str(catalog_completeness)])
-    if entity_review:
-        args.extend(["--entity-review-queue", str(entity_review)])
-    if field_provenance:
-        args.extend(["--field-provenance-coverage", str(field_provenance)])
-    result = subprocess.run(
-        args,
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    assert result.returncode == 0, result.stderr
+    module = site_build_module()
+    original_commit_sha = module.commit_sha
+    original_commit_date = module.commit_date
+    original_release_tag = module.release_tag
+    module.commit_sha = lambda: "test-site-commit"
+    module.commit_date = lambda: "2026-06-30T00:00:00+00:00"
+    module.release_tag = lambda: ""
+    try:
+        module.build_site(
+            out,
+            source_health_snapshot or module.DEFAULT_SOURCE_HEALTH_SNAPSHOT,
+            assurance_intelligence or module.DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT,
+            catalog_completeness or module.DEFAULT_CATALOG_COMPLETENESS_REPORT,
+            entity_review or module.DEFAULT_ENTITY_REVIEW_QUEUE,
+            field_provenance or module.DEFAULT_FIELD_PROVENANCE_COVERAGE,
+        )
+    finally:
+        module.commit_sha = original_commit_sha
+        module.commit_date = original_commit_date
+        module.release_tag = original_release_tag
     return out
 
 
@@ -66,6 +81,48 @@ def write_source_health_snapshot(path: Path, rows: list[dict]) -> Path:
         },
         "summary": {"source_count": len(rows), "status_bucket_counts": counts},
         "health": rows,
+    }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
+def write_assurance_intelligence_snapshot(path: Path, vendor_id: str) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "schema_version": "0.1.0",
+        "report_type": "assurance_intelligence_public_snapshot",
+        "snapshot_type": "artifact_derived",
+        "projection_profile": "openva.assurance-intelligence.v1",
+        "publication_policy": {
+            "id": "openva.assurance-intelligence-publication.default",
+            "version": "0.1.0",
+        },
+        "summary": {"assurance_count": 1, "axis_count": 5},
+        "entries": [
+            {
+                "assurance_id": "site-test-assurance",
+                "vendor_id": vendor_id,
+                "assurance_label": "Site Test Assurance",
+                "assurance_class": "accredited_certification",
+                "framework_id": "iso-27001",
+                "framework_display_name": "ISO 27001",
+                "projection_profile": "openva.assurance-intelligence.v1",
+                "effective_at": "2026-06-30T00:00:00Z",
+                "knowledge_cutoff": "2026-06-30T00:00:00Z",
+                "next_reevaluation_at": "2026-07-30T00:00:00Z",
+                "axes": {
+                    "instrument_state": {"value": "effective", "reason_code": "effective_at_within_stated_interval"},
+                    "supersession_state": {"value": "current", "reason_code": "no_explicit_successor_admitted"},
+                    "verification_state": {"value": "confirmed", "reason_code": "decisive_observations_support"},
+                    "verification_freshness": {
+                        "value": "current",
+                        "reason_code": "decisive_basis_within_current_threshold",
+                    },
+                    "evidence_set_state": {"value": "complete", "reason_code": "required_evidence_complete"},
+                },
+            }
+        ],
+        "advisory_boundary": "non_advisory",
     }
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return path
@@ -142,6 +199,7 @@ def test_site_static_build_passes_and_generates_compiled_distribution(tmp_path):
     assert (out / "data" / "source-types.json").is_file()
     assert (out / "data" / "coverage-summary.json").is_file()
     assert (out / "data" / "source-health-snapshot.json").is_file()
+    assert (out / "data" / "assurance-intelligence.json").is_file()
     assert (out / "data" / "observation-feed.json").is_file()
     assert not (out / "data" / "catalog-data.json").exists()
 
@@ -160,6 +218,9 @@ def test_site_static_build_passes_and_generates_compiled_distribution(tmp_path):
         "unavailable": 0,
         "ambiguous": 0,
     }
+    assurance = json.loads((out / "data" / "assurance-intelligence.json").read_text(encoding="utf-8"))
+    assert assurance["report_type"] == "assurance_intelligence_public_snapshot"
+    assert assurance["snapshot_type"] == "empty"
 
 
 def test_vendor_search_is_lightweight_and_detail_paths_exist(tmp_path):
@@ -311,6 +372,7 @@ def test_frontend_uses_compiled_outputs_and_on_demand_vendor_shards():
         'fetch("data/vendor-search.min.json")',
         'fetch("data/source-types.json")',
         'fetch("data/source-health-snapshot.json")',
+        'fetch("data/assurance-intelligence.json")',
         "const vendorDetailsCache = new Map();",
         "const sourceCache = new Map();",
         "async function loadVendorDetail",
@@ -320,6 +382,74 @@ def test_frontend_uses_compiled_outputs_and_on_demand_vendor_shards():
         assert phrase in app
 
     assert "data/catalog-data.json" not in app
+    assert "maintenance/assurance-intelligence" not in app
+
+
+def test_site_data_joins_assurance_intelligence_from_public_snapshot(tmp_path):
+    source = source_rows(1)[0]
+    snapshot = write_assurance_intelligence_snapshot(
+        tmp_path / "assurance-intelligence.json",
+        source["vendor_id"],
+    )
+
+    out = build_site(tmp_path, assurance_intelligence=snapshot)
+    shard = vendor_shard(out, source["vendor_id"])
+    public_snapshot = json.loads((out / "data" / "assurance-intelligence.json").read_text(encoding="utf-8"))
+
+    assert public_snapshot["summary"]["assurance_count"] == 1
+    assert shard["vendor"]["assurance_intelligence_count"] == 1
+    assert shard["assurance_intelligence"][0]["assurance_id"] == "site-test-assurance"
+    assert shard["assurance_intelligence"][0]["axes"]["verification_state"]["value"] == "confirmed"
+
+
+def test_assurance_intelligence_ui_labels_are_public_and_non_advisory():
+    app = (SITE / "src" / "app.js").read_text(encoding="utf-8")
+
+    for phrase in [
+        "Assurance Intelligence",
+        "Instrument",
+        "Supersession",
+        "Verification",
+        "Freshness",
+        "Evidence",
+        "Confirmed",
+        "No conclusion",
+        "No freshness basis",
+        "Conflicted",
+        "Source reachability is separate from assurance verification.",
+    ]:
+        assert phrase in app
+
+    assert "input_digest" not in app
+    assert "projection_ref" not in app
+    assert "assurance_observation_ids" not in app
+    assert "source_observation_ids" not in app
+
+
+def test_assurance_intelligence_public_output_excludes_internal_fields(tmp_path):
+    source = source_rows(1)[0]
+    snapshot = write_assurance_intelligence_snapshot(
+        tmp_path / "assurance-intelligence.json",
+        source["vendor_id"],
+    )
+    out = build_site(tmp_path, assurance_intelligence=snapshot)
+
+    public_text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in [
+            out / "data" / "assurance-intelligence.json",
+            out / "data" / "vendors" / f"{source['vendor_id']}.json",
+        ]
+    )
+    for forbidden in [
+        "input_digest",
+        "projection_ref",
+        "maintenance/",
+        "caused_by",
+        "assurance_observation_ids",
+        "source_observation_ids",
+    ]:
+        assert forbidden not in public_text
 
 
 def test_selection_and_browser_local_matcher_remain_memory_only():
@@ -486,6 +616,9 @@ def test_pages_workflow_deploys_site_and_feed_workflow_uploads_feed_artifact_onl
     assert "catalog confidence reports unavailable" in reviewed_text
     assert reviewed_text.index("Download latest source health snapshot") < reviewed_text.index("Build reviewed catalog site")
     assert reviewed_text.index("Download latest catalog confidence reports") < reviewed_text.index("Build reviewed catalog site")
+    assert "Build Assurance Intelligence public snapshot" in reviewed_text
+    assert "python -m tools.openva.assurance_intelligence_publication build --output public/assurance-intelligence.json" in reviewed_text
+    assert reviewed_text.index("Build Assurance Intelligence public snapshot") < reviewed_text.index("Build reviewed catalog site")
     assert "actions/deploy-pages@v4" in reviewed_text
     assert "actions/deploy-pages" not in feed_text
     assert "actions/upload-artifact@v6" in feed_text

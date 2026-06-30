@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-intelligence-public-snapshot.schema.json",
+  "title": "OpenVA Assurance Intelligence Public Snapshot",
+  "description": "Public-safe sidecar snapshot derived from materialized assurance intelligence projections. It excludes internal provenance and observations.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_type",
+    "snapshot_type",
+    "projection_profile",
+    "publication_policy",
+    "summary",
+    "entries",
+    "advisory_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "report_type": { "const": "assurance_intelligence_public_snapshot" },
+    "snapshot_type": { "enum": ["artifact_derived", "empty"] },
+    "projection_profile": { "const": "openva.assurance-intelligence.v1" },
+    "publication_policy": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "const": "openva.assurance-intelligence-publication.default" },
+        "version": { "const": "0.1.0" }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": ["assurance_count", "axis_count"],
+      "properties": {
+        "assurance_count": { "type": "integer", "minimum": 0 },
+        "axis_count": { "const": 5 }
+      },
+      "additionalProperties": false
+    },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/publicEntry" }
+    },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "openvaSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "nullableDateTime": {
+      "anyOf": [
+        { "type": "string", "format": "date-time" },
+        { "type": "null" }
+      ]
+    },
+    "nullableString": {
+      "anyOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "null" }
+      ]
+    },
+    "instrumentAxis": {
+      "type": "object",
+      "required": ["value", "reason_code"],
+      "properties": {
+        "value": { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentState" },
+        "reason_code": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentStateReasonCode" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "supersessionAxis": {
+      "type": "object",
+      "required": ["value", "reason_code"],
+      "properties": {
+        "value": { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionState" },
+        "reason_code": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionStateReasonCode" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "verificationAxis": {
+      "type": "object",
+      "required": ["value", "reason_code"],
+      "properties": {
+        "value": { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationState" },
+        "reason_code": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationStateReasonCode" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "freshnessAxis": {
+      "type": "object",
+      "required": ["value", "reason_code"],
+      "properties": {
+        "value": { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationFreshnessState" },
+        "reason_code": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationFreshnessReasonCode" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidenceAxis": {
+      "type": "object",
+      "required": ["value", "reason_code"],
+      "properties": {
+        "value": { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/evidenceSetState" },
+        "reason_code": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/evidenceSetReasonCode" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "axes": {
+      "type": "object",
+      "required": [
+        "instrument_state",
+        "supersession_state",
+        "verification_state",
+        "verification_freshness",
+        "evidence_set_state"
+      ],
+      "properties": {
+        "instrument_state": { "$ref": "#/$defs/instrumentAxis" },
+        "supersession_state": { "$ref": "#/$defs/supersessionAxis" },
+        "verification_state": { "$ref": "#/$defs/verificationAxis" },
+        "verification_freshness": { "$ref": "#/$defs/freshnessAxis" },
+        "evidence_set_state": { "$ref": "#/$defs/evidenceAxis" }
+      },
+      "additionalProperties": false
+    },
+    "publicEntry": {
+      "type": "object",
+      "required": [
+        "assurance_id",
+        "vendor_id",
+        "projection_profile",
+        "effective_at",
+        "knowledge_cutoff",
+        "next_reevaluation_at",
+        "axes"
+      ],
+      "properties": {
+        "assurance_id": { "$ref": "#/$defs/openvaSlug" },
+        "vendor_id": { "$ref": "#/$defs/openvaSlug" },
+        "assurance_label": { "$ref": "#/$defs/nullableString" },
+        "assurance_class": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/assuranceClass" },
+            { "type": "null" }
+          ]
+        },
+        "framework_id": { "$ref": "#/$defs/nullableString" },
+        "framework_display_name": { "$ref": "#/$defs/nullableString" },
+        "projection_profile": { "const": "openva.assurance-intelligence.v1" },
+        "effective_at": { "type": "string", "format": "date-time" },
+        "knowledge_cutoff": { "type": "string", "format": "date-time" },
+        "next_reevaluation_at": { "$ref": "#/$defs/nullableDateTime" },
+        "axes": { "$ref": "#/$defs/axes" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
