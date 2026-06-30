@@ -19,7 +19,7 @@ PYPROJECT = PKG / "pyproject.toml"
 # deterministic and offline. Provenance is asserted by the digest below.
 SCHEMA_URL = "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json"
 PINNED_SCHEMA = PKG / "manifest" / "server.schema.2025-12-11.json"
-PINNED_SCHEMA_SHA256 = "fe034eb855b202d8b80784eaa24412b5b89084fe9c48c1439226b7487976ed1c"
+PINNED_SCHEMA_SHA256 = "3fba09590c99f61735d234822279f4223fab9e300c0a81e81c91ab62a4114de0"
 
 
 def _server_json() -> dict:
@@ -64,7 +64,7 @@ def test_pyproject_pins_mcp_below_v2():
 
 
 def test_pinned_schema_provenance_digest_matches():
-    data = PINNED_SCHEMA.read_bytes()
+    data = PINNED_SCHEMA.read_bytes().replace(b"\r\n", b"\n")
     assert hashlib.sha256(data).hexdigest() == PINNED_SCHEMA_SHA256
     # server.json declares the same schema URL the pinned copy came from.
     assert _server_json()["$schema"] == SCHEMA_URL
