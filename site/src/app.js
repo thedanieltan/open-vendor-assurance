@@ -1,6 +1,7 @@
 let catalogData = null;
 let feedData = null;
 let sourceHealthData = null;
+let assuranceIntelligenceData = null;
 let visibleVendors = [];
 const selectedVendors = new Set();
 const selectedSources = new Set();
@@ -18,6 +19,34 @@ const SOURCE_HEALTH_LABELS = {
   missing: "Not yet verified",
 };
 const CONFIDENCE_NOTICE = "Catalog confidence labels are metadata about OpenVA review coverage, not advice.";
+const ASSURANCE_INTELLIGENCE_NOTICE = "Verification is based on admitted assurance observations. Freshness describes the age of the decisive verification basis. Evidence-set state describes completeness and internal coherence. Source reachability is separate from assurance verification.";
+const ASSURANCE_AXIS_LABELS = {
+  instrument_state: "Instrument",
+  supersession_state: "Supersession",
+  verification_state: "Verification",
+  verification_freshness: "Freshness",
+  evidence_set_state: "Evidence",
+};
+const ASSURANCE_STATE_LABELS = {
+  not_yet_effective: "Not yet effective",
+  effective: "Effective",
+  expired: "Expired",
+  historical: "Historical",
+  temporally_indeterminate: "Temporally indeterminate",
+  current: "Current",
+  superseded: "Superseded",
+  no_conclusion: "No conclusion",
+  confirmed: "Confirmed",
+  contradicted: "Contradicted",
+  inconclusive: "Inconclusive",
+  no_basis: "No freshness basis",
+  aging: "Aging",
+  stale: "Stale",
+  no_evidence: "No evidence",
+  incomplete: "Incomplete",
+  complete: "Complete",
+  conflicted: "Conflicted",
+};
 
 function text(value) {
   return value === null || value === undefined || value === "" ? "Unavailable" : String(value);
@@ -85,6 +114,46 @@ function confidenceTemplate(confidence) {
       <span><strong>Field provenance</strong><small>${html(provenance.label)}</small></span>
     </div>
     <p class="meta-line">${html(data.notice || CONFIDENCE_NOTICE)}</p>
+  `;
+}
+
+function stateLabel(value) {
+  return ASSURANCE_STATE_LABELS[value] || text(value).replaceAll("_", " ");
+}
+
+function assuranceIntelligenceTemplate(entries) {
+  if (!entries || !entries.length) {
+    return `
+      <h4>Assurance Intelligence</h4>
+      <div class="snapshot-box assurance-intelligence-snapshot">
+        <strong>No Assurance Intelligence entry is published for this vendor.</strong><br>
+        ${html(ASSURANCE_INTELLIGENCE_NOTICE)}
+      </div>
+    `;
+  }
+  return `
+    <h4>Assurance Intelligence</h4>
+    <div class="assurance-intelligence-list">
+      ${entries.map((entry) => `
+        <article class="assurance-intelligence-card">
+          <p class="meta-line">${html(entry.assurance_id)} · ${html(entry.assurance_class || "assurance")} · ${html(entry.framework_id || "framework unavailable")}</p>
+          <div class="assurance-axis-grid">
+            ${Object.entries(ASSURANCE_AXIS_LABELS).map(([axisName, label]) => {
+              const axis = entry.axes && entry.axes[axisName] ? entry.axes[axisName] : { value: "Unavailable" };
+              return `
+                <span class="assurance-axis-badge">
+                  <strong>${html(label)}</strong>
+                  <small>${html(stateLabel(axis.value))}</small>
+                  ${axis.reason_code ? `<em>${html(axis.reason_code.replaceAll("_", " "))}</em>` : ""}
+                </span>
+              `;
+            }).join("")}
+          </div>
+          <p class="meta-line">Effective: ${html(entry.effective_at)} · knowledge cutoff: ${html(entry.knowledge_cutoff)} · next reevaluation: ${html(entry.next_reevaluation_at || "Unavailable")}</p>
+        </article>
+      `).join("")}
+    </div>
+    <p class="meta-line">${html(ASSURANCE_INTELLIGENCE_NOTICE)}</p>
   `;
 }
 
@@ -493,6 +562,7 @@ async function renderVendorDetail(vendorId) {
     const candidates = detail.candidate_sources || [];
     const unavailable = detail.unavailable_sources || [];
     const observations = detail.latest_observations || [];
+    const assuranceIntelligence = detail.assurance_intelligence || [];
     detailPanel.innerHTML = `
       <p class="eyebrow">Vendor detail</p>
       <h3>${html(vendor.display_name)}</h3>
@@ -509,6 +579,7 @@ async function renderVendorDetail(vendorId) {
       <div class="snapshot-box">${snapshotDisclosure()}</div>
       <div class="snapshot-box source-health-snapshot">${sourceHealthDisclosure()}</div>
       <div class="snapshot-box catalog-confidence-snapshot">${confidenceTemplate(vendor.catalog_confidence)}</div>
+      ${assuranceIntelligenceTemplate(assuranceIntelligence)}
       <h4>Source coverage summary</h4>
       <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
       <h4>Canonical source records</h4>
@@ -679,12 +750,13 @@ function route() {
 }
 
 async function init() {
-  const [metaResponse, vendorSearchResponse, sourceTypesResponse, feedResponse, healthResponse] = await Promise.all([
+  const [metaResponse, vendorSearchResponse, sourceTypesResponse, feedResponse, healthResponse, assuranceResponse] = await Promise.all([
     fetch("data/meta.json"),
     fetch("data/vendor-search.min.json"),
     fetch("data/source-types.json"),
     fetch("data/observation-feed.json"),
     fetch("data/source-health-snapshot.json").catch(() => null),
+    fetch("data/assurance-intelligence.json").catch(() => null),
   ]);
   const meta = await metaResponse.json();
   const vendorSearch = await vendorSearchResponse.json();
@@ -698,10 +770,19 @@ async function init() {
         snapshot_type: "missing",
         summary: { status_bucket_counts: { healthy: 0, warning: 0, unavailable: 0, ambiguous: 0 } },
       };
+  assuranceIntelligenceData = assuranceResponse && assuranceResponse.ok
+    ? await assuranceResponse.json()
+    : {
+        report_type: "assurance_intelligence_public_snapshot",
+        snapshot_type: "empty",
+        summary: { assurance_count: 0, axis_count: 5 },
+        entries: [],
+      };
   catalogData = {
     meta,
     vendors: vendorSearch.items || [],
     sourceTypes: sourceTypes.items || [],
+    assuranceIntelligence: assuranceIntelligenceData.entries || [],
   };
   renderSnapshotDisclosures();
   renderHome();

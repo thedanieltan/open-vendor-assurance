@@ -94,6 +94,8 @@ jobs:
           if [ "$copied" -eq 3 ]; then
             echo "Catalog confidence reports copied from coverage-audit run $RUN_ID."
           fi
+      - name: Build Assurance Intelligence public snapshot
+        run: python -m tools.openva.assurance_intelligence_publication build --output public/assurance-intelligence.json
       - name: Build reviewed catalog site
         run: python site/build.py --out site/dist
       - name: Build agent exports (publish-time, read-only)

@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUT = SITE_ROOT / "dist"
 DEFAULT_SOURCE_HEALTH_SNAPSHOT = ROOT / "public" / "source-health-snapshot.json"
+DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT = ROOT / "public" / "assurance-intelligence.json"
 DEFAULT_CATALOG_COMPLETENESS_REPORT = ROOT / "reports" / "catalog-completeness-report.json"
 DEFAULT_ENTITY_REVIEW_QUEUE = ROOT / "reports" / "entity-review-queue.json"
 DEFAULT_FIELD_PROVENANCE_COVERAGE = ROOT / "reports" / "field-provenance-coverage.json"
@@ -60,6 +61,13 @@ FIELD_PROVENANCE_LABELS = {
     "partial": "Mixed",
     "missing": "Missing",
 }
+ASSURANCE_INTELLIGENCE_NOTICE = (
+    "Assurance Intelligence is derived from materialized public-safe projections. "
+    "Verification is based on admitted assurance observations; freshness describes "
+    "the age of the decisive verification basis; evidence-set state describes "
+    "completeness and internal coherence. Source reachability is separate from "
+    "assurance verification."
+)
 
 
 def load_json(path: Path) -> Any:
@@ -107,6 +115,48 @@ def load_source_health_snapshot(path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT) -> 
     if not isinstance(snapshot.get("health"), list):
         print(f"Warning: source health snapshot at {path} has no health list; site will show Not yet verified labels.")
         return empty_source_health_snapshot()
+    return snapshot
+
+
+def empty_assurance_intelligence_snapshot() -> dict[str, Any]:
+    return {
+        "schema_version": "0.1.0",
+        "report_type": "assurance_intelligence_public_snapshot",
+        "snapshot_type": "empty",
+        "projection_profile": "openva.assurance-intelligence.v1",
+        "publication_policy": {
+            "id": "openva.assurance-intelligence-publication.default",
+            "version": "0.1.0",
+        },
+        "summary": {"assurance_count": 0, "axis_count": 5},
+        "entries": [],
+        "advisory_boundary": "non_advisory",
+    }
+
+
+def load_assurance_intelligence_snapshot(path: Path = DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT) -> dict[str, Any]:
+    if not path.exists():
+        print(f"Warning: assurance intelligence snapshot not found at {path}; site will show unavailable labels.")
+        return empty_assurance_intelligence_snapshot()
+    snapshot = load_json(path)
+    if not isinstance(snapshot, dict) or snapshot.get("report_type") != "assurance_intelligence_public_snapshot":
+        print(f"Warning: invalid assurance intelligence snapshot at {path}; site will show unavailable labels.")
+        return empty_assurance_intelligence_snapshot()
+    if not isinstance(snapshot.get("entries"), list):
+        print(f"Warning: assurance intelligence snapshot at {path} has no entries list; site will show unavailable labels.")
+        return empty_assurance_intelligence_snapshot()
+    text = json.dumps(snapshot, sort_keys=True)
+    for forbidden in (
+        "input_digest",
+        "projection_ref",
+        "maintenance/",
+        "caused_by",
+        "assurance_observation_ids",
+        "source_observation_ids",
+    ):
+        if forbidden in text:
+            print(f"Warning: assurance intelligence snapshot at {path} contains internal field text; site will show unavailable labels.")
+            return empty_assurance_intelligence_snapshot()
     return snapshot
 
 
@@ -378,6 +428,7 @@ def build_meta(pack: dict[str, Any], sources: list[dict[str, Any]], vendor_count
 
 def build_compiled_catalog(
     source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT,
+    assurance_intelligence_snapshot_path: Path = DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT,
     catalog_completeness_path: Path = DEFAULT_CATALOG_COMPLETENESS_REPORT,
     entity_review_path: Path = DEFAULT_ENTITY_REVIEW_QUEUE,
     field_provenance_path: Path = DEFAULT_FIELD_PROVENANCE_COVERAGE,
@@ -391,6 +442,7 @@ def build_compiled_catalog(
     coverage_index = load_json(ROOT / "indexes/source-coverage.json")
     observations_index = load_json(ROOT / "indexes/observations.json")
     source_health_snapshot = load_source_health_snapshot(source_health_snapshot_path)
+    assurance_intelligence_snapshot = load_assurance_intelligence_snapshot(assurance_intelligence_snapshot_path)
     health_index = source_health_index(source_health_snapshot)
     completeness_report = load_optional_report(catalog_completeness_path, "catalog_completeness_report")
     entity_review_report = load_optional_report(entity_review_path, "entity_review_queue")
@@ -448,6 +500,14 @@ def build_compiled_catalog(
         if vendor_id:
             observations_by_vendor.setdefault(vendor_id, []).append(observation)
 
+    assurance_intelligence_by_vendor: dict[str, list[dict[str, Any]]] = {}
+    for row in assurance_intelligence_snapshot.get("entries", []):
+        if not isinstance(row, dict):
+            continue
+        vendor_id = str(row.get("vendor_id") or "")
+        if vendor_id:
+            assurance_intelligence_by_vendor.setdefault(vendor_id, []).append(row)
+
     vendor_summaries = []
     vendor_details = {}
     for row in vendor_search.get("items", []):
@@ -476,6 +536,7 @@ def build_compiled_catalog(
                 entity_reviews_by_vendor,
                 provenance_by_vendor,
             ),
+            "assurance_intelligence_count": len(assurance_intelligence_by_vendor.get(vendor_id, [])),
             "detail_path": f"data/vendors/{vendor_id}.json",
         }
         vendor_summaries.append(summary)
@@ -485,6 +546,7 @@ def build_compiled_catalog(
             "candidate_sources": candidates_by_vendor.get(vendor_id, []),
             "unavailable_sources": unavailable_by_vendor.get(vendor_id, []),
             "latest_observations": observations_by_vendor.get(vendor_id, []),
+            "assurance_intelligence": assurance_intelligence_by_vendor.get(vendor_id, []),
         }
 
     source_types = sorted({source.get("source_type") for source in compact_sources if source.get("source_type")})
@@ -505,6 +567,7 @@ def build_compiled_catalog(
         "source_types": source_types,
         "coverage_summary": coverage_summary,
         "source_health_snapshot": source_health_snapshot,
+        "assurance_intelligence_snapshot": assurance_intelligence_snapshot,
     }
 
 
@@ -543,6 +606,7 @@ def build_observation_feed() -> dict[str, Any]:
 def build_site(
     output_dir: Path,
     source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT,
+    assurance_intelligence_snapshot_path: Path = DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT,
     catalog_completeness_path: Path = DEFAULT_CATALOG_COMPLETENESS_REPORT,
     entity_review_path: Path = DEFAULT_ENTITY_REVIEW_QUEUE,
     field_provenance_path: Path = DEFAULT_FIELD_PROVENANCE_COVERAGE,
@@ -565,6 +629,7 @@ def build_site(
 
     compiled = build_compiled_catalog(
         source_health_snapshot_path,
+        assurance_intelligence_snapshot_path,
         catalog_completeness_path,
         entity_review_path,
         field_provenance_path,
@@ -574,6 +639,7 @@ def build_site(
     write_json(output_dir / "data/source-types.json", {"meta": compiled["meta"], "items": compiled["source_types"]})
     write_json(output_dir / "data/coverage-summary.json", {"meta": compiled["meta"], **compiled["coverage_summary"]})
     write_json(output_dir / "data/source-health-snapshot.json", compiled["source_health_snapshot"])
+    write_json(output_dir / "data/assurance-intelligence.json", compiled["assurance_intelligence_snapshot"])
     for vendor_id, detail in compiled["vendor_details"].items():
         write_json(output_dir / "data/vendors" / f"{vendor_id}.json", {"meta": compiled["meta"], **detail})
     write_json(output_dir / "data/observation-feed.json", build_observation_feed())
@@ -599,6 +665,11 @@ def main() -> int:
         default=str(DEFAULT_SOURCE_HEALTH_SNAPSHOT),
         help="Optional public source health snapshot JSON.",
     )
+    parser.add_argument(
+        "--assurance-intelligence-snapshot",
+        default=str(DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT),
+        help="Optional public assurance intelligence snapshot JSON.",
+    )
     parser.add_argument("--catalog-completeness-report", default=str(DEFAULT_CATALOG_COMPLETENESS_REPORT))
     parser.add_argument("--entity-review-queue", default=str(DEFAULT_ENTITY_REVIEW_QUEUE))
     parser.add_argument("--field-provenance-coverage", default=str(DEFAULT_FIELD_PROVENANCE_COVERAGE))
@@ -606,6 +677,7 @@ def main() -> int:
     build_site(
         Path(args.out),
         Path(args.source_health_snapshot),
+        Path(args.assurance_intelligence_snapshot),
         Path(args.catalog_completeness_report),
         Path(args.entity_review_queue),
         Path(args.field_provenance_coverage),

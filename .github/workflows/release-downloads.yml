@@ -64,6 +64,8 @@ jobs:
         run: git diff --exit-code openva-pack.json indexes/ dist/
       - name: Run tests
         run: pytest -q
+      - name: Build Assurance Intelligence public snapshot
+        run: python -m tools.openva.assurance_intelligence_publication build --output public/assurance-intelligence.json
       - name: Build compiled site distribution
         run: python site/build.py --out site/dist
       - name: Build release artifact manifest

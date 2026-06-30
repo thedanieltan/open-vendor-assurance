@@ -15,8 +15,13 @@ ARTIFACT_PATTERNS = [
     "openva-pack.json",
     "indexes/*.json",
     "dist/vendors/*.json",
+    "public/assurance-intelligence.json",
     "schemas/openva/*.json",
     "fixtures/packs/**/*.json",
+]
+
+REQUIRED_ARTIFACTS = [
+    "public/assurance-intelligence.json",
 ]
 
 
@@ -35,6 +40,10 @@ def artifact_paths() -> list[Path]:
             if path.is_file() and path != MANIFEST_PATH:
                 paths.add(path)
     return sorted(paths, key=lambda item: item.relative_to(ROOT).as_posix())
+
+
+def missing_required_artifacts() -> list[str]:
+    return [path for path in REQUIRED_ARTIFACTS if not (ROOT / path).is_file()]
 
 
 def build_manifest() -> dict[str, Any]:
@@ -76,6 +85,13 @@ def load_committed_manifest() -> dict[str, Any] | None:
 
 
 def check_manifest_current() -> list[str]:
+    missing = missing_required_artifacts()
+    if missing:
+        joined = ", ".join(missing)
+        return [
+            f"required release artifact is missing: {joined}; "
+            "run python -m tools.openva.assurance_intelligence_publication build"
+        ]
     expected = build_manifest()
     current = load_committed_manifest()
     if current == expected:
