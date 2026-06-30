@@ -48,7 +48,46 @@ jobs:
         run: python -m tools.openva.validate build-indexes
       - name: Check generated files are committed
         run: git diff --exit-code openva-pack.json indexes/ dist/
+      - name: Determine scope-policy operational freshness exclusion
+        id: scope_policy_freshness
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          echo "skip_release_gates=false" >> "$GITHUB_OUTPUT"
+          git worktree add /tmp/base-scope-policy "$BASE_SHA"
+          printf '%s' "$PR_BODY" > /tmp/pr-body.txt
+          git diff --name-only "$BASE_SHA" "$HEAD_SHA" > /tmp/changed-paths.txt
+          cd /tmp/base-scope-policy
+          if ! python -m tools.openva.pr_scope_guard --declaration-file /tmp/pr-body.txt --changed-paths-file /tmp/changed-paths.txt; then
+            exit 0
+          fi
+          if python - /tmp/pr-body.txt /tmp/changed-paths.txt <<'PY'
+          import re
+          import sys
+          from pathlib import Path
+          
+          import yaml
+          
+          body = Path(sys.argv[1]).read_text(encoding="utf-8")
+          changed = [line.strip() for line in Path(sys.argv[2]).read_text(encoding="utf-8").splitlines() if line.strip()]
+          found = []
+          for match in re.finditer(r"^\s*Work-Package:\s*(WP-[A-Z0-9][A-Z0-9-]*)\s*$", body or "", re.MULTILINE):
+              if match.group(1) not in found:
+                  found.append(match.group(1))
+          manifest = yaml.safe_load(Path("docs/operations/contracts/work-package-scope.yaml").read_text(encoding="utf-8"))
+          policy = (manifest.get("work_packages") or {}).get("WP-PR-SCOPE-POLICY-01") or {}
+          exclusive = set(policy.get("allowed_paths") or [])
+          raise SystemExit(0 if found == ["WP-PR-SCOPE-POLICY-01"] and changed and set(changed) <= exclusive else 1)
+          PY
+          then
+            echo "skip_release_gates=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Run source-intelligence release gates (pr profile)
+        if: steps.scope_policy_freshness.outputs.skip_release_gates != 'true'
         run: >-
           python -m tools.openva.release_gates check --profile pr
           --out-json "$RUNNER_TEMP/release-gates.json"

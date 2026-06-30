@@ -53,20 +53,107 @@ work_packages:
       - tests/test_workflow_retirement_evidence.py
       - tests/test_future_operations_specs.py
 
-  WP-ASSURANCE-01-SLICE1:
-    description: Temporal assurance structural schema contracts, offline schema registry wiring, structural fixture infrastructure, and architecture note. Slice 1 is schema/fixture/test/docs only; no acquisition, extraction, lifecycle projection, cross-record semantic validation, workflow changes, policy-threshold changes, or catalog-data migration.
+  WP-SOURCE-OBSERVATION-FRESHNESS-CONTINUITY-01:
+    description: >-
+      Committed latest-observation continuity for release freshness: persist a
+      deterministic latest-observations index, consume it in release freshness checks,
+      update the source-maintenance/observation-ledger PR path, and prove the committed
+      index versus append-only change-event boundary. No SLA weakening, fake events,
+      acquisition semantics, catalog mutation, or workflow authority widening.
     allowed_paths:
+      - .github/workflows/observation-ledger-append-pr.yml
+      - .github/workflows/source-maintenance-report.yml
+      - docs/architecture/SOURCE_OBSERVATION_FRESHNESS_CONTINUITY.md
+      - maintenance/source-observations/latest-observations.json
+      - tests/test_observation_automerge.py
+      - tests/test_observation_ledger.py
+      - tests/test_observation_ledger_append_workflow.py
+      - tests/test_release_gates.py
+      - tests/test_source_maintenance_workflow.py
+      - tools/openva/observation_automerge.py
+      - tools/openva/observation_ledger.py
+      - tools/openva/release_gates.py
+
+  WP-OPENVA-ASSURANCE-RELEASE-01:
+    description: >-
+      Pillar 3 Assurance Intelligence release: assurance contracts, policies,
+      runtime evaluators, materialization, semantic fixtures/tests, architecture docs,
+      and the MCP provenance-pin test required by the Pillar 3 range. No publication,
+      site, acquisition, catalog, source-observation maintenance, workflow, or
+      distribution artifacts.
+    allowed_paths:
+      - config/assurance-evidence-set-policy.yaml
+      - config/assurance-projection-policy.yaml
+      - config/assurance-verification-freshness-policy.yaml
+      - config/assurance-verification-policy.yaml
+      - docs/architecture/ASSURANCE_EVIDENCE_SET_V1.md
+      - docs/architecture/ASSURANCE_INTELLIGENCE_PILLAR3_CLOSURE.md
+      - docs/architecture/ASSURANCE_INTELLIGENCE_PROFILE_V1.md
+      - docs/architecture/ASSURANCE_OBSERVATION_KNOWLEDGE_TIME.md
+      - docs/architecture/ASSURANCE_VERIFICATION_FRESHNESS_V1.md
+      - docs/architecture/ASSURANCE_VERIFICATION_STATE_V1.md
+      - docs/architecture/KNOWLEDGE_TIME.md
+      - docs/architecture/LIFECYCLE_PROJECTION_V1.md
       - docs/architecture/TEMPORAL_ASSURANCE_SCHEMA_V1.md
-      - schemas/openva/assurance-record.schema.json
-      - schemas/openva/assurance-observation.schema.json
       - schemas/openva/assurance-change-event.schema.json
+      - schemas/openva/assurance-evidence-set-policy.schema.json
+      - schemas/openva/assurance-evidence-set.schema.json
+      - schemas/openva/assurance-intelligence-latest-index.schema.json
+      - schemas/openva/assurance-intelligence-projection.schema.json
+      - schemas/openva/assurance-intelligence-request.schema.json
+      - schemas/openva/assurance-observation.schema.json
+      - schemas/openva/assurance-projection-latest-index.schema.json
+      - schemas/openva/assurance-projection-policy.schema.json
+      - schemas/openva/assurance-projection-request.schema.json
+      - schemas/openva/assurance-projection.schema.json
+      - schemas/openva/assurance-record.schema.json
+      - schemas/openva/assurance-verification-freshness-policy.schema.json
+      - schemas/openva/assurance-verification-freshness.schema.json
+      - schemas/openva/assurance-verification-policy.schema.json
+      - schemas/openva/assurance-verification-request.schema.json
+      - schemas/openva/assurance-verification-state.schema.json
+      - schemas/openva/vocabularies/assurance-intelligence-v1.schema.json
+      - schemas/openva/vocabularies/assurance-projection-v1.schema.json
       - schemas/openva/vocabularies/assurance-v1.schema.json
+      - tests/fixtures/assurance/**
+      - tests/support/__init__.py
+      - tests/support/assurance_fixture_repository.py
+      - tests/support/assurance_fixture_runner.py
+      - tests/test_assurance*.py
+      - tests/test_openva_mcp_metadata.py
+      - tools/openva/assurance_intelligence.py
+      - tools/openva/assurance_intelligence_materialization.py
+      - tools/openva/assurance_projection.py
+      - tools/openva/assurance_projection_materialization.py
+      - tools/openva/assurance_projection_policy.py
+      - tools/openva/assurance_validation.py
+      - tools/openva/assurance_verification.py
       - tools/openva/schema_registry.py
       - tools/openva/validate.py
-      - tests/support/__init__.py
-      - tests/support/assurance_fixture_runner.py
-      - tests/test_assurance_schema_fixtures.py
-      - tests/fixtures/assurance/schema/**
+
+  WP-P4-ASSURANCE-INTELLIGENCE-PUBLICATION-01:
+    description: >-
+      Pillar 4 publication of the completed five-axis Assurance Intelligence profile:
+      public snapshot contracts/policy/generator, site and release integration,
+      publication acceptance tests, and architecture documentation. No Pillar 3
+      semantics, acquisition, MCP/API, scheduler, catalog, or source-observation work.
+    allowed_paths:
+      - .github/workflows/release-downloads.yml
+      - .github/workflows/site-pages.yml
+      - config/assurance-intelligence-publication-policy.yaml
+      - docs/architecture/ASSURANCE_INTELLIGENCE_PUBLICATION.md
+      - schemas/openva/assurance-intelligence-publication-policy.schema.json
+      - schemas/openva/assurance-intelligence-public-snapshot.schema.json
+      - site/build.py
+      - site/src/app.js
+      - site/src/styles.css
+      - tests/test_assurance_intelligence_publication.py
+      - tests/test_assurance_intelligence_publication_acceptance.py
+      - tests/test_release_artifacts.py
+      - tests/test_site.py
+      - tools/openva/assurance_intelligence_publication.py
+      - tools/openva/release_artifacts.py
+      - tools/openva/schema_registry.py
 
   WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01:
     description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400 (audit evidence, required corrections, and regression tests). Scope-policy files are NOT included here — they live in WP-PR-SCOPE-POLICY-01.
