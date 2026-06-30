@@ -17,10 +17,12 @@ from tools.openva.observation_ledger import (
     build_observation_records,
     build_review_report,
     classify_change,
+    baseline_from_latest_index,
     load_ledger_baseline,
     load_sla_config,
     query_events,
     stale_sources,
+    validate_latest_index,
 )
 
 OBSERVED_AT = "2026-06-12T05:30:00Z"
@@ -282,6 +284,37 @@ def test_partial_scope_carries_forward_unverified_sources():
     assert by_id["example-privacy"]["carried_forward"] is True
     assert by_id["example-privacy"]["observed_at"] == "2026-06-01T05:30:00Z"
     assert latest["summary"] == {"source_count": 2, "observed_this_run": 1, "carried_forward": 1}
+
+
+def test_latest_index_validates_and_round_trips_to_baseline():
+    baseline = {"example-dpa": baseline_entry()}
+    latest = build_latest_index([], baseline, generated_at=OBSERVED_AT)
+
+    validate_latest_index(latest)
+    as_baseline = baseline_from_latest_index(latest)
+
+    assert as_baseline["example-dpa"]["observed_at"] == "2026-06-01T05:30:00Z"
+
+
+def test_latest_index_rejects_duplicate_or_unsorted_sources():
+    duplicate = build_latest_index([], {"example-dpa": baseline_entry()}, generated_at=OBSERVED_AT)
+    duplicate["sources"].append(dict(duplicate["sources"][0]))
+
+    with pytest.raises(ValueError, match="duplicate"):
+        validate_latest_index(duplicate)
+
+    unsorted = build_latest_index(
+        [],
+        {
+            "b-source": baseline_entry(source_id="b-source"),
+            "a-source": baseline_entry(source_id="a-source"),
+        },
+        generated_at=OBSERVED_AT,
+    )
+    unsorted["sources"].reverse()
+
+    with pytest.raises(ValueError, match="sorted"):
+        validate_latest_index(unsorted)
 
 
 def test_freshness_statuses_against_sla_config():
