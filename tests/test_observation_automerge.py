@@ -8,6 +8,7 @@ import subprocess
 from pathlib import Path
 
 from tools.openva import observation_automerge as oa
+from tools.openva.observation_ledger import DOCTRINE
 
 
 def row(record_id: str, source_id: str, observed_at: str, *, event_type: str = "first_observed") -> dict:
@@ -51,7 +52,7 @@ def test_plan_filters_already_committed_rows(tmp_path):
     assert code == 0
     summary = json.loads(out_sum.read_text())
     assert summary["new_row_count"] == 1
-    assert [json.loads(l)["ledger_record_id"] for l in out_delta.read_text().splitlines()] == ["rec-b"]
+    assert [json.loads(line)["ledger_record_id"] for line in out_delta.read_text().splitlines()] == ["rec-b"]
 
 
 def test_plan_zero_new_rows_is_clean(tmp_path):
@@ -88,6 +89,7 @@ def test_plan_rejects_schema_invalid_row(tmp_path):
 # --------------------------- check --------------------------- #
 LABELS = [oa.AUTOMERGE_OBSERVATION_LABEL, oa.OBSERVATION_LEDGER_LABEL]
 PATH = "maintenance/source-observations/events/2026-06.ndjson"
+LATEST_PATH = "maintenance/source-observations/latest-observations.json"
 
 
 def loader_for(base: str | None, head: str):
@@ -98,6 +100,48 @@ def loader_for(base: str | None, head: str):
             return base
         return head
     return loader
+
+
+def loader_map(head_by_path: dict[str, str], base_by_path: dict[str, str] | None = None):
+    base_by_path = base_by_path or {}
+
+    def loader(ref: str, path: str) -> str:
+        if ref == "BASE":
+            if path not in base_by_path:
+                raise subprocess.CalledProcessError(128, ["git", "show"])
+            return base_by_path[path]
+        return head_by_path[path]
+
+    return loader
+
+
+def latest_index(*, source_id: str = "src-a", observed_at: str = "2026-06-02T00:00:00Z") -> dict:
+    return {
+        "schema_version": "0.1.0",
+        "report_type": "latest_observations_index",
+        "generated_at": observed_at,
+        "doctrine": DOCTRINE,
+        "summary": {"source_count": 1, "observed_this_run": 1, "carried_forward": 0},
+        "sources": [
+            {
+                "source_id": source_id,
+                "vendor_id": "example-vendor",
+                "source_url": "https://vendor.example/privacy",
+                "observed_at": observed_at,
+                "observation_id": f"{source_id}-{observed_at[:10]}-100",
+                "final_url": "https://vendor.example/privacy",
+                "http_status": 200,
+                "source_health_status": "reachable",
+                "change_class": "none",
+                "retrieval_method": "html_page",
+                "raw_sample_sha256": None,
+                "normalized_text_sample_sha256": None,
+                "review_signal": {"required": False, "reason": None},
+                "carried_forward": False,
+            }
+        ],
+        "not_advice": True,
+    }
 
 
 def test_check_accepts_clean_append():
@@ -116,6 +160,32 @@ def test_check_accepts_new_monthly_shard_with_no_base():
     )
     assert result.eligible, result.reasons
     assert result.appended_rows == 1
+
+
+def test_check_accepts_valid_latest_index_without_event_rows():
+    head = json.dumps(latest_index(), sort_keys=True)
+    result = oa.check_observation_automerge(
+        [LATEST_PATH],
+        LABELS,
+        "BASE",
+        "HEAD",
+        loader=loader_map({LATEST_PATH: head}),
+    )
+    assert result.eligible, result.reasons
+    assert result.appended_rows == 0
+
+
+def test_check_rejects_malformed_latest_index():
+    head = json.dumps({**latest_index(), "sources": "not-a-list"}, sort_keys=True)
+    result = oa.check_observation_automerge(
+        [LATEST_PATH],
+        LABELS,
+        "BASE",
+        "HEAD",
+        loader=loader_map({LATEST_PATH: head}),
+    )
+    assert not result.eligible
+    assert any("latest_index_invalid" in r for r in result.reasons)
 
 
 def test_check_rejects_modified_existing_line():
@@ -163,3 +233,4 @@ def test_is_ledger_event_path():
     assert oa.is_ledger_event_path("maintenance/source-observations/events/2026-06.ndjson")
     assert not oa.is_ledger_event_path("maintenance/source-observations/events/notes.txt")
     assert not oa.is_ledger_event_path("maintenance/source-observations/2026-06.ndjson")
+    assert oa.is_observation_state_path(LATEST_PATH)

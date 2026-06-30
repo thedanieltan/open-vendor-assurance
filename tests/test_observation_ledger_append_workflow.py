@@ -48,15 +48,18 @@ def test_applies_both_observation_labels():
     assert "--add-label \"automerge:observation\"" in text
 
 
-def test_no_pr_when_no_new_rows():
+def test_latest_index_can_create_pr_without_new_event_rows():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "new_row_count == '0'" in text
     assert "new_row_count != '0'" in text
+    assert "No committed observation continuity diff." in text
+    assert "steps.diff.outputs.has_changes == 'true'" in text
 
 
 def test_diff_scope_guard_and_no_direct_merge():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "maintenance/source-observations/events" in text
+    assert "maintenance/source-observations/latest-observations.json" in text
     # The append workflow never merges; merge is the agent-automerge job's role.
     assert "gh pr merge" not in text
 
@@ -65,3 +68,4 @@ def test_uses_plan_and_append_clis():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "python -m tools.openva.observation_automerge plan" in text
     assert "python -m tools.openva.observation_ledger append" in text
+    assert "python -m tools.openva.observation_ledger install-latest" in text

@@ -37,6 +37,7 @@ DOCTRINE = (
 )
 
 DEFAULT_LEDGER_DIR = ROOT / "maintenance" / "source-observations" / "events"
+DEFAULT_LATEST_INDEX = ROOT / "maintenance" / "source-observations" / "latest-observations.json"
 DEFAULT_SLA_CONFIG = ROOT / "config" / "observation-sla.yaml"
 
 TBD = "sha256:TBD"
@@ -283,11 +284,65 @@ def merge_baselines(
 def baseline_from_latest_index(latest_index: dict[str, Any] | None) -> dict[str, dict[str, Any]]:
     if not latest_index:
         return {}
+    validate_latest_index(latest_index)
     return {
         str(entry.get("source_id")): entry
         for entry in latest_index.get("sources", [])
         if entry.get("source_id")
     }
+
+
+def validate_latest_index(latest_index: dict[str, Any]) -> None:
+    if not isinstance(latest_index, dict):
+        raise ValueError("latest observations index must be a JSON object")
+    if latest_index.get("schema_version") != SCHEMA_VERSION:
+        raise ValueError("latest observations index schema_version mismatch")
+    if latest_index.get("report_type") != "latest_observations_index":
+        raise ValueError("latest observations index report_type mismatch")
+    if latest_index.get("doctrine") != DOCTRINE or latest_index.get("not_advice") is not True:
+        raise ValueError("latest observations index missing doctrine boundary")
+    sources = latest_index.get("sources")
+    if not isinstance(sources, list):
+        raise ValueError("latest observations index sources must be a list")
+    seen: set[str] = set()
+    previous_key: tuple[str, str] | None = None
+    required = {
+        "source_id",
+        "vendor_id",
+        "source_url",
+        "observed_at",
+        "observation_id",
+        "source_health_status",
+        "change_class",
+        "carried_forward",
+    }
+    for index, entry in enumerate(sources):
+        if not isinstance(entry, dict):
+            raise ValueError(f"latest observations index source {index} must be an object")
+        missing = sorted(name for name in required if name not in entry)
+        if missing:
+            raise ValueError(f"latest observations index source {index} missing {', '.join(missing)}")
+        source_id = str(entry.get("source_id") or "")
+        if not source_id:
+            raise ValueError(f"latest observations index source {index} missing source_id")
+        if source_id in seen:
+            raise ValueError(f"duplicate latest observation source_id: {source_id}")
+        seen.add(source_id)
+        observed_at = str(entry.get("observed_at") or "")
+        if observed_at:
+            parse_when(observed_at)
+        key = (str(entry.get("vendor_id") or ""), source_id)
+        if previous_key is not None and key < previous_key:
+            raise ValueError("latest observations index sources must be sorted by vendor_id, source_id")
+        previous_key = key
+
+
+def load_latest_index(path: Path = DEFAULT_LATEST_INDEX) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    latest_index = json.loads(path.read_text(encoding="utf-8"))
+    validate_latest_index(latest_index)
+    return latest_index
 
 
 def build_observation_records(
@@ -698,6 +753,13 @@ def main() -> int:
     append.add_argument("--delta", type=Path, required=True)
     append.add_argument("--ledger-dir", type=Path, default=DEFAULT_LEDGER_DIR)
 
+    install_latest = subparsers.add_parser(
+        "install-latest",
+        help="Install a validated latest-observations index into committed derivative state",
+    )
+    install_latest.add_argument("--latest", type=Path, required=True)
+    install_latest.add_argument("--out", type=Path, default=DEFAULT_LATEST_INDEX)
+
     query = subparsers.add_parser("query", help="Query the committed ledger and latest index")
     query.add_argument("--ledger-dir", type=Path, default=DEFAULT_LEDGER_DIR)
     query.add_argument("--latest", type=Path, default=None, help="latest-observations.json for --stale-by-sla")
@@ -737,6 +799,13 @@ def main() -> int:
         ]
         touched = append_ledger(delta, args.ledger_dir)
         print(json.dumps({"appended": len(delta), "files": [path.as_posix() for path in touched]}, indent=2))
+        return 0
+
+    if args.command == "install-latest":
+        latest_index = json.loads(args.latest.read_text(encoding="utf-8"))
+        validate_latest_index(latest_index)
+        write_json(args.out, latest_index)
+        print(json.dumps({"installed": args.out.as_posix(), "sources": len(latest_index["sources"])}, indent=2))
         return 0
 
     if args.command == "query":

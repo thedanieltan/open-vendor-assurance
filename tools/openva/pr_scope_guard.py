@@ -121,6 +121,30 @@ def out_of_scope_paths(changed_paths: list[str], work_package: str, manifest: di
     return sorted(path for path in changed_paths if not allowed(path))
 
 
+def scope_policy_operational_freshness_exemption(
+    changed_paths: list[str],
+    work_package: str,
+    manifest: dict[str, Any],
+) -> bool:
+    """Return true only for a pure, valid scope-policy control-plane PR.
+
+    This is intentionally narrower than the scope guard itself. It exists only to avoid a
+    trusted-base deadlock where the scope-policy PR cannot land because unrelated
+    operational source freshness is stale. The PR must still be a valid
+    WP-PR-SCOPE-POLICY-01 change, and every changed path must be one of the exclusive
+    scope-policy files.
+    """
+    if work_package != POLICY_WORK_PACKAGE:
+        return False
+    changed = [path for path in changed_paths if path]
+    if not changed:
+        return False
+    if out_of_scope_paths(changed, work_package, manifest):
+        return False
+    exclusive = policy_exclusive_paths(manifest)
+    return set(changed).issubset(exclusive)
+
+
 def changed_paths_from_git(base: str = "origin/main") -> list[str]:
     merge_base = subprocess.run(
         ["git", "merge-base", base, "HEAD"], capture_output=True, text=True, check=True
@@ -154,6 +178,14 @@ def main(argv: list[str] | None = None) -> int:
         "--changed-paths-file",
         help="Path to a newline-separated list of changed paths; overrides the git diff (for CI).",
     )
+    parser.add_argument(
+        "--check-policy-only-operational-freshness-exemption",
+        action="store_true",
+        help=(
+            "Exit 0 only when the declaration and changed paths qualify for the narrow "
+            "scope-policy operational freshness exclusion."
+        ),
+    )
     args = parser.parse_args(argv)
 
     if args.declaration_file:
@@ -176,6 +208,8 @@ def main(argv: list[str] | None = None) -> int:
     else:
         changed = changed_paths_from_git(args.base)
     try:
+        if args.check_policy_only_operational_freshness_exemption:
+            return 0 if scope_policy_operational_freshness_exemption(changed, work_package, manifest) else 1
         violations = out_of_scope_paths(changed, work_package, manifest)
     except KeyError:
         print(
