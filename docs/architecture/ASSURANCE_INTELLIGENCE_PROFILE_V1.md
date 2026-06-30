@@ -82,3 +82,24 @@ For identical semantic inputs, changing only `projected_at` changes only
 This profile is pure orchestration. It introduces no diffing, lifecycle events,
 materialization, index migration, acquisition integration, API, MCP, site,
 export, scheduler, queue, or publication surface.
+
+## Diffing And Materialization
+
+Unified intelligence materialization stores derivative artifacts separately
+from lifecycle projection artifacts:
+
+- `maintenance/assurance-intelligence/latest/<shard>/<assurance_id>.json`
+- `maintenance/assurance-intelligence/latest-index.json`
+
+Immutable change events continue to use the assurance-change event contract, but
+unified event identity includes the intelligence profile and transition axis so
+events are not confused with lifecycle-only contexts.
+
+Diffing emits events only when an axis `value` changes. Changes only to reason
+codes, provenance, policies, digests, boundaries, or `projected_at` do not
+create events. `projected_at` is ignored for ordering and identity.
+
+Persistent materialization follows the same index-last discipline as lifecycle
+projection: validate everything, write immutable events, write the latest
+projection, then update the latest index last. Historical mode remains
+side-effect free, and due planning is pure over `next_reevaluation_at`.
