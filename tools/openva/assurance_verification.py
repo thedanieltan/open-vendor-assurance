@@ -27,6 +27,11 @@ ASSURANCE_VERIFICATION_FRESHNESS_DATETIME_NAIVE = "ASSURANCE_VERIFICATION_FRESHN
 ASSURANCE_VERIFICATION_FRESHNESS_POLICY_INVALID = "ASSURANCE_VERIFICATION_FRESHNESS_POLICY_INVALID"
 ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID = "ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID"
 ASSURANCE_VERIFICATION_FRESHNESS_OUTPUT_INVALID = "ASSURANCE_VERIFICATION_FRESHNESS_OUTPUT_INVALID"
+ASSURANCE_EVIDENCE_SET_DATETIME_NAIVE = "ASSURANCE_EVIDENCE_SET_DATETIME_NAIVE"
+ASSURANCE_EVIDENCE_SET_POLICY_INVALID = "ASSURANCE_EVIDENCE_SET_POLICY_INVALID"
+ASSURANCE_EVIDENCE_SET_REQUIREMENT_MISSING = "ASSURANCE_EVIDENCE_SET_REQUIREMENT_MISSING"
+ASSURANCE_EVIDENCE_SET_INPUT_INVALID = "ASSURANCE_EVIDENCE_SET_INPUT_INVALID"
+ASSURANCE_EVIDENCE_SET_OUTPUT_INVALID = "ASSURANCE_EVIDENCE_SET_OUTPUT_INVALID"
 
 VERIFICATION_POLICY_SCHEMA_PATH = ROOT / "schemas/openva/assurance-verification-policy.schema.json"
 VERIFICATION_STATE_SCHEMA_PATH = ROOT / "schemas/openva/assurance-verification-state.schema.json"
@@ -34,6 +39,8 @@ VERIFICATION_FRESHNESS_POLICY_SCHEMA_PATH = (
     ROOT / "schemas/openva/assurance-verification-freshness-policy.schema.json"
 )
 VERIFICATION_FRESHNESS_SCHEMA_PATH = ROOT / "schemas/openva/assurance-verification-freshness.schema.json"
+EVIDENCE_SET_POLICY_SCHEMA_PATH = ROOT / "schemas/openva/assurance-evidence-set-policy.schema.json"
+EVIDENCE_SET_SCHEMA_PATH = ROOT / "schemas/openva/assurance-evidence-set.schema.json"
 
 
 class AssuranceVerificationError(Exception):
@@ -119,6 +126,43 @@ class VerificationFreshnessResult:
     freshness: Mapping[str, Any]
 
 
+@dataclass(frozen=True, slots=True)
+class EvidenceSetPolicyIdentity:
+    id: str
+    version: str
+    digest: str
+
+    def as_mapping(self) -> dict[str, str]:
+        return {
+            "id": self.id,
+            "version": self.version,
+            "digest": self.digest,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class AssuranceEvidenceSetPolicy:
+    data: Mapping[str, Any]
+    policy_id: str
+    policy_version: str
+    outcome_class_by_outcome: Mapping[str, str]
+    dimension_by_field: Mapping[str, str]
+    requirements_by_class: Mapping[str, tuple[str, ...]]
+
+
+@dataclass(frozen=True, slots=True)
+class EvidenceSetStateResult:
+    state: Mapping[str, Any]
+
+
+@dataclass(frozen=True, slots=True)
+class ClassifiedEvidence:
+    dimension: str
+    outcome_class: str
+    authority_tier: str
+    observation: Mapping[str, Any]
+
+
 def normalize_verification_datetime(value: datetime | str, *, field_name: str) -> datetime:
     if isinstance(value, str):
         try:
@@ -154,6 +198,20 @@ def normalize_freshness_datetime(value: datetime | str, *, field_name: str) -> d
         if exc.code == ASSURANCE_VERIFICATION_DATETIME_NAIVE:
             raise AssuranceVerificationError(
                 code=ASSURANCE_VERIFICATION_FRESHNESS_DATETIME_NAIVE,
+                instance_path=exc.instance_path,
+                message=exc.args[0],
+                related_ids=exc.related_ids,
+            ) from exc
+        raise
+
+
+def normalize_evidence_set_datetime(value: datetime | str, *, field_name: str) -> datetime:
+    try:
+        return normalize_verification_datetime(value, field_name=field_name)
+    except AssuranceVerificationError as exc:
+        if exc.code == ASSURANCE_VERIFICATION_DATETIME_NAIVE:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_EVIDENCE_SET_DATETIME_NAIVE,
                 instance_path=exc.instance_path,
                 message=exc.args[0],
                 related_ids=exc.related_ids,
@@ -457,6 +515,83 @@ def validate_verification_freshness_output(freshness: Mapping[str, Any]) -> None
     )
 
 
+def validate_evidence_set_policy(policy: Mapping[str, Any]) -> None:
+    validator = build_openva_validator(EVIDENCE_SET_POLICY_SCHEMA_PATH)
+    errors = sorted(validator.iter_errors(policy), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceVerificationError(
+        code=ASSURANCE_EVIDENCE_SET_POLICY_INVALID,
+        instance_path=validation_instance_path(error),
+        message=f"Evidence-set policy is invalid: {error.message}",
+    )
+
+
+def build_assurance_evidence_set_policy(policy: Mapping[str, Any]) -> AssuranceEvidenceSetPolicy:
+    validate_evidence_set_policy(policy)
+    outcome_class_by_outcome: dict[str, str] = {}
+    eligible = policy["eligible_observation_outcomes"]
+    for outcome_class, outcomes in eligible.items():
+        for outcome in outcomes:
+            if outcome in outcome_class_by_outcome:
+                raise AssuranceVerificationError(
+                    code=ASSURANCE_EVIDENCE_SET_POLICY_INVALID,
+                    instance_path="/eligible_observation_outcomes",
+                    message=f"Evidence outcome {outcome!r} appears in multiple outcome classes.",
+                    related_ids=(outcome,),
+                )
+            outcome_class_by_outcome[outcome] = outcome_class
+
+    requirements_by_class: dict[str, tuple[str, ...]] = {}
+    for assurance_class, dimensions in policy["requirements_by_assurance_class"].items():
+        if not dimensions:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_EVIDENCE_SET_POLICY_INVALID,
+                instance_path="/requirements_by_assurance_class",
+                message=f"Assurance class {assurance_class!r} has no evidence requirements.",
+                related_ids=(assurance_class,),
+            )
+        requirements_by_class[assurance_class] = tuple(sorted(dimensions))
+
+    return AssuranceEvidenceSetPolicy(
+        data=MappingProxyType(json_material(policy)),
+        policy_id=policy["policy_id"],
+        policy_version=policy["policy_version"],
+        outcome_class_by_outcome=MappingProxyType(outcome_class_by_outcome),
+        dimension_by_field=MappingProxyType(dict(policy["dimension_mapping"])),
+        requirements_by_class=MappingProxyType(requirements_by_class),
+    )
+
+
+def evidence_set_policy_identity(
+    policy: AssuranceEvidenceSetPolicy | Mapping[str, Any],
+) -> tuple[AssuranceEvidenceSetPolicy, EvidenceSetPolicyIdentity]:
+    evidence_policy = (
+        policy if isinstance(policy, AssuranceEvidenceSetPolicy) else build_assurance_evidence_set_policy(policy)
+    )
+    policy_material = json_material(evidence_policy.data)
+    digest = sha256_bytes(canonical_json(policy_material))
+    return evidence_policy, EvidenceSetPolicyIdentity(
+        id=evidence_policy.policy_id,
+        version=evidence_policy.policy_version,
+        digest=digest,
+    )
+
+
+def validate_evidence_set_output(state: Mapping[str, Any]) -> None:
+    validator = build_openva_validator(EVIDENCE_SET_SCHEMA_PATH)
+    errors = sorted(validator.iter_errors(state), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceVerificationError(
+        code=ASSURANCE_EVIDENCE_SET_OUTPUT_INVALID,
+        instance_path=validation_instance_path(error),
+        message=f"Evidence-set output is invalid: {error.message}",
+    )
+
+
 def observation_applicable_to_effective_at(
     observation: Mapping[str, Any],
     *,
@@ -656,6 +791,136 @@ def verification_freshness_input_digest(
         ],
     }
     return sha256_bytes(canonical_json(manifest))
+
+
+def evidence_set_input_digest(
+    *,
+    assurance_record: Mapping[str, Any],
+    observations: Iterable[Mapping[str, Any]],
+    verification_policy_identity_value: VerificationPolicyIdentity,
+    evidence_policy_identity_value: EvidenceSetPolicyIdentity,
+    effective_at: datetime,
+    knowledge_cutoff: datetime,
+) -> str:
+    manifest = {
+        "assurance_id": require_string(assurance_record, "assurance_id"),
+        "effective_at": format_utc_datetime(effective_at),
+        "knowledge_cutoff": format_utc_datetime(knowledge_cutoff),
+        "verification_policy": verification_policy_identity_value.as_mapping(),
+        "evidence_set_policy": evidence_policy_identity_value.as_mapping(),
+        "assurance_record": json_material(assurance_record),
+        "assurance_observations": [
+            json_material(observation)
+            for observation in sorted(
+                observations,
+                key=lambda observation: require_string(observation, "assurance_observation_id"),
+            )
+        ],
+    }
+    return sha256_bytes(canonical_json(manifest))
+
+
+def evidence_dimensions_for_observation(
+    observation: Mapping[str, Any],
+    *,
+    policy: AssuranceEvidenceSetPolicy,
+) -> tuple[str, ...]:
+    observed_fields = observation.get("observed_fields")
+    if not isinstance(observed_fields, Mapping):
+        return ()
+
+    dimensions: set[str] = set()
+    for field_name, dimension in policy.dimension_by_field.items():
+        value = observed_fields.get(field_name)
+        if value is None:
+            continue
+        if isinstance(value, str) and not value:
+            continue
+        dimensions.add(dimension)
+    return tuple(sorted(dimensions))
+
+
+def classify_evidence_observations(
+    *,
+    observations: Iterable[Mapping[str, Any]],
+    verification_policy: AssuranceVerificationPolicy,
+    evidence_policy: AssuranceEvidenceSetPolicy,
+) -> tuple[ClassifiedEvidence, ...]:
+    classified: list[ClassifiedEvidence] = []
+    for observation in observations:
+        outcome = outcome_for_observation(observation)
+        outcome_class = evidence_policy.outcome_class_by_outcome.get(outcome)
+        if outcome_class is None:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_EVIDENCE_SET_INPUT_INVALID,
+                instance_path="/evaluation/verification_outcome",
+                message=f"Evidence outcome {outcome!r} is not recognized by the supplied policy.",
+                related_ids=(outcome,),
+            )
+        if outcome_class == "ignored":
+            continue
+
+        dimensions = evidence_dimensions_for_observation(observation, policy=evidence_policy)
+        if not dimensions:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_EVIDENCE_SET_INPUT_INVALID,
+                instance_path="/observed_fields",
+                message="Eligible evidence observation does not map to an evidence dimension.",
+                related_ids=(require_string(observation, "assurance_observation_id"),),
+            )
+
+        authority_tier = verification_policy.authority_tier_by_outcome.get(outcome)
+        if authority_tier is None:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_EVIDENCE_SET_POLICY_INVALID,
+                instance_path="/authority_tiers",
+                message=f"Evidence outcome {outcome!r} has no verification authority tier.",
+                related_ids=(outcome,),
+            )
+        for dimension in dimensions:
+            classified.append(
+                ClassifiedEvidence(
+                    dimension=dimension,
+                    outcome_class=outcome_class,
+                    authority_tier=authority_tier,
+                    observation=observation,
+                )
+            )
+    return tuple(
+        sorted(
+            classified,
+            key=lambda item: (
+                item.dimension,
+                verification_policy.authority_order.index(item.authority_tier),
+                require_string(item.observation, "assurance_observation_id"),
+                item.outcome_class,
+            ),
+        )
+    )
+
+
+def top_authority_evidence_by_dimension(
+    classified: Iterable[ClassifiedEvidence],
+    *,
+    verification_policy: AssuranceVerificationPolicy,
+) -> dict[str, tuple[ClassifiedEvidence, ...]]:
+    grouped: dict[str, list[ClassifiedEvidence]] = {}
+    for item in classified:
+        grouped.setdefault(item.dimension, []).append(item)
+
+    result: dict[str, tuple[ClassifiedEvidence, ...]] = {}
+    for dimension, items in grouped.items():
+        for tier_name in verification_policy.authority_order:
+            top_items = [item for item in items if item.authority_tier == tier_name]
+            if top_items:
+                result[dimension] = tuple(
+                    sorted(
+                        top_items,
+                        key=lambda item: require_string(item.observation, "assurance_observation_id"),
+                    )
+                )
+                break
+    return result
 
 
 def observed_at_for_freshness(observation: Mapping[str, Any]) -> datetime:
@@ -941,3 +1206,115 @@ def project_verification_freshness(
     }
     validate_verification_freshness_output(freshness)
     return VerificationFreshnessResult(freshness=MappingProxyType(freshness))
+
+
+def project_evidence_set_state(
+    assurance_record: Mapping[str, Any],
+    assurance_observations: Iterable[Mapping[str, Any]],
+    verification_policy: AssuranceVerificationPolicy | Mapping[str, Any],
+    evidence_set_policy: AssuranceEvidenceSetPolicy | Mapping[str, Any],
+    effective_at: datetime | str,
+    knowledge_cutoff: datetime | str,
+) -> EvidenceSetStateResult:
+    effective_at_utc = normalize_evidence_set_datetime(effective_at, field_name="effective_at")
+    knowledge_cutoff_utc = normalize_evidence_set_datetime(knowledge_cutoff, field_name="knowledge_cutoff")
+    verification_policy_value, verification_policy_identity_value = verification_policy_identity(verification_policy)
+    evidence_policy_value, evidence_policy_identity_value = evidence_set_policy_identity(evidence_set_policy)
+
+    ensure_target_known_at_cutoff(assurance_record, knowledge_cutoff=knowledge_cutoff_utc)
+    target_id = require_string(assurance_record, "assurance_id")
+    target_vendor_id = require_string(assurance_record, "vendor_id")
+    assurance_class = require_string(assurance_record, "assurance_class")
+    required_dimensions = evidence_policy_value.requirements_by_class.get(assurance_class)
+    if required_dimensions is None:
+        raise AssuranceVerificationError(
+            code=ASSURANCE_EVIDENCE_SET_REQUIREMENT_MISSING,
+            instance_path="/assurance_class",
+            message=f"No evidence-set requirement rule exists for assurance class {assurance_class!r}.",
+            related_ids=(assurance_class,),
+        )
+
+    admitted = admitted_observations(assurance_observations, knowledge_cutoff=knowledge_cutoff_utc)
+    diagnostics = observation_semantic_diagnostics(
+        assurance_record=assurance_record,
+        observations=admitted,
+    )
+    if diagnostics:
+        raise VerificationInputInvalidError(diagnostics)
+
+    relevant = tuple(
+        observation
+        for observation in admitted
+        if observation.get("assurance_id") == target_id
+        and observation.get("vendor_id") == target_vendor_id
+        and observation_applicable_to_effective_at(observation, effective_at=effective_at_utc)
+    )
+    classified = classify_evidence_observations(
+        observations=relevant,
+        verification_policy=verification_policy_value,
+        evidence_policy=evidence_policy_value,
+    )
+    top_by_dimension = top_authority_evidence_by_dimension(
+        classified,
+        verification_policy=verification_policy_value,
+    )
+
+    satisfied_dimensions: set[str] = set()
+    conflicted_dimensions: set[str] = set()
+    material_observation_ids: set[str] = set()
+    for dimension, top_items in top_by_dimension.items():
+        outcome_classes = {item.outcome_class for item in top_items}
+        if "creates_conflict" in outcome_classes:
+            conflicted_dimensions.add(dimension)
+        if "satisfies_presence" in outcome_classes and dimension not in conflicted_dimensions:
+            satisfied_dimensions.add(dimension)
+        for item in top_items:
+            material_observation_ids.add(require_string(item.observation, "assurance_observation_id"))
+
+    required_set = set(required_dimensions)
+    missing_dimensions = required_set - satisfied_dimensions
+    if not classified:
+        value = "no_evidence"
+        reason_code = "no_admitted_evidence"
+        material_observation_ids = set()
+    elif conflicted_dimensions:
+        value = "conflicted"
+        reason_code = "evidence_conflict_detected"
+    elif missing_dimensions:
+        value = "incomplete"
+        reason_code = "required_evidence_missing"
+    else:
+        value = "complete"
+        reason_code = "required_evidence_complete"
+
+    state = {
+        "schema_version": "0.1.0",
+        "assurance_id": target_id,
+        "vendor_id": target_vendor_id,
+        "effective_at": format_utc_datetime(effective_at_utc),
+        "knowledge_cutoff": format_utc_datetime(knowledge_cutoff_utc),
+        "policy": evidence_policy_identity_value.as_mapping(),
+        "input_digest": evidence_set_input_digest(
+            assurance_record=assurance_record,
+            observations=relevant,
+            verification_policy_identity_value=verification_policy_identity_value,
+            evidence_policy_identity_value=evidence_policy_identity_value,
+            effective_at=effective_at_utc,
+            knowledge_cutoff=knowledge_cutoff_utc,
+        ),
+        "value": value,
+        "determination": "determined",
+        "reason_codes": [reason_code],
+        "required_dimensions": sorted(required_set),
+        "satisfied_dimensions": sorted(satisfied_dimensions),
+        "missing_dimensions": sorted(missing_dimensions),
+        "conflicted_dimensions": sorted(conflicted_dimensions),
+        "caused_by": {
+            "assurance_ids": [target_id],
+            "assurance_observation_ids": sorted(material_observation_ids),
+            "source_observation_ids": [],
+        },
+        "advisory_boundary": "non_advisory",
+    }
+    validate_evidence_set_output(state)
+    return EvidenceSetStateResult(state=MappingProxyType(state))
