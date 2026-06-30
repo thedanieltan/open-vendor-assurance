@@ -65,6 +65,38 @@
     },
     "verificationFreshnessBasisAggregation": {
       "const": "oldest_decisive_observed_at"
+    },
+    "evidenceSetState": {
+      "type": "string",
+      "enum": [
+        "no_evidence",
+        "incomplete",
+        "complete",
+        "conflicted"
+      ]
+    },
+    "evidenceSetReasonCode": {
+      "type": "string",
+      "enum": [
+        "no_admitted_evidence",
+        "required_evidence_missing",
+        "required_evidence_complete",
+        "evidence_conflict_detected"
+      ]
+    },
+    "evidenceDimension": {
+      "type": "string",
+      "enum": [
+        "validity_start",
+        "validity_end",
+        "instrument_identifier",
+        "issuer_identity",
+        "scope_description",
+        "point_in_time_scope",
+        "reporting_period_scope",
+        "claimed_effective_start",
+        "claimed_effective_end"
+      ]
     }
   }
 }

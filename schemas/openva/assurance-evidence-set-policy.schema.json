@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-evidence-set-policy.schema.json",
+  "title": "OpenVA Assurance Evidence Set Policy",
+  "description": "Normative policy contract for evidence-set completeness and coherence over structured assurance observations.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "policy_id",
+    "policy_version",
+    "evidence_profile",
+    "eligible_observation_outcomes",
+    "dimension_mapping",
+    "requirements_by_assurance_class",
+    "authority",
+    "conflict_handling",
+    "missing_requirement_rule",
+    "advisory_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "policy_id": { "$ref": "#/$defs/nonEmptyString" },
+    "policy_version": { "$ref": "#/$defs/nonEmptyString" },
+    "evidence_profile": { "const": "openva.assurance-evidence-set.v1" },
+    "eligible_observation_outcomes": {
+      "type": "object",
+      "required": ["satisfies_presence", "creates_conflict", "ignored"],
+      "properties": {
+        "satisfies_presence": { "$ref": "#/$defs/outcomeArray" },
+        "creates_conflict": { "$ref": "#/$defs/outcomeArray" },
+        "ignored": { "$ref": "#/$defs/outcomeArray" }
+      },
+      "additionalProperties": false
+    },
+    "dimension_mapping": {
+      "type": "object",
+      "required": [
+        "stated_valid_from",
+        "stated_valid_until",
+        "stated_identifier",
+        "stated_issuer_name",
+        "stated_scope_description",
+        "stated_as_of_date",
+        "stated_reporting_period"
+      ],
+      "properties": {
+        "stated_valid_from": { "$ref": "#/$defs/dimension" },
+        "stated_valid_until": { "$ref": "#/$defs/dimension" },
+        "stated_identifier": { "$ref": "#/$defs/dimension" },
+        "stated_issuer_name": { "$ref": "#/$defs/dimension" },
+        "stated_scope_description": { "$ref": "#/$defs/dimension" },
+        "stated_as_of_date": { "$ref": "#/$defs/dimension" },
+        "stated_reporting_period": { "$ref": "#/$defs/dimension" }
+      },
+      "additionalProperties": false
+    },
+    "requirements_by_assurance_class": {
+      "type": "object",
+      "required": [
+        "accredited_certification",
+        "attestation_report",
+        "regulatory_assertion",
+        "contractual_capability"
+      ],
+      "properties": {
+        "accredited_certification": { "$ref": "#/$defs/dimensionArray" },
+        "attestation_report": { "$ref": "#/$defs/dimensionArray" },
+        "regulatory_assertion": { "$ref": "#/$defs/dimensionArray" },
+        "contractual_capability": { "$ref": "#/$defs/dimensionArray" }
+      },
+      "additionalProperties": false
+    },
+    "authority": {
+      "type": "object",
+      "required": ["reuse_policy", "lower_authority_overrides"],
+      "properties": {
+        "reuse_policy": { "const": "assurance-verification-policy.authority_tiers" },
+        "lower_authority_overrides": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "conflict_handling": {
+      "type": "object",
+      "required": ["conflict_precedence", "same_dimension_support_and_conflict"],
+      "properties": {
+        "conflict_precedence": { "const": true },
+        "same_dimension_support_and_conflict": { "const": "conflicted" }
+      },
+      "additionalProperties": false
+    },
+    "missing_requirement_rule": { "const": "fail_closed" },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verificationOutcome": {
+      "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationOutcome"
+    },
+    "outcomeArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/verificationOutcome" }
+    },
+    "dimension": {
+      "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/evidenceDimension"
+    },
+    "dimensionArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/dimension" }
+    }
+  }
+}

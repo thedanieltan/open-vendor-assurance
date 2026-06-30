@@ -1,0 +1,48 @@
+schema_version: "0.1.0"
+policy_id: openva-assurance-evidence-set-policy
+policy_version: "0.1.0"
+evidence_profile: openva.assurance-evidence-set.v1
+eligible_observation_outcomes:
+  satisfies_presence:
+    - authoritative_status_confirmed
+    - evidence_consistent
+    - first_party_claim_observed
+  creates_conflict:
+    - evidence_conflict
+  ignored:
+    - insufficient_evidence
+    - verification_unavailable
+    - not_evaluated
+dimension_mapping:
+  stated_valid_from: validity_start
+  stated_valid_until: validity_end
+  stated_identifier: instrument_identifier
+  stated_issuer_name: issuer_identity
+  stated_scope_description: scope_description
+  stated_as_of_date: point_in_time_scope
+  stated_reporting_period: reporting_period_scope
+requirements_by_assurance_class:
+  accredited_certification:
+    - instrument_identifier
+    - issuer_identity
+    - scope_description
+    - validity_start
+    - validity_end
+  attestation_report:
+    - issuer_identity
+    - scope_description
+    - reporting_period_scope
+  regulatory_assertion:
+    - scope_description
+    - point_in_time_scope
+  contractual_capability:
+    - scope_description
+    - validity_start
+authority:
+  reuse_policy: assurance-verification-policy.authority_tiers
+  lower_authority_overrides: false
+conflict_handling:
+  conflict_precedence: true
+  same_dimension_support_and_conflict: conflicted
+missing_requirement_rule: fail_closed
+advisory_boundary: non_advisory
