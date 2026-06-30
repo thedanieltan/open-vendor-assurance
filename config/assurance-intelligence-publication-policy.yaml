@@ -1,0 +1,44 @@
+schema_version: "0.1.0"
+policy_id: openva.assurance-intelligence-publication.default
+policy_version: "0.1.0"
+allowed_projection_profiles:
+  - openva.assurance-intelligence.v1
+allowed_axes:
+  - instrument_state
+  - supersession_state
+  - verification_state
+  - verification_freshness
+  - evidence_set_state
+public_entry_fields:
+  - assurance_id
+  - vendor_id
+  - assurance_label
+  - assurance_class
+  - framework_id
+  - framework_display_name
+  - projection_profile
+  - effective_at
+  - knowledge_cutoff
+  - next_reevaluation_at
+  - axes
+public_axis_fields:
+  - value
+  - reason_code
+expose_reason_codes: true
+excluded_internal_fields:
+  - input_digest
+  - projected_at
+  - policy
+  - policies
+  - policy_digest
+  - projection_ref
+  - caused_by
+  - assurance_observation_ids
+  - source_observation_ids
+  - raw_observations
+  - internal_manifests
+  - runtime_metadata
+  - filesystem_paths
+malformed_input_behavior: fail_closed
+unsupported_profile_behavior: fail_closed
+advisory_boundary: non_advisory
