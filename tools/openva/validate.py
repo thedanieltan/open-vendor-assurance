@@ -10,11 +10,13 @@ from urllib.parse import urlparse
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
+from tools.openva import assurance_validation
 from tools.openva.advisory_wording import load_prohibited_terms as load_shared_prohibited_terms
 from tools.openva.advisory_wording import prohibited_terms_in_text
 from tools.openva.indexes import build_indexes, check_generated_current, records_for
 from tools.openva.pack import verify_pack_integrity
 from tools.openva.paths import relative_repo_path
+from tools.openva.schema_registry import build_openva_validator
 from tools.openva.url_safety import validate_url_safety
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -31,6 +33,9 @@ SCHEMA_MAP = {
     "field_provenance": ROOT / "schemas/openva/field-provenance.schema.json",
     "candidate_source": ROOT / "schemas/openva/candidate-source.schema.json",
     "unavailable_source": ROOT / "schemas/openva/unavailable-source.schema.json",
+    "assurance": ROOT / "schemas/openva/assurance-record.schema.json",
+    "assurance_observation": ROOT / "schemas/openva/assurance-observation.schema.json",
+    "assurance_change": ROOT / "schemas/openva/assurance-change-event.schema.json",
     "pack": ROOT / "schemas/openva/openva-pack.schema.json",
 }
 ADAPTER_NORMALIZED_RECORD_SCHEMA = ROOT / "schemas/openva/adapter-normalized-record.schema.json"
@@ -46,6 +51,27 @@ FIXTURE_GLOBS = {
     "field_provenance": ["examples/vendors/*/provenance/*.yaml", "data/vendors/*/provenance/*.yaml"],
     "candidate_source": ["examples/vendors/*/candidate_sources/*.yaml", "data/vendors/*/candidate_sources/*.yaml"],
     "unavailable_source": ["examples/vendors/*/unavailable_sources/*.yaml", "data/vendors/*/unavailable_sources/*.yaml"],
+    "assurance": ["examples/vendors/*/assurances/*.yaml", "data/vendors/*/assurances/*.yaml"],
+    "assurance_observation": [
+        "examples/vendors/*/assurance_observations/*.yaml",
+        "data/vendors/*/assurance_observations/*.yaml",
+    ],
+    "assurance_change": [
+        "examples/vendors/*/assurance_changes/*.yaml",
+        "data/vendors/*/assurance_changes/*.yaml",
+    ],
+}
+
+ASSURANCE_SEMANTIC_DATA_GLOBS = {
+    assurance_validation.VENDOR.kind: ["data/vendors/*/vendor.yaml"],
+    assurance_validation.SOURCE.kind: ["data/vendors/*/sources/*.yaml"],
+    assurance_validation.SOURCE_OBSERVATION.kind: ["data/vendors/*/observations/*.yaml"],
+    assurance_validation.ASSURANCE.kind: ["data/vendors/*/assurances/*.yaml"],
+    assurance_validation.ASSURANCE_OBSERVATION.kind: ["data/vendors/*/assurance_observations/*.yaml"],
+    assurance_validation.ASSURANCE_CHANGE_EVENT.kind: ["data/vendors/*/assurance_changes/*.yaml"],
+}
+ASSURANCE_SEMANTIC_SCHEMA_KINDS = {
+    spec.schema_kind for spec in assurance_validation.RECORD_KIND_SPECS
 }
 
 RECORD_TEXT_FILE_GLOBS = ["examples/**/*.yaml", "data/**/*.yaml"]
@@ -91,9 +117,20 @@ def iter_paths(patterns: list[str]) -> list[Path]:
     return sorted(path for path in paths if path.is_file())
 
 
-def validate_schema(kind: str) -> list[str]:
+def build_validator_for_schema_kind(kind: str) -> Draft202012Validator:
+    if kind.startswith("assurance"):
+        return build_openva_validator(SCHEMA_MAP[kind])
     schema = load_json(SCHEMA_MAP[kind])
-    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    return Draft202012Validator(schema, format_checker=FormatChecker())
+
+
+def build_validator_for_record_kind(record_kind: str) -> Draft202012Validator:
+    spec = assurance_validation.RECORD_KIND_SPEC_BY_KIND[record_kind]
+    return build_validator_for_schema_kind(spec.schema_kind)
+
+
+def validate_schema(kind: str) -> list[str]:
+    validator = build_validator_for_schema_kind(kind)
     failures: list[str] = []
 
     if kind == "pack":
@@ -110,6 +147,41 @@ def validate_schema(kind: str) -> list[str]:
             failures.append(f"{path}: {location}: {error.message}")
 
     return failures
+
+
+def format_assurance_diagnostic(diagnostic: assurance_validation.ValidationDiagnostic) -> str:
+    location = diagnostic.source_path or diagnostic.record_id
+    related = f" related_ids={list(diagnostic.related_ids)}" if diagnostic.related_ids else ""
+    return (
+        f"{location}: {diagnostic.code}: {diagnostic.record_kind} "
+        f"{diagnostic.record_id} at {diagnostic.instance_path}:{related} {diagnostic.message}"
+    )
+
+
+def build_assurance_repository_records() -> dict[str, list[assurance_validation.RepositoryRecord]]:
+    records: dict[str, list[assurance_validation.RepositoryRecord]] = {
+        spec.kind: [] for spec in assurance_validation.RECORD_KIND_SPECS
+    }
+    for spec in assurance_validation.RECORD_KIND_SPECS:
+        for path in iter_paths(ASSURANCE_SEMANTIC_DATA_GLOBS[spec.kind]):
+            data = load_json(path) if path.suffix == ".json" else load_yaml(path)
+            if isinstance(data, dict):
+                records[spec.kind].append(
+                    assurance_validation.RepositoryRecord.from_raw(
+                        spec=spec,
+                        payload=data,
+                        source_path=relative_repo_path(path, ROOT),
+                    )
+                )
+    return records
+
+
+def validate_assurance_semantics() -> list[str]:
+    build_result = assurance_validation.build_repository_snapshot(build_assurance_repository_records())
+    diagnostics = list(build_result.diagnostics)
+    if build_result.snapshot is not None:
+        diagnostics.extend(assurance_validation.validate_assurance_repository(build_result.snapshot))
+    return [format_assurance_diagnostic(diagnostic) for diagnostic in assurance_validation.sorted_diagnostics(diagnostics)]
 
 
 def validate_adapter_outputs() -> list[str]:
@@ -626,8 +698,13 @@ def validate_machine_decisions() -> list[str]:
 
 def validate_all() -> int:
     failures: list[str] = []
+    schema_failures_by_kind: dict[str, list[str]] = {}
     for kind in SCHEMA_MAP:
-        failures.extend(validate_schema(kind))
+        kind_failures = validate_schema(kind)
+        schema_failures_by_kind[kind] = kind_failures
+        failures.extend(kind_failures)
+    if not any(schema_failures_by_kind.get(kind) for kind in ASSURANCE_SEMANTIC_SCHEMA_KINDS):
+        failures.extend(validate_assurance_semantics())
     failures.extend(validate_cross_references())
     failures.extend(validate_quality_gates())
     failures.extend(verify_pack_integrity())

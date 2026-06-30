@@ -1,0 +1,19 @@
+schema_version: 0.1.0
+observation_id: supporting-observation-source
+vendor_id: acme
+source_id: acme-trust-center
+observed_at: '2026-01-20T00:00:00Z'
+result: ok
+http_status: 200
+final_url: https://acme.example/trust
+access_class: public_web
+hashes:
+  raw_sha256: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  normalized_text_sha256: sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+storage:
+  raw_document_stored: false
+  extracted_text_stored: false
+  screenshot_stored: false
+source_health:
+  status: reachable
+not_advice: true

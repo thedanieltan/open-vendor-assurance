@@ -1,0 +1,158 @@
+{
+  "change_event_causal_inputs": {
+    "repository/assurance_changes/acme-noop-effective-event.yaml": {
+      "assurance_ids": [
+        "acme-noop"
+      ],
+      "assurance_observation_ids": [
+        "acme-noop-observation"
+      ],
+      "change_event_id": "acme-noop-effective-event",
+      "fixture": "semantic-no-op-rebuild",
+      "transition_axis": "instrument_state"
+    }
+  },
+  "expected_result": "projection",
+  "fixture": "semantic-no-op-rebuild",
+  "projection_a": {
+    "advisory_boundary": "non_advisory",
+    "assurance_id": "acme-noop",
+    "axes": {
+      "instrument_state": {
+        "as_of_at": null,
+        "caused_by": {
+          "assurance_ids": [
+            "acme-noop"
+          ]
+        },
+        "claimed_interval_end_exclusive_at": null,
+        "claimed_interval_start_at": null,
+        "determination": "determined",
+        "interval_end_exclusive_at": "2027-01-02T00:00:00Z",
+        "interval_start_at": "2026-01-01T00:00:00Z",
+        "reason_codes": [
+          "effective_at_within_stated_interval"
+        ],
+        "reporting_period_end_exclusive_at": null,
+        "reporting_period_start_at": null,
+        "stated_as_of_date": null,
+        "stated_effective_from_claimed": null,
+        "stated_effective_until_claimed": null,
+        "stated_reporting_period_end": null,
+        "stated_reporting_period_start": null,
+        "stated_valid_from": "2026-01-01",
+        "stated_valid_until": "2027-01-01",
+        "temporal_model": "bounded_interval",
+        "value": "effective"
+      },
+      "supersession_state": {
+        "caused_by": {
+          "assurance_ids": [
+            "acme-noop"
+          ]
+        },
+        "determination": "determined",
+        "predecessor_assurance_id": null,
+        "reason_codes": [
+          "no_explicit_successor_admitted"
+        ],
+        "successor_assurance_ids": [],
+        "topology": "standalone",
+        "value": "current"
+      }
+    },
+    "effective_at": "2026-06-30T00:00:00Z",
+    "implemented_axes": [
+      "instrument_state",
+      "supersession_state"
+    ],
+    "input_digest": "sha256:2c55233bd52ba9cf329d8bb626c0501ca41b36afd3d736fca761c55b7b876155",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "next_reevaluation_at": "2027-01-02T00:00:00Z",
+    "policy": {
+      "digest": "sha256:e98b54e6caec1cc659290b0e41588847595467fa6ac6271bc2e15a69d1f38746",
+      "id": "openva-assurance-projection-policy",
+      "version": "0.1.0"
+    },
+    "projected_at": "2026-07-01T00:00:00Z",
+    "projection_profile": "openva.assurance-lifecycle.v1",
+    "schema_version": "0.1.0",
+    "vendor_id": "acme"
+  },
+  "projection_b": {
+    "advisory_boundary": "non_advisory",
+    "assurance_id": "acme-noop",
+    "axes": {
+      "instrument_state": {
+        "as_of_at": null,
+        "caused_by": {
+          "assurance_ids": [
+            "acme-noop"
+          ]
+        },
+        "claimed_interval_end_exclusive_at": null,
+        "claimed_interval_start_at": null,
+        "determination": "determined",
+        "interval_end_exclusive_at": "2027-01-02T00:00:00Z",
+        "interval_start_at": "2026-01-01T00:00:00Z",
+        "reason_codes": [
+          "effective_at_within_stated_interval"
+        ],
+        "reporting_period_end_exclusive_at": null,
+        "reporting_period_start_at": null,
+        "stated_as_of_date": null,
+        "stated_effective_from_claimed": null,
+        "stated_effective_until_claimed": null,
+        "stated_reporting_period_end": null,
+        "stated_reporting_period_start": null,
+        "stated_valid_from": "2026-01-01",
+        "stated_valid_until": "2027-01-01",
+        "temporal_model": "bounded_interval",
+        "value": "effective"
+      },
+      "supersession_state": {
+        "caused_by": {
+          "assurance_ids": [
+            "acme-noop"
+          ]
+        },
+        "determination": "determined",
+        "predecessor_assurance_id": null,
+        "reason_codes": [
+          "no_explicit_successor_admitted"
+        ],
+        "successor_assurance_ids": [],
+        "topology": "standalone",
+        "value": "current"
+      }
+    },
+    "effective_at": "2026-06-30T00:00:00Z",
+    "implemented_axes": [
+      "instrument_state",
+      "supersession_state"
+    ],
+    "input_digest": "sha256:2c55233bd52ba9cf329d8bb626c0501ca41b36afd3d736fca761c55b7b876155",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "next_reevaluation_at": "2027-01-02T00:00:00Z",
+    "policy": {
+      "digest": "sha256:e98b54e6caec1cc659290b0e41588847595467fa6ac6271bc2e15a69d1f38746",
+      "id": "openva-assurance-projection-policy",
+      "version": "0.1.0"
+    },
+    "projected_at": "2026-07-02T00:00:00Z",
+    "projection_profile": "openva.assurance-lifecycle.v1",
+    "schema_version": "0.1.0",
+    "vendor_id": "acme"
+  },
+  "request": {
+    "assurance_id": "acme-noop",
+    "effective_at": "2026-06-30T00:00:00Z",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "policy": {
+      "digest": "sha256:e98b54e6caec1cc659290b0e41588847595467fa6ac6271bc2e15a69d1f38746",
+      "id": "openva-assurance-projection-policy",
+      "version": "0.1.0"
+    },
+    "schema_version": "0.1.0"
+  }
+}

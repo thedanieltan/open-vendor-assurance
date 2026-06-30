@@ -1,0 +1,14 @@
+schema_version: "0.1.0"
+policy_id: openva-assurance-verification-freshness-policy
+policy_version: "0.1.0"
+freshness_profile: openva.assurance-verification-freshness.v1
+basis:
+  decisive_observation_source: verification_state.caused_by.assurance_observation_ids
+  timestamp_field: assurance_observation.observed_at
+  aggregation: oldest_decisive_observed_at
+thresholds:
+  current_max_age_seconds: 7776000
+  stale_min_age_seconds: 15552000
+boundary_semantics: lower_bound_inclusive_upper_bound_exclusive
+effective_before_basis: invalid
+advisory_boundary: non_advisory

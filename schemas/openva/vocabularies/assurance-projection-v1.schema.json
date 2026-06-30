@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/vocabularies/assurance-projection-v1.schema.json",
+  "title": "OpenVA Assurance Projection Vocabulary v1",
+  "description": "Closed vocabulary definitions for OpenVA assurance lifecycle projection contracts.",
+  "x-openva-vocabulary-version": "1.0.0",
+  "$defs": {
+    "instrumentState": {
+      "type": "string",
+      "enum": [
+        "not_yet_effective",
+        "effective",
+        "expired",
+        "historical",
+        "temporally_indeterminate"
+      ]
+    },
+    "supersessionState": {
+      "type": "string",
+      "enum": [
+        "current",
+        "superseded"
+      ]
+    },
+    "supersessionTopology": {
+      "type": "string",
+      "enum": [
+        "standalone",
+        "chain_root",
+        "chain_intermediate",
+        "chain_tip"
+      ]
+    },
+    "temporalModel": {
+      "type": "string",
+      "enum": [
+        "bounded_interval",
+        "point_or_period",
+        "optional_claimed_scope",
+        "optional_claimed_interval"
+      ]
+    },
+    "determination": {
+      "type": "string",
+      "enum": [
+        "determined",
+        "indeterminate"
+      ]
+    },
+    "calendarBasis": {
+      "const": "utc"
+    },
+    "intervalBoundary": {
+      "const": "inclusive"
+    },
+    "instrumentStateReasonCode": {
+      "type": "string",
+      "enum": [
+        "effective_at_before_valid_from",
+        "effective_at_within_stated_interval",
+        "stated_valid_until_passed",
+        "point_in_time_scope",
+        "reporting_period_scope",
+        "no_stated_end_date",
+        "no_usable_dates"
+      ]
+    },
+    "supersessionStateReasonCode": {
+      "type": "string",
+      "enum": [
+        "no_explicit_successor_admitted",
+        "explicit_successor_admitted"
+      ]
+    }
+  }
+}

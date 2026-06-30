@@ -1,0 +1,147 @@
+{
+  "schema_version": "0.1.0",
+  "cases": {
+    "accredited-certification-with-as-of-date.json": {
+      "schema": "assurance-record",
+      "expected_errors": [
+        {
+          "instance_path": "/temporal_scope",
+          "keyword": "additionalProperties",
+          "additional_property": "as_of_date",
+          "combinator_ancestry_contains": "oneOf",
+          "schema_path_contains": "certificationTemporalScope"
+        },
+        {
+          "instance_path": "/temporal_scope",
+          "keyword": "required",
+          "missing_property": "valid_from",
+          "combinator_ancestry_contains": "oneOf"
+        },
+        {
+          "instance_path": "/temporal_scope",
+          "keyword": "required",
+          "missing_property": "valid_until",
+          "combinator_ancestry_contains": "oneOf"
+        }
+      ]
+    },
+    "accredited-certification-with-compliant-boolean.json": {
+      "schema": "assurance-record",
+      "expected_errors": [
+        {
+          "instance_path": "",
+          "keyword": "additionalProperties",
+          "additional_property": "compliant"
+        }
+      ]
+    },
+    "accredited-certification-missing-valid-until.json": {
+      "schema": "assurance-record",
+      "expected_errors": [
+        {
+          "instance_path": "/temporal_scope",
+          "keyword": "required",
+          "missing_property": "valid_until",
+          "combinator_ancestry_contains": "oneOf",
+          "schema_path_contains": "certificationTemporalScope"
+        }
+      ]
+    },
+    "attestation-report-with-valid-until.json": {
+      "schema": "assurance-record",
+      "expected_errors": [
+        {
+          "instance_path": "/temporal_scope",
+          "keyword": "additionalProperties",
+          "additional_property": "valid_until",
+          "combinator_ancestry_contains": "oneOf",
+          "schema_path_contains": "attestationTemporalScope"
+        }
+      ]
+    },
+    "attestation-report-with-both-as-of-and-period.json": {
+      "schema": "assurance-record",
+      "expected_errors": [
+        {
+          "instance_path": "/temporal_scope",
+          "keyword": "oneOf",
+          "combinator_ancestry_contains": "oneOf",
+          "schema_path_contains": "attestationTemporalScope"
+        }
+      ]
+    },
+    "attestation-report-with-neither-as-of-nor-period.json": {
+      "schema": "assurance-record",
+      "expected_errors": [
+        {
+          "instance_path": "/temporal_scope",
+          "keyword": "oneOf",
+          "combinator_ancestry_contains": "oneOf",
+          "schema_path_contains": "attestationTemporalScope"
+        }
+      ]
+    },
+    "regulatory-assertion-with-certificate-validity.json": {
+      "schema": "assurance-record",
+      "expected_errors": [
+        {
+          "instance_path": "/temporal_scope",
+          "keyword": "additionalProperties",
+          "additional_property": "valid_from",
+          "combinator_ancestry_contains": "oneOf",
+          "schema_path_contains": "regulatoryAssertionTemporalScope"
+        },
+        {
+          "instance_path": "/temporal_scope",
+          "keyword": "additionalProperties",
+          "additional_property": "valid_until",
+          "combinator_ancestry_contains": "oneOf",
+          "schema_path_contains": "regulatoryAssertionTemporalScope"
+        }
+      ]
+    },
+    "record-with-wrong-advisory-boundary.json": {
+      "schema": "assurance-record",
+      "expected_errors": [
+        {
+          "instance_path": "/advisory_boundary",
+          "keyword": "const"
+        }
+      ]
+    },
+    "record-with-unknown-assurance-class.json": {
+      "schema": "assurance-record",
+      "expected_errors": [
+        {
+          "instance_path": "/assurance_class",
+          "keyword": "enum"
+        }
+      ]
+    },
+    "change-event-with-cross-axis-values.json": {
+      "schema": "assurance-change-event",
+      "expected_errors": [
+        {
+          "instance_path": "/transition/from",
+          "keyword": "enum",
+          "combinator_ancestry_contains": "oneOf"
+        },
+        {
+          "instance_path": "/transition/to",
+          "keyword": "enum",
+          "combinator_ancestry_contains": "oneOf"
+        }
+      ]
+    },
+    "observation-with-transition-state.json": {
+      "schema": "assurance-observation",
+      "expected_errors": [
+        {
+          "instance_path": "",
+          "keyword": "additionalProperties",
+          "additional_property": "transition"
+        }
+      ]
+    }
+  }
+}

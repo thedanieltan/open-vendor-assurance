@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/vocabularies/assurance-v1.schema.json",
+  "title": "OpenVA Assurance Vocabulary v1",
+  "description": "Closed vocabulary definitions shared by OpenVA assurance schemas.",
+  "x-openva-vocabulary-version": "1.0.0",
+  "$defs": {
+    "assuranceClass": {
+      "type": "string",
+      "enum": [
+        "accredited_certification",
+        "attestation_report",
+        "regulatory_assertion",
+        "contractual_capability"
+      ]
+    },
+    "accreditedCertificationClass": {
+      "const": "accredited_certification"
+    },
+    "attestationReportClass": {
+      "const": "attestation_report"
+    },
+    "regulatoryAssertionClass": {
+      "const": "regulatory_assertion"
+    },
+    "contractualCapabilityClass": {
+      "const": "contractual_capability"
+    },
+    "claimPresence": {
+      "type": "string",
+      "enum": [
+        "present",
+        "absent_from_observed_source",
+        "changed",
+        "not_evaluated",
+        "unparseable"
+      ]
+    },
+    "verificationOutcome": {
+      "type": "string",
+      "enum": [
+        "authoritative_status_confirmed",
+        "first_party_claim_observed",
+        "evidence_consistent",
+        "evidence_conflict",
+        "insufficient_evidence",
+        "verification_unavailable",
+        "not_evaluated"
+      ]
+    },
+    "instrumentState": {
+      "deprecated": true,
+      "type": "string",
+      "enum": [
+        "recorded",
+        "active_by_stated_dates",
+        "expired_by_stated_date",
+        "suspended_by_authoritative_source",
+        "withdrawn_by_authoritative_source",
+        "superseded_by_record",
+        "state_unknown"
+      ]
+    },
+    "verificationState": {
+      "type": "string",
+      "enum": [
+        "unverified",
+        "first_party_claim_only",
+        "authoritatively_confirmed",
+        "previously_confirmed",
+        "inconclusive",
+        "conflicting",
+        "current_status_unknown",
+        "unverifiable_from_public_sources"
+      ]
+    },
+    "verificationFreshness": {
+      "type": "string",
+      "enum": [
+        "current",
+        "refresh_due",
+        "refresh_failed",
+        "stale",
+        "not_applicable"
+      ]
+    },
+    "assuranceChangeType": {
+      "type": "string",
+      "enum": [
+        "assurance_recorded",
+        "verification_state_changed",
+        "verification_freshness_changed",
+        "instrument_state_changed",
+        "evidence_set_changed",
+        "assurance_superseded",
+        "assurance_corrected",
+        "projection_rebuilt"
+      ]
+    },
+    "transitionAxis": {
+      "type": "string",
+      "enum": [
+        "instrument_state",
+        "verification_state",
+        "verification_freshness",
+        "evidence_set"
+      ]
+    },
+    "transitionReasonCode": {
+      "type": "string",
+      "enum": [
+        "authoritative_status_confirmed",
+        "stated_valid_until_passed",
+        "authoritative_suspension_observed",
+        "authoritative_withdrawal_observed",
+        "replacement_assurance_recorded",
+        "evidence_source_not_found",
+        "evidence_source_gone",
+        "evidence_source_gated",
+        "evidence_source_bot_protected",
+        "verification_window_elapsed",
+        "conflicting_authoritative_evidence",
+        "new_evidence_source_confirmed"
+      ]
+    }
+  }
+}

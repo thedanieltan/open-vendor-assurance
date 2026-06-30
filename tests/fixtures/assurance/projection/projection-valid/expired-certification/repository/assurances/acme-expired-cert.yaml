@@ -1,0 +1,25 @@
+schema_version: 0.1.1
+assurance_id: acme-expired-cert
+vendor_id: acme
+assurance_class: accredited_certification
+framework:
+  framework_id: iso-27001
+  display_name: Example Framework
+subject:
+  entity_name: Acme Example Pte. Ltd.
+  scope_description: Example public assurance scope.
+temporal_scope:
+  issued_at: '2024-01-01'
+  valid_from: '2024-01-01'
+  valid_until: '2025-01-01'
+evidence:
+  source_ids:
+  - acme-trust-center
+advisory_boundary: non_advisory
+recorded_at: '2026-01-15T00:00:00Z'
+issuer:
+  name: Example Certification Body
+  authority_type: certification_body
+  country: SG
+identifiers:
+  certificate_number: ACME-EXPIRED-CERT

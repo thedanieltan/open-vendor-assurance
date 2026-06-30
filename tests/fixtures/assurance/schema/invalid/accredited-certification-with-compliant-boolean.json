@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1.1",
+  "assurance_id": "example-iso27001-2026",
+  "vendor_id": "example-vendor",
+  "assurance_class": "accredited_certification",
+  "framework": {
+    "framework_id": "iso_iec_27001",
+    "framework_version": "2022",
+    "display_name": "ISO/IEC 27001"
+  },
+  "subject": {
+    "entity_id": "example-inc",
+    "entity_name": "Example Vendor Inc.",
+    "scope_description": "Example cloud operations"
+  },
+  "issuer": {
+    "name": "Example Certification Body",
+    "authority_type": "certification_body",
+    "accreditation_body": "Example Accreditation Body",
+    "country": "US"
+  },
+  "identifiers": {
+    "certificate_number": "EXAMPLE-27001-2026"
+  },
+  "temporal_scope": {
+    "issued_at": "2026-01-15",
+    "valid_from": "2026-01-15",
+    "valid_until": "2029-01-14"
+  },
+  "evidence": {
+    "source_ids": [
+      "example-cert-source"
+    ],
+    "primary_source_id": "example-cert-source"
+  },
+  "advisory_boundary": "non_advisory",
+  "compliant": true,
+  "recorded_at": "2026-01-16T10:30:00Z"
+}

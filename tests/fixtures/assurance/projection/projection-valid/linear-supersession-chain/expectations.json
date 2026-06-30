@@ -1,0 +1,133 @@
+{
+  "expected_axes": {
+    "instrument_state": {
+      "as_of_at": "2026-02-01T00:00:00Z",
+      "caused_by": {
+        "assurance_ids": [
+          "acme-chain-b"
+        ]
+      },
+      "claimed_interval_end_exclusive_at": null,
+      "claimed_interval_start_at": null,
+      "determination": "determined",
+      "interval_end_exclusive_at": null,
+      "interval_start_at": null,
+      "reason_codes": [
+        "point_in_time_scope"
+      ],
+      "reporting_period_end_exclusive_at": null,
+      "reporting_period_start_at": null,
+      "stated_as_of_date": "2026-02-01",
+      "stated_effective_from_claimed": null,
+      "stated_effective_until_claimed": null,
+      "stated_reporting_period_end": null,
+      "stated_reporting_period_start": null,
+      "stated_valid_from": null,
+      "stated_valid_until": null,
+      "temporal_model": "optional_claimed_scope",
+      "value": "historical"
+    },
+    "supersession_state": {
+      "caused_by": {
+        "assurance_ids": [
+          "acme-chain-b",
+          "acme-chain-a",
+          "acme-chain-c"
+        ]
+      },
+      "determination": "determined",
+      "predecessor_assurance_id": "acme-chain-a",
+      "reason_codes": [
+        "explicit_successor_admitted"
+      ],
+      "successor_assurance_ids": [
+        "acme-chain-c"
+      ],
+      "topology": "chain_intermediate",
+      "value": "superseded"
+    }
+  },
+  "expected_next_reevaluation_at": null,
+  "expected_projection": {
+    "advisory_boundary": "non_advisory",
+    "assurance_id": "acme-chain-b",
+    "axes": {
+      "instrument_state": {
+        "as_of_at": "2026-02-01T00:00:00Z",
+        "caused_by": {
+          "assurance_ids": [
+            "acme-chain-b"
+          ]
+        },
+        "claimed_interval_end_exclusive_at": null,
+        "claimed_interval_start_at": null,
+        "determination": "determined",
+        "interval_end_exclusive_at": null,
+        "interval_start_at": null,
+        "reason_codes": [
+          "point_in_time_scope"
+        ],
+        "reporting_period_end_exclusive_at": null,
+        "reporting_period_start_at": null,
+        "stated_as_of_date": "2026-02-01",
+        "stated_effective_from_claimed": null,
+        "stated_effective_until_claimed": null,
+        "stated_reporting_period_end": null,
+        "stated_reporting_period_start": null,
+        "stated_valid_from": null,
+        "stated_valid_until": null,
+        "temporal_model": "optional_claimed_scope",
+        "value": "historical"
+      },
+      "supersession_state": {
+        "caused_by": {
+          "assurance_ids": [
+            "acme-chain-b",
+            "acme-chain-a",
+            "acme-chain-c"
+          ]
+        },
+        "determination": "determined",
+        "predecessor_assurance_id": "acme-chain-a",
+        "reason_codes": [
+          "explicit_successor_admitted"
+        ],
+        "successor_assurance_ids": [
+          "acme-chain-c"
+        ],
+        "topology": "chain_intermediate",
+        "value": "superseded"
+      }
+    },
+    "effective_at": "2026-06-30T00:00:00Z",
+    "implemented_axes": [
+      "instrument_state",
+      "supersession_state"
+    ],
+    "input_digest": "sha256:7f721403f8a115746d75869ea763455adcbb794d6f46a7fe14016266f773b2fd",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "next_reevaluation_at": null,
+    "policy": {
+      "digest": "sha256:e98b54e6caec1cc659290b0e41588847595467fa6ac6271bc2e15a69d1f38746",
+      "id": "openva-assurance-projection-policy",
+      "version": "0.1.0"
+    },
+    "projected_at": "2026-07-01T00:00:00Z",
+    "projection_profile": "openva.assurance-lifecycle.v1",
+    "schema_version": "0.1.0",
+    "vendor_id": "acme"
+  },
+  "expected_result": "projection",
+  "fixture": "linear-supersession-chain",
+  "request": {
+    "assurance_id": "acme-chain-b",
+    "effective_at": "2026-06-30T00:00:00Z",
+    "knowledge_cutoff": "2026-06-30T00:00:00Z",
+    "policy": {
+      "digest": "sha256:e98b54e6caec1cc659290b0e41588847595467fa6ac6271bc2e15a69d1f38746",
+      "id": "openva-assurance-projection-policy",
+      "version": "0.1.0"
+    },
+    "schema_version": "0.1.0"
+  }
+}

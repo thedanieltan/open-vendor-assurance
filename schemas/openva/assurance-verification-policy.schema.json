@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-verification-policy.schema.json",
+  "title": "OpenVA Assurance Verification Policy",
+  "description": "Normative policy contract for interpreting assurance observations as non-advisory verification-state inputs.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "policy_id",
+    "policy_version",
+    "eligible_observation_outcomes",
+    "authority_tiers",
+    "tie_handling",
+    "conflict_handling",
+    "legacy_unknown_outcomes",
+    "highest_authority_scope",
+    "applicability",
+    "advisory_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "policy_id": { "$ref": "#/$defs/nonEmptyString" },
+    "policy_version": { "$ref": "#/$defs/nonEmptyString" },
+    "eligible_observation_outcomes": { "$ref": "#/$defs/outcomeClasses" },
+    "authority_tiers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/authorityTier" }
+    },
+    "tie_handling": { "const": "evaluate_all_at_highest_authority" },
+    "conflict_handling": { "const": "inconclusive" },
+    "legacy_unknown_outcomes": { "const": "reject" },
+    "highest_authority_scope": {
+      "type": "object",
+      "required": ["consider_all_observations_at_tier", "lower_authority_overrides"],
+      "properties": {
+        "consider_all_observations_at_tier": { "const": true },
+        "lower_authority_overrides": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "applicability": {
+      "type": "object",
+      "required": ["date_source", "missing_observed_fields"],
+      "properties": {
+        "date_source": { "const": "assurance_observation.observed_fields" },
+        "missing_observed_fields": { "const": "applicable" }
+      },
+      "additionalProperties": false
+    },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verificationOutcome": {
+      "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationOutcome"
+    },
+    "outcomeArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/verificationOutcome" }
+    },
+    "outcomeClasses": {
+      "type": "object",
+      "required": ["support", "contradict", "inconclusive", "ignored"],
+      "properties": {
+        "support": { "$ref": "#/$defs/outcomeArray" },
+        "contradict": { "$ref": "#/$defs/outcomeArray" },
+        "inconclusive": { "$ref": "#/$defs/outcomeArray" },
+        "ignored": { "$ref": "#/$defs/outcomeArray" }
+      },
+      "additionalProperties": false
+    },
+    "authorityTier": {
+      "type": "object",
+      "required": ["tier", "outcomes"],
+      "properties": {
+        "tier": {
+          "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationAuthorityTier"
+        },
+        "outcomes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/verificationOutcome" }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

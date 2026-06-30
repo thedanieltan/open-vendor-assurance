@@ -1,0 +1,17 @@
+schema_version: 0.1.1
+assurance_id: acme-orphan
+vendor_id: acme
+assurance_class: regulatory_assertion
+framework:
+  framework_id: example_framework
+  display_name: Example Framework
+subject:
+  entity_name: Acme Example Pte. Ltd.
+  scope_description: Example public assurance scope.
+temporal_scope: {}
+evidence:
+  source_ids:
+  - acme-trust-center
+advisory_boundary: non_advisory
+recorded_at: '2026-01-15T00:00:00Z'
+supersedes_assurance_id: acme-missing

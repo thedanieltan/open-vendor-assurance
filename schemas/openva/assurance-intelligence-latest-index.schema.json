@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-intelligence-latest-index.schema.json",
+  "title": "OpenVA Assurance Intelligence Latest Index",
+  "description": "Deterministic derivative index pointing to latest materialized assurance intelligence projections. This is rebuildable operational metadata, not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_type",
+    "projection_profile",
+    "count",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "report_type": { "const": "assurance_intelligence_latest_index" },
+    "projection_profile": { "const": "openva.assurance-intelligence.v1" },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "openvaSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sha256Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "repoRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "policy": {
+      "type": "object",
+      "required": ["id", "version", "digest"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "version": { "$ref": "#/$defs/nonEmptyString" },
+        "digest": { "$ref": "#/$defs/sha256Digest" }
+      },
+      "additionalProperties": false
+    },
+    "policies": {
+      "type": "object",
+      "required": [
+        "lifecycle",
+        "verification",
+        "verification_freshness",
+        "evidence_set"
+      ],
+      "properties": {
+        "lifecycle": { "$ref": "#/$defs/policy" },
+        "verification": { "$ref": "#/$defs/policy" },
+        "verification_freshness": { "$ref": "#/$defs/policy" },
+        "evidence_set": { "$ref": "#/$defs/policy" }
+      },
+      "additionalProperties": false
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "assurance_id",
+        "vendor_id",
+        "projection_profile",
+        "projection_ref",
+        "policies",
+        "input_digest",
+        "effective_at",
+        "knowledge_cutoff",
+        "next_reevaluation_at"
+      ],
+      "properties": {
+        "assurance_id": { "$ref": "#/$defs/openvaSlug" },
+        "vendor_id": { "$ref": "#/$defs/openvaSlug" },
+        "projection_profile": { "const": "openva.assurance-intelligence.v1" },
+        "projection_ref": { "$ref": "#/$defs/repoRelativePath" },
+        "policies": { "$ref": "#/$defs/policies" },
+        "input_digest": { "$ref": "#/$defs/sha256Digest" },
+        "effective_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "knowledge_cutoff": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "next_reevaluation_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

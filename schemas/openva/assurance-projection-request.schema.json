@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-projection-request.schema.json",
+  "title": "OpenVA Assurance Projection Request",
+  "description": "Structural request contract for assurance lifecycle projection.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "assurance_id",
+    "effective_at",
+    "knowledge_cutoff",
+    "policy"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "assurance_id": { "$ref": "#/$defs/openvaSlug" },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "knowledge_cutoff": { "type": "string", "format": "date-time" },
+    "policy": { "$ref": "#/$defs/policyRef" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "openvaSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sha256Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "policyRef": {
+      "type": "object",
+      "required": ["id", "version", "digest"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "version": { "$ref": "#/$defs/nonEmptyString" },
+        "digest": { "$ref": "#/$defs/sha256Digest" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

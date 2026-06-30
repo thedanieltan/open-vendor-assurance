@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1.1",
+  "assurance_id": "example-soc2-as-of-2026",
+  "vendor_id": "example-vendor",
+  "assurance_class": "attestation_report",
+  "framework": {
+    "framework_id": "soc2",
+    "framework_version": null,
+    "display_name": "SOC 2"
+  },
+  "subject": {
+    "entity_name": "Example Vendor Inc.",
+    "scope_description": "Example trust services system"
+  },
+  "issuer": {
+    "name": "Example Audit LLP",
+    "authority_type": "audit_firm"
+  },
+  "temporal_scope": {
+    "as_of_date": "2026-05-31",
+    "valid_until": "2027-05-31"
+  },
+  "evidence": {
+    "source_ids": [
+      "example-soc2-source"
+    ]
+  },
+  "advisory_boundary": "non_advisory",
+  "recorded_at": "2026-02-20T09:00:00Z"
+}

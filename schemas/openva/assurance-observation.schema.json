@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-observation.schema.json",
+  "title": "OpenVA Assurance Observation",
+  "description": "Append-only point-in-time evaluation of an assurance record. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "assurance_observation_id",
+    "assurance_id",
+    "vendor_id",
+    "observed_at",
+    "recorded_at",
+    "source_observation_ids",
+    "evaluation",
+    "policy",
+    "advisory_boundary"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^0\\.1\\.[0-9]+$" },
+    "assurance_observation_id": { "$ref": "#/$defs/openvaSlug" },
+    "assurance_id": { "$ref": "#/$defs/openvaSlug" },
+    "vendor_id": { "$ref": "#/$defs/openvaSlug" },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:Z|[+-][0-9]{2}:[0-9]{2})$",
+      "description": "Immutable timestamp recording when this assurance observation entered OpenVA's repository knowledge set."
+    },
+    "source_observation_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/openvaSlug" }
+    },
+    "evaluation": { "$ref": "#/$defs/evaluation" },
+    "observed_fields": { "$ref": "#/$defs/observedFields" },
+    "extractor": { "$ref": "#/$defs/extractor" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "openvaSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dateOrNull": {
+      "anyOf": [
+        { "type": "string", "format": "date" },
+        { "type": "null" }
+      ]
+    },
+    "reportingPeriod": {
+      "type": ["object", "null"],
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "string", "format": "date" },
+        "end": { "type": "string", "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "evaluation": {
+      "type": "object",
+      "required": ["claim_presence", "verification_outcome", "reason_codes"],
+      "properties": {
+        "claim_presence": {
+          "$ref": "vocabularies/assurance-v1.schema.json#/$defs/claimPresence"
+        },
+        "verification_outcome": {
+          "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationOutcome"
+        },
+        "reason_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "observedFields": {
+      "type": "object",
+      "properties": {
+        "stated_valid_from": { "$ref": "#/$defs/dateOrNull" },
+        "stated_valid_until": { "$ref": "#/$defs/dateOrNull" },
+        "stated_as_of_date": { "$ref": "#/$defs/dateOrNull" },
+        "stated_reporting_period": { "$ref": "#/$defs/reportingPeriod" },
+        "stated_identifier": { "type": ["string", "null"] },
+        "stated_issuer_name": { "type": ["string", "null"] },
+        "stated_scope_description": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "extractor": {
+      "type": "object",
+      "required": ["method", "version"],
+      "properties": {
+        "method": {
+          "enum": [
+            "none",
+            "structured_html",
+            "pdf_text_extraction",
+            "registry_api",
+            "manual_public_source_review",
+            "other"
+          ]
+        },
+        "version": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "policy": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "version": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

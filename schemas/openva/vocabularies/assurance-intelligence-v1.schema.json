@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/vocabularies/assurance-intelligence-v1.schema.json",
+  "title": "OpenVA Assurance Intelligence Vocabulary v1",
+  "description": "Closed vocabulary definitions for non-advisory assurance intelligence contracts.",
+  "x-openva-vocabulary-version": "1.0.0",
+  "$defs": {
+    "verificationState": {
+      "type": "string",
+      "enum": [
+        "no_conclusion",
+        "confirmed",
+        "contradicted",
+        "inconclusive"
+      ]
+    },
+    "determination": {
+      "const": "determined"
+    },
+    "verificationStateReasonCode": {
+      "type": "string",
+      "enum": [
+        "no_admitted_verification_observation",
+        "decisive_observations_support",
+        "decisive_observations_contradict",
+        "decisive_observations_conflict",
+        "decisive_observation_inconclusive"
+      ]
+    },
+    "verificationAuthorityTier": {
+      "type": "string",
+      "enum": [
+        "authoritative",
+        "corroborating",
+        "first_party",
+        "indeterminate"
+      ]
+    },
+    "verificationOutcomeClass": {
+      "type": "string",
+      "enum": [
+        "support",
+        "contradict",
+        "inconclusive",
+        "ignored"
+      ]
+    },
+    "verificationFreshnessState": {
+      "type": "string",
+      "enum": [
+        "no_basis",
+        "current",
+        "aging",
+        "stale"
+      ]
+    },
+    "verificationFreshnessReasonCode": {
+      "type": "string",
+      "enum": [
+        "no_decisive_verification_observation",
+        "decisive_basis_within_current_threshold",
+        "decisive_basis_within_aging_threshold",
+        "decisive_basis_exceeds_stale_threshold"
+      ]
+    },
+    "verificationFreshnessBasisAggregation": {
+      "const": "oldest_decisive_observed_at"
+    },
+    "evidenceSetState": {
+      "type": "string",
+      "enum": [
+        "no_evidence",
+        "incomplete",
+        "complete",
+        "conflicted"
+      ]
+    },
+    "evidenceSetReasonCode": {
+      "type": "string",
+      "enum": [
+        "no_admitted_evidence",
+        "required_evidence_missing",
+        "required_evidence_complete",
+        "evidence_conflict_detected"
+      ]
+    },
+    "evidenceDimension": {
+      "type": "string",
+      "enum": [
+        "validity_start",
+        "validity_end",
+        "instrument_identifier",
+        "issuer_identity",
+        "scope_description",
+        "point_in_time_scope",
+        "reporting_period_scope",
+        "claimed_effective_start",
+        "claimed_effective_end"
+      ]
+    }
+  }
+}

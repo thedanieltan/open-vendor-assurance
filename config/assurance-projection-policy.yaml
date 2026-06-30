@@ -1,0 +1,23 @@
+schema_version: "0.1.0"
+policy_id: openva-assurance-projection-policy
+policy_version: "0.1.0"
+projection_profile: openva.assurance-lifecycle.v1
+date_semantics:
+  calendar_basis: utc
+  interval_start: inclusive
+  interval_end: exclusive
+class_rules:
+  accredited_certification:
+    temporal_model: bounded_interval
+  attestation_report:
+    temporal_model: point_or_period
+  regulatory_assertion:
+    temporal_model: optional_claimed_scope
+  contractual_capability:
+    temporal_model: optional_claimed_interval
+supersession:
+  explicit_links_only: true
+  infer_from_dates: false
+  infer_from_framework_match: false
+  infer_from_identifier_similarity: false
+advisory_boundary: non_advisory

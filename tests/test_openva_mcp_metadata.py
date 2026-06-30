@@ -8,8 +8,6 @@ import hashlib
 import json
 from pathlib import Path
 
-import pytest
-
 ROOT = Path(__file__).resolve().parents[1]
 PKG = ROOT / "integrations" / "mcp" / "openva_mcp"
 SERVER_JSON = PKG / "manifest" / "server.json"
@@ -66,7 +64,7 @@ def test_pyproject_pins_mcp_below_v2():
 
 
 def test_pinned_schema_provenance_digest_matches():
-    data = PINNED_SCHEMA.read_bytes()
+    data = PINNED_SCHEMA.read_bytes().replace(b"\r\n", b"\n")
     assert hashlib.sha256(data).hexdigest() == PINNED_SCHEMA_SHA256
     # server.json declares the same schema URL the pinned copy came from.
     assert _server_json()["$schema"] == SCHEMA_URL

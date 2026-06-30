@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1.1",
+  "assurance_id": "example-regulatory-assertion",
+  "vendor_id": "example-vendor",
+  "assurance_class": "regulatory_assertion",
+  "framework": {
+    "framework_id": "example_regulatory_program",
+    "framework_version": null,
+    "display_name": "Example Regulatory Program"
+  },
+  "subject": {
+    "entity_name": "Example Vendor Inc.",
+    "scope_description": "Example public vendor assertion"
+  },
+  "temporal_scope": {
+    "claimed_as_of": "2026-06-01",
+    "effective_from_claimed": null
+  },
+  "evidence": {
+    "source_ids": [
+      "example-regulatory-source"
+    ]
+  },
+  "advisory_boundary": "non_advisory",
+  "recorded_at": "2026-03-05T00:00:00Z"
+}

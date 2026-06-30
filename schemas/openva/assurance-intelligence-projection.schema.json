@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-intelligence-projection.schema.json",
+  "title": "OpenVA Assurance Intelligence Projection",
+  "description": "Structural output contract for pure five-axis assurance intelligence projection. Operational metadata only; not legal, compliance, procurement, security, KYC, AML, audit, or vendor-risk advice.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "projection_profile",
+    "implemented_axes",
+    "assurance_id",
+    "vendor_id",
+    "effective_at",
+    "knowledge_cutoff",
+    "projected_at",
+    "policies",
+    "input_digest",
+    "next_reevaluation_at",
+    "axes",
+    "advisory_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "projection_profile": { "const": "openva.assurance-intelligence.v1" },
+    "implemented_axes": {
+      "type": "array",
+      "prefixItems": [
+        { "const": "instrument_state" },
+        { "const": "supersession_state" },
+        { "const": "verification_state" },
+        { "const": "verification_freshness" },
+        { "const": "evidence_set_state" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 5
+    },
+    "assurance_id": { "$ref": "#/$defs/openvaSlug" },
+    "vendor_id": { "$ref": "#/$defs/openvaSlug" },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "knowledge_cutoff": { "type": "string", "format": "date-time" },
+    "projected_at": { "type": "string", "format": "date-time" },
+    "policies": { "$ref": "#/$defs/policies" },
+    "input_digest": { "$ref": "#/$defs/sha256Digest" },
+    "next_reevaluation_at": {
+      "anyOf": [
+        { "type": "string", "format": "date-time" },
+        { "type": "null" }
+      ]
+    },
+    "axes": {
+      "type": "object",
+      "required": [
+        "instrument_state",
+        "supersession_state",
+        "verification_state",
+        "verification_freshness",
+        "evidence_set_state"
+      ],
+      "properties": {
+        "instrument_state": {
+          "$ref": "assurance-projection.schema.json#/$defs/instrumentStateAxis"
+        },
+        "supersession_state": {
+          "$ref": "assurance-projection.schema.json#/$defs/supersessionStateAxis"
+        },
+        "verification_state": {
+          "$ref": "assurance-verification-state.schema.json"
+        },
+        "verification_freshness": {
+          "$ref": "assurance-verification-freshness.schema.json"
+        },
+        "evidence_set_state": {
+          "$ref": "assurance-evidence-set.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "openvaSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sha256Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "policyRef": {
+      "type": "object",
+      "required": ["id", "version", "digest"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "version": { "$ref": "#/$defs/nonEmptyString" },
+        "digest": { "$ref": "#/$defs/sha256Digest" }
+      },
+      "additionalProperties": false
+    },
+    "policies": {
+      "type": "object",
+      "required": [
+        "lifecycle",
+        "verification",
+        "verification_freshness",
+        "evidence_set"
+      ],
+      "properties": {
+        "lifecycle": { "$ref": "#/$defs/policyRef" },
+        "verification": { "$ref": "#/$defs/policyRef" },
+        "verification_freshness": { "$ref": "#/$defs/policyRef" },
+        "evidence_set": { "$ref": "#/$defs/policyRef" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,40 @@
+schema_version: "0.1.0"
+policy_id: openva-assurance-verification-policy
+policy_version: "0.1.0"
+eligible_observation_outcomes:
+  support:
+    - authoritative_status_confirmed
+    - evidence_consistent
+    - first_party_claim_observed
+  contradict:
+    - evidence_conflict
+  inconclusive:
+    - insufficient_evidence
+    - verification_unavailable
+  ignored:
+    - not_evaluated
+authority_tiers:
+  - tier: authoritative
+    outcomes:
+      - authoritative_status_confirmed
+  - tier: corroborating
+    outcomes:
+      - evidence_consistent
+      - evidence_conflict
+  - tier: first_party
+    outcomes:
+      - first_party_claim_observed
+  - tier: indeterminate
+    outcomes:
+      - insufficient_evidence
+      - verification_unavailable
+tie_handling: evaluate_all_at_highest_authority
+conflict_handling: inconclusive
+legacy_unknown_outcomes: reject
+highest_authority_scope:
+  consider_all_observations_at_tier: true
+  lower_authority_overrides: false
+applicability:
+  date_source: assurance_observation.observed_fields
+  missing_observed_fields: applicable
+advisory_boundary: non_advisory

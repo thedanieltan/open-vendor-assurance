@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1.1",
+  "assurance_observation_id": "example-assurance-observation",
+  "assurance_id": "example-iso27001-2026",
+  "vendor_id": "example-vendor",
+  "observed_at": "2026-06-29T00:00:00Z",
+  "recorded_at": "2026-06-29T00:00:00Z",
+  "source_observation_ids": ["example-source-observation"],
+  "evaluation": {
+    "claim_presence": "present",
+    "verification_outcome": "first_party_claim_observed",
+    "reason_codes": []
+  },
+  "policy": {
+    "id": "assurance-observation",
+    "version": "0.1.0"
+  },
+  "advisory_boundary": "non_advisory",
+  "transition": {
+    "from": "unverified",
+    "to": "first_party_claim_only"
+  }
+}
