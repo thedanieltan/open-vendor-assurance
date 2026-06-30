@@ -49,6 +49,7 @@ SCHEMA_VERSION = "0.1.0"
 REPORT_TYPE = "release_gates_report"
 DEFAULT_CONFIG = ROOT / "config" / "release-gates.yaml"
 DEFAULT_LEDGER_DIR = ROOT / "maintenance" / "source-observations" / "events"
+DEFAULT_LATEST_OBSERVATIONS_INDEX = ROOT / "maintenance" / "source-observations" / "latest-observations.json"
 
 PROFILE_PR = "pr"
 PROFILE_RELEASE = "release"
@@ -107,6 +108,7 @@ class GateContext:
     commit_sha: str
     source_health_readiness_path: Path | None = None
     source_health_policy: str = "enforce"
+    latest_observations_index_path: Path | None = None
 
 
 # --------------------------------------------------------------------------- #
@@ -319,15 +321,23 @@ def machine_provisional_vendor_ids(root: Path) -> set[str]:
 
 def compute_freshness(ctx: GateContext) -> dict[str, Any]:
     from tools.openva.observation_ledger import (
+        baseline_from_latest_index,
         build_freshness_report,
         build_latest_index,
+        load_latest_index,
         load_ledger_baseline,
         load_sla_config,
+        merge_baselines,
         source_records_by_id,
     )
 
-    baseline = load_ledger_baseline(ctx.ledger_dir)
-    latest = build_latest_index([], baseline, generated_at="2026-01-01T00:00:00Z")
+    ledger_baseline = load_ledger_baseline(ctx.ledger_dir)
+    latest_index_path = ctx.latest_observations_index_path or (ctx.root / DEFAULT_LATEST_OBSERVATIONS_INDEX.relative_to(ROOT))
+    committed_latest = load_latest_index(latest_index_path)
+    latest_baseline = baseline_from_latest_index(committed_latest)
+    baseline = merge_baselines(ledger_baseline, latest_baseline)
+    generated_at = str((committed_latest or {}).get("generated_at") or "2026-01-01T00:00:00Z")
+    latest = build_latest_index([], baseline, generated_at=generated_at)
     source_records = source_records_by_id(ctx.root)
     sla = load_sla_config()
     report = build_freshness_report(latest, sla, now=ctx.now, source_records=source_records)
@@ -338,6 +348,7 @@ def compute_freshness(ctx: GateContext) -> dict[str, Any]:
     return {
         "report": report,
         "baseline_source_ids": set(baseline),
+        "baseline": baseline,
         "all_source_ids": set(source_records),
         "provisional_source_ids": provisional_source_ids,
         "source_types": {sid: rec.get("source_type") for sid, rec in source_records.items()},
@@ -636,11 +647,7 @@ def gate_source_posture(ctx: GateContext, freshness: dict[str, Any]) -> GateResu
     broken-source hard fail is confirmed-P0 in the release source-health gate)."""
     cfg = ctx.config.get("source_posture") or {}
     broken_statuses = set(cfg.get("broken_health_statuses") or [])
-    report = freshness["report"]
-    # latest health is on the latest index, not the freshness report; recompute
-    from tools.openva.observation_ledger import load_ledger_baseline
-
-    baseline = load_ledger_baseline(ctx.ledger_dir)
+    baseline = freshness["baseline"]
     broken = sorted(
         sid for sid, entry in baseline.items()
         if str(entry.get("source_health_status")) in broken_statuses

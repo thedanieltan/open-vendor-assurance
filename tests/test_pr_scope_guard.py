@@ -21,6 +21,7 @@ from tools.openva.pr_scope_guard import (
     declared_work_package,
     load_manifest,
     out_of_scope_paths,
+    scope_policy_operational_freshness_exemption,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,6 +56,61 @@ SCOPE_POLICY_FILES = [
     "tests/test_pr_scope_guard.py",
     ".github/workflows/validate.yml",
     ".github/validation-ownership.yaml",
+]
+
+ASSURANCE_RELEASE_FILES = [
+    "config/assurance-projection-policy.yaml",
+    "docs/architecture/TEMPORAL_ASSURANCE_SCHEMA_V1.md",
+    "docs/architecture/ASSURANCE_INTELLIGENCE_PROFILE_V1.md",
+    "schemas/openva/assurance-record.schema.json",
+    "schemas/openva/assurance-intelligence-projection.schema.json",
+    "schemas/openva/vocabularies/assurance-intelligence-v1.schema.json",
+    "tools/openva/assurance_intelligence.py",
+    "tools/openva/assurance_projection.py",
+    "tools/openva/schema_registry.py",
+    "tools/openva/validate.py",
+    "tests/support/__init__.py",
+    "tests/support/assurance_fixture_repository.py",
+    "tests/support/assurance_fixture_runner.py",
+    "tests/test_assurance_intelligence_projection.py",
+    "tests/test_assurance_schema_fixtures.py",
+    "tests/fixtures/assurance/schema/valid/accredited-certification.json",
+    "tests/fixtures/assurance/verification/contracts/no-observations/expectations.json",
+    "tests/test_openva_mcp_metadata.py",
+]
+
+ASSURANCE_PUBLICATION_FILES = [
+    ".github/workflows/release-downloads.yml",
+    ".github/workflows/site-pages.yml",
+    "config/assurance-intelligence-publication-policy.yaml",
+    "docs/architecture/ASSURANCE_INTELLIGENCE_PUBLICATION.md",
+    "schemas/openva/assurance-intelligence-publication-policy.schema.json",
+    "schemas/openva/assurance-intelligence-public-snapshot.schema.json",
+    "site/build.py",
+    "site/src/app.js",
+    "site/src/styles.css",
+    "tests/test_assurance_intelligence_publication.py",
+    "tests/test_assurance_intelligence_publication_acceptance.py",
+    "tests/test_release_artifacts.py",
+    "tests/test_site.py",
+    "tools/openva/assurance_intelligence_publication.py",
+    "tools/openva/release_artifacts.py",
+    "tools/openva/schema_registry.py",
+]
+
+FRESHNESS_CONTINUITY_FILES = [
+    ".github/workflows/observation-ledger-append-pr.yml",
+    ".github/workflows/source-maintenance-report.yml",
+    "docs/architecture/SOURCE_OBSERVATION_FRESHNESS_CONTINUITY.md",
+    "maintenance/source-observations/latest-observations.json",
+    "tests/test_observation_automerge.py",
+    "tests/test_observation_ledger.py",
+    "tests/test_observation_ledger_append_workflow.py",
+    "tests/test_release_gates.py",
+    "tests/test_source_maintenance_workflow.py",
+    "tools/openva/observation_automerge.py",
+    "tools/openva/observation_ledger.py",
+    "tools/openva/release_gates.py",
 ]
 
 # This PR (#403) is the bootstrap PR. It physically spans TWO work packages: the
@@ -202,6 +258,103 @@ def test_bootstrap_cannot_recur_for_legal_entity_wp():
     manifest = load_manifest()
     violations = out_of_scope_paths(SCOPE_POLICY_FILES, "WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01", manifest)
     assert set(violations) == set(SCOPE_POLICY_FILES)
+
+
+def test_assurance_release_scope_covers_pillar_three_surface():
+    manifest = load_manifest()
+    assert out_of_scope_paths(ASSURANCE_RELEASE_FILES, "WP-OPENVA-ASSURANCE-RELEASE-01", manifest) == []
+
+
+def test_assurance_release_scope_rejects_publication_catalog_and_source_maintenance_work():
+    manifest = load_manifest()
+    out_of_scope = [
+        "data/vendors/example/vendor.yaml",
+        "examples/vendors/example/assurances/example.yaml",
+        ".github/workflows/validate.yml",
+        ".github/workflows/site-pages.yml",
+        "site/build.py",
+        "tools/openva/assurance_intelligence_publication.py",
+        "tools/openva/pr_scope_guard.py",
+        "tools/openva/source_observer.py",
+        "maintenance/source-observations/latest-observations.json",
+        "docs/operations/contracts/work-package-scope.yaml",
+    ]
+    assert out_of_scope_paths(out_of_scope, "WP-OPENVA-ASSURANCE-RELEASE-01", manifest) == sorted(out_of_scope)
+
+
+def test_assurance_publication_scope_covers_only_publication_surface():
+    manifest = load_manifest()
+    assert out_of_scope_paths(
+        ASSURANCE_PUBLICATION_FILES, "WP-P4-ASSURANCE-INTELLIGENCE-PUBLICATION-01", manifest
+    ) == []
+    blocked = [
+        "tools/openva/assurance_intelligence.py",
+        "tests/test_assurance_intelligence_projection.py",
+        "maintenance/source-observations/latest-observations.json",
+        "schemas/openva/assurance-intelligence-projection.schema.json",
+    ]
+    assert out_of_scope_paths(
+        blocked, "WP-P4-ASSURANCE-INTELLIGENCE-PUBLICATION-01", manifest
+    ) == sorted(blocked)
+
+
+def test_freshness_continuity_scope_covers_only_observation_freshness_surface():
+    manifest = load_manifest()
+    assert out_of_scope_paths(
+        FRESHNESS_CONTINUITY_FILES, "WP-SOURCE-OBSERVATION-FRESHNESS-CONTINUITY-01", manifest
+    ) == []
+    blocked = [
+        "config/observation-sla.yaml",
+        "maintenance/source-observations/events/2026-07.ndjson",
+        "data/vendors/example/vendor.yaml",
+        "tools/openva/assurance_intelligence.py",
+        "schemas/openva/assurance-record.schema.json",
+    ]
+    assert out_of_scope_paths(
+        blocked, "WP-SOURCE-OBSERVATION-FRESHNESS-CONTINUITY-01", manifest
+    ) == sorted(blocked)
+
+
+def test_policy_only_operational_freshness_exemption_accepts_pure_policy_pr():
+    manifest = load_manifest()
+    assert scope_policy_operational_freshness_exemption(
+        SCOPE_POLICY_FILES, "WP-PR-SCOPE-POLICY-01", manifest
+    )
+
+
+def test_policy_only_operational_freshness_exemption_rejects_non_policy_and_mixed_paths():
+    manifest = load_manifest()
+    assert not scope_policy_operational_freshness_exemption(
+        SCOPE_POLICY_FILES, "WP-OPENVA-ASSURANCE-RELEASE-01", manifest
+    )
+    assert not scope_policy_operational_freshness_exemption(
+        ["docs/operations/contracts/work-package-scope.yaml", "tools/openva/assurance_projection.py"],
+        "WP-PR-SCOPE-POLICY-01",
+        manifest,
+    )
+    assert not scope_policy_operational_freshness_exemption([], "WP-PR-SCOPE-POLICY-01", manifest)
+
+
+def test_validate_workflow_skips_only_release_gates_for_pure_scope_policy_pr():
+    workflow = yaml.safe_load((ROOT / ".github" / "workflows" / "validate.yml").read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["repository-integrity"]["steps"]
+    by_name = {step.get("name"): step for step in steps if step.get("name")}
+
+    assert "Run OpenVA validator" in by_name
+    assert "Rebuild generated indexes" in by_name
+    assert "Check generated files are committed" in by_name
+    assert "Determine scope-policy operational freshness exclusion" in by_name
+    assert "Run source-intelligence release gates (pr profile)" in by_name
+
+    release_gate = by_name["Run source-intelligence release gates (pr profile)"]
+    assert release_gate["if"] == "steps.scope_policy_freshness.outputs.skip_release_gates != 'true'"
+
+    probe = by_name["Determine scope-policy operational freshness exclusion"]["run"]
+    assert "python -m tools.openva.pr_scope_guard --declaration-file" in probe
+    assert 'found == ["WP-PR-SCOPE-POLICY-01"]' in probe
+    assert "set(changed) <= exclusive" in probe
+    assert "skip_release_gates=true" in probe
+    assert "python -m tools.openva.release_gates check --profile pr" in release_gate["run"]
 
 
 # --- Task B: ADR-0006 acceptance vs WP-02 implementation split ----------------

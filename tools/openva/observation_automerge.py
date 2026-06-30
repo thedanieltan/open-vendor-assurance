@@ -37,11 +37,12 @@ from typing import Any, Callable
 import jsonschema
 
 from tools.openva.indexes import ROOT
-from tools.openva.observation_ledger import last_observed_per_source, load_ledger_events, month_key
+from tools.openva.observation_ledger import last_observed_per_source, load_ledger_events, month_key, validate_latest_index
 
 AUTOMERGE_OBSERVATION_LABEL = "automerge:observation"
 OBSERVATION_LEDGER_LABEL = "observation-ledger"
 LEDGER_EVENTS_PREFIX = "maintenance/source-observations/events/"
+LATEST_INDEX_PATH = "maintenance/source-observations/latest-observations.json"
 LEDGER_FILE_RE = re.compile(r"^maintenance/source-observations/events/\d{4}-\d{2}\.ndjson$")
 RECORD_SCHEMA_PATH = ROOT / "schemas" / "openva" / "observation-ledger-record.schema.json"
 DEFAULT_MAX_APPENDED_ROWS = 5000
@@ -64,6 +65,11 @@ def load_record_schema() -> dict[str, Any]:
 
 def is_ledger_event_path(path: str) -> bool:
     return bool(LEDGER_FILE_RE.match(path.strip()))
+
+
+def is_observation_state_path(path: str) -> bool:
+    clean = path.strip()
+    return clean == LATEST_INDEX_PATH or is_ledger_event_path(clean)
 
 
 def parse_ndjson(text: str) -> list[str]:
@@ -189,11 +195,12 @@ def check_observation_automerge(
     paths = [path.strip() for path in changed_paths if path.strip()]
     if not paths:
         return ObservationAutomergeResult(False, ("no_changed_paths",), 0)
-    bad = [path for path in paths if not is_ledger_event_path(path)]
+    bad = [path for path in paths if not is_observation_state_path(path)]
     reasons.extend(f"disallowed_path:{path}" for path in bad)
 
     schema = schema or load_record_schema()
     appended = 0
+    latest_index_updated = False
     for path in (p for p in paths if is_ledger_event_path(p)):
         try:
             base_text = _safe_git_show(loader, base_ref, path)
@@ -211,7 +218,15 @@ def check_observation_automerge(
         reasons.extend(schema_violations(new_rows, schema, where=path))
         appended += len(new_rows)
 
-    if appended == 0 and not reasons:
+    if LATEST_INDEX_PATH in paths:
+        try:
+            latest_index = json.loads(loader(head_ref, LATEST_INDEX_PATH))
+            validate_latest_index(latest_index)
+            latest_index_updated = True
+        except Exception as exc:  # noqa: BLE001 - eligibility fails closed
+            reasons.append(f"latest_index_invalid:{type(exc).__name__}")
+
+    if appended == 0 and not latest_index_updated and not reasons:
         reasons.append("no_appended_rows")
     if appended > max_appended_rows:
         reasons.append(f"appended_row_limit_exceeded:{appended}>{max_appended_rows}")

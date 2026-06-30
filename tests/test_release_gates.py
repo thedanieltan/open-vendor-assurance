@@ -16,12 +16,14 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
 import yaml
 
 from tools.openva import release_gates as rg
 from tools.openva.advisory_wording import load_prohibited_terms
 from tools.openva.agent_export import payload_digest
 from tools.openva.indexes import ROOT
+from tools.openva.observation_ledger import DOCTRINE
 
 NOW = datetime(2026, 6, 13, 8, 0, 0, tzinfo=UTC)
 CONSTITUTION = yaml.safe_load((ROOT / "config" / "bot-constitution.yaml").read_text(encoding="utf-8"))
@@ -284,7 +286,57 @@ def _freshness(sources, all_ids, baseline_ids):
         "report": {"sources": sources},
         "all_source_ids": set(all_ids),
         "baseline_source_ids": set(baseline_ids),
+        "baseline": {},
     }
+
+
+def _write_source(root: Path, source_id: str = "example-dpa", source_type: str = "dpa") -> None:
+    source_dir = root / "data" / "vendors" / "example-vendor" / "sources"
+    source_dir.mkdir(parents=True)
+    (source_dir / f"{source_id}.yaml").write_text(
+        "\n".join(
+            [
+                "vendor_id: example-vendor",
+                f"source_id: {source_id}",
+                f"source_type: {source_type}",
+                "source_url: https://vendor.example/privacy",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+
+def _latest_index(path: Path, *, observed_at: str, source_id: str = "example-dpa") -> Path:
+    payload = {
+        "schema_version": "0.1.0",
+        "report_type": "latest_observations_index",
+        "generated_at": observed_at,
+        "doctrine": DOCTRINE,
+        "summary": {"source_count": 1, "observed_this_run": 1, "carried_forward": 0},
+        "sources": [
+            {
+                "source_id": source_id,
+                "vendor_id": "example-vendor",
+                "source_url": "https://vendor.example/privacy",
+                "observed_at": observed_at,
+                "observation_id": f"{source_id}-{observed_at[:10]}-run",
+                "final_url": "https://vendor.example/privacy",
+                "http_status": 200,
+                "source_health_status": "reachable",
+                "change_class": "none",
+                "retrieval_method": "html_page",
+                "raw_sample_sha256": None,
+                "normalized_text_sample_sha256": None,
+                "review_signal": {"required": False, "reason": None},
+                "carried_forward": False,
+            }
+        ],
+        "not_advice": True,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return path
 
 
 def test_full_baseline_gate_fails_on_unobserved_source():
@@ -302,6 +354,65 @@ def test_observation_freshness_gate_fails_on_expired():
 def test_high_priority_freshness_gate_fails_when_priority_type_out_of_sla():
     rows = [{"source_id": "a", "source_type": "dpa", "freshness": {"status": "stale", "age_days": 40, "observed_within_sla": False}}]
     assert rg.gate_high_priority_freshness(make_ctx(), _freshness(rows, {"a"}, {"a"})).status == "fail"
+
+
+def test_compute_freshness_uses_committed_latest_observation_without_change_event(tmp_path):
+    _write_source(tmp_path)
+    ledger = _write_ledger(tmp_path, [
+        {
+            "source_id": "example-dpa",
+            "vendor_id": "example-vendor",
+            "source_url": "https://vendor.example/privacy",
+            "observed_at": "2026-04-01T00:00:00Z",
+            "observation_id": "example-dpa-2026-04-01-run",
+            "source_health_status": "reachable",
+            "change_class": "first_observed",
+        }
+    ])
+    latest = _latest_index(
+        tmp_path / "maintenance" / "source-observations" / "latest-observations.json",
+        observed_at="2026-06-12T00:00:00Z",
+    )
+
+    freshness = rg.compute_freshness(make_ctx(root=tmp_path, ledger_dir=ledger, latest_observations_index_path=latest))
+    row = freshness["report"]["sources"][0]
+
+    assert freshness["baseline"]["example-dpa"]["observed_at"] == "2026-06-12T00:00:00Z"
+    assert row["freshness"]["status"] == "fresh"
+    assert rg.gate_high_priority_freshness(make_ctx(), freshness).status == "pass"
+
+
+def test_compute_freshness_keeps_newer_event_when_latest_index_is_older(tmp_path):
+    _write_source(tmp_path)
+    ledger = _write_ledger(tmp_path, [
+        {
+            "source_id": "example-dpa",
+            "vendor_id": "example-vendor",
+            "source_url": "https://vendor.example/privacy",
+            "observed_at": "2026-06-12T00:00:00Z",
+            "observation_id": "example-dpa-2026-06-12-run",
+            "source_health_status": "reachable",
+            "change_class": "none",
+        }
+    ])
+    latest = _latest_index(
+        tmp_path / "maintenance" / "source-observations" / "latest-observations.json",
+        observed_at="2026-04-01T00:00:00Z",
+    )
+
+    freshness = rg.compute_freshness(make_ctx(root=tmp_path, ledger_dir=ledger, latest_observations_index_path=latest))
+
+    assert freshness["baseline"]["example-dpa"]["observed_at"] == "2026-06-12T00:00:00Z"
+
+
+def test_compute_freshness_fails_closed_on_malformed_latest_index(tmp_path):
+    _write_source(tmp_path)
+    latest = tmp_path / "maintenance" / "source-observations" / "latest-observations.json"
+    latest.parent.mkdir(parents=True)
+    latest.write_text(json.dumps({"report_type": "latest_observations_index", "sources": "bad"}), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="schema_version"):
+        rg.compute_freshness(make_ctx(root=tmp_path, ledger_dir=tmp_path / "events", latest_observations_index_path=latest))
 
 
 # --------------------------------------------------------------------------- #

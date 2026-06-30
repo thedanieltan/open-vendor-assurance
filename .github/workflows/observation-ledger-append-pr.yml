@@ -73,6 +73,7 @@ jobs:
             --name openva-source-maintenance-report \
             --dir "$RUNNER_TEMP/smr"
           test -f "$RUNNER_TEMP/smr/observation-ledger/observation-ledger-delta.ndjson"
+          test -f "$RUNNER_TEMP/smr/observation-ledger/latest-observations.json"
 
       - name: Plan new ledger rows
         id: plan
@@ -87,7 +88,13 @@ jobs:
 
       - name: Exit without PR when there are no new rows
         if: steps.plan.outputs.new_row_count == '0'
-        run: echo "No new observation events to append; exiting without a PR."
+        run: echo "No new observation events to append; latest index may still update."
+
+      - name: Install latest observation index
+        run: |
+          set -euo pipefail
+          python -m tools.openva.observation_ledger install-latest \
+            --latest "$RUNNER_TEMP/smr/observation-ledger/latest-observations.json"
 
       - name: Append new rows to the committed ledger
         if: steps.plan.outputs.new_row_count != '0'
@@ -96,25 +103,28 @@ jobs:
           python -m tools.openva.observation_ledger append \
             --delta "$RUNNER_TEMP/filtered-delta.ndjson"
 
-      - name: Verify diff is confined to the ledger events path
-        if: steps.plan.outputs.new_row_count != '0'
+      - name: Verify diff is confined to observation continuity paths
+        id: diff
         run: |
           set -euo pipefail
-          git add maintenance/source-observations/events
+          git add maintenance/source-observations/events maintenance/source-observations/latest-observations.json
           CHANGED=$(git diff --cached --name-only)
           if [ -z "$CHANGED" ]; then
-            echo "::error::append produced no committed diff"
-            exit 1
+            echo "No committed observation continuity diff."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
           while IFS= read -r f; do
             case "$f" in
               maintenance/source-observations/events/*) : ;;
+              maintenance/source-observations/latest-observations.json) : ;;
               *) echo "::error::diff outside ledger events path: $f"; exit 1 ;;
             esac
           done <<< "$CHANGED"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
 
       - name: Open or update the append PR
-        if: steps.plan.outputs.new_row_count != '0'
+        if: steps.diff.outputs.has_changes == 'true'
         env:
           # A PR opened with the default GITHUB_TOKEN does not trigger
           # downstream workflows, so the automerge lane never
@@ -126,7 +136,7 @@ jobs:
         run: |
           set -euo pipefail
           PR_BRANCH="agent-observation-ledger-append-${RUN_ID}"
-          PR_TITLE="Observation ledger: append ${{ steps.plan.outputs.new_row_count }} events from run ${RUN_ID}"
+          PR_TITLE="Observation ledger: update observations from run ${RUN_ID}"
           python - "$RUNNER_TEMP/plan-summary.json" "$RUN_ID" > "$RUNNER_TEMP/pr-body.md" <<'PY'
           import json, sys
           summary = json.load(open(sys.argv[1]))
@@ -143,6 +153,7 @@ jobs:
               f"- Source workflow run: `{run_id}` (source-maintenance-report)",
               "- Artifact: `openva-source-maintenance-report`",
               "- Delta file: `observation-ledger/observation-ledger-delta.ndjson`",
+              "- Latest index: `observation-ledger/latest-observations.json`",
               f"- Filtered delta digest: `{summary.get('filtered_delta_digest')}`",
               f"- New rows: {summary.get('new_row_count')}",
               f"- Affected monthly shard(s): {months}",
@@ -155,8 +166,9 @@ jobs:
               "",
               "### Authority and boundary",
               "- Lane: `observation_ledger_append` (Level-0/1 operational events).",
-              "- Writes only `maintenance/source-observations/events/**`; never catalog truth.",
+              "- Writes only observation continuity artifacts; never catalog truth.",
               "- Append-only: existing ledger lines are never rewritten or removed.",
+              "- Latest-observation index is derivative committed state from real observations, not a fabricated event stream.",
               "- Labels applied: `observation-ledger`, `automerge:observation`.",
               "- Merge is enabled by the agent-automerge observation job after the WP35 release gate passes.",
               "",
