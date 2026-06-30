@@ -44,6 +44,27 @@
         "inconclusive",
         "ignored"
       ]
+    },
+    "verificationFreshnessState": {
+      "type": "string",
+      "enum": [
+        "no_basis",
+        "current",
+        "aging",
+        "stale"
+      ]
+    },
+    "verificationFreshnessReasonCode": {
+      "type": "string",
+      "enum": [
+        "no_decisive_verification_observation",
+        "decisive_basis_within_current_threshold",
+        "decisive_basis_within_aging_threshold",
+        "decisive_basis_exceeds_stale_threshold"
+      ]
+    },
+    "verificationFreshnessBasisAggregation": {
+      "const": "oldest_decisive_observed_at"
     }
   }
 }

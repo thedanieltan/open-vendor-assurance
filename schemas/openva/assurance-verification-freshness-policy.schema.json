@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/openva/assurance-verification-freshness-policy.schema.json",
+  "title": "OpenVA Assurance Verification Freshness Policy",
+  "description": "Normative policy contract for evaluating how current the decisive verification-observation basis is.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "policy_id",
+    "policy_version",
+    "freshness_profile",
+    "basis",
+    "thresholds",
+    "boundary_semantics",
+    "effective_before_basis",
+    "advisory_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "policy_id": { "$ref": "#/$defs/nonEmptyString" },
+    "policy_version": { "$ref": "#/$defs/nonEmptyString" },
+    "freshness_profile": { "const": "openva.assurance-verification-freshness.v1" },
+    "basis": {
+      "type": "object",
+      "required": [
+        "decisive_observation_source",
+        "timestamp_field",
+        "aggregation"
+      ],
+      "properties": {
+        "decisive_observation_source": {
+          "const": "verification_state.caused_by.assurance_observation_ids"
+        },
+        "timestamp_field": { "const": "assurance_observation.observed_at" },
+        "aggregation": {
+          "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationFreshnessBasisAggregation"
+        }
+      },
+      "additionalProperties": false
+    },
+    "thresholds": {
+      "type": "object",
+      "required": [
+        "current_max_age_seconds",
+        "stale_min_age_seconds"
+      ],
+      "properties": {
+        "current_max_age_seconds": {
+          "type": "integer",
+          "const": 7776000
+        },
+        "stale_min_age_seconds": {
+          "type": "integer",
+          "const": 15552000
+        }
+      },
+      "additionalProperties": false
+    },
+    "boundary_semantics": { "const": "lower_bound_inclusive_upper_bound_exclusive" },
+    "effective_before_basis": { "const": "invalid" },
+    "advisory_boundary": { "const": "non_advisory" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
