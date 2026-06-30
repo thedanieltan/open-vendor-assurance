@@ -379,7 +379,15 @@ def apply_assurance_intelligence_materialization(
         latest_intelligence_projection_relative_path(assurance_id),
     )
     latest_index_path = validate_destination_path(repository_root, latest_intelligence_index_relative_path())
-    event_destinations = validate_event_collisions(repository_root, plan.events)
+    try:
+        event_destinations = validate_event_collisions(repository_root, plan.events)
+    except AssuranceProjectionMaterializationError as exc:
+        raise AssuranceIntelligenceMaterializationError(
+            code=exc.code,
+            instance_path=exc.instance_path,
+            message=str(exc),
+            related_ids=exc.related_ids,
+        ) from exc
     existing_index = load_latest_intelligence_index(repository_root)
     updated_index = upsert_latest_index_entry(existing_index, plan.projection)
     validate_latest_index(updated_index)
