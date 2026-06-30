@@ -30,14 +30,26 @@ def build_site(
     field_provenance: Path | None = None,
 ) -> Path:
     out = tmp_path / "site-dist"
-    site_build_module().build_site(
-        out,
-        source_health_snapshot or site_build_module().DEFAULT_SOURCE_HEALTH_SNAPSHOT,
-        assurance_intelligence or site_build_module().DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT,
-        catalog_completeness or site_build_module().DEFAULT_CATALOG_COMPLETENESS_REPORT,
-        entity_review or site_build_module().DEFAULT_ENTITY_REVIEW_QUEUE,
-        field_provenance or site_build_module().DEFAULT_FIELD_PROVENANCE_COVERAGE,
-    )
+    module = site_build_module()
+    original_commit_sha = module.commit_sha
+    original_commit_date = module.commit_date
+    original_release_tag = module.release_tag
+    module.commit_sha = lambda: "test-site-commit"
+    module.commit_date = lambda: "2026-06-30T00:00:00+00:00"
+    module.release_tag = lambda: ""
+    try:
+        module.build_site(
+            out,
+            source_health_snapshot or module.DEFAULT_SOURCE_HEALTH_SNAPSHOT,
+            assurance_intelligence or module.DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT,
+            catalog_completeness or module.DEFAULT_CATALOG_COMPLETENESS_REPORT,
+            entity_review or module.DEFAULT_ENTITY_REVIEW_QUEUE,
+            field_provenance or module.DEFAULT_FIELD_PROVENANCE_COVERAGE,
+        )
+    finally:
+        module.commit_sha = original_commit_sha
+        module.commit_date = original_commit_date
+        module.release_tag = original_release_tag
     return out
 
 
