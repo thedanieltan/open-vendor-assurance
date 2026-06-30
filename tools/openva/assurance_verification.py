@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from types import MappingProxyType
 from typing import Any
 
@@ -23,9 +23,17 @@ ASSURANCE_VERIFICATION_POLICY_INVALID = "ASSURANCE_VERIFICATION_POLICY_INVALID"
 ASSURANCE_VERIFICATION_TARGET_NOT_KNOWN_AT_CUTOFF = "ASSURANCE_VERIFICATION_TARGET_NOT_KNOWN_AT_CUTOFF"
 ASSURANCE_VERIFICATION_INPUT_INVALID = "ASSURANCE_VERIFICATION_INPUT_INVALID"
 ASSURANCE_VERIFICATION_OUTPUT_INVALID = "ASSURANCE_VERIFICATION_OUTPUT_INVALID"
+ASSURANCE_VERIFICATION_FRESHNESS_DATETIME_NAIVE = "ASSURANCE_VERIFICATION_FRESHNESS_DATETIME_NAIVE"
+ASSURANCE_VERIFICATION_FRESHNESS_POLICY_INVALID = "ASSURANCE_VERIFICATION_FRESHNESS_POLICY_INVALID"
+ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID = "ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID"
+ASSURANCE_VERIFICATION_FRESHNESS_OUTPUT_INVALID = "ASSURANCE_VERIFICATION_FRESHNESS_OUTPUT_INVALID"
 
 VERIFICATION_POLICY_SCHEMA_PATH = ROOT / "schemas/openva/assurance-verification-policy.schema.json"
 VERIFICATION_STATE_SCHEMA_PATH = ROOT / "schemas/openva/assurance-verification-state.schema.json"
+VERIFICATION_FRESHNESS_POLICY_SCHEMA_PATH = (
+    ROOT / "schemas/openva/assurance-verification-freshness-policy.schema.json"
+)
+VERIFICATION_FRESHNESS_SCHEMA_PATH = ROOT / "schemas/openva/assurance-verification-freshness.schema.json"
 
 
 class AssuranceVerificationError(Exception):
@@ -81,6 +89,36 @@ class VerificationStateResult:
     state: Mapping[str, Any]
 
 
+@dataclass(frozen=True, slots=True)
+class VerificationFreshnessPolicyIdentity:
+    id: str
+    version: str
+    digest: str
+
+    def as_mapping(self) -> dict[str, str]:
+        return {
+            "id": self.id,
+            "version": self.version,
+            "digest": self.digest,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class AssuranceVerificationFreshnessPolicy:
+    data: Mapping[str, Any]
+    policy_id: str
+    policy_version: str
+    current_max_age_seconds: int
+    stale_min_age_seconds: int
+    aggregation: str
+    effective_before_basis: str
+
+
+@dataclass(frozen=True, slots=True)
+class VerificationFreshnessResult:
+    freshness: Mapping[str, Any]
+
+
 def normalize_verification_datetime(value: datetime | str, *, field_name: str) -> datetime:
     if isinstance(value, str):
         try:
@@ -107,6 +145,20 @@ def normalize_verification_datetime(value: datetime | str, *, field_name: str) -
             message=f"{field_name} must be timezone-aware.",
         )
     return parsed.astimezone(UTC)
+
+
+def normalize_freshness_datetime(value: datetime | str, *, field_name: str) -> datetime:
+    try:
+        return normalize_verification_datetime(value, field_name=field_name)
+    except AssuranceVerificationError as exc:
+        if exc.code == ASSURANCE_VERIFICATION_DATETIME_NAIVE:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_VERIFICATION_FRESHNESS_DATETIME_NAIVE,
+                instance_path=exc.instance_path,
+                message=exc.args[0],
+                related_ids=exc.related_ids,
+            ) from exc
+        raise
 
 
 def require_string(mapping: Mapping[str, Any], field_name: str) -> str:
@@ -322,6 +374,89 @@ def validate_verification_output(state: Mapping[str, Any]) -> None:
     )
 
 
+def validate_verification_result_input(state: Mapping[str, Any]) -> None:
+    validator = build_openva_validator(VERIFICATION_STATE_SCHEMA_PATH)
+    material = json_material(state)
+    errors = sorted(validator.iter_errors(material), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceVerificationError(
+        code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+        instance_path=validation_instance_path(error),
+        message=f"Verification state input is invalid: {error.message}",
+    )
+
+
+def validate_verification_freshness_policy(policy: Mapping[str, Any]) -> None:
+    validator = build_openva_validator(VERIFICATION_FRESHNESS_POLICY_SCHEMA_PATH)
+    errors = sorted(validator.iter_errors(policy), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceVerificationError(
+        code=ASSURANCE_VERIFICATION_FRESHNESS_POLICY_INVALID,
+        instance_path=validation_instance_path(error),
+        message=f"Verification freshness policy is invalid: {error.message}",
+    )
+
+
+def build_assurance_verification_freshness_policy(
+    policy: Mapping[str, Any],
+) -> AssuranceVerificationFreshnessPolicy:
+    validate_verification_freshness_policy(policy)
+    thresholds = policy["thresholds"]
+    current_max_age_seconds = thresholds["current_max_age_seconds"]
+    stale_min_age_seconds = thresholds["stale_min_age_seconds"]
+    if current_max_age_seconds >= stale_min_age_seconds:
+        raise AssuranceVerificationError(
+            code=ASSURANCE_VERIFICATION_FRESHNESS_POLICY_INVALID,
+            instance_path="/thresholds",
+            message="Current freshness threshold must be lower than stale threshold.",
+        )
+
+    basis = policy["basis"]
+    return AssuranceVerificationFreshnessPolicy(
+        data=MappingProxyType(json_material(policy)),
+        policy_id=policy["policy_id"],
+        policy_version=policy["policy_version"],
+        current_max_age_seconds=current_max_age_seconds,
+        stale_min_age_seconds=stale_min_age_seconds,
+        aggregation=basis["aggregation"],
+        effective_before_basis=policy["effective_before_basis"],
+    )
+
+
+def verification_freshness_policy_identity(
+    policy: AssuranceVerificationFreshnessPolicy | Mapping[str, Any],
+) -> tuple[AssuranceVerificationFreshnessPolicy, VerificationFreshnessPolicyIdentity]:
+    freshness_policy = (
+        policy
+        if isinstance(policy, AssuranceVerificationFreshnessPolicy)
+        else build_assurance_verification_freshness_policy(policy)
+    )
+    policy_material = json_material(freshness_policy.data)
+    digest = sha256_bytes(canonical_json(policy_material))
+    return freshness_policy, VerificationFreshnessPolicyIdentity(
+        id=freshness_policy.policy_id,
+        version=freshness_policy.policy_version,
+        digest=digest,
+    )
+
+
+def validate_verification_freshness_output(freshness: Mapping[str, Any]) -> None:
+    validator = build_openva_validator(VERIFICATION_FRESHNESS_SCHEMA_PATH)
+    errors = sorted(validator.iter_errors(freshness), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceVerificationError(
+        code=ASSURANCE_VERIFICATION_FRESHNESS_OUTPUT_INVALID,
+        instance_path=validation_instance_path(error),
+        message=f"Verification freshness output is invalid: {error.message}",
+    )
+
+
 def observation_applicable_to_effective_at(
     observation: Mapping[str, Any],
     *,
@@ -496,6 +631,124 @@ def verification_input_digest(
     return sha256_bytes(canonical_json(manifest))
 
 
+def verification_freshness_input_digest(
+    *,
+    assurance_record: Mapping[str, Any],
+    decisive_observations: Iterable[Mapping[str, Any]],
+    verification_result: Mapping[str, Any],
+    policy_identity: VerificationFreshnessPolicyIdentity,
+    effective_at: datetime,
+    knowledge_cutoff: datetime,
+) -> str:
+    manifest = {
+        "assurance_id": require_string(assurance_record, "assurance_id"),
+        "effective_at": format_utc_datetime(effective_at),
+        "knowledge_cutoff": format_utc_datetime(knowledge_cutoff),
+        "policy": policy_identity.as_mapping(),
+        "assurance_record": json_material(assurance_record),
+        "verification_result": json_material(verification_result),
+        "decisive_assurance_observations": [
+            json_material(observation)
+            for observation in sorted(
+                decisive_observations,
+                key=lambda observation: require_string(observation, "assurance_observation_id"),
+            )
+        ],
+    }
+    return sha256_bytes(canonical_json(manifest))
+
+
+def observed_at_for_freshness(observation: Mapping[str, Any]) -> datetime:
+    observed_at = observation.get("observed_at")
+    if not isinstance(observed_at, str):
+        raise AssuranceVerificationError(
+            code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+            instance_path="/observed_at",
+            message="Decisive assurance observation has no usable observed_at timestamp.",
+        )
+    try:
+        return normalize_freshness_datetime(observed_at, field_name="observed_at")
+    except AssuranceVerificationError as exc:
+        if exc.code == ASSURANCE_VERIFICATION_FRESHNESS_DATETIME_NAIVE:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+                instance_path="/observed_at",
+                message="Decisive assurance observation has no usable observed_at timestamp.",
+                related_ids=exc.related_ids,
+            ) from exc
+        raise
+
+
+def decisive_observations_for_freshness(
+    *,
+    assurance_record: Mapping[str, Any],
+    observations: Iterable[Mapping[str, Any]],
+    verification_result: Mapping[str, Any],
+    knowledge_cutoff: datetime,
+) -> tuple[Mapping[str, Any], ...]:
+    validate_verification_result_input(verification_result)
+    target_id = require_string(assurance_record, "assurance_id")
+    target_vendor_id = require_string(assurance_record, "vendor_id")
+    if verification_result["assurance_id"] != target_id or verification_result["vendor_id"] != target_vendor_id:
+        raise AssuranceVerificationError(
+            code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+            instance_path="/verification_result",
+            message="Verification result does not match the target assurance.",
+            related_ids=(verification_result["assurance_id"], target_id),
+        )
+
+    caused_by = verification_result["caused_by"]
+    decisive_ids = tuple(sorted(caused_by["assurance_observation_ids"]))
+    if not decisive_ids:
+        return ()
+
+    by_id: dict[str, Mapping[str, Any]] = {}
+    for observation in observations:
+        observation_id = require_string(observation, "assurance_observation_id")
+        by_id[observation_id] = observation
+
+    decisive: list[Mapping[str, Any]] = []
+    for observation_id in decisive_ids:
+        observation = by_id.get(observation_id)
+        if observation is None:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+                instance_path="/caused_by/assurance_observation_ids",
+                message=f"Decisive assurance observation {observation_id!r} was not supplied.",
+                related_ids=(observation_id,),
+            )
+        if observation.get("assurance_id") != target_id:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+                instance_path="/assurance_id",
+                message="Decisive assurance observation does not reference the target assurance.",
+                related_ids=(observation_id, target_id),
+            )
+        if observation.get("vendor_id") != target_vendor_id:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+                instance_path="/vendor_id",
+                message="Decisive assurance observation vendor does not match the target assurance.",
+                related_ids=(observation_id, target_vendor_id),
+            )
+        if observation_recorded_at(observation) > knowledge_cutoff:
+            raise AssuranceVerificationError(
+                code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+                instance_path="/recorded_at",
+                message="Decisive assurance observation is not known at the supplied knowledge cutoff.",
+                related_ids=(observation_id,),
+            )
+        decisive.append(observation)
+
+    diagnostics = observation_semantic_diagnostics(
+        assurance_record=assurance_record,
+        observations=decisive,
+    )
+    if diagnostics:
+        raise VerificationInputInvalidError(diagnostics)
+    return tuple(sorted(decisive, key=lambda observation: require_string(observation, "assurance_observation_id")))
+
+
 def project_verification_state(
     assurance_record: Mapping[str, Any],
     assurance_observations: Iterable[Mapping[str, Any]],
@@ -550,3 +803,141 @@ def project_verification_state(
     }
     validate_verification_output(state)
     return VerificationStateResult(state=MappingProxyType(state))
+
+
+def project_verification_freshness(
+    assurance_record: Mapping[str, Any],
+    assurance_observations: Iterable[Mapping[str, Any]],
+    verification_result: Mapping[str, Any],
+    policy: AssuranceVerificationFreshnessPolicy | Mapping[str, Any],
+    effective_at: datetime | str,
+    knowledge_cutoff: datetime | str,
+) -> VerificationFreshnessResult:
+    effective_at_utc = normalize_freshness_datetime(effective_at, field_name="effective_at")
+    knowledge_cutoff_utc = normalize_freshness_datetime(knowledge_cutoff, field_name="knowledge_cutoff")
+    freshness_policy, policy_identity = verification_freshness_policy_identity(policy)
+
+    ensure_target_known_at_cutoff(assurance_record, knowledge_cutoff=knowledge_cutoff_utc)
+    validate_verification_result_input(verification_result)
+    verification_effective_at = normalize_freshness_datetime(
+        verification_result["effective_at"],
+        field_name="effective_at",
+    )
+    verification_knowledge_cutoff = normalize_freshness_datetime(
+        verification_result["knowledge_cutoff"],
+        field_name="knowledge_cutoff",
+    )
+    if verification_effective_at != effective_at_utc or verification_knowledge_cutoff != knowledge_cutoff_utc:
+        raise AssuranceVerificationError(
+            code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+            instance_path="/verification_result",
+            message="Verification result effective_at and knowledge_cutoff must match freshness inputs.",
+        )
+
+    observations = tuple(assurance_observations)
+    decisive_observations = decisive_observations_for_freshness(
+        assurance_record=assurance_record,
+        observations=observations,
+        verification_result=verification_result,
+        knowledge_cutoff=knowledge_cutoff_utc,
+    )
+    target_id = require_string(assurance_record, "assurance_id")
+    if not decisive_observations:
+        freshness = {
+            "schema_version": "0.1.0",
+            "assurance_id": target_id,
+            "vendor_id": require_string(assurance_record, "vendor_id"),
+            "effective_at": format_utc_datetime(effective_at_utc),
+            "knowledge_cutoff": format_utc_datetime(knowledge_cutoff_utc),
+            "policy": policy_identity.as_mapping(),
+            "input_digest": verification_freshness_input_digest(
+                assurance_record=assurance_record,
+                decisive_observations=(),
+                verification_result=verification_result,
+                policy_identity=policy_identity,
+                effective_at=effective_at_utc,
+                knowledge_cutoff=knowledge_cutoff_utc,
+            ),
+            "value": "no_basis",
+            "determination": "determined",
+            "reason_codes": ["no_decisive_verification_observation"],
+            "basis_observed_at": None,
+            "age_seconds": None,
+            "next_reevaluation_at": None,
+            "caused_by": {
+                "assurance_ids": [target_id],
+                "assurance_observation_ids": [],
+                "source_observation_ids": [],
+            },
+            "advisory_boundary": "non_advisory",
+        }
+        validate_verification_freshness_output(freshness)
+        return VerificationFreshnessResult(freshness=MappingProxyType(freshness))
+
+    if freshness_policy.aggregation != "oldest_decisive_observed_at":
+        raise AssuranceVerificationError(
+            code=ASSURANCE_VERIFICATION_FRESHNESS_POLICY_INVALID,
+            instance_path="/basis/aggregation",
+            message="Unsupported verification freshness basis aggregation.",
+            related_ids=(freshness_policy.aggregation,),
+        )
+
+    basis_observed_at = min(observed_at_for_freshness(observation) for observation in decisive_observations)
+    if effective_at_utc < basis_observed_at:
+        raise AssuranceVerificationError(
+            code=ASSURANCE_VERIFICATION_FRESHNESS_INPUT_INVALID,
+            instance_path="/effective_at",
+            message="Freshness effective_at cannot precede the decisive observation basis.",
+        )
+
+    age_seconds = int((effective_at_utc - basis_observed_at).total_seconds())
+    current_boundary = basis_observed_at + timedelta(seconds=freshness_policy.current_max_age_seconds)
+    stale_boundary = basis_observed_at + timedelta(seconds=freshness_policy.stale_min_age_seconds)
+    if age_seconds < freshness_policy.current_max_age_seconds:
+        value = "current"
+        reason_code = "decisive_basis_within_current_threshold"
+        next_reevaluation_at = current_boundary
+    elif age_seconds < freshness_policy.stale_min_age_seconds:
+        value = "aging"
+        reason_code = "decisive_basis_within_aging_threshold"
+        next_reevaluation_at = stale_boundary
+    else:
+        value = "stale"
+        reason_code = "decisive_basis_exceeds_stale_threshold"
+        next_reevaluation_at = None
+
+    decisive_observation_ids = tuple(
+        sorted(require_string(observation, "assurance_observation_id") for observation in decisive_observations)
+    )
+    freshness = {
+        "schema_version": "0.1.0",
+        "assurance_id": target_id,
+        "vendor_id": require_string(assurance_record, "vendor_id"),
+        "effective_at": format_utc_datetime(effective_at_utc),
+        "knowledge_cutoff": format_utc_datetime(knowledge_cutoff_utc),
+        "policy": policy_identity.as_mapping(),
+        "input_digest": verification_freshness_input_digest(
+            assurance_record=assurance_record,
+            decisive_observations=decisive_observations,
+            verification_result=verification_result,
+            policy_identity=policy_identity,
+            effective_at=effective_at_utc,
+            knowledge_cutoff=knowledge_cutoff_utc,
+        ),
+        "value": value,
+        "determination": "determined",
+        "reason_codes": [reason_code],
+        "basis_observed_at": format_utc_datetime(basis_observed_at),
+        "age_seconds": age_seconds,
+        "next_reevaluation_at": (
+            format_utc_datetime(next_reevaluation_at) if next_reevaluation_at is not None else None
+        ),
+        "caused_by": {
+            "assurance_ids": [target_id],
+            "assurance_observation_ids": list(decisive_observation_ids),
+            "source_observation_ids": [],
+        },
+        "advisory_boundary": "non_advisory",
+    }
+    validate_verification_freshness_output(freshness)
+    return VerificationFreshnessResult(freshness=MappingProxyType(freshness))
