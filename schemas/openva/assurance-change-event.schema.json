@@ -102,6 +102,9 @@
       "anyOf": [
         { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/instrumentStateReasonCode" },
         { "$ref": "vocabularies/assurance-projection-v1.schema.json#/$defs/supersessionStateReasonCode" },
+        { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationStateReasonCode" },
+        { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationFreshnessReasonCode" },
+        { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/evidenceSetReasonCode" },
         { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode" }
       ]
     },
@@ -127,6 +130,14 @@
           "properties": {
             "transition": { "$ref": "#/$defs/verificationStateTransition" },
             "reason_code": {
+              "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationStateReasonCode"
+            }
+          }
+        },
+        {
+          "properties": {
+            "transition": { "$ref": "#/$defs/legacyVerificationStateTransition" },
+            "reason_code": {
               "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode"
             }
           }
@@ -135,6 +146,14 @@
           "properties": {
             "transition": { "$ref": "#/$defs/verificationFreshnessTransition" },
             "reason_code": {
+              "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationFreshnessReasonCode"
+            }
+          }
+        },
+        {
+          "properties": {
+            "transition": { "$ref": "#/$defs/legacyVerificationFreshnessTransition" },
+            "reason_code": {
               "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode"
             }
           }
@@ -142,6 +161,14 @@
         {
           "properties": {
             "transition": { "$ref": "#/$defs/evidenceSetTransition" },
+            "reason_code": {
+              "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/evidenceSetReasonCode"
+            }
+          }
+        },
+        {
+          "properties": {
+            "transition": { "$ref": "#/$defs/legacyEvidenceSetTransition" },
             "reason_code": {
               "$ref": "vocabularies/assurance-v1.schema.json#/$defs/transitionReasonCode"
             }
@@ -190,6 +217,23 @@
         "axis": { "const": "verification_state" },
         "from": {
           "anyOf": [
+            { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationState" },
+            { "type": "null" }
+          ]
+        },
+        "to": {
+          "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationState"
+        }
+      },
+      "additionalProperties": false
+    },
+    "legacyVerificationStateTransition": {
+      "type": "object",
+      "required": ["axis", "from", "to"],
+      "properties": {
+        "axis": { "const": "verification_state" },
+        "from": {
+          "anyOf": [
             { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationState" },
             { "type": "null" }
           ]
@@ -207,6 +251,23 @@
         "axis": { "const": "verification_freshness" },
         "from": {
           "anyOf": [
+            { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationFreshnessState" },
+            { "type": "null" }
+          ]
+        },
+        "to": {
+          "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/verificationFreshnessState"
+        }
+      },
+      "additionalProperties": false
+    },
+    "legacyVerificationFreshnessTransition": {
+      "type": "object",
+      "required": ["axis", "from", "to"],
+      "properties": {
+        "axis": { "const": "verification_freshness" },
+        "from": {
+          "anyOf": [
             { "$ref": "vocabularies/assurance-v1.schema.json#/$defs/verificationFreshness" },
             { "type": "null" }
           ]
@@ -218,6 +279,23 @@
       "additionalProperties": false
     },
     "evidenceSetTransition": {
+      "type": "object",
+      "required": ["axis", "from", "to"],
+      "properties": {
+        "axis": { "const": "evidence_set_state" },
+        "from": {
+          "anyOf": [
+            { "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/evidenceSetState" },
+            { "type": "null" }
+          ]
+        },
+        "to": {
+          "$ref": "vocabularies/assurance-intelligence-v1.schema.json#/$defs/evidenceSetState"
+        }
+      },
+      "additionalProperties": false
+    },
+    "legacyEvidenceSetTransition": {
       "type": "object",
       "required": ["axis", "from", "to"],
       "properties": {
@@ -242,19 +320,23 @@
             "supersession_state",
             "verification_state",
             "verification_freshness",
-            "evidence_set"
+            "evidence_set",
+            "evidence_set_state"
           ]
         },
         "from": true,
         "to": true
       },
       "additionalProperties": false,
-      "oneOf": [
+      "anyOf": [
         { "$ref": "#/$defs/instrumentStateTransition" },
         { "$ref": "#/$defs/supersessionStateTransition" },
         { "$ref": "#/$defs/verificationStateTransition" },
+        { "$ref": "#/$defs/legacyVerificationStateTransition" },
         { "$ref": "#/$defs/verificationFreshnessTransition" },
-        { "$ref": "#/$defs/evidenceSetTransition" }
+        { "$ref": "#/$defs/legacyVerificationFreshnessTransition" },
+        { "$ref": "#/$defs/evidenceSetTransition" },
+        { "$ref": "#/$defs/legacyEvidenceSetTransition" }
       ]
     }
   }

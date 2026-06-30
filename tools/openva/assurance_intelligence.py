@@ -5,14 +5,22 @@ from datetime import datetime
 from typing import Any
 
 from tools.openva.assurance_projection import AssuranceProjectionError
+from tools.openva.assurance_projection import ASSURANCE_CHANGE_EVENT_REASON_AMBIGUOUS
+from tools.openva.assurance_projection import ASSURANCE_CHANGE_EVENT_TIME_INVALID
 from tools.openva.assurance_projection import admitted_repository_records_for_manifest
+from tools.openva.assurance_projection import axis_state_value
+from tools.openva.assurance_projection import change_event_id_for_manifest
+from tools.openva.assurance_projection import event_caused_by
 from tools.openva.assurance_projection import format_utc_datetime
 from tools.openva.assurance_projection import json_material
 from tools.openva.assurance_projection import normalize_aware_datetime
+from tools.openva.assurance_projection import projection_axis
 from tools.openva.assurance_projection import project_assurance
 from tools.openva.assurance_projection import projection_policy_identity
 from tools.openva.assurance_projection import require_string
 from tools.openva.assurance_projection import resolve_target_assurance
+from tools.openva.assurance_projection import singular_axis_reason
+from tools.openva.assurance_projection import validate_change_event_output
 from tools.openva.assurance_projection import validation_instance_path
 from tools.openva.assurance_verification import evidence_set_policy_identity
 from tools.openva.assurance_verification import project_evidence_set_state
@@ -27,6 +35,9 @@ ASSURANCE_INTELLIGENCE_REQUEST_INVALID = "ASSURANCE_INTELLIGENCE_REQUEST_INVALID
 ASSURANCE_INTELLIGENCE_POLICY_MISMATCH = "ASSURANCE_INTELLIGENCE_POLICY_MISMATCH"
 ASSURANCE_INTELLIGENCE_TARGET_UNKNOWN = "ASSURANCE_INTELLIGENCE_TARGET_UNKNOWN"
 ASSURANCE_INTELLIGENCE_OUTPUT_INVALID = "ASSURANCE_INTELLIGENCE_OUTPUT_INVALID"
+ASSURANCE_INTELLIGENCE_DIFF_INPUT_INVALID = "ASSURANCE_INTELLIGENCE_DIFF_INPUT_INVALID"
+ASSURANCE_INTELLIGENCE_DIFF_INCOMPATIBLE = "ASSURANCE_INTELLIGENCE_DIFF_INCOMPATIBLE"
+ASSURANCE_INTELLIGENCE_DIFF_NON_MONOTONIC = "ASSURANCE_INTELLIGENCE_DIFF_NON_MONOTONIC"
 
 INTELLIGENCE_PROFILE = "openva.assurance-intelligence.v1"
 INTELLIGENCE_AXES = (
@@ -38,6 +49,28 @@ INTELLIGENCE_AXES = (
 )
 INTELLIGENCE_REQUEST_SCHEMA_PATH = ROOT / "schemas/openva/assurance-intelligence-request.schema.json"
 INTELLIGENCE_PROJECTION_SCHEMA_PATH = ROOT / "schemas/openva/assurance-intelligence-projection.schema.json"
+CHANGE_TYPE_BY_INTELLIGENCE_AXIS = {
+    "instrument_state": "instrument_state_changed",
+    "supersession_state": "assurance_superseded",
+    "verification_state": "verification_state_changed",
+    "verification_freshness": "verification_freshness_changed",
+    "evidence_set_state": "evidence_set_changed",
+}
+POLICY_BY_INTELLIGENCE_AXIS = {
+    "instrument_state": "lifecycle",
+    "supersession_state": "lifecycle",
+    "verification_state": "verification",
+    "verification_freshness": "verification_freshness",
+    "evidence_set_state": "evidence_set",
+}
+DIFF_COMPATIBILITY_FIELDS = (
+    "schema_version",
+    "projection_profile",
+    "implemented_axes",
+    "assurance_id",
+    "vendor_id",
+    "advisory_boundary",
+)
 
 
 class AssuranceIntelligenceError(Exception):
@@ -87,6 +120,85 @@ def validate_intelligence_output(projection: Mapping[str, Any]) -> None:
         instance_path=validation_instance_path(error),
         message=f"Assurance intelligence projection is invalid: {error.message}",
     )
+
+
+def validate_intelligence_projection_for_diff(
+    projection: Mapping[str, Any],
+    *,
+    field_name: str,
+) -> None:
+    validator = build_openva_validator(INTELLIGENCE_PROJECTION_SCHEMA_PATH)
+    errors = sorted(validator.iter_errors(json_material(projection)), key=lambda error: list(error.path))
+    if not errors:
+        return
+    error = errors[0]
+    raise AssuranceIntelligenceError(
+        code=ASSURANCE_INTELLIGENCE_DIFF_INPUT_INVALID,
+        instance_path=f"/{field_name}{validation_instance_path(error)}",
+        message=f"{field_name} intelligence projection is invalid: {error.message}",
+    )
+
+
+def validate_intelligence_diff_compatibility(
+    previous_projection: Mapping[str, Any],
+    new_projection: Mapping[str, Any],
+) -> None:
+    for field_name in DIFF_COMPATIBILITY_FIELDS:
+        if previous_projection.get(field_name) == new_projection.get(field_name):
+            continue
+        raise AssuranceIntelligenceError(
+            code=ASSURANCE_INTELLIGENCE_DIFF_INCOMPATIBLE,
+            instance_path=f"/{field_name}",
+            message=f"Intelligence projection field {field_name!r} is incompatible.",
+            related_ids=(str(previous_projection.get(field_name)), str(new_projection.get(field_name))),
+        )
+
+
+def validate_intelligence_forward_order(
+    previous_projection: Mapping[str, Any],
+    new_projection: Mapping[str, Any],
+) -> None:
+    for field_name in ("effective_at", "knowledge_cutoff"):
+        previous_value = normalize_aware_datetime(
+            require_string(previous_projection, field_name),
+            field_name=field_name,
+        )
+        new_value = normalize_aware_datetime(
+            require_string(new_projection, field_name),
+            field_name=field_name,
+        )
+        if new_value >= previous_value:
+            continue
+        raise AssuranceIntelligenceError(
+            code=ASSURANCE_INTELLIGENCE_DIFF_NON_MONOTONIC,
+            instance_path=f"/{field_name}",
+            message=f"New intelligence projection {field_name} must be greater than or equal to the previous value.",
+        )
+
+
+def validate_intelligence_diff_inputs(
+    previous_projection: Mapping[str, Any] | None,
+    new_projection: Mapping[str, Any],
+    detected_at: datetime | str,
+) -> datetime:
+    validate_intelligence_projection_for_diff(new_projection, field_name="new_projection")
+    if previous_projection is not None:
+        validate_intelligence_projection_for_diff(previous_projection, field_name="previous_projection")
+        validate_intelligence_diff_compatibility(previous_projection, new_projection)
+        validate_intelligence_forward_order(previous_projection, new_projection)
+
+    detected_at_utc = normalize_aware_datetime(detected_at, field_name="detected_at")
+    knowledge_cutoff = normalize_aware_datetime(
+        require_string(new_projection, "knowledge_cutoff"),
+        field_name="knowledge_cutoff",
+    )
+    if detected_at_utc < knowledge_cutoff:
+        raise AssuranceProjectionError(
+            code=ASSURANCE_CHANGE_EVENT_TIME_INVALID,
+            instance_path="/detected_at",
+            message="detected_at must be greater than or equal to the new projection knowledge_cutoff.",
+        )
+    return detected_at_utc
 
 
 def verify_policy_identity(
@@ -255,6 +367,132 @@ def earliest_reevaluation(*boundaries: str | None) -> str | None:
     if not non_null:
         return None
     return format_utc_datetime(min(non_null))
+
+
+def intelligence_event_policy_ref(
+    projection: Mapping[str, Any],
+    *,
+    axis_name: str,
+) -> dict[str, str]:
+    policies = projection.get("policies")
+    if not isinstance(policies, Mapping):
+        raise AssuranceIntelligenceError(
+            code=ASSURANCE_INTELLIGENCE_DIFF_INPUT_INVALID,
+            instance_path="/policies",
+            message="Intelligence projection policies must be an object.",
+        )
+    policy_name = POLICY_BY_INTELLIGENCE_AXIS[axis_name]
+    policy = policies.get(policy_name)
+    if not isinstance(policy, Mapping):
+        raise AssuranceIntelligenceError(
+            code=ASSURANCE_INTELLIGENCE_DIFF_INPUT_INVALID,
+            instance_path=f"/policies/{policy_name}",
+            message=f"Intelligence projection policy {policy_name!r} must be an object.",
+        )
+    return {
+        "id": require_string(policy, "id"),
+        "version": require_string(policy, "version"),
+    }
+
+
+def intelligence_event_identity_manifest(
+    event: Mapping[str, Any],
+    *,
+    new_projection: Mapping[str, Any],
+    axis_name: str,
+) -> dict[str, Any]:
+    policies = new_projection["policies"]
+    policy_name = POLICY_BY_INTELLIGENCE_AXIS[axis_name]
+    return {
+        "schema_version": event["schema_version"],
+        "projection_profile": new_projection["projection_profile"],
+        "axis": axis_name,
+        "assurance_id": event["assurance_id"],
+        "vendor_id": event["vendor_id"],
+        "change_type": event["change_type"],
+        "transition": json_material(event["transition"]),
+        "effective_at": event["effective_at"],
+        "knowledge_cutoff": event["knowledge_cutoff"],
+        "input_digest": event["input_digest"],
+        "policy": json_material(policies[policy_name]),
+        "advisory_boundary": event["advisory_boundary"],
+        "reason_code": event["reason_code"],
+        "caused_by": json_material(event["caused_by"]),
+    }
+
+
+def build_intelligence_change_event(
+    *,
+    axis_name: str,
+    previous_axis: Mapping[str, Any] | None,
+    new_axis: Mapping[str, Any],
+    new_projection: Mapping[str, Any],
+    detected_at: datetime,
+) -> dict[str, Any]:
+    from_value = None if previous_axis is None else axis_state_value(previous_axis, axis_name=axis_name)
+    to_value = axis_state_value(new_axis, axis_name=axis_name)
+    event = {
+        "schema_version": "0.1.0",
+        "change_event_id": "temporary-change-event-id",
+        "assurance_id": require_string(new_projection, "assurance_id"),
+        "vendor_id": require_string(new_projection, "vendor_id"),
+        "detected_at": format_utc_datetime(detected_at),
+        "effective_at": require_string(new_projection, "effective_at"),
+        "knowledge_cutoff": require_string(new_projection, "knowledge_cutoff"),
+        "input_digest": require_string(new_projection, "input_digest"),
+        "change_type": CHANGE_TYPE_BY_INTELLIGENCE_AXIS[axis_name],
+        "transition": {
+            "axis": axis_name,
+            "from": from_value,
+            "to": to_value,
+        },
+        "reason_code": singular_axis_reason(new_axis, axis_name=axis_name),
+        "caused_by": event_caused_by(new_axis, axis_name=axis_name),
+        "policy": intelligence_event_policy_ref(new_projection, axis_name=axis_name),
+        "advisory_boundary": require_string(new_projection, "advisory_boundary"),
+    }
+    manifest = intelligence_event_identity_manifest(
+        event,
+        new_projection=new_projection,
+        axis_name=axis_name,
+    )
+    event["change_event_id"] = change_event_id_for_manifest(manifest)
+    return event
+
+
+def diff_assurance_intelligence_projections(
+    previous_projection: Mapping[str, Any] | None,
+    new_projection: Mapping[str, Any],
+    detected_at: datetime | str,
+) -> tuple[Mapping[str, Any], ...]:
+    detected_at_utc = validate_intelligence_diff_inputs(previous_projection, new_projection, detected_at)
+    events: list[dict[str, Any]] = []
+    for axis_name in INTELLIGENCE_AXES:
+        new_axis = projection_axis(new_projection, axis_name)
+        previous_axis = None if previous_projection is None else projection_axis(previous_projection, axis_name)
+        if previous_axis is not None and axis_state_value(previous_axis, axis_name=axis_name) == axis_state_value(
+            new_axis,
+            axis_name=axis_name,
+        ):
+            continue
+        events.append(
+            build_intelligence_change_event(
+                axis_name=axis_name,
+                previous_axis=previous_axis,
+                new_axis=new_axis,
+                new_projection=new_projection,
+                detected_at=detected_at_utc,
+            )
+        )
+
+    for event in events:
+        try:
+            validate_change_event_output(event)
+        except AssuranceProjectionError as exc:
+            if exc.code == ASSURANCE_CHANGE_EVENT_REASON_AMBIGUOUS:
+                raise
+            raise
+    return tuple(events)
 
 
 def lifecycle_request_from_intelligence(
