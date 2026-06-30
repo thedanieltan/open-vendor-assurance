@@ -29,6 +29,8 @@ ASSURANCE_SCHEMA_PATHS: tuple[Path, ...] = (
     ROOT / "schemas/openva/assurance-verification-freshness-policy.schema.json",
     ROOT / "schemas/openva/assurance-evidence-set.schema.json",
     ROOT / "schemas/openva/assurance-evidence-set-policy.schema.json",
+    ROOT / "schemas/openva/assurance-intelligence-request.schema.json",
+    ROOT / "schemas/openva/assurance-intelligence-projection.schema.json",
 )
 
 
