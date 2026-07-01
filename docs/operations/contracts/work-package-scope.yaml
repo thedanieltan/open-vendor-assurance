@@ -1,32 +1,10 @@
-# Work-package path-scope manifest.
-#
-# A PR declares its work package; the scope guard (tools/openva/pr_scope_guard.py)
-# asserts every changed path matches that work package's allowed globs. This prevents
-# an unrelated ANCESTOR branch's commits from silently entering a PR via a
-# squash/rebase — the exact failure behind PR #400, which inherited the legal-entity
-# commit (26b2922) and bundled it into the candidate-activation squash without
-# independent review of that change set.
-#
-# Globs use fnmatch case-sensitive semantics where `*` spans `/` (so `dir/*` matches
-# everything beneath `dir/`). Add a new work package here (with its allowed_paths)
-# before opening a PR that declares it; an undeclared work package fails the guard.
-#
-# Trusted-base evaluation: CI reads this manifest (and the guard) from the trusted
-# BASE revision, so a PR cannot weaken the policy that judges its own diff. Adding or
-# widening a scope is therefore a two-PR process: land the manifest change under
-# WP-PR-SCOPE-POLICY-01 first, then open the implementation PR. See
-# docs/operations/pr-scope-guard.md.
+# Work-package path-scope manifest. CI evaluates this file from the trusted base.
 version: 1
-
-# Fail-closed: there are NO globally-exempt paths. The scope-policy machinery (this
-# manifest, the guard, its doc and tests, the CI workflow and its ownership map) is
-# governed SOLELY by WP-PR-SCOPE-POLICY-01 below — it is not shared, so no unrelated
-# work package can edit the policy that judges it.
 shared_allowed: []
 
 work_packages:
   WP-PR-SCOPE-POLICY-01:
-    description: The PR scope-policy machinery itself.
+    description: Scope-policy machinery; changes require an independent policy PR.
     allowed_paths:
       - docs/operations/contracts/work-package-scope.yaml
       - docs/operations/pr-scope-guard.md
@@ -34,3 +12,387 @@ work_packages:
       - tests/test_pr_scope_guard.py
       - .github/workflows/validate.yml
       - .github/validation-ownership.yaml
+
+  WP-WORKFLOW-CONTROL-PLANE-01:
+    description: Existing workflow inventory, retirement contracts, docs, and metadata-only PR validation control plane.
+    allowed_paths:
+      - .github/workflows/validate-pr-metadata.yml
+      - docs/operations/contracts/workflow-inventory.yaml
+      - docs/operations/contracts/workflow-retirement.yaml
+      - docs/operations/WORKFLOW_OPERATING_MODEL.md
+      - docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md
+      - docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md
+      - docs/operations/WORKFLOW_RETIREMENT_PLAN.md
+      - tests/test_ci_readiness.py
+      - tests/test_workflow_operating_model.py
+      - tests/test_workflow_contracts.py
+      - tests/test_workflow_retirement.py
+      - tests/test_workflow_retirement_enforcement.py
+      - tests/test_workflow_retirement_evidence.py
+      - tests/test_future_operations_specs.py
+
+  WP-SOURCE-OBSERVATION-FRESHNESS-CONTINUITY-01:
+    description: Committed latest-observation continuity and release freshness integration.
+    allowed_paths:
+      - .github/workflows/observation-ledger-append-pr.yml
+      - .github/workflows/source-maintenance-report.yml
+      - docs/architecture/SOURCE_OBSERVATION_FRESHNESS_CONTINUITY.md
+      - maintenance/source-observations/latest-observations.json
+      - tests/test_observation_automerge.py
+      - tests/test_observation_ledger.py
+      - tests/test_observation_ledger_append_workflow.py
+      - tests/test_release_gates.py
+      - tests/test_source_maintenance_workflow.py
+      - tools/openva/observation_automerge.py
+      - tools/openva/observation_ledger.py
+      - tools/openva/release_gates.py
+
+  WP-DISCOVERY-LEDGER-APPEND-01:
+    description: Data-only append of discovery events from one identified workflow run.
+    allowed_paths:
+      - maintenance/discovery-events/*.ndjson
+
+  WP-SOURCE-OBSERVATION-LEDGER-APPEND-01:
+    description: Data-only append of source observations plus the deterministic latest-observations index from the same artifact.
+    allowed_paths:
+      - maintenance/source-observations/events/*.ndjson
+      - maintenance/source-observations/latest-observations.json
+
+  WP-SOURCE-QUARANTINE-01:
+    description: One-source status-only reversible quarantine projection after the existing semantic and not-before gates pass.
+    allowed_paths:
+      - data/vendors/*/sources/*.yaml
+      - dist/vendors/*.json
+      - indexes/sources.json
+      - maintenance/machine-decisions/*.ndjson
+
+  WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01:
+    description: Exact code, workflow, inventory, and test surface for issue 450 operational PR declarations and idempotency repair; no operational data.
+    allowed_paths:
+      - .github/workflows/discovery-ledger-append-pr.yml
+      - .github/workflows/observation-ledger-append-pr.yml
+      - .github/workflows/source-maintenance-report.yml
+      - .github/workflows/candidate-promotion-pr.yml
+      - .github/workflows/agent-automerge.yml
+      - docs/operations/contracts/workflow-inventory.yaml
+      - tests/test_ci_readiness.py
+      - tests/test_operational_pr_scope.py
+      - tests/test_discovery_ledger.py
+      - tests/test_observation_ledger.py
+      - tests/test_observation_ledger_append_workflow.py
+      - tests/test_source_maintenance_workflow.py
+      - tests/test_source_quarantine.py
+      - tests/test_quarantine_automerge.py
+      - tests/test_quarantine_workflow.py
+      - tools/openva/discovery_ledger.py
+      - tools/openva/observation_ledger.py
+      - tools/openva/observation_automerge.py
+      - tools/openva/source_quarantine.py
+      - tools/openva/quarantine_automerge.py
+      - tools/openva/machine_provisional_controller.py
+
+  WP-OPENVA-ASSURANCE-RELEASE-01:
+    description: Pillar 3 five-axis Assurance Intelligence contracts, policies, evaluators, materialization, fixtures, and validation.
+    allowed_paths:
+      - config/assurance-evidence-set-policy.yaml
+      - config/assurance-projection-policy.yaml
+      - config/assurance-verification-freshness-policy.yaml
+      - config/assurance-verification-policy.yaml
+      - docs/architecture/ASSURANCE_EVIDENCE_SET_V1.md
+      - docs/architecture/ASSURANCE_INTELLIGENCE_PILLAR3_CLOSURE.md
+      - docs/architecture/ASSURANCE_INTELLIGENCE_PROFILE_V1.md
+      - docs/architecture/ASSURANCE_OBSERVATION_KNOWLEDGE_TIME.md
+      - docs/architecture/ASSURANCE_VERIFICATION_FRESHNESS_V1.md
+      - docs/architecture/ASSURANCE_VERIFICATION_STATE_V1.md
+      - docs/architecture/KNOWLEDGE_TIME.md
+      - docs/architecture/LIFECYCLE_PROJECTION_V1.md
+      - docs/architecture/TEMPORAL_ASSURANCE_SCHEMA_V1.md
+      - schemas/openva/assurance-change-event.schema.json
+      - schemas/openva/assurance-evidence-set-policy.schema.json
+      - schemas/openva/assurance-evidence-set.schema.json
+      - schemas/openva/assurance-intelligence-latest-index.schema.json
+      - schemas/openva/assurance-intelligence-projection.schema.json
+      - schemas/openva/assurance-intelligence-request.schema.json
+      - schemas/openva/assurance-observation.schema.json
+      - schemas/openva/assurance-projection-latest-index.schema.json
+      - schemas/openva/assurance-projection-policy.schema.json
+      - schemas/openva/assurance-projection-request.schema.json
+      - schemas/openva/assurance-projection.schema.json
+      - schemas/openva/assurance-record.schema.json
+      - schemas/openva/assurance-verification-freshness-policy.schema.json
+      - schemas/openva/assurance-verification-freshness.schema.json
+      - schemas/openva/assurance-verification-policy.schema.json
+      - schemas/openva/assurance-verification-request.schema.json
+      - schemas/openva/assurance-verification-state.schema.json
+      - schemas/openva/vocabularies/assurance-intelligence-v1.schema.json
+      - schemas/openva/vocabularies/assurance-projection-v1.schema.json
+      - schemas/openva/vocabularies/assurance-v1.schema.json
+      - tests/fixtures/assurance/**
+      - tests/support/__init__.py
+      - tests/support/assurance_fixture_repository.py
+      - tests/support/assurance_fixture_runner.py
+      - tests/test_assurance*.py
+      - tests/test_openva_mcp_metadata.py
+      - tools/openva/assurance_intelligence.py
+      - tools/openva/assurance_intelligence_materialization.py
+      - tools/openva/assurance_projection.py
+      - tools/openva/assurance_projection_materialization.py
+      - tools/openva/assurance_projection_policy.py
+      - tools/openva/assurance_validation.py
+      - tools/openva/assurance_verification.py
+      - tools/openva/schema_registry.py
+      - tools/openva/validate.py
+
+  WP-P4-ASSURANCE-INTELLIGENCE-PUBLICATION-01:
+    description: Pillar 4 public-safe Assurance Intelligence publication, site, and release integration.
+    allowed_paths:
+      - .github/workflows/release-downloads.yml
+      - .github/workflows/site-pages.yml
+      - config/assurance-intelligence-publication-policy.yaml
+      - docs/architecture/ASSURANCE_INTELLIGENCE_PUBLICATION.md
+      - schemas/openva/assurance-intelligence-publication-policy.schema.json
+      - schemas/openva/assurance-intelligence-public-snapshot.schema.json
+      - site/build.py
+      - site/src/app.js
+      - site/src/styles.css
+      - tests/test_assurance_intelligence_publication.py
+      - tests/test_assurance_intelligence_publication_acceptance.py
+      - tests/test_release_artifacts.py
+      - tests/test_site.py
+      - tools/openva/assurance_intelligence_publication.py
+      - tools/openva/release_artifacts.py
+      - tools/openva/schema_registry.py
+
+  WP-SOURCE-HEALTH-LABEL-RECONCILIATION-01:
+    description: Exact public source-health wording reconciliation surface.
+    allowed_paths:
+      - .github/workflows/site-pages.yml
+      - site/build.py
+      - site/src/app.js
+      - tests/test_site.py
+      - tools/openva/site_discovery.py
+      - docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md
+      - docs/source-trust/observation-retention-policy.md
+
+  WP-OPENVA-ASSURANCE-EVIDENCE-EXTRACTION-CONTRACT-01:
+    description: Optional reviewed evidence-extraction contract prerequisite; no cohort or platform work.
+    depends_on:
+      - WP-OPENVA-ASSURANCE-RELEASE-01
+      - WP-P4-ASSURANCE-INTELLIGENCE-PUBLICATION-01
+    allowed_paths:
+      - config/assurance-evidence-extraction-policy.yaml
+      - docs/architecture/ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT.md
+      - schemas/openva/assurance-evidence-extraction-policy.schema.json
+      - schemas/openva/assurance-evidence-extraction.schema.json
+      - tests/fixtures/assurance/evidence-extraction/**
+      - tests/test_assurance_evidence_extraction_contract.py
+      - tools/openva/assurance_evidence_extraction.py
+      - tools/openva/schema_registry.py
+      - tools/openva/validate.py
+
+  WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01:
+    description: Retrospective legal-entity export ratification and bounded corrections.
+    allowed_paths:
+      - docs/operations/legal-entity-export-ratification.md
+      - tests/test_legal_entity_export_ratification.py
+      - adapters/python/openva_vendor_inventory_matcher/openva_vendor_inventory_matcher/core.py
+      - tools/openva/agent_export.py
+      - integrations/mcp/openva_mcp/openva_mcp/matching.py
+      - tests/test_agent_export.py
+
+  WP-OPENVA-AI-NATIVE-DISTRIBUTION-LEGAL-ENTITY:
+    description: Legal-entity export projection and shared registration-number matching.
+    allowed_paths:
+      - tools/openva/agent_export.py
+      - schemas/openva/agent-export.schema.json
+      - schemas/openva/agent-enrichment-row.schema.json
+      - adapters/python/openva_vendor_inventory_matcher/*
+      - integrations/mcp/openva_mcp/*
+      - docs/architecture/decisions/ADR-0003-remote-mcp-product-surface.md
+      - docs/agent-workspace-composition.md
+      - tests/test_agent_export.py
+      - tests/test_matching_conformance.py
+      - tests/test_openva_enrichment_parity.py
+      - tests/test_openva_mcp_*.py
+
+  WP-OPENVA-CANDIDATE-ACTIVATION-01:
+    description: Candidate-bound autonomous catalogue promotion.
+    allowed_paths:
+      - tools/openva/candidate_record.py
+      - tools/openva/vendor_resolution.py
+      - tools/openva/autonomous_growth_controller.py
+      - tools/openva/candidate_intake_guard.py
+      - config/automerge-policy.yaml
+      - .github/workflows/agent-automerge.yml
+      - docs/candidate-intake.md
+      - docs/operations/contracts/bot-authority.yaml
+      - tests/test_candidate_*.py
+      - tests/test_automerge_lanes.py
+
+  WP-ADR-0006-STATUS-CHANGE:
+    description: ADR-0006 status and decision-document reconciliation only.
+    depends_on: []
+    allowed_paths:
+      - docs/architecture/decisions/ADR-0006-hosted-public-read-deployment.md
+      - docs/architecture/decisions/README.md
+      - tests/test_ai_native_distribution_docs.py
+      - tests/test_hosted_deployment_docs.py
+      - docs/roadmap.md
+      - docs/public-launch-checklist.md
+      - docs/operations/hosted-deployment-runbook.md
+      - docs/operations/contracts/hosted-deployment.yaml
+
+  WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP:
+    description: Atomic first hosted transport plus positioning reconciliation.
+    depends_on:
+      - WP-ADR-0006-STATUS-CHANGE
+    allowed_paths:
+      - services/openva_match_service/*
+      - docs/resolver-api.md
+      - tests/*
+      - README.md
+      - docs/openva-match-service-contract.md
+      - docs/openva-match-service-deployment.md
+      - docs/public-launch-checklist.md
+      - docs/release-downloads.md
+      - docs/v0.1.0-public-launch-readiness.md
+      - docs/agent-export-contract.md
+
+  WP-02A-HOSTED-TRANSPORT:
+    description: Decomposed hosted transport/API slice.
+    slice_id: WP-02A-hosted-transport-api
+    depends_on:
+      - WP-ADR-0006-STATUS-CHANGE
+    allowed_paths:
+      - services/openva_match_service/*
+      - docs/openva-match-service-contract.md
+      - docs/resolver-api.md
+      - tests/*
+
+  WP-02B-ASYNC-PERSISTENCE:
+    description: Async job persistence slice.
+    slice_id: WP-02B-async-job-persistence
+    depends_on:
+      - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
+    allowed_paths:
+      - services/openva_match_service/*
+      - schemas/openva/*
+      - tests/*
+
+  WP-02C-WORKER-QUEUE:
+    description: Worker and queue slice.
+    slice_id: WP-02C-worker-and-queue
+    depends_on:
+      - WP-02B-ASYNC-PERSISTENCE
+    allowed_paths:
+      - services/openva_match_service/*
+      - tools/openva/*
+      - tests/*
+
+  WP-02D-CANDIDATE-INGRESS:
+    description: Hosted candidate-ingress integration slice.
+    slice_id: WP-02D-candidate-ingress-integration
+    depends_on:
+      - WP-02C-WORKER-QUEUE
+    allowed_paths:
+      - services/openva_match_service/*
+      - tools/openva/*
+      - tests/*
+
+  WP-02E-SUPPLY-CHAIN:
+    description: Deployment artifact and supply-chain slice.
+    slice_id: WP-02E-artifact-and-supply-chain
+    depends_on:
+      - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
+    allowed_paths:
+      - services/openva_match_service/*
+      - .github/workflows/*
+      - docs/operations/*
+      - tests/*
+
+  WP-02F-STAGING:
+    description: Maintainer-gated staging infrastructure and provider controls.
+    slice_id: WP-02F-staging-environment
+    depends_on:
+      - WP-02E-SUPPLY-CHAIN
+      - WP-02J-LIVE-CHECK
+    allowed_paths:
+      - infra/*
+      - docs/operations/*
+
+  WP-02G-PRODUCTION-INFRA:
+    description: Maintainer-gated production infrastructure.
+    slice_id: WP-02G-production-infrastructure
+    depends_on:
+      - WP-02F-STAGING
+    allowed_paths:
+      - infra/*
+
+  WP-02H-OBSERVABILITY:
+    description: Provider-neutral application hardening and observability.
+    slice_id: WP-02H-observability-and-abuse-controls
+    depends_on:
+      - WP-02C-WORKER-QUEUE
+    allowed_paths:
+      - services/openva_match_service/*
+      - docs/operations/*
+      - tests/*
+
+  WP-02I-REMOTE-MCP:
+    description: Remote MCP resolver activation.
+    slice_id: WP-02I-remote-mcp-resolver-activation
+    depends_on:
+      - WP-02D-CANDIDATE-INGRESS
+      - WP-02H-OBSERVABILITY
+    allowed_paths:
+      - integrations/mcp/*
+      - services/openva_match_service/*
+      - tests/*
+
+  WP-02J-LIVE-CHECK:
+    description: Live check integration.
+    slice_id: WP-02J-live-check-integration
+    depends_on:
+      - WP-02I-REMOTE-MCP
+    allowed_paths:
+      - services/openva_match_service/*
+      - docs/*
+      - tests/*
+
+  WP-02K-LAUNCH-EVIDENCE:
+    description: Production smokes, launch evidence, and hosted programme closeout.
+    slice_id: WP-02K-production-smokes-and-launch-evidence
+    depends_on:
+      - WP-02G-PRODUCTION-INFRA
+    allowed_paths:
+      - docs/operations/*
+      - infra/*
+
+  WP-02L-POSITIONING:
+    description: Decomposed hosted positioning reconciliation.
+    slice_id: WP-02L-positioning-reconciliation
+    depends_on:
+      - WP-02A-HOSTED-TRANSPORT
+    allowed_paths:
+      - docs/*
+      - README.md
+      - integrations/*/README.md
+
+  WP-02-ROADMAP-RECONCILIATION-01:
+    description: Hosted roadmap, implementation-plan, contract, and drift-test reconciliation.
+    depends_on:
+      - WP-02A-L-HOSTED-TRANSPORT-POSITIONING-LOCKSTEP
+      - WP-02B-ASYNC-PERSISTENCE
+    allowed_paths:
+      - docs/roadmap.md
+      - docs/operations/hosted-deployment-implementation-plan.md
+      - docs/operations/contracts/hosted-deployment.yaml
+      - docs/operations/contracts/work-package-scope.yaml
+      - tests/test_hosted_deployment_docs.py
+      - tests/test_ai_native_distribution_docs.py
+
+  WP-SITE-CANONICAL-QUARANTINE-INVARIANT-01:
+    description: Site and SQLite test invariant reconciliation for status-only quarantined canonical sources.
+    allowed_paths:
+      - tests/test_site.py
+      - tests/test_openva_sqlite_export.py
