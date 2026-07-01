@@ -28,6 +28,7 @@ from tools.openva.pack import canonical_json, sha256_bytes
 from tools.openva.publication import PublicationConfig
 
 DISCOVERY_SCHEMA_VERSION = "1.0.0"
+MISSING_SOURCE_HEALTH_LABEL = "No source-health observation"
 
 PUBLIC_SOURCE_BOUNDARY = (
     "Only public, vendor-published sources are recorded. Gated, authenticated, "
@@ -173,7 +174,7 @@ def render_vendor_page(
                 "<tr>"
                 f"<td>{_esc(source.get('source_type'))}</td>"
                 f"<td class=\"url\"><a href=\"{_esc(source.get('source_url'))}\" rel=\"nofollow noopener\">{_esc(source.get('source_url'))}</a></td>"
-                f"<td>{_esc(health) if health else '<span class=\"muted\">Not yet verified</span>'}</td>"
+                f"<td>{_esc(health) if health else f'<span class=\"muted\">{MISSING_SOURCE_HEALTH_LABEL}</span>'}</td>"
                 f"<td>{_esc(observed) if observed else '<span class=\"muted\">—</span>'}</td>"
                 "</tr>"
             )

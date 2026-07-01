@@ -42,19 +42,19 @@ jobs:
             --json databaseId \
             --jq '.[0].databaseId // ""')"
           if [ -z "$RUN_ID" ]; then
-            echo "::warning::source health snapshot unavailable: no successful source-maintenance-report run was found. Site will show Not yet verified labels."
+            echo "::warning::source health snapshot unavailable: no successful source-maintenance-report run was found. Site will show No source-health observation labels."
             exit 0
           fi
           if ! gh run download "$RUN_ID" \
             --name openva-source-maintenance-report \
             --dir source-health-artifacts; then
-            echo "::warning::source health snapshot unavailable: could not download openva-source-maintenance-report from run $RUN_ID. Site will show Not yet verified labels."
+            echo "::warning::source health snapshot unavailable: could not download openva-source-maintenance-report from run $RUN_ID. Site will show No source-health observation labels."
             exit 0
           fi
           if [ -f source-health-artifacts/public/source-health-snapshot.json ]; then
             cp source-health-artifacts/public/source-health-snapshot.json public/source-health-snapshot.json
           else
-            echo "::warning::source health snapshot unavailable: public/source-health-snapshot.json was not present in run $RUN_ID. Site will show Not yet verified labels."
+            echo "::warning::source health snapshot unavailable: public/source-health-snapshot.json was not present in run $RUN_ID. Site will show No source-health observation labels."
           fi
       - name: Download latest catalog confidence reports
         env:

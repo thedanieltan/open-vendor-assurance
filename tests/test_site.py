@@ -294,13 +294,13 @@ def test_source_health_snapshot_joins_to_source_rows_by_identity(tmp_path):
     row = shard_source(shard, source["source_id"], source["source_url"])
 
     assert row["source_health"]["status_bucket"] == "healthy"
-    assert row["source_health"]["label"] == "Verified"
+    assert row["source_health"]["label"] == "Reachable at last check"
     assert row["source_health"]["status"] == "redirected"
     assert row["source_health"]["verified_at"] == "2026-05-24T12:00:00Z"
     assert row["source_health"]["final_url"] == final_url
 
 
-def test_source_with_no_health_row_shows_not_yet_verified(tmp_path):
+def test_source_with_no_health_row_shows_no_source_health_observation(tmp_path):
     matched, missing = source_rows(2)
     snapshot = write_source_health_snapshot(
         tmp_path / "source-health-snapshot.json",
@@ -311,7 +311,7 @@ def test_source_with_no_health_row_shows_not_yet_verified(tmp_path):
     row = shard_source(vendor_shard(out, missing["vendor_id"]), missing["source_id"], missing["source_url"])
 
     assert row["source_health"]["status_bucket"] == "missing"
-    assert row["source_health"]["label"] == "Not yet verified"
+    assert row["source_health"]["label"] == "No source-health observation"
     assert row["source_health"]["status"] is None
     assert row["source_health"]["verified_at"] is None
 
@@ -328,7 +328,7 @@ def test_unavailable_source_remains_visible_and_labelled_unavailable(tmp_path):
 
     assert row["source_url"] == source["source_url"]
     assert row["source_health"]["status_bucket"] == "unavailable"
-    assert row["source_health"]["label"] == "Unavailable"
+    assert row["source_health"]["label"] == "Unavailable at last check"
     assert row["source_health"]["status"] == "gone"
 
 
@@ -346,10 +346,10 @@ def test_warning_and_ambiguous_source_health_labels_are_factual(tmp_path):
     warning_row = shard_source(vendor_shard(out, warning["vendor_id"]), warning["source_id"], warning["source_url"])
     ambiguous_row = shard_source(vendor_shard(out, ambiguous["vendor_id"]), ambiguous["source_id"], ambiguous["source_url"])
 
-    assert warning_row["source_health"]["label"] == "Needs review"
-    assert warning_row["source_health"]["description"] == "Needs review based on the latest maintenance snapshot."
-    assert ambiguous_row["source_health"]["label"] == "Access ambiguous"
-    assert ambiguous_row["source_health"]["description"] == "Access ambiguous in the latest maintenance snapshot."
+    assert warning_row["source_health"]["label"] == "Retrieval requires review"
+    assert warning_row["source_health"]["description"] == "Retrieval requires review based on the latest maintenance snapshot."
+    assert ambiguous_row["source_health"]["label"] == "Access result ambiguous"
+    assert ambiguous_row["source_health"]["description"] == "Access result ambiguous in the latest maintenance snapshot."
 
 
 def test_site_build_works_when_source_health_snapshot_is_absent(tmp_path):
@@ -358,10 +358,37 @@ def test_site_build_works_when_source_health_snapshot_is_absent(tmp_path):
     source = source_rows(1)[0]
     row = shard_source(vendor_shard(out, source["vendor_id"]), source["source_id"], source["source_url"])
 
-    assert row["source_health"]["label"] == "Not yet verified"
+    assert row["source_health"]["label"] == "No source-health observation"
     fallback = json.loads((out / "data" / "source-health-snapshot.json").read_text(encoding="utf-8"))
     assert fallback["snapshot_type"] == "missing"
     assert fallback["metadata"]["missing_snapshot"] is True
+
+
+def test_static_vendor_pages_use_reachability_wording_for_healthy_source_health(tmp_path):
+    source = source_rows(1)[0]
+    snapshot = write_source_health_snapshot(
+        tmp_path / "source-health-snapshot.json",
+        [health_row(source, "ok", "healthy")],
+    )
+
+    out = build_site(tmp_path, snapshot)
+    page = (out / "vendors" / source["vendor_id"] / "index.html").read_text(encoding="utf-8")
+
+    assert "Reachable at last check" in page
+    assert "Not yet verified" not in page
+    assert "Verified" not in page
+
+
+def test_static_vendor_pages_use_neutral_wording_for_missing_source_health(tmp_path):
+    source = source_rows(1)[0]
+    snapshot = write_source_health_snapshot(tmp_path / "source-health-snapshot.json", [])
+
+    out = build_site(tmp_path, snapshot)
+    page = (out / "vendors" / source["vendor_id"] / "index.html").read_text(encoding="utf-8")
+
+    assert "No source-health observation" in page
+    assert "Not yet verified" not in page
+    assert "Verified" not in page
 
 
 def test_frontend_uses_compiled_outputs_and_on_demand_vendor_shards():
@@ -507,11 +534,15 @@ def test_source_health_display_uses_non_advisory_labels_and_conditional_final_ur
     app = (SITE / "src" / "app.js").read_text(encoding="utf-8")
 
     for phrase in [
-        'healthy: "Verified"',
-        'warning: "Needs review"',
-        'unavailable: "Unavailable"',
-        'ambiguous: "Access ambiguous"',
-        'missing: "Not yet verified"',
+        'healthy: "Reachable at last check"',
+        'warning: "Retrieval requires review"',
+        'unavailable: "Unavailable at last check"',
+        'ambiguous: "Access result ambiguous"',
+        'missing: "No source-health observation"',
+        "Bucket counts: reachable at last check",
+        "/ retrieval requires review",
+        "/ unavailable at last check",
+        "/ access result ambiguous",
         "Source health is based on the latest maintenance snapshot and may change.",
         "health.final_url && health.final_url !== source.source_url",
         "last checked",

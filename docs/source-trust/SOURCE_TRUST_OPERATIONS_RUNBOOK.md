@@ -203,11 +203,15 @@ If the coverage-audit artifact is unavailable, the site still builds and falls b
 
 Site labels are snapshot based:
 
-- `healthy`: Verified
-- `warning`: Needs review
-- `unavailable`: Unavailable
-- `ambiguous`: Access ambiguous
-- Missing health row: Not yet verified
+- `healthy`: Reachable at last check
+- `warning`: Retrieval requires review
+- `unavailable`: Unavailable at last check
+- `ambiguous`: Access result ambiguous
+- Missing health row: No source-health observation
+
+These public labels describe retrieval/access observations only. They preserve
+the underlying machine vocabulary and do not state that a source, vendor, or
+assurance is verified.
 
 Source health is a maintenance snapshot and may change. It does not imply catalog completeness, legal approval, compliance, procurement fitness, security assurance, or vendor-risk suitability.
 
