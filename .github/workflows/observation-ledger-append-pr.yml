@@ -11,7 +11,8 @@ name: observation-ledger-append-pr
 #
 # Authority: lane `observation_ledger_append` (docs/operations/contracts/
 # bot-authority.yaml) — may open PRs and apply ONLY the two observation labels;
-# writes only maintenance/source-observations/events/**; no catalog truth.
+# writes only maintenance/source-observations/events/** plus the deterministic
+# latest-observations index; no catalog truth.
 
 on:
   workflow_run:
@@ -35,7 +36,6 @@ concurrency:
 
 jobs:
   observation-ledger-append:
-    # Only proceed for a successful upstream run, or an explicit manual dispatch.
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -86,6 +86,13 @@ jobs:
           NEW=$(python -c "import json;print(json.load(open(r'$RUNNER_TEMP/plan-summary.json'))['new_row_count'])")
           echo "new_row_count=$NEW" >> "$GITHUB_OUTPUT"
 
+      - name: Reject a stale latest-observations artifact
+        run: |
+          set -euo pipefail
+          python -m tools.openva.observation_automerge check-latest \
+            --candidate "$RUNNER_TEMP/smr/observation-ledger/latest-observations.json" \
+            --committed maintenance/source-observations/latest-observations.json
+
       - name: Exit without PR when there are no new rows
         if: steps.plan.outputs.new_row_count == '0'
         run: echo "No new observation events to append; latest index may still update."
@@ -126,11 +133,6 @@ jobs:
       - name: Open or update the append PR
         if: steps.diff.outputs.has_changes == 'true'
         env:
-          # A PR opened with the default GITHUB_TOKEN does not trigger
-          # downstream workflows, so the automerge lane never
-          # runs. Use a workflow-triggering token when available (a GitHub App
-          # installation token or PAT in OPENVA_AUTOMERGE_TOKEN); fall back to
-          # github.token, which keeps current behaviour until the secret is set.
           GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
           RUN_ID: ${{ steps.resolve.outputs.run_id }}
         run: |
@@ -144,6 +146,8 @@ jobs:
           months = ", ".join(summary.get("affected_months", [])) or "(none)"
           by_type = summary.get("by_event_type", {})
           lines = [
+              "Work-Package: WP-SOURCE-OBSERVATION-LEDGER-APPEND-01",
+              "",
               "## Observation ledger append (autonomous)",
               "",
               "Append-only operational observation events appended to the committed ledger.",
