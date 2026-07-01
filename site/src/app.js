@@ -12,11 +12,11 @@ let localMatchRows = [];
 
 const CORE_COVERAGE = ["dpa", "privacy_notice", "security_page", "subprocessors_list", "trust_center"];
 const SOURCE_HEALTH_LABELS = {
-  healthy: "Verified",
-  warning: "Needs review",
-  unavailable: "Unavailable",
-  ambiguous: "Access ambiguous",
-  missing: "Not yet verified",
+  healthy: "Reachable at last check",
+  warning: "Retrieval requires review",
+  unavailable: "Unavailable at last check",
+  ambiguous: "Access result ambiguous",
+  missing: "No source-health observation",
 };
 const CONFIDENCE_NOTICE = "Catalog confidence labels are metadata about OpenVA review coverage, not advice.";
 const ASSURANCE_INTELLIGENCE_NOTICE = "Verification is based on admitted assurance observations. Freshness describes the age of the decisive verification basis. Evidence-set state describes completeness and internal coherence. Source reachability is separate from assurance verification.";
@@ -97,7 +97,7 @@ function sourceHealthDisclosure() {
     Generated at: ${html(snapshot.generated_at || "Unavailable")}<br>
     Snapshot type: ${html(snapshot.snapshot_type || "missing")}<br>
     Source: ${html(snapshot.source || "latest-source-health")}<br>
-    Bucket counts: verified ${html(counts.healthy || 0)} / needs review ${html(counts.warning || 0)} / unavailable ${html(counts.unavailable || 0)} / access ambiguous ${html(counts.ambiguous || 0)}
+    Bucket counts: reachable at last check ${html(counts.healthy || 0)} / retrieval requires review ${html(counts.warning || 0)} / unavailable at last check ${html(counts.unavailable || 0)} / access result ambiguous ${html(counts.ambiguous || 0)}
   `;
 }
 
@@ -167,7 +167,7 @@ function renderSnapshotDisclosures() {
 function renderHome() {
   const meta = catalogData.meta;
   const feedTimestamp = feedData.generated_at || "No live observation events are available yet";
-  const healthGeneratedAt = sourceHealthData && sourceHealthData.generated_at ? sourceHealthData.generated_at : "Not yet verified";
+  const healthGeneratedAt = sourceHealthData && sourceHealthData.generated_at ? sourceHealthData.generated_at : "No health snapshot";
   document.getElementById("home-stats").innerHTML = [
     ["Reviewed vendors", meta.vendor_count],
     ["Reviewed source records", meta.source_count],
@@ -350,7 +350,7 @@ async function matchInventoryRow(row, indexes) {
   } else if (buckets.length && buckets.every((bucket) => bucket === "healthy")) {
     resultState = "catalog_current";
   } else {
-    // Health not yet verified in the snapshot: cached mode cannot claim current.
+    // No source-health observation in the snapshot: cached mode cannot claim current.
     resultState = "verification_inconclusive";
   }
   return {
@@ -618,7 +618,7 @@ function sourceTemplate(source) {
   return `
     <li>
       <span class="source-health source-health--${html(bucket)}">${html(label)}</span>
-      status: ${html(health.status || "Not yet verified")} Â· last checked: ${html(health.verified_at || "Not yet verified")} Â· ${html(health.snapshot_notice || "Source health is based on the latest maintenance snapshot and may change.")}${finalUrl}<br>
+      status: ${html(health.status || "No source-health observation")} | last checked: ${html(health.verified_at || "No source-health observation")} | ${html(health.snapshot_notice || "Source health is based on the latest maintenance snapshot and may change.")}${finalUrl}<br>
       <label><input type="checkbox" data-select-source="${html(source.source_id)}" ${selectedSources.has(source.source_id) ? "checked" : ""}> Select source</label>
       <strong>${html(source.source_type)}</strong> · <a href="${html(source.source_url)}" target="_blank" rel="noreferrer">${html(source.title)}</a><br>
       language: ${html(source.source_language)} · authority: ${html(source.source_authority_class)} · access: ${html(source.access_class)} · rights: ${html(source.rights_class)}<br>

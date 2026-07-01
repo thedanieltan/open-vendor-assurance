@@ -27,18 +27,18 @@ SOURCE_HEALTH_BUCKET_COUNTS = {
     "ambiguous": 0,
 }
 SOURCE_HEALTH_LABELS = {
-    "healthy": "Verified",
-    "warning": "Needs review",
-    "unavailable": "Unavailable",
-    "ambiguous": "Access ambiguous",
-    "missing": "Not yet verified",
+    "healthy": "Reachable at last check",
+    "warning": "Retrieval requires review",
+    "unavailable": "Unavailable at last check",
+    "ambiguous": "Access result ambiguous",
+    "missing": "No source-health observation",
 }
 SOURCE_HEALTH_DESCRIPTIONS = {
-    "healthy": "Verified reachable in the latest maintenance snapshot.",
-    "warning": "Needs review based on the latest maintenance snapshot.",
+    "healthy": "Reachable in the latest maintenance snapshot.",
+    "warning": "Retrieval requires review based on the latest maintenance snapshot.",
     "unavailable": "Unavailable in the latest maintenance snapshot.",
-    "ambiguous": "Access ambiguous in the latest maintenance snapshot.",
-    "missing": "No source health row is available in the latest maintenance snapshot.",
+    "ambiguous": "Access result ambiguous in the latest maintenance snapshot.",
+    "missing": "No source-health observation is available in the latest maintenance snapshot.",
 }
 SOURCE_HEALTH_NOTICE = "Source health is based on the latest maintenance snapshot and may change."
 CONFIDENCE_NOTICE = "Catalog confidence labels are metadata about OpenVA review coverage, not advice."
@@ -106,14 +106,14 @@ def empty_source_health_snapshot() -> dict[str, Any]:
 
 def load_source_health_snapshot(path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT) -> dict[str, Any]:
     if not path.exists():
-        print(f"Warning: source health snapshot not found at {path}; site will show Not yet verified labels.")
+        print(f"Warning: source health snapshot not found at {path}; site will show No source-health observation labels.")
         return empty_source_health_snapshot()
     snapshot = load_json(path)
     if not isinstance(snapshot, dict) or snapshot.get("report_type") != "source_health_public_snapshot":
-        print(f"Warning: invalid source health snapshot at {path}; site will show Not yet verified labels.")
+        print(f"Warning: invalid source health snapshot at {path}; site will show No source-health observation labels.")
         return empty_source_health_snapshot()
     if not isinstance(snapshot.get("health"), list):
-        print(f"Warning: source health snapshot at {path} has no health list; site will show Not yet verified labels.")
+        print(f"Warning: source health snapshot at {path} has no health list; site will show No source-health observation labels.")
         return empty_source_health_snapshot()
     return snapshot
 

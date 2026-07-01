@@ -49,7 +49,7 @@ The approved strategy is:
 - `latest-source-health.json` is regenerated from the latest source observation ledger artifact.
 - `public/source-health-snapshot.json` is regenerated from `latest-source-health.json`.
 - The site consumes the latest available public source-health snapshot artifact.
-- The site falls back to `Not yet verified` labels when no snapshot artifact is available.
+- The site falls back to `No source-health observation` labels when no snapshot artifact is available.
 - Release readiness consumes source-health artifacts rather than running full-catalog live verification inside the release workflow.
 
 ## Future Options
