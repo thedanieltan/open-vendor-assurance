@@ -171,6 +171,29 @@ work_packages:
       - docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md
       - docs/source-trust/observation-retention-policy.md
 
+  WP-OPENVA-ASSURANCE-EVIDENCE-EXTRACTION-CONTRACT-01:
+    description: >-
+      Reviewed prerequisite for any real Assurance Intelligence cohort: define and
+      enforce the public evidence-extraction contract that admits source-observation
+      inputs, extracted facts, vendor/source/framework/assurance linkage, provenance,
+      conflict and ambiguity handling, effective and knowledge time, idempotency, and
+      reversal behavior before cohort records are registered. No cohort data,
+      publication output, site, workflow, hosted/API/MCP, source-health semantics,
+      catalog growth, or new Assurance Intelligence axes.
+    depends_on:
+      - WP-OPENVA-ASSURANCE-RELEASE-01
+      - WP-P4-ASSURANCE-INTELLIGENCE-PUBLICATION-01
+    allowed_paths:
+      - config/assurance-evidence-extraction-policy.yaml
+      - docs/architecture/ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT.md
+      - schemas/openva/assurance-evidence-extraction-policy.schema.json
+      - schemas/openva/assurance-evidence-extraction.schema.json
+      - tests/fixtures/assurance/evidence-extraction/**
+      - tests/test_assurance_evidence_extraction_contract.py
+      - tools/openva/assurance_evidence_extraction.py
+      - tools/openva/schema_registry.py
+      - tools/openva/validate.py
+
   WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01:
     description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400 (audit evidence, required corrections, and regression tests). Scope-policy files are NOT included here — they live in WP-PR-SCOPE-POLICY-01.
     allowed_paths:
