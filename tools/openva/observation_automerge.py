@@ -1,7 +1,29 @@
 """WP35.5 autonomous observation-ledger append lane.
 
-Plans idempotent observation appends, rejects stale latest-index artifacts, and
-checks the append-only automerge boundary. Operational metadata only; not advice.
+Two responsibilities:
+
+  plan   Given a source-maintenance `observation-ledger-delta.ndjson`, filter it
+         to the genuinely-new rows (idempotent on re-trigger), validate each new
+         row against the ledger-record schema and append ordering, and emit a
+         filtered delta plus a summary (counts, digest, affected monthly shards).
+         The append-PR workflow uses this; zero new rows => no PR.
+
+  check  The agent-automerge observation job's eligibility gate. Verifies the PR
+         touches only the committed ledger events path, is strictly append-only
+         against the base revision (existing lines never rewritten or removed),
+         every new row validates against the schema, validates the deterministic
+         latest-observations index when present, and the required lane labels
+         are present. Fails closed.
+
+This lane writes ONLY append-only operational observation events under
+maintenance/source-observations/events/** plus the deterministic
+maintenance/source-observations/latest-observations.json index. It never writes
+catalog truth, mutates sources/vendors/schemas/tools/workflows, or merges by
+itself; merge is enabled by the agent-automerge job after the WP35 release gate
+passes.
+
+Operational metadata only. Not legal, compliance, procurement, security, KYC,
+AML, audit, or vendor-risk advice.
 """
 
 from __future__ import annotations
@@ -54,6 +76,7 @@ def is_observation_state_path(path: str) -> bool:
 
 
 def parse_ndjson(text: str) -> list[str]:
+    """Return non-blank stripped lines, preserving order."""
     return [line.strip() for line in text.splitlines() if line.strip()]
 
 
@@ -71,6 +94,8 @@ def schema_violations(rows: list[dict[str, Any]], schema: dict[str, Any], *, whe
 
 
 def append_only_new_lines(base_text: str | None, head_text: str) -> tuple[list[str], list[str]]:
+    """Return (new_lines, violations). head must begin with exactly the base
+    lines (no rewrites or removals); only appended lines are allowed."""
     head_lines = parse_ndjson(head_text)
     base_lines = parse_ndjson(base_text) if base_text is not None else []
     violations: list[str] = []
@@ -84,8 +109,8 @@ def _safe_git_show(loader: Callable[[str, str], str], ref: str, path: str) -> st
     try:
         return loader(ref, path)
     except subprocess.CalledProcessError:
-        return None
-    except Exception:
+        return None  # path did not exist at base (new monthly shard) => treat as empty
+    except Exception:  # noqa: BLE001 - fail closed elsewhere; signal "unreadable" distinctly
         raise
 
 
@@ -116,8 +141,9 @@ def check_latest_files(candidate_path: Path, committed_path: Path) -> list[str]:
     return latest_index_regressions(candidate, committed)
 
 
-# plan: filter artifact delta to genuinely-new, valid rows
-
+# --------------------------------------------------------------------------- #
+# plan: filter the artifact delta to genuinely-new, valid rows
+# --------------------------------------------------------------------------- #
 def plan_new_rows(delta_rows: list[dict[str, Any]], ledger_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
     existing_ids = {str(event.get("ledger_record_id")) for event in load_ledger_events(ledger_dir)}
     last = last_observed_per_source(ledger_dir)
@@ -127,7 +153,7 @@ def plan_new_rows(delta_rows: list[dict[str, Any]], ledger_dir: Path) -> tuple[l
     for row in delta_rows:
         record_id = str(row.get("ledger_record_id") or "")
         if record_id in existing_ids:
-            continue
+            continue  # idempotent: already committed
         if record_id in seen:
             reasons.append(f"duplicate_in_delta:{record_id}")
             continue
@@ -177,8 +203,9 @@ def run_plan(delta_path: Path, ledger_dir: Path, out_delta: Path, out_summary: P
     return 0
 
 
+# --------------------------------------------------------------------------- #
 # check: agent-automerge eligibility gate
-
+# --------------------------------------------------------------------------- #
 def check_observation_automerge(
     changed_paths: list[str],
     labels: list[str],
@@ -208,7 +235,7 @@ def check_observation_automerge(
         try:
             base_text = _safe_git_show(loader, base_ref, path)
             head_text = loader(head_ref, path)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - eligibility fails closed
             reasons.append(f"ledger_load_failed:{path}:{type(exc).__name__}")
             continue
         new_lines, violations = append_only_new_lines(base_text, head_text)
@@ -228,7 +255,7 @@ def check_observation_automerge(
             committed = json.loads(base_text) if base_text is not None else None
             reasons.extend(latest_index_regressions(candidate, committed))
             latest_index_updated = True
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - eligibility fails closed
             reasons.append(f"latest_index_invalid:{type(exc).__name__}")
 
     if appended == 0 and not latest_index_updated and not reasons:

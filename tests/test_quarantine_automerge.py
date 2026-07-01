@@ -129,6 +129,12 @@ def test_rejects_disallowed_path():
     assert any("disallowed_path" in r for r in result.reasons)
 
 
+def test_rejects_openva_pack_outside_registered_quarantine_scope():
+    result = check(paths=PATHS + ["openva-pack.json"])
+    assert not result.eligible
+    assert "disallowed_path:openva-pack.json" in result.reasons
+
+
 def test_rejects_two_sources():
     result = check(paths=[SOURCE_PATH, "data/vendors/acme/sources/acme-security.yaml", DECISION_PATH])
     assert not result.eligible

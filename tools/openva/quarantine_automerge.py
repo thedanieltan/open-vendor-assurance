@@ -6,7 +6,7 @@ merge only when it:
 - changes ONLY a single EXISTING source record
   (data/vendors/<vendor>/sources/<source>.yaml), its linked quarantine decision
   record (maintenance/machine-decisions/**), and deterministic generated outputs
-  (indexes/, dist/, openva-pack.json) — it must NOT add, remove, or edit any
+  (indexes/, dist/) — it must NOT add, remove, or edit any
   other source, vendor, artifact, or change record;
 - transitions that one source's review_state to `quarantined` (it was not
   quarantined at the base revision), changing ONLY the status-only quarantine
@@ -39,7 +39,6 @@ import yaml
 MARKER_LABEL = "quarantine"
 QUARANTINE_LABEL = "automerge:quarantine"
 DECISION_PREFIX = "maintenance/machine-decisions/"
-GENERATED_EXACT = {"openva-pack.json"}
 GENERATED_PREFIXES = ("indexes/", "dist/")
 
 # Only these source fields may differ between base and head (status-only).
@@ -75,7 +74,7 @@ def is_decision_path(path: str) -> bool:
 
 
 def is_generated_path(path: str) -> bool:
-    return path in GENERATED_EXACT or any(path.startswith(prefix) for prefix in GENERATED_PREFIXES)
+    return any(path.startswith(prefix) for prefix in GENERATED_PREFIXES)
 
 
 def load_decisions_from_changed(loader: Callable[[str, str], str], head_ref: str, decision_paths: list[str]) -> dict[str, dict[str, Any]]:

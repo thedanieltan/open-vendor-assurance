@@ -1084,6 +1084,8 @@ jobs:
           report = json.load(open("source-quarantine-report.json", encoding="utf-8"))
           source_id = report["source_id"]
           lines = [
+              "Work-Package: WP-SOURCE-QUARANTINE-01",
+              "",
               "## Summary",
               "",
               f"Status-only quarantine of source `{source_id}` (persistently not-found/gone",
@@ -1117,7 +1119,7 @@ jobs:
           PR_BRANCH="agent-source-quarantine-${QUARANTINABLE_SOURCE_ID}-${GITHUB_RUN_ID}"
           echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
           git switch -c "$PR_BRANCH"
-          git add data indexes dist openva-pack.json maintenance/machine-decisions
+          git add data indexes dist maintenance/machine-decisions
           git commit -m "Catalog: quarantine ${QUARANTINABLE_SOURCE_ID}"
           git push --force-with-lease origin "$PR_BRANCH"
       - name: Create pull request

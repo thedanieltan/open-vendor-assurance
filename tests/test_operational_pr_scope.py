@@ -8,7 +8,14 @@ import yaml
 
 from tools.openva.discovery_ledger import append_events
 from tools.openva.machine_decisions import append_decisions, load_decisions
-from tools.openva.observation_automerge import latest_index_regressions, plan_new_rows
+from tools.openva.observation_automerge import (
+    AUTOMERGE_OBSERVATION_LABEL,
+    LATEST_INDEX_PATH,
+    OBSERVATION_LEDGER_LABEL,
+    check_observation_automerge,
+    latest_index_regressions,
+    plan_new_rows,
+)
 from tools.openva.observation_ledger import DOCTRINE
 from tools.openva.source_quarantine import quarantine_eligibility
 
@@ -53,11 +60,14 @@ def test_operational_control_plane_cannot_write_operational_data_or_scope_policy
     assert allowed.isdisjoint(rejected)
 
 
-def test_generated_ledger_pr_bodies_declare_the_registered_work_packages() -> None:
+def test_generated_operational_pr_bodies_declare_the_registered_work_packages_once() -> None:
     discovery = (ROOT / ".github" / "workflows" / "discovery-ledger-append-pr.yml").read_text(encoding="utf-8")
     observation = (ROOT / ".github" / "workflows" / "observation-ledger-append-pr.yml").read_text(encoding="utf-8")
-    assert "Work-Package: WP-DISCOVERY-LEDGER-APPEND-01" in discovery
-    assert "Work-Package: WP-SOURCE-OBSERVATION-LEDGER-APPEND-01" in observation
+    candidate = (ROOT / ".github" / "workflows" / "candidate-promotion-pr.yml").read_text(encoding="utf-8")
+
+    assert discovery.count("Work-Package: WP-DISCOVERY-LEDGER-APPEND-01") == 1
+    assert observation.count("Work-Package: WP-SOURCE-OBSERVATION-LEDGER-APPEND-01") == 1
+    assert candidate.count("Work-Package: WP-SOURCE-QUARANTINE-01") == 1
 
 
 def discovery_event(event_id: str) -> dict:
@@ -138,6 +148,71 @@ def test_latest_index_rejects_regression_and_source_drop() -> None:
         "latest_index_source_dropped:vendor-security"
     ]
     assert latest_index_regressions(latest_index("2026-07-03T00:00:00Z"), committed) == []
+
+
+def latest_loader(candidate: dict, committed: dict):
+    payloads = {
+        ("BASE", LATEST_INDEX_PATH): json.dumps(committed, sort_keys=True),
+        ("HEAD", LATEST_INDEX_PATH): json.dumps(candidate, sort_keys=True),
+    }
+
+    def loader(ref: str, path: str) -> str:
+        return payloads[(ref, path)]
+
+    return loader
+
+
+def test_observation_automerge_rejects_latest_index_removal_and_regression() -> None:
+    committed = latest_index("2026-07-02T00:00:00Z")
+    labels = [AUTOMERGE_OBSERVATION_LABEL, OBSERVATION_LEDGER_LABEL]
+
+    dropped = check_observation_automerge(
+        [LATEST_INDEX_PATH],
+        labels,
+        "BASE",
+        "HEAD",
+        loader=latest_loader(latest_index("2026-07-03T00:00:00Z", include_source=False), committed),
+    )
+    assert dropped.eligible is False
+    assert "latest_index_source_dropped:vendor-security" in dropped.reasons
+
+    regressed = check_observation_automerge(
+        [LATEST_INDEX_PATH],
+        labels,
+        "BASE",
+        "HEAD",
+        loader=latest_loader(latest_index("2026-07-01T00:00:00Z"), committed),
+    )
+    assert regressed.eligible is False
+    assert (
+        "latest_index_regressed:vendor-security:2026-07-01T00:00:00Z<2026-07-02T00:00:00Z"
+        in regressed.reasons
+    )
+
+
+def test_observation_automerge_accepts_newer_or_equal_latest_index_only_update() -> None:
+    committed = latest_index("2026-07-02T00:00:00Z")
+    labels = [AUTOMERGE_OBSERVATION_LABEL, OBSERVATION_LEDGER_LABEL]
+
+    equal = check_observation_automerge(
+        [LATEST_INDEX_PATH],
+        labels,
+        "BASE",
+        "HEAD",
+        loader=latest_loader(latest_index("2026-07-02T00:00:00Z"), committed),
+    )
+    assert equal.eligible is True
+    assert equal.appended_rows == 0
+
+    newer = check_observation_automerge(
+        [LATEST_INDEX_PATH],
+        labels,
+        "BASE",
+        "HEAD",
+        loader=latest_loader(latest_index("2026-07-03T00:00:00Z"), committed),
+    )
+    assert newer.eligible is True
+    assert newer.appended_rows == 0
 
 
 def test_quarantine_eligibility_refuses_an_already_quarantined_source() -> None:

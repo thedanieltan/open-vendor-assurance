@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import jsonschema
+import pytest
 import yaml
 
 from tools.openva import machine_decisions as md
@@ -181,3 +182,16 @@ def test_apply_refuses_already_quarantined(tmp_path):
         assert False, "apply should refuse an already-quarantined source"
     except ValueError as exc:
         assert "already quarantined" in str(exc)
+
+
+def test_apply_refuses_duplicate_quarantine_decision_before_source_mutation(tmp_path):
+    spath, ledger_dir, decisions_dir = _build_temp_catalog(tmp_path)
+    prepared = sq.prepare_quarantine("acme-dpa", root=tmp_path, now=NOW, ledger_dir=ledger_dir)
+    assert prepared.decision is not None
+    md.append_decisions([prepared.decision], decisions_dir)
+    before = spath.read_text(encoding="utf-8")
+
+    with pytest.raises(ValueError, match="duplicate decision_id"):
+        sq.apply_quarantine(prepared, root=tmp_path, decisions_dir=decisions_dir, now=NOW, rebuild=False)
+
+    assert spath.read_text(encoding="utf-8") == before
