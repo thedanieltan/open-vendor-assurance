@@ -98,6 +98,17 @@ ASSURANCE_PUBLICATION_FILES = [
     "tools/openva/schema_registry.py",
 ]
 
+SOURCE_HEALTH_LABEL_RECONCILIATION_WP = "WP-SOURCE-HEALTH-LABEL-RECONCILIATION-01"
+SOURCE_HEALTH_LABEL_RECONCILIATION_FILES = [
+    ".github/workflows/site-pages.yml",
+    "site/build.py",
+    "site/src/app.js",
+    "tests/test_site.py",
+    "tools/openva/site_discovery.py",
+    "docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md",
+    "docs/source-trust/observation-retention-policy.md",
+]
+
 FRESHNESS_CONTINUITY_FILES = [
     ".github/workflows/observation-ledger-append-pr.yml",
     ".github/workflows/source-maintenance-report.yml",
@@ -176,6 +187,18 @@ def test_committed_manifest_is_well_formed():
         assert wp_id.startswith("WP-"), wp_id
         assert body.get("allowed_paths"), f"{wp_id} must declare allowed_paths"
         assert isinstance(body["allowed_paths"], list)
+
+
+def test_scope_manifest_contains_no_known_mojibake_markers():
+    text = (ROOT / "docs" / "operations" / "contracts" / "work-package-scope.yaml").read_text(
+        encoding="utf-8"
+    )
+    markers = [
+        bytes.fromhex("c3a2e282ace2809d").decode("utf-8"),
+        bytes.fromhex("c382c2b7").decode("utf-8"),
+        bytes.fromhex("c3a2e282ace284a2").decode("utf-8"),
+    ]
+    assert [marker for marker in markers if marker in text] == []
 
 
 # --- Task A: dedicated scope-policy governance lane ---------------------------
@@ -295,6 +318,30 @@ def test_assurance_publication_scope_covers_only_publication_surface():
     ]
     assert out_of_scope_paths(
         blocked, "WP-P4-ASSURANCE-INTELLIGENCE-PUBLICATION-01", manifest
+    ) == sorted(blocked)
+
+
+def test_source_health_label_reconciliation_scope_covers_exact_composite_surface():
+    manifest = load_manifest()
+    assert out_of_scope_paths(
+        SOURCE_HEALTH_LABEL_RECONCILIATION_FILES,
+        SOURCE_HEALTH_LABEL_RECONCILIATION_WP,
+        manifest,
+    ) == []
+
+
+def test_source_health_label_reconciliation_scope_rejects_unlisted_paths():
+    manifest = load_manifest()
+    blocked = [
+        "site/src/styles.css",
+        "docs/source-trust/source-health.md",
+        "public/assurance-intelligence.json",
+        "tests/test_assurance_intelligence_publication.py",
+    ]
+    assert out_of_scope_paths(
+        blocked,
+        SOURCE_HEALTH_LABEL_RECONCILIATION_WP,
+        manifest,
     ) == sorted(blocked)
 
 
