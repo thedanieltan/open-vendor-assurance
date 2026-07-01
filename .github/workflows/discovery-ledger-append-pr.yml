@@ -141,6 +141,8 @@ jobs:
           PR_BRANCH="agent-discovery-ledger-append-${RUN_ID}"
           PR_TITLE="Discovery ledger: append events run ${RUN_ID}"
           {
+            echo "Work-Package: WP-DISCOVERY-LEDGER-APPEND-01"
+            echo ""
             echo "## Summary"
             echo ""
             echo "Appends discovery events emitted by catalog-growth-discovery run \`$RUN_ID\`."
