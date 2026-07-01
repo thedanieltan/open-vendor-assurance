@@ -1,26 +1,7 @@
 """WP35.5 autonomous observation-ledger append lane.
 
-Two responsibilities:
-
-  plan   Given a source-maintenance `observation-ledger-delta.ndjson`, filter it
-         to the genuinely-new rows (idempotent on re-trigger), validate each new
-         row against the ledger-record schema and append ordering, and emit a
-         filtered delta plus a summary (counts, digest, affected monthly shards).
-         The append-PR workflow uses this; zero new rows => no PR.
-
-  check  The agent-automerge observation job's eligibility gate. Verifies the PR
-         touches only the committed ledger events path, is strictly append-only
-         against the base revision (existing lines never rewritten or removed),
-         every new row validates against the schema, and the required lane labels
-         are present. Fails closed.
-
-This lane writes ONLY append-only operational observation events under
-maintenance/source-observations/events/**. It never writes catalog truth,
-mutates sources/vendors/schemas/tools/workflows, or merges by itself; merge is
-enabled by the agent-automerge job after the WP35 release gate passes.
-
-Operational metadata only. Not legal, compliance, procurement, security, KYC,
-AML, audit, or vendor-risk advice.
+Plans idempotent observation appends, rejects stale latest-index artifacts, and
+checks the append-only automerge boundary. Operational metadata only; not advice.
 """
 
 from __future__ import annotations
@@ -73,7 +54,6 @@ def is_observation_state_path(path: str) -> bool:
 
 
 def parse_ndjson(text: str) -> list[str]:
-    """Return non-blank stripped lines, preserving order."""
     return [line.strip() for line in text.splitlines() if line.strip()]
 
 
@@ -91,8 +71,6 @@ def schema_violations(rows: list[dict[str, Any]], schema: dict[str, Any], *, whe
 
 
 def append_only_new_lines(base_text: str | None, head_text: str) -> tuple[list[str], list[str]]:
-    """Return (new_lines, violations). head must begin with exactly the base
-    lines (no rewrites or removals); only appended lines are allowed."""
     head_lines = parse_ndjson(head_text)
     base_lines = parse_ndjson(base_text) if base_text is not None else []
     violations: list[str] = []
@@ -106,14 +84,40 @@ def _safe_git_show(loader: Callable[[str, str], str], ref: str, path: str) -> st
     try:
         return loader(ref, path)
     except subprocess.CalledProcessError:
-        return None  # path did not exist at base (new monthly shard) => treat as empty
-    except Exception:  # noqa: BLE001 - fail closed elsewhere; signal "unreadable" distinctly
+        return None
+    except Exception:
         raise
 
 
-# --------------------------------------------------------------------------- #
-# plan: filter the artifact delta to genuinely-new, valid rows
-# --------------------------------------------------------------------------- #
+def latest_index_regressions(candidate: dict[str, Any], committed: dict[str, Any] | None) -> list[str]:
+    """Reject a generated latest index that drops or predates committed source state."""
+    validate_latest_index(candidate)
+    if committed is None:
+        return []
+    validate_latest_index(committed)
+    candidate_by_id = {str(row["source_id"]): row for row in candidate["sources"]}
+    reasons: list[str] = []
+    for current in committed["sources"]:
+        source_id = str(current["source_id"])
+        proposed = candidate_by_id.get(source_id)
+        if proposed is None:
+            reasons.append(f"latest_index_source_dropped:{source_id}")
+            continue
+        current_time = str(current.get("observed_at") or "")
+        proposed_time = str(proposed.get("observed_at") or "")
+        if proposed_time < current_time:
+            reasons.append(f"latest_index_regressed:{source_id}:{proposed_time}<{current_time}")
+    return reasons
+
+
+def check_latest_files(candidate_path: Path, committed_path: Path) -> list[str]:
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    committed = json.loads(committed_path.read_text(encoding="utf-8")) if committed_path.exists() else None
+    return latest_index_regressions(candidate, committed)
+
+
+# plan: filter artifact delta to genuinely-new, valid rows
+
 def plan_new_rows(delta_rows: list[dict[str, Any]], ledger_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
     existing_ids = {str(event.get("ledger_record_id")) for event in load_ledger_events(ledger_dir)}
     last = last_observed_per_source(ledger_dir)
@@ -123,7 +127,7 @@ def plan_new_rows(delta_rows: list[dict[str, Any]], ledger_dir: Path) -> tuple[l
     for row in delta_rows:
         record_id = str(row.get("ledger_record_id") or "")
         if record_id in existing_ids:
-            continue  # idempotent: already committed
+            continue
         if record_id in seen:
             reasons.append(f"duplicate_in_delta:{record_id}")
             continue
@@ -173,9 +177,8 @@ def run_plan(delta_path: Path, ledger_dir: Path, out_delta: Path, out_summary: P
     return 0
 
 
-# --------------------------------------------------------------------------- #
 # check: agent-automerge eligibility gate
-# --------------------------------------------------------------------------- #
+
 def check_observation_automerge(
     changed_paths: list[str],
     labels: list[str],
@@ -205,7 +208,7 @@ def check_observation_automerge(
         try:
             base_text = _safe_git_show(loader, base_ref, path)
             head_text = loader(head_ref, path)
-        except Exception as exc:  # noqa: BLE001 - eligibility fails closed
+        except Exception as exc:
             reasons.append(f"ledger_load_failed:{path}:{type(exc).__name__}")
             continue
         new_lines, violations = append_only_new_lines(base_text, head_text)
@@ -220,10 +223,12 @@ def check_observation_automerge(
 
     if LATEST_INDEX_PATH in paths:
         try:
-            latest_index = json.loads(loader(head_ref, LATEST_INDEX_PATH))
-            validate_latest_index(latest_index)
+            candidate = json.loads(loader(head_ref, LATEST_INDEX_PATH))
+            base_text = _safe_git_show(loader, base_ref, LATEST_INDEX_PATH)
+            committed = json.loads(base_text) if base_text is not None else None
+            reasons.extend(latest_index_regressions(candidate, committed))
             latest_index_updated = True
-        except Exception as exc:  # noqa: BLE001 - eligibility fails closed
+        except Exception as exc:
             reasons.append(f"latest_index_invalid:{type(exc).__name__}")
 
     if appended == 0 and not latest_index_updated and not reasons:
@@ -254,6 +259,10 @@ def main(argv: list[str] | None = None) -> int:
     plan.add_argument("--out-delta", type=Path, required=True)
     plan.add_argument("--out-summary", type=Path, required=True)
 
+    latest = subparsers.add_parser("check-latest", help="fail if a candidate latest index drops or predates committed state")
+    latest.add_argument("--candidate", type=Path, required=True)
+    latest.add_argument("--committed", type=Path, required=True)
+
     check = subparsers.add_parser("check", help="agent-automerge eligibility gate")
     check.add_argument("--paths-file", required=True)
     check.add_argument("--labels", default="")
@@ -264,6 +273,14 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command == "plan":
         return run_plan(args.delta, args.ledger_dir, args.out_delta, args.out_summary)
+    if args.command == "check-latest":
+        reasons = check_latest_files(args.candidate, args.committed)
+        for reason in reasons:
+            print(f"reason={reason}")
+        if reasons:
+            return 1
+        print("latest_index_monotonic=true")
+        return 0
 
     paths = Path(args.paths_file).read_text(encoding="utf-8").splitlines()
     result = check_observation_automerge(
