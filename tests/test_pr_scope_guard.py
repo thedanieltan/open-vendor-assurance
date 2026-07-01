@@ -109,6 +109,19 @@ SOURCE_HEALTH_LABEL_RECONCILIATION_FILES = [
     "docs/source-trust/observation-retention-policy.md",
 ]
 
+ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_WP = "WP-OPENVA-ASSURANCE-EVIDENCE-EXTRACTION-CONTRACT-01"
+ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_FILES = [
+    "config/assurance-evidence-extraction-policy.yaml",
+    "docs/architecture/ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT.md",
+    "schemas/openva/assurance-evidence-extraction-policy.schema.json",
+    "schemas/openva/assurance-evidence-extraction.schema.json",
+    "tests/fixtures/assurance/evidence-extraction/valid/public-dpa-fact.json",
+    "tests/test_assurance_evidence_extraction_contract.py",
+    "tools/openva/assurance_evidence_extraction.py",
+    "tools/openva/schema_registry.py",
+    "tools/openva/validate.py",
+]
+
 FRESHNESS_CONTINUITY_FILES = [
     ".github/workflows/observation-ledger-append-pr.yml",
     ".github/workflows/source-maintenance-report.yml",
@@ -330,6 +343,15 @@ def test_source_health_label_reconciliation_scope_covers_exact_composite_surface
     ) == []
 
 
+def test_assurance_evidence_extraction_contract_scope_covers_prerequisite_surface():
+    manifest = load_manifest()
+    assert out_of_scope_paths(
+        ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_FILES,
+        ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_WP,
+        manifest,
+    ) == []
+
+
 def test_source_health_label_reconciliation_scope_rejects_unlisted_paths():
     manifest = load_manifest()
     blocked = [
@@ -341,6 +363,27 @@ def test_source_health_label_reconciliation_scope_rejects_unlisted_paths():
     assert out_of_scope_paths(
         blocked,
         SOURCE_HEALTH_LABEL_RECONCILIATION_WP,
+        manifest,
+    ) == sorted(blocked)
+
+
+def test_assurance_evidence_extraction_contract_scope_rejects_cohort_and_platform_work():
+    manifest = load_manifest()
+    blocked = [
+        "data/vendors/adobe/assurances/adobe-public-dpa.yaml",
+        "data/vendors/adobe/assurance_observations/adobe-public-dpa-observation.yaml",
+        "maintenance/assurance-intelligence/latest/ad/adobe-public-dpa.json",
+        "public/assurance-intelligence.json",
+        "site/build.py",
+        ".github/workflows/site-pages.yml",
+        "services/openva_match_service/app.py",
+        "schemas/openva/assurance-record.schema.json",
+        "tools/openva/assurance_intelligence.py",
+        "maintenance/source-observations/latest-observations.json",
+    ]
+    assert out_of_scope_paths(
+        blocked,
+        ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_WP,
         manifest,
     ) == sorted(blocked)
 
