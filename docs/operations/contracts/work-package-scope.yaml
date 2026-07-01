@@ -155,6 +155,22 @@ work_packages:
       - tools/openva/release_artifacts.py
       - tools/openva/schema_registry.py
 
+  WP-SOURCE-HEALTH-LABEL-RECONCILIATION-01:
+    description: >-
+      Atomic source-health label reconciliation for the public site and source-trust
+      operations documentation. Narrows human-facing source-health wording without
+      changing the underlying machine vocabulary, source-observation semantics,
+      acquisition, catalog data, assurance cohort records, or release workflows beyond
+      the exact Pages publication workflow path listed here.
+    allowed_paths:
+      - .github/workflows/site-pages.yml
+      - site/build.py
+      - site/src/app.js
+      - tests/test_site.py
+      - tools/openva/site_discovery.py
+      - docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md
+      - docs/source-trust/observation-retention-policy.md
+
   WP-LEGAL-ENTITY-EXPORT-RATIFICATION-01:
     description: Retrospective ratification of the legal-entity export/matching change set bundled into PR #400 (audit evidence, required corrections, and regression tests). Scope-policy files are NOT included here — they live in WP-PR-SCOPE-POLICY-01.
     allowed_paths:
