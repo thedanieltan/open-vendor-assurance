@@ -11,13 +11,16 @@ Two responsibilities:
   check  The agent-automerge observation job's eligibility gate. Verifies the PR
          touches only the committed ledger events path, is strictly append-only
          against the base revision (existing lines never rewritten or removed),
-         every new row validates against the schema, and the required lane labels
+         every new row validates against the schema, validates the deterministic
+         latest-observations index when present, and the required lane labels
          are present. Fails closed.
 
 This lane writes ONLY append-only operational observation events under
-maintenance/source-observations/events/**. It never writes catalog truth,
-mutates sources/vendors/schemas/tools/workflows, or merges by itself; merge is
-enabled by the agent-automerge job after the WP35 release gate passes.
+maintenance/source-observations/events/** plus the deterministic
+maintenance/source-observations/latest-observations.json index. It never writes
+catalog truth, mutates sources/vendors/schemas/tools/workflows, or merges by
+itself; merge is enabled by the agent-automerge job after the WP35 release gate
+passes.
 
 Operational metadata only. Not legal, compliance, procurement, security, KYC,
 AML, audit, or vendor-risk advice.
@@ -109,6 +112,33 @@ def _safe_git_show(loader: Callable[[str, str], str], ref: str, path: str) -> st
         return None  # path did not exist at base (new monthly shard) => treat as empty
     except Exception:  # noqa: BLE001 - fail closed elsewhere; signal "unreadable" distinctly
         raise
+
+
+def latest_index_regressions(candidate: dict[str, Any], committed: dict[str, Any] | None) -> list[str]:
+    """Reject a generated latest index that drops or predates committed source state."""
+    validate_latest_index(candidate)
+    if committed is None:
+        return []
+    validate_latest_index(committed)
+    candidate_by_id = {str(row["source_id"]): row for row in candidate["sources"]}
+    reasons: list[str] = []
+    for current in committed["sources"]:
+        source_id = str(current["source_id"])
+        proposed = candidate_by_id.get(source_id)
+        if proposed is None:
+            reasons.append(f"latest_index_source_dropped:{source_id}")
+            continue
+        current_time = str(current.get("observed_at") or "")
+        proposed_time = str(proposed.get("observed_at") or "")
+        if proposed_time < current_time:
+            reasons.append(f"latest_index_regressed:{source_id}:{proposed_time}<{current_time}")
+    return reasons
+
+
+def check_latest_files(candidate_path: Path, committed_path: Path) -> list[str]:
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    committed = json.loads(committed_path.read_text(encoding="utf-8")) if committed_path.exists() else None
+    return latest_index_regressions(candidate, committed)
 
 
 # --------------------------------------------------------------------------- #
@@ -220,8 +250,10 @@ def check_observation_automerge(
 
     if LATEST_INDEX_PATH in paths:
         try:
-            latest_index = json.loads(loader(head_ref, LATEST_INDEX_PATH))
-            validate_latest_index(latest_index)
+            candidate = json.loads(loader(head_ref, LATEST_INDEX_PATH))
+            base_text = _safe_git_show(loader, base_ref, LATEST_INDEX_PATH)
+            committed = json.loads(base_text) if base_text is not None else None
+            reasons.extend(latest_index_regressions(candidate, committed))
             latest_index_updated = True
         except Exception as exc:  # noqa: BLE001 - eligibility fails closed
             reasons.append(f"latest_index_invalid:{type(exc).__name__}")
@@ -254,6 +286,10 @@ def main(argv: list[str] | None = None) -> int:
     plan.add_argument("--out-delta", type=Path, required=True)
     plan.add_argument("--out-summary", type=Path, required=True)
 
+    latest = subparsers.add_parser("check-latest", help="fail if a candidate latest index drops or predates committed state")
+    latest.add_argument("--candidate", type=Path, required=True)
+    latest.add_argument("--committed", type=Path, required=True)
+
     check = subparsers.add_parser("check", help="agent-automerge eligibility gate")
     check.add_argument("--paths-file", required=True)
     check.add_argument("--labels", default="")
@@ -264,6 +300,14 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command == "plan":
         return run_plan(args.delta, args.ledger_dir, args.out_delta, args.out_summary)
+    if args.command == "check-latest":
+        reasons = check_latest_files(args.candidate, args.committed)
+        for reason in reasons:
+            print(f"reason={reason}")
+        if reasons:
+            return 1
+        print("latest_index_monotonic=true")
+        return 0
 
     paths = Path(args.paths_file).read_text(encoding="utf-8").splitlines()
     result = check_observation_automerge(
