@@ -1,9 +1,27 @@
 """Deterministic robots.txt policy evaluator for OpenVA discovery.
 
-The evaluator implements the RFC 9309 semantics OpenVA relies on directly and
-also records the widely deployed, non-standard ``Crawl-delay`` directive. When
-multiple equally specific groups match, OpenVA applies the largest valid delay;
-this is conservative and prevents group splitting from weakening origin pacing.
+urllib.robotparser does not reliably implement RFC 9309 longest-match
+precedence, so OpenVA implements and tests the semantics it relies on directly:
+
+- a group is one or more consecutive user-agent lines followed by rules;
+- blank lines and sitemap/unknown records do not terminate a group;
+- rules before the first user-agent line are ignored;
+- every group matching the most-specific product token is combined;
+- the ``*`` group is used only when no explicit group matches;
+- the longest matching path wins and an equal-length tie prefers Allow;
+- ``*`` matches any sequence and a trailing ``$`` anchors the path end;
+- an empty Disallow imposes no restriction;
+- comparison and specificity are octet-based after URI normalization.
+
+OpenVA also records the widely deployed, non-standard ``Crawl-delay``
+directive. A delay is applicable only when it occurs inside a user-agent group.
+When multiple equally specific groups match, OpenVA applies the largest valid
+delay so group splitting cannot weaken origin pacing.
+
+A present-but-unparseable robots file remains restrictive under OpenVA policy.
+Robots directives are operating policy for this fetch lane, never evidence about
+a source URL. The parser identifier is versioned so policy changes are visible in
+discovery metadata.
 """
 
 from __future__ import annotations
@@ -21,6 +39,7 @@ _MAX_CRAWL_DELAY_SECONDS = 86_400.0
 
 
 def _percent_encode_non_ascii(value: str) -> str:
+    """Encode raw non-ASCII characters as their UTF-8 percent octets."""
     out: list[str] = []
     for char in value:
         if ord(char) < 0x80:
@@ -31,6 +50,8 @@ def _percent_encode_non_ascii(value: str) -> str:
 
 
 def _normalize_percent(value: str) -> str:
+    """Return the octet-canonical form used for robots path comparison."""
+
     def repl(match: re.Match[str]) -> str:
         char = chr(int(match.group(1), 16))
         return char if char in _UNRESERVED else "%" + match.group(1).upper()
@@ -39,6 +60,7 @@ def _normalize_percent(value: str) -> str:
 
 
 def _octet_length(normalized: str) -> int:
+    """Measure a normalized rule path in octets; each ``%XX`` is one octet."""
     return len(_PCT.sub("\x00", normalized))
 
 
@@ -61,6 +83,8 @@ def _compile(path: str) -> tuple[re.Pattern[str], int]:
     end_anchor = path.endswith("$")
     core = path[:-1] if end_anchor else path
     normalized = _normalize_percent(core)
+    # The end anchor is metadata, not a path octet. A wildcard counts as one
+    # octet for the repository's established specificity rule.
     length = _octet_length(normalized)
     regex = "^" + re.escape(normalized).replace(r"\*", ".*") + ("$" if end_anchor else "")
     return re.compile(regex), length
@@ -141,11 +165,15 @@ class RobotsPolicy:
                 regex, length = _compile(value)
                 current_rules.append(_Rule(field == "allow", value, regex, length))
             elif field == "crawl-delay":
+                # A delay without a preceding user-agent has no group to govern.
+                # Ignore it exactly as rules before the first user-agent are
+                # ignored; do not let it make an otherwise unparseable file valid.
+                if not seen_first_agent:
+                    continue
                 delay = _parse_crawl_delay(value)
                 if delay is not None:
                     recognized += 1
-                    if seen_first_agent:
-                        current_delays.append(delay)
+                    current_delays.append(delay)
             elif field == "sitemap":
                 recognized += 1
                 if value:
