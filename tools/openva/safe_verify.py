@@ -18,11 +18,13 @@ Web Bot Auth is inherited from ``build_safe_fetcher`` at the shared transport
 boundary. The same SSRF, authority, redirect, deadline, and byte-boundary checks
 therefore continue to run, while every HTTPS request and redirect hop receives a
 fresh authority-bound signature. HTTP requests retain the existing bounded,
-unsigned behavior.
+unsigned behavior. Verification traffic uses its own stable product token rather
+than being mislabeled as sitemap discovery.
 """
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Callable
 
 from tools.openva import source_verification
@@ -72,6 +74,10 @@ def build_safe_verify_fetcher(
         transport=transport,
         clock=clock,
     )
+    # The shared constructor defaults to the sitemap-discovery product token.
+    # Verification is a distinct Cloudflare behavioral identity, so replace only
+    # the immutable policy's user-agent while preserving every safety bound.
+    fetcher.policy = replace(fetcher.policy, user_agent=source_verification.USER_AGENT)
 
     def verify(url: str) -> source_verification.FetchResult:
         try:
