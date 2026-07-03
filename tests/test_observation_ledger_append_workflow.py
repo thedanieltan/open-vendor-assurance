@@ -35,6 +35,8 @@ def test_triggers_on_source_maintenance_run_and_manual_exact_id():
     assert "github.event.workflow_run.id" in text
     assert "inputs.source_run_id" in text
     assert "--limit 1" not in text  # never resolve an arbitrary latest run
+    assert "--name openva-source-maintenance-observation-continuity" in text
+    assert "openva-source-maintenance-report" not in text
 
 
 def test_only_proceeds_on_successful_upstream_run():

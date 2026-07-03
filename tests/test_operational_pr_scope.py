@@ -70,6 +70,21 @@ def test_generated_operational_pr_bodies_declare_the_registered_work_packages_on
     assert candidate.count("Work-Package: WP-SOURCE-QUARANTINE-01") == 1
 
 
+def test_discovery_append_workflow_provisions_labels_before_application() -> None:
+    text = (ROOT / ".github" / "workflows" / "discovery-ledger-append-pr.yml").read_text(encoding="utf-8")
+
+    discovery_label = text.index('gh label create "discovery-ledger"')
+    automerge_label = text.index('gh label create "automerge:observation"')
+    apply = text.index('gh pr edit "$PR_NUMBER" --add-label "discovery-ledger" --add-label "automerge:observation"')
+
+    assert discovery_label < apply
+    assert automerge_label < apply
+    assert "--force" in text[discovery_label:apply]
+    assert "Autonomous append-only discovery ledger update" in text[discovery_label:apply]
+    assert "Eligible for the bounded observation/discovery automerge lane" in text[automerge_label:apply]
+    assert "maintenance/discovery-events/*.ndjson" in text
+
+
 def discovery_event(event_id: str) -> dict:
     return {
         "schema_version": "0.1.0",

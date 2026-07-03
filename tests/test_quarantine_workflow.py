@@ -89,3 +89,22 @@ def test_quarantine_job_runs_on_schedule():
     quarantine_if = workflow["jobs"]["source-quarantine"]["if"]
     assert "schedule" in quarantine_if
     assert "quarantine" in quarantine_if
+
+
+def test_general_candidate_promotion_job_uses_explicit_mode_allow_list():
+    workflow = load(PROMOTION)
+    condition = workflow["jobs"]["candidate-promotion-pr"]["if"]
+    allowed = [
+        "reviewed-path",
+        "strict-growth-latest",
+        "strict-growth-shortlist",
+        "machine-provisional-from-queue",
+    ]
+    skipped = ["candidate-bound", "quarantine", "rollback", "quorum-promotion"]
+
+    assert "contains(fromJson" in condition
+    for mode in allowed:
+        assert mode in condition
+    for mode in skipped:
+        assert mode not in condition
+    assert "inputs.promotion_plan_mode != 'candidate-bound'" not in condition
