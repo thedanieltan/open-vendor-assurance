@@ -8,7 +8,9 @@ written to the repository, command line, logs, exceptions, or observation output
 
 Configuration is all-or-nothing. When no Web Bot Auth variables are present,
 OpenVA preserves its existing unsigned behavior. A partial configuration fails
-closed rather than emitting malformed identity headers.
+closed rather than emitting malformed identity headers. HTTPS requests are signed;
+legacy HTTP sources retain the existing bounded unsigned transport because Web Bot
+Auth identity is meaningful only over authenticated HTTPS.
 """
 
 from __future__ import annotations
@@ -71,10 +73,11 @@ def _canonical_public_jwk(jwk: Mapping[str, object]) -> dict[str, str]:
     if not isinstance(x, str) or not x:
         raise WebBotAuthConfigurationError("public JWK x must be a non-empty base64url string")
     try:
-        base64.urlsafe_b64decode(x + "=" * (-len(x) % 4))
+        decoded = base64.urlsafe_b64decode(x + "=" * (-len(x) % 4))
     except (ValueError, base64.binascii.Error) as exc:
         raise WebBotAuthConfigurationError("public JWK x is not valid base64url") from exc
-    # RFC 7638 requires lexicographic member ordering and only required members.
+    if len(decoded) != 32:
+        raise WebBotAuthConfigurationError("public JWK x must encode a 32-byte Ed25519 key")
     return {"crv": "Ed25519", "kty": "OKP", "x": x}
 
 
@@ -141,7 +144,6 @@ def _openssl_sign(private_key_pem: bytes, payload: bytes) -> bytes:
         except FileNotFoundError as exc:
             raise WebBotAuthConfigurationError("OpenSSL is required for Web Bot Auth signing") from exc
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
-            # Never include stderr: some OpenSSL builds may echo key-file details.
             raise WebBotAuthConfigurationError("Ed25519 signing failed") from exc
     if len(completed.stdout) != 64:
         raise WebBotAuthConfigurationError("Ed25519 signer returned an invalid signature length")
@@ -226,7 +228,7 @@ class WebBotAuthSigner:
 
 
 class WebBotAuthTransport:
-    """Transport decorator that signs every request, including each redirect hop."""
+    """Transport decorator that re-signs each HTTPS request and redirect hop."""
 
     def __init__(self, delegate: TransportLike, signer: WebBotAuthSigner) -> None:
         self.delegate = delegate
@@ -246,7 +248,8 @@ class WebBotAuthTransport:
         clock: Callable[[], float],
     ):
         signed_headers = dict(headers)
-        signed_headers.update(self.signer.headers_for_url(url))
+        if urlsplit(url).scheme.lower() == "https":
+            signed_headers.update(self.signer.headers_for_url(url))
         return self.delegate.open(
             url=url,
             ip=ip,
