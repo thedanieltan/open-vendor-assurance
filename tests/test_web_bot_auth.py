@@ -63,6 +63,21 @@ def test_request_headers_cover_authority_and_signature_agent():
     assert 'tag="web-bot-auth"' in payload
 
 
+def test_ipv6_authority_is_bracketed_in_signature_base():
+    signed_payloads: list[bytes] = []
+    signer = WebBotAuthSigner(
+        directory_url=DIRECTORY,
+        public_jwk=PUBLIC_JWK,
+        sign_bytes=lambda payload: signed_payloads.append(payload) or (b"s" * 64),
+        clock=lambda: 1_700_000_000,
+        nonce_factory=lambda: b"n" * 32,
+    )
+
+    signer.headers_for_url("https://[2001:db8::1]:8443/security")
+
+    assert '"@authority": [2001:db8::1]:8443' in signed_payloads[0].decode("ascii")
+
+
 def test_non_https_requests_are_not_signed_directly():
     signer = WebBotAuthSigner(
         directory_url=DIRECTORY,
@@ -168,6 +183,13 @@ def test_invalid_crawl_delay_is_ignored():
     )
     assert policy.crawl_delay("OpenVA-Discovery") is None
     assert policy.can_fetch("OpenVA-Discovery", "/security")
+
+
+def test_crawl_delay_before_user_agent_does_not_create_a_valid_group():
+    policy = RobotsPolicy.parse("Crawl-delay: 2\n")
+    assert policy.malformed is True
+    assert policy.crawl_delay("OpenVA-Discovery") is None
+    assert policy.can_fetch("OpenVA-Discovery", "/security") is False
 
 
 def test_sitemap_discovery_waits_after_robots_before_fetching_sitemap():
