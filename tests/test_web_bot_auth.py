@@ -217,6 +217,6 @@ def test_sitemap_discovery_waits_after_robots_before_fetching_sitemap():
 def test_worker_contract_does_not_publish_secret_member():
     worker = Path("infra/cloudflare/openva-web-bot-auth/worker.js").read_text(encoding="utf-8")
     assert "application/http-message-signatures-directory+json" in worker
-    assert 'tag=\\"http-message-signatures-directory\\"' in worker
+    assert 'tag="http-message-signatures-directory"' in worker
     assert "Signature-Input" in worker
     assert 'const published = { kty: "OKP", crv: "Ed25519", x: signingJwk.x }' in worker
