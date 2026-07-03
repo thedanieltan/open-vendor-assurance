@@ -95,9 +95,12 @@ def _authority(url: str) -> str:
     if not parts.hostname:
         raise WebBotAuthConfigurationError("request URL has no hostname")
     host = parts.hostname.lower()
+    # RFC 3986 authority syntax requires brackets around an IPv6 literal. The
+    # URL parser removes them from ``hostname``, so restore them before signing.
+    serialized_host = f"[{host}]" if ":" in host else host
     if parts.port is not None and parts.port != 443:
-        return f"{host}:{parts.port}"
-    return host
+        return f"{serialized_host}:{parts.port}"
+    return serialized_host
 
 
 def _quoted_directory_url(url: str) -> str:
