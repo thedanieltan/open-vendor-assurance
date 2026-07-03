@@ -101,7 +101,7 @@ jobs:
   candidate-promotion-pr:
     # The reviewed / strict-growth / quorum / coverage-queue paths. The
     # candidate-bound mutation runs in its own job below.
-    if: ${{ inputs.promotion_plan_mode != 'candidate-bound' }}
+    if: ${{ github.event_name == 'schedule' || contains(fromJson('["reviewed-path","strict-growth-latest","strict-growth-shortlist","machine-provisional-from-queue"]'), inputs.promotion_plan_mode || 'reviewed-path') }}
     runs-on: ubuntu-latest
     env:
       REQUESTED_PROMOTION_PLAN_PATH: "${{ inputs.promotion_plan_path || '' }}"

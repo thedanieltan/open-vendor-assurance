@@ -168,4 +168,12 @@ jobs:
           else
             PR_NUMBER=$(gh pr create --base main --head "$PR_BRANCH" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/pr-body.md")
           fi
+          gh label create "discovery-ledger" \
+            --description "Autonomous append-only discovery ledger update" \
+            --color "1D76DB" \
+            --force
+          gh label create "automerge:observation" \
+            --description "Eligible for the bounded observation/discovery automerge lane" \
+            --color "0E8A16" \
+            --force
           gh pr edit "$PR_NUMBER" --add-label "discovery-ledger" --add-label "automerge:observation"
