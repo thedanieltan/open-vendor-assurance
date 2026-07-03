@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from tools.openva.robots_policy import RobotsPolicy
+from tools.openva.safe_fetch import build_safe_fetcher
 from tools.openva.sitemap_discovery import Bounds, FetchResult, discover_sitemap_candidates
 from tools.openva.web_bot_auth import (
     ENV_DIRECTORY_URL,
@@ -101,6 +102,40 @@ def test_absent_environment_preserves_unsigned_transport(monkeypatch):
         monkeypatch.delenv(name, raising=False)
     delegate = object()
     assert wrap_transport(delegate) is delegate
+
+
+def test_shared_safe_fetch_constructor_applies_identity_once(monkeypatch):
+    class Delegate:
+        def resolve(self, host):
+            return ["93.184.216.34"]
+
+        def open(self, **kwargs):
+            raise AssertionError("network should not be used by this construction test")
+
+    class Signer:
+        def headers_for_url(self, url):
+            return {"Signature-Agent": '"https://directory.example/.well-known/http-message-signatures-directory"'}
+
+    delegate = Delegate()
+    signer = Signer()
+    monkeypatch.setattr(
+        WebBotAuthSigner,
+        "from_environment",
+        classmethod(lambda cls: signer),
+    )
+
+    fetcher = build_safe_fetcher(
+        ["vendor.example"],
+        max_redirects=2,
+        timeout_seconds=3,
+        max_compressed_bytes=100,
+        max_decompressed_bytes=200,
+        transport=delegate,
+    )
+
+    assert isinstance(fetcher.transport, WebBotAuthTransport)
+    assert fetcher.transport.delegate is delegate
+    assert fetcher.transport.signer is signer
 
 
 def test_transport_re_signs_each_https_url_and_leaves_http_unsigned():
