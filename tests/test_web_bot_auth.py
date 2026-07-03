@@ -63,7 +63,7 @@ def test_request_headers_cover_authority_and_signature_agent():
     assert 'tag="web-bot-auth"' in payload
 
 
-def test_non_https_requests_are_not_signed():
+def test_non_https_requests_are_not_signed_directly():
     signer = WebBotAuthSigner(
         directory_url=DIRECTORY,
         public_jwk=PUBLIC_JWK,
@@ -88,7 +88,7 @@ def test_absent_environment_preserves_unsigned_transport(monkeypatch):
     assert wrap_transport(delegate) is delegate
 
 
-def test_transport_re_signs_each_url():
+def test_transport_re_signs_each_https_url_and_leaves_http_unsigned():
     class Delegate:
         def __init__(self):
             self.calls = []
@@ -125,10 +125,20 @@ def test_transport_re_signs_each_url():
         deadline=10.0,
         clock=lambda: 0.0,
     )
+    transport.open(
+        url="http://vendor.example/legacy",
+        ip="93.184.216.34",
+        host="vendor.example",
+        headers={"User-Agent": "OpenVA-Discovery"},
+        deadline=10.0,
+        clock=lambda: 0.0,
+    )
 
     assert result == "response"
     assert signed_urls == ["https://vendor.example/a", "https://vendor.example/b"]
-    assert all("Signature-Agent" in call["headers"] for call in delegate.calls)
+    assert "Signature-Agent" in delegate.calls[0]["headers"]
+    assert "Signature-Agent" in delegate.calls[1]["headers"]
+    assert "Signature-Agent" not in delegate.calls[2]["headers"]
 
 
 def test_robots_crawl_delay_uses_most_specific_group_and_conservative_max():
