@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+import tools.openva.web_bot_auth as web_bot_auth
 from tools.openva.robots_policy import RobotsPolicy
 from tools.openva.safe_fetch import build_safe_fetcher
 from tools.openva.sitemap_discovery import Bounds, FetchResult, discover_sitemap_candidates
@@ -28,6 +29,17 @@ PUBLIC_JWK = {
     "x": base64.urlsafe_b64encode(bytes(range(32))).decode("ascii").rstrip("="),
 }
 DIRECTORY = "https://openva-web-bot-auth.example/.well-known/http-message-signatures-directory"
+
+
+def _set_complete_web_bot_auth_environment(monkeypatch: pytest.MonkeyPatch) -> str:
+    private_key = base64.b64encode(
+        b"-----BEGIN PRIVATE KEY-----\nsecret fixture\n-----END PRIVATE KEY-----\n"
+    ).decode("ascii")
+    monkeypatch.setenv(ENV_DIRECTORY_URL, DIRECTORY)
+    monkeypatch.setenv(ENV_PUBLIC_JWK, json.dumps(PUBLIC_JWK, separators=(",", ":")))
+    monkeypatch.setenv(ENV_PRIVATE_KEY, private_key)
+    monkeypatch.setattr(web_bot_auth, "_WEB_BOT_AUTH_CONFIG_DIAGNOSTIC_EMITTED", False)
+    return private_key
 
 
 def test_jwk_thumbprint_uses_rfc7638_required_members_only():
@@ -89,19 +101,43 @@ def test_non_https_requests_are_not_signed_directly():
         signer.headers_for_url("http://vendor.example/security")
 
 
-def test_partial_environment_configuration_fails_closed(monkeypatch):
+def test_complete_environment_configuration_emits_safe_diagnostic_once(monkeypatch, capsys):
+    private_key = _set_complete_web_bot_auth_environment(monkeypatch)
+
+    signer = WebBotAuthSigner.from_environment()
+    first = capsys.readouterr()
+    WebBotAuthSigner.from_environment()
+    second = capsys.readouterr()
+
+    assert signer is not None
+    assert first.err == "web_bot_auth_configured=true\n"
+    assert second.err == ""
+    assert PUBLIC_JWK["x"] not in first.err
+    assert private_key not in first.err
+    assert "Signature" not in first.err
+    assert "Signature-Input" not in first.err
+    assert "Signature-Agent" not in first.err
+
+
+def test_partial_environment_configuration_fails_closed(monkeypatch, capsys):
     monkeypatch.setenv(ENV_DIRECTORY_URL, DIRECTORY)
     monkeypatch.delenv(ENV_PUBLIC_JWK, raising=False)
     monkeypatch.delenv(ENV_PRIVATE_KEY, raising=False)
+    monkeypatch.setattr(web_bot_auth, "_WEB_BOT_AUTH_CONFIG_DIAGNOSTIC_EMITTED", False)
     with pytest.raises(WebBotAuthConfigurationError, match="partial"):
         WebBotAuthSigner.from_environment()
+    captured = capsys.readouterr()
+    assert captured.err == ""
 
 
-def test_absent_environment_preserves_unsigned_transport(monkeypatch):
+def test_absent_environment_preserves_unsigned_transport(monkeypatch, capsys):
     for name in (ENV_DIRECTORY_URL, ENV_PUBLIC_JWK, ENV_PRIVATE_KEY):
         monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(web_bot_auth, "_WEB_BOT_AUTH_CONFIG_DIAGNOSTIC_EMITTED", False)
     delegate = object()
     assert wrap_transport(delegate) is delegate
+    captured = capsys.readouterr()
+    assert captured.err == ""
 
 
 def test_shared_safe_fetch_constructor_applies_identity_once(monkeypatch):
