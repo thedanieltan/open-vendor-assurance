@@ -99,11 +99,14 @@ work_packages:
       - .github/workflows/agent-automerge.yml
       - docs/operations/contracts/workflow-inventory.yaml
       - tests/test_ci_readiness.py
+      - tests/test_candidate_intake_workflows.py
       - tests/test_operational_pr_scope.py
+      - tests/test_public_launch_readiness.py
       - tests/test_discovery_ledger.py
       - tests/test_observation_ledger.py
       - tests/test_observation_ledger_append_workflow.py
       - tests/test_source_maintenance_workflow.py
+      - tests/test_wp41_workflows.py
       - tests/test_source_quarantine.py
       - tests/test_quarantine_automerge.py
       - tests/test_quarantine_workflow.py
