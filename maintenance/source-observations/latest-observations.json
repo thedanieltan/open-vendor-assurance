@@ -1,32 +1,32 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-04T10:55:51Z",
+  "generated_at": "2026-07-04T22:55:36Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
     "source_count": 610,
-    "observed_this_run": 153,
-    "carried_forward": 457
+    "observed_this_run": 1,
+    "carried_forward": 609
   },
   "sources": [
     {
       "source_id": "acuity-scheduling-privacy",
       "vendor_id": "acuity-scheduling",
       "source_url": "https://www.acuityscheduling.com/privacy",
-      "observed_at": "2026-07-03T19:33:04Z",
-      "observation_id": "acuity-scheduling-privacy-2026-07-03-28679683995",
+      "observed_at": "2026-07-04T22:55:36Z",
+      "observation_id": "acuity-scheduling-privacy-2026-07-04-28722301590",
       "final_url": "https://www.acuityscheduling.com/privacy",
       "http_status": 404,
       "source_health_status": "unreachable",
       "change_class": "non_material",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:500d392d39bba84fc624e4721a556699fb9f7ff9d0a6fb5d320e90c5c4b02dc5",
+      "raw_sample_sha256": "sha256:e69d4b26339ebc1aa9a7c2d3abf930eb381436ac122ec4ea559cb73b4f1e4b01",
       "normalized_text_sample_sha256": "sha256:04763630c67a4d3ddceabd58f8a0a7cf093cd1dd2734c7f7e74d5bdcfdb510de",
       "review_signal": {
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "acuity-scheduling-security",
@@ -45,7 +45,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "adobe-compliance",
@@ -121,7 +121,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "adobe-subprocessors",
@@ -197,7 +197,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "adp-subprocessors",
@@ -273,7 +273,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "airtable-privacy",
@@ -349,7 +349,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "akur8-privacy",
@@ -425,7 +425,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "algolia-dpa",
@@ -501,7 +501,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "alibaba-cloud-international-compliance",
@@ -577,7 +577,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "alibaba-cloud-international-subprocessors",
@@ -653,7 +653,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aliyun-security",
@@ -729,7 +729,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "amplitude-compliance",
@@ -805,7 +805,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "amplitude-subprocessors",
@@ -881,7 +881,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "anthropic-security",
@@ -957,7 +957,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "applied-systems-terms",
@@ -1033,7 +1033,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "asana-security",
@@ -1109,7 +1109,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "athenahealth-terms",
@@ -1185,7 +1185,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "atlassian-security",
@@ -1261,7 +1261,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "auditboard-privacy",
@@ -1337,7 +1337,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "auth0-dpa",
@@ -1413,7 +1413,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aws-compliance",
@@ -1489,7 +1489,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aws-security-page",
@@ -1565,7 +1565,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bamboohr-privacy",
@@ -1641,7 +1641,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bill-com-compliance",
@@ -1717,7 +1717,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "box-compliance",
@@ -1793,7 +1793,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "box-subprocessors",
@@ -1869,7 +1869,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "calendly-privacy",
@@ -1945,7 +1945,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "canva-privacy",
@@ -2021,7 +2021,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "clickup-compliance",
@@ -2097,7 +2097,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "clickup-subprocessors",
@@ -2173,7 +2173,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cloudflare-security",
@@ -2249,7 +2249,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cohere-privacy",
@@ -2325,7 +2325,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "complyadvantage-privacy",
@@ -2401,7 +2401,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "contentful-privacy",
@@ -2477,7 +2477,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "culture-amp-security",
@@ -2553,7 +2553,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "databricks-dpa",
@@ -2629,7 +2629,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "datadog-compliance",
@@ -2705,7 +2705,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "datadog-subprocessors",
@@ -2781,7 +2781,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "deel-security",
@@ -2857,7 +2857,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "digitalocean-dpa",
@@ -2933,7 +2933,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docker-compliance",
@@ -3009,7 +3009,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docker-subprocessors",
@@ -3085,7 +3085,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docusign-security",
@@ -3161,7 +3161,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "drata-privacy",
@@ -3237,7 +3237,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dropbox-dpa",
@@ -3313,7 +3313,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "duck-creek-technologies-governance",
@@ -3389,7 +3389,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "elastic-dpa",
@@ -3465,7 +3465,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "emarsys-privacy-notice",
@@ -3541,7 +3541,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "exoscale-privacy-notice",
@@ -3617,7 +3617,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "figma-subprocessors",
@@ -3693,7 +3693,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "freshworks-security",
@@ -3769,7 +3769,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "github-dpa",
@@ -3845,7 +3845,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "google-cloud-compliance",
@@ -3921,7 +3921,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "google-cloud-subprocessors",
@@ -3997,7 +3997,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "google-workspace-subprocessors",
@@ -4073,7 +4073,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gorgias-subprocessors",
@@ -4149,7 +4149,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "grafana-labs-privacy-notice",
@@ -4225,7 +4225,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "greenhouse-privacy",
@@ -4301,7 +4301,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "greythr-security",
@@ -4377,7 +4377,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gusto-compliance",
@@ -4453,7 +4453,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gusto-subprocessors",
@@ -4529,7 +4529,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hashicorp-security",
@@ -4605,7 +4605,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "help-scout-security",
@@ -4681,7 +4681,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hibob-security",
@@ -4757,7 +4757,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "huawei-cloud-cn-security",
@@ -4833,7 +4833,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "huawei-cloud-international-privacy",
@@ -4909,7 +4909,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hubspot-dpa",
@@ -4985,7 +4985,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hugging-face-compliance",
@@ -5061,7 +5061,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hugging-face-subprocessors",
@@ -5137,7 +5137,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hyperproof-security",
@@ -5213,7 +5213,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ibm-cloud-privacy",
@@ -5289,7 +5289,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "intercom-compliance",
@@ -5365,7 +5365,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "intercom-subprocessors",
@@ -5441,7 +5441,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "klaviyo-security",
@@ -5517,7 +5517,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "lattice-security",
@@ -5593,7 +5593,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "logicgate-dpa",
@@ -5669,7 +5669,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mailchimp-compliance",
@@ -5745,7 +5745,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mailchimp-subprocessors",
@@ -5821,7 +5821,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "microsoft-compliance",
@@ -5897,7 +5897,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "microsoft-subprocessors",
@@ -5973,7 +5973,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "miro-security",
@@ -6049,7 +6049,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mistral-ai-privacy",
@@ -6125,7 +6125,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mixpanel-dpa",
@@ -6201,7 +6201,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "monday-compliance",
@@ -6277,7 +6277,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "monday-subprocessors",
@@ -6353,7 +6353,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mongodb-security",
@@ -6429,7 +6429,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netsuite-compliance",
@@ -6505,7 +6505,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "new-relic-privacy",
@@ -6581,7 +6581,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "notion-privacy",
@@ -6657,7 +6657,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "odoo-privacy",
@@ -6733,7 +6733,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "okta-privacy",
@@ -6809,7 +6809,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "onepassword-dpa",
@@ -6885,7 +6885,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "onetrust-privacy",
@@ -6961,7 +6961,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "openai-dpa",
@@ -7037,7 +7037,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "oracle-cloud-compliance",
@@ -7113,7 +7113,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "oracle-cloud-subprocessors",
@@ -7189,7 +7189,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pagerduty-security",
@@ -7265,7 +7265,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "palantir-security-overview",
@@ -7341,7 +7341,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "personio-dpa",
@@ -7417,7 +7417,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pinecone-privacy",
@@ -7493,7 +7493,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pipedrive-subprocessors-list",
@@ -7569,7 +7569,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "planetscale-security",
@@ -7664,7 +7664,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "posthog-compliance",
@@ -7721,7 +7721,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "posthog-security",
@@ -7797,7 +7797,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "qualtrics-privacy",
@@ -7873,7 +7873,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "quickbooks-dpa",
@@ -7949,7 +7949,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "redis-privacy-notice",
@@ -8025,7 +8025,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "retool-compliance",
@@ -8101,7 +8101,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "rippling-compliance",
@@ -8177,7 +8177,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "rippling-subprocessors",
@@ -8253,7 +8253,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "salesforce-compliance",
@@ -8329,7 +8329,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "salesforce-subprocessors",
@@ -8405,7 +8405,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sanity-security",
@@ -8481,7 +8481,7 @@
         "required": true,
         "reason": "change_class_access_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sap-privacy",
@@ -8557,7 +8557,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "scrut-automation-dpa",
@@ -8633,7 +8633,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "second-front-systems-privacy",
@@ -8709,7 +8709,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "secureframe-privacy",
@@ -8785,7 +8785,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "segment-privacy",
@@ -8861,7 +8861,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sentry-dpa",
@@ -8937,7 +8937,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "servicenow-compliance",
@@ -9013,7 +9013,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shield-ai-home",
@@ -9089,7 +9089,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shift-technology-privacy",
@@ -9165,7 +9165,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shopify-privacy",
@@ -9241,7 +9241,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "slack-dpa",
@@ -9317,7 +9317,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "snowflake-compliance",
@@ -9393,7 +9393,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "snowflake-subprocessors",
@@ -9469,7 +9469,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "splunk-security",
@@ -9545,7 +9545,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "square-security",
@@ -9621,7 +9621,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "starburst-privacy-notice",
@@ -9697,7 +9697,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "stripe-dpa",
@@ -9773,7 +9773,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sumsub-security",
@@ -9849,7 +9849,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "supabase-security",
@@ -9925,7 +9925,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "surveymonkey-security",
@@ -10001,7 +10001,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "tencent-cloud-cn-privacy",
@@ -10077,7 +10077,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "tencent-cloud-international-dpa",
@@ -10153,7 +10153,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "thoropass-compliance",
@@ -10229,7 +10229,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "thoropass-subprocessors",
@@ -10305,7 +10305,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trustarc-privacy",
@@ -10381,7 +10381,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "twilio-dpa",
@@ -10457,7 +10457,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "typeform-dpa",
@@ -10533,7 +10533,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vanta-compliance",
@@ -10609,7 +10609,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vercel-compliance",
@@ -10685,7 +10685,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vercel-subprocessors",
@@ -10761,7 +10761,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vtex-privacy-notice",
@@ -10837,7 +10837,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "weaviate-security",
@@ -10913,7 +10913,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "webflow-security",
@@ -10989,7 +10989,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wix-privacy",
@@ -11065,7 +11065,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "workday-dpa",
@@ -11141,7 +11141,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "xero-compliance",
@@ -11217,7 +11217,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "xero-subprocessors",
@@ -11293,7 +11293,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zapier-subprocessors",
@@ -11369,7 +11369,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zendesk-security",
@@ -11445,7 +11445,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zoho-privacy",
@@ -11521,7 +11521,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zoom-dpa",
@@ -11597,7 +11597,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     }
   ],
   "not_advice": true
