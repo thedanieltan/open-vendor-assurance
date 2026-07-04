@@ -36,6 +36,12 @@ checks above run for real in those tests. ``SocketTransport`` is the production
 implementation. ``SafeFetcher.fetch`` is the ``Fetcher`` callable consumed by
 ``sitemap_discovery`` (for both robots.txt and sitemaps); a per-vendor instance
 is bound to that vendor's official domains for same-authority enforcement.
+
+Web Bot Auth is applied as a transport decorator at this shared constructor, so
+robots, sitemaps, candidate verification, and observation all use the same
+identity behavior without duplicating signing logic. The decorator adds headers
+only to HTTPS requests and re-signs every redirect hop after the ordinary safety
+and authority checks select that hop.
 """
 
 from __future__ import annotations
@@ -470,7 +476,15 @@ def build_safe_fetcher(
     transport: Transport | None = None,
     clock: Callable[[], float] | None = None,
 ) -> SafeFetcher:
-    """Construct the production fetcher bound to a vendor's own authority."""
+    """Construct the production fetcher bound to a vendor's own authority.
+
+    Web Bot Auth is an identity decorator over the selected transport. It never
+    replaces the SSRF-safe fetcher, relaxes same-authority rules, or changes body
+    and deadline limits. With no identity environment configured, the decorator
+    returns the original transport unchanged.
+    """
+    from tools.openva.web_bot_auth import wrap_transport
+
     policy = FetchPolicy(
         max_redirects=max_redirects,
         timeout_seconds=timeout_seconds,
@@ -478,8 +492,9 @@ def build_safe_fetcher(
         max_decompressed_bytes=max_decompressed_bytes,
         accept_encoding=accept_encoding,
     )
+    base_transport = transport if transport is not None else SocketTransport()
     return SafeFetcher(
-        transport or SocketTransport(),
+        wrap_transport(base_transport),
         policy,
         same_authority_domains=official_domains,
         clock=clock,

@@ -1,0 +1,31 @@
+schema_version: "0.1.0"
+operator:
+  name: Open Vendor Assurance
+  repository: https://github.com/thedanieltan/open-vendor-assurance
+  contact: https://github.com/thedanieltan/open-vendor-assurance/issues
+identities:
+  discovery:
+    user_agent: OpenVA-Discovery
+    purpose:
+      - data_collection
+      - monitoring_and_operations
+    content_use: reference
+  source_verifier:
+    user_agent: OpenVA-SourceVerifier/0.1 (+https://github.com/thedanieltan/open-vendor-assurance)
+    purpose:
+      - monitoring_and_operations
+    content_use: reference
+behavior:
+  public_sources_only: true
+  obey_robots_txt: true
+  obey_crawl_delay: required
+  bypass_access_controls: false
+  submit_payment_automatically: false
+  raw_document_retention: false
+  ai_training: false
+web_bot_auth:
+  algorithm: ed25519
+  signature_lifetime_seconds: 60
+  directory_path: /.well-known/http-message-signatures-directory
+  activation: environment_gated
+  private_key_committed: false
