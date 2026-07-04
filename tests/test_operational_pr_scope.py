@@ -21,10 +21,19 @@ from tools.openva.source_quarantine import quarantine_eligibility
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs" / "operations" / "contracts" / "work-package-scope.yaml"
+AGENT_AUTOMERGE = ROOT / ".github" / "workflows" / "agent-automerge.yml"
 
 
 def work_packages() -> dict[str, dict]:
     return yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))["work_packages"]
+
+
+def workflow(path: Path) -> dict:
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def job_step(steps: list[dict], name: str) -> dict:
+    return next(step for step in steps if step.get("name") == name)
 
 
 def test_operational_data_work_packages_are_narrow_and_separate() -> None:
@@ -83,6 +92,60 @@ def test_discovery_append_workflow_provisions_labels_before_application() -> Non
     assert "Autonomous append-only discovery ledger update" in text[discovery_label:apply]
     assert "Eligible for the bounded observation/discovery automerge lane" in text[automerge_label:apply]
     assert "maintenance/discovery-events/*.ndjson" in text
+
+
+def test_agent_automerge_has_discovery_ledger_consumer_with_distinct_label_gate() -> None:
+    jobs = workflow(AGENT_AUTOMERGE)["jobs"]
+
+    assert "discovery-ledger" in jobs
+    condition = jobs["discovery-ledger"]["if"]
+    observation_condition = jobs["observation-ledger"]["if"]
+    assert "discovery-ledger" in condition
+    assert "automerge:observation" in condition
+    assert "observation-ledger" in observation_condition
+    assert "discovery-ledger" not in observation_condition
+    assert "!contains(join(github.event.pull_request.labels.*.name, ','), 'observation-ledger')" in condition
+    for unrelated in (
+        "quarantine",
+        "candidate-intake",
+        "catalog-growth",
+        "machine-canonical",
+        "machine-provisional",
+    ):
+        assert f"'%s'" % unrelated in condition
+
+
+def test_agent_automerge_discovery_ledger_gates_before_native_automerge() -> None:
+    steps = workflow(AGENT_AUTOMERGE)["jobs"]["discovery-ledger"]["steps"]
+    names = [step.get("name") for step in steps]
+    checkout = next(step for step in steps if str(step.get("uses", "")).startswith("actions/checkout"))
+    collect = job_step(steps, "Collect changed paths")
+    check = job_step(steps, "Check discovery-ledger automerge eligibility")
+    tests = job_step(steps, "Run discovery ledger tests")
+    merge = job_step(steps, "Enable GitHub native auto-merge")
+
+    assert checkout["with"]["ref"] == "${{ github.event.pull_request.head.sha }}"
+    assert "git fetch origin ${{ github.event.pull_request.base.sha }}" in "\n".join(
+        str(step.get("run", "")) for step in steps
+    )
+    assert 'gh pr diff "$PR_NUMBER" --name-only > changed-files.txt' in collect["run"]
+    assert "python -m tools.openva.discovery_ledger check" in check["run"]
+    assert "--paths-file changed-files.txt" in check["run"]
+    assert "--base-ref ${{ github.event.pull_request.base.sha }}" in check["run"]
+    assert "--head-ref HEAD" in check["run"]
+    assert "tests/test_discovery_ledger.py" in tests["run"]
+    assert "tests/test_operational_pr_scope.py" in tests["run"]
+    assert "tests/test_wp41_workflows.py" in tests["run"]
+    assert 'gh pr merge "$PR_NUMBER" --auto --squash --delete-branch' in merge["run"]
+
+    for required in (
+        "Fetch base commit",
+        "Collect changed paths",
+        "Check discovery-ledger automerge eligibility",
+        "Run source-intelligence release gate (pr profile)",
+        "Run discovery ledger tests",
+    ):
+        assert names.index(required) < names.index("Enable GitHub native auto-merge")
 
 
 def discovery_event(event_id: str) -> dict:
