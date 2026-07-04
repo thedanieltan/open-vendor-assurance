@@ -47,6 +47,9 @@ jobs:
       FETCH_TIMEOUT: "${{ inputs.fetch_timeout || '3' }}"
       REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR: "${{ inputs.max_promotion_actions_per_pr || '' }}"
       REQUESTED_MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '' }}"
+      OPENVA_WEB_BOT_AUTH_DIRECTORY_URL: ${{ secrets.OPENVA_WEB_BOT_AUTH_DIRECTORY_URL }}
+      OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON: ${{ secrets.OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON }}
+      OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64: ${{ secrets.OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64 }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
