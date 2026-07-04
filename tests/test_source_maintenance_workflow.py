@@ -117,3 +117,16 @@ def test_source_maintenance_uploads_observation_continuity_before_optional_enric
     assert "source-observation-ledger-summary.md" in upload_block
     assert "latest-source-health.json" in upload_block
     assert "public/source-health-snapshot.json" in upload_block
+
+
+def test_source_maintenance_observation_build_uses_committed_latest_baseline():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    start = text.index("- name: Build observation ledger v2 reports (read-only artifacts)")
+    end = text.index("- name: Upload observation continuity artifacts")
+    block = text[start:end]
+
+    assert "python -m tools.openva.observation_ledger build" in block
+    assert "--verification-report source-verification-report.json" in block
+    assert "--run-id \"${{ github.run_id }}\"" in block
+    assert "--baseline maintenance/source-observations/latest-observations.json" in block
+    assert "--output-dir observation-ledger" in block

@@ -15,6 +15,7 @@ from tools.openva.observation_ledger import (
     build_freshness_report,
     build_latest_index,
     build_observation_records,
+    build_outputs,
     build_review_report,
     classify_change,
     baseline_from_latest_index,
@@ -296,6 +297,46 @@ def test_latest_index_validates_and_round_trips_to_baseline():
     assert as_baseline["example-dpa"]["observed_at"] == "2026-06-01T05:30:00Z"
 
 
+def test_build_outputs_with_latest_baseline_carries_forward_unverified_sources(tmp_path):
+    committed_latest = build_latest_index(
+        [],
+        {
+            "example-dpa": baseline_entry(),
+            "example-privacy": baseline_entry(
+                source_id="example-privacy",
+                observed_at="2026-06-02T05:30:00Z",
+                observation_id="example-privacy-2026-06-02-100",
+            ),
+        },
+        generated_at="2026-06-02T05:30:00Z",
+    )
+    output_dir = tmp_path / "observation-ledger"
+    ledger_dir = tmp_path / "events"
+    ledger_dir.mkdir()
+
+    summary = build_outputs(
+        report_for([verification_row()]),
+        output_dir=output_dir,
+        run_id=RUN_ID,
+        observed_at=OBSERVED_AT,
+        now=NOW,
+        root=Path("."),
+        ledger_dir=ledger_dir,
+        baseline_index=committed_latest,
+        sla_config=SLA_CONFIG,
+    )
+
+    latest = json.loads((output_dir / "latest-observations.json").read_text(encoding="utf-8"))
+    by_id = {entry["source_id"]: entry for entry in latest["sources"]}
+
+    assert summary["latest_sources"] == 2
+    assert set(by_id) == {"example-dpa", "example-privacy"}
+    assert by_id["example-dpa"]["observed_at"] == OBSERVED_AT
+    assert by_id["example-privacy"]["carried_forward"] is True
+    assert by_id["example-privacy"]["observed_at"] == "2026-06-02T05:30:00Z"
+    assert by_id["example-privacy"]["observed_at"] >= "2026-06-02T05:30:00Z"
+
+
 def test_latest_index_rejects_duplicate_or_unsorted_sources():
     duplicate = build_latest_index([], {"example-dpa": baseline_entry()}, generated_at=OBSERVED_AT)
     duplicate["sources"].append(dict(duplicate["sources"][0]))
@@ -484,10 +525,11 @@ def test_workflow_extension_is_read_only():
     assert "observation-ledger/changed-since-last-observation.json" in text
     assert "observation-ledger/sources-requiring-review.json" in text
     assert "observation_ledger append" not in text
+    assert "observation_ledger install-latest" not in text
     assert "git commit" not in text
     assert "git push" not in text
     assert "create-pull-request" not in text
-    assert "maintenance/source-observations" not in text
+    assert "--baseline maintenance/source-observations/latest-observations.json" in text
 
 
 def test_observation_ledger_doc_states_doctrine_and_boundaries():
