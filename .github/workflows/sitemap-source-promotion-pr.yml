@@ -1,0 +1,299 @@
+name: sitemap-source-promotion-pr
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_promotion_actions_per_pr:
+        description: "Maximum sitemap-discovered source promotions to apply in one generated Catalog PR"
+        required: false
+        type: string
+        default: "10"
+  schedule:
+    # Runs after catalog-growth-discovery so sitemap findings can become source-addition PRs.
+    - cron: "17 9 * * 3"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sitemap-source-promotion-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sitemap-source-promotion-pr:
+    runs-on: ubuntu-latest
+    env:
+      MAX_PROMOTION_ACTIONS_PER_PR: "${{ inputs.max_promotion_actions_per_pr || '10' }}"
+      OPENVA_WEB_BOT_AUTH_DIRECTORY_URL: ${{ secrets.OPENVA_WEB_BOT_AUTH_DIRECTORY_URL }}
+      OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON: ${{ secrets.OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON }}
+      OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64: ${{ secrets.OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64 }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Validate current records
+        run: python -m tools.openva.validate validate
+      - name: Run sitemap source discovery
+        run: |
+          set -euo pipefail
+          DISCOVERED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "DISCOVERED_AT=$DISCOVERED_AT" >> "$GITHUB_ENV"
+          python -m tools.openva.catalog_growth_discovery_queue run-sitemap-discovery \
+            --queue maintenance/queues/catalog-growth-discovery.json \
+            --discovery-run-id "${{ github.run_id }}-${{ github.run_attempt }}" \
+            --discovered-at "$DISCOVERED_AT" \
+            --output sitemap-source-discovery-events.json
+      - name: Materialize sitemap candidates into reviewed candidate source records
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          from tools.openva.source_discovery import write_discovery_outputs
+
+          sitemap = json.load(open("sitemap-source-discovery-events.json", encoding="utf-8"))
+          vendors = list((sitemap.get("verification") or {}).get("vendors") or [])
+          candidates_written = 0
+          vendors_with_candidates = 0
+          normalized_vendors = []
+
+          for vendor in vendors:
+              if not isinstance(vendor, dict):
+                  continue
+              candidates = list(vendor.get("candidates") or [])
+              if candidates:
+                  write_discovery_outputs(vendor)
+                  candidates_written += len(candidates)
+                  vendors_with_candidates += 1
+              normalized_vendors.append(
+                  {
+                      "vendor_id": vendor.get("vendor_id"),
+                      "candidates": candidates,
+                      "unavailable_sources": list(vendor.get("unavailable_sources") or []),
+                      "observations": list(vendor.get("observations") or []),
+                      "discovery_events": list(vendor.get("discovery_events") or []),
+                  }
+              )
+
+          report = {
+              "schema_version": "0.1.0",
+              "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+              "report_type": "source_discovery_report",
+              "discovery_context": "sitemap_existing_vendor_source_discovery",
+              "posture": {
+                  "network_fetch_performed": False,
+                  "writes_repository_state": True,
+                  "writes_canonical_sources": False,
+                  "opens_pull_requests": False,
+                  "public_sources_only": True,
+                  "non_advisory": True,
+              },
+              "summary": {
+                  "vendors_checked": len(vendors),
+                  "vendors_with_candidate_sources": vendors_with_candidates,
+                  "candidate_sources_written_or_reported": candidates_written,
+                  "unavailable_sources_written_or_reported": sum(len(v.get("unavailable_sources") or []) for v in normalized_vendors),
+                  "sitemap_locator_events": sitemap.get("event_count", 0),
+                  "sitemap_verified_candidate_sources": (sitemap.get("verification") or {}).get("verified_candidate_count", 0),
+              },
+              "vendors": normalized_vendors,
+          }
+          Path("sitemap-source-discovery-report.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(report["summary"], indent=2, sort_keys=True))
+          PY
+      - name: Build sitemap source promotion plan
+        run: |
+          set -euo pipefail
+          python -m tools.openva.promotion_planner plan \
+            --discovery-report sitemap-source-discovery-report.json \
+            --output sitemap-source-promotion-plan.raw.json
+          python - <<'PY'
+          import json
+          import os
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          raw = json.load(open("sitemap-source-promotion-plan.raw.json", encoding="utf-8"))
+          cap = int(os.environ.get("MAX_PROMOTION_ACTIONS_PER_PR") or "10")
+          actions = [
+              action
+              for action in raw.get("actions", [])
+              if action.get("action") == "promote_candidate_source_for_review"
+          ]
+          selected = actions[:cap]
+          deferred = actions[cap:]
+          plan = {
+              "schema_version": "0.1.0",
+              "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+              "report_type": "candidate_promotion_plan_proposal",
+              "source_plan_path": "sitemap-source-promotion-plan.raw.json",
+              "posture": {
+                  "network_fetch_performed": False,
+                  "writes_repository_state": False,
+                  "writes_canonical_sources": False,
+                  "non_advisory": True,
+              },
+              "summary": {
+                  "action_count": len(selected),
+                  "uncapped_action_count": len(actions),
+                  "deferred_action_count": len(deferred),
+                  "max_promotion_actions_per_pr": cap,
+                  "action_types": {"promote_candidate_source_for_review": len(selected)},
+              },
+              "actions": selected,
+          }
+          if deferred:
+              plan["deferred_actions"] = [
+                  {"action": action, "reason_codes": ["max_promotion_actions_per_pr_exceeded"]}
+                  for action in deferred
+              ]
+          Path("sitemap-source-promotion-plan.json").write_text(
+              json.dumps(plan, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(plan["summary"], indent=2, sort_keys=True))
+          if selected:
+              print("HAS_PROMOTION_ACTIONS=true", file=open(os.environ["GITHUB_ENV"], "a", encoding="utf-8"))
+          else:
+              print("HAS_PROMOTION_ACTIONS=false", file=open(os.environ["GITHUB_ENV"], "a", encoding="utf-8"))
+          PY
+      - name: Stop when no sitemap-discovered source promotions exist
+        if: env.HAS_PROMOTION_ACTIONS != 'true'
+        run: echo "Sitemap discovery produced no reviewed source promotion actions in this shard."
+      - name: Apply sitemap source promotions
+        if: env.HAS_PROMOTION_ACTIONS == 'true'
+        run: |
+          python -m tools.openva.candidate_promotion_actions apply \
+            --promotion-plan sitemap-source-promotion-plan.json \
+            --output candidate-promotion-report.json
+      - name: Validate promoted catalog
+        if: env.HAS_PROMOTION_ACTIONS == 'true'
+        run: python -m tools.openva.validate validate
+      - name: Rebuild generated outputs
+        if: env.HAS_PROMOTION_ACTIONS == 'true'
+        run: python -m tools.openva.validate build-indexes
+      - name: Check whether catalog changes were produced
+        if: env.HAS_PROMOTION_ACTIONS == 'true'
+        id: catalog_changes
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data indexes dist openva-pack.json; then
+            echo "No sitemap source promotion changes produced."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Sitemap source promotion changes produced."
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run source preflight for changed sources
+        if: env.HAS_PROMOTION_ACTIONS == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        id: source_preflight
+        continue-on-error: true
+        run: |
+          {
+            git diff --name-only HEAD -- data/vendors
+            git ls-files --others --exclude-standard -- data/vendors
+          } | sort -u > changed-paths.txt
+          python -m tools.openva.source_preflight check-changed-sources \
+            --paths-file changed-paths.txt \
+            --output source-preflight-report.json
+      - name: Fail if source preflight failed
+        if: steps.source_preflight.outcome == 'failure'
+        run: exit 1
+      - name: Prepare PR body
+        if: env.HAS_PROMOTION_ACTIONS == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          sitemap = json.load(open("sitemap-source-discovery-events.json", encoding="utf-8"))
+          discovery = json.load(open("sitemap-source-discovery-report.json", encoding="utf-8"))
+          plan = json.load(open("sitemap-source-promotion-plan.json", encoding="utf-8"))
+          report = json.load(open("candidate-promotion-report.json", encoding="utf-8"))
+          preflight = json.load(open("source-preflight-report.json", encoding="utf-8"))
+          lines = [
+              "## Summary",
+              "",
+              "Applies reviewed source promotions derived from bounded sitemap discovery over existing catalog vendors.",
+              "",
+              "## Discovery",
+              "",
+              f"- Vendors inspected: `{len(sitemap.get('per_vendor', []))}`",
+              f"- Sitemap locator events: `{sitemap.get('event_count', 0)}`",
+              f"- Verified sitemap candidate sources: `{(sitemap.get('verification') or {}).get('verified_candidate_count', 0)}`",
+              f"- Candidate source records written in workflow: `{discovery['summary']['candidate_sources_written_or_reported']}`",
+              "",
+              "## Promotion",
+              "",
+              f"- Promotion actions selected: `{plan['summary']['action_count']}`",
+              f"- Uncapped promotion actions: `{plan['summary'].get('uncapped_action_count', plan['summary']['action_count'])}`",
+              f"- Deferred promotion actions: `{plan['summary'].get('deferred_action_count', 0)}`",
+              f"- Canonical sources written: `{report['summary']['canonical_sources_written']}`",
+              f"- Source preflight failures: `{preflight['failed_count']}`",
+              "",
+              "## Guardrails",
+              "",
+              "- Uses only public sitemap-discovered URLs verified through the existing source discovery and candidate-promotion path.",
+              "- Writes reviewed candidate source records plus canonical metadata; no raw documents are mirrored.",
+              "- Runs catalog validation and changed-source preflight before opening the PR.",
+              "- Does not merge automatically.",
+              "- Operational metadata only; not legal, compliance, procurement, security, or vendor-risk advice.",
+              "",
+          ]
+          Path("sitemap-source-promotion-pr-body.md").write_text("\n".join(lines), encoding="utf-8")
+          PY
+      - name: Commit and push promotion branch
+        if: env.HAS_PROMOTION_ACTIONS == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          PR_BRANCH="agent-sitemap-source-promotion-${GITHUB_RUN_ID}"
+          echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
+          git switch -c "$PR_BRANCH"
+          git add data indexes dist openva-pack.json
+          git commit -m "Catalog: promote sitemap-discovered public sources"
+          git push --force-with-lease origin "$PR_BRANCH"
+      - name: Create or update pull request
+        if: env.HAS_PROMOTION_ACTIONS == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA=$(git rev-parse HEAD)
+          cp sitemap-source-promotion-pr-body.md sitemap-source-promotion-pr-body-final.md
+          {
+            echo ""
+            echo "- Head SHA: \`$HEAD_SHA\`"
+          } >> sitemap-source-promotion-pr-body-final.md
+          gh pr create \
+            --base main \
+            --head "$PR_BRANCH" \
+            --title "Catalog: promote sitemap-discovered public sources" \
+            --body-file sitemap-source-promotion-pr-body-final.md
+      - name: Upload sitemap source promotion artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-sitemap-source-promotion-artifacts
+          path: |
+            sitemap-source-discovery-events.json
+            sitemap-source-discovery-report.json
+            sitemap-source-promotion-plan.raw.json
+            sitemap-source-promotion-plan.json
+            candidate-promotion-report.json
+            source-preflight-report.json
+            sitemap-source-promotion-pr-body.md
+            sitemap-source-promotion-pr-body-final.md
+          if-no-files-found: warn
