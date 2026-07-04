@@ -29,6 +29,16 @@ on:
         description: "Optional number of vendors to discover against"
         required: false
         type: string
+      max_urls_per_type:
+        description: "Maximum candidate URLs to probe per source type during optional discovery"
+        required: false
+        default: "4"
+        type: string
+      fetch_timeout:
+        description: "Per-request source discovery timeout in seconds"
+        required: false
+        default: "3"
+        type: string
   schedule:
     # WP35.5: twice weekly (Wed + Sun) so sharded observation coverage cycles
     # in ~2 weeks and the autonomous append loop keeps the ledger fresh.
@@ -137,14 +147,126 @@ jobs:
             --verification-report source-verification-report.json \
             --run-id "${{ github.run_id }}" \
             --output-dir observation-ledger
+      - name: Upload observation continuity artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-source-maintenance-observation-continuity
+          path: |
+            source-verification-report.json
+            source-observation-ledger.json
+            source-observation-ledger-summary.md
+            latest-source-health.json
+            public/source-health-snapshot.json
+            observation-ledger/observation-records.json
+            observation-ledger/latest-observations.json
+            observation-ledger/source-freshness-report.json
+            observation-ledger/changed-since-last-observation.json
+            observation-ledger/sources-requiring-review.json
+            observation-ledger/observation-ledger-delta.ndjson
+          if-no-files-found: error
       - name: Build candidate source discovery report
         run: |
-          LIMIT="${{ inputs.vendor_limit }}"
-          if [ -n "$LIMIT" ]; then
-            python -m tools.openva.source_discovery discover --vendor-limit "$LIMIT" --output source-discovery-report.json
-          else
-            python -m tools.openva.source_discovery discover --output source-discovery-report.json
+          set -euo pipefail
+          VENDOR_LIMIT="$(printf '%s' "${{ inputs.vendor_limit }}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          MAX_URLS_PER_TYPE="$(printf '%s' "${{ inputs.max_urls_per_type }}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          FETCH_TIMEOUT="$(printf '%s' "${{ inputs.fetch_timeout }}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          DISCOVERY_DEADLINE="15m"
+
+          if [ -z "$VENDOR_LIMIT" ]; then
+            VENDOR_LIMIT="10"
           fi
+          if [ -z "$MAX_URLS_PER_TYPE" ]; then
+            MAX_URLS_PER_TYPE="4"
+          fi
+          if [ -z "$FETCH_TIMEOUT" ]; then
+            FETCH_TIMEOUT="3"
+          fi
+
+          case "$VENDOR_LIMIT" in
+            ''|*[!0-9]*) echo "vendor_limit must be a positive integer" >&2; exit 2 ;;
+          esac
+          case "$MAX_URLS_PER_TYPE" in
+            ''|*[!0-9]*) echo "max_urls_per_type must be a positive integer" >&2; exit 2 ;;
+          esac
+          if [ "$VENDOR_LIMIT" -le 0 ]; then
+            echo "vendor_limit must be greater than zero" >&2
+            exit 2
+          fi
+          if [ "$MAX_URLS_PER_TYPE" -le 0 ]; then
+            echo "max_urls_per_type must be greater than zero" >&2
+            exit 2
+          fi
+          python - "$FETCH_TIMEOUT" <<'PY'
+          import sys
+
+          try:
+              value = float(sys.argv[1])
+          except ValueError:
+              raise SystemExit("fetch_timeout must be a positive number")
+          if value <= 0:
+              raise SystemExit("fetch_timeout must be greater than zero")
+          PY
+
+          set +e
+          timeout --signal=TERM --kill-after=30s "$DISCOVERY_DEADLINE" \
+            python -m tools.openva.source_discovery discover \
+              --vendor-limit "$VENDOR_LIMIT" \
+              --max-urls-per-type "$MAX_URLS_PER_TYPE" \
+              --fetch-timeout "$FETCH_TIMEOUT" \
+              --output source-discovery-report.json
+          STATUS=$?
+          set -e
+
+          if [ "$STATUS" -eq 124 ]; then
+            echo "::warning::candidate source discovery reached ${DISCOVERY_DEADLINE}; writing degraded empty discovery report"
+            python - <<'PY'
+          import json
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          report = {
+              "schema_version": "0.1.0",
+              "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+              "report_type": "source_discovery_report",
+              "partial": True,
+              "degraded": True,
+              "reason": "discovery_timeout",
+              "posture": {
+                  "network_fetch_performed": True,
+                  "writes_repository_state": False,
+                  "writes_canonical_sources": False,
+                  "opens_pull_requests": False,
+                  "public_sources_only": True,
+                  "non_advisory": True,
+              },
+              "summary": {
+                  "vendors_checked": 0,
+                  "candidate_sources_written_or_reported": 0,
+                  "unavailable_sources_written_or_reported": 0,
+                  "partial": True,
+                  "degraded": True,
+                  "reason": "discovery_timeout",
+              },
+              "vendors": [],
+          }
+          Path("source-discovery-report.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          elif [ "$STATUS" -ne 0 ]; then
+            exit "$STATUS"
+          fi
+
+          python - <<'PY'
+          import json
+
+          report = json.load(open("source-discovery-report.json", encoding="utf-8"))
+          if report.get("report_type") != "source_discovery_report":
+              raise SystemExit("source-discovery-report.json is not a source_discovery_report")
+          if "summary" not in report or "vendors" not in report:
+              raise SystemExit("source-discovery-report.json is structurally incomplete")
+          PY
       - name: Build source repair sweep report
         run: |
           python -m tools.openva.source_repair_sweep build \

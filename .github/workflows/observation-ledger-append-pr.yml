@@ -3,7 +3,7 @@ name: observation-ledger-append-pr
 # WP35.5 autonomous observation-ledger continuity.
 #
 # After a successful source-maintenance-report run, this workflow downloads that
-# exact run's artifact, filters its observation-ledger delta to genuinely-new
+# exact run's observation-continuity artifact, filters its ledger delta to genuinely-new
 # rows, appends them to the committed monthly ledger, and opens (or updates) a
 # path-restricted, append-only, release-gated PR labelled for the observation
 # automerge lane. It never pushes to main and never merges; the agent-automerge
@@ -71,7 +71,7 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/smr"
           gh run download "${{ steps.resolve.outputs.run_id }}" \
-            --name openva-source-maintenance-report \
+            --name openva-source-maintenance-observation-continuity \
             --dir "$RUNNER_TEMP/smr"
           test -f "$RUNNER_TEMP/smr/observation-ledger/observation-ledger-delta.ndjson"
           test -f "$RUNNER_TEMP/smr/observation-ledger/latest-observations.json"
@@ -161,7 +161,7 @@ jobs:
               "",
               "### Provenance",
               f"- Source workflow run: `{run_id}` (source-maintenance-report)",
-              "- Artifact: `openva-source-maintenance-report`",
+              "- Artifact: `openva-source-maintenance-observation-continuity`",
               "- Delta file: `observation-ledger/observation-ledger-delta.ndjson`",
               "- Latest index: `observation-ledger/latest-observations.json`",
               f"- Filtered delta digest: `{summary.get('filtered_delta_digest')}`",
