@@ -31,7 +31,20 @@ def test_discovery_ledger_append_has_race_safe_append_contract():
     assert "git merge-base --is-ancestor origin/main HEAD" in text
     assert "--max-append-count 500 \\" in text
     assert "maintenance/discovery-events/*.ndjson" in text
-    assert "--force" not in text
+    assert "git push --force" not in text
+    assert "git push -f" not in text
+    assert "--force-with-lease" not in text
+
+    first_label = 'gh label create "discovery-ledger"'
+    label_apply = 'gh pr edit "$PR_NUMBER"'
+    assert first_label in text
+    assert 'gh label create "automerge:observation"' in text
+    label_block_start = text.index(first_label)
+    label_block_end = text.index(label_apply, label_block_start)
+    label_block = text[label_block_start:label_block_end]
+    append_and_push_text = text[:label_block_start] + text[label_block_end:]
+    assert label_block.count("--force") == 2
+    assert "--force" not in append_and_push_text
 
 
 def test_machine_provisional_scheduler_uses_live_queue_and_race_checks():

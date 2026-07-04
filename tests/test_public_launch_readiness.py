@@ -88,7 +88,7 @@ def test_source_observation_retention_policy_documents_retention_strategy():
         "Workflows never commit\n  ledger files",
         "latest-source-health.json",
         "public/source-health-snapshot.json",
-        "The site falls back to `Not yet verified` labels",
+        "The site falls back to `No source-health observation` labels",
         "Change release gate behavior.",
         "Mutate catalog data.",
     ]:

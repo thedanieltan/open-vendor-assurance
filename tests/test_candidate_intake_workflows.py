@@ -93,7 +93,25 @@ def test_automerge_candidate_intake_guards_and_recomputes_before_merge():
 
 def test_promotion_main_job_skips_candidate_bound_mode():
     wf = _load(PROMOTION)
-    assert "!= 'candidate-bound'" in wf["jobs"]["candidate-promotion-pr"]["if"]
+    condition = wf["jobs"]["candidate-promotion-pr"]["if"]
+
+    for mode in (
+        "reviewed-path",
+        "strict-growth-latest",
+        "strict-growth-shortlist",
+        "machine-provisional-from-queue",
+    ):
+        assert mode in condition
+
+    for mode in (
+        "candidate-bound",
+        "quarantine",
+        "rollback",
+        "quorum-promotion",
+    ):
+        assert mode not in condition
+
+    assert "!= 'candidate-bound'" not in condition
 
 
 def test_candidate_bound_job_is_mode_gated_with_binding_inputs():
