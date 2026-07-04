@@ -16,6 +16,7 @@ work_packages:
   WP-OPENVA-CRAWLER-IDENTITY-01:
     description: Cloudflare-verifiable crawler identity, robots pacing, access-policy classification, public operator documentation, and a free-tier key-directory Worker.
     allowed_paths:
+      - .github/workflows/catalog-growth-discovery.yml
       - .github/workflows/source-maintenance-report.yml
       - config/crawler-identity.yaml
       - docs/observation-result-taxonomy.md
