@@ -7,7 +7,6 @@ by itself, satisfy identity, authority, materialization, or promotion gates.
 import gzip
 
 import pytest
-
 from tools.openva import sitemap_discovery as sd
 from tools.openva.sitemap_discovery import (
     Bounds,
@@ -55,9 +54,6 @@ def run(mapping, *, bounds=BOUNDS):
     return discover_sitemap_candidates(DOMAINS, fetcher(mapping), bounds=bounds, **RUN)
 
 
-# --- happy path + acceptance ----------------------------------------------
-
-
 def test_sitemap_creates_zero_weight_candidate():
     out = run({"https://vendor.example/sitemap.xml": {"body": _urlset(
         "https://vendor.example/trust", "https://vendor.example/security/dpa", "https://vendor.example/blog/post",
@@ -65,8 +61,7 @@ def test_sitemap_creates_zero_weight_candidate():
     urls = {c["url"] for c in out.candidates}
     assert "https://vendor.example/trust" in urls
     assert "https://vendor.example/security/dpa" in urls
-    assert "https://vendor.example/blog/post" not in urls  # irrelevant filtered out
-    # Acceptance: the event asserts no authority and no content verification.
+    assert "https://vendor.example/blog/post" not in urls
     event = next(e for e in out.events if e["candidate_url"] == "https://vendor.example/trust")
     assert event["origin"] == "sitemap"
     assert event["classification"] == "unverified_candidate"
@@ -74,9 +69,6 @@ def test_sitemap_creates_zero_weight_candidate():
     assert "content_state:not_fetched" in event["reason_codes"]
     assert "promotion_weight:none" in event["reason_codes"]
     assert event["not_advice"] is True
-
-
-# --- XML / decompression hardening ----------------------------------------
 
 
 def test_xxe_payload_is_rejected():
@@ -113,14 +105,11 @@ def test_xml_gz_handling():
     assert any(c["url"] == "https://vendor.example/trust" for c in out.candidates)
 
 
-# --- bounds ---------------------------------------------------------------
-
-
 def test_cyclic_sitemap_index_terminates():
     a = "https://vendor.example/sitemap.xml"
     b = "https://vendor.example/b.xml"
-    out = run({a: {"body": _index(b)}, b: {"body": _index(a)}})  # a -> b -> a
-    assert out.candidates == []  # no infinite loop, no crash
+    out = run({a: {"body": _index(b)}, b: {"body": _index(a)}})
+    assert out.candidates == []
 
 
 def test_max_index_depth_enforced():
@@ -151,9 +140,6 @@ def test_max_candidate_count_capped():
     assert len(out.candidates) == 5
 
 
-# --- authority & safety ---------------------------------------------------
-
-
 def test_off_authority_sitemap_rejected():
     out = run({"https://vendor.example/sitemap.xml": {"body": _index("https://evil.test/s.xml")}})
     assert any(r["reason"] == "off_authority_sitemap" for r in out.rejected)
@@ -174,7 +160,7 @@ def test_unsafe_candidate_url_rejected():
 
 def test_sitemap_redirect_off_authority_rejected():
     out = run({"https://vendor.example/sitemap.xml": {"body": _urlset("https://vendor.example/trust"),
-                                                      "final_url": "https://evil.test/sitemap.xml"}})
+                                                       "final_url": "https://evil.test/sitemap.xml"}})
     assert any("off_authority" in r["reason"] for r in out.rejected)
 
 
@@ -186,9 +172,6 @@ def test_redirect_overflow_rejected():
 def test_www_apex_is_same_authority():
     out = run({"https://vendor.example/sitemap.xml": {"body": _urlset("https://www.vendor.example/trust")}})
     assert any(c["url"] == "https://www.vendor.example/trust" for c in out.candidates)
-
-
-# --- dedup, ordering, relevance ------------------------------------------
 
 
 def test_duplicate_url_normalization_deduplicates():
@@ -210,9 +193,6 @@ def test_irrelevant_large_sitemap_yields_nothing():
     urls = [f"https://vendor.example/products/{i}" for i in range(100)]
     out = run({"https://vendor.example/sitemap.xml": {"body": _urlset(*urls)}})
     assert out.candidates == []
-
-
-# --- robots ---------------------------------------------------------------
 
 
 def test_robots_disallow_suppresses_discovery():
@@ -240,13 +220,7 @@ def test_sitemap_declared_through_robots_is_followed():
     assert any(c["url"] == "https://vendor.example/security" for c in out.candidates)
 
 
-# --- robots access-result states (item 1): failures suppress all fetching ----
-
-
 def _robots_then_sitemaps(robots_behavior):
-    """A fetcher whose robots.txt behaves as given; every sitemap would yield a
-    candidate IF it were ever fetched. Records every requested URL."""
-
     requested: list[str] = []
 
     def fetch(url: str) -> FetchResult:
@@ -281,7 +255,6 @@ def test_robots_5xx_is_unreachable_and_suppresses_all_fetching():
     assert out.robots_reason == "robots_http_503"
     assert out.candidates == []
     assert out.sitemaps_attempted == 0
-    # Only robots.txt was ever requested — no sitemap or candidate fetch happened.
     assert all(u.endswith("/robots.txt") for u in fetch.requested)
 
 
@@ -307,7 +280,7 @@ def test_robots_redirect_overflow_is_distinct_from_transport_failure():
     fetch = _raising_robots("redirect_overflow")
     out = _discover(fetch)
     assert out.robots_state == "unreachable"
-    assert out.robots_reason == "robots_redirect_overflow"  # not collapsed with transport
+    assert out.robots_reason == "robots_redirect_overflow"
     assert out.candidates == []
 
 
@@ -337,23 +310,19 @@ def test_robots_empty_200_is_success_and_proceeds():
 
 
 def test_malformed_locator_is_a_bounded_rejection_and_later_locators_still_process():
-    # Malformed locators (bad IPv6 brackets, out-of-range port) must not raise a
-    # URL-parse error that aborts the run; they become bounded rejections and the
-    # remaining valid locators are still discovered.
     out = run({"https://vendor.example/sitemap.xml": {"body": _urlset(
-        "https://[:::]/trust",                    # malformed IPv6 host
-        "https://vendor.example:99999/security",  # out-of-range port
-        "https://vendor.example/security/dpa",    # valid, relevant
+        "https://[:::]/trust",
+        "https://vendor.example:99999/security",
+        "https://vendor.example/security/dpa",
     )}})
     urls = {c["url"] for c in out.candidates}
-    assert "https://vendor.example/security/dpa" in urls  # later locator still processed
-    assert all("[:::]" not in u and ":99999" not in u for u in urls)  # malformed not candidates
+    assert "https://vendor.example/security/dpa" in urls
+    assert all("[:::]" not in u and ":99999" not in u for u in urls)
     reasons = {r["reason"] for r in out.rejected}
-    assert reasons & {"unsafe_candidate_url", "malformed_candidate_url"}  # bounded rejection codes
+    assert reasons & {"unsafe_candidate_url", "malformed_candidate_url"}
 
 
 def test_outcome_records_parser_id_and_sitemaps_attempted():
     out = run({"https://vendor.example/sitemap.xml": {"body": _urlset("https://vendor.example/trust")}})
-    assert out.robots_parser == "openva-robots.v3"  # the corrected evaluator was used
-    # Both default locations are probed: sitemap.xml (200) and sitemap_index.xml (404).
+    assert out.robots_parser == "openva-robots.v4"
     assert out.sitemaps_attempted == 2

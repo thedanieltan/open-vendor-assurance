@@ -13,10 +13,18 @@ A safety, bound, or transport failure is surfaced as a ``FetchResult`` with
 ``http_status=None`` and an ``error``, which the ordinary classifier treats as
 not-a-candidate: a sitemap locator therefore stays zero-weight until this safe
 verification actually succeeds.
+
+Web Bot Auth is inherited from ``build_safe_fetcher`` at the shared transport
+boundary. The same SSRF, authority, redirect, deadline, and byte-boundary checks
+therefore continue to run, while every HTTPS request and redirect hop receives a
+fresh authority-bound signature. HTTP requests retain the existing bounded,
+unsigned behavior. Verification traffic uses its own stable product token rather
+than being mislabeled as sitemap discovery.
 """
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Callable
 
 from tools.openva import source_verification
@@ -51,7 +59,8 @@ def build_safe_verify_fetcher(
 
     Reuses ``SafeFetcher`` (same-authority redirects, DNS-pinned IP, mixed-answer
     rejection, deadline, byte bound) and requests identity encoding so the body
-    it classifies is readable text. Returns ``source_verification.FetchResult``.
+    it classifies is readable text. The shared constructor applies Web Bot Auth
+    once when configured. Returns ``source_verification.FetchResult``.
     """
     fetcher = build_safe_fetcher(
         official_domains,
@@ -65,6 +74,10 @@ def build_safe_verify_fetcher(
         transport=transport,
         clock=clock,
     )
+    # The shared constructor defaults to the sitemap-discovery product token.
+    # Verification is a distinct Cloudflare behavioral identity, so replace only
+    # the immutable policy's user-agent while preserving every safety bound.
+    fetcher.policy = replace(fetcher.policy, user_agent=source_verification.USER_AGENT)
 
     def verify(url: str) -> source_verification.FetchResult:
         try:
