@@ -146,6 +146,7 @@ jobs:
           python -m tools.openva.observation_ledger build \
             --verification-report source-verification-report.json \
             --run-id "${{ github.run_id }}" \
+            --baseline maintenance/source-observations/latest-observations.json \
             --output-dir observation-ledger
       - name: Upload observation continuity artifacts
         uses: actions/upload-artifact@v6
