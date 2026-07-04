@@ -17,3 +17,15 @@ provenance:
   observer: human
   confidence: medium
 not_advice: true
+review_state: quarantined
+quarantine:
+  reason: persistent_not_found
+  quarantined_by: quarantine-controller
+  quarantined_at: '2026-07-04T14:47:04.605502Z'
+  prior_review_state: null
+  decision_id: acuity-scheduling-security-quarantine
+  reversal:
+    method: revert_quarantine
+    reference: Revert the quarantine PR for acuity-scheduling-security; restores the
+      prior review_state. See decision acuity-scheduling-security-quarantine.
+    reversal_decision_id: null
