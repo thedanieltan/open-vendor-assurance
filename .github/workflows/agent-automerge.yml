@@ -461,6 +461,85 @@ jobs:
             reports/openva-failure-routing/observation-ledger-failure-routing-report.md
           if-no-files-found: ignore
 
+  discovery-ledger:
+    if: contains(join(github.event.pull_request.labels.*.name, ','), 'discovery-ledger') && contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:observation') && !contains(join(github.event.pull_request.labels.*.name, ','), 'observation-ledger') && !contains(join(github.event.pull_request.labels.*.name, ','), 'quarantine') && !contains(join(github.event.pull_request.labels.*.name, ','), 'candidate-intake') && !contains(join(github.event.pull_request.labels.*.name, ','), 'catalog-growth') && !contains(join(github.event.pull_request.labels.*.name, ','), 'machine-canonical') && !contains(join(github.event.pull_request.labels.*.name, ','), 'machine-provisional')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Fetch base commit
+        run: git fetch origin ${{ github.event.pull_request.base.sha }}
+
+      - name: Collect changed paths
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr diff "$PR_NUMBER" --name-only > changed-files.txt
+
+      - name: Check discovery-ledger automerge eligibility
+        env:
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          python -m tools.openva.discovery_ledger check \
+            --paths-file changed-files.txt \
+            --labels "$LABELS" \
+            --base-ref ${{ github.event.pull_request.base.sha }} \
+            --head-ref HEAD
+
+      - name: Run source-intelligence release gate (pr profile)
+        run: >-
+          python -m tools.openva.release_gates check --profile pr
+          --out-json "$RUNNER_TEMP/release-gates.json"
+          --out-md "$RUNNER_TEMP/release-gates-summary.md"
+
+      - name: Run discovery ledger tests
+        run: pytest -q tests/test_discovery_ledger.py tests/test_operational_pr_scope.py tests/test_wp41_workflows.py
+
+      - name: Enable GitHub native auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+
+      - name: Build discovery ledger failure routing input
+        if: failure()
+        run: |
+          python -m tools.openva.bot_workflow_failure build \
+            --workflow agent-automerge.yml \
+            --lane pr_safety \
+            --failure-code automerge_lane_mismatch \
+            --message "automerge lane mismatch in discovery ledger lane; inspect labels, paths, append-only behaviour, duplicate discovery event ids, operational metadata, and the release gate" \
+            --out reports/openva-failure-routing/discovery-ledger-failure-input.json \
+            --preserve-existing
+      - name: Route discovery ledger failure
+        if: failure()
+        run: |
+          python -m tools.openva.bot_failure_router classify \
+            --input reports/openva-failure-routing/discovery-ledger-failure-input.json \
+            --out reports/openva-failure-routing/discovery-ledger-failure-routing-report.json \
+            --out-md reports/openva-failure-routing/discovery-ledger-failure-routing-report.md
+      - name: Upload discovery ledger failure routing artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-automerge-discovery-ledger-failure-routing
+          path: |
+            reports/openva-failure-routing/discovery-ledger-failure-input.json
+            reports/openva-failure-routing/discovery-ledger-failure-routing-report.json
+            reports/openva-failure-routing/discovery-ledger-failure-routing-report.md
+          if-no-files-found: ignore
+
   candidate-intake:
     # WP-OPENVA-CANDIDATE-ACTIVATION-01 consuming candidate-intake merge job.
     # Checks out the exact PR head, runs the candidate-intake guard (path +
