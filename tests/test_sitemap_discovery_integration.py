@@ -25,6 +25,7 @@ from tools.openva.catalog_growth_discovery_queue import (
     sitemap_discovery_enabled,
 )
 from tools.openva.discovery_ledger import validate_event
+from tools.openva.robots_policy import PARSER_ID as ROBOTS_PARSER_ID
 from tools.openva.sitemap_discovery import FetchResult
 from tools.openva.source_verification import FetchResult as VerifyFetchResult
 
@@ -101,7 +102,7 @@ def test_enabled_mode_returns_per_vendor_records_with_normalized_events():
     assert len(records) == 1
     record = records[0]
     assert record["vendor_id"] == "vendor"
-    assert record["robots_parser"] == "openva-robots.v3"  # corrected evaluator used
+    assert record["robots_parser"] == ROBOTS_PARSER_ID  # corrected evaluator used
     assert "https://vendor.example/trust" in record["locators"]
     assert record["events"], "the enabled mode must produce zero-weight events"
     for event in record["events"]:
@@ -166,7 +167,7 @@ def test_end_to_end_locator_reaches_an_eligible_outcome(tmp_path):
     assert pv["verified_candidate_count"] == 1  # locator fetched + classified into a candidate
     assert pv["provisional_eligibility"] == "strict_promote_ready"  # eligible outcome
     assert report["verification"]["provisional_eligibility_outcomes"] == {"strict_promote_ready": 1}
-    assert report["robots_parser"] == "openva-robots.v3"
+    assert report["robots_parser"] == ROBOTS_PARSER_ID
     assert json.loads(out.read_text(encoding="utf-8")) == report
 
 
