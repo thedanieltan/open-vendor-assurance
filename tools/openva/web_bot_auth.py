@@ -21,6 +21,7 @@ import json
 import os
 import secrets
 import subprocess
+import sys
 import tempfile
 import time
 from dataclasses import dataclass
@@ -35,6 +36,8 @@ SIGNATURE_LABEL = "openva"
 ENV_DIRECTORY_URL = "OPENVA_WEB_BOT_AUTH_DIRECTORY_URL"
 ENV_PUBLIC_JWK = "OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON"
 ENV_PRIVATE_KEY = "OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64"
+
+_WEB_BOT_AUTH_CONFIG_DIAGNOSTIC_EMITTED = False
 
 
 class WebBotAuthConfigurationError(RuntimeError):
@@ -62,6 +65,14 @@ class TransportLike(Protocol):
 
 def _b64url_no_padding(data: bytes) -> str:
     return base64.urlsafe_b64encode(data).decode("ascii").rstrip("=")
+
+
+def _emit_configured_diagnostic_once() -> None:
+    global _WEB_BOT_AUTH_CONFIG_DIAGNOSTIC_EMITTED
+    if _WEB_BOT_AUTH_CONFIG_DIAGNOSTIC_EMITTED:
+        return
+    print("web_bot_auth_configured=true", file=sys.stderr)
+    _WEB_BOT_AUTH_CONFIG_DIAGNOSTIC_EMITTED = True
 
 
 def _canonical_public_jwk(jwk: Mapping[str, object]) -> dict[str, str]:
@@ -219,6 +230,8 @@ class WebBotAuthSigner:
             private_key = base64.b64decode(values[ENV_PRIVATE_KEY], validate=True)
         except (ValueError, base64.binascii.Error) as exc:
             raise WebBotAuthConfigurationError("private key environment value is not valid base64") from exc
+
+        _emit_configured_diagnostic_once()
 
         def sign(payload: bytes) -> bytes:
             return _openssl_sign(private_key, payload)
