@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from tools.openva.candidate_promotion_actions import filter_reviewed_candidate_plan
 from tools.openva.promotion_planner import (
     build_promotion_plan,
     build_strict_growth_plan,
@@ -181,6 +182,26 @@ def test_planner_promotes_likely_candidate_for_review(tmp_path):
     assert action["requires_human_review"] is True
     assert action["writes_canonical_sources"] is False
     assert action["non_advisory"] is True
+
+
+def test_sitemap_viability_filter_excludes_duplicate_canonical_source_url_from_final_plan(tmp_path):
+    write_yaml(tmp_path / "data/vendors/example/vendor.yaml", vendor())
+    existing = source(source_type="security_page")
+    existing["source_id"] = "example-security-page"
+    existing["source_url"] = "https://example.com/privacy"
+    write_yaml(tmp_path / "data/vendors/example/sources/example-security-page.yaml", existing)
+    duplicate = candidate(source_type="privacy_notice")
+    duplicate["candidate_source_id"] = "example-privacy-notice-candidate"
+    duplicate["candidate_url"] = "https://example.com/privacy/"
+    write_yaml(tmp_path / "data/vendors/example/candidate_sources/example-privacy-notice-candidate.yaml", duplicate)
+
+    raw_plan = build_promotion_plan(root=tmp_path)
+    filtered_plan, report = filter_reviewed_candidate_plan(raw_plan, root=tmp_path)
+
+    assert raw_plan["summary"]["action_types"] == {"promote_candidate_source_for_review": 1}
+    assert filtered_plan["actions"] == []
+    assert filtered_plan["summary"]["skipped_action_count"] == 1
+    assert report["summary"]["skip_reason_counts"]["duplicate_canonical_source_url"] == 1
 
 
 def test_planner_keeps_unavailable_source_until_next_review(tmp_path):

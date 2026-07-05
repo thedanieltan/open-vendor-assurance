@@ -3,7 +3,11 @@ import copy
 import pytest
 import yaml
 
-from tools.openva.candidate_promotion_actions import apply_candidate_promotions
+from tools.openva.candidate_promotion_actions import (
+    apply_candidate_promotions,
+    filter_reviewed_candidate_plan,
+    normalize_source_url_for_comparison,
+)
 from tools.openva.materialization_envelope import build_envelope
 from tools.openva.promotion_planner import build_strict_growth_plan
 
@@ -18,6 +22,26 @@ def write_json(path, data):
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def write_vendor(root, vendor_id="example"):
+    write_yaml(
+        root / f"data/vendors/{vendor_id}/vendor.yaml",
+        {
+            "schema_version": "0.1.0",
+            "vendor_id": vendor_id,
+            "display_name": vendor_id.title(),
+            "legal_name": None,
+            "headquarters_country": "US",
+            "official_domains": [f"{vendor_id}.test"],
+            "source_policy": {
+                "public_sources_only": True,
+                "gated_materials_excluded": True,
+                "raw_documents_mirrored_by_default": False,
+            },
+            "catalog_status": "active",
+        },
+    )
 
 
 def attach_envelope(action, root):
@@ -100,6 +124,7 @@ def strict_growth_action():
 
 
 def test_apply_reviewed_candidate_promotion_writes_canonical_source(tmp_path):
+    write_vendor(tmp_path)
     write_yaml(
         tmp_path / "data/vendors/example/candidate_sources/example-dpa-candidate.yaml",
         {
@@ -140,6 +165,7 @@ def test_apply_reviewed_candidate_promotion_writes_canonical_source(tmp_path):
 
 
 def test_apply_reviewed_candidate_promotion_preserves_plan_coverage_claims(tmp_path):
+    write_vendor(tmp_path)
     write_yaml(
         tmp_path / "data/vendors/example/candidate_sources/example-dpa-candidate.yaml",
         {
@@ -172,6 +198,7 @@ def test_apply_reviewed_candidate_promotion_preserves_plan_coverage_claims(tmp_p
 
 
 def test_apply_reviewed_candidate_promotion_skips_duplicate_source(tmp_path):
+    write_vendor(tmp_path)
     write_yaml(
         tmp_path / "data/vendors/example/candidate_sources/example-dpa-candidate.yaml",
         {
@@ -187,11 +214,230 @@ def test_apply_reviewed_candidate_promotion_skips_duplicate_source(tmp_path):
     )
     write_yaml(
         tmp_path / "data/vendors/example/sources/example-dpa.yaml",
-        {"schema_version": "0.1.0", "source_id": "example-dpa", "vendor_id": "example"},
+        {
+            "schema_version": "0.1.0",
+            "source_id": "example-dpa",
+            "vendor_id": "example",
+            "source_type": "dpa",
+            "source_url": "https://example.test/dpa",
+        },
     )
 
-    with pytest.raises(ValueError, match="canonical source already exists"):
-        apply_candidate_promotions({"actions": [reviewed_action()]}, root=tmp_path)
+    report = apply_candidate_promotions({"actions": [reviewed_action()]}, root=tmp_path)
+
+    assert report["summary"]["canonical_sources_written"] == 0
+    assert report["summary"]["skipped_actions"] == 1
+    assert "canonical_source_path_exists" in report["skipped"][0]["reason_codes"]
+    assert "duplicate_canonical_source_url" in report["skipped"][0]["reason_codes"]
+
+
+@pytest.mark.parametrize(
+    "candidate_url",
+    [
+        "https://www.graphcore.ai/privacy/",
+        "HTTPS://www.graphcore.ai/privacy",
+        "https://www.graphcore.ai/privacy#section",
+    ],
+)
+def test_filter_reviewed_plan_treats_normalized_vendor_urls_as_duplicates(tmp_path, candidate_url):
+    write_vendor(tmp_path, "graphcore")
+    write_yaml(
+        tmp_path / "data/vendors/graphcore/sources/graphcore-security-page.yaml",
+        {
+            "schema_version": "0.1.0",
+            "source_id": "graphcore-security-page",
+            "vendor_id": "graphcore",
+            "source_type": "security_page",
+            "source_url": "https://www.graphcore.ai/privacy",
+        },
+    )
+    candidate = {
+        "schema_version": "0.1.0",
+        "candidate_source_id": "graphcore-privacy-notice-candidate",
+        "vendor_id": "graphcore",
+        "source_type_candidate": "privacy_notice",
+        "candidate_url": candidate_url,
+        "confidence": "likely",
+        "requires_review": True,
+        "evidence": {"http_status": 200, "matched_terms": ["privacy"], "page_title": "Privacy Notice"},
+        "not_advice": True,
+    }
+    write_yaml(tmp_path / "data/vendors/graphcore/candidate_sources/graphcore-privacy-notice-candidate.yaml", candidate)
+    action = {
+        **reviewed_action(),
+        "vendor_id": "graphcore",
+        "source_type": "privacy_notice",
+        "candidate_source_id": "graphcore-privacy-notice-candidate",
+        "candidate_url": candidate_url,
+        "path": "data/vendors/graphcore/candidate_sources/graphcore-privacy-notice-candidate.yaml",
+    }
+
+    filtered, report = filter_reviewed_candidate_plan({"actions": [action]}, root=tmp_path)
+
+    assert filtered["actions"] == []
+    assert report["summary"]["skipped_action_count"] == 1
+    assert report["summary"]["skip_reason_counts"]["duplicate_canonical_source_url"] == 1
+
+
+def test_filter_reviewed_plan_does_not_treat_same_url_across_vendors_as_duplicate(tmp_path):
+    write_vendor(tmp_path, "alpha")
+    write_vendor(tmp_path, "beta")
+    write_yaml(
+        tmp_path / "data/vendors/beta/sources/beta-security-page.yaml",
+        {
+            "schema_version": "0.1.0",
+            "source_id": "beta-security-page",
+            "vendor_id": "beta",
+            "source_type": "security_page",
+            "source_url": "https://shared.example/privacy",
+        },
+    )
+    candidate = {
+        "schema_version": "0.1.0",
+        "candidate_source_id": "alpha-privacy-notice-candidate",
+        "vendor_id": "alpha",
+        "source_type_candidate": "privacy_notice",
+        "candidate_url": "https://shared.example/privacy",
+        "confidence": "likely",
+        "requires_review": True,
+        "evidence": {"http_status": 200, "matched_terms": ["privacy"], "page_title": "Privacy Notice"},
+        "not_advice": True,
+    }
+    write_yaml(tmp_path / "data/vendors/alpha/candidate_sources/alpha-privacy-notice-candidate.yaml", candidate)
+    action = {
+        **reviewed_action(),
+        "vendor_id": "alpha",
+        "source_type": "privacy_notice",
+        "candidate_source_id": "alpha-privacy-notice-candidate",
+        "candidate_url": "https://shared.example/privacy",
+        "path": "data/vendors/alpha/candidate_sources/alpha-privacy-notice-candidate.yaml",
+    }
+
+    filtered, report = filter_reviewed_candidate_plan({"actions": [action]}, root=tmp_path)
+
+    assert filtered["actions"] == [action]
+    assert report["summary"]["viable_action_count"] == 1
+    assert report["summary"]["skipped_action_count"] == 0
+
+
+def test_filter_reviewed_plan_reports_path_collision_and_existing_semantic_source(tmp_path):
+    write_vendor(tmp_path)
+    write_yaml(
+        tmp_path / "data/vendors/example/sources/example-dpa.yaml",
+        {
+            "schema_version": "0.1.0",
+            "source_id": "example-dpa",
+            "vendor_id": "example",
+            "source_type": "dpa",
+            "source_url": "https://example.test/dpa",
+        },
+    )
+    write_yaml(
+        tmp_path / "data/vendors/example/candidate_sources/example-dpa-candidate.yaml",
+        {
+            "schema_version": "0.1.0",
+            "candidate_source_id": "example-dpa-candidate",
+            "vendor_id": "example",
+            "source_type_candidate": "dpa",
+            "candidate_url": "https://example.test/dpa/",
+            "confidence": "likely",
+            "requires_review": True,
+            "evidence": {"http_status": 200, "matched_terms": ["data processing"], "page_title": "Data Processing Addendum"},
+            "not_advice": True,
+        },
+    )
+    action = reviewed_action()
+    action["candidate_url"] = "https://example.test/dpa/"
+
+    filtered, report = filter_reviewed_candidate_plan({"actions": [action]}, root=tmp_path)
+    reasons = report["skipped_actions"][0]["reason_codes"]
+
+    assert filtered["actions"] == []
+    assert "canonical_source_path_exists" in reasons
+    assert "duplicate_canonical_source_url" in reasons
+    assert "already_represented_by_canonical_source" in reasons
+
+
+def test_filter_reviewed_plan_skips_invalid_candidate_before_apply(tmp_path):
+    write_vendor(tmp_path)
+    write_yaml(
+        tmp_path / "data/vendors/example/candidate_sources/example-dpa-candidate.yaml",
+        {
+            "schema_version": "0.1.0",
+            "candidate_source_id": "example-dpa-candidate",
+            "vendor_id": "example",
+            "source_type_candidate": "dpa",
+            "candidate_url": "http://example.test/dpa",
+            "confidence": "likely",
+            "requires_review": True,
+            "evidence": {"http_status": 200, "matched_terms": [], "page_title": "Approved DPA"},
+            "not_advice": True,
+        },
+    )
+    action = reviewed_action()
+    action["candidate_url"] = "http://example.test/dpa"
+
+    filtered, report = filter_reviewed_candidate_plan({"actions": [action]}, root=tmp_path)
+    reasons = report["skipped_actions"][0]["reason_codes"]
+
+    assert filtered["actions"] == []
+    assert "source_url_not_https" in reasons
+    assert "candidate_missing_matched_terms" in reasons
+    assert "prohibited_advisory_wording" in reasons
+
+
+def test_apply_defense_in_depth_skips_duplicate_source_url_without_writing(tmp_path):
+    write_vendor(tmp_path)
+    write_yaml(
+        tmp_path / "data/vendors/example/sources/example-security-page.yaml",
+        {
+            "schema_version": "0.1.0",
+            "source_id": "example-security-page",
+            "vendor_id": "example",
+            "source_type": "security_page",
+            "source_url": "https://example.test/privacy",
+        },
+    )
+    write_yaml(
+        tmp_path / "data/vendors/example/candidate_sources/example-privacy-notice-candidate.yaml",
+        {
+            "schema_version": "0.1.0",
+            "candidate_source_id": "example-privacy-notice-candidate",
+            "vendor_id": "example",
+            "source_type_candidate": "privacy_notice",
+            "candidate_url": "https://example.test/privacy/",
+            "confidence": "likely",
+            "requires_review": True,
+            "evidence": {"http_status": 200, "matched_terms": ["privacy"], "page_title": "Privacy Notice"},
+            "not_advice": True,
+        },
+    )
+    action = {
+        **reviewed_action(),
+        "source_type": "privacy_notice",
+        "candidate_source_id": "example-privacy-notice-candidate",
+        "candidate_url": "https://example.test/privacy/",
+        "path": "data/vendors/example/candidate_sources/example-privacy-notice-candidate.yaml",
+    }
+
+    report = apply_candidate_promotions({"actions": [action]}, root=tmp_path)
+
+    assert report["summary"]["canonical_sources_written"] == 0
+    assert report["summary"]["skipped_actions"] == 1
+    assert report["summary"]["skip_reason_counts"]["duplicate_canonical_source_url"] == 1
+    assert not (tmp_path / "data/vendors/example/sources/example-privacy-notice.yaml").exists()
+
+
+def test_normalize_source_url_for_comparison_handles_safe_equivalences():
+    assert normalize_source_url_for_comparison("HTTPS://www.graphcore.ai:443/privacy#section") == (
+        "https://www.graphcore.ai/privacy"
+    )
+    assert normalize_source_url_for_comparison("https://www.graphcore.ai/privacy/") == (
+        "https://www.graphcore.ai/privacy"
+    )
+    assert normalize_source_url_for_comparison("https://www.graphcore.ai/%70rivacy") == (
+        "https://www.graphcore.ai/privacy"
+    )
 
 
 def test_apply_strict_growth_writes_vendor_source_artifact_and_change(tmp_path):

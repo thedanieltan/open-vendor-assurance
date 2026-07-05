@@ -364,6 +364,13 @@ jobs:
           )
           print(json.dumps(plan["summary"], indent=2, sort_keys=True))
           PY
+      - name: Filter sitemap source promotion viability
+        if: env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
+        run: |
+          python -m tools.openva.candidate_promotion_actions filter-reviewed-plan \
+            --promotion-plan sitemap-source-promotion-plan.json \
+            --output sitemap-source-promotion-plan.json \
+            --viability-report sitemap-source-promotion-viability-report.json
       - name: Stash temporary sitemap candidate-source records
         if: env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
         run: |
@@ -525,10 +532,18 @@ jobs:
           from pathlib import Path
 
           manifest = json.load(open("sitemap-source-candidate-manifest.json", encoding="utf-8"))
+          plan = json.load(open("sitemap-source-promotion-plan.json", encoding="utf-8"))
+          viable_candidate_ids = {
+              str(action.get("candidate_source_id") or "")
+              for action in plan.get("actions", []) or []
+              if action.get("candidate_source_id")
+          }
           stash_root = Path(manifest.get("temporary_candidate_stash_root") or "reports/sitemap-source-temporary-candidates")
           restored_paths = []
           for item in manifest.get("stashed_candidate_paths") or []:
               path = Path(item)
+              if path.stem not in viable_candidate_ids:
+                  continue
               stash_path = stash_root / path
               if not stash_path.exists():
                   continue
@@ -544,21 +559,28 @@ jobs:
             --promotion-plan "$PROMOTION_PLAN_PATH" \
             --output candidate-promotion-report.json
       - name: Remove temporary sitemap candidate-source records
-        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
+        if: always() && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
         run: |
           set -euo pipefail
           python - <<'PY'
           import json
           from pathlib import Path
 
-          manifest = json.load(open("sitemap-source-candidate-manifest.json", encoding="utf-8"))
+          manifest_path = Path("sitemap-source-candidate-manifest.json")
+          if not manifest_path.exists():
+              print(json.dumps({"temporary_candidate_sources_cleaned": 0, "manifest_missing": True}, sort_keys=True))
+              raise SystemExit(0)
+          manifest = json.load(open(manifest_path, encoding="utf-8"))
+          cleaned = 0
           for item in manifest.get("temporary_candidate_paths") or []:
               path = Path(item)
               if path.exists():
                   path.unlink()
+                  cleaned += 1
               parent = path.parent
               if parent.name == "candidate_sources" and parent.exists() and not any(parent.iterdir()):
                   parent.rmdir()
+          print(json.dumps({"temporary_candidate_sources_cleaned": cleaned}, sort_keys=True))
           PY
       - name: Rebuild generated outputs
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
@@ -865,7 +887,7 @@ jobs:
             candidate-promotion-pr-body-final.md
           if-no-files-found: error
       - name: Upload sitemap source promotion evidence artifacts
-        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
+        if: always() && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
         uses: actions/upload-artifact@v6
         with:
           name: openva-candidate-promotion-pr-sitemap-source-evidence
@@ -875,7 +897,8 @@ jobs:
             sitemap-source-candidate-manifest.json
             sitemap-source-promotion-plan.raw.json
             sitemap-source-promotion-plan.json
-          if-no-files-found: error
+            sitemap-source-promotion-viability-report.json
+          if-no-files-found: warn
       - name: Upload strict-growth evidence artifacts
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist')
         uses: actions/upload-artifact@v6
