@@ -13,6 +13,7 @@ def test_catalog_guard_allows_catalog_files():
             "openva-pack.json",
             "maintenance/generated/strict-growth-promotion-plan.json",
             "maintenance/generated/strict-growth-eligibility-report.json",
+            "maintenance/source-observations/latest-observations.json",
             "maintenance/applied/applied-plans.json",
             "docs/coverage-map.md",
             "docs/vendor-expansion-backlog.md",

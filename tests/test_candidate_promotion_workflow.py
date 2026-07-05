@@ -107,10 +107,38 @@ def test_candidate_promotion_commits_rebuilt_dist_outputs():
     assert "python -m tools.openva.validate build-indexes" in text
     assert "git diff --quiet -- data indexes dist maintenance/generated maintenance/machine-decisions openva-pack.json" in text
     assert "git add data indexes dist openva-pack.json" in text
+    assert "git add maintenance/source-observations/latest-observations.json" in text
     assert "if [ -d maintenance/generated ]; then" in text
     assert "git add maintenance/generated" in text
     # WP36b: the linked machine decision record is committed too.
     assert "git add maintenance/machine-decisions" in text
+
+
+def test_candidate_promotion_generated_pr_body_declares_work_package():
+    text = workflow_text()
+
+    body = text[text.index("- name: Prepare compact PR body") : text.index("- name: Commit and push promotion branch")]
+
+    assert "'Work-Package: WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01'" in body
+    assert body.index("'Work-Package: WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01'") < body.index("'## Summary'")
+
+
+def test_candidate_promotion_installs_preflight_observation_baseline_before_pr_body():
+    text = workflow_text()
+
+    preflight = text.index("- name: Run source preflight for changed sources")
+    fail = text.index("- name: Fail if source preflight failed")
+    install = text.index("- name: Install source preflight observation baseline")
+    body = text.index("- name: Prepare compact PR body")
+
+    assert preflight < fail < install < body
+    block = text[install:body]
+    assert "source-preflight-verification-report.json" in block
+    assert "report_type\": \"source_verification_report\"" in block
+    assert "python -m tools.openva.observation_ledger build \\" in block
+    assert "--baseline maintenance/source-observations/latest-observations.json" in block
+    assert "python -m tools.openva.observation_ledger install-latest \\" in block
+    assert "python -m tools.openva.release_gates check --profile pr" in block
 
 
 def test_strict_growth_latest_commits_sha_bound_evidence_files():

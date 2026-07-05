@@ -113,10 +113,11 @@ def test_sitemap_source_mode_uses_existing_promotion_pipeline():
     rebuild = text.index("- name: Rebuild generated outputs")
     final_validate = text.index("- name: Validate generated catalog promotion")
     preflight = text.index("- name: Run source preflight for changed sources")
+    observation_baseline = text.index("- name: Install source preflight observation baseline")
     pr_create = text.index("- name: Create or update pull request")
 
     assert sitemap < viability < stash < select < current_validate < restore < apply
-    assert apply < cleanup < rebuild < final_validate < preflight < pr_create
+    assert apply < cleanup < rebuild < final_validate < preflight < observation_baseline < pr_create
     block = text[sitemap:select]
     assert "python -m tools.openva.catalog_growth_discovery_queue run-sitemap-discovery \\" in block
     assert "from tools.openva.source_discovery import write_discovery_outputs" in block
@@ -164,10 +165,11 @@ def test_sitemap_source_temp_candidates_are_cleaned_before_staging_and_pr_creati
     final_validate = text.index("- name: Validate generated catalog promotion")
     catalog_changes = text.index("- name: Check whether catalog changes were produced")
     preflight = text.index("- name: Run source preflight for changed sources")
+    observation_baseline = text.index("- name: Install source preflight observation baseline")
     commit = text.index("- name: Commit and push promotion branch")
     pr_create = text.index("- name: Create or update pull request")
 
-    assert cleanup < rebuild < final_validate < catalog_changes < preflight < commit < pr_create
+    assert cleanup < rebuild < final_validate < catalog_changes < preflight < observation_baseline < commit < pr_create
     cleanup_block = text[cleanup:rebuild]
     assert "if: always() && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'" in cleanup_block
     assert "path.unlink()" in cleanup_block
@@ -187,12 +189,14 @@ def test_sitemap_source_final_validation_rebuild_and_preflight_run_before_pr_cre
     rebuild = text.index("- name: Rebuild generated outputs")
     catalog_changes = text.index("- name: Check whether catalog changes were produced")
     preflight = text.index("- name: Run source preflight for changed sources")
+    observation_baseline = text.index("- name: Install source preflight observation baseline")
     pr_create = text.index("- name: Create or update pull request")
 
-    assert apply < cleanup < rebuild < final_validate < catalog_changes < preflight < pr_create
+    assert apply < cleanup < rebuild < final_validate < catalog_changes < preflight < observation_baseline < pr_create
     assert "python -m tools.openva.validate build-indexes" in text[rebuild:final_validate]
     assert "python -m tools.openva.validate validate" in text[final_validate:catalog_changes]
-    assert "python -m tools.openva.source_preflight check-changed-sources" in text[preflight:pr_create]
+    assert "python -m tools.openva.source_preflight check-changed-sources" in text[preflight:observation_baseline]
+    assert "python -m tools.openva.observation_ledger install-latest" in text[observation_baseline:pr_create]
 
 
 def test_sitemap_source_zero_actions_exits_without_pr_creation():
@@ -222,6 +226,7 @@ def test_sitemap_source_one_selected_action_path_restores_candidates_before_appl
     rebuild = text.index("- name: Rebuild generated outputs")
     final_validate = text.index("- name: Validate generated catalog promotion")
     preflight = text.index("- name: Run source preflight for changed sources")
+    observation_baseline = text.index("- name: Install source preflight observation baseline")
     pr_create = text.index("- name: Create or update pull request")
     filter_block = text[filter_start:filter_end]
     viability_block = text[viability:restore]
@@ -232,7 +237,7 @@ def test_sitemap_source_one_selected_action_path_restores_candidates_before_appl
     assert "promote_actions[:max_actions]" not in filter_block
     assert '"viability_filter_pending": True' in filter_block
     assert '--max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"' in viability_block
-    assert restore < apply < cleanup < rebuild < final_validate < preflight < pr_create
+    assert restore < apply < cleanup < rebuild < final_validate < preflight < observation_baseline < pr_create
 
 
 def test_sitemap_source_cap_is_applied_after_viability_filtering():

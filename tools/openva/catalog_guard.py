@@ -23,6 +23,7 @@ ALLOWED_FILES = {
     "docs/coverage-map.md",
     "docs/vendor-expansion-backlog.md",
     "maintenance/applied/applied-plans.json",
+    "maintenance/source-observations/latest-observations.json",
 }
 
 PROHIBITED_PREFIXES = (
