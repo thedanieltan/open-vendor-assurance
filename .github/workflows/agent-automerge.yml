@@ -15,6 +15,284 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  generated-catalog:
+    if: >-
+      startsWith(github.event.pull_request.head.ref, 'agent-candidate-promotion-') &&
+      github.event.pull_request.title == 'Catalog: apply reviewed candidate source promotion'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Collect generated catalog PR metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr diff "$PR_NUMBER" --name-only > changed-files.txt
+          gh pr view "$PR_NUMBER" --json body --jq .body > pr-body.md
+          for attempt in $(seq 1 30); do
+            gh pr view "$PR_NUMBER" --json title,headRefName,isDraft,mergeable > pr-metadata.json
+            MERGEABLE=$(python -c "import json; print(json.load(open('pr-metadata.json', encoding='utf-8')).get('mergeable') or '')")
+            if [ "$MERGEABLE" != "UNKNOWN" ] && [ -n "$MERGEABLE" ]; then
+              break
+            fi
+            sleep 10
+          done
+
+      - name: Collect unresolved review thread state
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          OWNER="${GITHUB_REPOSITORY%/*}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+          if ! gh api graphql \
+            -f owner="$OWNER" \
+            -f repo="$REPO" \
+            -F number="$PR_NUMBER" \
+            -f query='
+              query($owner: String!, $repo: String!, $number: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  pullRequest(number: $number) {
+                    reviewThreads(first: 100) {
+                      nodes { isResolved }
+                      pageInfo { hasNextPage }
+                    }
+                  }
+                }
+              }
+            ' > review-threads.json; then
+            printf '{"review_threads_unavailable": true}\n' > review-threads.json
+          fi
+
+      - name: Wait for generated catalog required checks
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          import time
+
+          pr_number = "${{ github.event.pull_request.number }}"
+          required = ("validate", "catalog-pr-guard", "agent-weighted-review")
+          terminal = {"success", "failure", "skipped"}
+
+          def workflow_status(rows, workflow):
+              matches = [row for row in rows if row.get("workflow") == workflow]
+              if not matches:
+                  return "missing"
+              states = {str(row.get("state") or "").upper() for row in matches}
+              buckets = {str(row.get("bucket") or "").lower() for row in matches}
+              if "fail" in buckets or states & {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED"}:
+                  return "failure"
+              if "pending" in buckets or any(state not in {"SUCCESS", "SKIPPED"} for state in states):
+                  return "pending"
+              if "SUCCESS" in states:
+                  return "success"
+              return "skipped"
+
+          latest_rows = []
+          latest_statuses = {workflow: "missing" for workflow in required}
+          for _ in range(45):
+              completed = subprocess.run(
+                  [
+                      "gh",
+                      "pr",
+                      "checks",
+                      pr_number,
+                      "--json",
+                      "name,workflow,state,bucket,link",
+                  ],
+                  check=False,
+                  text=True,
+                  capture_output=True,
+              )
+              latest_rows = json.loads(completed.stdout or "[]")
+              latest_statuses = {workflow: workflow_status(latest_rows, workflow) for workflow in required}
+              if all(status in terminal for status in latest_statuses.values()):
+                  break
+              time.sleep(20)
+
+          with open("pr-checks.json", "w", encoding="utf-8") as handle:
+              json.dump(latest_rows, handle, indent=2, sort_keys=True)
+              handle.write("\n")
+          with open("check-conclusions.env", "w", encoding="utf-8") as handle:
+              for workflow, status in latest_statuses.items():
+                  env_name = workflow.upper().replace("-", "_") + "_CHECK"
+                  handle.write(f"{env_name}={status}\n")
+          PY
+          cat check-conclusions.env >> "$GITHUB_ENV"
+
+      - name: Run source preflight for changed sources
+        run: |
+          python -m tools.openva.source_preflight check-changed-sources \
+            --paths-file changed-files.txt \
+            --output source-preflight-report.json || true
+
+      - name: Run source-intelligence release gate
+        run: >-
+          python -m tools.openva.release_gates check --profile pr
+          --out-json release-gates.json
+          --out-md release-gates-summary.md || true
+
+      - name: Rebuild generated outputs and detect drift
+        run: |
+          GENERATED_OUTPUTS_FRESH=true
+          python -m tools.openva.validate build-indexes || GENERATED_OUTPUTS_FRESH=false
+          git diff --quiet openva-pack.json indexes/ dist/ || GENERATED_OUTPUTS_FRESH=false
+          echo "GENERATED_OUTPUTS_FRESH=$GENERATED_OUTPUTS_FRESH" >> "$GITHUB_ENV"
+
+      - name: Prepare generated catalog eligibility inputs
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          def load_json(path, default):
+              file_path = Path(path)
+              if not file_path.exists():
+                  return default
+              return json.loads(file_path.read_text(encoding="utf-8"))
+
+          body = Path("pr-body.md").read_text(encoding="utf-8-sig")
+          metadata = load_json("pr-metadata.json", {})
+          source_preflight = load_json("source-preflight-report.json", {"failed_count": 999})
+          release_gates = load_json("release-gates.json", {"decision": "blocked", "gates": []})
+          review_threads = load_json("review-threads.json", {"review_threads_unavailable": True})
+          changed_paths = [line.strip() for line in Path("changed-files.txt").read_text(encoding="utf-8").splitlines() if line.strip()]
+
+          def body_int(label):
+              match = re.search(rf"{re.escape(label)}:\s*`?(\d+)`?", body)
+              return match.group(1) if match else ""
+
+          release_gates_passed = str(release_gates.get("decision") != "blocked").lower()
+          full_baseline_gate = next(
+              (gate for gate in release_gates.get("gates", []) if gate.get("gate_id") == "full_baseline_readiness"),
+              {},
+          )
+          latest_observations_full_baseline = str(full_baseline_gate.get("status") == "pass").lower()
+
+          if review_threads.get("review_threads_unavailable"):
+              unresolved_review_threads = 999
+          else:
+              nodes = (
+                  review_threads.get("data", {})
+                  .get("repository", {})
+                  .get("pullRequest", {})
+                  .get("reviewThreads", {})
+                  .get("nodes", [])
+              )
+              has_more_threads = (
+                  review_threads.get("data", {})
+                  .get("repository", {})
+                  .get("pullRequest", {})
+                  .get("reviewThreads", {})
+                  .get("pageInfo", {})
+                  .get("hasNextPage")
+              )
+              unresolved_review_threads = 999 if has_more_threads else sum(1 for node in nodes if not node.get("isResolved"))
+
+          forbidden_patterns = (
+              "OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64",
+              "OPENVA_WEB_BOT_AUTH_PRIVATE_JWK",
+              "BEGIN PRIVATE KEY",
+              "Signature-Input:",
+              "Signature-Agent:",
+              "Signature:",
+          )
+          secret_scan_passed = True
+          for raw_path in changed_paths:
+              path = Path(raw_path)
+              if not path.is_file():
+                  continue
+              try:
+                  text = path.read_text(encoding="utf-8")
+              except UnicodeDecodeError:
+                  text = path.read_text(encoding="utf-8", errors="ignore")
+              if any(pattern in text for pattern in forbidden_patterns):
+                  secret_scan_passed = False
+                  break
+
+          values = {
+              "HEAD_BRANCH": metadata.get("headRefName") or "",
+              "PR_TITLE": metadata.get("title") or "",
+              "IS_DRAFT": str(bool(metadata.get("isDraft"))).lower(),
+              "MERGEABLE": str(metadata.get("mergeable") == "MERGEABLE").lower(),
+              "UNRESOLVED_REVIEW_THREADS": str(unresolved_review_threads),
+              "SOURCE_PREFLIGHT_FAILURES": str(source_preflight.get("failed_count", 999)),
+              "RELEASE_GATES_PASSED": release_gates_passed,
+              "LATEST_OBSERVATIONS_FULL_BASELINE": latest_observations_full_baseline,
+              "SELECTED_ACTION_COUNT": body_int("Promotion actions selected for this PR"),
+              "MAX_SELECTED_ACTION_COUNT": body_int("Max promotion actions per generated PR") or "10",
+              "SECRET_SCAN_PASSED": str(secret_scan_passed).lower(),
+          }
+          with open("generated-catalog-automerge-inputs.env", "w", encoding="utf-8") as handle:
+              for key, value in values.items():
+                  handle.write(f"{key}={value}\n")
+          PY
+          cat generated-catalog-automerge-inputs.env >> "$GITHUB_ENV"
+
+      - name: Check generated catalog automerge eligibility
+        run: |
+          SELECTED_ACTION_ARGS=()
+          if [ -n "$SELECTED_ACTION_COUNT" ]; then
+            SELECTED_ACTION_ARGS=(--selected-action-count "$SELECTED_ACTION_COUNT")
+          fi
+          python -m tools.openva.generated_catalog_pr_risk \
+            --paths-file changed-files.txt \
+            --automerge-eligibility \
+            --pr-body-file pr-body.md \
+            --head-branch "$HEAD_BRANCH" \
+            --title "$PR_TITLE" \
+            --draft "$IS_DRAFT" \
+            --mergeable "$MERGEABLE" \
+            --unresolved-review-threads "$UNRESOLVED_REVIEW_THREADS" \
+            --check "validate=$VALIDATE_CHECK" \
+            --check "catalog-pr-guard=$CATALOG_PR_GUARD_CHECK" \
+            --check "agent-weighted-review=$AGENT_WEIGHTED_REVIEW_CHECK" \
+            --source-preflight-failures "$SOURCE_PREFLIGHT_FAILURES" \
+            --release-gates-passed "$RELEASE_GATES_PASSED" \
+            --latest-observations-full-baseline "$LATEST_OBSERVATIONS_FULL_BASELINE" \
+            --generated-outputs-fresh "$GENERATED_OUTPUTS_FRESH" \
+            "${SELECTED_ACTION_ARGS[@]}" \
+            --max-selected-action-count "$MAX_SELECTED_ACTION_COUNT" \
+            --secret-scan-passed "$SECRET_SCAN_PASSED" \
+            --out-json generated-catalog-automerge-eligibility.json
+
+      - name: Upload generated catalog automerge eligibility report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: generated-catalog-automerge-eligibility
+          path: |
+            generated-catalog-automerge-eligibility.json
+            generated-catalog-automerge-inputs.env
+            source-preflight-report.json
+            release-gates.json
+            release-gates-summary.md
+            pr-checks.json
+          if-no-files-found: warn
+
+      - name: Enable GitHub native auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+
   machine-canonical:
     if: contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:machine-canonical') && !contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:strict-growth')
     runs-on: ubuntu-latest
