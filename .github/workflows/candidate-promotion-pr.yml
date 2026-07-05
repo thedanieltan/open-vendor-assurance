@@ -330,9 +330,7 @@ jobs:
               and action.get("candidate_source_id") in sitemap_candidate_ids
           ]
           max_actions = int(os.environ.get("MAX_PROMOTION_ACTIONS_PER_PR") or "0")
-          selected_actions = promote_actions[:max_actions] if max_actions else promote_actions
-          deferred_actions = promote_actions[max_actions:] if max_actions else []
-          counts = Counter(action["action"] for action in selected_actions)
+          counts = Counter(action["action"] for action in promote_actions)
           plan = {
               **raw,
               "report_type": "sitemap_source_promotion_plan",
@@ -343,21 +341,17 @@ jobs:
               },
               "summary": {
                   **(raw.get("summary") or {}),
-                  "action_count": len(selected_actions),
-                  "selected_promotion_action_count": len(selected_actions),
+                  "action_count": len(promote_actions),
+                  "selected_promotion_action_count": len(promote_actions),
                   "candidate_source_ids_from_sitemap": len(sitemap_candidate_ids),
                   "uncapped_action_count": len(promote_actions),
-                  "batch_deferred_action_count": len(deferred_actions),
+                  "batch_deferred_action_count": 0,
                   "max_promotion_actions_per_pr": max_actions,
+                  "viability_filter_pending": True,
                   "action_types": dict(sorted(counts.items())),
               },
-              "actions": selected_actions,
+              "actions": promote_actions,
           }
-          if deferred_actions:
-              plan["deferred_actions"] = [
-                  {"action": action, "reason_codes": ["max_promotion_actions_per_pr_exceeded"]}
-                  for action in deferred_actions
-              ]
           Path("sitemap-source-promotion-plan.json").write_text(
               json.dumps(plan, indent=2, sort_keys=True) + "\n",
               encoding="utf-8",
@@ -370,7 +364,8 @@ jobs:
           python -m tools.openva.candidate_promotion_actions filter-reviewed-plan \
             --promotion-plan sitemap-source-promotion-plan.json \
             --output sitemap-source-promotion-plan.json \
-            --viability-report sitemap-source-promotion-viability-report.json
+            --viability-report sitemap-source-promotion-viability-report.json \
+            --max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"
       - name: Stash temporary sitemap candidate-source records
         if: env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
         run: |

@@ -125,6 +125,7 @@ def test_sitemap_source_mode_uses_existing_promotion_pipeline():
     assert "--discovery-report sitemap-source-discovery-report.json" in block
     assert 'action.get("action") == "promote_candidate_source_for_review"' in block
     assert "candidate_promotion_actions filter-reviewed-plan" in block
+    assert '--max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"' in block
     assert "sitemap-source-promotion-viability-report.json" in block
     assert "sitemap-source-promotion-plan.json" in block
     assert "candidate_promotion_actions apply" in text[select:cleanup]
@@ -214,6 +215,7 @@ def test_sitemap_source_one_selected_action_path_restores_candidates_before_appl
 
     filter_start = text.index('action.get("action") == "promote_candidate_source_for_review"')
     filter_end = text.index('Path("sitemap-source-promotion-plan.json").write_text')
+    viability = text.index("- name: Filter sitemap source promotion viability")
     restore = text.index("- name: Restore temporary sitemap candidate-source records for apply")
     apply = text.index("- name: Apply candidate promotions")
     cleanup = text.index("- name: Remove temporary sitemap candidate-source records")
@@ -222,12 +224,31 @@ def test_sitemap_source_one_selected_action_path_restores_candidates_before_appl
     preflight = text.index("- name: Run source preflight for changed sources")
     pr_create = text.index("- name: Create or update pull request")
     filter_block = text[filter_start:filter_end]
+    viability_block = text[viability:restore]
 
     assert "selected_promotion_action_count" in filter_block
-    assert '"action_count": len(selected_actions)' in filter_block
+    assert '"action_count": len(promote_actions)' in filter_block
     assert '"action_types": dict(sorted(counts.items()))' in filter_block
-    assert "promote_actions[:max_actions]" in filter_block
+    assert "promote_actions[:max_actions]" not in filter_block
+    assert '"viability_filter_pending": True' in filter_block
+    assert '--max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"' in viability_block
     assert restore < apply < cleanup < rebuild < final_validate < preflight < pr_create
+
+
+def test_sitemap_source_cap_is_applied_after_viability_filtering():
+    text = CANDIDATE_PROMOTION.read_text(encoding="utf-8")
+
+    sitemap = text.index("- name: Regenerate sitemap source promotion plan")
+    viability = text.index("- name: Filter sitemap source promotion viability")
+    select = text.index("- name: Select candidate promotion plan")
+    raw_block = text[sitemap:viability]
+    viability_block = text[viability:select]
+
+    assert "selected_actions = promote_actions[:max_actions]" not in raw_block
+    assert '"actions": promote_actions' in raw_block
+    assert '"uncapped_action_count": len(promote_actions)' in raw_block
+    assert "candidate_promotion_actions filter-reviewed-plan" in viability_block
+    assert '--max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"' in viability_block
 
 
 def test_sitemap_source_evidence_artifacts_include_viability_report_even_without_catalog_changes():

@@ -5,6 +5,7 @@ import yaml
 
 from tools.openva.candidate_promotion_actions import (
     apply_candidate_promotions,
+    build_sitemap_source_plan_from_artifacts,
     filter_reviewed_candidate_plan,
     normalize_source_url_for_comparison,
 )
@@ -73,6 +74,36 @@ def reviewed_action():
         "requires_human_review": True,
         "writes_canonical_sources": False,
         "non_advisory": True,
+    }
+
+
+def write_reviewed_candidate(root, vendor_id, source_type, candidate_source_id, candidate_url, matched_terms=None):
+    matched_terms = matched_terms or ["data processing"]
+    write_vendor(root, vendor_id)
+    write_yaml(
+        root / f"data/vendors/{vendor_id}/candidate_sources/{candidate_source_id}.yaml",
+        {
+            "schema_version": "0.1.0",
+            "candidate_source_id": candidate_source_id,
+            "vendor_id": vendor_id,
+            "source_type_candidate": source_type,
+            "candidate_url": candidate_url,
+            "confidence": "likely",
+            "requires_review": True,
+            "evidence": {"http_status": 200, "matched_terms": matched_terms, "page_title": "Data Processing Addendum"},
+            "not_advice": True,
+        },
+    )
+
+
+def reviewed_action_for(vendor_id, source_type, candidate_source_id, candidate_url):
+    return {
+        **reviewed_action(),
+        "vendor_id": vendor_id,
+        "source_type": source_type,
+        "candidate_source_id": candidate_source_id,
+        "candidate_url": candidate_url,
+        "path": f"data/vendors/{vendor_id}/candidate_sources/{candidate_source_id}.yaml",
     }
 
 
@@ -384,6 +415,138 @@ def test_filter_reviewed_plan_skips_invalid_candidate_before_apply(tmp_path):
     assert "source_url_not_https" in reasons
     assert "candidate_missing_matched_terms" in reasons
     assert "prohibited_advisory_wording" in reasons
+
+
+def test_filter_reviewed_plan_applies_cap_after_viability_filtering(tmp_path):
+    write_reviewed_candidate(tmp_path, "example", "dpa", "example-dpa-candidate", "https://example.test/dpa")
+    write_yaml(
+        tmp_path / "data/vendors/example/sources/example-dpa.yaml",
+        {
+            "schema_version": "0.1.0",
+            "source_id": "example-dpa",
+            "vendor_id": "example",
+            "source_type": "dpa",
+            "source_url": "https://example.test/dpa",
+        },
+    )
+    write_reviewed_candidate(tmp_path, "alpha", "dpa", "alpha-dpa-candidate", "https://alpha.test/dpa")
+    write_reviewed_candidate(tmp_path, "beta", "dpa", "beta-dpa-candidate", "https://beta.test/dpa")
+    duplicate = reviewed_action_for("example", "dpa", "example-dpa-candidate", "https://example.test/dpa")
+    first_viable = reviewed_action_for("alpha", "dpa", "alpha-dpa-candidate", "https://alpha.test/dpa")
+    second_viable = reviewed_action_for("beta", "dpa", "beta-dpa-candidate", "https://beta.test/dpa")
+
+    filtered, report = filter_reviewed_candidate_plan(
+        {"actions": [duplicate, first_viable, second_viable]}, root=tmp_path, max_actions=1
+    )
+
+    assert filtered["actions"] == [first_viable]
+    assert report["summary"]["candidate_actions_considered"] == 3
+    assert report["summary"]["skipped_action_count"] == 1
+    assert report["summary"]["skip_reason_counts"]["duplicate_canonical_source_url"] == 1
+    assert report["summary"]["viable_before_cap_count"] == 2
+    assert report["summary"]["selected_after_cap_count"] == 1
+    assert report["summary"]["viable_action_count"] == 1
+    assert report["summary"]["deferred_due_to_cap_count"] == 1
+    assert filtered["summary"]["batch_deferred_action_count"] == 1
+    assert filtered["deferred_actions"][0]["action"] == second_viable
+
+
+def test_filter_reviewed_plan_cap_five_selects_viable_actions_after_duplicate_skip(tmp_path):
+    write_reviewed_candidate(tmp_path, "example", "dpa", "example-dpa-candidate", "https://example.test/dpa")
+    write_yaml(
+        tmp_path / "data/vendors/example/sources/example-dpa.yaml",
+        {
+            "schema_version": "0.1.0",
+            "source_id": "example-dpa",
+            "vendor_id": "example",
+            "source_type": "dpa",
+            "source_url": "https://example.test/dpa",
+        },
+    )
+    actions = [reviewed_action_for("example", "dpa", "example-dpa-candidate", "https://example.test/dpa")]
+    for index in range(6):
+        vendor_id = f"vendor{index}"
+        candidate_id = f"{vendor_id}-dpa-candidate"
+        candidate_url = f"https://{vendor_id}.test/dpa"
+        write_reviewed_candidate(tmp_path, vendor_id, "dpa", candidate_id, candidate_url)
+        actions.append(reviewed_action_for(vendor_id, "dpa", candidate_id, candidate_url))
+
+    filtered, report = filter_reviewed_candidate_plan({"actions": actions}, root=tmp_path, max_actions=5)
+
+    assert len(filtered["actions"]) == 5
+    assert filtered["actions"][0]["candidate_source_id"] == "vendor0-dpa-candidate"
+    assert report["summary"]["candidate_actions_considered"] == 7
+    assert report["summary"]["skipped_action_count"] == 1
+    assert report["summary"]["skip_reason_counts"]["duplicate_canonical_source_url"] == 1
+    assert report["summary"]["viable_before_cap_count"] == 6
+    assert report["summary"]["selected_after_cap_count"] == 5
+    assert report["summary"]["deferred_due_to_cap_count"] == 1
+    assert len(report["deferred_viable_actions"]) == 1
+
+
+def test_filter_reviewed_plan_replays_saved_raw_plan_without_live_discovery(tmp_path):
+    write_reviewed_candidate(tmp_path, "example", "dpa", "example-dpa-candidate", "https://example.test/dpa")
+    raw_plan = {
+        "report_type": "sitemap_source_promotion_plan",
+        "summary": {"uncapped_action_count": 1},
+        "actions": [reviewed_action_for("example", "dpa", "example-dpa-candidate", "https://example.test/dpa")],
+    }
+
+    filtered, report = filter_reviewed_candidate_plan(raw_plan, root=tmp_path, max_actions=1)
+
+    assert filtered["actions"] == raw_plan["actions"]
+    assert report["summary"]["candidate_actions_considered"] == 1
+    assert report["summary"]["viable_before_cap_count"] == 1
+    assert report["summary"]["selected_after_cap_count"] == 1
+    assert report["summary"]["skipped_action_count"] == 0
+
+
+def test_sitemap_source_replay_artifacts_rehydrate_candidates_and_filter_without_live_discovery(tmp_path):
+    write_vendor(tmp_path, "example")
+    discovery_events = {
+        "verification": {
+            "vendors": [
+                {
+                    "vendor_id": "example",
+                    "candidates": [
+                        {
+                            "schema_version": "0.1.0",
+                            "candidate_source_id": "example-dpa-candidate",
+                            "vendor_id": "example",
+                            "source_type_candidate": "dpa",
+                            "candidate_url": "https://example.test/dpa",
+                            "confidence": "likely",
+                            "requires_review": True,
+                            "evidence": {
+                                "http_status": 200,
+                                "matched_terms": ["data processing"],
+                                "page_title": "Data Processing Addendum",
+                            },
+                            "not_advice": True,
+                        }
+                    ],
+                }
+            ]
+        }
+    }
+    raw_plan = {
+        "report_type": "promotion_plan",
+        "actions": [reviewed_action_for("example", "dpa", "example-dpa-candidate", "https://example.test/dpa")],
+    }
+
+    replay_plan, manifest = build_sitemap_source_plan_from_artifacts(discovery_events, raw_plan, root=tmp_path)
+    filtered, report = filter_reviewed_candidate_plan(replay_plan, root=tmp_path, max_actions=1)
+
+    assert (tmp_path / "data/vendors/example/candidate_sources/example-dpa-candidate.yaml").exists()
+    assert manifest["candidate_source_ids"] == ["example-dpa-candidate"]
+    assert manifest["temporary_candidate_paths"] == [
+        "data/vendors/example/candidate_sources/example-dpa-candidate.yaml"
+    ]
+    assert replay_plan["summary"]["uncapped_action_count"] == 1
+    assert replay_plan["summary"]["viability_filter_pending"] is True
+    assert filtered["actions"] == raw_plan["actions"]
+    assert report["summary"]["selected_after_cap_count"] == 1
+    assert report["summary"]["skipped_action_count"] == 0
 
 
 def test_apply_defense_in_depth_skips_duplicate_source_url_without_writing(tmp_path):
