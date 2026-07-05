@@ -728,6 +728,61 @@ jobs:
       - name: Fail if source preflight failed
         if: steps.source_preflight.outcome == 'failure'
         run: exit 1
+      - name: Install source preflight observation baseline
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p reports/openva-source-observations
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          preflight = json.load(open("source-preflight-report.json", encoding="utf-8"))
+          rows = []
+          for row in preflight.get("checked_sources") or []:
+              rows.append({
+                  "vendor_id": row.get("vendor_id"),
+                  "source_id": row.get("source_id"),
+                  "source_type": row.get("source_type"),
+                  "source_url": row.get("source_url"),
+                  "final_url": row.get("final_url"),
+                  "http_status": row.get("http_status"),
+                  "verification_status": row.get("verification_status"),
+              })
+          report = {
+              "schema_version": preflight.get("schema_version", "0.1.0"),
+              "generated_at": preflight.get("generated_at"),
+              "report_type": "source_verification_report",
+              "posture": {
+                  "network_fetch_performed": False,
+                  "writes_repository_state": False,
+                  "opens_pull_requests": False,
+                  "mutates_catalog": False,
+                  "enables_automerge": False,
+                  "non_advisory": True,
+              },
+              "sources": rows,
+          }
+          Path("source-preflight-verification-report.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps({"source_preflight_observation_rows": len(rows)}, sort_keys=True))
+          PY
+          if [ "$(python -c "import json; print(json.load(open('source-preflight-verification-report.json'))['sources'] != [])")" != "True" ]; then
+            echo "No changed source preflight rows; leaving committed observation baseline unchanged."
+            exit 0
+          fi
+          python -m tools.openva.observation_ledger build \
+            --verification-report source-preflight-verification-report.json \
+            --output-dir reports/openva-source-observations \
+            --run-id "${{ github.run_id }}-${{ github.run_attempt }}" \
+            --baseline maintenance/source-observations/latest-observations.json
+          python -m tools.openva.observation_ledger install-latest \
+            --latest reports/openva-source-observations/latest-observations.json
+          python -m tools.openva.release_gates check --profile pr \
+            --out-json reports/openva-source-observations/release-gates-after-preflight-observation.json \
+            --out-md reports/openva-source-observations/release-gates-after-preflight-observation.md
       - name: Prepare compact PR body
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true'
         run: |
@@ -742,6 +797,8 @@ jobs:
           plan_summary = promotion_plan.get('summary', {})
           selected_actions = plan_summary.get('selected_promotion_action_count', os.environ['PROMOTION_PLAN_ACTION_COUNT'])
           lines = [
+              'Work-Package: WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01',
+              '',
               '## Summary',
               '',
               'Applies OpenVA candidate promotions from a selected promotion plan.',
@@ -799,6 +856,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$PR_BRANCH"
           git add data indexes dist openva-pack.json
+          git add maintenance/source-observations/latest-observations.json
           if [ -d maintenance/generated ]; then
             git add maintenance/generated
           fi
@@ -878,6 +936,8 @@ jobs:
             ${{ env.PROMOTION_PLAN_PATH }}
             candidate-promotion-report.json
             source-preflight-report.json
+            source-preflight-verification-report.json
+            reports/openva-source-observations
             candidate-promotion-pr-body.md
             candidate-promotion-pr-body-final.md
           if-no-files-found: error
