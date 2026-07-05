@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-05T10:54:45Z",
+  "generated_at": "2026-07-05T18:50:33Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 611,
+    "source_count": 612,
     "observed_this_run": 1,
-    "carried_forward": 610
+    "carried_forward": 611
   },
   "sources": [
     {
@@ -4339,7 +4339,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "guidewire-privacy",
@@ -5195,6 +5195,25 @@
         "reason": "change_class_material_possible"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "hyperproof-trust-center",
+      "vendor_id": "hyperproof",
+      "source_url": "https://hyperproof.io/23-nycrr-500-cybersecurity-regulation",
+      "observed_at": "2026-07-05T18:50:33Z",
+      "observation_id": "hyperproof-trust-center-2026-07-05-28751092339-1",
+      "final_url": "https://hyperproof.io/23-nycrr-500-cybersecurity-regulation/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": null,
+      "normalized_text_sample_sha256": null,
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "ibm-cloud-compliance",
