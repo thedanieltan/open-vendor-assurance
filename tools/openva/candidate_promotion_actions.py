@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections import Counter
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote, unquote, urlsplit, urlunsplit
 
 import yaml
 
@@ -15,8 +17,10 @@ from tools.openva.machine_decisions import append_decisions, load_decisions
 from tools.openva.materialization_envelope import verify_envelope
 from tools.openva.pack import canonical_json, sha256_bytes
 from tools.openva.promotion_planner import REVIEWED_CANDIDATE_PROMOTION_ACTION, STRICT_GROWTH_PROMOTION_ACTION
+from tools.openva.source_discovery import source_type_role
 from tools.openva.source_verification import ROOT, display_path
 from tools.openva.strict_growth_redirects import canonical_clean_reasons, redirect_metrics_for_actions
+from tools.openva.url_safety import validate_url_safety
 
 HASH_TBD = "sha256:TBD"
 
@@ -311,6 +315,226 @@ def candidate_path(action: dict[str, Any], root: Path) -> Path:
     return root / "data" / "vendors" / str(action["vendor_id"]) / "candidate_sources" / f"{action['candidate_source_id']}.yaml"
 
 
+def normalize_source_url_for_comparison(url: Any) -> str:
+    raw = str(url or "").strip()
+    if not raw:
+        return ""
+    try:
+        parsed = urlsplit(raw)
+        port = parsed.port
+    except ValueError:
+        return raw
+    scheme = parsed.scheme.lower()
+    host = (parsed.hostname or "").lower().rstrip(".")
+    if not scheme or not host:
+        return raw
+    netloc = f"[{host}]" if ":" in host and not host.startswith("[") else host
+    if port is not None and not ((scheme == "https" and port == 443) or (scheme == "http" and port == 80)):
+        netloc = f"{netloc}:{port}"
+    path = quote(unquote(parsed.path or ""), safe="/:@!$&'()*+,;=")
+    if path == "/":
+        path = ""
+    elif path.endswith("/"):
+        path = path.rstrip("/")
+    return urlunsplit((scheme, netloc, path, parsed.query, ""))
+
+
+def canonical_sources_for_vendor(root: Path, vendor_id: str) -> list[tuple[Path, dict[str, Any]]]:
+    sources: list[tuple[Path, dict[str, Any]]] = []
+    for path in sorted((root / "data" / "vendors" / vendor_id / "sources").glob("*.yaml")):
+        try:
+            sources.append((path, load_yaml(path)))
+        except Exception:
+            continue
+    return sources
+
+
+def reviewed_skip_entry(action: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "action": action,
+        "vendor_id": str(action.get("vendor_id") or result.get("vendor_id") or ""),
+        "candidate_source_id": str(action.get("candidate_source_id") or result.get("candidate_source_id") or ""),
+        "source_type": str(action.get("source_type") or result.get("source_type") or ""),
+        "candidate_url": str(action.get("candidate_url") or result.get("candidate_url") or ""),
+        "normalized_candidate_url": result.get("normalized_candidate_url"),
+        "candidate_path": result.get("candidate_path"),
+        "target_source_path": result.get("target_source_path"),
+        "reason_codes": sorted(set(result.get("reason_codes") or [])),
+    }
+
+
+def reviewed_candidate_viability(action: dict[str, Any], root: Path) -> dict[str, Any]:
+    reason_codes: list[str] = []
+    vendor_id = str(action.get("vendor_id") or "")
+    source_type = str(action.get("source_type") or "")
+    candidate_url = str(action.get("candidate_url") or "")
+    normalized_url = normalize_source_url_for_comparison(candidate_url)
+    result: dict[str, Any] = {
+        "viable": False,
+        "vendor_id": vendor_id,
+        "source_type": source_type,
+        "candidate_source_id": str(action.get("candidate_source_id") or ""),
+        "candidate_url": candidate_url,
+        "normalized_candidate_url": normalized_url,
+    }
+
+    try:
+        validate_action(action)
+    except ValueError:
+        reason_codes.append("candidate_action_invalid")
+
+    c_path = candidate_path(action, root)
+    result["candidate_path"] = display_path(c_path, root)
+    if not c_path.exists():
+        reason_codes.append("candidate_source_missing")
+        result["reason_codes"] = sorted(set(reason_codes))
+        return result
+
+    try:
+        candidate = load_yaml(c_path)
+    except Exception:
+        reason_codes.append("candidate_source_malformed")
+        result["reason_codes"] = sorted(set(reason_codes))
+        return result
+
+    missing = [
+        field
+        for field in [
+            "candidate_source_id",
+            "vendor_id",
+            "source_type_candidate",
+            "candidate_url",
+            "requires_review",
+            "evidence",
+            "not_advice",
+        ]
+        if field not in candidate
+    ]
+    if missing:
+        reason_codes.append("candidate_missing_required_fields")
+
+    if vendor_id and not (root / "data" / "vendors" / vendor_id / "vendor.yaml").exists():
+        reason_codes.append("vendor_missing")
+
+    if source_type and not source_type_role(source_type, "qualifies_as_promotion_source_role"):
+        reason_codes.append("source_type_not_allowed")
+
+    try:
+        parsed = urlsplit(candidate_url)
+        _port = parsed.port
+        if parsed.scheme.lower() != "https":
+            reason_codes.append("source_url_not_https")
+    except ValueError:
+        reason_codes.append("source_url_malformed")
+    for _failure in validate_url_safety(candidate_url):
+        reason_codes.append("source_url_not_safe")
+        break
+
+    expected = {
+        "vendor_id": vendor_id,
+        "candidate_source_id": str(action.get("candidate_source_id") or ""),
+        "source_type_candidate": source_type,
+        "candidate_url": candidate_url,
+    }
+    if any(candidate.get(key) != value for key, value in expected.items()):
+        reason_codes.append("candidate_action_mismatch")
+    if candidate.get("requires_review") is not True or candidate.get("not_advice") is not True:
+        reason_codes.append("candidate_promotion_invariant_failed")
+    evidence = candidate.get("evidence", {}) if isinstance(candidate.get("evidence"), dict) else {}
+    if evidence.get("http_status") != 200:
+        reason_codes.append("candidate_http_status_not_200")
+    if not evidence.get("matched_terms"):
+        reason_codes.append("candidate_missing_matched_terms")
+
+    advisory_terms: set[str] = set()
+    for value in (candidate.get("notes"), evidence.get("page_title")):
+        advisory_terms.update(prohibited_terms_in_text(value))
+    if advisory_terms:
+        reason_codes.append("prohibited_advisory_wording")
+
+    record: dict[str, Any] | None = None
+    if not reason_codes:
+        try:
+            record = source_from_candidate(candidate, action)
+        except Exception:
+            reason_codes.append("canonical_source_render_failed")
+
+    if record:
+        s_path = root / "data" / "vendors" / record["vendor_id"] / "sources" / f"{record['source_id']}.yaml"
+        a_path = root / "data" / "vendors" / record["vendor_id"] / "artifacts" / f"{record['source_id']}.yaml"
+        c_path_out = root / "data" / "vendors" / record["vendor_id"] / "changes" / f"candidate-promotion-{record['source_id']}.yaml"
+        result["target_source_path"] = display_path(s_path, root)
+        if s_path.exists():
+            reason_codes.append("canonical_source_path_exists")
+        if a_path.exists():
+            reason_codes.append("canonical_artifact_path_exists")
+        if c_path_out.exists():
+            reason_codes.append("change_event_path_exists")
+
+    for _path, source in canonical_sources_for_vendor(root, vendor_id):
+        if normalize_source_url_for_comparison(source.get("source_url")) == normalized_url:
+            reason_codes.append("duplicate_canonical_source_url")
+            if str(source.get("source_type") or "") == source_type:
+                reason_codes.append("already_represented_by_canonical_source")
+
+    result["reason_codes"] = sorted(set(reason_codes))
+    result["viable"] = not result["reason_codes"]
+    return result
+
+
+def filter_reviewed_candidate_plan(promotion_plan: dict[str, Any], root: Path = ROOT) -> tuple[dict[str, Any], dict[str, Any]]:
+    viable_actions: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    considered = 0
+    for action in promotion_plan.get("actions", []) or []:
+        if action.get("action") != REVIEWED_CANDIDATE_PROMOTION_ACTION:
+            continue
+        considered += 1
+        result = reviewed_candidate_viability(action, root)
+        if result["viable"]:
+            viable_actions.append(action)
+        else:
+            skipped.append(reviewed_skip_entry(action, result))
+
+    reason_counts = Counter(reason for item in skipped for reason in item.get("reason_codes", []))
+    filtered = {
+        **promotion_plan,
+        "actions": viable_actions,
+        "skipped_actions": skipped,
+        "summary": {
+            **(promotion_plan.get("summary") or {}),
+            "action_count": len(viable_actions),
+            "selected_promotion_action_count": len(viable_actions),
+            "viability_candidate_actions_considered": considered,
+            "viable_action_count": len(viable_actions),
+            "skipped_action_count": len(skipped),
+            "skip_reason_counts": dict(sorted(reason_counts.items())),
+        },
+    }
+    report = {
+        "schema_version": "0.1.0",
+        "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "report_type": "candidate_promotion_viability_report",
+        "summary": {
+            "candidate_actions_considered": considered,
+            "viable_action_count": len(viable_actions),
+            "skipped_action_count": len(skipped),
+            "skip_reason_counts": dict(sorted(reason_counts.items())),
+        },
+        "viable_actions": [
+            {
+                "vendor_id": str(action.get("vendor_id") or ""),
+                "candidate_source_id": str(action.get("candidate_source_id") or ""),
+                "source_type": str(action.get("source_type") or ""),
+                "candidate_url": str(action.get("candidate_url") or ""),
+            }
+            for action in viable_actions
+        ],
+        "skipped_actions": skipped,
+    }
+    return filtered, report
+
+
 def validate_action(action: dict[str, Any]) -> None:
     if action.get("action") != REVIEWED_CANDIDATE_PROMOTION_ACTION:
         raise ValueError("unsupported candidate promotion action")
@@ -510,8 +734,10 @@ def artifact_from_source(source: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def apply_reviewed_candidate(action: dict[str, Any], root: Path) -> list[dict[str, str]]:
-    validate_action(action)
+def apply_reviewed_candidate(action: dict[str, Any], root: Path) -> tuple[list[dict[str, str]], dict[str, Any] | None]:
+    viability = reviewed_candidate_viability(action, root)
+    if not viability["viable"]:
+        return [], reviewed_skip_entry(action, viability)
     c_path = candidate_path(action, root)
     candidate = load_yaml(c_path)
     validate_candidate(candidate, action)
@@ -519,10 +745,6 @@ def apply_reviewed_candidate(action: dict[str, Any], root: Path) -> list[dict[st
     s_path = root / "data" / "vendors" / record["vendor_id"] / "sources" / f"{record['source_id']}.yaml"
     a_path = root / "data" / "vendors" / record["vendor_id"] / "artifacts" / f"{record['source_id']}.yaml"
     c_path_out = root / "data" / "vendors" / record["vendor_id"] / "changes" / f"candidate-promotion-{record['source_id']}.yaml"
-    if s_path.exists():
-        raise ValueError("canonical source already exists")
-    if a_path.exists():
-        raise ValueError("canonical artifact already exists")
     write_yaml(s_path, record)
     artifact = artifact_from_source(record)
     write_yaml(a_path, artifact)
@@ -542,7 +764,7 @@ def apply_reviewed_candidate(action: dict[str, Any], root: Path) -> list[dict[st
         {"action": "write", "path": display_path(s_path, root), "candidate_path": display_path(c_path, root)},
         {"action": "write", "path": display_path(a_path, root), "candidate_path": display_path(c_path, root)},
         {"action": "write", "path": display_path(c_path_out, root), "candidate_path": display_path(c_path, root)},
-    ]
+    ], None
 
 
 def apply_strict_growth(action: dict[str, Any], root: Path, written_vendors: set[str]) -> list[dict[str, str]]:
@@ -614,11 +836,15 @@ def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT
         if action.get("action") == STRICT_GROWTH_PROMOTION_ACTION:
             applied.extend(apply_strict_growth(action, root, strict_growth_written_vendors))
         else:
-            applied.extend(apply_reviewed_candidate(action, root))
+            file_actions, skip = apply_reviewed_candidate(action, root)
+            applied.extend(file_actions)
+            if skip:
+                skipped.append(skip)
 
     if root.resolve() == ROOT.resolve():
         build_indexes()
     redirect_metrics = redirect_metrics_for_actions(actions)
+    skip_reason_counts = Counter(reason for item in skipped for reason in item.get("reason_codes", []))
     return {
         "schema_version": "0.1.0",
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
@@ -637,6 +863,7 @@ def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT
             "canonical_artifacts_written": sum(1 for item in applied if "/artifacts/" in item["path"]),
             "change_events_written": sum(1 for item in applied if "/changes/" in item["path"]),
             "skipped_actions": len(skipped),
+            "skip_reason_counts": dict(sorted(skip_reason_counts.items())),
             **redirect_metrics,
         },
         "file_actions": applied,
@@ -646,13 +873,20 @@ def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT
 
 def main() -> int:
     parser = argparse.ArgumentParser(prog="openva-candidate-promotion-actions")
-    parser.add_argument("command", choices={"apply"})
+    parser.add_argument("command", choices={"apply", "filter-reviewed-plan"})
     parser.add_argument("--promotion-plan", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=ROOT / "candidate-promotion-report.json")
+    parser.add_argument("--viability-report", type=Path, default=ROOT / "candidate-promotion-viability-report.json")
     args = parser.parse_args()
-    report = apply_candidate_promotions(load_json(args.promotion_plan))
-    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps(report["summary"], indent=2, sort_keys=True))
+    if args.command == "filter-reviewed-plan":
+        filtered, report = filter_reviewed_candidate_plan(load_json(args.promotion_plan))
+        args.output.write_text(json.dumps(filtered, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        args.viability_report.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        print(json.dumps(report["summary"], indent=2, sort_keys=True))
+    else:
+        report = apply_candidate_promotions(load_json(args.promotion_plan))
+        args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        print(json.dumps(report["summary"], indent=2, sort_keys=True))
     return 0
 
 

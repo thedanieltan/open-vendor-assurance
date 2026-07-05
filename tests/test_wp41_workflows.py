@@ -103,6 +103,7 @@ def test_sitemap_source_mode_uses_existing_promotion_pipeline():
     text = CANDIDATE_PROMOTION.read_text(encoding="utf-8")
 
     sitemap = text.index("- name: Regenerate sitemap source promotion plan")
+    viability = text.index("- name: Filter sitemap source promotion viability")
     stash = text.index("- name: Stash temporary sitemap candidate-source records")
     select = text.index("- name: Select candidate promotion plan")
     current_validate = text.index("- name: Validate current records")
@@ -114,7 +115,7 @@ def test_sitemap_source_mode_uses_existing_promotion_pipeline():
     preflight = text.index("- name: Run source preflight for changed sources")
     pr_create = text.index("- name: Create or update pull request")
 
-    assert sitemap < stash < select < current_validate < restore < apply
+    assert sitemap < viability < stash < select < current_validate < restore < apply
     assert apply < cleanup < rebuild < final_validate < preflight < pr_create
     block = text[sitemap:select]
     assert "python -m tools.openva.catalog_growth_discovery_queue run-sitemap-discovery \\" in block
@@ -123,6 +124,8 @@ def test_sitemap_source_mode_uses_existing_promotion_pipeline():
     assert "python -m tools.openva.promotion_planner plan \\" in block
     assert "--discovery-report sitemap-source-discovery-report.json" in block
     assert 'action.get("action") == "promote_candidate_source_for_review"' in block
+    assert "candidate_promotion_actions filter-reviewed-plan" in block
+    assert "sitemap-source-promotion-viability-report.json" in block
     assert "sitemap-source-promotion-plan.json" in block
     assert "candidate_promotion_actions apply" in text[select:cleanup]
     assert "sitemap-source-candidate-manifest.json" in text[cleanup:preflight]
@@ -146,6 +149,9 @@ def test_sitemap_source_temp_candidates_are_not_visible_to_current_record_valida
     assert '"stashed_candidate_paths"' in stash_block
     assert '"temporary_candidate_stash_root"' in stash_block
     assert "python -m tools.openva.validate validate" in validate_block
+    assert 'json.load(open("sitemap-source-promotion-plan.json", encoding="utf-8"))' in restore_block
+    assert "viable_candidate_ids" in restore_block
+    assert "if path.stem not in viable_candidate_ids" in restore_block
     assert "shutil.copy2(stash_path, path)" in restore_block
 
 
@@ -162,6 +168,7 @@ def test_sitemap_source_temp_candidates_are_cleaned_before_staging_and_pr_creati
 
     assert cleanup < rebuild < final_validate < catalog_changes < preflight < commit < pr_create
     cleanup_block = text[cleanup:rebuild]
+    assert "if: always() && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'" in cleanup_block
     assert "path.unlink()" in cleanup_block
     assert 'parent.name == "candidate_sources"' in cleanup_block
     assert "python -m tools.openva.validate build-indexes" in text[rebuild:final_validate]
@@ -199,6 +206,7 @@ def test_sitemap_source_zero_actions_exits_without_pr_creation():
     assert select_start < stop < validate
     assert "if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN != 'true'" in text[stop:validate]
     assert "Generated promotion plan completed with zero selected promotion actions." in text
+    assert "candidate_promotion_actions apply" not in text[stop:validate]
 
 
 def test_sitemap_source_one_selected_action_path_restores_candidates_before_apply():
@@ -220,6 +228,17 @@ def test_sitemap_source_one_selected_action_path_restores_candidates_before_appl
     assert '"action_types": dict(sorted(counts.items()))' in filter_block
     assert "promote_actions[:max_actions]" in filter_block
     assert restore < apply < cleanup < rebuild < final_validate < preflight < pr_create
+
+
+def test_sitemap_source_evidence_artifacts_include_viability_report_even_without_catalog_changes():
+    text = CANDIDATE_PROMOTION.read_text(encoding="utf-8")
+
+    upload = text.index("- name: Upload sitemap source promotion evidence artifacts")
+    strict_upload = text.index("- name: Upload strict-growth evidence artifacts")
+    block = text[upload:strict_upload]
+
+    assert "if: always() && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'" in block
+    assert "sitemap-source-promotion-viability-report.json" in block
 
 
 def test_non_sitemap_modes_keep_current_validation_before_apply_and_rebuild_before_final_validation():
