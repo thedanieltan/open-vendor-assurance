@@ -482,7 +482,9 @@ def reviewed_candidate_viability(action: dict[str, Any], root: Path) -> dict[str
     return result
 
 
-def filter_reviewed_candidate_plan(promotion_plan: dict[str, Any], root: Path = ROOT) -> tuple[dict[str, Any], dict[str, Any]]:
+def filter_reviewed_candidate_plan(
+    promotion_plan: dict[str, Any], root: Path = ROOT, max_actions: int | None = None
+) -> tuple[dict[str, Any], dict[str, Any]]:
     viable_actions: list[dict[str, Any]] = []
     skipped: list[dict[str, Any]] = []
     considered = 0
@@ -496,19 +498,35 @@ def filter_reviewed_candidate_plan(promotion_plan: dict[str, Any], root: Path = 
         else:
             skipped.append(reviewed_skip_entry(action, result))
 
+    cap = max_actions or 0
+    selected_actions = viable_actions[:cap] if cap else viable_actions
+    deferred_due_to_cap = viable_actions[cap:] if cap else []
     reason_counts = Counter(reason for item in skipped for reason in item.get("reason_codes", []))
+    deferred_actions = [
+        {"action": action, "reason_codes": ["max_promotion_actions_per_pr_exceeded"]}
+        for action in deferred_due_to_cap
+    ]
     filtered = {
         **promotion_plan,
-        "actions": viable_actions,
+        "actions": selected_actions,
         "skipped_actions": skipped,
+        "deferred_actions": [
+            *((promotion_plan.get("deferred_actions") or [])),
+            *deferred_actions,
+        ],
         "summary": {
             **(promotion_plan.get("summary") or {}),
-            "action_count": len(viable_actions),
-            "selected_promotion_action_count": len(viable_actions),
+            "action_count": len(selected_actions),
+            "selected_promotion_action_count": len(selected_actions),
             "viability_candidate_actions_considered": considered,
-            "viable_action_count": len(viable_actions),
+            "viable_action_count": len(selected_actions),
+            "viable_before_cap_count": len(viable_actions),
+            "selected_after_cap_count": len(selected_actions),
+            "deferred_due_to_cap_count": len(deferred_due_to_cap),
             "skipped_action_count": len(skipped),
             "skip_reason_counts": dict(sorted(reason_counts.items())),
+            "max_promotion_actions_per_pr": cap,
+            "batch_deferred_action_count": len(deferred_due_to_cap),
         },
     }
     report = {
@@ -517,9 +535,13 @@ def filter_reviewed_candidate_plan(promotion_plan: dict[str, Any], root: Path = 
         "report_type": "candidate_promotion_viability_report",
         "summary": {
             "candidate_actions_considered": considered,
-            "viable_action_count": len(viable_actions),
+            "viable_action_count": len(selected_actions),
+            "viable_before_cap_count": len(viable_actions),
+            "selected_after_cap_count": len(selected_actions),
+            "deferred_due_to_cap_count": len(deferred_due_to_cap),
             "skipped_action_count": len(skipped),
             "skip_reason_counts": dict(sorted(reason_counts.items())),
+            "max_promotion_actions_per_pr": cap,
         },
         "viable_actions": [
             {
@@ -528,11 +550,92 @@ def filter_reviewed_candidate_plan(promotion_plan: dict[str, Any], root: Path = 
                 "source_type": str(action.get("source_type") or ""),
                 "candidate_url": str(action.get("candidate_url") or ""),
             }
-            for action in viable_actions
+            for action in selected_actions
+        ],
+        "deferred_viable_actions": [
+            {
+                "vendor_id": str(action.get("vendor_id") or ""),
+                "candidate_source_id": str(action.get("candidate_source_id") or ""),
+                "source_type": str(action.get("source_type") or ""),
+                "candidate_url": str(action.get("candidate_url") or ""),
+                "reason_codes": ["max_promotion_actions_per_pr_exceeded"],
+            }
+            for action in deferred_due_to_cap
         ],
         "skipped_actions": skipped,
     }
     return filtered, report
+
+
+def build_sitemap_source_plan_from_artifacts(
+    discovery_events: dict[str, Any], raw_plan: dict[str, Any], root: Path = ROOT
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Replay sitemap-source candidate promotion selection from saved artifacts.
+
+    This intentionally performs no network fetches. It rehydrates the reviewed
+    candidate-source records that the live workflow would have written from the
+    saved discovery events, then rebuilds the uncapped sitemap-source promotion
+    plan from the saved raw planner output.
+    """
+    from tools.openva.source_discovery import write_discovery_outputs
+
+    vendors = list((discovery_events.get("verification") or {}).get("vendors") or [])
+    candidate_ids: list[str] = []
+    temporary_paths: list[str] = []
+    for vendor in vendors:
+        vendor_id = str(vendor.get("vendor_id") or "")
+        if not vendor_id:
+            continue
+        new_candidates: list[dict[str, Any]] = []
+        for candidate in vendor.get("candidates") or []:
+            candidate_id = str(candidate.get("candidate_source_id") or "")
+            if not candidate_id:
+                continue
+            candidate_ids.append(candidate_id)
+            candidate_path = root / "data" / "vendors" / vendor_id / "candidate_sources" / f"{candidate_id}.yaml"
+            if not candidate_path.exists():
+                new_candidates.append(candidate)
+                temporary_paths.append(display_path(candidate_path, root))
+        if new_candidates:
+            write_discovery_outputs(
+                {"vendor_id": vendor_id, "candidates": new_candidates, "unavailable_sources": []},
+                root=root,
+            )
+
+    sitemap_candidate_ids = set(candidate_ids)
+    promote_actions = [
+        action
+        for action in raw_plan.get("actions", []) or []
+        if action.get("action") == REVIEWED_CANDIDATE_PROMOTION_ACTION
+        and action.get("candidate_source_id") in sitemap_candidate_ids
+    ]
+    counts = Counter(action["action"] for action in promote_actions)
+    plan = {
+        **raw_plan,
+        "report_type": "sitemap_source_promotion_plan",
+        "inputs": {
+            **(raw_plan.get("inputs") or {}),
+            "sitemap_source_discovery_report_path": "sitemap-source-discovery-events.json",
+            "sitemap_candidate_manifest_path": "sitemap-source-candidate-manifest.json",
+            "replay_from_saved_artifacts": True,
+        },
+        "summary": {
+            **(raw_plan.get("summary") or {}),
+            "action_count": len(promote_actions),
+            "selected_promotion_action_count": len(promote_actions),
+            "candidate_source_ids_from_sitemap": len(sitemap_candidate_ids),
+            "uncapped_action_count": len(promote_actions),
+            "batch_deferred_action_count": 0,
+            "viability_filter_pending": True,
+            "action_types": dict(sorted(counts.items())),
+        },
+        "actions": promote_actions,
+    }
+    manifest = {
+        "candidate_source_ids": sorted(sitemap_candidate_ids),
+        "temporary_candidate_paths": sorted(set(temporary_paths)),
+    }
+    return plan, manifest
 
 
 def validate_action(action: dict[str, Any]) -> None:
@@ -873,15 +976,31 @@ def apply_candidate_promotions(promotion_plan: dict[str, Any], root: Path = ROOT
 
 def main() -> int:
     parser = argparse.ArgumentParser(prog="openva-candidate-promotion-actions")
-    parser.add_argument("command", choices={"apply", "filter-reviewed-plan"})
+    parser.add_argument("command", choices={"apply", "filter-reviewed-plan", "replay-sitemap-source-plan"})
     parser.add_argument("--promotion-plan", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=ROOT / "candidate-promotion-report.json")
     parser.add_argument("--viability-report", type=Path, default=ROOT / "candidate-promotion-viability-report.json")
+    parser.add_argument("--discovery-events", type=Path)
+    parser.add_argument("--candidate-manifest", type=Path, default=ROOT / "sitemap-source-candidate-manifest.json")
+    parser.add_argument("--max-actions", type=int, default=None)
     args = parser.parse_args()
+    if args.max_actions is not None and args.max_actions < 0:
+        raise SystemExit("--max-actions must be a non-negative integer")
     if args.command == "filter-reviewed-plan":
-        filtered, report = filter_reviewed_candidate_plan(load_json(args.promotion_plan))
+        filtered, report = filter_reviewed_candidate_plan(load_json(args.promotion_plan), max_actions=args.max_actions)
         args.output.write_text(json.dumps(filtered, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         args.viability_report.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        print(json.dumps(report["summary"], indent=2, sort_keys=True))
+    elif args.command == "replay-sitemap-source-plan":
+        if args.discovery_events is None:
+            raise SystemExit("replay-sitemap-source-plan requires --discovery-events")
+        plan, manifest = build_sitemap_source_plan_from_artifacts(
+            load_json(args.discovery_events), load_json(args.promotion_plan)
+        )
+        filtered, report = filter_reviewed_candidate_plan(plan, max_actions=args.max_actions)
+        args.output.write_text(json.dumps(filtered, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        args.viability_report.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        args.candidate_manifest.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         print(json.dumps(report["summary"], indent=2, sort_keys=True))
     else:
         report = apply_candidate_promotions(load_json(args.promotion_plan))
