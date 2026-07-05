@@ -91,16 +91,25 @@ work_packages:
       - maintenance/machine-decisions/*.ndjson
 
   WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01:
-    description: Exact code, workflow, inventory, and test surface for issue 450 operational PR declarations and idempotency repair; no operational data.
+    description: Exact workflow/control-plane surface for operational PR declarations and generated candidate-promotion catalog PRs.
     allowed_paths:
       - .github/workflows/discovery-ledger-append-pr.yml
       - .github/workflows/observation-ledger-append-pr.yml
       - .github/workflows/source-maintenance-report.yml
       - .github/workflows/candidate-promotion-pr.yml
       - .github/workflows/agent-automerge.yml
+      - data/vendors/**
+      - dist/vendors/**
       - docs/operations/contracts/workflow-inventory.yaml
+      - indexes/**
+      - maintenance/generated/**
+      - maintenance/machine-decisions/**
+      - maintenance/source-observations/latest-observations.json
+      - openva-pack.json
       - tests/test_ci_readiness.py
       - tests/test_candidate_intake_workflows.py
+      - tests/test_candidate_promotion_workflow.py
+      - tests/test_catalog_guard.py
       - tests/test_operational_pr_scope.py
       - tests/test_public_launch_readiness.py
       - tests/test_discovery_ledger.py
@@ -113,6 +122,7 @@ work_packages:
       - tests/test_source_quarantine.py
       - tests/test_quarantine_automerge.py
       - tests/test_quarantine_workflow.py
+      - tools/openva/catalog_guard.py
       - tools/openva/candidate_promotion_actions.py
       - tools/openva/discovery_ledger.py
       - tools/openva/observation_ledger.py

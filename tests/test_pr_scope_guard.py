@@ -122,6 +122,30 @@ ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_FILES = [
     "tools/openva/validate.py",
 ]
 
+GENERATED_CANDIDATE_PROMOTION_CATALOG_PR_FILES = [
+    "data/vendors/guidewire/sources/guidewire-dpa.yaml",
+    "data/vendors/guidewire/artifacts/guidewire-dpa.yaml",
+    "data/vendors/guidewire/changes/candidate-promotion-guidewire-dpa.yaml",
+    "dist/vendors/guidewire.json",
+    "indexes/sources.json",
+    "indexes/artifacts.json",
+    "indexes/changes.json",
+    "indexes/source-coverage.json",
+    "indexes/summary.json",
+    "indexes/vendor-match-index.json",
+    "indexes/vendor-search.json",
+    "maintenance/source-observations/latest-observations.json",
+    "openva-pack.json",
+]
+
+CANDIDATE_PROMOTION_RUNTIME_FIX_FILES = [
+    ".github/workflows/candidate-promotion-pr.yml",
+    "tools/openva/catalog_guard.py",
+    "tests/test_catalog_guard.py",
+    "tests/test_candidate_promotion_workflow.py",
+    "tests/test_wp41_workflows.py",
+]
+
 FRESHNESS_CONTINUITY_FILES = [
     ".github/workflows/observation-ledger-append-pr.yml",
     ".github/workflows/source-maintenance-report.yml",
@@ -348,6 +372,24 @@ def test_assurance_evidence_extraction_contract_scope_covers_prerequisite_surfac
     assert out_of_scope_paths(
         ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_FILES,
         ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_WP,
+        manifest,
+    ) == []
+
+
+def test_autonomous_operational_scope_covers_generated_candidate_promotion_catalog_pr_outputs():
+    manifest = load_manifest()
+    assert out_of_scope_paths(
+        GENERATED_CANDIDATE_PROMOTION_CATALOG_PR_FILES,
+        "WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01",
+        manifest,
+    ) == []
+
+
+def test_autonomous_operational_scope_covers_candidate_promotion_runtime_fix_surface():
+    manifest = load_manifest()
+    assert out_of_scope_paths(
+        CANDIDATE_PROMOTION_RUNTIME_FIX_FILES,
+        "WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01",
         manifest,
     ) == []
 
