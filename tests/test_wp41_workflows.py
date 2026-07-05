@@ -5,6 +5,7 @@ AUTONOMOUS_GROWTH = Path(".github/workflows/autonomous-catalog-growth.yml")
 DISCOVERY_LEDGER = Path(".github/workflows/discovery-ledger-append-pr.yml")
 MACHINE_MATERIALIZATION = Path(".github/workflows/machine-provisional-materialization.yml")
 CANDIDATE_PROMOTION = Path(".github/workflows/candidate-promotion-pr.yml")
+AGENT_AUTOMERGE = Path(".github/workflows/agent-automerge.yml")
 
 
 def test_discovery_ledger_append_authenticates_source_run_and_artifact():
@@ -281,3 +282,66 @@ def test_non_sitemap_modes_keep_current_validation_before_apply_and_rebuild_befo
     assert "env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'" in text[restore:apply]
     assert "env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'" in text[cleanup:rebuild]
     assert apply < cleanup < rebuild < final_validate
+
+
+def test_agent_automerge_has_generated_catalog_lane_scoped_to_generated_prs():
+    text = AGENT_AUTOMERGE.read_text(encoding="utf-8")
+
+    job = text[text.index("  generated-catalog:") : text.index("  machine-canonical:")]
+
+    assert "startsWith(github.event.pull_request.head.ref, 'agent-candidate-promotion-')" in job
+    assert (
+        "github.event.pull_request.title == 'Catalog: apply reviewed candidate source promotion'"
+        in job
+    )
+    assert "automerge:machine-canonical" not in job
+    assert "automerge:strict-growth" not in job
+
+
+def test_agent_automerge_generated_catalog_lane_uses_fail_closed_evaluator():
+    text = AGENT_AUTOMERGE.read_text(encoding="utf-8")
+    job = text[text.index("  generated-catalog:") : text.index("  machine-canonical:")]
+
+    collect = job.index("- name: Collect generated catalog PR metadata")
+    checks = job.index("- name: Wait for generated catalog required checks")
+    preflight = job.index("- name: Run source preflight for changed sources")
+    release_gates = job.index("- name: Run source-intelligence release gate")
+    freshness = job.index("- name: Rebuild generated outputs and detect drift")
+    prepare = job.index("- name: Prepare generated catalog eligibility inputs")
+    eligibility = job.index("- name: Check generated catalog automerge eligibility")
+    upload = job.index("- name: Upload generated catalog automerge eligibility report")
+    merge = job.index("- name: Enable GitHub native auto-merge")
+
+    assert collect < checks < preflight < release_gates < freshness < prepare < eligibility < upload < merge
+    assert "gh pr diff \"$PR_NUMBER\" --name-only > changed-files.txt" in job
+    assert "gh pr view \"$PR_NUMBER\" --json body --jq .body > pr-body.md" in job
+    assert '"gh",\n                      "pr",\n                      "checks"' in job
+    assert "python -m tools.openva.source_preflight check-changed-sources" in job
+    assert "python -m tools.openva.release_gates check --profile pr" in job
+    assert "python -m tools.openva.validate build-indexes" in job
+    assert "git diff --quiet openva-pack.json indexes/ dist/" in job
+    assert "python -m tools.openva.generated_catalog_pr_risk \\" in job
+    assert "--automerge-eligibility" in job
+    assert "--check \"validate=$VALIDATE_CHECK\"" in job
+    assert "--check \"catalog-pr-guard=$CATALOG_PR_GUARD_CHECK\"" in job
+    assert "--check \"agent-weighted-review=$AGENT_WEIGHTED_REVIEW_CHECK\"" in job
+    assert "--source-preflight-failures \"$SOURCE_PREFLIGHT_FAILURES\"" in job
+    assert "--release-gates-passed \"$RELEASE_GATES_PASSED\"" in job
+    assert "--latest-observations-full-baseline \"$LATEST_OBSERVATIONS_FULL_BASELINE\"" in job
+    assert "--generated-outputs-fresh \"$GENERATED_OUTPUTS_FRESH\"" in job
+    assert "--secret-scan-passed \"$SECRET_SCAN_PASSED\"" in job
+    assert "generated-catalog-automerge-eligibility.json" in job
+    assert "gh pr merge \"$PR_NUMBER\" --auto --squash --delete-branch" in job
+
+
+def test_agent_automerge_generated_catalog_lane_uploads_eligibility_artifact():
+    text = AGENT_AUTOMERGE.read_text(encoding="utf-8")
+    job = text[text.index("  generated-catalog:") : text.index("  machine-canonical:")]
+    upload = job[job.index("- name: Upload generated catalog automerge eligibility report") :]
+
+    assert "if: always()" in upload
+    assert "name: generated-catalog-automerge-eligibility" in upload
+    assert "generated-catalog-automerge-eligibility.json" in upload
+    assert "source-preflight-report.json" in upload
+    assert "release-gates.json" in upload
+    assert "pr-checks.json" in upload
