@@ -112,6 +112,7 @@ work_packages:
       - tests/test_candidate_intake_workflows.py
       - tests/test_candidate_promotion_workflow.py
       - tests/test_catalog_guard.py
+      - tests/test_generated_catalog_pr_risk.py
       - tests/test_operational_pr_scope.py
       - tests/test_public_launch_readiness.py
       - tests/test_discovery_ledger.py
@@ -126,6 +127,7 @@ work_packages:
       - tests/test_quarantine_workflow.py
       - tools/openva/catalog_guard.py
       - tools/openva/candidate_promotion_actions.py
+      - tools/openva/generated_catalog_pr_risk.py
       - tools/openva/discovery_ledger.py
       - tools/openva/observation_ledger.py
       - tools/openva/observation_automerge.py
