@@ -58,7 +58,8 @@ def test_operational_control_plane_cannot_write_operational_data_or_scope_policy
     rejected = {
         "maintenance/discovery-events/*.ndjson",
         "maintenance/source-observations/events/*.ndjson",
-        "maintenance/source-observations/latest-observations.json",
+        "maintenance/source-observations/*.json",
+        "maintenance/source-observations/**",
         "data/vendors/*/sources/*.yaml",
         "indexes/sources.json",
         "maintenance/machine-decisions/*.ndjson",
@@ -67,6 +68,7 @@ def test_operational_control_plane_cannot_write_operational_data_or_scope_policy
         "schemas/openva/*",
     }
     assert allowed.isdisjoint(rejected)
+    assert "maintenance/source-observations/latest-observations.json" in allowed
 
 
 def test_generated_operational_pr_bodies_declare_the_registered_work_packages_once() -> None:
