@@ -10,6 +10,8 @@ work_packages:
       - docs/operations/pr-scope-guard.md
       - tools/openva/pr_scope_guard.py
       - tests/test_pr_scope_guard.py
+      - tests/test_operational_pr_scope.py
+      - tests/test_sitemap_discovery_integration.py
       - .github/workflows/validate.yml
       - .github/validation-ownership.yaml
 
