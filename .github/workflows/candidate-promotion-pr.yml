@@ -560,6 +560,9 @@ jobs:
               if parent.name == "candidate_sources" and parent.exists() and not any(parent.iterdir()):
                   parent.rmdir()
           PY
+      - name: Rebuild generated outputs
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
+        run: python -m tools.openva.validate build-indexes
       - name: Validate generated catalog promotion
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: |
@@ -573,9 +576,6 @@ jobs:
               --out reports/openva-failure-routing/catalog-promotion-failure-input.json
             exit 1
           }
-      - name: Rebuild generated outputs
-        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
-        run: python -m tools.openva.validate build-indexes
       - name: Check whether catalog changes were produced
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         id: catalog_changes
