@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 from tools.openva.generated_catalog_pr_risk import (
+    GENERATED_CATALOG_TITLE,
+    GENERATED_CATALOG_WORK_PACKAGE,
+    GeneratedCatalogAutoMergeInput,
     GeneratedCatalogPrRiskClass,
     LATEST_OBSERVATIONS_PATH,
     classify_generated_catalog_pr_risk,
+    evaluate_generated_catalog_automerge_eligibility,
     is_generated_catalog_pr_low_risk_path,
     is_vendor_catalog_record_path,
     read_paths_file,
@@ -26,6 +30,32 @@ ALLOWED_GENERATED_CATALOG_PR_PATHS = [
     LATEST_OBSERVATIONS_PATH,
     "openva-pack.json",
 ]
+
+
+def _eligible_input(**overrides):
+    data = {
+        "changed_paths": tuple(ALLOWED_GENERATED_CATALOG_PR_PATHS),
+        "pr_body": f"Work-Package: {GENERATED_CATALOG_WORK_PACKAGE}\n\n## Summary\n",
+        "head_branch": "agent-candidate-promotion-28738275937",
+        "title": GENERATED_CATALOG_TITLE,
+        "is_draft": False,
+        "mergeable": True,
+        "check_conclusions": {
+            "validate": "success",
+            "catalog-pr-guard": "success",
+            "agent-weighted-review": "success",
+        },
+        "source_preflight_failures": 0,
+        "release_gates_passed": True,
+        "latest_observations_full_baseline": True,
+        "generated_outputs_fresh": True,
+        "unresolved_review_threads": 0,
+        "selected_action_count": 5,
+        "max_selected_action_count": 5,
+        "secret_scan_passed": True,
+    }
+    data.update(overrides)
+    return GeneratedCatalogAutoMergeInput(**data)
 
 
 def test_generated_catalog_pr_risk_allows_bounded_generated_catalog_surface() -> None:
@@ -121,3 +151,135 @@ def test_paths_file_reader_accepts_utf8_bom(tmp_path) -> None:
     result = classify_generated_catalog_pr_risk(read_paths_file(str(paths_file)))
 
     assert result.risk_class == GeneratedCatalogPrRiskClass.LOW_RISK
+
+
+def test_generated_catalog_automerge_accepts_low_risk_green_generated_pr() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(_eligible_input())
+
+    assert result.eligible is True
+    assert result.decision == "MERGE"
+    assert result.risk_class == GeneratedCatalogPrRiskClass.LOW_RISK
+    assert result.reasons == ()
+    assert result.work_package == GENERATED_CATALOG_WORK_PACKAGE
+
+
+def test_generated_catalog_automerge_rejects_missing_work_package() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(pr_body="## Summary\n")
+    )
+
+    assert result.eligible is False
+    assert "invalid_work_package:missing" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_high_risk_paths() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(changed_paths=(".github/workflows/agent-automerge.yml",))
+    )
+
+    assert result.eligible is False
+    assert result.risk_class == GeneratedCatalogPrRiskClass.HIGH_RISK
+    assert "unexpected_path:.github/workflows/agent-automerge.yml" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_broad_observation_path() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(changed_paths=("maintenance/source-observations/events/2026-07.ndjson",))
+    )
+
+    assert result.eligible is False
+    assert (
+        "unexpected_path:maintenance/source-observations/events/2026-07.ndjson"
+        in result.reasons
+    )
+
+
+def test_generated_catalog_automerge_rejects_failed_and_missing_checks() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(
+            check_conclusions={
+                "validate": "failure",
+                "catalog-pr-guard": "success",
+            }
+        )
+    )
+
+    assert result.eligible is False
+    assert result.missing_checks == ("agent-weighted-review",)
+    assert result.failed_checks == ("validate",)
+    assert "missing_check:agent-weighted-review" in result.reasons
+    assert "failed_check:validate" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_source_preflight_failure() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(source_preflight_failures=1)
+    )
+
+    assert result.eligible is False
+    assert "source_preflight_failures:1" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_release_gate_failure() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(release_gates_passed=False)
+    )
+
+    assert result.eligible is False
+    assert "release_gates_not_passed" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_incomplete_latest_observations_baseline() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(latest_observations_full_baseline=False)
+    )
+
+    assert result.eligible is False
+    assert "latest_observations_full_baseline_not_passed" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_stale_generated_outputs() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(generated_outputs_fresh=False)
+    )
+
+    assert result.eligible is False
+    assert "generated_outputs_not_fresh" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_draft_conflicted_and_threaded_prs() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(is_draft=True, mergeable=False, unresolved_review_threads=2)
+    )
+
+    assert result.eligible is False
+    assert "draft_pr" in result.reasons
+    assert "not_mergeable" in result.reasons
+    assert "unresolved_review_threads:2" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_wrong_generated_identity() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(head_branch="feature/manual-catalog-change")
+    )
+
+    assert result.eligible is False
+    assert "not_generated_candidate_promotion_pr" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_batch_limit_excess() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(selected_action_count=6, max_selected_action_count=5)
+    )
+
+    assert result.eligible is False
+    assert "selected_action_count_exceeded:6>5" in result.reasons
+
+
+def test_generated_catalog_automerge_rejects_missing_selected_action_count() -> None:
+    result = evaluate_generated_catalog_automerge_eligibility(
+        _eligible_input(selected_action_count=None)
+    )
+
+    assert result.eligible is False
+    assert "selected_action_count_missing" in result.reasons
