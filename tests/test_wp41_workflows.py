@@ -103,12 +103,15 @@ def test_sitemap_source_mode_uses_existing_promotion_pipeline():
     text = CANDIDATE_PROMOTION.read_text(encoding="utf-8")
 
     sitemap = text.index("- name: Regenerate sitemap source promotion plan")
+    stash = text.index("- name: Stash temporary sitemap candidate-source records")
     select = text.index("- name: Select candidate promotion plan")
+    current_validate = text.index("- name: Validate current records")
+    restore = text.index("- name: Restore temporary sitemap candidate-source records for apply")
     apply = text.index("- name: Apply candidate promotions")
     cleanup = text.index("- name: Remove temporary sitemap candidate-source records")
     preflight = text.index("- name: Run source preflight for changed sources")
 
-    assert sitemap < select < apply < cleanup < preflight
+    assert sitemap < stash < select < current_validate < restore < apply < cleanup < preflight
     block = text[sitemap:select]
     assert "python -m tools.openva.catalog_growth_discovery_queue run-sitemap-discovery \\" in block
     assert "from tools.openva.source_discovery import write_discovery_outputs" in block
@@ -122,10 +125,87 @@ def test_sitemap_source_mode_uses_existing_promotion_pipeline():
     assert "openva-candidate-promotion-pr-sitemap-source-evidence" in text
 
 
+def test_sitemap_source_temp_candidates_are_not_visible_to_current_record_validation():
+    text = CANDIDATE_PROMOTION.read_text(encoding="utf-8")
+
+    stash = text.index("- name: Stash temporary sitemap candidate-source records")
+    current_validate = text.index("- name: Validate current records")
+    restore = text.index("- name: Restore temporary sitemap candidate-source records for apply")
+    apply = text.index("- name: Apply candidate promotions")
+
+    stash_block = text[stash:current_validate]
+    validate_block = text[current_validate:restore]
+    restore_block = text[restore:apply]
+
+    assert 'Path("reports") / "sitemap-source-temporary-candidates"' in stash_block
+    assert "shutil.move(path.as_posix(), stash_path.as_posix())" in stash_block
+    assert '"stashed_candidate_paths"' in stash_block
+    assert '"temporary_candidate_stash_root"' in stash_block
+    assert "python -m tools.openva.validate validate" in validate_block
+    assert "shutil.copy2(stash_path, path)" in restore_block
+
+
+def test_sitemap_source_temp_candidates_are_cleaned_before_staging_and_pr_creation():
+    text = CANDIDATE_PROMOTION.read_text(encoding="utf-8")
+
+    cleanup = text.index("- name: Remove temporary sitemap candidate-source records")
+    catalog_changes = text.index("- name: Check whether catalog changes were produced")
+    preflight = text.index("- name: Run source preflight for changed sources")
+    commit = text.index("- name: Commit and push promotion branch")
+    pr_create = text.index("- name: Create or update pull request")
+
+    assert cleanup < catalog_changes < preflight < commit < pr_create
+    cleanup_block = text[cleanup:catalog_changes]
+    assert "path.unlink()" in cleanup_block
+    assert 'parent.name == "candidate_sources"' in cleanup_block
+    commit_block = text[commit:pr_create]
+    assert "git add data indexes dist openva-pack.json" in commit_block
+    assert "reports/sitemap-source-temporary-candidates" not in commit_block
+
+
+def test_sitemap_source_final_validation_rebuild_and_preflight_run_before_pr_creation():
+    text = CANDIDATE_PROMOTION.read_text(encoding="utf-8")
+
+    apply = text.index("- name: Apply candidate promotions")
+    cleanup = text.index("- name: Remove temporary sitemap candidate-source records")
+    final_validate = text.index("- name: Validate generated catalog promotion")
+    rebuild = text.index("- name: Rebuild generated outputs")
+    catalog_changes = text.index("- name: Check whether catalog changes were produced")
+    preflight = text.index("- name: Run source preflight for changed sources")
+    pr_create = text.index("- name: Create or update pull request")
+
+    assert apply < cleanup < final_validate < rebuild < catalog_changes < preflight < pr_create
+    assert "python -m tools.openva.validate validate" in text[final_validate:rebuild]
+    assert "python -m tools.openva.validate build-indexes" in text[rebuild:catalog_changes]
+    assert "python -m tools.openva.source_preflight check-changed-sources" in text[preflight:pr_create]
+
+
 def test_sitemap_source_zero_actions_exits_without_pr_creation():
     text = CANDIDATE_PROMOTION.read_text(encoding="utf-8")
-    select = text[text.index("- name: Select candidate promotion plan") : text.index("- name: Validate workflow inputs")]
+    select_start = text.index("- name: Select candidate promotion plan")
+    stop = text.index("- name: Stop when no unapplied reviewed candidate promotion plan exists")
+    validate = text.index("- name: Validate workflow inputs")
+    select = text[select_start:validate]
 
     assert '[ "$PROMOTION_PLAN_MODE" = "sitemap-source-latest" ]' in select
     assert "GENERATED_PROMOTION_NO_ACTIONS=true" in select
+    assert select_start < stop < validate
+    assert "if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN != 'true'" in text[stop:validate]
     assert "Generated promotion plan completed with zero selected promotion actions." in text
+
+
+def test_sitemap_source_one_selected_action_path_restores_candidates_before_apply():
+    text = CANDIDATE_PROMOTION.read_text(encoding="utf-8")
+
+    filter_start = text.index('action.get("action") == "promote_candidate_source_for_review"')
+    filter_end = text.index('Path("sitemap-source-promotion-plan.json").write_text')
+    restore = text.index("- name: Restore temporary sitemap candidate-source records for apply")
+    apply = text.index("- name: Apply candidate promotions")
+    cleanup = text.index("- name: Remove temporary sitemap candidate-source records")
+    filter_block = text[filter_start:filter_end]
+
+    assert "selected_promotion_action_count" in filter_block
+    assert '"action_count": len(selected_actions)' in filter_block
+    assert '"action_types": dict(sorted(counts.items()))' in filter_block
+    assert "promote_actions[:max_actions]" in filter_block
+    assert restore < apply < cleanup
