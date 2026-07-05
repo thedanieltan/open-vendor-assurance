@@ -9,7 +9,7 @@ on:
         type: string
         default: ""
       promotion_plan_mode:
-        description: "reviewed-path, strict-growth-latest generation, or strict-growth-shortlist generation"
+        description: "reviewed-path, strict-growth-latest generation, strict-growth-shortlist generation, or sitemap-source-latest generation"
         required: false
         type: choice
         default: "reviewed-path"
@@ -17,6 +17,7 @@ on:
           - reviewed-path
           - strict-growth-latest
           - strict-growth-shortlist
+          - sitemap-source-latest
           - machine-provisional-from-queue
           - candidate-bound
           - quorum-promotion
@@ -101,7 +102,7 @@ jobs:
   candidate-promotion-pr:
     # The reviewed / strict-growth / quorum / coverage-queue paths. The
     # candidate-bound mutation runs in its own job below.
-    if: ${{ github.event_name == 'schedule' || contains(fromJson('["reviewed-path","strict-growth-latest","strict-growth-shortlist","machine-provisional-from-queue"]'), inputs.promotion_plan_mode || 'reviewed-path') }}
+    if: ${{ github.event_name == 'schedule' || contains(fromJson('["reviewed-path","strict-growth-latest","strict-growth-shortlist","sitemap-source-latest","machine-provisional-from-queue"]'), inputs.promotion_plan_mode || 'reviewed-path') }}
     runs-on: ubuntu-latest
     env:
       REQUESTED_PROMOTION_PLAN_PATH: "${{ inputs.promotion_plan_path || '' }}"
@@ -113,6 +114,9 @@ jobs:
       REQUESTED_MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '' }}"
       REQUESTED_PR_BRANCH: "${{ inputs.pr_branch || '' }}"
       PR_TITLE: "${{ inputs.pr_title || 'Catalog: apply reviewed candidate source promotion' }}"
+      OPENVA_WEB_BOT_AUTH_DIRECTORY_URL: ${{ secrets.OPENVA_WEB_BOT_AUTH_DIRECTORY_URL }}
+      OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON: ${{ secrets.OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON }}
+      OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64: ${{ secrets.OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64 }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -229,17 +233,150 @@ jobs:
             --workflow-attempt "${{ github.run_attempt }}" \
             --source-commit-sha "${{ github.sha }}" \
             --base-sha "${{ github.sha }}"
+      - name: Regenerate sitemap source promotion plan
+        if: env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          python -m tools.openva.catalog_growth_discovery_queue validate \
+            --output catalog-growth-discovery-queue-summary.json
+          python -m tools.openva.catalog_growth_discovery_queue run-sitemap-discovery \
+            --queue maintenance/queues/catalog-growth-discovery.json \
+            --discovery-run-id "${{ github.run_id }}-${{ github.run_attempt }}" \
+            --discovered-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --output sitemap-source-discovery-events.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from tools.openva.source_discovery import write_discovery_outputs
+
+          source = json.load(open("sitemap-source-discovery-events.json", encoding="utf-8"))
+          vendors = list((source.get("verification") or {}).get("vendors") or [])
+          report = {
+              "schema_version": "0.1.0",
+              "generated_at": source.get("discovered_at"),
+              "report_type": "source_discovery_report",
+              "discovery_context": "sitemap_source_discovery",
+              "posture": {
+                  "network_fetch_performed": True,
+                  "writes_repository_state": True,
+                  "writes_canonical_sources": False,
+                  "opens_pull_requests": False,
+                  "public_sources_only": True,
+                  "non_advisory": True,
+              },
+              "summary": {
+                  "vendors_checked": len(vendors),
+                  "candidate_sources_written_or_reported": sum(len(v.get("candidates") or []) for v in vendors),
+                  "unavailable_sources_written_or_reported": 0,
+              },
+              "vendors": vendors,
+          }
+          Path("sitemap-source-discovery-report.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          candidate_ids = []
+          temporary_paths = []
+          for vendor in vendors:
+              vendor_id = str(vendor.get("vendor_id") or "")
+              if not vendor_id:
+                  continue
+              new_candidates = []
+              for candidate in vendor.get("candidates") or []:
+                  candidate_id = str(candidate.get("candidate_source_id") or "")
+                  if not candidate_id:
+                      continue
+                  candidate_ids.append(candidate_id)
+                  candidate_path = Path("data") / "vendors" / vendor_id / "candidate_sources" / f"{candidate_id}.yaml"
+                  if not candidate_path.exists():
+                      new_candidates.append(candidate)
+                      temporary_paths.append(candidate_path.as_posix())
+              if new_candidates:
+                  write_discovery_outputs(
+                      {
+                          "vendor_id": vendor_id,
+                          "candidates": new_candidates,
+                          "unavailable_sources": [],
+                      }
+                  )
+          manifest = {
+              "candidate_source_ids": sorted(set(candidate_ids)),
+              "temporary_candidate_paths": sorted(set(temporary_paths)),
+          }
+          Path("sitemap-source-candidate-manifest.json").write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(report["summary"], indent=2, sort_keys=True))
+          PY
+          python -m tools.openva.promotion_planner plan \
+            --discovery-report sitemap-source-discovery-report.json \
+            --output sitemap-source-promotion-plan.raw.json
+          python - <<'PY'
+          import json
+          import os
+          from collections import Counter
+          from pathlib import Path
+
+          raw = json.load(open("sitemap-source-promotion-plan.raw.json", encoding="utf-8"))
+          manifest = json.load(open("sitemap-source-candidate-manifest.json", encoding="utf-8"))
+          sitemap_candidate_ids = set(manifest.get("candidate_source_ids") or [])
+          promote_actions = [
+              action
+              for action in raw.get("actions", []) or []
+              if action.get("action") == "promote_candidate_source_for_review"
+              and action.get("candidate_source_id") in sitemap_candidate_ids
+          ]
+          max_actions = int(os.environ.get("MAX_PROMOTION_ACTIONS_PER_PR") or "0")
+          selected_actions = promote_actions[:max_actions] if max_actions else promote_actions
+          deferred_actions = promote_actions[max_actions:] if max_actions else []
+          counts = Counter(action["action"] for action in selected_actions)
+          plan = {
+              **raw,
+              "report_type": "sitemap_source_promotion_plan",
+              "inputs": {
+                  **(raw.get("inputs") or {}),
+                  "sitemap_source_discovery_report_path": "sitemap-source-discovery-events.json",
+                  "sitemap_candidate_manifest_path": "sitemap-source-candidate-manifest.json",
+              },
+              "summary": {
+                  **(raw.get("summary") or {}),
+                  "action_count": len(selected_actions),
+                  "selected_promotion_action_count": len(selected_actions),
+                  "candidate_source_ids_from_sitemap": len(sitemap_candidate_ids),
+                  "uncapped_action_count": len(promote_actions),
+                  "batch_deferred_action_count": len(deferred_actions),
+                  "max_promotion_actions_per_pr": max_actions,
+                  "action_types": dict(sorted(counts.items())),
+              },
+              "actions": selected_actions,
+          }
+          if deferred_actions:
+              plan["deferred_actions"] = [
+                  {"action": action, "reason_codes": ["max_promotion_actions_per_pr_exceeded"]}
+                  for action in deferred_actions
+              ]
+          Path("sitemap-source-promotion-plan.json").write_text(
+              json.dumps(plan, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(plan["summary"], indent=2, sort_keys=True))
+          PY
       - name: Select candidate promotion plan
         id: reviewed_plan
         run: |
           set -euo pipefail
           REQUESTED_PROMOTION_PLAN_PATH="$(printf '%s' "$REQUESTED_PROMOTION_PLAN_PATH" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
           case "$PROMOTION_PLAN_MODE" in
-            reviewed-path|strict-growth-latest|strict-growth-shortlist|machine-provisional-from-queue) ;;
-            *) echo "promotion_plan_mode must be reviewed-path, strict-growth-latest, strict-growth-shortlist, or machine-provisional-from-queue" >&2; exit 1 ;;
+            reviewed-path|strict-growth-latest|strict-growth-shortlist|sitemap-source-latest|machine-provisional-from-queue) ;;
+            *) echo "promotion_plan_mode must be reviewed-path, strict-growth-latest, strict-growth-shortlist, sitemap-source-latest, or machine-provisional-from-queue" >&2; exit 1 ;;
           esac
           if [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] || [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ] || [ "$PROMOTION_PLAN_MODE" = "machine-provisional-from-queue" ]; then
             REQUESTED_PROMOTION_PLAN_PATH="strict-growth-promotion-plan.json"
+          elif [ "$PROMOTION_PLAN_MODE" = "sitemap-source-latest" ]; then
+            REQUESTED_PROMOTION_PLAN_PATH="sitemap-source-promotion-plan.json"
           fi
           if [ -n "$REQUESTED_PROMOTION_PLAN_PATH" ]; then
             if [ ! -f "$REQUESTED_PROMOTION_PLAN_PATH" ]; then
@@ -248,11 +385,11 @@ jobs:
             fi
             PLAN_SHA256=$(sha256sum "$REQUESTED_PROMOTION_PLAN_PATH" | awk '{print $1}')
             PLAN_ACTION_COUNT=$(python -c "import json, sys; data = json.load(open(sys.argv[1], encoding='utf-8')); print(len(data.get('actions', []) or []))" "$REQUESTED_PROMOTION_PLAN_PATH")
-            if { [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] || [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ] || [ "$PROMOTION_PLAN_MODE" = "machine-provisional-from-queue" ]; } && [ "$PLAN_ACTION_COUNT" = "0" ]; then
+            if { [ "$PROMOTION_PLAN_MODE" = "strict-growth-latest" ] || [ "$PROMOTION_PLAN_MODE" = "strict-growth-shortlist" ] || [ "$PROMOTION_PLAN_MODE" = "sitemap-source-latest" ] || [ "$PROMOTION_PLAN_MODE" = "machine-provisional-from-queue" ]; } && [ "$PLAN_ACTION_COUNT" = "0" ]; then
               echo "HAS_REVIEWED_PLAN=false" >> "$GITHUB_ENV"
-              echo "STRICT_GROWTH_NO_ACTIONS=true" >> "$GITHUB_ENV"
+              echo "GENERATED_PROMOTION_NO_ACTIONS=true" >> "$GITHUB_ENV"
               echo "HAS_REVIEWED_PLAN=false" >> "$GITHUB_OUTPUT"
-              echo "STRICT_GROWTH_NO_ACTIONS=true" >> "$GITHUB_OUTPUT"
+              echo "GENERATED_PROMOTION_NO_ACTIONS=true" >> "$GITHUB_OUTPUT"
               exit 0
             fi
             echo "HAS_REVIEWED_PLAN=true" >> "$GITHUB_ENV"
@@ -277,8 +414,8 @@ jobs:
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN != 'true'
         run: |
           set -euo pipefail
-          if [ "${{ steps.reviewed_plan.outputs.STRICT_GROWTH_NO_ACTIONS }}" = "true" ]; then
-            echo "Strict-growth generation completed with zero selected promotion actions."
+          if [ "${{ steps.reviewed_plan.outputs.GENERATED_PROMOTION_NO_ACTIONS }}" = "true" ]; then
+            echo "Generated promotion plan completed with zero selected promotion actions."
           elif [ "${{ steps.reviewed_plan.outputs.REVIEWED_PLAN_ALREADY_APPLIED }}" = "true" ]; then
             echo "Reviewed candidate promotion plan already applied."
           else
@@ -300,8 +437,8 @@ jobs:
           echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_ENV"
           echo "PR_TITLE=$PR_TITLE" >> "$GITHUB_ENV"
           case "$SELECTED_PLAN_PATH" in
-            maintenance/reviewed/*.json|strict-growth-promotion-plan.json|maintenance/generated/strict-growth-*.json) ;;
-            *) echo "promotion_plan_path must be under maintenance/reviewed/, strict-growth-promotion-plan.json, or maintenance/generated/strict-growth-*.json" >&2; exit 1 ;;
+            maintenance/reviewed/*.json|strict-growth-promotion-plan.json|sitemap-source-promotion-plan.json|maintenance/generated/strict-growth-*.json) ;;
+            *) echo "promotion_plan_path must be under maintenance/reviewed/, strict-growth-promotion-plan.json, sitemap-source-promotion-plan.json, or maintenance/generated/strict-growth-*.json" >&2; exit 1 ;;
           esac
           test -f "$SELECTED_PLAN_PATH" || { echo "promotion plan file not found: $SELECTED_PLAN_PATH" >&2; exit 1; }
           case "$PR_BRANCH" in
@@ -353,6 +490,23 @@ jobs:
           python -m tools.openva.candidate_promotion_actions apply \
             --promotion-plan "$PROMOTION_PLAN_PATH" \
             --output candidate-promotion-report.json
+      - name: Remove temporary sitemap candidate-source records
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.load(open("sitemap-source-candidate-manifest.json", encoding="utf-8"))
+          for item in manifest.get("temporary_candidate_paths") or []:
+              path = Path(item)
+              if path.exists():
+                  path.unlink()
+              parent = path.parent
+              if parent.name == "candidate_sources" and parent.exists() and not any(parent.iterdir()):
+                  parent.rmdir()
+          PY
       - name: Validate generated catalog promotion
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: |
@@ -656,6 +810,18 @@ jobs:
             source-preflight-report.json
             candidate-promotion-pr-body.md
             candidate-promotion-pr-body-final.md
+          if-no-files-found: error
+      - name: Upload sitemap source promotion evidence artifacts
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-candidate-promotion-pr-sitemap-source-evidence
+          path: |
+            sitemap-source-discovery-events.json
+            sitemap-source-discovery-report.json
+            sitemap-source-candidate-manifest.json
+            sitemap-source-promotion-plan.raw.json
+            sitemap-source-promotion-plan.json
           if-no-files-found: error
       - name: Upload strict-growth evidence artifacts
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && steps.catalog_changes.outputs.has_changes == 'true' && (env.PROMOTION_PLAN_MODE == 'strict-growth-latest' || env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist')
