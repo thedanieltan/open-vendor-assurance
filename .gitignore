@@ -29,3 +29,15 @@ coverage-audit-artifacts/
 # Local scratch worktrees and test temp dirs from external tooling
 .tmp/
 .pytest-tmp/
+
+# Local secrets / credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*
+credentials.*
+service-account*.json
