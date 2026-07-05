@@ -364,6 +364,37 @@ jobs:
           )
           print(json.dumps(plan["summary"], indent=2, sort_keys=True))
           PY
+      - name: Stash temporary sitemap candidate-source records
+        if: env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import shutil
+          from pathlib import Path
+
+          manifest = json.load(open("sitemap-source-candidate-manifest.json", encoding="utf-8"))
+          stash_root = Path("reports") / "sitemap-source-temporary-candidates"
+          stashed_paths = []
+          for item in manifest.get("temporary_candidate_paths") or []:
+              path = Path(item)
+              if not path.exists():
+                  continue
+              stash_path = stash_root / path
+              stash_path.parent.mkdir(parents=True, exist_ok=True)
+              shutil.move(path.as_posix(), stash_path.as_posix())
+              stashed_paths.append(path.as_posix())
+              parent = path.parent
+              if parent.name == "candidate_sources" and parent.exists() and not any(parent.iterdir()):
+                  parent.rmdir()
+          manifest["stashed_candidate_paths"] = sorted(set(stashed_paths))
+          manifest["temporary_candidate_stash_root"] = stash_root.as_posix()
+          Path("sitemap-source-candidate-manifest.json").write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps({"stashed_temporary_candidate_sources": len(stashed_paths)}, sort_keys=True))
+          PY
       - name: Select candidate promotion plan
         id: reviewed_plan
         run: |
@@ -484,6 +515,28 @@ jobs:
               --out reports/openva-failure-routing/catalog-promotion-failure-input.json
             exit 1
           }
+      - name: Restore temporary sitemap candidate-source records for apply
+        if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true' && env.PROMOTION_PLAN_MODE == 'sitemap-source-latest'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import shutil
+          from pathlib import Path
+
+          manifest = json.load(open("sitemap-source-candidate-manifest.json", encoding="utf-8"))
+          stash_root = Path(manifest.get("temporary_candidate_stash_root") or "reports/sitemap-source-temporary-candidates")
+          restored_paths = []
+          for item in manifest.get("stashed_candidate_paths") or []:
+              path = Path(item)
+              stash_path = stash_root / path
+              if not stash_path.exists():
+                  continue
+              path.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(stash_path, path)
+              restored_paths.append(path.as_posix())
+          print(json.dumps({"restored_temporary_candidate_sources": len(restored_paths)}, sort_keys=True))
+          PY
       - name: Apply candidate promotions
         if: steps.reviewed_plan.outputs.HAS_REVIEWED_PLAN == 'true'
         run: |
