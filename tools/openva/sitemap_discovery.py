@@ -30,6 +30,29 @@ BOUNDS_PATH = ROOT / "config" / "discovery-bounds.yaml"
 POLICY_VERSION = "tier-a-sitemap-discovery.v1"
 _FORBIDDEN_XML = re.compile(rb"<!DOCTYPE|<!ENTITY", re.IGNORECASE)
 _GZIP_MAGIC = b"\x1f\x8b"
+_HTTP_REASON_RE = re.compile(r"(?:sitemap|robots)_http_(\d{3})")
+
+SOURCE_MAP_SOURCE_TYPE_HINTS: dict[str, tuple[str, ...]] = {
+    "dpa": (
+        "dpa",
+        "data-processing",
+        "data_processing",
+        "data-processing-addendum",
+        "data-processing-agreement",
+    ),
+    "privacy_notice": ("privacy", "privacy-policy", "privacy-notice"),
+    "subprocessors_list": (
+        "subprocessor",
+        "sub-processors",
+        "subprocessors",
+        "third-party-processors",
+    ),
+    "security_page": ("security", "vulnerability", "security-center"),
+    "trust_center": ("trust", "trust-center", "trustcentre", "trustcenter"),
+    "compliance_page": ("compliance", "certification", "soc", "iso"),
+    "ai_terms": ("ai", "artificial-intelligence"),
+    "data_transfer_terms": ("data-transfer", "standard-contractual", "scc"),
+}
 
 
 class SitemapDiscoveryError(Exception):
@@ -89,6 +112,7 @@ class DiscoveryOutcome:
     robots_parser: str = ROBOTS_PARSER_ID
     sitemaps_attempted: int = 0
     events: list[dict[str, Any]] = field(default_factory=list)
+    source_map_records: list[dict[str, Any]] = field(default_factory=list)
 
 
 def load_bounds(path: Path = BOUNDS_PATH) -> Bounds:
@@ -172,6 +196,82 @@ def normalize_candidate_url(url: str) -> str:
     if path != "/" and path.endswith("/"):
         path = path.rstrip("/")
     return f"{parts.scheme.lower()}://{host}{path}" + (f"?{parts.query}" if parts.query else "")
+
+
+def infer_source_type_from_locator(url: str) -> str:
+    low = url.lower().replace("_", "-")
+    for source_type, hints in SOURCE_MAP_SOURCE_TYPE_HINTS.items():
+        if any(hint in low for hint in hints):
+            return source_type
+    return "unknown"
+
+
+def _status_code_from_reason(reason: str) -> int | None:
+    match = _HTTP_REASON_RE.search(reason)
+    return int(match.group(1)) if match else None
+
+
+def _public_access_status_from_rejection(reason: str, status_code: int | None) -> str:
+    if status_code in {401, 403} or "login" in reason or "gated" in reason:
+        return "gated"
+    if status_code == 404 or "unavailable" in reason or "unreachable" in reason:
+        return "unavailable"
+    if status_code is not None and status_code >= 500:
+        return "unavailable"
+    return "unknown"
+
+
+def _source_map_record(
+    *,
+    source_url: str,
+    source_type: str,
+    vendor_identity: str | None,
+    public_access_status: str,
+    status_code: int | None,
+    redirect_target: str | None,
+    checked_at: str,
+    confidence: str,
+    rejection_reason: str | None,
+) -> dict[str, Any]:
+    return {
+        "source_url": source_url,
+        "source_type": source_type,
+        "vendor_identity": vendor_identity,
+        "public_access_status": public_access_status,
+        "status_code": status_code,
+        "redirect_target": redirect_target,
+        "checked_at": checked_at,
+        "confidence": confidence,
+        "rejection_reason": rejection_reason,
+        "not_advice": True,
+    }
+
+
+def _append_rejected_source_map_records(
+    outcome: DiscoveryOutcome,
+    *,
+    vendor_identity: str | None,
+    checked_at: str,
+) -> None:
+    for rejection in outcome.rejected:
+        source_url = rejection.get("url")
+        reason = rejection.get("reason") or "rejected"
+        if not source_url:
+            continue
+        status_code = _status_code_from_reason(reason)
+        outcome.source_map_records.append(
+            _source_map_record(
+                source_url=source_url,
+                source_type=infer_source_type_from_locator(source_url),
+                vendor_identity=vendor_identity,
+                public_access_status=_public_access_status_from_rejection(reason, status_code),
+                status_code=status_code,
+                redirect_target=None,
+                checked_at=checked_at,
+                confidence="none",
+                rejection_reason=reason,
+            )
+        )
 
 
 def _gather_locs(
@@ -279,6 +379,7 @@ def discover_sitemap_candidates(
     outcome = DiscoveryOutcome()
     if not official_domains:
         return outcome
+    vendor_identity = vendor_id or official_domains[0].strip().lower().rstrip(".")
     base = f"https://{official_domains[0].strip().lower().rstrip('.')}/"
 
     access = _read_robots(base, fetcher)
@@ -289,6 +390,7 @@ def discover_sitemap_candidates(
         outcome.robots_parser = robots.parser_id
     if access.suppress_all:
         outcome.rejected.append({"url": base, "reason": f"discovery_suppressed:{access.reason_code}"})
+        _append_rejected_source_map_records(outcome, vendor_identity=vendor_identity, checked_at=discovered_at)
         return outcome
 
     effective_fetcher = _paced_fetcher(
@@ -352,6 +454,19 @@ def discover_sitemap_candidates(
     outcome.sitemaps_attempted = files_fetched[0]
     for url in sorted(seen)[: bounds.max_candidate_urls]:
         outcome.candidates.append({"url": url, "discovered_from": found_in[url]})
+        outcome.source_map_records.append(
+            _source_map_record(
+                source_url=url,
+                source_type=infer_source_type_from_locator(url),
+                vendor_identity=vendor_identity,
+                public_access_status="unknown",
+                status_code=None,
+                redirect_target=None,
+                checked_at=discovered_at,
+                confidence="low",
+                rejection_reason=None,
+            )
+        )
         outcome.events.append(
             _discovery_event(
                 url=url,
@@ -361,6 +476,7 @@ def discover_sitemap_candidates(
                 discovered_at=discovered_at,
             )
         )
+    _append_rejected_source_map_records(outcome, vendor_identity=vendor_identity, checked_at=discovered_at)
     return outcome
 
 
