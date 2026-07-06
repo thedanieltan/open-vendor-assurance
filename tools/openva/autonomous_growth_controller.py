@@ -9,14 +9,17 @@ continuously-operating lane. On each scheduled cycle the controller:
    evaluation and the global work-priority reserved capacity;
 3. yields to pending integrity/maintenance work (rollback / quarantine /
    repair) before growth;
-4. selects exactly **one** eligible candidate (deterministically, oldest
-   first);
+4. selects exactly **one** eligible candidate (demand-informed, deterministic);
 5. authorises generating exactly one new machine_provisional vendor.
 
 It never authorises more than one new machine-provisional vendor per cycle and
 never authorises a second catalog-mutation architecture: on "proceed" it hands
 the single selected candidate to the existing machine-provisional generation +
 decision + not_before + automerge machinery.
+
+Demand signals only prioritise already-eligible candidates. Demand never makes
+an ineligible, ambiguous, gated, unsafe, or insufficient-evidence candidate
+eligible and never bypasses candidate binding.
 
 This module is a pure decision function; the workflow performs the side effects.
 
@@ -38,13 +41,75 @@ GROWTH_LANE = "catalog_growth_promotion"
 GROWTH_WORK_CLASS = "machine_provisional_growth"
 MAX_VENDORS_PER_CYCLE = 1
 
+DEMAND_SIGNAL_WEIGHTS = {
+    "repeated_user_agent_misses": 100,
+    "frequently_requested_vendor": 80,
+    "frequently_missing_source_type": 60,
+    "repeated_ambiguous_identity": 50,
+    "rediscovered_candidate_url": 40,
+    "high_use_broken_gated_unavailable_url": 30,
+}
+
+DEMAND_SIGNAL_ALIASES = {
+    "repeated_user_misses": "repeated_user_agent_misses",
+    "repeated_agent_misses": "repeated_user_agent_misses",
+    "frequent_vendor_request": "frequently_requested_vendor",
+    "missing_source_type": "frequently_missing_source_type",
+    "ambiguous_identity": "repeated_ambiguous_identity",
+    "rediscovered_candidate": "rediscovered_candidate_url",
+    "broken_gated_unavailable_url": "high_use_broken_gated_unavailable_url",
+}
+
+
+def normalise_demand_signal(signal: str) -> str:
+    key = str(signal or "").strip().lower().replace("-", "_")
+    return DEMAND_SIGNAL_ALIASES.get(key, key)
+
+
+def demand_signal_summary(candidate: dict[str, Any]) -> dict[str, Any]:
+    """Summarise Phase 9 resolver-usefulness signals on a candidate.
+
+    Signals may come from future resolver/API/agent-workspace telemetry in either
+    ``demand_signals`` or ``resolver_demand_signals``. This function is tolerant:
+    unknown signals are preserved for audit but score zero. It does not evaluate
+    evidence and cannot make a candidate eligible.
+    """
+    raw = candidate.get("demand_signals") or candidate.get("resolver_demand_signals") or []
+    if isinstance(raw, dict):
+        raw_signals = [key for key, value in raw.items() if value]
+    else:
+        raw_signals = list(raw or [])
+    signals = tuple(dict.fromkeys(normalise_demand_signal(signal) for signal in raw_signals if signal))
+    priority = sum(DEMAND_SIGNAL_WEIGHTS.get(signal, 0) for signal in signals)
+    return {
+        "priority": priority,
+        "signals": signals,
+        "known_signals": tuple(signal for signal in signals if signal in DEMAND_SIGNAL_WEIGHTS),
+        "unknown_signals": tuple(signal for signal in signals if signal not in DEMAND_SIGNAL_WEIGHTS),
+        "not_advice": True,
+    }
+
+
+def demand_priority(candidate: dict[str, Any]) -> int:
+    return int(demand_signal_summary(candidate)["priority"])
+
 
 def select_one_candidate(eligible_candidates: list[dict[str, Any]]) -> dict[str, Any] | None:
-    """Deterministically select exactly one eligible candidate (oldest first)."""
+    """Deterministically select exactly one eligible candidate.
+
+    Phase 9 changes the ordering from pure age to resolver-usefulness priority,
+    but the input set is still filtered to ``eligibility_state == 'eligible'``.
+    Demand signals therefore prioritise background cache reuse only; they do not
+    authorise a candidate, create a vendor, approve a source, or bypass binding.
+    Ties remain oldest first for stable behaviour.
+    """
     usable = [c for c in eligible_candidates if c.get("eligibility_state") == "eligible"]
     if not usable:
         return None
-    return sorted(usable, key=lambda c: (str(c.get("created_at") or ""), str(c.get("candidate_id") or "")))[0]
+    return sorted(
+        usable,
+        key=lambda c: (-demand_priority(c), str(c.get("created_at") or ""), str(c.get("candidate_id") or "")),
+    )[0]
 
 
 def decide_cycle(
@@ -119,6 +184,7 @@ def _result(
     binding: dict[str, Any] | None = None,
     mismatch_reasons: tuple[str, ...] = (),
 ) -> dict[str, Any]:
+    demand = demand_signal_summary(candidate or {})
     result = {
         "schema_version": "0.1.0",
         "report_type": "autonomous_growth_cycle_decision",
@@ -126,6 +192,11 @@ def _result(
         "reason": reason,
         "max_vendors_this_cycle": MAX_VENDORS_PER_CYCLE if proceed else 0,
         "selected_candidate_id": (candidate or {}).get("candidate_id"),
+        # Phase 9: demand signals explain ordering only. They are not an
+        # authorisation surface and never replace eligibility, queue, capacity,
+        # or candidate-binding gates.
+        "selected_candidate_demand_priority": demand["priority"],
+        "selected_candidate_demand_signals": list(demand["known_signals"]),
         # The bound candidate identity carried to the candidate-bound promotion
         # dispatch (None unless the cycle is authorised and binding succeeded).
         "selected_candidate": binding,
