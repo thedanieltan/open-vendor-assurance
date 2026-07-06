@@ -4,9 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       vendor_limit:
-        description: "Optional number of vendors/candidates to discover against"
+        description: "Optional number of vendors/candidates to discover against. Empty uses the queue default."
         required: false
         type: string
+        default: ""
+      source_types:
+        description: "Optional comma-separated source types for this run. Empty uses the queue defaults."
+        required: false
+        type: string
+        default: ""
       max_urls_per_type:
         description: "Maximum candidate URLs to probe per source type"
         required: false
@@ -19,6 +25,11 @@ on:
         default: "3"
       max_promotion_actions_per_pr:
         description: "Preferred. Maximum selected promotion actions applied by one generated Catalog PR."
+        required: false
+        type: string
+        default: ""
+      strict_growth_max_vendors:
+        description: "Maximum vendors included in the strict-growth shortlist. Empty uses the routine default of 5."
         required: false
         type: string
         default: ""
@@ -43,10 +54,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VENDOR_LIMIT: "${{ inputs.vendor_limit || '' }}"
+      REQUESTED_SOURCE_TYPES: "${{ inputs.source_types || '' }}"
       MAX_URLS_PER_TYPE: "${{ inputs.max_urls_per_type || '4' }}"
       FETCH_TIMEOUT: "${{ inputs.fetch_timeout || '3' }}"
       REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR: "${{ inputs.max_promotion_actions_per_pr || '' }}"
       REQUESTED_MAX_ACTIONS_PER_PLAN: "${{ inputs.max_actions_per_plan || '' }}"
+      REQUESTED_STRICT_GROWTH_MAX_VENDORS: "${{ inputs.strict_growth_max_vendors || '' }}"
       OPENVA_WEB_BOT_AUTH_DIRECTORY_URL: ${{ secrets.OPENVA_WEB_BOT_AUTH_DIRECTORY_URL }}
       OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON: ${{ secrets.OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON }}
       OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64: ${{ secrets.OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64 }}
@@ -57,27 +70,6 @@ jobs:
           python-version: "3.12"
       - name: Install package
         run: pip install -e ".[dev]"
-      - name: Resolve promotion action cap
-        run: |
-          set -euo pipefail
-          PREFERRED="$(printf '%s' "$REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          LEGACY="$(printf '%s' "$REQUESTED_MAX_ACTIONS_PER_PLAN" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          if [ -z "$PREFERRED" ] && [ -z "$LEGACY" ]; then
-            PREFERRED="50"
-          fi
-          for VALUE in "$PREFERRED" "$LEGACY"; do
-            if [ -n "$VALUE" ]; then
-              case "$VALUE" in
-                *[!0-9]*) echo "max_promotion_actions_per_pr must be a non-negative integer" >&2; exit 1 ;;
-              esac
-            fi
-          done
-          if [ -n "$PREFERRED" ] && [ -n "$LEGACY" ] && [ "$PREFERRED" != "$LEGACY" ]; then
-            echo "max_promotion_actions_per_pr and deprecated max_actions_per_plan differ" >&2
-            exit 1
-          fi
-          RESOLVED="${PREFERRED:-$LEGACY}"
-          echo "MAX_PROMOTION_ACTIONS_PER_PR=$RESOLVED" >> "$GITHUB_ENV"
       - name: Validate current records
         run: |
           python -m tools.openva.validate validate || {
@@ -94,6 +86,94 @@ jobs:
         run: |
           python -m tools.openva.catalog_growth_discovery_queue validate \
             --output catalog-growth-discovery-queue-summary.json
+      - name: Resolve discovery controls
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_ENV"
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          queue = json.loads(Path("catalog-growth-discovery-queue-summary.json").read_text(encoding="utf-8"))
+
+          def clean(value: str | None) -> str:
+              return (value or "").strip()
+
+          def integer_control(name: str, value: str | None, default: str, *, minimum: int = 0) -> str:
+              candidate = clean(value) or default
+              if not re.fullmatch(r"[0-9]+", candidate):
+                  raise SystemExit(f"{name} must be a non-negative integer")
+              if int(candidate) < minimum:
+                  raise SystemExit(f"{name} must be at least {minimum}")
+              return candidate
+
+          def positive_number_control(name: str, value: str | None, default: str) -> str:
+              candidate = clean(value) or default
+              try:
+                  parsed = float(candidate)
+              except ValueError as exc:
+                  raise SystemExit(f"{name} must be a positive number") from exc
+              if parsed <= 0:
+                  raise SystemExit(f"{name} must be greater than zero")
+              return candidate
+
+          vendor_limit = integer_control(
+              "vendor_limit",
+              os.environ.get("VENDOR_LIMIT"),
+              str(queue["max_vendors_per_discovery_run"]),
+              minimum=1,
+          )
+          max_urls_per_type = integer_control(
+              "max_urls_per_type",
+              os.environ.get("MAX_URLS_PER_TYPE"),
+              "4",
+              minimum=1,
+          )
+          fetch_timeout = positive_number_control(
+              "fetch_timeout",
+              os.environ.get("FETCH_TIMEOUT"),
+              "3",
+          )
+
+          preferred = clean(os.environ.get("REQUESTED_MAX_PROMOTION_ACTIONS_PER_PR"))
+          legacy = clean(os.environ.get("REQUESTED_MAX_ACTIONS_PER_PLAN"))
+          if preferred and legacy and preferred != legacy:
+              raise SystemExit("max_promotion_actions_per_pr and deprecated max_actions_per_plan differ")
+          max_actions = integer_control(
+              "max_promotion_actions_per_pr",
+              preferred or legacy,
+              "50",
+              minimum=0,
+          )
+          strict_growth_max_vendors = integer_control(
+              "strict_growth_max_vendors",
+              os.environ.get("REQUESTED_STRICT_GROWTH_MAX_VENDORS"),
+              "5",
+              minimum=1,
+          )
+
+          requested_source_types = clean(os.environ.get("REQUESTED_SOURCE_TYPES"))
+          if requested_source_types:
+              if not re.fullmatch(r"[A-Za-z0-9_, -]+", requested_source_types):
+                  raise SystemExit("source_types may contain only letters, digits, underscores, commas, spaces, and hyphens")
+              source_types = ",".join(
+                  token.strip().lower().replace("-", "_")
+                  for token in requested_source_types.split(",")
+                  if token.strip()
+              )
+              if not source_types:
+                  raise SystemExit("source_types override did not contain any source types")
+          else:
+              source_types = ",".join(queue.get("source_types", []))
+
+          print(f"RESOLVED_VENDOR_LIMIT={vendor_limit}")
+          print(f"RESOLVED_SOURCE_TYPES={source_types}")
+          print(f"RESOLVED_MAX_URLS_PER_TYPE={max_urls_per_type}")
+          print(f"RESOLVED_FETCH_TIMEOUT={fetch_timeout}")
+          print(f"MAX_PROMOTION_ACTIONS_PER_PR={max_actions}")
+          print(f"RESOLVED_STRICT_GROWTH_MAX_VENDORS={strict_growth_max_vendors}")
+          PY
       - name: Run bounded sitemap source discovery
         run: |
           set -euo pipefail
@@ -102,17 +182,6 @@ jobs:
             --discovery-run-id "${{ github.run_id }}-${{ github.run_attempt }}" \
             --discovered-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             --output sitemap-source-discovery-events.json
-      - name: Configure bounded source discovery
-        run: |
-          set -euo pipefail
-          python - <<'PY' >> "$GITHUB_ENV"
-          import json
-
-          queue = json.load(open('catalog-growth-discovery-queue-summary.json', encoding='utf-8'))
-          source_types = ','.join(queue.get('source_types', []))
-          print(f"QUEUE_VENDOR_LIMIT={queue['max_vendors_per_discovery_run']}")
-          print(f"QUEUE_SOURCE_TYPES={source_types}")
-          PY
       - name: Build vendor candidate discovery report
         run: |
           python -m tools.openva.vendor_candidate_discovery discover \
@@ -120,29 +189,21 @@ jobs:
       - name: Discover sources for vendor candidates
         run: |
           set -euo pipefail
-          LIMIT="$(printf '%s' "$VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          if [ -z "$LIMIT" ]; then
-            LIMIT="$QUEUE_VENDOR_LIMIT"
-          fi
           python -m tools.openva.source_discovery discover-vendor-candidates \
             --vendor-candidates vendor-candidate-discovery-report.json \
-            --vendor-limit "$LIMIT" \
-            --source-types "$QUEUE_SOURCE_TYPES" \
-            --max-urls-per-type "$MAX_URLS_PER_TYPE" \
-            --fetch-timeout "$FETCH_TIMEOUT" \
+            --vendor-limit "$RESOLVED_VENDOR_LIMIT" \
+            --source-types "$RESOLVED_SOURCE_TYPES" \
+            --max-urls-per-type "$RESOLVED_MAX_URLS_PER_TYPE" \
+            --fetch-timeout "$RESOLVED_FETCH_TIMEOUT" \
             --output vendor-candidate-source-discovery-report.json
       - name: Build existing vendor source discovery report
         run: |
           set -euo pipefail
-          LIMIT="$(printf '%s' "$VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-          if [ -z "$LIMIT" ]; then
-            LIMIT="$QUEUE_VENDOR_LIMIT"
-          fi
           python -m tools.openva.source_discovery discover \
-            --vendor-limit "$LIMIT" \
-            --source-types "$QUEUE_SOURCE_TYPES" \
-            --max-urls-per-type "$MAX_URLS_PER_TYPE" \
-            --fetch-timeout "$FETCH_TIMEOUT" \
+            --vendor-limit "$RESOLVED_VENDOR_LIMIT" \
+            --source-types "$RESOLVED_SOURCE_TYPES" \
+            --max-urls-per-type "$RESOLVED_MAX_URLS_PER_TYPE" \
+            --fetch-timeout "$RESOLVED_FETCH_TIMEOUT" \
             --output source-discovery-report.json
       - name: Build promotion plan from existing vendor discovery report
         run: |
@@ -177,7 +238,7 @@ jobs:
             --output-json strict-growth-shortlist.json \
             --output-csv reports/strict-growth-shortlist.csv \
             --output-md reports/strict-growth-shortlist-summary.md \
-            --max-vendors 5 \
+            --max-vendors "$RESOLVED_STRICT_GROWTH_MAX_VENDORS" \
             --max-actions "$MAX_PROMOTION_ACTIONS_PER_PR"
       - name: Build strict growth promotion plan
         run: |
@@ -201,191 +262,162 @@ jobs:
           import json
           from pathlib import Path
 
-          Path('reports').mkdir(exist_ok=True)
-          queue = json.load(open('catalog-growth-discovery-queue-summary.json', encoding='utf-8'))
-          vendors = json.load(open('vendor-candidate-discovery-report.json', encoding='utf-8'))
-          enrichment = json.load(open('vendor-candidate-source-discovery-report.json', encoding='utf-8'))
-          discovery = json.load(open('source-discovery-report.json', encoding='utf-8'))
-          promotion = json.load(open('promotion-plan.json', encoding='utf-8'))
-          strict_growth = json.load(open('strict-growth-promotion-plan.json', encoding='utf-8'))
-          shortlist = json.load(open('strict-growth-shortlist.json', encoding='utf-8'))
-          backlog = json.load(open('catalog-growth-backlog-report.json', encoding='utf-8'))
-          batches = json.load(open('promotion-plan-batch-summary.json', encoding='utf-8'))
-          eligibility = json.load(open('catalog-growth-eligibility-report.json', encoding='utf-8'))
-          sitemap = json.load(open('sitemap-source-discovery-events.json', encoding='utf-8'))
-          sitemap_rotation = sitemap.get('rotation', {}) or {}
-          sitemap_verification = sitemap.get('verification', {}) or {}
-          sitemap_outcomes = sitemap_verification.get('provisional_eligibility_outcomes', {}) or {}
-          sitemap_vendor_lines = [
-              f"- `{pv['vendor_id']}` ({pv['official_domain']}): robots `{pv['robots_state']}`"
-              f" via `{pv['robots_parser']}`, sitemaps attempted `{pv['sitemaps_attempted']}`,"
-              f" locators `{pv['candidate_count']}`, verified `{pv['verified_candidate_count']}`,"
-              f" provisional `{pv.get('provisional_eligibility')}`, rejected `{pv['rejected_count']}`"
-              for pv in sitemap.get('per_vendor', [])[:10]
-          ] or ['- none']
+          Path("reports").mkdir(exist_ok=True)
+          queue = json.load(open("catalog-growth-discovery-queue-summary.json", encoding="utf-8"))
+          vendors = json.load(open("vendor-candidate-discovery-report.json", encoding="utf-8"))
+          enrichment = json.load(open("vendor-candidate-source-discovery-report.json", encoding="utf-8"))
+          discovery = json.load(open("source-discovery-report.json", encoding="utf-8"))
+          promotion = json.load(open("promotion-plan.json", encoding="utf-8"))
+          strict_growth = json.load(open("strict-growth-promotion-plan.json", encoding="utf-8"))
+          shortlist = json.load(open("strict-growth-shortlist.json", encoding="utf-8"))
+          backlog = json.load(open("catalog-growth-backlog-report.json", encoding="utf-8"))
+          batches = json.load(open("promotion-plan-batch-summary.json", encoding="utf-8"))
+          eligibility = json.load(open("catalog-growth-eligibility-report.json", encoding="utf-8"))
+          sitemap = json.load(open("sitemap-source-discovery-events.json", encoding="utf-8"))
+
           lines = [
-              '<!-- openva-catalog-growth-discovery -->',
-              '',
-              '# OpenVA catalog growth discovery queue',
-              '',
-              'This issue is generated by the taxonomy-driven catalog growth discovery workflow.',
-              '',
-              'It is non-advisory and does not mutate canonical catalog records.',
-              '',
-              '## Queue summary',
-              '',
+              "<!-- openva-catalog-growth-discovery -->",
+              "",
+              "# OpenVA catalog growth discovery queue",
+              "",
+              "This issue is generated by the taxonomy-driven catalog growth discovery workflow.",
+              "It is non-advisory and does not mutate canonical catalog records.",
+              "",
+              "## Effective run controls",
+              "",
+              f"- Vendor/candidate limit: `{Path('/tmp/unused') and '${{ env.RESOLVED_VENDOR_LIMIT }}'}`",
+              f"- Source types: `{Path('/tmp/unused') and '${{ env.RESOLVED_SOURCE_TYPES }}'}`",
+              f"- Max URLs per type: `{Path('/tmp/unused') and '${{ env.RESOLVED_MAX_URLS_PER_TYPE }}'}`",
+              f"- Fetch timeout: `{Path('/tmp/unused') and '${{ env.RESOLVED_FETCH_TIMEOUT }}'}`",
+              f"- Promotion actions per PR: `{Path('/tmp/unused') and '${{ env.MAX_PROMOTION_ACTIONS_PER_PR }}'}`",
+              f"- Strict-growth max vendors: `{Path('/tmp/unused') and '${{ env.RESOLVED_STRICT_GROWTH_MAX_VENDORS }}'}`",
+              "",
+              "## Queue summary",
+              "",
               f"- Cohorts: `{queue['cohort_count']}`",
               f"- Queued cohorts: `{queue['queued_cohort_count']}`",
               f"- Target vendor candidates: `{queue['target_vendor_candidates']}`",
-              '',
-              '## Vendor candidate discovery',
-              '',
+              f"- Queue default source types: `{','.join(queue.get('source_types', []))}`",
+              "",
+              "## Vendor candidate discovery",
+              "",
               f"- New vendor candidates reported: `{vendors['summary']['candidate_vendor_count']}`",
               f"- Known vendors skipped from candidate report: `{vendors['summary']['known_vendor_count']}`",
-              '',
-              '## Vendor candidate source discovery',
-              '',
+              "",
+              "## Vendor candidate source discovery",
+              "",
               f"- Vendor candidates checked: `{enrichment['summary']['vendor_candidates_checked']}`",
               f"- Candidate sources reported: `{enrichment['summary']['candidate_sources_written_or_reported']}`",
               f"- Unavailable sources reported: `{enrichment['summary']['unavailable_sources_written_or_reported']}`",
-              '',
-              '## Existing vendor source discovery summary',
-              '',
+              "",
+              "## Existing vendor source discovery summary",
+              "",
               f"- Existing vendors checked: `{discovery['summary']['vendors_checked']}`",
               f"- Candidate sources reported: `{discovery['summary']['candidate_sources_written_or_reported']}`",
               f"- Unavailable sources reported: `{discovery['summary']['unavailable_sources_written_or_reported']}`",
-              '',
-              '## Sitemap source discovery',
-              '',
+              "",
+              "## Sitemap source discovery",
+              "",
               f"- Mode enabled: `{sitemap.get('mode_enabled')}`",
-              f"- Robots parser: `{sitemap.get('robots_parser')}`",
-              f"- Rotation shard: `{sitemap_rotation.get('shard_index')}` of `{sitemap_rotation.get('shard_count')}`"
-              f" (ISO week `{sitemap_rotation.get('iso_week')}`, eligible vendors `{sitemap_rotation.get('eligible_vendor_count')}`)",
               f"- Vendors inspected this cycle: `{len(sitemap.get('per_vendor', []))}`",
-              f"- Zero-weight locator events: `{sitemap.get('event_count')}`",
-              f"- Verified candidate sources: `{sitemap_verification.get('verified_candidate_count')}`",
-              f"- Provisional eligibility (source-quality only; identity/materialization gates apply downstream): `{sitemap_outcomes}`",
-              '',
-              '### Per-vendor sitemap execution',
-              '',
-              *sitemap_vendor_lines,
-              '',
-              '## Growth eligibility summary',
-              '',
+              f"- Verified candidate sources: `{(sitemap.get('verification') or {}).get('verified_candidate_count')}`",
+              "",
+              "## Growth eligibility summary",
+              "",
               f"- Candidate vendors classified: `{eligibility['summary']['candidate_count']}`",
               f"- Strict promote ready: `{eligibility['summary']['strict_promote_ready_count']}`",
               f"- Review required: `{eligibility['summary']['review_required_count']}`",
               f"- Rejected or deferred: `{eligibility['summary']['rejected_or_deferred_count']}`",
-              '',
-              '## Catalog growth backlog summary',
-              '',
+              "",
+              "## Catalog growth backlog summary",
+              "",
               f"- Backlog candidates: `{backlog['summary']['candidate_count']}`",
               f"- Strict PR candidates: `{backlog['summary']['strict_pr_candidate_count']}`",
               f"- Human review required: `{backlog['summary']['human_review_required_count']}`",
               f"- Rejected: `{backlog['summary']['rejected_count']}`",
-              '',
-              '## Strict growth shortlist summary',
-              '',
+              "",
+              "## Strict growth shortlist summary",
+              "",
               f"- Strict-growth shortlist count: `{shortlist['summary']['shortlisted_action_count']}`",
               f"- Shortlisted vendors: `{shortlist['summary']['shortlisted_vendor_count']}`",
               f"- Excluded candidates/actions: `{shortlist['summary']['excluded_count']}`",
-              '',
-              '### Shortlisted vendors',
-              '',
-              *(
-                  [
-                      f"- `{item['candidate_vendor_id']}` / `{item['source_type_candidate']}` / `{item['candidate_source_id']}`"
-                      for item in shortlist.get('items', [])[:10]
-                  ]
-                  or ['- none']
-              ),
-              '',
-              '### Excluded candidates by reason',
-              '',
-              *(
-                  [
-                      f"- `{reason}`: `{count}`"
-                      for reason, count in sorted(shortlist['summary'].get('excluded_by_reason', {}).items())
-                  ]
-                  or ['- none']
-              ),
-              '',
-              '## Strict growth planning summary',
-              '',
+              "",
+              "## Strict growth planning summary",
+              "",
               f"- Strict growth actions: `{strict_growth['summary']['action_count']}`",
-              '',
-              '## Existing vendor promotion planning summary',
-              '',
+              "",
+              "## Existing vendor promotion planning summary",
+              "",
               f"- Plan actions: `{promotion['summary']['action_count']}`",
               f"- Candidate promotion batches: `{batches['summary']['batch_count']}`",
               f"- Candidate promotion actions: `{batches['summary']['candidate_promotion_actions']}`",
-              '',
-              '## Next step',
-              '',
-              'Use strict growth promotion plans through the existing candidate-promotion apply path; do not bypass validation or source preflight.',
-              '',
+              "",
+              "## Next step",
+              "",
+              "Use strict growth promotion plans through the existing candidate-promotion apply path; do not bypass validation or source preflight.",
+              "",
           ]
-          Path('catalog-growth-discovery-issue.md').write_text('\n'.join(lines), encoding='utf-8')
-          Path('reports/catalog-growth-discovery-summary.md').write_text('\n'.join(lines), encoding='utf-8')
+          Path("catalog-growth-discovery-issue.md").write_text("\n".join(lines), encoding="utf-8")
+          Path("reports/catalog-growth-discovery-summary.md").write_text("\n".join(lines), encoding="utf-8")
 
-          with open('reports/vendor-candidates.csv', 'w', encoding='utf-8', newline='') as handle:
-              fields = ['candidate_vendor_id', 'display_name_candidate', 'official_domain_candidate', 'coverage_lane', 'cohort_id', 'source_index_url']
-              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+          with open("reports/vendor-candidates.csv", "w", encoding="utf-8", newline="") as handle:
+              fields = ["candidate_vendor_id", "display_name_candidate", "official_domain_candidate", "coverage_lane", "cohort_id", "source_index_url"]
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
               writer.writeheader()
-              for candidate in vendors.get('vendor_candidates', []):
+              for candidate in vendors.get("vendor_candidates", []):
                   writer.writerow(candidate)
 
           def write_candidate_rows(report, path):
               rows = []
-              for vendor in report.get('vendors', []):
-                  for candidate in vendor.get('candidates', []):
-                      evidence = candidate.get('evidence', {})
+              for vendor in report.get("vendors", []):
+                  for candidate in vendor.get("candidates", []):
+                      evidence = candidate.get("evidence", {})
                       rows.append({
-                          'vendor_id': candidate.get('vendor_id'),
-                          'candidate_source_id': candidate.get('candidate_source_id'),
-                          'source_type_candidate': candidate.get('source_type_candidate'),
-                          'candidate_url': candidate.get('candidate_url'),
-                          'confidence': candidate.get('confidence'),
-                          'http_status': evidence.get('http_status'),
-                          'final_url': evidence.get('final_url'),
-                          'matched_terms': ';'.join(evidence.get('matched_terms', [])),
+                          "vendor_id": candidate.get("vendor_id"),
+                          "candidate_source_id": candidate.get("candidate_source_id"),
+                          "source_type_candidate": candidate.get("source_type_candidate"),
+                          "candidate_url": candidate.get("candidate_url"),
+                          "confidence": candidate.get("confidence"),
+                          "http_status": evidence.get("http_status"),
+                          "final_url": evidence.get("final_url"),
+                          "matched_terms": ";".join(evidence.get("matched_terms", [])),
                       })
-              with open(path, 'w', encoding='utf-8', newline='') as handle:
-                  fields = ['vendor_id', 'candidate_source_id', 'source_type_candidate', 'candidate_url', 'confidence', 'http_status', 'final_url', 'matched_terms']
-                  writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+              with open(path, "w", encoding="utf-8", newline="") as handle:
+                  fields = ["vendor_id", "candidate_source_id", "source_type_candidate", "candidate_url", "confidence", "http_status", "final_url", "matched_terms"]
+                  writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
                   writer.writeheader()
                   for row in rows:
                       writer.writerow(row)
 
           def write_unavailable_rows(report, path):
               rows = []
-              for vendor in report.get('vendors', []):
-                  for unavailable in vendor.get('unavailable_sources', []):
+              for vendor in report.get("vendors", []):
+                  for unavailable in vendor.get("unavailable_sources", []):
                       rows.append({
-                          'vendor_id': unavailable.get('vendor_id'),
-                          'unavailable_source_id': unavailable.get('unavailable_source_id'),
-                          'source_type': unavailable.get('source_type'),
-                          'status': unavailable.get('status'),
-                          'reason': unavailable.get('reason'),
-                          'next_review_after': unavailable.get('next_review_after'),
+                          "vendor_id": unavailable.get("vendor_id"),
+                          "unavailable_source_id": unavailable.get("unavailable_source_id"),
+                          "source_type": unavailable.get("source_type"),
+                          "status": unavailable.get("status"),
+                          "reason": unavailable.get("reason"),
+                          "next_review_after": unavailable.get("next_review_after"),
                       })
-              with open(path, 'w', encoding='utf-8', newline='') as handle:
-                  fields = ['vendor_id', 'unavailable_source_id', 'source_type', 'status', 'reason', 'next_review_after']
-                  writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+              with open(path, "w", encoding="utf-8", newline="") as handle:
+                  fields = ["vendor_id", "unavailable_source_id", "source_type", "status", "reason", "next_review_after"]
+                  writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
                   writer.writeheader()
                   for row in rows:
                       writer.writerow(row)
 
-          write_candidate_rows(enrichment, 'reports/vendor-candidate-source-candidates.csv')
-          write_unavailable_rows(enrichment, 'reports/vendor-candidate-source-unavailable.csv')
-          write_candidate_rows(discovery, 'reports/source-discovery-candidates.csv')
-          write_unavailable_rows(discovery, 'reports/source-discovery-unavailable.csv')
+          write_candidate_rows(enrichment, "reports/vendor-candidate-source-candidates.csv")
+          write_unavailable_rows(enrichment, "reports/vendor-candidate-source-unavailable.csv")
+          write_candidate_rows(discovery, "reports/source-discovery-candidates.csv")
+          write_unavailable_rows(discovery, "reports/source-discovery-unavailable.csv")
 
-          with open('reports/promotion-plan-actions.csv', 'w', encoding='utf-8', newline='') as handle:
-              fields = ['action', 'vendor_id', 'source_type', 'source_id', 'candidate_source_id', 'unavailable_source_id', 'reason']
-              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction='ignore')
+          with open("reports/promotion-plan-actions.csv", "w", encoding="utf-8", newline="") as handle:
+              fields = ["action", "vendor_id", "source_type", "source_id", "candidate_source_id", "unavailable_source_id", "reason"]
+              writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
               writer.writeheader()
-              for action in promotion.get('actions', []):
+              for action in promotion.get("actions", []):
                   writer.writerow(action)
           PY
       - name: Create or update catalog growth discovery issue
