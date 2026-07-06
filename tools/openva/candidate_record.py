@@ -74,6 +74,42 @@ USEFUL_SOURCE_ROLES = {"primary_assurance", "supporting_assurance"}
 # before it may materialise. Fail closed below this.
 DEFAULT_MIN_USEFUL_SOURCE_ROLES = 1
 
+# Phase 6 user-facing reusable-memory states. These are deliberately separate
+# from evaluator states, ingress durability rungs, machine-provisional PRs, and
+# quorum terms. Ordinary users should see whether a discovered source can be
+# reused later, not the internal candidate lifecycle mechanics.
+USER_MEMORY_QUEUED_FOR_REUSE = "queued_for_reuse"
+USER_MEMORY_ALREADY_KNOWN = "already_known"
+USER_MEMORY_CANDIDATE_FOUND = "candidate_found"
+USER_MEMORY_NOT_QUEUED_AMBIGUOUS = "not_queued_ambiguous"
+USER_MEMORY_NOT_QUEUED_UNSAFE = "not_queued_unsafe"
+USER_MEMORY_NOT_QUEUED_INSUFFICIENT_EVIDENCE = "not_queued_insufficient_evidence"
+
+USER_MEMORY_STATES = (
+    USER_MEMORY_QUEUED_FOR_REUSE,
+    USER_MEMORY_ALREADY_KNOWN,
+    USER_MEMORY_CANDIDATE_FOUND,
+    USER_MEMORY_NOT_QUEUED_AMBIGUOUS,
+    USER_MEMORY_NOT_QUEUED_UNSAFE,
+    USER_MEMORY_NOT_QUEUED_INSUFFICIENT_EVIDENCE,
+)
+
+USER_MEMORY_STATE_LABELS = {
+    USER_MEMORY_QUEUED_FOR_REUSE: "queued for reuse",
+    USER_MEMORY_ALREADY_KNOWN: "already known",
+    USER_MEMORY_CANDIDATE_FOUND: "candidate found",
+    USER_MEMORY_NOT_QUEUED_AMBIGUOUS: "not queued: ambiguous",
+    USER_MEMORY_NOT_QUEUED_UNSAFE: "not queued: unsafe",
+    USER_MEMORY_NOT_QUEUED_INSUFFICIENT_EVIDENCE: "not queued: insufficient evidence",
+}
+
+# String constants are used here to avoid a dependency cycle with
+# ``vendor_resolution``. These are the durability rungs that mean the candidate
+# has reached a durable/reusable intake path rather than read-only preview memory.
+DURABLE_REUSE_INGRESS_STATES = frozenset(
+    {"persisted_local", "committed_local", "submitted_remote", "workflow_visible"}
+)
+
 
 def load_schema() -> dict[str, Any]:
     return json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -242,6 +278,62 @@ def evaluate_eligibility(
 
     reasons.append(f"usable_assurance_sources={len(usable)}")
     return ELIGIBLE_STATE, reasons
+
+
+def user_facing_candidate_memory_state(
+    eligibility_state: str,
+    *,
+    ingress_state: str | None = None,
+) -> str:
+    """Map internal candidate eligibility to a user-facing reusable-memory state.
+
+    Phase 6 keeps candidate memory as a background cache. This function is the
+    public vocabulary bridge: it hides internal evaluator, ingress, PR, quorum,
+    and machine-provisional language behind a small set of states users can act
+    on. It is not advice and does not change eligibility, promotion, or mutation
+    authority.
+    """
+    if eligibility_state == "rejected_duplicate":
+        return USER_MEMORY_ALREADY_KNOWN
+    if eligibility_state in {"rejected_identity_collision", "deferred_cross_authority", "deferred_language_uncertainty"}:
+        return USER_MEMORY_NOT_QUEUED_AMBIGUOUS
+    if eligibility_state == "rejected_unsafe_url":
+        return USER_MEMORY_NOT_QUEUED_UNSAFE
+    if eligibility_state in {
+        "deferred_insufficient_evidence",
+        "rejected_source_type_conflict",
+        "rejected_gated",
+    }:
+        return USER_MEMORY_NOT_QUEUED_INSUFFICIENT_EVIDENCE
+    if eligibility_state == ELIGIBLE_STATE:
+        return (
+            USER_MEMORY_QUEUED_FOR_REUSE
+            if ingress_state in DURABLE_REUSE_INGRESS_STATES
+            else USER_MEMORY_CANDIDATE_FOUND
+        )
+    return USER_MEMORY_CANDIDATE_FOUND
+
+
+def user_facing_candidate_memory_view(
+    record: dict[str, Any],
+    *,
+    ingress_state: str | None = None,
+) -> dict[str, Any]:
+    """Return the Phase 6 user-facing reusable-memory projection.
+
+    The projection intentionally omits candidate ids, eligibility states,
+    ingress states, PR state, quorum state, and other internal lifecycle details.
+    Internal orchestration can still use the candidate record directly.
+    """
+    state = user_facing_candidate_memory_state(
+        str(record.get("eligibility_state") or "pending"),
+        ingress_state=ingress_state,
+    )
+    return {
+        "state": state,
+        "label": USER_MEMORY_STATE_LABELS[state],
+        "not_advice": True,
+    }
 
 
 def build_candidate(
