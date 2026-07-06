@@ -130,7 +130,7 @@ jobs:
         run: python -m tools.openva.automation_rules schema-conformance --changed-files changed-files.txt --output weighted-review-schema.json
       - name: Skip schema conformance agent when not relevant
         if: steps.classify.outputs.schema_required != 'true'
-        run: >-
+        run: |
           python - <<'PY'
           import json
           from datetime import UTC, datetime
@@ -155,7 +155,7 @@ jobs:
         run: python -m tools.openva.automation_rules source-accessibility --changed-files changed-files.txt --retry-429 --output weighted-review-source.json
       - name: Skip source accessibility agent when not relevant
         if: steps.classify.outputs.source_required != 'true'
-        run: >-
+        run: |
           python - <<'PY'
           import json
           from datetime import UTC, datetime
@@ -180,7 +180,7 @@ jobs:
         run: python -m tools.openva.automation_rules advisory-wording --changed-files changed-files.txt --output weighted-review-wording.json
       - name: Skip advisory wording agent when not relevant
         if: steps.classify.outputs.advisory_required != 'true'
-        run: >-
+        run: |
           python - <<'PY'
           import json
           from datetime import UTC, datetime
@@ -205,7 +205,7 @@ jobs:
         run: python -m tools.openva.automation_rules provenance-completeness --changed-files changed-files.txt --output weighted-review-provenance.json
       - name: Skip provenance completeness agent when not relevant
         if: steps.classify.outputs.provenance_required != 'true'
-        run: >-
+        run: |
           python - <<'PY'
           import json
           from datetime import UTC, datetime
