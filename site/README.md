@@ -1,8 +1,8 @@
 # OpenVA Site
 
-This directory contains the static OpenVA browser resolver UI.
+This directory contains the static OpenVA Catalog Viewer.
 
-Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
+Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
 
 The site is built from committed OpenVA public pack and index files:
 
@@ -23,9 +23,9 @@ Build locally:
 python site/build.py
 ```
 
-The page is static and GitHub Pages-ready. It has no backend, database, account
-system, upload endpoint, private inventory processing, live verification job,
-live discovery job, or server-side workspace persistence.
+The viewer is static and GitHub Pages-ready. It has no backend, database,
+account system, upload endpoint, private inventory processing, or server-side
+workspace persistence.
 
 ## Discovery surface
 
@@ -33,7 +33,7 @@ The same build also emits a static discovery layer for search engines and
 machine consumers:
 
 ```text
-vendors/{vendor_id}/index.html   one page per vendor reference
+vendors/{vendor_id}/index.html   one page per canonical vendor
 agents/index.html                agent and machine integration guide
 .well-known/openva.json          typed discovery manifest with content digest
 sitemap.xml
@@ -42,56 +42,41 @@ llms.txt
 assets/openva-pages.css          shared stylesheet for the generated pages
 ```
 
-These files are generated from committed public metadata and
+These files are generated from the committed catalog and
 `config/publication.yaml`; they are deterministic and must not be hand-edited.
 Each vendor page links to that vendor's JSON export and keeps the original
-vendor-published source URLs. To change the published base URL, edit
+vendor-published source URLs. To change the canonical base URL, edit
 `config/publication.yaml` rather than the generators.
 
-Selections and browser-local CSV rows are held in browser memory only. They are
-not written to `localStorage`, `sessionStorage`, a server, or a database.
+Selections are held in browser memory only. They are not written to
+`localStorage`, `sessionStorage`, a server, or a database.
 
 ## Public route terminology
 
-The public site should present the product as a resolver-first source-pack UI:
+The public site keeps stable product terminology even when labels are shortened
+for navigation. The primary user workspace is the Reviewed Catalog, presented in
+the navigation as Catalog. The maintainer/developer surface is the Live
+Observation Feed, linked outside the primary navigation so non-dev users can stay
+focused on the reviewed catalog workflow.
 
-```text
-Resolve vendor sources
-Source Lookup
-Configurable source-pack builder
-Source pack preview
-Export Source Pack
-```
-
-Role labels such as CISO, DPO, and procurement are preset shortcuts only. They
-preselect source fields; users can add or remove fields before export.
-
-Legacy strings may still appear in tests or non-visible compatibility notes
-until the site test suite is fully reconciled. Do not expand those strings into
-new user-facing copy:
+Boundary phrases that must remain present across the site and documentation:
 
 ```text
 Reviewed Catalog
 Live Observation Feed
 Reviewed catalog snapshot
-Local Matcher
-```
-
-Boundary phrases that must remain true across the site and documentation:
-
-```text
-Your CSV is processed locally in your browser. It is not uploaded to OpenVA.
 not a live monitoring feed
+No live observation events are available yet.
+observation ledger workflow
+Local Matcher
+Your CSV is processed locally in your browser. It is not uploaded to OpenVA.
 openva-matched-inventory.csv
 openva-matched-inventory.json
-not_advice
 ```
 
-## Browser-local resolver
+## Browser-local inventory matcher
 
-The browser-local resolver lets users choose a CSV from their own computer and
-resolve it against OpenVA public metadata in browser memory. The CSV stays in
-the user's browser session and match results can be downloaded as CSV or JSON.
+The Local Matcher page lets users choose a CSV from their own computer and match it against OpenVA public metadata in browser memory. The CSV stays in the user's browser session and match results can be downloaded as CSV or JSON.
 
 Supported input columns:
 
@@ -99,47 +84,60 @@ Supported input columns:
 vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
 ```
 
-The downloaded result preserves user-provided columns and appends OpenVA public
-metadata fields such as matched vendor ID, match method, confidence, source
-types, source URLs, result state, mode, and the non-advisory boundary.
+The downloaded match result preserves user-provided columns and appends OpenVA public metadata fields such as matched vendor ID, match method, confidence, the unified `result_state`, `freshness_mode`, source types, canonical source URLs, review state, and the non-advisory boundary.
 
-The browser-local resolver is cached/static: it reports loaded public metadata
-and never claims live verification, live discovery, or server-side lifecycle
-routing. Hosted/self-hosted live resolution is described by the resolver
-contract — see `docs/vendor-resolution.md` and `docs/resolver-api.md`.
+The browser Local Matcher resolves in **cached** mode: it reports the latest known
+catalogue state and never claims live verification (`freshness_mode: cached`,
+`result_state` drawn from the unified vocabulary — `catalog_current`,
+`verification_inconclusive`, `not_found`). Live `verify`-mode resolution (live
+link checks, discovery of replacements and missing sources, and routing into the
+catalogue lifecycle) is served by the unified resolver contract — see
+`docs/vendor-resolution.md`. OpenVA preserves source-reference and observation
+history; it does not archive or reproduce historical vendor documents.
 
-Local resolution results are not vendor approval, compliance findings, risk
-scores, procurement recommendations, legal opinions, security conclusions, or
-suitability determinations.
+Local match results are not vendor approval, compliance findings, risk scores, procurement recommendations, legal opinions, or suitability determinations.
 
-## Observation feed shell
+## Feed contract
 
-The static build emits:
+The live observation feed is generated as:
 
 ```text
 site/dist/data/observation-feed.json
 ```
 
-Observation events are machine-generated public-source facts, not vendor
-approval, compliance findings, risk findings, procurement recommendations,
-legal opinions, or materiality determinations.
+The v1 feed ships with an empty state because the observation ledger workflow
+has not shipped yet. Real feed activation requires a later observation
+ledger/feed generation PR.
 
-The static site must not add real observation events by hand, promote
-observation events into public source records, or imply continuous document
-monitoring.
+Observation events must be non-canonical and preserve:
+
+```text
+catalog_tier: observation
+review_state: auto_observed or human_review_required
+canonical: false
+advisory_boundary: non_advisory
+```
+
+Do not add real observation events by hand. Do not promote observation events
+into canonical catalog records from the site.
 
 ## Deployment and update cadence
 
-The static browser resolver UI is deployed to GitHub Pages from `site/dist/`
-when a release tag matching `v*` is pushed. The build checks out the tagged
-commit, runs OpenVA validation, builds the static site from the tagged pack/index
-files, uploads the GitHub Pages artifact, and deploys it through the official
-Pages deployment action.
+The reviewed catalog site is deployed to GitHub Pages from `site/dist/` when a
+release tag matching `v*` is pushed. The build checks out the tagged commit,
+runs OpenVA validation, builds the reviewed catalog site from the tagged
+pack/index files, uploads the GitHub Pages artifact, and deploys it through the
+official Pages deployment action.
 
-## Compiled public-metadata distribution
+The live feed shell is deployed through the same GitHub Pages static site
+output. The placeholder workflow runs on `workflow_dispatch` and on the weekly
+cron `0 3 * * 0` while the observation ledger is still pending. It confirms the
+feed events array is empty instead of faking observation events.
 
-The site is generated as a compiled static distribution rather than a runtime
-database.
+## Compiled catalog distribution
+
+The site is generated as a compiled catalog distribution rather than a single
+large runtime database.
 
 Initial page load uses:
 
@@ -156,5 +154,5 @@ Vendor details are loaded on demand from:
 site/dist/data/vendors/{vendor_id}.json
 ```
 
-This keeps the non-dev hosted page usable as OpenVA grows, while release assets
+This keeps the non-dev hosted site usable as OpenVA grows, while release assets
 continue to serve bulk CSV and internal tooling use cases.
