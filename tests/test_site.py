@@ -679,14 +679,11 @@ def test_site_docs_cover_compiled_distribution_and_public_boundaries():
         "data/vendors/{vendor_id}.json",
         "browser memory only",
         "not written to `localStorage`, `sessionStorage`, a server, or a database",
-        "no backend, database, account",
-        "no upload endpoint",
-        "live verification job",
-        "live discovery job",
-        "server-side workspace persistence",
-        "static/public metadata",
-        "no live verification",
-        "no live discovery",
+        "no backend, database, account system, upload endpoint",
+        "no live verification job",
+        "no live discovery job",
+        "no server-side workspace persistence",
+        "public metadata",
     ]:
         assert phrase in text
 
