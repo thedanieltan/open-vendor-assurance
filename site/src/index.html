@@ -95,7 +95,7 @@
           <div class="hero-card" aria-label="Recommended first step">
             <span class="status-dot"></span>
             <strong>Recommended first step</strong>
-            <p>Start with a vendor list, choose the source types you need, and export a source pack for your own internal review workflow.</p>
+            <p>Start with a vendor list, choose the source types you need, remove fields you do not want, and export a source pack for your own internal review workflow.</p>
           </div>
         </div>
 
@@ -104,27 +104,40 @@
           OpenVA resolves public-source metadata only. It does not approve, certify, score, recommend, or determine whether any vendor is compliant, secure, suitable, or legally adequate. Do not upload private agreements, SOC reports, credentials, customer evidence, or confidential vendor inventories.
         </aside>
 
-        <section class="section-card assurance-types">
+        <section class="section-card assurance-types" id="source-pack-builder">
           <div class="section-heading-lite">
-            <p class="eyebrow">Source packs</p>
-            <h3>Public references used in vendor assurance workflows</h3>
-            <p>OpenVA is a starting point for source gathering, not a substitute for legal, procurement, security, privacy, or risk review.</p>
+            <p class="eyebrow">Configurable source-pack builder</p>
+            <h3>One view, optional presets, user-selected fields</h3>
+            <p>Choose the public source fields you want to resolve. CISO, DPO, and procurement are presets only; users can add or remove source types before export.</p>
           </div>
           <div class="surface-grid compact-surface-grid">
             <article>
-              <span class="card-kicker">CISO</span>
-              <h3>Security source pack</h3>
-              <p>Security page, trust center, compliance page, vulnerability disclosure, and certification references.</p>
+              <span class="card-kicker">Preset shortcuts</span>
+              <h3>Start from a role, then edit</h3>
+              <p><button type="button" data-source-pack-preset="ciso">CISO preset</button> <button type="button" data-source-pack-preset="dpo">DPO preset</button> <button type="button" data-source-pack-preset="procurement">Procurement preset</button> <button type="button" data-source-pack-preset="custom">Custom</button></p>
+              <p class="meta-line">Presets preselect fields only. They are not separate products, roles, approval paths, or conclusions.</p>
             </article>
             <article>
-              <span class="card-kicker">DPO</span>
-              <h3>Privacy source pack</h3>
-              <p>DPA, privacy notice, subprocessor list, data transfer terms, and AI/data terms where public.</p>
+              <span class="card-kicker">Selectable source fields</span>
+              <h3>Include only what you need</h3>
+              <fieldset>
+                <legend>Source types to include in the source pack</legend>
+                <label><input type="checkbox" data-source-pack-field="dpa" checked> DPA</label><br>
+                <label><input type="checkbox" data-source-pack-field="privacy_notice" checked> Privacy notice</label><br>
+                <label><input type="checkbox" data-source-pack-field="subprocessors_list" checked> Subprocessors list</label><br>
+                <label><input type="checkbox" data-source-pack-field="security_page" checked> Security page</label><br>
+                <label><input type="checkbox" data-source-pack-field="trust_center" checked> Trust center</label><br>
+                <label><input type="checkbox" data-source-pack-field="compliance_page"> Compliance page</label><br>
+                <label><input type="checkbox" data-source-pack-field="vulnerability_disclosure"> Vulnerability disclosure</label><br>
+                <label><input type="checkbox" data-source-pack-field="certification_reference"> Certification reference</label><br>
+                <label><input type="checkbox" data-source-pack-field="data_transfer_terms"> Data transfer terms</label><br>
+                <label><input type="checkbox" data-source-pack-field="ai_data_terms"> AI/data terms</label>
+              </fieldset>
             </article>
             <article>
-              <span class="card-kicker">Procurement</span>
-              <h3>Intake source pack</h3>
-              <p>Vendor identity, public source coverage, missing or ambiguous references, and export-ready metadata.</p>
+              <span class="card-kicker">Output boundary</span>
+              <h3>Fields, not findings</h3>
+              <p>The builder returns public source URLs and found/missing/ambiguous/unavailable states. It does not produce a security conclusion, DPA adequacy finding, legal opinion, vendor approval, procurement recommendation, or risk score.</p>
             </article>
           </div>
         </section>
@@ -259,23 +272,36 @@
           The file is parsed in browser memory only. OpenVA does not receive, store, persist, or transmit your private vendor inventory.
         </aside>
         <section class="section-card">
-          <h3>Choose source pack type</h3>
-          <p>Use a preset to decide which public source types you want to review. This browser-local resolver uses the loaded public snapshot only; live checking and discovery belong to the hosted resolver phase.</p>
+          <h3>Configure source pack fields</h3>
+          <p>Use one builder for every workflow. Start with a preset if useful, then remove any source fields you do not want in the source pack. This browser-local resolver uses the loaded public snapshot only; live checking and discovery belong to the hosted resolver phase.</p>
           <div class="surface-grid compact-surface-grid role-preset-grid">
             <article>
-              <span class="card-kicker">CISO preset</span>
-              <h3>Security sources</h3>
-              <p>security_page, trust_center, compliance_page, vulnerability_disclosure, certification_reference</p>
+              <span class="card-kicker">Preset shortcuts</span>
+              <h3>Optional starting points</h3>
+              <p><button type="button" data-source-pack-preset="ciso">CISO preset</button> <button type="button" data-source-pack-preset="dpo">DPO preset</button> <button type="button" data-source-pack-preset="procurement">Procurement preset</button> <button type="button" data-source-pack-preset="custom">Custom</button></p>
+              <p class="meta-line">Presets preselect fields only. Users can add or remove fields before export.</p>
             </article>
             <article>
-              <span class="card-kicker">DPO preset</span>
-              <h3>Privacy sources</h3>
-              <p>dpa, privacy_notice, subprocessors_list, data_transfer_terms, ai_data_terms</p>
+              <span class="card-kicker">Selected source fields</span>
+              <h3>Filter the source pack</h3>
+              <fieldset>
+                <legend>Include these public source types</legend>
+                <label><input type="checkbox" data-source-pack-field="dpa" checked> DPA</label><br>
+                <label><input type="checkbox" data-source-pack-field="privacy_notice" checked> Privacy notice</label><br>
+                <label><input type="checkbox" data-source-pack-field="subprocessors_list" checked> Subprocessors list</label><br>
+                <label><input type="checkbox" data-source-pack-field="security_page" checked> Security page</label><br>
+                <label><input type="checkbox" data-source-pack-field="trust_center" checked> Trust center</label><br>
+                <label><input type="checkbox" data-source-pack-field="compliance_page"> Compliance page</label><br>
+                <label><input type="checkbox" data-source-pack-field="vulnerability_disclosure"> Vulnerability disclosure</label><br>
+                <label><input type="checkbox" data-source-pack-field="certification_reference"> Certification reference</label><br>
+                <label><input type="checkbox" data-source-pack-field="data_transfer_terms"> Data transfer terms</label><br>
+                <label><input type="checkbox" data-source-pack-field="ai_data_terms"> AI/data terms</label>
+              </fieldset>
             </article>
             <article>
-              <span class="card-kicker">Procurement preset</span>
-              <h3>Intake sources</h3>
-              <p>dpa, privacy_notice, security_page, trust_center, subprocessors_list</p>
+              <span class="card-kicker">Boundary</span>
+              <h3>Source selection only</h3>
+              <p class="meta-line">Filtering fields does not approve, reject, score, recommend, or determine whether any vendor is secure, compliant, legally adequate, suitable, or procurement-ready.</p>
             </article>
           </div>
         </section>
