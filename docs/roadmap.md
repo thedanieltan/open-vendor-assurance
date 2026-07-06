@@ -3,89 +3,148 @@
 This roadmap communicates OpenVA direction without creating a support, legal,
 compliance, procurement, security, or vendor-certification commitment.
 
-OpenVA is a resolver-first, public-source-only, metadata-first service for vendor-published assurance source references. It helps humans and agents turn bounded vendor identities into structured public source packs. It is not an advisory, scoring, monitoring, or vendor-ranking service.
+OpenVA is a resolver-first, public-source-only, metadata-first project for vendor-published assurance source references. It helps humans and agents turn bounded vendor identities into structured public source packs. It is not an advisory, scoring, monitoring, or vendor-ranking service.
 
 ## North star: vendor source resolution
 
-OpenVA is moving from a catalog-browsing product to a **public-source resolver** for CISO, DPO, procurement, compliance, and agent workflows.
+OpenVA is a **public-source resolver** for CISO, DPO, procurement, compliance, and agent workflows.
 
 The target flow is:
 
 ```text
 vendor identity
   -> match / resolve identity
+  -> choose source fields
   -> find public source URLs
   -> classify source type
   -> return a structured source pack
   -> export, write back, or queue reusable reference memory
 ```
 
-The reference cache remains useful, but it is supporting infrastructure: speed, dedupe, identity memory, source-type normalization, negative memory, and reproducibility. The cache is not audit evidence, a canonical legal source, a complete vendor universe, or a vendor approval layer.
+The reference cache remains supporting infrastructure: speed, dedupe, identity memory, source-type normalization, negative memory, and reproducibility. The cache is not audit evidence, a canonical legal source, a complete vendor universe, or a vendor approval layer.
 
-## Unified vendor resolution
+## Closeout status
 
-OpenVA has moved from static catalogue lookup to **reference-cache-first, resolve-on-use** source resolution shared by browser users, API consumers, agents, and MCP integrations (`docs/vendor-resolution.md`). Shipped: the `resolve_vendor_sources` contract, the result-state vocabulary, `cached`/`verify` freshness modes, the proposed source-reference history model, durable idempotent candidate ingress into the existing `maintenance/candidates` queue, the result schema, and a CLI.
+The resolver-first Phases 1-9 are complete as implementation slices. See `docs/resolver-first-closeout.md` for the consolidation record.
 
-The hosted browser Local Matcher is currently cached-only and surfaces a `result_state` per vendor; it does not perform live discovery or lifecycle routing. Scheduled `catalog-growth-discovery` runs hand strict-safe growth to the existing `candidate-promotion-pr.yml` promotion workflow automatically through `catalog-growth-promotion-bridge.yml`, which dispatches the controlled write path only when the strict-growth plan has eligible actions and no hold, active promotion run, or open growth PR blocks it.
+| Phase | Merged PR | Status |
+| --- | --- | --- |
+| Phase 1 — Positioning correction | #518 | Complete |
+| Phase 2 — Resolver-first public UI | #520 | Complete |
+| Phase 3 — Source pack schema | #521 | Complete |
+| Phase 4 — Hosted resolver staging | #522 | Staging smoke plan complete; production hosted launch not claimed |
+| Phase 5 — Source map and discovery engine | #523 | Complete |
+| Phase 6 — Candidate memory as background cache | #524 | Complete |
+| Phase 7 — Workspace write-back | #525 | Connector-neutral projection complete |
+| Phase 8 — Configurable source pack builder | #526 | Complete |
+| Phase 9 — Resolver-usefulness prioritisation | #527 | Complete |
 
-A read-only, cached-pack enrichment API extends the match service under `/v1` (catalogue meta, vendor and source lookup, single-vendor match, and a bounded batch `enrich` endpoint) so zero-install spreadsheet and document clients can resolve vendors against the published reference cache without cloning the repository (`docs/resolver-api.md`). It performs no live verification and persists nothing.
-
-A Google Sheets client consumes that `/v1/enrich` endpoint (`integrations/google-sheets/`): from a custom menu a spreadsheet user configures a public-read OpenVA endpoint, selects source types, and writes stable `openva_*` reference columns back into a sheet, without reproducing matcher, ranking, or source-canonicality logic and without embedding an API key. It needs no local Python, Docker, repository checkout, or API secret, but the current release installs manually into a bound Apps Script project; it is a reference and fallback client, not the primary distribution path.
-
-This is not a new advisory or scoring system. OpenVA preserves source-reference and observation history. It does not archive, reproduce, monitor, compare, or interpret historical vendor documents.
+This closeout does not create a Phase 10. Future work should be operational launch evidence, bug fixes, wording reconciliation, drift-prevention tests, or concrete user-driven adapter/workspace compatibility work.
 
 ## Current state
 
-OpenVA operates an autonomous reference-cache and catalog pipeline for bounded, machine-verifiable public-source locator facts. Discovery, verification, observation, maintenance, promotion, rollback, publication, and audit actions run through declared workflows and pull-request gates. Humans govern code, schemas, authority, permissions, thresholds, and exceptions.
+OpenVA currently ships:
 
-A published record means OpenVA identified and classified a public source reference. It does not mean the vendor is compliant, approved, safe, certified, suitable, or recommended.
+- static GitHub Pages browser UI;
+- browser-local CSV resolution against loaded public metadata;
+- configurable source-pack field selection;
+- direct public source lookup;
+- source-pack result schema;
+- static/digest-verifiable agent exports;
+- release CSV assets;
+- connector-neutral workspace write-back row projection;
+- bounded source-map discovery primitives;
+- candidate memory as background reusable public-source memory;
+- resolver-usefulness prioritisation for already-eligible background candidates;
+- self-hostable HTTP/MCP/service components.
 
-## Distribution model
+The browser page is static and browser-local. It does not upload private vendor inventories, run live discovery from the page, or operate a production hosted verify endpoint.
 
-**Primary distribution:** OpenVA HTTP/MCP capabilities composed by users' existing agents with the workspace connectors those agents already control. The agent reads the user's spreadsheet, database, or tickets through its own connector, sends OpenVA only bounded vendor identities, and writes results back itself. OpenVA does not require direct access to Google Drive, Microsoft 365, Notion, Jira, Slack, or any other workspace, and holds no workspace credential. The read-only MCP surface is available over **stdio** and **Streamable HTTP**, and a composite `enrich_inventory` tool serves agent-composed workspace workflows. See [`agent-workspace-composition.md`](agent-workspace-composition.md), [ADR-0002](architecture/decisions/ADR-0002-agent-composed-workspace-integration.md), and [ADR-0003](architecture/decisions/ADR-0003-remote-mcp-product-surface.md).
+## Hosted resolver deployment status
 
-**Secondary distribution:** thin native/reference clients for environments without capable agents or where organisational policy requires a dedicated client. The Google Sheets client (`integrations/google-sheets/`) is the current example — implemented, manually installed, useful as a tested reference and fallback. Excel, Word, or Google Workspace add-on clients are not the default next step; a native client is built only where demonstrated demand or policy justifies it ([ADR-0005](architecture/decisions/ADR-0005-native-clients-as-secondary-compatibility-surfaces.md)).
+The provider-neutral hosted application path and staging smoke plan exist, but OpenVA does not currently claim an operated production hosted resolver.
 
-The static GitHub Pages viewer, pinned digest-verifiable exports, and the static/local MCP layer remain the reproducible foundation. This positioning describes priority and transport capability; OpenVA does not operate a production hosted endpoint, and live `verify`-mode over remote MCP remains future work governed by [ADR-0001](architecture/decisions/ADR-0001-hosted-resolver-and-live-verification.md).
+Hosted/live operation remains gated by:
 
-## Hosted public-read deployment
+```text
+provider
+region
+domain
+credentials
+spend controls
+staging deployment
+production deployment
+production smokes
+launch evidence
+operational ownership
+```
 
-The deployment architecture for ADR-0001's accepted hosted posture is specified in [ADR-0006](architecture/decisions/ADR-0006-hosted-public-read-deployment.md) and [`docs/operations/hosted-deployment-decision.md`](operations/hosted-deployment-decision.md): a portable container (recommended baseline Google Cloud Run; alternatives AWS Lambda and Azure Container Apps), an async `verify`-worker, a TTL-deleted job/result store, and an always-on static fallback. ADR-0006 is **Accepted** and the decision package is complete; acceptance authorises the architecture only — it provisions nothing, creates no provider account, and **OpenVA still does not operate a production hosted endpoint**.
+Until those gates are complete, use this wording:
 
-The provider-neutral application path is complete and merged. What remains is the maintainer-gated infrastructure chain: staging, production, production smokes, launch evidence, and programme closeout. These require accepted external deployment choices (provider, region, domain, credentials, spend), plus real provisioning. No slice claims the service is live until launch evidence exists.
+```text
+OpenVA ships a static/browser-local resolver UI and self-hostable resolver components.
+It does not currently operate a production hosted private-inventory upload or live verify endpoint.
+```
 
-## Product phases
+## Product boundary
+
+In scope:
+
+- resolving bounded vendor identities;
+- locating public vendor-published assurance source URLs;
+- classifying source types;
+- separating found, missing, ambiguous, gated, unavailable, candidate-found, and not-checked states;
+- shaping source-pack output for humans, APIs, MCP tools, CSV, spreadsheets, and agents;
+- exporting public-source locator metadata;
+- background reusable memory through candidate records and controlled PR gates.
+
+Out of scope:
+
+- evaluating document substance;
+- approving or rejecting vendors;
+- risk scoring;
+- legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice;
+- private evidence storage;
+- authenticated trust-center collection;
+- NDA-gated material;
+- raw document mirroring by default;
+- continuous content monitoring;
+- legal document versioning.
+
+## Correct user-facing model
+
+The user-facing model is:
+
+```text
+vendor list
+  -> choose source fields
+  -> resolve public source references
+  -> review found / missing / ambiguous / gated / unavailable states
+  -> export source pack
+  -> optionally write back through the user's own workspace or agent
+```
+
+Role labels are presets only:
+
+- CISO preset: security page, trust center, compliance page, vulnerability disclosure, certification references;
+- DPO preset: DPA, privacy notice, subprocessor list, data transfer terms, AI/data terms;
+- procurement preset: vendor identity, official domain, legal entity hints, source coverage, missing/ambiguous/gated flags, export/write-back status.
+
+Users can include or remove fields. Presets are not separate products, approval paths, or conclusions.
+
+## Completed product phases
 
 ### Phase 1 — Positioning correction
 
-Reframe public language from catalog-first to resolver-first.
-
-Deliverables:
-
-- README and roadmap language updated;
-- hosted-page language updated;
-- catalog described as reference cache / public source memory;
-- source URLs described as locator metadata, not audit truth;
-- non-advisory boundary preserved.
+Public language was reframed from catalog-first to resolver-first. Source URLs are described as locator metadata, not audit truth. The non-advisory boundary remains explicit.
 
 ### Phase 2 — Resolver-first public UI
 
-Make the primary browser journey `Resolve vendor sources`, not `Browse catalog`.
-
-Deliverables:
-
-- paste/upload vendor list entry point;
-- role presets for CISO, DPO, and procurement;
-- source-type selector;
-- source pack result matrix;
-- export/write-back oriented copy;
-- catalog browse moved to a secondary path.
+The primary browser journey became resolving vendor sources and exporting source packs. Browse/search remains a secondary utility path.
 
 ### Phase 3 — Source pack schema
 
-Standardise human, API, MCP, CSV, and spreadsheet outputs.
-
-Required result fields:
+OpenVA now has a public source-pack result contract for humans, API/MCP consumers, CSV/spreadsheet exports, and agents. Required result fields include:
 
 ```text
 match_status
@@ -103,9 +162,7 @@ not_advice
 
 ### Phase 4 — Hosted resolver staging
 
-Expose cached lookup, on-demand source checks, and async resolver jobs through staging infrastructure.
-
-Minimum endpoints:
+The staging smoke plan defines the expected hosted resolver evidence contract and endpoint mapping:
 
 ```text
 POST /resolve
@@ -117,26 +174,17 @@ GET /resolve-jobs/{id}/results
 GET /v1/catalog/meta
 ```
 
+This phase did not provision production or claim an operated hosted endpoint.
+
 ### Phase 5 — Source map and discovery engine
 
-Use web discovery as a bounded resolver primitive, not as broad scraping or document monitoring.
+Bounded discovery emits locator metadata only: source URL, source type, vendor identity, public access status, status code, redirect target, checked time, confidence, rejection reason, and `not_advice`.
 
-Discovery sources may include:
-
-```text
-sitemap
-robots-allowed public links
-known path patterns
-official-domain search
-trust-center subdomain patterns
-safe public dynamic page probing
-```
-
-Stored output remains locator metadata only: source URL, source type, vendor identity, public access status, status code, redirect target, checked time, confidence, rejection reason, and `not_advice`.
+Discovery remains a resolver primitive, not broad scraping, content monitoring, or document interpretation.
 
 ### Phase 6 — Candidate memory as background cache
 
-Turn useful resolver discoveries into reusable reference memory without exposing ordinary users to internal workflow concepts.
+Useful resolver discoveries can become reusable public-source memory without exposing ordinary users to internal workflow concepts.
 
 User-facing statuses:
 
@@ -153,9 +201,9 @@ Internal mutation continues through candidate records, eligibility checks, PRs, 
 
 ### Phase 7 — Workspace write-back
 
-Make OpenVA useful where teams already work.
+OpenVA now has a connector-neutral source-pack write-back row projection for CSV, spreadsheets, APIs, MCP tools, and agent-composed workspace workflows.
 
-Priority surfaces:
+Priority surfaces remain:
 
 1. CSV upload/export;
 2. Google Sheets;
@@ -163,19 +211,13 @@ Priority surfaces:
 4. Notion/Jira through agent-composed workflows;
 5. API for internal tools.
 
-### Phase 8 — Role-specific views
+### Phase 8 — Configurable source pack builder
 
-Same resolver, different defaults.
+OpenVA uses one configurable source-pack builder. CISO, DPO, and procurement are presets only. Users can add or remove source fields before export.
 
-- CISO: security page, trust center, compliance page, vulnerability disclosure, certification references.
-- DPO: DPA, privacy notice, subprocessor list, data transfer terms, AI/data terms.
-- Procurement: vendor identity, official domain, legal entity hints, source coverage, missing/ambiguous/gated flags, export/write-back status.
+### Phase 9 — Resolver-usefulness prioritisation
 
-### Phase 9 — Demand-informed cache growth
-
-Stop optimizing for catalog size. Optimize for resolver usefulness.
-
-Prioritize:
+Background reusable-memory prioritisation now uses resolver-usefulness signals, including:
 
 ```text
 repeated user/agent misses
@@ -186,9 +228,15 @@ candidate URLs rediscovered multiple times
 high-use broken/gated/unavailable URLs
 ```
 
-Scheduled discovery remains, but user and agent demand becomes the signal.
+Demand signals only prioritise already-eligible candidates. They do not make unsafe, ambiguous, gated, or insufficient-evidence candidates selectable.
 
-## Priorities
+## Priorities after closeout
+
+### Operational launch evidence
+
+- complete staging only when provider, region, domain, credentials, and spend controls exist;
+- run staging smokes against the documented evidence contract;
+- do not claim production hosted operation until launch evidence exists.
 
 ### Resolution usefulness
 
@@ -199,7 +247,7 @@ Scheduled discovery remains, but user and agent demand becomes the signal.
 
 ### Source locator quality
 
-- deepen DPA, subprocessor, privacy, security, compliance, and trust-center coverage for commonly requested vendors;
+- deepen DPA, subprocessor, privacy, security, compliance, and trust-center source coverage for commonly requested vendors;
 - prefer authoritative vendor-controlled sources over inferred URLs;
 - record moved, unavailable, gated, and ambiguous source-locator status;
 - keep discovery and maintenance bounded by host, URL, byte, and time limits.
@@ -215,7 +263,7 @@ Scheduled discovery remains, but user and agent demand becomes the signal.
 
 - preserve deny-by-default workflow authority;
 - require independent evidence and separation of duties for autonomous promotion;
-- keep every machine-created catalog claim reversible;
+- keep every machine-created source claim reversible;
 - maintain release gates, conformance fixtures, versioning rules, and public security and contribution policies;
 - retire obsolete workflows and documentation only after their durable contracts and evidence have been identified.
 
@@ -251,7 +299,7 @@ Good contributions are bounded and testable, for example:
 - adding public metadata for a clearly identified vendor source;
 - improving source-resolution fixtures, examples, or factual documentation;
 - adding tests around existing behavior;
-- improving adapter compatibility without changing catalog meaning.
+- improving adapter compatibility without changing source meaning.
 
 Schema, workflow-authority, permission, and policy-threshold changes require maintainer review and explicit scope.
 
@@ -265,4 +313,4 @@ Maintainers should keep the following true:
 - validation and release gates pass;
 - scheduled workflows are enabled and observable;
 - public discovery and agent-export endpoints are available;
-- open issues and pull requests do not misrepresent cache completeness, catalog completeness, live verification status, or automation authority.
+- open issues and pull requests do not misrepresent cache completeness, live verification status, hosted deployment status, or automation authority.

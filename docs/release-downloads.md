@@ -2,22 +2,13 @@
 
 OpenVA publishes spreadsheet-friendly release assets through GitHub Releases.
 
-These files are for users who want to inspect public vendor assurance metadata without installing Python, running Docker, or hosting a service.
+These files are for users who want to inspect public vendor assurance source metadata without installing Python, running Docker, or hosting a service.
 
-To resolve your own vendor list against the catalogue, use the unified resolver
-described in `docs/vendor-resolution.md`. Its `verify` mode confirms current
-sources, refreshes stale or broken ones, and discovers missing vendors and source
-types — all in one combined result with CSV/JSON export and a `result_state` per
-vendor. The hosted browser Local Matcher offers the same combined result in
-`cached` mode (latest known catalogue state only); it does not perform the live
-check or routing.
+To resolve your own vendor list, use the browser resolver UI, the local Python matcher, or the optional self-hosted resolver components. The browser resolver is static and browser-local: it uses loaded public metadata and does not perform live verification, live discovery, hosted private-inventory upload, or server-side matching.
 
 OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
 
-The initial catalog is a seed dataset. It is useful for testing importer
-workflows, matching public vendor assurance references, and contributing
-public-source metadata, but it should not be treated as complete vendor
-assurance coverage.
+The initial public metadata set is useful for testing importer workflows, matching public vendor assurance source references, and contributing public-source metadata, but it should not be treated as complete vendor assurance coverage.
 
 ## Where to find the files
 
@@ -26,13 +17,13 @@ assurance coverage.
 3. Expand **Assets**.
 4. Download the files you need.
 
-## Hosted catalog viewer
+## Browser resolver UI
 
-Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
+Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
 
-Use the hosted catalog viewer to browse the reviewed catalog snapshot, use the browser-local matcher, and export selected public OpenVA metadata without installing tooling.
+Use the browser resolver UI to resolve vendor sources from loaded public metadata, configure source-pack fields, use browser-local CSV matching, and export selected public OpenVA metadata without installing tooling.
 
-The hosted viewer is static and read-only. It does not provide accounts, workspaces, server-side matching, hosted private inventory upload, vendor approval, risk scoring, legal advice, compliance advice, procurement advice, KYC/AML conclusions, sanctions conclusions, or certification-validity conclusions.
+The browser page is static and read-only over public metadata. It does not provide accounts, workspaces, server-side matching, hosted private inventory upload, live verification, live discovery, vendor approval, risk scoring, legal advice, compliance advice, procurement advice, KYC/AML conclusions, sanctions conclusions, or certification-validity conclusions.
 
 ## Which file to download
 
@@ -42,7 +33,7 @@ Use:
 openva-csv.zip
 ```
 
-to browse OpenVA in a spreadsheet. This is the main non-technical download.
+to browse OpenVA public metadata in a spreadsheet. This is the main non-technical download.
 
 It contains:
 
@@ -68,7 +59,7 @@ to prepare your own vendor inventory for matching with OpenVA tooling. Use which
 vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
 ```
 
-`vendor_name` is usually enough to get a brand-level match. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `domain` improves brand match confidence when available. `jurisdiction` lets OpenVA use the contracting-entity resolution index when the catalog has a public record for that vendor and jurisdiction. `registration_number` is optional, but it is the strongest entity-level identifier when OpenVA has the corresponding legal entity record. In Singapore, this is the UEN. `registered_address` is optional context from your own inventory and is preserved in the output.
+`vendor_name` is usually enough to get a brand-level match. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `domain` improves brand match confidence when available. `jurisdiction` lets OpenVA use the contracting-entity resolution index when the reference cache has a public record for that vendor and jurisdiction. `registration_number` is optional, but it is the strongest entity-level identifier when OpenVA has the corresponding legal entity record. In Singapore, this is the UEN. `registered_address` is optional context from your own inventory and is preserved in the output.
 
 Use:
 
@@ -92,7 +83,7 @@ only if you want checksums and release artifact metadata.
 OpenVA pack and generated index timestamps may use a fixed value such as
 `1970-01-01T00:00:00Z` to preserve deterministic rebuilds.
 
-This value is not a catalog freshness signal.
+This value is not a freshness signal.
 
 Consumers that need freshness or provenance should use:
 
@@ -101,8 +92,7 @@ Consumers that need freshness or provenance should use:
 - change-level `detected_at`;
 - observation-level `observed_at`, where observation records exist.
 
-Do not treat pack-level `generated_at` or `generatedAt` as evidence that
-a vendor source was collected, reviewed, updated, or observed at that time.
+Do not treat pack-level `generated_at` or `generatedAt` as evidence that a vendor source was collected, reviewed, updated, checked, or observed at that time.
 
 ## How to read the CSVs
 
@@ -114,25 +104,20 @@ Use `sources.csv` to inspect the public URLs themselves.
 
 Use `candidate_sources.csv` and `unavailable_sources.csv` carefully:
 
-- candidate sources are not canonical records yet;
-- unavailable sources are catalog notes, not negative compliance findings;
+- candidate sources are not reusable reference records yet;
+- unavailable sources are source-locator notes, not negative compliance findings;
 - observations are fetch-time facts, not vendor ratings.
 
 ## Matching your own vendor list
 
-OpenVA does not currently operate a production central matching service or a
-hosted private-inventory upload service. The repository now ships an optional,
-API-key-gated verify transport for self-hosted use and future hosted deployment.
-The transport is disabled by default, and this release does not include the
-durable backend, worker, production infrastructure, or public verify endpoint
-required for an operated hosted service. Until those later deployment gates are
-completed, private vendor inventories should remain browser-local, local, or
-inside a consumer-controlled self-hosted environment.
+OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository ships optional API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default unless configured by the operator, and this release does not include the production infrastructure, production smoke evidence, or public verify endpoint required for an operated hosted service.
+
+Until hosted deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment.
 
 If you want to match a vendor list against OpenVA today:
 
 - prepare your file using `openva-inventory-template.csv`;
-- use the hosted site's browser-local matcher, where your CSV is processed locally in your browser and is not uploaded to OpenVA;
+- use the browser resolver UI, where your CSV is processed locally in your browser and is not uploaded to OpenVA;
 - or run the local Python matcher / optional self-hosted match service inside your own environment;
 - keep the input vendor inventory inside your own environment.
 
@@ -148,37 +133,23 @@ registration_number
 
 At least one of `vendor_name`, `business_entity_name`, `domain`, or `registration_number` is required. `jurisdiction` helps with legal entity resolution when a brand match already exists. `registered_address` and other columns, such as an internal owner, business unit, or category, are preserved in the output but are not required for matching.
 
-and writes an enriched CSV with OpenVA public metadata references.
+The output is an enriched CSV with OpenVA public source-reference metadata.
 
-## Hosted catalog viewer and live observation feed
+## Browser resolver and observation shell
 
-OpenVA provides a hosted viewer for browsing and exporting selected public
-OpenVA metadata from a reviewed catalog snapshot.
+OpenVA provides a static browser page for resolving and exporting selected public OpenVA metadata from the loaded public snapshot.
 
-Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
+Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
 
-The viewer may also display a live observation feed of machine-generated
-public-source events. The live feed is non-canonical and is separate from the
-human-reviewed catalog.
+The page does not accept private vendor inventory uploads, private contracts, SOC reports, credentials, screenshots, or customer-specific evidence.
 
-The live feed UI shell currently ships with an empty state. Real observation
-events require the observation ledger workflow, which is a subsequent PR.
+The static page is not a live monitoring feed. It displays release tag, commit SHA, and snapshot metadata where available. For reproducible use, pin the GitHub release or commit.
 
-The viewer does not accept private vendor inventory uploads, private contracts,
-SOC reports, credentials, screenshots, or customer-specific evidence.
-
-The reviewed catalog is not a live monitoring feed. The page displays the
-release tag, commit SHA, and catalog snapshot date where available. For
-reproducible use, pin the GitHub release or commit.
-
-Live observation events are machine-generated public-source facts. They are not
-vendor approval, compliance findings, risk findings, procurement
-recommendations, legal opinions, or materiality determinations.
+Observation events are machine-generated public-source facts. They are not vendor approval, compliance findings, risk findings, procurement recommendations, legal opinions, or materiality determinations.
 
 The site is deployed to GitHub Pages from the static site build output.
 
-For private inventory matching, use the browser-local matcher, local matcher, or optional self-hosted
-match service inside your own environment.
+For private inventory matching, use the browser-local resolver, local matcher, or optional self-hosted match service inside your own environment.
 
 ## Legal entity resolution
 
@@ -200,7 +171,7 @@ Registration number: populated when OpenVA has the public registry record
 
 ## Missing or stale data
 
-If a vendor is missing, a public source moved, or OpenVA records incomplete metadata, open a GitHub issue using the **Vendor catalog update** form.
+If a vendor is missing, a public source moved, or OpenVA records incomplete metadata, open a GitHub issue using the vendor/source update pathway.
 
 Submit public URLs only. Do not submit private agreements, gated portal exports, screenshots, copied document text, credentials, SOC reports, private certificates, or customer-specific terms.
 
@@ -209,11 +180,9 @@ Submit public URLs only. Do not submit private agreements, gated portal exports,
 OpenVA records public-source metadata only.
 
 It does not approve, recommend, certify, score, or determine whether any vendor is compliant, safe, adequate, suitable, low risk, or high risk.
-## Hosted site compiled catalog distribution
 
-The hosted catalog viewer is generated as a compiled catalog distribution.
-It uses a lightweight `vendor-search.min.json` index for browsing and loads
-`data/vendors/{vendor_id}.json` detail shards on demand.
+## Static site distribution
 
-This keeps the non-dev hosted site usable as OpenVA grows. GitHub Release
-assets remain the bulk-download path for CSVs, templates, and internal tooling.
+The browser resolver UI is generated as a compiled static distribution. It uses a lightweight `vendor-search.min.json` index for lookup and loads `data/vendors/{vendor_id}.json` detail shards on demand.
+
+This keeps the non-dev hosted page usable as OpenVA grows. GitHub Release assets remain the bulk-download path for CSVs, templates, and internal tooling.
