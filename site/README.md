@@ -89,6 +89,20 @@ openva-matched-inventory.json
 not_advice
 ```
 
+## Retired terminology
+
+The following older phrases are retained here only to document retired public-site
+language and to make the migration path explicit. Do not use them for new product
+copy; prefer resolver-first, source-pack, browser-local, and static public-metadata
+wording instead:
+
+```text
+compiled catalog distribution
+Hosted site uses compiled/sharded catalog outputs
+Vendor detail records are generated
+Browser-local matcher still processes private inventories in memory only
+```
+
 ## Browser-local resolver
 
 The browser-local resolver lets users choose a CSV from their own computer and
