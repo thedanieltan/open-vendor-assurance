@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from tools.openva.generated_catalog_pr_risk import GeneratedCatalogPrRiskClass, classify_generated_catalog_pr_risk
+
 
 AUTONOMOUS_GROWTH = Path(".github/workflows/autonomous-catalog-growth.yml")
 DISCOVERY_LEDGER = Path(".github/workflows/discovery-ledger-append-pr.yml")
@@ -307,6 +309,7 @@ def test_agent_automerge_generated_catalog_lane_uses_fail_closed_evaluator():
     text = AGENT_AUTOMERGE.read_text(encoding="utf-8")
     job = text[text.index("  generated-catalog:") : text.index("  machine-canonical:")]
 
+    pause = job.index("- name: Check generated catalog circuit breaker pause")
     collect = job.index("- name: Collect generated catalog PR metadata")
     classify = job.index("- name: Classify generated catalog PR paths before applying patch")
     apply = job.index("- name: Apply generated catalog PR patch as data")
@@ -318,8 +321,10 @@ def test_agent_automerge_generated_catalog_lane_uses_fail_closed_evaluator():
     upload = job.index("- name: Upload generated catalog automerge eligibility report")
     merge = job.index("- name: Enable GitHub native auto-merge")
 
-    assert collect < classify < apply < checks < preflight < release_gates < freshness < eligibility < upload < merge
+    assert pause < collect < classify < apply < checks < preflight < release_gates < freshness < eligibility < upload < merge
     assert "ref: main" in job
+    assert "python -m tools.openva.generated_catalog_pr_risk --circuit-breaker-check-pause" in job
+    assert "maintenance/generated/generated-catalog-circuit-breaker.json" in job
     assert "gh pr diff \"$PR_NUMBER\" --name-only > changed-files.txt" in job
     assert "gh pr diff \"$PR_NUMBER\" --patch > generated-catalog.patch" in job
     assert "python -m tools.openva.generated_catalog_pr_risk --paths-file changed-files.txt" in job
@@ -353,6 +358,7 @@ def test_agent_automerge_rereviews_generated_catalog_on_schedule_after_checks_se
 
     resolve = job.index("- name: Resolve generated catalog PR awaiting re-evaluation")
     checkout = job.index("- uses: actions/checkout@v5")
+    pause = job.index("- name: Check generated catalog circuit breaker pause")
     collect = job.index("- name: Collect generated catalog PR diff")
     classify = job.index("- name: Classify generated catalog PR paths before applying patch")
     apply = job.index("- name: Apply generated catalog PR patch as data")
@@ -368,6 +374,7 @@ def test_agent_automerge_rereviews_generated_catalog_on_schedule_after_checks_se
     assert '[[ "$HEAD_REF" != agent-candidate-promotion-* ]]' in job
     assert 'Catalog: apply reviewed candidate source promotion' in job
     assert "ref: main" in job
+    assert "python -m tools.openva.generated_catalog_pr_risk --circuit-breaker-check-pause" in job
     assert "head_sha" not in job
     assert "headRefOid" not in job
     assert "github.event.workflow_run.head_sha" not in job
@@ -386,7 +393,55 @@ def test_agent_automerge_rereviews_generated_catalog_on_schedule_after_checks_se
     assert "$GITHUB_ENV" not in job
     assert "--github-output-file \"$GITHUB_OUTPUT\"" in job
     assert "steps.generated_catalog_rereview_eligibility.outputs.eligible == 'true'" in job
-    assert resolve < checkout < collect < classify < apply < checks < eligibility < upload < merge
+    assert resolve < checkout < pause < collect < classify < apply < checks < eligibility < upload < merge
+
+
+def test_agent_automerge_has_trusted_main_generated_catalog_circuit_breaker():
+    text = AGENT_AUTOMERGE.read_text(encoding="utf-8")
+    job = text[text.index("  generated-catalog-circuit-breaker:") : text.index("  machine-canonical:")]
+
+    checkout = job.index("- uses: actions/checkout@v5")
+    resolve = job.index("- name: Resolve latest merged generated catalog PR")
+    validate = job.index("- name: Run post-merge validation")
+    drift = job.index("- name: Rebuild generated outputs and detect post-merge drift")
+    release_gate = job.index("- name: Run post-merge release gate")
+    publication = job.index("- name: Collect publication status for generated catalog merge")
+    evaluate = job.index("- name: Evaluate generated catalog circuit breaker")
+    upload = job.index("- name: Upload generated catalog circuit breaker artifacts")
+    fail_closed = job.index("- name: Fail closed when generated catalog circuit breaker pauses the lane")
+
+    assert "if: github.event_name == 'schedule'" in job
+    assert "ref: main" in job
+    assert "github.event.pull_request.head.sha" not in job
+    assert "headRefOid" not in job
+    assert "$GITHUB_ENV" not in job
+    assert "python -m tools.openva.validate validate" in job
+    assert "python -m tools.openva.validate build-indexes" in job
+    assert "python -m tools.openva.release_gates check --profile pr" in job
+    assert "gh run list --branch main" in job
+    assert "python -m tools.openva.generated_catalog_pr_risk --circuit-breaker-evaluate" in job
+    assert "generated-catalog-circuit-breaker.json" in job
+    assert "generated-catalog-circuit-breaker.md" in job
+    assert "steps.generated_catalog_circuit_breaker.outputs.pause_required == 'true'" in job
+    assert checkout < resolve < validate < drift < release_gate < publication < evaluate < upload < fail_closed
+
+
+def test_agent_automerge_circuit_breaker_does_not_make_code_policy_workflows_automerge_eligible():
+    text = AGENT_AUTOMERGE.read_text(encoding="utf-8")
+    generated = text[text.index("  generated-catalog:") : text.index("  generated-catalog-rereview:")]
+    circuit = text[text.index("  generated-catalog-circuit-breaker:") : text.index("  machine-canonical:")]
+
+    assert "gh pr merge \"$PR_NUMBER\" --auto --squash --delete-branch" in generated
+    assert "gh pr merge" not in circuit
+    assert "gh pr create" not in circuit
+    result = classify_generated_catalog_pr_risk(
+        [
+            ".github/workflows/agent-automerge.yml",
+            "tools/openva/generated_catalog_pr_risk.py",
+            "docs/operations/contracts/work-package-scope.yaml",
+        ]
+    )
+    assert result.risk_class == GeneratedCatalogPrRiskClass.HIGH_RISK
 
 
 def test_agent_automerge_keeps_pending_required_checks_non_mergeable_until_rereview():

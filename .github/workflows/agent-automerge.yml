@@ -37,6 +37,11 @@ jobs:
       - name: Install package
         run: pip install -e ".[dev]"
 
+      - name: Check generated catalog circuit breaker pause
+        run: >-
+          python -m tools.openva.generated_catalog_pr_risk --circuit-breaker-check-pause
+          --pause-file maintenance/generated/generated-catalog-circuit-breaker.json
+
       - name: Collect generated catalog PR metadata
         env:
           GH_TOKEN: ${{ github.token }}
@@ -295,6 +300,12 @@ jobs:
         if: steps.resolve_generated_catalog.outputs.generated_pr == 'true'
         run: pip install -e ".[dev]"
 
+      - name: Check generated catalog circuit breaker pause
+        if: steps.resolve_generated_catalog.outputs.generated_pr == 'true'
+        run: >-
+          python -m tools.openva.generated_catalog_pr_risk --circuit-breaker-check-pause
+          --pause-file maintenance/generated/generated-catalog-circuit-breaker.json
+
       - name: Collect generated catalog PR diff
         if: steps.resolve_generated_catalog.outputs.generated_pr == 'true'
         env:
@@ -469,6 +480,186 @@ jobs:
           PR_NUMBER: ${{ steps.resolve_generated_catalog.outputs.pr_number }}
         run: |
           gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+
+  generated-catalog-circuit-breaker:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Resolve latest merged generated catalog PR
+        id: resolve_generated_catalog_merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports/generated-catalog-circuit-breaker
+          gh pr list \
+            --state merged \
+            --limit 50 \
+            --json number,title,headRefName,mergeCommit,mergedAt \
+            --jq '[.[] | select(.headRefName | startswith("agent-candidate-promotion-")) | select(.title == "Catalog: apply reviewed candidate source promotion")][0] // {}' \
+            > reports/generated-catalog-circuit-breaker/source-pr.json
+          python - "$GITHUB_OUTPUT" <<'PY'
+          import json
+          import sys
+
+          data = json.load(open("reports/generated-catalog-circuit-breaker/source-pr.json", encoding="utf-8"))
+          merge_commit = data.get("mergeCommit") if isinstance(data, dict) else {}
+          merge_sha = ""
+          if isinstance(merge_commit, dict):
+              merge_sha = str(merge_commit.get("oid") or "")
+          source_pr = str(data.get("number") or "") if isinstance(data, dict) else ""
+          generated = bool(source_pr)
+          merged = bool(source_pr and merge_sha)
+          with open(sys.argv[1], "a", encoding="utf-8") as handle:
+              handle.write(f"generated_catalog_pr={str(generated).lower()}\n")
+              handle.write(f"merged={str(merged).lower()}\n")
+              handle.write(f"source_pr={source_pr}\n")
+              handle.write(f"source_merge_sha={merge_sha}\n")
+              handle.write(f"merge_metadata_present={str(merged).lower()}\n")
+          PY
+
+      - name: Collect merged generated catalog affected paths
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_PR: ${{ steps.resolve_generated_catalog_merge.outputs.source_pr }}
+        run: |
+          set -euo pipefail
+          : > reports/generated-catalog-circuit-breaker/affected-paths.txt
+          if [ -n "$SOURCE_PR" ]; then
+            gh pr diff "$SOURCE_PR" --name-only > reports/generated-catalog-circuit-breaker/affected-paths.txt
+          fi
+
+      - name: Run post-merge validation
+        run: |
+          set -euo pipefail
+          if python -m tools.openva.validate validate; then
+            printf '{"validation_passed": true}\n' > reports/generated-catalog-circuit-breaker/validation-status.json
+          else
+            printf '{"validation_passed": false}\n' > reports/generated-catalog-circuit-breaker/validation-status.json
+          fi
+
+      - name: Rebuild generated outputs and detect post-merge drift
+        run: |
+          set -euo pipefail
+          GENERATED_OUTPUTS_FRESH=true
+          if ! python -m tools.openva.validate build-indexes; then
+            GENERATED_OUTPUTS_FRESH=false
+          fi
+          if ! git diff --exit-code openva-pack.json indexes/ dist/; then
+            GENERATED_OUTPUTS_FRESH=false
+          fi
+          git diff -- openva-pack.json indexes/ dist/ > reports/generated-catalog-circuit-breaker/generated-output-drift.patch
+          python - "$GENERATED_OUTPUTS_FRESH" <<'PY'
+          import json
+          import sys
+
+          value = sys.argv[1] == "true"
+          with open("reports/generated-catalog-circuit-breaker/generated-output-status.json", "w", encoding="utf-8") as handle:
+              json.dump({"generated_outputs_fresh": value}, handle, indent=2, sort_keys=True)
+              handle.write("\n")
+          PY
+
+      - name: Run post-merge release gate
+        run: |
+          set -euo pipefail
+          if python -m tools.openva.release_gates check --profile pr \
+            --out-json reports/generated-catalog-circuit-breaker/release-gates.json \
+            --out-md reports/generated-catalog-circuit-breaker/release-gates-summary.md; then
+            printf '{"release_gates_passed": true}\n' > reports/generated-catalog-circuit-breaker/release-gate-status.json
+          else
+            printf '{"release_gates_passed": false}\n' > reports/generated-catalog-circuit-breaker/release-gate-status.json
+          fi
+
+      - name: Collect publication status for generated catalog merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_MERGE_SHA: ${{ steps.resolve_generated_catalog_merge.outputs.source_merge_sha }}
+        run: |
+          set -euo pipefail
+          gh run list --branch main --limit 50 --json workflowName,headSha,conclusion,status \
+            > reports/generated-catalog-circuit-breaker/publication-runs.json
+          python - "$SOURCE_MERGE_SHA" <<'PY'
+          import json
+          import sys
+
+          merge_sha = sys.argv[1]
+          publication_workflows = {"site-pages", "release-downloads", "site-live-feed"}
+          failed_conclusions = {"failure", "cancelled", "timed_out", "action_required"}
+          rows = json.load(open("reports/generated-catalog-circuit-breaker/publication-runs.json", encoding="utf-8") or [])
+          failures = [
+              row
+              for row in rows
+              if row.get("headSha") == merge_sha
+              and row.get("workflowName") in publication_workflows
+              and row.get("status") == "completed"
+              and str(row.get("conclusion") or "").lower() in failed_conclusions
+          ]
+          with open("reports/generated-catalog-circuit-breaker/publication-status.json", "w", encoding="utf-8") as handle:
+              json.dump({"publication_passed": not failures, "failed_publication_runs": len(failures)}, handle, indent=2, sort_keys=True)
+              handle.write("\n")
+          PY
+
+      - name: Evaluate generated catalog circuit breaker
+        id: generated_catalog_circuit_breaker
+        continue-on-error: true
+        env:
+          GENERATED_CATALOG_PR: ${{ steps.resolve_generated_catalog_merge.outputs.generated_catalog_pr }}
+          MERGED: ${{ steps.resolve_generated_catalog_merge.outputs.merged }}
+          SOURCE_PR: ${{ steps.resolve_generated_catalog_merge.outputs.source_pr }}
+          SOURCE_MERGE_SHA: ${{ steps.resolve_generated_catalog_merge.outputs.source_merge_sha }}
+          MERGE_METADATA_PRESENT: ${{ steps.resolve_generated_catalog_merge.outputs.merge_metadata_present }}
+        run: |
+          set -euo pipefail
+          VALIDATION_PASSED="$(python -c 'import json; print(str(json.load(open("reports/generated-catalog-circuit-breaker/validation-status.json", encoding="utf-8"))["validation_passed"]).lower())')"
+          GENERATED_OUTPUTS_FRESH="$(python -c 'import json; print(str(json.load(open("reports/generated-catalog-circuit-breaker/generated-output-status.json", encoding="utf-8"))["generated_outputs_fresh"]).lower())')"
+          RELEASE_GATES_PASSED="$(python -c 'import json; print(str(json.load(open("reports/generated-catalog-circuit-breaker/release-gate-status.json", encoding="utf-8"))["release_gates_passed"]).lower())')"
+          PUBLICATION_PASSED="$(python -c 'import json; print(str(json.load(open("reports/generated-catalog-circuit-breaker/publication-status.json", encoding="utf-8"))["publication_passed"]).lower())')"
+          ARGS=(
+            --generated-catalog-pr "$GENERATED_CATALOG_PR"
+            --merged "$MERGED"
+            --source-merge-sha "$SOURCE_MERGE_SHA"
+            --validation-passed "$VALIDATION_PASSED"
+            --generated-outputs-fresh-circuit "$GENERATED_OUTPUTS_FRESH"
+            --release-gates-passed-circuit "$RELEASE_GATES_PASSED"
+            --publication-passed "$PUBLICATION_PASSED"
+            --automerge-job-succeeded "$MERGED"
+            --expected-artifact-present true
+            --merge-metadata-present "$MERGE_METADATA_PRESENT"
+            --affected-paths-file reports/generated-catalog-circuit-breaker/affected-paths.txt
+            --out-json reports/generated-catalog-circuit-breaker/generated-catalog-circuit-breaker.json
+            --out-md reports/generated-catalog-circuit-breaker/generated-catalog-circuit-breaker.md
+            --github-output-file "$GITHUB_OUTPUT"
+          )
+          if [ -n "$SOURCE_PR" ]; then
+            ARGS+=(--source-pr "$SOURCE_PR")
+          fi
+          python -m tools.openva.generated_catalog_pr_risk --circuit-breaker-evaluate "${ARGS[@]}"
+
+      - name: Upload generated catalog circuit breaker artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: generated-catalog-circuit-breaker
+          path: reports/generated-catalog-circuit-breaker/
+          if-no-files-found: warn
+
+      - name: Fail closed when generated catalog circuit breaker pauses the lane
+        if: steps.generated_catalog_circuit_breaker.outputs.pause_required == 'true'
+        run: |
+          echo "::error::generated catalog circuit breaker requires pause and remediation"
+          exit 1
 
   machine-canonical:
     if: github.event_name == 'pull_request' && contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:machine-canonical') && !contains(join(github.event.pull_request.labels.*.name, ','), 'automerge:strict-growth')
