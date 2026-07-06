@@ -20,6 +20,33 @@ from tools.openva.sitemap_discovery import (
 DOMAINS = ["vendor.example"]
 RUN = {"discovery_run_id": "run-1", "discovered_at": "2026-06-15T00:00:00Z", "vendor_id": "vendor"}
 BOUNDS = Bounds(relevance_terms=("trust", "security", "privacy", "dpa", "subprocessor"))
+SOURCE_MAP_REQUIRED_FIELDS = {
+    "source_url",
+    "source_type",
+    "vendor_identity",
+    "public_access_status",
+    "status_code",
+    "redirect_target",
+    "checked_at",
+    "confidence",
+    "rejection_reason",
+    "not_advice",
+}
+SOURCE_MAP_FORBIDDEN_FIELDS = {
+    "content",
+    "body",
+    "body_sample",
+    "raw_document",
+    "document_text",
+    "document_version",
+    "content_hash",
+    "risk_score",
+    "approved",
+    "recommended",
+    "legal_opinion",
+    "compliance_decision",
+    "security_decision",
+}
 
 
 def _urlset(*urls: str) -> bytes:
@@ -69,6 +96,51 @@ def test_sitemap_creates_zero_weight_candidate():
     assert "content_state:not_fetched" in event["reason_codes"]
     assert "promotion_weight:none" in event["reason_codes"]
     assert event["not_advice"] is True
+
+
+def test_source_map_records_include_phase_5_locator_metadata_for_candidates():
+    out = run({"https://vendor.example/sitemap.xml": {"body": _urlset(
+        "https://vendor.example/trust", "https://vendor.example/security/dpa"
+    )}})
+
+    records = {record["source_url"]: record for record in out.source_map_records}
+    trust = records["https://vendor.example/trust"]
+    dpa = records["https://vendor.example/security/dpa"]
+
+    assert SOURCE_MAP_REQUIRED_FIELDS <= set(trust)
+    assert trust["source_type"] == "trust_center"
+    assert trust["vendor_identity"] == "vendor"
+    assert trust["public_access_status"] == "unknown"
+    assert trust["status_code"] is None
+    assert trust["redirect_target"] is None
+    assert trust["checked_at"] == RUN["discovered_at"]
+    assert trust["confidence"] == "low"
+    assert trust["rejection_reason"] is None
+    assert trust["not_advice"] is True
+    assert dpa["source_type"] == "dpa"
+    assert not (SOURCE_MAP_FORBIDDEN_FIELDS & set(trust))
+
+
+def test_source_map_records_capture_rejection_metadata_without_content_monitoring():
+    out = run({"https://vendor.example/sitemap.xml": {"body": _urlset(
+        "https://evil.test/trust", "https://vendor.example/security/dpa"
+    )}})
+
+    rejected = next(record for record in out.source_map_records if record["source_url"] == "https://evil.test/trust")
+    accepted = next(record for record in out.source_map_records if record["source_url"] == "https://vendor.example/security/dpa")
+
+    assert SOURCE_MAP_REQUIRED_FIELDS <= set(rejected)
+    assert rejected["source_type"] == "trust_center"
+    assert rejected["vendor_identity"] == "vendor"
+    assert rejected["public_access_status"] == "unknown"
+    assert rejected["status_code"] is None
+    assert rejected["redirect_target"] is None
+    assert rejected["checked_at"] == RUN["discovered_at"]
+    assert rejected["confidence"] == "none"
+    assert rejected["rejection_reason"] == "off_authority_candidate_url"
+    assert rejected["not_advice"] is True
+    assert not (SOURCE_MAP_FORBIDDEN_FIELDS & set(rejected))
+    assert accepted["rejection_reason"] is None
 
 
 def test_xxe_payload_is_rejected():
