@@ -104,27 +104,45 @@
           OpenVA resolves public-source metadata only. It does not approve, certify, score, recommend, or determine whether any vendor is compliant, secure, suitable, or legally adequate. Do not upload private agreements, SOC reports, credentials, customer evidence, or confidential vendor inventories.
         </aside>
 
-        <section class="section-card assurance-types">
+        <section class="section-card assurance-types" id="role-views">
           <div class="section-heading-lite">
-            <p class="eyebrow">Source packs</p>
-            <h3>Public references used in vendor assurance workflows</h3>
-            <p>OpenVA is a starting point for source gathering, not a substitute for legal, procurement, security, privacy, or risk review.</p>
+            <p class="eyebrow">Role-specific views</p>
+            <h3>CISO, DPO, and procurement source-pack views</h3>
+            <p>Use these views to choose public source types for a review workflow. The views do not decide whether a vendor is secure, compliant, legally adequate, suitable, approved, or recommended.</p>
           </div>
-          <div class="surface-grid compact-surface-grid">
-            <article>
-              <span class="card-kicker">CISO</span>
+          <div class="surface-grid compact-surface-grid role-view-grid">
+            <article class="role-view-card" data-role-view="ciso">
+              <span class="card-kicker">CISO view</span>
               <h3>Security source pack</h3>
-              <p>Security page, trust center, compliance page, vulnerability disclosure, and certification references.</p>
+              <p>Use when the question is: where are the vendor's public security and assurance references?</p>
+              <dl>
+                <dt>Requested source types</dt>
+                <dd><code>security_page</code>, <code>trust_center</code>, <code>compliance_page</code>, <code>vulnerability_disclosure</code>, <code>certification_reference</code></dd>
+                <dt>Output boundary</dt>
+                <dd>Public source URLs only; not a security conclusion, approval, or risk score.</dd>
+              </dl>
             </article>
-            <article>
-              <span class="card-kicker">DPO</span>
+            <article class="role-view-card" data-role-view="dpo">
+              <span class="card-kicker">DPO view</span>
               <h3>Privacy source pack</h3>
-              <p>DPA, privacy notice, subprocessor list, data transfer terms, and AI/data terms where public.</p>
+              <p>Use when the question is: where are the vendor's public privacy, DPA, transfer, and subprocessor references?</p>
+              <dl>
+                <dt>Requested source types</dt>
+                <dd><code>dpa</code>, <code>privacy_notice</code>, <code>subprocessors_list</code>, <code>data_transfer_terms</code>, <code>ai_data_terms</code></dd>
+                <dt>Output boundary</dt>
+                <dd>Public source URLs only; not a DPA adequacy finding, transfer assessment, or legal opinion.</dd>
+              </dl>
             </article>
-            <article>
-              <span class="card-kicker">Procurement</span>
+            <article class="role-view-card" data-role-view="procurement">
+              <span class="card-kicker">Procurement view</span>
               <h3>Intake source pack</h3>
-              <p>Vendor identity, public source coverage, missing or ambiguous references, and export-ready metadata.</p>
+              <p>Use when the question is: what public references should be written back into the vendor intake workspace?</p>
+              <dl>
+                <dt>Requested source types</dt>
+                <dd><code>dpa</code>, <code>privacy_notice</code>, <code>security_page</code>, <code>trust_center</code>, <code>subprocessors_list</code></dd>
+                <dt>Output boundary</dt>
+                <dd>Public source URLs and ambiguity/missing-source notes only; not vendor approval or procurement recommendation.</dd>
+              </dl>
             </article>
           </div>
         </section>
@@ -260,22 +278,25 @@
         </aside>
         <section class="section-card">
           <h3>Choose source pack type</h3>
-          <p>Use a preset to decide which public source types you want to review. This browser-local resolver uses the loaded public snapshot only; live checking and discovery belong to the hosted resolver phase.</p>
+          <p>Use a role view to decide which public source types you want to review. This browser-local resolver uses the loaded public snapshot only; live checking and discovery belong to the hosted resolver phase.</p>
           <div class="surface-grid compact-surface-grid role-preset-grid">
-            <article>
-              <span class="card-kicker">CISO preset</span>
+            <article class="role-view-card" data-role-view="ciso">
+              <span class="card-kicker">CISO view</span>
               <h3>Security sources</h3>
-              <p>security_page, trust_center, compliance_page, vulnerability_disclosure, certification_reference</p>
+              <p><code>security_page</code>, <code>trust_center</code>, <code>compliance_page</code>, <code>vulnerability_disclosure</code>, <code>certification_reference</code></p>
+              <p class="meta-line">Use for source gathering only; not a security approval or risk score.</p>
             </article>
-            <article>
-              <span class="card-kicker">DPO preset</span>
+            <article class="role-view-card" data-role-view="dpo">
+              <span class="card-kicker">DPO view</span>
               <h3>Privacy sources</h3>
-              <p>dpa, privacy_notice, subprocessors_list, data_transfer_terms, ai_data_terms</p>
+              <p><code>dpa</code>, <code>privacy_notice</code>, <code>subprocessors_list</code>, <code>data_transfer_terms</code>, <code>ai_data_terms</code></p>
+              <p class="meta-line">Use for source gathering only; not a DPA adequacy finding or legal opinion.</p>
             </article>
-            <article>
-              <span class="card-kicker">Procurement preset</span>
+            <article class="role-view-card" data-role-view="procurement">
+              <span class="card-kicker">Procurement view</span>
               <h3>Intake sources</h3>
-              <p>dpa, privacy_notice, security_page, trust_center, subprocessors_list</p>
+              <p><code>dpa</code>, <code>privacy_notice</code>, <code>security_page</code>, <code>trust_center</code>, <code>subprocessors_list</code></p>
+              <p class="meta-line">Use for source gathering only; not vendor approval or procurement recommendation.</p>
             </article>
           </div>
         </section>
