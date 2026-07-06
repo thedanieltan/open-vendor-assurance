@@ -149,6 +149,36 @@
         "screenshot_stored": false
       },
       "vendor_id": "hyperproof"
+    },
+    {
+      "_openva_path": "data/vendors/hyperproof/artifacts/hyperproof-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "hyperproof-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://hyperproof.io/23-nycrr-500-cybersecurity-regulation",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "hyperproof-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "hyperproof"
     }
   ],
   "candidate_sources": [],
@@ -267,9 +297,46 @@
       "title_en": "Hyperproof Subprocessors",
       "title_native": "Hyperproof Subprocessors",
       "vendor_id": "hyperproof"
+    },
+    {
+      "_openva_path": "data/vendors/hyperproof/sources/hyperproof-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-05T18:50:09.675575Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "hyperproof-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://hyperproof.io/23-nycrr-500-cybersecurity-regulation",
+      "title_native": "NYDFS Cybersecurity Compliance Guide | 23 NYCRR 500",
+      "vendor_id": "hyperproof"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/hyperproof/changes/candidate-promotion-hyperproof-trust-center.yaml",
+      "artifact_id": "hyperproof-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-hyperproof-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-05T18:50:09.675575Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "hyperproof-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "hyperproof"
+    },
     {
       "_openva_path": "data/vendors/hyperproof/changes/grc-privacy-assurance-batch-1-hyperproof-compliance.yaml",
       "artifact_id": "hyperproof-compliance",
@@ -368,10 +435,10 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 5,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 5,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
@@ -379,7 +446,8 @@
       "dpa",
       "privacy_notice",
       "security_page",
-      "subprocessors_list"
+      "subprocessors_list",
+      "trust_center"
     ],
     "unavailable_source_count": 0,
     "unavailable_source_types": []
