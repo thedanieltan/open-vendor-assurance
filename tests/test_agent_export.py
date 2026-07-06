@@ -4,7 +4,11 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-from tools.openva.agent_export import build_agent_exports
+from tools.openva.agent_export import (
+    WORKSPACE_WRITEBACK_COLUMNS,
+    build_agent_exports,
+    workspace_writeback_row,
+)
 
 SCHEMA = json.loads(Path("schemas/openva/agent-export.schema.json").read_text(encoding="utf-8"))
 
@@ -382,3 +386,115 @@ def test_not_advice_and_doctrine_everywhere(tmp_path):
         assert document["not_advice"] is True, rel
         if "doctrine" in document:
             assert "does not version vendor truth" in document["doctrine"]
+
+
+def source_pack_example() -> dict:
+    return {
+        "schema_version": "0.1.0",
+        "source_pack_id": "source-pack-example-vendor",
+        "snapshot_id": "sha256:example",
+        "mode": "cached_only",
+        "vendor_input": {"display_name": "Example Vendor"},
+        "matched_vendor": {
+            "vendor_id": "example-vendor",
+            "display_name": "Example Vendor",
+            "legal_name": "Example Vendor Ltd",
+            "official_domain": "vendor.example",
+        },
+        "match_status": "matched",
+        "requested_source_types": ["dpa", "privacy_notice", "subprocessors_list", "security_page", "trust_center"],
+        "sources": [
+            {
+                "match_status": "matched",
+                "source_type": "dpa",
+                "source_url": "https://vendor.example/legal/dpa",
+                "result_state": "found",
+                "mode": "cached_only",
+                "confidence": "high",
+                "public_access_status": "public",
+                "checked_at": None,
+                "snapshot_id": "sha256:example",
+                "candidate_queued": False,
+                "not_advice": True,
+            },
+            {
+                "match_status": "matched",
+                "source_type": "privacy_notice",
+                "source_url": "https://vendor.example/privacy",
+                "result_state": "found",
+                "mode": "cached_only",
+                "confidence": "high",
+                "public_access_status": "public",
+                "checked_at": None,
+                "snapshot_id": "sha256:example",
+                "candidate_queued": False,
+                "not_advice": True,
+            },
+            {
+                "match_status": "matched",
+                "source_type": "security_page",
+                "source_url": None,
+                "result_state": "missing",
+                "mode": "cached_only",
+                "confidence": "none",
+                "public_access_status": "unknown",
+                "checked_at": None,
+                "snapshot_id": "sha256:example",
+                "candidate_queued": False,
+                "not_advice": True,
+            },
+        ],
+        "missing_source_types": ["security_page", "trust_center"],
+        "ambiguous_source_types": ["subprocessors_list"],
+        "notes": ["Browser-local cached result; no live source check performed."],
+        "not_advice": True,
+    }
+
+
+def test_workspace_writeback_columns_are_stable() -> None:
+    assert WORKSPACE_WRITEBACK_COLUMNS == (
+        "openva_match_status",
+        "openva_vendor_id",
+        "openva_vendor_name",
+        "openva_dpa_url",
+        "openva_privacy_url",
+        "openva_subprocessors_url",
+        "openva_security_url",
+        "openva_trust_center_url",
+        "openva_result_mode",
+        "openva_notes",
+        "openva_not_advice",
+    )
+
+
+def test_workspace_writeback_row_projects_source_pack_for_spreadsheets() -> None:
+    row = workspace_writeback_row(source_pack_example())
+
+    assert set(row) == set(WORKSPACE_WRITEBACK_COLUMNS)
+    assert row["openva_match_status"] == "matched"
+    assert row["openva_vendor_id"] == "example-vendor"
+    assert row["openva_vendor_name"] == "Example Vendor"
+    assert row["openva_dpa_url"] == "https://vendor.example/legal/dpa"
+    assert row["openva_privacy_url"] == "https://vendor.example/privacy"
+    assert row["openva_security_url"] == ""
+    assert row["openva_trust_center_url"] == ""
+    assert row["openva_result_mode"] == "cached_only"
+    assert row["openva_not_advice"] == "true"
+    assert "missing: security_page,trust_center" in row["openva_notes"]
+    assert "ambiguous: subprocessors_list" in row["openva_notes"]
+
+
+def test_workspace_writeback_row_rejects_advisory_fields() -> None:
+    pack = source_pack_example()
+    pack["risk_score"] = 0.2
+
+    with pytest.raises(ValueError, match="forbidden advisory"):
+        workspace_writeback_row(pack)
+
+
+def test_workspace_writeback_row_requires_not_advice_boundary() -> None:
+    pack = source_pack_example()
+    pack["sources"][0]["not_advice"] = False
+
+    with pytest.raises(ValueError, match="not_advice"):
+        workspace_writeback_row(pack)
