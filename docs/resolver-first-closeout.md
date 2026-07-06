@@ -141,6 +141,16 @@ Export source pack
 
 Avoid presenting internal lifecycle language as the product promise.
 
+## Docs deletion audit
+
+No docs are deleted in this closeout. The audit found stale public-facing wording,
+not clearly obsolete documents. This PR reconciles the public README and docs under
+`docs/` in place so existing references remain intact.
+
+`site/README.md` still needs resolver-first wording reconciliation, but it is
+outside `WP-02L-POSITIONING` scope and should be handled in a separate site-docs
+or publication-scope PR rather than this closeout PR.
+
 ## Closeout assertion
 
 The Phases 1-9 roadmap is complete as implementation slices. Future work should
