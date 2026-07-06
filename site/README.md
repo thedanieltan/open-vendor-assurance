@@ -74,6 +74,8 @@ new user-facing copy:
 Reviewed Catalog
 Live Observation Feed
 Reviewed catalog snapshot
+No live observation events are available yet.
+observation ledger workflow
 Local Matcher
 ```
 
