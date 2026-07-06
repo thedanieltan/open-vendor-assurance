@@ -210,6 +210,18 @@ work_packages:
       - tools/openva/release_artifacts.py
       - tools/openva/schema_registry.py
 
+  WP-OPENVA-RESOLVER-RESULT-PACK-01:
+    description: Resolver-first result-pack contract, projection, static-safe browser output, and tests. This work freezes the output contract Lovable/GitHub Pages can build against without enabling live browser egress or changing the pinned agent-export contract.
+    allowed_paths:
+      - docs/resolver-result-pack-contract.md
+      - tools/openva/resolver_result_pack.py
+      - schemas/openva/resolver-result-pack.schema.json
+      - site/src/app.js
+      - site/README.md
+      - tests/test_resolver_result_pack.py
+      - tests/test_site.py
+      - tests/test_validate.py
+
   WP-SOURCE-HEALTH-LABEL-RECONCILIATION-01:
     description: Exact public source-health wording reconciliation surface.
     allowed_paths:
