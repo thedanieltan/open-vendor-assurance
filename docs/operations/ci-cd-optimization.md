@@ -86,6 +86,17 @@ This work package does not weaken catalog authority gates. It does not allow cat
 
 It also does not change OpenVA's non-advisory boundary. Weighted review remains advisory only and does not merge, close, or mutate catalog records.
 
+## Smoke-test procedure
+
+Use small pull requests that touch one low-risk surface at a time to verify routing after CI changes land. For an operations-doc-only change under `docs/operations/`, expected validation is:
+
+- `validate / pr-change-classifier`: runs
+- `validate / pr-scope-guard`: runs
+- `validate / repository-integrity`: runs
+- `validate / workflow-operating-model`: runs
+- unrelated catalog, source-maintenance, release-site, MCP, and Google Sheets lanes: skipped
+- `agent-weighted-review / weighted-review`: runs once, with only relevant validators active
+
 ## Expected impact
 
 Low-risk PRs should avoid unnecessary catalog growth, source maintenance, release/site, MCP, Sheets, and weighted-review fan-out.
