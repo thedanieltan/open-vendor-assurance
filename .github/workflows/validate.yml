@@ -126,7 +126,6 @@ jobs:
           )
           release_site = (
               starts("site/")
-              or starts("adapters/")
               or starts("releases/")
               or exact(".github/workflows/release-downloads.yml")
               or exact(".github/workflows/site-pages.yml")
@@ -271,12 +270,6 @@ jobs:
   pr-scope-guard:
     name: pr-scope-guard
     runs-on: ubuntu-latest
-    # PR-only: every changed path must fall within the PR's declared work package
-    # (docs/operations/pr-scope-guard.md). The guard CODE and MANIFEST are read from
-    # the BASE revision (trusted), so a PR cannot weaken its own gate or expand its own
-    # allowlist in the same change — new policy applies only to later, human-reviewed
-    # PRs. The PR declares its work package with a single `Work-Package: WP-...` line in
-    # its body; zero/multiple/unknown fails closed.
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v5
@@ -295,8 +288,6 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           set -euo pipefail
-          # Trusted policy: run the guard + manifest exactly as they exist at the base,
-          # so the PR under evaluation cannot modify the policy that judges it.
           git worktree add /tmp/base-guard "$BASE_SHA"
           if [ ! -f /tmp/base-guard/tools/openva/pr_scope_guard.py ]; then
             echo "scope guard not present at the base revision yet; skipping (self-bootstrap)."
@@ -312,7 +303,6 @@ jobs:
     name: workflow-operating-model
     runs-on: ubuntu-latest
     needs: pr-change-classifier
-    # Targeted PR coverage: only workflow/governance-model changes.
     if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.workflow_operating_model == 'true'
     steps:
       - uses: actions/checkout@v5
@@ -335,7 +325,6 @@ jobs:
     name: catalog-growth
     runs-on: ubuntu-latest
     needs: pr-change-classifier
-    # Targeted PR coverage: only catalog-growth/candidate-promotion changes.
     if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.catalog_growth == 'true'
     steps:
       - uses: actions/checkout@v5
@@ -358,7 +347,6 @@ jobs:
     name: source-maintenance
     runs-on: ubuntu-latest
     needs: pr-change-classifier
-    # Targeted PR coverage: only source-maintenance/repair changes.
     if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.source_maintenance == 'true'
     steps:
       - uses: actions/checkout@v5
@@ -379,7 +367,6 @@ jobs:
     name: catalog-quality
     runs-on: ubuntu-latest
     needs: pr-change-classifier
-    # Targeted PR coverage: only catalog/schema/automation-rule changes.
     if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.catalog_quality == 'true'
     steps:
       - uses: actions/checkout@v5
@@ -396,7 +383,6 @@ jobs:
     name: release-site
     runs-on: ubuntu-latest
     needs: pr-change-classifier
-    # Targeted PR coverage: only release/site/adapter changes.
     if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.release_site == 'true'
     steps:
       - uses: actions/checkout@v5
@@ -413,7 +399,6 @@ jobs:
     name: mcp-integration
     runs-on: ubuntu-latest
     needs: pr-change-classifier
-    # Targeted PR coverage: only MCP/matching/agent-bundle changes.
     if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.mcp_integration == 'true'
     steps:
       - uses: actions/checkout@v5
@@ -448,7 +433,6 @@ jobs:
     name: google-sheets-integration
     runs-on: ubuntu-latest
     needs: pr-change-classifier
-    # Targeted PR coverage: only Google Sheets integration changes.
     if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.google_sheets_integration == 'true'
     steps:
       - uses: actions/checkout@v5
@@ -461,8 +445,6 @@ jobs:
   full-suite:
     name: full-suite
     runs-on: ubuntu-latest
-    # Global regression signal on pushes to main (and not on pull requests, where the
-    # targeted jobs above cover the change without rerunning the whole suite per push).
     if: github.event_name != 'pull_request'
     steps:
       - uses: actions/checkout@v5
