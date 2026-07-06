@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/resolver-result-pack.schema.json",
+  "title": "OpenVA Resolver Result-Pack Row",
+  "description": "Resolver-first, browser-safe result-pack row for one requested vendor. Static cached producers must not emit live-found semantics.",
+  "type": "array",
+  "items": { "$ref": "#/$defs/resultRow" },
+  "$defs": {
+    "resultRow": {
+      "type": "object",
+      "required": [
+        "result_pack_version",
+        "input_index",
+        "input_vendor_name",
+        "input_domain",
+        "identity_status",
+        "no_match_reason",
+        "matched_vendor_id",
+        "matched_vendor_name",
+        "sources",
+        "not_advice"
+      ],
+      "properties": {
+        "result_pack_version": { "const": "1.0.0" },
+        "input_index": { "type": "integer", "minimum": 0 },
+        "input_vendor_name": { "type": ["string", "null"], "maxLength": 300 },
+        "input_domain": { "type": ["string", "null"], "maxLength": 253 },
+        "identity_status": { "enum": ["match", "no_match"] },
+        "no_match_reason": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "enum": [
+                "not_in_reference",
+                "multiple_plausible_entities",
+                "no_public_identity",
+                "inconclusive"
+              ]
+            }
+          ]
+        },
+        "matched_vendor_id": {
+          "type": ["string", "null"],
+          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+        },
+        "matched_vendor_name": { "type": ["string", "null"], "maxLength": 300 },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sourceResult" }
+        },
+        "not_advice": { "const": true }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "identity_status": { "const": "match" } },
+            "required": ["identity_status"]
+          },
+          "then": {
+            "properties": { "no_match_reason": { "type": "null" } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "identity_status": { "const": "no_match" } },
+            "required": ["identity_status"]
+          },
+          "then": {
+            "properties": { "no_match_reason": { "type": "string" } }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "sourceResult": {
+      "type": "object",
+      "required": ["source_type", "status", "url", "basis", "checked_at"],
+      "properties": {
+        "source_type": {
+          "enum": [
+            "trust_center",
+            "dpa",
+            "subprocessors_list",
+            "privacy_notice",
+            "security_page",
+            "status_page"
+          ]
+        },
+        "status": {
+          "enum": [
+            "found",
+            "not_found",
+            "gated",
+            "unavailable",
+            "not_applicable",
+            "not_checked"
+          ]
+        },
+        "url": { "type": ["string", "null"], "maxLength": 2048 },
+        "basis": { "enum": ["cached", "live"] },
+        "checked_at": { "type": ["string", "null"] }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "basis": { "const": "cached" } },
+            "required": ["basis"]
+          },
+          "then": {
+            "properties": {
+              "status": { "not": { "const": "found" } },
+              "checked_at": { "type": "null" }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

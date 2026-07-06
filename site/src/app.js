@@ -11,6 +11,21 @@ let localInventoryRows = [];
 let localMatchRows = [];
 
 const CORE_COVERAGE = ["dpa", "privacy_notice", "security_page", "subprocessors_list", "trust_center"];
+const RESULT_PACK_VERSION = "1.0.0";
+const RESULT_PACK_SOURCE_TYPES = ["trust_center", "dpa", "subprocessors_list", "privacy_notice", "security_page", "status_page"];
+const RESULT_PACK_FLAT_COLUMNS = [
+  "openva_identity_status",
+  "openva_no_match_reason",
+  "openva_matched_vendor_id",
+  "openva_matched_vendor_name",
+  ...RESULT_PACK_SOURCE_TYPES.flatMap((sourceType) => [
+    `openva_${sourceType}_status`,
+    `openva_${sourceType}_url`,
+    `openva_${sourceType}_basis`,
+    `openva_${sourceType}_checked_at`,
+  ]),
+  "openva_not_advice",
+];
 const SOURCE_HEALTH_LABELS = {
   healthy: "Reachable at last check",
   warning: "Retrieval requires review",
@@ -261,6 +276,80 @@ function serializeCsv(rows, preferredColumns = []) {
   return [columns.join(","), ...rows.map((row) => columns.map((key) => csvCell(row[key])).join(","))].join("\n") + "\n";
 }
 
+function selectedResultPackSourceTypes() {
+  const selected = [...document.querySelectorAll("#matcher-view [data-source-pack-field]:checked")]
+    .map((box) => box.dataset.sourcePackField)
+    .filter((sourceType) => RESULT_PACK_SOURCE_TYPES.includes(sourceType));
+  return selected.length ? RESULT_PACK_SOURCE_TYPES.filter((sourceType) => selected.includes(sourceType)) : [...RESULT_PACK_SOURCE_TYPES];
+}
+
+function cachedSourceResult(sourceType, url = null) {
+  return {
+    source_type: sourceType,
+    status: "not_checked",
+    url: url || null,
+    basis: "cached",
+    checked_at: null,
+  };
+}
+
+function cachedSourceUrlsByType(summary) {
+  const urls = new Map();
+  (summary.sources || []).forEach((source) => {
+    if (RESULT_PACK_SOURCE_TYPES.includes(source.source_type) && source.source_url && !urls.has(source.source_type)) {
+      urls.set(source.source_type, source.source_url);
+    }
+  });
+  return urls;
+}
+
+function browserResultPackRow(row, inputIndex, vendor, summary = null) {
+  const sourceUrls = summary ? cachedSourceUrlsByType(summary) : new Map();
+  const matched = Boolean(vendor);
+  const inputVendorName = row.vendor_name || row.business_entity_name || null;
+  return {
+    result_pack_version: RESULT_PACK_VERSION,
+    input_index: inputIndex,
+    input_vendor_name: inputVendorName || null,
+    input_domain: row.domain || null,
+    identity_status: matched ? "match" : "no_match",
+    no_match_reason: matched ? null : (inputVendorName || row.domain ? "not_in_reference" : "no_public_identity"),
+    matched_vendor_id: matched ? vendor.vendor_id : null,
+    matched_vendor_name: matched ? vendor.display_name : null,
+    sources: selectedResultPackSourceTypes().map((sourceType) => cachedSourceResult(sourceType, sourceUrls.get(sourceType))),
+    not_advice: true,
+  };
+}
+
+function flattenResultPackRows(inputRows, resultRows) {
+  return resultRows.map((result, index) => {
+    const row = { ...(inputRows[index] || {}) };
+    row.openva_identity_status = result.identity_status;
+    row.openva_no_match_reason = result.no_match_reason;
+    row.openva_matched_vendor_id = result.matched_vendor_id;
+    row.openva_matched_vendor_name = result.matched_vendor_name;
+    RESULT_PACK_SOURCE_TYPES.forEach((sourceType) => {
+      const source = (result.sources || []).find((item) => item.source_type === sourceType) || cachedSourceResult(sourceType);
+      row[`openva_${sourceType}_status`] = source.status;
+      row[`openva_${sourceType}_url`] = source.url;
+      row[`openva_${sourceType}_basis`] = source.basis;
+      row[`openva_${sourceType}_checked_at`] = source.checked_at;
+    });
+    row.openva_not_advice = result.not_advice ? "true" : "false";
+    return row;
+  });
+}
+
+function resultPackCsv(inputRows, resultRows) {
+  const inputColumns = [];
+  inputRows.forEach((row) => {
+    Object.keys(row).forEach((key) => {
+      if (!inputColumns.includes(key)) inputColumns.push(key);
+    });
+  });
+  return serializeCsv(flattenResultPackRows(inputRows, resultRows), [...inputColumns, ...RESULT_PACK_FLAT_COLUMNS]);
+}
+
 function detailSourceSummary(detail) {
   const sources = detail.canonical_sources || [];
   const candidates = detail.candidate_sources || [];
@@ -291,86 +380,28 @@ function buildLocalMatchIndexes() {
   return { domainIndex, nameIndex };
 }
 
-async function matchInventoryRow(row, indexes) {
+async function matchInventoryRow(row, inputIndex, indexes) {
   const domain = normalizeDomain(row.domain || "");
   const vendorName = normalizeForMatch(row.vendor_name || "");
   const businessName = normalizeForMatch(row.business_entity_name || "");
   let vendor = null;
-  let matchMethod = "no_match";
-  let confidence = "0.00";
 
   if (domain && indexes.domainIndex.has(domain)) {
     vendor = indexes.domainIndex.get(domain);
-    matchMethod = "domain_exact";
-    confidence = "1.00";
   } else if (vendorName && indexes.nameIndex.has(vendorName)) {
     vendor = indexes.nameIndex.get(vendorName);
-    matchMethod = "vendor_name_exact";
-    confidence = "0.95";
   } else if (businessName && indexes.nameIndex.has(businessName)) {
     vendor = indexes.nameIndex.get(businessName);
-    matchMethod = "business_entity_name_exact";
-    confidence = "0.90";
   }
 
   if (!vendor) {
-    return {
-      ...row,
-      matched_vendor_id: "",
-      matched_vendor_name: "",
-      match_method: matchMethod,
-      match_confidence: confidence,
-      catalog_tier: "",
-      review_state: "human_review_required",
-      advisory_boundary: "non_advisory",
-      freshness_mode: "cached",
-      catalog_membership: "none",
-      result_state: "not_found",
-      matched_source_types: "",
-      canonical_source_urls: "",
-      candidate_source_count: "0",
-      unavailable_source_count: "0",
-      notes: "No conservative OpenVA match found. Live discovery and catalogue-lifecycle routing run through the OpenVA resolver contract; the browser surface returns cached catalogue state only.",
-    };
+    return browserResultPackRow(row, inputIndex, null);
   }
 
   const summary = await vendorSourceSummary(vendor.vendor_id);
-  // Browser-local resolution is always cached: it reports the latest known
-  // catalogue state and never claims live verification. The verify mode (live
-  // refresh, discovery, candidate routing) is served by the resolver contract.
-  // Catalogue membership and source health are separate axes: a matched vendor is
-  // canonical regardless of health, and result_state consults the latest health
-  // snapshot rather than assuming current.
-  const buckets = (summary.sources || []).map((source) => (source.source_health && source.source_health.status_bucket) || "missing");
-  let resultState;
-  if (!summary.sourceTypes.length) {
-    resultState = "verification_inconclusive";
-  } else if (buckets.some((bucket) => bucket === "unavailable")) {
-    resultState = "source_unavailable";
-  } else if (buckets.length && buckets.every((bucket) => bucket === "healthy")) {
-    resultState = "catalog_current";
-  } else {
-    // No source-health observation in the snapshot: cached mode cannot claim current.
-    resultState = "verification_inconclusive";
-  }
-  return {
-    ...row,
-    matched_vendor_id: vendor.vendor_id,
-    matched_vendor_name: vendor.display_name,
-    match_method: matchMethod,
-    match_confidence: confidence,
-    catalog_tier: "human_reviewed",
-    review_state: "human_reviewed",
-    advisory_boundary: "non_advisory",
-    freshness_mode: "cached",
-    catalog_membership: "canonical",
-    result_state: resultState,
-    matched_source_types: summary.sourceTypes.join("; "),
-    canonical_source_urls: summary.sourceUrls.join("; "),
-    candidate_source_count: String(summary.candidates.length),
-    unavailable_source_count: String(summary.unavailable.length),
-    notes: "Matched against OpenVA public metadata (cached). This is not vendor approval, compliance advice, risk scoring, or a procurement recommendation.",
-  };
+  // Browser-local resolution is always cached. Known URLs are locators only:
+  // they remain not_checked/cached until the live resolver actually checks them.
+  return browserResultPackRow(row, inputIndex, vendor, summary);
 }
 
 function renderLocalMatcher() {
@@ -385,17 +416,17 @@ function renderLocalMatcher() {
   ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
 
   document.getElementById("match-preview").innerHTML = localMatchRows.length
-    ? `<table><thead><tr><th>Input vendor</th><th>Matched vendor</th><th>Result state</th><th>Method</th><th>Source types</th></tr></thead><tbody>${
+    ? `<table><thead><tr><th>Input vendor</th><th>Matched vendor</th><th>Identity status</th><th>No-match reason</th><th>Cached source locators</th></tr></thead><tbody>${
         localMatchRows.slice(0, 20).map((row) => `
           <tr>
-            <td>${html(row.vendor_name || row.business_entity_name || row.domain || row.registration_number)}</td>
+            <td>${html(row.input_vendor_name || row.input_domain || "Unavailable")}</td>
             <td>${html(row.matched_vendor_name || "No match")}</td>
-            <td>${html(row.result_state || "")}</td>
-            <td>${html(row.match_method)}</td>
-            <td>${html(row.matched_source_types)}</td>
+            <td>${html(row.identity_status)}</td>
+            <td>${html(row.no_match_reason)}</td>
+            <td>${html((row.sources || []).filter((source) => source.url).map((source) => source.source_type).join("; "))}</td>
           </tr>
         `).join("")
-      }</tbody></table><p>Preview shows up to 20 rows. Download CSV or JSON for the full local result.</p>`
+      }</tbody></table><p>Preview shows up to 20 rows. Download CSV or JSON for the full resolver result-pack. Browser-local sources are cached/not_checked only.</p>`
     : "<p>No local match results yet.</p>";
 }
 
@@ -421,7 +452,7 @@ function setupLocalMatcher() {
   document.getElementById("run-local-match").addEventListener("click", async () => {
     const indexes = buildLocalMatchIndexes();
     document.getElementById("matcher-status").textContent = "Matching locally against the lightweight OpenVA vendor index and loading matched vendor shards on demand...";
-    localMatchRows = await Promise.all(localInventoryRows.map((row) => matchInventoryRow(row, indexes)));
+    localMatchRows = await Promise.all(localInventoryRows.map((row, index) => matchInventoryRow(row, index, indexes)));
     document.getElementById("matcher-status").textContent = `${localMatchRows.length} row(s) matched locally in browser memory. No private inventory data was uploaded.`;
     renderLocalMatcher();
   });
@@ -435,34 +466,11 @@ function setupLocalMatcher() {
   });
 
   document.getElementById("download-matches-csv").addEventListener("click", () => {
-    const preferred = [
-      "vendor_name",
-      "business_entity_name",
-      "domain",
-      "jurisdiction",
-      "registration_number",
-      "registered_address",
-      "matched_vendor_id",
-      "matched_vendor_name",
-      "match_method",
-      "match_confidence",
-      "result_state",
-      "catalog_membership",
-      "freshness_mode",
-      "catalog_tier",
-      "review_state",
-      "advisory_boundary",
-      "matched_source_types",
-      "canonical_source_urls",
-      "candidate_source_count",
-      "unavailable_source_count",
-      "notes",
-    ];
-    download("openva-matched-inventory.csv", serializeCsv(localMatchRows, preferred), "text/csv");
+    download("openva-matched-inventory.csv", resultPackCsv(localInventoryRows, localMatchRows), "text/csv");
   });
 
   document.getElementById("download-matches-json").addEventListener("click", () => {
-    download("openva-matched-inventory.json", JSON.stringify({ meta: { ...exportMetadata(), export_scope: "browser_local_inventory_match" }, rows: localMatchRows }, null, 2) + "\n", "application/json");
+    download("openva-matched-inventory.json", JSON.stringify(localMatchRows, null, 2) + "\n", "application/json");
   });
 
   renderLocalMatcher();
