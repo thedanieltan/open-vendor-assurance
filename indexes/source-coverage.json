@@ -2,7 +2,7 @@
   "candidate_source_type_counts": {},
   "coverage_claim_role_counts": {},
   "covered_role_counts": {
-    "compliance_page": 94,
+    "compliance_page": 95,
     "dpa": 101,
     "other_public_source": 2,
     "privacy_notice": 158,
@@ -15,7 +15,7 @@
   "generated_at": "1970-01-01T00:00:00Z",
   "schema_version": "0.1.0",
   "source_type_counts": {
-    "compliance_page": 94,
+    "compliance_page": 95,
     "dpa": 101,
     "other_public_source": 2,
     "privacy_notice": 158,
@@ -27,7 +27,7 @@
   "unavailable_source_type_counts": {
     "dpa": 16
   },
-  "unique_source_location_count": 612,
+  "unique_source_location_count": 613,
   "vendor_coverage": [
     {
       "candidate_source_types": [],
@@ -200,12 +200,14 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "compliance_page",
         "privacy_notice",
         "security_page",
         "terms_of_service"
       ],
       "coverage_claim_role_coverage": [],
       "covered_roles": [
+        "compliance_page",
         "privacy_notice",
         "security_page",
         "terms_of_service"
@@ -216,6 +218,7 @@
         "subprocessors_list"
       ],
       "primary_source_type_coverage": [
+        "compliance_page",
         "privacy_notice",
         "security_page",
         "terms_of_service"
@@ -223,7 +226,7 @@
       "roles_covered_via_claims": 0,
       "roles_covered_via_same_source_url": [],
       "unavailable_source_types": [],
-      "unique_source_locations": 3,
+      "unique_source_locations": 4,
       "vendor_id": "akur8"
     },
     {
