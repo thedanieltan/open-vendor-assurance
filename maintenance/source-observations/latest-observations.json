@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-05T18:50:33Z",
+  "generated_at": "2026-07-06T07:23:04Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 612,
+    "source_count": 613,
     "observed_this_run": 1,
-    "carried_forward": 611
+    "carried_forward": 612
   },
   "sources": [
     {
@@ -350,6 +350,25 @@
         "reason": "change_class_material_possible"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "akur8-compliance-page",
+      "vendor_id": "akur8",
+      "source_url": "https://www.akur8.com/news/bancassurance-is-pricing-sophistication-the-key-to-continued-growth",
+      "observed_at": "2026-07-06T07:23:04Z",
+      "observation_id": "akur8-compliance-page-2026-07-06-28774526618-1",
+      "final_url": "https://www.akur8.com/news/bancassurance-is-pricing-sophistication-the-key-to-continued-growth",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": null,
+      "normalized_text_sample_sha256": null,
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "akur8-privacy",
@@ -5213,7 +5232,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ibm-cloud-compliance",
