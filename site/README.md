@@ -1,8 +1,10 @@
 # OpenVA Site
 
-This directory contains the static OpenVA browser resolver UI.
+This directory contains the static OpenVA contract and community-index browser.
+It is a documentation, discovery, local resolver entry-point, and result-pack
+preview surface. It is not the OpenVA product runtime.
 
-Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
+Static site: https://thedanieltan.github.io/open-vendor-assurance/
 
 The site is built from committed OpenVA public pack and index files:
 
@@ -25,9 +27,13 @@ python site/build.py
 
 The page is static and GitHub Pages-ready. It has no backend, database, account
 system, upload endpoint, private inventory processing, live verification job,
-live discovery job, or server-side workspace persistence. Boundary shorthand:
-no backend, database, account system, upload endpoint; no live verification job;
-no live discovery job; no server-side workspace persistence.
+live discovery job, hosted resolver worker, or server-side workspace
+persistence. Boundary shorthand: no backend, database, account system, upload
+endpoint; no live verification job; no live discovery job; no hosted resolver
+worker; no server-side workspace persistence.
+
+Canonical boundary phrase: no backend, database, account system, upload endpoint.
+Canonical boundary phrase: no hosted resolver worker.
 
 ## Discovery surface
 
@@ -55,10 +61,14 @@ not written to `localStorage`, `sessionStorage`, a server, or a database.
 
 ## Public route terminology
 
-The public site should present the product as a resolver-first source-pack UI:
+The public site should present OpenVA as a local-first resolver contract and
+static community index browser:
 
 ```text
-Resolve vendor sources
+Resolver contract documentation
+Community index browser
+Local resolver / CLI / MCP entry point
+Result-pack preview
 Source Lookup
 Configurable source-pack builder
 Source pack preview
@@ -85,6 +95,8 @@ Boundary phrases that must remain true across the site and documentation:
 
 ```text
 Your CSV is processed locally in your browser. It is not uploaded to OpenVA.
+community index is hint-only
+consumer-side live verification
 not a live monitoring feed
 openva-matched-inventory.csv
 openva-matched-inventory.json
@@ -113,7 +125,8 @@ openva_matched_vendor_id
 openva_matched_vendor_name
 openva_{source_type}_status
 openva_{source_type}_url
-openva_{source_type}_basis
+openva_{source_type}_candidate_basis
+openva_{source_type}_verification_basis
 openva_{source_type}_checked_at
 openva_not_advice
 ```
@@ -125,10 +138,13 @@ The JSON download is an array of resolver result-pack rows using
 The browser-local resolver is cached/static: it reports loaded public metadata
 and never claims live verification, live discovery, or server-side lifecycle
 routing. Known cached URLs may appear as locators, but their result-pack source
-status remains `not_checked`, `basis` remains `cached`, and `checked_at` remains
-`null`. Hosted/self-hosted live resolution is described by the resolver
-contract - see `docs/vendor-resolution.md`,
-`docs/resolver-api.md`, and `docs/resolver-result-pack-contract.md`.
+status remains `not_checked`, `candidate_basis` remains `cached_locator`,
+`verification_basis` remains `not_checked`, and `checked_at` remains `null`.
+The community index is hint-only and is not authoritative evidence. Verified
+outcomes require consumer-side live verification by a CLI, local engine, MCP
+server, or forked deployment; no result should imply OpenVA operated the check.
+See `docs/local-first-resolution-doctrine.md`,
+`docs/vendor-resolution.md`, and `docs/resolver-result-pack-contract.md`.
 
 Local resolution results are not vendor approval, compliance findings, risk
 scores, procurement recommendations, legal opinions, security conclusions, or
@@ -152,11 +168,13 @@ monitoring.
 
 ## Deployment and update cadence
 
-The static browser resolver UI is deployed to GitHub Pages from `site/dist/`
-when a release tag matching `v*` is pushed. The build checks out the tagged
-commit, runs OpenVA validation, builds the static site from the tagged pack/index
-files, uploads the GitHub Pages artifact, and deploys it through the official
-Pages deployment action.
+The static site is deployed to GitHub Pages from `site/dist/` when a release tag
+matching `v*` is pushed. The build checks out the tagged commit, runs OpenVA
+validation, builds the static site from the tagged pack/index files, uploads the
+GitHub Pages artifact, and deploys it through the official Pages deployment
+action. This deployment publishes contract documentation, a community index
+browser, local resolver entry points, and result-pack previews; it does not run
+a hosted OpenVA resolver or process user inventories for OpenVA.
 
 ## Compiled public-metadata distribution
 

@@ -43,6 +43,22 @@ NO_MATCH_REASONS: tuple[str, ...] = (
     "inconclusive",
 )
 
+CANDIDATE_BASES: tuple[str, ...] = (
+    "community_hint",
+    "vendor_asserted",
+    "cached_locator",
+    "direct_input",
+    "none",
+)
+
+VERIFICATION_BASES: tuple[str, ...] = (
+    "not_checked",
+    "verified_live",
+    "live_unavailable",
+    "live_gated",
+    "live_not_found",
+)
+
 FLAT_RESULT_COLUMNS: tuple[str, ...] = (
     "openva_identity_status",
     "openva_no_match_reason",
@@ -54,7 +70,8 @@ FLAT_RESULT_COLUMNS: tuple[str, ...] = (
         for column in (
             f"openva_{source_type}_status",
             f"openva_{source_type}_url",
-            f"openva_{source_type}_basis",
+            f"openva_{source_type}_candidate_basis",
+            f"openva_{source_type}_verification_basis",
             f"openva_{source_type}_checked_at",
         )
     ),
@@ -158,23 +175,30 @@ def project_source(
     resolution_status: str,
     source_type: str,
 ) -> dict[str, Any]:
-    """Project one resolver source; cached basis never claims live-found."""
+    """Project one resolver source; candidate inputs never imply live verification."""
     if source is None:
         return {
             "source_type": source_type,
             "status": "not_checked",
             "url": None,
-            "basis": "cached",
+            "candidate_basis": "none",
+            "verification_basis": "not_checked",
             "checked_at": None,
         }
     live_checked = bool(source.get("live_checked"))
-    basis = "live" if live_checked else "cached"
+    status = _source_status(str(source.get("status") or resolution_status), source, live_checked)
+    verification_basis = _verification_basis(status, live_checked)
     return {
         "source_type": source_type,
-        "status": _source_status(str(source.get("status") or resolution_status), source, live_checked),
-        "url": _nullable_text(source.get("source_url")),
-        "basis": basis,
-        "checked_at": _nullable_text(source.get("checked_at")) if live_checked else None,
+        "status": status,
+        "url": _nullable_text(source.get("source_url") or source.get("candidate_url")),
+        "candidate_basis": _candidate_basis(source),
+        "verification_basis": verification_basis,
+        "checked_at": (
+            _nullable_text(source.get("checked_at"))
+            if verification_basis != "not_checked"
+            else None
+        ),
     }
 
 
@@ -195,12 +219,14 @@ def flatten_result_row(input_row: dict[str, Any], result_row: dict[str, Any]) ->
         source = source_by_type.get(source_type) or {
             "status": "not_checked",
             "url": None,
-            "basis": "cached",
+            "candidate_basis": "none",
+            "verification_basis": "not_checked",
             "checked_at": None,
         }
         flattened[f"openva_{source_type}_status"] = source["status"]
         flattened[f"openva_{source_type}_url"] = source["url"]
-        flattened[f"openva_{source_type}_basis"] = source["basis"]
+        flattened[f"openva_{source_type}_candidate_basis"] = source["candidate_basis"]
+        flattened[f"openva_{source_type}_verification_basis"] = source["verification_basis"]
         flattened[f"openva_{source_type}_checked_at"] = source["checked_at"]
     return flattened
 
@@ -272,6 +298,36 @@ def _source_status(status: str, source: dict[str, Any], live_checked: bool) -> s
         if "gated" in reasons or "bot_protected" in reasons:
             return "gated"
         return "unavailable" if source.get("source_url") else "not_checked"
+    return "not_checked"
+
+
+def _candidate_basis(source: dict[str, Any]) -> str:
+    explicit = str(source.get("candidate_basis") or "")
+    if explicit in CANDIDATE_BASES:
+        return explicit
+    origin = str(source.get("origin") or "")
+    if origin in {"community_hint", "community"}:
+        return "community_hint"
+    if origin in {"vendor_asserted", "vendor"}:
+        return "vendor_asserted"
+    if origin == "direct_input":
+        return "direct_input"
+    if source.get("source_url") or source.get("candidate_url") or source.get("previous_source_url"):
+        return "cached_locator"
+    return "none"
+
+
+def _verification_basis(status: str, live_checked: bool) -> str:
+    if not live_checked:
+        return "not_checked"
+    if status == "found":
+        return "verified_live"
+    if status == "gated":
+        return "live_gated"
+    if status == "not_found":
+        return "live_not_found"
+    if status == "unavailable":
+        return "live_unavailable"
     return "not_checked"
 
 

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/resolver-result-pack.schema.json",
   "title": "OpenVA Resolver Result-Pack Row",
-  "description": "Resolver-first, browser-safe result-pack row for one requested vendor. Static cached producers must not emit live-found semantics.",
+  "description": "Resolver-first, browser-safe result-pack row for one requested vendor. Static cached and hint-only producers must not emit consumer-side live verification semantics.",
   "type": "array",
   "items": { "$ref": "#/$defs/resultRow" },
   "$defs": {
@@ -74,7 +74,14 @@
     },
     "sourceResult": {
       "type": "object",
-      "required": ["source_type", "status", "url", "basis", "checked_at"],
+      "required": [
+        "source_type",
+        "status",
+        "url",
+        "candidate_basis",
+        "verification_basis",
+        "checked_at"
+      ],
       "properties": {
         "source_type": {
           "enum": [
@@ -97,19 +104,84 @@
           ]
         },
         "url": { "type": ["string", "null"], "maxLength": 2048 },
-        "basis": { "enum": ["cached", "live"] },
+        "candidate_basis": {
+          "enum": [
+            "community_hint",
+            "vendor_asserted",
+            "cached_locator",
+            "direct_input",
+            "none"
+          ]
+        },
+        "verification_basis": {
+          "enum": [
+            "not_checked",
+            "verified_live",
+            "live_unavailable",
+            "live_gated",
+            "live_not_found"
+          ]
+        },
         "checked_at": { "type": ["string", "null"] }
       },
       "allOf": [
         {
           "if": {
-            "properties": { "basis": { "const": "cached" } },
-            "required": ["basis"]
+            "properties": { "verification_basis": { "const": "not_checked" } },
+            "required": ["verification_basis"]
           },
           "then": {
             "properties": {
-              "status": { "not": { "const": "found" } },
+              "status": { "const": "not_checked" },
               "checked_at": { "type": "null" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "verification_basis": { "const": "verified_live" } },
+            "required": ["verification_basis"]
+          },
+          "then": {
+            "properties": {
+              "status": { "const": "found" },
+              "checked_at": { "type": "string" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "verification_basis": { "const": "live_unavailable" } },
+            "required": ["verification_basis"]
+          },
+          "then": {
+            "properties": {
+              "status": { "const": "unavailable" },
+              "checked_at": { "type": "string" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "verification_basis": { "const": "live_gated" } },
+            "required": ["verification_basis"]
+          },
+          "then": {
+            "properties": {
+              "status": { "const": "gated" },
+              "checked_at": { "type": "string" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "verification_basis": { "const": "live_not_found" } },
+            "required": ["verification_basis"]
+          },
+          "then": {
+            "properties": {
+              "status": { "const": "not_found" },
+              "checked_at": { "type": "string" }
             }
           }
         }

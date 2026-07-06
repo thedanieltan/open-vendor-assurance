@@ -12,6 +12,23 @@ def test_resolver_result_pack_schema_is_valid_standalone_schema():
     Draft202012Validator.check_schema(schema)
     assert schema["$id"] == "https://openva.dev/schemas/resolver-result-pack.schema.json"
     assert schema["$defs"]["resultRow"]["properties"]["result_pack_version"] == {"const": "1.0.0"}
+    source = schema["$defs"]["sourceResult"]
+    assert "candidate_basis" in source["required"]
+    assert "verification_basis" in source["required"]
+    assert source["properties"]["candidate_basis"]["enum"] == [
+        "community_hint",
+        "vendor_asserted",
+        "cached_locator",
+        "direct_input",
+        "none",
+    ]
+    assert source["properties"]["verification_basis"]["enum"] == [
+        "not_checked",
+        "verified_live",
+        "live_unavailable",
+        "live_gated",
+        "live_not_found",
+    ]
 
 
 def test_build_indexes_passes():
