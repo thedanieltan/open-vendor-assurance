@@ -1,16 +1,16 @@
 /* Lovable mockup implementation layer for the static OpenVA public page.
-   Presentation-only: keeps the existing compiled catalog, browser-local matcher,
-   and export contracts intact while replacing the public UI shell. */
+   Presentation-only: keeps the compiled catalog, browser-local matcher, and export
+   contracts intact while replacing the public UI shell. */
 
 :root {
   --mock-bg: #f6f8fb;
   --mock-bg-2: #eef4ff;
-  --mock-panel: rgba(255, 255, 255, 0.88);
+  --mock-panel: rgba(255, 255, 255, 0.9);
   --mock-panel-solid: #ffffff;
   --mock-ink: #0f172a;
-  --mock-muted: #607089;
-  --mock-subtle: #e4ebf7;
+  --mock-muted: #64748b;
   --mock-line: rgba(123, 142, 170, 0.28);
+  --mock-subtle: #e8eef8;
   --mock-navy: #071226;
   --mock-navy-2: #0f1f3d;
   --mock-blue: #2563eb;
@@ -18,7 +18,6 @@
   --mock-cyan: #38bdf8;
   --mock-green: #22c55e;
   --mock-amber: #f59e0b;
-  --mock-red: #ef4444;
   --mock-radius: 24px;
   --mock-radius-lg: 34px;
   --mock-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
@@ -29,12 +28,12 @@
 html[data-theme="dark"] {
   --mock-bg: #07111f;
   --mock-bg-2: #0d1b2f;
-  --mock-panel: rgba(15, 23, 42, 0.82);
+  --mock-panel: rgba(15, 23, 42, 0.84);
   --mock-panel-solid: #111c2f;
   --mock-ink: #f8fafc;
   --mock-muted: #b9c6d8;
-  --mock-subtle: rgba(148, 163, 184, 0.16);
   --mock-line: rgba(226, 232, 240, 0.14);
+  --mock-subtle: rgba(148, 163, 184, 0.16);
   --mock-navy: #020617;
   --mock-navy-2: #0f172a;
   --mock-blue: #60a5fa;
@@ -50,12 +49,12 @@ html[data-theme="dark"] {
   :root:not([data-theme="light"]) {
     --mock-bg: #07111f;
     --mock-bg-2: #0d1b2f;
-    --mock-panel: rgba(15, 23, 42, 0.82);
+    --mock-panel: rgba(15, 23, 42, 0.84);
     --mock-panel-solid: #111c2f;
     --mock-ink: #f8fafc;
     --mock-muted: #b9c6d8;
-    --mock-subtle: rgba(148, 163, 184, 0.16);
     --mock-line: rgba(226, 232, 240, 0.14);
+    --mock-subtle: rgba(148, 163, 184, 0.16);
     --mock-navy: #020617;
     --mock-navy-2: #0f172a;
     --mock-blue: #60a5fa;
@@ -302,21 +301,14 @@ select:focus-visible {
   background: rgba(255, 255, 255, 0.14) !important;
 }
 
-.hero-trust-row,
-.proof-strip,
-.workflow-strip {
+.hero-trust-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-}
-
-.hero-trust-row {
   margin: 1.25rem 0 0;
 }
 
-.trust-pill,
-.proof-chip,
-.workflow-chip {
+.trust-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.42rem;
@@ -330,9 +322,7 @@ select:focus-visible {
   font-weight: 760;
 }
 
-.trust-pill::before,
-.proof-chip::before,
-.workflow-chip::before {
+.trust-pill::before {
   content: "";
   width: 0.48rem;
   height: 0.48rem;
@@ -364,12 +354,19 @@ select:focus-visible {
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
 }
 
-.mockup-topbar {
+.mockup-topbar,
+.mockup-record-header,
+.mockup-search-row,
+.mockup-source-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 0.82rem 0.9rem;
+  gap: 0.75rem;
+}
+
+.mockup-topbar,
+.mockup-search-row {
+  padding: 0.8rem 0.9rem;
 }
 
 .mockup-window-dots {
@@ -389,19 +386,6 @@ select:focus-visible {
 .mockup-window-dots span:nth-child(2) { background: #fbbf24; }
 .mockup-window-dots span:nth-child(3) { background: #34d399; }
 
-.mockup-topbar strong {
-  font-size: 0.88rem;
-  color: #0f172a;
-}
-
-.mockup-search-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.78rem 0.85rem;
-}
-
 .mockup-input {
   display: flex;
   align-items: center;
@@ -420,7 +404,6 @@ select:focus-visible {
   border-radius: 0.65rem;
   background: #eff6ff;
   color: #2563eb;
-  font-size: 1.1rem;
 }
 
 .mockup-badge {
@@ -438,13 +421,6 @@ select:focus-visible {
   display: grid;
   gap: 0.8rem;
   padding: 0.9rem;
-}
-
-.mockup-record-header {
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-  gap: 1rem;
 }
 
 .mockup-record h3 {
@@ -477,10 +453,6 @@ select:focus-visible {
 }
 
 .mockup-source-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.6rem;
   padding: 0.65rem;
   box-shadow: none;
 }
@@ -491,14 +463,14 @@ select:focus-visible {
   background: #22c55e;
 }
 
-.mockup-source-row small {
-  color: #64748b;
-  font-weight: 720;
-}
-
 .mockup-source-row strong {
   color: #0f172a;
   font-size: 0.88rem;
+}
+
+.mockup-source-row small {
+  color: #64748b;
+  font-weight: 720;
 }
 
 .mockup-timeline {
@@ -525,7 +497,11 @@ select:focus-visible {
   color: #78350f !important;
 }
 
-html[data-theme="dark"] .trust-boundary,
+html[data-theme="dark"] .trust-boundary {
+  background: linear-gradient(135deg, rgba(41, 30, 13, 0.96), rgba(69, 46, 12, 0.62)) !important;
+  color: #fde68a !important;
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .trust-boundary {
     background: linear-gradient(135deg, rgba(41, 30, 13, 0.96), rgba(69, 46, 12, 0.62)) !important;
@@ -729,7 +705,9 @@ input::placeholder {
   padding: 0.1rem 0.2rem 0.1rem 0;
 }
 
-.vendor-card {
+.vendor-card,
+.catalog-list-panel,
+.detail-panel {
   border-radius: 24px !important;
 }
 
@@ -893,6 +871,7 @@ footer strong {
   .mockup-record-header,
   .mockup-source-row,
   .mockup-timeline {
+    display: grid;
     grid-template-columns: 1fr;
   }
 
