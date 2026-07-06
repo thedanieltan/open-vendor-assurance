@@ -104,13 +104,31 @@ vendor_name,business_entity_name,domain,jurisdiction,registration_number,registe
 ```
 
 The downloaded result preserves user-provided columns and appends OpenVA public
-metadata fields such as matched vendor ID, match method, confidence, source
-types, source URLs, result state, mode, and the non-advisory boundary.
+metadata fields from the resolver result-pack contract:
+
+```text
+openva_identity_status
+openva_no_match_reason
+openva_matched_vendor_id
+openva_matched_vendor_name
+openva_{source_type}_status
+openva_{source_type}_url
+openva_{source_type}_basis
+openva_{source_type}_checked_at
+openva_not_advice
+```
+
+The JSON download is an array of resolver result-pack rows using
+`result_pack_version: 1.0.0`; see
+`docs/resolver-result-pack-contract.md`.
 
 The browser-local resolver is cached/static: it reports loaded public metadata
 and never claims live verification, live discovery, or server-side lifecycle
-routing. Hosted/self-hosted live resolution is described by the resolver
-contract — see `docs/vendor-resolution.md` and `docs/resolver-api.md`.
+routing. Known cached URLs may appear as locators, but their result-pack source
+status remains `not_checked`, `basis` remains `cached`, and `checked_at` remains
+`null`. Hosted/self-hosted live resolution is described by the resolver
+contract - see `docs/vendor-resolution.md`,
+`docs/resolver-api.md`, and `docs/resolver-result-pack-contract.md`.
 
 Local resolution results are not vendor approval, compliance findings, risk
 scores, procurement recommendations, legal opinions, security conclusions, or

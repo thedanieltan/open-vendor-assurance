@@ -1,6 +1,17 @@
+from jsonschema import Draft202012Validator
+
 from tools.openva.indexes import build_indexes
 from tools.openva import validate as validate_module
 from tools.openva.validate import validate_all, validate_coverage_claims, validate_quality_gates
+from tools.openva.schema_registry import load_schema
+
+
+def test_resolver_result_pack_schema_is_valid_standalone_schema():
+    schema = load_schema(validate_module.ROOT / "schemas/openva/resolver-result-pack.schema.json")
+
+    Draft202012Validator.check_schema(schema)
+    assert schema["$id"] == "https://openva.dev/schemas/resolver-result-pack.schema.json"
+    assert schema["$defs"]["resultRow"]["properties"]["result_pack_version"] == {"const": "1.0.0"}
 
 
 def test_build_indexes_passes():

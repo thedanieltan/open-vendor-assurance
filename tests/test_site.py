@@ -491,12 +491,14 @@ def test_selection_and_browser_local_matcher_remain_memory_only():
         "const selectedSources = new Set();",
         "localInventoryRows",
         "localMatchRows",
+        "RESULT_PACK_VERSION",
+        "RESULT_PACK_SOURCE_TYPES",
+        "browserResultPackRow",
+        "resultPackCsv",
         "parseCsv",
         "matchInventoryRow",
-        "domain_exact",
-        "vendor_name_exact",
-        "business_entity_name_exact",
-        "browser_local_inventory_match",
+        "openva_identity_status",
+        "`openva_${sourceType}_basis`",
     ]:
         assert phrase in app
 
@@ -504,6 +506,23 @@ def test_selection_and_browser_local_matcher_remain_memory_only():
     assert "sessionStorage" not in source_text
     assert "FormData" not in source_text
     assert "XMLHttpRequest" not in source_text
+
+
+def test_browser_local_result_pack_is_cached_and_never_live_found():
+    app = (SITE / "src" / "app.js").read_text(encoding="utf-8")
+    cached_source_block = app.split("function cachedSourceResult", 1)[1].split("function cachedSourceUrlsByType", 1)[0]
+    result_pack_block = app.split("function browserResultPackRow", 1)[1].split("function flattenResultPackRows", 1)[0]
+    csv_block = app.split("function resultPackCsv", 1)[1].split("function detailSourceSummary", 1)[0]
+
+    assert "result_pack_version: RESULT_PACK_VERSION" in result_pack_block
+    assert 'identity_status: matched ? "match" : "no_match"' in result_pack_block
+    assert 'status: "not_checked"' in cached_source_block
+    assert 'basis: "cached"' in cached_source_block
+    assert "checked_at: null" in cached_source_block
+    assert 'basis: "live"' not in app
+    assert 'status: "found"' not in cached_source_block
+    assert "RESULT_PACK_FLAT_COLUMNS" in csv_block
+    assert "openva_not_advice" in app
 
 
 def test_site_text_preserves_catalog_feed_and_matcher_boundary():
@@ -522,6 +541,7 @@ def test_site_text_preserves_catalog_feed_and_matcher_boundary():
         "Your CSV is processed locally in your browser. It is not uploaded to OpenVA.",
         "openva-matched-inventory.csv",
         "openva-matched-inventory.json",
+        "result_pack_version: 1.0.0",
     ]:
         assert phrase in text
 
