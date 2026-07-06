@@ -19,10 +19,176 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pr-change-classifier:
+    name: pr-change-classifier
+    runs-on: ubuntu-latest
+    outputs:
+      repository_integrity_heavy: ${{ steps.classify.outputs.repository_integrity_heavy }}
+      workflow_operating_model: ${{ steps.classify.outputs.workflow_operating_model }}
+      catalog_growth: ${{ steps.classify.outputs.catalog_growth }}
+      source_maintenance: ${{ steps.classify.outputs.source_maintenance }}
+      catalog_quality: ${{ steps.classify.outputs.catalog_quality }}
+      release_site: ${{ steps.classify.outputs.release_site }}
+      mcp_integration: ${{ steps.classify.outputs.mcp_integration }}
+      google_sheets_integration: ${{ steps.classify.outputs.google_sheets_integration }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Classify PR change risk
+        id: classify
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            {
+              echo "repository_integrity_heavy=true"
+              echo "workflow_operating_model=true"
+              echo "catalog_growth=true"
+              echo "source_maintenance=true"
+              echo "catalog_quality=true"
+              echo "release_site=true"
+              echo "mcp_integration=true"
+              echo "google_sheets_integration=true"
+            } >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git diff --name-only "$BASE_SHA" "$HEAD_SHA" > changed-paths.txt
+          echo "Changed paths:"; sed 's/^/  /' changed-paths.txt
+
+          python - <<'PY'
+          from pathlib import Path
+
+          paths = [
+              line.strip()
+              for line in Path("changed-paths.txt").read_text(encoding="utf-8").splitlines()
+              if line.strip()
+          ]
+
+          def starts(prefix: str) -> bool:
+              return any(path.startswith(prefix) for path in paths)
+
+          def exact(value: str) -> bool:
+              return value in paths
+
+          def contains(fragment: str) -> bool:
+              return any(fragment in path for path in paths)
+
+          workflow_paths = starts(".github/workflows/") or starts(".github/actions/")
+          governance_docs = starts("docs/operations/")
+          catalog_data = starts("data/") or starts("indexes/") or starts("dist/") or exact("openva-pack.json")
+          schema_or_contract = starts("schemas/") or starts("config/")
+          validator_or_release = (
+              contains("tools/openva/validate")
+              or contains("tools/openva/release_gates")
+              or contains("tools/openva/repository_hygiene")
+              or contains("tools/openva/pr_scope_guard")
+          )
+          catalog_growth = (
+              starts("maintenance/candidates/")
+              or contains("catalog_growth")
+              or contains("candidate")
+              or contains("promotion")
+              or exact(".github/workflows/catalog-growth-discovery.yml")
+              or exact(".github/workflows/candidate-promotion-pr.yml")
+              or exact(".github/workflows/contribution-intake-agent.yml")
+              or any(path.startswith("tests/test_catalog_growth") for path in paths)
+              or any(path.startswith("tests/test_vendor_candidate") for path in paths)
+              or any(path.startswith("tests/test_candidate_promotion") for path in paths)
+              or exact("tests/test_reviewed_candidate_promotion_doc.py")
+              or exact("tests/test_promotion_planner.py")
+          )
+          source_maintenance = (
+              starts("maintenance/source")
+              or contains("source_maintenance")
+              or contains("source_preflight")
+              or contains("source_repair")
+              or contains("source_refinement")
+              or exact(".github/workflows/source-maintenance-report.yml")
+              or exact(".github/workflows/source-repair-pr.yml")
+              or exact(".github/workflows/source-repair-pr-cleanup.yml")
+              or exact(".github/workflows/source-refinement-queue.yml")
+              or exact(".github/workflows/source-refinement-scan.yml")
+              or any(path.startswith("tests/test_source_") for path in paths)
+              or exact("tests/test_p0_repair_automerge_workflow.py")
+              or exact("tests/test_release_candidate_workflow.py")
+          )
+          catalog_quality = (
+              catalog_data
+              or schema_or_contract
+              or contains("automation_rules")
+              or contains("catalog_guard")
+              or any(path.startswith("tests/test_catalog") for path in paths)
+              or exact("tests/test_automation_rules.py")
+          )
+          release_site = (
+              starts("site/")
+              or starts("adapters/")
+              or starts("releases/")
+              or exact(".github/workflows/release-downloads.yml")
+              or exact(".github/workflows/site-pages.yml")
+              or exact(".github/workflows/site-live-feed.yml")
+              or any(path.startswith("tests/test_release_") for path in paths)
+              or exact("tests/test_site.py")
+              or exact("tests/test_adapter_contract.py")
+          )
+          mcp_integration = (
+              starts("integrations/mcp/")
+              or starts("adapters/python/openva_pack_reader/")
+              or starts("adapters/python/openva_vendor_inventory_matcher/")
+              or any(path.startswith("tests/test_openva_mcp") for path in paths)
+              or exact("tests/test_matching_conformance.py")
+              or exact("tests/test_release_coherence.py")
+              or exact("tests/test_agent_bundle_verification.py")
+          )
+          google_sheets = starts("integrations/google-sheets/")
+          workflow_operating_model = (
+              workflow_paths
+              or governance_docs
+              or any(path.startswith("tests/test_workflow") for path in paths)
+              or exact("tests/test_ci_readiness.py")
+              or exact("tests/test_workflow_retirement_evidence.py")
+              or exact("tests/test_future_operations_specs.py")
+          )
+          repository_integrity_heavy = (
+              catalog_data
+              or schema_or_contract
+              or validator_or_release
+              or workflow_paths
+              or catalog_growth
+              or source_maintenance
+              or catalog_quality
+          )
+
+          outputs = {
+              "repository_integrity_heavy": repository_integrity_heavy,
+              "workflow_operating_model": workflow_operating_model,
+              "catalog_growth": catalog_growth,
+              "source_maintenance": source_maintenance,
+              "catalog_quality": catalog_quality,
+              "release_site": release_site,
+              "mcp_integration": mcp_integration,
+              "google_sheets_integration": google_sheets,
+          }
+
+          with Path(__import__("os").environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as handle:
+              for key, value in outputs.items():
+                  handle.write(f"{key}={'true' if value else 'false'}\n")
+
+          print("Path-aware validation lanes:")
+          for key, value in outputs.items():
+              print(f"  {key}: {value}")
+          PY
+
   repository-integrity:
     name: repository-integrity
     runs-on: ubuntu-latest
-    # Runs on every triggering event: PR code events and pushes to main.
+    needs: pr-change-classifier
+    # Fast by default on PRs. Heavy validation/index/release gates only run for
+    # catalog/schema/workflow/authority-sensitive changes, or every push to main.
     steps:
       - uses: actions/checkout@v5
         with:
@@ -30,6 +196,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Enforce repository hygiene
@@ -43,14 +210,17 @@ jobs:
           --head "$OPENVA_HEAD_SHA"
           --head-ref "$OPENVA_HEAD_REF"
       - name: Run OpenVA validator
+        if: github.event_name != 'pull_request' || needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'
         run: python -m tools.openva.validate validate
       - name: Rebuild generated indexes
+        if: github.event_name != 'pull_request' || needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'
         run: python -m tools.openva.validate build-indexes
       - name: Check generated files are committed
+        if: github.event_name != 'pull_request' || needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'
         run: git diff --exit-code openva-pack.json indexes/ dist/
       - name: Determine scope-policy operational freshness exclusion
         id: scope_policy_freshness
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -69,9 +239,9 @@ jobs:
           import re
           import sys
           from pathlib import Path
-          
+
           import yaml
-          
+
           body = Path(sys.argv[1]).read_text(encoding="utf-8")
           changed = [line.strip() for line in Path(sys.argv[2]).read_text(encoding="utf-8").splitlines() if line.strip()]
           found = []
@@ -87,7 +257,12 @@ jobs:
             echo "skip_release_gates=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Run source-intelligence release gates (pr profile)
-        if: steps.scope_policy_freshness.outputs.skip_release_gates != 'true'
+        if: >-
+          github.event_name != 'pull_request' ||
+          (
+            needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true' &&
+            steps.scope_policy_freshness.outputs.skip_release_gates != 'true'
+          )
         run: >-
           python -m tools.openva.release_gates check --profile pr
           --out-json "$RUNNER_TEMP/release-gates.json"
@@ -110,6 +285,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install PyYAML
         run: pip install "pyyaml>=6"
       - name: Run scope guard from the trusted base revision
@@ -135,14 +311,15 @@ jobs:
   workflow-operating-model:
     name: workflow-operating-model
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
-    # where full-suite reruns every test.
-    if: github.event_name == 'pull_request'
+    needs: pr-change-classifier
+    # Targeted PR coverage: only workflow/governance-model changes.
+    if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.workflow_operating_model == 'true'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Run workflow operating model tests
@@ -157,14 +334,15 @@ jobs:
   catalog-growth:
     name: catalog-growth
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
-    # where full-suite reruns every test.
-    if: github.event_name == 'pull_request'
+    needs: pr-change-classifier
+    # Targeted PR coverage: only catalog-growth/candidate-promotion changes.
+    if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.catalog_growth == 'true'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Run catalog growth tests
@@ -179,14 +357,15 @@ jobs:
   source-maintenance:
     name: source-maintenance
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
-    # where full-suite reruns every test.
-    if: github.event_name == 'pull_request'
+    needs: pr-change-classifier
+    # Targeted PR coverage: only source-maintenance/repair changes.
+    if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.source_maintenance == 'true'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Run source maintenance tests
@@ -199,14 +378,15 @@ jobs:
   catalog-quality:
     name: catalog-quality
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
-    # where full-suite reruns every test.
-    if: github.event_name == 'pull_request'
+    needs: pr-change-classifier
+    # Targeted PR coverage: only catalog/schema/automation-rule changes.
+    if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.catalog_quality == 'true'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Run catalog quality tests
@@ -215,14 +395,15 @@ jobs:
   release-site:
     name: release-site
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
-    # where full-suite reruns every test.
-    if: github.event_name == 'pull_request'
+    needs: pr-change-classifier
+    # Targeted PR coverage: only release/site/adapter changes.
+    if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.release_site == 'true'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Run release and site tests
@@ -231,14 +412,15 @@ jobs:
   mcp-integration:
     name: mcp-integration
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
-    # where full-suite reruns the Python tests.
-    if: github.event_name == 'pull_request'
+    needs: pr-change-classifier
+    # Targeted PR coverage: only MCP/matching/agent-bundle changes.
+    if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.mcp_integration == 'true'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install package
         run: pip install -e ".[dev]"
       - name: Install MCP local dependency chain
@@ -265,9 +447,9 @@ jobs:
   google-sheets-integration:
     name: google-sheets-integration
     runs-on: ubuntu-latest
-    # Targeted PR coverage: runs on pull-request events only; skipped on pushes to main,
-    # where full-suite reruns every test.
-    if: github.event_name == 'pull_request'
+    needs: pr-change-classifier
+    # Targeted PR coverage: only Google Sheets integration changes.
+    if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.google_sheets_integration == 'true'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
@@ -287,6 +469,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: "pip"
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
