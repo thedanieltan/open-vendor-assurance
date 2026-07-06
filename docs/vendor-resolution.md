@@ -1,28 +1,22 @@
 # Unified vendor resolution (resolve-on-use)
 
-OpenVA resolves vendor assurance sources **catalogue-first, with live refresh on
-use**. The same pipeline serves browser users, API consumers, agents, and future
-MCP integrations: every human or agent request receives the best current
-public-source result OpenVA can establish, and every discovered gap or stale
-source becomes input to the same autonomous catalogue-improvement lifecycle.
+OpenVA resolves vendor assurance source URLs **reference-cache-first, with optional live check or discovery on use**. The same pipeline serves browser users, API consumers, agents, and future MCP integrations: every human or agent request receives the best public-source locator result OpenVA can establish within the requested mode, and every useful discovered gap or stale source becomes input to the same autonomous reference-cache improvement lifecycle.
 
-This is not a new advisory or scoring system. OpenVA remains a public-source
-metadata registry. **OpenVA preserves source-reference and observation history.
-It does not archive or reproduce historical vendor documents.**
+This is not a new advisory, scoring, monitoring, or document-versioning system. OpenVA remains a public-source metadata resolver. **OpenVA preserves source-reference and observation history. It does not archive, reproduce, monitor, compare, or interpret historical vendor documents.**
 
 ## The flow
 
-```
+```text
 Vendor list or agent request
-  → resolve vendor identity
-  → match against the OpenVA catalogue
-  → for each required source type:
-       does a catalogue source exist?  is it current?
-         current               → return the catalogue source
-         missing/stale/broken/ → run bounded public discovery,
-         redirected/unavailable  return the discovered candidate,
-                                 and submit it to autonomous
-                                 verification and promotion
+  -> resolve vendor identity
+  -> check the OpenVA reference cache
+  -> for each required source type:
+       does a cached public source reference exist?
+         cached answer available       -> return the cached source reference
+         missing/stale/broken/         -> run bounded public discovery or check,
+         redirected/unavailable           return the discovered candidate when safe,
+                                         and submit reusable locator findings to
+                                         autonomous verification and promotion
 ```
 
 The orchestrator lives in [`tools/openva/vendor_resolution.py`](../tools/openva/vendor_resolution.py).
@@ -31,10 +25,10 @@ It composes existing machinery rather than duplicating it:
 | Concern | Reused component |
 | --- | --- |
 | Vendor identity matching | `openva_vendor_inventory_matcher.core` (the single matching authority) |
-| Source health + safety | `tools/openva/source_verification.py`, `tools/openva/url_safety.py` |
+| Source URL status + safety | `tools/openva/source_verification.py`, `tools/openva/url_safety.py` |
 | Candidate emission + eligibility | `tools/openva/candidate_record.py` (`build_candidate`, `evaluate_eligibility`) |
 | Durable lifecycle ingress | `maintenance/candidates/<candidate_id>.json` — the queue `autonomous-catalog-growth.yml` already consumes |
-| Promotion | The existing candidate → machine_provisional → quorum → PR → release-gate → automerge lifecycle |
+| Promotion | The existing candidate -> machine_provisional -> quorum -> PR -> release-gate -> automerge lifecycle |
 
 ## Result-state vocabulary
 
@@ -42,26 +36,25 @@ One small, consistent set is used everywhere (browser, API, agent, CSV export):
 
 | State | Meaning |
 | --- | --- |
-| `catalog_current` | Existing OpenVA source was checked and remains valid. |
-| `catalog_refreshed` | Existing source was outdated/moved/broken; a current replacement was found. |
-| `newly_discovered` | Vendor or source was absent from the catalogue and found through live discovery. |
-| `source_unavailable` | Existing source is unavailable and no replacement was found. |
-| `not_found` | No catalogue match or suitable public source was found. |
+| `catalog_current` | Existing OpenVA source reference was checked and remains usable. |
+| `catalog_refreshed` | Existing source reference was outdated/moved/broken; a current replacement was found. |
+| `newly_discovered` | Vendor or source was absent from the reference cache and found through live discovery. |
+| `source_unavailable` | Existing source reference is unavailable and no replacement was found. |
+| `not_found` | No cache match or suitable public source was found. |
 | `identity_ambiguous` | Multiple plausible vendor identities or domains exist. |
-| `verification_inconclusive` | OpenVA could not establish a reliable current result. |
+| `verification_inconclusive` | OpenVA could not establish a reliable source locator result. |
 | `candidate_processing` | A discovered/refreshed source has entered the autonomous lifecycle. |
-| `catalogued` | The candidate passed existing promotion controls and is now canonical. |
+| `catalogued` | The candidate passed existing promotion controls and is now an active catalog/reference-cache record. |
 
-These nine are kept on three independent axes, because conflating them misleads
-agents:
+These nine are kept on independent axes, because conflating them misleads agents:
 
-- **`status`** — the resolution/health outcome (`catalog_current …
-  verification_inconclusive`).
-- **`catalog_membership`** — `canonical` when the answer is backed by a canonical
-  catalogue record (true even when that record is stale or broken), else `none`.
-- **`catalog_status`** — the *durable* catalogue-lifecycle stage of the record
-  backing the answer: `catalogued` (canonical), `candidate_processing` (eligible
-  **and `workflow_visible`** — see the durability ladder below),
+- **`status`** — the resolution/URL-status outcome (`catalog_current` …
+  `verification_inconclusive`).
+- **`catalog_membership`** — `canonical` when the answer is backed by an active
+  catalogue/reference-cache record (true even when that record is stale or broken), else `none`.
+- **`catalog_status`** — the *durable* lifecycle stage of the record backing the
+  answer: `catalogued` (active), `candidate_processing` (eligible and
+  **`workflow_visible`** — see the durability ladder below),
   `candidate_deferred`, `candidate_rejected`, or `pending_ingress`, or `null`.
 - A deferred candidate's discovered URL is exposed only as an unverified
   `candidate_url`, never as the resolved `source_url`.
@@ -76,8 +69,8 @@ source.
 
 | Mode | Behaviour |
 | --- | --- |
-| `cached` | Return current catalogue metadata and the latest known observation state. No live fetch. `live_checked` is always `false`; `checked_at` is the last stored observation time. Use for fast bulk lookup. |
-| `verify` | Check source availability and canonical location during the request. `live_checked` is `true` and `checked_at` is the current observation time. Stale/redirected/broken/incomplete sources trigger live discovery. Use for onboarding/due diligence. |
+| `cached` | Return current reference-cache metadata and the latest known observation state. No live fetch. `live_checked` is always `false`; `checked_at` is the last stored observation time. Use for fast bulk lookup. |
+| `verify` | Check source availability and current location during the request. `live_checked` is `true` and `checked_at` is the current observation time. Stale/redirected/broken/incomplete sources trigger bounded public discovery. Use for onboarding/due diligence source preparation. |
 
 Cached and verified results are never silently treated as equivalent: the
 `live_checked` flag and `checked_at` timestamp always disclose which one a
@@ -123,29 +116,29 @@ and returns a result that validates against
 
 Each source distinguishes:
 
-- **catalogue-derived vs live-discovery** — `origin` (`catalog` / `live_discovery`);
+- **cache-derived vs live-discovery** — `origin` (`catalog` / `live_discovery`);
 - **cached vs checked-this-request** — `live_checked` + `checked_at`;
-- **pending vs canonical catalogue update** — `catalog_status`
+- **pending vs active cache update** — `catalog_status`
   (`candidate_processing` / `catalogued` / `null`).
 
 ## Human upload workflow
 
 There are two surfaces with deliberately different capabilities:
 
-- **Hosted browser Local Matcher** — a static, fully client-side page. It resolves
+- **Hosted browser Local Resolver** — a static, fully client-side page. It resolves
   an uploaded CSV (`vendor_name, business_entity_name, domain, jurisdiction,
-  registration_number, registered_address`) against the catalogue in **cached**
-  mode only, returning one unified result per vendor with a `result_state` column
-  in the CSV/JSON export. Being static, it **does not** perform live discovery,
-  fetch vendor URLs, or route candidates into the lifecycle; it reports cached
-  catalogue state and points to the resolver for live verification. It never
-  uploads the CSV.
+  registration_number, registered_address`) against the reference cache in
+  **cached** mode only, returning one unified result per vendor with a
+  `result_state` column in the CSV/JSON export. Being static, it **does not**
+  perform live discovery, fetch vendor URLs, or route candidates into the
+  lifecycle; it reports cached reference-cache state and points to the resolver
+  for live verification. It never uploads the CSV.
 - **Resolver `verify` mode** (`resolve_inventory(...)` via Python/CLI, run
   server-side or in CI) — performs the live checks, discovers replacements and
   missing sources, and **durably enqueues** discovered/refreshed sources into the
-  catalogue lifecycle. Here users genuinely do not need to file GitHub issues for
-  routine unmatched vendors, and never need to understand candidates, machine
-  quorum, or internal workflow terminology.
+  reference-cache lifecycle. Here users genuinely do not need to file GitHub
+  issues for routine unmatched vendors, and never need to understand candidates,
+  machine quorum, or internal workflow terminology.
 
 Connecting the hosted page to a running resolver service (so browser uploads also
 get `verify` mode) is tracked in `docs/roadmap.md`; today that live path is the
@@ -204,7 +197,7 @@ visibility. Until a candidate is `workflow_visible`, the caller sees
 
 ### Concurrency and merge
 
-The whole read → validate → merge → re-evaluate → write(-commit) transaction runs
+The whole read -> validate -> merge -> re-evaluate -> write(-commit) transaction runs
 under an exclusive lock (`fcntl` file lock for the shared queue;
 `GitHubIntakeIngress` relies on the remote intake's serialisation / compare-and-swap
 for cross-host safety). The persisted record is validated before merge (a corrupt
@@ -221,15 +214,15 @@ never the legacy unrestricted client. URLs also fail closed via
 
 ## Catalogue mutation boundary
 
-Live resolution **never** writes canonical catalogue files or `main`. It resolves
-identity, checks health, discovers candidate URLs, classifies provisionally,
-records observations, creates candidate records, and returns session results.
-Canonical mutation continues only through the established lane:
+Live resolution **never** writes active catalogue/reference-cache files or `main`.
+It resolves identity, checks URL status, discovers candidate URLs, classifies
+provisionally, records observations, creates candidate records, and returns
+session results. Active mutation continues only through the established lane:
 
-```
-candidate → eligibility → machine_provisional → observation
-          → independent machine quorum → pull request
-          → release gates → controlled automerge → active catalogue
+```text
+candidate -> eligibility -> machine_provisional -> observation
+          -> independent machine quorum -> pull request
+          -> release gates -> controlled automerge -> active catalogue/cache record
 ```
 
 ## Historical source-reference model
