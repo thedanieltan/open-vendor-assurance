@@ -1,12 +1,12 @@
 # Open Vendor Assurance
 
-Open Vendor Assurance (OpenVA) is a public-source-only, metadata-first registry of vendor-published assurance references.
+Open Vendor Assurance (OpenVA) is a resolver-first, public-source-only, metadata-first project for vendor-published assurance source references.
 
 **Use OpenVA in your browser:** https://thedanieltan.github.io/open-vendor-assurance/
 
-The hosted catalog viewer is the easiest path for non-dev users. It lets users browse the reviewed public catalog, use the browser-local vendor inventory matcher, and export selected public metadata without installing Python, Docker, or developer tooling.
+The browser UI helps users resolve vendor names into public source packs. It supports source lookup, browser-local CSV resolution, configurable source-pack fields, and export of selected public metadata without installing Python, Docker, or developer tooling.
 
-OpenVA records factual metadata about public vendor assurance materials such as data processing addenda, subprocessor lists, trust-center pages, privacy notices, security pages, certification references, public KYC/AML statements, AI/data terms, and related source references.
+OpenVA records factual locator metadata about public vendor assurance materials such as data processing addenda, subprocessor lists, trust-center pages, privacy notices, security pages, certification references, public KYC/AML statements, AI/data terms, and related source references.
 
 OpenVA is not a legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice product.
 
@@ -15,7 +15,7 @@ OpenVA is not a legal, compliance, procurement, audit, security, KYC, AML, sanct
 For non-dev users:
 
 ```text
-Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
+Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
 GitHub Releases
 docs/release-downloads.md
 openva-inventory-template.csv
@@ -53,7 +53,7 @@ indexes/
 schemas/openva/
 ```
 
-For agent-composed use (primary distribution):
+For agent-composed use:
 
 ```text
 docs/agent-workspace-composition.md   how an agent composes OpenVA with its own workspace connector
@@ -61,33 +61,22 @@ docs/agent-integrations.md            MCP (stdio + Streamable HTTP), HTTP, and f
 integrations/mcp/openva_mcp/          read-only MCP server (stdio + Streamable HTTP)
 ```
 
-OpenVA's primary distribution model is agent-composed: a user's existing agent reads the
-workspace (spreadsheet, database, tickets) through the connector it already controls, sends
-OpenVA only bounded vendor identities via the read-only HTTP/MCP tools, and writes results
-back itself. OpenVA never accesses the workspace and holds no workspace credential
-(see [ADR-0002](docs/architecture/decisions/ADR-0002-agent-composed-workspace-integration.md)
-and [ADR-0003](docs/architecture/decisions/ADR-0003-remote-mcp-product-surface.md)).
+OpenVA's preferred distribution model is agent-composed: a user's existing agent reads the workspace through the connector it already controls, sends OpenVA only bounded vendor identities through read-only HTTP/MCP tools, and writes source-pack results back itself. OpenVA never needs workspace credentials and does not require direct access to Google Drive, Microsoft 365, Notion, Jira, Slack, or another workspace.
 
-For spreadsheet users without a capable agent (Google Sheets — secondary/fallback):
+For spreadsheet users without a capable agent, the Google Sheets client is a secondary compatibility surface:
 
 ```text
 integrations/google-sheets/      Google Sheets client over the /v1/enrich API
 ```
 
-The Google Sheets integration is a **secondary compatibility surface**, not the primary
-distribution path: a bound Apps Script project that enriches vendor rows against a configured
-public-read OpenVA deployment. It consumes the existing `/v1/enrich` API, embeds no API key,
-and writes stable `openva_*` reference columns back into a sheet. No local Python, Docker,
-repository checkout or API secret is required; the current release requires manual
-installation into a bound Apps Script project, and a zero-install Workspace add-on is a
-future objective rather than a current capability. Results are public-source references
-cached to the service's loaded snapshot — not advice or live verification.
+The Google Sheets integration is a bound Apps Script client that enriches vendor rows against a configured public-read OpenVA endpoint. It consumes the existing `/v1/enrich` API, embeds no API key, and writes stable `openva_*` reference columns back into a sheet. The current release requires manual installation into a bound Apps Script project; a zero-install Workspace add-on is a future objective rather than a current capability. Results are public-source references from the service's loaded snapshot, not advice or live verification.
 
 For public relaunch readiness:
 
 ```text
 docs/public-launch-checklist.md
 docs/roadmap.md
+docs/resolver-first-closeout.md
 docs/triage-policy.md
 docs/first-good-issue-policy.md
 DISCLAIMER.md
@@ -101,10 +90,11 @@ OpenVA is:
 - public-source-only;
 - metadata-first;
 - factual and non-advisory;
+- resolver-first;
 - native-language-aware;
 - provenance-driven;
 - hash-friendly;
-- exportable through universal packs;
+- source-pack oriented;
 - usable independently of any one runtime or application.
 
 OpenVA does not:
@@ -136,51 +126,63 @@ python -m tools.openva.conformance fixtures/packs/minimal-valid
 python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation
 ```
 
+## Resolver-first closeout status
+
+The resolver-first Phases 1-9 are complete as implementation slices:
+
+```text
+#518 Phase 1 — Positioning correction
+#520 Phase 2 — Resolver-first public UI
+#521 Phase 3 — Source pack schema
+#522 Phase 4 — Hosted resolver staging smoke plan
+#523 Phase 5 — Source map and discovery engine
+#524 Phase 6 — Candidate memory as background cache
+#525 Phase 7 — Workspace write-back projection
+#526 Phase 8 — Configurable source pack builder
+#527 Phase 9 — Resolver-usefulness prioritisation
+```
+
+The shipped browser UI is static and browser-local. It uses loaded public metadata and does not upload private vendor inventories, run live discovery from the page, or operate a production hosted verify endpoint.
+
+Hosted resolver infrastructure remains gated by staging, production, smoke evidence, credentials, provider choice, domain, and launch evidence. Until those gates are complete, OpenVA should be described as a static/browser-local resolver UI plus repository-shipped HTTP/MCP/self-hosted components, not as an operated production hosted resolver.
+
+See `docs/resolver-first-closeout.md` for the consolidation record.
+
 ## Automation posture
 
-OpenVA operates an **autonomous** catalog: routine catalog growth and
-maintenance run through pull requests without human approval, gated by machine
-decisions, separation of duties, release gates, and controlled automerge. Humans
-govern the rules (code, schemas, workflows, authority, policy thresholds,
-permissions, the emergency hold), not routine records. When evidence is
-insufficient the system fails closed (`deferred` / `rejected` / `quarantined` /
-`rolled_back`) rather than queueing a human. See `AGENTS.md` and
-`docs/catalog-autonomy-policy.md`.
+OpenVA operates an autonomous reference-cache maintenance system: routine public-source record maintenance and background reusable-memory updates run through pull requests, machine decisions, separation of duties, release gates, and controlled automerge. Humans govern the rules: code, schemas, workflows, authority, policy thresholds, permissions, and emergency holds.
+
+When evidence is insufficient, the system fails closed (`deferred` / `rejected` / `quarantined` / `rolled_back`) rather than treating ambiguity as approval. See `AGENTS.md` and `docs/catalog-autonomy-policy.md`.
 
 The full workflow inventory lives in `.github/workflows/`, with classification and retirement status tracked in `docs/operations/`. Representative public-facing workflow groups are:
 
 ```text
 validate.yml                         validates PRs and pushes to main
-catalog-pr-guard.yml                 enforces Catalog PR boundaries
-catalog-growth-discovery.yml         proposes catalog candidates (reports and issues only)
+catalog-pr-guard.yml                 enforces catalog PR boundaries
+catalog-growth-discovery.yml         proposes candidates from bounded discovery signals
 candidate-promotion-pr.yml           controlled promotion PRs from reviewed evidence
 source-maintenance-report.yml        scheduled source health, observation ledger, and discovery report
 submitted-source-verification.yml    verifies submitted source claims (comment and label only)
-coverage-audit.yml                   catalog breadth/depth audit and coverage growth report
+coverage-audit.yml                   breadth/depth audit and coverage report
 bot-dashboard-issue.yml              bot dashboard render and issue sync (dry-run default)
 bot-chatops.yml                      live /openva hold and /openva unhold label commands
 release-candidate.yml                release artifact smoke workflow
 ```
 
-Scheduled maintenance detects drift, materialises routine catalog records, and
-produces artifacts. No automation changes `main` directly; every mutation flows
-through a pull request, the release gate, and a controlled automerge lane.
+Scheduled maintenance detects drift in public-source locator metadata, materialises routine records, and produces artifacts. No automation changes `main` directly; every mutation flows through a pull request, the release gate, and a controlled automerge lane.
 
 Quarantined legacy report workflows remain manual-only pending retirement evidence; see `docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md`.
 
 Live chat-ops is limited to `/openva hold` and `/openva unhold`, which add or remove only the `openva-hold` label on the current issue or pull request, are maintainer-gated, and are smoke-tested. All other `/openva` commands remain report-only, local-audit-only, or denied; see `docs/operations/BOT_CHATOPS_EXECUTION.md`.
 
-Agent-generated catalog work enters through pull requests and is decided
-autonomously by the machine quorum and release gates. The catalog lifecycle is:
+Agent-generated public-source work enters through pull requests and is decided autonomously by machine gates. The internal lifecycle is:
 
 ```text
 submitted claim -> candidate -> machine_provisional -> active
                              \-> deferred | rejected | quarantined | rolled_back
 ```
 
-Human review remains required for changes to code, schemas, workflows, policy
-thresholds, authority contracts, permissions, and governance — not for routine
-catalog records.
+Human review remains required for changes to code, schemas, workflows, policy thresholds, authority contracts, permissions, and governance — not for routine public-source locator records.
 
 ## Architecture stance
 
@@ -193,6 +195,7 @@ artifact_reference
 source_observation
 freshness_status
 change_event
+source_pack_result
 ```
 
 Consumers of OpenVA own their own operational use of that metadata:
@@ -208,7 +211,7 @@ control_mapping
 user-specific obligation impact
 ```
 
-OpenVA exports consumer-neutral dataset packs. Importing OpenVA data should not be treated as vendor approval, risk acceptance, legal advice, compliance advice, procurement advice, security advice, KYC/AML advice, or regulatory advice.
+OpenVA exports consumer-neutral source packs and dataset packs. Importing OpenVA data should not be treated as vendor approval, risk acceptance, legal advice, compliance advice, procurement advice, security advice, KYC/AML advice, or regulatory advice.
 
 ## Public-source-only rule
 
@@ -246,9 +249,7 @@ schema_version: 0.1.0
 
 Consumers should pin the release tag or repository commit, `profileId`, `schemaVersion`, `packId`, and pack/index digests where reproducibility matters.
 
-Pack-level `generated_at` and `generatedAt` values may be fixed to preserve
-deterministic rebuilds. They are not a catalog freshness signal; use source,
-change, observation, release tag, or repository commit metadata for provenance.
+Pack-level `generated_at` and `generatedAt` values may be fixed to preserve deterministic rebuilds. They are not a freshness signal; use source, change, observation, release tag, or repository commit metadata for provenance.
 
 See:
 
@@ -265,7 +266,7 @@ For AI agents, OpenVA publishes static, deterministic, digest-verifiable JSON ex
 https://thedanieltan.github.io/open-vendor-assurance/public/openva-agent-index.json
 ```
 
-The agent index lists every export (vendor index, per-vendor source maps, flat source index, latest observations, latest change events) with its content digest, and every file carries a snapshot block (`commit_sha`, `generated_at`, `digest`) for verification. Exports record public source metadata, observed health, and change signals only — no risk scores, no legal conclusions, no gated content.
+The agent index lists every export with its content digest, and every file carries a snapshot block (`commit_sha`, `generated_at`, `digest`) for verification. Exports record public source metadata, observed health, and change signals only — no risk scores, no legal conclusions, no gated content.
 
 See `docs/agent-export-contract.md` for shapes, field semantics, and the digest verification recipe.
 
@@ -273,41 +274,27 @@ The hosted site also publishes a static discovery surface over these exports: a 
 
 ## Unified vendor resolution
 
-OpenVA resolves vendor assurance sources **catalogue-first, with live refresh on
-use**, through one pipeline shared by browser users, API consumers, agents, and
-MCP integrations (stdio and Streamable HTTP). A request resolves the vendor identity, matches the
-catalogue, and for each required source type checks whether a catalogue source
-exists and is current. Current sources are returned as-is; missing, stale,
-broken, redirected, or unavailable sources trigger bounded public discovery, and
-any discovered or refreshed source is routed into the *existing* autonomous
-catalogue-growth lifecycle (candidate → eligibility → machine_provisional →
-quorum → PR → release gates → automerge). Live resolution never writes canonical
-catalogue files.
+OpenVA resolves vendor assurance sources through one shared contract for browser users, API consumers, agents, and MCP integrations. A request resolves vendor identity, maps requested source types, returns public source references where available, and separates matched, ambiguous, missing, gated, unavailable, and not-checked states.
 
-Results use one small vocabulary — `catalog_current`, `catalog_refreshed`,
-`newly_discovered`, `source_unavailable`, `not_found`, `identity_ambiguous`,
-`verification_inconclusive`, `candidate_processing`, `catalogued` — and two
-explicit freshness modes (`cached` for stored state, `verify` for a live check).
-Cached and verified results are never silently treated as equivalent, and
-catalogue membership, source health, and durable lifecycle stage are reported on
-separate axes so a deferred or rejected candidate is never shown as processing.
+Results preserve separate axes for:
 
-In `verify` mode the resolver enqueues discovered/refreshed candidates to
-`maintenance/candidates/` — the same queue the autonomous-growth workflow
-consumes — under a concurrency-safe, deterministic merge. A candidate is only
-reported as `candidate_processing` once it is reachable from the ref that workflow
-checks out (the remote default branch); local-only writes/commits stay
-`pending_ingress`. The hosted browser Local Matcher is cached-only (static page):
-it reports catalogue state and a `result_state` per vendor but does not perform
-live discovery or lifecycle routing.
+```text
+identity match status
+requested source type
+result state
+mode: cached_only | checked_on_demand | discovered
+public access status
+confidence
+snapshot identity
+candidate memory state
+not_advice
+```
 
-OpenVA preserves source-reference and observation history. It does not archive or
-reproduce historical vendor documents.
+The browser resolver is cached/static and browser-local. It reports loaded public metadata and source-pack states, but it does not perform live discovery or lifecycle routing from the page.
 
-The contract lives in `tools/openva/vendor_resolution.py`
-(`resolve_vendor_sources(...)`), validates against
-`schemas/openva/vendor-resolution-result.schema.json`, and is documented in
-`docs/vendor-resolution.md`.
+The hosted/self-hosted resolver contracts live in `tools/openva/vendor_resolution.py`, `schemas/openva/vendor-resolution-result.schema.json`, and `schemas/openva/source-pack-result.schema.json`, with details in `docs/vendor-resolution.md` and `docs/resolver-api.md`.
+
+OpenVA preserves source-reference and observation history. It does not archive, reproduce, continuously monitor, compare, or interpret historical vendor documents.
 
 ## Release Downloads
 
@@ -321,21 +308,21 @@ openva-inventory-template.csv
 
 `openva-csv.zip` contains curated CSV exports for vendors, sources, artifacts, observations, candidate sources, unavailable sources, and source coverage. The sample and template inventory files show simple `vendor_name`, `business_entity_name`, optional `domain`, optional `jurisdiction`, optional `registration_number`, and optional `registered_address` columns for matching a vendor list against OpenVA.
 
-These files are generated from the tagged repository state. OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository now ships an optional, API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default, and this release does not include the durable backend, worker, production infrastructure, or public verify endpoint required for an operated hosted service. Users keep their vendor inventories local unless they choose to run their own tooling.
+These files are generated from the tagged repository state. OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository ships optional API-key-gated verify transport for self-hosted use and future hosted deployment. That transport is disabled by default unless configured by the operator, and the public project does not claim a production hosted verify endpoint until staging, production, smoke evidence, and launch evidence are complete.
 
 See `docs/release-downloads.md` for a plain-language walkthrough of the release assets.
 
-## Hosted catalog viewer
+## Browser resolver UI
 
-OpenVA also provides a GitHub Pages catalog viewer for non-dev users.
+OpenVA provides a GitHub Pages resolver UI for non-dev users.
 
-Hosted catalog viewer: https://thedanieltan.github.io/open-vendor-assurance/
+Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
 
-The hosted site is a static, read-only viewer over public OpenVA metadata. It lets users browse the reviewed catalog snapshot, view the live observation feed shell, use the browser-local matcher, and export selected public metadata.
+The hosted page is static and read-only over public OpenVA metadata. It lets users resolve vendor sources from loaded public metadata, configure source-pack fields, use browser-local CSV matching, look up public source records, and export selected public metadata.
 
-The site does not provide accounts, workspaces, server-side matching, hosted private inventory upload, vendor scoring, vendor approval, or compliance conclusions. Private vendor inventories should remain browser-local, local, or self-hosted inside the user's own environment.
+The site does not provide accounts, workspaces, server-side matching, hosted private inventory upload, live discovery from the page, vendor scoring, vendor approval, or compliance conclusions. Private vendor inventories should remain browser-local, local, or self-hosted inside the user's own environment.
 
-The hosted site is generated as a compiled catalog distribution:
+The hosted page is generated as a compiled static distribution:
 
 ```text
 data/meta.json
@@ -346,7 +333,7 @@ data/vendors/{vendor_id}.json
 data/observation-feed.json
 ```
 
-The reviewed catalog is a release snapshot, not a live monitoring feed. The live observation feed shell is non-canonical; durable observation and change state lives in the observation ledger (see `docs/observation-ledger.md`) and in the agent exports under `/public/`.
+The static site is a release snapshot over loaded public metadata, not a live monitoring feed. Durable observation and change state lives in the observation ledger and in the agent exports under `/public/`.
 
 For details, see `docs/release-downloads.md` and `site/README.md`.
 
@@ -381,4 +368,4 @@ python -m openva_jsonl_export --pack . --out ./openva-jsonl
 python -m openva_vendor_inventory_matcher --pack . --input customer_vendors.csv --out matched_vendors.csv
 ```
 
-The optional match service in `services/openva_match_service/` wraps the pack reader and inventory matcher as a self-hosted HTTP service. OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository now ships an optional, API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default, and this release does not include the durable backend, worker, production infrastructure, or public verify endpoint required for an operated hosted service. Until those later deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment. It also exposes a read-only, cached-pack enrichment API under `/v1` for zero-install spreadsheet and document clients — see [`docs/resolver-api.md`](docs/resolver-api.md).
+The optional match service in `services/openva_match_service/` wraps the pack reader and inventory matcher as a self-hosted HTTP service. OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository ships optional API-key-gated verify transport for self-hosted use and future hosted deployment. Until hosted deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment. The service also exposes a read-only, cached-pack enrichment API under `/v1` for zero-install spreadsheet and document clients — see [`docs/resolver-api.md`](docs/resolver-api.md).
