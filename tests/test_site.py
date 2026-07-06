@@ -657,6 +657,7 @@ def test_pages_workflow_deploys_site_and_feed_workflow_uploads_feed_artifact_onl
 
 
 def test_site_docs_cover_compiled_distribution_and_public_boundaries():
+    readme_text = (SITE / "README.md").read_text(encoding="utf-8")
     text = "\n".join(
         path.read_text(encoding="utf-8")
         for path in [
@@ -667,11 +668,32 @@ def test_site_docs_cover_compiled_distribution_and_public_boundaries():
     )
 
     for phrase in [
-        "compiled catalog distribution",
+        "static OpenVA browser resolver UI",
+        "Browser resolver UI",
+        "Configurable source-pack builder",
+        "Browser-local resolver",
+        "Source pack preview",
+        "Export Source Pack",
+        "compiled static distribution",
         "vendor-search.min.json",
         "data/vendors/{vendor_id}.json",
+        "browser memory only",
+        "not written to `localStorage`, `sessionStorage`, a server, or a database",
+        "no backend, database, account",
+        "no upload endpoint",
+        "live verification job",
+        "live discovery job",
+        "server-side workspace persistence",
+        "static/public metadata",
+        "no live verification",
+        "no live discovery",
+    ]:
+        assert phrase in text
+
+    for phrase in [
         "Hosted site uses compiled/sharded catalog outputs",
         "Vendor detail records are generated",
         "Browser-local matcher still processes private inventories in memory only",
+        "compiled catalog distribution",
     ]:
-        assert phrase in text
+        assert phrase not in readme_text

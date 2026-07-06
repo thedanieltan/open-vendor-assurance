@@ -25,7 +25,9 @@ python site/build.py
 
 The page is static and GitHub Pages-ready. It has no backend, database, account
 system, upload endpoint, private inventory processing, live verification job,
-live discovery job, or server-side workspace persistence.
+live discovery job, or server-side workspace persistence. Boundary shorthand:
+no upload endpoint, no live verification, no live discovery, no server-side
+workspace persistence.
 
 ## Discovery surface
 
@@ -89,15 +91,6 @@ openva-matched-inventory.json
 not_advice
 ```
 
-<!-- Legacy site-doc test tokens only. Preferred public copy is resolver-first,
-source-pack-oriented, browser-local, and static/public-metadata based. Do not
-expand these strings into visible product sections:
-compiled catalog distribution
-Hosted site uses compiled/sharded catalog outputs
-Vendor detail records are generated
-Browser-local matcher still processes private inventories in memory only
--->
-
 ## Browser-local resolver
 
 The browser-local resolver lets users choose a CSV from their own computer and
@@ -114,7 +107,7 @@ The downloaded result preserves user-provided columns and appends OpenVA public
 metadata fields such as matched vendor ID, match method, confidence, source
 types, source URLs, result state, mode, and the non-advisory boundary.
 
-The browser-local resolver is cached/static: it reports loaded public metadata
+The browser-local resolver is cached/static: it reports loaded static/public metadata
 and never claims live verification, live discovery, or server-side lifecycle
 routing. Hosted/self-hosted live resolution is described by the resolver
 contract — see `docs/vendor-resolution.md` and `docs/resolver-api.md`.
