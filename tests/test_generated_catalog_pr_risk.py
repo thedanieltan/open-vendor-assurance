@@ -6,6 +6,7 @@ from tools.openva.generated_catalog_pr_risk import (
     GeneratedCatalogAutoMergeInput,
     GeneratedCatalogPrRiskClass,
     LATEST_OBSERVATIONS_PATH,
+    build_generated_catalog_automerge_input_from_files,
     classify_generated_catalog_pr_risk,
     evaluate_generated_catalog_automerge_eligibility,
     is_generated_catalog_pr_low_risk_path,
@@ -161,6 +162,69 @@ def test_generated_catalog_automerge_accepts_low_risk_green_generated_pr() -> No
     assert result.risk_class == GeneratedCatalogPrRiskClass.LOW_RISK
     assert result.reasons == ()
     assert result.work_package == GENERATED_CATALOG_WORK_PACKAGE
+
+
+def test_generated_catalog_automerge_builds_safe_input_from_files(tmp_path) -> None:
+    paths_file = tmp_path / "changed-files.txt"
+    pr_body_file = tmp_path / "pr-body.md"
+    metadata_file = tmp_path / "pr-metadata.json"
+    checks_file = tmp_path / "pr-checks.json"
+    source_preflight_file = tmp_path / "source-preflight-report.json"
+    release_gates_file = tmp_path / "release-gates.json"
+    review_threads_file = tmp_path / "review-threads.json"
+    generated_outputs_file = tmp_path / "generated-outputs-fresh.json"
+
+    paths_file.write_text("\n".join(ALLOWED_GENERATED_CATALOG_PR_PATHS), encoding="utf-8")
+    pr_body_file.write_text(
+        "\n".join(
+            [
+                f"Work-Package: {GENERATED_CATALOG_WORK_PACKAGE}",
+                "",
+                "Promotion actions selected for this PR: `1`",
+                "Max promotion actions per generated PR: `5`",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    metadata_file.write_text(
+        '{"title":"Catalog: apply reviewed candidate source promotion","headRefName":"agent-candidate-promotion-1","isDraft":false,"mergeable":"MERGEABLE"}',
+        encoding="utf-8",
+    )
+    checks_file.write_text(
+        """
+        [
+          {"workflow": "validate", "state": "SUCCESS", "bucket": "pass"},
+          {"workflow": "catalog-pr-guard", "state": "SUCCESS", "bucket": "pass"},
+          {"workflow": "agent-weighted-review", "state": "SUCCESS", "bucket": "pass"}
+        ]
+        """,
+        encoding="utf-8",
+    )
+    source_preflight_file.write_text('{"failed_count": 0}', encoding="utf-8")
+    release_gates_file.write_text(
+        '{"decision":"passed","gates":[{"gate_id":"full_baseline_readiness","status":"pass"}]}',
+        encoding="utf-8",
+    )
+    review_threads_file.write_text(
+        '{"data":{"repository":{"pullRequest":{"reviewThreads":{"nodes":[],"pageInfo":{"hasNextPage":false}}}}}}',
+        encoding="utf-8",
+    )
+    generated_outputs_file.write_text('{"generated_outputs_fresh": true}', encoding="utf-8")
+
+    data = build_generated_catalog_automerge_input_from_files(
+        paths_file=str(paths_file),
+        pr_body_file=str(pr_body_file),
+        metadata_file=str(metadata_file),
+        checks_file=str(checks_file),
+        source_preflight_report=str(source_preflight_file),
+        release_gates_report=str(release_gates_file),
+        review_threads_report=str(review_threads_file),
+        generated_outputs_fresh_file=str(generated_outputs_file),
+    )
+    result = evaluate_generated_catalog_automerge_eligibility(data)
+
+    assert result.eligible is True
+    assert result.decision == "MERGE"
 
 
 def test_generated_catalog_automerge_rejects_missing_work_package() -> None:

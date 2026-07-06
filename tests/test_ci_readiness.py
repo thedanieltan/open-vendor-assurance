@@ -205,7 +205,16 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         "agent-weighted-review.yml": {"triggers": {"pull_request"}, "permissions": {"contents": "read", "pull-requests": "read", "issues": "write"}},
         "bot-dashboard-issue.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "issues": "write"}},
         "bot-chatops.yml": {"triggers": {"issue_comment"}, "permissions": {"contents": "read", "issues": "write", "pull-requests": "read"}},
-        "agent-automerge.yml": {"triggers": {"pull_request"}, "permissions": {"contents": "write", "pull-requests": "write", "checks": "read", "statuses": "read"}},
+        "agent-automerge.yml": {
+            "triggers": {"pull_request", "schedule"},
+            "permissions": {
+                "actions": "read",
+                "contents": "write",
+                "pull-requests": "write",
+                "checks": "read",
+                "statuses": "read",
+            },
+        },
     }
     for path in WORKFLOW_DIR.glob("*.yml"):
         workflow = yaml.safe_load(path.read_text(encoding="utf-8"))

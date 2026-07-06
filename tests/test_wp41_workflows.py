@@ -6,6 +6,7 @@ DISCOVERY_LEDGER = Path(".github/workflows/discovery-ledger-append-pr.yml")
 MACHINE_MATERIALIZATION = Path(".github/workflows/machine-provisional-materialization.yml")
 CANDIDATE_PROMOTION = Path(".github/workflows/candidate-promotion-pr.yml")
 AGENT_AUTOMERGE = Path(".github/workflows/agent-automerge.yml")
+CATALOG_PR_GUARD = Path(".github/workflows/catalog-pr-guard.yml")
 
 
 def test_discovery_ledger_append_authenticates_source_run_and_artifact():
@@ -289,11 +290,15 @@ def test_agent_automerge_has_generated_catalog_lane_scoped_to_generated_prs():
 
     job = text[text.index("  generated-catalog:") : text.index("  machine-canonical:")]
 
+    assert "schedule:" in text
+    assert "workflow_run:" not in text
+    assert 'cron: "*/10 * * * *"' in text
     assert "startsWith(github.event.pull_request.head.ref, 'agent-candidate-promotion-')" in job
     assert (
         "github.event.pull_request.title == 'Catalog: apply reviewed candidate source promotion'"
         in job
     )
+    assert "github.event_name == 'pull_request'" in job
     assert "automerge:machine-canonical" not in job
     assert "automerge:strict-growth" not in job
 
@@ -303,35 +308,89 @@ def test_agent_automerge_generated_catalog_lane_uses_fail_closed_evaluator():
     job = text[text.index("  generated-catalog:") : text.index("  machine-canonical:")]
 
     collect = job.index("- name: Collect generated catalog PR metadata")
+    classify = job.index("- name: Classify generated catalog PR paths before applying patch")
+    apply = job.index("- name: Apply generated catalog PR patch as data")
     checks = job.index("- name: Wait for generated catalog required checks")
     preflight = job.index("- name: Run source preflight for changed sources")
     release_gates = job.index("- name: Run source-intelligence release gate")
     freshness = job.index("- name: Rebuild generated outputs and detect drift")
-    prepare = job.index("- name: Prepare generated catalog eligibility inputs")
     eligibility = job.index("- name: Check generated catalog automerge eligibility")
     upload = job.index("- name: Upload generated catalog automerge eligibility report")
     merge = job.index("- name: Enable GitHub native auto-merge")
 
-    assert collect < checks < preflight < release_gates < freshness < prepare < eligibility < upload < merge
+    assert collect < classify < apply < checks < preflight < release_gates < freshness < eligibility < upload < merge
+    assert "ref: main" in job
     assert "gh pr diff \"$PR_NUMBER\" --name-only > changed-files.txt" in job
+    assert "gh pr diff \"$PR_NUMBER\" --patch > generated-catalog.patch" in job
+    assert "python -m tools.openva.generated_catalog_pr_risk --paths-file changed-files.txt" in job
+    assert "git apply --check --whitespace=nowarn generated-catalog.patch" in job
     assert "gh pr view \"$PR_NUMBER\" --json body --jq .body > pr-body.md" in job
     assert '"gh",\n                      "pr",\n                      "checks"' in job
     assert "python -m tools.openva.source_preflight check-changed-sources" in job
     assert "python -m tools.openva.release_gates check --profile pr" in job
     assert "python -m tools.openva.validate build-indexes" in job
-    assert "git diff --quiet openva-pack.json indexes/ dist/" in job
+    assert "generated-outputs-before-build.patch" in job
+    assert "generated-outputs-after-build.patch" in job
+    assert "cmp -s generated-outputs-before-build.patch generated-outputs-after-build.patch" in job
     assert "python -m tools.openva.generated_catalog_pr_risk \\" in job
-    assert "--automerge-eligibility" in job
-    assert "--check \"validate=$VALIDATE_CHECK\"" in job
-    assert "--check \"catalog-pr-guard=$CATALOG_PR_GUARD_CHECK\"" in job
-    assert "--check \"agent-weighted-review=$AGENT_WEIGHTED_REVIEW_CHECK\"" in job
-    assert "--source-preflight-failures \"$SOURCE_PREFLIGHT_FAILURES\"" in job
-    assert "--release-gates-passed \"$RELEASE_GATES_PASSED\"" in job
-    assert "--latest-observations-full-baseline \"$LATEST_OBSERVATIONS_FULL_BASELINE\"" in job
-    assert "--generated-outputs-fresh \"$GENERATED_OUTPUTS_FRESH\"" in job
-    assert "--secret-scan-passed \"$SECRET_SCAN_PASSED\"" in job
+    assert "--automerge-eligibility-from-files" in job
+    assert "continue-on-error: true" in job
+    assert "--metadata-file pr-metadata.json" in job
+    assert "--checks-file pr-checks.json" in job
+    assert "--github-output-file \"$GITHUB_OUTPUT\"" in job
+    assert "$GITHUB_ENV" not in job
     assert "generated-catalog-automerge-eligibility.json" in job
     assert "gh pr merge \"$PR_NUMBER\" --auto --squash --delete-branch" in job
+    assert "steps.generated_catalog_eligibility.outputs.eligible == 'true'" in job
+
+
+def test_agent_automerge_rereviews_generated_catalog_on_schedule_after_checks_settle():
+    text = AGENT_AUTOMERGE.read_text(encoding="utf-8")
+    job = text[text.index("  generated-catalog-rereview:") : text.index("  machine-canonical:")]
+
+    resolve = job.index("- name: Resolve generated catalog PR awaiting re-evaluation")
+    checkout = job.index("- uses: actions/checkout@v5")
+    collect = job.index("- name: Collect generated catalog PR diff")
+    classify = job.index("- name: Classify generated catalog PR paths before applying patch")
+    apply = job.index("- name: Apply generated catalog PR patch as data")
+    checks = job.index("- name: Collect generated catalog required checks")
+    eligibility = job.index("- name: Check generated catalog automerge eligibility")
+    upload = job.index("- name: Upload generated catalog automerge eligibility report")
+    merge = job.index("- name: Enable GitHub native auto-merge")
+
+    assert "if: github.event_name == 'schedule'" in job
+    assert 'gh pr list \\' in job
+    assert "--limit 50" in job
+    assert "startswith(\"agent-candidate-promotion-\")" in job
+    assert '[[ "$HEAD_REF" != agent-candidate-promotion-* ]]' in job
+    assert 'Catalog: apply reviewed candidate source promotion' in job
+    assert "ref: main" in job
+    assert "head_sha" not in job
+    assert "headRefOid" not in job
+    assert "github.event.workflow_run.head_sha" not in job
+    assert "github.event.pull_request.head.sha" not in job
+    assert "gh pr diff \"$PR_NUMBER\" --name-only > changed-files.txt" in job
+    assert "gh pr diff \"$PR_NUMBER\" --patch > generated-catalog.patch" in job
+    assert "python -m tools.openva.generated_catalog_pr_risk --paths-file changed-files.txt" in job
+    assert "git apply --check --whitespace=nowarn generated-catalog.patch" in job
+    assert '"gh",\n                  "pr",\n                  "checks"' in job
+    assert "python -m tools.openva.generated_catalog_pr_risk \\" in job
+    assert "--automerge-eligibility-from-files" in job
+    assert "continue-on-error: true" in job
+    assert "$GITHUB_ENV" not in job
+    assert "--github-output-file \"$GITHUB_OUTPUT\"" in job
+    assert "steps.generated_catalog_rereview_eligibility.outputs.eligible == 'true'" in job
+    assert resolve < checkout < collect < classify < apply < checks < eligibility < upload < merge
+
+
+def test_agent_automerge_keeps_pending_required_checks_non_mergeable_until_rereview():
+    text = AGENT_AUTOMERGE.read_text(encoding="utf-8")
+    job = text[text.index("  generated-catalog:") : text.index("  generated-catalog-rereview:")]
+
+    assert '"pending" in buckets' in job
+    assert 'return "pending"' in job
+    assert "--checks-file pr-checks.json" in job
+    assert "steps.generated_catalog_eligibility.outputs.eligible == 'true'" in job
 
 
 def test_agent_automerge_generated_catalog_lane_uploads_eligibility_artifact():
@@ -345,3 +404,37 @@ def test_agent_automerge_generated_catalog_lane_uploads_eligibility_artifact():
     assert "source-preflight-report.json" in upload
     assert "release-gates.json" in upload
     assert "pr-checks.json" in upload
+
+
+def test_catalog_pr_guard_has_generated_catalog_fast_path():
+    text = CATALOG_PR_GUARD.read_text(encoding="utf-8")
+
+    classify = text.index("- name: Classify generated catalog fast path")
+    validate = text.index("- name: Validate current records")
+    install_match = text.index("- name: Install match service test dependencies")
+    tests = text.index("- name: Run tests")
+    fast_path_block = text[classify:validate]
+
+    assert classify < validate < install_match < tests
+    assert "is_generated_candidate_promotion_pr(branch, title)" in fast_path_block
+    assert "GENERATED_CATALOG_WORK_PACKAGE" in fast_path_block
+    assert "classify_generated_catalog_pr_risk(changed_paths)" in fast_path_block
+    assert "GeneratedCatalogPrRiskClass.LOW_RISK" in fast_path_block
+    assert "fast_path=true" in fast_path_block
+    assert "fast_path=false" in fast_path_block
+    assert "if: steps.generated_catalog_fast_path.outputs.fast_path != 'true'" in text[validate:]
+    assert 'pip install -e "services/openva_match_service[dev]"' in text[install_match:tests]
+
+
+def test_catalog_pr_guard_fast_path_only_applies_to_generated_candidate_promotion_prs():
+    text = CATALOG_PR_GUARD.read_text(encoding="utf-8")
+    fast_path_block = text[
+        text.index("- name: Classify generated catalog fast path") : text.index("- name: Validate current records")
+    ]
+
+    assert "headRefName" in fast_path_block
+    assert "title" in fast_path_block
+    assert "body" in fast_path_block
+    assert "Catalog PR is not a generated candidate-promotion PR; using full guard path." in fast_path_block
+    assert "Generated catalog PR must declare" in fast_path_block
+    assert "Generated catalog PR is not LOW_RISK" in fast_path_block
