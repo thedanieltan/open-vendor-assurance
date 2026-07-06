@@ -1,6 +1,7 @@
 version: 1
 workflow: .github/workflows/validate.yml
 required_status_contexts:
+  - validate / pr-change-classifier
   - validate / repository-integrity
   - validate / workflow-operating-model
   - validate / catalog-growth
@@ -12,9 +13,17 @@ required_status_contexts:
   - validate / google-sheets-integration
   - validate / pr-scope-guard
 jobs:
+  pr-change-classifier:
+    owner_loop: pr_safety
+    purpose: Classify PR changed paths into validation lanes so low-risk PRs keep fast checks while catalog, workflow, source-maintenance, release/site, MCP, and Sheets changes retain targeted coverage.
+    commands:
+      - git diff --name-only "$BASE_SHA" "$HEAD_SHA" > changed-paths.txt
+    protects:
+      - .github/workflows/validate.yml
+      - .github/validation-ownership.yaml
   repository-integrity:
     owner_loop: repository_integrity
-    purpose: Validate canonical records, deterministic generated outputs, and the source-intelligence release gates.
+    purpose: Validate canonical records, deterministic generated outputs, and the source-intelligence release gates for authority-sensitive changes; always preserve the repository hygiene check.
     commands:
       - python -m tools.openva.validate validate
       - python -m tools.openva.validate build-indexes
