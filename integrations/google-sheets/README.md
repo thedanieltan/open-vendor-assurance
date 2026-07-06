@@ -278,3 +278,9 @@ node --test integrations/google-sheets/test/*.test.mjs
 The repository also runs these via `tests/test_google_sheets_integration.py`, which adds
 static contract checks (V8 runtime, minimal scopes, no embedded key, only `/v1/catalog/meta`
 and `/v1/enrich` called).
+
+## CI routing smoke
+
+This README is the narrowest Google Sheets surface used for routing validation. A docs-only
+edit here should run the Google Sheets integration lane and skip unrelated catalog, MCP, and
+release-site lanes.
