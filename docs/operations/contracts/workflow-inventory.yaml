@@ -37,8 +37,8 @@ public_workflows:
   - name: agent-automerge.yml
     loop: pr_safety
     status: core
-    triggers: [pull_request]
-    permissions: {contents: write, pull-requests: write, checks: read, statuses: read}
+    triggers: [pull_request, schedule]
+    permissions: {actions: read, contents: write, pull-requests: write, checks: read, statuses: read}
     writes_repository_state: true
     creates_prs: false
     merges_prs: true

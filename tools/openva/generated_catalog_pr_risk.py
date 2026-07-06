@@ -9,9 +9,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from dataclasses import dataclass
 from enum import StrEnum
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from typing import Mapping
 
 from tools.openva.paths import normalize_repo_path
@@ -26,6 +27,14 @@ REQUIRED_GENERATED_CATALOG_CHECKS = (
     "agent-weighted-review",
 )
 DEFAULT_MAX_GENERATED_CATALOG_ACTIONS = 10
+GENERATED_CATALOG_FORBIDDEN_FILE_PATTERNS = (
+    "OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64",
+    "OPENVA_WEB_BOT_AUTH_PRIVATE_JWK",
+    "BEGIN PRIVATE KEY",
+    "Signature-Input:",
+    "Signature-Agent:",
+    "Signature:",
+)
 
 
 class GeneratedCatalogPrRiskClass(StrEnum):
@@ -320,11 +329,174 @@ def _parse_check(value: str) -> tuple[str, str]:
     return name, conclusion
 
 
+def _load_json_file(path: str, default: object) -> object:
+    file_path = Path(path)
+    if not file_path.exists():
+        return default
+    return json.loads(file_path.read_text(encoding="utf-8"))
+
+
+def _workflow_status(rows: list[Mapping[str, object]], workflow: str) -> str:
+    matches = [row for row in rows if row.get("workflow") == workflow]
+    if not matches:
+        return "missing"
+    states = {str(row.get("state") or "").upper() for row in matches}
+    buckets = {str(row.get("bucket") or "").lower() for row in matches}
+    if "fail" in buckets or states & {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED"}:
+        return "failure"
+    if "pending" in buckets or any(state not in {"SUCCESS", "SKIPPED"} for state in states):
+        return "pending"
+    if "SUCCESS" in states:
+        return "success"
+    return "skipped"
+
+
+def _check_conclusions_from_file(path: str) -> dict[str, str]:
+    rows = _load_json_file(path, [])
+    if not isinstance(rows, list):
+        return {}
+    return {
+        workflow: _workflow_status(rows, workflow)
+        for workflow in REQUIRED_GENERATED_CATALOG_CHECKS
+    }
+
+
+def _review_thread_count_from_file(path: str) -> int:
+    report = _load_json_file(path, {"review_threads_unavailable": True})
+    if not isinstance(report, dict) or report.get("review_threads_unavailable"):
+        return 999
+    review_threads = (
+        report.get("data", {})
+        .get("repository", {})
+        .get("pullRequest", {})
+        .get("reviewThreads", {})
+    )
+    if review_threads.get("pageInfo", {}).get("hasNextPage"):
+        return 999
+    nodes = review_threads.get("nodes", [])
+    return sum(1 for node in nodes if not node.get("isResolved"))
+
+
+def _release_gate_flags_from_file(path: str) -> tuple[bool, bool]:
+    report = _load_json_file(path, {"decision": "blocked", "gates": []})
+    if not isinstance(report, dict):
+        return False, False
+    release_gates_passed = report.get("decision") != "blocked"
+    full_baseline_gate = next(
+        (
+            gate
+            for gate in report.get("gates", [])
+            if gate.get("gate_id") == "full_baseline_readiness"
+        ),
+        {},
+    )
+    return release_gates_passed, full_baseline_gate.get("status") == "pass"
+
+
+def _body_int(pr_body: str, label: str) -> int | None:
+    match = re.search(rf"{re.escape(label)}:\s*`?(\d+)`?", pr_body)
+    return int(match.group(1)) if match else None
+
+
+def _source_preflight_failures_from_file(path: str) -> int:
+    report = _load_json_file(path, {"failed_count": 999})
+    if not isinstance(report, dict):
+        return 999
+    try:
+        return int(report.get("failed_count", 999))
+    except (TypeError, ValueError):
+        return 999
+
+
+def _generated_outputs_fresh_from_file(path: str) -> bool:
+    report = _load_json_file(path, {"generated_outputs_fresh": False})
+    return isinstance(report, dict) and report.get("generated_outputs_fresh") is True
+
+
+def _secret_scan_passed(changed_paths: tuple[str, ...], root: Path = Path(".")) -> bool:
+    for raw_path in changed_paths:
+        path = root / raw_path
+        if not path.is_file():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        if any(pattern in text for pattern in GENERATED_CATALOG_FORBIDDEN_FILE_PATTERNS):
+            return False
+    return True
+
+
+def build_generated_catalog_automerge_input_from_files(
+    *,
+    paths_file: str,
+    pr_body_file: str,
+    metadata_file: str,
+    checks_file: str,
+    source_preflight_report: str,
+    release_gates_report: str,
+    review_threads_report: str,
+    generated_outputs_fresh_file: str,
+) -> GeneratedCatalogAutoMergeInput:
+    """Build eligibility input from workflow artifacts without exporting PR data.
+
+    This is used by privileged automerge lanes. PR metadata, body text, check
+    rows, and changed files are treated as data, normalized in-process, and never
+    appended to ``GITHUB_ENV``.
+    """
+    changed_paths = tuple(read_paths_file(paths_file))
+    pr_body = Path(pr_body_file).read_text(encoding="utf-8-sig")
+    metadata = _load_json_file(metadata_file, {})
+    if not isinstance(metadata, dict):
+        metadata = {}
+    release_gates_passed, latest_observations_full_baseline = _release_gate_flags_from_file(
+        release_gates_report
+    )
+    return GeneratedCatalogAutoMergeInput(
+        changed_paths=changed_paths,
+        pr_body=pr_body,
+        head_branch=str(metadata.get("headRefName") or ""),
+        title=str(metadata.get("title") or ""),
+        is_draft=bool(metadata.get("isDraft")),
+        mergeable=metadata.get("mergeable") == "MERGEABLE",
+        check_conclusions=_check_conclusions_from_file(checks_file),
+        source_preflight_failures=_source_preflight_failures_from_file(
+            source_preflight_report
+        ),
+        release_gates_passed=release_gates_passed,
+        latest_observations_full_baseline=latest_observations_full_baseline,
+        generated_outputs_fresh=_generated_outputs_fresh_from_file(
+            generated_outputs_fresh_file
+        ),
+        unresolved_review_threads=_review_thread_count_from_file(review_threads_report),
+        selected_action_count=_body_int(pr_body, "Promotion actions selected for this PR"),
+        max_selected_action_count=(
+            _body_int(pr_body, "Max promotion actions per generated PR")
+            or DEFAULT_MAX_GENERATED_CATALOG_ACTIONS
+        ),
+        secret_scan_passed=_secret_scan_passed(changed_paths),
+    )
+
+
+def _write_github_output(path: str | None, result: GeneratedCatalogAutoMergeEligibilityResult) -> None:
+    if not path:
+        return
+    with open(path, "a", encoding="utf-8") as handle:
+        handle.write(f"eligible={str(result.eligible).lower()}\n")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Classify generated catalog PR diff risk.")
     parser.add_argument("--paths-file", required=True)
     parser.add_argument("--automerge-eligibility", action="store_true")
+    parser.add_argument("--automerge-eligibility-from-files", action="store_true")
     parser.add_argument("--pr-body-file")
+    parser.add_argument("--metadata-file")
+    parser.add_argument("--checks-file")
+    parser.add_argument("--source-preflight-report")
+    parser.add_argument("--release-gates-report")
+    parser.add_argument("--review-threads-report")
+    parser.add_argument("--generated-outputs-fresh-file")
     parser.add_argument("--head-branch", default="")
     parser.add_argument("--title", default="")
     parser.add_argument("--draft", type=_parse_bool, default=False)
@@ -339,9 +511,48 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-selected-action-count", type=int, default=DEFAULT_MAX_GENERATED_CATALOG_ACTIONS)
     parser.add_argument("--secret-scan-passed", type=_parse_bool, default=True)
     parser.add_argument("--out-json")
+    parser.add_argument("--github-output-file")
     args = parser.parse_args(argv)
 
     paths = read_paths_file(args.paths_file)
+    if args.automerge_eligibility_from_files:
+        required_files = {
+            "--pr-body-file": args.pr_body_file,
+            "--metadata-file": args.metadata_file,
+            "--checks-file": args.checks_file,
+            "--source-preflight-report": args.source_preflight_report,
+            "--release-gates-report": args.release_gates_report,
+            "--review-threads-report": args.review_threads_report,
+            "--generated-outputs-fresh-file": args.generated_outputs_fresh_file,
+        }
+        missing = [name for name, value in required_files.items() if not value]
+        if missing:
+            parser.error(
+                "--automerge-eligibility-from-files requires "
+                + ", ".join(missing)
+            )
+        result = evaluate_generated_catalog_automerge_eligibility(
+            build_generated_catalog_automerge_input_from_files(
+                paths_file=args.paths_file,
+                pr_body_file=args.pr_body_file,
+                metadata_file=args.metadata_file,
+                checks_file=args.checks_file,
+                source_preflight_report=args.source_preflight_report,
+                release_gates_report=args.release_gates_report,
+                review_threads_report=args.review_threads_report,
+                generated_outputs_fresh_file=args.generated_outputs_fresh_file,
+            )
+        )
+        payload = result.to_json_dict()
+        output = json.dumps(payload, indent=2, sort_keys=True)
+        print(output)
+        if args.out_json:
+            with open(args.out_json, "w", encoding="utf-8") as handle:
+                handle.write(output)
+                handle.write("\n")
+        _write_github_output(args.github_output_file, result)
+        return 0 if result.eligible else 1
+
     if args.automerge_eligibility:
         if not args.pr_body_file:
             parser.error("--pr-body-file is required with --automerge-eligibility")
