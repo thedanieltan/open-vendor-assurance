@@ -62,14 +62,17 @@
     <link rel="stylesheet" href="visual.css?v=20260523-ui6">
     <link rel="stylesheet" href="theme.css?v=20260523-ui6">
     <link rel="stylesheet" href="product-polish.css?v=20260523-ui6">
+    <link rel="stylesheet" href="lovable-mockup.css?v=20260706-ui7">
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header">
-      <div class="brand-lockup">
-        <p class="eyebrow">OpenVA</p>
-        <h1>Open Vendor Assurance</h1>
-      </div>
+      <a class="brand-lockup" href="#home" aria-label="OpenVA home">
+        <span>
+          <span class="eyebrow">OpenVA</span>
+          <h1>Open Vendor Assurance</h1>
+        </span>
+      </a>
       <nav aria-label="Primary">
         <a href="#home">Home</a>
         <a href="#catalog">Catalog</a>
@@ -81,20 +84,50 @@
     <main id="main-content">
       <section id="home-view" class="view home-room">
         <div class="section-heading hero-panel public-hero-room">
-          <div>
+          <div class="hero-copy">
             <p class="eyebrow">Public vendor assurance catalog</p>
-            <h2>Find public vendor assurance links in seconds.</h2>
-            <p>OpenVA helps DPOs, procurement teams, and compliance operators find public vendor references such as privacy notices, trust centers, DPA pages, security pages, and subprocessor lists — without uploading private vendor data.</p>
+            <h2>Vendor assurance without the spreadsheet hunt.</h2>
+            <p>OpenVA gives DPOs, procurement teams, security reviewers, and compliance operators a searchable public-source map of vendor-published assurance references — privacy notices, DPAs, trust centers, security pages, and subprocessor lists.</p>
             <div class="hero-actions">
-              <a class="button" href="#catalog">Search the catalog</a>
+              <a class="button" href="#catalog">Search the Reviewed Catalog</a>
               <a class="button secondary-button" href="#matcher">Match a local CSV</a>
             </div>
-            <p class="helper-copy">No account required. Public-source metadata only.</p>
+            <div class="hero-trust-row" aria-label="OpenVA boundaries">
+              <span class="trust-pill">No account required</span>
+              <span class="trust-pill">No private uploads</span>
+              <span class="trust-pill">Public-source metadata only</span>
+            </div>
+            <p class="helper-copy">Built for early due diligence triage. Keep confidential contracts, SOC reports, credentials, and internal vendor inventories out of the public page.</p>
           </div>
-          <div class="hero-card" aria-label="Recommended first step">
-            <span class="status-dot"></span>
-            <strong>Recommended first step</strong>
-            <p>Search by vendor name, legal entity, or domain. Open a record to review public references before starting your internal due diligence workflow.</p>
+
+          <div class="hero-card mockup-console" aria-label="OpenVA catalog workflow preview">
+            <div class="mockup-topbar">
+              <span class="mockup-window-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              <strong>OpenVA evidence console</strong>
+            </div>
+            <div class="mockup-search-row">
+              <span class="mockup-input">Search “stripe.com”</span>
+              <span class="mockup-badge">Matched</span>
+            </div>
+            <div class="mockup-record">
+              <div class="mockup-record-header">
+                <div>
+                  <h3>Stripe, Inc.</h3>
+                  <p>Reviewed public metadata · non-advisory boundary</p>
+                </div>
+                <span class="mockup-score">5 refs</span>
+              </div>
+              <div class="mockup-source-grid">
+                <div class="mockup-source-row"><span class="dot"></span><strong>Privacy notice</strong><small>Reachable at last check</small></div>
+                <div class="mockup-source-row"><span class="dot"></span><strong>Trust center</strong><small>Reviewed catalog record</small></div>
+                <div class="mockup-source-row"><span class="dot"></span><strong>Subprocessor list</strong><small>Public source reference</small></div>
+              </div>
+            </div>
+            <div class="mockup-timeline" aria-label="OpenVA user flow">
+              <span>Search</span>
+              <span>Review links</span>
+              <span>Export metadata</span>
+            </div>
           </div>
         </div>
 
@@ -109,14 +142,14 @@
             <h3>Public references used in vendor due diligence</h3>
             <p>OpenVA is a starting point for evidence gathering, not a substitute for legal, procurement, security, or risk review.</p>
           </div>
-          <div class="surface-grid compact-surface-grid">
+          <div class="surface-grid compact-surface-grid persona-grid">
             <article>
-              <span class="card-kicker">Privacy</span>
+              <span class="card-kicker">Privacy and DPO teams</span>
               <h3>Privacy notices and DPA pages</h3>
               <p>Find public privacy and data processing references before requesting confidential evidence from a vendor.</p>
             </article>
             <article>
-              <span class="card-kicker">Security</span>
+              <span class="card-kicker">Security review</span>
               <h3>Trust centers and security pages</h3>
               <p>Open reviewed public security references that vendors already publish for customers and prospects.</p>
             </article>
@@ -130,15 +163,15 @@
 
         <section class="section-card start-guide primary-path-room">
           <div class="section-heading-lite">
-            <p class="eyebrow">Primary path</p>
-            <h3>Search, open, export</h3>
-            <p>Use this order unless you already know you need a CSV match or export.</p>
+            <p class="eyebrow">Primary workflow</p>
+            <h3>Search, review, export</h3>
+            <p>Use this flow when you need a clean public-source starting point before your internal vendor risk process begins.</p>
           </div>
           <div class="start-steps">
             <article>
               <span class="step-number">1</span>
               <h3>Search a vendor</h3>
-              <p>Find a company by name, legal name, or domain.</p>
+              <p>Find a company by name, legal name, vendor ID, or official domain.</p>
               <a class="button" href="#catalog">Search vendors</a>
             </article>
             <article>
@@ -168,8 +201,8 @@
         <section class="section-card optional-tools utility-room">
           <div class="section-heading-lite">
             <p class="eyebrow">Utility tools</p>
-            <h3>Use these after you understand the catalog</h3>
-            <p>The catalog is the default starting point. These tools support bulk matching and downloads.</p>
+            <h3>Bulk matching and downloads stay browser-local</h3>
+            <p>The catalog is the default starting point. These tools support CSV matching and export without sending private inventory data to OpenVA.</p>
           </div>
           <div class="surface-grid compact-surface-grid">
             <article>
@@ -190,9 +223,11 @@
 
       <section id="catalog-view" class="view hidden catalog-workspace-room">
         <div class="section-heading catalog-heading-room">
-          <p class="eyebrow">Recommended starting point</p>
-          <h2>Vendor Catalog</h2>
-          <p>Search for a vendor, open the record, and review the public assurance links OpenVA has indexed.</p>
+          <div>
+            <p class="eyebrow">Recommended starting point</p>
+            <h2>Reviewed Catalog</h2>
+            <p>Search for a vendor, open the record, and review the public assurance links OpenVA has indexed.</p>
+          </div>
         </div>
         <div class="snapshot-box" data-snapshot-disclosure></div>
         <div id="catalog-summary" class="summary-strip" aria-live="polite"></div>
@@ -228,7 +263,7 @@
       <section id="feed-view" class="view hidden maintainer-room">
         <div class="section-heading">
           <p class="eyebrow">Developer view</p>
-          <h2>Observation Feed</h2>
+          <h2>Live Observation Feed</h2>
           <p>This feed contains machine-generated public-source observations. It is separate from the human-reviewed OpenVA catalog.</p>
         </div>
         <div class="feed-warning">
