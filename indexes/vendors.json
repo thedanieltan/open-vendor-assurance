@@ -1,5 +1,5 @@
 {
-  "count": 164,
+  "count": 167,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -1836,6 +1836,41 @@
       "vendor_id": "github"
     },
     {
+      "_openva_path": "data/vendors/gitlab/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "GitLab",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "GitLab Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public GitLab assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "gitlab.com",
+        "about.gitlab.com",
+        "handbook.gitlab.com",
+        "trust.gitlab.com"
+      ],
+      "public_entrypoints": [
+        "https://trust.gitlab.com/",
+        "https://handbook.gitlab.com/handbook/legal/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "developer_platform",
+        "security"
+      ],
+      "vendor_id": "gitlab"
+    },
+    {
       "_openva_path": "data/vendors/google-cloud/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Google Cloud",
@@ -2002,6 +2037,38 @@
         "observability"
       ],
       "vendor_id": "grafana-labs"
+    },
+    {
+      "_openva_path": "data/vendors/grammarly/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Grammarly",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Grammarly, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Grammarly assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "grammarly.com"
+      ],
+      "public_entrypoints": [
+        "https://www.grammarly.com/trust",
+        "https://www.grammarly.com/security"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "ai_platform",
+        "productivity_software"
+      ],
+      "vendor_id": "grammarly"
     },
     {
       "_openva_path": "data/vendors/graphcore/vendor.yaml",
@@ -4357,6 +4424,39 @@
         "productivity_software"
       ],
       "vendor_id": "slack"
+    },
+    {
+      "_openva_path": "data/vendors/smartsheet/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Smartsheet",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Smartsheet Inc.",
+      "notes": "Public-source-only catalog record. Metadata references general public Smartsheet assurance materials and does not cover bespoke customer agreements.",
+      "official_domains": [
+        "smartsheet.com"
+      ],
+      "public_entrypoints": [
+        "https://www.smartsheet.com/trust",
+        "https://www.smartsheet.com/legal/privacy"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "collaboration_software",
+        "project_management",
+        "productivity_software"
+      ],
+      "vendor_id": "smartsheet"
     },
     {
       "_openva_path": "data/vendors/snowflake/vendor.yaml",

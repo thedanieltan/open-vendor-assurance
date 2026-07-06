@@ -1,0 +1,275 @@
+schema_version: 0.1.0
+batch_id: productivity-devsecops-batch-1
+operation: create
+collected_at: '2026-07-06T00:00:00Z'
+observer: agent
+vendors:
+- vendor_id: gitlab
+  display_name: GitLab
+  legal_name: GitLab Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - gitlab.com
+  - about.gitlab.com
+  - handbook.gitlab.com
+  - trust.gitlab.com
+  public_entrypoints:
+  - https://trust.gitlab.com/
+  - https://handbook.gitlab.com/handbook/legal/
+  vendor_categories:
+  - developer_platform
+  - security
+  notes: Public-source-only catalog record. Metadata references general public GitLab
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: gitlab-dpa
+    source_type: dpa
+    title_native: GitLab Data Processing Agreement and Standard Contractual Clauses
+    title_en: GitLab Data Processing Agreement and Standard Contractual Clauses
+    source_url: https://handbook.gitlab.com/handbook/legal/data-processing-agreement/
+    source_language: en
+    summary_native: Public GitLab data processing agreement metadata reference.
+    summary_en: Public GitLab data processing agreement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: gitlab-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - GitLab services
+  - source_id: gitlab-subprocessors
+    source_type: subprocessors_list
+    title_native: GitLab Subprocessors
+    title_en: GitLab Subprocessors
+    source_url: https://about.gitlab.com/privacy/subprocessors/
+    source_language: en
+    summary_native: Public GitLab subprocessors metadata reference.
+    summary_en: Public GitLab subprocessors metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: gitlab-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - GitLab services
+  - source_id: gitlab-privacy
+    source_type: privacy_notice
+    title_native: GitLab Privacy Statement
+    title_en: GitLab Privacy Statement
+    source_url: https://handbook.gitlab.com/handbook/legal/privacy/
+    source_language: en
+    summary_native: Public GitLab privacy statement metadata reference.
+    summary_en: Public GitLab privacy statement metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: gitlab-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - GitLab services
+  - source_id: gitlab-trust
+    source_type: trust_center
+    title_native: GitLab Trust Center
+    title_en: GitLab Trust Center
+    source_url: https://trust.gitlab.com/
+    source_language: en
+    summary_native: Public GitLab trust center landing page metadata reference.
+    summary_en: Public GitLab trust center landing page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: gitlab-trust
+      artifact_type: trust_center
+      region_scope:
+      - global
+      product_scope:
+      - GitLab services
+  - source_id: gitlab-ai-transparency
+    source_type: ai_terms
+    title_native: GitLab AI Transparency Center
+    title_en: GitLab AI Transparency Center
+    source_url: https://about.gitlab.com/ai-transparency-center/
+    source_language: en
+    summary_native: Public GitLab AI transparency center metadata reference.
+    summary_en: Public GitLab AI transparency center metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: gitlab-ai-transparency
+      artifact_type: ai_terms
+      region_scope:
+      - global
+      product_scope:
+      - GitLab services
+- vendor_id: grammarly
+  display_name: Grammarly
+  legal_name: Grammarly, Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - grammarly.com
+  public_entrypoints:
+  - https://www.grammarly.com/trust
+  - https://www.grammarly.com/security
+  vendor_categories:
+  - ai_platform
+  - productivity_software
+  notes: Public-source-only catalog record. Metadata references general public Grammarly
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: grammarly-trust
+    source_type: trust_center
+    title_native: The Grammarly User Trust Center
+    title_en: The Grammarly User Trust Center
+    source_url: https://www.grammarly.com/trust
+    source_language: en
+    summary_native: Public Grammarly trust center landing page metadata reference.
+    summary_en: Public Grammarly trust center landing page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: grammarly-trust
+      artifact_type: trust_center
+      region_scope:
+      - global
+      product_scope:
+      - Grammarly services
+  - source_id: grammarly-security
+    source_type: security_page
+    title_native: Security at Grammarly
+    title_en: Security at Grammarly
+    source_url: https://www.grammarly.com/security
+    source_language: en
+    summary_native: Public Grammarly security page metadata reference.
+    summary_en: Public Grammarly security page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: grammarly-security
+      artifact_type: security_page
+      region_scope:
+      - global
+      product_scope:
+      - Grammarly services
+  - source_id: grammarly-privacy
+    source_type: privacy_notice
+    title_native: Grammarly Privacy Policy
+    title_en: Grammarly Privacy Policy
+    source_url: https://www.grammarly.com/privacy-policy
+    source_language: en
+    summary_native: Public Grammarly privacy policy metadata reference.
+    summary_en: Public Grammarly privacy policy metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: grammarly-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Grammarly services
+  - source_id: grammarly-compliance
+    source_type: compliance_page
+    title_native: Grammarly Security Compliances, Certifications, and Validations
+    title_en: Grammarly Security Compliances, Certifications, and Validations
+    source_url: https://www.grammarly.com/compliance
+    source_language: en
+    summary_native: Public Grammarly compliance page metadata reference.
+    summary_en: Public Grammarly compliance page metadata reference.
+    confidence: low
+    artifact:
+      artifact_id: grammarly-compliance
+      artifact_type: compliance_page
+      region_scope:
+      - global
+      product_scope:
+      - Grammarly services
+- vendor_id: smartsheet
+  display_name: Smartsheet
+  legal_name: Smartsheet Inc.
+  headquarters_country: US
+  regions_served:
+  - global
+  entity_surface: global_brand
+  source_authority_language: en
+  official_domains:
+  - smartsheet.com
+  public_entrypoints:
+  - https://www.smartsheet.com/trust
+  - https://www.smartsheet.com/legal/privacy
+  vendor_categories:
+  - collaboration_software
+  - project_management
+  - productivity_software
+  notes: Public-source-only catalog record. Metadata references general public Smartsheet
+    assurance materials and does not cover bespoke customer agreements.
+  sources:
+  - source_id: smartsheet-dpa
+    source_type: dpa
+    title_native: Smartsheet Data Processing Addendum
+    title_en: Smartsheet Data Processing Addendum
+    source_url: https://www.smartsheet.com/legal/DPA
+    source_language: en
+    summary_native: Public Smartsheet data processing addendum metadata reference.
+    summary_en: Public Smartsheet data processing addendum metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: smartsheet-dpa
+      artifact_type: dpa
+      region_scope:
+      - global
+      product_scope:
+      - Smartsheet services
+  - source_id: smartsheet-subprocessors
+    source_type: subprocessors_list
+    title_native: Smartsheet Subprocessors
+    title_en: Smartsheet Subprocessors
+    source_url: https://www.smartsheet.com/legal/subprocessors
+    source_language: en
+    summary_native: Public Smartsheet subprocessors metadata reference.
+    summary_en: Public Smartsheet subprocessors metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: smartsheet-subprocessors
+      artifact_type: subprocessors_list
+      region_scope:
+      - global
+      product_scope:
+      - Smartsheet services
+  - source_id: smartsheet-privacy
+    source_type: privacy_notice
+    title_native: Smartsheet Privacy Notice
+    title_en: Smartsheet Privacy Notice
+    source_url: https://www.smartsheet.com/legal/privacy
+    source_language: en
+    summary_native: Public Smartsheet privacy notice metadata reference.
+    summary_en: Public Smartsheet privacy notice metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: smartsheet-privacy
+      artifact_type: privacy_notice
+      region_scope:
+      - global
+      product_scope:
+      - Smartsheet services
+  - source_id: smartsheet-trust
+    source_type: trust_center
+    title_native: Smartsheet Trust Center
+    title_en: Smartsheet Trust Center
+    source_url: https://www.smartsheet.com/trust
+    source_language: en
+    summary_native: Public Smartsheet trust center landing page metadata reference.
+    summary_en: Public Smartsheet trust center landing page metadata reference.
+    confidence: medium
+    artifact:
+      artifact_id: smartsheet-trust
+      artifact_type: trust_center
+      region_scope:
+      - global
+      product_scope:
+      - Smartsheet services

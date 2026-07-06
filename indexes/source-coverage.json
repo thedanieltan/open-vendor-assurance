@@ -2,32 +2,34 @@
   "candidate_source_type_counts": {},
   "coverage_claim_role_counts": {},
   "covered_role_counts": {
-    "compliance_page": 95,
-    "dpa": 101,
+    "ai_terms": 1,
+    "compliance_page": 96,
+    "dpa": 103,
     "other_public_source": 2,
-    "privacy_notice": 158,
-    "security_page": 139,
-    "subprocessors_list": 106,
+    "privacy_notice": 161,
+    "security_page": 140,
+    "subprocessors_list": 108,
     "terms_of_service": 7,
-    "trust_center": 5
+    "trust_center": 8
   },
   "duplicate_source_url_count": 0,
   "generated_at": "1970-01-01T00:00:00Z",
   "schema_version": "0.1.0",
   "source_type_counts": {
-    "compliance_page": 95,
-    "dpa": 101,
+    "ai_terms": 1,
+    "compliance_page": 96,
+    "dpa": 103,
     "other_public_source": 2,
-    "privacy_notice": 158,
-    "security_page": 139,
-    "subprocessors_list": 106,
+    "privacy_notice": 161,
+    "security_page": 140,
+    "subprocessors_list": 108,
     "terms_of_service": 7,
-    "trust_center": 5
+    "trust_center": 8
   },
   "unavailable_source_type_counts": {
     "dpa": 16
   },
-  "unique_source_location_count": 613,
+  "unique_source_location_count": 626,
   "vendor_coverage": [
     {
       "candidate_source_types": [],
@@ -1680,6 +1682,40 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "ai_terms",
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "ai_terms",
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "ai_terms",
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 5,
+      "vendor_id": "gitlab"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -1821,6 +1857,38 @@
       "unavailable_source_types": [],
       "unique_source_locations": 2,
       "vendor_id": "grafana-labs"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "grammarly"
     },
     {
       "candidate_source_types": [],
@@ -3954,6 +4022,37 @@
       "unavailable_source_types": [],
       "unique_source_locations": 5,
       "vendor_id": "slack"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "smartsheet"
     },
     {
       "candidate_source_types": [],
