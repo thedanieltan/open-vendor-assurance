@@ -89,15 +89,6 @@ openva-matched-inventory.json
 not_advice
 ```
 
-<!-- Legacy site-doc test tokens only. Preferred public copy is resolver-first,
-source-pack-oriented, browser-local, and static/public-metadata based. Do not
-expand these strings into visible product sections:
-compiled catalog distribution
-Hosted site uses compiled/sharded catalog outputs
-Vendor detail records are generated
-Browser-local matcher still processes private inventories in memory only
--->
-
 ## Browser-local resolver
 
 The browser-local resolver lets users choose a CSV from their own computer and
