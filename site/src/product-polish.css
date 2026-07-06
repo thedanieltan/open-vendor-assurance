@@ -1,61 +1,6 @@
 /* Public product polish layer for the hosted OpenVA viewer. */
+@import url("public-site-refresh.css?v=20260706-ui7");
 
-:root {
-  --product-bg: #f6f8fb;
-  --product-surface: #ffffff;
-  --product-ink: #0f172a;
-  --product-muted: #64748b;
-  --product-border: #dbe3ee;
-  --product-primary: #2563eb;
-  --product-navy: #071226;
-  --product-shadow: 0 16px 44px rgba(15, 23, 42, 0.10);
+#export-view:not(.hidden) {
+  display: grid !important;
 }
-
-body {
-  color: var(--product-ink);
-  background: radial-gradient(circle at 10% 0%, rgba(37, 99, 235, 0.12), transparent 24rem), linear-gradient(180deg, #f6f8fb, #eef4ff 34rem, #f6f8fb) !important;
-}
-
-.site-header {
-  width: calc(100% - 1.5rem);
-  max-width: 1240px;
-  margin: 0.75rem auto 0;
-  border-radius: 24px;
-  background: linear-gradient(135deg, #071226, #0f1f3d) !important;
-  box-shadow: var(--product-shadow);
-}
-
-button, .button { border-radius: 999px !important; font-weight: 800 !important; }
-button:not(.secondary):not(.secondary-button):not(.theme-toggle), .button:not(.secondary-button) {
-  background: var(--product-primary) !important;
-  border-color: var(--product-primary) !important;
-  color: #ffffff !important;
-}
-
-.public-hero-room {
-  border-radius: 34px !important;
-  background: radial-gradient(circle at 90% 10%, rgba(56, 189, 248, 0.22), transparent 20rem), linear-gradient(135deg, #071226, #0f1f3d) !important;
-  color: #ffffff;
-  box-shadow: var(--product-shadow);
-}
-
-.public-hero-room h2 { color: #ffffff !important; font-size: clamp(2.4rem, 7vw, 5rem) !important; line-height: 0.92 !important; letter-spacing: -0.07em !important; }
-.public-hero-room p:not(.eyebrow) { color: rgba(226, 232, 240, 0.84) !important; }
-.hero-card { background: rgba(255, 255, 255, 0.94) !important; color: #0f172a; border-radius: 24px !important; box-shadow: var(--product-shadow) !important; }
-.trust-boundary { border-left-color: #f59e0b !important; background: #fffbeb !important; color: #78350f !important; }
-
-.section-card, .section-heading, .filters, .vendor-card, .detail-panel, .event-card, .snapshot-box, .summary-strip span, .stats-grid article, .surface-grid article {
-  border-color: var(--product-border) !important;
-  background: var(--product-surface) !important;
-  color: var(--product-ink) !important;
-  box-shadow: var(--product-shadow) !important;
-}
-
-.section-card, .section-heading, .catalog-workspace-room, .utility-workspace-room, .maintainer-room { border-radius: 24px !important; }
-.section-heading h2, .section-heading-lite h3, .surface-grid h3, .start-steps h3, .detail-panel h3 { color: var(--product-ink) !important; letter-spacing: -0.04em; }
-.section-heading p, .section-card p, .surface-grid article p, .start-steps article p, .helper-copy, .meta-line, .summary-strip small { color: var(--product-muted) !important; }
-.eyebrow, .card-kicker { color: var(--product-primary) !important; }
-.catalog-heading-room::after { content: "Reviewed Catalog"; display: inline-flex; border-radius: 999px; background: rgba(34, 197, 94, 0.12); color: #15803d; padding: 0.4rem 0.7rem; font-weight: 800; }
-#export-view:not(.hidden) { display: grid !important; }
-
-@media (max-width: 900px) { .site-header { position: static; } }
