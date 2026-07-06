@@ -59,27 +59,15 @@ jobs:
 
       - name: Apply generated catalog PR patch as data
         run: |
-          git apply --check --whitespace=nowarn generated-catalog.patch
-          git apply --whitespace=nowarn generated-catalog.patch
-          git diff --name-only > applied-changed-files.txt
-          python - <<'PY'
-          from pathlib import Path
-
-          expected = {
-              line.strip()
-              for line in Path("changed-files.txt").read_text(encoding="utf-8").splitlines()
-              if line.strip()
-          }
-          applied = {
-              line.strip()
-              for line in Path("applied-changed-files.txt").read_text(encoding="utf-8").splitlines()
-              if line.strip()
-          }
-          if expected != applied:
-              raise SystemExit(
-                  f"applied patch path mismatch: expected={sorted(expected)!r} applied={sorted(applied)!r}"
-              )
-          PY
+          git apply --check --index --whitespace=nowarn generated-catalog.patch
+          git apply --index --whitespace=nowarn generated-catalog.patch
+          python -m tools.openva.generated_catalog_pr_risk \
+            --paths-file changed-files.txt \
+            --verify-applied-paths \
+            --ignore-path changed-files.txt \
+            --ignore-path generated-catalog.patch \
+            --ignore-path pr-body.md \
+            --ignore-path pr-metadata.json
 
       - name: Collect unresolved review thread state
         env:
@@ -323,27 +311,15 @@ jobs:
       - name: Apply generated catalog PR patch as data
         if: steps.resolve_generated_catalog.outputs.generated_pr == 'true'
         run: |
-          git apply --check --whitespace=nowarn generated-catalog.patch
-          git apply --whitespace=nowarn generated-catalog.patch
-          git diff --name-only > applied-changed-files.txt
-          python - <<'PY'
-          from pathlib import Path
-
-          expected = {
-              line.strip()
-              for line in Path("changed-files.txt").read_text(encoding="utf-8").splitlines()
-              if line.strip()
-          }
-          applied = {
-              line.strip()
-              for line in Path("applied-changed-files.txt").read_text(encoding="utf-8").splitlines()
-              if line.strip()
-          }
-          if expected != applied:
-              raise SystemExit(
-                  f"applied patch path mismatch: expected={sorted(expected)!r} applied={sorted(applied)!r}"
-              )
-          PY
+          git apply --check --index --whitespace=nowarn generated-catalog.patch
+          git apply --index --whitespace=nowarn generated-catalog.patch
+          python -m tools.openva.generated_catalog_pr_risk \
+            --paths-file changed-files.txt \
+            --verify-applied-paths \
+            --ignore-path changed-files.txt \
+            --ignore-path generated-catalog.patch \
+            --ignore-path pr-body.md \
+            --ignore-path pr-metadata.json
 
       - name: Collect unresolved review thread state
         if: steps.resolve_generated_catalog.outputs.generated_pr == 'true'

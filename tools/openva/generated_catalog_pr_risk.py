@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path, PurePosixPath
@@ -201,6 +202,63 @@ def classify_generated_catalog_pr_risk(
 def read_paths_file(path: str) -> list[str]:
     with open(path, encoding="utf-8-sig") as handle:
         return [line.strip() for line in handle if line.strip()]
+
+
+def _git_paths(args: list[str], *, cwd: str | None = None) -> tuple[str, ...]:
+    completed = subprocess.run(
+        ["git", *args],
+        cwd=cwd,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    return tuple(line.strip() for line in completed.stdout.splitlines() if line.strip())
+
+
+def collect_applied_patch_paths(
+    *,
+    cwd: str | None = None,
+    ignored_paths: tuple[str, ...] = (),
+) -> tuple[str, ...]:
+    """Return repository paths changed after applying a generated PR patch.
+
+    The generated-catalog automerge workflow applies a PR patch as inert data to
+    a trusted ``main`` checkout. A plain ``git diff --name-only`` misses newly
+    added files when they are untracked, so this combines staged, unstaged, and
+    untracked path views and then removes explicit workflow scratch files.
+    """
+    ignored = {normalize_repo_path(path) for path in ignored_paths}
+    paths = {
+        *(_git_paths(["diff", "--name-only"], cwd=cwd)),
+        *(_git_paths(["diff", "--cached", "--name-only"], cwd=cwd)),
+        *(_git_paths(["ls-files", "--others", "--modified", "--exclude-standard"], cwd=cwd)),
+    }
+    normalized = {
+        normalize_repo_path(path)
+        for path in paths
+        if normalize_repo_path(path) and normalize_repo_path(path) not in ignored
+    }
+    return tuple(sorted(normalized))
+
+
+def verify_applied_patch_paths(
+    expected_paths: list[str] | tuple[str, ...],
+    *,
+    cwd: str | None = None,
+    ignored_paths: tuple[str, ...] = (),
+) -> tuple[str, ...]:
+    """Fail closed unless applied repository paths exactly match expectation."""
+    expected = tuple(sorted({normalize_repo_path(path) for path in expected_paths if normalize_repo_path(path)}))
+    applied = collect_applied_patch_paths(cwd=cwd, ignored_paths=ignored_paths)
+    if expected != applied:
+        missing = sorted(set(expected) - set(applied))
+        unexpected = sorted(set(applied) - set(expected))
+        raise ValueError(
+            "applied patch path mismatch: "
+            f"expected={list(expected)!r} applied={list(applied)!r} "
+            f"missing={missing!r} unexpected={unexpected!r}"
+        )
+    return applied
 
 
 def extract_work_package(pr_body: str) -> str | None:
@@ -490,6 +548,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--paths-file", required=True)
     parser.add_argument("--automerge-eligibility", action="store_true")
     parser.add_argument("--automerge-eligibility-from-files", action="store_true")
+    parser.add_argument("--verify-applied-paths", action="store_true")
+    parser.add_argument("--ignore-path", action="append", default=[])
     parser.add_argument("--pr-body-file")
     parser.add_argument("--metadata-file")
     parser.add_argument("--checks-file")
@@ -515,6 +575,20 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     paths = read_paths_file(args.paths_file)
+    if args.verify_applied_paths:
+        try:
+            applied_paths = verify_applied_patch_paths(
+                paths,
+                ignored_paths=tuple(args.ignore_path),
+            )
+        except ValueError as exc:
+            print(str(exc))
+            return 1
+        print("applied_paths_verified=true")
+        for path in applied_paths:
+            print(f"applied_path={path}")
+        return 0
+
     if args.automerge_eligibility_from_files:
         required_files = {
             "--pr-body-file": args.pr_body_file,

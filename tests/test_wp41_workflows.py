@@ -323,7 +323,10 @@ def test_agent_automerge_generated_catalog_lane_uses_fail_closed_evaluator():
     assert "gh pr diff \"$PR_NUMBER\" --name-only > changed-files.txt" in job
     assert "gh pr diff \"$PR_NUMBER\" --patch > generated-catalog.patch" in job
     assert "python -m tools.openva.generated_catalog_pr_risk --paths-file changed-files.txt" in job
-    assert "git apply --check --whitespace=nowarn generated-catalog.patch" in job
+    assert "git apply --check --index --whitespace=nowarn generated-catalog.patch" in job
+    assert "git apply --index --whitespace=nowarn generated-catalog.patch" in job
+    assert "--verify-applied-paths" in job
+    assert "applied-changed-files.txt" not in job
     assert "gh pr view \"$PR_NUMBER\" --json body --jq .body > pr-body.md" in job
     assert '"gh",\n                      "pr",\n                      "checks"' in job
     assert "python -m tools.openva.source_preflight check-changed-sources" in job
@@ -372,7 +375,10 @@ def test_agent_automerge_rereviews_generated_catalog_on_schedule_after_checks_se
     assert "gh pr diff \"$PR_NUMBER\" --name-only > changed-files.txt" in job
     assert "gh pr diff \"$PR_NUMBER\" --patch > generated-catalog.patch" in job
     assert "python -m tools.openva.generated_catalog_pr_risk --paths-file changed-files.txt" in job
-    assert "git apply --check --whitespace=nowarn generated-catalog.patch" in job
+    assert "git apply --check --index --whitespace=nowarn generated-catalog.patch" in job
+    assert "git apply --index --whitespace=nowarn generated-catalog.patch" in job
+    assert "--verify-applied-paths" in job
+    assert "applied-changed-files.txt" not in job
     assert '"gh",\n                  "pr",\n                  "checks"' in job
     assert "python -m tools.openva.generated_catalog_pr_risk \\" in job
     assert "--automerge-eligibility-from-files" in job

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import subprocess
+
 from tools.openva.generated_catalog_pr_risk import (
     GENERATED_CATALOG_TITLE,
     GENERATED_CATALOG_WORK_PACKAGE,
@@ -8,6 +10,7 @@ from tools.openva.generated_catalog_pr_risk import (
     LATEST_OBSERVATIONS_PATH,
     build_generated_catalog_automerge_input_from_files,
     classify_generated_catalog_pr_risk,
+    verify_applied_patch_paths,
     evaluate_generated_catalog_automerge_eligibility,
     is_generated_catalog_pr_low_risk_path,
     is_vendor_catalog_record_path,
@@ -31,6 +34,30 @@ ALLOWED_GENERATED_CATALOG_PR_PATHS = [
     LATEST_OBSERVATIONS_PATH,
     "openva-pack.json",
 ]
+
+
+def _git(repo, *args):
+    return subprocess.run(
+        ["git", *args],
+        cwd=repo,
+        check=True,
+        text=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
+def _init_repo(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init")
+    _git(repo, "config", "user.email", "openva@example.invalid")
+    _git(repo, "config", "user.name", "OpenVA Test")
+    (repo / "indexes").mkdir()
+    (repo / "indexes" / "sources.json").write_text('{"sources":[]}\n', encoding="utf-8")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-m", "initial")
+    return repo
 
 
 def _eligible_input(**overrides):
@@ -152,6 +179,67 @@ def test_paths_file_reader_accepts_utf8_bom(tmp_path) -> None:
     result = classify_generated_catalog_pr_risk(read_paths_file(str(paths_file)))
 
     assert result.risk_class == GeneratedCatalogPrRiskClass.LOW_RISK
+
+
+def test_applied_patch_paths_include_modified_tracked_files(tmp_path) -> None:
+    repo = _init_repo(tmp_path)
+    (repo / "indexes" / "sources.json").write_text('{"sources":["akur8"]}\n', encoding="utf-8")
+
+    applied = verify_applied_patch_paths(
+        ("indexes/sources.json",),
+        cwd=str(repo),
+    )
+
+    assert applied == ("indexes/sources.json",)
+
+
+def test_applied_patch_paths_include_untracked_added_files(tmp_path) -> None:
+    repo = _init_repo(tmp_path)
+    added = repo / "data" / "vendors" / "akur8" / "sources" / "akur8-compliance-page.yaml"
+    added.parent.mkdir(parents=True)
+    added.write_text("source_id: akur8-compliance-page\n", encoding="utf-8")
+
+    applied = verify_applied_patch_paths(
+        ("data/vendors/akur8/sources/akur8-compliance-page.yaml",),
+        cwd=str(repo),
+    )
+
+    assert applied == ("data/vendors/akur8/sources/akur8-compliance-page.yaml",)
+
+
+def test_applied_patch_paths_fail_closed_when_expected_added_file_missing(tmp_path) -> None:
+    repo = _init_repo(tmp_path)
+
+    try:
+        verify_applied_patch_paths(
+            ("data/vendors/akur8/sources/akur8-compliance-page.yaml",),
+            cwd=str(repo),
+        )
+    except ValueError as exc:
+        message = str(exc)
+    else:
+        raise AssertionError("expected missing added file to fail closed")
+
+    assert "missing=['data/vendors/akur8/sources/akur8-compliance-page.yaml']" in message
+
+
+def test_applied_patch_paths_fail_closed_on_unexpected_added_file(tmp_path) -> None:
+    repo = _init_repo(tmp_path)
+    added = repo / "data" / "vendors" / "akur8" / "sources" / "akur8-compliance-page.yaml"
+    added.parent.mkdir(parents=True)
+    added.write_text("source_id: akur8-compliance-page\n", encoding="utf-8")
+
+    try:
+        verify_applied_patch_paths(
+            ("indexes/sources.json",),
+            cwd=str(repo),
+        )
+    except ValueError as exc:
+        message = str(exc)
+    else:
+        raise AssertionError("expected unexpected added file to fail closed")
+
+    assert "unexpected=['data/vendors/akur8/sources/akur8-compliance-page.yaml']" in message
 
 
 def test_generated_catalog_automerge_accepts_low_risk_green_generated_pr() -> None:
