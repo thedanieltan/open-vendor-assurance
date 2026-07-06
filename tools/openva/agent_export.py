@@ -65,6 +65,45 @@ OBSERVATIONS_LATEST_FILE = "observations/latest.json"
 CHANGES_LATEST_FILE = "changes/latest.json"
 VENDOR_EXPORT_TEMPLATE = "vendors/{vendor_id}.json"
 
+WORKSPACE_WRITEBACK_SOURCE_COLUMNS = {
+    "dpa": "openva_dpa_url",
+    "privacy_notice": "openva_privacy_url",
+    "subprocessors_list": "openva_subprocessors_url",
+    "security_page": "openva_security_url",
+    "trust_center": "openva_trust_center_url",
+}
+
+WORKSPACE_WRITEBACK_COLUMNS = (
+    "openva_match_status",
+    "openva_vendor_id",
+    "openva_vendor_name",
+    "openva_dpa_url",
+    "openva_privacy_url",
+    "openva_subprocessors_url",
+    "openva_security_url",
+    "openva_trust_center_url",
+    "openva_result_mode",
+    "openva_notes",
+    "openva_not_advice",
+)
+
+WORKSPACE_WRITEBACK_FORBIDDEN_ADVISORY_KEYS = frozenset(
+    {
+        "approval",
+        "approved",
+        "recommendation",
+        "recommended",
+        "risk_score",
+        "risk_rating",
+        "compliance_decision",
+        "security_decision",
+        "procurement_decision",
+        "legal_opinion",
+        "vendor_approval",
+        "suitability",
+    }
+)
+
 
 def load_records(root: Path, glob: str) -> list[dict[str, Any]]:
     records = []
@@ -97,6 +136,64 @@ def real_hash(value: Any) -> str | None:
     if isinstance(value, str) and value.startswith("sha256:") and value != "sha256:TBD":
         return value
     return None
+
+
+def _assert_non_advisory_workspace_payload(payload: dict[str, Any], *, where: str) -> None:
+    forbidden = WORKSPACE_WRITEBACK_FORBIDDEN_ADVISORY_KEYS & set(payload)
+    if forbidden:
+        names = ", ".join(sorted(forbidden))
+        raise ValueError(f"{where} carries forbidden advisory field(s): {names}")
+    if payload.get("not_advice") is not True:
+        raise ValueError(f"{where} must carry not_advice: true")
+
+
+def _workspace_notes(source_pack: dict[str, Any]) -> str:
+    notes = [str(note) for note in source_pack.get("notes") or [] if str(note).strip()]
+    missing = sorted(str(item) for item in source_pack.get("missing_source_types") or [] if str(item).strip())
+    ambiguous = sorted(str(item) for item in source_pack.get("ambiguous_source_types") or [] if str(item).strip())
+    if missing:
+        notes.append("missing: " + ",".join(missing))
+    if ambiguous:
+        notes.append("ambiguous: " + ",".join(ambiguous))
+    return "; ".join(notes)
+
+
+def workspace_writeback_row(source_pack: dict[str, Any]) -> dict[str, str]:
+    """Project a Phase 3 source pack into stable workspace write-back columns.
+
+    This is the Phase 7 export contract for CSV/spreadsheet/agent workspace
+    write-back. It is intentionally connector-neutral: callers can write this row
+    into Google Sheets, Notion, Jira, a CSV, or another workspace using their own
+    authority. The row contains public source locator metadata only and carries
+    no advisory, approval, risk, security, compliance, procurement, or legal
+    conclusion.
+    """
+    _assert_non_advisory_workspace_payload(source_pack, where="source_pack")
+    for index, source in enumerate(source_pack.get("sources") or []):
+        if not isinstance(source, dict):
+            raise ValueError(f"source_pack.sources[{index}] must be an object")
+        _assert_non_advisory_workspace_payload(source, where=f"source_pack.sources[{index}]")
+
+    vendor_input = source_pack.get("vendor_input") or {}
+    matched_vendor = source_pack.get("matched_vendor") or {}
+    row = {column: "" for column in WORKSPACE_WRITEBACK_COLUMNS}
+    row["openva_match_status"] = str(source_pack.get("match_status") or "")
+    row["openva_vendor_id"] = str(matched_vendor.get("vendor_id") or "")
+    row["openva_vendor_name"] = str(
+        matched_vendor.get("display_name") or vendor_input.get("display_name") or ""
+    )
+    row["openva_result_mode"] = str(source_pack.get("mode") or "")
+    row["openva_notes"] = _workspace_notes(source_pack)
+    row["openva_not_advice"] = "true"
+
+    for source in source_pack.get("sources") or []:
+        source_type = str(source.get("source_type") or "")
+        column = WORKSPACE_WRITEBACK_SOURCE_COLUMNS.get(source_type)
+        if column is None:
+            continue
+        if source.get("result_state") == "found" and source.get("source_url"):
+            row[column] = str(source.get("source_url"))
+    return row
 
 
 def observation_entries(
