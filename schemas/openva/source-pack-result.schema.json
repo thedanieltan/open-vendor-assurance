@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openva.dev/schemas/source-pack-result.schema.json",
+  "title": "OpenVA Source Pack Result",
+  "description": "Public-facing source-pack result for vendor assurance workflows. This contract is for human, API, MCP, CSV, spreadsheet, and agent outputs. It records public source locator metadata only; it is not legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_pack_id",
+    "snapshot_id",
+    "mode",
+    "vendor_input",
+    "match_status",
+    "requested_source_types",
+    "sources",
+    "missing_source_types",
+    "ambiguous_source_types",
+    "not_advice"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^0\\.1\\.[0-9]+$"
+    },
+    "source_pack_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "description": "Consumer-stable identifier for this source-pack result row or envelope."
+    },
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "description": "Snapshot, release, commit, or resolver-run identity used to produce this source pack."
+    },
+    "mode": {
+      "$ref": "#/$defs/mode"
+    },
+    "vendor_input": {
+      "type": "object",
+      "required": ["display_name"],
+      "properties": {
+        "display_name": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "business_entity_name": { "type": ["string", "null"], "maxLength": 300 },
+        "domain": { "type": ["string", "null"], "maxLength": 253 },
+        "jurisdiction": { "type": ["string", "null"], "maxLength": 120 },
+        "registration_number": { "type": ["string", "null"], "maxLength": 120 },
+        "registered_address": { "type": ["string", "null"], "maxLength": 500 }
+      },
+      "additionalProperties": false
+    },
+    "matched_vendor": {
+      "type": ["object", "null"],
+      "required": ["vendor_id", "display_name"],
+      "properties": {
+        "vendor_id": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "display_name": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "legal_name": { "type": ["string", "null"], "maxLength": 300 },
+        "official_domain": { "type": ["string", "null"], "maxLength": 253 }
+      },
+      "additionalProperties": false
+    },
+    "match_status": {
+      "$ref": "#/$defs/match_status"
+    },
+    "requested_source_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/source_type" }
+    },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source_pack_source" }
+    },
+    "missing_source_types": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/source_type" }
+    },
+    "ambiguous_source_types": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/source_type" }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 240 }
+    },
+    "not_advice": { "const": true }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "match_status": {
+      "enum": ["matched", "ambiguous", "no_match"]
+    },
+    "mode": {
+      "enum": ["cached_only", "checked_on_demand", "discovered"]
+    },
+    "result_state": {
+      "enum": [
+        "found",
+        "missing",
+        "ambiguous",
+        "unavailable",
+        "gated",
+        "candidate_found",
+        "not_checked_live"
+      ]
+    },
+    "confidence": {
+      "enum": ["high", "medium", "low", "none"]
+    },
+    "public_access_status": {
+      "enum": ["public", "gated", "unavailable", "ambiguous", "unknown"]
+    },
+    "source_type": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "source_pack_source": {
+      "type": "object",
+      "required": [
+        "match_status",
+        "source_type",
+        "source_url",
+        "result_state",
+        "mode",
+        "confidence",
+        "public_access_status",
+        "checked_at",
+        "snapshot_id",
+        "candidate_queued",
+        "not_advice"
+      ],
+      "properties": {
+        "match_status": { "$ref": "#/$defs/match_status" },
+        "source_type": { "$ref": "#/$defs/source_type" },
+        "source_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "candidate_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "result_state": { "$ref": "#/$defs/result_state" },
+        "mode": { "$ref": "#/$defs/mode" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "public_access_status": { "$ref": "#/$defs/public_access_status" },
+        "checked_at": { "type": ["string", "null"] },
+        "snapshot_id": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "candidate_queued": { "type": "boolean" },
+        "not_advice": { "const": true },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 240 }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
