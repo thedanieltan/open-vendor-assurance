@@ -1,3 +1,5 @@
+"""Contract tests for the preferred agent enrichment result fields."""
+
 import json
 from pathlib import Path
 
