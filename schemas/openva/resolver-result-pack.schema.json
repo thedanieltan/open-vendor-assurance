@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/resolver-result-pack.schema.json",
   "title": "Compiled Vendor Information Row",
-  "description": "Human-facing compiled vendor information row. Uploaded input columns are preserved separately in the CSV; this schema describes the appended compiled result payload.",
+  "description": "Human-facing compiled vendor information row. Uploaded input columns are preserved separately in the CSV; this schema describes the appended matched vendor identity and source-link payload.",
   "type": "array",
   "items": { "$ref": "#/$defs/resultRow" },
   "$defs": {
@@ -13,12 +13,12 @@
         "input_index",
         "input_vendor_name",
         "input_domain",
-        "compiled_vendor_name",
-        "compiled_domain",
+        "matched_vendor_name",
+        "official_domain",
+        "trust_security_url",
         "dpa_url",
         "subprocessors_url",
         "privacy_notice_url",
-        "security_or_trust_url",
         "status_page_url"
       ],
       "properties": {
@@ -26,27 +26,27 @@
         "input_index": { "type": "integer", "minimum": 0 },
         "input_vendor_name": { "type": ["string", "null"], "maxLength": 300 },
         "input_domain": { "type": ["string", "null"], "maxLength": 253 },
-        "compiled_vendor_name": { "type": ["string", "null"], "maxLength": 300 },
-        "compiled_domain": { "type": ["string", "null"], "maxLength": 253 },
+        "matched_vendor_name": { "type": ["string", "null"], "maxLength": 300 },
+        "official_domain": { "type": ["string", "null"], "maxLength": 253 },
+        "trust_security_url": { "type": ["string", "null"], "maxLength": 2048 },
         "dpa_url": { "type": ["string", "null"], "maxLength": 2048 },
         "subprocessors_url": { "type": ["string", "null"], "maxLength": 2048 },
         "privacy_notice_url": { "type": ["string", "null"], "maxLength": 2048 },
-        "security_or_trust_url": { "type": ["string", "null"], "maxLength": 2048 },
         "status_page_url": { "type": ["string", "null"], "maxLength": 2048 }
       },
       "allOf": [
         {
           "if": {
-            "properties": { "compiled_vendor_name": { "type": "null" } },
-            "required": ["compiled_vendor_name"]
+            "properties": { "matched_vendor_name": { "type": "null" } },
+            "required": ["matched_vendor_name"]
           },
           "then": {
             "properties": {
-              "compiled_domain": { "type": "null" },
+              "official_domain": { "type": "null" },
+              "trust_security_url": { "type": "null" },
               "dpa_url": { "type": "null" },
               "subprocessors_url": { "type": "null" },
               "privacy_notice_url": { "type": "null" },
-              "security_or_trust_url": { "type": "null" },
               "status_page_url": { "type": "null" }
             }
           }
