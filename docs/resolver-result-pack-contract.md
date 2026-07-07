@@ -1,231 +1,271 @@
 # Resolver Result-Pack Contract
 
-The resolver result-pack is the stable output shape for local-first resolver
-implementations and static integrations. It lets CLIs, local engines, MCP
-servers, forked deployments, GitHub Pages, Lovable, and other consumers build
-against a deterministic contract without making OpenVA a hosted resolver,
-hosted CSV processor, or operated API runtime.
+The resolver result-pack is the stable output shape for OpenVA's indexed public assurance source-reference enrichment.
 
-Operational metadata only. This result pack is not legal, compliance,
-procurement, security, KYC, AML, audit, vendor-risk, approval, suitability, or
-recommendation advice.
+OpenVA populates vendor lists with indexed public assurance source references. It does not operate as a vendor approval, scoring, monitoring, legal, compliance, procurement, audit, security, KYC, AML, sanctions, suitability, or risk-advice product.
 
-OpenVA owns the shape of the answer, not the runtime that computes it. The
-result pack is the product boundary: consumers may run their own live resolver
-and emit this contract, but OpenVA does not process user vendor inventories.
+The templates for human and agent users are defined in [`output-templates.md`](output-templates.md).
 
-## Version
+## Product boundary
+
+OpenVA's default answer is based on the loaded OpenVA index.
+
+It should be described as:
 
 ```text
-result_pack_version: 1.0.0
+indexed public assurance source references
 ```
 
-## Provenance Model
-
-Result packs separate candidate input provenance from verification outcome
-provenance. These axes must not be collapsed.
-
-Candidate input basis says why a locator or source candidate was available to
-the resolver:
+Do not describe default output as:
 
 ```text
-candidate_basis
+current source references
+live checked references
+freshly verified references
+monitoring results
+risk findings
+approval findings
 ```
 
-Allowed values:
+A blank source URL means OpenVA has no indexed public source reference for that source type in the loaded index. It is not a negative compliance or security finding.
+
+## Human CSV contract
+
+Human CSV output is preset-based.
+
+The default rule is:
 
 ```text
-community_hint
-vendor_asserted
-cached_locator
-direct_input
-none
+original user columns + selected OpenVA enrichment columns
 ```
 
-Community hints are unverified candidate inputs. Vendor assertions are
-unverified candidate inputs. Cached locators are unverified candidate inputs.
-Direct user input is also only a candidate input until the consumer environment
-performs live verification.
+OpenVA must preserve the user's original columns where practical and append the selected OpenVA columns. It should not force optional identity fields into the output unless the user supplied them.
 
-Verification basis says what a consumer-side live resolver run established:
+### Default human preset: Source URLs
 
-```text
-verification_basis
+```csv
+openva_match,openva_vendor_name,openva_domain,dpa_url,privacy_notice_url,subprocessors_url,security_page_url,trust_center_url,status_page_url,openva_notes
 ```
 
-Allowed values:
-
-```text
-not_checked
-verified_live
-live_unavailable
-live_gated
-live_not_found
-```
-
-Only a consumer-side live verification run may emit `verified_live`. Static
-browser output, community index rows, cached locators, and vendor assertions
-must remain `verification_basis=not_checked` unless a separate live check has
-actually run in the consumer environment.
-
-The public/community index is hint-only. It is not authoritative evidence and
-must not be treated as final truth. Final truth for a result-pack row comes only
-from a live resolver run performed by the consumer environment.
-
-## JSON Rows
-
-A JSON result pack is an array with one object per requested vendor. Row order
-MUST preserve input order. Each row has these top-level fields:
-
-```text
-result_pack_version
-input_index
-input_vendor_name
-input_domain
-identity_status
-no_match_reason
-matched_vendor_id
-matched_vendor_name
-sources
-not_advice
-```
-
-`identity_status` is one of:
+### Human identity status
 
 ```text
 match
 no_match
 ```
 
-`no_match_reason` is `null` for matched rows and otherwise one of:
+If `openva_match=no_match`, OpenVA source URL columns are blank and `openva_notes` should say:
 
 ```text
-not_in_reference
-multiple_plausible_entities
-no_public_identity
-inconclusive
+No indexed OpenVA match.
 ```
 
-`sources` is a deterministic array ordered as:
+### Human presets
+
+The full human preset list is maintained in [`output-templates.md`](output-templates.md):
 
 ```text
-trust_center
-dpa
-subprocessors_list
-privacy_notice
-security_page
-status_page
+Source URLs
+Privacy / DPA Review
+Security Review
+Procurement Quick Check
+Minimal Match Only
+Full Human Export
 ```
 
-Each source object has:
+### Human default exclusions
+
+Do not include these fields in default human exports:
 
 ```text
-source_type
-status
-url
-candidate_basis
-verification_basis
-checked_at
+match_confidence
+catalog_membership
+catalog_tier
+review_state
+freshness_mode
+advisory_boundary
+candidate_source_count
+unavailable_source_count
 ```
 
-`status` is one of:
+Those fields are diagnostic or internal. They may appear in compatibility or advanced machine exports, but not in the normal spreadsheet template.
+
+## Agent / MCP / API contract
+
+Agent, MCP, and API consumers receive structured rows. The preferred shape is:
 
 ```text
-found
-not_found
+input
+identity
+source_references
+notes
+not_advice
+```
+
+### Agent row template
+
+```json
+{
+  "row_id": "1",
+  "input": {
+    "vendor_name": "Stripe",
+    "business_entity_name": "",
+    "domain": "stripe.com",
+    "jurisdiction": "",
+    "registration_number": "",
+    "registered_address": ""
+  },
+  "identity": {
+    "match_status": "match",
+    "matched_vendor_id": "stripe",
+    "matched_vendor_name": "Stripe",
+    "matched_domain": "stripe.com",
+    "match_basis": ["indexed_domain"],
+    "no_match_reason": null
+  },
+  "source_references": {
+    "dpa": {
+      "status": "indexed",
+      "url": "https://stripe.com/legal/dpa",
+      "title": "Data Processing Agreement"
+    },
+    "privacy_notice": {
+      "status": "indexed",
+      "url": "https://stripe.com/privacy",
+      "title": "Privacy Notice"
+    },
+    "subprocessors": {
+      "status": "indexed",
+      "url": "https://stripe.com/legal/subprocessors",
+      "title": "Subprocessors"
+    },
+    "security_page": {
+      "status": "indexed",
+      "url": "https://stripe.com/security",
+      "title": "Security"
+    },
+    "trust_center": {
+      "status": "indexed",
+      "url": "https://stripe.com/trust",
+      "title": "Trust Center"
+    },
+    "status_page": {
+      "status": "not_indexed",
+      "url": null,
+      "title": null
+    }
+  },
+  "notes": [
+    "Matched by indexed domain.",
+    "Source references are indexed public references, not vendor approval or risk advice."
+  ],
+  "not_advice": true
+}
+```
+
+### Agent identity status
+
+```text
+match
+no_match
+```
+
+Ambiguity is not a third top-level identity status. It is represented as:
+
+```json
+{
+  "match_status": "no_match",
+  "no_match_reason": "multiple_plausible_entities"
+}
+```
+
+### Agent source-reference status
+
+```text
+indexed
+not_indexed
 gated
 unavailable
 not_applicable
-not_checked
 ```
 
-`status` is the projected outcome, while `candidate_basis` and
-`verification_basis` explain how that outcome was reached. A cached URL may be
-included as a candidate locator, but the source remains
-`status=not_checked`, `candidate_basis=cached_locator`, and
-`verification_basis=not_checked` until a consumer-side live check occurs.
+Use `indexed` when OpenVA has an indexed public source reference in the loaded index. Use `not_indexed` when the loaded index has no public source reference for that source type.
 
-## Flat CSV
+### Agent no-match example
 
-The flat CSV output preserves input row order and appends deterministic columns
-after the input columns:
+```json
+{
+  "row_id": "2",
+  "input": {
+    "vendor_name": "Unknown Vendor",
+    "domain": ""
+  },
+  "identity": {
+    "match_status": "no_match",
+    "matched_vendor_id": null,
+    "matched_vendor_name": null,
+    "matched_domain": null,
+    "match_basis": [],
+    "no_match_reason": "no_indexed_openva_match"
+  },
+  "source_references": {},
+  "notes": ["No indexed OpenVA match."],
+  "not_advice": true
+}
+```
+
+## Compatibility projection
+
+Older machine surfaces may continue to expose:
 
 ```text
-openva_identity_status
-openva_no_match_reason
-openva_matched_vendor_id
-openva_matched_vendor_name
-openva_trust_center_status
-openva_trust_center_url
-openva_trust_center_candidate_basis
-openva_trust_center_verification_basis
-openva_trust_center_checked_at
-openva_dpa_status
-openva_dpa_url
-openva_dpa_candidate_basis
-openva_dpa_verification_basis
-openva_dpa_checked_at
-openva_subprocessors_list_status
-openva_subprocessors_list_url
-openva_subprocessors_list_candidate_basis
-openva_subprocessors_list_verification_basis
-openva_subprocessors_list_checked_at
-openva_privacy_notice_status
-openva_privacy_notice_url
-openva_privacy_notice_candidate_basis
-openva_privacy_notice_verification_basis
-openva_privacy_notice_checked_at
-openva_security_page_status
-openva_security_page_url
-openva_security_page_candidate_basis
-openva_security_page_verification_basis
-openva_security_page_checked_at
-openva_status_page_status
-openva_status_page_url
-openva_status_page_candidate_basis
-openva_status_page_verification_basis
-openva_status_page_checked_at
-openva_not_advice
+match
+sources
+primary_source_by_type
+source_urls_by_type
 ```
 
-## Resolver-State Mapping
+Those fields are compatibility projections for agents and adapters. They are not the default human spreadsheet template.
 
-The Python projection uses `tools/openva/vendor_resolution.py` as the matching
-and resolution authority. It does not reimplement matching.
+Compatibility mapping:
 
-| Resolver state | Result-pack mapping |
+| Compatibility value | Preferred identity value |
 | --- | --- |
-| `catalog_current` | `status=found` only when `verification_basis=verified_live`; cached/static output MUST use `status=not_checked`, `candidate_basis=cached_locator`, `verification_basis=not_checked` |
-| `catalog_refreshed` | `status=found`, `verification_basis=verified_live` only when consumer-side live verification supports the refreshed locator |
-| `newly_discovered` | `status=found`, `verification_basis=verified_live` only when consumer-side live discovery and verification support the result |
-| `source_unavailable` | `status=unavailable`, `verification_basis=live_unavailable` when consumer-side live evidence supports it |
-| `not_found` | `status=not_found`, `verification_basis=live_not_found` when live checking or discovery was actually attempted |
-| `identity_ambiguous` | `identity_status=no_match`, `no_match_reason=multiple_plausible_entities` |
-| `verification_inconclusive` | `status=gated`, `status=unavailable`, or `status=not_checked` depending on the consumer-side live result; do not overclaim |
-| `candidate_processing` | `status=not_checked`, `verification_basis=not_checked` |
-| `catalogued` | `status=found` only when live-checked; otherwise `status=not_checked`, `candidate_basis=cached_locator`, `verification_basis=not_checked` |
+| `matched` | `match` |
+| `ambiguous` | `no_match` with `no_match_reason=multiple_plausible_entities` |
+| `no_match` | `no_match` with `no_match_reason=no_indexed_openva_match` |
 
-## Static Honesty Rule
+## Source type keys
 
-The GitHub Pages browser path is static and cached. It MUST NOT perform live
-egress, live source verification, live discovery, candidate lifecycle routing,
-server-side CSV upload, or server-side persistence.
+Use these human/agent presentation keys:
 
-For browser-local output:
+```text
+dpa
+privacy_notice
+subprocessors
+security_page
+trust_center
+status_page
+```
 
-- emit `identity_status=match` only when the conservative browser-local matcher
-  matches a vendor from the loaded static index;
-- emit `identity_status=no_match` when the browser-local matcher does not match;
-- for every requested source type requiring live verification, emit
-  `status=not_checked`, `verification_basis=not_checked`, and `checked_at=null`;
-- a known cached URL MAY be included as a locator, but it MUST remain
-  `candidate_basis=cached_locator` and `verification_basis=not_checked`;
-- community hints and vendor assertions MAY be carried as candidate inputs, but
-  they MUST remain unverified unless separately live-verified;
-- never emit `verification_basis=verified_live`;
-- never emit live `found` semantics.
+Where the internal source type is `subprocessors_list`, the human and agent presentation key may be `subprocessors`.
 
-Consumer-run live resolver surfaces may emit `verification_basis=verified_live`
-only after the consumer environment has actually performed the bounded live
-verification or discovery path. No source result should imply OpenVA operated
-the check.
+## Non-advisory rule
+
+Every result must remain factual and non-advisory.
+
+OpenVA result packs must not state that a vendor is:
+
+```text
+approved
+recommended
+compliant
+safe
+certified
+adequate
+suitable
+low risk
+high risk
+```
+
+OpenVA returns indexed public source references only.
