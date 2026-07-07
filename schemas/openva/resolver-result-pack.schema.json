@@ -13,95 +13,42 @@
         "input_index",
         "input_vendor_name",
         "input_domain",
-        "match_status",
-        "match_reason",
         "compiled_vendor_name",
         "compiled_domain",
         "dpa_url",
         "subprocessors_url",
         "privacy_notice_url",
         "security_or_trust_url",
-        "status_page_url",
-        "source_status",
-        "review_note"
+        "status_page_url"
       ],
       "properties": {
         "result_pack_version": { "const": "2.0.0" },
         "input_index": { "type": "integer", "minimum": 0 },
         "input_vendor_name": { "type": ["string", "null"], "maxLength": 300 },
         "input_domain": { "type": ["string", "null"], "maxLength": 253 },
-        "match_status": { "enum": ["matched", "not_matched"] },
-        "match_reason": {
-          "enum": [
-            "domain match",
-            "name match",
-            "reference match",
-            "not in reference",
-            "multiple plausible entities",
-            "missing vendor identity",
-            "inconclusive"
-          ]
-        },
         "compiled_vendor_name": { "type": ["string", "null"], "maxLength": 300 },
         "compiled_domain": { "type": ["string", "null"], "maxLength": 253 },
         "dpa_url": { "type": ["string", "null"], "maxLength": 2048 },
         "subprocessors_url": { "type": ["string", "null"], "maxLength": 2048 },
         "privacy_notice_url": { "type": ["string", "null"], "maxLength": 2048 },
         "security_or_trust_url": { "type": ["string", "null"], "maxLength": 2048 },
-        "status_page_url": { "type": ["string", "null"], "maxLength": 2048 },
-        "source_status": { "enum": ["compiled_from_reference", "not_available"] },
-        "review_note": {
-          "enum": [
-            "Review compiled links before relying on them",
-            "Vendor matched; no compiled source links available",
-            "No compiled source available"
-          ]
-        }
+        "status_page_url": { "type": ["string", "null"], "maxLength": 2048 }
       },
       "allOf": [
         {
           "if": {
-            "properties": { "match_status": { "const": "matched" } },
-            "required": ["match_status"]
+            "properties": { "compiled_vendor_name": { "type": "null" } },
+            "required": ["compiled_vendor_name"]
           },
           "then": {
             "properties": {
-              "compiled_vendor_name": { "type": "string" }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": { "match_status": { "const": "not_matched" } },
-            "required": ["match_status"]
-          },
-          "then": {
-            "properties": {
-              "compiled_vendor_name": { "type": "null" },
               "compiled_domain": { "type": "null" },
               "dpa_url": { "type": "null" },
               "subprocessors_url": { "type": "null" },
               "privacy_notice_url": { "type": "null" },
               "security_or_trust_url": { "type": "null" },
-              "status_page_url": { "type": "null" },
-              "source_status": { "const": "not_available" },
-              "review_note": { "const": "No compiled source available" }
+              "status_page_url": { "type": "null" }
             }
-          }
-        },
-        {
-          "if": {
-            "properties": { "source_status": { "const": "compiled_from_reference" } },
-            "required": ["source_status"]
-          },
-          "then": {
-            "anyOf": [
-              { "properties": { "dpa_url": { "type": "string" } }, "required": ["dpa_url"] },
-              { "properties": { "subprocessors_url": { "type": "string" } }, "required": ["subprocessors_url"] },
-              { "properties": { "privacy_notice_url": { "type": "string" } }, "required": ["privacy_notice_url"] },
-              { "properties": { "security_or_trust_url": { "type": "string" } }, "required": ["security_or_trust_url"] },
-              { "properties": { "status_page_url": { "type": "string" } }, "required": ["status_page_url"] }
-            ]
           }
         }
       ],
