@@ -64,10 +64,6 @@ documented adapter mapping, not one wire schema for both:
 
 The per-row result shape is shared and pinned by
 [`schemas/openva/agent-enrichment-result.schema.json`](../schemas/openva/agent-enrichment-result.schema.json).
-That schema treats `identity` and `source_references` as first-class required
-fields for new agents, not tolerated extension fields. The older `match`,
-`sources`, `primary_source_by_type`, and `source_urls_by_type` fields remain in
-the schema as compatibility projections for existing consumers.
 Registration-number matching is data-dependent, not transport-dependent: both
 surfaces use one shared legal-entity fallback and match a `registration_number` when
 the underlying data carries legal entities for the vendor (the pack for `/v1`; each
@@ -89,15 +85,6 @@ source_references
 ```text
 match
 no_match
-```
-
-Ambiguity is not a third top-level identity status. It is represented as:
-
-```json
-{
-  "match_status": "no_match",
-  "no_match_reason": "multiple_plausible_entities"
-}
 ```
 
 `source_references` is a destination-neutral object keyed by requested source type.
@@ -123,16 +110,6 @@ Example source reference:
     "source_id": null
   }
 }
-```
-
-`source_references.<type>.status` is one of:
-
-```text
-indexed
-not_indexed
-gated
-unavailable
-not_applicable
 ```
 
 Compatibility fields remain available for older adapters:
