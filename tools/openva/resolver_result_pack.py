@@ -18,10 +18,10 @@ from tools.openva import vendor_resolution
 RESULT_PACK_VERSION = "2.0.0"
 
 SOURCE_TYPES: tuple[str, ...] = (
+    "trust_security",
     "dpa",
     "subprocessors",
     "privacy_notice",
-    "security_or_trust",
     "status_page",
 )
 
@@ -35,26 +35,27 @@ RESOLVER_SOURCE_TYPES: tuple[str, ...] = (
 )
 
 SOURCE_TYPE_ALIASES: dict[str, str] = {
+    "trust_center": "trust_security",
+    "security_page": "trust_security",
+    "security_or_trust": "trust_security",
     "subprocessors_list": "subprocessors",
-    "trust_center": "security_or_trust",
-    "security_page": "security_or_trust",
 }
 
 RESOLVER_SOURCE_TYPES_BY_OUTPUT: dict[str, tuple[str, ...]] = {
+    "trust_security": ("trust_center", "security_page"),
     "dpa": ("dpa",),
     "subprocessors": ("subprocessors_list",),
     "privacy_notice": ("privacy_notice",),
-    "security_or_trust": ("trust_center", "security_page"),
     "status_page": ("status_page",),
 }
 
 FLAT_RESULT_COLUMNS: tuple[str, ...] = (
     "matched_vendor_name",
     "official_domain",
+    "trust_security_url",
     "dpa_url",
     "subprocessors_url",
     "privacy_notice_url",
-    "security_or_trust_url",
     "status_page_url",
 )
 
@@ -160,10 +161,10 @@ def project_resolution(
         "input_domain": _nullable_text(input_row.get("domain")),
         "matched_vendor_name": _nullable_text(vendor.get("display_name")) if matched else None,
         "official_domain": _official_domain(vendor) if matched else None,
+        "trust_security_url": source_urls["trust_security"],
         "dpa_url": source_urls["dpa"],
         "subprocessors_url": source_urls["subprocessors"],
         "privacy_notice_url": source_urls["privacy_notice"],
-        "security_or_trust_url": source_urls["security_or_trust"],
         "status_page_url": source_urls["status_page"],
     }
 
@@ -233,7 +234,7 @@ def _source_url_for_output(source_by_type: dict[str, dict[str, Any]], output_sou
 def _source_url(source: dict[str, Any] | None) -> str | None:
     if not isinstance(source, dict):
         return None
-    return _nullable_text(source.get("source_url") or source.get("candidate_url"))
+    return _nullable_text(source.get("source_url"))
 
 
 def _official_domain(vendor: dict[str, Any]) -> str | None:
