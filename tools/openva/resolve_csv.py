@@ -163,7 +163,7 @@ def _source_for_type(vendor: dict[str, Any] | None, source_type: str) -> dict[st
         return None
     sources = [
         source
-        for source in vendor.get("canonical_sources", []) or []
+        for source in _indexed_source_records(vendor)
         if isinstance(source, dict)
         and source.get("source_type") == source_type
         and _source_url(source)
@@ -177,6 +177,16 @@ def _source_for_type(vendor: dict[str, Any] | None, source_type: str) -> dict[st
             ),
         )[0]
     return None
+
+
+def _indexed_source_records(vendor: dict[str, Any]) -> list[dict[str, Any]]:
+    source_records = vendor.get("source_records")
+    if isinstance(source_records, list):
+        return [source for source in source_records if isinstance(source, dict)]
+    legacy_records = vendor.get("canonical_sources")
+    if isinstance(legacy_records, list):
+        return [source for source in legacy_records if isinstance(source, dict)]
+    return []
 
 
 def _source_url(source: dict[str, Any] | None) -> str | None:
