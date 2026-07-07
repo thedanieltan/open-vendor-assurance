@@ -133,8 +133,8 @@ def test_flat_csv_preserves_input_order_and_uses_minimal_human_download_columns(
 
 def test_source_type_aliases_collapse_to_human_template_columns():
     assert pack.normalize_source_types(["trust_center", "security_page", "subprocessors_list"]) == [
-        "subprocessors",
         "trust_security",
+        "subprocessors",
     ]
     assert pack.normalize_source_types(["security_or_trust"]) == ["trust_security"]
     assert pack.resolver_source_types(["trust_security"]) == ["trust_center", "security_page"]
