@@ -539,10 +539,13 @@ def build_compiled_catalog(
             "assurance_intelligence_count": len(assurance_intelligence_by_vendor.get(vendor_id, [])),
             "detail_path": f"data/vendors/{vendor_id}.json",
         }
+        source_records = sources_by_vendor.get(vendor_id, [])
         vendor_summaries.append(summary)
         vendor_details[vendor_id] = {
             "vendor": summary,
-            "canonical_sources": sources_by_vendor.get(vendor_id, []),
+            "source_records": source_records,
+            # Legacy alias retained while browser and downstream consumers migrate.
+            "canonical_sources": source_records,
             "candidate_sources": candidates_by_vendor.get(vendor_id, []),
             "unavailable_sources": unavailable_by_vendor.get(vendor_id, []),
             "latest_observations": observations_by_vendor.get(vendor_id, []),
