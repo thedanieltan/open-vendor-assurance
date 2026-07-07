@@ -212,6 +212,11 @@ function renderHome() {
   ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
 }
 
+function detailSourceRecords(detail) {
+  const records = detail.source_records || detail.canonical_sources || [];
+  return Array.isArray(records) ? records : [];
+}
+
 async function loadVendorDetail(vendorId) {
   if (vendorDetailsCache.has(vendorId)) {
     return vendorDetailsCache.get(vendorId);
@@ -226,7 +231,7 @@ async function loadVendorDetail(vendorId) {
   }
   const detail = await response.json();
   vendorDetailsCache.set(vendorId, detail);
-  (detail.canonical_sources || []).forEach((source) => {
+  detailSourceRecords(detail).forEach((source) => {
     if (source.source_id) sourceCache.set(source.source_id, source);
   });
   return detail;
@@ -373,7 +378,7 @@ function resultPackCsv(inputRows, resultRows) {
 }
 
 function detailSourceSummary(detail) {
-  const sources = detail.canonical_sources || [];
+  const sources = detailSourceRecords(detail);
   const candidates = detail.candidate_sources || [];
   const unavailable = detail.unavailable_sources || [];
   return {
@@ -586,7 +591,7 @@ async function renderVendorDetail(vendorId) {
   try {
     const detail = await loadVendorDetail(vendorId);
     const vendor = detail.vendor;
-    const sources = detail.canonical_sources || [];
+    const sources = detailSourceRecords(detail);
     const candidates = detail.candidate_sources || [];
     const unavailable = detail.unavailable_sources || [];
     const observations = detail.latest_observations || [];
@@ -596,7 +601,7 @@ async function renderVendorDetail(vendorId) {
       <h3>${html(vendor.display_name)}</h3>
       <p class="meta-line">${html(vendor.legal_name)} · vendor_id: ${html(vendor.vendor_id)}</p>
       <div class="summary-strip">
-        <span><strong>${html(sources.length)}</strong><small>canonical sources</small></span>
+        <span><strong>${html(sources.length)}</strong><small>source records</small></span>
         <span><strong>${html(candidates.length)}</strong><small>candidate sources</small></span>
         <span><strong>${html(unavailable.length)}</strong><small>unavailable notes</small></span>
       </div>
@@ -608,16 +613,15 @@ async function renderVendorDetail(vendorId) {
       <div class="snapshot-box source-health-snapshot">${sourceHealthDisclosure()}</div>
       <div class="snapshot-box catalog-confidence-snapshot">${confidenceTemplate(vendor.catalog_confidence)}</div>
       ${assuranceIntelligenceTemplate(assuranceIntelligence)}
-      <h4>Source coverage summary</h4>
+      <h4>Indexed source records</h4>
       <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
-      <h4>Canonical source records</h4>
       <ul class="source-list">${sources.map(sourceTemplate).join("") || "<li>No reviewed source records.</li>"}</ul>
-      <h4>Candidate source records, non-canonical</h4>
+      <h4>Candidate source records</h4>
       <ul class="source-list">${candidates.map(candidateTemplate).join("") || "<li>No candidate source records.</li>"}</ul>
       <h4>Unavailable source notes, non-advisory</h4>
       <ul class="source-list">${unavailable.map((item) => `<li>${html(item.source_type)} · ${html(item.unavailability_status || item.status)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("") || "<li>No unavailable source notes.</li>"}</ul>
       <h4>Related observation events</h4>
-      ${observations.length ? `<ul class="source-list">${observations.map((item) => `<li>${html(item.source_id)} · ${html(item.result)} · catalog_tier: ${html(item.catalog_tier)} · canonical: false · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("")}</ul>` : "<p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>"}
+      ${observations.length ? `<ul class="source-list">${observations.map((item) => `<li>${html(item.source_id)} · ${html(item.result)} · catalog_tier: ${html(item.catalog_tier)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("")}</ul>` : "<p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>"}
     `;
     document.querySelectorAll("[data-select-source]").forEach((box) => {
       box.addEventListener("change", (event) => {
@@ -652,7 +656,7 @@ function sourceTemplate(source) {
 }
 
 function candidateTemplate(candidate) {
-  return `<li>${html(candidate.source_type_candidate)} · ${html(candidate.candidate_url)} · canonical: false · catalog_tier: ${html(candidate.catalog_tier)} · review_state: ${html(candidate.review_state)} · advisory_boundary: ${html(candidate.advisory_boundary)}</li>`;
+  return `<li>${html(candidate.source_type_candidate)} · ${html(candidate.candidate_url)} · catalog_tier: ${html(candidate.catalog_tier)} · review_state: ${html(candidate.review_state)} · advisory_boundary: ${html(candidate.advisory_boundary)}</li>`;
 }
 
 function eventMatches(event) {
@@ -670,7 +674,7 @@ function renderFeed() {
   document.getElementById("feed-meta").innerHTML = `
     <p>Latest feed generated timestamp: ${html(feedData.generated_at)}</p>
     <p>Feed source commit/workflow identifier: ${html(feedData.source_commit)} / ${html(feedData.workflow)}</p>
-    <p>catalog_tier: observation · review_state: auto_observed or human_review_required · canonical: false · advisory_boundary: non_advisory</p>
+    <p>catalog_tier: observation · review_state: auto_observed or human_review_required · advisory_boundary: non_advisory</p>
   `;
   const events = (feedData.events || []).filter(eventMatches);
   document.getElementById("feed-list").innerHTML = events.length
@@ -687,7 +691,7 @@ function eventTemplate(event) {
       <h4>${html(event.event_type)}</h4>
       <p>${html(event.vendor_id)} · ${html(event.source_id)} · ${html(event.source_type)} · ${html(event.observed_at)}</p>
       <p>result: ${html(event.result)} · http_status: ${html(event.http_status)}</p>
-      <p>catalog_tier: ${html(event.catalog_tier)} · review_state: ${html(event.review_state)} · canonical: false · advisory_boundary: ${html(event.advisory_boundary)}</p>
+      <p>catalog_tier: ${html(event.catalog_tier)} · review_state: ${html(event.review_state)} · advisory_boundary: ${html(event.advisory_boundary)}</p>
       ${hashNote}
     </article>
   `;
@@ -698,7 +702,7 @@ async function selectedRecords() {
   const vendors = catalogData.vendors.filter((vendor) => selectedVendors.has(vendor.vendor_id));
   const vendorSources = [...selectedVendors].flatMap((vendorId) => {
     const detail = vendorDetailsCache.get(vendorId);
-    return detail ? (detail.canonical_sources || []) : [];
+    return detail ? detailSourceRecords(detail) : [];
   });
   const selectedSourceRows = [...selectedSources]
     .map((sourceId) => sourceCache.get(sourceId))
