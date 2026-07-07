@@ -139,10 +139,10 @@ def _result_row(
         "input_domain": _nullable_text(input_row.get("domain")),
         "matched_vendor_name": _nullable_text(vendor.get("display_name")) if vendor else None,
         "official_domain": _official_domain(vendor) if vendor else None,
+        "trust_security_url": source_urls["trust_security"],
         "dpa_url": source_urls["dpa"],
         "subprocessors_url": source_urls["subprocessors"],
         "privacy_notice_url": source_urls["privacy_notice"],
-        "security_or_trust_url": source_urls["security_or_trust"],
         "status_page_url": source_urls["status_page"],
     }
 
@@ -161,34 +161,28 @@ def _source_url_for_output(vendor: dict[str, Any] | None, output_source_type: st
 def _source_for_type(vendor: dict[str, Any] | None, source_type: str) -> dict[str, Any] | None:
     if vendor is None:
         return None
-    primary_by_type = vendor.get("primary_source_by_type")
-    if isinstance(primary_by_type, dict):
-        primary = primary_by_type.get(source_type)
-        if isinstance(primary, dict) and _source_url(primary):
-            return primary
-    for key in ("canonical_sources", "candidate_sources"):
-        sources = [
-            source
-            for source in vendor.get(key, []) or []
-            if isinstance(source, dict)
-            and source.get("source_type") == source_type
-            and _source_url(source)
-        ]
-        if sources:
-            return sorted(
-                sources,
-                key=lambda source: (
-                    str(source.get("source_id") or ""),
-                    str(source.get("source_url") or source.get("candidate_url") or ""),
-                ),
-            )[0]
+    sources = [
+        source
+        for source in vendor.get("canonical_sources", []) or []
+        if isinstance(source, dict)
+        and source.get("source_type") == source_type
+        and _source_url(source)
+    ]
+    if sources:
+        return sorted(
+            sources,
+            key=lambda source: (
+                str(source.get("source_id") or ""),
+                str(source.get("source_url") or ""),
+            ),
+        )[0]
     return None
 
 
 def _source_url(source: dict[str, Any] | None) -> str | None:
     if not isinstance(source, dict):
         return None
-    return _nullable_text(source.get("source_url") or source.get("candidate_url"))
+    return _nullable_text(source.get("source_url"))
 
 
 def _official_domain(vendor: dict[str, Any] | None) -> str | None:
