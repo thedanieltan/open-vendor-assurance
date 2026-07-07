@@ -4,7 +4,7 @@ OpenVA publishes spreadsheet-friendly release assets through GitHub Releases.
 
 These files are for users who want to inspect public vendor assurance source metadata without installing Python, running Docker, or hosting a service.
 
-To resolve your own vendor list, use the browser resolver UI, the local Python matcher, or the optional self-hosted resolver components. The browser resolver is static and browser-local: it uses loaded public metadata and does not perform live verification, live discovery, hosted private-inventory upload, or server-side matching.
+To resolve your own vendor list, use the browser resolver UI, the local Python matcher, or the optional self-hosted read-only components. The browser resolver is static and browser-local: it uses loaded public metadata and does not perform live verification, live discovery, hosted private-inventory upload, or server-side matching.
 
 OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
 
@@ -21,7 +21,7 @@ The initial public metadata set is useful for testing importer workflows, matchi
 
 Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
 
-Use the browser resolver UI to resolve vendor sources from loaded public metadata, configure source-pack fields, use browser-local CSV matching, and export selected public OpenVA metadata without installing tooling.
+Use the browser resolver UI to match vendor lists against loaded public metadata, choose human export presets, and export indexed public source references without installing tooling.
 
 The browser page is static and read-only over public metadata. It does not provide accounts, workspaces, server-side matching, hosted private inventory upload, live verification, live discovery, vendor approval, risk scoring, legal advice, compliance advice, procurement advice, KYC/AML conclusions, sanctions conclusions, or certification-validity conclusions.
 
@@ -59,7 +59,7 @@ to prepare your own vendor inventory for matching with OpenVA tooling. Use which
 vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
 ```
 
-`vendor_name` is usually enough to get a brand-level match. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `domain` improves brand match confidence when available. `jurisdiction` lets OpenVA use the contracting-entity resolution index when the reference cache has a public record for that vendor and jurisdiction. `registration_number` is optional, but it is the strongest entity-level identifier when OpenVA has the corresponding legal entity record. In Singapore, this is the UEN. `registered_address` is optional context from your own inventory and is preserved in the output.
+`vendor_name` is usually enough to get a brand-level match. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `domain` improves matching when available. `jurisdiction` lets OpenVA use the contracting-entity resolution index when the reference cache has a public record for that vendor and jurisdiction. `registration_number` is optional, but it is the strongest entity-level identifier when OpenVA has the corresponding legal entity record. In Singapore, this is the UEN. `registered_address` is optional context from your own inventory and is preserved in the output.
 
 Use:
 
@@ -80,12 +80,11 @@ only if you want checksums and release artifact metadata.
 
 ## Deterministic pack timestamps
 
-OpenVA pack and generated index timestamps may use a fixed value such as
-`1970-01-01T00:00:00Z` to preserve deterministic rebuilds.
+OpenVA pack and generated index timestamps may use a fixed value such as `1970-01-01T00:00:00Z` to preserve deterministic rebuilds.
 
 This value is not a freshness signal.
 
-Consumers that need freshness or provenance should use:
+Consumers that need provenance should use:
 
 - the pinned release tag or repository commit SHA;
 - source-level `provenance.collected_at`;
@@ -98,7 +97,7 @@ Do not treat pack-level `generated_at` or `generatedAt` as evidence that a vendo
 
 Start with `vendors.csv` to find a vendor by name or domain.
 
-Use `source_coverage.csv` to see which public source types OpenVA currently records for each vendor, such as DPA, privacy notice, security page, and subprocessors.
+Use `source_coverage.csv` to see which public source types OpenVA currently records for each vendor, such as DPA, privacy notice, security page, trust center, status page, and subprocessors.
 
 Use `sources.csv` to inspect the public URLs themselves.
 
@@ -110,13 +109,11 @@ Use `candidate_sources.csv` and `unavailable_sources.csv` carefully:
 
 ## Matching your own vendor list
 
-OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository ships optional API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default unless configured by the operator, and this release does not include the production infrastructure, production smoke evidence, or public verify endpoint required for an operated hosted service.
-
-Until hosted deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment.
+OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. Until hosted deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment.
 
 If you want to match a vendor list against OpenVA today:
 
-- prepare your file using `openva-inventory-template.csv`;
+- prepare your file using `openva-inventory-template.csv` or your existing vendor list;
 - use the browser resolver UI, where your CSV is processed locally in your browser and is not uploaded to OpenVA;
 - or run the local Python matcher / optional self-hosted match service inside your own environment;
 - keep the input vendor inventory inside your own environment.
@@ -133,7 +130,42 @@ registration_number
 
 At least one of `vendor_name`, `business_entity_name`, `domain`, or `registration_number` is required. `jurisdiction` helps with legal entity resolution when a brand match already exists. `registered_address` and other columns, such as an internal owner, business unit, or category, are preserved in the output but are not required for matching.
 
-The output is an enriched CSV with OpenVA public source-reference metadata.
+The output is an enriched CSV with OpenVA indexed public source-reference metadata.
+
+## Human output presets
+
+Human exports preserve the user's original columns and append only the selected OpenVA enrichment columns.
+
+Default preset — Source URLs:
+
+```csv
+openva_match,openva_vendor_name,openva_domain,dpa_url,privacy_notice_url,subprocessors_url,security_page_url,trust_center_url,status_page_url,openva_notes
+```
+
+Other presets are defined in [`output-templates.md`](output-templates.md):
+
+```text
+Privacy / DPA Review
+Security Review
+Procurement Quick Check
+Minimal Match Only
+Full Human Export
+```
+
+Do not include these diagnostic fields in the default human output:
+
+```text
+match_confidence
+catalog_membership
+catalog_tier
+review_state
+freshness_mode
+advisory_boundary
+candidate_source_count
+unavailable_source_count
+```
+
+A blank source URL means OpenVA has no indexed public source reference for that source type in the loaded index. It is not a compliance, security, procurement, risk, or legal conclusion.
 
 ## Browser resolver and observation shell
 
@@ -160,14 +192,13 @@ For example, a Singapore inventory row for Stripe might produce:
 ```text
 Vendor name: Stripe
 Domain matched: stripe.com
-Brand match: stripe, exact domain, confidence 1.00
+Brand match: stripe, exact domain
 Legal entity match method: jurisdiction_resolution_index
-Legal entity resolution confidence: candidate
 Candidate entity: Stripe Payments Singapore Pte. Ltd.
 Registration number: populated when OpenVA has the public registry record
 ```
 
-`candidate` means public metadata suggests the entity may be relevant for that jurisdiction. It is not confirmation from your signed agreement. OpenVA provides the public DPA reference only; confirm that the entity named in your signed agreement matches the entity shown in OpenVA.
+`candidate` means public metadata suggests the entity may be relevant for that jurisdiction. It is not confirmation from your signed agreement. OpenVA provides the public source reference only; confirm that the entity named in your signed agreement matches the entity shown in OpenVA.
 
 ## Missing or stale data
 
