@@ -195,7 +195,7 @@ def test_source_type_filter_and_missing_type_note(snapshot):
         "source_type": "dpa",
         "url": "https://vendor.example/legal/dpa",
         "title": None,
-        "source_id": "example-dpa",
+        "source_id": "example-vendor-dpa",
     }
     assert result["source_references"]["trust_center"] == {
         "status": "not_indexed",
