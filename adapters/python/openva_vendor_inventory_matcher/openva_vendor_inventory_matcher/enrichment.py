@@ -1,7 +1,7 @@
 """Shared, dependency-neutral enrichment projection authority.
 
 This module owns the *projection* half of the host-neutral enrichment contract:
-given a match decision and the matched vendor's canonical sources, filter by
+given a match decision and the matched vendor's indexed source records, filter by
 requested source type, pick the primary source per type, group URLs, and emit
 machine-state notes. ``assemble_enrichment`` is that shared authority, used by
 both surfaces, so for the **same decision and the same sources** they produce an
@@ -39,7 +39,7 @@ from openva_vendor_inventory_matcher.core import (
     select_with_legal_fallback,
 )
 
-# Canonical source-type -> human label, used only to phrase machine-state notes.
+# Source-type -> human label, used only to phrase machine-state notes.
 # Never a compliance conclusion. Shared so both surfaces word notes identically.
 SOURCE_TYPE_LABELS: dict[str, str] = {
     "dpa": "DPA",
@@ -152,8 +152,8 @@ def build_notes(
 ) -> list[str]:
     """Machine-state notes only; never a compliance conclusion, never 'non-compliant'.
 
-    A missing source type is recorded as a neutral coverage fact ("has no canonical
-    X source"), not as a deficiency or a pass/fail judgement.
+    A missing source type is recorded as a neutral coverage fact ("has no indexed
+    X source record"), not as a deficiency or a pass/fail judgement.
     """
     if status == "ambiguous":
         return ["Ambiguous vendor match"]
@@ -164,26 +164,26 @@ def build_notes(
         for source_type in source_types:
             if source_type not in primary_by_type:
                 label = SOURCE_TYPE_LABELS.get(source_type, source_type)
-                notes.append(f"Matched vendor has no canonical {label} source")
+                notes.append(f"Matched vendor has no indexed {label} source record")
     elif not has_any_sources:
-        notes.append("Matched vendor has no canonical sources")
+        notes.append("Matched vendor has no indexed source records")
     return notes
 
 
 def filter_and_rank(
-    canonical_sources: list[dict[str, Any]],
+    source_records: list[dict[str, Any]],
     source_types: list[str] | None,
 ) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, list[str]]]:
-    """Filter raw canonical sources by requested type and rank a primary per type.
+    """Filter raw source records by requested type and rank a primary per type.
 
     Returns (filtered raw rows in input order, primary raw row per type, urls per
-    type). ``None`` source_types means all canonical types; an explicit list keeps
+    type). ``None`` source_types means all indexed types; an explicit list keeps
     only matching rows and an unknown type simply yields no rows for that type.
     """
     requested = set(source_types) if source_types else None
     filtered = [
         row
-        for row in canonical_sources
+        for row in source_records
         if requested is None or row.get("source_type") in requested
     ]
     primary = primary_source_by_type(filtered)
@@ -194,6 +194,66 @@ def filter_and_rank(
         if source_type and url:
             urls_by_type.setdefault(source_type, []).append(url)
     return filtered, primary, urls_by_type
+
+
+def identity_projection(match: dict[str, Any]) -> dict[str, Any]:
+    """Preferred compact identity block for new agent consumers.
+
+    The legacy ``match`` object remains in the result for compatibility. New agent
+    consumers can map this normalized block into Sheets, Notion, Jira, GRC tools,
+    procurement systems, or internal databases without inheriting the older
+    matched/ambiguous/no_match vocabulary.
+    """
+    status = str(match.get("status") or "no_match")
+    is_match = status == "matched"
+    if status == "ambiguous":
+        no_match_reason = "multiple_plausible_entities"
+    elif is_match:
+        no_match_reason = None
+    else:
+        no_match_reason = "no_indexed_openva_match"
+    return {
+        "match_status": "match" if is_match else "no_match",
+        "matched_vendor_id": match.get("vendor_id") if is_match else None,
+        "matched_vendor_name": match.get("display_name") if is_match else None,
+        "match_basis": [match.get("method")] if is_match and match.get("method") else [],
+        "no_match_reason": no_match_reason,
+    }
+
+
+def source_reference(source_type: str, source: dict[str, Any] | None) -> dict[str, Any]:
+    """Project one source record into the preferred agent source-reference object."""
+    if not source:
+        return {
+            "status": "not_indexed",
+            "source_type": source_type,
+            "url": None,
+            "title": None,
+            "source_id": None,
+        }
+    return {
+        "status": "indexed",
+        "source_type": source_type,
+        "url": source.get("source_url"),
+        "title": source.get("title") or source.get("title_en") or source.get("title_native"),
+        "source_id": source.get("source_id"),
+    }
+
+
+def source_references_by_type(
+    *,
+    status: str,
+    source_types: list[str] | None,
+    primary_by_type: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Build destination-neutral references agents can map into their own schemas."""
+    if status != "matched":
+        return {}
+    output_types = source_types if source_types is not None else sorted(primary_by_type)
+    return {
+        source_type: source_reference(source_type, primary_by_type.get(source_type))
+        for source_type in output_types
+    }
 
 
 def assemble_enrichment(
@@ -209,7 +269,7 @@ def assemble_enrichment(
     """Assemble the host-neutral enrichment result from an *already-decided* match.
 
     This is the **shared projection authority**: given a match decision and the
-    matched vendor's raw canonical source rows, it performs source-type filtering,
+    matched vendor's raw source records, it performs source-type filtering,
     primary-source ranking, URL grouping, and machine-state notes — identically for
     every surface. The *matcher* that produced ``match`` is the caller's concern and
     may differ in capability (pack-backed legal-entity resolution for the match
@@ -217,10 +277,10 @@ def assemble_enrichment(
     parity holds for the same decision and the same sources.
 
     ``match`` is the match dict (``status`` plus ``vendor_id`` / ``candidates`` …).
-    ``sources_for`` returns the matched vendor's raw canonical source rows (each
-    needs ``source_type``, ``source_url``, ``source_id``; ``effective_or_published_at``
-    is used for ranking when present). ``project_source`` shapes each surviving raw
-    row into the adapter's public source view. ``row_id`` and ``identity`` are echoed
+    ``sources_for`` returns the matched vendor's raw source rows (each needs
+    ``source_type``, ``source_url``, ``source_id``; ``effective_or_published_at`` is
+    used for ranking when present). ``project_source`` shapes each surviving raw row
+    into the adapter's public source view. ``row_id`` and ``identity`` are echoed
     verbatim. No snapshot identity is attached here — the transport discloses that
     once at the response envelope.
     """
@@ -251,6 +311,12 @@ def assemble_enrichment(
     return {
         "row_id": row_id,
         "input": identity or {},
+        "identity": identity_projection(match),
+        "source_references": source_references_by_type(
+            status=str(match.get("status") or ""),
+            source_types=source_types,
+            primary_by_type=primary_by_type,
+        ),
         "match": match,
         "sources": sources,
         "primary_source_by_type": primary_by_type,
@@ -258,50 +324,3 @@ def assemble_enrichment(
         "notes": notes,
         "not_advice": True,
     }
-
-
-def enrich_identity(
-    vendors: list[VendorRecord],
-    *,
-    sources_for: Callable[[str], list[dict[str, Any]]],
-    row_id: str | int | None = None,
-    vendor_name: str | None = None,
-    domain: str | None = None,
-    business_entity_name: str | None = None,
-    registration_number: str | None = None,
-    source_types: list[str] | None = None,
-    project_source: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
-    legal_by_registration: dict[str, Any] | None = None,
-    legal_by_id: dict[str, Any] | None = None,
-) -> dict[str, Any]:
-    """Enrichment for surfaces that match via :func:`match_identity` (the MCP tool).
-
-    Runs :func:`match_identity` (domain/name, plus the shared registration-number
-    fallback when ``legal_by_registration`` / ``legal_by_id`` are supplied) and feeds
-    the result to :func:`assemble_enrichment`. Surfaces with their own capability-aware
-    matcher (the match service's pack-backed ``MatcherIndex.enrich_row``) call
-    :func:`assemble_enrichment` directly with their own match decision.
-    """
-    match, selected = match_identity(
-        vendors,
-        vendor_name=vendor_name,
-        domain=domain,
-        business_entity_name=business_entity_name,
-        registration_number=registration_number,
-        legal_by_registration=legal_by_registration,
-        legal_by_id=legal_by_id,
-    )
-    return assemble_enrichment(
-        match,
-        selected.vendor.vendor_id if selected else None,
-        sources_for=sources_for,
-        source_types=source_types,
-        row_id=row_id,
-        identity={
-            "vendor_name": vendor_name,
-            "domain": domain,
-            "business_entity_name": business_entity_name,
-            "registration_number": registration_number,
-        },
-        project_source=project_source,
-    )
