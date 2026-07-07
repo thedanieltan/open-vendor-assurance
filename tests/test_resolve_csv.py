@@ -242,3 +242,26 @@ def test_docs_describe_hint_only_index_and_consumer_side_live_verification():
     assert "hint-only" in text
     assert "does not make network calls" in text
     assert "consumer-side live verification" in text
+
+
+def test_release_readiness_docs_point_to_local_compiler_not_hosted_resolver():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    local_compiler = (ROOT / "docs/local-compiler.md").read_text(encoding="utf-8")
+    site_readme = (ROOT / "site/README.md").read_text(encoding="utf-8")
+
+    command_fragments = [
+        "python -m tools.openva.resolve_csv input.csv",
+        "--source-types trust_center,dpa,subprocessors_list,privacy_notice,security_page,status_page",
+        "--out-json result-pack.json",
+        "--out-csv result-pack.csv",
+    ]
+    for fragment in command_fragments:
+        assert fragment in readme
+        assert fragment in local_compiler
+
+    assert "OpenVA does not need workspace credentials" in readme
+    assert "operate a hosted resolver API" in readme
+    assert "Hosted resolver infrastructure remains gated" not in readme
+    assert "configured public-read OpenVA endpoint" not in readme
+    assert "Google Sheets client over the /v1/enrich API" not in readme
+    assert "no hosted resolver worker" in site_readme
