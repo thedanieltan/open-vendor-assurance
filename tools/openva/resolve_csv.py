@@ -54,18 +54,8 @@ def compile_rows(
 
     rows: list[dict[str, Any]] = []
     for input_index, input_row in enumerate(input_rows):
-        candidates = _match_candidates(input_row, matcher_records)
-        selected = matcher.select_match(candidates)
-        rows.append(
-            _result_row(
-                input_row,
-                input_index,
-                selected,
-                vendors_by_id,
-                requested_source_types,
-                matcher.classify(candidates, selected),
-            )
-        )
+        selected = matcher.select_match(_match_candidates(input_row, matcher_records))
+        rows.append(_result_row(input_row, input_index, selected, vendors_by_id, requested_source_types))
     return rows
 
 
@@ -136,22 +126,17 @@ def _result_row(
     selected: matcher.MatchCandidate | None,
     vendors_by_id: dict[str, dict[str, Any]],
     source_types: list[str],
-    match_status: str,
 ) -> dict[str, Any]:
     vendor = vendors_by_id.get(selected.vendor.vendor_id) if selected is not None else None
-    matched = vendor is not None
     source_urls = {
-        source_type: _source_url_for_output(vendor, source_type) if source_type in source_types else None
+        source_type: _source_url_for_output(vendor, source_type) if vendor and source_type in source_types else None
         for source_type in pack.SOURCE_TYPES
     }
-    any_source = any(source_urls.values())
     return {
         "result_pack_version": pack.RESULT_PACK_VERSION,
         "input_index": input_index,
         "input_vendor_name": _nullable_text(input_row.get("vendor_name") or input_row.get("business_entity_name")),
         "input_domain": _nullable_text(input_row.get("domain")),
-        "match_status": "matched" if matched else "not_matched",
-        "match_reason": _match_reason(input_row, selected, match_status),
         "compiled_vendor_name": _nullable_text(vendor.get("display_name")) if vendor else None,
         "compiled_domain": _compiled_domain(vendor) if vendor else None,
         "dpa_url": source_urls["dpa"],
@@ -159,8 +144,6 @@ def _result_row(
         "privacy_notice_url": source_urls["privacy_notice"],
         "security_or_trust_url": source_urls["security_or_trust"],
         "status_page_url": source_urls["status_page"],
-        "source_status": "compiled_from_reference" if any_source else "not_available",
-        "review_note": _review_note(matched, any_source),
     }
 
 
@@ -218,32 +201,6 @@ def _compiled_domain(vendor: dict[str, Any] | None) -> str | None:
             if text:
                 return text
     return _nullable_text(vendor.get("official_domain"))
-
-
-def _match_reason(
-    input_row: dict[str, Any],
-    selected: matcher.MatchCandidate | None,
-    match_status: str,
-) -> str:
-    if selected is not None:
-        if selected.method in {"domain_exact", "domain_subdomain"}:
-            return "domain match"
-        if selected.method == "name_exact":
-            return "name match"
-        return "reference match"
-    if match_status == matcher.STATUS_AMBIGUOUS:
-        return "multiple plausible entities"
-    if not (input_row.get("vendor_name") or input_row.get("business_entity_name") or input_row.get("domain")):
-        return "missing vendor identity"
-    return "not in reference"
-
-
-def _review_note(matched: bool, any_source: bool) -> str:
-    if matched and any_source:
-        return "Review compiled links before relying on them"
-    if matched:
-        return "Vendor matched; no compiled source links available"
-    return "No compiled source available"
 
 
 def _nullable_text(value: Any) -> str | None:
