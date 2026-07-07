@@ -29,20 +29,18 @@ def write_index(root: Path) -> None:
                         "catalog_status": "active",
                         "official_domains": ["acme.example"],
                         "manifest_path": "dist/vendors/acme.json",
-                        "primary_source_by_type": {
-                            "trust_center": {
+                        "canonical_sources": [
+                            {
                                 "source_id": "acme-trust",
                                 "source_type": "trust_center",
                                 "source_url": "https://trust.acme.example",
                             },
-                            "dpa": {
+                            {
                                 "source_id": "acme-dpa",
                                 "source_type": "dpa",
                                 "source_url": "https://acme.example/dpa",
                             },
-                        },
-                        "canonical_sources": [],
-                        "candidate_sources": [],
+                        ],
                     },
                     {
                         "vendor_id": "beta",
@@ -51,15 +49,13 @@ def write_index(root: Path) -> None:
                         "catalog_status": "active",
                         "official_domains": ["beta.example"],
                         "manifest_path": "dist/vendors/beta.json",
-                        "primary_source_by_type": {
-                            "security_page": {
+                        "canonical_sources": [
+                            {
                                 "source_id": "beta-security",
                                 "source_type": "security_page",
                                 "source_url": "https://beta.example/security",
                             }
-                        },
-                        "canonical_sources": [],
-                        "candidate_sources": [],
+                        ],
                     },
                 ],
             },
