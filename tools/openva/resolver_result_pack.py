@@ -1,10 +1,9 @@
-"""Resolver-first result-pack projection.
+"""Human-facing vendor-list compilation output.
 
-This module freezes the public/browser-facing result shape without changing the
-live resolver or the pinned agent-export contract. Python callers use
-``vendor_resolution`` as the matching and resolution authority, then this module
-projects those results into a compact JSON/CSV contract suitable for static
-browser output and Lovable/GitHub Pages integrations.
+This module keeps matching and source lookup separate from the downloadable CSV
+shape. The CSV download is intentionally simple: preserve the uploaded columns
+and append matched vendor identity plus source fields for CISO, DPO, and
+procurement review.
 """
 
 from __future__ import annotations
@@ -16,9 +15,17 @@ from typing import Any
 
 from tools.openva import vendor_resolution
 
-RESULT_PACK_VERSION = "1.0.0"
+RESULT_PACK_VERSION = "2.0.0"
 
 SOURCE_TYPES: tuple[str, ...] = (
+    "dpa",
+    "subprocessors",
+    "privacy_notice",
+    "security_or_trust",
+    "status_page",
+)
+
+RESOLVER_SOURCE_TYPES: tuple[str, ...] = (
     "trust_center",
     "dpa",
     "subprocessors_list",
@@ -27,67 +34,57 @@ SOURCE_TYPES: tuple[str, ...] = (
     "status_page",
 )
 
-SOURCE_STATUSES: tuple[str, ...] = (
-    "found",
-    "not_found",
-    "gated",
-    "unavailable",
-    "not_applicable",
-    "not_checked",
-)
+SOURCE_TYPE_ALIASES: dict[str, str] = {
+    "subprocessors_list": "subprocessors",
+    "trust_center": "security_or_trust",
+    "security_page": "security_or_trust",
+}
 
-NO_MATCH_REASONS: tuple[str, ...] = (
-    "not_in_reference",
-    "multiple_plausible_entities",
-    "no_public_identity",
-    "inconclusive",
-)
-
-CANDIDATE_BASES: tuple[str, ...] = (
-    "community_hint",
-    "vendor_asserted",
-    "cached_locator",
-    "direct_input",
-    "none",
-)
-
-VERIFICATION_BASES: tuple[str, ...] = (
-    "not_checked",
-    "verified_live",
-    "live_unavailable",
-    "live_gated",
-    "live_not_found",
-)
+RESOLVER_SOURCE_TYPES_BY_OUTPUT: dict[str, tuple[str, ...]] = {
+    "dpa": ("dpa",),
+    "subprocessors": ("subprocessors_list",),
+    "privacy_notice": ("privacy_notice",),
+    "security_or_trust": ("trust_center", "security_page"),
+    "status_page": ("status_page",),
+}
 
 FLAT_RESULT_COLUMNS: tuple[str, ...] = (
-    "openva_identity_status",
-    "openva_no_match_reason",
-    "openva_matched_vendor_id",
-    "openva_matched_vendor_name",
-    *(
-        column
-        for source_type in SOURCE_TYPES
-        for column in (
-            f"openva_{source_type}_status",
-            f"openva_{source_type}_url",
-            f"openva_{source_type}_candidate_basis",
-            f"openva_{source_type}_verification_basis",
-            f"openva_{source_type}_checked_at",
-        )
-    ),
-    "openva_not_advice",
+    "matched_vendor_name",
+    "official_domain",
+    "dpa_url",
+    "subprocessors_url",
+    "privacy_notice_url",
+    "security_or_trust_url",
+    "status_page_url",
 )
 
 
 def normalize_source_types(source_types: Iterable[str] | None = None) -> list[str]:
-    """Return contract source types in deterministic contract order."""
+    """Return output source types in deterministic human-template order."""
     if source_types is None:
         return list(SOURCE_TYPES)
-    requested = {str(source_type) for source_type in source_types}
-    unknown = sorted(requested.difference(SOURCE_TYPES))
+    requested: set[str] = set()
+    unknown: list[str] = []
+    for source_type in source_types:
+        canonical = SOURCE_TYPE_ALIASES.get(str(source_type), str(source_type))
+        if canonical not in SOURCE_TYPES:
+            unknown.append(str(source_type))
+        else:
+            requested.add(canonical)
     if unknown:
-        raise ValueError(f"unsupported resolver result-pack source type(s): {', '.join(unknown)}")
+        raise ValueError(f"unsupported vendor compilation source type(s): {', '.join(sorted(unknown))}")
     return [source_type for source_type in SOURCE_TYPES if source_type in requested]
+
+
+def resolver_source_types(source_types: Iterable[str] | None = None) -> list[str]:
+    """Map human-template source types to resolver/catalog source types."""
+    output_types = normalize_source_types(source_types)
+    requested: list[str] = []
+    for output_type in output_types:
+        for resolver_type in RESOLVER_SOURCE_TYPES_BY_OUTPUT[output_type]:
+            if resolver_type not in requested:
+                requested.append(resolver_type)
+    return requested
 
 
 def build_result_pack(
@@ -103,12 +100,9 @@ def build_result_pack(
     ingress: Any | None = None,
     now: Callable[[], str] = vendor_resolution._now_default,
 ) -> list[dict[str, Any]]:
-    """Resolve input rows through the existing resolver, then project them.
-
-    Matching authority remains ``vendor_resolution.resolve_vendor_sources`` and
-    the shared inventory matcher it wraps. This function only shapes output.
-    """
-    source_types = normalize_source_types(required_source_types)
+    """Resolve input rows, then project them to the compiled vendor-info shape."""
+    output_source_types = normalize_source_types(required_source_types)
+    requested_resolver_types = resolver_source_types(output_source_types)
     emitter = vendor_resolution.SessionEmitter(
         ingress if ingress is not None else vendor_resolution.RecordingIngress()
     )
@@ -117,7 +111,7 @@ def build_result_pack(
         resolution = vendor_resolution.resolve_vendor_sources(
             {
                 "vendor": row,
-                "required_source_types": source_types,
+                "required_source_types": requested_resolver_types,
                 "freshness_mode": freshness_mode,
                 "channel": channel,
             },
@@ -128,7 +122,7 @@ def build_result_pack(
             emitter=emitter,
             now=now,
         )
-        projected.append(project_resolution(row, index, resolution, source_types))
+        projected.append(project_resolution(row, index, resolution, output_source_types))
     return projected
 
 
@@ -138,18 +132,24 @@ def project_resolution(
     resolution: vendor_resolution.VendorResolution | dict[str, Any],
     required_source_types: Iterable[str] | None = None,
 ) -> dict[str, Any]:
-    """Project one resolver result into one result-pack row."""
+    """Project one resolver result into one compiled vendor-info row."""
     payload = resolution.to_response() if hasattr(resolution, "to_response") else dict(resolution)
     vendor = dict(payload.get("vendor") or {})
-    resolution_status = str(payload.get("resolution_status") or "")
     source_types = normalize_source_types(required_source_types)
     source_by_type = {
         str(source.get("source_type")): source
         for source in payload.get("sources", [])
-        if isinstance(source, dict) and source.get("source_type") in SOURCE_TYPES
+        if isinstance(source, dict) and source.get("source_type") in RESOLVER_SOURCE_TYPES
     }
-    identity_status = _identity_status(vendor, resolution_status)
-    no_match_reason = None if identity_status == "match" else _no_match_reason(input_row, resolution_status)
+    matched = bool(vendor.get("vendor_id"))
+    source_urls = {
+        source_type: (
+            _source_url_for_output(source_by_type, source_type)
+            if matched and source_type in source_types
+            else None
+        )
+        for source_type in SOURCE_TYPES
+    }
 
     return {
         "result_pack_version": RESULT_PACK_VERSION,
@@ -158,15 +158,13 @@ def project_resolution(
             input_row.get("vendor_name") or input_row.get("business_entity_name")
         ),
         "input_domain": _nullable_text(input_row.get("domain")),
-        "identity_status": identity_status,
-        "no_match_reason": no_match_reason,
-        "matched_vendor_id": _nullable_text(vendor.get("vendor_id")),
-        "matched_vendor_name": _nullable_text(vendor.get("display_name")),
-        "sources": [
-            project_source(source_by_type.get(source_type), resolution_status, source_type)
-            for source_type in source_types
-        ],
-        "not_advice": True,
+        "matched_vendor_name": _nullable_text(vendor.get("display_name")) if matched else None,
+        "official_domain": _official_domain(vendor) if matched else None,
+        "dpa_url": source_urls["dpa"],
+        "subprocessors_url": source_urls["subprocessors"],
+        "privacy_notice_url": source_urls["privacy_notice"],
+        "security_or_trust_url": source_urls["security_or_trust"],
+        "status_page_url": source_urls["status_page"],
     }
 
 
@@ -175,59 +173,22 @@ def project_source(
     resolution_status: str,
     source_type: str,
 ) -> dict[str, Any]:
-    """Project one resolver source; candidate inputs never imply live verification."""
-    if source is None:
-        return {
-            "source_type": source_type,
-            "status": "not_checked",
-            "url": None,
-            "candidate_basis": "none",
-            "verification_basis": "not_checked",
-            "checked_at": None,
-        }
-    live_checked = bool(source.get("live_checked"))
-    status = _source_status(str(source.get("status") or resolution_status), source, live_checked)
-    verification_basis = _verification_basis(status, live_checked)
+    """Project one source to the simplified source shape used by the human template."""
+    del resolution_status
+    output_type = SOURCE_TYPE_ALIASES.get(str(source_type), str(source_type))
+    if output_type not in SOURCE_TYPES:
+        raise ValueError(f"unsupported vendor compilation source type: {source_type}")
     return {
-        "source_type": source_type,
-        "status": status,
-        "url": _nullable_text(source.get("source_url") or source.get("candidate_url")),
-        "candidate_basis": _candidate_basis(source),
-        "verification_basis": verification_basis,
-        "checked_at": (
-            _nullable_text(source.get("checked_at"))
-            if verification_basis != "not_checked"
-            else None
-        ),
+        "source_type": output_type,
+        "url": _source_url(source),
     }
 
 
 def flatten_result_row(input_row: dict[str, Any], result_row: dict[str, Any]) -> dict[str, Any]:
-    """Append deterministic ``openva_*`` CSV columns to the original row."""
+    """Append deterministic human-download columns to the original row."""
     flattened: dict[str, Any] = dict(input_row)
-    flattened.update(
-        {
-            "openva_identity_status": result_row["identity_status"],
-            "openva_no_match_reason": result_row["no_match_reason"],
-            "openva_matched_vendor_id": result_row["matched_vendor_id"],
-            "openva_matched_vendor_name": result_row["matched_vendor_name"],
-            "openva_not_advice": "true" if result_row["not_advice"] else "false",
-        }
-    )
-    source_by_type = {source["source_type"]: source for source in result_row["sources"]}
-    for source_type in SOURCE_TYPES:
-        source = source_by_type.get(source_type) or {
-            "status": "not_checked",
-            "url": None,
-            "candidate_basis": "none",
-            "verification_basis": "not_checked",
-            "checked_at": None,
-        }
-        flattened[f"openva_{source_type}_status"] = source["status"]
-        flattened[f"openva_{source_type}_url"] = source["url"]
-        flattened[f"openva_{source_type}_candidate_basis"] = source["candidate_basis"]
-        flattened[f"openva_{source_type}_verification_basis"] = source["verification_basis"]
-        flattened[f"openva_{source_type}_checked_at"] = source["checked_at"]
+    for column in FLAT_RESULT_COLUMNS:
+        flattened[column] = result_row.get(column)
     return flattened
 
 
@@ -261,74 +222,31 @@ def result_pack_csv(input_rows: list[dict[str, Any]], result_rows: list[dict[str
     return output.getvalue()
 
 
-def _identity_status(vendor: dict[str, Any], resolution_status: str) -> str:
-    if resolution_status == vendor_resolution.RESULT_IDENTITY_AMBIGUOUS:
-        return "no_match"
-    return "match" if vendor.get("vendor_id") else "no_match"
+def _source_url_for_output(source_by_type: dict[str, dict[str, Any]], output_source_type: str) -> str | None:
+    for resolver_type in RESOLVER_SOURCE_TYPES_BY_OUTPUT[output_source_type]:
+        url = _source_url(source_by_type.get(resolver_type))
+        if url:
+            return url
+    return None
 
 
-def _no_match_reason(input_row: dict[str, Any], resolution_status: str) -> str:
-    if resolution_status == vendor_resolution.RESULT_IDENTITY_AMBIGUOUS:
-        return "multiple_plausible_entities"
-    if not (input_row.get("vendor_name") or input_row.get("business_entity_name") or input_row.get("domain")):
-        return "no_public_identity"
-    if resolution_status == vendor_resolution.RESULT_VERIFICATION_INCONCLUSIVE:
-        return "inconclusive"
-    return "not_in_reference"
+def _source_url(source: dict[str, Any] | None) -> str | None:
+    if not isinstance(source, dict):
+        return None
+    return _nullable_text(source.get("source_url") or source.get("candidate_url"))
 
 
-def _source_status(status: str, source: dict[str, Any], live_checked: bool) -> str:
-    if not live_checked:
-        return "not_checked"
-    if status in {
-        vendor_resolution.RESULT_CATALOG_CURRENT,
-        vendor_resolution.RESULT_CATALOG_REFRESHED,
-        vendor_resolution.RESULT_NEWLY_DISCOVERED,
-        vendor_resolution.RESULT_CATALOGUED,
-    }:
-        return "found"
-    if status == vendor_resolution.RESULT_SOURCE_UNAVAILABLE:
-        return "unavailable"
-    if status == vendor_resolution.RESULT_NOT_FOUND:
-        return "not_found"
-    if status == vendor_resolution.RESULT_CANDIDATE_PROCESSING:
-        return "not_checked"
-    if status == vendor_resolution.RESULT_VERIFICATION_INCONCLUSIVE:
-        reasons = " ".join(str(reason).lower() for reason in source.get("reasons", []))
-        if "gated" in reasons or "bot_protected" in reasons:
-            return "gated"
-        return "unavailable" if source.get("source_url") else "not_checked"
-    return "not_checked"
-
-
-def _candidate_basis(source: dict[str, Any]) -> str:
-    explicit = str(source.get("candidate_basis") or "")
-    if explicit in CANDIDATE_BASES:
-        return explicit
-    origin = str(source.get("origin") or "")
-    if origin in {"community_hint", "community"}:
-        return "community_hint"
-    if origin in {"vendor_asserted", "vendor"}:
-        return "vendor_asserted"
-    if origin == "direct_input":
-        return "direct_input"
-    if source.get("source_url") or source.get("candidate_url") or source.get("previous_source_url"):
-        return "cached_locator"
-    return "none"
-
-
-def _verification_basis(status: str, live_checked: bool) -> str:
-    if not live_checked:
-        return "not_checked"
-    if status == "found":
-        return "verified_live"
-    if status == "gated":
-        return "live_gated"
-    if status == "not_found":
-        return "live_not_found"
-    if status == "unavailable":
-        return "live_unavailable"
-    return "not_checked"
+def _official_domain(vendor: dict[str, Any]) -> str | None:
+    domain = _nullable_text(vendor.get("official_domain"))
+    if domain:
+        return domain
+    official_domains = vendor.get("official_domains")
+    if isinstance(official_domains, list):
+        for item in official_domains:
+            domain = _nullable_text(item)
+            if domain:
+                return domain
+    return None
 
 
 def _nullable_text(value: Any) -> str | None:

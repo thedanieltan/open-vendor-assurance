@@ -8,7 +8,6 @@ from jsonschema import Draft202012Validator
 from tools.openva import resolver_result_pack as pack
 from tools.openva import vendor_resolution
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -54,37 +53,38 @@ def validation_errors(rows):
     return sorted(Draft202012Validator(schema).iter_errors(rows), key=lambda error: list(error.path))
 
 
-def test_nested_json_order_is_deterministic_and_schema_valid():
+def test_projected_json_is_minimal_compiled_vendor_shape_and_schema_valid():
     row = {"vendor_name": "Example", "domain": "example.com"}
     result = resolution(
         sources=[
-            resolved_source("security_page", vendor_resolution.RESULT_CATALOG_CURRENT, live_checked=True, url="https://example.com/security"),
+            resolved_source("trust_center", vendor_resolution.RESULT_CATALOG_CURRENT, live_checked=False, url="https://example.com/trust"),
             resolved_source("dpa", vendor_resolution.RESULT_CATALOG_CURRENT, live_checked=False, url="https://example.com/dpa"),
+            resolved_source("subprocessors_list", vendor_resolution.RESULT_CATALOG_CURRENT, live_checked=False, url="https://example.com/subprocessors"),
         ]
     )
 
     projected = pack.project_resolution(row, 0, result)
 
-    assert [source["source_type"] for source in projected["sources"]] == list(pack.SOURCE_TYPES)
-    assert projected["sources"][0]["source_type"] == "trust_center"
-    assert projected["sources"][1] == {
-        "source_type": "dpa",
-        "status": "not_checked",
-        "url": "https://example.com/dpa",
-        "candidate_basis": "cached_locator",
-        "verification_basis": "not_checked",
-        "checked_at": None,
+    assert projected == {
+        "result_pack_version": "2.0.0",
+        "input_index": 0,
+        "input_vendor_name": "Example",
+        "input_domain": "example.com",
+        "matched_vendor_name": "Example",
+        "official_domain": "example.com",
+        "trust_security_url": "https://example.com/trust",
+        "dpa_url": "https://example.com/dpa",
+        "subprocessors_url": "https://example.com/subprocessors",
+        "privacy_notice_url": None,
+        "status_page_url": None,
     }
-    assert projected["sources"][4]["status"] == "found"
-    assert projected["sources"][4]["candidate_basis"] == "cached_locator"
-    assert projected["sources"][4]["verification_basis"] == "verified_live"
     validate_rows([projected])
 
 
-def test_flat_csv_preserves_input_order_and_deterministic_columns():
+def test_flat_csv_preserves_input_order_and_uses_minimal_human_download_columns():
     inputs = [
-        {"vendor_name": "First", "domain": "first.example"},
-        {"vendor_name": "Second", "domain": "second.example"},
+        {"vendor_name": "First", "business_entity_name": "", "domain": "first.example"},
+        {"vendor_name": "Second", "business_entity_name": "", "domain": "second.example"},
     ]
     rows = [
         pack.project_resolution(inputs[0], 0, resolution(vendor_id=None, status=vendor_resolution.RESULT_NOT_FOUND)),
@@ -110,136 +110,60 @@ def test_flat_csv_preserves_input_order_and_deterministic_columns():
 
     assert reader.fieldnames == [
         "vendor_name",
+        "business_entity_name",
         "domain",
         *pack.FLAT_RESULT_COLUMNS,
     ]
     assert [row["vendor_name"] for row in parsed] == ["First", "Second"]
-    assert parsed[0]["openva_identity_status"] == "no_match"
-    assert parsed[1]["openva_trust_center_status"] == "found"
-    assert parsed[1]["openva_trust_center_candidate_basis"] == "cached_locator"
-    assert parsed[1]["openva_trust_center_verification_basis"] == "verified_live"
+    assert parsed[0]["business_entity_name"] == ""
+    assert parsed[0]["matched_vendor_name"] == ""
+    assert parsed[0]["dpa_url"] == ""
+    assert parsed[1]["matched_vendor_name"] == "Example"
+    assert parsed[1]["trust_security_url"] == "https://second.example/trust"
+    assert "compiled_vendor_name" not in reader.fieldnames
+    assert "compiled_domain" not in reader.fieldnames
+    assert "security_or_trust_url" not in reader.fieldnames
+    assert "openva_not_advice" not in reader.fieldnames
+    assert not any(column.startswith("openva_") for column in reader.fieldnames)
+    assert "match_status" not in reader.fieldnames
+    assert "match_reason" not in reader.fieldnames
+    assert "source_status" not in reader.fieldnames
+    assert "review_note" not in reader.fieldnames
 
 
-def test_schema_enum_coverage_matches_projection_constants():
-    schema = json.loads((ROOT / "schemas/openva/resolver-result-pack.schema.json").read_text(encoding="utf-8"))
-    source_schema = schema["$defs"]["sourceResult"]["properties"]
-    no_match_schema = schema["$defs"]["resultRow"]["properties"]["no_match_reason"]["oneOf"][1]
+def test_source_type_aliases_collapse_to_human_template_columns():
+    assert pack.normalize_source_types(["trust_center", "security_page", "subprocessors_list"]) == [
+        "subprocessors",
+        "trust_security",
+    ]
+    assert pack.normalize_source_types(["security_or_trust"]) == ["trust_security"]
+    assert pack.resolver_source_types(["trust_security"]) == ["trust_center", "security_page"]
 
-    assert tuple(source_schema["source_type"]["enum"]) == pack.SOURCE_TYPES
-    assert tuple(source_schema["status"]["enum"]) == pack.SOURCE_STATUSES
-    assert tuple(source_schema["candidate_basis"]["enum"]) == pack.CANDIDATE_BASES
-    assert tuple(source_schema["verification_basis"]["enum"]) == pack.VERIFICATION_BASES
-    assert tuple(no_match_schema["enum"]) == pack.NO_MATCH_REASONS
+    trust = pack.project_source({"source_type": "trust_center", "source_url": "https://example.com/trust"}, "", "trust_center")
+    security = pack.project_source({"source_type": "security_page", "source_url": "https://example.com/security"}, "", "security_page")
 
-
-def test_no_match_reason_mapping_and_identity_ambiguous_collapse():
-    base = {"vendor_name": "Example", "domain": "example.com"}
-
-    ambiguous = pack.project_resolution(
-        base,
-        0,
-        resolution(vendor_id=None, status=vendor_resolution.RESULT_IDENTITY_AMBIGUOUS),
-    )
-    absent = pack.project_resolution(base, 1, resolution(vendor_id=None, status=vendor_resolution.RESULT_NOT_FOUND))
-    no_identity = pack.project_resolution({}, 2, resolution(vendor_id=None, status=vendor_resolution.RESULT_NOT_FOUND))
-    inconclusive = pack.project_resolution(
-        base,
-        3,
-        resolution(vendor_id=None, status=vendor_resolution.RESULT_VERIFICATION_INCONCLUSIVE),
-    )
-
-    assert ambiguous["identity_status"] == "no_match"
-    assert ambiguous["no_match_reason"] == "multiple_plausible_entities"
-    assert absent["no_match_reason"] == "not_in_reference"
-    assert no_identity["no_match_reason"] == "no_public_identity"
-    assert inconclusive["no_match_reason"] == "inconclusive"
+    assert trust == {"source_type": "trust_security", "url": "https://example.com/trust"}
+    assert security == {"source_type": "trust_security", "url": "https://example.com/security"}
 
 
-def test_source_state_mapping_does_not_overclaim_cached_or_inconclusive_results():
-    cached_current = pack.project_source(
-        {
-            "source_type": "dpa",
-            "status": vendor_resolution.RESULT_CATALOG_CURRENT,
-            "source_url": "https://example.com/dpa",
-            "live_checked": False,
-            "checked_at": "2026-01-01T00:00:00Z",
-        },
-        vendor_resolution.RESULT_CATALOG_CURRENT,
-        "dpa",
-    )
-    gated = pack.project_source(
-        {
-            "source_type": "privacy_notice",
-            "status": vendor_resolution.RESULT_VERIFICATION_INCONCLUSIVE,
-            "source_url": "https://example.com/privacy",
-            "live_checked": True,
-            "checked_at": "2026-07-06T00:00:00Z",
-            "reasons": ["inconclusive:gated"],
-        },
-        vendor_resolution.RESULT_VERIFICATION_INCONCLUSIVE,
-        "privacy_notice",
-    )
-    unavailable = pack.project_source(
-        {
-            "source_type": "security_page",
-            "status": vendor_resolution.RESULT_VERIFICATION_INCONCLUSIVE,
-            "source_url": "https://example.com/security",
-            "live_checked": True,
-            "checked_at": "2026-07-06T00:00:00Z",
-        },
-        vendor_resolution.RESULT_VERIFICATION_INCONCLUSIVE,
-        "security_page",
-    )
-
-    assert cached_current == {
-        "source_type": "dpa",
-        "status": "not_checked",
-        "url": "https://example.com/dpa",
-        "candidate_basis": "cached_locator",
-        "verification_basis": "not_checked",
-        "checked_at": None,
-    }
-    assert gated["status"] == "gated"
-    assert gated["verification_basis"] == "live_gated"
-    assert unavailable["status"] == "unavailable"
-    assert unavailable["verification_basis"] == "live_unavailable"
-
-
-def test_candidate_inputs_cannot_become_verified_live_without_live_check():
-    for candidate_basis in ("community_hint", "vendor_asserted", "cached_locator"):
-        projected = pack.project_source(
-            {
-                "source_type": "dpa",
-                "status": vendor_resolution.RESULT_CATALOG_CURRENT,
-                "source_url": "https://example.com/dpa",
-                "candidate_basis": candidate_basis,
-                "live_checked": False,
-                "checked_at": "2026-01-01T00:00:00Z",
-            },
-            vendor_resolution.RESULT_CATALOG_CURRENT,
-            "dpa",
-        )
-
-        assert projected["candidate_basis"] == candidate_basis
-        assert projected["status"] == "not_checked"
-        assert projected["verification_basis"] == "not_checked"
-        assert projected["checked_at"] is None
-
-
-def test_result_pack_schema_requires_provenance_distinction():
+def test_result_pack_schema_rejects_retired_status_reason_and_advice_fields():
     row = pack.project_resolution(
         {"vendor_name": "Example", "domain": "example.com"},
         0,
         resolution(sources=[resolved_source("dpa", vendor_resolution.RESULT_CATALOG_CURRENT, live_checked=False, url="https://example.com/dpa")]),
     )
-    missing_candidate = json.loads(json.dumps(row))
-    missing_verification = json.loads(json.dumps(row))
-    del missing_candidate["sources"][1]["candidate_basis"]
-    del missing_verification["sources"][1]["verification_basis"]
+    polluted = json.loads(json.dumps(row))
+    polluted["openva_not_advice"] = True
+    polluted["compiled_vendor_name"] = "Example"
+    polluted["compiled_domain"] = "example.com"
+    polluted["security_or_trust_url"] = "https://example.com/trust"
+    polluted["match_status"] = "matched"
+    polluted["match_reason"] = "domain match"
+    polluted["source_status"] = "compiled_from_reference"
+    polluted["review_note"] = "Review compiled links before relying on them"
 
     assert validation_errors([row]) == []
-    assert validation_errors([missing_candidate])
-    assert validation_errors([missing_verification])
+    assert validation_errors([polluted])
 
 
 def test_projection_uses_existing_resolver_authority_for_python_resolution():
@@ -256,18 +180,6 @@ def test_agent_export_schema_version_remains_pinned():
     vendor_schema = schema["$defs"]["vendor_export"]["properties"]["schema_version"]
     assert vendor_schema == {"const": "0.1.0"}
     assert "`0.1.0`" in text
-
-
-def test_contract_doc_contains_mapping_table_and_static_honesty_rule():
-    text = (ROOT / "docs/resolver-result-pack-contract.md").read_text(encoding="utf-8")
-
-    assert "| `identity_ambiguous` | `identity_status=no_match`, `no_match_reason=multiple_plausible_entities` |" in text
-    assert "community index is hint-only" in text
-    assert "consumer-side live verification" in text
-    assert "| `catalog_current` | `status=found` only when `verification_basis=verified_live`;" in text
-    assert "## Static Honesty Rule" in text
-    assert "never emit `verification_basis=verified_live`" in text
-    assert "never emit live `found` semantics" in text
 
 
 def test_local_first_doctrine_declares_runtime_boundary():

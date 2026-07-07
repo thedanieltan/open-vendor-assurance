@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/resolver-result-pack.schema.json",
-  "title": "OpenVA Resolver Result-Pack Row",
-  "description": "Resolver-first, browser-safe result-pack row for one requested vendor. Static cached and hint-only producers must not emit consumer-side live verification semantics.",
+  "title": "Compiled Vendor Information Row",
+  "description": "Human-facing compiled vendor information row. Uploaded input columns are preserved separately in the CSV; this schema describes the appended matched vendor identity and source-link payload.",
   "type": "array",
   "items": { "$ref": "#/$defs/resultRow" },
   "$defs": {
@@ -13,175 +13,41 @@
         "input_index",
         "input_vendor_name",
         "input_domain",
-        "identity_status",
-        "no_match_reason",
-        "matched_vendor_id",
         "matched_vendor_name",
-        "sources",
-        "not_advice"
+        "official_domain",
+        "trust_security_url",
+        "dpa_url",
+        "subprocessors_url",
+        "privacy_notice_url",
+        "status_page_url"
       ],
       "properties": {
-        "result_pack_version": { "const": "1.0.0" },
+        "result_pack_version": { "const": "2.0.0" },
         "input_index": { "type": "integer", "minimum": 0 },
         "input_vendor_name": { "type": ["string", "null"], "maxLength": 300 },
         "input_domain": { "type": ["string", "null"], "maxLength": 253 },
-        "identity_status": { "enum": ["match", "no_match"] },
-        "no_match_reason": {
-          "oneOf": [
-            { "type": "null" },
-            {
-              "enum": [
-                "not_in_reference",
-                "multiple_plausible_entities",
-                "no_public_identity",
-                "inconclusive"
-              ]
-            }
-          ]
-        },
-        "matched_vendor_id": {
-          "type": ["string", "null"],
-          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
-        },
         "matched_vendor_name": { "type": ["string", "null"], "maxLength": 300 },
-        "sources": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/sourceResult" }
-        },
-        "not_advice": { "const": true }
+        "official_domain": { "type": ["string", "null"], "maxLength": 253 },
+        "trust_security_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "dpa_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "subprocessors_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "privacy_notice_url": { "type": ["string", "null"], "maxLength": 2048 },
+        "status_page_url": { "type": ["string", "null"], "maxLength": 2048 }
       },
       "allOf": [
         {
           "if": {
-            "properties": { "identity_status": { "const": "match" } },
-            "required": ["identity_status"]
-          },
-          "then": {
-            "properties": { "no_match_reason": { "type": "null" } }
-          }
-        },
-        {
-          "if": {
-            "properties": { "identity_status": { "const": "no_match" } },
-            "required": ["identity_status"]
-          },
-          "then": {
-            "properties": { "no_match_reason": { "type": "string" } }
-          }
-        }
-      ],
-      "additionalProperties": false
-    },
-    "sourceResult": {
-      "type": "object",
-      "required": [
-        "source_type",
-        "status",
-        "url",
-        "candidate_basis",
-        "verification_basis",
-        "checked_at"
-      ],
-      "properties": {
-        "source_type": {
-          "enum": [
-            "trust_center",
-            "dpa",
-            "subprocessors_list",
-            "privacy_notice",
-            "security_page",
-            "status_page"
-          ]
-        },
-        "status": {
-          "enum": [
-            "found",
-            "not_found",
-            "gated",
-            "unavailable",
-            "not_applicable",
-            "not_checked"
-          ]
-        },
-        "url": { "type": ["string", "null"], "maxLength": 2048 },
-        "candidate_basis": {
-          "enum": [
-            "community_hint",
-            "vendor_asserted",
-            "cached_locator",
-            "direct_input",
-            "none"
-          ]
-        },
-        "verification_basis": {
-          "enum": [
-            "not_checked",
-            "verified_live",
-            "live_unavailable",
-            "live_gated",
-            "live_not_found"
-          ]
-        },
-        "checked_at": { "type": ["string", "null"] }
-      },
-      "allOf": [
-        {
-          "if": {
-            "properties": { "verification_basis": { "const": "not_checked" } },
-            "required": ["verification_basis"]
+            "properties": { "matched_vendor_name": { "type": "null" } },
+            "required": ["matched_vendor_name"]
           },
           "then": {
             "properties": {
-              "status": { "const": "not_checked" },
-              "checked_at": { "type": "null" }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": { "verification_basis": { "const": "verified_live" } },
-            "required": ["verification_basis"]
-          },
-          "then": {
-            "properties": {
-              "status": { "const": "found" },
-              "checked_at": { "type": "string" }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": { "verification_basis": { "const": "live_unavailable" } },
-            "required": ["verification_basis"]
-          },
-          "then": {
-            "properties": {
-              "status": { "const": "unavailable" },
-              "checked_at": { "type": "string" }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": { "verification_basis": { "const": "live_gated" } },
-            "required": ["verification_basis"]
-          },
-          "then": {
-            "properties": {
-              "status": { "const": "gated" },
-              "checked_at": { "type": "string" }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": { "verification_basis": { "const": "live_not_found" } },
-            "required": ["verification_basis"]
-          },
-          "then": {
-            "properties": {
-              "status": { "const": "not_found" },
-              "checked_at": { "type": "string" }
+              "official_domain": { "type": "null" },
+              "trust_security_url": { "type": "null" },
+              "dpa_url": { "type": "null" },
+              "subprocessors_url": { "type": "null" },
+              "privacy_notice_url": { "type": "null" },
+              "status_page_url": { "type": "null" }
             }
           }
         }
