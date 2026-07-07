@@ -1,9 +1,8 @@
 """Human-facing vendor-list compilation output.
 
 This module keeps matching and source lookup separate from the downloadable CSV
-shape. Resolver callers may still use the nested JSON row for integration, but
-the CSV download is intentionally simple: preserve the uploaded columns and
-append compiled vendor/source fields for human review.
+shape. The CSV download is intentionally simple: preserve the uploaded columns
+and append compiled vendor/source fields for CISO, DPO, and procurement review.
 """
 
 from __future__ import annotations
@@ -17,7 +16,6 @@ from tools.openva import vendor_resolution
 
 RESULT_PACK_VERSION = "2.0.0"
 
-# Output/source column taxonomy for the human download template.
 SOURCE_TYPES: tuple[str, ...] = (
     "dpa",
     "subprocessors",
@@ -26,7 +24,6 @@ SOURCE_TYPES: tuple[str, ...] = (
     "status_page",
 )
 
-# Source types understood by the underlying resolver/catalog.
 RESOLVER_SOURCE_TYPES: tuple[str, ...] = (
     "trust_center",
     "dpa",
@@ -50,19 +47,7 @@ RESOLVER_SOURCE_TYPES_BY_OUTPUT: dict[str, tuple[str, ...]] = {
     "status_page": ("status_page",),
 }
 
-NO_MATCH_REASONS: tuple[str, ...] = (
-    "not in reference",
-    "multiple plausible entities",
-    "missing vendor identity",
-    "inconclusive",
-)
-
-MATCH_STATUSES: tuple[str, ...] = ("matched", "not_matched")
-SOURCE_STATUSES: tuple[str, ...] = ("compiled_from_reference", "not_available")
-
 FLAT_RESULT_COLUMNS: tuple[str, ...] = (
-    "match_status",
-    "match_reason",
     "compiled_vendor_name",
     "compiled_domain",
     "dpa_url",
@@ -70,8 +55,6 @@ FLAT_RESULT_COLUMNS: tuple[str, ...] = (
     "privacy_notice_url",
     "security_or_trust_url",
     "status_page_url",
-    "source_status",
-    "review_note",
 )
 
 
@@ -151,7 +134,6 @@ def project_resolution(
     """Project one resolver result into one compiled vendor-info row."""
     payload = resolution.to_response() if hasattr(resolution, "to_response") else dict(resolution)
     vendor = dict(payload.get("vendor") or {})
-    resolution_status = str(payload.get("resolution_status") or "")
     source_types = normalize_source_types(required_source_types)
     source_by_type = {
         str(source.get("source_type")): source
@@ -167,7 +149,6 @@ def project_resolution(
         )
         for source_type in SOURCE_TYPES
     }
-    any_source = any(source_urls.values())
 
     return {
         "result_pack_version": RESULT_PACK_VERSION,
@@ -176,8 +157,6 @@ def project_resolution(
             input_row.get("vendor_name") or input_row.get("business_entity_name")
         ),
         "input_domain": _nullable_text(input_row.get("domain")),
-        "match_status": "matched" if matched else "not_matched",
-        "match_reason": _match_reason(input_row, vendor, resolution_status, matched),
         "compiled_vendor_name": _nullable_text(vendor.get("display_name")) if matched else None,
         "compiled_domain": _compiled_domain(vendor) if matched else None,
         "dpa_url": source_urls["dpa"],
@@ -185,8 +164,6 @@ def project_resolution(
         "privacy_notice_url": source_urls["privacy_notice"],
         "security_or_trust_url": source_urls["security_or_trust"],
         "status_page_url": source_urls["status_page"],
-        "source_status": "compiled_from_reference" if any_source else "not_available",
-        "review_note": _review_note(matched, any_source),
     }
 
 
@@ -269,39 +246,6 @@ def _compiled_domain(vendor: dict[str, Any]) -> str | None:
             if domain:
                 return domain
     return None
-
-
-def _match_reason(
-    input_row: dict[str, Any],
-    vendor: dict[str, Any],
-    resolution_status: str,
-    matched: bool,
-) -> str:
-    if matched:
-        input_domain = _nullable_text(input_row.get("domain"))
-        compiled_domain = _compiled_domain(vendor)
-        if input_domain and compiled_domain and input_domain.lower().strip() == compiled_domain.lower().strip():
-            return "domain match"
-        input_name = _nullable_text(input_row.get("vendor_name") or input_row.get("business_entity_name"))
-        compiled_name = _nullable_text(vendor.get("display_name"))
-        if input_name and compiled_name and input_name.lower().strip() == compiled_name.lower().strip():
-            return "name match"
-        return "reference match"
-    if resolution_status == vendor_resolution.RESULT_IDENTITY_AMBIGUOUS:
-        return "multiple plausible entities"
-    if not (input_row.get("vendor_name") or input_row.get("business_entity_name") or input_row.get("domain")):
-        return "missing vendor identity"
-    if resolution_status == vendor_resolution.RESULT_VERIFICATION_INCONCLUSIVE:
-        return "inconclusive"
-    return "not in reference"
-
-
-def _review_note(matched: bool, any_source: bool) -> str:
-    if matched and any_source:
-        return "Review compiled links before relying on them"
-    if matched:
-        return "Vendor matched; no compiled source links available"
-    return "No compiled source available"
 
 
 def _nullable_text(value: Any) -> str | None:
