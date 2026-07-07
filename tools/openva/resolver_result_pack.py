@@ -2,7 +2,8 @@
 
 This module keeps matching and source lookup separate from the downloadable CSV
 shape. The CSV download is intentionally simple: preserve the uploaded columns
-and append compiled vendor/source fields for CISO, DPO, and procurement review.
+and append matched vendor identity plus source fields for CISO, DPO, and
+procurement review.
 """
 
 from __future__ import annotations
@@ -48,8 +49,8 @@ RESOLVER_SOURCE_TYPES_BY_OUTPUT: dict[str, tuple[str, ...]] = {
 }
 
 FLAT_RESULT_COLUMNS: tuple[str, ...] = (
-    "compiled_vendor_name",
-    "compiled_domain",
+    "matched_vendor_name",
+    "official_domain",
     "dpa_url",
     "subprocessors_url",
     "privacy_notice_url",
@@ -157,8 +158,8 @@ def project_resolution(
             input_row.get("vendor_name") or input_row.get("business_entity_name")
         ),
         "input_domain": _nullable_text(input_row.get("domain")),
-        "compiled_vendor_name": _nullable_text(vendor.get("display_name")) if matched else None,
-        "compiled_domain": _compiled_domain(vendor) if matched else None,
+        "matched_vendor_name": _nullable_text(vendor.get("display_name")) if matched else None,
+        "official_domain": _official_domain(vendor) if matched else None,
         "dpa_url": source_urls["dpa"],
         "subprocessors_url": source_urls["subprocessors"],
         "privacy_notice_url": source_urls["privacy_notice"],
@@ -235,7 +236,7 @@ def _source_url(source: dict[str, Any] | None) -> str | None:
     return _nullable_text(source.get("source_url") or source.get("candidate_url"))
 
 
-def _compiled_domain(vendor: dict[str, Any]) -> str | None:
+def _official_domain(vendor: dict[str, Any]) -> str | None:
     domain = _nullable_text(vendor.get("official_domain"))
     if domain:
         return domain
