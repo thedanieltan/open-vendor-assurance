@@ -268,25 +268,30 @@ its `freshness` label, the cached `match`, canonical `sources`, and — when `fr
     { "row_id": "12", "freshness": "verify", "match": { … }, "sources": [ … ],
       "verification": { … }, "not_advice": true }
   ],
+  "freshness_mode": "verify",
+  "verify_enabled": true,
   "snapshot": { … },
   "not_advice": true
 }
 ```
 
-When the live path is unavailable or no update is needed, results are explicit about the
-cached basis:
+The actual hosted endpoint serving `/check` live to the public is infrastructure-gated
+(WP-02F/02G/02K); this slice ships the provider-neutral application code with the live path
+**off by default**.
 
-```json
-{
-  "results": [
-    { "row_id": "12", "freshness": "cached", "match": { … }, "sources": [ … ],
-      "verification": null, "not_advice": true }
-  ],
-  "snapshot": { … },
-  "not_advice": true
-}
-```
+## Snapshot and refresh
 
-Potential live failure reasons are explicit and non-advisory, for example `transport_disabled`,
-`kill_switch_armed`, `worker_unavailable`, `live_timeout`, or `source_unreachable`. These are
-operational states, not compliance/security/risk conclusions.
+`snapshot.snapshot_digest` is a deterministic `sha256:` digest of the loaded pack;
+re-running enrichment after the service loads a newer pack changes the digest. It is a
+content snapshot identity, not a git commit SHA. `catalog_commit_sha` is `null` unless
+the deployment supplies `OPENVA_CATALOG_COMMIT_SHA`.
+
+## Limitations
+
+Cached only — no live verification. The catalogue covers a curated set of vendors; an
+unmatched vendor means OpenVA has no catalogue record, not that the vendor is unsafe.
+This endpoint and the MCP `enrich_inventory` tool are the primary, agent-composed way to
+consume OpenVA. The Google Sheets client (`integrations/google-sheets/`) is a secondary,
+manually installed reference/fallback client; Excel and Word clients are optional
+secondary surfaces built only where demand or policy justifies them, not a committed next
+step ([ADR-0005](architecture/decisions/ADR-0005-native-clients-as-secondary-compatibility-surfaces.md)).
