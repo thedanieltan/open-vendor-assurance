@@ -13,6 +13,7 @@ let localMatchRows = [];
 const CORE_COVERAGE = ["dpa", "privacy_notice", "security_page", "subprocessors_list", "trust_center"];
 const RESULT_PACK_VERSION = "1.0.0";
 const RESULT_PACK_SOURCE_TYPES = ["trust_center", "dpa", "subprocessors_list", "privacy_notice", "security_page", "status_page"];
+// Legacy collapsed column is intentionally not emitted: `openva_${sourceType}_basis`.
 const RESULT_PACK_FLAT_COLUMNS = [
   "openva_identity_status",
   "openva_no_match_reason",
@@ -21,7 +22,8 @@ const RESULT_PACK_FLAT_COLUMNS = [
   ...RESULT_PACK_SOURCE_TYPES.flatMap((sourceType) => [
     `openva_${sourceType}_status`,
     `openva_${sourceType}_url`,
-    `openva_${sourceType}_basis`,
+    `openva_${sourceType}_candidate_basis`,
+    `openva_${sourceType}_verification_basis`,
     `openva_${sourceType}_checked_at`,
   ]),
   "openva_not_advice",
@@ -288,7 +290,9 @@ function cachedSourceResult(sourceType, url = null) {
     source_type: sourceType,
     status: "not_checked",
     url: url || null,
-    basis: "cached",
+    candidate_basis: url ? "cached_locator" : "none",
+    verification_basis: "not_checked",
+    // Legacy collapsed basis removed from output; previous basis: "cached".
     checked_at: null,
   };
 }
@@ -332,7 +336,8 @@ function flattenResultPackRows(inputRows, resultRows) {
       const source = (result.sources || []).find((item) => item.source_type === sourceType) || cachedSourceResult(sourceType);
       row[`openva_${sourceType}_status`] = source.status;
       row[`openva_${sourceType}_url`] = source.url;
-      row[`openva_${sourceType}_basis`] = source.basis;
+      row[`openva_${sourceType}_candidate_basis`] = source.candidate_basis;
+      row[`openva_${sourceType}_verification_basis`] = source.verification_basis;
       row[`openva_${sourceType}_checked_at`] = source.checked_at;
     });
     row.openva_not_advice = result.not_advice ? "true" : "false";
@@ -400,7 +405,7 @@ async function matchInventoryRow(row, inputIndex, indexes) {
 
   const summary = await vendorSourceSummary(vendor.vendor_id);
   // Browser-local resolution is always cached. Known URLs are locators only:
-  // they remain not_checked/cached until the live resolver actually checks them.
+  // they remain not_checked with verification_basis=not_checked until a live resolver actually checks them.
   return browserResultPackRow(row, inputIndex, vendor, summary);
 }
 
