@@ -53,7 +53,7 @@ def validation_errors(rows):
     return sorted(Draft202012Validator(schema).iter_errors(rows), key=lambda error: list(error.path))
 
 
-def test_projected_json_is_simple_compiled_vendor_shape_and_schema_valid():
+def test_projected_json_is_minimal_compiled_vendor_shape_and_schema_valid():
     row = {"vendor_name": "Example", "domain": "example.com"}
     result = resolution(
         sources=[
@@ -70,8 +70,6 @@ def test_projected_json_is_simple_compiled_vendor_shape_and_schema_valid():
         "input_index": 0,
         "input_vendor_name": "Example",
         "input_domain": "example.com",
-        "match_status": "matched",
-        "match_reason": "domain match",
         "compiled_vendor_name": "Example",
         "compiled_domain": "example.com",
         "dpa_url": "https://example.com/dpa",
@@ -79,13 +77,11 @@ def test_projected_json_is_simple_compiled_vendor_shape_and_schema_valid():
         "privacy_notice_url": None,
         "security_or_trust_url": "https://example.com/trust",
         "status_page_url": None,
-        "source_status": "compiled_from_reference",
-        "review_note": "Review compiled links before relying on them",
     }
     validate_rows([projected])
 
 
-def test_flat_csv_preserves_input_order_and_uses_human_download_columns():
+def test_flat_csv_preserves_input_order_and_uses_minimal_human_download_columns():
     inputs = [
         {"vendor_name": "First", "business_entity_name": "", "domain": "first.example"},
         {"vendor_name": "Second", "business_entity_name": "", "domain": "second.example"},
@@ -120,46 +116,16 @@ def test_flat_csv_preserves_input_order_and_uses_human_download_columns():
     ]
     assert [row["vendor_name"] for row in parsed] == ["First", "Second"]
     assert parsed[0]["business_entity_name"] == ""
-    assert parsed[0]["match_status"] == "not_matched"
-    assert parsed[0]["match_reason"] == "not in reference"
     assert parsed[0]["compiled_vendor_name"] == ""
-    assert parsed[0]["source_status"] == "not_available"
-    assert parsed[1]["match_status"] == "matched"
+    assert parsed[0]["dpa_url"] == ""
+    assert parsed[1]["compiled_vendor_name"] == "Example"
     assert parsed[1]["security_or_trust_url"] == "https://second.example/trust"
     assert "openva_not_advice" not in reader.fieldnames
     assert not any(column.startswith("openva_") for column in reader.fieldnames)
-
-
-def test_schema_enum_coverage_matches_projection_constants():
-    schema = json.loads((ROOT / "schemas/openva/resolver-result-pack.schema.json").read_text(encoding="utf-8"))
-    result_schema = schema["$defs"]["resultRow"]["properties"]
-
-    assert tuple(result_schema["match_status"]["enum"]) == pack.MATCH_STATUSES
-    assert tuple(result_schema["source_status"]["enum"]) == pack.SOURCE_STATUSES
-    assert tuple(result_schema["match_reason"]["enum"][-4:]) == pack.NO_MATCH_REASONS
-
-
-def test_no_match_reason_mapping_and_identity_ambiguous_collapse():
-    base = {"vendor_name": "Example", "domain": "example.com"}
-
-    ambiguous = pack.project_resolution(
-        base,
-        0,
-        resolution(vendor_id=None, status=vendor_resolution.RESULT_IDENTITY_AMBIGUOUS),
-    )
-    absent = pack.project_resolution(base, 1, resolution(vendor_id=None, status=vendor_resolution.RESULT_NOT_FOUND))
-    no_identity = pack.project_resolution({}, 2, resolution(vendor_id=None, status=vendor_resolution.RESULT_NOT_FOUND))
-    inconclusive = pack.project_resolution(
-        base,
-        3,
-        resolution(vendor_id=None, status=vendor_resolution.RESULT_VERIFICATION_INCONCLUSIVE),
-    )
-
-    assert ambiguous["match_status"] == "not_matched"
-    assert ambiguous["match_reason"] == "multiple plausible entities"
-    assert absent["match_reason"] == "not in reference"
-    assert no_identity["match_reason"] == "missing vendor identity"
-    assert inconclusive["match_reason"] == "inconclusive"
+    assert "match_status" not in reader.fieldnames
+    assert "match_reason" not in reader.fieldnames
+    assert "source_status" not in reader.fieldnames
+    assert "review_note" not in reader.fieldnames
 
 
 def test_source_type_aliases_collapse_to_human_template_columns():
@@ -176,7 +142,7 @@ def test_source_type_aliases_collapse_to_human_template_columns():
     assert security == {"source_type": "security_or_trust", "url": "https://example.com/security"}
 
 
-def test_result_pack_schema_rejects_retired_advice_and_branded_columns():
+def test_result_pack_schema_rejects_retired_status_reason_and_advice_fields():
     row = pack.project_resolution(
         {"vendor_name": "Example", "domain": "example.com"},
         0,
@@ -184,6 +150,10 @@ def test_result_pack_schema_rejects_retired_advice_and_branded_columns():
     )
     polluted = json.loads(json.dumps(row))
     polluted["openva_not_advice"] = True
+    polluted["match_status"] = "matched"
+    polluted["match_reason"] = "domain match"
+    polluted["source_status"] = "compiled_from_reference"
+    polluted["review_note"] = "Review compiled links before relying on them"
 
     assert validation_errors([row]) == []
     assert validation_errors([polluted])
