@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/agent-enrichment-result.schema.json",
   "title": "OpenVA Agent Enrichment Result",
-  "description": "Host-neutral per-row enrichment result emitted by the MCP enrich_inventory tool and the match-service /v1/enrich endpoint. It records public-source references and machine-state notes only; it never carries a compliance, suitability, approval, or risk conclusion. additionalProperties is true so a transport may add a compatibility projection (e.g. the match service's spreadsheet block) without forking this contract.",
+  "description": "Host-neutral per-row enrichment result emitted by the MCP enrich_inventory tool and the match-service /v1/enrich endpoint. The preferred template is identity + source_references: a match/no_match identity outcome and indexed public assurance source references. Compatibility projections such as match, sources, primary_source_by_type, and source_urls_by_type may remain for older adapters. The result never carries a compliance, suitability, approval, or risk conclusion.",
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -28,23 +28,37 @@
         "vendor_name": { "type": ["string", "null"] },
         "domain": { "type": ["string", "null"] },
         "business_entity_name": { "type": ["string", "null"] },
-        "registration_number": { "type": ["string", "null"] }
+        "jurisdiction": { "type": ["string", "null"] },
+        "registration_number": { "type": ["string", "null"] },
+        "registered_address": { "type": ["string", "null"] }
       }
     },
-    "match": { "$ref": "#/$defs/match" },
+    "identity": {
+      "$ref": "#/$defs/identity",
+      "description": "Preferred simplified identity template for MCP/API/agent users."
+    },
+    "source_references": {
+      "type": "object",
+      "description": "Preferred simplified source-reference template keyed by source type. Values are indexed public source references from the loaded OpenVA index, not live-check results or advisory conclusions.",
+      "additionalProperties": { "$ref": "#/$defs/source_reference" }
+    },
+    "match": {
+      "$ref": "#/$defs/legacy_match",
+      "description": "Compatibility projection for older adapters. Prefer identity.match_status for new consumers."
+    },
     "sources": {
       "type": "array",
-      "description": "Canonical public sources for the matched vendor, filtered by requested type, preserving original vendor-published URLs. Empty unless the match status is matched.",
+      "description": "Compatibility projection containing indexed public source rows for the matched vendor, filtered by requested type, preserving original vendor-published URLs. Empty unless the match status is matched.",
       "items": { "type": "object" }
     },
     "primary_source_by_type": {
       "type": "object",
-      "description": "The primary source object per source_type, chosen deterministically by the shared ranking.",
+      "description": "Compatibility projection: the primary source object per source_type, chosen deterministically by the shared ranking.",
       "additionalProperties": { "type": "object" }
     },
     "source_urls_by_type": {
       "type": "object",
-      "description": "Original source URLs grouped by source_type.",
+      "description": "Compatibility projection: original source URLs grouped by source_type.",
       "additionalProperties": {
         "type": "array",
         "items": { "type": "string" }
@@ -52,22 +66,67 @@
     },
     "notes": {
       "type": "array",
-      "description": "Machine-state notes only (e.g. ambiguous match, no catalogue match, missing canonical source type). Never a compliance conclusion.",
+      "description": "Machine-state notes only (e.g. no indexed OpenVA match, multiple plausible entities, missing indexed source reference). Never a compliance conclusion.",
       "items": { "type": "string" }
     },
     "not_advice": {
       "const": true,
-      "description": "Always true. OpenVA returns public-source references, not advice."
+      "description": "Always true. OpenVA returns indexed public source references, not advice."
     }
   },
   "$defs": {
-    "match": {
+    "identity": {
+      "type": "object",
+      "required": [
+        "match_status",
+        "matched_vendor_id",
+        "matched_vendor_name",
+        "matched_domain",
+        "match_basis",
+        "no_match_reason"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "match_status": {
+          "enum": ["match", "no_match"]
+        },
+        "matched_vendor_id": { "type": ["string", "null"] },
+        "matched_vendor_name": { "type": ["string", "null"] },
+        "matched_domain": { "type": ["string", "null"] },
+        "match_basis": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "no_match_reason": {
+          "type": ["string", "null"],
+          "enum": [
+            "multiple_plausible_entities",
+            "no_indexed_openva_match",
+            "insufficient_indexed_identity_evidence",
+            null
+          ]
+        }
+      }
+    },
+    "source_reference": {
+      "type": "object",
+      "required": ["status", "url", "title"],
+      "additionalProperties": true,
+      "properties": {
+        "status": {
+          "enum": ["indexed", "not_indexed", "gated", "unavailable", "not_applicable"]
+        },
+        "url": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"] }
+      }
+    },
+    "legacy_match": {
       "type": "object",
       "required": ["status", "candidates"],
       "properties": {
         "status": {
           "enum": ["matched", "ambiguous", "no_match"],
-          "description": "ambiguous is never collapsed into matched; a weak identity stays no_match."
+          "description": "Compatibility status. New consumers should map matched -> match; ambiguous -> no_match with no_match_reason=multiple_plausible_entities; no_match -> no_match with no_match_reason=no_indexed_openva_match."
         },
         "method": { "type": ["string", "null"] },
         "confidence": { "type": ["number", "null"] },
