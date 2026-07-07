@@ -29,7 +29,7 @@ def write_index(root: Path) -> None:
                         "catalog_status": "active",
                         "official_domains": ["acme.example"],
                         "manifest_path": "dist/vendors/acme.json",
-                        "canonical_sources": [
+                        "source_records": [
                             {
                                 "source_id": "acme-trust",
                                 "source_type": "trust_center",
@@ -49,7 +49,7 @@ def write_index(root: Path) -> None:
                         "catalog_status": "active",
                         "official_domains": ["beta.example"],
                         "manifest_path": "dist/vendors/beta.json",
-                        "canonical_sources": [
+                        "source_records": [
                             {
                                 "source_id": "beta-security",
                                 "source_type": "security_page",
