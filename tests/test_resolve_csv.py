@@ -102,7 +102,7 @@ def test_cli_reads_csv_preserves_order_and_writes_compiled_vendor_files(tmp_path
         [
             str(input_csv),
             "--source-types",
-            "security_or_trust,dpa,status_page",
+            "trust_security,dpa,status_page",
             "--out-json",
             str(out_json),
             "--out-csv",
@@ -117,26 +117,29 @@ def test_cli_reads_csv_preserves_order_and_writes_compiled_vendor_files(tmp_path
 
     assert [row["input_index"] for row in rows] == [0, 1, 2]
     assert [row["input_vendor_name"] for row in rows] == ["Acme", "Beta", "Missing"]
-    assert rows[0]["compiled_vendor_name"] == "Acme"
-    assert rows[0]["compiled_domain"] == "acme.example"
+    assert rows[0]["matched_vendor_name"] == "Acme"
+    assert rows[0]["official_domain"] == "acme.example"
     assert rows[0]["dpa_url"] == "https://acme.example/dpa"
-    assert rows[0]["security_or_trust_url"] == "https://trust.acme.example"
-    assert rows[1]["security_or_trust_url"] == "https://beta.example/security"
-    assert rows[2]["compiled_vendor_name"] is None
-    assert rows[2]["compiled_domain"] is None
+    assert rows[0]["trust_security_url"] == "https://trust.acme.example"
+    assert rows[1]["trust_security_url"] == "https://beta.example/security"
+    assert rows[2]["matched_vendor_name"] is None
+    assert rows[2]["official_domain"] is None
     assert rows[2]["dpa_url"] is None
-    assert rows[2]["security_or_trust_url"] is None
+    assert rows[2]["trust_security_url"] is None
 
     parsed_csv = list(csv.DictReader(StringIO(out_csv.read_text(encoding="utf-8"))))
     assert [row["vendor_name"] for row in parsed_csv] == ["Acme", "Beta", "Missing"]
     assert parsed_csv[0]["business_entity_name"] == ""
-    assert parsed_csv[0]["compiled_vendor_name"] == "Acme"
+    assert parsed_csv[0]["matched_vendor_name"] == "Acme"
     assert parsed_csv[0]["dpa_url"] == "https://acme.example/dpa"
-    assert parsed_csv[0]["security_or_trust_url"] == "https://trust.acme.example"
-    assert parsed_csv[2]["compiled_vendor_name"] == ""
+    assert parsed_csv[0]["trust_security_url"] == "https://trust.acme.example"
+    assert parsed_csv[2]["matched_vendor_name"] == ""
     assert parsed_csv[2]["dpa_url"] == ""
     assert "openva_not_advice" not in parsed_csv[0]
     assert not any(column.startswith("openva_") for column in parsed_csv[0])
+    assert "compiled_vendor_name" not in parsed_csv[0]
+    assert "compiled_domain" not in parsed_csv[0]
+    assert "security_or_trust_url" not in parsed_csv[0]
     assert "match_status" not in parsed_csv[0]
     assert "match_reason" not in parsed_csv[0]
     assert "source_status" not in parsed_csv[0]
@@ -153,7 +156,7 @@ def test_cli_output_columns_are_deterministic(tmp_path):
     args = [
         str(input_csv),
         "--source-types",
-        "security_or_trust,dpa,status_page",
+        "trust_security,dpa,status_page",
         "--out-json",
         str(out_json),
         "--out-csv",
@@ -221,23 +224,26 @@ def test_hint_only_compiler_does_not_use_network(tmp_path, monkeypatch):
         raise AssertionError("resolve_csv must not use network sockets")
 
     monkeypatch.setattr(socket, "socket", fail_socket)
-    rows = resolve_csv.compile_rows(input_rows, ["security_or_trust", "dpa"], catalog_root=tmp_path)
+    rows = resolve_csv.compile_rows(input_rows, ["trust_security", "dpa"], catalog_root=tmp_path)
 
     assert rows[0]["dpa_url"] == "https://acme.example/dpa"
-    assert rows[1]["security_or_trust_url"] == "https://beta.example/security"
+    assert rows[1]["trust_security_url"] == "https://beta.example/security"
 
 
 def test_result_pack_schema_rejects_retired_status_reason_and_advice_fields(tmp_path):
     write_index(tmp_path)
     rows = resolve_csv.compile_rows(
         [{"vendor_name": "Acme", "domain": "acme.example"}],
-        ["security_or_trust"],
+        ["trust_security"],
         catalog_root=tmp_path,
     )
     validate_rows(rows)
 
     schema = json.loads((ROOT / "schemas/openva/resolver-result-pack.schema.json").read_text(encoding="utf-8"))
     polluted = json.loads(json.dumps(rows))
+    polluted[0]["compiled_vendor_name"] = "Acme"
+    polluted[0]["compiled_domain"] = "acme.example"
+    polluted[0]["security_or_trust_url"] = "https://trust.acme.example"
     polluted[0]["match_status"] = "matched"
     polluted[0]["match_reason"] = "domain match"
     polluted[0]["source_status"] = "compiled_from_reference"
@@ -250,10 +256,11 @@ def test_result_pack_schema_rejects_retired_status_reason_and_advice_fields(tmp_
 def test_docs_describe_simple_compiled_vendor_download():
     text = (ROOT / "docs/local-compiler.md").read_text(encoding="utf-8")
 
-    assert "compiled vendor information" in text
+    assert "matched vendor identity" in text
     assert "does not make network calls" in text
-    assert "compiled_vendor_name" in text
-    assert "security_or_trust_url" in text
+    assert "matched_vendor_name" in text
+    assert "trust_security_url" in text
+    assert "security_or_trust_url" not in text
     assert "match_status" not in text
     assert "source_status" not in text
 
