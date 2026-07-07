@@ -41,6 +41,7 @@ For consumers and downstream importers:
 ```text
 GitHub Releases
 docs/release-downloads.md
+docs/local-compiler.md
 docs/agent-export-contract.md
 docs/adapter-contract.md
 docs/adapter-output-contract.md
@@ -291,6 +292,11 @@ not_advice
 ```
 
 The browser resolver is cached/static and browser-local. It reports loaded public metadata and source-pack states, but it does not perform live discovery or lifecycle routing from the page.
+
+For local batch use, `python -m tools.openva.resolve_csv` compiles a vendor CSV
+into resolver result-pack JSON and flat CSV using committed OpenVA index hints
+only. It does not fetch URLs, perform live verification, upload inventories, or
+call a hosted OpenVA resolver. See `docs/local-compiler.md`.
 
 The hosted/self-hosted resolver contracts live in `tools/openva/vendor_resolution.py`, `schemas/openva/vendor-resolution-result.schema.json`, and `schemas/openva/source-pack-result.schema.json`, with details in `docs/vendor-resolution.md` and `docs/resolver-api.md`.
 
