@@ -3,12 +3,12 @@
 The tool is the agent-composed workspace path: an agent reads a workspace through
 its own connector, then sends only bounded vendor-identity rows here. It matches with
 the snapshot-grade identity matcher and delegates source-type filtering,
-primary-source ranking, and notes to the shared ``assemble_enrichment`` projection
-authority — the same projection ``/v1/enrich`` uses over its own pack-backed matcher,
-so the two surfaces agree for the same decision and sources. These tests pin
-matched/ambiguous/no-match behaviour, order and duplicate preservation, exact
-``row_id`` echo, bounded inputs, schema conformance, and that no internal path or
-advisory claim leaks.
+primary-source ranking, destination-neutral source references, and notes to the
+shared ``assemble_enrichment`` projection authority — the same projection
+``/v1/enrich`` uses over its own pack-backed matcher, so the two surfaces agree for
+the same decision and sources. These tests pin matched/ambiguous/no-match behaviour,
+order and duplicate preservation, exact ``row_id`` echo, bounded inputs, schema
+conformance, and that no internal path or advisory claim leaks.
 """
 
 import json
@@ -84,10 +84,27 @@ def test_matched_no_match_and_summary(snapshot):
         snapshot,
         [{"row_id": "a", "domain": "vendor.example"}, {"row_id": "b", "domain": "unknown-co.tld"}],
     )
-    assert out["results"][0]["match"]["status"] == "matched"
-    assert out["results"][0]["match"]["vendor_id"] == "example-vendor"
-    assert out["results"][1]["match"]["status"] == "no_match"
-    assert out["results"][1]["match"]["vendor_id"] is None
+    matched = out["results"][0]
+    no_match = out["results"][1]
+    assert matched["match"]["status"] == "matched"
+    assert matched["match"]["vendor_id"] == "example-vendor"
+    assert matched["identity"] == {
+        "match_status": "match",
+        "matched_vendor_id": "example-vendor",
+        "matched_vendor_name": "Example Vendor",
+        "match_basis": ["domain_exact"],
+        "no_match_reason": None,
+    }
+    assert no_match["match"]["status"] == "no_match"
+    assert no_match["match"]["vendor_id"] is None
+    assert no_match["identity"] == {
+        "match_status": "no_match",
+        "matched_vendor_id": None,
+        "matched_vendor_name": None,
+        "match_basis": [],
+        "no_match_reason": "no_indexed_openva_match",
+    }
+    assert no_match["source_references"] == {}
     assert out["summary"] == {"matched": 1, "ambiguous": 0, "no_match": 1}
     assert out["count"] == 2
     assert out["not_advice"] is True
@@ -106,6 +123,8 @@ def test_registration_number_matches_when_export_carries_legal_entity(tmp_path):
     assert result["match"]["status"] == "matched"
     assert result["match"]["vendor_id"] == "example-vendor"
     assert result["match"]["method"] == "registration_number_exact"
+    assert result["identity"]["match_status"] == "match"
+    assert result["identity"]["match_basis"] == ["registration_number_exact"]
 
     matched = tools.match_inventory(snapshot, [{"registration_number": "RC-555"}])
     assert matched["results"][0]["match_status"] == "matched"
@@ -132,8 +151,11 @@ def test_ambiguous_stays_ambiguous_and_projection_empty():
     result = out["results"][0]
     assert result["match"]["status"] == "ambiguous"
     assert result["match"]["vendor_id"] is None
+    assert result["identity"]["match_status"] == "no_match"
+    assert result["identity"]["no_match_reason"] == "multiple_plausible_entities"
     assert {c["vendor_id"] for c in result["match"]["candidates"]} == {"acme-a", "acme-b"}
     assert result["sources"] == []
+    assert result["source_references"] == {}
     assert result["primary_source_by_type"] == {}
     assert result["source_urls_by_type"] == {}
     assert result["notes"] == ["Ambiguous vendor match"]
@@ -168,7 +190,21 @@ def test_source_type_filter_and_missing_type_note(snapshot):
     assert {s["source_type"] for s in result["sources"]} <= {"dpa", "trust_center"}
     assert "dpa" in result["primary_source_by_type"]
     assert result["source_urls_by_type"]["dpa"] == ["https://vendor.example/legal/dpa"]
-    assert "Matched vendor has no canonical trust centre source" in result["notes"]
+    assert result["source_references"]["dpa"] == {
+        "status": "indexed",
+        "source_type": "dpa",
+        "url": "https://vendor.example/legal/dpa",
+        "title": None,
+        "source_id": "example-dpa",
+    }
+    assert result["source_references"]["trust_center"] == {
+        "status": "not_indexed",
+        "source_type": "trust_center",
+        "url": None,
+        "title": None,
+        "source_id": None,
+    }
+    assert "Matched vendor has no indexed trust centre source record" in result["notes"]
 
 
 def test_unknown_source_type_yields_no_sources(snapshot):
@@ -176,7 +212,8 @@ def test_unknown_source_type_yields_no_sources(snapshot):
     result = out["results"][0]
     assert result["sources"] == []
     assert result["primary_source_by_type"] == {}
-    assert result["notes"] == ["Matched vendor has no canonical made_up_type source"]
+    assert result["source_references"]["made_up_type"]["status"] == "not_indexed"
+    assert result["notes"] == ["Matched vendor has no indexed made_up_type source record"]
 
 
 def test_primary_source_selection_is_deterministic_across_multiple():
@@ -184,12 +221,19 @@ def test_primary_source_selection_is_deterministic_across_multiple():
     sources = {
         "multi": [
             {"source_id": "s-late", "source_type": "dpa", "source_url": "https://multi.example/dpa-late", "effective_or_published_at": "2024-01-01"},
-            {"source_id": "s-new", "source_type": "dpa", "source_url": "https://multi.example/dpa-new", "effective_or_published_at": "2026-01-01"},
+            {"source_id": "s-new", "source_type": "dpa", "source_url": "https://multi.example/dpa-new", "effective_or_published_at": "2026-01-01", "title": "New DPA"},
         ]
     }
     out = tools.enrich_inventory(_FakeSnapshot(vendors, sources), [{"row_id": "1", "domain": "multi.example"}], source_types=["dpa"])
     primary = out["results"][0]["primary_source_by_type"]["dpa"]
     assert primary["source_id"] == "s-new"  # newest effective date wins
+    assert out["results"][0]["source_references"]["dpa"] == {
+        "status": "indexed",
+        "source_type": "dpa",
+        "url": "https://multi.example/dpa-new",
+        "title": "New DPA",
+        "source_id": "s-new",
+    }
     assert out["results"][0]["source_urls_by_type"]["dpa"] == [
         "https://multi.example/dpa-late",
         "https://multi.example/dpa-new",
