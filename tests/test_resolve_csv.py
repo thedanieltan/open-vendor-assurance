@@ -242,3 +242,18 @@ def test_docs_describe_hint_only_index_and_consumer_side_live_verification():
     assert "hint-only" in text
     assert "does not make network calls" in text
     assert "consumer-side live verification" in text
+
+
+def test_release_readiness_docs_preserve_local_compiler_entrypoint():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    local_compiler = (ROOT / "docs/local-compiler.md").read_text(encoding="utf-8")
+    site_readme = (ROOT / "site/README.md").read_text(encoding="utf-8")
+
+    assert "docs/local-compiler.md" in readme
+    assert "python -m tools.openva.resolve_csv" in readme
+    assert "python -m tools.openva.resolve_csv input.csv" in local_compiler
+    assert "--out-json result-pack.json" in local_compiler
+    assert "--out-csv result-pack.csv" in local_compiler
+    assert "does not make network calls" in local_compiler
+    assert "consumer-side live verification" in local_compiler
+    assert "no hosted resolver worker" in site_readme
