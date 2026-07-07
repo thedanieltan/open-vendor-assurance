@@ -15,7 +15,7 @@ vendor-risk assessment, legal advice, procurement approval, or security certific
 
 You send vendor identities (name and/or domain, optionally business-entity name or
 registration number). OpenVA resolves each against the loaded catalogue and returns the
-matched vendor's public source references plus snapshot provenance. Only
+matched vendor's **canonical** public source references plus snapshot provenance. Only
 vendor-identity fields and your selected source types are sent; nothing is persisted.
 
 ## Access
@@ -83,52 +83,9 @@ per-field length and array-size caps as defense in depth (over-limit returns `42
 }
 ```
 
-Each result includes the preferred first-class agent fields:
-
-```text
-identity
-source_references
-```
-
-These fields are pinned by
-[`schemas/openva/agent-enrichment-result.schema.json`](../schemas/openva/agent-enrichment-result.schema.json).
-New agents should use `identity.match_status` and `source_references.<type>` for
-write-back. The older `match`, `sources`, `primary_source_by_type`, and
-`source_urls_by_type` fields remain available as compatibility projections for existing
-adapters.
-
-`identity.match_status` is one of:
-
-```text
-match
-no_match
-```
-
-Ambiguous compatibility matches are represented in the preferred block as:
-
-```json
-{
-  "match_status": "no_match",
-  "no_match_reason": "multiple_plausible_entities"
-}
-```
-
-`source_references.<type>.status` is one of:
-
-```text
-indexed
-not_indexed
-gated
-unavailable
-not_applicable
-```
-
-Missing source types, ambiguous, and no-match rows return `null` source URLs or empty
-source-reference objects as appropriate. Notes explain machine states only (e.g.
-`Ambiguous vendor match`, `No catalogue match`, `Matched vendor has no indexed DPA
-source`) — never a compliance conclusion, and absence is never labelled non-compliance.
-
-Reference clients may also expose a stable `spreadsheet` projection for write-back:
+Each result includes `match`, canonical `sources`, `primary_source_by_type` (the
+matcher's existing primary choice per type), `source_urls_by_type`, machine-state
+`notes`, and a stable `spreadsheet` projection for write-back:
 
 | Spreadsheet key | Source |
 |---|---|
@@ -142,6 +99,11 @@ Reference clients may also expose a stable `spreadsheet` projection for write-ba
 | `openva_last_observed_at` | latest per-source observation, or `null` |
 | `openva_snapshot_digest` | snapshot digest |
 | `openva_notes` | machine-state notes |
+
+Missing source types, ambiguous, and no-match rows return `null` source columns. Notes
+explain machine states only (e.g. `Ambiguous vendor match`, `No catalogue match`,
+`Matched vendor has no canonical DPA source`) — never a compliance conclusion, and
+absence is never labelled non-compliance.
 
 ## Verify transport (`/v1/verify`, WP-02A)
 
