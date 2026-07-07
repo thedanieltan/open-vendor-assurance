@@ -4,6 +4,33 @@
   const qs = (selector, root = document) => root.querySelector(selector);
   const qsa = (selector, root = document) => [...root.querySelectorAll(selector)];
 
+  const HUMAN_EXPORT_PRESETS = {
+    source_urls: {
+      label: "Source URLs",
+      columns: ["openva_match", "openva_vendor_name", "openva_domain", "dpa_url", "privacy_notice_url", "subprocessors_url", "security_page_url", "trust_center_url", "status_page_url", "openva_notes"],
+    },
+    privacy_dpa: {
+      label: "Privacy / DPA Review",
+      columns: ["openva_match", "openva_vendor_name", "openva_domain", "dpa_url", "privacy_notice_url", "subprocessors_url", "trust_center_url", "openva_notes"],
+    },
+    security_review: {
+      label: "Security Review",
+      columns: ["openva_match", "openva_vendor_name", "openva_domain", "security_page_url", "trust_center_url", "status_page_url", "openva_notes"],
+    },
+    procurement_quick_check: {
+      label: "Procurement Quick Check",
+      columns: ["openva_match", "openva_vendor_name", "openva_domain", "trust_center_url", "privacy_notice_url", "security_page_url", "openva_notes"],
+    },
+    minimal_match_only: {
+      label: "Minimal Match Only",
+      columns: ["openva_match", "openva_vendor_name", "openva_domain", "openva_notes"],
+    },
+    full_human_export: {
+      label: "Full Human Export",
+      columns: ["openva_match", "openva_vendor_id", "openva_vendor_name", "openva_domain", "openva_match_basis", "dpa_url", "privacy_notice_url", "subprocessors_url", "security_page_url", "trust_center_url", "status_page_url", "openva_notes"],
+    },
+  };
+
   function storedTheme() {
     const value = localStorage.getItem("openva-theme") || "system";
     return THEMES.includes(value) ? value : "system";
@@ -46,6 +73,8 @@
       #catalog-filters.catalog-filter-console input:focus, #catalog-filters.catalog-filter-console select:focus { border-color: var(--product-primary); background: var(--product-surface); box-shadow: none; outline: none; }
       #catalog-filters.catalog-filter-console .catalog-search-filter { padding: .85rem; border-color: rgba(29,78,216,.24); }
       #catalog-filters.catalog-filter-console .catalog-search-filter input { min-height: 3.15rem; font-size: 1.05rem; }
+      .export-preset-control { display: inline-grid; gap: .35rem; align-items: center; font-weight: 700; }
+      .export-preset-control select { min-height: 2.65rem; min-width: 15rem; border-radius: 12px; }
       @media (max-width: 980px) { #catalog-filters.catalog-filter-console { grid-template-columns: repeat(2, minmax(0,1fr)); } #catalog-filters.catalog-filter-console .catalog-search-filter { grid-column: 1 / -1; } }
       @media (max-width: 620px) { #catalog-filters.catalog-filter-console { grid-template-columns: 1fr; padding: .75rem; } }
     `;
@@ -78,9 +107,149 @@
     form.dataset.catalogFilterPolished = "true";
   }
 
+  function selectedHumanExportPreset() {
+    const selector = qs("#human-export-preset");
+    return HUMAN_EXPORT_PRESETS[selector && selector.value] || HUMAN_EXPORT_PRESETS.source_urls;
+  }
+
+  function installHumanExportPresetSelector() {
+    if (qs("#human-export-preset")) return;
+    const button = qs("#download-matches-csv");
+    if (!button || !button.parentElement) return;
+    const wrapper = document.createElement("label");
+    wrapper.className = "export-preset-control";
+    const select = document.createElement("select");
+    select.id = "human-export-preset";
+    select.setAttribute("aria-label", "Human CSV export preset");
+    Object.entries(HUMAN_EXPORT_PRESETS).forEach(([value, preset]) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = preset.label;
+      select.appendChild(option);
+    });
+    wrapper.append("Export preset", select);
+    button.parentElement.insertBefore(wrapper, button);
+    select.addEventListener("change", () => {
+      if (typeof renderLocalMatcher === "function") renderLocalMatcher();
+    });
+  }
+
+  function sourceUrlMap(summary) {
+    const urls = new Map();
+    (summary.sources || []).forEach((source) => {
+      const sourceType = source.source_type === "subprocessors_list" ? "subprocessors" : source.source_type;
+      if (source.source_url && !urls.has(sourceType)) urls.set(sourceType, source.source_url);
+    });
+    return urls;
+  }
+
+  function humanMatchRow(row, inputIndex, vendor, matchBasis, summary = null) {
+    const matched = Boolean(vendor);
+    const urls = summary ? sourceUrlMap(summary) : new Map();
+    return {
+      input_index: inputIndex,
+      input_vendor_name: row.vendor_name || row.business_entity_name || "",
+      input_domain: row.domain || "",
+      openva_match: matched ? "match" : "no_match",
+      openva_vendor_id: matched ? vendor.vendor_id : "",
+      openva_vendor_name: matched ? vendor.display_name : "",
+      openva_domain: matched ? officialDomain(vendor) || "" : "",
+      openva_match_basis: matched ? matchBasis : "",
+      dpa_url: matched ? urls.get("dpa") || "" : "",
+      privacy_notice_url: matched ? urls.get("privacy_notice") || "" : "",
+      subprocessors_url: matched ? urls.get("subprocessors") || "" : "",
+      security_page_url: matched ? urls.get("security_page") || "" : "",
+      trust_center_url: matched ? urls.get("trust_center") || "" : "",
+      status_page_url: matched ? urls.get("status_page") || "" : "",
+      openva_notes: matched ? `Matched by ${matchBasis}.` : "No indexed OpenVA match.",
+    };
+  }
+
+  function installHumanPresetOverrides() {
+    if (window.__openvaHumanPresetOverridesInstalled) return;
+    window.__openvaHumanPresetOverridesInstalled = true;
+
+    matchInventoryRow = async function matchInventoryRowWithHumanPresets(row, inputIndex, indexes) {
+      const domain = normalizeDomain(row.domain || "");
+      const vendorName = normalizeForMatch(row.vendor_name || "");
+      const businessName = normalizeForMatch(row.business_entity_name || "");
+      let vendor = null;
+      let matchBasis = "";
+
+      if (domain && indexes.domainIndex.has(domain)) {
+        vendor = indexes.domainIndex.get(domain);
+        matchBasis = "indexed_domain";
+      } else if (vendorName && indexes.nameIndex.has(vendorName)) {
+        vendor = indexes.nameIndex.get(vendorName);
+        matchBasis = "indexed_vendor_name";
+      } else if (businessName && indexes.nameIndex.has(businessName)) {
+        vendor = indexes.nameIndex.get(businessName);
+        matchBasis = "indexed_business_entity_name";
+      }
+
+      if (!vendor) return humanMatchRow(row, inputIndex, null, "");
+      return humanMatchRow(row, inputIndex, vendor, matchBasis, await vendorSourceSummary(vendor.vendor_id));
+    };
+
+    resultPackCsv = function humanPresetResultPackCsv(inputRows, resultRows) {
+      const inputColumns = [];
+      inputRows.forEach((row) => {
+        Object.keys(row).forEach((key) => {
+          if (!inputColumns.includes(key)) inputColumns.push(key);
+        });
+      });
+      const preset = selectedHumanExportPreset();
+      const rows = resultRows.map((result, index) => {
+        const row = { ...(inputRows[index] || {}) };
+        preset.columns.forEach((column) => {
+          row[column] = result[column] || "";
+        });
+        return row;
+      });
+      return serializeCsv(rows, [...inputColumns, ...preset.columns]);
+    };
+
+    renderLocalMatcher = function renderLocalMatcherWithHumanPresets() {
+      const total = localMatchRows.length;
+      const matched = localMatchRows.filter((row) => row.openva_match === "match").length;
+      const unmatched = total - matched;
+      const preset = selectedHumanExportPreset();
+      document.getElementById("match-summary").innerHTML = [
+        ["Rows processed", total],
+        ["Matched rows", matched],
+        ["Unmatched rows", unmatched],
+        ["Export preset", preset.label],
+        ["Processing boundary", "browser-local; not uploaded to OpenVA"],
+      ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
+
+      document.getElementById("match-preview").innerHTML = localMatchRows.length
+        ? `<table><thead><tr><th>Input vendor</th><th>OpenVA match</th><th>Matched vendor</th><th>Domain</th><th>Source URLs</th><th>Notes</th></tr></thead><tbody>${
+            localMatchRows.slice(0, 20).map((row) => `
+              <tr>
+                <td>${html(row.input_vendor_name || row.input_domain || "Unavailable")}</td>
+                <td>${html(row.openva_match || "no_match")}</td>
+                <td>${html(row.openva_vendor_name || "")}</td>
+                <td>${html(row.openva_domain || "")}</td>
+                <td>${html([row.dpa_url, row.privacy_notice_url, row.subprocessors_url, row.security_page_url, row.trust_center_url, row.status_page_url].filter(Boolean).join("; "))}</td>
+                <td>${html(row.openva_notes || "")}</td>
+              </tr>
+            `).join("")
+          }</tbody></table><p>Preview shows up to 20 rows. CSV export preserves your original columns and appends the selected OpenVA preset columns.</p>`
+        : "<p>No local match results yet.</p>";
+    };
+
+    const baseSetupLocalMatcher = setupLocalMatcher;
+    setupLocalMatcher = function setupLocalMatcherWithHumanPresets() {
+      baseSetupLocalMatcher();
+      installHumanExportPresetSelector();
+    };
+  }
+
+  installHumanPresetOverrides();
   applyTheme(storedTheme());
   window.addEventListener("DOMContentLoaded", () => {
     installThemeToggle();
     polishCatalogFilters();
+    installHumanExportPresetSelector();
   });
 })();
