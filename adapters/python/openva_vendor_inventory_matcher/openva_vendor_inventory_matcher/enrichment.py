@@ -324,3 +324,50 @@ def assemble_enrichment(
         "notes": notes,
         "not_advice": True,
     }
+
+
+def enrich_identity(
+    vendors: list[VendorRecord],
+    *,
+    sources_for: Callable[[str], list[dict[str, Any]]],
+    row_id: str | int | None = None,
+    vendor_name: str | None = None,
+    domain: str | None = None,
+    business_entity_name: str | None = None,
+    registration_number: str | None = None,
+    source_types: list[str] | None = None,
+    project_source: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+    legal_by_registration: dict[str, Any] | None = None,
+    legal_by_id: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Enrichment for surfaces that match via :func:`match_identity` (the MCP tool).
+
+    Runs :func:`match_identity` (domain/name, plus the shared registration-number
+    fallback when ``legal_by_registration`` / ``legal_by_id`` are supplied) and feeds
+    the result to :func:`assemble_enrichment`. Surfaces with their own capability-aware
+    matcher (the match service's pack-backed ``MatcherIndex.enrich_row``) call
+    :func:`assemble_enrichment` directly with their own match decision.
+    """
+    match, selected = match_identity(
+        vendors,
+        vendor_name=vendor_name,
+        domain=domain,
+        business_entity_name=business_entity_name,
+        registration_number=registration_number,
+        legal_by_registration=legal_by_registration,
+        legal_by_id=legal_by_id,
+    )
+    return assemble_enrichment(
+        match,
+        selected.vendor.vendor_id if selected else None,
+        sources_for=sources_for,
+        source_types=source_types,
+        row_id=row_id,
+        identity={
+            "vendor_name": vendor_name,
+            "domain": domain,
+            "business_entity_name": business_entity_name,
+            "registration_number": registration_number,
+        },
+        project_source=project_source,
+    )
