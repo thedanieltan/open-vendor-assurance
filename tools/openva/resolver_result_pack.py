@@ -160,7 +160,11 @@ def project_resolution(
     }
     matched = bool(vendor.get("vendor_id"))
     source_urls = {
-        source_type: _source_url_for_output(source_by_type, source_type) if source_type in source_types else None
+        source_type: (
+            _source_url_for_output(source_by_type, source_type)
+            if matched and source_type in source_types
+            else None
+        )
         for source_type in SOURCE_TYPES
     }
     any_source = any(source_urls.values())
@@ -174,8 +178,8 @@ def project_resolution(
         "input_domain": _nullable_text(input_row.get("domain")),
         "match_status": "matched" if matched else "not_matched",
         "match_reason": _match_reason(input_row, vendor, resolution_status, matched),
-        "compiled_vendor_name": _nullable_text(vendor.get("display_name")),
-        "compiled_domain": _compiled_domain(vendor),
+        "compiled_vendor_name": _nullable_text(vendor.get("display_name")) if matched else None,
+        "compiled_domain": _compiled_domain(vendor) if matched else None,
         "dpa_url": source_urls["dpa"],
         "subprocessors_url": source_urls["subprocessors"],
         "privacy_notice_url": source_urls["privacy_notice"],
