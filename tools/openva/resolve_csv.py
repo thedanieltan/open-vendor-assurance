@@ -137,8 +137,8 @@ def _result_row(
         "input_index": input_index,
         "input_vendor_name": _nullable_text(input_row.get("vendor_name") or input_row.get("business_entity_name")),
         "input_domain": _nullable_text(input_row.get("domain")),
-        "compiled_vendor_name": _nullable_text(vendor.get("display_name")) if vendor else None,
-        "compiled_domain": _compiled_domain(vendor) if vendor else None,
+        "matched_vendor_name": _nullable_text(vendor.get("display_name")) if vendor else None,
+        "official_domain": _official_domain(vendor) if vendor else None,
         "dpa_url": source_urls["dpa"],
         "subprocessors_url": source_urls["subprocessors"],
         "privacy_notice_url": source_urls["privacy_notice"],
@@ -191,7 +191,7 @@ def _source_url(source: dict[str, Any] | None) -> str | None:
     return _nullable_text(source.get("source_url") or source.get("candidate_url"))
 
 
-def _compiled_domain(vendor: dict[str, Any] | None) -> str | None:
+def _official_domain(vendor: dict[str, Any] | None) -> str | None:
     if vendor is None:
         return None
     domains = vendor.get("official_domains")
