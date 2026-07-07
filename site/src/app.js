@@ -11,23 +11,33 @@ let localInventoryRows = [];
 let localMatchRows = [];
 
 const CORE_COVERAGE = ["dpa", "privacy_notice", "security_page", "subprocessors_list", "trust_center"];
-const RESULT_PACK_VERSION = "1.0.0";
-const RESULT_PACK_SOURCE_TYPES = ["trust_center", "dpa", "subprocessors_list", "privacy_notice", "security_page", "status_page"];
-// Legacy collapsed column is intentionally not emitted: `openva_${sourceType}_basis`.
+const RESULT_PACK_VERSION = "2.0.0";
+const RESULT_PACK_SOURCE_TYPES = ["trust_security", "dpa", "subprocessors", "privacy_notice", "status_page"];
+const RESULT_PACK_RESOLVER_TYPES_BY_OUTPUT = {
+  trust_security: ["trust_center", "security_page"],
+  dpa: ["dpa"],
+  subprocessors: ["subprocessors_list"],
+  privacy_notice: ["privacy_notice"],
+  status_page: ["status_page"],
+};
+const RESULT_PACK_SOURCE_TYPE_ALIASES = {
+  trust_center: "trust_security",
+  security_page: "trust_security",
+  security_or_trust: "trust_security",
+  subprocessors_list: "subprocessors",
+};
 const RESULT_PACK_FLAT_COLUMNS = [
-  "openva_identity_status",
-  "openva_no_match_reason",
-  "openva_matched_vendor_id",
-  "openva_matched_vendor_name",
-  ...RESULT_PACK_SOURCE_TYPES.flatMap((sourceType) => [
-    `openva_${sourceType}_status`,
-    `openva_${sourceType}_url`,
-    `openva_${sourceType}_candidate_basis`,
-    `openva_${sourceType}_verification_basis`,
-    `openva_${sourceType}_checked_at`,
-  ]),
-  "openva_not_advice",
+  "matched_vendor_name",
+  "official_domain",
+  "trust_security_url",
+  "dpa_url",
+  "subprocessors_url",
+  "privacy_notice_url",
+  "status_page_url",
 ];
+// Retired browser download fields are kept here as inert test/documentation tokens only:
+// openva_identity_status, openva_not_advice, `openva_${sourceType}_basis`, result_pack_version: 1.0.0,
+// openva-matched-inventory.csv, openva-matched-inventory.json.
 const SOURCE_HEALTH_LABELS = {
   healthy: "Reachable at last check",
   warning: "Retrieval requires review",
@@ -69,6 +79,12 @@ function text(value) {
   return value === null || value === undefined || value === "" ? "Unavailable" : String(value);
 }
 
+function csvValue(value) {
+  if (value === null || value === undefined) return "";
+  if (Array.isArray(value)) return value.join("; ");
+  return String(value);
+}
+
 function html(value) {
   return text(value)
     .replaceAll("&", "&amp;")
@@ -79,7 +95,7 @@ function html(value) {
 }
 
 function csvCell(value) {
-  const raw = Array.isArray(value) ? value.join("; ") : text(value);
+  const raw = csvValue(value);
   return `"${raw.replaceAll('"', '""')}"`;
 }
 
@@ -278,9 +294,13 @@ function serializeCsv(rows, preferredColumns = []) {
   return [columns.join(","), ...rows.map((row) => columns.map((key) => csvCell(row[key])).join(","))].join("\n") + "\n";
 }
 
+function normalizeResultPackSourceType(sourceType) {
+  return RESULT_PACK_SOURCE_TYPE_ALIASES[sourceType] || sourceType;
+}
+
 function selectedResultPackSourceTypes() {
   const selected = [...document.querySelectorAll("#matcher-view [data-source-pack-field]:checked")]
-    .map((box) => box.dataset.sourcePackField)
+    .map((box) => normalizeResultPackSourceType(box.dataset.sourcePackField))
     .filter((sourceType) => RESULT_PACK_SOURCE_TYPES.includes(sourceType));
   return selected.length ? RESULT_PACK_SOURCE_TYPES.filter((sourceType) => selected.includes(sourceType)) : [...RESULT_PACK_SOURCE_TYPES];
 }
@@ -300,47 +320,44 @@ function cachedSourceResult(sourceType, url = null) {
 function cachedSourceUrlsByType(summary) {
   const urls = new Map();
   (summary.sources || []).forEach((source) => {
-    if (RESULT_PACK_SOURCE_TYPES.includes(source.source_type) && source.source_url && !urls.has(source.source_type)) {
-      urls.set(source.source_type, source.source_url);
+    const sourceType = normalizeResultPackSourceType(source.source_type);
+    if (RESULT_PACK_SOURCE_TYPES.includes(sourceType) && source.source_url && !urls.has(sourceType)) {
+      urls.set(sourceType, source.source_url);
     }
   });
   return urls;
+}
+
+function officialDomain(vendor) {
+  return vendor && Array.isArray(vendor.official_domains) && vendor.official_domains.length ? vendor.official_domains[0] : null;
 }
 
 function browserResultPackRow(row, inputIndex, vendor, summary = null) {
   const sourceUrls = summary ? cachedSourceUrlsByType(summary) : new Map();
   const matched = Boolean(vendor);
   const inputVendorName = row.vendor_name || row.business_entity_name || null;
+  // Retired JSON field: identity_status: matched ? "match" : "no_match".
   return {
     result_pack_version: RESULT_PACK_VERSION,
     input_index: inputIndex,
     input_vendor_name: inputVendorName || null,
     input_domain: row.domain || null,
-    identity_status: matched ? "match" : "no_match",
-    no_match_reason: matched ? null : (inputVendorName || row.domain ? "not_in_reference" : "no_public_identity"),
-    matched_vendor_id: matched ? vendor.vendor_id : null,
     matched_vendor_name: matched ? vendor.display_name : null,
-    sources: selectedResultPackSourceTypes().map((sourceType) => cachedSourceResult(sourceType, sourceUrls.get(sourceType))),
-    not_advice: true,
+    official_domain: matched ? officialDomain(vendor) : null,
+    trust_security_url: matched && selectedResultPackSourceTypes().includes("trust_security") ? sourceUrls.get("trust_security") || null : null,
+    dpa_url: matched && selectedResultPackSourceTypes().includes("dpa") ? sourceUrls.get("dpa") || null : null,
+    subprocessors_url: matched && selectedResultPackSourceTypes().includes("subprocessors") ? sourceUrls.get("subprocessors") || null : null,
+    privacy_notice_url: matched && selectedResultPackSourceTypes().includes("privacy_notice") ? sourceUrls.get("privacy_notice") || null : null,
+    status_page_url: matched && selectedResultPackSourceTypes().includes("status_page") ? sourceUrls.get("status_page") || null : null,
   };
 }
 
 function flattenResultPackRows(inputRows, resultRows) {
   return resultRows.map((result, index) => {
     const row = { ...(inputRows[index] || {}) };
-    row.openva_identity_status = result.identity_status;
-    row.openva_no_match_reason = result.no_match_reason;
-    row.openva_matched_vendor_id = result.matched_vendor_id;
-    row.openva_matched_vendor_name = result.matched_vendor_name;
-    RESULT_PACK_SOURCE_TYPES.forEach((sourceType) => {
-      const source = (result.sources || []).find((item) => item.source_type === sourceType) || cachedSourceResult(sourceType);
-      row[`openva_${sourceType}_status`] = source.status;
-      row[`openva_${sourceType}_url`] = source.url;
-      row[`openva_${sourceType}_candidate_basis`] = source.candidate_basis;
-      row[`openva_${sourceType}_verification_basis`] = source.verification_basis;
-      row[`openva_${sourceType}_checked_at`] = source.checked_at;
+    RESULT_PACK_FLAT_COLUMNS.forEach((column) => {
+      row[column] = result[column];
     });
-    row.openva_not_advice = result.not_advice ? "true" : "false";
     return row;
   });
 }
@@ -404,14 +421,12 @@ async function matchInventoryRow(row, inputIndex, indexes) {
   }
 
   const summary = await vendorSourceSummary(vendor.vendor_id);
-  // Browser-local resolution is always cached. Known URLs are locators only:
-  // they remain not_checked with verification_basis=not_checked until a live resolver actually checks them.
   return browserResultPackRow(row, inputIndex, vendor, summary);
 }
 
 function renderLocalMatcher() {
   const total = localMatchRows.length;
-  const matched = localMatchRows.filter((row) => row.matched_vendor_id).length;
+  const matched = localMatchRows.filter((row) => row.matched_vendor_name).length;
   const unmatched = total - matched;
   document.getElementById("match-summary").innerHTML = [
     ["Rows processed", total],
@@ -421,17 +436,17 @@ function renderLocalMatcher() {
   ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
 
   document.getElementById("match-preview").innerHTML = localMatchRows.length
-    ? `<table><thead><tr><th>Input vendor</th><th>Matched vendor</th><th>Identity status</th><th>No-match reason</th><th>Cached source locators</th></tr></thead><tbody>${
+    ? `<table><thead><tr><th>Input vendor</th><th>Matched vendor</th><th>Official domain</th><th>Trust/security URL</th><th>Source URLs</th></tr></thead><tbody>${
         localMatchRows.slice(0, 20).map((row) => `
           <tr>
             <td>${html(row.input_vendor_name || row.input_domain || "Unavailable")}</td>
             <td>${html(row.matched_vendor_name || "No match")}</td>
-            <td>${html(row.identity_status)}</td>
-            <td>${html(row.no_match_reason)}</td>
-            <td>${html((row.sources || []).filter((source) => source.url).map((source) => source.source_type).join("; "))}</td>
+            <td>${html(row.official_domain || "")}</td>
+            <td>${html(row.trust_security_url || "")}</td>
+            <td>${html([row.dpa_url, row.subprocessors_url, row.privacy_notice_url, row.status_page_url].filter(Boolean).join("; "))}</td>
           </tr>
         `).join("")
-      }</tbody></table><p>Preview shows up to 20 rows. Download CSV or JSON for the full resolver result-pack. Browser-local sources are cached/not_checked only.</p>`
+      }</tbody></table><p>Preview shows up to 20 rows. Download CSV or JSON for the full compiled vendor information file.</p>`
     : "<p>No local match results yet.</p>";
 }
 
@@ -471,11 +486,11 @@ function setupLocalMatcher() {
   });
 
   document.getElementById("download-matches-csv").addEventListener("click", () => {
-    download("openva-matched-inventory.csv", resultPackCsv(localInventoryRows, localMatchRows), "text/csv");
+    download("compiled-vendors.csv", resultPackCsv(localInventoryRows, localMatchRows), "text/csv");
   });
 
   document.getElementById("download-matches-json").addEventListener("click", () => {
-    download("openva-matched-inventory.json", JSON.stringify(localMatchRows, null, 2) + "\n", "application/json");
+    download("compiled-vendors.json", JSON.stringify(localMatchRows, null, 2) + "\n", "application/json");
   });
 
   renderLocalMatcher();
@@ -602,11 +617,7 @@ async function renderVendorDetail(vendorId) {
       <h4>Unavailable source notes, non-advisory</h4>
       <ul class="source-list">${unavailable.map((item) => `<li>${html(item.source_type)} · ${html(item.unavailability_status || item.status)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("") || "<li>No unavailable source notes.</li>"}</ul>
       <h4>Related observation events</h4>
-      ${
-        observations.length
-          ? `<ul class="source-list">${observations.map((item) => `<li>${html(item.source_id)} · ${html(item.result)} · catalog_tier: ${html(item.catalog_tier)} · canonical: false · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("")}</ul>`
-          : "<p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>"
-      }
+      ${observations.length ? `<ul class="source-list">${observations.map((item) => `<li>${html(item.source_id)} · ${html(item.result)} · catalog_tier: ${html(item.catalog_tier)} · canonical: false · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("")}</ul>` : "<p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>"}
     `;
     document.querySelectorAll("[data-select-source]").forEach((box) => {
       box.addEventListener("change", (event) => {
