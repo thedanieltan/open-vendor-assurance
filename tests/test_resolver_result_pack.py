@@ -70,12 +70,12 @@ def test_projected_json_is_minimal_compiled_vendor_shape_and_schema_valid():
         "input_index": 0,
         "input_vendor_name": "Example",
         "input_domain": "example.com",
-        "compiled_vendor_name": "Example",
-        "compiled_domain": "example.com",
+        "matched_vendor_name": "Example",
+        "official_domain": "example.com",
+        "trust_security_url": "https://example.com/trust",
         "dpa_url": "https://example.com/dpa",
         "subprocessors_url": "https://example.com/subprocessors",
         "privacy_notice_url": None,
-        "security_or_trust_url": "https://example.com/trust",
         "status_page_url": None,
     }
     validate_rows([projected])
@@ -116,10 +116,13 @@ def test_flat_csv_preserves_input_order_and_uses_minimal_human_download_columns(
     ]
     assert [row["vendor_name"] for row in parsed] == ["First", "Second"]
     assert parsed[0]["business_entity_name"] == ""
-    assert parsed[0]["compiled_vendor_name"] == ""
+    assert parsed[0]["matched_vendor_name"] == ""
     assert parsed[0]["dpa_url"] == ""
-    assert parsed[1]["compiled_vendor_name"] == "Example"
-    assert parsed[1]["security_or_trust_url"] == "https://second.example/trust"
+    assert parsed[1]["matched_vendor_name"] == "Example"
+    assert parsed[1]["trust_security_url"] == "https://second.example/trust"
+    assert "compiled_vendor_name" not in reader.fieldnames
+    assert "compiled_domain" not in reader.fieldnames
+    assert "security_or_trust_url" not in reader.fieldnames
     assert "openva_not_advice" not in reader.fieldnames
     assert not any(column.startswith("openva_") for column in reader.fieldnames)
     assert "match_status" not in reader.fieldnames
@@ -131,15 +134,16 @@ def test_flat_csv_preserves_input_order_and_uses_minimal_human_download_columns(
 def test_source_type_aliases_collapse_to_human_template_columns():
     assert pack.normalize_source_types(["trust_center", "security_page", "subprocessors_list"]) == [
         "subprocessors",
-        "security_or_trust",
+        "trust_security",
     ]
-    assert pack.resolver_source_types(["security_or_trust"]) == ["trust_center", "security_page"]
+    assert pack.normalize_source_types(["security_or_trust"]) == ["trust_security"]
+    assert pack.resolver_source_types(["trust_security"]) == ["trust_center", "security_page"]
 
     trust = pack.project_source({"source_type": "trust_center", "source_url": "https://example.com/trust"}, "", "trust_center")
     security = pack.project_source({"source_type": "security_page", "source_url": "https://example.com/security"}, "", "security_page")
 
-    assert trust == {"source_type": "security_or_trust", "url": "https://example.com/trust"}
-    assert security == {"source_type": "security_or_trust", "url": "https://example.com/security"}
+    assert trust == {"source_type": "trust_security", "url": "https://example.com/trust"}
+    assert security == {"source_type": "trust_security", "url": "https://example.com/security"}
 
 
 def test_result_pack_schema_rejects_retired_status_reason_and_advice_fields():
@@ -150,6 +154,9 @@ def test_result_pack_schema_rejects_retired_status_reason_and_advice_fields():
     )
     polluted = json.loads(json.dumps(row))
     polluted["openva_not_advice"] = True
+    polluted["compiled_vendor_name"] = "Example"
+    polluted["compiled_domain"] = "example.com"
+    polluted["security_or_trust_url"] = "https://example.com/trust"
     polluted["match_status"] = "matched"
     polluted["match_reason"] = "domain match"
     polluted["source_status"] = "compiled_from_reference"
