@@ -41,6 +41,10 @@ column. `trust_security_url` intentionally covers trust centers, trust portals,
 security pages, security-and-compliance pages, and similar vendor pages because
 companies do not name this URL consistently.
 
+For the human CSV, URL columns are selected from indexed source records. The
+compiler prefers the `source_records` vocabulary and keeps legacy catalog field
+names only as compatibility input while generated indexes are migrated.
+
 The CSV no longer emits row-level `openva_*` fields, `not_advice`, status fields,
 reason fields, review-note fields, candidate basis fields, verification basis
 fields, or checked-at fields. Those terms are implementation details and do not
