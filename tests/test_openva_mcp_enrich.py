@@ -231,7 +231,7 @@ def test_primary_source_selection_is_deterministic_across_multiple():
         "status": "indexed",
         "source_type": "dpa",
         "url": "https://multi.example/dpa-new",
-        "title": "New DPA",
+        "title": None,
         "source_id": "s-new",
     }
     assert out["results"][0]["source_urls_by_type"]["dpa"] == [
