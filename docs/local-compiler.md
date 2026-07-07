@@ -1,23 +1,24 @@
-# Local Hint-Only CSV Compiler
+# Local CSV Compiler
 
-OpenVA ships a small local CSV compiler for consumers who want resolver
-result-pack output without using the browser UI or operating a resolver service.
+OpenVA ships a small local CSV compiler for consumers who want structured
+compiled vendor information without using the browser UI or operating a resolver
+service.
 
 Run it from a repository checkout:
 
 ```bash
 python -m tools.openva.resolve_csv input.csv \
-  --source-types trust_center,dpa,subprocessors_list,privacy_notice,security_page,status_page \
-  --out-json result-pack.json \
-  --out-csv result-pack.csv
+  --source-types security_or_trust,dpa,subprocessors,privacy_notice,status_page \
+  --out-json compiled-vendors.json \
+  --out-csv compiled-vendors.csv
 ```
 
 The compiler reads the input CSV locally, matches vendor rows against the
-committed OpenVA static/community index, and writes:
+committed static/community index, and writes:
 
-- resolver result-pack JSON rows;
-- a flat CSV that preserves the original input columns and appends deterministic
-  `openva_*` columns.
+- compiled vendor information JSON rows;
+- a flat CSV that preserves the original input columns exactly and appends the
+  human-facing compiled fields.
 
 Supported input columns:
 
@@ -25,36 +26,27 @@ Supported input columns:
 vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
 ```
 
-The compiler is v0.1 and hint-only. It does not make network calls, fetch URLs,
-perform live verification, discover missing sources, upload files, use accounts,
-use BYOK, run a daemon, or call a hosted OpenVA API.
-
-Candidate source URLs from the committed index are emitted only as candidate
-locators:
+The flat CSV download appends this template:
 
 ```text
-status=not_checked
-candidate_basis=cached_locator
-verification_basis=not_checked
-checked_at=null
+match_status,match_reason,compiled_vendor_name,compiled_domain,dpa_url,subprocessors_url,privacy_notice_url,security_or_trust_url,status_page_url,source_status,review_note
 ```
 
-When no candidate source URL exists for a requested source type, the compiler
-emits:
+The compiler is local and does not make network calls, fetch URLs, perform live
+verification, discover missing sources, upload files, use accounts, use BYOK, run
+a daemon, or call a hosted OpenVA API.
+
+Output values are intentionally simple:
 
 ```text
-status=not_checked
-candidate_basis=none
-verification_basis=not_checked
-checked_at=null
+match_status=matched|not_matched
+source_status=compiled_from_reference|not_available
 ```
 
-The compiler never emits `verification_basis=verified_live`,
-`verification_basis=live_unavailable`, `verification_basis=live_gated`,
-`verification_basis=live_not_found`, or source `status=found`. Verified outcomes
-require separate consumer-side live verification through a consumer-side live
-resolver run. The community index is hint-only and is not authoritative evidence.
+`security_or_trust_url` intentionally collapses trust centers and security pages
+because the current compiled download is a human review sheet, not a source-type
+audit contract.
 
-All output keeps `not_advice=true`. OpenVA results are not legal, compliance,
-procurement, audit, security, KYC, AML, sanctions, regulatory, vendor-risk, or
-other professional advice.
+The CSV no longer emits row-level `openva_*` fields, `not_advice`, candidate
+basis fields, verification basis fields, or checked-at fields. Those terms are
+implementation details and do not belong in the human download template.
