@@ -49,6 +49,11 @@ def validate_rows(rows):
     assert errors == []
 
 
+def validation_errors(rows):
+    schema = json.loads((ROOT / "schemas/openva/resolver-result-pack.schema.json").read_text(encoding="utf-8"))
+    return sorted(Draft202012Validator(schema).iter_errors(rows), key=lambda error: list(error.path))
+
+
 def test_nested_json_order_is_deterministic_and_schema_valid():
     row = {"vendor_name": "Example", "domain": "example.com"}
     result = resolution(
@@ -66,11 +71,13 @@ def test_nested_json_order_is_deterministic_and_schema_valid():
         "source_type": "dpa",
         "status": "not_checked",
         "url": "https://example.com/dpa",
-        "basis": "cached",
+        "candidate_basis": "cached_locator",
+        "verification_basis": "not_checked",
         "checked_at": None,
     }
     assert projected["sources"][4]["status"] == "found"
-    assert projected["sources"][4]["basis"] == "live"
+    assert projected["sources"][4]["candidate_basis"] == "cached_locator"
+    assert projected["sources"][4]["verification_basis"] == "verified_live"
     validate_rows([projected])
 
 
@@ -109,7 +116,8 @@ def test_flat_csv_preserves_input_order_and_deterministic_columns():
     assert [row["vendor_name"] for row in parsed] == ["First", "Second"]
     assert parsed[0]["openva_identity_status"] == "no_match"
     assert parsed[1]["openva_trust_center_status"] == "found"
-    assert parsed[1]["openva_trust_center_basis"] == "live"
+    assert parsed[1]["openva_trust_center_candidate_basis"] == "cached_locator"
+    assert parsed[1]["openva_trust_center_verification_basis"] == "verified_live"
 
 
 def test_schema_enum_coverage_matches_projection_constants():
@@ -119,6 +127,8 @@ def test_schema_enum_coverage_matches_projection_constants():
 
     assert tuple(source_schema["source_type"]["enum"]) == pack.SOURCE_TYPES
     assert tuple(source_schema["status"]["enum"]) == pack.SOURCE_STATUSES
+    assert tuple(source_schema["candidate_basis"]["enum"]) == pack.CANDIDATE_BASES
+    assert tuple(source_schema["verification_basis"]["enum"]) == pack.VERIFICATION_BASES
     assert tuple(no_match_schema["enum"]) == pack.NO_MATCH_REASONS
 
 
@@ -185,11 +195,51 @@ def test_source_state_mapping_does_not_overclaim_cached_or_inconclusive_results(
         "source_type": "dpa",
         "status": "not_checked",
         "url": "https://example.com/dpa",
-        "basis": "cached",
+        "candidate_basis": "cached_locator",
+        "verification_basis": "not_checked",
         "checked_at": None,
     }
     assert gated["status"] == "gated"
+    assert gated["verification_basis"] == "live_gated"
     assert unavailable["status"] == "unavailable"
+    assert unavailable["verification_basis"] == "live_unavailable"
+
+
+def test_candidate_inputs_cannot_become_verified_live_without_live_check():
+    for candidate_basis in ("community_hint", "vendor_asserted", "cached_locator"):
+        projected = pack.project_source(
+            {
+                "source_type": "dpa",
+                "status": vendor_resolution.RESULT_CATALOG_CURRENT,
+                "source_url": "https://example.com/dpa",
+                "candidate_basis": candidate_basis,
+                "live_checked": False,
+                "checked_at": "2026-01-01T00:00:00Z",
+            },
+            vendor_resolution.RESULT_CATALOG_CURRENT,
+            "dpa",
+        )
+
+        assert projected["candidate_basis"] == candidate_basis
+        assert projected["status"] == "not_checked"
+        assert projected["verification_basis"] == "not_checked"
+        assert projected["checked_at"] is None
+
+
+def test_result_pack_schema_requires_provenance_distinction():
+    row = pack.project_resolution(
+        {"vendor_name": "Example", "domain": "example.com"},
+        0,
+        resolution(sources=[resolved_source("dpa", vendor_resolution.RESULT_CATALOG_CURRENT, live_checked=False, url="https://example.com/dpa")]),
+    )
+    missing_candidate = json.loads(json.dumps(row))
+    missing_verification = json.loads(json.dumps(row))
+    del missing_candidate["sources"][1]["candidate_basis"]
+    del missing_verification["sources"][1]["verification_basis"]
+
+    assert validation_errors([row]) == []
+    assert validation_errors([missing_candidate])
+    assert validation_errors([missing_verification])
 
 
 def test_projection_uses_existing_resolver_authority_for_python_resolution():
@@ -212,7 +262,19 @@ def test_contract_doc_contains_mapping_table_and_static_honesty_rule():
     text = (ROOT / "docs/resolver-result-pack-contract.md").read_text(encoding="utf-8")
 
     assert "| `identity_ambiguous` | `identity_status=no_match`, `no_match_reason=multiple_plausible_entities` |" in text
-    assert "| `catalog_current` | `status=found` only when `basis=live`; cached/static output MUST use `status=not_checked` |" in text
+    assert "community index is hint-only" in text
+    assert "consumer-side live verification" in text
+    assert "| `catalog_current` | `status=found` only when `verification_basis=verified_live`;" in text
     assert "## Static Honesty Rule" in text
-    assert "never emit `basis=live`" in text
+    assert "never emit `verification_basis=verified_live`" in text
     assert "never emit live `found` semantics" in text
+
+
+def test_local_first_doctrine_declares_runtime_boundary():
+    text = (ROOT / "docs/local-first-resolution-doctrine.md").read_text(encoding="utf-8")
+
+    assert "OpenVA does not process user vendor inventories." in text
+    assert "Live resolution executes on the consumer side" in text
+    assert "community index of candidate hints, never an oracle" in text
+    assert "result pack is the product boundary" in text
+    assert "hosted OpenVA resolver or hosted OpenVA API is explicitly out of scope" in text

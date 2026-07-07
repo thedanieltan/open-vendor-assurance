@@ -688,8 +688,12 @@ def test_site_docs_cover_compiled_distribution_and_public_boundaries():
     )
 
     for phrase in [
-        "static OpenVA browser resolver UI",
-        "Browser resolver UI",
+        "static OpenVA contract and community-index browser",
+        "Static site",
+        "Resolver contract documentation",
+        "Community index browser",
+        "Local resolver / CLI / MCP entry point",
+        "Result-pack preview",
         "Configurable source-pack builder",
         "Browser-local resolver",
         "Source pack preview",
@@ -702,6 +706,11 @@ def test_site_docs_cover_compiled_distribution_and_public_boundaries():
         "no backend, database, account system, upload endpoint",
         "no live verification job",
         "no live discovery job",
+        "no hosted resolver worker",
+        "community index is hint-only",
+        "consumer-side live verification",
+        "openva_{source_type}_candidate_basis",
+        "openva_{source_type}_verification_basis",
         "no server-side workspace persistence",
         "public metadata",
     ]:
