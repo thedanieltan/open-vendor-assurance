@@ -222,6 +222,19 @@ work_packages:
       - tests/test_site.py
       - tests/test_validate.py
 
+  WP-OPENVA-LOCAL-FIRST-DOCTRINE-01:
+    description: Local-first resolver doctrine, result-pack provenance split, static-site runtime boundary wording, and focused validation.
+    allowed_paths:
+      - docs/local-first-resolution-doctrine.md
+      - docs/resolver-result-pack-contract.md
+      - schemas/openva/resolver-result-pack.schema.json
+      - tools/openva/resolver_result_pack.py
+      - site/README.md
+      - tests/test_resolver_result_pack.py
+      - tests/test_site.py
+      - tests/test_validate.py
+      - docs/operations/contracts/work-package-scope.yaml
+
   WP-SOURCE-HEALTH-LABEL-RECONCILIATION-01:
     description: Exact public source-health wording reconciliation surface.
     allowed_paths:
