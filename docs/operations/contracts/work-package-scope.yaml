@@ -235,6 +235,20 @@ work_packages:
       - tests/test_validate.py
       - docs/operations/contracts/work-package-scope.yaml
 
+  WP-OPENVA-HINT-ONLY-COMPILER-CLI-01:
+    description: Local no-network CSV compiler that reads vendor rows, uses the static/community index as hint-only candidate locators, and emits resolver result-pack JSON plus flat CSV without live verification.
+    allowed_paths:
+      - tools/openva/resolve_csv.py
+      - tools/openva/resolver_result_pack.py
+      - docs/cli.md
+      - docs/local-compiler.md
+      - README.md
+      - site/README.md
+      - tests/test_resolve_csv.py
+      - tests/test_resolver_result_pack.py
+      - schemas/openva/resolver-result-pack.schema.json
+      - docs/operations/contracts/work-package-scope.yaml
+
   WP-SOURCE-HEALTH-LABEL-RECONCILIATION-01:
     description: Exact public source-health wording reconciliation surface.
     allowed_paths:
