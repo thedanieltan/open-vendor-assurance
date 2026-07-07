@@ -1,7 +1,7 @@
 # OpenVA Site
 
 This directory contains the static OpenVA contract and community-index browser.
-It is a documentation, discovery, local resolver entry-point, and result-pack
+It is a documentation, discovery, local resolver entry-point, and source-reference
 preview surface. It is not the OpenVA product runtime.
 
 Static site: https://thedanieltan.github.io/open-vendor-assurance/
@@ -61,22 +61,20 @@ not written to `localStorage`, `sessionStorage`, a server, or a database.
 
 ## Public route terminology
 
-The public site should present OpenVA as a local-first resolver contract and
-static community index browser:
+The public site should present OpenVA as a browser-local tool for populating
+vendor lists with indexed public assurance source references:
 
 ```text
-Resolver contract documentation
-Community index browser
-Local resolver / CLI / MCP entry point
-Result-pack preview
-Source Lookup
-Configurable source-pack builder
-Source pack preview
-Export Source Pack
+Vendor list enrichment
+Source reference lookup
+Human export presets
+Agent / MCP / API templates
+Export source references
 ```
 
-Role labels such as CISO, DPO, and procurement are preset shortcuts only. They
-preselect source fields; users can add or remove fields before export.
+Role labels such as CISO, DPO, security, privacy, and procurement are preset
+shortcuts only. They preselect source fields; users can add or remove fields
+before export.
 
 Legacy strings may still appear in tests or non-visible compatibility notes
 until the site test suite is fully reconciled. Do not expand those strings into
@@ -95,19 +93,16 @@ Boundary phrases that must remain true across the site and documentation:
 
 ```text
 Your CSV is processed locally in your browser. It is not uploaded to OpenVA.
-community index is hint-only
-consumer-side live verification
 not a live monitoring feed
-openva-matched-inventory.csv
-openva-matched-inventory.json
+indexed public assurance source references
 not_advice
 ```
 
-## Browser-local resolver
+## Browser-local vendor-list enrichment
 
 The browser-local resolver lets users choose a CSV from their own computer and
-resolve it against OpenVA public metadata in browser memory. The CSV stays in
-the user's browser session and match results can be downloaded as CSV or JSON.
+match it against OpenVA public metadata in browser memory. The CSV stays in the
+user's browser session and match results can be downloaded as CSV or JSON.
 
 Supported input columns:
 
@@ -115,36 +110,49 @@ Supported input columns:
 vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
 ```
 
-The downloaded result preserves user-provided columns and appends OpenVA public
-metadata fields from the resolver result-pack contract:
+Only one identity field is required for matching. OpenVA should preserve user
+columns where practical and append the selected OpenVA output preset.
 
-```text
-openva_identity_status
-openva_no_match_reason
-openva_matched_vendor_id
-openva_matched_vendor_name
-openva_{source_type}_status
-openva_{source_type}_url
-openva_{source_type}_candidate_basis
-openva_{source_type}_verification_basis
-openva_{source_type}_checked_at
-openva_not_advice
+Default human preset:
+
+```csv
+openva_match,openva_vendor_name,openva_domain,dpa_url,privacy_notice_url,subprocessors_url,security_page_url,trust_center_url,status_page_url,openva_notes
 ```
 
-The JSON download is an array of resolver result-pack rows using
-`result_pack_version: 1.0.0`; see
-`docs/resolver-result-pack-contract.md`.
+Other human presets are documented in [`../docs/output-templates.md`](../docs/output-templates.md):
 
-The browser-local resolver is cached/static: it reports loaded public metadata
-and never claims live verification, live discovery, or server-side lifecycle
-routing. Known cached URLs may appear as locators, but their result-pack source
-status remains `not_checked`, `candidate_basis` remains `cached_locator`,
-`verification_basis` remains `not_checked`, and `checked_at` remains `null`.
-The community index is hint-only and is not authoritative evidence. Verified
-outcomes require consumer-side live verification by a CLI, local engine, MCP
-server, or forked deployment; no result should imply OpenVA operated the check.
-See `docs/local-first-resolution-doctrine.md`,
-`docs/vendor-resolution.md`, and `docs/resolver-result-pack-contract.md`.
+```text
+Source URLs
+Privacy / DPA Review
+Security Review
+Procurement Quick Check
+Minimal Match Only
+Full Human Export
+```
+
+Do not include these diagnostic fields in the default human export:
+
+```text
+match_confidence
+catalog_membership
+catalog_tier
+review_state
+freshness_mode
+advisory_boundary
+candidate_source_count
+unavailable_source_count
+```
+
+The JSON download is for agents and machine consumers. New consumers should use
+the simplified `identity` + `source_references` template documented in
+`docs/output-templates.md` and `docs/resolver-result-pack-contract.md`.
+Compatibility fields such as `match`, `sources`, `primary_source_by_type`, and
+`source_urls_by_type` may remain for older adapters.
+
+The browser-local resolver is static: it reports loaded public metadata and
+never claims live verification, live discovery, server-side lifecycle routing,
+server-side CSV upload, or server-side persistence. Known indexed URLs are
+source references from the loaded OpenVA index, not live monitoring results.
 
 Local resolution results are not vendor approval, compliance findings, risk
 scores, procurement recommendations, legal opinions, security conclusions, or
@@ -173,8 +181,8 @@ matching `v*` is pushed. The build checks out the tagged commit, runs OpenVA
 validation, builds the static site from the tagged pack/index files, uploads the
 GitHub Pages artifact, and deploys it through the official Pages deployment
 action. This deployment publishes contract documentation, a community index
-browser, local resolver entry points, and result-pack previews; it does not run
-a hosted OpenVA resolver or process user inventories for OpenVA.
+browser, local resolver entry points, and source-reference previews; it does not
+run a hosted OpenVA resolver or process user inventories for OpenVA.
 
 ## Compiled public-metadata distribution
 
