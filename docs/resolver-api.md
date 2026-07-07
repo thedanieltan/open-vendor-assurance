@@ -15,7 +15,7 @@ vendor-risk assessment, legal advice, procurement approval, or security certific
 
 You send vendor identities (name and/or domain, optionally business-entity name or
 registration number). OpenVA resolves each against the loaded catalogue and returns the
-matched vendor's **canonical** public source references plus snapshot provenance. Only
+matched vendor's public source references plus snapshot provenance. Only
 vendor-identity fields and your selected source types are sent; nothing is persisted.
 
 ## Access
@@ -83,9 +83,52 @@ per-field length and array-size caps as defense in depth (over-limit returns `42
 }
 ```
 
-Each result includes `match`, canonical `sources`, `primary_source_by_type` (the
-matcher's existing primary choice per type), `source_urls_by_type`, machine-state
-`notes`, and a stable `spreadsheet` projection for write-back:
+Each result includes the preferred first-class agent fields:
+
+```text
+identity
+source_references
+```
+
+These fields are pinned by
+[`schemas/openva/agent-enrichment-result.schema.json`](../schemas/openva/agent-enrichment-result.schema.json).
+New agents should use `identity.match_status` and `source_references.<type>` for
+write-back. The older `match`, `sources`, `primary_source_by_type`, and
+`source_urls_by_type` fields remain available as compatibility projections for existing
+adapters.
+
+`identity.match_status` is one of:
+
+```text
+match
+no_match
+```
+
+Ambiguous compatibility matches are represented in the preferred block as:
+
+```json
+{
+  "match_status": "no_match",
+  "no_match_reason": "multiple_plausible_entities"
+}
+```
+
+`source_references.<type>.status` is one of:
+
+```text
+indexed
+not_indexed
+gated
+unavailable
+not_applicable
+```
+
+Missing source types, ambiguous, and no-match rows return `null` source URLs or empty
+source-reference objects as appropriate. Notes explain machine states only (e.g.
+`Ambiguous vendor match`, `No catalogue match`, `Matched vendor has no indexed DPA
+source`) — never a compliance conclusion, and absence is never labelled non-compliance.
+
+Reference clients may also expose a stable `spreadsheet` projection for write-back:
 
 | Spreadsheet key | Source |
 |---|---|
@@ -99,11 +142,6 @@ matcher's existing primary choice per type), `source_urls_by_type`, machine-stat
 | `openva_last_observed_at` | latest per-source observation, or `null` |
 | `openva_snapshot_digest` | snapshot digest |
 | `openva_notes` | machine-state notes |
-
-Missing source types, ambiguous, and no-match rows return `null` source columns. Notes
-explain machine states only (e.g. `Ambiguous vendor match`, `No catalogue match`,
-`Matched vendor has no canonical DPA source`) — never a compliance conclusion, and
-absence is never labelled non-compliance.
 
 ## Verify transport (`/v1/verify`, WP-02A)
 
@@ -230,30 +268,25 @@ its `freshness` label, the cached `match`, canonical `sources`, and — when `fr
     { "row_id": "12", "freshness": "verify", "match": { … }, "sources": [ … ],
       "verification": { … }, "not_advice": true }
   ],
-  "freshness_mode": "verify",
-  "verify_enabled": true,
   "snapshot": { … },
   "not_advice": true
 }
 ```
 
-The actual hosted endpoint serving `/check` live to the public is infrastructure-gated
-(WP-02F/02G/02K); this slice ships the provider-neutral application code with the live path
-**off by default**.
+When the live path is unavailable or no update is needed, results are explicit about the
+cached basis:
 
-## Snapshot and refresh
+```json
+{
+  "results": [
+    { "row_id": "12", "freshness": "cached", "match": { … }, "sources": [ … ],
+      "verification": null, "not_advice": true }
+  ],
+  "snapshot": { … },
+  "not_advice": true
+}
+```
 
-`snapshot.snapshot_digest` is a deterministic `sha256:` digest of the loaded pack;
-re-running enrichment after the service loads a newer pack changes the digest. It is a
-content snapshot identity, not a git commit SHA. `catalog_commit_sha` is `null` unless
-the deployment supplies `OPENVA_CATALOG_COMMIT_SHA`.
-
-## Limitations
-
-Cached only — no live verification. The catalogue covers a curated set of vendors; an
-unmatched vendor means OpenVA has no catalogue record, not that the vendor is unsafe.
-This endpoint and the MCP `enrich_inventory` tool are the primary, agent-composed way to
-consume OpenVA. The Google Sheets client (`integrations/google-sheets/`) is a secondary,
-manually installed reference/fallback client; Excel and Word clients are optional
-secondary surfaces built only where demand or policy justifies them, not a committed next
-step ([ADR-0005](architecture/decisions/ADR-0005-native-clients-as-secondary-compatibility-surfaces.md)).
+Potential live failure reasons are explicit and non-advisory, for example `transport_disabled`,
+`kill_switch_armed`, `worker_unavailable`, `live_timeout`, or `source_unreachable`. These are
+operational states, not compliance/security/risk conclusions.
