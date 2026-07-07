@@ -20,7 +20,7 @@ agent maps identity columns → bounded vendor identities
         ↓
 OpenVA enrich_inventory  (MCP)  /  POST /v1/enrich  (HTTP)
         ↓
-public source references + provenance + snapshot identity
+identity + source_references + compatibility projection + snapshot identity
         ↓
 agent preview or host-authorised write-back
 ```
@@ -50,7 +50,7 @@ Call `enrich_inventory` (MCP) or `POST /v1/enrich` (HTTP) with:
 
 - an opaque `row_id` per row (a correlation id, never a workspace identifier);
 - bounded vendor identities;
-- explicitly requested `source_types` (optional; omit for all canonical types).
+- explicitly requested `source_types` (optional; omit for all indexed types).
 
 The genuinely shared, transport-neutral contract is the **row**, pinned by
 [`schemas/openva/agent-enrichment-row.schema.json`](../schemas/openva/agent-enrichment-row.schema.json).
@@ -73,15 +73,58 @@ no legal-entity records yet, so a registration-number-only row currently resolve
 
 ## 4. Interpret
 
-Preserve the match status verbatim:
+For new agent consumers, prefer the normalized blocks:
 
 ```text
-matched      ambiguous      no_match
+identity
+source_references
+```
+
+`identity.match_status` is one of:
+
+```text
+match
+no_match
+```
+
+`source_references` is a destination-neutral object keyed by requested source type.
+It is designed for agents that write into different schemas such as Google Sheets,
+Notion, Jira, GRC tools, procurement systems, and internal databases.
+
+Example source reference:
+
+```json
+{
+  "dpa": {
+    "status": "indexed",
+    "source_type": "dpa",
+    "url": "https://vendor.example/legal/dpa",
+    "title": "Data Processing Agreement",
+    "source_id": "example-dpa"
+  },
+  "trust_center": {
+    "status": "not_indexed",
+    "source_type": "trust_center",
+    "url": null,
+    "title": null,
+    "source_id": null
+  }
+}
+```
+
+Compatibility fields remain available for older adapters:
+
+```text
+match
+sources
+primary_source_by_type
+source_urls_by_type
 ```
 
 Rules:
 
-- never collapse `ambiguous` into `matched`;
+- preserve `identity.match_status` as `match` or `no_match`;
+- use `identity.no_match_reason=multiple_plausible_entities` when older compatibility output says `match.status=ambiguous`;
 - never treat `no_match` as unsafe or non-compliant;
 - never treat a missing source type as non-compliance — it is a neutral coverage
   fact;
@@ -102,16 +145,17 @@ The agent should:
 
 - add new fields rather than overwrite unrelated data;
 - reuse existing OpenVA fields where unambiguous;
+- map `source_references.<type>.url` into the destination's own schema;
 - preserve formulas and unselected rows;
 - avoid deleting or reordering user data;
-- surface ambiguous rows separately;
+- surface no-match rows separately;
 - record the snapshot identity when useful.
 
 ## 6. Report
 
-The agent should report: rows processed; matched / ambiguous / no-match counts;
-source types requested; snapshot identity; any rows it did not modify; and that
-OpenVA returns public-source references rather than compliance conclusions.
+The agent should report: rows processed; match / no-match counts; source types
+requested; snapshot identity; any rows it did not modify; and that OpenVA returns
+public-source references rather than compliance conclusions.
 
 ## 7. Example prompts
 
