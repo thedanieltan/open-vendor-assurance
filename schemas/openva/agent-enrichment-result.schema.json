@@ -2,12 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/agent-enrichment-result.schema.json",
   "title": "OpenVA Agent Enrichment Result",
-  "description": "Host-neutral per-row enrichment result emitted by the MCP enrich_inventory tool and the match-service /v1/enrich endpoint. It records public-source references and machine-state notes only; it never carries a compliance, suitability, approval, or risk conclusion. additionalProperties is true so a transport may add a compatibility projection (e.g. the match service's spreadsheet block) without forking this contract.",
+  "description": "Host-neutral per-row enrichment result emitted by the MCP enrich_inventory tool and the match-service /v1/enrich endpoint. The preferred agent contract is identity + source_references: a stable match/no_match identity projection and destination-neutral indexed public source references. Compatibility fields remain for older adapters. The result records public-source references and machine-state notes only; it never carries a compliance, suitability, approval, or risk conclusion.",
   "type": "object",
   "additionalProperties": true,
   "required": [
     "row_id",
     "input",
+    "identity",
+    "source_references",
     "match",
     "sources",
     "primary_source_by_type",
@@ -31,20 +33,32 @@
         "registration_number": { "type": ["string", "null"] }
       }
     },
-    "match": { "$ref": "#/$defs/match" },
+    "identity": {
+      "$ref": "#/$defs/identity",
+      "description": "Preferred first-class agent identity projection. New consumers should depend on this block instead of interpreting the compatibility match object directly."
+    },
+    "source_references": {
+      "type": "object",
+      "description": "Preferred first-class agent source-reference projection keyed by requested source type. Each value is an indexed public source reference, or a neutral not_indexed/gated/unavailable/not_applicable state. New consumers should map this object into their destination schema.",
+      "additionalProperties": { "$ref": "#/$defs/source_reference" }
+    },
+    "match": {
+      "$ref": "#/$defs/match",
+      "description": "Compatibility identity object for existing consumers. New consumers should use identity."
+    },
     "sources": {
       "type": "array",
-      "description": "Canonical public sources for the matched vendor, filtered by requested type, preserving original vendor-published URLs. Empty unless the match status is matched.",
+      "description": "Compatibility source list for existing consumers. New consumers should use source_references.",
       "items": { "type": "object" }
     },
     "primary_source_by_type": {
       "type": "object",
-      "description": "The primary source object per source_type, chosen deterministically by the shared ranking.",
+      "description": "Compatibility projection: the primary source object per source_type, chosen deterministically by the shared ranking. New consumers should use source_references.",
       "additionalProperties": { "type": "object" }
     },
     "source_urls_by_type": {
       "type": "object",
-      "description": "Original source URLs grouped by source_type.",
+      "description": "Compatibility projection: original source URLs grouped by source_type. New consumers should use source_references.",
       "additionalProperties": {
         "type": "array",
         "items": { "type": "string" }
@@ -52,7 +66,7 @@
     },
     "notes": {
       "type": "array",
-      "description": "Machine-state notes only (e.g. ambiguous match, no catalogue match, missing canonical source type). Never a compliance conclusion.",
+      "description": "Machine-state notes only (e.g. ambiguous match, no indexed OpenVA match, missing indexed source type). Never a compliance conclusion.",
       "items": { "type": "string" }
     },
     "not_advice": {
@@ -61,13 +75,60 @@
     }
   },
   "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "match_status",
+        "matched_vendor_id",
+        "matched_vendor_name",
+        "match_basis",
+        "no_match_reason"
+      ],
+      "properties": {
+        "match_status": {
+          "enum": ["match", "no_match"],
+          "description": "Preferred normalized identity status. Ambiguity is represented as no_match with no_match_reason=multiple_plausible_entities."
+        },
+        "matched_vendor_id": { "type": ["string", "null"] },
+        "matched_vendor_name": { "type": ["string", "null"] },
+        "match_basis": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "no_match_reason": {
+          "type": ["string", "null"],
+          "enum": [
+            "multiple_plausible_entities",
+            "no_indexed_openva_match",
+            "insufficient_indexed_identity_evidence",
+            null
+          ]
+        }
+      }
+    },
+    "source_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "source_type", "url", "title", "source_id"],
+      "properties": {
+        "status": {
+          "enum": ["indexed", "not_indexed", "gated", "unavailable", "not_applicable"],
+          "description": "Neutral indexed-source state. It is not a compliance, security, risk, or procurement conclusion."
+        },
+        "source_type": { "type": "string" },
+        "url": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"] },
+        "source_id": { "type": ["string", "null"] }
+      }
+    },
     "match": {
       "type": "object",
       "required": ["status", "candidates"],
       "properties": {
         "status": {
           "enum": ["matched", "ambiguous", "no_match"],
-          "description": "ambiguous is never collapsed into matched; a weak identity stays no_match."
+          "description": "Compatibility status. New consumers should map matched -> identity.match_status=match; ambiguous -> identity.match_status=no_match with no_match_reason=multiple_plausible_entities; no_match -> identity.match_status=no_match."
         },
         "method": { "type": ["string", "null"] },
         "confidence": { "type": ["number", "null"] },
