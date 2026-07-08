@@ -1,14 +1,14 @@
 # Open Vendor Assurance
 
-Open Vendor Assurance (OpenVA) is a resolver-first, public-source-only, metadata-first project for vendor-published assurance source references.
+Open Vendor Assurance (OpenVA) is a public-source, metadata-first resolver for vendor-published assurance references.
 
 **Use OpenVA in your browser:** https://thedanieltan.github.io/open-vendor-assurance/
 
-The browser UI helps users resolve vendor names into public source packs. It supports source lookup, browser-local CSV resolution, configurable source-pack fields, and export of selected public metadata without installing Python, Docker, or developer tooling.
+OpenVA helps users turn a vendor list into a review sheet of public vendor assurance URLs. Upload a CSV, resolve vendors against indexed public-source records, and export selected source-reference columns without installing Python, Docker, or developer tooling.
 
 OpenVA records factual locator metadata about public vendor assurance materials such as data processing addenda, subprocessor lists, trust-center pages, privacy notices, security pages, certification references, public KYC/AML statements, AI/data terms, and related source references.
 
-OpenVA is not a legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice product.
+OpenVA is not a legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice product. It does not approve, score, certify, monitor, or assess vendors.
 
 ## Start here
 
@@ -18,6 +18,7 @@ For non-dev users:
 Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
 GitHub Releases
 docs/release-downloads.md
+docs/releases/v0.1-closure.md
 openva-inventory-template.csv
 openva-sample-inventory.csv
 ```
@@ -62,7 +63,7 @@ docs/agent-integrations.md            MCP (stdio + Streamable HTTP), HTTP, and f
 integrations/mcp/openva_mcp/          read-only MCP server (stdio + Streamable HTTP)
 ```
 
-OpenVA's preferred distribution model is agent-composed: a user's existing agent reads the workspace through the connector it already controls, sends OpenVA only bounded vendor identities through read-only HTTP/MCP tools, and writes source-pack results back itself. OpenVA never needs workspace credentials and does not require direct access to Google Drive, Microsoft 365, Notion, Jira, Slack, or another workspace.
+OpenVA's preferred distribution model is agent-composed: a user's existing agent reads the workspace through the connector it already controls, sends OpenVA only bounded vendor identities through read-only HTTP/MCP tools, and writes source-reference results back itself. OpenVA never needs workspace credentials and does not require direct access to Google Drive, Microsoft 365, Notion, Jira, Slack, or another workspace.
 
 For spreadsheet users without a capable agent, the Google Sheets client is a secondary compatibility surface:
 
@@ -78,6 +79,7 @@ For public relaunch readiness:
 docs/public-launch-checklist.md
 docs/roadmap.md
 docs/resolver-first-closeout.md
+docs/releases/v0.1-closure.md
 docs/triage-policy.md
 docs/first-good-issue-policy.md
 DISCLAIMER.md
@@ -95,7 +97,7 @@ OpenVA is:
 - native-language-aware;
 - provenance-driven;
 - hash-friendly;
-- source-pack oriented;
+- source-reference oriented;
 - usable independently of any one runtime or application.
 
 OpenVA does not:
@@ -146,6 +148,8 @@ The resolver-first Phases 1-9 are complete as implementation slices:
 The shipped browser UI is static and browser-local. It uses loaded public metadata and does not upload private vendor inventories, run live discovery from the page, or operate a production hosted verify endpoint.
 
 Hosted resolver infrastructure remains gated by staging, production, smoke evidence, credentials, provider choice, domain, and launch evidence. Until those gates are complete, OpenVA should be described as a static/browser-local resolver UI plus repository-shipped HTTP/MCP/self-hosted components, not as an operated production hosted resolver.
+
+OpenVA v0.1 additionally locks the human CSV and agent enrichment contracts; see `docs/releases/v0.1-closure.md`.
 
 See `docs/resolver-first-closeout.md` for the consolidation record.
 
@@ -212,166 +216,8 @@ control_mapping
 user-specific obligation impact
 ```
 
-OpenVA exports consumer-neutral source packs and dataset packs. Importing OpenVA data should not be treated as vendor approval, risk acceptance, legal advice, compliance advice, procurement advice, security advice, KYC/AML advice, or regulatory advice.
+OpenVA exports consumer-neutral source-reference metadata and dataset packs. Importing OpenVA data should not be treated as vendor approval, risk acceptance, legal advice, compliance advice, procurement advice, security advice, KYC/AML advice, or regulatory advice.
 
 ## Public-source-only rule
 
 If a source requires login, NDA, customer status, sales approval, support ticket access, private portal access, credentialed access, form submission, or anti-bot bypass, it is out of scope.
-
-The repository may record that a public landing page exists. It must not include private contents, private hashes, private summaries, or extracted private text.
-
-## Native-language rule
-
-The native-language source remains authoritative. English summaries are convenience metadata only.
-
-## Default evidence model
-
-The default evidence model is:
-
-```text
-source URL + provenance metadata + access classification + rights classification + hash metadata
-```
-
-The default evidence model is not:
-
-```text
-raw document mirroring
-```
-
-## Pack contract
-
-Current export identifiers:
-
-```text
-profileId: openva.public-metadata.v1
-schemaVersion: openva-export-pack.v1
-schema_version: 0.1.0
-```
-
-Consumers should pin the release tag or repository commit, `profileId`, `schemaVersion`, `packId`, and pack/index digests where reproducibility matters.
-
-Pack-level `generated_at` and `generatedAt` values may be fixed to preserve deterministic rebuilds. They are not a freshness signal; use source, change, observation, release tag, or repository commit metadata for provenance.
-
-See:
-
-```text
-docs/versioning-policy.md
-docs/release-policy.md
-```
-
-## Agent exports
-
-For AI agents, OpenVA publishes static, deterministic, digest-verifiable JSON exports on the hosted site. Start at:
-
-```text
-https://thedanieltan.github.io/open-vendor-assurance/public/openva-agent-index.json
-```
-
-The agent index lists every export with its content digest, and every file carries a snapshot block (`commit_sha`, `generated_at`, `digest`) for verification. Exports record public source metadata, observed health, and change signals only — no risk scores, no legal conclusions, no gated content.
-
-See `docs/agent-export-contract.md` for shapes, field semantics, and the digest verification recipe.
-
-The hosted site also publishes a static discovery surface over these exports: a static page per vendor at `/vendors/{vendor_id}/`, an agent integration guide at `/agents/`, a typed discovery manifest at `/.well-known/openva.json`, plus `sitemap.xml`, `robots.txt`, and `llms.txt`. All OpenVA-owned public URLs derive from `config/publication.yaml`.
-
-## Unified vendor resolution
-
-OpenVA resolves vendor assurance sources through one shared contract for browser users, API consumers, agents, and MCP integrations. A request resolves vendor identity, maps requested source types, returns public source references where available, and separates matched, ambiguous, missing, gated, unavailable, and not-checked states.
-
-Results preserve separate axes for:
-
-```text
-identity match status
-requested source type
-result state
-mode: cached_only | checked_on_demand | discovered
-public access status
-confidence
-snapshot identity
-candidate memory state
-not_advice
-```
-
-The browser resolver is cached/static and browser-local. It reports loaded public metadata and source-pack states, but it does not perform live discovery or lifecycle routing from the page.
-
-For local batch use, `python -m tools.openva.resolve_csv` compiles a vendor CSV
-into resolver result-pack JSON and flat CSV using committed OpenVA index hints
-only. It does not fetch URLs, perform live verification, upload inventories, or
-call a hosted OpenVA resolver. See `docs/local-compiler.md`.
-
-The hosted/self-hosted resolver contracts live in `tools/openva/vendor_resolution.py`, `schemas/openva/vendor-resolution-result.schema.json`, and `schemas/openva/source-pack-result.schema.json`, with details in `docs/vendor-resolution.md` and `docs/resolver-api.md`.
-
-OpenVA preserves source-reference and observation history. It does not archive, reproduce, continuously monitor, compare, or interpret historical vendor documents.
-
-## Release Downloads
-
-For spreadsheet-first users, OpenVA publishes non-technical download assets through GitHub Releases:
-
-```text
-openva-csv.zip
-openva-sample-inventory.csv
-openva-inventory-template.csv
-```
-
-`openva-csv.zip` contains curated CSV exports for vendors, sources, artifacts, observations, candidate sources, unavailable sources, and source coverage. The sample and template inventory files show simple `vendor_name`, `business_entity_name`, optional `domain`, optional `jurisdiction`, optional `registration_number`, and optional `registered_address` columns for matching a vendor list against OpenVA.
-
-These files are generated from the tagged repository state. OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository ships optional API-key-gated verify transport for self-hosted use and future hosted deployment. That transport is disabled by default unless configured by the operator, and the public project does not claim a production hosted verify endpoint until staging, production, smoke evidence, and launch evidence are complete.
-
-See `docs/release-downloads.md` for a plain-language walkthrough of the release assets.
-
-## Browser resolver UI
-
-OpenVA provides a GitHub Pages resolver UI for non-dev users.
-
-Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
-
-The hosted page is static and read-only over public OpenVA metadata. It lets users resolve vendor sources from loaded public metadata, configure source-pack fields, use browser-local CSV matching, look up public source records, and export selected public metadata.
-
-The site does not provide accounts, workspaces, server-side matching, hosted private inventory upload, live discovery from the page, vendor scoring, vendor approval, or compliance conclusions. Private vendor inventories should remain browser-local, local, or self-hosted inside the user's own environment.
-
-The hosted page is generated as a compiled static distribution:
-
-```text
-data/meta.json
-data/vendor-search.min.json
-data/source-types.json
-data/coverage-summary.json
-data/vendors/{vendor_id}.json
-data/observation-feed.json
-```
-
-The static site is a release snapshot over loaded public metadata, not a live monitoring feed. Durable observation and change state lives in the observation ledger and in the agent exports under `/public/`.
-
-For details, see `docs/release-downloads.md` and `site/README.md`.
-
-## Adapters
-
-OpenVA ships small Python adapters for common consumption paths. Install an adapter from the repository checkout, then point it at the pack directory or `openva-pack.json`.
-
-```bash
-python -m pip install adapters/python/openva_pack_reader
-python -m pip install adapters/python/openva_csv_export
-python -m pip install adapters/python/openva_sqlite_export
-python -m pip install adapters/python/openva_jsonl_export
-python -m pip install adapters/python/openva_vendor_inventory_matcher
-```
-
-Available adapters:
-
-```text
-openva_pack_reader                  read-only pack, index, and vendor manifest reader
-openva_csv_export                   spreadsheet-friendly CSV export
-openva_sqlite_export                local SQLite export
-openva_jsonl_export                 pipeline-friendly JSONL export
-openva_vendor_inventory_matcher     conservative inventory-to-OpenVA matcher
-```
-
-Examples:
-
-```bash
-python -m openva_csv_export --pack . --out ./openva-csv
-python -m openva_sqlite_export --pack . --out ./openva.sqlite
-python -m openva_jsonl_export --pack . --out ./openva-jsonl
-python -m openva_vendor_inventory_matcher --pack . --input customer_vendors.csv --out matched_vendors.csv
-```
-
-The optional match service in `services/openva_match_service/` wraps the pack reader and inventory matcher as a self-hosted HTTP service. OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository ships optional API-key-gated verify transport for self-hosted use and future hosted deployment. Until hosted deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment. The service also exposes a read-only, cached-pack enrichment API under `/v1` for zero-install spreadsheet and document clients — see [`docs/resolver-api.md`](docs/resolver-api.md).
