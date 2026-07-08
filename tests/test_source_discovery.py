@@ -264,6 +264,39 @@ def test_discovery_ranks_strong_candidate_after_weak_first_hit():
     assert len(result["observations"]) == 2
 
 
+def test_generated_discovery_events_use_non_advisory_redirect_vocabulary():
+    vendor = vendor_record()
+    candidate_url = "https://www.example.com/security"
+
+    def redirected_fetch(url: str) -> FetchResult:
+        body = "Security encryption availability vulnerability"
+        return FetchResult(
+            requested_url=url,
+            final_url="https://trust.example.net/security",
+            http_status=200,
+            content_type="text/html; charset=utf-8",
+            content_length=len(body),
+            etag=None,
+            last_modified=None,
+            body_sample=body.encode("utf-8"),
+        )
+
+    result = discover_for_vendor(
+        vendor,
+        root=Path("/tmp/nonexistent-openva-root"),
+        fetcher=redirected_fetch,
+        source_types=("security_page",),
+        max_urls_per_type=1,
+    )
+
+    assert result["candidates"][0]["candidate_url"] == candidate_url
+    event = result["discovery_events"][0]
+    assert event["classification"] == "strong_same_authority_redirect"
+    assert event["reason_codes"] == ["strong_same_authority_redirect"]
+    assert "safe" not in event["classification"].lower()
+    assert all("safe" not in reason.lower() for reason in event["reason_codes"])
+
+
 def test_due_unavailable_source_type_is_rediscovered(tmp_path):
     vendor = vendor_record()
     write_vendor(tmp_path, vendor)
