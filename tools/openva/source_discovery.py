@@ -450,7 +450,7 @@ def candidate_rank(source_type: str, url: str, result: FetchResult, semantic: di
     if status == "strong" and authority:
         return 500, "strong_same_authority_canonical_url"
     if status == "strong":
-        return 450, "strong_safe_redirect"
+        return 450, "strong_same_authority_redirect"
     if corroborated_pdf:
         return 400, "pdf_with_corroborating_title_path_evidence"
     if status == "weak":
