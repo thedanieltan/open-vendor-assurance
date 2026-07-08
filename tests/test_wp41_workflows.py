@@ -368,7 +368,9 @@ def test_agent_automerge_rereviews_generated_catalog_on_schedule_after_checks_se
     merge = job.index("- name: Enable GitHub native auto-merge")
 
     assert "if: github.event_name == 'schedule'" in job
-    assert 'gh pr list \\' in job
+    assert "REPO: ${{ github.repository }}" in job
+    assert 'gh pr list --repo "$REPO" \\' in job
+    assert 'gh pr view "$PR_NUMBER" --repo "$REPO" --json body --jq .body > pr-body.md' in job
     assert "--limit 50" in job
     assert "startswith(\"agent-candidate-promotion-\")" in job
     assert '[[ "$HEAD_REF" != agent-candidate-promotion-* ]]' in job
@@ -510,20 +512,33 @@ def test_catalog_pr_guard_has_generated_catalog_fast_path():
     text = CATALOG_PR_GUARD.read_text(encoding="utf-8")
 
     classify = text.index("- name: Classify generated catalog fast path")
+    quarantine = text.index("- name: Classify quarantine fast path")
     validate = text.index("- name: Validate current records")
     install_match = text.index("- name: Install match service test dependencies")
     tests = text.index("- name: Run tests")
     fast_path_block = text[classify:validate]
 
-    assert classify < validate < install_match < tests
+    assert classify < quarantine < validate < install_match < tests
     assert "is_generated_candidate_promotion_pr(branch, title)" in fast_path_block
     assert "GENERATED_CATALOG_WORK_PACKAGE" in fast_path_block
     assert "classify_generated_catalog_pr_risk(changed_paths)" in fast_path_block
     assert "GeneratedCatalogPrRiskClass.LOW_RISK" in fast_path_block
     assert "fast_path=true" in fast_path_block
     assert "fast_path=false" in fast_path_block
-    assert "if: steps.generated_catalog_fast_path.outputs.fast_path != 'true'" in text[validate:]
+    assert "if: steps.generated_catalog_fast_path.outputs.fast_path != 'true' && steps.quarantine_fast_path.outputs.fast_path != 'true'" in text[validate:]
     assert 'pip install -e "services/openva_match_service[dev]"' in text[install_match:tests]
+
+
+def test_catalog_pr_guard_has_quarantine_fast_path():
+    text = CATALOG_PR_GUARD.read_text(encoding="utf-8")
+    block = text[text.index("- name: Classify quarantine fast path") : text.index("- name: Validate current records")]
+
+    assert "check_quarantine_pr_shape" in block
+    assert "headRefName" in block
+    assert "title" in block
+    assert "body" in block
+    assert "Source quarantine PR shape accepted" in block
+    assert "deferring deep status-only checks to quarantine lane" in block
 
 
 def test_catalog_pr_guard_fast_path_only_applies_to_generated_candidate_promotion_prs():

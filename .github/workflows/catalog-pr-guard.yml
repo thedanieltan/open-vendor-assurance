@@ -86,12 +86,50 @@ jobs:
               handle.write("fast_path=true\n")
           print("Generated catalog PR LOW_RISK fast path accepted.")
           PY
-      - name: Validate current records
+      - name: Classify quarantine fast path
+        id: quarantine_fast_path
         if: steps.generated_catalog_fast_path.outputs.fast_path != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr view "$PR_NUMBER" --json title,headRefName,body > /tmp/catalog-pr-metadata.json
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          from tools.openva.quarantine_automerge import check_quarantine_pr_shape
+
+          metadata = json.loads(Path("/tmp/catalog-pr-metadata.json").read_text(encoding="utf-8"))
+          changed_paths = [
+              line.strip()
+              for line in Path("/tmp/catalog-pr-files.txt").read_text(encoding="utf-8").splitlines()
+              if line.strip()
+          ]
+          result = check_quarantine_pr_shape(
+              changed_paths,
+              head_branch=metadata.get("headRefName") or "",
+              title=metadata.get("title") or "",
+              body=metadata.get("body") or "",
+          )
+          output_path = Path(os.environ["GITHUB_OUTPUT"])
+          with output_path.open("a", encoding="utf-8") as handle:
+              handle.write(f"fast_path={str(result.eligible).lower()}\n")
+
+          if result.eligible:
+              print("Source quarantine PR shape accepted; deferring deep status-only checks to quarantine lane.")
+          else:
+              print("Catalog PR is not a source quarantine PR; using full guard path.")
+              for reason in result.reasons:
+                  print(f"quarantine_fast_path_reason={reason}")
+          PY
+      - name: Validate current records
+        if: steps.generated_catalog_fast_path.outputs.fast_path != 'true' && steps.quarantine_fast_path.outputs.fast_path != 'true'
         run: python -m tools.openva.validate validate
       - name: Install match service test dependencies
-        if: steps.generated_catalog_fast_path.outputs.fast_path != 'true'
+        if: steps.generated_catalog_fast_path.outputs.fast_path != 'true' && steps.quarantine_fast_path.outputs.fast_path != 'true'
         run: pip install -e "services/openva_match_service[dev]"
       - name: Run tests
-        if: steps.generated_catalog_fast_path.outputs.fast_path != 'true'
+        if: steps.generated_catalog_fast_path.outputs.fast_path != 'true' && steps.quarantine_fast_path.outputs.fast_path != 'true'
         run: pytest -q
