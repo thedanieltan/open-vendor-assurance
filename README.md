@@ -10,6 +10,131 @@ OpenVA records factual locator metadata about public vendor assurance materials 
 
 OpenVA is not a legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice product. It does not approve, score, certify, monitor, or assess vendors.
 
+## Get value quickly
+
+### Browser users — no install
+
+Open:
+
+```text
+https://thedanieltan.github.io/open-vendor-assurance/
+```
+
+Then upload or paste a CSV with at least one of:
+
+```text
+vendor_name
+domain
+business_entity_name
+registration_number
+```
+
+Export the review CSV when matching is complete.
+
+### MCP users — copy/paste install
+
+Use this when your agent host supports MCP.
+
+macOS / Linux:
+
+```bash
+git clone https://github.com/thedanieltan/open-vendor-assurance.git
+cd open-vendor-assurance
+python3.12 -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip
+pip install ./adapters/python/openva_pack_reader ./adapters/python/openva_vendor_inventory_matcher ./integrations/mcp/openva_mcp
+openva-mcp --base-url https://thedanieltan.github.io/open-vendor-assurance/public --verify
+openva-mcp --base-url https://thedanieltan.github.io/open-vendor-assurance/public
+```
+
+Windows PowerShell:
+
+```powershell
+git clone https://github.com/thedanieltan/open-vendor-assurance.git
+cd open-vendor-assurance
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install ./adapters/python/openva_pack_reader ./adapters/python/openva_vendor_inventory_matcher ./integrations/mcp/openva_mcp
+openva-mcp --base-url https://thedanieltan.github.io/open-vendor-assurance/public --verify
+openva-mcp --base-url https://thedanieltan.github.io/open-vendor-assurance/public
+```
+
+MCP host config:
+
+```json
+{
+  "mcpServers": {
+    "openva": {
+      "command": "openva-mcp",
+      "args": ["--base-url", "https://thedanieltan.github.io/open-vendor-assurance/public"]
+    }
+  }
+}
+```
+
+If your MCP host cannot find `openva-mcp`, use the absolute path inside the virtual environment:
+
+```text
+/path/to/open-vendor-assurance/.venv/bin/openva-mcp
+C:\path\to\open-vendor-assurance\.venv\Scripts\openva-mcp.exe
+```
+
+### Self-hosted API users — copy/paste Docker
+
+Use this when you want an internal HTTP endpoint for `/v1/enrich`.
+
+```bash
+git clone https://github.com/thedanieltan/open-vendor-assurance.git
+cd open-vendor-assurance
+docker build -f services/openva_match_service/Dockerfile -t openva-match-service:local .
+docker run --rm \
+  -p 8000:8000 \
+  -v "$PWD:/data/openva-pack:ro" \
+  -e OPENVA_PACK_PATH=/data/openva-pack \
+  -e OPENVA_SERVICE_API_KEY=replace-with-a-secret \
+  openva-match-service:local
+```
+
+Test from another terminal:
+
+```bash
+curl -fsS \
+  -H "Authorization: Bearer replace-with-a-secret" \
+  http://localhost:8000/v1/catalog/meta \
+  | python -m json.tool
+```
+
+Call `/v1/enrich`:
+
+```bash
+curl -fsS \
+  -H "Authorization: Bearer replace-with-a-secret" \
+  -H "Content-Type: application/json" \
+  -d '{"vendors":[{"row_id":"1","vendor_name":"Stripe","domain":"stripe.com"}],"source_types":["dpa","subprocessors_list","privacy_notice","security_page","trust_center"]}' \
+  http://localhost:8000/v1/enrich \
+  | python -m json.tool
+```
+
+OpenVA does not currently operate a production central API. Self-hosted API users run their own instance.
+
+### Google Sheets users — manual fallback
+
+The Google Sheets client is a secondary compatibility surface. It requires manual Apps Script installation today.
+
+```text
+1. Open your Google Sheet.
+2. Select Extensions → Apps Script.
+3. Create the files listed in integrations/google-sheets/README.md.
+4. Paste the matching file contents from integrations/google-sheets/src/.
+5. Replace the manifest with integrations/google-sheets/appsscript.json.
+6. Reload the spreadsheet.
+7. Use the OpenVA menu.
+```
+
+There is no Google Workspace Marketplace add-on yet.
+
 ## Start here
 
 For non-dev users:
