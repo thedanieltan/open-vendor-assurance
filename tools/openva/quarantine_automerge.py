@@ -28,16 +28,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from typing import Any, Callable
 
 import yaml
 
 MARKER_LABEL = "quarantine"
 QUARANTINE_LABEL = "automerge:quarantine"
+QUARANTINE_WORK_PACKAGE = "WP-SOURCE-QUARANTINE-01"
 DECISION_PREFIX = "maintenance/machine-decisions/"
 GENERATED_PREFIXES = ("indexes/", "dist/")
 
@@ -97,12 +99,75 @@ def status_only_diff_reasons(base_source: dict[str, Any], head_source: dict[str,
     return reasons
 
 
+def _body_declares_work_package(body: str, work_package: str) -> bool:
+    return bool(re.search(rf"(?m)^Work-Package:\s*{re.escape(work_package)}\s*$", body or ""))
+
+
+def quarantine_pr_identity_reasons(
+    *,
+    head_branch: str | None,
+    title: str | None,
+    body: str | None,
+) -> list[str]:
+    reasons: list[str] = []
+    if head_branch is not None and not head_branch.startswith("agent-source-quarantine-"):
+        reasons.append(f"head_branch_not_source_quarantine:{head_branch}")
+    if title is not None and not title.startswith("Catalog: quarantine "):
+        reasons.append(f"title_not_source_quarantine:{title}")
+    if body is not None and not _body_declares_work_package(body, QUARANTINE_WORK_PACKAGE):
+        reasons.append(f"missing_work_package:{QUARANTINE_WORK_PACKAGE}")
+    return reasons
+
+
+def quarantine_pr_path_reasons(changed_paths: list[str]) -> list[str]:
+    reasons: list[str] = []
+    paths = [path.strip() for path in changed_paths if path.strip()]
+    if not paths:
+        return ["no_changed_paths"]
+
+    source_paths: set[str] = set()
+    decision_paths: list[str] = []
+    for path in paths:
+        sfile = source_file_path(path)
+        if sfile:
+            source_paths.add(sfile)
+        elif is_vendor_subtree(path):
+            reasons.append(f"non_source_vendor_path:{path}")
+        elif is_decision_path(path):
+            decision_paths.append(path)
+        elif is_generated_path(path):
+            continue
+        else:
+            reasons.append(f"disallowed_path:{path}")
+
+    if len(source_paths) != 1:
+        reasons.append(f"expected_exactly_one_source:{sorted(source_paths)}")
+    if not decision_paths:
+        reasons.append("missing_quarantine_decision_record")
+    return reasons
+
+
+def check_quarantine_pr_shape(
+    changed_paths: list[str],
+    *,
+    head_branch: str | None,
+    title: str | None,
+    body: str | None,
+) -> QuarantineResult:
+    reasons = quarantine_pr_identity_reasons(head_branch=head_branch, title=title, body=body)
+    reasons.extend(quarantine_pr_path_reasons(changed_paths))
+    return QuarantineResult(not reasons, tuple(reasons))
+
+
 def check_quarantine_automerge(
     changed_paths: list[str],
     labels: list[str],
     base_ref: str,
     head_ref: str,
     *,
+    head_branch: str | None = None,
+    title: str | None = None,
+    body: str | None = None,
     loader: Callable[[str, str], str] = git_show,
     now: datetime | None = None,
 ) -> QuarantineResult:
@@ -112,6 +177,7 @@ def check_quarantine_automerge(
     for required in (MARKER_LABEL, QUARANTINE_LABEL):
         if required not in clean_labels:
             reasons.append(f"missing_label:{required}")
+    reasons.extend(quarantine_pr_identity_reasons(head_branch=head_branch, title=title, body=body))
 
     paths = [path.strip() for path in changed_paths if path.strip()]
     if not paths:
@@ -160,6 +226,9 @@ def check_quarantine_automerge(
     reasons.extend(status_only_diff_reasons(base_source, head_source))
 
     quarantine = head_source.get("quarantine") or {}
+    for field in ("reason", "quarantined_by", "quarantined_at", "prior_review_state", "decision_id", "reversal"):
+        if field not in quarantine:
+            reasons.append(f"head_quarantine_missing:{field}")
     if (quarantine.get("reversal") or {}).get("method") != "revert_quarantine":
         reasons.append("head_reversal_method_not_revert_quarantine")
     decision_id = quarantine.get("decision_id")
@@ -177,8 +246,14 @@ def check_quarantine_automerge(
         else:
             if decision.get("decision") != "quarantine":
                 reasons.append(f"unexpected_decision:{decision.get('decision')}")
+            if decision.get("decision_type") != "quarantine":
+                reasons.append(f"unexpected_decision_type:{decision.get('decision_type')}")
+            if decision.get("subject_type") != "source":
+                reasons.append(f"unexpected_subject_type:{decision.get('subject_type')}")
             if decision.get("subject_id") != source_id:
                 reasons.append("decision_subject_mismatch")
+            if decision.get("not_advice") is not True:
+                reasons.append("decision_not_advice_not_true")
             deciding = decision.get("deciding_bot")
             discovery = decision.get("discovery_bot")
             if deciding and discovery and deciding == discovery:
@@ -202,14 +277,27 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("command", choices=["check"])
     parser.add_argument("--paths-file", required=True)
     parser.add_argument("--labels", default="")
+    parser.add_argument("--head-branch", default=None)
+    parser.add_argument("--title", default=None)
+    parser.add_argument("--body-file", type=Path, default=None)
     parser.add_argument("--base-ref", required=True)
     parser.add_argument("--head-ref", required=True)
     parser.add_argument("--now", default=None)
     args = parser.parse_args(argv)
 
     paths = open(args.paths_file, encoding="utf-8").read().splitlines()
+    body = args.body_file.read_text(encoding="utf-8") if args.body_file else None
     now = datetime.fromisoformat(args.now.replace("Z", "+00:00")) if args.now else None
-    result = check_quarantine_automerge(paths, args.labels.split(","), args.base_ref, args.head_ref, now=now)
+    result = check_quarantine_automerge(
+        paths,
+        args.labels.split(","),
+        args.base_ref,
+        args.head_ref,
+        head_branch=args.head_branch,
+        title=args.title,
+        body=body,
+        now=now,
+    )
     print(f"eligible={str(result.eligible).lower()}")
     print(f"source_id={result.source_id}")
     for reason in result.reasons:

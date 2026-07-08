@@ -37,6 +37,7 @@ def head_source(**overrides) -> dict:
         "reason": "persistent_not_found",
         "quarantined_by": "quarantine-controller",
         "quarantined_at": "2026-06-20T00:00:00Z",
+        "prior_review_state": "validated",
         "decision_id": "acme-dpa-quarantine",
         "reversal": {"method": "revert_quarantine", "reference": "revert", "reversal_decision_id": None},
     }
@@ -47,6 +48,8 @@ def head_source(**overrides) -> dict:
 def decision_line(**overrides) -> str:
     record = {
         "decision_id": "acme-dpa-quarantine",
+        "decision_type": "quarantine",
+        "subject_type": "source",
         "decision": "quarantine",
         "subject_id": "acme-dpa",
         "deciding_bot": "quarantine-controller",
@@ -85,6 +88,22 @@ def test_accepts_valid_status_only_quarantine():
     result = check()
     assert result.eligible, result.reasons
     assert result.source_id == "acme-dpa"
+
+
+def test_accepts_pr_561_quarantine_shape():
+    result = qa.check_quarantine_pr_shape(
+        [
+            "data/vendors/acuity-scheduling/sources/acuity-scheduling-security.yaml",
+            "dist/vendors/acuity-scheduling.json",
+            "indexes/sources.json",
+            "maintenance/machine-decisions/2026-07.ndjson",
+        ],
+        head_branch="agent-source-quarantine-acuity-scheduling-security-28936986389",
+        title="Catalog: quarantine acuity-scheduling-security",
+        body="Work-Package: WP-SOURCE-QUARANTINE-01\n\n## Summary\n",
+    )
+
+    assert result.eligible, result.reasons
 
 
 def test_rejects_not_before_in_future():
@@ -157,6 +176,20 @@ def test_rejects_wrong_decision_kind():
     result = check(decision=decision_line(decision="promote"))
     assert not result.eligible
     assert any("unexpected_decision" in r for r in result.reasons)
+
+
+def test_rejects_non_advisory_decision_violation():
+    result = check(decision=decision_line(not_advice=False))
+    assert not result.eligible
+    assert any("decision_not_advice_not_true" in r for r in result.reasons)
+
+
+def test_rejects_missing_prior_review_state():
+    bad = head_source()
+    del bad["quarantine"]["prior_review_state"]
+    result = check(head=bad)
+    assert not result.eligible
+    assert "head_quarantine_missing:prior_review_state" in result.reasons
 
 
 def test_rejects_missing_decision_record():

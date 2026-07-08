@@ -232,13 +232,14 @@ jobs:
         id: resolve_generated_catalog
         env:
           GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
           {
             echo "generated_pr=false"
             echo "pr_number="
           } >> "$GITHUB_OUTPUT"
 
-          gh pr list \
+          gh pr list --repo "$REPO" \
             --state open \
             --limit 50 \
             --json number,title,headRefName,isDraft,mergeable \
@@ -278,7 +279,7 @@ jobs:
             exit 0
           fi
 
-          gh pr view "$PR_NUMBER" --json body --jq .body > pr-body.md
+          gh pr view "$PR_NUMBER" --repo "$REPO" --json body --jq .body > pr-body.md
 
           {
             echo "generated_pr=true"
@@ -1273,10 +1274,17 @@ jobs:
       - name: Check discovery-ledger automerge eligibility
         env:
           LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
+          printf '%s' "$PR_BODY" > pr-body.md
           python -m tools.openva.discovery_ledger check \
             --paths-file changed-files.txt \
             --labels "$LABELS" \
+            --head-branch "$PR_HEAD_REF" \
+            --title "$PR_TITLE" \
+            --body-file pr-body.md \
             --base-ref ${{ github.event.pull_request.base.sha }} \
             --head-ref HEAD
 
@@ -1610,10 +1618,17 @@ jobs:
       - name: Check quarantine automerge eligibility
         env:
           LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
+          printf '%s' "$PR_BODY" > pr-body.md
           python -m tools.openva.quarantine_automerge check \
             --paths-file changed-files.txt \
             --labels "$LABELS" \
+            --head-branch "$PR_HEAD_REF" \
+            --title "$PR_TITLE" \
+            --body-file pr-body.md \
             --base-ref ${{ github.event.pull_request.base.sha }} \
             --head-ref HEAD
 
