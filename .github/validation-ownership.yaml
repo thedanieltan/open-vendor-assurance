@@ -94,12 +94,7 @@ jobs:
     owner_loop: regression
     purpose: Preserve broad regression coverage without a single monolithic pytest invocation that can hit the platform timeout.
     commands:
-      - pytest -q tests/test_ci_readiness.py tests/test_workflow_operating_model.py tests/test_workflow_retirement_evidence.py tests/test_future_operations_specs.py tests/test_workflow_contracts.py
-      - pytest -q tests/test_catalog*.py tests/test_automation_rules.py tests/test_release_*.py tests/test_site.py tests/test_adapter_contract.py tests/test_release_coherence.py tests/test_agent_bundle_verification.py
-      - pytest -q tests/test_source_*.py tests/test_p0_repair_automerge_workflow.py tests/test_release_candidate_workflow.py
-      - pytest -q tests/test_openva_mcp.py tests/test_openva_mcp_protocol.py tests/test_openva_mcp_hardening.py tests/test_openva_mcp_metadata.py tests/test_openva_mcp_enrich.py tests/test_openva_mcp_streamable_http.py tests/test_openva_mcp_authority_boundaries.py tests/test_matching_conformance.py
-      - pytest -q tests/test_openva_match_service.py tests/test_hosted_job_lifecycle.py tests/test_supply_chain_policy.py
-      - pytest -q tests/test_agent_export.py tests/test_resolver_result_pack.py tests/test_validate.py tests/test_safe_fetch.py tests/test_safe_verify.py tests/test_sitemap_discovery.py tests/test_source_verification.py tests/test_web_bot_auth.py tests/test_google_sheets_integration.py
+      - pytest -q ${{ matrix.pytest_args }}
     protects:
       - tests/**
       - tools/**
