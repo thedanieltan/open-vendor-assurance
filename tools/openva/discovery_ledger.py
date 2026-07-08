@@ -24,8 +24,10 @@ HASH_RE = re.compile(r"^sha256:[a-f0-9]{64}$")
 EVENT_ID_RE = re.compile(r"^[a-f0-9]{32}$")
 DISCOVERY_LEDGER_LABEL = "discovery-ledger"
 AUTOMERGE_OBSERVATION_LABEL = "automerge:observation"
+DISCOVERY_LEDGER_WORK_PACKAGE = "WP-DISCOVERY-LEDGER-APPEND-01"
 LEDGER_EVENTS_PREFIX = "maintenance/discovery-events/"
 LEDGER_FILE_RE = re.compile(r"^maintenance/discovery-events/\d{4}-\d{2}\.ndjson$")
+DISCOVERY_LEDGER_TITLE_RE = re.compile(r"^Discovery ledger: append events run \d+$")
 
 
 @dataclass(frozen=True)
@@ -115,6 +117,8 @@ def validate_event(event: dict[str, Any]) -> list[str]:
         "schema_version",
         "discovery_event_id",
         "candidate_id",
+        "vendor_id",
+        "source_type",
         "origin",
         "candidate_url",
         "evidence_digest",
@@ -139,6 +143,10 @@ def validate_event(event: dict[str, Any]) -> list[str]:
     if event.get("not_advice") is not True:
         reasons.append("not_advice_not_true")
     return reasons
+
+
+def _body_declares_work_package(body: str, work_package: str) -> bool:
+    return bool(re.search(rf"(?m)^Work-Package:\s*{re.escape(work_package)}\s*$", body or ""))
 
 
 def _prohibited_terms() -> list[str]:
@@ -250,6 +258,9 @@ def check_discovery_automerge(
     base_ref: str,
     head_ref: str,
     *,
+    head_branch: str | None = None,
+    title: str | None = None,
+    body: str | None = None,
     loader: Callable[[str, str], str] = git_show,
     list_paths: Callable[[str], list[str]] = git_list_ledger_paths,
     committed_event_ids: set[str] | None = None,
@@ -260,6 +271,12 @@ def check_discovery_automerge(
     for required in (DISCOVERY_LEDGER_LABEL, AUTOMERGE_OBSERVATION_LABEL):
         if required not in clean_labels:
             reasons.append(f"missing_label:{required}")
+    if head_branch is not None and not head_branch.startswith("agent-discovery-ledger-append-"):
+        reasons.append(f"head_branch_not_discovery_ledger:{head_branch}")
+    if title is not None and not DISCOVERY_LEDGER_TITLE_RE.fullmatch(title):
+        reasons.append(f"title_not_discovery_ledger:{title}")
+    if body is not None and not _body_declares_work_package(body, DISCOVERY_LEDGER_WORK_PACKAGE):
+        reasons.append(f"missing_work_package:{DISCOVERY_LEDGER_WORK_PACKAGE}")
 
     paths = [path.strip() for path in changed_paths if path.strip()]
     if not paths:
@@ -335,6 +352,9 @@ def main(argv: list[str] | None = None) -> int:
     check = subparsers.add_parser("check", help="agent-automerge eligibility gate")
     check.add_argument("--paths-file", required=True)
     check.add_argument("--labels", default="")
+    check.add_argument("--head-branch", default=None)
+    check.add_argument("--title", default=None)
+    check.add_argument("--body-file", type=Path, default=None)
     check.add_argument("--base-ref", required=True)
     check.add_argument("--head-ref", required=True)
     args = parser.parse_args(argv)
@@ -361,7 +381,16 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "check":
         paths = Path(args.paths_file).read_text(encoding="utf-8").splitlines()
-        result = check_discovery_automerge(paths, args.labels.split(","), args.base_ref, args.head_ref)
+        body = args.body_file.read_text(encoding="utf-8") if args.body_file else None
+        result = check_discovery_automerge(
+            paths,
+            args.labels.split(","),
+            args.base_ref,
+            args.head_ref,
+            head_branch=args.head_branch,
+            title=args.title,
+            body=body,
+        )
         print(f"eligible={str(result.eligible).lower()}")
         print(f"appended_rows={result.appended_rows}")
         for reason in result.reasons:

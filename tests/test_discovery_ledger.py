@@ -92,6 +92,28 @@ def test_discovery_automerge_accepts_clean_monthly_append():
     assert result.appended_rows == 1
 
 
+def test_discovery_automerge_accepts_pr_560_shape_with_repeated_candidate_ids():
+    first = event("1" * 32)
+    second = event("2" * 32)
+    second["candidate_id"] = first["candidate_id"]
+    second["discovery_run_id"] = "run-2"
+    result = check_discovery_automerge(
+        [DISCOVERY_PATH],
+        LABELS,
+        "BASE",
+        "HEAD",
+        head_branch="agent-discovery-ledger-append-28935834029",
+        title="Discovery ledger: append events run 28935834029",
+        body="Work-Package: WP-DISCOVERY-LEDGER-APPEND-01\n\n- Lane: `discovery_ledger_append`\n",
+        loader=loader_for({}, {DISCOVERY_PATH: ndjson([first, second])}),
+        list_paths=lambda _ref: [],
+        committed_event_ids=set(),
+    )
+
+    assert result.eligible, result.reasons
+    assert result.appended_rows == 2
+
+
 def test_discovery_automerge_requires_discovery_label_pair():
     result = check(
         [DISCOVERY_PATH],
@@ -117,6 +139,26 @@ def test_discovery_automerge_rejects_non_discovery_paths():
     assert result.eligible is False
     for path in rejected:
         assert f"disallowed_path:{path}" in result.reasons
+
+
+def test_discovery_automerge_rejects_wrong_pr_identity():
+    result = check_discovery_automerge(
+        [DISCOVERY_PATH],
+        LABELS,
+        "BASE",
+        "HEAD",
+        head_branch="agent-strict-growth-123",
+        title="Catalog: promote source",
+        body="Work-Package: WP-CATALOG-GROWTH-PROMOTION-01\n",
+        loader=loader_for({}, {DISCOVERY_PATH: ndjson([event("3" * 32)])}),
+        list_paths=lambda _ref: [],
+        committed_event_ids=set(),
+    )
+
+    assert result.eligible is False
+    assert any("head_branch_not_discovery_ledger" in reason for reason in result.reasons)
+    assert any("title_not_discovery_ledger" in reason for reason in result.reasons)
+    assert "missing_work_package:WP-DISCOVERY-LEDGER-APPEND-01" in result.reasons
 
 
 def test_discovery_automerge_rejects_non_monthly_discovery_paths():
