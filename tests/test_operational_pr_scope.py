@@ -133,6 +133,9 @@ def test_agent_automerge_discovery_ledger_gates_before_native_automerge() -> Non
     assert 'gh pr diff "$PR_NUMBER" --name-only > changed-files.txt' in collect["run"]
     assert "python -m tools.openva.discovery_ledger check" in check["run"]
     assert "--paths-file changed-files.txt" in check["run"]
+    assert '--head-branch "$PR_HEAD_REF"' in check["run"]
+    assert '--title "$PR_TITLE"' in check["run"]
+    assert "--body-file pr-body.md" in check["run"]
     assert "--base-ref ${{ github.event.pull_request.base.sha }}" in check["run"]
     assert "--head-ref HEAD" in check["run"]
     assert "tests/test_discovery_ledger.py" in tests["run"]
@@ -155,6 +158,8 @@ def discovery_event(event_id: str) -> dict:
         "schema_version": "0.1.0",
         "discovery_event_id": event_id,
         "candidate_id": "vendor-security-abc123",
+        "vendor_id": "vendor",
+        "source_type": "security_page",
         "origin": "source_discovery",
         "candidate_url": "https://example.com/security",
         "evidence_digest": "sha256:" + "a" * 64,
