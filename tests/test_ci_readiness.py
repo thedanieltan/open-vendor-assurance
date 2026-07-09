@@ -253,8 +253,23 @@ def test_source_repair_pr_workflow_is_manual_human_reviewed_only():
     text = (WORKFLOW_DIR / "source-repair-pr.yml").read_text(encoding="utf-8")
     assert set(triggers.keys()) == {"workflow_dispatch"}
     assert workflow["permissions"] == {"contents": "write", "pull-requests": "write"}
-    assert "reviewed-artifacts-root" in text
-    assert "maintenance/reviewed" in text
-    assert "source_review_decisions load-repair-plan" in text
-    assert "source_repair" in text
-    assert "queue-gate-report.json" in text
+    assert "validation_report_path must be under maintenance/reviewed/" in text
+    assert "evidence_report_path must be under maintenance/reviewed/" in text
+    assert "pr_branch must start with agent-" in text
+    assert "pr_title must start with Catalog: repair" in text
+    assert "python -m tools.openva.source_repair_actions apply" in text
+    assert "gh pr create" in text
+    assert "gh pr merge" not in text
+
+
+def test_source_refinement_scan_runs_weekly_and_selects_latest_maintenance_runs():
+    workflow = load_workflow("source-refinement-scan.yml")
+    triggers = workflow_triggers(workflow)
+    text = (WORKFLOW_DIR / "source-refinement-scan.yml").read_text(encoding="utf-8")
+    assert set(triggers.keys()) == {"workflow_dispatch", "schedule"}
+    assert workflow["permissions"] == {"actions": "read", "contents": "read"}
+    assert triggers["schedule"][0]["cron"] == "0 8 * * 3"
+    assert "gh run list" in text
+    assert "--workflow source-maintenance-report.yml" in text
+    assert "python -m tools.openva.github_actions_artifacts select-latest-source-maintenance-runs" in text
+    assert "insufficient source maintenance history" in text
