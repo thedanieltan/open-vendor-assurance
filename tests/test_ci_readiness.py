@@ -137,17 +137,20 @@ def test_validate_full_regression_is_sharded_and_non_pr_only():
         "match-service",
         "remaining-unit",
     }
-    for shard, item in shards.items():
-        selection = str(item["pytest_selection"])
+    for item in shards.values():
+        selection = str(item["pytest_args"])
         assert selection
-        if shard != "remaining-unit":
-            assert selection != "pytest -q"
-            assert selection.startswith("tests/")
+        assert selection != "pytest -q"
+        assert selection.startswith("tests/")
+        assert isinstance(item["install_mcp"], bool)
+        assert isinstance(item["install_match_service"], bool)
+    assert shards["mcp-and-adapters"]["install_mcp"] is True
+    assert shards["match-service"]["install_match_service"] is True
 
     run_steps = [str(step.get("run", "")).strip() for step in shard_job["steps"] if "run" in step]
     assert "pytest -q" not in run_steps
-    assert any("pytest -q ${{ matrix.pytest_selection }}" in step for step in run_steps)
-    assert any("remaining-tests.txt" in step and "pytest -q $(tr" in step for step in run_steps)
+    assert any("pytest -q ${{ matrix.pytest_args }}" in step for step in run_steps)
+    assert not any("pytest_selection" in step or "remaining-tests.txt" in step for step in run_steps)
 
 
 def test_validate_pr_path_aware_jobs_remain_intact():

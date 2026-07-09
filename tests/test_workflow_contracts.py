@@ -47,8 +47,9 @@ def test_validation_ownership_contract_matches_validate_workflow_jobs_and_comman
     assert contract["required_status_contexts"] == [
         f"validate / {job_name}"
         for job_name, job_contract in contract["jobs"].items()
-        if job_contract.get("required_on_pull_request", True)
+        if job_contract.get("required_on_pull_request", True) or job_name == "full-regression-shards"
     ]
+    assert contract["jobs"]["full-regression-shards"]["required_on_pull_request"] is False
 
     for job_name, job_contract in contract["jobs"].items():
         job = workflow["jobs"][job_name]

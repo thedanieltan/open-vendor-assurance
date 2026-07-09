@@ -11,7 +11,7 @@ on:
     # edit, so a metadata edit cannot flip a failing required check to skipped/passing.
     types: [opened, synchronize, reopened, ready_for_review]
   push:
-    # push validation on main is unchanged.
+    # push validation on main is unchanged, but full regression is now sharded.
     branches: [main]
 
 permissions:
@@ -446,7 +446,7 @@ jobs:
         run: node --test integrations/google-sheets/test/*.test.mjs
 
   full-regression-shards:
-    name: full-regression / ${{ matrix.shard }}
+    name: full-regression-shards (${{ matrix.shard }})
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     timeout-minutes: 15
@@ -455,145 +455,80 @@ jobs:
       matrix:
         include:
           - shard: workflow-contracts
-            pytest_selection: >-
+            install_mcp: false
+            install_match_service: false
+            pytest_args: >-
               tests/test_ci_readiness.py
               tests/test_workflow_operating_model.py
-              tests/test_workflow_contracts.py
-              tests/test_workflow_retirement.py
-              tests/test_workflow_retirement_enforcement.py
               tests/test_workflow_retirement_evidence.py
               tests/test_future_operations_specs.py
-              tests/test_*_workflow.py
+              tests/test_workflow_contracts.py
           - shard: catalog-and-release
-            pytest_selection: >-
+            install_mcp: false
+            install_match_service: false
+            pytest_args: >-
               tests/test_catalog*.py
+              tests/test_automation_rules.py
               tests/test_release_*.py
-              tests/test_constitution_regression.py
-              tests/test_quality_gates.py
-              tests/test_validate.py
-              tests/test_generated_exports.py
-              tests/test_pack_integrity.py
-              tests/test_registry_outputs.py
-              tests/test_public_exports.py
-              tests/test_public_launch_readiness.py
-              tests/test_public_launch_readiness_record.py
-          - shard: source-maintenance
-            pytest_selection: >-
-              tests/test_source_*.py
-              tests/test_observation*.py
-              tests/test_observe.py
-              tests/test_safe_*.py
-              tests/test_robots_policy.py
-              tests/test_sitemap*.py
-              tests/test_web_bot_auth.py
-          - shard: mcp-and-adapters
-            pytest_selection: >-
-              tests/test_openva_mcp*.py
-              tests/test_adapter*.py
-              tests/test_agent_bundle_verification.py
-              tests/test_matching_conformance.py
-              tests/test_openva_csv_export.py
-              tests/test_openva_jsonl_export.py
-              tests/test_openva_sqlite_export.py
-              tests/test_openva_pack_reader.py
-              tests/test_openva_vendor_inventory_matcher.py
-              tests/test_openva_enrichment_*.py
+              tests/test_site.py
+              tests/test_adapter_contract.py
               tests/test_release_coherence.py
+              tests/test_agent_bundle_verification.py
+          - shard: source-maintenance
+            install_mcp: false
+            install_match_service: false
+            pytest_args: >-
+              tests/test_source_*.py
+              tests/test_p0_repair_automerge_workflow.py
+              tests/test_release_candidate_workflow.py
+          - shard: mcp-and-adapters
+            install_mcp: true
+            install_match_service: false
+            pytest_args: >-
+              tests/test_openva_mcp.py
+              tests/test_openva_mcp_protocol.py
+              tests/test_openva_mcp_hardening.py
+              tests/test_openva_mcp_metadata.py
+              tests/test_openva_mcp_enrich.py
+              tests/test_openva_mcp_streamable_http.py
+              tests/test_openva_mcp_authority_boundaries.py
+              tests/test_matching_conformance.py
           - shard: match-service
-            pytest_selection: >-
-              tests/test_openva_match_service*.py
+            install_mcp: false
+            install_match_service: true
+            pytest_args: >-
+              tests/test_openva_match_service.py
               tests/test_hosted_job_lifecycle.py
+              tests/test_supply_chain_policy.py
           - shard: remaining-unit
-            pytest_selection: remaining-unit-complement
+            install_mcp: false
+            install_match_service: false
+            pytest_args: >-
+              tests/test_agent_export.py
+              tests/test_resolver_result_pack.py
+              tests/test_validate.py
+              tests/test_safe_fetch.py
+              tests/test_safe_verify.py
+              tests/test_sitemap_discovery.py
+              tests/test_source_verification.py
+              tests/test_web_bot_auth.py
+              tests/test_google_sheets_integration.py
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: "pip"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
       - name: Install package
         run: pip install -e ".[dev]"
-      - name: Install shard dependencies
+      - name: Install MCP local dependency chain
+        if: matrix.install_mcp
         run: |
-          set -euo pipefail
-          case "${{ matrix.shard }}" in
-            mcp-and-adapters)
-              pip install -e adapters/python/openva_pack_reader
-              pip install -e adapters/python/openva_vendor_inventory_matcher
-              pip install -e "integrations/mcp/openva_mcp[dev]"
-              ;;
-            match-service)
-              pip install -e "services/openva_match_service[dev]"
-              ;;
-            *)
-              echo "No extra dependencies for ${{ matrix.shard }}"
-              ;;
-          esac
-      - name: Run focused shard tests
-        if: matrix.shard != 'remaining-unit'
-        run: pytest -q ${{ matrix.pytest_selection }}
-      - name: Run remaining unit shard
-        if: matrix.shard == 'remaining-unit'
-        run: |
-          set -euo pipefail
-          python - <<'PY' > "$RUNNER_TEMP/remaining-tests.txt"
-          from fnmatch import fnmatchcase
-          from pathlib import Path
-
-          excluded = (
-              "test_ci_readiness.py",
-              "test_workflow_operating_model.py",
-              "test_workflow_contracts.py",
-              "test_workflow_retirement.py",
-              "test_workflow_retirement_enforcement.py",
-              "test_workflow_retirement_evidence.py",
-              "test_future_operations_specs.py",
-              "test_*_workflow.py",
-              "test_catalog*.py",
-              "test_release_*.py",
-              "test_constitution_regression.py",
-              "test_quality_gates.py",
-              "test_validate.py",
-              "test_generated_exports.py",
-              "test_pack_integrity.py",
-              "test_registry_outputs.py",
-              "test_public_exports.py",
-              "test_public_launch_readiness.py",
-              "test_public_launch_readiness_record.py",
-              "test_source_*.py",
-              "test_observation*.py",
-              "test_observe.py",
-              "test_safe_*.py",
-              "test_robots_policy.py",
-              "test_sitemap*.py",
-              "test_web_bot_auth.py",
-              "test_openva_mcp*.py",
-              "test_adapter*.py",
-              "test_agent_bundle_verification.py",
-              "test_matching_conformance.py",
-              "test_openva_csv_export.py",
-              "test_openva_jsonl_export.py",
-              "test_openva_sqlite_export.py",
-              "test_openva_pack_reader.py",
-              "test_openva_vendor_inventory_matcher.py",
-              "test_openva_enrichment_*.py",
-              "test_release_coherence.py",
-              "test_openva_match_service*.py",
-              "test_hosted_job_lifecycle.py",
-          )
-
-          selected = [
-              path.as_posix()
-              for path in sorted(Path("tests").glob("test_*.py"))
-              if not any(fnmatchcase(path.name, pattern) for pattern in excluded)
-          ]
-          if not selected:
-              raise SystemExit("remaining-unit shard selected no tests")
-          print("\n".join(selected))
-          PY
-          echo "Remaining unit shard selection:"
-          sed 's/^/  /' "$RUNNER_TEMP/remaining-tests.txt"
-          pytest -q $(tr '\n' ' ' < "$RUNNER_TEMP/remaining-tests.txt")
+          pip install -e adapters/python/openva_pack_reader
+          pip install -e adapters/python/openva_vendor_inventory_matcher
+          pip install -e "integrations/mcp/openva_mcp[dev]"
+      - name: Install match service test dependencies
+        if: matrix.install_match_service
+        run: pip install -e "services/openva_match_service[dev]"
+      - name: Run sharded regression tests
+        run: pytest -q ${{ matrix.pytest_args }}
