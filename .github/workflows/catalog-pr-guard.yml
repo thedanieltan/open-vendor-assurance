@@ -120,16 +120,12 @@ jobs:
           if result.eligible:
               print("Source quarantine PR shape accepted; deferring deep status-only checks to quarantine lane.")
           else:
-              print("Catalog PR is not a source quarantine PR; using full guard path.")
+              print("Catalog PR is not a source quarantine PR; catalog-pr-guard remains limited to boundary checks.")
               for reason in result.reasons:
                   print(f"quarantine_fast_path_reason={reason}")
           PY
-      - name: Validate current records
+      - name: Defer heavy validation to validate workflow
         if: steps.generated_catalog_fast_path.outputs.fast_path != 'true' && steps.quarantine_fast_path.outputs.fast_path != 'true'
-        run: python -m tools.openva.validate validate
-      - name: Install match service test dependencies
-        if: steps.generated_catalog_fast_path.outputs.fast_path != 'true' && steps.quarantine_fast_path.outputs.fast_path != 'true'
-        run: pip install -e "services/openva_match_service[dev]"
-      - name: Run tests
-        if: steps.generated_catalog_fast_path.outputs.fast_path != 'true' && steps.quarantine_fast_path.outputs.fast_path != 'true'
-        run: pytest -q
+        run: |
+          echo "catalog-pr-guard completed boundary checks."
+          echo "Heavy validation, generated-output freshness, release gates, and tests are enforced by validate.yml."

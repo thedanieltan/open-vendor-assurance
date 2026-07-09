@@ -151,7 +151,9 @@ def test_catalog_guard_workflow_is_read_only_and_pr_scoped():
     assert workflow["permissions"] == {"contents": "read", "pull-requests": "read"}
     assert "pull_request" in triggers
     assert workflow["jobs"]["catalog-pr-guard"]["if"] == "startsWith(github.event.pull_request.title, 'Catalog:')"
-    assert 'pip install -e "services/openva_match_service[dev]"' in text
+    assert "python -m tools.openva.catalog_guard" in text
+    assert "Heavy validation, generated-output freshness, release gates, and tests are enforced by validate.yml." in text
+    assert 'pip install -e "services/openva_match_service[dev]"' not in text
 
 
 def test_observation_report_is_manual_only_read_only_observation_workflow():
