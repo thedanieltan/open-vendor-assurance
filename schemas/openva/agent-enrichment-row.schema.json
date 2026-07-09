@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/agent-enrichment-row.schema.json",
   "title": "OpenVA Agent Enrichment Row",
-  "description": "The shared, transport-neutral vendor-identity row. This is the contract genuinely common to both enrichment surfaces: the MCP enrich_inventory tool wraps a list of these rows under `rows`, and the match-service /v1/enrich HTTP endpoint wraps the same rows under `vendors`. A row carries only bounded vendor-identity fields and an opaque row_id; additionalProperties is false so unrelated workspace columns cannot enter OpenVA. At least one identity field must be non-empty (enforced by each transport).",
+  "description": "The shared, transport-neutral vendor-identity row. This is the contract genuinely common to both enrichment surfaces: the MCP enrich_inventory tool wraps a list of these rows under `rows`, and the match-service /v1/enrich HTTP endpoint wraps the same rows under `vendors`. A row carries only bounded vendor-identity fields and an opaque row_id; additionalProperties is false so unrelated workspace columns and resolver internals cannot enter OpenVA. At least one identity field must be non-empty (enforced by each transport). Specific identifiers such as business_entity_name or registration_number may resolve to one entity when evidence supports it; vague brand-only rows may return candidate state in the result contract instead of expanding this input template.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -17,7 +17,7 @@
     "registration_number": {
       "type": ["string", "null"],
       "maxLength": 512,
-      "description": "Matched via legal-entity resolution on any surface that carries legal-entity data for the vendor (the match service over a catalogue pack; the MCP snapshot over the vendor export's legal_entities) using one shared fallback. The shipped catalogue carries no legal-entity records yet, so a registration-number-only row currently resolves to no_match until such data exists."
+      "description": "Matched via legal-entity resolution on any surface that carries legal-entity data for the vendor (the match service over a catalogue pack; the MCP snapshot over the vendor export's legal_entities) using one shared fallback. Registration-number matching is scoped to the specific legal entity; it does not collapse a global brand into one contracting entity."
     }
   }
 }
