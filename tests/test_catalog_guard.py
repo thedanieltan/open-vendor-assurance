@@ -1,4 +1,11 @@
-from tools.openva.catalog_guard import validate_catalog_batch_duplicates, validate_catalog_paths
+import json
+
+from tools.openva.catalog_guard import (
+    validate_catalog_batch_duplicates,
+    validate_catalog_generated_outputs,
+    validate_catalog_paths,
+    validate_changed_source_observations,
+)
 
 
 def test_catalog_guard_allows_catalog_files():
@@ -47,6 +54,69 @@ def test_catalog_guard_rejects_unknown_docs():
     failures = validate_catalog_paths(["docs/new-policy.md"])
 
     assert failures == ["docs/new-policy.md: catalog PR path is outside the allowed catalog-agent file set"]
+
+
+def test_catalog_generated_guard_requires_outputs_for_data_changes():
+    failures = validate_catalog_generated_outputs(["data/vendors/example/sources/example.yaml"])
+
+    assert failures == [
+        "catalog data changed but generated outputs are absent; run python -m tools.openva.validate build-indexes, then commit openva-pack.json indexes/ dist/"
+    ]
+
+
+def test_catalog_generated_guard_accepts_data_changes_with_outputs():
+    failures = validate_catalog_generated_outputs(
+        [
+            "data/vendors/example/sources/example.yaml",
+            "indexes/sources.json",
+            "dist/vendors/example.json",
+            "openva-pack.json",
+        ]
+    )
+
+    assert failures == []
+
+
+def test_changed_source_observation_guard_requires_latest_baseline(tmp_path):
+    source_path = tmp_path / "data" / "vendors" / "example" / "sources" / "example-source.yaml"
+    source_path.parent.mkdir(parents=True)
+    source_path.write_text(
+        """
+source_id: example-source
+vendor_id: example
+source_url: https://example.com/legal
+""".lstrip(),
+        encoding="utf-8",
+    )
+    latest_path = tmp_path / "maintenance" / "source-observations" / "latest-observations.json"
+    latest_path.parent.mkdir(parents=True)
+    latest_path.write_text(json.dumps({"sources": []}), encoding="utf-8")
+
+    failures = validate_changed_source_observations(["data/vendors/example/sources/example-source.yaml"], root=tmp_path)
+
+    assert failures == [
+        "data/vendors/example/sources/example-source.yaml: source_id example-source has no latest-observations baseline; verify the new source(s), run python -m tools.openva.observation_ledger build, install latest-observations.json, then commit maintenance/source-observations/latest-observations.json"
+    ]
+
+
+def test_changed_source_observation_guard_accepts_latest_baseline(tmp_path):
+    source_path = tmp_path / "data" / "vendors" / "example" / "sources" / "example-source.yaml"
+    source_path.parent.mkdir(parents=True)
+    source_path.write_text(
+        """
+source_id: example-source
+vendor_id: example
+source_url: https://example.com/legal
+""".lstrip(),
+        encoding="utf-8",
+    )
+    latest_path = tmp_path / "maintenance" / "source-observations" / "latest-observations.json"
+    latest_path.parent.mkdir(parents=True)
+    latest_path.write_text(json.dumps({"sources": [{"source_id": "example-source"}]}), encoding="utf-8")
+
+    failures = validate_changed_source_observations(["data/vendors/example/sources/example-source.yaml"], root=tmp_path)
+
+    assert failures == []
 
 
 def test_catalog_batch_guard_rejects_duplicate_vendor_id_in_manifest(tmp_path):
