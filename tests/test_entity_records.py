@@ -62,6 +62,41 @@ def test_legal_entity_schema_accepts_stub_without_verification_source():
     assert schema_errors("legal-entity.schema.json", instance) == []
 
 
+def test_legal_entity_schema_accepts_identifier_scheme_and_authority():
+    instance = valid_legal_entity()
+    instance["registration_number"] = "202000001A"
+    instance["identifier_scheme"] = "SG_UEN"
+    instance["identifier_authority"] = "Accounting and Corporate Regulatory Authority"
+    instance["identifier_authority_url"] = "https://www.acra.gov.sg/"
+
+    assert schema_errors("legal-entity.schema.json", instance) == []
+
+
+def test_legal_entity_schema_rejects_identifier_scheme_without_authority():
+    instance = valid_legal_entity()
+    instance["registration_number"] = "0001477333"
+    instance["identifier_scheme"] = "US_SEC_CIK"
+
+    assert schema_errors("legal-entity.schema.json", instance) != []
+
+
+def test_legal_entity_schema_rejects_identifier_authority_without_scheme():
+    instance = valid_legal_entity()
+    instance["registration_number"] = "0001477333"
+    instance["identifier_authority"] = "U.S. Securities and Exchange Commission"
+
+    assert schema_errors("legal-entity.schema.json", instance) != []
+
+
+def test_legal_entity_schema_rejects_unknown_identifier_scheme():
+    instance = valid_legal_entity()
+    instance["registration_number"] = "0001477333"
+    instance["identifier_scheme"] = "US_DELAWARE_FILE_NUMBER"
+    instance["identifier_authority"] = "Delaware Division of Corporations"
+
+    assert schema_errors("legal-entity.schema.json", instance) != []
+
+
 def test_legal_entity_schema_accepts_source_backed_registered_address():
     instance = valid_legal_entity()
     instance["registered_address"] = {
