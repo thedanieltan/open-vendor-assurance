@@ -2,7 +2,12 @@ from jsonschema import Draft202012Validator
 
 from tools.openva.indexes import build_indexes
 from tools.openva import validate as validate_module
-from tools.openva.validate import validate_all, validate_coverage_claims, validate_quality_gates
+from tools.openva.validate import (
+    validate_all,
+    validate_coverage_claims,
+    validate_quality_gates,
+    validate_registration_number_quorum,
+)
 from tools.openva.schema_registry import load_schema
 
 
@@ -60,6 +65,48 @@ def source_record(**overrides):
         },
         "not_advice": True,
     }
+    record.update(overrides)
+    return record
+
+
+def legal_entity_record(**overrides):
+    record = {
+        "_openva_path": "data/vendors/example/legal_entities/example-pte-ltd.yaml",
+        "schema_version": "0.1.0",
+        "entity_id": "example-pte-ltd",
+        "vendor_id": "example",
+        "legal_name": "Example Pte. Ltd.",
+        "jurisdiction": "SG",
+        "registration_number": "202612345A",
+        "verification_source_ids": ["example-registry", "example-terms"],
+    }
+    record.update(overrides)
+    return record
+
+
+def official_registry_source(**overrides):
+    record = source_record(
+        _openva_path="data/vendors/example/sources/example-registry.yaml",
+        source_id="example-registry",
+        source_type="other_public_source",
+        source_authority_class="public_registry",
+        entity_id="example-pte-ltd",
+        registration_number="202612345A",
+        source_url="https://registry.example/entities/202612345A",
+    )
+    record.update(overrides)
+    return record
+
+
+def corroborating_entity_source(**overrides):
+    record = source_record(
+        _openva_path="data/vendors/example/sources/example-terms.yaml",
+        source_id="example-terms",
+        source_type="terms_of_service",
+        source_authority_class="vendor_legal_terms",
+        entity_id="example-pte-ltd",
+        source_url="https://example.com/legal/terms",
+    )
     record.update(overrides)
     return record
 
@@ -155,6 +202,39 @@ def test_coverage_claim_target_source_id_must_exist_and_match_vendor():
     assert any("must match source vendor_id" in failure for failure in vendor_failures)
 
 
+def test_registration_number_quorum_passes_for_scoped_entity_evidence():
+    failures = validate_registration_number_quorum(
+        "data/vendors/example/legal_entities/example-pte-ltd.yaml",
+        legal_entity_record(),
+        [official_registry_source(), corroborating_entity_source()],
+    )
+
+    assert failures == []
+
+
+def test_registration_number_quorum_fails_for_registry_only():
+    failures = validate_registration_number_quorum(
+        "data/vendors/example/legal_entities/example-pte-ltd.yaml",
+        legal_entity_record(verification_source_ids=["example-registry"]),
+        [official_registry_source()],
+    )
+
+    assert failures == [
+        "data/vendors/example/legal_entities/example-pte-ltd.yaml: "
+        "registration_number evidence quorum failed: corroborating_source_missing"
+    ]
+
+
+def test_registration_number_quorum_is_skipped_when_registration_number_absent():
+    failures = validate_registration_number_quorum(
+        "data/vendors/example/legal_entities/example-pte-ltd.yaml",
+        legal_entity_record(registration_number=None),
+        [official_registry_source()],
+    )
+
+    assert failures == []
+
+
 def test_duplicate_source_url_for_same_vendor_fails(monkeypatch):
     first = source_record(source_id="example-legal", source_url="https://example.com/legal")
     second = source_record(
@@ -189,3 +269,33 @@ def test_duplicate_source_url_for_same_vendor_fails(monkeypatch):
     failures = validate_quality_gates()
 
     assert any("duplicate source_url for vendor example: https://example.com/legal" in failure for failure in failures)
+
+
+def test_quality_gates_enforce_registration_number_quorum(monkeypatch):
+    def records_for(kind):
+        if kind == "vendor":
+            return [
+                {
+                    "_openva_path": "data/vendors/example/vendor.yaml",
+                    "vendor_id": "example",
+                    "official_domains": ["example.com"],
+                    "regions_served": [],
+                    "vendor_categories": [],
+                }
+            ]
+        if kind == "source":
+            return [official_registry_source()]
+        if kind == "legal_entity":
+            return [legal_entity_record(verification_source_ids=["example-registry"])]
+        return []
+
+    monkeypatch.setattr(validate_module, "records_for", records_for)
+    monkeypatch.setattr(validate_module, "records_for_optional_kind", lambda _kind: [])
+    monkeypatch.setattr(validate_module, "load_region_tags", lambda: set())
+    monkeypatch.setattr(validate_module, "load_vendor_category_tags", lambda: set())
+    monkeypatch.setattr(validate_module, "load_prohibited_terms", lambda: [])
+    monkeypatch.setattr(validate_module, "load_official_publisher_exceptions", lambda: set())
+
+    failures = validate_quality_gates()
+
+    assert any("registration_number evidence quorum failed: corroborating_source_missing" in failure for failure in failures)
