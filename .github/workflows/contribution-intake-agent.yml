@@ -77,7 +77,7 @@ jobs:
           title: ${{ env.OPENVA_INTAKE_PR_TITLE }}
           commit-message: ${{ env.OPENVA_INTAKE_PR_TITLE }}
           body-path: .openva-intake/pr-body.md
-          labels: catalog, agent-generated, needs-human-review
+          labels: catalog, agent-generated
           add-paths: |
             catalog-batches/intake/*.yaml
             data/vendors/**
