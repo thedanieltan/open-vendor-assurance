@@ -36,7 +36,6 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "submitted-source-verification.yml",
     "validate.yml",
     "validate-pr-metadata.yml",
-    "web-bot-auth-smoke.yml",
 }
 
 
