@@ -68,9 +68,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -88,6 +90,22 @@
           "source_type": "dpa",
           "source_url": "https://www.adobe.com/content/dam/cc/en/legal/terms/enterprise/pdfs/DPA-WW.pdf",
           "title": "Adobe Data Processing Agreement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "adobe-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=796343",
+          "title": "Adobe Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "adobe-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.adobe.com/legal/terms.html",
+          "title": "Adobe public legal terms page"
         },
         {
           "confidence": null,
@@ -117,7 +135,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Adobe",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "adobe-inc",
+          "jurisdiction": "US",
+          "legal_name": "Adobe Inc.",
+          "registered_address": null,
+          "registration_number": "0000796343",
+          "vendor_id": "adobe"
+        }
+      ],
       "legal_name": "Adobe Inc.",
       "manifest_path": "dist/vendors/adobe.json",
       "missing_core_source_types": [],
@@ -140,6 +168,14 @@
           "source_type": "dpa",
           "source_url": "https://www.adobe.com/content/dam/cc/en/legal/terms/enterprise/pdfs/DPA-WW.pdf",
           "title": "Adobe Data Processing Agreement"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "adobe-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=796343",
+          "title": "Adobe Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -164,6 +200,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.adobe.com/privacy/sub-processors.html",
           "title": "Adobe Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "adobe-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.adobe.com/legal/terms.html",
+          "title": "Adobe public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -174,9 +218,11 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -210,12 +256,38 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.adp.com/legal/data-privacy/subprocessors.aspx",
           "title": "ADP Subprocessors"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "automatic-data-processing-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=8670",
+          "title": "Automatic Data Processing, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "automatic-data-processing-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.adp.com/legal.aspx",
+          "title": "ADP public legal terms page"
         }
       ],
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "ADP",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "automatic-data-processing-inc",
+          "jurisdiction": "US",
+          "legal_name": "Automatic Data Processing, Inc.",
+          "registered_address": null,
+          "registration_number": "0000008670",
+          "vendor_id": "adp"
+        }
+      ],
       "legal_name": "ADP, Inc.",
       "manifest_path": "dist/vendors/adp.json",
       "missing_core_source_types": [],
@@ -230,6 +302,14 @@
           "source_type": "dpa",
           "source_url": "https://www.adp.com/legal/data-privacy/data-processing-addendum.aspx",
           "title": "ADP Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "automatic-data-processing-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=8670",
+          "title": "Automatic Data Processing, Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -254,6 +334,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.adp.com/legal/data-privacy/subprocessors.aspx",
           "title": "ADP Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "automatic-data-processing-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.adp.com/legal.aspx",
+          "title": "ADP public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -1223,9 +1311,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -1243,6 +1333,22 @@
           "source_type": "dpa",
           "source_url": "https://asana.com/terms/data-processing",
           "title": "Asana Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "asana-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1477720",
+          "title": "Asana, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "asana-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://asana.com/terms",
+          "title": "Asana public legal terms page"
         },
         {
           "confidence": null,
@@ -1272,7 +1378,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Asana",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "asana-inc",
+          "jurisdiction": "US",
+          "legal_name": "Asana, Inc.",
+          "registered_address": null,
+          "registration_number": "0001477720",
+          "vendor_id": "asana"
+        }
+      ],
       "legal_name": "Asana, Inc.",
       "manifest_path": "dist/vendors/asana.json",
       "missing_core_source_types": [],
@@ -1295,6 +1411,14 @@
           "source_type": "dpa",
           "source_url": "https://asana.com/terms/data-processing",
           "title": "Asana Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "asana-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1477720",
+          "title": "Asana, Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -1319,6 +1443,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://asana.com/terms/subprocessors",
           "title": "Asana Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "asana-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://asana.com/terms",
+          "title": "Asana public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -2122,9 +2254,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -2142,6 +2276,22 @@
           "source_type": "dpa",
           "source_url": "https://www.box.com/legal/data-processing-addendum",
           "title": "Box Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "box-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1372612",
+          "title": "Box, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "box-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.box.com/legal/termsofservice",
+          "title": "Box public legal terms page"
         },
         {
           "confidence": null,
@@ -2171,7 +2321,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Box",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "box-inc",
+          "jurisdiction": "US",
+          "legal_name": "Box, Inc.",
+          "registered_address": null,
+          "registration_number": "0001372612",
+          "vendor_id": "box"
+        }
+      ],
       "legal_name": "Box, Inc.",
       "manifest_path": "dist/vendors/box.json",
       "missing_core_source_types": [],
@@ -2194,6 +2354,14 @@
           "source_type": "dpa",
           "source_url": "https://www.box.com/legal/data-processing-addendum",
           "title": "Box Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "box-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1372612",
+          "title": "Box, Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -2218,6 +2386,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.box.com/legal/subprocessors",
           "title": "Box Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "box-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.box.com/legal/termsofservice",
+          "title": "Box public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -3695,9 +3871,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -3715,6 +3893,22 @@
           "source_type": "dpa",
           "source_url": "https://www.digitalocean.com/legal/data-processing-agreement",
           "title": "DigitalOcean Data Processing Agreement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "digitalocean-holdings-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1582961",
+          "title": "DigitalOcean Holdings, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "digitalocean-holdings-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.digitalocean.com/legal/terms-of-service-agreement",
+          "title": "DigitalOcean public legal terms page"
         },
         {
           "confidence": null,
@@ -3744,7 +3938,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "DigitalOcean",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "digitalocean-holdings-inc",
+          "jurisdiction": "US",
+          "legal_name": "DigitalOcean Holdings, Inc.",
+          "registered_address": null,
+          "registration_number": "0001582961",
+          "vendor_id": "digitalocean"
+        }
+      ],
       "legal_name": "DigitalOcean, LLC",
       "manifest_path": "dist/vendors/digitalocean.json",
       "missing_core_source_types": [],
@@ -3767,6 +3971,14 @@
           "source_type": "dpa",
           "source_url": "https://www.digitalocean.com/legal/data-processing-agreement",
           "title": "DigitalOcean Data Processing Agreement"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "digitalocean-holdings-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1582961",
+          "title": "DigitalOcean Holdings, Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -3791,6 +4003,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.digitalocean.com/trust/subprocessors",
           "title": "DigitalOcean Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "digitalocean-holdings-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.digitalocean.com/legal/terms-of-service-agreement",
+          "title": "DigitalOcean public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -3909,9 +4129,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -3929,6 +4151,22 @@
           "source_type": "dpa",
           "source_url": "https://www.docusign.com/legal/terms-and-conditions/data-protection-attachment",
           "title": "DocuSign Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docusign-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1261333",
+          "title": "DocuSign, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docusign-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.docusign.com/legal/terms-and-conditions",
+          "title": "DocuSign public legal terms page"
         },
         {
           "confidence": null,
@@ -3958,7 +4196,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "DocuSign",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "docusign-inc",
+          "jurisdiction": "US",
+          "legal_name": "DocuSign, Inc.",
+          "registered_address": null,
+          "registration_number": "0001261333",
+          "vendor_id": "docusign"
+        }
+      ],
       "legal_name": "DocuSign, Inc.",
       "manifest_path": "dist/vendors/docusign.json",
       "missing_core_source_types": [],
@@ -3981,6 +4229,14 @@
           "source_type": "dpa",
           "source_url": "https://www.docusign.com/legal/terms-and-conditions/data-protection-attachment",
           "title": "DocuSign Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docusign-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1261333",
+          "title": "DocuSign, Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -4005,6 +4261,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.docusign.com/trust/privacy/subprocessors-list",
           "title": "DocuSign Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docusign-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.docusign.com/legal/terms-and-conditions",
+          "title": "DocuSign public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -4739,9 +5003,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -4759,6 +5025,22 @@
           "source_type": "dpa",
           "source_url": "https://www.freshworks.com/data-processing-addendum/",
           "title": "Freshworks Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "freshworks-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1544522",
+          "title": "Freshworks Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "freshworks-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.freshworks.com/terms/",
+          "title": "Freshworks public legal terms page"
         },
         {
           "confidence": null,
@@ -4788,7 +5070,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Freshworks",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "freshworks-inc",
+          "jurisdiction": "US",
+          "legal_name": "Freshworks Inc.",
+          "registered_address": null,
+          "registration_number": "0001544522",
+          "vendor_id": "freshworks"
+        }
+      ],
       "legal_name": "Freshworks Inc.",
       "manifest_path": "dist/vendors/freshworks.json",
       "missing_core_source_types": [],
@@ -4811,6 +5103,14 @@
           "source_type": "dpa",
           "source_url": "https://www.freshworks.com/data-processing-addendum/",
           "title": "Freshworks Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "freshworks-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1544522",
+          "title": "Freshworks Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -4835,6 +5135,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.freshworks.com/privacy/sub-processor-july31-2025/",
           "title": "Freshworks Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "freshworks-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.freshworks.com/terms/",
+          "title": "Freshworks public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -6324,9 +6632,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -6344,6 +6654,22 @@
           "source_type": "dpa",
           "source_url": "https://legal.hubspot.com/dpa",
           "title": "HubSpot Data Processing Agreement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "hubspot-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1404655",
+          "title": "HubSpot, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "hubspot-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://legal.hubspot.com/legal-stuff",
+          "title": "HubSpot public legal terms page"
         },
         {
           "confidence": null,
@@ -6373,7 +6699,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "HubSpot",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "hubspot-inc",
+          "jurisdiction": "US",
+          "legal_name": "HubSpot, Inc.",
+          "registered_address": null,
+          "registration_number": "0001404655",
+          "vendor_id": "hubspot"
+        }
+      ],
       "legal_name": "HubSpot, Inc.",
       "manifest_path": "dist/vendors/hubspot.json",
       "missing_core_source_types": [],
@@ -6396,6 +6732,14 @@
           "source_type": "dpa",
           "source_url": "https://legal.hubspot.com/dpa",
           "title": "HubSpot Data Processing Agreement"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "hubspot-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1404655",
+          "title": "HubSpot, Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -6420,6 +6764,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://legal.hubspot.com/sub-processors-page",
           "title": "HubSpot Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "hubspot-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://legal.hubspot.com/legal-stuff",
+          "title": "HubSpot public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -6662,9 +7014,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -6706,12 +7060,38 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.ibm.com/support/customer/csol/terms/subprocessors",
           "title": "IBM Subprocessors"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "international-business-machines-corporation-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=51143",
+          "title": "International Business Machines Corporation SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "international-business-machines-corporation-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.ibm.com/legal",
+          "title": "IBM public legal terms page"
         }
       ],
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "IBM Cloud",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "international-business-machines-corporation",
+          "jurisdiction": "US",
+          "legal_name": "International Business Machines Corporation",
+          "registered_address": null,
+          "registration_number": "0000051143",
+          "vendor_id": "ibm-cloud"
+        }
+      ],
       "legal_name": "International Business Machines Corporation",
       "manifest_path": "dist/vendors/ibm-cloud.json",
       "missing_core_source_types": [],
@@ -6734,6 +7114,14 @@
           "source_type": "dpa",
           "source_url": "https://www.ibm.com/support/customer/csol/terms/?id=i126-7807",
           "title": "IBM Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "international-business-machines-corporation-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=51143",
+          "title": "International Business Machines Corporation SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -6758,6 +7146,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.ibm.com/support/customer/csol/terms/subprocessors",
           "title": "IBM Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "international-business-machines-corporation-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.ibm.com/legal",
+          "title": "IBM public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -7450,9 +7846,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -7462,6 +7860,22 @@
           "source_type": "compliance_page",
           "source_url": "https://www.microsoft.com/en-us/trust-center/compliance/compliance-overview",
           "title": "Microsoft Trust Center Compliance"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "microsoft-corporation-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=789019",
+          "title": "Microsoft Corporation SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "microsoft-corporation-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.microsoft.com/en-us/legal/terms-of-use",
+          "title": "Microsoft public legal terms page"
         },
         {
           "confidence": null,
@@ -7499,7 +7913,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Microsoft",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "microsoft-corporation",
+          "jurisdiction": "US",
+          "legal_name": "Microsoft Corporation",
+          "registered_address": null,
+          "registration_number": "0000789019",
+          "vendor_id": "microsoft"
+        }
+      ],
       "legal_name": "Microsoft Corporation",
       "manifest_path": "dist/vendors/microsoft.json",
       "missing_core_source_types": [],
@@ -7524,6 +7948,14 @@
           "source_url": "https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA",
           "title": "Microsoft Products and Services Data Protection Addendum (DPA)"
         },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "microsoft-corporation-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=789019",
+          "title": "Microsoft Corporation SEC EDGAR company page"
+        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -7547,6 +7979,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.microsoft.com/en-us/trust-center/privacy/data-management",
           "title": "Microsoft subprocessors and data management reference"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "microsoft-corporation-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.microsoft.com/en-us/legal/terms-of-use",
+          "title": "Microsoft public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -8014,9 +8454,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -8034,6 +8476,22 @@
           "source_type": "dpa",
           "source_url": "https://www.mongodb.com/legal/dpa",
           "title": "MongoDB Data Processing Agreement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mongodb-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1441816",
+          "title": "MongoDB, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mongodb-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.mongodb.com/legal/terms-of-use",
+          "title": "MongoDB public legal terms page"
         },
         {
           "confidence": null,
@@ -8063,7 +8521,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "MongoDB",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "mongodb-inc",
+          "jurisdiction": "US",
+          "legal_name": "MongoDB, Inc.",
+          "registered_address": null,
+          "registration_number": "0001441816",
+          "vendor_id": "mongodb"
+        }
+      ],
       "legal_name": "MongoDB, Inc.",
       "manifest_path": "dist/vendors/mongodb.json",
       "missing_core_source_types": [],
@@ -8086,6 +8554,14 @@
           "source_type": "dpa",
           "source_url": "https://www.mongodb.com/legal/dpa",
           "title": "MongoDB Data Processing Agreement"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mongodb-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1441816",
+          "title": "MongoDB, Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -8110,6 +8586,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.mongodb.com/products/platform/trust/subprocessors",
           "title": "MongoDB Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mongodb-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.mongodb.com/legal/terms-of-use",
+          "title": "MongoDB public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -8512,9 +8996,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -8532,6 +9018,22 @@
           "source_type": "dpa",
           "source_url": "https://www.okta.com/legal/data-processing-addendum/",
           "title": "Okta Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "okta-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1660134",
+          "title": "Okta, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "okta-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.okta.com/terms-of-use/",
+          "title": "Okta public legal terms page"
         },
         {
           "confidence": null,
@@ -8561,7 +9063,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Okta",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "okta-inc",
+          "jurisdiction": "US",
+          "legal_name": "Okta, Inc.",
+          "registered_address": null,
+          "registration_number": "0001660134",
+          "vendor_id": "okta"
+        }
+      ],
       "legal_name": "Okta, Inc.",
       "manifest_path": "dist/vendors/okta.json",
       "missing_core_source_types": [],
@@ -8584,6 +9096,14 @@
           "source_type": "dpa",
           "source_url": "https://www.okta.com/legal/data-processing-addendum/",
           "title": "Okta Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "okta-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1660134",
+          "title": "Okta, Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -8608,6 +9128,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.okta.com/subprocessors/",
           "title": "Okta Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "okta-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.okta.com/terms-of-use/",
+          "title": "Okta public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -8908,9 +9436,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -8952,12 +9482,38 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.oracle.com/corporate/cloud-compliance/subprocessors/",
           "title": "Oracle Cloud Subprocessors"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "oracle-corporation-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1341439",
+          "title": "Oracle Corporation SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "oracle-corporation-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.oracle.com/legal/terms.html",
+          "title": "Oracle public legal terms page"
         }
       ],
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Oracle Cloud",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "oracle-corporation",
+          "jurisdiction": "US",
+          "legal_name": "Oracle Corporation",
+          "registered_address": null,
+          "registration_number": "0001341439",
+          "vendor_id": "oracle-cloud"
+        }
+      ],
       "legal_name": "Oracle Corporation",
       "manifest_path": "dist/vendors/oracle-cloud.json",
       "missing_core_source_types": [],
@@ -8980,6 +9536,14 @@
           "source_type": "dpa",
           "source_url": "https://www.oracle.com/a/ocom/docs/corporate/data-processing-agreement-062619.pdf",
           "title": "Oracle Data Processing Agreement"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "oracle-corporation-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1341439",
+          "title": "Oracle Corporation SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -9004,6 +9568,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.oracle.com/corporate/cloud-compliance/subprocessors/",
           "title": "Oracle Cloud Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "oracle-corporation-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.oracle.com/legal/terms.html",
+          "title": "Oracle public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -9246,7 +9818,9 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "dpa"
+        "dpa",
+        "other_public_source",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -9256,12 +9830,38 @@
           "source_type": "dpa",
           "source_url": "https://www.paypal.com/us/legalhub/paypal/data-protection",
           "title": "PayPal Data Protection Terms"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "paypal-holdings-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1633917",
+          "title": "PayPal Holdings, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "paypal-holdings-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.paypal.com/us/legalhub/home",
+          "title": "PayPal public legal terms page"
         }
       ],
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "PayPal",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "paypal-holdings-inc",
+          "jurisdiction": "US",
+          "legal_name": "PayPal Holdings, Inc.",
+          "registered_address": null,
+          "registration_number": "0001633917",
+          "vendor_id": "paypal"
+        }
+      ],
       "legal_name": "PayPal, Inc.",
       "manifest_path": "dist/vendors/paypal.json",
       "missing_core_source_types": [
@@ -9280,6 +9880,22 @@
           "source_type": "dpa",
           "source_url": "https://www.paypal.com/us/legalhub/paypal/data-protection",
           "title": "PayPal Data Protection Terms"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "paypal-holdings-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1633917",
+          "title": "PayPal Holdings, Inc. SEC EDGAR company page"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "paypal-holdings-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.paypal.com/us/legalhub/home",
+          "title": "PayPal public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -9968,11 +10584,29 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "intuit-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=896878",
+          "title": "Intuit Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "intuit-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.intuit.com/legal/terms/",
+          "title": "Intuit public legal terms page"
+        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -10017,7 +10651,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "QuickBooks",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "intuit-inc",
+          "jurisdiction": "US",
+          "legal_name": "Intuit Inc.",
+          "registered_address": null,
+          "registration_number": "0000896878",
+          "vendor_id": "quickbooks"
+        }
+      ],
       "legal_name": "Intuit Inc.",
       "manifest_path": "dist/vendors/quickbooks.json",
       "missing_core_source_types": [],
@@ -10042,6 +10686,14 @@
           "source_url": "https://www.intuit.com/legal/data-processing-agreement/",
           "title": "Intuit Data Processing Agreement"
         },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "intuit-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=896878",
+          "title": "Intuit Inc. SEC EDGAR company page"
+        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -10065,6 +10717,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.intuit.com/privacy/subprocessors/",
           "title": "Intuit Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "intuit-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.intuit.com/legal/terms/",
+          "title": "Intuit public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -11793,9 +12453,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -11813,6 +12475,22 @@
           "source_type": "dpa",
           "source_url": "https://www.snowflake.com/en/legal/addenda/data-processing-addendum/",
           "title": "Snowflake Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "snowflake-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1640147",
+          "title": "Snowflake Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "snowflake-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.snowflake.com/legal/terms-of-service/",
+          "title": "Snowflake public legal terms page"
         },
         {
           "confidence": null,
@@ -11842,7 +12520,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Snowflake",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "snowflake-inc",
+          "jurisdiction": "US",
+          "legal_name": "Snowflake Inc.",
+          "registered_address": null,
+          "registration_number": "0001640147",
+          "vendor_id": "snowflake"
+        }
+      ],
       "legal_name": "Snowflake Inc.",
       "manifest_path": "dist/vendors/snowflake.json",
       "missing_core_source_types": [],
@@ -11865,6 +12553,14 @@
           "source_type": "dpa",
           "source_url": "https://www.snowflake.com/en/legal/addenda/data-processing-addendum/",
           "title": "Snowflake Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "snowflake-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1640147",
+          "title": "Snowflake Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -11889,6 +12585,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.snowflake.com/en/legal/privacy/snowflake-sub-processors/",
           "title": "Snowflake Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "snowflake-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.snowflake.com/legal/terms-of-service/",
+          "title": "Snowflake public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -13078,9 +13782,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -13098,6 +13804,22 @@
           "source_type": "dpa",
           "source_url": "https://www.twilio.com/en-us/legal/data-protection-addendum",
           "title": "Twilio Data Protection Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "twilio-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1447669",
+          "title": "Twilio Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "twilio-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.twilio.com/en-us/legal/tos",
+          "title": "Twilio public legal terms page"
         },
         {
           "confidence": null,
@@ -13127,7 +13849,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Twilio",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "twilio-inc",
+          "jurisdiction": "US",
+          "legal_name": "Twilio Inc.",
+          "registered_address": null,
+          "registration_number": "0001447669",
+          "vendor_id": "twilio"
+        }
+      ],
       "legal_name": "Twilio Inc.",
       "manifest_path": "dist/vendors/twilio.json",
       "missing_core_source_types": [],
@@ -13150,6 +13882,14 @@
           "source_type": "dpa",
           "source_url": "https://www.twilio.com/en-us/legal/data-protection-addendum",
           "title": "Twilio Data Protection Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "twilio-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1447669",
+          "title": "Twilio Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -13174,6 +13914,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.twilio.com/en-us/legal/sub-processors",
           "title": "Twilio Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "twilio-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.twilio.com/en-us/legal/tos",
+          "title": "Twilio public legal terms page"
         }
       },
       "unavailable_source_types": [],
@@ -13973,9 +14721,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -13993,6 +14743,22 @@
           "source_type": "dpa",
           "source_url": "https://www.workday.com/en-us/legal/contract-terms-and-conditions/data-processing-terms.html",
           "title": "Workday Data Processing Terms"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "workday-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1327811",
+          "title": "Workday, Inc. SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "workday-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.workday.com/en-us/legal/terms-and-conditions.html",
+          "title": "Workday public legal terms page"
         },
         {
           "confidence": null,
@@ -14022,7 +14788,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Workday",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "workday-inc",
+          "jurisdiction": "US",
+          "legal_name": "Workday, Inc.",
+          "registered_address": null,
+          "registration_number": "0001327811",
+          "vendor_id": "workday"
+        }
+      ],
       "legal_name": "Workday, Inc.",
       "manifest_path": "dist/vendors/workday.json",
       "missing_core_source_types": [],
@@ -14045,6 +14821,14 @@
           "source_type": "dpa",
           "source_url": "https://www.workday.com/en-us/legal/contract-terms-and-conditions/data-processing-terms.html",
           "title": "Workday Data Processing Terms"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "workday-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1327811",
+          "title": "Workday, Inc. SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -14069,6 +14853,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.workday.com/en-us/legal/subprocessors.html",
           "title": "Workday Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "workday-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.workday.com/en-us/legal/terms-and-conditions.html",
+          "title": "Workday public legal terms page"
         }
       },
       "unavailable_source_types": [],

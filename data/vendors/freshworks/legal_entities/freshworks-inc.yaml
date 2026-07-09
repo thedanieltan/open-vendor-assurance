@@ -1,0 +1,22 @@
+schema_version: 0.1.0
+entity_id: freshworks-inc
+vendor_id: freshworks
+legal_name: Freshworks Inc.
+jurisdiction: US
+registration_number: '0001544522'
+identifier_scheme: US_SEC_CIK
+identifier_authority: U.S. Securities and Exchange Commission
+identifier_authority_url: https://www.sec.gov/edgar
+verification_source_ids:
+- freshworks-inc-sec-edgar
+- freshworks-inc-terms
+verified_observed_at: '2026-07-09T00:00:00Z'
+official_domains:
+- freshworks.com
+public_entrypoints:
+- https://www.sec.gov/edgar/browse/?CIK=1544522
+- https://www.freshworks.com/terms/
+catalog_status: canonical
+notes: Scoped verified legal-entity record. Registration number stores the SEC CIK public-company identifier for Freshworks
+  Inc.; it does not assert a Delaware state entity number or a universal Freshworks contracting party across all jurisdictions.
+not_advice: true
