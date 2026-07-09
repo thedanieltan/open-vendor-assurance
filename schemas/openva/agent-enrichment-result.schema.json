@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openva.dev/schemas/agent-enrichment-result.schema.json",
   "title": "OpenVA Agent Enrichment Result",
-  "description": "Host-neutral per-row enrichment result emitted by the MCP enrich_inventory tool and the match-service /v1/enrich endpoint. The preferred agent contract is identity + source_references: a stable match/no_match identity projection and destination-neutral indexed public source references. Compatibility fields remain for older adapters. The result records public-source references and machine-state notes only; it never carries a compliance, suitability, approval, or risk conclusion.",
+  "description": "Host-neutral per-row enrichment result emitted by the MCP enrich_inventory tool and the match-service /v1/enrich endpoint. The preferred agent contract is identity + source_references: a stable match/no_match identity projection and destination-neutral indexed public source references. Compatibility fields remain for older adapters. Optional entity_resolution is a compact status block only; detailed evidence stays in source/legal-entity records or diagnostic profiles. The result records public-source references and machine-state notes only; it never carries a compliance, suitability, approval, or risk conclusion.",
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -36,6 +36,10 @@
     "identity": {
       "$ref": "#/$defs/identity",
       "description": "Preferred first-class agent identity projection. New consumers should depend on this block instead of interpreting the compatibility match object directly."
+    },
+    "entity_resolution": {
+      "$ref": "#/$defs/entity_resolution",
+      "description": "Optional compact legal-entity resolution summary. Omit unless legal-entity data is available or useful for the caller. This block exposes status, stable ids, and a reason code only; evidence details are dereferenced through source/legal-entity records or a diagnostic profile."
     },
     "source_references": {
       "type": "object",
@@ -104,6 +108,49 @@
             "insufficient_indexed_identity_evidence",
             null
           ]
+        }
+      }
+    },
+    "entity_resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "matched_entity_id",
+        "candidate_entity_ids",
+        "review_required",
+        "reason_code"
+      ],
+      "properties": {
+        "status": {
+          "enum": ["not_requested", "resolved", "ambiguous", "unmatched", "not_supported"],
+          "description": "Compact legal-entity resolution status. Brand matching remains in identity; this block is scoped to legal-entity ids only."
+        },
+        "matched_entity_id": {
+          "type": ["string", "null"],
+          "description": "The resolved legal entity id when exactly one evidence-supported entity is selected; otherwise null."
+        },
+        "candidate_entity_ids": {
+          "type": "array",
+          "description": "Evidence-supported legal-entity candidates when the brand/entity relationship is ambiguous. Empty for resolved, unmatched, not_requested, or not_supported states.",
+          "items": { "type": "string" }
+        },
+        "review_required": {
+          "type": "boolean",
+          "description": "True when the caller must supply more discriminating input or perform review before treating a legal entity as resolved."
+        },
+        "reason_code": {
+          "type": ["string", "null"],
+          "enum": [
+            "identifier_exact_match",
+            "brand_only_multiple_entities",
+            "no_entity_data",
+            "insufficient_entity_evidence",
+            "conflicting_entity_evidence",
+            "not_requested",
+            null
+          ],
+          "description": "Compact machine reason code. Evidence-quorum details belong in diagnostics, not this default block."
         }
       }
     },
