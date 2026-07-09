@@ -256,9 +256,10 @@ def source_row(source_record: dict[str, Any], observation: dict[str, Any] | None
 def legal_entity_projection(entity: dict[str, Any]) -> dict[str, Any]:
     """Public legal-entity identity fields only — the same shape the matcher emits.
 
-    Source-backed public identity metadata (legal_name, jurisdiction, registration
-    number, registered address). Carries no private or self-certifying content."""
-    return {
+    Source-backed public identity metadata (legal_name, jurisdiction, typed
+    registration identifier, registered address). Carries no private or
+    self-certifying content."""
+    projected = {
         "entity_id": entity.get("entity_id"),
         "vendor_id": entity.get("vendor_id"),
         "legal_name": entity.get("legal_name"),
@@ -267,6 +268,10 @@ def legal_entity_projection(entity: dict[str, Any]) -> dict[str, Any]:
         "catalog_status": entity.get("catalog_status"),
         "registered_address": entity.get("registered_address"),
     }
+    for key in ("identifier_scheme", "identifier_authority", "identifier_authority_url"):
+        if entity.get(key) is not None:
+            projected[key] = entity.get(key)
+    return projected
 
 
 def vendor_export_payload(
