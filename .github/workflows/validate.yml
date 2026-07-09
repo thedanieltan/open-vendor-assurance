@@ -1,6 +1,9 @@
 name: validate
 
 on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 7 * * 0"
   pull_request:
     # Code-change events only. PR title/body/base `edited` events are handled by the
     # dedicated validate-pr-metadata.yml workflow, which reruns ONLY pr-scope-guard on an
@@ -442,10 +445,66 @@ jobs:
       - name: Run Google Sheets pure-function tests
         run: node --test integrations/google-sheets/test/*.test.mjs
 
-  full-suite:
-    name: full-suite
+  full-regression-shards:
+    name: full-regression / ${{ matrix.shard }}
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: workflow-contracts
+            pytest_selection: >-
+              tests/test_ci_readiness.py
+              tests/test_workflow_operating_model.py
+              tests/test_workflow_contracts.py
+              tests/test_workflow_retirement.py
+              tests/test_workflow_retirement_enforcement.py
+              tests/test_workflow_retirement_evidence.py
+              tests/test_future_operations_specs.py
+              tests/test_*_workflow.py
+          - shard: catalog-and-release
+            pytest_selection: >-
+              tests/test_catalog*.py
+              tests/test_release_*.py
+              tests/test_constitution_regression.py
+              tests/test_quality_gates.py
+              tests/test_validate.py
+              tests/test_generated_exports.py
+              tests/test_pack_integrity.py
+              tests/test_registry_outputs.py
+              tests/test_public_exports.py
+              tests/test_public_launch_readiness.py
+              tests/test_public_launch_readiness_record.py
+          - shard: source-maintenance
+            pytest_selection: >-
+              tests/test_source_*.py
+              tests/test_observation*.py
+              tests/test_observe.py
+              tests/test_safe_*.py
+              tests/test_robots_policy.py
+              tests/test_sitemap*.py
+              tests/test_web_bot_auth.py
+          - shard: mcp-and-adapters
+            pytest_selection: >-
+              tests/test_openva_mcp*.py
+              tests/test_adapter*.py
+              tests/test_agent_bundle_verification.py
+              tests/test_matching_conformance.py
+              tests/test_openva_csv_export.py
+              tests/test_openva_jsonl_export.py
+              tests/test_openva_sqlite_export.py
+              tests/test_openva_pack_reader.py
+              tests/test_openva_vendor_inventory_matcher.py
+              tests/test_openva_enrichment_*.py
+              tests/test_release_coherence.py
+          - shard: match-service
+            pytest_selection: >-
+              tests/test_openva_match_service*.py
+              tests/test_hosted_job_lifecycle.py
+          - shard: remaining-unit
+            pytest_selection: remaining-unit-complement
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -457,7 +516,84 @@ jobs:
           node-version: "22"
       - name: Install package
         run: pip install -e ".[dev]"
-      - name: Install match service test dependencies
-        run: pip install -e "services/openva_match_service[dev]"
-      - name: Run tests
-        run: pytest -q
+      - name: Install shard dependencies
+        run: |
+          set -euo pipefail
+          case "${{ matrix.shard }}" in
+            mcp-and-adapters)
+              pip install -e adapters/python/openva_pack_reader
+              pip install -e adapters/python/openva_vendor_inventory_matcher
+              pip install -e "integrations/mcp/openva_mcp[dev]"
+              ;;
+            match-service)
+              pip install -e "services/openva_match_service[dev]"
+              ;;
+            *)
+              echo "No extra dependencies for ${{ matrix.shard }}"
+              ;;
+          esac
+      - name: Run focused shard tests
+        if: matrix.shard != 'remaining-unit'
+        run: pytest -q ${{ matrix.pytest_selection }}
+      - name: Run remaining unit shard
+        if: matrix.shard == 'remaining-unit'
+        run: |
+          set -euo pipefail
+          python - <<'PY' > "$RUNNER_TEMP/remaining-tests.txt"
+          from fnmatch import fnmatchcase
+          from pathlib import Path
+
+          excluded = (
+              "test_ci_readiness.py",
+              "test_workflow_operating_model.py",
+              "test_workflow_contracts.py",
+              "test_workflow_retirement.py",
+              "test_workflow_retirement_enforcement.py",
+              "test_workflow_retirement_evidence.py",
+              "test_future_operations_specs.py",
+              "test_*_workflow.py",
+              "test_catalog*.py",
+              "test_release_*.py",
+              "test_constitution_regression.py",
+              "test_quality_gates.py",
+              "test_validate.py",
+              "test_generated_exports.py",
+              "test_pack_integrity.py",
+              "test_registry_outputs.py",
+              "test_public_exports.py",
+              "test_public_launch_readiness.py",
+              "test_public_launch_readiness_record.py",
+              "test_source_*.py",
+              "test_observation*.py",
+              "test_observe.py",
+              "test_safe_*.py",
+              "test_robots_policy.py",
+              "test_sitemap*.py",
+              "test_web_bot_auth.py",
+              "test_openva_mcp*.py",
+              "test_adapter*.py",
+              "test_agent_bundle_verification.py",
+              "test_matching_conformance.py",
+              "test_openva_csv_export.py",
+              "test_openva_jsonl_export.py",
+              "test_openva_sqlite_export.py",
+              "test_openva_pack_reader.py",
+              "test_openva_vendor_inventory_matcher.py",
+              "test_openva_enrichment_*.py",
+              "test_release_coherence.py",
+              "test_openva_match_service*.py",
+              "test_hosted_job_lifecycle.py",
+          )
+
+          selected = [
+              path.as_posix()
+              for path in sorted(Path("tests").glob("test_*.py"))
+              if not any(fnmatchcase(path.name, pattern) for pattern in excluded)
+          ]
+          if not selected:
+              raise SystemExit("remaining-unit shard selected no tests")
+          print("\n".join(selected))
+          PY
+          echo "Remaining unit shard selection:"
+          sed 's/^/  /' "$RUNNER_TEMP/remaining-tests.txt"
+          pytest -q $(tr '\n' ' ' < "$RUNNER_TEMP/remaining-tests.txt")

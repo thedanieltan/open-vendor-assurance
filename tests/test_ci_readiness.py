@@ -36,6 +36,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "submitted-source-verification.yml",
     "validate.yml",
     "validate-pr-metadata.yml",
+    "web-bot-auth-smoke.yml",
 }
 
 
@@ -64,6 +65,8 @@ def test_validate_workflow_uses_read_only_permissions_and_expected_triggers():
     triggers = workflow_triggers(workflow)
     assert workflow["permissions"] == {"contents": "read"}
     assert "pull_request" in triggers
+    assert "workflow_dispatch" in triggers
+    assert "schedule" in triggers
     assert triggers["push"]["branches"] == ["main"]
 
 
@@ -104,7 +107,7 @@ def test_validate_push_trigger_on_main_is_preserved_with_explicit_pr_types():
     workflow = load_workflow("validate.yml")
     triggers = workflow_triggers(workflow)
     assert triggers["push"]["branches"] == ["main"]
-    assert set(triggers.keys()) == {"pull_request", "push"}
+    assert set(triggers.keys()) == {"pull_request", "push", "workflow_dispatch", "schedule"}
 
 
 def test_validate_workflow_checks_generated_pack_and_indexes():
@@ -113,6 +116,66 @@ def test_validate_workflow_checks_generated_pack_and_indexes():
     assert "python -m tools.openva.validate build-indexes" in text
     assert "git diff --exit-code openva-pack.json indexes/" in text
     assert "pytest -q" in text
+
+
+def test_validate_full_regression_is_sharded_and_non_pr_only():
+    workflow = load_workflow("validate.yml")
+    jobs = workflow["jobs"]
+
+    assert "full-suite" not in jobs
+    shard_job = jobs["full-regression-shards"]
+    assert shard_job["if"] == "github.event_name != 'pull_request'"
+    assert shard_job["timeout-minutes"] == 15
+    assert shard_job["strategy"]["fail-fast"] is False
+
+    shards = {item["shard"]: item for item in shard_job["strategy"]["matrix"]["include"]}
+    assert set(shards) == {
+        "workflow-contracts",
+        "catalog-and-release",
+        "source-maintenance",
+        "mcp-and-adapters",
+        "match-service",
+        "remaining-unit",
+    }
+    for shard, item in shards.items():
+        selection = str(item["pytest_selection"])
+        assert selection
+        if shard != "remaining-unit":
+            assert selection != "pytest -q"
+            assert selection.startswith("tests/")
+
+    run_steps = [str(step.get("run", "")).strip() for step in shard_job["steps"] if "run" in step]
+    assert "pytest -q" not in run_steps
+    assert any("pytest -q ${{ matrix.pytest_selection }}" in step for step in run_steps)
+    assert any("remaining-tests.txt" in step and "pytest -q $(tr" in step for step in run_steps)
+
+
+def test_validate_pr_path_aware_jobs_remain_intact():
+    workflow = load_workflow("validate.yml")
+    jobs = workflow["jobs"]
+
+    expected_outputs = {
+        "workflow-operating-model": "workflow_operating_model",
+        "catalog-growth": "catalog_growth",
+        "source-maintenance": "source_maintenance",
+        "catalog-quality": "catalog_quality",
+        "release-site": "release_site",
+        "mcp-integration": "mcp_integration",
+        "google-sheets-integration": "google_sheets_integration",
+    }
+    for job_name, classifier_output in expected_outputs.items():
+        assert job_name in jobs
+        assert jobs[job_name]["needs"] == "pr-change-classifier"
+        assert jobs[job_name]["if"] == (
+            "github.event_name == 'pull_request' && "
+            f"needs.pr-change-classifier.outputs.{classifier_output} == 'true'"
+        )
+
+    assert jobs["pr-scope-guard"]["if"] == "github.event_name == 'pull_request'"
+    scope_guard_run = "\n".join(
+        str(step.get("run", "")) for step in jobs["pr-scope-guard"]["steps"]
+    )
+    assert "python -m tools.openva.pr_scope_guard" in scope_guard_run
 
 
 def test_release_candidate_builds_report_only_source_health_readiness():

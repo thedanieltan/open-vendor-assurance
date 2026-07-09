@@ -109,6 +109,31 @@ SOURCE_HEALTH_LABEL_RECONCILIATION_FILES = [
     "docs/source-trust/observation-retention-policy.md",
 ]
 
+CI_TEST_TIERING_WP = "WP-CI-TEST-TIERING-01"
+CI_TEST_TIERING_FILES = [
+    ".github/workflows/validate.yml",
+    ".github/validation-ownership.yaml",
+    "docs/ci-and-branch-protection.md",
+    "docs/architecture/OPENVA_SYSTEM_DESIGN.md",
+    "docs/operations/contracts/work-package-scope.yaml",
+    "docs/operations/contracts/workflow-inventory.yaml",
+    "tests/test_ci_readiness.py",
+    "tests/test_workflow_contracts.py",
+    "tests/test_retired_validation_checks.py",
+    "tests/test_pr_scope_guard.py",
+]
+
+CRAWLER_IDENTITY_SMOKE_FILES = [
+    ".github/workflows/web-bot-auth-smoke.yml",
+    "docs/operations/WORKFLOW_OPERATING_MODEL.md",
+    "docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md",
+    "docs/operations/contracts/workflow-inventory.yaml",
+    "docs/operations/contracts/work-package-scope.yaml",
+    "tests/test_ci_readiness.py",
+    "tests/test_workflow_operating_model.py",
+    "tests/test_wp41_workflows.py",
+]
+
 ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_WP = "WP-OPENVA-ASSURANCE-EVIDENCE-EXTRACTION-CONTRACT-01"
 ASSURANCE_EVIDENCE_EXTRACTION_CONTRACT_FILES = [
     "config/assurance-evidence-extraction-policy.yaml",
@@ -367,6 +392,39 @@ def test_source_health_label_reconciliation_scope_covers_exact_composite_surface
     ) == []
 
 
+def test_ci_test_tiering_scope_covers_only_validation_tiering_surface():
+    manifest = load_manifest()
+    assert out_of_scope_paths(CI_TEST_TIERING_FILES, CI_TEST_TIERING_WP, manifest) == []
+    blocked = [
+        ".github/workflows/agent-automerge.yml",
+        ".github/workflows/catalog-pr-guard.yml",
+        "config/release-gates.yaml",
+        "tools/openva/release_gates.py",
+        "data/vendors/example/vendor.yaml",
+    ]
+    assert out_of_scope_paths(blocked, CI_TEST_TIERING_WP, manifest) == sorted(blocked)
+
+
+def test_crawler_identity_scope_covers_manual_web_bot_auth_smoke_surface():
+    manifest = load_manifest()
+    assert out_of_scope_paths(
+        CRAWLER_IDENTITY_SMOKE_FILES,
+        "WP-OPENVA-CRAWLER-IDENTITY-01",
+        manifest,
+    ) == []
+    blocked = [
+        ".github/workflows/agent-automerge.yml",
+        ".github/workflows/validate.yml",
+        "data/vendors/example/vendor.yaml",
+        "config/release-gates.yaml",
+    ]
+    assert out_of_scope_paths(
+        blocked,
+        "WP-OPENVA-CRAWLER-IDENTITY-01",
+        manifest,
+    ) == sorted(blocked)
+
+
 def test_assurance_evidence_extraction_contract_scope_covers_prerequisite_surface():
     manifest = load_manifest()
     assert out_of_scope_paths(
@@ -479,7 +537,10 @@ def test_validate_workflow_skips_only_release_gates_for_pure_scope_policy_pr():
     assert "Run source-intelligence release gates (pr profile)" in by_name
 
     release_gate = by_name["Run source-intelligence release gates (pr profile)"]
-    assert release_gate["if"] == "steps.scope_policy_freshness.outputs.skip_release_gates != 'true'"
+    release_gate_condition = release_gate["if"]
+    assert "github.event_name != 'pull_request'" in release_gate_condition
+    assert "needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'" in release_gate_condition
+    assert "steps.scope_policy_freshness.outputs.skip_release_gates != 'true'" in release_gate_condition
 
     probe = by_name["Determine scope-policy operational freshness exclusion"]["run"]
     assert "python -m tools.openva.pr_scope_guard --declaration-file" in probe

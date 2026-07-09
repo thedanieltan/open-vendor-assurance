@@ -23,6 +23,7 @@ No workflow is removed by this audit. Risky retirements require a migration note
 | `agent-weighted-review.yml` | `keep_core` | Advisory review agents add reviewer signal without merging or mutating catalog files. | Keep. |
 | `agent-automerge.yml` | `keep_core` | Controlled automerge lane with preflight and validation before merge. | Keep without policy relaxation. |
 | `source-maintenance-report.yml` | `edit_existing` | Source cleanup/reporting entry point. It keeps the full operator artifact and exposes a one-file reviewer inbox. | Keep in place. Maintain reviewer/operator artifact separation. |
+| `web-bot-auth-smoke.yml` | `support` | Manual secret-backed Web Bot Auth smoke for activation evidence; no repository mutation or artifact upload. | Keep manual-only and sanitized. |
 | `source-refinement-scan.yml` | `keep_core` | Confirms P0 source repair candidates from repeated source maintenance evidence. | Keep. |
 | `source-repair-pr.yml` | `keep_core` | Manual, reviewed, validated source repair PR creation path. | Keep manual and reviewed-only. |
 | `source-repair-pr-cleanup.yml` | `keep_core` | Cleans up stale generated source repair PRs. | Keep. |

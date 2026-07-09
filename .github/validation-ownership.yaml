@@ -8,7 +8,6 @@ required_status_contexts:
   - validate / source-maintenance
   - validate / catalog-quality
   - validate / release-site
-  - validate / full-suite
   - validate / mcp-integration
   - validate / google-sheets-integration
   - validate / pr-scope-guard
@@ -90,11 +89,13 @@ jobs:
       - public/**
       - site/**
       - tools/openva/release_*.py
-  full-suite:
+  full-regression-shards:
     owner_loop: regression
-    purpose: Preserve the old full-suite safety signal after ownership-specific jobs run.
+    required_on_pull_request: false
+    purpose: Preserve broad regression coverage on push to main, manual dispatch, and the weekly schedule without making every operational PR wait on one monolithic pytest process.
     commands:
-      - pytest -q
+      - pytest -q ${{ matrix.pytest_selection }}
+      - pytest -q $(tr '\n' ' ' < "$RUNNER_TEMP/remaining-tests.txt")
     protects:
       - tests/**
       - tools/**

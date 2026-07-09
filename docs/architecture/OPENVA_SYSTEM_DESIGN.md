@@ -145,7 +145,7 @@ Users decide what to do with it.
 
 Validation should remain strong but easier to diagnose.
 
-`validate.yml` is one workflow with multiple named jobs. Each job owns an operating area and the full suite remains as the global regression signal. This keeps branch protection strict while making failures attributable.
+`validate.yml` is one workflow with multiple named jobs. Pull requests use path-aware ownership jobs as the main safety gate, while broad regression remains available through non-PR sharded jobs on push to `main`, manual dispatch, and schedule. This keeps branch protection strict while making failures attributable.
 
 The ownership contract is:
 

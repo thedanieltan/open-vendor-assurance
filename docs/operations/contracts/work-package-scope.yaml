@@ -20,17 +20,26 @@ work_packages:
     allowed_paths:
       - .github/workflows/catalog-growth-discovery.yml
       - .github/workflows/source-maintenance-report.yml
+      - .github/workflows/web-bot-auth-smoke.yml
       - config/crawler-identity.yaml
       - docs/observation-result-taxonomy.md
+      - docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md
+      - docs/operations/WORKFLOW_OPERATING_MODEL.md
+      - docs/operations/contracts/work-package-scope.yaml
+      - docs/operations/contracts/workflow-inventory.yaml
       - docs/operations/openva-crawler-identity.md
       - infra/cloudflare/openva-web-bot-auth/*
+      - tests/test_ci_readiness.py
       - tests/test_observe.py
+      - tests/test_pr_scope_guard.py
       - tests/test_robots_policy.py
       - tests/test_safe_fetch.py
       - tests/test_safe_verify.py
       - tests/test_sitemap_discovery.py
       - tests/test_source_verification.py
       - tests/test_web_bot_auth.py
+      - tests/test_workflow_operating_model.py
+      - tests/test_wp41_workflows.py
       - tools/openva/observe.py
       - tools/openva/robots_policy.py
       - tools/openva/safe_fetch.py
@@ -56,6 +65,20 @@ work_packages:
       - tests/test_workflow_retirement_enforcement.py
       - tests/test_workflow_retirement_evidence.py
       - tests/test_future_operations_specs.py
+
+  WP-CI-TEST-TIERING-01:
+    description: CI validation tiering and full-regression sharding for validate.yml without weakening PR scope, release, catalog, or automerge gates.
+    allowed_paths:
+      - .github/workflows/validate.yml
+      - .github/validation-ownership.yaml
+      - docs/ci-and-branch-protection.md
+      - docs/architecture/OPENVA_SYSTEM_DESIGN.md
+      - docs/operations/contracts/work-package-scope.yaml
+      - docs/operations/contracts/workflow-inventory.yaml
+      - tests/test_ci_readiness.py
+      - tests/test_workflow_contracts.py
+      - tests/test_retired_validation_checks.py
+      - tests/test_pr_scope_guard.py
 
   WP-SOURCE-OBSERVATION-FRESHNESS-CONTINUITY-01:
     description: Committed latest-observation continuity and release freshness integration.

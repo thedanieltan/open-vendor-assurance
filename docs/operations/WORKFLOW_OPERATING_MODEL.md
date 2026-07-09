@@ -46,6 +46,7 @@ Purpose: eliminate or truth-state source debt.
 Workflows:
 
 - `source-maintenance-report.yml`
+- `web-bot-auth-smoke.yml`
 - `source-refinement-scan.yml`
 - `source-repair-pr.yml`
 - `source-repair-pr-cleanup.yml`
@@ -179,6 +180,7 @@ The manual reviewed path (steps 1–6 above) remains the route for ambiguous, re
 | `agent-weighted-review.yml` | Advisory agent checks for schema, source accessibility, wording, and provenance. | `pull_request` | `contents: read`, `pull-requests: read`, `issues: write` | No catalog writes; comments only | No | No | Advisory comments | PR reviewers, automerge policy context | Core |
 | `agent-automerge.yml` | Controlled automerge lanes for approved agent PRs. | `pull_request` | `contents: write`, `pull-requests: write`, `checks: read`, `statuses: read` | Yes, through merge only | No | Yes | Preflight artifact, failure routing report, merge result | `main`, release/site loop | Core |
 | `source-maintenance-report.yml` | Source cleanup/reporting entry point. Builds source health, verification, discovery, repair sweep, triage, decision sheet, promotion, and cleanup reports. | `workflow_dispatch`, scheduled twice weekly (Wed and Sun) | `contents: read` | No | No | No | `openva-source-maintenance-report`, `openva-source-reviewer-inbox`, failure routing report | Source cleanup loop, release candidate, site pages, reviewers | Core |
+| `web-bot-auth-smoke.yml` | Manual secret-backed Web Bot Auth smoke for validating the signed directory and Cloudflare crawltest behavior without printing secret material. | `workflow_dispatch` only | `contents: read` | No | No | No | Sanitized job summary only | Operators, issue #456 evidence collection | Support |
 | `source-refinement-scan.yml` | Compare recent source maintenance runs and identify confirmed P0 repair candidates. | `workflow_dispatch`, scheduled weekly | `actions: read`, `contents: read` | No | No | No | Confirmed P0 scan, evidence artifacts, failure routing report | `source-repair-pr.yml`, release readiness | Core |
 | `source-repair-pr.yml` | Create repair PRs from committed and validated reviewed evidence and repair plans. | `workflow_dispatch` | `contents: write`, `pull-requests: write` | Yes, in PR branch | Yes | No | Repair action report, queue gate report, failure routing report, PR body | PR safety loop, source maintenance re-run | Core |
 | `source-repair-pr-cleanup.yml` | Close stale generated source repair PRs. | `workflow_dispatch`, scheduled weekly | `contents: read`, `pull-requests: write`, `issues: write` | PR state only | No | No | Stale PR cleanup report | Operators | Core |

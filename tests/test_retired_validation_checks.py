@@ -3,13 +3,16 @@ from pathlib import Path
 RETIRED_VALIDATE_CONTEXT = "validate / validate"
 
 REQUIRED_VALIDATE_CONTEXTS = [
+    "validate / pr-change-classifier",
     "validate / repository-integrity",
     "validate / workflow-operating-model",
     "validate / catalog-growth",
     "validate / source-maintenance",
     "validate / catalog-quality",
     "validate / release-site",
-    "validate / full-suite",
+    "validate / mcp-integration",
+    "validate / google-sheets-integration",
+    "validate / pr-scope-guard",
 ]
 
 OPERATIONAL_LAUNCH_DOCS = [
@@ -34,4 +37,5 @@ def test_branch_protection_doc_lists_partitioned_validate_contexts():
     for context in REQUIRED_VALIDATE_CONTEXTS:
         assert context in text
 
+    assert "validate / full-suite" not in text
     assert "do not keep that old status context as a required branch-protection check" in text

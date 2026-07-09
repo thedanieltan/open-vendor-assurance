@@ -17,13 +17,16 @@ It runs on pull requests and pushes to `main`, but it is partitioned into named 
 Required status contexts should be:
 
 ```text
+validate / pr-change-classifier
 validate / repository-integrity
 validate / workflow-operating-model
 validate / catalog-growth
 validate / source-maintenance
 validate / catalog-quality
 validate / release-site
-validate / full-suite
+validate / mcp-integration
+validate / google-sheets-integration
+validate / pr-scope-guard
 ```
 
 Historical note: the previous single-job required context was `validate / validate`. After partitioning, do not keep that old status context as a required branch-protection check because it is no longer emitted by the validation workflow.
@@ -44,7 +47,10 @@ The jobs preserve the old protection strength while improving failure ownership:
 | `source-maintenance` | Source health, source review, source repair, and source preflight. | Source maintenance and repair tests. |
 | `catalog-quality` | Catalog guardrails and advisory automation checks. | Catalog-facing tests and automation rules. |
 | `release-site` | Release assets, site output, and consumer adapter contract. | Release, site, and adapter tests. |
-| `full-suite` | Global regression signal. | Full `pytest -q`. |
+| `mcp-integration` | MCP server, adapter chain, protocol, hardening, and conformance. | MCP and adapter tests with local integration dependencies. |
+| `google-sheets-integration` | Google Sheets pure-function integration surface. | Node test runner over the Apps Script test fixtures. |
+| `pr-scope-guard` | Work-package path boundary. | Trusted-base scope guard on pull requests. |
+| `full-regression-shards` | Non-PR broad regression signal. | Sharded pytest selections on push to `main`, manual dispatch, and weekly schedule. |
 
 Repository integrity must verify:
 
@@ -54,11 +60,9 @@ python -m tools.openva.validate build-indexes
 git diff --exit-code openva-pack.json indexes/ dist/
 ```
 
-The full-suite job must still run:
-
-```bash
-pytest -q
-```
+Broad regression remains available, but it must not be a monolithic required PR
+gate. The `full-regression-shards` matrix runs only outside pull requests and
+uses focused pytest selections with per-shard timeouts so slow areas are visible.
 
 ## Catalog PR guard
 
@@ -210,7 +214,7 @@ solely to create or update issue comments or maintainer queue issues. They must 
 Before public launch, protect `main` with these expectations:
 
 - require pull requests before merging;
-- require the seven `validate / ...` status checks listed above;
+- require the PR `validate / ...` status checks listed above;
 - require branches to be up to date before merge where practical;
 - require conversation resolution before merge;
 - restrict force pushes;

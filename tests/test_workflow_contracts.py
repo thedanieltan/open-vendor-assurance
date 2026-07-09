@@ -45,7 +45,9 @@ def test_validation_ownership_contract_matches_validate_workflow_jobs_and_comman
 
     assert set(workflow["jobs"]) == set(contract["jobs"])
     assert contract["required_status_contexts"] == [
-        f"validate / {job_name}" for job_name in contract["jobs"]
+        f"validate / {job_name}"
+        for job_name, job_contract in contract["jobs"].items()
+        if job_contract.get("required_on_pull_request", True)
     ]
 
     for job_name, job_contract in contract["jobs"].items():

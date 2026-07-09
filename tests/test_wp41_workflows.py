@@ -9,6 +9,7 @@ MACHINE_MATERIALIZATION = Path(".github/workflows/machine-provisional-materializ
 CANDIDATE_PROMOTION = Path(".github/workflows/candidate-promotion-pr.yml")
 AGENT_AUTOMERGE = Path(".github/workflows/agent-automerge.yml")
 CATALOG_PR_GUARD = Path(".github/workflows/catalog-pr-guard.yml")
+WEB_BOT_AUTH_SMOKE = Path(".github/workflows/web-bot-auth-smoke.yml")
 
 
 def test_discovery_ledger_append_authenticates_source_run_and_artifact():
@@ -101,6 +102,32 @@ def test_candidate_promotion_wires_web_bot_auth_for_sitemap_fetches():
         "OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64: ${{ secrets.OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64 }}"
         in job_env
     )
+
+
+def test_web_bot_auth_smoke_workflow_is_manual_secret_backed_and_sanitized():
+    text = WEB_BOT_AUTH_SMOKE.read_text(encoding="utf-8")
+
+    assert "workflow_dispatch:" in text
+    assert "pull_request:" not in text
+    assert "push:" not in text
+    assert "schedule:" not in text
+    assert "permissions:\n  contents: read" in text
+
+    for name in (
+        "OPENVA_WEB_BOT_AUTH_DIRECTORY_URL",
+        "OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON",
+        "OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64",
+    ):
+        assert f"{name}: ${{{{ secrets.{name} }}}}" in text
+
+    assert "python -m pytest -q tests/test_web_bot_auth.py" in text
+    assert "run: pytest -q" not in text
+    assert "actions/upload-artifact" not in text
+    assert "GITHUB_STEP_SUMMARY" in text
+    assert "no secret values printed; no artifacts uploaded" in text
+    assert "https://crawltest.com/cdn-cgi/web-bot-auth" in text
+    assert "status in {200, 401}" in text
+    assert "malformed_or_missing_signature" in text
 
 
 def test_sitemap_source_mode_uses_existing_promotion_pipeline():
