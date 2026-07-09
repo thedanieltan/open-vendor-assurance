@@ -2675,9 +2675,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -2695,6 +2697,22 @@
           "source_type": "dpa",
           "source_url": "https://www.cloudflare.com/cloudflare-customer-dpa/",
           "title": "Cloudflare Customer Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cloudflare-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1477333",
+          "title": "Cloudflare Inc SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cloudflare-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.cloudflare.com/website-terms/",
+          "title": "Cloudflare website terms"
         },
         {
           "confidence": null,
@@ -2724,7 +2742,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Cloudflare",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "cloudflare-inc",
+          "jurisdiction": "US",
+          "legal_name": "Cloudflare, Inc.",
+          "registered_address": null,
+          "registration_number": "0001477333",
+          "vendor_id": "cloudflare"
+        }
+      ],
       "legal_name": "Cloudflare, Inc.",
       "manifest_path": "dist/vendors/cloudflare.json",
       "missing_core_source_types": [],
@@ -2747,6 +2775,14 @@
           "source_type": "dpa",
           "source_url": "https://www.cloudflare.com/cloudflare-customer-dpa/",
           "title": "Cloudflare Customer Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cloudflare-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1477333",
+          "title": "Cloudflare Inc SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -2771,6 +2807,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.cloudflare.com/gdpr/subprocessors/cloudflare-services/",
           "title": "Cloudflare Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cloudflare-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.cloudflare.com/website-terms/",
+          "title": "Cloudflare website terms"
         }
       },
       "unavailable_source_types": [],
@@ -4063,9 +4107,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -4083,6 +4129,22 @@
           "source_type": "dpa",
           "source_url": "https://assets.dropbox.com/documents/en/legal/dfb-data-processing-agreement.pdf",
           "title": "Dropbox Data Processing Agreement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "dropbox-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1467623",
+          "title": "Dropbox Inc SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "dropbox-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.dropbox.com/terms",
+          "title": "Dropbox terms of service"
         },
         {
           "confidence": null,
@@ -4112,7 +4174,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Dropbox",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "dropbox-inc",
+          "jurisdiction": "US",
+          "legal_name": "Dropbox, Inc.",
+          "registered_address": null,
+          "registration_number": "0001467623",
+          "vendor_id": "dropbox"
+        }
+      ],
       "legal_name": "Dropbox, Inc.",
       "manifest_path": "dist/vendors/dropbox.json",
       "missing_core_source_types": [],
@@ -4135,6 +4207,14 @@
           "source_type": "dpa",
           "source_url": "https://assets.dropbox.com/documents/en/legal/dfb-data-processing-agreement.pdf",
           "title": "Dropbox Data Processing Agreement"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "dropbox-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1467623",
+          "title": "Dropbox Inc SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -4159,6 +4239,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://assets.dropbox.com/documents/en/legal/data-transfer-and-subprocessors.pdf",
           "title": "Dropbox Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "dropbox-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.dropbox.com/terms",
+          "title": "Dropbox terms of service"
         }
       },
       "unavailable_source_types": [],
@@ -14273,11 +14361,29 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zoom-communications-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1585521",
+          "title": "Zoom Communications Inc SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zoom-communications-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.zoom.com/en/terms/",
+          "title": "Zoom terms of service"
+        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -14322,7 +14428,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Zoom",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "zoom-communications-inc",
+          "jurisdiction": "US",
+          "legal_name": "Zoom Communications, Inc.",
+          "registered_address": null,
+          "registration_number": "0001585521",
+          "vendor_id": "zoom"
+        }
+      ],
       "legal_name": "Zoom Communications, Inc.",
       "manifest_path": "dist/vendors/zoom.json",
       "missing_core_source_types": [],
@@ -14347,6 +14463,14 @@
           "source_url": "https://www.zoom.com/en/trust/legal-compliance/data-processing-addendum/",
           "title": "Zoom Data Processing Addendum"
         },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zoom-communications-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1585521",
+          "title": "Zoom Communications Inc SEC EDGAR company page"
+        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": "2026-02-02",
@@ -14370,6 +14494,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.zoom.com/en/trust/subprocessors/",
           "title": "Zoom Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zoom-communications-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.zoom.com/en/terms/",
+          "title": "Zoom terms of service"
         }
       },
       "unavailable_source_types": [],
