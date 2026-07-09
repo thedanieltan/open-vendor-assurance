@@ -106,7 +106,7 @@ def evaluate_entity_evidence_quorum(
         source = source_by_id.get(source_id)
         if source is None:
             continue
-        if _is_official_entity_source(source, entity_id, vendor_id):
+        if _is_official_entity_source(source, entity_id):
             official_ids.append(source_id)
         if _is_corroborating_source(source, entity_id, vendor_id, registration_number):
             corroborating_ids.append(source_id)
@@ -138,11 +138,14 @@ def evaluate_entity_evidence_quorum(
     )
 
 
-def _is_official_entity_source(source: dict[str, Any], entity_id: str, vendor_id: str) -> bool:
+def _is_official_entity_source(source: dict[str, Any], entity_id: str) -> bool:
     authority_class = _string(source.get("source_authority_class"))
     if authority_class not in OFFICIAL_AUTHORITY_CLASSES:
         return False
-    return _source_scopes_to_entity(source, entity_id, vendor_id)
+    # Official registry/authority evidence must bind the specific scoped entity.
+    # A vendor-level or brand-level source is not enough for registration-number
+    # promotion because global brands can map to multiple legal entities.
+    return bool(entity_id and _string(source.get("entity_id")) == entity_id)
 
 
 def _is_corroborating_source(
