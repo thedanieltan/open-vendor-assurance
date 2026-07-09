@@ -231,7 +231,7 @@ def validate_cross_references() -> list[str]:
     sources_by_id = {record["source_id"]: record for record in source_records}
     artifacts = {record["artifact_id"] for record in records_for("artifact")}
     legal_entities = {record["entity_id"]: record for record in records_for("legal_entity")}
-    entity_mentions = {record["mention_id"] for record in records_for("entity_mention")}
+    entity_mentions = {record["mention_id"]: record for record in records_for("entity_mention")}
     field_provenance = records_for_optional_kind("field_provenance")
 
     for source in source_records:
