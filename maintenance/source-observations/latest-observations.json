@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-09T11:04:09Z",
+  "generated_at": "2026-07-09T13:05:34Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 624,
+    "source_count": 630,
     "observed_this_run": 6,
-    "carried_forward": 618
+    "carried_forward": 624
   },
   "sources": [
     {
@@ -2249,7 +2249,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cloudflare-inc-terms",
@@ -2268,7 +2268,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cloudflare-privacy",
@@ -2782,6 +2782,44 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "datadog-inc-sec-edgar",
+      "vendor_id": "datadog",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1561550",
+      "observed_at": "2026-07-09T13:05:34Z",
+      "observation_id": "datadog-inc-sec-edgar-2026-07-09-pr581-verified-registration-batch-3",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1561550",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "datadog-inc-terms",
+      "vendor_id": "datadog",
+      "source_url": "https://www.datadoghq.com/legal/terms/",
+      "observed_at": "2026-07-09T13:05:34Z",
+      "observation_id": "datadog-inc-terms-2026-07-09-pr581-verified-registration-batch-3",
+      "final_url": "https://www.datadoghq.com/legal/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b202216926292e5b0c26b03b9b1e976752555d3f06e0135667a50a5ec58af53a",
+      "normalized_text_sample_sha256": "sha256:f12b17671052f0ca64c239b4a404c8195d735631318fe5e3e425a378f0e8b0ef",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "datadog-privacy",
@@ -3389,7 +3427,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dropbox-inc-terms",
@@ -3408,7 +3446,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dropbox-privacy",
@@ -8484,6 +8522,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "salesforce-inc-legal",
+      "vendor_id": "salesforce",
+      "source_url": "https://www.salesforce.com/company/legal/",
+      "observed_at": "2026-07-09T13:05:34Z",
+      "observation_id": "salesforce-inc-legal-2026-07-09-pr581-verified-registration-batch-3",
+      "final_url": "https://www.salesforce.com/company/legal/?bc=HL",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:95265a7f5719234f4be6fe09f0190b25f390309f5d82c668929d7a9ba33fdde1",
+      "normalized_text_sample_sha256": "sha256:3e77bec930544c31efdec29eaf497c30d3bdbd362af20634aff2d9591b2135bb",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "salesforce-inc-sec-edgar",
+      "vendor_id": "salesforce",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1108524",
+      "observed_at": "2026-07-09T13:05:34Z",
+      "observation_id": "salesforce-inc-sec-edgar-2026-07-09-pr581-verified-registration-batch-3",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1108524",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "salesforce-privacy",
       "vendor_id": "salesforce",
       "source_url": "https://www.salesforce.com/company/privacy/",
@@ -9147,6 +9223,44 @@
         "reason": "change_class_access_changed"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "servicenow-inc-sec-edgar",
+      "vendor_id": "servicenow",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1373715",
+      "observed_at": "2026-07-09T13:05:34Z",
+      "observation_id": "servicenow-inc-sec-edgar-2026-07-09-pr581-verified-registration-batch-3",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1373715",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "servicenow-inc-terms",
+      "vendor_id": "servicenow",
+      "source_url": "https://www.servicenow.com/terms-of-use.html",
+      "observed_at": "2026-07-09T13:05:34Z",
+      "observation_id": "servicenow-inc-terms-2026-07-09-pr581-verified-registration-batch-3",
+      "final_url": "https://www.servicenow.com/terms-of-use.html",
+      "http_status": 403,
+      "source_health_status": "bot_protected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:56044430252b155f4a52a79ff8aa50ae46c79c9c3700e4affe1d28e658f374db",
+      "normalized_text_sample_sha256": "sha256:8c5181fde60c892694c2e409926384f1a6428ff6a71a46157b0c10ff40df3ca1",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_bot_protected"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "servicenow-privacy",
@@ -11749,7 +11863,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zoom-communications-inc-terms",
@@ -11768,7 +11882,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zoom-compliance",
