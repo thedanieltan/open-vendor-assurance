@@ -20,6 +20,14 @@
     "legal_name": { "type": "string", "minLength": 1, "maxLength": 240 },
     "jurisdiction": { "type": "string", "pattern": "^[A-Z]{2}$" },
     "registration_number": { "type": ["string", "null"], "maxLength": 120 },
+    "identifier_scheme": {
+      "anyOf": [
+        { "$ref": "#/$defs/identifier_scheme" },
+        { "type": "null" }
+      ]
+    },
+    "identifier_authority": { "type": ["string", "null"], "minLength": 1, "maxLength": 160 },
+    "identifier_authority_url": { "type": ["string", "null"], "format": "uri" },
     "registered_address": {
       "anyOf": [
         {
@@ -148,10 +156,40 @@
       "then": {
         "properties": { "verification_source_ids": { "minItems": 1 } }
       }
+    },
+    {
+      "if": {
+        "properties": { "identifier_scheme": { "$ref": "#/$defs/identifier_scheme" } },
+        "required": ["identifier_scheme"]
+      },
+      "then": {
+        "required": ["identifier_authority"],
+        "properties": { "identifier_authority": { "type": "string", "minLength": 1 } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "identifier_authority": { "type": "string", "minLength": 1 } },
+        "required": ["identifier_authority"]
+      },
+      "then": {
+        "required": ["identifier_scheme"],
+        "properties": { "identifier_scheme": { "$ref": "#/$defs/identifier_scheme" } }
+      }
     }
   ],
   "additionalProperties": false,
   "$defs": {
-    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" }
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$" },
+    "identifier_scheme": {
+      "enum": [
+        "AU_ABN",
+        "AU_ACN",
+        "GB_COMPANIES_HOUSE",
+        "SG_UEN",
+        "US_SEC_CIK",
+        "OTHER_PUBLIC_REGISTRY"
+      ]
+    }
   }
 }
