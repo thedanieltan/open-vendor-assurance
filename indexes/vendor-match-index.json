@@ -1406,6 +1406,7 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
@@ -1438,6 +1439,14 @@
         {
           "confidence": null,
           "effective_or_published_at": null,
+          "source_id": "atlassian-pty-ltd-abn-lookup",
+          "source_type": "other_public_source",
+          "source_url": "https://abr.business.gov.au/ABN/View?abn=53102443916",
+          "title": "Atlassian Pty Ltd ABN Lookup registry entry"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
           "source_id": "atlassian-security",
           "source_type": "security_page",
           "source_url": "https://www.atlassian.com/trust",
@@ -1455,7 +1464,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Atlassian",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "atlassian-pty-ltd",
+          "jurisdiction": "AU",
+          "legal_name": "Atlassian Pty Ltd",
+          "registered_address": null,
+          "registration_number": "53102443916",
+          "vendor_id": "atlassian"
+        }
+      ],
       "legal_name": "Atlassian Pty Ltd",
       "manifest_path": "dist/vendors/atlassian.json",
       "missing_core_source_types": [],
@@ -1478,6 +1497,14 @@
           "source_type": "dpa",
           "source_url": "https://www.atlassian.com/legal/data-processing-addendum",
           "title": "Atlassian Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "atlassian-pty-ltd-abn-lookup",
+          "source_type": "other_public_source",
+          "source_url": "https://abr.business.gov.au/ABN/View?abn=53102443916",
+          "title": "Atlassian Pty Ltd ABN Lookup registry entry"
         },
         "privacy_notice": {
           "confidence": null,
@@ -2336,9 +2363,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -2368,6 +2397,22 @@
         {
           "confidence": null,
           "effective_or_published_at": null,
+          "source_id": "canva-pty-ltd-abn-lookup",
+          "source_type": "other_public_source",
+          "source_url": "https://abr.business.gov.au/ABN/View?abn=80158929938",
+          "title": "Canva Pty Ltd ABN Lookup registry entry"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "canva-pty-ltd-terms-of-use",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.canva.com/policies/terms-of-use/",
+          "title": "Canva terms of use"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
           "source_id": "canva-security",
           "source_type": "security_page",
           "source_url": "https://www.canva.com/security/",
@@ -2385,7 +2430,28 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Canva",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "canva-pty-ltd",
+          "jurisdiction": "AU",
+          "legal_name": "Canva Pty Ltd",
+          "registered_address": {
+            "address_lines": [
+              "110 Kippax St"
+            ],
+            "country": "AU",
+            "locality": "Surry Hills",
+            "postal_code": "2010",
+            "region": "NSW",
+            "source_ids": [
+              "canva-pty-ltd-terms-of-use"
+            ]
+          },
+          "registration_number": "80158929938",
+          "vendor_id": "canva"
+        }
+      ],
       "legal_name": "Canva Pty Ltd",
       "manifest_path": "dist/vendors/canva.json",
       "missing_core_source_types": [],
@@ -2408,6 +2474,14 @@
           "source_type": "dpa",
           "source_url": "https://www.canva.com/policies/data-processing-addendum/",
           "title": "Canva Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "canva-pty-ltd-abn-lookup",
+          "source_type": "other_public_source",
+          "source_url": "https://abr.business.gov.au/ABN/View?abn=80158929938",
+          "title": "Canva Pty Ltd ABN Lookup registry entry"
         },
         "privacy_notice": {
           "confidence": null,
@@ -2432,6 +2506,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.canva.com/policies/subprocessors/",
           "title": "Canva Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "canva-pty-ltd-terms-of-use",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.canva.com/policies/terms-of-use/",
+          "title": "Canva terms of use"
         }
       },
       "unavailable_source_types": [],
@@ -13480,9 +13562,27 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "privacy_notice"
+        "other_public_source",
+        "privacy_notice",
+        "terms_of_service"
       ],
       "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wise-payments-limited-companies-house",
+          "source_type": "other_public_source",
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/07209813",
+          "title": "Wise Payments Limited Companies House registry entry"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wise-payments-limited-customer-agreement",
+          "source_type": "terms_of_service",
+          "source_url": "https://wise.com/gb/legal/terms-of-use-personal",
+          "title": "Wise Payments Limited UK personal customer agreement"
+        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -13495,7 +13595,29 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Wise",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "wise-payments-limited",
+          "jurisdiction": "GB",
+          "legal_name": "Wise Payments Limited",
+          "registered_address": {
+            "address_lines": [
+              "1st Floor Worship Square",
+              "65 Clifton Street"
+            ],
+            "country": "GB",
+            "locality": "London",
+            "postal_code": "EC2A 4JE",
+            "region": "England",
+            "source_ids": [
+              "wise-payments-limited-companies-house"
+            ]
+          },
+          "registration_number": "07209813",
+          "vendor_id": "wise"
+        }
+      ],
       "legal_name": "Wise Payments Limited",
       "manifest_path": "dist/vendors/wise.json",
       "missing_core_source_types": [
@@ -13507,6 +13629,14 @@
         "wise.com"
       ],
       "primary_source_by_type": {
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wise-payments-limited-companies-house",
+          "source_type": "other_public_source",
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/07209813",
+          "title": "Wise Payments Limited Companies House registry entry"
+        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -13514,6 +13644,14 @@
           "source_type": "privacy_notice",
           "source_url": "https://wise.com/privacy-policy",
           "title": "Wise Privacy Policy"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wise-payments-limited-customer-agreement",
+          "source_type": "terms_of_service",
+          "source_url": "https://wise.com/gb/legal/terms-of-use-personal",
+          "title": "Wise Payments Limited UK personal customer agreement"
         }
       },
       "unavailable_source_types": [],

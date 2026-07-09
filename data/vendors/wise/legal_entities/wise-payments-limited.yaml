@@ -1,0 +1,28 @@
+schema_version: 0.1.0
+entity_id: wise-payments-limited
+vendor_id: wise
+legal_name: Wise Payments Limited
+jurisdiction: GB
+registration_number: '07209813'
+registered_address:
+  address_lines:
+    - 1st Floor Worship Square
+    - 65 Clifton Street
+  locality: London
+  region: England
+  postal_code: EC2A 4JE
+  country: GB
+  source_ids:
+    - wise-payments-limited-companies-house
+verification_source_ids:
+  - wise-payments-limited-companies-house
+  - wise-payments-limited-customer-agreement
+verified_observed_at: '2026-07-09T00:00:00Z'
+official_domains:
+  - wise.com
+public_entrypoints:
+  - https://wise.com/gb/legal/terms-of-use-personal
+  - https://find-and-update.company-information.service.gov.uk/company/07209813
+catalog_status: canonical
+notes: Scoped verified legal-entity record. Registration number is verified for Wise Payments Limited only and does not assert a global Wise contracting party across all jurisdictions.
+not_advice: true

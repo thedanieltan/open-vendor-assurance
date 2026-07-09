@@ -1,0 +1,27 @@
+schema_version: 0.1.0
+entity_id: canva-pty-ltd
+vendor_id: canva
+legal_name: Canva Pty Ltd
+jurisdiction: AU
+registration_number: '80158929938'
+registered_address:
+  address_lines:
+    - 110 Kippax St
+  locality: Surry Hills
+  region: NSW
+  postal_code: '2010'
+  country: AU
+  source_ids:
+    - canva-pty-ltd-terms-of-use
+verification_source_ids:
+  - canva-pty-ltd-abn-lookup
+  - canva-pty-ltd-terms-of-use
+verified_observed_at: '2026-07-09T00:00:00Z'
+official_domains:
+  - canva.com
+public_entrypoints:
+  - https://abr.business.gov.au/ABN/View?abn=80158929938
+  - https://www.canva.com/policies/terms-of-use/
+catalog_status: canonical
+notes: Scoped verified legal-entity record. Registration number stores the ABN as the ABN Lookup primary identifier; the same official registry source also reports ASIC ACN 158 929 938. This does not assert a single global Canva contracting party.
+not_advice: true
