@@ -39,6 +39,17 @@ work_packages:
       - tools/openva/source_verification.py
       - tools/openva/web_bot_auth.py
 
+  # Bounded source URL backfill discovery/queue surface.
+  WP-SOURCE-URL-BACKFILL-DISCOVERY-01:
+    description: Source URL backfill discovery registry and queue expansion for schema-supported public source types.
+    depends_on:
+      - WP-OPENVA-CRAWLER-IDENTITY-01
+    allowed_paths:
+      - maintenance/queues/catalog-growth-discovery.json
+      - tools/openva/source_discovery.py
+      - tests/test_source_discovery.py
+      - tests/test_catalog_growth_discovery_queue.py
+
   WP-WORKFLOW-CONTROL-PLANE-01:
     description: Existing workflow inventory, retirement contracts, docs, and metadata-only PR validation control plane.
     allowed_paths:
