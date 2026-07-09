@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -42,6 +43,14 @@ PROHIBITED_FILES = {
     "LICENSE",
 }
 
+GENERATED_OUTPUT_HINT = (
+    "run python -m tools.openva.validate build-indexes, then commit openva-pack.json indexes/ dist/"
+)
+OBSERVATION_BASELINE_HINT = (
+    "verify the new source(s), run python -m tools.openva.observation_ledger build, "
+    "install latest-observations.json, then commit maintenance/source-observations/latest-observations.json"
+)
+
 
 def normalize_path(path: str) -> str:
     return normalize_repo_path(path)
@@ -77,12 +86,39 @@ def is_catalog_batch_path(path: str) -> bool:
     return normalized.startswith("catalog-batches/") and normalized.endswith((".yaml", ".yml"))
 
 
+def is_catalog_data_path(path: str) -> bool:
+    normalized = normalize_path(path)
+    return normalized.startswith("data/vendors/") and normalized.endswith((".yaml", ".yml"))
+
+
+def is_source_record_path(path: str) -> bool:
+    normalized = normalize_path(path)
+    return normalized.startswith("data/vendors/") and "/sources/" in normalized and normalized.endswith((".yaml", ".yml"))
+
+
+def is_generated_output_path(path: str) -> bool:
+    normalized = normalize_path(path)
+    return normalized == "openva-pack.json" or normalized.startswith("indexes/") or normalized.startswith("dist/vendors/")
+
+
 def load_yaml(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         data = yaml.safe_load(handle)
     if not isinstance(data, dict):
         raise ValueError(f"{relative_repo_path(path, ROOT)}: expected YAML mapping")
     return data
+
+
+def load_latest_observed_source_ids(root: Path = ROOT) -> set[str]:
+    path = root / "maintenance" / "source-observations" / "latest-observations.json"
+    if not path.exists():
+        return set()
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {
+        str(entry.get("source_id"))
+        for entry in data.get("sources", [])
+        if isinstance(entry, dict) and entry.get("source_id")
+    }
 
 
 def validate_catalog_paths(paths: list[str]) -> list[str]:
@@ -96,6 +132,49 @@ def validate_catalog_paths(paths: list[str]) -> list[str]:
             continue
         if not is_allowed_catalog_path(path):
             failures.append(f"{path}: catalog PR path is outside the allowed catalog-agent file set")
+    return failures
+
+
+def validate_catalog_generated_outputs(paths: list[str]) -> list[str]:
+    """Catalog data changes must carry regenerated public outputs.
+
+    The canonical validator still performs byte-for-byte generated-file freshness
+    checks. This guard exists to fail catalog PRs early with an actionable command
+    when a data-only branch forgets to commit generated outputs at all.
+    """
+    normalized = [normalize_path(path) for path in paths]
+    if any(is_catalog_data_path(path) for path in normalized) and not any(is_generated_output_path(path) for path in normalized):
+        return [f"catalog data changed but generated outputs are absent; {GENERATED_OUTPUT_HINT}"]
+    return []
+
+
+def validate_changed_source_observations(paths: list[str], *, root: Path = ROOT) -> list[str]:
+    """Every changed source record must be represented in latest observations.
+
+    Active catalog sources participate in the source-intelligence release gates.
+    If a PR adds source records but omits the committed latest-observations
+    projection, `release_gates check --profile pr` fails later at the freshness
+    baseline gate. This guard points directly at the missing source ids.
+    """
+    failures: list[str] = []
+    observed_source_ids = load_latest_observed_source_ids(root)
+    for raw_path in paths:
+        path = normalize_path(raw_path)
+        if not is_source_record_path(path):
+            continue
+        record_path = root / path
+        if not record_path.exists():
+            # Deleted sources do not need a fresh latest-observations entry here;
+            # the canonical validators/release gates handle stale projections.
+            continue
+        try:
+            source = load_yaml(record_path)
+        except ValueError as exc:
+            failures.append(str(exc))
+            continue
+        source_id = str(source.get("source_id") or "")
+        if source_id and source_id not in observed_source_ids:
+            failures.append(f"{path}: source_id {source_id} has no latest-observations baseline; {OBSERVATION_BASELINE_HINT}")
     return failures
 
 
@@ -142,6 +221,8 @@ def validate_catalog_batch_duplicates(paths: list[str], *, root: Path = ROOT) ->
 
 def validate_catalog_pr(paths: list[str], *, root: Path = ROOT) -> list[str]:
     failures = validate_catalog_paths(paths)
+    failures.extend(validate_catalog_generated_outputs(paths))
+    failures.extend(validate_changed_source_observations(paths, root=root))
     failures.extend(validate_catalog_batch_duplicates(paths, root=root))
     return failures
 
