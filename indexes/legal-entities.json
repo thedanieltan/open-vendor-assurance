@@ -1,5 +1,5 @@
 {
-  "count": 6,
+  "count": 9,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -96,6 +96,33 @@
       "verified_observed_at": "2026-07-09T00:00:00Z"
     },
     {
+      "_openva_path": "data/vendors/datadog/legal_entities/datadog-inc.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "datadog-inc",
+      "identifier_authority": "U.S. Securities and Exchange Commission",
+      "identifier_authority_url": "https://www.sec.gov/edgar",
+      "identifier_scheme": "US_SEC_CIK",
+      "jurisdiction": "US",
+      "legal_name": "Datadog, Inc.",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number stores the SEC CIK public-company identifier for Datadog, Inc.; it does not assert a Delaware state entity number or a universal Datadog contracting party across all jurisdictions.",
+      "official_domains": [
+        "datadoghq.com"
+      ],
+      "public_entrypoints": [
+        "https://www.sec.gov/edgar/browse/?CIK=1561550",
+        "https://www.datadoghq.com/legal/terms/"
+      ],
+      "registration_number": "0001561550",
+      "schema_version": "0.1.0",
+      "vendor_id": "datadog",
+      "verification_source_ids": [
+        "datadog-inc-sec-edgar",
+        "datadog-inc-terms"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    },
+    {
       "_openva_path": "data/vendors/dropbox/legal_entities/dropbox-inc.yaml",
       "catalog_status": "canonical",
       "entity_id": "dropbox-inc",
@@ -119,6 +146,60 @@
       "verification_source_ids": [
         "dropbox-inc-sec-edgar",
         "dropbox-inc-terms"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    },
+    {
+      "_openva_path": "data/vendors/salesforce/legal_entities/salesforce-inc.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "salesforce-inc",
+      "identifier_authority": "U.S. Securities and Exchange Commission",
+      "identifier_authority_url": "https://www.sec.gov/edgar",
+      "identifier_scheme": "US_SEC_CIK",
+      "jurisdiction": "US",
+      "legal_name": "Salesforce, Inc.",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number stores the SEC CIK public-company identifier for Salesforce, Inc.; it does not assert a Delaware state entity number or a universal Salesforce contracting party across all jurisdictions.",
+      "official_domains": [
+        "salesforce.com"
+      ],
+      "public_entrypoints": [
+        "https://www.sec.gov/edgar/browse/?CIK=1108524",
+        "https://www.salesforce.com/company/legal/"
+      ],
+      "registration_number": "0001108524",
+      "schema_version": "0.1.0",
+      "vendor_id": "salesforce",
+      "verification_source_ids": [
+        "salesforce-inc-sec-edgar",
+        "salesforce-inc-legal"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    },
+    {
+      "_openva_path": "data/vendors/servicenow/legal_entities/servicenow-inc.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "servicenow-inc",
+      "identifier_authority": "U.S. Securities and Exchange Commission",
+      "identifier_authority_url": "https://www.sec.gov/edgar",
+      "identifier_scheme": "US_SEC_CIK",
+      "jurisdiction": "US",
+      "legal_name": "ServiceNow, Inc.",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number stores the SEC CIK public-company identifier for ServiceNow, Inc.; it does not assert a Delaware state entity number or a universal ServiceNow contracting party across all jurisdictions.",
+      "official_domains": [
+        "servicenow.com"
+      ],
+      "public_entrypoints": [
+        "https://www.sec.gov/edgar/browse/?CIK=1373715",
+        "https://www.servicenow.com/terms-of-use.html"
+      ],
+      "registration_number": "0001373715",
+      "schema_version": "0.1.0",
+      "vendor_id": "servicenow",
+      "verification_source_ids": [
+        "servicenow-inc-sec-edgar",
+        "servicenow-inc-terms"
       ],
       "verified_observed_at": "2026-07-09T00:00:00Z"
     },

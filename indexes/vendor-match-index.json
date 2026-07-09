@@ -3394,9 +3394,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -3414,6 +3416,22 @@
           "source_type": "dpa",
           "source_url": "https://www.datadoghq.com/legal/data-processing-addendum/2023-02-28/",
           "title": "Datadog Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "datadog-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1561550",
+          "title": "Datadog Inc SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "datadog-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.datadoghq.com/legal/terms/",
+          "title": "Datadog website terms of use"
         },
         {
           "confidence": null,
@@ -3443,7 +3461,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Datadog",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "datadog-inc",
+          "jurisdiction": "US",
+          "legal_name": "Datadog, Inc.",
+          "registered_address": null,
+          "registration_number": "0001561550",
+          "vendor_id": "datadog"
+        }
+      ],
       "legal_name": "Datadog, Inc.",
       "manifest_path": "dist/vendors/datadog.json",
       "missing_core_source_types": [],
@@ -3466,6 +3494,14 @@
           "source_type": "dpa",
           "source_url": "https://www.datadoghq.com/legal/data-processing-addendum/2023-02-28/",
           "title": "Datadog Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "datadog-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1561550",
+          "title": "Datadog Inc SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -3490,6 +3526,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.datadoghq.com/legal/subprocessors/",
           "title": "Datadog Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "datadog-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.datadoghq.com/legal/terms/",
+          "title": "Datadog website terms of use"
         }
       },
       "unavailable_source_types": [],
@@ -10416,9 +10460,11 @@
       "canonical_source_types": [
         "compliance_page",
         "dpa",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -10436,6 +10482,22 @@
           "source_type": "dpa",
           "source_url": "https://www.salesforce.com/company/privacy/data-processing-addendum/",
           "title": "Salesforce Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "salesforce-inc-legal",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.salesforce.com/company/legal/",
+          "title": "Salesforce legal agreements page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "salesforce-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1108524",
+          "title": "Salesforce Inc SEC EDGAR company page"
         },
         {
           "confidence": null,
@@ -10465,7 +10527,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "Salesforce",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "salesforce-inc",
+          "jurisdiction": "US",
+          "legal_name": "Salesforce, Inc.",
+          "registered_address": null,
+          "registration_number": "0001108524",
+          "vendor_id": "salesforce"
+        }
+      ],
       "legal_name": "Salesforce, Inc.",
       "manifest_path": "dist/vendors/salesforce.json",
       "missing_core_source_types": [],
@@ -10488,6 +10560,14 @@
           "source_type": "dpa",
           "source_url": "https://www.salesforce.com/company/privacy/data-processing-addendum/",
           "title": "Salesforce Data Processing Addendum"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "salesforce-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1108524",
+          "title": "Salesforce Inc SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -10512,6 +10592,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.salesforce.com/company/privacy/infrastructure-sub-processors/",
           "title": "Salesforce Infrastructure and Subprocessor Documentation"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "salesforce-inc-legal",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.salesforce.com/company/legal/",
+          "title": "Salesforce legal agreements page"
         }
       },
       "unavailable_source_types": [],
@@ -11211,9 +11299,11 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "compliance_page",
+        "other_public_source",
         "privacy_notice",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -11223,6 +11313,22 @@
           "source_type": "compliance_page",
           "source_url": "https://www.servicenow.com/company/trust/compliance.html",
           "title": "ServiceNow Compliance"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "servicenow-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1373715",
+          "title": "ServiceNow Inc SEC EDGAR company page"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "servicenow-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.servicenow.com/terms-of-use.html",
+          "title": "ServiceNow website terms of use"
         },
         {
           "confidence": null,
@@ -11252,7 +11358,17 @@
       "catalog_status": "active",
       "contracting_entity_resolution": [],
       "display_name": "ServiceNow",
-      "legal_entities": [],
+      "legal_entities": [
+        {
+          "catalog_status": "canonical",
+          "entity_id": "servicenow-inc",
+          "jurisdiction": "US",
+          "legal_name": "ServiceNow, Inc.",
+          "registered_address": null,
+          "registration_number": "0001373715",
+          "vendor_id": "servicenow"
+        }
+      ],
       "legal_name": "ServiceNow, Inc.",
       "manifest_path": "dist/vendors/servicenow.json",
       "missing_core_source_types": [],
@@ -11267,6 +11383,14 @@
           "source_type": "compliance_page",
           "source_url": "https://www.servicenow.com/company/trust/compliance.html",
           "title": "ServiceNow Compliance"
+        },
+        "other_public_source": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "servicenow-inc-sec-edgar",
+          "source_type": "other_public_source",
+          "source_url": "https://www.sec.gov/edgar/browse/?CIK=1373715",
+          "title": "ServiceNow Inc SEC EDGAR company page"
         },
         "privacy_notice": {
           "confidence": null,
@@ -11291,6 +11415,14 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/subprocessor-list.pdf",
           "title": "ServiceNow Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "servicenow-inc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.servicenow.com/terms-of-use.html",
+          "title": "ServiceNow website terms of use"
         }
       },
       "unavailable_source_types": [
