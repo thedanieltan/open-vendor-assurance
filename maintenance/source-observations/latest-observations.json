@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-09T10:24:49Z",
+  "generated_at": "2026-07-09T11:04:09Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 618,
-    "observed_this_run": 5,
-    "carried_forward": 613
+    "source_count": 624,
+    "observed_this_run": 6,
+    "carried_forward": 618
   },
   "sources": [
     {
@@ -1223,7 +1223,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "atlassian-security",
@@ -2021,7 +2021,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "canva-pty-ltd-terms-of-use",
@@ -2040,7 +2040,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "canva-security",
@@ -2231,6 +2231,44 @@
         "reason": "change_class_material_possible"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "cloudflare-inc-sec-edgar",
+      "vendor_id": "cloudflare",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1477333",
+      "observed_at": "2026-07-09T11:04:09Z",
+      "observation_id": "cloudflare-inc-sec-edgar-2026-07-09-pr577-verified-registration-batch-2",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1477333",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "cloudflare-inc-terms",
+      "vendor_id": "cloudflare",
+      "source_url": "https://www.cloudflare.com/website-terms/",
+      "observed_at": "2026-07-09T11:04:09Z",
+      "observation_id": "cloudflare-inc-terms-2026-07-09-pr577-verified-registration-batch-2",
+      "final_url": "https://www.cloudflare.com/website-terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cf5bedafd25dffe6c81021a65df992c775b646924e115a2cc2bb88286ef59214",
+      "normalized_text_sample_sha256": "sha256:d9f8117e26866007fdf91a5eceb6a69ee16bca7e4b5cfccb269ffde525aacb27",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "cloudflare-privacy",
@@ -3333,6 +3371,44 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "dropbox-inc-sec-edgar",
+      "vendor_id": "dropbox",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1467623",
+      "observed_at": "2026-07-09T11:04:09Z",
+      "observation_id": "dropbox-inc-sec-edgar-2026-07-09-pr577-verified-registration-batch-2",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1467623",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "dropbox-inc-terms",
+      "vendor_id": "dropbox",
+      "source_url": "https://www.dropbox.com/terms",
+      "observed_at": "2026-07-09T11:04:09Z",
+      "observation_id": "dropbox-inc-terms-2026-07-09-pr577-verified-registration-batch-2",
+      "final_url": "https://www.dropbox.com/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2f7b46eecddeae2a0558cabd5530b3e308ea05465c9ac769e4451825a2d2c988",
+      "normalized_text_sample_sha256": "sha256:880aacb99fc8fca9d8990fd9cade83eb6514d094f52b77a6578cfc8ad713425f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "dropbox-privacy",
@@ -11084,7 +11160,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wise-payments-limited-customer-agreement",
@@ -11103,7 +11179,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wise-privacy",
@@ -11655,6 +11731,44 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "zoom-communications-inc-sec-edgar",
+      "vendor_id": "zoom",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1585521",
+      "observed_at": "2026-07-09T11:04:09Z",
+      "observation_id": "zoom-communications-inc-sec-edgar-2026-07-09-pr577-verified-registration-batch-2",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1585521",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "zoom-communications-inc-terms",
+      "vendor_id": "zoom",
+      "source_url": "https://www.zoom.com/en/terms/",
+      "observed_at": "2026-07-09T11:04:09Z",
+      "observation_id": "zoom-communications-inc-terms-2026-07-09-pr577-verified-registration-batch-2",
+      "final_url": "https://www.zoom.com/en/trust/terms/?cms_guid=false",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8dc140e24a7464d3485b071c0072940637f798b2b1c34b30ff3c6f3313aa528a",
+      "normalized_text_sample_sha256": "sha256:da486a32f407f5b8781f6396cab3b213fcb09b295866149dd5922046324c5fe1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "zoom-compliance",

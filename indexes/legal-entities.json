@@ -1,5 +1,5 @@
 {
-  "count": 3,
+  "count": 6,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -63,6 +63,54 @@
       "verified_observed_at": "2026-07-09T00:00:00Z"
     },
     {
+      "_openva_path": "data/vendors/cloudflare/legal_entities/cloudflare-inc.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "cloudflare-inc",
+      "jurisdiction": "US",
+      "legal_name": "Cloudflare, Inc.",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number stores the SEC CIK public-company identifier for Cloudflare, Inc.; it does not assert a Delaware state entity number or a universal Cloudflare contracting party across all jurisdictions.",
+      "official_domains": [
+        "cloudflare.com"
+      ],
+      "public_entrypoints": [
+        "https://www.sec.gov/edgar/browse/?CIK=1477333",
+        "https://www.cloudflare.com/website-terms/"
+      ],
+      "registration_number": "0001477333",
+      "schema_version": "0.1.0",
+      "vendor_id": "cloudflare",
+      "verification_source_ids": [
+        "cloudflare-inc-sec-edgar",
+        "cloudflare-inc-terms"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    },
+    {
+      "_openva_path": "data/vendors/dropbox/legal_entities/dropbox-inc.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "dropbox-inc",
+      "jurisdiction": "US",
+      "legal_name": "Dropbox, Inc.",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number stores the SEC CIK public-company identifier for Dropbox, Inc.; it does not assert a Delaware state entity number or a universal Dropbox contracting party across all jurisdictions.",
+      "official_domains": [
+        "dropbox.com"
+      ],
+      "public_entrypoints": [
+        "https://www.sec.gov/edgar/browse/?CIK=1467623",
+        "https://www.dropbox.com/terms"
+      ],
+      "registration_number": "0001467623",
+      "schema_version": "0.1.0",
+      "vendor_id": "dropbox",
+      "verification_source_ids": [
+        "dropbox-inc-sec-edgar",
+        "dropbox-inc-terms"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    },
+    {
       "_openva_path": "data/vendors/wise/legal_entities/wise-payments-limited.yaml",
       "catalog_status": "canonical",
       "entity_id": "wise-payments-limited",
@@ -96,6 +144,31 @@
       "verification_source_ids": [
         "wise-payments-limited-companies-house",
         "wise-payments-limited-customer-agreement"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    },
+    {
+      "_openva_path": "data/vendors/zoom/legal_entities/zoom-communications-inc.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "zoom-communications-inc",
+      "jurisdiction": "US",
+      "legal_name": "Zoom Communications, Inc.",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number stores the SEC CIK public-company identifier for Zoom Communications, Inc.; it does not assert a Delaware state entity number or a universal Zoom contracting party across all jurisdictions.",
+      "official_domains": [
+        "zoom.com",
+        "zoom.us"
+      ],
+      "public_entrypoints": [
+        "https://www.sec.gov/edgar/browse/?CIK=1585521",
+        "https://www.zoom.com/en/terms/"
+      ],
+      "registration_number": "0001585521",
+      "schema_version": "0.1.0",
+      "vendor_id": "zoom",
+      "verification_source_ids": [
+        "zoom-communications-inc-sec-edgar",
+        "zoom-communications-inc-terms"
       ],
       "verified_observed_at": "2026-07-09T00:00:00Z"
     }
