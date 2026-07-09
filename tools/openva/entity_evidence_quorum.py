@@ -17,8 +17,9 @@ The gate is scoped narrowly:
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass, field
-from typing import Any, Iterable
+from typing import Any
 
 OFFICIAL_AUTHORITY_CLASSES = frozenset(
     {
@@ -152,8 +153,9 @@ def _is_corroborating_source(
 ) -> bool:
     if not _source_scopes_to_entity(source, entity_id, vendor_id):
         return False
-    if _source_registration_numbers(source):
-        return registration_number in _source_registration_numbers(source)
+    numbers = _source_registration_numbers(source)
+    if numbers:
+        return registration_number in numbers
     # A source can corroborate the entity-to-vendor relationship even when the
     # registry source remains the authority for the number itself.
     return bool(entity_id and _string(source.get("entity_id")) == entity_id)
@@ -238,8 +240,12 @@ def _source_registration_numbers(source: dict[str, Any]) -> set[str]:
             numbers.add(value)
     identifiers = source.get("identifiers") or source.get("registration_numbers") or []
     if isinstance(identifiers, dict):
-        identifiers = identifiers.values()
-    for value in identifiers if isinstance(identifiers, list | tuple | set) else []:
+        iterable = identifiers.values()
+    elif isinstance(identifiers, Iterable) and not isinstance(identifiers, str):
+        iterable = identifiers
+    else:
+        iterable = []
+    for value in iterable:
         number = _normalize_registration_number(value)
         if number:
             numbers.add(number)
