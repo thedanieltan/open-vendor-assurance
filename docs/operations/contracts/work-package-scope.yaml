@@ -39,6 +39,7 @@ work_packages:
       - tools/openva/source_verification.py
       - tools/openva/web_bot_auth.py
 
+  # Bounded source URL backfill discovery/queue surface.
   WP-SOURCE-URL-BACKFILL-DISCOVERY-01:
     description: Source URL backfill discovery registry and queue expansion for schema-supported public source types.
     depends_on:
