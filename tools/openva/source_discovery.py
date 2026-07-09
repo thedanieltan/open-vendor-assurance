@@ -115,6 +115,35 @@ SOURCE_TYPE_REGISTRY: dict[str, dict[str, Any]] = {
         "qualifies_for_vendor_materialization": False,
         "qualifies_as_promotion_source_role": False,
     },
+    "certification_reference": {
+        "candidate_paths": (
+            "/security/certifications",
+            "/trust/certifications",
+            "/trust-center/certifications",
+            "/trustcenter/certifications",
+            "/compliance/certifications",
+            "/security/compliance",
+            "/trust/compliance",
+        ),
+        "known_subdomain_patterns": (),
+        "qualifies_for_coverage": True,
+        "qualifies_for_vendor_materialization": True,
+        "qualifies_as_promotion_source_role": True,
+    },
+    "ai_terms": {
+        "candidate_paths": (
+            "/legal/ai-terms",
+            "/ai-terms",
+            "/terms/ai",
+            "/legal/ai",
+            "/responsible-ai",
+            "/trust/ai",
+        ),
+        "known_subdomain_patterns": (),
+        "qualifies_for_coverage": True,
+        "qualifies_for_vendor_materialization": False,
+        "qualifies_as_promotion_source_role": True,
+    },
 }
 
 DEFAULT_SOURCE_TYPES = tuple(SOURCE_TYPE_REGISTRY)
@@ -124,13 +153,8 @@ DISCOVERY_PATHS: dict[str, tuple[str, ...]] = {
 }
 
 UNAVAILABLE_REASON = {
-    "dpa": "distinct_public_url_not_identified",
-    "subprocessors_list": "distinct_public_url_not_identified",
-    "privacy_notice": "distinct_public_url_not_identified",
-    "security_page": "distinct_public_url_not_identified",
-    "compliance_page": "distinct_public_url_not_identified",
-    "trust_center": "distinct_public_url_not_identified",
-    "status_page": "distinct_public_url_not_identified",
+    source_type: "distinct_public_url_not_identified"
+    for source_type in SOURCE_TYPE_REGISTRY
 }
 
 
@@ -168,13 +192,7 @@ def source_type_role(source_type: str, role: str) -> bool:
 def safe_discovery_fetcher(
     vendor: dict[str, Any], fetch_timeout: float | None = None
 ) -> Callable[[str], FetchResult]:
-    """SSRF-safe discovery fetcher bound to the vendor's own official domains.
-
-    Candidate-URL preflights are fetched over the same DNS-pinned, same-authority,
-    bounded boundary as the sitemap lane. Fails closed (``FetchResult`` with
-    ``http_status=None``) when the vendor has no official domain to anchor to, so
-    discovery never issues a raw, unbounded fetch for an unanchored vendor.
-    """
+    """SSRF-safe discovery fetcher bound to the vendor's own official domains."""
     official_domains = [str(domain) for domain in (vendor.get("official_domains") or []) if domain]
     if not official_domains:
         def _unresolved(url: str) -> FetchResult:
@@ -217,16 +235,6 @@ def canonical_source_types_for_vendor(vendor_id: str, root: Path = ROOT) -> set[
     for path in sorted((root / "data" / "vendors" / vendor_id / "sources").glob("*.yaml")):
         source = load_yaml(path)
         source_type = source.get("source_type")
-        if isinstance(source_type, str):
-            result.add(source_type)
-    return result
-
-
-def unavailable_source_types_for_vendor(vendor_id: str, root: Path = ROOT) -> set[str]:
-    result: set[str] = set()
-    for path in sorted((root / "data" / "vendors" / vendor_id / "unavailable_sources").glob("*.yaml")):
-        unavailable = load_yaml(path)
-        source_type = unavailable.get("source_type")
         if isinstance(source_type, str):
             result.add(source_type)
     return result
@@ -343,6 +351,17 @@ def unavailable_source_id(vendor_id: str, source_type: str) -> str:
     return f"{vendor_id}-{suffix}"
 
 
+def same_authority(candidate_url: str, final_url: str | None) -> bool:
+    candidate_host = urlparse(candidate_url).netloc.lower().removeprefix("www.")
+    final_host = urlparse(final_url or candidate_url).netloc.lower().removeprefix("www.")
+    return candidate_host == final_host
+
+
+def evidence_digest(record: dict[str, Any]) -> str:
+    payload = json.dumps(record, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
 def candidate_record(
     vendor_id: str,
     source_type: str,
@@ -350,7 +369,7 @@ def candidate_record(
     result: FetchResult,
     semantic: dict[str, Any],
     discovered_at: str,
-    ) -> dict[str, Any]:
+) -> dict[str, Any]:
     verification_source = {"source_url": url, "source_type": source_type}
     verification_status = classify_status(verification_source, result, semantic)
     canonical_candidate_url = result.final_url if same_authority(url, result.final_url) else url
@@ -411,12 +430,6 @@ def unavailable_record(
     }
 
 
-def same_authority(candidate_url: str, final_url: str | None) -> bool:
-    candidate_host = urlparse(candidate_url).netloc.lower().removeprefix("www.")
-    final_host = urlparse(final_url or candidate_url).netloc.lower().removeprefix("www.")
-    return candidate_host == final_host
-
-
 def url_text_evidence(source_type: str, url: str, result: FetchResult) -> bool:
     haystack = " ".join(
         [
@@ -433,6 +446,8 @@ def url_text_evidence(source_type: str, url: str, result: FetchResult) -> bool:
         "compliance_page": ("compliance", "soc", "iso"),
         "trust_center": ("trust", "security", "compliance"),
         "status_page": ("status", "uptime", "incident"),
+        "certification_reference": ("certification", "certificate", "soc", "iso", "audit"),
+        "ai_terms": ("ai", "artificial intelligence", "machine learning", "model training"),
     }.get(source_type, ())
     return any(term in haystack for term in terms)
 
@@ -456,11 +471,6 @@ def candidate_rank(source_type: str, url: str, result: FetchResult, semantic: di
     if status == "weak":
         return 300, "weak_semantic_candidate"
     return 0, "unavailable_or_mismatch"
-
-
-def evidence_digest(record: dict[str, Any]) -> str:
-    payload = json.dumps(record, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    return "sha256:" + hashlib.sha256(payload).hexdigest()
 
 
 def discovery_event(
@@ -495,7 +505,7 @@ def discovery_event(
         "supersedes": None,
         "discovered_at": discovered_at,
         "discovery_run_id": discovery_run_id,
-        "policy_version": "source_discovery_registry_0.2.0",
+        "policy_version": "source_discovery_registry_0.3.0",
         "not_advice": True,
     }
 
@@ -508,8 +518,6 @@ def discover_for_vendor(
     max_urls_per_type: int = 20,
     fetch_timeout: float | None = None,
 ) -> dict[str, Any]:
-    # Default to an SSRF-safe fetcher bound to this vendor's own authority; an
-    # injected fetcher (tests) is honoured verbatim. Raw fetch_url is never default.
     if fetcher is None:
         fetcher = safe_discovery_fetcher(vendor, fetch_timeout)
     vendor_id = str(vendor["vendor_id"])
@@ -540,11 +548,7 @@ def discover_for_vendor(
                 "final_url": result.final_url,
                 "content_type": result.content_type,
                 "semantic_status": semantic.get("status"),
-                "verification_status": classify_status(
-                    {"source_url": url, "source_type": source_type},
-                    result,
-                    semantic,
-                ),
+                "verification_status": classify_status({"source_url": url, "source_type": source_type}, result, semantic),
                 "matched_terms": semantic.get("matched_terms", []),
                 "candidate_rank": rank,
                 "rank_reason": rank_reason,
@@ -563,10 +567,7 @@ def discover_for_vendor(
             if matched and rank > 0:
                 ranked.append((rank, index, rank_reason, url, result, semantic))
         if ranked:
-            rank, _index, rank_reason, url, result, semantic = sorted(
-                ranked,
-                key=lambda item: (-item[0], item[1]),
-            )[0]
+            rank, _index, rank_reason, url, result, semantic = sorted(ranked, key=lambda item: (-item[0], item[1]))[0]
             selected = candidate_record(vendor_id, source_type, url, result, semantic, discovered_at)
             selected["selection"] = {
                 "rank": rank,
@@ -593,15 +594,7 @@ def discover_for_vendor(
             ]
             candidates.append(selected)
         else:
-            unavailable.append(
-                unavailable_record(
-                    vendor_id,
-                    source_type,
-                    checked_urls,
-                    discovered_at,
-                    next_review_after,
-                )
-            )
+            unavailable.append(unavailable_record(vendor_id, source_type, checked_urls, discovered_at, next_review_after))
 
     return {
         "vendor_id": vendor_id,
@@ -622,18 +615,6 @@ def verify_sitemap_locators(
     discovery_run_id: str | None = None,
     max_locators: int = 50,
 ) -> dict[str, Any]:
-    """Verify sitemap-discovered locator URLs through the ORDINARY verification.
-
-    A sitemap locator is only a URL with no authority and no content evidence
-    until it is fetched. This re-uses the exact verification primitives
-    ``discover_for_vendor`` uses — fetch, ``is_candidate_match`` /
-    ``semantic_match``, ``candidate_rank`` and ``candidate_record`` — so a
-    verified locator becomes a normal candidate that the existing eligibility and
-    promotion consumers handle unchanged, and the same materialization and
-    cross-run retrieval-independence gates apply. It introduces no new mutation
-    path and can never short-circuit verification. Output matches the
-    ``discover_for_vendor`` vendor-result shape.
-    """
     vendor_id = str(vendor["vendor_id"])
     discovered_at = discovered_at or datetime.now(UTC).isoformat().replace("+00:00", "Z")
     discovery_run_id = discovery_run_id or f"{vendor_id}-sitemap-{discovered_at}"
@@ -653,8 +634,6 @@ def verify_sitemap_locators(
         if best is not None:
             rank, source_type, semantic, rank_reason = best
         else:
-            # No source type matched: keep a record-keeping observation under the
-            # primary type so the rejected locator is still auditable.
             source_type = source_types[0]
             _matched, semantic = is_candidate_match(source_type, result)
             rank, rank_reason = candidate_rank(source_type, url, result, semantic)
@@ -665,9 +644,7 @@ def verify_sitemap_locators(
             "final_url": result.final_url,
             "content_type": result.content_type,
             "semantic_status": semantic.get("status"),
-            "verification_status": classify_status(
-                {"source_url": url, "source_type": source_type}, result, semantic
-            ),
+            "verification_status": classify_status({"source_url": url, "source_type": source_type}, result, semantic),
             "matched_terms": semantic.get("matched_terms", []),
             "candidate_rank": rank,
             "rank_reason": rank_reason,
@@ -733,22 +710,13 @@ def build_discovery_report(
     paths = vendor_paths(root)
     if vendor_limit is not None:
         paths = paths[:vendor_limit]
-
     vendor_results: list[dict[str, Any]] = []
     for path in paths:
         vendor = load_yaml(path)
-        result = discover_for_vendor(
-            vendor,
-            root=root,
-            fetcher=fetcher,
-            source_types=source_types,
-            max_urls_per_type=max_urls_per_type,
-            fetch_timeout=fetch_timeout,
-        )
+        result = discover_for_vendor(vendor, root=root, fetcher=fetcher, source_types=source_types, max_urls_per_type=max_urls_per_type, fetch_timeout=fetch_timeout)
         if write:
             write_discovery_outputs(result, root=root)
         vendor_results.append(result)
-
     return {
         "schema_version": "0.1.0",
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
@@ -788,14 +756,7 @@ def build_vendor_candidate_discovery_report(
     for candidate in candidates:
         if not candidate.get("candidate_vendor_id") or not candidate.get("official_domain_candidate"):
             continue
-        result = discover_for_vendor(
-            candidate_to_vendor(candidate),
-            root=root,
-            fetcher=fetcher,
-            source_types=source_types,
-            max_urls_per_type=max_urls_per_type,
-            fetch_timeout=fetch_timeout,
-        )
+        result = discover_for_vendor(candidate_to_vendor(candidate), root=root, fetcher=fetcher, source_types=source_types, max_urls_per_type=max_urls_per_type, fetch_timeout=fetch_timeout)
         result.update(
             {
                 "candidate_vendor_id": candidate.get("candidate_vendor_id"),
