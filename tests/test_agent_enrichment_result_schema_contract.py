@@ -104,6 +104,52 @@ def test_source_reference_schema_rejects_unpublished_status():
         jsonschema.validate(result, RESULT_SCHEMA)
 
 
+def test_entity_resolution_schema_is_optional_for_compact_default_results():
+    assert "entity_resolution" not in RESULT_SCHEMA["required"]
+    jsonschema.validate(_valid_result(), RESULT_SCHEMA)
+
+
+def test_entity_resolution_schema_accepts_compact_resolved_entity_status():
+    result = _valid_result()
+    result["entity_resolution"] = {
+        "status": "resolved",
+        "matched_entity_id": "example-vendor-ltd",
+        "candidate_entity_ids": [],
+        "review_required": False,
+        "reason_code": "identifier_exact_match",
+    }
+    jsonschema.validate(result, RESULT_SCHEMA)
+
+
+def test_entity_resolution_schema_accepts_compact_ambiguous_entity_status():
+    result = _valid_result()
+    result["entity_resolution"] = {
+        "status": "ambiguous",
+        "matched_entity_id": None,
+        "candidate_entity_ids": [
+            "example-vendor-us-inc",
+            "example-vendor-eu-limited",
+        ],
+        "review_required": True,
+        "reason_code": "brand_only_multiple_entities",
+    }
+    jsonschema.validate(result, RESULT_SCHEMA)
+
+
+def test_entity_resolution_schema_rejects_embedded_diagnostic_evidence():
+    result = _valid_result()
+    result["entity_resolution"] = {
+        "status": "resolved",
+        "matched_entity_id": "example-vendor-ltd",
+        "candidate_entity_ids": [],
+        "review_required": False,
+        "reason_code": "identifier_exact_match",
+        "official_source_ids": ["example-registry"],
+    }
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(result, RESULT_SCHEMA)
+
+
 def test_compatibility_fields_remain_required_for_existing_adapters():
     for field in ("match", "sources", "primary_source_by_type", "source_urls_by_type"):
         assert field in RESULT_SCHEMA["required"]
