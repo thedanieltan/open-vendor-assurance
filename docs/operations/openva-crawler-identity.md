@@ -26,6 +26,10 @@ OpenVA:
 - does not retain raw fetched documents by default;
 - uses fetched material as reference metadata and hashes, not for AI model training.
 
+## Verification taxonomy coverage
+
+Source verification may classify registered public sources across the full source-type vocabulary supported by the catalog schema. Broad semantic coverage is used only to reduce false `not_evaluated_unknown_source_type` results during verification; it does not by itself authorize automated discovery, promotion, or catalog materialization of those source types.
+
 ## Web Bot Auth
 
 When configured, OpenVA signs every SSRF-safe verification request with Ed25519 HTTP Message Signatures. The signature covers:
