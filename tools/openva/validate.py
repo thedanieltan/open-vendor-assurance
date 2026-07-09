@@ -13,6 +13,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from tools.openva import assurance_validation
 from tools.openva.advisory_wording import load_prohibited_terms as load_shared_prohibited_terms
 from tools.openva.advisory_wording import prohibited_terms_in_text
+from tools.openva.entity_evidence_quorum import evaluate_entity_evidence_quorum
 from tools.openva.indexes import build_indexes, check_generated_current, records_for
 from tools.openva.pack import verify_pack_integrity
 from tools.openva.paths import relative_repo_path
@@ -230,7 +231,7 @@ def validate_cross_references() -> list[str]:
     sources_by_id = {record["source_id"]: record for record in source_records}
     artifacts = {record["artifact_id"] for record in records_for("artifact")}
     legal_entities = {record["entity_id"]: record for record in records_for("legal_entity")}
-    entity_mentions = {record["mention_id"]: record for record in records_for("entity_mention")}
+    entity_mentions = {record["mention_id"] for record in records_for("entity_mention")}
     field_provenance = records_for_optional_kind("field_provenance")
 
     for source in source_records:
@@ -571,6 +572,17 @@ def validate_optional_source_ledgers(vendors: dict[str, dict[str, Any]], excepti
     return failures
 
 
+def validate_registration_number_quorum(path: str, legal_entity: dict[str, Any], source_records: list[dict[str, Any]]) -> list[str]:
+    """Require registration-number-bearing legal entities to pass the evidence quorum."""
+    if not legal_entity.get("registration_number"):
+        return []
+    decision = evaluate_entity_evidence_quorum(legal_entity, source_records)
+    if decision.passed:
+        return []
+    reasons = ",".join(decision.reason_codes) or "unknown"
+    return [f"{path}: registration_number evidence quorum failed: {reasons}"]
+
+
 def validate_quality_gates() -> list[str]:
     failures: list[str] = []
     vendors = {record["vendor_id"]: record for record in records_for("vendor")}
@@ -645,6 +657,7 @@ def validate_quality_gates() -> list[str]:
             expected_path = f"data/vendors/{legal_entity['vendor_id']}/legal_entities/{legal_entity['entity_id']}.yaml"
             if path != expected_path:
                 failures.append(f"{path}: entity_id/vendor_id do not match canonical path {expected_path}")
+        failures.extend(validate_registration_number_quorum(path, legal_entity, source_records))
 
     for mention in records_for("entity_mention"):
         path = mention["_openva_path"]
