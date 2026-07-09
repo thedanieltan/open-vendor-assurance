@@ -1,7 +1,105 @@
 {
-  "count": 0,
+  "count": 3,
   "generated_at": "1970-01-01T00:00:00Z",
-  "items": [],
+  "items": [
+    {
+      "_openva_path": "data/vendors/atlassian/legal_entities/atlassian-pty-ltd.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "atlassian-pty-ltd",
+      "jurisdiction": "AU",
+      "legal_name": "Atlassian Pty Ltd",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number stores the ABN as the ABN Lookup primary identifier; the same official registry source also reports ASIC ACN 102 443 916. This does not assert a single global Atlassian contracting party.",
+      "official_domains": [
+        "atlassian.com"
+      ],
+      "public_entrypoints": [
+        "https://abr.business.gov.au/ABN/View?abn=53102443916",
+        "https://www.atlassian.com/legal/privacy-policy"
+      ],
+      "registration_number": "53102443916",
+      "schema_version": "0.1.0",
+      "vendor_id": "atlassian",
+      "verification_source_ids": [
+        "atlassian-pty-ltd-abn-lookup",
+        "atlassian-privacy"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    },
+    {
+      "_openva_path": "data/vendors/canva/legal_entities/canva-pty-ltd.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "canva-pty-ltd",
+      "jurisdiction": "AU",
+      "legal_name": "Canva Pty Ltd",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number stores the ABN as the ABN Lookup primary identifier; the same official registry source also reports ASIC ACN 158 929 938. This does not assert a single global Canva contracting party.",
+      "official_domains": [
+        "canva.com"
+      ],
+      "public_entrypoints": [
+        "https://abr.business.gov.au/ABN/View?abn=80158929938",
+        "https://www.canva.com/policies/terms-of-use/"
+      ],
+      "registered_address": {
+        "address_lines": [
+          "110 Kippax St"
+        ],
+        "country": "AU",
+        "locality": "Surry Hills",
+        "postal_code": "2010",
+        "region": "NSW",
+        "source_ids": [
+          "canva-pty-ltd-terms-of-use"
+        ]
+      },
+      "registration_number": "80158929938",
+      "schema_version": "0.1.0",
+      "vendor_id": "canva",
+      "verification_source_ids": [
+        "canva-pty-ltd-abn-lookup",
+        "canva-pty-ltd-terms-of-use"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    },
+    {
+      "_openva_path": "data/vendors/wise/legal_entities/wise-payments-limited.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "wise-payments-limited",
+      "jurisdiction": "GB",
+      "legal_name": "Wise Payments Limited",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number is verified for Wise Payments Limited only and does not assert a global Wise contracting party across all jurisdictions.",
+      "official_domains": [
+        "wise.com"
+      ],
+      "public_entrypoints": [
+        "https://wise.com/gb/legal/terms-of-use-personal",
+        "https://find-and-update.company-information.service.gov.uk/company/07209813"
+      ],
+      "registered_address": {
+        "address_lines": [
+          "1st Floor Worship Square",
+          "65 Clifton Street"
+        ],
+        "country": "GB",
+        "locality": "London",
+        "postal_code": "EC2A 4JE",
+        "region": "England",
+        "source_ids": [
+          "wise-payments-limited-companies-house"
+        ]
+      },
+      "registration_number": "07209813",
+      "schema_version": "0.1.0",
+      "vendor_id": "wise",
+      "verification_source_ids": [
+        "wise-payments-limited-companies-house",
+        "wise-payments-limited-customer-agreement"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    }
+  ],
   "kind": "legal_entity",
   "schema_version": "0.1.0"
 }

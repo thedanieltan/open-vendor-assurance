@@ -35,6 +35,54 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/wise/sources/wise-payments-limited-companies-house.yaml",
+      "access_class": "public_web",
+      "entity_id": "wise-payments-limited",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-09T00:00:00Z",
+        "confidence": "high",
+        "observer": "human",
+        "publisher": "regulator"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "public_registry",
+      "source_id": "wise-payments-limited-companies-house",
+      "source_language": "en",
+      "source_type": "other_public_source",
+      "source_url": "https://find-and-update.company-information.service.gov.uk/company/07209813",
+      "summary_en": "UK Companies House registry entry for Wise Payments Limited, including company number 07209813 and registered office metadata.",
+      "summary_native": "UK Companies House registry entry for Wise Payments Limited, including company number 07209813 and registered office metadata.",
+      "title_en": "Wise Payments Limited Companies House registry entry",
+      "title_native": "Wise Payments Limited Companies House registry entry",
+      "vendor_id": "wise"
+    },
+    {
+      "_openva_path": "data/vendors/wise/sources/wise-payments-limited-customer-agreement.yaml",
+      "access_class": "public_web",
+      "entity_id": "wise-payments-limited",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-09T00:00:00Z",
+        "confidence": "high",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_legal_terms",
+      "source_id": "wise-payments-limited-customer-agreement",
+      "source_language": "en",
+      "source_type": "terms_of_service",
+      "source_url": "https://wise.com/gb/legal/terms-of-use-personal",
+      "summary_en": "Wise-published UK personal customer agreement naming Wise Payments Limited and stating company number 07209813.",
+      "summary_native": "Wise-published UK personal customer agreement naming Wise Payments Limited and stating company number 07209813.",
+      "title_en": "Wise Payments Limited UK personal customer agreement",
+      "title_native": "Wise Payments Limited UK personal customer agreement",
+      "vendor_id": "wise"
+    },
+    {
       "_openva_path": "data/vendors/wise/sources/wise-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -85,18 +133,58 @@
     "public_sources_only": true,
     "raw_documents_mirrored_by_default": false
   },
-  "legal_entities": [],
+  "legal_entities": [
+    {
+      "_openva_path": "data/vendors/wise/legal_entities/wise-payments-limited.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "wise-payments-limited",
+      "jurisdiction": "GB",
+      "legal_name": "Wise Payments Limited",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number is verified for Wise Payments Limited only and does not assert a global Wise contracting party across all jurisdictions.",
+      "official_domains": [
+        "wise.com"
+      ],
+      "public_entrypoints": [
+        "https://wise.com/gb/legal/terms-of-use-personal",
+        "https://find-and-update.company-information.service.gov.uk/company/07209813"
+      ],
+      "registered_address": {
+        "address_lines": [
+          "1st Floor Worship Square",
+          "65 Clifton Street"
+        ],
+        "country": "GB",
+        "locality": "London",
+        "postal_code": "EC2A 4JE",
+        "region": "England",
+        "source_ids": [
+          "wise-payments-limited-companies-house"
+        ]
+      },
+      "registration_number": "07209813",
+      "schema_version": "0.1.0",
+      "vendor_id": "wise",
+      "verification_source_ids": [
+        "wise-payments-limited-companies-house",
+        "wise-payments-limited-customer-agreement"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    }
+  ],
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 3,
     "entity_mention_count": 0,
-    "legal_entity_count": 0,
+    "legal_entity_count": 1,
     "source_types": [
-      "privacy_notice"
+      "other_public_source",
+      "privacy_notice",
+      "terms_of_service"
     ],
     "unavailable_source_count": 0,
     "unavailable_source_types": []
