@@ -2,6 +2,27 @@
 
 Contributions are welcome, but this repository uses strict evidence, source, and wording rules.
 
+## Fastest way to contribute a vendor or source
+
+Use the `Vendor catalog update` GitHub issue form when you want to:
+
+- suggest a new public vendor;
+- add a public source to an existing vendor;
+- correct a moved or broken public source URL;
+- correct factual public vendor/source metadata.
+
+A good submission includes:
+
+```text
+Vendor: Example Vendor / example-vendor
+Official website: https://vendor.example
+Public source URL: https://vendor.example/legal/dpa
+Requested change: Add this public DPA page to the catalog.
+Why authoritative: It is published on the vendor's official domain.
+```
+
+Humans and agents should submit the same evidence shape: vendor identity, official domain, public source URL, source role if known, and short factual context. Contributors do not need to know OpenVA's internal source schema.
+
 ## What this project accepts
 
 OpenVA accepts factual metadata about public vendor-published assurance materials, including:
@@ -74,9 +95,24 @@ When catalog records change, regenerate and commit the generated outputs. Adapte
 
 If you are not opening a pull request, use the `Vendor catalog update` GitHub issue form to add a vendor, add a public source, or correct factual catalog metadata.
 
-The issue is an intake request, not canonical catalog data. You do not need to classify source types, artifact types, source language, access class, or rights class. The contribution intake agent classifies metadata during PR preparation, comments its checks on the issue, and opens a reviewed `Catalog:` PR only for low-risk existing-vendor source updates.
+The issue is an intake request, not canonical catalog data. You do not need to classify source types, artifact types, source language, access class, or rights class. The contribution intake agent classifies metadata during PR preparation, comments its checks on the issue, and opens a machine-gated `Catalog:` PR only for low-risk existing-vendor source updates.
 
 Use the `Scope or boundary question` issue form first when you are unsure whether a source or request is in scope.
+
+## Human and agent contribution boundary
+
+Human and agent contributions are welcome, but neither path writes catalog truth directly.
+
+```text
+issue or agent request
+→ intake / verification
+→ catalog or candidate PR
+→ validation, catalog guard, generated-output checks, release gates
+→ controlled merge path
+→ active catalog
+```
+
+Low-risk public-source updates can proceed through machine gates without default human review. Ambiguous, gated, private, advisory, conflicting, or unsupported submissions are blocked or routed as non-canonical evidence instead of being merged by assumption.
 
 ## Submitting source claims
 
@@ -160,4 +196,4 @@ Catalog: add <region> vendor batch <N>
 Catalog: fix <vendor-id> catalog metadata
 ```
 
-Catalog-agent PRs are limited to small metadata-only batches, normally three to five vendors, and must not modify substrate, schema, workflow, policy, governance, or observation tooling unless a maintainer explicitly assigns that work.
+Catalog-agent PRs are limited to small metadata-only batches, normally three to five vendors, and must not modify substrate, schema, workflow, policy, governance, or observation tooling unless an assigned work package explicitly authorizes that work.
