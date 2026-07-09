@@ -55,6 +55,54 @@
       "title_en": "PayPal Data Protection Terms",
       "title_native": "PayPal Data Protection Terms",
       "vendor_id": "paypal"
+    },
+    {
+      "_openva_path": "data/vendors/paypal/sources/paypal-holdings-inc-sec-edgar.yaml",
+      "access_class": "public_web",
+      "entity_id": "paypal-holdings-inc",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-09T00:00:00Z",
+        "confidence": "high",
+        "observer": "human",
+        "publisher": "regulator"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "public_authority",
+      "source_id": "paypal-holdings-inc-sec-edgar",
+      "source_language": "en",
+      "source_type": "other_public_source",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1633917",
+      "summary_en": "SEC EDGAR public company page for PayPal Holdings, Inc., using CIK 0001633917 as the public authority identifier.",
+      "summary_native": "SEC EDGAR public company page for PayPal Holdings, Inc., using CIK 0001633917 as the public authority identifier.",
+      "title_en": "PayPal Holdings, Inc. SEC EDGAR company page",
+      "title_native": "PayPal Holdings, Inc. SEC EDGAR company page",
+      "vendor_id": "paypal"
+    },
+    {
+      "_openva_path": "data/vendors/paypal/sources/paypal-holdings-inc-terms.yaml",
+      "access_class": "public_web",
+      "entity_id": "paypal-holdings-inc",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-09T00:00:00Z",
+        "confidence": "medium",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_legal_terms",
+      "source_id": "paypal-holdings-inc-terms",
+      "source_language": "en",
+      "source_type": "terms_of_service",
+      "source_url": "https://www.paypal.com/us/legalhub/home",
+      "summary_en": "PayPal-published legal or terms page metadata reference used as a distinct vendor-controlled corroborating source for the PayPal legal surface.",
+      "summary_native": "PayPal-published legal or terms page metadata reference used as a distinct vendor-controlled corroborating source for the PayPal legal surface.",
+      "title_en": "PayPal public legal terms page",
+      "title_native": "PayPal public legal terms page",
+      "vendor_id": "paypal"
     }
   ],
   "changes": [
@@ -84,18 +132,48 @@
     "public_sources_only": true,
     "raw_documents_mirrored_by_default": false
   },
-  "legal_entities": [],
+  "legal_entities": [
+    {
+      "_openva_path": "data/vendors/paypal/legal_entities/paypal-holdings-inc.yaml",
+      "catalog_status": "canonical",
+      "entity_id": "paypal-holdings-inc",
+      "identifier_authority": "U.S. Securities and Exchange Commission",
+      "identifier_authority_url": "https://www.sec.gov/edgar",
+      "identifier_scheme": "US_SEC_CIK",
+      "jurisdiction": "US",
+      "legal_name": "PayPal Holdings, Inc.",
+      "not_advice": true,
+      "notes": "Scoped verified legal-entity record. Registration number stores the SEC CIK public-company identifier for PayPal Holdings, Inc.; it does not assert a Delaware state entity number or a universal PayPal contracting party across all jurisdictions.",
+      "official_domains": [
+        "paypal.com"
+      ],
+      "public_entrypoints": [
+        "https://www.sec.gov/edgar/browse/?CIK=1633917",
+        "https://www.paypal.com/us/legalhub/home"
+      ],
+      "registration_number": "0001633917",
+      "schema_version": "0.1.0",
+      "vendor_id": "paypal",
+      "verification_source_ids": [
+        "paypal-holdings-inc-sec-edgar",
+        "paypal-holdings-inc-terms"
+      ],
+      "verified_observed_at": "2026-07-09T00:00:00Z"
+    }
+  ],
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
     "artifact_count": 1,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 3,
     "entity_mention_count": 0,
-    "legal_entity_count": 0,
+    "legal_entity_count": 1,
     "source_types": [
-      "dpa"
+      "dpa",
+      "other_public_source",
+      "terms_of_service"
     ],
     "unavailable_source_count": 0,
     "unavailable_source_types": []

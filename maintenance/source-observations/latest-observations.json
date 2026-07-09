@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-09T13:05:34Z",
+  "generated_at": "2026-07-09T13:28:39Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 630,
-    "observed_this_run": 6,
-    "carried_forward": 624
+    "source_count": 666,
+    "observed_this_run": 36,
+    "carried_forward": 630
   },
   "sources": [
     {
@@ -84,6 +84,44 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "adobe-inc-sec-edgar",
+      "vendor_id": "adobe",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=796343",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "adobe-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=796343",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "adobe-inc-terms",
+      "vendor_id": "adobe",
+      "source_url": "https://www.adobe.com/legal/terms.html",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "adobe-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.adobe.com/legal/terms.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:190a534d3d2b9453101837e7f0a32964384dfddba6e8f7d414e94d49ffe2fe91",
+      "normalized_text_sample_sha256": "sha256:eb9e1a571cafbc4ccc254c09dc857fe7adb417ce3aa585d8ceb6dd85ef6ebd7b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "adobe-privacy",
@@ -217,6 +255,44 @@
         "reason": "change_class_access_changed"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "automatic-data-processing-inc-sec-edgar",
+      "vendor_id": "adp",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=8670",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "automatic-data-processing-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=8670",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "automatic-data-processing-inc-terms",
+      "vendor_id": "adp",
+      "source_url": "https://www.adp.com/legal.aspx",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "automatic-data-processing-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.adp.com/legal.aspx",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8d10dd426830e4f1d9baf521e8121389876cdeb220f948cee49e0e0155fe0c8c",
+      "normalized_text_sample_sha256": "sha256:13efcb87577df9034ebe6ba839ad8931ef1882fc492fcc7987afe2be34e2cd9b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "adyen-subprocessors",
@@ -1036,6 +1112,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "asana-inc-sec-edgar",
+      "vendor_id": "asana",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1477720",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "asana-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1477720",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "asana-inc-terms",
+      "vendor_id": "asana",
+      "source_url": "https://asana.com/terms",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "asana-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://asana.com/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e144dc4dcc2623b0efa5c728c15b1fb2ad6a97c6c24e817225dda399eaa602db",
+      "normalized_text_sample_sha256": "sha256:1eb98b9035122f4418baf1bdd840b70664bbb22c66b24d79cae715de69fc8782",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "asana-privacy",
       "vendor_id": "asana",
       "source_url": "https://asana.com/privacy",
@@ -1794,6 +1908,44 @@
         "reason": "source_health_gated"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "box-inc-sec-edgar",
+      "vendor_id": "box",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1372612",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "box-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1372612",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "box-inc-terms",
+      "vendor_id": "box",
+      "source_url": "https://www.box.com/legal/termsofservice",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "box-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.box.com/legal/termsofservice",
+      "http_status": 403,
+      "source_health_status": "gated",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:517af0c7e4574b3a11c3322315fe379f8df5d6b6964ae9409bb4f5790ff8676a",
+      "normalized_text_sample_sha256": "sha256:ae0b26c68939e8214056c2517af3b5091f1c674c8aef5f1e1fbab7804a78829b",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_gated"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "box-privacy",
@@ -2800,7 +2952,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "datadog-inc-terms",
@@ -2819,7 +2971,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "datadog-privacy",
@@ -3031,6 +3183,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "digitalocean-holdings-inc-sec-edgar",
+      "vendor_id": "digitalocean",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1582961",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "digitalocean-holdings-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1582961",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "digitalocean-holdings-inc-terms",
+      "vendor_id": "digitalocean",
+      "source_url": "https://www.digitalocean.com/legal/terms-of-service-agreement",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "digitalocean-holdings-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.digitalocean.com/legal/terms-of-service-agreement",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d1859a747c23614af6c855adfe6136e73f544a5600415f3571b9af4187084d98",
+      "normalized_text_sample_sha256": "sha256:ec5281a02f41961ce03b841f0b9e4221be93012c52c76e8ccc613764ce54b8f9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "digitalocean-privacy",
       "vendor_id": "digitalocean",
       "source_url": "https://www.digitalocean.com/legal/privacy-policy",
@@ -3219,6 +3409,44 @@
         "reason": "change_class_material_possible"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "docusign-inc-sec-edgar",
+      "vendor_id": "docusign",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1261333",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "docusign-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1261333",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "docusign-inc-terms",
+      "vendor_id": "docusign",
+      "source_url": "https://www.docusign.com/legal/terms-and-conditions",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "docusign-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.docusign.com/legal/terms-and-conditions",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c7374b8cb2169b55ebf1c295b9902e42e6fce1a3aea7706499ca633f5d6c495d",
+      "normalized_text_sample_sha256": "sha256:9b82aadeb582ea2ef4099b9fb8d213d85cbb13db7b8635fa77ccf549849d3329",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "docusign-privacy",
@@ -3865,6 +4093,44 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "freshworks-inc-sec-edgar",
+      "vendor_id": "freshworks",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1544522",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "freshworks-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1544522",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "freshworks-inc-terms",
+      "vendor_id": "freshworks",
+      "source_url": "https://www.freshworks.com/terms/",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "freshworks-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.freshworks.com/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:acc50bd91f4b9d8d40c19261ce50835e753792af9f9c047ae6f813556ee1051c",
+      "normalized_text_sample_sha256": "sha256:1c4852584b304bd74fd7a95b6154b15640bc6ff58a7f0bb1512febbb40569b87",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "freshworks-privacy",
@@ -5140,6 +5406,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "hubspot-inc-sec-edgar",
+      "vendor_id": "hubspot",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1404655",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "hubspot-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1404655",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "hubspot-inc-terms",
+      "vendor_id": "hubspot",
+      "source_url": "https://legal.hubspot.com/legal-stuff",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "hubspot-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://legal.hubspot.com/legal-center",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:96eb20b2813df703c53c28d93574f0c6ec029426ed6f6d529785f09a2e037c82",
+      "normalized_text_sample_sha256": "sha256:3c6717fc1ac7488a18f758b02aa1e6952c7397eae24acd326a97f6ade9cc50b4",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "hubspot-privacy",
       "vendor_id": "hubspot",
       "source_url": "https://legal.hubspot.com/privacy-policy",
@@ -5499,6 +5803,44 @@
         "reason": "source_health_unreachable"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "international-business-machines-corporation-sec-edgar",
+      "vendor_id": "ibm-cloud",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=51143",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "international-business-machines-corporation-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=51143",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "international-business-machines-corporation-terms",
+      "vendor_id": "ibm-cloud",
+      "source_url": "https://www.ibm.com/legal",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "international-business-machines-corporation-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.ibm.com/legal",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e3f296c1a6e3aabbe7b27533c4eca6e9fd2dbef906ba4728a565aefa53732cec",
+      "normalized_text_sample_sha256": "sha256:4d57a7605ed5b50bfa3ced15929766731932f777110c90feaaa55deb23530608",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "insider-privacy-notice",
@@ -6071,6 +6413,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "microsoft-corporation-sec-edgar",
+      "vendor_id": "microsoft",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=789019",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "microsoft-corporation-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=789019",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "microsoft-corporation-terms",
+      "vendor_id": "microsoft",
+      "source_url": "https://www.microsoft.com/en-us/legal/terms-of-use",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "microsoft-corporation-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.microsoft.com/en-us/legal/terms-of-use",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4ef68d701e347915272dedbbe899822d13d76e63adbcc017697346ded0846687",
+      "normalized_text_sample_sha256": "sha256:c70cecdb57aae92c9179944780167edc6ebf36ede764ebde535cfe3e307890e7",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "microsoft-dpa",
       "vendor_id": "microsoft",
       "source_url": "https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA",
@@ -6565,6 +6945,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "mongodb-inc-sec-edgar",
+      "vendor_id": "mongodb",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1441816",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "mongodb-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1441816",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "mongodb-inc-terms",
+      "vendor_id": "mongodb",
+      "source_url": "https://www.mongodb.com/legal/terms-of-use",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "mongodb-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.mongodb.com/legal/terms-of-use",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ba08e4d66755719938aafa0950af209473d7ddae26114b7ecc823b7517d8dd5e",
+      "normalized_text_sample_sha256": "sha256:6bbe291e833622aa47952aa64cee373c0b7c3bee1e7c8f5109bb2211dc1a4f10",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "mongodb-privacy",
       "vendor_id": "mongodb",
       "source_url": "https://www.mongodb.com/legal/privacy-policy",
@@ -6962,6 +7380,44 @@
         "reason": "source_health_unreachable"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "okta-inc-sec-edgar",
+      "vendor_id": "okta",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1660134",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "okta-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1660134",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "okta-inc-terms",
+      "vendor_id": "okta",
+      "source_url": "https://www.okta.com/terms-of-use/",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "okta-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.okta.com/terms-of-use/",
+      "http_status": 404,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5853ba59c5e4081ba593dd5e3345625f618044661574eeb806ec6a6131eff299",
+      "normalized_text_sample_sha256": "sha256:e3f4ca3d37c89739df7040101615d3a2abbac7a48fc822d688b19c389129c3cb",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "okta-privacy",
@@ -7363,6 +7819,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "oracle-corporation-sec-edgar",
+      "vendor_id": "oracle-cloud",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1341439",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "oracle-corporation-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1341439",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "oracle-corporation-terms",
+      "vendor_id": "oracle-cloud",
+      "source_url": "https://www.oracle.com/legal/terms.html",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "oracle-corporation-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.oracle.com/legal/terms/",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:40c3e1ee3577d2961cb0905e649b122d8ea1fe3e93b4c9b3989f54b430527d58",
+      "normalized_text_sample_sha256": "sha256:89b6fb6e873454a1cf75917a2536169e957c752990f13287ed0f5b4b792df37e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "pagerduty-compliance",
       "vendor_id": "pagerduty",
       "source_url": "https://www.pagerduty.com/security/compliance/",
@@ -7570,6 +8064,44 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "paypal-holdings-inc-sec-edgar",
+      "vendor_id": "paypal",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1633917",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "paypal-holdings-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1633917",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "paypal-holdings-inc-terms",
+      "vendor_id": "paypal",
+      "source_url": "https://www.paypal.com/us/legalhub/home",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "paypal-holdings-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.paypal.com/us/legalhub/paypal/home",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5b6d9a4cca273070548e4e293bd78f5adfcaad4803d00d6b6443816d5e3191e2",
+      "normalized_text_sample_sha256": "sha256:a8ef29b7f8c0c9fbfee25014b4a59cb5624f72d6dd23fd111d200ab8700cdae0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "personio-dpa",
@@ -8085,6 +8617,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "intuit-inc-sec-edgar",
+      "vendor_id": "quickbooks",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=896878",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "intuit-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=896878",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "intuit-inc-terms",
+      "vendor_id": "quickbooks",
+      "source_url": "https://www.intuit.com/legal/terms/",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "intuit-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.intuit.com/legal/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:42a342bb6e0cbe4128dffd9329476ea77876c14b5a951757b58fee0228ae754a",
+      "normalized_text_sample_sha256": "sha256:3e4479d669881ae6edec83291f35c43f6812eeb3806ea3f106319f8531c1a7b5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "quickbooks-compliance",
       "vendor_id": "quickbooks",
       "source_url": "https://security.intuit.com/security-practices/",
@@ -8538,7 +9108,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "salesforce-inc-sec-edgar",
@@ -8557,7 +9127,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "salesforce-privacy",
@@ -9241,7 +9811,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "servicenow-inc-terms",
@@ -9260,7 +9830,7 @@
         "required": true,
         "reason": "source_health_bot_protected"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "servicenow-privacy",
@@ -9660,6 +10230,44 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "snowflake-inc-sec-edgar",
+      "vendor_id": "snowflake",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1640147",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "snowflake-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1640147",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "snowflake-inc-terms",
+      "vendor_id": "snowflake",
+      "source_url": "https://www.snowflake.com/legal/terms-of-service/",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "snowflake-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.snowflake.com/en/legal/terms-of-service/",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7faae0fe375c123a6502d9cd37e9d1721ee889caaa7f39e1fbe4ec5179e4bb2d",
+      "normalized_text_sample_sha256": "sha256:3a197dab633a7f09b48f8f5cc97a04ac222b825aa08d10db48a152a5662d24fc",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "snowflake-privacy",
@@ -10707,6 +11315,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "twilio-inc-sec-edgar",
+      "vendor_id": "twilio",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1447669",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "twilio-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1447669",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "twilio-inc-terms",
+      "vendor_id": "twilio",
+      "source_url": "https://www.twilio.com/en-us/legal/tos",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "twilio-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.twilio.com/en-us/legal/tos",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7a4463c7b69adff07ea2029d2e4351c386d9d22508860f4e71625bbd8eb91d0f",
+      "normalized_text_sample_sha256": "sha256:c093d6436be610f3079001e4bbfbc850182265dda1ce5815598626ae2aa8e1f2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "twilio-privacy",
       "vendor_id": "twilio",
       "source_url": "https://www.twilio.com/en-us/legal/privacy",
@@ -11427,6 +12073,44 @@
         "reason": "source_health_unreachable"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "workday-inc-sec-edgar",
+      "vendor_id": "workday",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=1327811",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "workday-inc-sec-edgar-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=1327811",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "workday-inc-terms",
+      "vendor_id": "workday",
+      "source_url": "https://www.workday.com/en-us/legal/terms-and-conditions.html",
+      "observed_at": "2026-07-09T13:28:39Z",
+      "observation_id": "workday-inc-terms-2026-07-09-pr582-bulk-verified-legal-entity-backfill-1",
+      "final_url": "https://www.workday.com/en-us/legal/terms-and-conditions.html",
+      "http_status": 404,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7d83e9abc70663dcab41e3abdd385aac292f3583991e0e124d973c9aff784912",
+      "normalized_text_sample_sha256": "sha256:074530c43a6220f767470cd2ac492fc2b1a52bbd21ac45ae2ff5c9a700eee110",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "workday-privacy",
