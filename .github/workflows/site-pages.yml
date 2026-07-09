@@ -28,6 +28,10 @@ jobs:
         run: pip install -e ".[dev]"
       - name: Validate records
         run: python -m tools.openva.validate validate
+      - name: Rebuild generated catalog indexes for site publish
+        run: |
+          set -euo pipefail
+          python -m tools.openva.validate build-indexes
       - name: Download latest source health snapshot
         env:
           GH_TOKEN: ${{ github.token }}
