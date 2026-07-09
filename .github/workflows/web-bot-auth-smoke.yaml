@@ -1,0 +1,187 @@
+name: web-bot-auth-smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-bot-auth-smoke
+  cancel-in-progress: false
+
+jobs:
+  web-bot-auth-smoke:
+    name: web-bot-auth-smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      OPENVA_WEB_BOT_AUTH_DIRECTORY_URL: ${{ secrets.OPENVA_WEB_BOT_AUTH_DIRECTORY_URL }}
+      OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON: ${{ secrets.OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON }}
+      OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64: ${{ secrets.OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64 }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Validate public signed directory endpoint
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import json
+          import os
+          import urllib.error
+          import urllib.request
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          REQUIRED = (
+              "OPENVA_WEB_BOT_AUTH_DIRECTORY_URL",
+              "OPENVA_WEB_BOT_AUTH_PUBLIC_JWK_JSON",
+              "OPENVA_WEB_BOT_AUTH_PRIVATE_KEY_PEM_B64",
+          )
+          timestamp = datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
+          missing = [name for name in REQUIRED if not os.environ.get(name, "").strip()]
+          if missing:
+              print(f"timestamp={timestamp}")
+              print("directory_result=fail")
+              print("missing_required_secret_names=" + ",".join(missing))
+              print("secret_logging=no secret values printed; only missing secret names were reported")
+              raise SystemExit(2)
+
+          url = os.environ["OPENVA_WEB_BOT_AUTH_DIRECTORY_URL"].strip()
+          request = urllib.request.Request(
+              url,
+              method="GET",
+              headers={"User-Agent": "OpenVA-WebBotAuth-Smoke"},
+          )
+          try:
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  status = response.status
+                  headers = response.headers
+                  body = response.read(100_000)
+          except urllib.error.HTTPError as exc:
+              status = exc.code
+              headers = exc.headers
+              body = exc.read(100_000)
+
+          content_type = headers.get_content_type()
+          has_signature = bool(headers.get("Signature"))
+          has_signature_input = bool(headers.get("Signature-Input"))
+          jwks_ok = False
+          no_private_d = False
+          try:
+              jwks = json.loads(body.decode("utf-8"))
+              keys = jwks.get("keys")
+              if isinstance(keys, list) and keys:
+                  no_private_d = all(isinstance(key, dict) and "d" not in key for key in keys)
+                  jwks_ok = all(
+                      isinstance(key, dict)
+                      and key.get("kty") == "OKP"
+                      and key.get("crv") == "Ed25519"
+                      and isinstance(key.get("x"), str)
+                      and len(base64.urlsafe_b64decode(key["x"] + "=" * (-len(key["x"]) % 4))) == 32
+                      for key in keys
+                  )
+          except Exception:
+              jwks_ok = False
+
+          passed = (
+              status == 200
+              and content_type == "application/http-message-signatures-directory+json"
+              and has_signature
+              and has_signature_input
+              and jwks_ok
+              and no_private_d
+          )
+          lines = [
+              "## Web Bot Auth directory smoke",
+              "",
+              f"- timestamp: `{timestamp}`",
+              f"- directory status: `{status}`",
+              f"- directory content type: `{content_type}`",
+              f"- Signature header present: `{has_signature}`",
+              f"- Signature-Input header present: `{has_signature_input}`",
+              f"- public JWKS valid: `{jwks_ok}`",
+              f"- public JWKS private `d` member absent: `{no_private_d}`",
+              f"- result: `{'pass' if passed else 'fail'}`",
+              "- secret logging: no secret values printed; no artifacts uploaded",
+          ]
+          summary = "\n".join(lines) + "\n"
+          print(summary)
+          if os.environ.get("GITHUB_STEP_SUMMARY"):
+              with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as handle:
+                  handle.write(summary + "\n")
+          raise SystemExit(0 if passed else 1)
+          PY
+      - name: Run focused Web Bot Auth tests
+        run: python -m pytest -q tests/test_web_bot_auth.py
+      - name: Run signed crawltest smoke
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import contextlib
+          import io
+          import os
+          import urllib.error
+          import urllib.request
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          from tools.openva.web_bot_auth import signed_headers_for_url
+
+          timestamp = datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
+          target = "https://crawltest.com/cdn-cgi/web-bot-auth"
+          with contextlib.redirect_stderr(io.StringIO()):
+              signed_headers = signed_headers_for_url(target)
+          required_headers = {"Signature-Agent", "Signature-Input", "Signature"}
+          missing = sorted(required_headers - set(signed_headers))
+          if missing:
+              print(f"timestamp={timestamp}")
+              print("crawltest_result=fail")
+              print("missing_signed_header_names=" + ",".join(missing))
+              print("secret_logging=no secret values printed; no artifacts uploaded")
+              raise SystemExit(2)
+
+          headers = {"User-Agent": "OpenVA-Discovery", **signed_headers}
+          request = urllib.request.Request(target, method="GET", headers=headers)
+          try:
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  status = response.status
+                  response.read(100_000)
+          except urllib.error.HTTPError as exc:
+              status = exc.code
+              exc.read(100_000)
+
+          passed = status in {200, 401}
+          if status == 400:
+              reason = "malformed_or_missing_signature"
+          elif status == 401:
+              reason = "unknown_key_before_cloudflare_approval"
+          elif status == 200:
+              reason = "accepted_after_cloudflare_approval"
+          else:
+              reason = "unexpected_status"
+
+          lines = [
+              "## Web Bot Auth crawltest smoke",
+              "",
+              f"- timestamp: `{timestamp}`",
+              f"- crawltest status: `{status}`",
+              f"- result: `{'pass' if passed else 'fail'}`",
+              f"- interpretation: `{reason}`",
+              "- secret logging: no secret values printed; no artifacts uploaded",
+          ]
+          summary = "\n".join(lines) + "\n"
+          print(summary)
+          if os.environ.get("GITHUB_STEP_SUMMARY"):
+              with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as handle:
+                  handle.write(summary + "\n")
+          raise SystemExit(0 if passed else 1)
+          PY
