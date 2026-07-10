@@ -211,6 +211,26 @@ DISCLAIMER.md
 LICENSE
 ```
 
+## Contributing vendor/source updates
+
+Use the `Vendor catalog update` GitHub issue form when you want to suggest a vendor, add a public source, or correct factual public-source metadata.
+
+A useful human or agent submission has this shape:
+
+```text
+Vendor: Example Vendor / example-vendor
+Official website: https://vendor.example
+Public source URL: https://vendor.example/legal/dpa
+Requested change: Add this public DPA page to the catalog.
+Why authoritative: It is published on the vendor's official domain.
+```
+
+Contributors do not need to classify OpenVA schema fields such as source type, artifact type, access class, rights class, or language. OpenVA automation classifies metadata during intake and then routes eligible changes through validation, catalog guards, generated-output checks, release gates, and controlled merge lanes.
+
+Do not submit private agreements, gated trust-center exports, SOC reports, ISO certificates, screenshots, copied document text, customer-specific terms, credentials, or anything that requires login, form submission, customer status, NDA, sales approval, support-ticket access, or anti-bot bypass.
+
+Low-risk public-source updates can proceed through machine gates without default human review. Ambiguous, gated, private, advisory, conflicting, or unsupported submissions fail closed as non-canonical evidence rather than being merged by assumption.
+
 ## Scope
 
 OpenVA is:
