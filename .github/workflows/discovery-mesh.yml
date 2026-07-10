@@ -16,18 +16,21 @@ on:
   schedule:
     # Daily at 03:37 UTC / 11:37 Asia/Singapore. The entire eligible catalog is sharded.
     - cron: "37 3 * * *"
+  pull_request:
+    types: [closed]
 
 permissions:
-  actions: read
+  actions: write
   contents: write
   pull-requests: write
 
 concurrency:
-  group: discovery-mesh-${{ github.ref }}
+  group: discovery-mesh-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
   plan:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
@@ -177,11 +180,10 @@ jobs:
           git push origin "$BRANCH"
           echo "has_changes=true" >> "$GITHUB_OUTPUT"
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
-          echo "run_key=$RUN_KEY" >> "$GITHUB_OUTPUT"
       - name: Open candidate-intake PR and enable native auto-merge
         if: steps.intake.outputs.has_changes == 'true'
         env:
-          # Workflow-triggering token so PR validation and the intake bridge fire.
+          # Workflow-triggering token so PR validation and this workflow's merged-PR handoff fire.
           GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
           BRANCH: ${{ steps.intake.outputs.branch }}
         run: |
@@ -194,7 +196,7 @@ jobs:
 
           This PR stages only verified noncanonical candidate-source records, the reviewed promotion plan and viability report, and vendor-identity signal evidence.
 
-          It does not write canonical sources or vendors. After this intake PR merges, the dedicated bridge dispatches \`candidate-promotion-pr.yml\`, which remains the sole canonical mutation authority.
+          It does not write canonical sources or vendors. After this intake PR merges, the same discovery-mesh workflow dispatches \`candidate-promotion-pr.yml\`, which remains the sole canonical mutation authority.
 
           Catalog breadth was not capped. The entire eligible catalog was assigned across \`${{ needs.plan.outputs.shard_count }}\` shards.
           EOF
@@ -215,3 +217,68 @@ jobs:
             maintenance/generated/*discovery-mesh*.json
           if-no-files-found: warn
           retention-days: 30
+
+  promotion-handoff:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'agent-discovery-mesh-intake-') &&
+      github.event.pull_request.title == 'Ops: stage discovery mesh candidates'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Resolve exact merged discovery mesh plan
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          gh pr diff "$PR_NUMBER" --name-only \
+            | grep '^maintenance/generated/strict-growth-discovery-mesh-.*promotion-plan-.*\.json$' \
+            | sort -u > discovery-mesh-plan-paths.txt || true
+          COUNT=$(wc -l < discovery-mesh-plan-paths.txt | tr -d ' ')
+          if [ "$COUNT" = "0" ]; then
+            echo "No discovery mesh promotion plan merged; nothing to dispatch."
+            echo "dispatch=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$COUNT" != "1" ]; then
+            echo "Expected exactly one discovery mesh promotion plan, found $COUNT" >&2
+            cat discovery-mesh-plan-paths.txt >&2
+            exit 1
+          fi
+          PLAN_PATH=$(cat discovery-mesh-plan-paths.txt)
+          test -f "$PLAN_PATH" || { echo "Merged promotion plan missing: $PLAN_PATH" >&2; exit 1; }
+          ACTION_COUNT=$(python -c 'import json,sys; print(len(json.load(open(sys.argv[1], encoding="utf-8")).get("actions", []) or []))' "$PLAN_PATH")
+          case "$ACTION_COUNT" in *[!0-9]*) echo "Invalid action count" >&2; exit 1 ;; esac
+          if [ "$ACTION_COUNT" = "0" ]; then
+            echo "Discovery mesh plan contains zero viable actions; no canonical mutation dispatch."
+            echo "dispatch=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "dispatch=true" >> "$GITHUB_OUTPUT"
+          echo "plan_path=$PLAN_PATH" >> "$GITHUB_OUTPUT"
+          echo "action_count=$ACTION_COUNT" >> "$GITHUB_OUTPUT"
+      - name: Dispatch existing canonical mutation workflow
+        if: steps.plan.outputs.dispatch == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLAN_PATH: ${{ steps.plan.outputs.plan_path }}
+        run: |
+          set -euo pipefail
+          gh workflow run candidate-promotion-pr.yml \
+            -f promotion_plan_mode=reviewed-path \
+            -f promotion_plan_path="$PLAN_PATH" \
+            -f pr_title="Catalog: apply reviewed candidate source promotion"
+          {
+            echo "### Discovery mesh promotion handoff"
+            echo ""
+            echo "- Plan: \`$PLAN_PATH\`"
+            echo "- Actions: \`${{ steps.plan.outputs.action_count }}\`"
+            echo "- Mutation authority: \`candidate-promotion-pr.yml\`"
+            echo "- Catalog breadth cap: none"
+          } >> "$GITHUB_STEP_SUMMARY"
