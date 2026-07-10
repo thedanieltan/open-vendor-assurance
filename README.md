@@ -1,6 +1,6 @@
 # Open Vendor Assurance
 
-Open Vendor Assurance (OpenVA) is a public-source, metadata-first resolver for vendor-published assurance references.
+Open Vendor Assurance (OpenVA) is a public-source-only, metadata-first resolver for vendor-published assurance references.
 
 **Use OpenVA in your browser:** https://thedanieltan.github.io/open-vendor-assurance/
 
@@ -29,7 +29,7 @@ business_entity_name
 registration_number
 ```
 
-Export the review CSV when matching is complete.
+Export the review workbook or CSV when matching is complete.
 
 ### MCP users — copy/paste install
 
@@ -137,13 +137,11 @@ There is no Google Workspace Marketplace add-on yet.
 
 ## Start here
 
-For non-dev users:
+For non-developer users:
 
 ```text
 Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
-GitHub Releases
-docs/release-downloads.md
-docs/releases/v0.1-closure.md
+docs/continuous-publication.md
 openva-inventory-template.csv
 openva-sample-inventory.csv
 ```
@@ -165,16 +163,13 @@ SECURITY.md
 For consumers and downstream importers:
 
 ```text
-GitHub Releases
-docs/release-downloads.md
+docs/continuous-publication.md
+docs/compatibility-policy.md
 docs/local-compiler.md
 docs/agent-export-contract.md
 docs/adapter-contract.md
 docs/adapter-output-contract.md
 docs/consumer-conformance-fixtures.md
-docs/versioning-policy.md
-docs/release-policy.md
-docs/release-checklist.md
 openva-pack.json
 indexes/
 schemas/openva/
@@ -184,8 +179,8 @@ For agent-composed use:
 
 ```text
 docs/agent-workspace-composition.md   how an agent composes OpenVA with its own workspace connector
-docs/agent-integrations.md            MCP (stdio + Streamable HTTP), HTTP, and framework adapters
-integrations/mcp/openva_mcp/          read-only MCP server (stdio + Streamable HTTP)
+docs/agent-integrations.md            MCP, HTTP, and framework adapters
+integrations/mcp/openva_mcp/          read-only MCP server
 ```
 
 OpenVA's preferred distribution model is agent-composed: a user's existing agent reads the workspace through the connector it already controls, sends OpenVA only bounded vendor identities through read-only HTTP/MCP tools, and writes source-reference results back itself. OpenVA never needs workspace credentials and does not require direct access to Google Drive, Microsoft 365, Notion, Jira, Slack, or another workspace.
@@ -196,20 +191,37 @@ For spreadsheet users without a capable agent, the Google Sheets client is a sec
 integrations/google-sheets/      Google Sheets client over the /v1/enrich API
 ```
 
-The Google Sheets integration is a bound Apps Script client that enriches vendor rows against a configured public-read OpenVA endpoint. It consumes the existing `/v1/enrich` API, embeds no API key, and writes stable `openva_*` reference columns back into a sheet. The current release requires manual installation into a bound Apps Script project; a zero-install Workspace add-on is a future objective rather than a current capability. Results are public-source references from the service's loaded snapshot, not advice or live verification.
+The Google Sheets integration enriches vendor rows against a configured public-read OpenVA endpoint, embeds no API key, and writes stable `openva_*` reference columns back into a sheet. It currently requires manual installation into a bound Apps Script project. Results are public-source references from the service's loaded snapshot, not advice or live verification.
 
-For public relaunch readiness:
+For public operation and governance:
 
 ```text
 docs/public-launch-checklist.md
+docs/continuous-publication.md
+docs/compatibility-policy.md
 docs/roadmap.md
 docs/resolver-first-closeout.md
-docs/releases/v0.1-closure.md
 docs/triage-policy.md
 docs/first-good-issue-policy.md
+docs/consumer-conformance-fixtures.md
 DISCLAIMER.md
 LICENSE
 ```
+
+## Continuous publication
+
+OpenVA has no formal catalog-release lifecycle. The current accepted catalog is published continuously:
+
+```text
+accepted change
+→ merge to main
+→ validate and rebuild generated indexes
+→ deploy GitHub Pages
+```
+
+The exact state used by a page, API snapshot, agent bundle, or export is identified by its source commit SHA, generated timestamp, schema version, and relevant digests. Consumers that need a fixed state should pin an exact commit SHA or digest rather than waiting for or following a version tag.
+
+See `docs/continuous-publication.md` and `docs/compatibility-policy.md`.
 
 ## Contributing vendor/source updates
 
@@ -225,7 +237,7 @@ Requested change: Add this public DPA page to the catalog.
 Why authoritative: It is published on the vendor's official domain.
 ```
 
-Contributors do not need to classify OpenVA schema fields such as source type, artifact type, access class, rights class, or language. OpenVA automation classifies metadata during intake and then routes eligible changes through validation, catalog guards, generated-output checks, release gates, and controlled merge lanes.
+Contributors do not need to classify OpenVA schema fields such as source type, artifact type, access class, rights class, or language. OpenVA automation classifies metadata during intake and then routes eligible changes through validation, catalog guards, generated-output checks, policy gates, and controlled merge lanes.
 
 Do not submit private agreements, gated trust-center exports, SOC reports, ISO certificates, screenshots, copied document text, customer-specific terms, credentials, or anything that requires login, form submission, customer status, NDA, sales approval, support-ticket access, or anti-bot bypass.
 
@@ -247,10 +259,11 @@ OpenVA is:
 
 OpenVA does not:
 
-- mirror raw vendor documents by default;
+- use raw document mirroring by default;
 - include bespoke agreements;
 - include authenticated trust-center or customer portal materials;
 - include NDA-gated content;
+- use anti-bot bypass;
 - state that any vendor is compliant, approved, safe, certified, adequate, suitable, or recommended;
 - provide tenant-specific risk decisions;
 - replace professional, legal, compliance, procurement, audit, security, KYC, AML, sanctions, regulatory, or vendor-risk advice.
@@ -260,47 +273,27 @@ OpenVA does not:
 Run:
 
 ```bash
-python -m tools.openva.validate validate
-pytest -q
-```
-
-Before a release or pack-pinning point, also run:
-
-```bash
 python -m tools.openva.validate build-indexes
 python -m tools.openva.validate validate
 pytest -q
 python -m tools.openva.conformance fixtures/packs/minimal-valid
 python -m tools.openva.conformance fixtures/packs/valid-bot-protected-observation
+python -m tools.openva.conformance fixtures/packs/valid-brand-only-fallback
 ```
+
+These checks validate the continuously published repository state. They do not prepare or publish a formal release.
 
 ## Resolver-first closeout status
 
-The resolver-first Phases 1-9 are complete as implementation slices:
-
-```text
-#518 Phase 1 — Positioning correction
-#520 Phase 2 — Resolver-first public UI
-#521 Phase 3 — Source pack schema
-#522 Phase 4 — Hosted resolver staging smoke plan
-#523 Phase 5 — Source map and discovery engine
-#524 Phase 6 — Candidate memory as background cache
-#525 Phase 7 — Workspace write-back projection
-#526 Phase 8 — Configurable source pack builder
-#527 Phase 9 — Resolver-usefulness prioritisation
-```
-
-The shipped browser UI is static and browser-local. It uses loaded public metadata and does not upload private vendor inventories, run live discovery from the page, or operate a production hosted verify endpoint.
+The resolver-first Phases 1–9 are complete as implementation slices. The shipped browser UI is static and browser-local. It uses loaded public metadata and does not upload private vendor inventories, run live discovery from the page, or operate a production hosted verification endpoint.
 
 Hosted resolver infrastructure remains gated by staging, production, smoke evidence, credentials, provider choice, domain, and launch evidence. Until those gates are complete, OpenVA should be described as a static/browser-local resolver UI plus repository-shipped HTTP/MCP/self-hosted components, not as an operated production hosted resolver.
-
-OpenVA v0.1 additionally locks the human CSV and agent enrichment contracts; see `docs/releases/v0.1-closure.md`.
 
 See `docs/resolver-first-closeout.md` for the consolidation record.
 
 ## Automation posture
 
-OpenVA operates an autonomous reference-cache maintenance system: routine public-source record maintenance and background reusable-memory updates run through pull requests, machine decisions, separation of duties, release gates, and controlled automerge. Humans govern the rules: code, schemas, workflows, authority, policy thresholds, permissions, and emergency holds.
+OpenVA operates an autonomous reference-cache maintenance system: routine public-source record maintenance and background reusable-memory updates run through pull requests, machine decisions, separation of duties, validation gates, and controlled automerge. Humans govern code, schemas, workflows, authority, policy thresholds, permissions, and emergency holds.
 
 When evidence is insufficient, the system fails closed (`deferred` / `rejected` / `quarantined` / `rolled_back`) rather than treating ambiguity as approval. See `AGENTS.md` and `docs/catalog-autonomy-policy.md`.
 
@@ -312,27 +305,27 @@ catalog-pr-guard.yml                 enforces catalog PR boundaries
 catalog-growth-discovery.yml         proposes candidates from bounded discovery signals
 candidate-promotion-pr.yml           controlled promotion PRs from reviewed evidence
 source-maintenance-report.yml        scheduled source health, observation ledger, and discovery report
-submitted-source-verification.yml    verifies submitted source claims (comment and label only)
+submitted-source-verification.yml    verifies submitted source claims
 coverage-audit.yml                   breadth/depth audit and coverage report
-bot-dashboard-issue.yml              bot dashboard render and issue sync (dry-run default)
+site-pages.yml                       publishes accepted main to GitHub Pages
+bot-dashboard-issue.yml              bot dashboard render and issue sync
 bot-chatops.yml                      live /openva hold and /openva unhold label commands
-release-candidate.yml                release artifact smoke workflow
 ```
 
-Scheduled maintenance detects drift in public-source locator metadata, materialises routine records, and produces artifacts. No automation changes `main` directly; every mutation flows through a pull request, the release gate, and a controlled automerge lane.
+Scheduled maintenance detects drift in public-source locator metadata, materialises routine records, and produces artifacts. Automation does not write directly to `main`; every repository mutation flows through a pull request, validation, and a controlled merge lane. Accepted `main` is then deployed continuously by the Pages workflow.
 
 Quarantined legacy report workflows remain manual-only pending retirement evidence; see `docs/operations/WORKFLOW_RETIREMENT_EVIDENCE.md`.
 
-Live chat-ops is limited to `/openva hold` and `/openva unhold`, which add or remove only the `openva-hold` label on the current issue or pull request, are maintainer-gated, and are smoke-tested. All other `/openva` commands remain report-only, local-audit-only, or denied; see `docs/operations/BOT_CHATOPS_EXECUTION.md`.
+Live chat-ops is limited to `/openva hold` and `/openva unhold`, which add or remove only the `openva-hold` label on the current issue or pull request and are maintainer-gated. All other `/openva` commands remain report-only, local-audit-only, or denied; see `docs/operations/BOT_CHATOPS_EXECUTION.md`.
 
 Agent-generated public-source work enters through pull requests and is decided autonomously by machine gates. The internal lifecycle is:
 
 ```text
-submitted claim -> candidate -> machine_provisional -> active
-                             \-> deferred | rejected | quarantined | rolled_back
+submitted claim → candidate → machine_provisional → active
+                             ↘ deferred | rejected | quarantined | rolled_back
 ```
 
-Human review remains required for changes to code, schemas, workflows, policy thresholds, authority contracts, permissions, and governance — not for routine public-source locator records.
+Human review remains required for changes to code, schemas, workflows, policy thresholds, authority contracts, permissions, and governance—not for routine public-source locator records.
 
 ## Architecture stance
 
