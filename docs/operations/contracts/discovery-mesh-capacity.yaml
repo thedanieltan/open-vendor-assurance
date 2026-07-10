@@ -1,0 +1,24 @@
+schema_version: "0.1.0"
+catalog_capacity:
+  vendor_count_cap: null
+  posture: unbounded
+execution:
+  deterministic_sharding: true
+  default_vendor_limit: null
+  operator_vendor_limit_allowed_for:
+    - diagnostics
+    - incident_response
+    - recovery
+network_safety:
+  per_vendor_limits_required: true
+  dimensions:
+    - pages
+    - requests
+    - links_per_page
+    - response_size
+    - redirects
+    - delegated_hosts
+mutation:
+  candidate_staging_only: true
+  canonical_mutation_authority: candidate-promotion-pr
+not_advice: true
