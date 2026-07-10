@@ -147,6 +147,57 @@ components:
     dependencies:
       - match-service
 
+  operational-governance:
+    kind: governance
+    manifests: []
+    change_patterns:
+      - .github/workflows/agent-automerge.yml
+      - .github/workflows/discovery-ledger-append-pr.yml
+      - .github/workflows/observation-ledger-append-pr.yml
+      - .github/workflows/candidate-promotion-pr.yml
+      - maintenance/discovery-events/**
+      - maintenance/source-observations/**
+      - maintenance/machine-decisions/**
+      - tools/openva/discovery_ledger.py
+      - tools/openva/observation_*.py
+      - tools/openva/source_quarantine.py
+    test_patterns:
+      - tests/test_operational_pr_scope.py
+    dependencies:
+      - core-tools
+
+  distribution-positioning:
+    kind: documentation-contract
+    manifests: []
+    change_patterns:
+      - README.md
+      - docs/roadmap.md
+      - docs/agent-*.md
+      - docs/resolver-api.md
+      - docs/architecture/decisions/**
+      - integrations/mcp/openva_mcp/README.md
+      - integrations/google-sheets/README.md
+    test_patterns:
+      - tests/test_ai_native_distribution_docs.py
+    dependencies:
+      - contract
+
+  hosted-deployment-contracts:
+    kind: documentation-contract
+    manifests:
+      - docs/operations/contracts/hosted-deployment.yaml
+    change_patterns:
+      - docs/operations/hosted-deployment-*.md
+      - docs/operations/contracts/hosted-deployment.yaml
+      - docs/security/hosted-deployment-threat-model.md
+      - examples/hosted-deployment/**
+      - schemas/openva/hosted-job-record.schema.json
+    test_patterns:
+      - tests/test_hosted_deployment_docs.py
+    dependencies:
+      - contract
+      - match-service
+
   repository-control:
     kind: governance
     manifests: []
@@ -164,7 +215,4 @@ components:
       - tests/test_ci_readiness.py
       - tests/test_workflow_*.py
       - tests/test_pr_scope_guard.py
-      - tests/test_operational_pr_scope.py
-      - tests/test_ai_native_distribution_docs.py
-      - tests/test_hosted_deployment_docs.py
     dependencies: []
