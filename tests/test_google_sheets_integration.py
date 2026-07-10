@@ -1,4 +1,4 @@
-"""Temporary isolated agent-user transport smoke; this branch is never merged."""
+"""Temporary isolated agent-user smoke; this branch is never merged."""
 
 from __future__ import annotations
 
@@ -15,13 +15,9 @@ from openva_match_service.app import create_app  # noqa: E402
 from openva_match_service.config import ServiceConfig  # noqa: E402
 
 
-def test_agent_can_call_enrichment_endpoint() -> None:
+def test_agent_receives_normalized_known_and_unknown_identity() -> None:
     app = create_app(
-        ServiceConfig(
-            pack_path=Path("."),
-            api_key="smoke-key",
-            public_read_enabled=True,
-        )
+        ServiceConfig(pack_path=Path("."), api_key="smoke-key", public_read_enabled=True)
     )
     payload = {
         "vendors": [
@@ -35,6 +31,10 @@ def test_agent_can_call_enrichment_endpoint() -> None:
 
     assert response.status_code == 200, response.text
     body = response.json()
+    known, unknown = body["results"]
+    assert known["identity"]["match_status"] == "match", known
+    assert known["identity"]["matched_vendor_id"] == "stripe", known
+    assert unknown["identity"]["match_status"] == "no_match", unknown
+    assert known["not_advice"] is True
+    assert unknown["not_advice"] is True
     assert body["not_advice"] is True
-    assert len(body["results"]) == 2
-    assert [row["row_id"] for row in body["results"]] == ["known", "unknown"]
