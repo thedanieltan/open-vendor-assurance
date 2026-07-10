@@ -1,4 +1,12 @@
 (() => {
+  const originalNormalizeForMatch = window.normalizeForMatch;
+  if (typeof originalNormalizeForMatch === "function") {
+    window.normalizeForMatch = (value) => {
+      if (value === null || value === undefined || String(value).trim() === "") return "";
+      return originalNormalizeForMatch(value);
+    };
+  }
+
   const THEMES = ["system", "light", "dark"];
   const LABELS = { system: "System", light: "Day", dark: "Night" };
   const qs = (selector, root = document) => root.querySelector(selector);
