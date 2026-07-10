@@ -86,9 +86,21 @@
     form.dataset.catalogFilterPolished = "true";
   }
 
+  function installSponsorLink() {
+    const links = qs("footer .footer-links");
+    if (!links || qs("[data-openva-sponsor]", links)) return;
+    const sponsor = document.createElement("a");
+    sponsor.href = "https://github.com/sponsors/thedanieltan";
+    sponsor.textContent = "Support OpenVA";
+    sponsor.title = "Voluntary sponsorship helps fund catalog growth, verification, infrastructure, and maintenance.";
+    sponsor.dataset.openvaSponsor = "true";
+    links.appendChild(sponsor);
+  }
+
   applyTheme(storedTheme());
   window.addEventListener("DOMContentLoaded", () => {
     installThemeToggle();
     polishCatalogFilters();
+    installSponsorLink();
   });
 })();
