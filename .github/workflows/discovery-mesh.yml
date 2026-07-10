@@ -1,0 +1,217 @@
+name: discovery-mesh
+
+on:
+  workflow_dispatch:
+    inputs:
+      shard_count:
+        description: "Optional diagnostic override. Scheduled runs use worker defaults."
+        required: false
+        type: string
+        default: ""
+      vendor_limit:
+        description: "Optional per-shard diagnostic limit. Scheduled runs leave this blank and process the full catalog."
+        required: false
+        type: string
+        default: ""
+  schedule:
+    # Daily at 03:37 UTC / 11:37 Asia/Singapore. The entire eligible catalog is sharded.
+    - cron: "37 3 * * *"
+
+permissions:
+  actions: read
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: discovery-mesh-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Build full-catalog shard matrix
+        id: plan
+        env:
+          REQUESTED_SHARD_COUNT: "${{ inputs.shard_count || '' }}"
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          import os
+
+          from tools.openva import discovery_mesh_config as config
+
+          requested = os.environ.get("REQUESTED_SHARD_COUNT", "").strip()
+          shard_count = int(requested) if requested else config.DEFAULT_SHARD_COUNT
+          if shard_count < 1 or shard_count > 256:
+              raise SystemExit("shard_count must be between 1 and 256")
+          if config.CATALOG_VENDOR_LIMIT is not None:
+              raise SystemExit("scheduled discovery mesh must not define a catalog vendor cap")
+          print("matrix=" + json.dumps({"shard": list(range(shard_count))}, separators=(",", ":")))
+          print(f"shard_count={shard_count}")
+          PY
+
+  discover:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 32
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    env:
+      REQUESTED_VENDOR_LIMIT: "${{ inputs.vendor_limit || '' }}"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Resolve growth-oriented per-vendor bounds
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_ENV"
+          from tools.openva import discovery_mesh_config as config
+
+          print(f"MESH_MAX_PAGES={config.MAX_PAGES_PER_VENDOR}")
+          print(f"MESH_MAX_TOTAL_REQUESTS={config.MAX_TOTAL_REQUESTS_PER_VENDOR}")
+          print(f"MESH_MAX_LINKS_PER_PAGE={config.MAX_LINKS_PER_PAGE}")
+          print(f"MESH_MAX_LOCATORS={config.MAX_LOCATOR_CANDIDATES_PER_VENDOR}")
+          print(f"MESH_FETCH_TIMEOUT={config.FETCH_TIMEOUT_SECONDS}")
+          PY
+      - name: Run full-catalog discovery shard
+        run: |
+          set -euo pipefail
+          mkdir -p reports/discovery-mesh
+          ARGS=(
+            --shard-index "${{ matrix.shard }}"
+            --shard-count "${{ needs.plan.outputs.shard_count }}"
+            --fetch-timeout "$MESH_FETCH_TIMEOUT"
+            --max-pages "$MESH_MAX_PAGES"
+            --max-total-requests "$MESH_MAX_TOTAL_REQUESTS"
+            --max-links-per-page "$MESH_MAX_LINKS_PER_PAGE"
+            --max-locators-per-vendor "$MESH_MAX_LOCATORS"
+            --output "reports/discovery-mesh/shard-${{ matrix.shard }}.json"
+          )
+          LIMIT="$(printf '%s' "$REQUESTED_VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          if [ -n "$LIMIT" ]; then
+            case "$LIMIT" in *[!0-9]*) echo "vendor_limit must be a positive integer" >&2; exit 1 ;; esac
+            if [ "$LIMIT" = "0" ]; then echo "vendor_limit must be positive" >&2; exit 1; fi
+            ARGS+=(--vendor-limit "$LIMIT")
+          fi
+          python -m tools.openva.discovery_mesh_runner shard "${ARGS[@]}"
+      - name: Upload shard report
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-discovery-mesh-shard-${{ matrix.shard }}
+          path: reports/discovery-mesh/shard-${{ matrix.shard }}.json
+          if-no-files-found: error
+          retention-days: 14
+
+  aggregate:
+    needs: [plan, discover]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Download every shard report
+        uses: actions/download-artifact@v6
+        with:
+          pattern: openva-discovery-mesh-shard-*
+          path: reports/discovery-mesh/shards
+          merge-multiple: true
+      - name: Aggregate reports and stage noncanonical candidates
+        run: |
+          set -euo pipefail
+          RUN_KEY="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          mkdir -p maintenance/generated reports/discovery-mesh
+          python -m tools.openva.discovery_mesh_runner aggregate \
+            --input-dir reports/discovery-mesh/shards \
+            --write-candidates \
+            --output reports/discovery-mesh/source-discovery-report.json \
+            --identity-output "maintenance/generated/discovery-mesh-identity-signals-${RUN_KEY}.json" \
+            --manifest-output "maintenance/generated/discovery-mesh-candidate-manifest-${RUN_KEY}.json"
+          PLAN_PATH="maintenance/generated/strict-growth-discovery-mesh-promotion-plan-${RUN_KEY}.json"
+          python -m tools.openva.promotion_planner plan \
+            --discovery-report reports/discovery-mesh/source-discovery-report.json \
+            --output "$PLAN_PATH"
+          python -m tools.openva.candidate_promotion_actions filter-reviewed-plan \
+            --promotion-plan "$PLAN_PATH" \
+            --output "$PLAN_PATH" \
+            --viability-report "maintenance/generated/discovery-mesh-promotion-viability-${RUN_KEY}.json"
+      - name: Validate staged candidate intake
+        run: python -m tools.openva.validate validate
+      - name: Prepare intake branch
+        id: intake
+        run: |
+          set -euo pipefail
+          RUN_KEY="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          BRANCH="agent-discovery-mesh-intake-${RUN_KEY}"
+          git config user.name "openva-discovery-mesh"
+          git config user.email "openva-discovery-mesh@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add data/vendors/*/candidate_sources/*.yaml maintenance/generated/*discovery-mesh*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Ops: stage discovery mesh candidates (${RUN_KEY})"
+          git push origin "$BRANCH"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          echo "run_key=$RUN_KEY" >> "$GITHUB_OUTPUT"
+      - name: Open candidate-intake PR and enable native auto-merge
+        if: steps.intake.outputs.has_changes == 'true'
+        env:
+          # Workflow-triggering token so PR validation and the intake bridge fire.
+          GH_TOKEN: ${{ secrets.OPENVA_AUTOMERGE_TOKEN || github.token }}
+          BRANCH: ${{ steps.intake.outputs.branch }}
+        run: |
+          set -euo pipefail
+          BODY_FILE="$RUNNER_TEMP/discovery-mesh-intake.md"
+          cat > "$BODY_FILE" <<EOF
+          Work-Package: WP-AUTONOMOUS-OPERATIONAL-PR-CONTROL-PLANE-01
+
+          Generated by full-catalog discovery mesh run \`${GITHUB_RUN_ID}\`, attempt \`${GITHUB_RUN_ATTEMPT}\`.
+
+          This PR stages only verified noncanonical candidate-source records, the reviewed promotion plan and viability report, and vendor-identity signal evidence.
+
+          It does not write canonical sources or vendors. After this intake PR merges, the dedicated bridge dispatches \`candidate-promotion-pr.yml\`, which remains the sole canonical mutation authority.
+
+          Catalog breadth was not capped. The entire eligible catalog was assigned across \`${{ needs.plan.outputs.shard_count }}\` shards.
+          EOF
+          PR_URL=$(gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "Ops: stage discovery mesh candidates" \
+            --body-file "$BODY_FILE")
+          PR_NUMBER="${PR_URL##*/}"
+          gh pr merge "$PR_NUMBER" --auto --squash --delete-branch
+      - name: Upload aggregate evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: openva-discovery-mesh-aggregate
+          path: |
+            reports/discovery-mesh/source-discovery-report.json
+            maintenance/generated/*discovery-mesh*.json
+          if-no-files-found: warn
+          retention-days: 30
