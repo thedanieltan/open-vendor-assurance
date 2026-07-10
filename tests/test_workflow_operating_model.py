@@ -24,8 +24,6 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "coverage-audit.yml",
     "observation-ledger-append-pr.yml",
     "observe-report.yml",
-    "release-candidate.yml",
-    "release-downloads.yml",
     "site-live-feed.yml",
     "site-pages.yml",
     "source-maintenance-report.yml",
