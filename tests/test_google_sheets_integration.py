@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 
-def test_generated_browser_app_resolves_adp_result_pack_row(tmp_path: Path) -> None:
+def test_human_can_resolve_known_and_unknown_rows_and_export_csv(tmp_path: Path) -> None:
     site_out = tmp_path / "site"
     subprocess.run(
         [sys.executable, "site/build.py", "--out", str(site_out)],
@@ -57,9 +57,10 @@ vm.runInContext(
 
 (async () => {
   const result = await vm.runInContext(`(async () => {
-    const row = parseCsv('vendor_name,domain\\nADP,adp.com\\n')[0];
+    const input = parseCsv('vendor_name,domain\\nADP,adp.com\\nUnknown Vendor,unknown.invalid\\n');
     const indexes = buildLocalMatchIndexes();
-    return matchInventoryRow(row, 0, indexes);
+    const rows = await Promise.all(input.map((row, index) => matchInventoryRow(row, index, indexes)));
+    return { rows, csv: resultPackCsv(input, rows) };
   })()`, context);
   process.stdout.write(JSON.stringify(result));
 })().catch((error) => {
@@ -75,7 +76,16 @@ vm.runInContext(
         text=True,
     )
     result = json.loads(completed.stdout)
-    assert result["result_pack_version"] == "2.0.0"
-    assert result["matched_vendor_name"] == "ADP"
-    assert result["official_domain"] == "adp.com"
-    assert result["dpa_url"].startswith("https://")
+    known, unknown = result["rows"]
+
+    assert known["result_pack_version"] == "2.0.0"
+    assert known["matched_vendor_name"] == "ADP"
+    assert known["official_domain"] == "adp.com"
+    assert known["dpa_url"].startswith("https://")
+    assert unknown["matched_vendor_name"] is None
+    assert unknown["official_domain"] is None
+    assert unknown["dpa_url"] is None
+    assert "matched_vendor_name" in result["csv"]
+    assert "dpa_url" in result["csv"]
+    assert "ADP" in result["csv"]
+    assert "Unknown Vendor" in result["csv"]
