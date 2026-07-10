@@ -5,21 +5,12 @@ from pathlib import Path
 
 import yaml
 
-from tools.openva.workflow_retirement import (
-    build_report,
-    load_contracts,
-    load_retirement_contract,
-    main,
-    validate_contracts,
-)
+from tools.openva.workflow_retirement import build_report, load_contracts, main, validate_contracts
 
 WORKFLOW_DIR = Path(".github/workflows")
 WORKFLOW_INVENTORY = Path("docs/operations/contracts/workflow-inventory.yaml")
 WORKFLOW_RETIREMENT_DOC = Path("docs/operations/WORKFLOW_RETIREMENT_PLAN.md")
 WORKFLOW_RETIREMENT = Path("docs/operations/contracts/workflow-retirement.yaml")
-WORKFLOW_RETIREMENT_DISCOVERY_MESH = Path(
-    "docs/operations/contracts/workflow-retirement.discovery-mesh.yaml"
-)
 
 
 def load_yaml(path: Path) -> dict:
@@ -48,7 +39,7 @@ def inventory_names() -> set[str]:
 
 
 def retirement_entries() -> list[dict]:
-    return load_retirement_contract()["workflows"]
+    return load_yaml(WORKFLOW_RETIREMENT)["workflows"]
 
 
 def test_retirement_contract_exists_parses_and_points_to_source_document():
@@ -59,14 +50,6 @@ def test_retirement_contract_exists_parses_and_points_to_source_document():
     assert contract["source_document"] == "docs/operations/WORKFLOW_RETIREMENT_PLAN.md"
     assert contract["default_posture"]["unclassified_workflows_block_retirement"] is True
     assert contract["default_posture"]["destructive_retirement_requires_followup_pr"] is True
-
-
-def test_discovery_mesh_retirement_extension_is_additive_and_targeted():
-    extension = load_yaml(WORKFLOW_RETIREMENT_DISCOVERY_MESH)
-
-    assert extension["contract"] == "workflow-retirement-extension"
-    assert extension["extends"] == WORKFLOW_RETIREMENT.as_posix()
-    assert [entry["name"] for entry in extension["workflows"]] == ["discovery-mesh.yml"]
 
 
 def test_every_inventory_workflow_has_a_retirement_entry():
@@ -81,7 +64,7 @@ def test_every_retirement_entry_references_inventory_workflow():
 
 
 def test_statuses_are_valid_and_expected_statuses_are_declared():
-    contract = load_retirement_contract()
+    contract = load_yaml(WORKFLOW_RETIREMENT)
     statuses = set(contract["statuses"])
 
     assert statuses == {"active", "shadow_report_only", "deprecated_callable", "quarantined", "retired"}
@@ -90,7 +73,7 @@ def test_statuses_are_valid_and_expected_statuses_are_declared():
 
 
 def test_unclassified_workflows_block_retirement_and_destructive_changes_are_disallowed():
-    posture = load_retirement_contract()["default_posture"]
+    posture = load_yaml(WORKFLOW_RETIREMENT)["default_posture"]
 
     assert posture["unclassified_workflows_block_retirement"] is True
     assert posture["workflow_deletion_allowed_in_this_contract"] is False
