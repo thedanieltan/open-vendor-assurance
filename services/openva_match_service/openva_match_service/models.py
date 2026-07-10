@@ -236,14 +236,10 @@ class SpreadsheetProjection(BaseModel):
 
 
 class EnrichResultModel(BaseModel):
-    # The canonical JSON Schema intentionally permits compatibility extensions while
-    # requiring the preferred ``identity`` and ``source_references`` blocks. Preserve
-    # those projection fields instead of silently stripping them during FastAPI response
-    # validation. Runtime contract tests assert that both required blocks are present.
-    model_config = ConfigDict(extra="allow")
-
     row_id: str | int | None = None
     input: MatchInput
+    identity: dict[str, Any]
+    source_references: dict[str, dict[str, Any]] = Field(default_factory=dict)
     match: MatchResultModel
     sources: list[SourceModel] = Field(default_factory=list)
     primary_source_by_type: dict[str, SourceModel] = Field(default_factory=dict)
