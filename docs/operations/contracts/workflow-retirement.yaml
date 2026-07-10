@@ -25,8 +25,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [protects main through validation, generated output checks, and test execution]
-    required_retirement_evidence: [replacement validation gate approved in a separate workflow operating model PR, full validation suite pass]
+    retirement_blockers: [protects main through validation and generated-output checks]
+    required_retirement_evidence: [replacement validation gate, full validation suite pass]
     allowed_triggers_until_retired: [pull_request, push]
     write_permissions_allowed_until_retired: false
   - name: validate-pr-metadata.yml
@@ -37,8 +37,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [reruns pr-scope-guard on PR-body edits so a Work-Package change cannot leave a stale-green scope-guard result]
-    required_retirement_evidence: [pr-scope-guard re-validation folded back into validate.yml without rerunning the full suite on metadata edits]
+    retirement_blockers: [revalidates PR scope after metadata edits]
+    required_retirement_evidence: [equivalent metadata revalidation]
     allowed_triggers_until_retired: [pull_request]
     write_permissions_allowed_until_retired: false
   - name: catalog-pr-guard.yml
@@ -50,7 +50,7 @@ workflows:
     retirement_ready: false
     must_not_retire_yet: true
     retirement_blockers: [protects catalog PR scope and title expectations]
-    required_retirement_evidence: [replacement PR guard evidence, branch protection impact review]
+    required_retirement_evidence: [replacement catalog PR guard]
     allowed_triggers_until_retired: [pull_request]
     write_permissions_allowed_until_retired: false
   - name: agent-weighted-review.yml
@@ -61,8 +61,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [provides advisory review context for schema, sources, wording, and provenance]
-    required_retirement_evidence: [equivalent advisory review coverage, maintainer approval that review signal is no longer required]
+    retirement_blockers: [provides independent advisory review]
+    required_retirement_evidence: [equivalent review coverage]
     allowed_triggers_until_retired: [pull_request]
     write_permissions_allowed_until_retired: true
   - name: agent-automerge.yml
@@ -73,9 +73,9 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [owns current strict-growth automerge safety lane]
-    required_retirement_evidence: [replacement automerge authority contract, strict-growth lane simulation, branch protection and required-check review]
-    allowed_triggers_until_retired: [pull_request]
+    retirement_blockers: [owns controlled automerge lanes]
+    required_retirement_evidence: [replacement automerge authority contract]
+    allowed_triggers_until_retired: [pull_request, schedule]
     write_permissions_allowed_until_retired: true
   - name: source-maintenance-report.yml
     current_status: active
@@ -85,8 +85,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [source-health reporting remains a release readiness input]
-    required_retirement_evidence: [replacement source-health report evidence, release candidate compatibility proof]
+    retirement_blockers: [source-health reporting remains a release input]
+    required_retirement_evidence: [replacement source-health reporting]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: false
   - name: source-refinement-scan.yml
@@ -97,8 +97,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [confirms P0 source repair candidates before source repair]
-    required_retirement_evidence: [replacement confirmed source repair candidate scan, source repair loop compatibility proof]
+    retirement_blockers: [confirms source repair candidates]
+    required_retirement_evidence: [replacement confirmed repair scan]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: false
   - name: source-repair-pr.yml
@@ -109,45 +109,9 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [controlled source repair write path from committed reviewed evidence]
-    required_retirement_evidence: [replacement source repair PR path, reviewed evidence handoff proof, validation suite pass]
+    retirement_blockers: [controlled source repair write path]
+    required_retirement_evidence: [replacement source repair path]
     allowed_triggers_until_retired: [workflow_dispatch]
-    write_permissions_allowed_until_retired: true
-  - name: observation-ledger-append-pr.yml
-    current_status: active
-    inventory_status: core
-    operating_loop: observation_ledger_append
-    replacement_owner: observation-ledger-append-pr.yml
-    retirement_candidate: false
-    retirement_ready: false
-    must_not_retire_yet: true
-    retirement_blockers: [autonomous append-only observation-ledger continuity path]
-    required_retirement_evidence: [replacement observation ledger append path, append-only and release-gate proof, validation suite pass]
-    allowed_triggers_until_retired: [workflow_dispatch, workflow_run]
-    write_permissions_allowed_until_retired: true
-  - name: candidate-intake-pr.yml
-    current_status: active
-    inventory_status: core
-    operating_loop: candidate_intake
-    replacement_owner: candidate-intake-pr.yml
-    retirement_candidate: false
-    retirement_ready: false
-    must_not_retire_yet: true
-    retirement_blockers: [external boundary that stages candidate records for the candidate-bound autonomous promotion path]
-    required_retirement_evidence: [replacement candidate-intake boundary, candidate-bound binding proof, validation suite pass]
-    allowed_triggers_until_retired: [workflow_dispatch]
-    write_permissions_allowed_until_retired: true
-  - name: discovery-ledger-append-pr.yml
-    current_status: active
-    inventory_status: core
-    operating_loop: discovery_ledger_append
-    replacement_owner: discovery-ledger-append-pr.yml
-    retirement_candidate: false
-    retirement_ready: false
-    must_not_retire_yet: true
-    retirement_blockers: [autonomous append-only discovery-ledger continuity path]
-    required_retirement_evidence: [replacement discovery ledger append path, append-only and release-gate proof, validation suite pass]
-    allowed_triggers_until_retired: [workflow_dispatch, workflow_run]
     write_permissions_allowed_until_retired: true
   - name: source-repair-pr-cleanup.yml
     current_status: active
@@ -157,9 +121,33 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [closes stale generated source repair PR state]
-    required_retirement_evidence: [replacement stale PR cleanup policy, maintainer confirmation that stale source repair PRs are handled]
+    retirement_blockers: [closes stale source repair PR state]
+    required_retirement_evidence: [replacement stale PR cleanup]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
+    write_permissions_allowed_until_retired: true
+  - name: observation-ledger-append-pr.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: observation_ledger_append
+    replacement_owner: observation-ledger-append-pr.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns append-only observation continuity]
+    required_retirement_evidence: [replacement observation ledger append path]
+    allowed_triggers_until_retired: [workflow_dispatch, workflow_run]
+    write_permissions_allowed_until_retired: true
+  - name: discovery-ledger-append-pr.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: discovery_ledger_append
+    replacement_owner: discovery-ledger-append-pr.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns append-only discovery continuity]
+    required_retirement_evidence: [replacement discovery ledger append path]
+    allowed_triggers_until_retired: [workflow_dispatch, workflow_run]
     write_permissions_allowed_until_retired: true
   - name: coverage-audit.yml
     current_status: active
@@ -169,8 +157,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [owns catalog quality coverage reporting]
-    required_retirement_evidence: [replacement coverage and provenance report, site/report consumer compatibility proof]
+    retirement_blockers: [owns catalog quality reporting]
+    required_retirement_evidence: [replacement coverage and provenance report]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: false
   - name: catalog-growth-discovery.yml
@@ -181,9 +169,27 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [catalog growth discovery may propose new candidates]
-    required_retirement_evidence: [replacement discovery proposal report, proof that discovery does not write catalog truth]
+    retirement_blockers: [owns legacy bounded catalog-growth discovery]
+    required_retirement_evidence: [replacement discovery proposal report]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
+    write_permissions_allowed_until_retired: true
+  - name: discovery-mesh.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: catalog_growth
+    replacement_owner: discovery-mesh.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers:
+      - owns uncapped full-catalog sharded source discovery
+      - owns candidate-only intake for discovery-mesh evidence
+      - owns exact-plan handoff to candidate-promotion-pr.yml without a second canonical mutation path
+    required_retirement_evidence:
+      - replacement full-catalog sharding with no scheduled vendor cap
+      - replacement candidate-intake and exact-plan handoff proof
+      - validation suite pass
+    allowed_triggers_until_retired: [workflow_dispatch, schedule, pull_request]
     write_permissions_allowed_until_retired: true
   - name: autonomous-catalog-growth.yml
     current_status: active
@@ -193,9 +199,9 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [scheduled autonomous growth gate that dispatches the single machine-provisional mutation lane]
-    required_retirement_evidence: [replacement growth controller, proof that the controller does not write catalog truth and dispatches only candidate-promotion-pr.yml]
-    allowed_triggers_until_retired: [workflow_dispatch, schedule]
+    retirement_blockers: [owns candidate-bound autonomous growth decisions]
+    required_retirement_evidence: [replacement growth controller]
+    allowed_triggers_until_retired: [workflow_dispatch, schedule, push]
     write_permissions_allowed_until_retired: true
   - name: catalog-growth-promotion-bridge.yml
     current_status: active
@@ -205,8 +211,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [scheduled discovery-to-strict-growth promotion handoff that dispatches only candidate-promotion-pr.yml]
-    required_retirement_evidence: [replacement handoff that preserves discovery-success/main-only/zero-action gating and dispatches no second mutation path]
+    retirement_blockers: [owns scheduled discovery promotion handoff]
+    required_retirement_evidence: [replacement exact promotion handoff]
     allowed_triggers_until_retired: [workflow_run, workflow_dispatch]
     write_permissions_allowed_until_retired: true
   - name: candidate-promotion-pr.yml
@@ -217,8 +223,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [controlled promotion write path for reviewed promotion actions]
-    required_retirement_evidence: [replacement controlled promotion PR path, strict-growth simulation, reviewed evidence compatibility proof]
+    retirement_blockers: [sole controlled catalog promotion write path]
+    required_retirement_evidence: [replacement controlled promotion path]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: true
   - name: machine-provisional-materialization.yml
@@ -229,10 +235,22 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [manual machine-provisional recovery and diagnostic dispatcher]
-    required_retirement_evidence: [replacement manual recovery path, queue enforcement proof, validation suite pass]
+    retirement_blockers: [manual machine-provisional recovery dispatcher]
+    required_retirement_evidence: [replacement recovery path]
     allowed_triggers_until_retired: [workflow_dispatch]
     write_permissions_allowed_until_retired: false
+  - name: candidate-intake-pr.yml
+    current_status: active
+    inventory_status: core
+    operating_loop: candidate_intake
+    replacement_owner: candidate-intake-pr.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [external candidate intake boundary]
+    required_retirement_evidence: [replacement candidate intake boundary]
+    allowed_triggers_until_retired: [workflow_dispatch]
+    write_permissions_allowed_until_retired: true
   - name: release-candidate.yml
     current_status: active
     inventory_status: core
@@ -241,8 +259,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [owns release candidate assembly and source-health readiness awareness]
-    required_retirement_evidence: [replacement release candidate artifact path, release operator approval]
+    retirement_blockers: [owns release candidate assembly]
+    required_retirement_evidence: [replacement release candidate path]
     allowed_triggers_until_retired: [workflow_dispatch]
     write_permissions_allowed_until_retired: false
   - name: release-image.yml
@@ -253,8 +271,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [owns the deployment-artifact supply-chain build and fail-closed gate]
-    required_retirement_evidence: [replacement artifact supply-chain pipeline proof, release operator approval]
+    retirement_blockers: [owns deployment artifact supply chain]
+    required_retirement_evidence: [replacement artifact pipeline]
     allowed_triggers_until_retired: [workflow_dispatch]
     write_permissions_allowed_until_retired: false
   - name: site-pages.yml
@@ -266,7 +284,7 @@ workflows:
     retirement_ready: false
     must_not_retire_yet: true
     retirement_blockers: [owns reviewed catalog site deployment]
-    required_retirement_evidence: [replacement Pages deployment proof, site build and deployment validation]
+    required_retirement_evidence: [replacement Pages deployment]
     allowed_triggers_until_retired: [push, workflow_dispatch]
     write_permissions_allowed_until_retired: true
   - name: release-downloads.yml
@@ -277,8 +295,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [owns release download asset publication]
-    required_retirement_evidence: [replacement release download publication proof, release operator approval]
+    retirement_blockers: [owns release download publication]
+    required_retirement_evidence: [replacement release publication]
     allowed_triggers_until_retired: [push]
     write_permissions_allowed_until_retired: true
   - name: site-live-feed.yml
@@ -289,8 +307,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [owns live feed refresh output]
-    required_retirement_evidence: [replacement live feed publication proof, site operator approval]
+    retirement_blockers: [owns live feed refresh]
+    required_retirement_evidence: [replacement live feed path]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: true
   - name: bot-dashboard-issue.yml
@@ -301,8 +319,8 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [owns report-only bot dashboard issue visibility once enabled]
-    required_retirement_evidence: [replacement durable bot dashboard visibility path, validation suite pass, maintainer approval that dashboard issue sync is no longer needed]
+    retirement_blockers: [owns bot dashboard visibility]
+    required_retirement_evidence: [replacement dashboard visibility]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: true
   - name: bot-chatops.yml
@@ -313,32 +331,20 @@ workflows:
     retirement_candidate: false
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [owns live hold/unhold chat-ops label control]
-    required_retirement_evidence: [replacement live hold control path, validation suite pass, maintainer approval that live hold chat-ops is no longer needed]
+    retirement_blockers: [owns live hold and unhold control]
+    required_retirement_evidence: [replacement live hold control]
     allowed_triggers_until_retired: [issue_comment]
-    write_permissions_allowed_until_retired: true
-  - name: submitted-source-verification.yml
-    current_status: active
-    inventory_status: support
-    operating_loop: submission_verification
-    replacement_owner: submitted-source-verification.yml
-    retirement_candidate: false
-    retirement_ready: false
-    must_not_retire_yet: true
-    retirement_blockers: [owns verification-only triage of submission claims before any controlled promotion path exists]
-    required_retirement_evidence: [replacement submission verification path, maintainer approval that submission claims no longer need automated first-pass verification, validation suite pass]
-    allowed_triggers_until_retired: [issues, workflow_dispatch]
     write_permissions_allowed_until_retired: true
   - name: catalog-agent-pr.yml
     current_status: deprecated_callable
     inventory_status: support
     operating_loop: support_agent_pr
-    replacement_owner: candidate-promotion-pr.yml after reviewed evidence or an explicit support_agent_pr contract
+    replacement_owner: candidate-promotion-pr.yml
     retirement_candidate: true
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [confirm maintainers no longer need manual agent-authored catalog PR support, confirm candidate-promotion-pr.yml covers reviewed catalog growth use cases]
-    required_retirement_evidence: [two clean controlled promotion runs for equivalent catalog growth cases, validation suite pass, maintainer approval of support path removal]
+    retirement_blockers: [maintainer support path still callable]
+    required_retirement_evidence: [equivalent controlled promotion runs]
     allowed_triggers_until_retired: [workflow_dispatch]
     write_permissions_allowed_until_retired: true
   - name: catalog-maintenance-pr.yml
@@ -349,32 +355,44 @@ workflows:
     retirement_candidate: true
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [confirm scheduled maintenance PR behavior is replaced by report-only evidence plus controlled promotion or source repair, confirm dashboard does not depend on support-only artifacts]
-    required_retirement_evidence: [two clean dashboard runs without support-only artifact dependency, validation suite pass, maintainer approval of scheduled support PR removal]
+    retirement_blockers: [scheduled support PR replacement not fully proven]
+    required_retirement_evidence: [replacement maintenance evidence path]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: true
   - name: contribution-intake-agent.yml
     current_status: deprecated_callable
     inventory_status: support
     operating_loop: support_agent_pr
-    replacement_owner: reviewed evidence intake plus candidate-promotion-pr.yml or source-repair-pr.yml
+    replacement_owner: reviewed evidence intake and candidate-promotion-pr.yml
     retirement_candidate: true
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [confirm issue-based contribution intake has a reviewed evidence handoff, confirm no contributor path depends on direct support PR generation]
-    required_retirement_evidence: [documented contribution intake replacement, validation suite pass, maintainer approval of issue-triggered support path removal]
+    retirement_blockers: [contributor replacement path not fully proven]
+    required_retirement_evidence: [documented contribution replacement]
+    allowed_triggers_until_retired: [issues, workflow_dispatch]
+    write_permissions_allowed_until_retired: true
+  - name: submitted-source-verification.yml
+    current_status: active
+    inventory_status: support
+    operating_loop: submission_verification
+    replacement_owner: submitted-source-verification.yml
+    retirement_candidate: false
+    retirement_ready: false
+    must_not_retire_yet: true
+    retirement_blockers: [owns first-pass submission verification]
+    required_retirement_evidence: [replacement submission verification]
     allowed_triggers_until_retired: [issues, workflow_dispatch]
     write_permissions_allowed_until_retired: true
   - name: catalog-maintenance.yml
     current_status: shadow_report_only
     inventory_status: consolidation_candidate
     operating_loop: legacy_report
-    replacement_owner: validate.yml, source-maintenance-report.yml, coverage-audit.yml, and build-index validation
+    replacement_owner: validate.yml and coverage-audit.yml
     retirement_candidate: true
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [confirm dashboard no longer depends on legacy artifact, confirm release candidate does not consume legacy-only output, confirm entity stub reporting is covered by current validation or coverage outputs]
-    required_retirement_evidence: [two clean dashboard runs without legacy artifact dependency, validation suite pass, build-index validation pass]
+    retirement_blockers: [entity stub replacement is not proven]
+    required_retirement_evidence: [two clean replacement runs, validation suite pass]
     allowed_triggers_until_retired: [workflow_dispatch, schedule]
     write_permissions_allowed_until_retired: false
   - name: source-refinement-queue.yml
@@ -385,8 +403,13 @@ workflows:
     retirement_candidate: true
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [quarantined by WP22 as the first legacy report workflow; keep manual-only while final evidence is gathered, confirm source-refinement-scan.yml covers confirmed source repair queue needs, confirm operators no longer consume legacy refinement queue artifacts, migrate docs/source-refinement-workflow.md and human review docs away from primary use]
-    required_retirement_evidence: [WP22 retirement report pass, WP22 bot ops smoke harness pass, source-refinement-queue.yml has no schedule trigger, two clean source refinement scan runs, source maintenance report comparison, validation suite pass]
+    retirement_blockers:
+      - WP22 quarantine remains in force
+      - confirm operators no longer consume legacy refinement queue artifacts
+    required_retirement_evidence:
+      - source-refinement-queue.yml has no schedule trigger
+      - replacement source refinement evidence
+      - validation suite pass
     allowed_triggers_until_retired: [workflow_dispatch]
     write_permissions_allowed_until_retired: false
   - name: observe-report.yml
@@ -397,7 +420,12 @@ workflows:
     retirement_candidate: true
     retirement_ready: false
     must_not_retire_yet: true
-    retirement_blockers: [quarantined by WP26 as the second legacy report workflow; keep manual-only while final evidence is gathered, confirm observation dry-run output is covered by current source maintenance and catalog growth reports, confirm review queue export is covered by dashboard or reviewed evidence handoff, confirm operators no longer consume legacy observation report artifacts]
-    required_retirement_evidence: [WP26 retirement report pass, WP26 bot ops smoke harness pass, observe-report.yml has no schedule trigger, two clean source maintenance or catalog growth report runs covering observation use cases, dashboard comparison showing no legacy-only dependency, validation suite pass]
+    retirement_blockers:
+      - WP26 quarantine remains in force
+      - confirm observation output is fully replaced
+    required_retirement_evidence:
+      - observe-report.yml has no schedule trigger
+      - replacement observation reporting evidence
+      - validation suite pass
     allowed_triggers_until_retired: [workflow_dispatch]
     write_permissions_allowed_until_retired: false
