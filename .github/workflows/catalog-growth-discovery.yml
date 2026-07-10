@@ -28,7 +28,8 @@ on:
         type: string
         default: ""
   schedule:
-    - cron: "17 8 * * 3"
+    # Mon/Wed/Fri at 08:17 UTC / 16:17 Asia/Singapore. The bridge owns mutation handoff.
+    - cron: "17 8 * * 1,3,5"
 
 permissions:
   contents: read
