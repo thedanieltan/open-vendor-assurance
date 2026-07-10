@@ -200,15 +200,16 @@ work_packages:
       - tools/openva/validate.py
 
   WP-P4-ASSURANCE-INTELLIGENCE-PUBLICATION-01:
-    description: Pillar 4 public-safe Assurance Intelligence publication, site, and release integration.
+    description: Pillar 4 public-safe Assurance Intelligence and continuous catalog publication surface.
     allowed_paths:
-      - .github/workflows/release-downloads.yml
       - .github/workflows/site-pages.yml
       - config/assurance-intelligence-publication-policy.yaml
+      - config/publication.yaml
       - docs/architecture/ASSURANCE_INTELLIGENCE_PUBLICATION.md
       - schemas/openva/assurance-intelligence-publication-policy.schema.json
       - schemas/openva/assurance-intelligence-public-snapshot.schema.json
       - site/build.py
+      - site/build_core.py
       - site/README.md
       - site/src/index.html
       - site/src/app.js
@@ -216,11 +217,15 @@ work_packages:
       - site/src/styles.css
       - tests/test_assurance_intelligence_publication.py
       - tests/test_assurance_intelligence_publication_acceptance.py
+      - tests/test_discoverability.py
+      - tests/test_publication_config.py
       - tests/test_release_artifacts.py
       - tests/test_site.py
       - tools/openva/assurance_intelligence_publication.py
+      - tools/openva/publication.py
       - tools/openva/release_artifacts.py
       - tools/openva/schema_registry.py
+      - tools/openva/site_discovery.py
 
   WP-OPENVA-RESOLVER-RESULT-PACK-01:
     description: Resolver-first result-pack contract, projection, static-safe browser output, and tests. This work freezes the output contract Lovable/GitHub Pages can build against without enabling live browser egress or changing the pinned agent-export contract.
