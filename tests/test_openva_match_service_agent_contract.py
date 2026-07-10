@@ -45,7 +45,7 @@ def test_http_enrichment_preserves_preferred_agent_fields() -> None:
 
     assert unknown["identity"]["match_status"] == "no_match"
     assert unknown["identity"]["matched_vendor_id"] is None
-    assert unknown["source_references"]["dpa"]["status"] == "not_indexed"
+    assert unknown["source_references"] == {}
 
     assert body["not_advice"] is True
     assert known["not_advice"] is True
