@@ -119,6 +119,21 @@ def test_active_workflows_are_not_marked_retirement_ready():
             assert entry["must_not_retire_yet"] is True, entry["name"]
 
 
+def test_discovery_mesh_is_active_and_not_retirement_ready():
+    entry = next(entry for entry in retirement_entries() if entry["name"] == "discovery-mesh.yml")
+
+    assert entry["current_status"] == "active"
+    assert entry["inventory_status"] == "core"
+    assert entry["retirement_candidate"] is False
+    assert entry["retirement_ready"] is False
+    assert entry["must_not_retire_yet"] is True
+    assert entry["allowed_triggers_until_retired"] == [
+        "workflow_dispatch",
+        "schedule",
+        "pull_request",
+    ]
+
+
 def test_retired_workflows_do_not_appear_in_active_inventory():
     retired = [entry for entry in retirement_entries() if entry["current_status"] == "retired"]
 
@@ -146,6 +161,7 @@ def test_report_output_is_deterministic(tmp_path):
     assert first == second
     assert "Workflow Retirement Report" in first
     assert "`catalog-maintenance.yml`" in first
+    assert "`discovery-mesh.yml`" in first
 
     out = tmp_path / "workflow-retirement-report.md"
     result = main(["report", "--out", str(out)])
