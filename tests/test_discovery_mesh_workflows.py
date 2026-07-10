@@ -3,7 +3,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DISCOVERY = ROOT / ".github" / "workflows" / "discovery-mesh.yml"
-BRIDGE = ROOT / ".github" / "workflows" / "discovery-mesh-promotion-bridge.yml"
 
 
 def test_scheduled_discovery_mesh_processes_full_catalog_without_vendor_cap() -> None:
@@ -38,9 +37,10 @@ def test_mesh_intake_uses_workflow_triggering_token_and_stages_candidates_only()
     assert "sole canonical mutation authority" in text
 
 
-def test_bridge_dispatches_existing_canonical_mutation_workflow() -> None:
-    text = BRIDGE.read_text(encoding="utf-8")
+def test_merged_intake_handoff_dispatches_existing_canonical_mutation_workflow() -> None:
+    text = DISCOVERY.read_text(encoding="utf-8")
 
+    assert "promotion-handoff:" in text
     assert "github.event.pull_request.merged == true" in text
     assert "agent-discovery-mesh-intake-" in text
     assert "Ops: stage discovery mesh candidates" in text
@@ -49,8 +49,8 @@ def test_bridge_dispatches_existing_canonical_mutation_workflow() -> None:
     assert "Catalog breadth cap: none" in text
 
 
-def test_bridge_fails_closed_on_ambiguous_or_empty_plan() -> None:
-    text = BRIDGE.read_text(encoding="utf-8")
+def test_handoff_fails_closed_on_ambiguous_or_empty_plan() -> None:
+    text = DISCOVERY.read_text(encoding="utf-8")
 
     assert 'if [ "$COUNT" != "1" ]' in text
     assert "Expected exactly one discovery mesh promotion plan" in text
