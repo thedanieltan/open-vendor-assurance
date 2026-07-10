@@ -273,7 +273,7 @@ def test_enrich_source_type_selection_and_missing_types_are_null():
         result = client.post("/v1/enrich", headers=AUTH, json=payload).json()["results"][0]
     assert result["spreadsheet"]["openva_dpa"]  # stripe has a DPA
     assert result["spreadsheet"]["openva_trust_center"] is None  # stripe has no trust centre
-    assert "Matched vendor has no canonical trust centre source" in result["notes"]
+    assert "Matched vendor has no indexed trust centre source record" in result["notes"]
     assert {s["source_type"] for s in result["sources"]} <= {"dpa", "trust_center"}
     assert "dpa" in result["primary_source_by_type"]  # reuses matcher primary choice
     assert result["source_urls_by_type"]["dpa"]
@@ -296,7 +296,6 @@ def test_enrich_rejects_empty_list_and_enforces_row_cap():
     with TestClient(capped) as client:
         resp = client.post("/v1/enrich", headers=AUTH, json={"vendors": [{"vendor_name": "Stripe"}, {"vendor_name": "Slack"}]})
     assert resp.status_code == 413
-
 
 def test_enrich_preserves_registration_number_matching():
     # Regression: /v1/enrich must keep the pack-backed registration-number match path.
@@ -397,7 +396,6 @@ def test_real_pack_sources_report_null_observation_without_network():
 
 
 # --------------------------------------------------------------------------- CORS
-
 
 def test_cors_allows_configured_origin_and_preflight():
     origin = "https://sheets.example"

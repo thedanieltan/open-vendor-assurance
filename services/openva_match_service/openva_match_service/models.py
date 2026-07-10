@@ -207,7 +207,7 @@ class EnrichRequest(BaseModel):
                     "compliance_page",
                 ],
             }
-        }
+        },
     )
 
     vendors: list[EnrichVendorItem] = Field(min_length=1, description="Bounded by OPENVA_MAX_ROWS. Processed in input order; duplicates preserved.")
@@ -238,6 +238,8 @@ class SpreadsheetProjection(BaseModel):
 class EnrichResultModel(BaseModel):
     row_id: str | int | None = None
     input: MatchInput
+    identity: dict[str, Any]
+    source_references: dict[str, dict[str, Any]] = Field(default_factory=dict)
     match: MatchResultModel
     sources: list[SourceModel] = Field(default_factory=list)
     primary_source_by_type: dict[str, SourceModel] = Field(default_factory=dict)
@@ -264,8 +266,8 @@ class EnrichResponse(BaseModel):
 
 
 class VerifyRowItem(MatchInput):
-    # Inherits extra="forbid" + the identity fields + the identity validator from
-    # MatchInput. Adds an optional row_id (same contract as EnrichVendorItem). It
+    # Inherits extra="forbid" + the identity fields + the "at least one identity"
+    # validator from MatchInput. Adds an optional row_id (same contract as EnrichVendorItem). It
     # intentionally declares NO url field: extra="forbid" makes any url/candidate_url/
     # source_url a 422, which is the SSRF boundary — verify takes identities only.
     model_config = ConfigDict(
