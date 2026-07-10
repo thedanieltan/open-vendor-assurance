@@ -6,14 +6,16 @@ import subprocess
 import sys
 
 
-def test_enrichment_note_contract() -> None:
+def test_remaining_enrichment_contracts() -> None:
     subprocess.run(
         [
             sys.executable,
             "-m",
             "pytest",
             "-q",
-            "tests/test_openva_enrichment_api.py::test_enrich_source_type_selection_and_missing_types_are_null",
+            "tests/test_openva_enrichment_api.py",
+            "-k",
+            "enrich and not source_type_selection_and_missing_types_are_null",
         ],
         check=True,
     )
