@@ -21,7 +21,8 @@
         "applicationCategory": "BusinessApplication",
         "applicationSubCategory": "Vendor assurance source resolver",
         "description": "OpenVA resolves public vendor assurance source URLs such as privacy notices, trust centers, DPA pages, security pages, and subprocessor lists.",
-        "operatingSystem": "Web"
+        "operatingSystem": "Web",
+        "license": "https://opensource.org/license/mit"
       }
     </script>
     <script type="application/ld+json">
@@ -42,13 +43,13 @@
         "url": "{{OPENVA_HOME_URL}}",
         "description": "Public, vendor-published assurance source references such as privacy notices, DPAs, subprocessor lists, trust centers, security pages, and certification references.",
         "isAccessibleForFree": true,
-        "license": "https://opensource.org/license/mit",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
         "dataset": {
           "@type": "Dataset",
           "name": "OpenVA public assurance source references",
           "description": "Factual locator metadata about public vendor assurance sources: source type, original vendor-published URL, observed source health, and snapshot identity. OpenVA does not endorse, certify, score, or rank listed vendors.",
           "isAccessibleForFree": true,
-          "license": "https://opensource.org/license/mit",
+          "license": "https://creativecommons.org/publicdomain/zero/1.0/",
           "creator": { "@type": "Organization", "name": "Open Vendor Assurance" },
           "distribution": {
             "@type": "DataDownload",
@@ -89,6 +90,7 @@
             <div class="hero-actions">
               <a class="button" href="#matcher">Resolve vendor sources</a>
               <a class="button secondary-button" href="#export">Export source pack</a>
+              <a class="button secondary-button" href="https://github.com/thedanieltan/open-vendor-assurance">Fork on GitHub</a>
             </div>
             <p class="helper-copy">No account required. Public-source metadata only.</p>
           </div>
@@ -363,10 +365,11 @@
       </div>
       <p class="resource-links footer-links">
         <a id="github-releases-link" href="https://github.com/thedanieltan/open-vendor-assurance/releases">GitHub Releases</a>
-        <a href="../docs/release-downloads.md">Release files</a>
-        <a href="../docs/openva-match-service-contract.md">Resolver docs</a>
-        <a href="#feed">Observation feed</a>
+        <a href="https://github.com/thedanieltan/open-vendor-assurance/blob/main/docs/release-downloads.md">Release guide</a>
+        <a href="https://github.com/thedanieltan/open-vendor-assurance/blob/main/docs/resolver-api.md">Resolver docs</a>
+        <a href="https://github.com/thedanieltan/open-vendor-assurance/blob/main/docs/licensing.md">Licensing and reuse</a>
       </p>
+      <p class="meta-line">Software and project documentation: MIT. OpenVA-authored catalog metadata: CC0 1.0. Vendor documents, trademarks, and other third-party materials remain with their respective owners.</p>
     </footer>
     <script src="app.js?v=20260523-ui6"></script>
     <script src="ui-fixes.js?v=20260523-ui6"></script>
