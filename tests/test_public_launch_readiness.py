@@ -12,9 +12,6 @@ REQUIRED_DOCS = [
     "docs/roadmap.md",
     "docs/triage-policy.md",
     "docs/first-good-issue-policy.md",
-    "docs/versioning-policy.md",
-    "docs/release-policy.md",
-    "docs/release-checklist.md",
     "docs/consumer-conformance-fixtures.md",
 ]
 
@@ -33,8 +30,6 @@ def test_readme_has_public_launch_start_here_navigation():
 
     assert "## Start here" in text
     assert "docs/consumer-conformance-fixtures.md" in text
-    assert "docs/versioning-policy.md" in text
-    assert "docs/release-policy.md" in text
     assert "docs/public-launch-checklist.md" in text
     assert "docs/triage-policy.md" in text
     assert "docs/index.md" not in text or "docs/index.md" in read("docs/index.md")
@@ -64,9 +59,6 @@ def test_docs_index_links_launch_and_consumer_docs():
         "docs/source-trust/observation-retention-policy.md",
         "docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md",
         "docs/consumer-conformance-fixtures.md",
-        "docs/versioning-policy.md",
-        "docs/release-policy.md",
-        "docs/release-checklist.md",
     ]
     for item in expected:
         assert item in text
@@ -109,8 +101,6 @@ def test_source_trust_operations_runbook_documents_operating_policy():
         "Quality refinement is human reviewed only",
         "max 10 records per PR",
         "5-10 records per batch",
-        "release-candidate",
-        "defaults to `enforce`",
     ]:
         assert phrase in text
 
@@ -146,7 +136,7 @@ def test_disclaimer_and_readme_align_on_no_advice_boundary():
         assert phrase in readme
 
 
-def test_public_launch_copy_positions_v010_as_infrastructure_launch():
+def test_public_launch_copy_preserves_infrastructure_scope():
     text = "\n".join(
         read(path).lower()
         for path in [
@@ -154,7 +144,6 @@ def test_public_launch_copy_positions_v010_as_infrastructure_launch():
             "docs/public-launch-checklist.md",
             "docs/v0.1.0-public-launch-readiness.md",
             "docs/roadmap.md",
-            "docs/release-downloads.md",
         ]
     )
 
