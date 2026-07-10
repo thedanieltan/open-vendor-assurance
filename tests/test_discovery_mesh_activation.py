@@ -137,14 +137,13 @@ def write_plan(root: Path, run_token: str, vendor_id: str, actions: list[dict]) 
 
 
 def test_builds_one_plan_per_vendor_without_vendor_or_action_cap(tmp_path: Path) -> None:
-    actions = []
-    for index in range(1_250):
-        vendor_id = f"vendor-{index:04d}"
-        actions.append(reviewed_action(vendor_id, f"{vendor_id}-dpa"))
-    raw = {"actions": actions}
+    actions = [
+        reviewed_action(f"vendor-{index:04d}", f"vendor-{index:04d}-dpa")
+        for index in range(1_250)
+    ]
 
     paths, manifest = build_vendor_promotion_plans(
-        raw,
+        {"actions": actions},
         source_plan_path="mesh-promotion-plan.raw.json",
         run_token="run-123",
         output_root=tmp_path / "maintenance" / "reviewed" / "discovery-mesh",
@@ -158,7 +157,7 @@ def test_builds_one_plan_per_vendor_without_vendor_or_action_cap(tmp_path: Path)
     assert all(json.loads(path.read_text(encoding="utf-8"))["summary"]["vendor_count"] == 1 for path in paths)
 
 
-def test_groups_multiple_source_actions_for_the_same_vendor() -> None:
+def test_groups_multiple_source_actions_for_the_same_vendor(tmp_path: Path) -> None:
     plan = {
         "actions": [
             reviewed_action("alpha", "alpha-dpa", "dpa"),
@@ -171,7 +170,7 @@ def test_groups_multiple_source_actions_for_the_same_vendor() -> None:
         plan,
         source_plan_path="raw.json",
         run_token="run-1",
-        output_root=Path(pytest.ensuretemp("mesh-plans")),
+        output_root=tmp_path / "plans",
     )
 
     assert manifest["summary"]["vendor_plan_count"] == 2
@@ -195,9 +194,11 @@ def test_validates_complete_official_domain_intake(tmp_path: Path) -> None:
     write_vendor(tmp_path, "alpha")
     candidate = write_candidate(tmp_path, "alpha", "alpha-dpa")
     plan = write_plan(tmp_path, "run-1", "alpha", [reviewed_action("alpha", "alpha-dpa")])
-    changed = [candidate.relative_to(tmp_path).as_posix(), plan.relative_to(tmp_path).as_posix()]
 
-    report = validate_intake(tmp_path, changed)
+    report = validate_intake(
+        tmp_path,
+        [candidate.relative_to(tmp_path).as_posix(), plan.relative_to(tmp_path).as_posix()],
+    )
 
     assert report["valid"] is True
     assert report["summary"] == {
