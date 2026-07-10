@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "queue_type": "catalog_growth_discovery_queue",
-  "purpose": "Drive top-500 assurance-convergence vendor discovery from OpenVA coverage lanes without treating discovered vendors or sources as canonical truth.",
+  "purpose": "Drive top-500 assurance-convergence vendor discovery as the initial OpenVA baseline without treating discovered vendors or sources as canonical truth.",
   "non_advisory": true,
-  "closure_target": {
-    "target_id": "top_500_assurance_convergence_vendors",
+  "discovery_target": {
+    "target_id": "top_500_assurance_convergence_baseline",
     "target_vendor_candidates": 500,
-    "completion_policy": "Capture the highest-value recurring vendor-assurance candidates across the declared coverage lanes, then rely on bounded official-domain and sitemap source discovery plus existing promotion gates. Do not expand into an unbounded crawler or a second catalog database."
+    "expansion_policy": "Capture the highest-value recurring vendor-assurance candidates across the declared coverage lanes first. After the top-500 baseline is materially covered, expansion may continue through curated coverage-lane additions, regional/sector cohorts, user-submitted candidates, and bounded official-domain or sitemap source discovery. Do not expand into an unbounded crawler or a second catalog database."
   },
   "posture": {
     "network_fetch_performed": true,
