@@ -98,7 +98,6 @@ def _esc(value: Any) -> str:
 
 def _write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    # Newline-normalised so byte-for-byte determinism holds across platforms.
     path.write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8", newline="\n")
 
 
@@ -110,18 +109,11 @@ def _source_health_label(source: dict[str, Any]) -> str | None:
 
 
 def _latest_observed_at(source: dict[str, Any]) -> str | None:
-    # Only a genuine observation timestamp counts. provenance.collected_at is
-    # catalog-curation metadata, not an observation, so it is never used here;
-    # an unobserved source renders the empty state instead.
     verified = (source.get("source_health") or {}).get("verified_at")
     return str(verified) if verified else None
 
 
-def _vendor_dataset_jsonld(
-    config: PublicationConfig,
-    vendor: dict[str, Any],
-    export_url: str,
-) -> str:
+def _vendor_dataset_jsonld(config: PublicationConfig, vendor: dict[str, Any], export_url: str) -> str:
     payload = {
         "@context": "https://schema.org",
         "@type": "Dataset",
@@ -159,9 +151,9 @@ def render_vendor_page(
 
     domains = [d for d in (vendor.get("official_domains") or []) if d]
     domain_html = (
-        "<ul class=\"chips\">" + "".join(f"<li>{_esc(d)}</li>" for d in domains) + "</ul>"
+        '<ul class="chips">' + "".join(f"<li>{_esc(d)}</li>" for d in domains) + "</ul>"
         if domains
-        else "<p class=\"muted\">No official domains recorded.</p>"
+        else '<p class="muted">No official domains recorded.</p>'
     )
 
     ordered = sorted(sources, key=lambda s: (str(s.get("source_type") or ""), str(s.get("source_url") or "")))
@@ -173,7 +165,7 @@ def render_vendor_page(
             rows.append(
                 "<tr>"
                 f"<td>{_esc(source.get('source_type'))}</td>"
-                f"<td class=\"url\"><a href=\"{_esc(source.get('source_url'))}\" rel=\"nofollow noopener\">{_esc(source.get('source_url'))}</a></td>"
+                f'<td class="url"><a href="{_esc(source.get("source_url"))}" rel="nofollow noopener">{_esc(source.get("source_url"))}</a></td>'
                 f"<td>{_esc(health) if health else f'<span class=\"muted\">{MISSING_SOURCE_HEALTH_LABEL}</span>'}</td>"
                 f"<td>{_esc(observed) if observed else '<span class=\"muted\">—</span>'}</td>"
                 "</tr>"
@@ -185,7 +177,7 @@ def render_vendor_page(
             "</tr></thead><tbody>" + "".join(rows) + "</tbody></table>"
         )
     else:
-        sources_html = "<p class=\"muted\">No public assurance sources are recorded yet.</p>"
+        sources_html = '<p class="muted">No public assurance sources are recorded yet.</p>'
 
     jsonld = _vendor_dataset_jsonld(config, vendor, export_url)
 
@@ -218,8 +210,7 @@ def render_vendor_page(
       {sources_html}
 
       <h2>Machine-readable export</h2>
-      <p>The full source map for this vendor, with content digest and snapshot
-      identity, is published as JSON:</p>
+      <p>The full source map for this vendor, with content digest and snapshot identity, is published as JSON:</p>
       <ul class="links">
         <li><a href="{_esc(export_url)}">Vendor JSON export</a></li>
         <li><a href="{_esc(config.agent_index_url)}">Agent index</a></li>
@@ -264,14 +255,9 @@ def render_agents_page(config: PublicationConfig, *, commit_sha: str, snapshot_d
       </header>
 
       <h2>What is available</h2>
-      <p>OpenVA publishes a public registry of vendor-published assurance source
-      references as static JSON. Each record carries the source type, the
-      original vendor-published URL, observed source health where known, the
-      latest observation timestamp where known, and snapshot identity.</p>
+      <p>OpenVA publishes a public registry of vendor-published assurance source references as static JSON. Each record carries the source type, original vendor-published URL, observed source health where known, latest observation timestamp where known, and snapshot identity.</p>
 
       <h2>Where to start</h2>
-      <p>Begin at the agent index. It lists every export with its content digest
-      and the per-vendor export template.</p>
       <ul class="links">
         <li><a href="{_esc(config.agent_index_url)}">Agent index</a></li>
         <li><a href="{_esc(config.vendor_index_url)}">Vendor index</a></li>
@@ -280,32 +266,19 @@ def render_agents_page(config: PublicationConfig, *, commit_sha: str, snapshot_d
       </ul>
 
       <h2>Pin and verify a snapshot</h2>
-      <p>Every export carries a <code>snapshot</code> block
-      (<code>commit_sha</code>, <code>generated_at</code>, <code>digest</code>).
-      Pin a consumer to a <code>commit_sha</code> for reproducibility. To verify a
-      file, remove its <code>snapshot</code> block, serialize the remainder as
-      canonical JSON (UTF-8, sorted keys, no trailing newline), and compute
-      <code>sha256</code> over those bytes; the result must equal
-      <code>snapshot.digest</code>. The agent index lists the digest of every
-      other file.</p>
+      <p>Every export carries a <code>snapshot</code> block (<code>commit_sha</code>, <code>generated_at</code>, <code>digest</code>). Pin a consumer to a <code>commit_sha</code> for reproducibility. To verify a file, remove its <code>snapshot</code> block, serialize the remainder as canonical JSON, and compare its SHA-256 digest.</p>
 
       <h2>Citing vendor sources</h2>
-      <p>Always cite the original vendor-published source URL from each record.
-      OpenVA records the location and observed state of a public source; it does
-      not host, mirror, or replace the vendor's own document.</p>
+      <p>Always cite the original vendor-published source URL. OpenVA records the location and observed state of a public source; it does not host, mirror, or replace the vendor's own document.</p>
 
-      <h2>Downloads and adapters</h2>
+      <h2>Repository and contract</h2>
       <ul class="links">
-        <li><a href="{_esc(config.release_url)}">Release downloads</a></li>
         <li><a href="{_esc(config.repository_url)}">Repository</a></li>
         <li><a href="{_esc(config.export_contract_url)}">Export contract</a></li>
       </ul>
 
       <h2>MCP support</h2>
-      <p>No installable OpenVA MCP server is published yet. The discovery
-      manifest reports MCP availability as <code>false</code> until one ships;
-      consumers should treat the static exports as the integration surface for
-      now.</p>
+      <p>The discovery manifest reports current MCP availability. Static exports remain the baseline read-only integration surface.</p>
 
       <div class="boundary">
         <p>{_esc(PUBLIC_SOURCE_BOUNDARY)}</p>
@@ -326,13 +299,6 @@ HOMEPAGE_PLACEHOLDERS = ("{{OPENVA_HOME_URL}}", "{{OPENVA_AGENT_INDEX_URL}}")
 
 
 def render_index_html(template: str, config: PublicationConfig) -> str:
-    """Substitute publication-config URLs into the homepage template.
-
-    A minimal token replacement, not a template engine: the homepage's
-    OpenVA-owned metadata URLs (og:url, canonical, structured-data URLs, and the
-    agent-index download URL) come from config/publication.yaml so a host change
-    is a one-line config edit.
-    """
     return (
         template
         .replace("{{OPENVA_HOME_URL}}", config.url(""))
@@ -341,11 +307,7 @@ def render_index_html(template: str, config: PublicationConfig) -> str:
 
 
 def render_robots(config: PublicationConfig) -> str:
-    return (
-        "User-agent: *\n"
-        "Allow: /\n"
-        f"Sitemap: {config.url('sitemap.xml')}\n"
-    )
+    return "User-agent: *\nAllow: /\n" f"Sitemap: {config.url('sitemap.xml')}\n"
 
 
 def render_sitemap(config: PublicationConfig, vendor_ids: list[str], *, lastmod: str) -> str:
@@ -358,42 +320,34 @@ def render_sitemap(config: PublicationConfig, vendor_ids: list[str], *, lastmod:
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        f"{entries}"
-        "</urlset>\n"
+        f"{entries}</urlset>\n"
     )
 
 
 def render_llms_txt(config: PublicationConfig) -> str:
-    return f"""\
-# {config.project_name}
+    return f"""# {config.project_name}
 
 > Public, machine-readable registry of vendor-published assurance source
-> references (privacy notices, DPAs, subprocessor lists, trust centers,
-> security pages, certification references). Metadata only; not advice.
+> references. Metadata only; not advice.
 
 ## Start here
 - [Agent index]({config.agent_index_url}): root index of every export, with content digests
 - [Vendor index]({config.vendor_index_url}): all catalogued vendors
 - [Source index]({config.source_index_url}): flat list of public source references
 - [Export contract]({config.export_contract_url}): export shapes and digest verification
-- [Release downloads]({config.release_url}): tagged CSV and bulk assets
+- [Source repository]({config.repository_url}): current accepted catalog and history
 
 ## Rules for consumers
+- Pin an exact commit SHA or verified digest when a fixed state is required.
 - Always cite the original vendor-published source URL recorded on each source.
-- OpenVA makes no compliance, suitability, security, or risk determination
-  about any vendor. Records are factual metadata, not advice.
+- OpenVA makes no compliance, suitability, security, or risk determination about any vendor.
 
 This file is a convenience pointer, not an authority or integrity mechanism.
 Verify snapshots with the digests in the agent index.
 """
 
 
-def discovery_manifest(
-    config: PublicationConfig,
-    *,
-    commit_sha: str,
-    generated_at: str,
-) -> dict[str, Any]:
+def discovery_manifest(config: PublicationConfig, *, commit_sha: str, generated_at: str) -> dict[str, Any]:
     payload = {
         "schema_version": DISCOVERY_SCHEMA_VERSION,
         "project": config.project_name,
@@ -403,7 +357,7 @@ def discovery_manifest(
         "vendor_index_url": config.vendor_index_url,
         "source_index_url": config.source_index_url,
         "export_contract_url": config.export_contract_url,
-        "release_url": config.release_url,
+        "publication_model": "continuous_main",
         "mcp": {"available": False, "manifest_url": None},
         "not_advice": True,
     }
@@ -425,9 +379,7 @@ def build_discovery(
     commit_sha: str,
     generated_at: str,
 ) -> dict[str, Any]:
-    """Emit the discovery surface into an already-built site tree."""
     snapshot_date = generated_at[:10]
-
     _write(output_dir / "assets" / "openva-pages.css", PAGE_STYLESHEET)
 
     vendor_ids: list[str] = []
@@ -452,10 +404,7 @@ def build_discovery(
     _write(output_dir / "llms.txt", render_llms_txt(config))
 
     manifest = discovery_manifest(config, commit_sha=commit_sha, generated_at=generated_at)
-    _write(
-        output_dir / ".well-known" / "openva.json",
-        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
-    )
+    _write(output_dir / ".well-known" / "openva.json", json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
     return {
         "vendor_pages": len(vendor_ids),
