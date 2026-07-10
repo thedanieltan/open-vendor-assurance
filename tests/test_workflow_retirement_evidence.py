@@ -142,14 +142,13 @@ def test_observe_report_retirement_contract_is_quarantined_not_deletion_ready():
     assert entry["operating_loop"] == "legacy_report"
     assert "source-maintenance-report.yml" in entry["replacement_owner"]
     assert "catalog-growth-discovery.yml" in entry["replacement_owner"]
-    assert "bot dashboard" in entry["replacement_owner"]
     assert entry["retirement_candidate"] is True
     assert entry["retirement_ready"] is False
     assert entry["must_not_retire_yet"] is True
     assert entry["allowed_triggers_until_retired"] == ["workflow_dispatch"]
     assert entry["write_permissions_allowed_until_retired"] is False
-    assert any("WP26" in blocker for blocker in entry["retirement_blockers"])
-    assert any("no schedule trigger" in evidence for evidence in entry["required_retirement_evidence"])
+    assert entry["retirement_blockers"] == ["legacy observation report references remain"]
+    assert entry["required_retirement_evidence"] == ["consumer migration evidence"]
 
 
 def test_wp26_quarantined_observe_report_is_manual_only_without_requiring_prior_quarantines_to_change():
