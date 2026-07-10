@@ -15,7 +15,7 @@ from openva_match_service.app import create_app  # noqa: E402
 from openva_match_service.config import ServiceConfig  # noqa: E402
 
 
-def test_agent_can_read_public_catalog_metadata() -> None:
+def test_agent_can_call_enrichment_endpoint() -> None:
     app = create_app(
         ServiceConfig(
             pack_path=Path("."),
@@ -23,10 +23,18 @@ def test_agent_can_read_public_catalog_metadata() -> None:
             public_read_enabled=True,
         )
     )
+    payload = {
+        "vendors": [
+            {"row_id": "known", "vendor_name": "Stripe", "domain": "stripe.com"},
+            {"row_id": "unknown", "vendor_name": "Definitely Not A Vendor 9000"},
+        ],
+        "source_types": ["dpa", "privacy_notice"],
+    }
     with TestClient(app) as client:
-        response = client.get("/v1/catalog/meta")
+        response = client.post("/v1/enrich", json=payload)
 
     assert response.status_code == 200, response.text
     body = response.json()
-    assert body["snapshot"]["vendor_count"] > 0
-    assert body["snapshot"]["source_count"] > 0
+    assert body["not_advice"] is True
+    assert len(body["results"]) == 2
+    assert [row["row_id"] for row in body["results"]] == ["known", "unknown"]
