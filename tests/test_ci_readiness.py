@@ -24,9 +24,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "coverage-audit.yml",
     "observation-ledger-append-pr.yml",
     "observe-report.yml",
-    "release-candidate.yml",
     "release-image.yml",
-    "release-downloads.yml",
     "site-live-feed.yml",
     "site-pages.yml",
     "source-maintenance-report.yml",
@@ -116,35 +114,6 @@ def test_validate_workflow_checks_generated_pack_and_indexes():
     assert "pytest -q" in text
 
 
-def test_release_candidate_builds_report_only_source_health_readiness():
-    text = (WORKFLOW_DIR / "release-candidate.yml").read_text(encoding="utf-8")
-    workflow = load_workflow("release-candidate.yml")
-    triggers = workflow_triggers(workflow)
-    assert workflow["permissions"] == {"contents": "read", "actions": "read"}
-    assert "Download latest source maintenance artifacts" in text
-    assert "gh run list" in text
-    assert "--workflow source-maintenance-report.yml" in text
-    assert "gh run download" in text
-    assert "--name openva-source-maintenance-report" in text
-    assert "source health artifact unavailable" in text
-    assert "Download latest source refinement scan artifacts" in text
-    assert "--workflow source-refinement-scan.yml" in text
-    assert "--name openva-confirmed-p0-source-refinement-scan" in text
-    assert "source-refinement-artifacts/confirmed-p0-repair-candidates.json" in text
-    assert "confirmed P0 scan artifact unavailable" in text
-    assert "python -m tools.openva.release_source_health check" in text
-    assert "--report-only" in text
-    assert "--enforce" in text
-    # WP35: source health is the producer; the aggregate release gate is the
-    # authoritative final enforcer.
-    assert "python -m tools.openva.release_gates check" in text
-    assert "RELEASE_GATES_EXIT_CODE" in text
-    assert "release-source-health-readiness.json" in text
-    assert "release-source-health-summary.md" in text
-    assert "release-gates.json" in text
-    assert triggers["workflow_dispatch"]["inputs"]["source_health_policy"]["default"] == "enforce"
-
-
 def test_catalog_guard_workflow_is_read_only_and_pr_scoped():
     workflow = load_workflow("catalog-pr-guard.yml")
     triggers = workflow_triggers(workflow)
@@ -203,7 +172,6 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         "catalog-growth-promotion-bridge.yml": {"triggers": {"workflow_run", "workflow_dispatch"}, "permissions": {"actions": "write", "contents": "read", "issues": "read", "pull-requests": "read"}},
         "contribution-intake-agent.yml": {"triggers": {"issues", "workflow_dispatch"}, "permissions": {"contents": "write", "pull-requests": "write", "issues": "write"}},
         "submitted-source-verification.yml": {"triggers": {"issues", "workflow_dispatch"}, "permissions": {"contents": "read", "issues": "write"}},
-        "release-downloads.yml": {"triggers": {"push"}, "permissions": {"contents": "write"}},
         "site-live-feed.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "pages": "write", "id-token": "write"}},
         "site-pages.yml": {"triggers": {"push", "workflow_dispatch"}, "permissions": {"contents": "read", "actions": "read", "pages": "write", "id-token": "write"}},
         "agent-weighted-review.yml": {"triggers": {"pull_request"}, "permissions": {"contents": "read", "pull-requests": "read", "issues": "write"}},
