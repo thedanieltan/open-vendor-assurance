@@ -1,0 +1,170 @@
+version: 1
+fallback: full_suite
+
+components:
+  contract:
+    kind: shared-contract
+    manifests: []
+    change_patterns:
+      - schemas/**
+      - data/**
+      - indexes/**
+      - fixtures/packs/**
+      - openva-pack.json
+    test_patterns:
+      - tests
+    dependencies: []
+    full_suite: true
+
+  core-tools:
+    kind: python-package
+    manifests:
+      - pyproject.toml
+    install_path: .
+    change_patterns:
+      - tools/openva/**
+      - config/**
+      - maintenance/**
+      - pyproject.toml
+    test_patterns:
+      - tests
+    dependencies:
+      - contract
+    full_suite: true
+
+  pack-reader:
+    kind: python-package
+    manifests:
+      - adapters/python/openva_pack_reader/pyproject.toml
+    install_path: adapters/python/openva_pack_reader
+    change_patterns:
+      - adapters/python/openva_pack_reader/**
+    test_patterns:
+      - tests/test_openva_pack_reader.py
+    dependencies:
+      - contract
+
+  csv-export:
+    kind: python-package
+    manifests:
+      - adapters/python/openva_csv_export/pyproject.toml
+    install_path: adapters/python/openva_csv_export
+    change_patterns:
+      - adapters/python/openva_csv_export/**
+    test_patterns:
+      - tests/test_openva_csv_export.py
+    dependencies:
+      - pack-reader
+
+  jsonl-export:
+    kind: python-package
+    manifests:
+      - adapters/python/openva_jsonl_export/pyproject.toml
+    install_path: adapters/python/openva_jsonl_export
+    change_patterns:
+      - adapters/python/openva_jsonl_export/**
+    test_patterns:
+      - tests/test_openva_jsonl_export.py
+    dependencies:
+      - pack-reader
+
+  sqlite-export:
+    kind: python-package
+    manifests:
+      - adapters/python/openva_sqlite_export/pyproject.toml
+    install_path: adapters/python/openva_sqlite_export
+    change_patterns:
+      - adapters/python/openva_sqlite_export/**
+    test_patterns:
+      - tests/test_openva_sqlite_export.py
+    dependencies:
+      - pack-reader
+
+  inventory-matcher:
+    kind: python-package
+    manifests:
+      - adapters/python/openva_vendor_inventory_matcher/pyproject.toml
+    install_path: adapters/python/openva_vendor_inventory_matcher
+    change_patterns:
+      - adapters/python/openva_vendor_inventory_matcher/**
+    test_patterns:
+      - tests/test_openva_vendor_inventory_matcher.py
+      - tests/test_matching_conformance.py
+      - tests/test_openva_enrichment_parity.py
+      - tests/test_legal_entity_export_ratification.py
+    dependencies:
+      - pack-reader
+
+  match-service:
+    kind: service
+    manifests:
+      - services/openva_match_service/pyproject.toml
+    install_path: services/openva_match_service
+    change_patterns:
+      - services/openva_match_service/**
+    test_patterns:
+      - tests/test_openva_match_service*.py
+      - tests/test_openva_enrichment_api.py
+      - tests/test_hosted_job_lifecycle.py
+      - tests/test_hosted_*.py
+    dependencies:
+      - contract
+      - inventory-matcher
+
+  mcp:
+    kind: integration
+    manifests:
+      - integrations/mcp/openva_mcp/pyproject.toml
+    install_path: integrations/mcp/openva_mcp
+    change_patterns:
+      - integrations/mcp/openva_mcp/**
+    test_patterns:
+      - tests/test_openva_mcp*.py
+      - tests/test_openva_enrichment_parity.py
+    dependencies:
+      - contract
+      - inventory-matcher
+
+  browser-site:
+    kind: static-site
+    manifests: []
+    change_patterns:
+      - site/**
+    test_patterns:
+      - tests/test_site.py
+      - tests/test_resolver_result_pack.py
+    dependencies:
+      - contract
+
+  google-sheets:
+    kind: integration
+    manifests:
+      - integrations/google-sheets/appsscript.json
+    change_patterns:
+      - integrations/google-sheets/**
+    test_patterns:
+      - tests/test_google_sheets_integration.py
+    dependencies:
+      - match-service
+
+  repository-control:
+    kind: governance
+    manifests: []
+    change_patterns:
+      - .github/**
+      - docs/**
+      - README.md
+      - CONTRIBUTING.md
+      - GOVERNANCE.md
+      - SECURITY.md
+      - AGENTS.md
+      - LICENSE
+      - .gitignore
+    test_patterns:
+      - tests/test_ci_readiness.py
+      - tests/test_workflow_*.py
+      - tests/test_pr_scope_guard.py
+      - tests/test_operational_pr_scope.py
+      - tests/test_ai_native_distribution_docs.py
+      - tests/test_hosted_deployment_docs.py
+    dependencies: []
