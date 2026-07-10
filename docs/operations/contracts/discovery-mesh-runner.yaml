@@ -1,0 +1,14 @@
+schema_version: "0.1.0"
+runner:
+  mode: deterministic_shards
+  catalog_vendor_cap: null
+  default_vendor_limit: null
+  writes_canonical_state: false
+aggregate:
+  stages_candidate_sources: true
+  writes_canonical_state: false
+promotion:
+  authority_workflow: candidate-promotion-pr.yml
+network:
+  per_vendor_bounds_required: true
+not_advice: true
