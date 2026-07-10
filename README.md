@@ -366,3 +366,13 @@ OpenVA exports consumer-neutral source-reference metadata and dataset packs. Imp
 ## Public-source-only rule
 
 If a source requires login, NDA, customer status, sales approval, support ticket access, private portal access, credentialed access, form submission, or anti-bot bypass, it is out of scope.
+
+## Licensing and public reuse
+
+OpenVA is intended to be freely forked, modified, redistributed, self-hosted, and built upon for commercial or non-commercial use.
+
+- Software and project documentation remain under the MIT License in `LICENSE`.
+- OpenVA-authored catalog metadata and generated data are dedicated under CC0 1.0 Universal.
+- Vendor documents, trademarks, pages, and other third-party materials remain with their respective owners and are not licensed by OpenVA.
+
+Forks and substantial software redistributions must retain the MIT notice. CC0-covered catalog metadata has no attribution or share-alike requirement. See `docs/licensing.md` for the detailed boundary.
