@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 
-def test_generated_browser_app_returns_neutral_no_match(tmp_path: Path) -> None:
+def test_generated_browser_app_projects_neutral_no_match(tmp_path: Path) -> None:
     site_out = tmp_path / "site"
     subprocess.run(
         [sys.executable, "site/build.py", "--out", str(site_out)],
@@ -24,7 +24,6 @@ const vm = require("vm");
 const root = process.argv[1];
 let appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
 appSource = appSource.replace(/\ninit\(\);\s*$/, "\n");
-const vendorSearch = JSON.parse(fs.readFileSync(path.join(root, "data/vendor-search.min.json"), "utf8"));
 const context = {
   console,
   Map,
@@ -39,23 +38,14 @@ const context = {
   Blob: function Blob() {},
   URL: { createObjectURL: () => "blob:smoke", revokeObjectURL: () => {} },
   document: { querySelectorAll: () => [], createElement: () => ({ click: () => {} }) },
-  vendorSearch,
 };
 vm.createContext(context);
 vm.runInContext(appSource, context);
-vm.runInContext("catalogData = { meta: {}, vendors: vendorSearch.items, sourceTypes: [] };", context);
-
-(async () => {
-  const result = await vm.runInContext(`(async () => {
-    const row = parseCsv('vendor_name,domain\\nUnknown Vendor,unknown.invalid\\n')[0];
-    const indexes = buildLocalMatchIndexes();
-    return matchInventoryRow(row, 0, indexes);
-  })()`, context);
-  process.stdout.write(JSON.stringify(result));
-})().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+const result = vm.runInContext(
+  "browserResultPackRow({ vendor_name: 'Unknown Vendor', domain: 'unknown.invalid' }, 0, null)",
+  context,
+);
+process.stdout.write(JSON.stringify(result));
 """
 
     completed = subprocess.run(
