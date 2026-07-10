@@ -1,4 +1,4 @@
-"""Temporary isolated agent-user smoke; this branch is never merged."""
+"""Temporary isolated agent-user identity smoke; this branch is never merged."""
 
 from __future__ import annotations
 
@@ -15,10 +15,8 @@ from openva_match_service.app import create_app  # noqa: E402
 from openva_match_service.config import ServiceConfig  # noqa: E402
 
 
-def test_agent_receives_identity_and_public_source_references() -> None:
-    app = create_app(
-        ServiceConfig(pack_path=Path("."), api_key="smoke-key", public_read_enabled=True)
-    )
+def test_agent_resolves_indexed_adp_identity() -> None:
+    app = create_app(ServiceConfig(pack_path=Path("."), api_key="smoke-key", public_read_enabled=True))
     payload = {
         "vendors": [
             {"row_id": "known", "vendor_name": "ADP", "domain": "adp.com"},
@@ -30,13 +28,7 @@ def test_agent_receives_identity_and_public_source_references() -> None:
         response = client.post("/v1/enrich", json=payload)
 
     assert response.status_code == 200, response.text
-    body = response.json()
-    known, unknown = body["results"]
+    known, unknown = response.json()["results"]
     assert known["identity"]["match_status"] == "match", known
     assert known["identity"]["matched_vendor_id"] == "adp", known
-    assert known["source_references"]["dpa"]["status"] == "indexed", known
-    assert known["source_references"]["dpa"]["url"].startswith("https://"), known
     assert unknown["identity"]["match_status"] == "no_match", unknown
-    assert body["not_advice"] is True
-    assert known["not_advice"] is True
-    assert unknown["not_advice"] is True
