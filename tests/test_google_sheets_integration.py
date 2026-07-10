@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 
-def test_generated_browser_app_reads_cached_adp_sources(tmp_path: Path) -> None:
+def test_generated_browser_app_resolves_adp_result_pack_row(tmp_path: Path) -> None:
     site_out = tmp_path / "site"
     subprocess.run(
         [sys.executable, "site/build.py", "--out", str(site_out)],
@@ -26,6 +26,8 @@ let appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
 appSource = appSource.replace(/\ninit\(\);\s*$/, "\n");
 const vendorSearch = JSON.parse(fs.readFileSync(path.join(root, "data/vendor-search.min.json"), "utf8"));
 const knownDetail = JSON.parse(fs.readFileSync(path.join(root, "data/vendors/adp.json"), "utf8"));
+const selectedFields = ["trust_security", "dpa", "subprocessors", "privacy_notice", "status_page"]
+  .map((sourcePackField) => ({ dataset: { sourcePackField }, checked: true }));
 const context = {
   console,
   Map,
@@ -39,7 +41,10 @@ const context = {
   Date,
   Blob: function Blob() {},
   URL: { createObjectURL: () => "blob:smoke", revokeObjectURL: () => {} },
-  document: { querySelectorAll: () => [], createElement: () => ({ click: () => {} }) },
+  document: {
+    querySelectorAll: (selector) => selector.includes("data-source-pack-field") ? selectedFields : [],
+    createElement: () => ({ click: () => {} }),
+  },
   vendorSearch,
   knownDetail,
 };
@@ -52,12 +57,9 @@ vm.runInContext(
 
 (async () => {
   const result = await vm.runInContext(`(async () => {
-    const summary = await vendorSourceSummary('adp');
-    return {
-      sourceCount: summary.sources.length,
-      sourceTypes: summary.sourceTypes,
-      dpaUrl: (summary.sources.find((source) => source.source_type === 'dpa') || {}).source_url || null,
-    };
+    const row = parseCsv('vendor_name,domain\\nADP,adp.com\\n')[0];
+    const indexes = buildLocalMatchIndexes();
+    return matchInventoryRow(row, 0, indexes);
   })()`, context);
   process.stdout.write(JSON.stringify(result));
 })().catch((error) => {
@@ -73,6 +75,7 @@ vm.runInContext(
         text=True,
     )
     result = json.loads(completed.stdout)
-    assert result["sourceCount"] > 0
-    assert "dpa" in result["sourceTypes"]
-    assert result["dpaUrl"].startswith("https://")
+    assert result["result_pack_version"] == "2.0.0"
+    assert result["matched_vendor_name"] == "ADP"
+    assert result["official_domain"] == "adp.com"
+    assert result["dpa_url"].startswith("https://")
