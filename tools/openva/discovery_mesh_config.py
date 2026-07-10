@@ -1,0 +1,31 @@
+"""Operational configuration for the discovery mesh worker.
+
+Catalog breadth is intentionally uncapped. Resource bounds below are per vendor,
+not limits on the number of vendors OpenVA may discover or maintain.
+"""
+
+from __future__ import annotations
+
+CATALOG_VENDOR_LIMIT: int | None = None
+DEFAULT_SHARD_COUNT = 32
+
+MAX_DEPTH_PER_VENDOR = 2
+MAX_PAGES_PER_VENDOR = 5_000
+MAX_TOTAL_REQUESTS_PER_VENDOR = 7_500
+MAX_LINKS_PER_PAGE = 2_000
+MAX_LOCATOR_CANDIDATES_PER_VENDOR = 10_000
+MAX_DELEGATED_HOSTS_PER_VENDOR = 500
+MAX_RELATIONSHIP_PAGES_PER_VENDOR = 500
+FETCH_TIMEOUT_SECONDS = 10.0
+
+BREADTH_SHARE = 0.45
+DEPTH_SHARE = 0.40
+MAINTENANCE_SHARE = 0.15
+CANDIDATE_PROMOTION_ACTION_CAP: int | None = None
+INTAKE_AUTOMERGE = True
+CANONICAL_MUTATION_WORKFLOW = "candidate-promotion-pr.yml"
+
+FULL_CATALOG_SHARDED = True
+SIGNALS_ARE_CATALOG_FACTS = False
+CANONICAL_MUTATION_AUTHORITY_UNCHANGED = True
+NON_ADVISORY = True
