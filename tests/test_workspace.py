@@ -34,11 +34,18 @@ def test_repository_workspace_manifest_is_valid_and_complete() -> None:
         "mcp",
         "browser-site",
         "google-sheets",
+        "operational-governance",
+        "distribution-positioning",
+        "hosted-deployment-contracts",
         "repository-control",
     }
     assert workspace.components["inventory-matcher"].dependencies == ("pack-reader",)
     assert workspace.components["mcp"].dependencies == ("contract", "inventory-matcher")
     assert workspace.components["google-sheets"].dependencies == ("match-service",)
+    assert workspace.components["hosted-deployment-contracts"].dependencies == (
+        "contract",
+        "match-service",
+    )
 
 
 def test_pack_reader_change_expands_to_reverse_dependents() -> None:
@@ -59,11 +66,13 @@ def test_pack_reader_change_expands_to_reverse_dependents() -> None:
         "match-service",
         "mcp",
         "google-sheets",
+        "hosted-deployment-contracts",
     }
     assert plan.full_suite is False
     assert "tests/test_openva_pack_reader.py" in plan.test_paths
     assert "tests/test_openva_vendor_inventory_matcher.py" in plan.test_paths
     assert "tests/test_openva_mcp.py" in plan.test_paths
+    assert "tests/test_hosted_deployment_docs.py" in plan.test_paths
     assert plan.build_order.index("pack-reader") < plan.build_order.index("inventory-matcher")
     assert plan.build_order.index("inventory-matcher") < plan.build_order.index("mcp")
 
@@ -117,6 +126,50 @@ def test_test_file_change_is_owned_by_its_component() -> None:
     assert plan.direct_components == ("csv-export",)
     assert plan.affected_components == ("csv-export",)
     assert plan.test_paths == ("tests/test_openva_csv_export.py",)
+
+
+def test_policy_workflow_change_does_not_pull_unrelated_governance_suites() -> None:
+    workspace = load_workspace(root=ROOT)
+    plan = plan_workspace(workspace, [".github/workflows/validate.yml"], root=ROOT)
+
+    assert plan.direct_components == ("repository-control",)
+    assert "tests/test_pr_scope_guard.py" in plan.test_paths
+    assert "tests/test_operational_pr_scope.py" not in plan.test_paths
+    assert "tests/test_ai_native_distribution_docs.py" not in plan.test_paths
+    assert "tests/test_hosted_deployment_docs.py" not in plan.test_paths
+
+
+def test_specialised_governance_surfaces_select_their_own_drift_tests() -> None:
+    workspace = load_workspace(root=ROOT)
+
+    operational = plan_workspace(
+        workspace,
+        [".github/workflows/discovery-ledger-append-pr.yml"],
+        root=ROOT,
+    )
+    assert set(operational.direct_components) == {
+        "operational-governance",
+        "repository-control",
+    }
+    assert "tests/test_operational_pr_scope.py" in operational.test_paths
+
+    positioning = plan_workspace(workspace, ["docs/agent-integrations.md"], root=ROOT)
+    assert set(positioning.direct_components) == {
+        "distribution-positioning",
+        "repository-control",
+    }
+    assert "tests/test_ai_native_distribution_docs.py" in positioning.test_paths
+
+    hosted = plan_workspace(
+        workspace,
+        ["docs/operations/contracts/hosted-deployment.yaml"],
+        root=ROOT,
+    )
+    assert set(hosted.direct_components) == {
+        "hosted-deployment-contracts",
+        "repository-control",
+    }
+    assert "tests/test_hosted_deployment_docs.py" in hosted.test_paths
 
 
 def test_dependency_cycle_is_rejected() -> None:
