@@ -154,16 +154,8 @@ public_workflows:
     writes_repository_state: true
     creates_prs: true
     merges_prs: false
-  - name: release-candidate.yml
-    loop: publication
-    status: core
-    triggers: [workflow_dispatch]
-    permissions: {contents: read, actions: read}
-    writes_repository_state: false
-    creates_prs: false
-    merges_prs: false
   - name: release-image.yml
-    loop: publication
+    loop: artifact_integrity
     status: core
     triggers: [workflow_dispatch]
     permissions: {contents: read, actions: read}
@@ -171,23 +163,15 @@ public_workflows:
     creates_prs: false
     merges_prs: false
   - name: site-pages.yml
-    loop: publication
+    loop: continuous_publication
     status: core
     triggers: [push, workflow_dispatch]
     permissions: {contents: read, actions: read, pages: write, id-token: write}
     writes_repository_state: false
     creates_prs: false
     merges_prs: false
-  - name: release-downloads.yml
-    loop: publication
-    status: core
-    triggers: [push]
-    permissions: {contents: write}
-    writes_repository_state: false
-    creates_prs: false
-    merges_prs: false
   - name: site-live-feed.yml
-    loop: publication
+    loop: continuous_publication
     status: core
     triggers: [workflow_dispatch, schedule]
     permissions: {contents: read, pages: write, id-token: write}
