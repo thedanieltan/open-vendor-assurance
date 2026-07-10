@@ -144,7 +144,6 @@ components:
       - integrations/google-sheets/**
     test_patterns:
       - tests/test_google_sheets_integration.py
-      - integrations/google-sheets/test/*.test.mjs
     dependencies:
       - match-service
 
