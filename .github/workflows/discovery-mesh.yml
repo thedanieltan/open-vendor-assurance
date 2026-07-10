@@ -171,7 +171,9 @@ jobs:
           git config user.name "openva-discovery-mesh"
           git config user.email "openva-discovery-mesh@users.noreply.github.com"
           git switch -c "$BRANCH"
-          git add data/vendors/*/candidate_sources/*.yaml maintenance/generated/*discovery-mesh*.json 2>/dev/null || true
+          find data/vendors -type f -path '*/candidate_sources/*.yaml' -print0 \
+            | xargs -0 -r git add --
+          git add maintenance/generated/*discovery-mesh*.json
           if git diff --cached --quiet; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
             exit 0
