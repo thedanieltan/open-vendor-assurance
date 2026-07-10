@@ -12,9 +12,6 @@ from tools.openva.catalog_growth_discovery_queue import (
 )
 
 
-QUEUE = Path("maintenance/queues/catalog-growth-discovery.json")
-
-
 def test_rejection_reason_codes_cannot_leak_raw_text():
     # Bounded codes pass through; the ParseError tail is dropped; anything with
     # whitespace/markup/free text (a page or robots snippet) maps to a generic code.
@@ -25,6 +22,9 @@ def test_rejection_reason_codes_cannot_leak_raw_text():
     assert _normalize_reason("<title>Secret internal page</title>") == "rejected_other"
     assert _normalize_reason("User-agent: * Disallow: /secret raw robots body") == "rejected_other"
     assert _normalize_reason("x" * 200) == "rejected_other"
+
+
+QUEUE = Path("maintenance/queues/catalog-growth-discovery.json")
 
 
 def _write(tmp_path, queue):
