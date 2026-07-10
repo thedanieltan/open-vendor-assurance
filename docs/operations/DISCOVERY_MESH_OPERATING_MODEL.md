@@ -29,12 +29,28 @@ Each shard:
 
 The aggregate job deduplicates shard results, stages verified noncanonical candidate-source records, preserves unresolved vendor identity signals, and builds a reviewed promotion plan.
 
+## Vendor-breadth replenishment
+
+The aggregate job also projects relationship identity observations through `vendor_breadth_replenishment` into four stable, noncanonical files:
+
+- `maintenance/generated/vendor-breadth-signal-ledger.json`;
+- `maintenance/generated/vendor-breadth-resolution-queue.json`;
+- `maintenance/generated/vendor-breadth-candidates.json`;
+- `maintenance/generated/vendor-breadth-provider-metrics.json`.
+
+The ledger is replay-idempotent. Reprocessing the same provider signal does not increment demand or observation counts and does not change persisted bytes. Distinct signal IDs, such as distinct resolver requests or separately attested provider records, accumulate as independent observations. Material corrections update the existing observation in place.
+
+Incomplete identities remain in the resolution queue. Only identities with a usable name, official-domain candidate, and country candidate enter `vendor-breadth-candidates.json`. Current and previous catalog domains are excluded. Provider-replenished candidates are not truncated by curated seed targets and are consumed by the existing `vendor_candidate_discovery` command.
+
+Relationship signals are produced automatically by the daily mesh. Resolver-demand and public-directory adapters use the same ledger contract and may be supplied by an authorized producer without changing the admission pipeline. Provider signals are evidence inputs, not catalog facts.
+
 ## Candidate-intake boundary
 
 The aggregate job opens `Ops: stage discovery mesh candidates` from an `agent-discovery-mesh-intake-*` branch. That PR may contain only:
 
 - `data/vendors/*/candidate_sources/*.yaml` records;
-- discovery-mesh identity signals, manifests, viability evidence, and the exact reviewed promotion plan under `maintenance/generated/`.
+- discovery-mesh identity signals, manifests, viability evidence, and the exact reviewed promotion plan under `maintenance/generated/`;
+- the stable vendor-breadth ledger, resolution queue, candidate projection, and cumulative provider metrics under `maintenance/generated/`.
 
 The candidate-intake PR does not contain canonical source or vendor mutations. It runs through normal validation and native auto-merge.
 
@@ -50,8 +66,10 @@ When an exact candidate-intake PR merges, the `promotion-handoff` job inside `di
 
 `candidate-promotion-pr.yml` remains the sole canonical catalog mutation authority. Its queue gate, source preflight, release gates, PR validation, generated-catalog risk classification, and automerge controls remain unchanged.
 
+New-vendor identities from `vendor-breadth-candidates.json` enter the existing vendor-candidate discovery, source-discovery, strict eligibility, materialization-envelope, machine-provisional, observation, quorum, and promotion path. The breadth ledger does not create a second admission or mutation path.
+
 ## Consolidation posture
 
 `discovery-mesh.yml` is deliberately one workflow rather than separate discovery, aggregation, intake, and promotion-bridge workflows. Event-specific job guards keep scheduled discovery and merged-intake handoff in one declared authority surface, limiting workflow sprawl.
 
-It is classified as `keep_core`. Retirement is blocked until another workflow demonstrates equivalent uncapped full-catalog sharding, candidate-only intake, exact-plan handoff, and preservation of `candidate-promotion-pr.yml` as the sole canonical mutation authority.
+It is classified as `keep_core`. Retirement is blocked until another workflow demonstrates equivalent uncapped full-catalog sharding, replay-idempotent breadth replenishment, candidate-only intake, exact-plan handoff, and preservation of `candidate-promotion-pr.yml` as the sole canonical mutation authority.
