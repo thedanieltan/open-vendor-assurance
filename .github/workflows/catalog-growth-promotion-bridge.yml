@@ -251,9 +251,9 @@ jobs:
           # Hand the single authorised cycle to the one existing mutation workflow.
           # This bridge never writes catalog state itself; candidate-promotion-pr.yml
           # regenerates/re-validates current evidence and remains the sole catalog
-          # write authority. Provenance (the source discovery run id) is recorded in
-          # the dispatched PR title, this step's audit, and the workflow summary.
-          ARGS=(-f "promotion_plan_mode=$MODE" -f "pr_title=Catalog: strict-growth promotion bridged from discovery run $RUN_ID")
+          # write authority. Provenance remains in this step's audit and workflow summary;
+          # the dispatched PR title must match the generated-catalog automerge lane.
+          ARGS=(-f "promotion_plan_mode=$MODE" -f "pr_title=Catalog: apply reviewed candidate source promotion")
           if [ -n "$CAP" ]; then
             ARGS+=(-f "max_promotion_actions_per_pr=$CAP")
           fi
