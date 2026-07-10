@@ -467,7 +467,7 @@ def test_policy_only_operational_freshness_exemption_rejects_non_policy_and_mixe
     assert not scope_policy_operational_freshness_exemption([], "WP-PR-SCOPE-POLICY-01", manifest)
 
 
-def test_validate_workflow_skips_only_release_gates_for_pure_scope_policy_pr():
+def test_validate_workflow_keeps_path_aware_release_gate_and_policy_exemption():
     workflow = yaml.safe_load((ROOT / ".github" / "workflows" / "validate.yml").read_text(encoding="utf-8"))
     steps = workflow["jobs"]["repository-integrity"]["steps"]
     by_name = {step.get("name"): step for step in steps if step.get("name")}
@@ -479,7 +479,10 @@ def test_validate_workflow_skips_only_release_gates_for_pure_scope_policy_pr():
     assert "Run source-intelligence release gates (pr profile)" in by_name
 
     release_gate = by_name["Run source-intelligence release gates (pr profile)"]
-    assert release_gate["if"] == "steps.scope_policy_freshness.outputs.skip_release_gates != 'true'"
+    release_condition = " ".join(release_gate["if"].split())
+    assert "github.event_name != 'pull_request'" in release_condition
+    assert "needs.pr-change-classifier.outputs.repository_integrity_heavy == 'true'" in release_condition
+    assert "steps.scope_policy_freshness.outputs.skip_release_gates != 'true'" in release_condition
 
     probe = by_name["Determine scope-policy operational freshness exclusion"]["run"]
     assert "python -m tools.openva.pr_scope_guard --declaration-file" in probe
