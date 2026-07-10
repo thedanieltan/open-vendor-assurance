@@ -34,9 +34,11 @@ OpenVA does not currently operate a production central matching service or hoste
 
 ## Distribution model
 
-**Primary distribution:** agent-composed and file-based use. A user's existing agent or application reads its own workspace, sends bounded vendor identities to OpenVA, and writes the returned public source references back under the user's control.
+Primary distribution: agent-composed and file-based use. A user's existing agent or application reads its own workspace, sends bounded vendor identities to OpenVA, and writes the returned public source references back under the user's control.
 
-**Secondary distribution:** the browser-local resolver, local command-line tools, the optional self-hosted HTTP service, Google Sheets compatibility, and direct release downloads.
+Secondary distribution: the browser-local resolver, local command-line tools, the optional self-hosted HTTP service, Google Sheets compatibility, and direct release downloads.
+
+OpenVA's preferred distribution model is agent-composed workspace integration. The read-only MCP surface supports both stdio and Streamable HTTP.
 
 Native workspace clients remain compatibility surfaces rather than a reason for OpenVA to request workspace credentials. OpenVA does not access the user's Google Drive, Microsoft 365, Notion, Jira, Slack, or other private workspace.
 
