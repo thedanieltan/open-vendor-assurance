@@ -27,11 +27,11 @@ Each shard:
 7. extracts subprocessor relationship identity signals;
 8. writes report artifacts only.
 
-The aggregate job deduplicates shard results, stages verified noncanonical candidate-source records, preserves unresolved vendor identity signals, and builds a reviewed promotion plan.
+The aggregate job deduplicates shard results, verifies candidate sources, preserves unresolved vendor identity signals, and builds a reviewed promotion plan.
 
 ## Vendor-breadth replenishment
 
-The aggregate job also projects relationship identity observations through `vendor_breadth_replenishment` into four stable, noncanonical files:
+The aggregate job projects relationship identity observations through `vendor_breadth_replenishment` into four stable, noncanonical files:
 
 - `maintenance/generated/vendor-breadth-signal-ledger.json`;
 - `maintenance/generated/vendor-breadth-resolution-queue.json`;
@@ -44,13 +44,45 @@ Incomplete identities remain in the resolution queue. Only identities with a usa
 
 Relationship signals are produced automatically by the daily mesh. Resolver-demand and public-directory adapters use the same ledger contract and may be supplied by an authorized producer without changing the admission pipeline. Provider signals are evidence inputs, not catalog facts.
 
-## Candidate-intake boundary
+## Production health and intake decision
 
-The aggregate job opens `Ops: stage discovery mesh candidates` from an `agent-discovery-mesh-intake-*` branch. That PR may contain only:
+Every aggregate run builds JSON and Markdown `discovery_mesh_health` reports. The report separates:
 
-- `data/vendors/*/candidate_sources/*.yaml` records;
-- discovery-mesh identity signals, manifests, viability evidence, and the exact reviewed promotion plan under `maintenance/generated/`;
-- the stable vendor-breadth ledger, resolution queue, candidate projection, and cumulative provider metrics under `maintenance/generated/`.
+- current catalog breadth and source depth;
+- pages, requests, locator signals, delegated hosts, and verified source candidates;
+- provider-discovered entities, unresolved identities, and source-discovery-ready candidates;
+- viable reviewed promotion actions;
+- locator, verification, and promotion yield ratios;
+- changed versus unchanged stable breadth outputs.
+
+The health report is report-only and non-advisory. It does not score vendors or alter admission thresholds.
+
+The health report also provides the deterministic intake decision:
+
+- intake is needed when at least one viable source-promotion action exists or at least one stable breadth projection changed;
+- a true no-op run has neither viable source-promotion actions nor changed stable breadth outputs;
+- true no-op runs upload evidence and exit without creating a pull request.
+
+A health status of `attention` does not bypass or automatically loosen crawl, identity, or admission controls. Its reason codes are operational diagnostics for maintainers.
+
+## Exact candidate-intake boundary
+
+The aggregate job opens `Ops: stage discovery mesh candidates` from an `agent-discovery-mesh-intake-*` branch only when the health decision requires intake.
+
+The PR may contain only:
+
+- stable changed `maintenance/generated/vendor-breadth-*.json` projections;
+- the exact reviewed discovery-mesh promotion plan when it contains viable actions;
+- candidate-source YAML records explicitly referenced by that exact plan.
+
+Run-specific identity signals, candidate manifests, viability reports, source-discovery reports, replenishment-run reports, and health reports remain workflow artifacts. They are not committed merely to preserve execution telemetry.
+
+Before commit, the workflow enforces a cached-path allowlist and fails closed when:
+
+- a candidate path is outside `data/vendors/*/candidate_sources/*.yaml`;
+- a staged candidate is not accompanied by the exact reviewed promotion plan;
+- any unrelated path is staged;
+- health requires intake but no eligible changed path exists.
 
 The candidate-intake PR does not contain canonical source or vendor mutations. It runs through normal validation and native auto-merge.
 
@@ -60,7 +92,8 @@ When an exact candidate-intake PR merges, the `promotion-handoff` job inside `di
 
 - requires the exact branch prefix and PR title;
 - requires exactly one merged discovery-mesh promotion plan;
-- no-ops on zero viable actions;
+- no-ops when the intake contains only breadth projections;
+- no-ops on a zero-action plan;
 - fails closed on ambiguous plan selection;
 - dispatches `candidate-promotion-pr.yml` in `reviewed-path` mode with the exact committed plan path.
 
@@ -72,4 +105,4 @@ New-vendor identities from `vendor-breadth-candidates.json` enter the existing v
 
 `discovery-mesh.yml` is deliberately one workflow rather than separate discovery, aggregation, intake, and promotion-bridge workflows. Event-specific job guards keep scheduled discovery and merged-intake handoff in one declared authority surface, limiting workflow sprawl.
 
-It is classified as `keep_core`. Retirement is blocked until another workflow demonstrates equivalent uncapped full-catalog sharding, replay-idempotent breadth replenishment, candidate-only intake, exact-plan handoff, and preservation of `candidate-promotion-pr.yml` as the sole canonical mutation authority.
+It is classified as `keep_core`. Retirement is blocked until another workflow demonstrates equivalent uncapped full-catalog sharding, replay-idempotent breadth replenishment, measured health reporting, true no-op suppression, exact candidate-only intake, exact-plan handoff, and preservation of `candidate-promotion-pr.yml` as the sole canonical mutation authority.
