@@ -37,6 +37,32 @@ def test_mesh_intake_uses_workflow_triggering_token_and_stages_candidates_only()
     assert "sole canonical mutation authority" in text
 
 
+def test_mesh_replenishes_stable_vendor_breadth_state_idempotently() -> None:
+    text = DISCOVERY.read_text(encoding="utf-8")
+
+    assert "vendor_breadth_replenishment build" in text
+    assert '--relationship-report "$IDENTITY_REPORT"' in text
+    assert '--existing-ledger "$LEDGER"' in text
+    assert '--existing-queue "$QUEUE"' in text
+    assert '--existing-candidates "$CANDIDATES"' in text
+    assert '--existing-metrics "$METRICS"' in text
+    assert 'LEDGER="maintenance/generated/vendor-breadth-signal-ledger.json"' in text
+    assert 'QUEUE="maintenance/generated/vendor-breadth-resolution-queue.json"' in text
+    assert 'CANDIDATES="maintenance/generated/vendor-breadth-candidates.json"' in text
+    assert 'METRICS="maintenance/generated/vendor-breadth-provider-metrics.json"' in text
+    assert "vendor-breadth-replenishment-run-" in text
+
+
+def test_mesh_intake_persists_breadth_outputs_without_new_mutation_workflow() -> None:
+    text = DISCOVERY.read_text(encoding="utf-8")
+
+    assert "git add maintenance/generated/vendor-breadth-*.json" in text
+    assert "maintenance/generated/vendor-breadth-*.json" in text
+    assert "stable vendor-breadth ledger, resolution queue, candidate projection" in text
+    assert "Provider signals are not catalog facts" in text
+    assert "provider-replenished identities are not truncated by the curated seed target" in text
+
+
 def test_merged_intake_handoff_dispatches_existing_canonical_mutation_workflow() -> None:
     text = DISCOVERY.read_text(encoding="utf-8")
 
