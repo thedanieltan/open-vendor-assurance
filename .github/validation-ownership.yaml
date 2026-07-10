@@ -44,7 +44,7 @@ jobs:
     purpose: Validate the workspace manifest, calculate reverse-dependent impact from the exact PR diff, install local prerequisites in dependency order, and run the conservative affected Python test plan.
     commands:
       - python -m tools.openva.workspace validate
-      - python -m tools.openva.workspace plan --base-ref "$BASE_SHA" --head-ref "$HEAD_SHA" --pretty > "$RUNNER_TEMP/workspace-plan.json"
+      - python -m tools.openva.workspace plan
     protects:
       - tools/openva/workspace.py
       - tools/openva/workspace.yaml
