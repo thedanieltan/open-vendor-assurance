@@ -7,6 +7,7 @@ from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 import yaml
 
@@ -14,13 +15,35 @@ from tools.openva.catalog_growth_discovery_queue import QUEUE_PATH, load_json, v
 from tools.openva.source_verification import ROOT
 
 SEED_DIR = ROOT / "maintenance" / "seeds" / "vendors"
+BREADTH_CANDIDATE_PATH = ROOT / "maintenance" / "generated" / "vendor-breadth-candidates.json"
 VENDOR_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
 DOMAIN_PATTERN = re.compile(r"^[a-z0-9.-]+\.[a-z]{2,}$")
 COUNTRY_PATTERN = re.compile(r"^[A-Z]{2}$")
 
 
+def normalize_domain(value: Any) -> str:
+    raw = str(value or "").strip().lower()
+    if "://" in raw:
+        raw = urlparse(raw).hostname or ""
+    return raw.split("/", 1)[0].removeprefix("www.").strip(".")
+
+
 def known_vendor_ids(root: Path = ROOT) -> set[str]:
     return {path.parent.name for path in (root / "data" / "vendors").glob("*/vendor.yaml")}
+
+
+def known_vendor_domains(root: Path = ROOT) -> set[str]:
+    domains: set[str] = set()
+    for path in sorted((root / "data" / "vendors").glob("*/vendor.yaml")):
+        vendor = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        if not isinstance(vendor, dict):
+            continue
+        for key in ("official_domains", "previous_domains", "public_entrypoints"):
+            for value in vendor.get(key, []) or []:
+                domain = normalize_domain(value)
+                if domain:
+                    domains.add(domain)
+    return domains
 
 
 def slugify(value: str) -> str:
@@ -40,6 +63,18 @@ def load_seed_file(path: Path) -> list[dict[str, Any]]:
             raise ValueError(f"{path}: seed entries must be mappings")
         seeds.append(item)
     return seeds
+
+
+def load_breadth_candidates(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict) or data.get("report_type") != "vendor_candidate_discovery_report":
+        raise ValueError(f"{path}: expected vendor_candidate_discovery_report")
+    rows = data.get("vendor_candidates", []) or []
+    if not isinstance(rows, list):
+        raise ValueError(f"{path}: vendor_candidates must be a list")
+    return [dict(row) for row in rows if isinstance(row, dict)]
 
 
 def seed_paths_for_lane(coverage_lane: str, root: Path = ROOT) -> list[Path]:
@@ -86,7 +121,7 @@ def validate_seed_identities(root: Path = ROOT) -> dict[str, Any]:
             seed_count += 1
             location = f"{path}:{index}"
             vendor_id = str(seed.get("candidate_vendor_id") or "")
-            domain = str(seed.get("official_domain_candidate") or "").lower().removeprefix("www.")
+            domain = normalize_domain(seed.get("official_domain_candidate"))
             lane = str(seed.get("coverage_lane") or default_lane)
             categories = seed.get("vendor_category_candidates") or []
             country = seed.get("headquarters_country_candidate")
@@ -150,7 +185,7 @@ def validate_seed_identities(root: Path = ROOT) -> dict[str, Any]:
 
 def candidate_from_seed(seed: dict[str, Any], coverage_lane: str, cohort_id: str) -> dict[str, Any]:
     vendor_id = str(seed.get("candidate_vendor_id") or slugify(str(seed["official_domain_candidate"]).split(".")[0]))
-    domain = str(seed["official_domain_candidate"]).lower().removeprefix("www.")
+    domain = normalize_domain(seed["official_domain_candidate"])
     candidate = {
         "candidate_vendor_id": vendor_id,
         "display_name_candidate": str(seed.get("display_name_candidate") or domain)[:120],
@@ -169,6 +204,42 @@ def candidate_from_seed(seed: dict[str, Any], coverage_lane: str, cohort_id: str
     return candidate
 
 
+def candidate_from_breadth(row: dict[str, Any]) -> dict[str, Any] | None:
+    vendor_id = str(row.get("candidate_vendor_id") or "").strip()
+    domain = normalize_domain(row.get("official_domain_candidate"))
+    country = str(row.get("headquarters_country_candidate") or "").strip().upper()
+    name = str(row.get("display_name_candidate") or "").strip()
+    if not VENDOR_ID_PATTERN.fullmatch(vendor_id):
+        return None
+    if not DOMAIN_PATTERN.fullmatch(domain):
+        return None
+    if not COUNTRY_PATTERN.fullmatch(country):
+        return None
+    if not name:
+        return None
+    if row.get("requires_review") is not True:
+        return None
+    if row.get("writes_canonical_vendors") is not False:
+        return None
+    if row.get("non_advisory") is not True:
+        return None
+    return {
+        **row,
+        "candidate_vendor_id": vendor_id,
+        "display_name_candidate": name[:120],
+        "official_domain_candidate": domain,
+        "headquarters_country_candidate": country,
+        "coverage_lane": str(row.get("coverage_lane") or "signal_mesh"),
+        "cohort_id": str(row.get("cohort_id") or "provider-replenishment"),
+        "discovery_method": "provider_replenishment_mesh",
+        "source_index_url": str(row.get("source_index_url") or f"https://{domain}"),
+        "vendor_category_candidates": list(row.get("vendor_category_candidates") or []),
+        "requires_review": True,
+        "writes_canonical_vendors": False,
+        "non_advisory": True,
+    }
+
+
 def discover_for_cohort(cohort: dict[str, Any], root: Path = ROOT) -> list[dict[str, Any]]:
     lane = str(cohort["coverage_lane"])
     candidates: list[dict[str, Any]] = []
@@ -183,27 +254,60 @@ def discover_for_cohort(cohort: dict[str, Any], root: Path = ROOT) -> list[dict[
 def build_vendor_candidate_report(
     queue_path: Path = QUEUE_PATH,
     root: Path = ROOT,
+    breadth_candidate_path: Path | None = BREADTH_CANDIDATE_PATH,
 ) -> dict[str, Any]:
     validate_queue(queue_path, root)
     queue = load_json(queue_path)
-    known = known_vendor_ids(root)
-    seen: set[str] = set()
+    known_ids = known_vendor_ids(root)
+    known_domains = known_vendor_domains(root)
+    seen_ids: set[str] = set()
+    seen_domains: set[str] = set()
     candidates: list[dict[str, Any]] = []
+    seed_candidate_count = 0
+
     for cohort in queue.get("cohorts", []) or []:
         if cohort.get("status") != "queued":
             continue
         cohort_count = 0
         for candidate in discover_for_cohort(cohort, root=root):
             vendor_id = candidate["candidate_vendor_id"]
-            if vendor_id in known or vendor_id in seen:
+            domain = normalize_domain(candidate.get("official_domain_candidate"))
+            if vendor_id in known_ids or vendor_id in seen_ids or domain in known_domains or domain in seen_domains:
                 continue
-            seen.add(vendor_id)
+            seen_ids.add(vendor_id)
+            seen_domains.add(domain)
             candidates.append(candidate)
+            seed_candidate_count += 1
             cohort_count += 1
             if cohort_count >= int(cohort["target_vendor_candidates"]):
                 break
-            if len(candidates) >= queue["limits"]["target_vendor_candidates"]:
+            if seed_candidate_count >= int(queue["limits"]["target_vendor_candidates"]):
                 break
+
+    breadth_candidate_count = 0
+    invalid_breadth_candidate_count = 0
+    if breadth_candidate_path is not None:
+        for row in load_breadth_candidates(breadth_candidate_path):
+            candidate = candidate_from_breadth(row)
+            if candidate is None:
+                invalid_breadth_candidate_count += 1
+                continue
+            vendor_id = candidate["candidate_vendor_id"]
+            domain = normalize_domain(candidate["official_domain_candidate"])
+            if vendor_id in known_ids or vendor_id in seen_ids or domain in known_domains or domain in seen_domains:
+                continue
+            seen_ids.add(vendor_id)
+            seen_domains.add(domain)
+            candidates.append(candidate)
+            breadth_candidate_count += 1
+
+    candidates.sort(
+        key=lambda item: (
+            -int(item.get("priority") or 0),
+            str(item.get("coverage_lane") or ""),
+            str(item["candidate_vendor_id"]),
+        )
+    )
     return {
         "schema_version": "0.1.0",
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
@@ -217,9 +321,13 @@ def build_vendor_candidate_report(
         },
         "summary": {
             "candidate_vendor_count": len(candidates),
-            "known_vendor_count": len(known),
+            "seed_candidate_count": seed_candidate_count,
+            "breadth_candidate_count": breadth_candidate_count,
+            "invalid_breadth_candidate_count": invalid_breadth_candidate_count,
+            "known_vendor_count": len(known_ids),
+            "catalog_vendor_count_cap": None,
         },
-        "vendor_candidates": sorted(candidates, key=lambda item: (item["coverage_lane"], item["candidate_vendor_id"])),
+        "vendor_candidates": candidates,
     }
 
 
@@ -227,6 +335,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(prog="openva-vendor-candidate-discovery")
     parser.add_argument("command", choices={"discover", "validate-seeds"})
     parser.add_argument("--queue", type=Path, default=QUEUE_PATH)
+    parser.add_argument("--breadth-candidates", type=Path, default=BREADTH_CANDIDATE_PATH)
+    parser.add_argument("--no-breadth-candidates", action="store_true")
     parser.add_argument("--output", type=Path, default=ROOT / "vendor-candidate-discovery-report.json")
     args = parser.parse_args()
     if args.command == "validate-seeds":
@@ -249,7 +359,11 @@ def main() -> int:
         )
         return 1 if summary["failures"] else 0
 
-    report = build_vendor_candidate_report(queue_path=args.queue)
+    breadth_path = None if args.no_breadth_candidates else args.breadth_candidates
+    report = build_vendor_candidate_report(
+        queue_path=args.queue,
+        breadth_candidate_path=breadth_path,
+    )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
