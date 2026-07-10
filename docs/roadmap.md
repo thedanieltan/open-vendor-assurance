@@ -60,6 +60,14 @@ OpenVA currently ships:
 
 The browser page is static and browser-local. It does not upload private vendor inventories, run live discovery from the page, or operate a production hosted verify endpoint.
 
+## Distribution model
+
+Primary distribution: agent-composed workspace integration. A user's existing agent or application reads the workspace through a connector it already controls, sends OpenVA only bounded vendor identities, and writes returned public source references back under the user's control.
+
+Secondary distribution: browser-local resolution, local files and command-line tools, the optional self-hosted HTTP service, Google Sheets compatibility, and release downloads.
+
+The read-only MCP surface supports stdio and Streamable HTTP. OpenVA does not require direct access to Google Drive, Microsoft 365, Notion, Jira, Slack, or another private workspace.
+
 ## Hosted resolver deployment status
 
 The provider-neutral hosted application path and staging smoke plan exist, but OpenVA does not currently claim an operated production hosted resolver.
@@ -266,6 +274,15 @@ Demand signals only prioritise already-eligible candidates. They do not make uns
 - keep every machine-created source claim reversible;
 - maintain release gates, conformance fixtures, versioning rules, and public security and contribution policies;
 - retire obsolete workflows and documentation only after their durable contracts and evidence have been identified.
+
+### Public reuse
+
+- keep software and project documentation under MIT;
+- dedicate OpenVA-authored catalog metadata and generated data under CC0 1.0 Universal;
+- permit public and private forks, modification, redistribution, self-hosting, and commercial use under those permissive terms;
+- exclude vendor-owned documents, trademarks, webpages, and other third-party materials from OpenVA's licence grant.
+
+See `docs/licensing.md`.
 
 ## Operating boundaries
 

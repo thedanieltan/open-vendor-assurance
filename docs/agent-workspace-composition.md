@@ -100,6 +100,10 @@ Ambiguity is not a third top-level identity status. It is represented as:
 }
 ```
 
+Compatibility-facing summaries may use the row labels `matched`, `ambiguous`, and
+`no_match`. New integrations should rely on the normalized `identity.match_status`
+and `identity.no_match_reason` fields above.
+
 `source_references` is a destination-neutral object keyed by requested source type.
 It is designed for agents that write into different schemas such as Google Sheets,
 Notion, Jira, GRC tools, procurement systems, and internal databases.
