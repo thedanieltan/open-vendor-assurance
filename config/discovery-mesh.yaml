@@ -1,0 +1,33 @@
+schema_version: "0.1.0"
+
+# The catalog itself is not capped. Scheduled runs shard the complete eligible
+# catalog. A manual vendor_limit may be supplied only for diagnostics.
+catalog:
+  vendor_limit: null
+  shard_count: 32
+
+# These are per-vendor resource safety bounds, not catalog breadth limits.
+# They are deliberately growth-oriented rather than trial-sized.
+per_vendor:
+  max_depth: 2
+  max_pages: 5000
+  max_total_requests: 7500
+  max_links_per_page: 2000
+  max_locator_candidates: 10000
+  max_delegated_hosts: 500
+  max_relationship_pages: 500
+  fetch_timeout_seconds: 10
+
+execution:
+  breadth_share: 0.45
+  depth_share: 0.40
+  maintenance_share: 0.15
+  candidate_promotion_action_cap: null
+  intake_automerge: true
+  canonical_mutation_workflow: candidate-promotion-pr.yml
+
+posture:
+  full_catalog_sharded: true
+  signals_are_catalog_facts: false
+  canonical_mutation_authority_unchanged: true
+  non_advisory: true
