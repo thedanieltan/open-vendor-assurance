@@ -1,41 +1,16 @@
-# Release Downloads For Spreadsheet Users
+# OpenVA release downloads
 
-OpenVA publishes spreadsheet-friendly release assets through GitHub Releases.
+OpenVA publishes spreadsheet-friendly and machine-readable catalog snapshots through GitHub Releases.
 
-These files are for users who want to inspect public vendor assurance source metadata without installing Python, running Docker, or hosting a service.
+Use these files when you want public vendor assurance source metadata without installing Python, running Docker, or operating a service.
 
-To resolve your own vendor list, use the browser resolver UI, the local Python matcher, or the optional self-hosted resolver components. The browser resolver is static and browser-local: it uses loaded public metadata and does not perform live verification, live discovery, hosted private-inventory upload, or server-side matching.
+**Browser resolver:** https://thedanieltan.github.io/open-vendor-assurance/
 
-OpenVA v0.1.0 is an infrastructure launch, not a completeness claim.
+## Main downloads
 
-The initial public metadata set is useful for testing importer workflows, matching public vendor assurance source references, and contributing public-source metadata, but it should not be treated as complete vendor assurance coverage.
+### `openva-csv.zip`
 
-## Where to find the files
-
-1. Open the OpenVA repository on GitHub.
-2. Select **Releases** in the right sidebar or open the latest release from the repository home page.
-3. Expand **Assets**.
-4. Download the files you need.
-
-## Browser resolver UI
-
-Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
-
-Use the browser resolver UI to resolve vendor sources from loaded public metadata, configure source-pack fields, use browser-local CSV matching, and export selected public OpenVA metadata without installing tooling.
-
-The browser page is static and read-only over public metadata. It does not provide accounts, workspaces, server-side matching, hosted private inventory upload, live verification, live discovery, vendor approval, risk scoring, legal advice, compliance advice, procurement advice, KYC/AML conclusions, sanctions conclusions, or certification-validity conclusions.
-
-## Which file to download
-
-Use:
-
-```text
-openva-csv.zip
-```
-
-to browse OpenVA public metadata in a spreadsheet. This is the main non-technical download.
-
-It contains:
+The main non-technical bulk download. It contains tables such as:
 
 ```text
 vendors.csv
@@ -47,142 +22,64 @@ unavailable_sources.csv
 source_coverage.csv
 ```
 
-Use:
+Start with `vendors.csv`, use `source_coverage.csv` to identify available source types, and open `sources.csv` for the public URLs.
 
-```text
-openva-inventory-template.csv
-```
+Candidate and unavailable records are operational metadata, not negative compliance or risk findings.
 
-to prepare your own vendor inventory for matching with OpenVA tooling. Use whichever columns you already have:
+### `openva-inventory-template.csv`
+
+A template for resolving your own vendor list. Supported identity columns include:
 
 ```text
 vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address
 ```
 
-`vendor_name` is usually enough to get a brand-level match. `business_entity_name` is useful when your inventory stores the contracting or billing entity name instead of the product or brand name. `domain` improves brand match confidence when available. `jurisdiction` lets OpenVA use the contracting-entity resolution index when the reference cache has a public record for that vendor and jurisdiction. `registration_number` is optional, but it is the strongest entity-level identifier when OpenVA has the corresponding legal entity record. In Singapore, this is the UEN. `registered_address` is optional context from your own inventory and is preserved in the output.
+At least one of `vendor_name`, `business_entity_name`, `domain`, or `registration_number` is required.
 
-Use:
+### `openva-sample-inventory.csv`
 
-```text
-openva-sample-inventory.csv
-```
+A small example showing the accepted inventory shape.
 
-to see a small example inventory.
-
-Use:
+### Release manifests
 
 ```text
 openva-release-downloads-manifest.json
 release-artifacts.json
 ```
 
-only if you want checksums and release artifact metadata.
+Use these when you need checksums, release identities, or artifact metadata.
 
-## Deterministic pack timestamps
+## Resolve a private vendor inventory
 
-OpenVA pack and generated index timestamps may use a fixed value such as
-`1970-01-01T00:00:00Z` to preserve deterministic rebuilds.
+The browser resolver processes CSV files locally in browser memory and does not upload the inventory to OpenVA.
 
-This value is not a freshness signal.
+For internal automation, use the local Python matcher, MCP server, or optional self-hosted match service inside your own environment.
 
-Consumers that need freshness or provenance should use:
+OpenVA does not currently operate a production central matching service. The repository includes optional, API-key-gated verify transport for self-hosted use, disabled unless configured by the operator.
 
-- the pinned release tag or repository commit SHA;
-- source-level `provenance.collected_at`;
-- change-level `detected_at`;
-- observation-level `observed_at`, where observation records exist.
+## Snapshot and freshness semantics
 
-Do not treat pack-level `generated_at` or `generatedAt` as evidence that a vendor source was collected, reviewed, updated, checked, or observed at that time.
+Generated packs may use deterministic timestamps, including fixed values such as `1970-01-01T00:00:00Z`. A pack-level generated timestamp is not evidence that every source was checked at that time.
 
-## How to read the CSVs
+For reproducibility and freshness, use:
 
-Start with `vendors.csv` to find a vendor by name or domain.
+- the release tag or repository commit SHA;
+- source-level provenance timestamps;
+- change-event timestamps;
+- observation timestamps where available.
 
-Use `source_coverage.csv` to see which public source types OpenVA currently records for each vendor, such as DPA, privacy notice, security page, and subprocessors.
+The static site displays loaded snapshot identity and source-health metadata when available. It is not a live monitoring feed.
 
-Use `sources.csv` to inspect the public URLs themselves.
+## Licensing
 
-Use `candidate_sources.csv` and `unavailable_sources.csv` carefully:
+- OpenVA software and project documentation: MIT.
+- OpenVA-authored catalog metadata and generated data: CC0 1.0 Universal.
+- Vendor documents, trademarks, pages, and other third-party materials: not licensed by OpenVA.
 
-- candidate sources are not reusable reference records yet;
-- unavailable sources are source-locator notes, not negative compliance findings;
-- observations are fetch-time facts, not vendor ratings.
+See `docs/licensing.md` for the precise boundary. OpenVA-authored CC0 metadata may be copied, modified, combined, redistributed, and used commercially without attribution or share-alike obligations.
 
-## Matching your own vendor list
+## Coverage boundary
 
-OpenVA does not currently operate a production central matching service or a hosted private-inventory upload service. The repository ships optional API-key-gated verify transport for self-hosted use and future hosted deployment. The transport is disabled by default unless configured by the operator, and this release does not include the production infrastructure, production smoke evidence, or public verify endpoint required for an operated hosted service.
+OpenVA v0.1.0 was an infrastructure launch with a seed dataset, not a completeness claim. Missing data does not mean a source does not exist, and a recorded source does not amount to vendor approval, legal advice, compliance advice, procurement advice, or a risk assessment.
 
-Until hosted deployment gates are completed, private vendor inventories should remain browser-local, local, or inside a consumer-controlled self-hosted environment.
-
-If you want to match a vendor list against OpenVA today:
-
-- prepare your file using `openva-inventory-template.csv`;
-- use the browser resolver UI, where your CSV is processed locally in your browser and is not uploaded to OpenVA;
-- or run the local Python matcher / optional self-hosted match service inside your own environment;
-- keep the input vendor inventory inside your own environment.
-
-The local matcher accepts these columns:
-
-```text
-vendor_name
-business_entity_name
-domain
-jurisdiction
-registration_number
-```
-
-At least one of `vendor_name`, `business_entity_name`, `domain`, or `registration_number` is required. `jurisdiction` helps with legal entity resolution when a brand match already exists. `registered_address` and other columns, such as an internal owner, business unit, or category, are preserved in the output but are not required for matching.
-
-The output is an enriched CSV with OpenVA public source-reference metadata.
-
-## Browser resolver and observation shell
-
-OpenVA provides a static browser page for resolving and exporting selected public OpenVA metadata from the loaded public snapshot.
-
-Browser resolver UI: https://thedanieltan.github.io/open-vendor-assurance/
-
-The page does not accept private vendor inventory uploads, private contracts, SOC reports, credentials, screenshots, or customer-specific evidence.
-
-The static page is not a live monitoring feed. It displays release tag, commit SHA, and snapshot metadata where available. For reproducible use, pin the GitHub release or commit.
-
-Observation events are machine-generated public-source facts. They are not vendor approval, compliance findings, risk findings, procurement recommendations, legal opinions, or materiality determinations.
-
-The site is deployed to GitHub Pages from the static site build output.
-
-For private inventory matching, use the browser-local resolver, local matcher, or optional self-hosted match service inside your own environment.
-
-## Legal entity resolution
-
-OpenVA separates brand matching from legal entity matching.
-
-For example, a Singapore inventory row for Stripe might produce:
-
-```text
-Vendor name: Stripe
-Domain matched: stripe.com
-Brand match: stripe, exact domain, confidence 1.00
-Legal entity match method: jurisdiction_resolution_index
-Legal entity resolution confidence: candidate
-Candidate entity: Stripe Payments Singapore Pte. Ltd.
-Registration number: populated when OpenVA has the public registry record
-```
-
-`candidate` means public metadata suggests the entity may be relevant for that jurisdiction. It is not confirmation from your signed agreement. OpenVA provides the public DPA reference only; confirm that the entity named in your signed agreement matches the entity shown in OpenVA.
-
-## Missing or stale data
-
-If a vendor is missing, a public source moved, or OpenVA records incomplete metadata, open a GitHub issue using the vendor/source update pathway.
-
-Submit public URLs only. Do not submit private agreements, gated portal exports, screenshots, copied document text, credentials, SOC reports, private certificates, or customer-specific terms.
-
-## Non-advisory reminder
-
-OpenVA records public-source metadata only.
-
-It does not approve, recommend, certify, score, or determine whether any vendor is compliant, safe, adequate, suitable, low risk, or high risk.
-
-## Static site distribution
-
-The browser resolver UI is generated as a compiled static distribution. It uses a lightweight `vendor-search.min.json` index for lookup and loads `data/vendors/{vendor_id}.json` detail shards on demand.
-
-This keeps the non-dev hosted page usable as OpenVA grows. GitHub Release assets remain the bulk-download path for CSVs, templates, and internal tooling.
+To add or correct public-source metadata, use the vendor/source update issue pathway. Submit public URLs only; do not submit private agreements, authenticated portal exports, credentials, SOC reports, private certificates, screenshots, copied document text, or customer-specific terms.
