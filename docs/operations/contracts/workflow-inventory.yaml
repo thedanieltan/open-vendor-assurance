@@ -109,19 +109,11 @@ public_workflows:
   - name: discovery-mesh.yml
     loop: catalog_growth
     status: core
-    triggers: [workflow_dispatch, schedule]
-    permissions: {actions: read, contents: write, pull-requests: write}
+    triggers: [workflow_dispatch, schedule, pull_request]
+    permissions: {actions: write, contents: write, pull-requests: write}
     writes_repository_state: true
     creates_prs: true
     merges_prs: true
-  - name: discovery-mesh-promotion-bridge.yml
-    loop: catalog_growth
-    status: core
-    triggers: [pull_request]
-    permissions: {actions: write, contents: read, pull-requests: read}
-    writes_repository_state: false
-    creates_prs: false
-    merges_prs: false
   - name: autonomous-catalog-growth.yml
     loop: catalog_growth
     status: core
