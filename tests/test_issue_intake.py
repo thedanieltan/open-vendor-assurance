@@ -79,7 +79,7 @@ def test_scope_template_absorbs_out_of_scope_question_path():
     assert "OpenVA does not bypass anti-bot systems" in text
 
 
-def test_contribution_intake_agent_opens_reviewed_prs_without_auto_merge():
+def test_contribution_intake_agent_opens_machine_gated_prs_without_default_human_review():
     workflow = load_yaml(WORKFLOW_DIR / "contribution-intake-agent.yml")
     triggers = workflow_triggers(workflow)
     text = (WORKFLOW_DIR / "contribution-intake-agent.yml").read_text(encoding="utf-8")
@@ -98,4 +98,6 @@ def test_contribution_intake_agent_opens_reviewed_prs_without_auto_merge():
     assert "add-paths:" in text
     assert ".openva-intake/*" not in text
     assert "Catalog:" in text
+    assert "needs-human-review" not in text
+    assert "labels: catalog, agent-generated" in text
     assert "merge" not in text.lower()
