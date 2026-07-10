@@ -10,6 +10,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_INVENTORY = Path("docs/operations/contracts/workflow-inventory.yaml")
 WORKFLOW_RETIREMENT = Path("docs/operations/contracts/workflow-retirement.yaml")
+WORKFLOW_RETIREMENT_EXTENSIONS = "workflow-retirement.*.yaml"
 DEFAULT_REPORT = Path("maintenance/workflow-retirement-report.md")
 
 
@@ -20,10 +21,36 @@ def load_yaml(path: Path) -> dict[str, Any]:
     return data
 
 
+def load_retirement_contract(root: Path = ROOT) -> dict[str, Any]:
+    """Load the base contract plus additive, name-unique workflow extensions."""
+
+    base_path = root / WORKFLOW_RETIREMENT
+    retirement = load_yaml(base_path)
+    workflows = list(retirement.get("workflows", []) or [])
+    names = {str(entry.get("name") or "") for entry in workflows}
+    for path in sorted(base_path.parent.glob(WORKFLOW_RETIREMENT_EXTENSIONS)):
+        if path == base_path:
+            continue
+        extension = load_yaml(path)
+        if extension.get("contract") != "workflow-retirement-extension":
+            raise ValueError(f"{path}: expected workflow-retirement-extension contract")
+        if extension.get("extends") != WORKFLOW_RETIREMENT.as_posix():
+            raise ValueError(f"{path}: extension target mismatch")
+        for entry in extension.get("workflows", []) or []:
+            name = str(entry.get("name") or "")
+            if not name:
+                raise ValueError(f"{path}: retirement extension entry missing name")
+            if name in names:
+                raise ValueError(f"{path}: duplicate retirement entry {name}")
+            names.add(name)
+            workflows.append(entry)
+    return {**retirement, "workflows": workflows}
+
+
 def load_contracts(root: Path = ROOT) -> dict[str, Any]:
     return {
         "inventory": load_yaml(root / WORKFLOW_INVENTORY),
-        "retirement": load_yaml(root / WORKFLOW_RETIREMENT),
+        "retirement": load_retirement_contract(root),
     }
 
 
