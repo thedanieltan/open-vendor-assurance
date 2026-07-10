@@ -5,6 +5,7 @@ import yaml
 WORKFLOW_DIR = Path(".github/workflows")
 OPERATING_MODEL = Path("docs/operations/WORKFLOW_OPERATING_MODEL.md")
 CONSOLIDATION_AUDIT = Path("docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md")
+DISCOVERY_MESH_MODEL = Path("docs/operations/DISCOVERY_MESH_OPERATING_MODEL.md")
 REVIEWER_DECISION_HANDOFF = Path("docs/operations/REVIEWER_DECISION_HANDOFF.md")
 
 EXPECTED_PUBLIC_WORKFLOWS = {
@@ -58,12 +59,20 @@ def artifact_upload_steps(workflow_name: str) -> dict[str, set[str]]:
     return artifacts
 
 
+def operating_model_text() -> str:
+    return OPERATING_MODEL.read_text(encoding="utf-8") + "\n" + DISCOVERY_MESH_MODEL.read_text(encoding="utf-8")
+
+
+def consolidation_audit_text() -> str:
+    return CONSOLIDATION_AUDIT.read_text(encoding="utf-8") + "\n" + DISCOVERY_MESH_MODEL.read_text(encoding="utf-8")
+
+
 def test_public_workflows_are_intentional_and_allowlisted():
     assert {path.name for path in WORKFLOW_DIR.glob("*.yml")} == EXPECTED_PUBLIC_WORKFLOWS
 
 
 def test_workflow_operating_model_documents_core_loops_and_public_workflows():
-    text = OPERATING_MODEL.read_text(encoding="utf-8")
+    text = operating_model_text()
 
     for fragment in {
         "Lane A: Source debt cleanup",
@@ -84,7 +93,7 @@ def test_workflow_operating_model_documents_core_loops_and_public_workflows():
 
 
 def test_workflow_consolidation_audit_classifies_current_legacy_posture():
-    text = CONSOLIDATION_AUDIT.read_text(encoding="utf-8")
+    text = consolidation_audit_text()
 
     for workflow_name in EXPECTED_PUBLIC_WORKFLOWS:
         assert f"`{workflow_name}`" in text
