@@ -12,6 +12,9 @@ from tools.openva.catalog_growth_discovery_queue import (
 )
 
 
+QUEUE = Path("maintenance/queues/catalog-growth-discovery.json")
+
+
 def test_rejection_reason_codes_cannot_leak_raw_text():
     # Bounded codes pass through; the ParseError tail is dropped; anything with
     # whitespace/markup/free text (a page or robots snippet) maps to a generic code.
@@ -24,9 +27,6 @@ def test_rejection_reason_codes_cannot_leak_raw_text():
     assert _normalize_reason("x" * 200) == "rejected_other"
 
 
-QUEUE = Path("maintenance/queues/catalog-growth-discovery.json")
-
-
 def _write(tmp_path, queue):
     path = tmp_path / "catalog-growth-discovery.json"
     path.write_text(json.dumps(queue), encoding="utf-8")
@@ -37,12 +37,36 @@ def test_catalog_growth_discovery_queue_is_taxonomy_driven_and_bounded():
     summary = validate_queue(QUEUE)
 
     assert summary["queue_type"] == "catalog_growth_discovery_queue"
-    assert summary["cohort_count"] >= 10
-    assert summary["queued_cohort_count"] >= 10
-    assert summary["target_vendor_candidates"] >= 200
+    assert summary["cohort_count"] == 16
+    assert summary["queued_cohort_count"] == 16
+    assert summary["target_vendor_candidates"] == 500
     assert "cloud_platforms" in summary["coverage_lane_counts"]
     assert "security_identity" in summary["coverage_lane_counts"]
     assert "regional_apac" in summary["coverage_lane_counts"]
+
+
+def test_catalog_growth_discovery_queue_declares_top_500_closure_target():
+    queue = json.loads(QUEUE.read_text(encoding="utf-8"))
+    summary = validate_queue(QUEUE)
+
+    assert queue["closure_target"]["target_id"] == "top_500_assurance_convergence_vendors"
+    assert queue["closure_target"]["target_vendor_candidates"] == 500
+    assert "unbounded crawler" in queue["closure_target"]["completion_policy"]
+    assert queue["limits"]["target_vendor_candidates"] == 500
+    assert queue["limits"]["target_vendor_candidates"] == summary["target_vendor_candidates"]
+
+    high_priority_total = sum(
+        int(cohort["target_vendor_candidates"])
+        for cohort in queue["cohorts"]
+        if cohort["priority"] == "high"
+    )
+    medium_priority_total = sum(
+        int(cohort["target_vendor_candidates"])
+        for cohort in queue["cohorts"]
+        if cohort["priority"] == "medium"
+    )
+    assert high_priority_total == 240
+    assert medium_priority_total == 260
 
 
 def test_catalog_growth_discovery_queue_posture_reflects_network_modes_but_never_writes():
