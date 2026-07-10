@@ -15,6 +15,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "bot-dashboard-issue.yml",
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
+    "discovery-mesh.yml",
     "catalog-maintenance-pr.yml",
     "catalog-maintenance.yml",
     "catalog-pr-guard.yml",
@@ -182,7 +183,6 @@ def test_pr_scope_guard_runs_from_trusted_base_worktree_not_head():
     assert "python -m tools.openva.pr_scope_guard" in run_text
     assert "--declaration-file" in run_text
     assert "--changed-paths-file" in run_text
-    # The diff under evaluation is the exact base->head range.
     assert 'git diff --name-only "$BASE_SHA" "$HEAD_SHA"' in run_text
 
 
