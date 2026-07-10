@@ -2,6 +2,9 @@ from pathlib import Path
 
 
 WORKFLOW = Path(".github/workflows/candidate-promotion-pr.yml")
+BRIDGE = Path(".github/workflows/catalog-growth-promotion-bridge.yml")
+AUTOMERGE = Path(".github/workflows/agent-automerge.yml")
+GENERATED_CATALOG_TITLE = "Catalog: apply reviewed candidate source promotion"
 
 
 def strict_growth_regeneration_block() -> str:
@@ -20,14 +23,14 @@ def test_strict_growth_latest_regenerates_sha_bound_evidence():
 
     assert "env.PROMOTION_PLAN_MODE == 'strict-growth-latest'" in block
     assert "env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist'" in block
-    assert "python -m tools.openva.catalog_growth_eligibility classify \\" in block
-    assert "python -m tools.openva.promotion_planner plan-strict-growth \\" in block
+    assert "python -m tools.openva.catalog_growth_eligibility classify \" in block
+    assert "python -m tools.openva.promotion_planner plan-strict-growth \" in block
 
     eligibility = block[
-        block.index("python -m tools.openva.catalog_growth_eligibility classify \\") :
-        block.index("python -m tools.openva.promotion_planner plan-strict-growth \\")
+        block.index("python -m tools.openva.catalog_growth_eligibility classify \") :
+        block.index("python -m tools.openva.promotion_planner plan-strict-growth \")
     ]
-    planner = block[block.index("python -m tools.openva.promotion_planner plan-strict-growth \\") :]
+    planner = block[block.index("python -m tools.openva.promotion_planner plan-strict-growth \") :]
 
     for command in (eligibility, planner):
         assert '--head-sha "${{ github.sha }}"' in command
@@ -41,8 +44,8 @@ def test_strict_growth_shortlist_mode_builds_shortlist_before_plan():
 
     assert "- strict-growth-shortlist" in text
     assert "reviewed-path|strict-growth-latest|strict-growth-shortlist" in text
-    shortlist = text.index("python -m tools.openva.strict_growth_shortlist build \\")
-    plan = text.index("python -m tools.openva.strict_growth_shortlist plan \\")
+    shortlist = text.index("python -m tools.openva.strict_growth_shortlist build \")
+    plan = text.index("python -m tools.openva.strict_growth_shortlist plan \")
     apply = text.index("- name: Apply candidate promotions")
 
     assert shortlist < plan < apply
@@ -56,7 +59,7 @@ def test_strict_growth_shortlist_mode_builds_shortlist_before_plan():
 def test_strict_growth_latest_uses_workflow_batch_cap_before_apply():
     text = workflow_text()
 
-    plan = text.index("python -m tools.openva.promotion_planner plan-strict-growth \\")
+    plan = text.index("python -m tools.openva.promotion_planner plan-strict-growth \")
     select = text.index("- name: Select candidate promotion plan")
     apply = text.index("- name: Apply candidate promotions")
 
@@ -75,9 +78,9 @@ def test_strict_growth_plan_preflight_runs_before_candidate_apply():
     block = text[preflight:apply]
     assert "env.PROMOTION_PLAN_MODE == 'strict-growth-latest'" in block
     assert "env.PROMOTION_PLAN_MODE == 'strict-growth-shortlist'" in block
-    assert "python -m tools.openva.strict_growth_automerge check-plan \\" in block
-    assert "--promotion-plan strict-growth-promotion-plan.json \\" in block
-    assert "--eligibility-report catalog-growth-eligibility-report.json \\" in block
+    assert "python -m tools.openva.strict_growth_automerge check-plan \" in block
+    assert "--promotion-plan strict-growth-promotion-plan.json \" in block
+    assert "--eligibility-report catalog-growth-eligibility-report.json \" in block
     assert "--current-head-sha" in block
     assert "--current-base-sha" in block
 
@@ -90,14 +93,14 @@ def test_strict_growth_plan_gets_immutable_materialization_envelope_before_selec
     block = text[regenerate:select]
 
     assert regenerate < attach < select
-    assert "--promotion-plan strict-growth-promotion-plan.json \\" in block
-    assert "--vendor-candidate-report vendor-candidate-discovery-report.json \\" in block
-    assert "--source-discovery-report vendor-candidate-source-discovery-report.json \\" in block
-    assert "--eligibility-report catalog-growth-eligibility-report.json \\" in block
-    assert '--discovery-run-id "${{ github.run_id }}-${{ github.run_attempt }}" \\' in block
-    assert '--workflow-run-id "${{ github.run_id }}" \\' in block
-    assert '--workflow-attempt "${{ github.run_attempt }}" \\' in block
-    assert '--source-commit-sha "${{ github.sha }}" \\' in block
+    assert "--promotion-plan strict-growth-promotion-plan.json \" in block
+    assert "--vendor-candidate-report vendor-candidate-discovery-report.json \" in block
+    assert "--source-discovery-report vendor-candidate-source-discovery-report.json \" in block
+    assert "--eligibility-report catalog-growth-eligibility-report.json \" in block
+    assert '--discovery-run-id "${{ github.run_id }}-${{ github.run_attempt }}" \' in block
+    assert '--workflow-run-id "${{ github.run_id }}" \' in block
+    assert '--workflow-attempt "${{ github.run_attempt }}" \' in block
+    assert '--source-commit-sha "${{ github.sha }}" \' in block
     assert '--base-sha "${{ github.sha }}"' in block
 
 
@@ -134,10 +137,10 @@ def test_candidate_promotion_installs_preflight_observation_baseline_before_pr_b
     assert preflight < fail < install < body
     block = text[install:body]
     assert "source-preflight-verification-report.json" in block
-    assert "report_type\": \"source_verification_report\"" in block
-    assert "python -m tools.openva.observation_ledger build \\" in block
+    assert "report_type\": \"source_verification_report" in block
+    assert "python -m tools.openva.observation_ledger build \" in block
     assert "--baseline maintenance/source-observations/latest-observations.json" in block
-    assert "python -m tools.openva.observation_ledger install-latest \\" in block
+    assert "python -m tools.openva.observation_ledger install-latest \" in block
     assert "python -m tools.openva.release_gates check --profile pr" in block
 
 
@@ -153,7 +156,7 @@ def test_strict_growth_latest_commits_sha_bound_evidence_files():
     assert "PROMOTION_PLAN_PATH=maintenance/generated/strict-growth-promotion-plan.json" in text
     assert "ELIGIBILITY_REPORT_PATH=maintenance/generated/strict-growth-eligibility-report.json" in text
     assert "Strict-growth eligibility report: `{os.environ['ELIGIBILITY_REPORT_PATH']}`" in text
-    assert "Head SHA: \\`$HEAD_SHA\\`" in text
+    assert "Head SHA: \`$HEAD_SHA\`" in text
     assert "candidate-promotion-pr-body-final.md" in text
     assert "Upload strict-growth evidence artifacts" in text
     assert "Strict-growth uncapped promotion actions:" in text
@@ -204,3 +207,32 @@ def test_candidate_promotion_applies_only_machine_provisional_labels():
     assert "--add-label automerge:p0-source-repair" not in text
     assert "--add-label automerge:strict-growth" not in text
     assert "--add-label automerge:observation" not in text
+
+
+def test_bridge_dispatches_pr_title_owned_by_generated_catalog_automerge_lane():
+    bridge = BRIDGE.read_text(encoding="utf-8")
+    automerge = AUTOMERGE.read_text(encoding="utf-8")
+
+    dispatch_block = bridge[
+        bridge.index("- name: Dispatch existing strict-growth promotion workflow") :
+        bridge.index("- name: Upload promotion bridge decision artifacts")
+    ]
+    generated_catalog_condition = automerge[
+        automerge.index("generated-catalog:") : automerge.index("generated-catalog-rereview:")
+    ]
+
+    assert f"pr_title={GENERATED_CATALOG_TITLE}" in dispatch_block
+    assert f"title == '{GENERATED_CATALOG_TITLE}'" in generated_catalog_condition
+    assert "Catalog: strict-growth promotion bridged from discovery run" not in dispatch_block
+
+
+def test_bridge_does_not_widen_automerge_authority_with_labels():
+    bridge = BRIDGE.read_text(encoding="utf-8")
+    dispatch_block = bridge[
+        bridge.index("- name: Dispatch existing strict-growth promotion workflow") :
+        bridge.index("- name: Upload promotion bridge decision artifacts")
+    ]
+
+    assert "automerge:strict-growth" not in dispatch_block
+    assert "catalog-growth" not in dispatch_block
+    assert "gh pr edit" not in dispatch_block
