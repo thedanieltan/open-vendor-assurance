@@ -3,6 +3,7 @@ workflow: .github/workflows/validate.yml
 required_status_contexts:
   - validate / pr-change-classifier
   - validate / repository-integrity
+  - validate / workspace-affected-tests
   - validate / workflow-operating-model
   - validate / catalog-growth
   - validate / source-maintenance
@@ -38,6 +39,20 @@ jobs:
       - config/bot-constitution.yaml
       - config/release-gates.yaml
       - tools/openva/release_gates.py
+  workspace-affected-tests:
+    owner_loop: workspace_control_plane
+    purpose: Validate the workspace manifest, calculate reverse-dependent impact from the exact PR diff, install local prerequisites in dependency order, and run the conservative affected Python test plan.
+    commands:
+      - python -m tools.openva.workspace validate
+      - python -m tools.openva.workspace plan
+    protects:
+      - tools/openva/workspace.py
+      - tools/openva/workspace.yaml
+      - adapters/python/**
+      - integrations/mcp/**
+      - services/openva_match_service/**
+      - site/**
+      - integrations/google-sheets/**
   workflow-operating-model:
     owner_loop: workflow_control_plane
     purpose: Validate workflow inventory, operating model, future-operation specs, and structured contracts.
