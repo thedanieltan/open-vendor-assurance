@@ -15,7 +15,7 @@ from tools.openva.catalog_growth_discovery_queue import QUEUE_PATH, load_json, v
 from tools.openva.source_verification import ROOT
 
 SEED_DIR = ROOT / "maintenance" / "seeds" / "vendors"
-BREADTH_CANDIDATE_PATH = ROOT / "maintenance" / "generated" / "vendor-breadth-candidates.json"
+BREADTH_CANDIDATE_PATH = Path("maintenance/generated/vendor-breadth-candidates.json")
 VENDOR_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
 DOMAIN_PATTERN = re.compile(r"^[a-z0-9.-]+\.[a-z]{2,}$")
 COUNTRY_PATTERN = re.compile(r"^[A-Z]{2}$")
@@ -287,7 +287,10 @@ def build_vendor_candidate_report(
     breadth_candidate_count = 0
     invalid_breadth_candidate_count = 0
     if breadth_candidate_path is not None:
-        for row in load_breadth_candidates(breadth_candidate_path):
+        resolved_breadth_path = breadth_candidate_path
+        if not resolved_breadth_path.is_absolute():
+            resolved_breadth_path = root / resolved_breadth_path
+        for row in load_breadth_candidates(resolved_breadth_path):
             candidate = candidate_from_breadth(row)
             if candidate is None:
                 invalid_breadth_candidate_count += 1
