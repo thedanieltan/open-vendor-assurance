@@ -63,7 +63,7 @@ The static site has:
 - no hosted resolver worker;
 - no server-side workspace persistence.
 
-The community index is hint-only for local matching. Consumer-side live verification, where used, belongs to the consumer or a separately operated resolver—not the static page.
+The community index is hint-only for local matching. Where used, consumer-side live verification belongs to the consumer or a separately operated resolver—not the static page.
 
 The output remains public metadata and source-reference facts. Result-pack provenance fields distinguish candidate and verification basis, including fields such as:
 

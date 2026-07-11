@@ -418,7 +418,6 @@ def build_meta(pack: dict[str, Any], sources: list[dict[str, Any]], vendor_count
         "vendor_count": vendor_count,
         "source_count": len(sources),
         "canonical_base_url": config.canonical_base_url,
-        "github_releases_url": config.release_url,
         "non_advisory": True,
         "compiled_distribution": True,
         "site_data_contract": "openva-site-compiled-catalog.v1",
