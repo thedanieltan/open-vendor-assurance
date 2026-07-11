@@ -220,7 +220,12 @@ work_packages:
       - tests/test_discoverability.py
       - tests/test_publication_config.py
       - tests/test_release_artifacts.py
-      - tests/test_site.py
+      # tests/test_site.py was renamed to tests/site_contract.py by the retired-
+      # formal-release workflow cleanup; tests/release_gates_contract.py is that
+      # same cleanup's sibling file, needed here for the leftover release-tag/
+      # release-workflow test references this WP's own retirement work orphans.
+      - tests/site_contract.py
+      - tests/release_gates_contract.py
       - tools/openva/assurance_intelligence_publication.py
       - tools/openva/publication.py
       - tools/openva/release_artifacts.py
