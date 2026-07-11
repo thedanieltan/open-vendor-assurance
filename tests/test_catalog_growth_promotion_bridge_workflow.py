@@ -284,8 +284,16 @@ def test_bridge_never_writes_catalog_or_opens_or_merges_prs():
 
 
 def test_records_source_run_provenance():
+    # #594 aligned the dispatched PR title with the generated-catalog automerge lane,
+    # so the discovery-run id no longer rides the PR title. Provenance now lives in the
+    # bridge's own audit trail: the eligibility summary line, the step summary, and the
+    # --source-run-id passed to the promotion planner.
     body = text()
-    assert "bridged from discovery run $RUN_ID" in body
+    assert "bridged from discovery run $RUN_ID" not in body
+    assert 'pr_title=Catalog: apply reviewed candidate source promotion' in body
+    assert "Provenance remains in this step's audit and workflow summary" in body
+    assert 'Discovery run \`$RUN_ID\`' in body
+    assert '--source-run-id "$RUN_ID"' in body
     assert "GITHUB_STEP_SUMMARY" in body
 
 

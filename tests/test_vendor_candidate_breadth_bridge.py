@@ -7,8 +7,22 @@ import yaml
 
 from tools.openva.vendor_candidate_discovery import build_vendor_candidate_report
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def write_category_taxonomy(root: Path) -> None:
+    # vendor_candidate_discovery resolves config/category-taxonomy.yaml against the
+    # SELECTED root (root isolation), so every fixture root must carry the control
+    # file; the real taxonomy is copied verbatim so the fixture stays aligned with
+    # the actual control surface instead of inventing a divergent minimal shape.
+    target = root / "config" / "category-taxonomy.yaml"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    source = REPO_ROOT / "config" / "category-taxonomy.yaml"
+    target.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+
 
 def write_queue(root: Path, target: int = 1) -> Path:
+    write_category_taxonomy(root)
     queue = root / "maintenance" / "queues" / "catalog-growth-discovery.json"
     queue.parent.mkdir(parents=True, exist_ok=True)
     queue.write_text(
@@ -31,7 +45,15 @@ def write_queue(root: Path, target: int = 1) -> Path:
                 },
                 "source_types": ["dpa"],
                 "discovery_modes": ["seed_file_vendor_discovery"],
-                "cohorts": [],
+                "cohorts": [
+                    {
+                        "cohort_id": "fixture-cohort",
+                        "coverage_lane": "cloud_platforms",
+                        "target_vendor_candidates": 1,
+                        "priority": "high",
+                        "status": "queued",
+                    }
+                ],
             },
             indent=2,
         )

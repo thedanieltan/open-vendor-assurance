@@ -336,7 +336,12 @@ def plan_workspace(
     if full_suite:
         test_paths = ("tests",)
         affected = set(workspace.components)
-        reason = "shared component change requires the full repository suite"
+        # Preserve an already-explained conservative plan: the unowned-file fallback and
+        # the no-changed-files paths above set their own (more specific) reasons and have
+        # already widened `affected` to every component - overwriting them here hid WHY
+        # the full suite ran (test_unowned_change_fails_safe_to_full_suite regression).
+        if reason == "dependency-aware affected-component plan":
+            reason = "shared component change requires the full repository suite"
     else:
         patterns = [
             pattern
