@@ -60,44 +60,6 @@ jobs:
           else
             echo "::warning::source health snapshot unavailable: public/source-health-snapshot.json was not present in run $RUN_ID. Site will show No source-health observation labels."
           fi
-      - name: Download latest catalog confidence reports
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          mkdir -p coverage-audit-artifacts reports
-          RUN_ID="$(gh run list \
-            --workflow coverage-audit.yml \
-            --branch main \
-            --status success \
-            --limit 1 \
-            --json databaseId \
-            --jq '.[0].databaseId // ""')"
-          if [ -z "$RUN_ID" ]; then
-            echo "::warning::catalog confidence reports unavailable: no successful coverage-audit run was found. Site will use fallback confidence labels."
-            exit 0
-          fi
-          if ! gh run download "$RUN_ID" \
-            --name openva-coverage-audit-report \
-            --dir coverage-audit-artifacts; then
-            echo "::warning::catalog confidence reports unavailable: could not download openva-coverage-audit-report from run $RUN_ID. Site will use fallback confidence labels."
-            exit 0
-          fi
-          copied=0
-          for report in catalog-completeness-report.json entity-review-queue.json field-provenance-coverage.json; do
-            if [ -f "coverage-audit-artifacts/reports/$report" ]; then
-              cp "coverage-audit-artifacts/reports/$report" "reports/$report"
-              copied=$((copied + 1))
-            elif [ -f "coverage-audit-artifacts/$report" ]; then
-              cp "coverage-audit-artifacts/$report" "reports/$report"
-              copied=$((copied + 1))
-            else
-              echo "::warning::catalog confidence report unavailable: reports/$report was not present in coverage-audit run $RUN_ID. Site may use fallback confidence labels."
-            fi
-          done
-          if [ "$copied" -eq 3 ]; then
-            echo "Catalog confidence reports copied from coverage-audit run $RUN_ID."
-          fi
       - name: Build Assurance Intelligence public snapshot
         run: python -m tools.openva.assurance_intelligence_publication build --output public/assurance-intelligence.json
       - name: Build reviewed catalog site
