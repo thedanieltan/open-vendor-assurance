@@ -15,7 +15,6 @@ REQUIRED_VALIDATE_CONTEXTS = [
 OPERATIONAL_LAUNCH_DOCS = [
     Path("docs/public-launch-cutover.md"),
     Path("docs/v0.1.0-public-launch-readiness.md"),
-    Path("docs/v0.1.0-release-candidate.md"),
 ]
 
 
