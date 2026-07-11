@@ -47,7 +47,7 @@ def test_readme_preserves_non_advisory_public_source_boundary():
     assert "metadata-first" in text
     assert "not a legal" in text
     assert "vendor-risk advice" in text
-    assert "raw document mirroring" in text
+    assert "mirror raw vendor documents by default" in text
     assert "anti-bot bypass" in text
     assert "authenticated trust-center" in text
 
@@ -163,6 +163,6 @@ def test_public_launch_copy_positions_v010_as_infrastructure_launch():
         "seed dataset",
         "not a completeness claim",
         "does not currently operate a production central matching service",
-        "optional, api-key-gated verify transport for self-hosted use",
+        "optional api-key-gated verify transport for self-hosted use",
     ]:
         assert phrase in text

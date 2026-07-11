@@ -43,6 +43,9 @@ INTEGRATED_WORKFLOWS = {
         },
         "lanes": {"pr_safety"},
         "permissions": {
+            # actions: read added with the generated-catalog automerge lane (run/artifact
+            # reads); any FURTHER widening still fails this freeze.
+            "actions": "read",
             "contents": "write",
             "pull-requests": "write",
             "checks": "read",

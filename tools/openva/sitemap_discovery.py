@@ -552,6 +552,13 @@ def _discovery_event(
             canonical_json([candidate_id, discovery_run_id, evidence_digest, classification])
         )[len("sha256:") : len("sha256:") + 32],
         "candidate_id": candidate_id,
+        # The hardened discovery-ledger event contract (#562) requires vendor_id and
+        # source_type at TOP level; this emitter predates it and only carried
+        # vendor_id inside evidence. Values stay honest: vendor_id may be None when
+        # the caller has no canonical vendor, and source_type is the locator-based
+        # inference (never a verified claim).
+        "vendor_id": vendor_id,
+        "source_type": infer_source_type_from_locator(url),
         "origin": "sitemap",
         "candidate_url": url,
         "evidence_digest": evidence_digest,
