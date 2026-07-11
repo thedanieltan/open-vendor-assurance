@@ -141,6 +141,11 @@
         "snapshot": { "$ref": "#/$defs/snapshot" },
         "doctrine": { "type": "string" },
         "count": { "type": "integer", "minimum": 0 },
+        "source_type_labels": {
+          "type": "object",
+          "description": "Data dictionary: stable machine source-type keys mapped to the authoritative human-facing labels. Additive; machine keys remain the contract identifiers.",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        },
         "sources": {
           "type": "array",
           "items": {
@@ -257,6 +262,11 @@
         "observation_input": { "enum": ["run_artifact", "committed_events_fallback", "none"] },
         "guarantees": { "type": "object" },
         "counts": { "type": "object" },
+        "source_type_labels": {
+          "type": "object",
+          "description": "Data dictionary: stable machine source-type keys mapped to the authoritative human-facing labels. Additive; machine keys remain the contract identifiers.",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        },
         "exports": { "type": "object" },
         "vendor_export_template": { "type": "string" },
         "vendor_exports": {

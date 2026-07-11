@@ -25,9 +25,6 @@ def build_site(
     tmp_path: Path,
     source_health_snapshot: Path | None = None,
     assurance_intelligence: Path | None = None,
-    catalog_completeness: Path | None = None,
-    entity_review: Path | None = None,
-    field_provenance: Path | None = None,
 ) -> Path:
     out = tmp_path / "site-dist"
     module = site_build_module()
@@ -42,9 +39,6 @@ def build_site(
             out,
             source_health_snapshot or module.DEFAULT_SOURCE_HEALTH_SNAPSHOT,
             assurance_intelligence or module.DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT,
-            catalog_completeness or module.DEFAULT_CATALOG_COMPLETENESS_REPORT,
-            entity_review or module.DEFAULT_ENTITY_REVIEW_QUEUE,
-            field_provenance or module.DEFAULT_FIELD_PROVENANCE_COVERAGE,
         )
     finally:
         module.commit_sha = original_commit_sha
@@ -126,38 +120,6 @@ def write_assurance_intelligence_snapshot(path: Path, vendor_id: str) -> Path:
     }
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return path
-
-
-def write_confidence_reports(tmp_path: Path, vendor_id: str) -> tuple[Path, Path, Path]:
-    completeness = tmp_path / "catalog-completeness-report.json"
-    entity = tmp_path / "entity-review-queue.json"
-    provenance = tmp_path / "field-provenance-coverage.json"
-    completeness.write_text(json.dumps({
-        "report_type": "catalog_completeness_report",
-        "vendors": [{
-            "vendor_id": vendor_id,
-            "completeness_bucket": "source_coverage_incomplete",
-            "missing_expected_sources": ["dpa"],
-            "missing_required_fields": [],
-        }],
-    }), encoding="utf-8")
-    entity.write_text(json.dumps({
-        "report_type": "entity_review_queue",
-        "items": [{
-            "vendor_id": vendor_id,
-            "issue_type": "missing_legal_entity",
-        }],
-    }), encoding="utf-8")
-    provenance.write_text(json.dumps({
-        "report_type": "field_provenance_coverage",
-        "vendors": [{
-            "vendor_id": vendor_id,
-            "coverage_bucket": "mixed",
-            "covered_fields": ["legal_entity_name"],
-            "missing_fields": ["dpa_url"],
-        }],
-    }), encoding="utf-8")
-    return completeness, entity, provenance
 
 
 def health_row(source: dict, status: str, bucket: str, *, final_url: str | None = None) -> dict:
@@ -574,52 +536,33 @@ def test_source_health_display_uses_non_advisory_labels_and_conditional_final_ur
         assert forbidden not in label_block
 
 
-def test_vendor_shards_include_separate_catalog_confidence_labels(tmp_path):
-    source = source_rows(1)[0]
-    completeness, entity, provenance = write_confidence_reports(tmp_path, source["vendor_id"])
-
-    out = build_site(
-        tmp_path,
-        catalog_completeness=completeness,
-        entity_review=entity,
-        field_provenance=provenance,
-    )
-    shard = vendor_shard(out, source["vendor_id"])
-    confidence = shard["vendor"]["catalog_confidence"]
-
-    assert confidence["source_health_separate"] is True
-    assert confidence["catalog_completeness"]["label"] == "Source coverage incomplete"
-    assert confidence["entity_review"]["label"] == "Needs review"
-    assert confidence["field_provenance"]["label"] == "Mixed"
-    assert "not advice" in confidence["notice"]
-
-
-def test_catalog_confidence_falls_back_when_reports_are_absent(tmp_path):
+def test_public_outputs_present_no_vendor_completeness_or_maturity_states(tmp_path):
+    """The public product model is: an accurate vendor-published URL, or no URL
+    currently recorded. Vendor maturity/completeness states are internal
+    maintenance metadata and must not appear in public site outputs."""
     out = build_site(tmp_path)
     vendor = json.loads((out / "data/vendor-search.min.json").read_text(encoding="utf-8"))["items"][0]
-    confidence = vendor["catalog_confidence"]
+    assert "catalog_confidence" not in vendor
 
-    assert confidence["catalog_completeness"]["label"] == "Not reviewed"
-    assert confidence["entity_review"]["label"] == "Not reviewed"
-    assert confidence["field_provenance"]["label"] == "Missing"
-    assert confidence["source_health_separate"] is True
+    source = source_rows(1)[0]
+    shard = vendor_shard(out, source["vendor_id"])
+    assert "catalog_confidence" not in shard["vendor"]
 
-
-def test_catalog_confidence_ui_labels_are_separate_and_non_advisory():
-    app = (SITE / "src" / "app.js").read_text(encoding="utf-8")
-
-    for phrase in [
-        "Catalog completeness",
-        "Entity review",
-        "Field provenance",
-        "Shown per source record",
-        "Catalog confidence labels are metadata about OpenVA review coverage, not advice.",
+    page_text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in [SITE / "src" / "app.js", SITE / "src" / "index.html"]
+    ).lower()
+    for forbidden in [
+        "complete enough for review",
+        "core complete",
+        "scope complete",
+        "discovery incomplete",
+        "source coverage incomplete",
+        "partial coverage",
+        "catalog completeness",
+        "core_coverage",
     ]:
-        assert phrase in app
-
-    confidence_block = app.split("function confidenceTemplate", 1)[1].split("function renderSnapshotDisclosures", 1)[0].lower()
-    for forbidden in ["trusted", "approved", "compliant", "safe", "canonical"]:
-        assert forbidden not in confidence_block
+        assert forbidden not in page_text
 
 
 def test_feed_contract_remains_empty_and_noncanonical(tmp_path):
@@ -657,16 +600,11 @@ def test_pages_workflow_deploys_site_and_feed_workflow_uploads_feed_artifact_onl
     assert "--name openva-source-maintenance-report" in reviewed_text
     assert "public/source-health-snapshot.json" in reviewed_text
     assert "source health snapshot unavailable" in reviewed_text
-    assert "Download latest catalog confidence reports" in reviewed_text
-    assert "--workflow coverage-audit.yml" in reviewed_text
-    assert "--name openva-coverage-audit-report" in reviewed_text
-    assert "catalog-completeness-report.json entity-review-queue.json field-provenance-coverage.json" in reviewed_text
-    assert "coverage-audit-artifacts/reports/$report" in reviewed_text
-    assert "coverage-audit-artifacts/$report" in reviewed_text
-    assert "reports/$report" in reviewed_text
-    assert "catalog confidence reports unavailable" in reviewed_text
+    # Vendor completeness/maturity reports stay internal to coverage-audit;
+    # the published site no longer downloads or renders them.
+    assert "Download latest catalog confidence reports" not in reviewed_text
+    assert "catalog-completeness-report.json" not in reviewed_text
     assert reviewed_text.index("Download latest source health snapshot") < reviewed_text.index("Build reviewed catalog site")
-    assert reviewed_text.index("Download latest catalog confidence reports") < reviewed_text.index("Build reviewed catalog site")
     assert "Build Assurance Intelligence public snapshot" in reviewed_text
     assert "python -m tools.openva.assurance_intelligence_publication build --output public/assurance-intelligence.json" in reviewed_text
     assert reviewed_text.index("Build Assurance Intelligence public snapshot") < reviewed_text.index("Build reviewed catalog site")

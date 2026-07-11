@@ -4,6 +4,44 @@ OpenVA classifies public source references by access and rights posture.
 
 This policy exists to keep records factual, public-source-only, and metadata-first while still allowing maintainers to describe different public publication patterns.
 
+## Source types and human-facing labels
+
+The machine identifiers below are compatibility-sensitive contract keys used
+by the schema, exports, API fields, Model Context Protocol fields, JSON
+properties, and established CSV contract columns. They are never renamed or
+removed. Every human-facing surface (browser interface, help text,
+documentation, accessible labels, Excel worksheets, vendor pages, search
+filters, source-type descriptions, and search-engine metadata) uses the full
+label from the single authoritative mapping in
+`config/controlled-vocabulary.yaml` (`source_type_labels`), accessed in code
+through `tools/openva/source_type_labels.py`. Display surfaces never
+abbreviate (for example, never a bare "DPA").
+
+| Machine key | Human-facing label |
+| --- | --- |
+| `dpa` | Data processing addendum |
+| `subprocessors_list` | Subprocessor list |
+| `privacy_notice` | Privacy notice |
+| `trust_center` | Trust center |
+| `security_page` | Security page |
+| `compliance_page` | Compliance page |
+| `certification_reference` | Certification reference |
+| `terms_of_service` | Terms of service |
+| `kyc_statement` | Know your customer statement |
+| `aml_statement` | Anti-money laundering statement |
+| `ai_terms` | Artificial intelligence terms |
+| `government_request_policy` | Government request policy |
+| `transparency_report` | Transparency report |
+| `status_page` | Service status page |
+| `other_public_source` | Other public source |
+
+For each accepted vendor and each supported source type, the public product
+exposes either the accurate vendor-published URL that OpenVA currently
+records, or an explicit "no URL currently recorded" state. Absence of a URL
+is a factual statement about OpenVA's records only; it is never a vendor
+risk, maturity, or quality conclusion, and the public product does not
+present vendor completeness states.
+
 ## Access classes
 
 ### `public_web`

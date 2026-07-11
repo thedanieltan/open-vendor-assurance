@@ -191,15 +191,9 @@ After WP-L3D, `release-candidate` defaults to `enforce`. `report_only` remains a
 
 ## Site Snapshot Behavior
 
-The public site consumes `public/source-health-snapshot.json` from the latest source-maintenance artifact when available. It also consumes catalog confidence reports from the latest coverage-audit artifact when available:
+The public site consumes `public/source-health-snapshot.json` from the latest source-maintenance artifact when available.
 
-```text
-reports/catalog-completeness-report.json
-reports/entity-review-queue.json
-reports/field-provenance-coverage.json
-```
-
-If the coverage-audit artifact is unavailable, the site still builds and falls back to Not reviewed / Missing catalog confidence labels.
+Coverage-audit reports (`reports/catalog-completeness-report.json`, `reports/entity-review-queue.json`, `reports/field-provenance-coverage.json`) remain internal maintenance inputs. The public site does not download or render vendor completeness/maturity labels; the public model is the recorded vendor-published URL or an explicit "no URL currently recorded" state.
 
 Site labels are snapshot based:
 
