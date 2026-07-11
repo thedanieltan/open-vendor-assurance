@@ -1,7 +1,7 @@
 import importlib.util
 from pathlib import Path
 
-_CONTRACT_PATH = Path(__file__).resolve().parents[1] / ".github" / "test_support" / "site_contract.py"
+_CONTRACT_PATH = Path(__file__).with_name("site_contract.py")
 _SPEC = importlib.util.spec_from_file_location("openva_site_contract", _CONTRACT_PATH)
 assert _SPEC and _SPEC.loader
 _CONTRACT = importlib.util.module_from_spec(_SPEC)
