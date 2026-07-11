@@ -7,18 +7,6 @@
     };
   }
 
-  if (typeof window.snapshotDisclosure === "function") {
-    window.snapshotDisclosure = () => {
-      const meta = catalogData.meta;
-      return `
-        <strong>Current accepted catalog state: ${html(meta.catalog_snapshot_identity)}</strong><br>
-        Catalog generated at: ${html(meta.catalog_snapshot_date)}<br>
-        This page follows the latest accepted OpenVA catalog deployed from <code>main</code>.<br>
-        Source commit: ${html(meta.commit_sha)}
-      `;
-    };
-  }
-
   const THEMES = ["system", "light", "dark"];
   const LABELS = { system: "System", light: "Day", dark: "Night" };
   const qs = (selector, root = document) => root.querySelector(selector);
