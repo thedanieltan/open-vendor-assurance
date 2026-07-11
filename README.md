@@ -259,7 +259,7 @@ OpenVA is:
 
 OpenVA does not:
 
-- use raw document mirroring by default;
+- mirror raw vendor documents by default;
 - include bespoke agreements;
 - include authenticated trust-center or customer portal materials;
 - include NDA-gated content;
