@@ -44,6 +44,7 @@ import yaml
 from tools.openva.indexes import ROOT
 from tools.openva.observation_ledger import DEFAULT_LEDGER_DIR, DOCTRINE, load_ledger_baseline
 from tools.openva.pack import canonical_json, sha256_bytes
+from tools.openva.source_type_labels import source_type_labels
 
 SCHEMA_VERSION = "0.1.0"
 
@@ -441,6 +442,10 @@ def build_agent_exports(
             "schema_version": SCHEMA_VERSION,
             "doctrine": DOCTRINE,
             "count": len(flat_rows),
+            # Data dictionary only: machine `source_type` keys are the stable
+            # contract identifiers; these labels are the authoritative
+            # human-facing wording for display surfaces.
+            "source_type_labels": source_type_labels(),
             "sources": flat_rows,
             "not_advice": True,
         },
@@ -496,6 +501,7 @@ def build_agent_exports(
             "observation_input": observation_input,
             "guarantees": GUARANTEES,
             "counts": {"vendors": len(vendor_index_rows), "sources": len(flat_rows)},
+            "source_type_labels": source_type_labels(),
             "exports": exports_map,
             "vendor_export_template": VENDOR_EXPORT_TEMPLATE,
             "vendor_exports": vendor_exports,

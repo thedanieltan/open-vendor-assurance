@@ -26,6 +26,7 @@ from typing import Any
 
 from tools.openva.pack import canonical_json, sha256_bytes
 from tools.openva.publication import PublicationConfig
+from tools.openva.source_type_labels import source_type_labels
 
 DISCOVERY_SCHEMA_VERSION = "1.0.0"
 MISSING_SOURCE_HEALTH_LABEL = "No source-health observation"
@@ -156,28 +157,44 @@ def render_vendor_page(
         else '<p class="muted">No official domains recorded.</p>'
     )
 
-    ordered = sorted(sources, key=lambda s: (str(s.get("source_type") or ""), str(s.get("source_url") or "")))
-    if ordered:
-        rows = []
-        for source in ordered:
+    # Every supported source type appears for every vendor: either the
+    # vendor-published URL OpenVA currently records, or an explicit "no URL
+    # currently recorded" row. Absence is a factual statement about OpenVA's
+    # records, never a vendor risk or quality conclusion.
+    labels = source_type_labels()
+    by_type: dict[str, list[dict[str, Any]]] = {}
+    for source in sources:
+        by_type.setdefault(str(source.get("source_type") or ""), []).append(source)
+    rows = []
+    for source_type, label in labels.items():
+        recorded = sorted(by_type.get(source_type, []), key=lambda s: str(s.get("source_url") or ""))
+        if not recorded:
+            rows.append(
+                "<tr>"
+                f"<td>{_esc(label)}</td>"
+                '<td class="url"><span class="muted">No URL currently recorded</span></td>'
+                '<td><span class="muted">—</span></td>'
+                '<td><span class="muted">—</span></td>'
+                "</tr>"
+            )
+            continue
+        for source in recorded:
             observed = _latest_observed_at(source)
             health = _source_health_label(source)
             rows.append(
                 "<tr>"
-                f"<td>{_esc(source.get('source_type'))}</td>"
+                f"<td>{_esc(label)}</td>"
                 f'<td class="url"><a href="{_esc(source.get("source_url"))}" rel="nofollow noopener">{_esc(source.get("source_url"))}</a></td>'
                 f"<td>{_esc(health) if health else f'<span class=\"muted\">{MISSING_SOURCE_HEALTH_LABEL}</span>'}</td>"
                 f"<td>{_esc(observed) if observed else '<span class=\"muted\">—</span>'}</td>"
                 "</tr>"
             )
-        sources_html = (
-            "<table><thead><tr>"
-            "<th>Source type</th><th>Original vendor source URL</th>"
-            "<th>Source health</th><th>Latest observation</th>"
-            "</tr></thead><tbody>" + "".join(rows) + "</tbody></table>"
-        )
-    else:
-        sources_html = '<p class="muted">No public assurance sources are recorded yet.</p>'
+    sources_html = (
+        "<table><thead><tr>"
+        "<th>Source type</th><th>Vendor-published source URL</th>"
+        "<th>Source health</th><th>Last checked</th>"
+        "</tr></thead><tbody>" + "".join(rows) + "</tbody></table>"
+    )
 
     jsonld = _vendor_dataset_jsonld(config, vendor, export_url)
 
@@ -310,11 +327,12 @@ def render_robots(config: PublicationConfig) -> str:
     return "User-agent: *\nAllow: /\n" f"Sitemap: {config.url('sitemap.xml')}\n"
 
 
-def render_sitemap(config: PublicationConfig, vendor_ids: list[str], *, lastmod: str) -> str:
+def render_sitemap(config: PublicationConfig, vendor_ids: list[str], *, lastmod: str | None) -> str:
     urls = [config.canonical_base_url + "/", config.agents_url]
     urls.extend(config.vendor_page_url(vendor_id) for vendor_id in vendor_ids)
+    lastmod_tag = f"    <lastmod>{_esc(lastmod)}</lastmod>\n" if lastmod else ""
     entries = "".join(
-        f"  <url>\n    <loc>{_esc(url)}</loc>\n    <lastmod>{_esc(lastmod)}</lastmod>\n  </url>\n"
+        f"  <url>\n    <loc>{_esc(url)}</loc>\n{lastmod_tag}  </url>\n"
         for url in urls
     )
     return (
@@ -379,7 +397,11 @@ def build_discovery(
     commit_sha: str,
     generated_at: str,
 ) -> dict[str, Any]:
-    snapshot_date = generated_at[:10]
+    # A missing snapshot timestamp stays an explicit unavailable state; it is
+    # never rendered as an epoch (January 1, 1970) date.
+    trimmed = generated_at.strip()
+    lastmod = trimmed[:10] if trimmed and not trimmed.startswith("1970-01-01") else None
+    snapshot_date = lastmod or "date unavailable"
     _write(output_dir / "assets" / "openva-pages.css", PAGE_STYLESHEET)
 
     vendor_ids: list[str] = []
@@ -400,7 +422,7 @@ def build_discovery(
 
     _write(output_dir / "agents" / "index.html", render_agents_page(config, commit_sha=commit_sha, snapshot_date=snapshot_date))
     _write(output_dir / "robots.txt", render_robots(config))
-    _write(output_dir / "sitemap.xml", render_sitemap(config, vendor_ids, lastmod=snapshot_date))
+    _write(output_dir / "sitemap.xml", render_sitemap(config, vendor_ids, lastmod=lastmod))
     _write(output_dir / "llms.txt", render_llms_txt(config))
 
     manifest = discovery_manifest(config, commit_sha=commit_sha, generated_at=generated_at)

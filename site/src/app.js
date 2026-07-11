@@ -10,7 +10,6 @@ const sourceCache = new Map();
 let localInventoryRows = [];
 let localMatchRows = [];
 
-const CORE_COVERAGE = ["dpa", "privacy_notice", "security_page", "subprocessors_list", "trust_center"];
 const RESULT_PACK_VERSION = "2.0.0";
 const RESULT_PACK_SOURCE_TYPES = ["trust_security", "dpa", "subprocessors", "privacy_notice", "status_page"];
 const RESULT_PACK_RESOLVER_TYPES_BY_OUTPUT = {
@@ -45,7 +44,14 @@ const SOURCE_HEALTH_LABELS = {
   ambiguous: "Access result ambiguous",
   missing: "No source-health observation",
 };
-const CONFIDENCE_NOTICE = "Catalog confidence labels are metadata about OpenVA review coverage, not advice.";
+// Human-facing source-type labels come from one authoritative repository
+// mapping (config/controlled-vocabulary.yaml), delivered through the compiled
+// data/source-types.json. The page never defines its own source-type enum.
+let SOURCE_TYPE_LABELS = {};
+
+function sourceTypeLabel(sourceType) {
+  return SOURCE_TYPE_LABELS[sourceType] || text(sourceType);
+}
 const ASSURANCE_INTELLIGENCE_NOTICE = "Verification is based on admitted assurance observations. Freshness describes the age of the decisive verification basis. Evidence-set state describes completeness and internal coherence. Source reachability is separate from assurance verification.";
 const ASSURANCE_AXIS_LABELS = {
   instrument_state: "Instrument",
@@ -113,7 +119,7 @@ function snapshotDisclosure() {
   const meta = catalogData.meta;
   return `
     <strong>Current accepted catalog state: ${html(meta.catalog_snapshot_identity)}</strong><br>
-    Catalog generated at: ${html(meta.catalog_snapshot_date)}<br>
+    Catalog generated at: ${html(meta.catalog_snapshot_date || "Snapshot date unavailable")}<br>
     This page follows the latest accepted OpenVA catalog deployed from <code>main</code>.<br>
     Source commit: ${html(meta.commit_sha)}
   `;
@@ -130,22 +136,6 @@ function sourceHealthDisclosure() {
     Snapshot type: ${html(snapshot.snapshot_type || "missing")}<br>
     Source: ${html(snapshot.source || "latest-source-health")}<br>
     Bucket counts: reachable at last check ${html(counts.healthy || 0)} / retrieval requires review ${html(counts.warning || 0)} / unavailable at last check ${html(counts.unavailable || 0)} / access result ambiguous ${html(counts.ambiguous || 0)}
-  `;
-}
-
-function confidenceTemplate(confidence) {
-  const data = confidence || {};
-  const completeness = data.catalog_completeness || { label: "Not reviewed" };
-  const entity = data.entity_review || { label: "Not reviewed" };
-  const provenance = data.field_provenance || { label: "Missing" };
-  return `
-    <div class="confidence-grid">
-      <span><strong>Source health</strong><small>Shown per source record</small></span>
-      <span><strong>Catalog completeness</strong><small>${html(completeness.label)}</small></span>
-      <span><strong>Entity review</strong><small>${html(entity.label)}</small></span>
-      <span><strong>Field provenance</strong><small>${html(provenance.label)}</small></span>
-    </div>
-    <p class="meta-line">${html(data.notice || CONFIDENCE_NOTICE)}</p>
   `;
 }
 
@@ -499,19 +489,18 @@ function setupLocalMatcher() {
   renderLocalMatcher();
 }
 
-function optionList(values, label) {
+function optionList(values, label, displayLabel = (value) => value) {
   const unique = [...new Set(values.filter(Boolean))].sort();
-  return [`<option value="">${html(label)}</option>`, ...unique.map((value) => `<option value="${html(value)}">${html(value)}</option>`)].join("");
+  return [`<option value="">${html(label)}</option>`, ...unique.map((value) => `<option value="${html(value)}">${html(displayLabel(value))}</option>`)].join("");
 }
 
 function setupFilters() {
   const sourceTypes = catalogData.sourceTypes;
   const countries = catalogData.vendors.map((vendor) => vendor.headquarters_country);
   const categories = catalogData.vendors.flatMap((vendor) => vendor.vendor_categories || []);
-  document.getElementById("source-type-filter").innerHTML = optionList(sourceTypes, "All source types");
+  document.getElementById("source-type-filter").innerHTML = optionList(sourceTypes, "All source types", sourceTypeLabel);
   document.getElementById("country-filter").innerHTML = optionList(countries, "All countries");
   document.getElementById("category-filter").innerHTML = optionList(categories, "All categories");
-  document.getElementById("coverage-filter").innerHTML = optionList(CORE_COVERAGE, "All coverage");
   document.getElementById("catalog-filters").addEventListener("input", renderCatalog);
   document.getElementById("select-visible").addEventListener("click", () => {
     visibleVendors.forEach((vendor) => selectedVendors.add(vendor.vendor_id));
@@ -531,7 +520,6 @@ function vendorMatches(vendor) {
   const sourceType = document.getElementById("source-type-filter").value;
   const country = document.getElementById("country-filter").value;
   const category = document.getElementById("category-filter").value;
-  const coverage = document.getElementById("coverage-filter").value;
   const haystack = [
     vendor.display_name,
     vendor.legal_name,
@@ -541,8 +529,7 @@ function vendorMatches(vendor) {
   return (!query || haystack.includes(query))
     && (!sourceType || (vendor.source_types || []).includes(sourceType))
     && (!country || vendor.headquarters_country === country)
-    && (!category || (vendor.vendor_categories || []).includes(category))
-    && (!coverage || (vendor.source_types || []).includes(coverage));
+    && (!category || (vendor.vendor_categories || []).includes(category));
 }
 
 function renderCatalogSummary() {
@@ -564,8 +551,7 @@ function renderCatalog() {
       <label><input type="checkbox" data-select-vendor="${html(vendor.vendor_id)}" ${selectedVendors.has(vendor.vendor_id) ? "checked" : ""}> Select public vendor metadata</label>
       <h4><button class="secondary" type="button" data-open-vendor="${html(vendor.vendor_id)}">${html(vendor.display_name)}</button></h4>
       <div class="meta-line">${html(vendor.legal_name)} · ${html(vendor.headquarters_country)} · ${html(vendor.catalog_status)}</div>
-      <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
-      ${confidenceTemplate(vendor.catalog_confidence)}
+      <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(sourceTypeLabel(item))}</span>`).join("")}</div>
     </article>
   `).join("") : `<article class="event-card"><h3>No vendors match these filters.</h3><p>Try clearing one filter or searching by vendor name, legal name, vendor ID, or official domain.</p></article>`;
   document.querySelectorAll("[data-select-vendor]").forEach((box) => {
@@ -609,15 +595,14 @@ async function renderVendorDetail(vendorId) {
       <p>Vendor categories: ${(vendor.vendor_categories || []).map(html).join(", ") || "Unavailable"}</p>
       <div class="snapshot-box">${snapshotDisclosure()}</div>
       <div class="snapshot-box source-health-snapshot">${sourceHealthDisclosure()}</div>
-      <div class="snapshot-box catalog-confidence-snapshot">${confidenceTemplate(vendor.catalog_confidence)}</div>
       ${assuranceIntelligenceTemplate(assuranceIntelligence)}
       <h4>Indexed source records</h4>
-      <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(item)}</span>`).join("")}</div>
+      <div class="pill-row">${(vendor.source_types || []).map((item) => `<span class="pill">${html(sourceTypeLabel(item))}</span>`).join("")}</div>
       <ul class="source-list">${sources.map(sourceTemplate).join("") || "<li>No reviewed source records.</li>"}</ul>
       <h4>Candidate source records</h4>
       <ul class="source-list">${candidates.map(candidateTemplate).join("") || "<li>No candidate source records.</li>"}</ul>
       <h4>Unavailable source notes, non-advisory</h4>
-      <ul class="source-list">${unavailable.map((item) => `<li>${html(item.source_type)} · ${html(item.unavailability_status || item.status)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("") || "<li>No unavailable source notes.</li>"}</ul>
+      <ul class="source-list">${unavailable.map((item) => `<li>${html(sourceTypeLabel(item.source_type))} · ${html(item.unavailability_status || item.status)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("") || "<li>No unavailable source notes.</li>"}</ul>
       <h4>Related observation events</h4>
       ${observations.length ? `<ul class="source-list">${observations.map((item) => `<li>${html(item.source_id)} · ${html(item.result)} · catalog_tier: ${html(item.catalog_tier)} · advisory_boundary: ${html(item.advisory_boundary)}</li>`).join("")}</ul>` : "<p>Live observation feed events are shown separately from reviewed catalog records. No related live observation events are available yet.</p>"}
     `;
@@ -646,7 +631,7 @@ function sourceTemplate(source) {
       <span class="source-health source-health--${html(bucket)}">${html(label)}</span>
       status: ${html(health.status || "No source-health observation")} | last checked: ${html(health.verified_at || "No source-health observation")} | ${html(health.snapshot_notice || "Source health is based on the latest maintenance snapshot and may change.")}${finalUrl}<br>
       <label><input type="checkbox" data-select-source="${html(source.source_id)}" ${selectedSources.has(source.source_id) ? "checked" : ""}> Select source</label>
-      <strong>${html(source.source_type)}</strong> · <a href="${html(source.source_url)}" target="_blank" rel="noreferrer">${html(source.title)}</a><br>
+      <strong>${html(sourceTypeLabel(source.source_type))}</strong> · <a href="${html(source.source_url)}" target="_blank" rel="noreferrer">${html(source.title)}</a><br>
       language: ${html(source.source_language)} · authority: ${html(source.source_authority_class)} · access: ${html(source.access_class)} · rights: ${html(source.rights_class)}<br>
       provenance.collected_at: ${html(source.provenance && source.provenance.collected_at)} · catalog_tier: ${html(source.catalog_tier)} · review_state: ${html(source.review_state)} · advisory_boundary: ${html(source.advisory_boundary)}
     </li>
@@ -654,7 +639,7 @@ function sourceTemplate(source) {
 }
 
 function candidateTemplate(candidate) {
-  return `<li>${html(candidate.source_type_candidate)} · ${html(candidate.candidate_url)} · catalog_tier: ${html(candidate.catalog_tier)} · review_state: ${html(candidate.review_state)} · advisory_boundary: ${html(candidate.advisory_boundary)}</li>`;
+  return `<li>${html(sourceTypeLabel(candidate.source_type_candidate))} · ${html(candidate.candidate_url)} · catalog_tier: ${html(candidate.catalog_tier)} · review_state: ${html(candidate.review_state)} · advisory_boundary: ${html(candidate.advisory_boundary)}</li>`;
 }
 
 function eventMatches(event) {
@@ -687,7 +672,7 @@ function eventTemplate(event) {
   return `
     <article class="event-card">
       <h4>${html(event.event_type)}</h4>
-      <p>${html(event.vendor_id)} · ${html(event.source_id)} · ${html(event.source_type)} · ${html(event.observed_at)}</p>
+      <p>${html(event.vendor_id)} · ${html(event.source_id)} · ${html(sourceTypeLabel(event.source_type))} · ${html(event.observed_at)}</p>
       <p>result: ${html(event.result)} · http_status: ${html(event.http_status)}</p>
       <p>catalog_tier: ${html(event.catalog_tier)} · review_state: ${html(event.review_state)} · advisory_boundary: ${html(event.advisory_boundary)}</p>
       ${hashNote}
@@ -803,6 +788,7 @@ async function init() {
         summary: { assurance_count: 0, axis_count: 5 },
         entries: [],
       };
+  SOURCE_TYPE_LABELS = sourceTypes.labels || {};
   catalogData = {
     meta,
     vendors: vendorSearch.items || [],
