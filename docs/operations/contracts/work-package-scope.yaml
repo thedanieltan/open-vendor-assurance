@@ -505,3 +505,30 @@ work_packages:
     allowed_paths:
       - tests/test_site.py
       - tests/test_openva_sqlite_export.py
+
+  WP-OPENVA-CANONICAL-SITE-01:
+    description: Canonical public-site program — definitive source-type label vocabulary, catalog-first one-page implementation, catalog audit reporting, and search discoverability (homepage metadata, vendor and source-type pages, sitemaps).
+    allowed_paths:
+      - config/controlled-vocabulary.yaml
+      - config/publication.yaml
+      - schemas/openva/agent-export.schema.json
+      - site/**
+      - tools/openva/source_type_labels.py
+      - tools/openva/site_discovery.py
+      - tools/openva/agent_export.py
+      - tools/openva/publication.py
+      - tests/site_contract.py
+      - tests/test_site.py
+      - tests/test_source_type_labels.py
+      - tests/test_sitemap_discovery.py
+      - tests/test_sitemap_discovery_integration.py
+      - tests/test_generated_exports.py
+      - tests/test_agent_export.py
+      - tests/test_release_site_routing_smoke.py
+      - tests/test_public_launch_readiness.py
+      - .github/workflows/site-pages.yml
+      - README.md
+      - docs/*
+      - docs/source-trust/SOURCE_TRUST_OPERATIONS_RUNBOOK.md
+      - docs/operations/reports/*
+      - docs/maintenance/*
