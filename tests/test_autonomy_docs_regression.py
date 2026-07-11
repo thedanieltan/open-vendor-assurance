@@ -54,7 +54,9 @@ def test_governance_names_fail_closed_states():
 def test_readme_states_autonomous_model_and_lifecycle():
     text = _read(README)
     assert "autonomous" in text.lower()
-    assert "without human approval" in text.lower()
+    # Current README wording (WP-02L positioning): the autonomy claim is stated as
+    # machine-gated processing "without default human review".
+    assert "without default human review" in text.lower()
     for state in LIFECYCLE_STATES:
         assert state in text, f"README missing lifecycle state {state}"
     # README must not claim routine catalog changes are review-gated

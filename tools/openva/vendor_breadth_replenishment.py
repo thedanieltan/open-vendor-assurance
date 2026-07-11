@@ -185,10 +185,13 @@ def merge_ledger_idempotent(
             changed = True
 
     rows = [_finalize_entity(entities[key]) for key in sorted(entities)]
-    timestamp = (
-        generated_at
-        or (now_iso() if changed else str((existing or {}).get("generated_at") or now_iso()))
-    )
+    # Replay idempotence: an unchanged merge must reproduce the existing ledger
+    # byte-for-byte, so a caller-supplied generated_at may only stamp a ledger
+    # whose content actually changed — otherwise the prior stamp is preserved.
+    if changed:
+        timestamp = generated_at or now_iso()
+    else:
+        timestamp = str((existing or {}).get("generated_at") or generated_at or now_iso())
     ledger = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": timestamp,

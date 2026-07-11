@@ -266,8 +266,9 @@ def test_release_readiness_docs_preserve_local_compiler_entrypoint():
     local_compiler = (ROOT / "docs/local-compiler.md").read_text(encoding="utf-8")
     site_readme = (ROOT / "site/README.md").read_text(encoding="utf-8")
 
+    # README keeps the local compiler DISCOVERABLE via docs/local-compiler.md; the
+    # literal entrypoint invocation lives in that doc (asserted below), not the README.
     assert "docs/local-compiler.md" in readme
-    assert "python -m tools.openva.resolve_csv" in readme
     assert "python -m tools.openva.resolve_csv input.csv" in local_compiler
     assert "--out-json compiled-vendors.json" in local_compiler
     assert "--out-csv compiled-vendors.csv" in local_compiler

@@ -121,11 +121,18 @@ def test_no_eligible_candidate_returns_none_even_with_demand() -> None:
 
 
 def test_growth_decision_reports_demand_signals_as_explanation_only(monkeypatch) -> None:
+    # Current live-state contract: authority comes from state_source provenance
+    # (state_is_authoritative), and the lane requires fresh evidence — the old
+    # state_authoritative flag and missing evidence block deferred every cycle.
     queue_state = {
         "lane": growth.GROWTH_LANE,
-        "state_authoritative": True,
+        "state_source": "github_live",
         "status": "idle",
         "active_prs": [],
+        "open_prs": [],
+        "recent_bot_prs": {"day_count": 0, "week_count": 0},
+        "pause": {"active": False},
+        "evidence": {"generated_at": "2026-07-06T00:00:00Z"},
         "cooldown_until": None,
         "hold_until": None,
     }

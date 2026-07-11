@@ -509,29 +509,34 @@ def test_agent_automerge_generated_catalog_lane_uploads_eligibility_artifact():
 
 
 def test_catalog_pr_guard_has_generated_catalog_fast_path():
+    # Heavy validation moved to validate.yml (#591: "dedupe catalog PR guard heavy
+    # validation"); the guard now ends with an explicit deferral step, so the fast-path
+    # classification is asserted against that boundary instead of the removed
+    # "Validate current records" / match-service / test steps.
     text = CATALOG_PR_GUARD.read_text(encoding="utf-8")
 
     classify = text.index("- name: Classify generated catalog fast path")
     quarantine = text.index("- name: Classify quarantine fast path")
-    validate = text.index("- name: Validate current records")
-    install_match = text.index("- name: Install match service test dependencies")
-    tests = text.index("- name: Run tests")
-    fast_path_block = text[classify:validate]
+    defer = text.index("- name: Defer heavy validation to validate workflow")
+    fast_path_block = text[classify:quarantine]
 
-    assert classify < quarantine < validate < install_match < tests
+    assert classify < quarantine < defer
     assert "is_generated_candidate_promotion_pr(branch, title)" in fast_path_block
     assert "GENERATED_CATALOG_WORK_PACKAGE" in fast_path_block
     assert "classify_generated_catalog_pr_risk(changed_paths)" in fast_path_block
     assert "GeneratedCatalogPrRiskClass.LOW_RISK" in fast_path_block
     assert "fast_path=true" in fast_path_block
     assert "fast_path=false" in fast_path_block
-    assert "if: steps.generated_catalog_fast_path.outputs.fast_path != 'true' && steps.quarantine_fast_path.outputs.fast_path != 'true'" in text[validate:]
-    assert 'pip install -e "services/openva_match_service[dev]"' in text[install_match:tests]
+    assert "if: steps.generated_catalog_fast_path.outputs.fast_path != 'true' && steps.quarantine_fast_path.outputs.fast_path != 'true'" in text[defer:]
+    assert "enforced by validate.yml" in text[defer:]
 
 
 def test_catalog_pr_guard_has_quarantine_fast_path():
     text = CATALOG_PR_GUARD.read_text(encoding="utf-8")
-    block = text[text.index("- name: Classify quarantine fast path") : text.index("- name: Validate current records")]
+    block = text[
+        text.index("- name: Classify quarantine fast path")
+        : text.index("- name: Defer heavy validation to validate workflow")
+    ]
 
     assert "check_quarantine_pr_shape" in block
     assert "headRefName" in block
@@ -544,7 +549,8 @@ def test_catalog_pr_guard_has_quarantine_fast_path():
 def test_catalog_pr_guard_fast_path_only_applies_to_generated_candidate_promotion_prs():
     text = CATALOG_PR_GUARD.read_text(encoding="utf-8")
     fast_path_block = text[
-        text.index("- name: Classify generated catalog fast path") : text.index("- name: Validate current records")
+        text.index("- name: Classify generated catalog fast path")
+        : text.index("- name: Classify quarantine fast path")
     ]
 
     assert "headRefName" in fast_path_block

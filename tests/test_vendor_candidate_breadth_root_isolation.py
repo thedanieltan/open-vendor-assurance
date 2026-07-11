@@ -5,8 +5,18 @@ from pathlib import Path
 
 from tools.openva.vendor_candidate_discovery import build_vendor_candidate_report
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
 
 def test_default_breadth_projection_is_resolved_against_selected_root(tmp_path: Path) -> None:
+    # The taxonomy control file is resolved against the SELECTED root too, so the
+    # isolated fixture root carries a verbatim copy of the real control surface.
+    taxonomy = tmp_path / "config" / "category-taxonomy.yaml"
+    taxonomy.parent.mkdir(parents=True, exist_ok=True)
+    taxonomy.write_text(
+        (REPO_ROOT / "config" / "category-taxonomy.yaml").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
     queue = tmp_path / "maintenance" / "queues" / "catalog-growth-discovery.json"
     queue.parent.mkdir(parents=True, exist_ok=True)
     queue.write_text(
@@ -29,7 +39,15 @@ def test_default_breadth_projection_is_resolved_against_selected_root(tmp_path: 
                 },
                 "source_types": ["dpa"],
                 "discovery_modes": ["seed_file_vendor_discovery"],
-                "cohorts": [],
+                "cohorts": [
+                    {
+                        "cohort_id": "fixture-cohort",
+                        "coverage_lane": "cloud_platforms",
+                        "target_vendor_candidates": 1,
+                        "priority": "high",
+                        "status": "queued",
+                    }
+                ],
             }
         ),
         encoding="utf-8",

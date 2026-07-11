@@ -16,24 +16,24 @@ def test_resolver_result_pack_schema_is_valid_standalone_schema():
 
     Draft202012Validator.check_schema(schema)
     assert schema["$id"] == "https://openva.dev/schemas/resolver-result-pack.schema.json"
-    assert schema["$defs"]["resultRow"]["properties"]["result_pack_version"] == {"const": "1.0.0"}
-    source = schema["$defs"]["sourceResult"]
-    assert "candidate_basis" in source["required"]
-    assert "verification_basis" in source["required"]
-    assert source["properties"]["candidate_basis"]["enum"] == [
-        "community_hint",
-        "vendor_asserted",
-        "cached_locator",
-        "direct_input",
-        "none",
-    ]
-    assert source["properties"]["verification_basis"]["enum"] == [
-        "not_checked",
-        "verified_live",
-        "live_unavailable",
-        "live_gated",
-        "live_not_found",
-    ]
+    assert schema["$defs"]["resultRow"]["properties"]["result_pack_version"] == {"const": "2.0.0"}
+    # v2 (#547) deliberately flattened the pack to one resultRow of reference columns;
+    # the v1 sourceResult/candidate_basis/verification_basis machinery was retired.
+    assert set(schema["$defs"]) == {"resultRow"}
+    row = schema["$defs"]["resultRow"]["properties"]
+    for column in [
+        "input_index",
+        "input_vendor_name",
+        "input_domain",
+        "matched_vendor_name",
+        "official_domain",
+        "trust_security_url",
+        "dpa_url",
+        "subprocessors_url",
+        "privacy_notice_url",
+        "status_page_url",
+    ]:
+        assert column in row, column
 
 
 def test_build_indexes_passes():
