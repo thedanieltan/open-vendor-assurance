@@ -350,7 +350,7 @@ lanes:
   - id: publication
     status: active
     authority_level: 1
-    workflows: [release-candidate.yml, site-pages.yml, release-downloads.yml, site-live-feed.yml]
+    workflows: [site-pages.yml, site-live-feed.yml]
     may_write_branches: false
     may_open_prs: false
     may_label_prs: false
@@ -358,10 +358,10 @@ lanes:
     may_merge_prs: false
     may_write_catalog_truth: false
     allowed_paths: []
-    write_authority_explanation: Writes only Pages deployments or GitHub release assets; it must not generate catalog truth.
+    write_authority_explanation: Writes only Pages deployments; it must not generate catalog truth.
     required_labels_for_write_authority: []
     token_permissions: {actions: read, contents: write, pages: write, id-token: write}
-    audit_artifacts: [release artifacts, source-health readiness report, Pages deployment artifact, release download assets]
+    audit_artifacts: [source-health readiness report, Pages deployment artifact]
     deny_by_default: true
   - id: bot_dashboard_issue_sync
     status: active
