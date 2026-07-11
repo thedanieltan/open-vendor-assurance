@@ -476,8 +476,9 @@ def test_machine_enforced_rules_have_negative_fixtures():
 
 def test_contract_enforced_rule_no_direct_write_to_main():
     # The CLI cannot prove human branch-protection; it proves OpenVA automation
-    # holds no write permission on the PR-checking and release workflows.
-    for name in ("validate.yml", "release-candidate.yml"):
+    # holds no write permission on the PR-checking workflow. release-candidate.yml
+    # was retired along with the formal release-workflow lifecycle.
+    for name in ("validate.yml",):
         workflow = yaml.safe_load((ROOT / ".github" / "workflows" / name).read_text(encoding="utf-8"))
         assert "write" not in json.dumps(workflow.get("permissions", {})), f"{name} must be read-only"
 

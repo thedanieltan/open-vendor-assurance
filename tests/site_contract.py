@@ -634,9 +634,9 @@ def test_feed_contract_remains_empty_and_noncanonical(tmp_path):
     assert feed["contract"]["advisory_boundary"] == "non_advisory"
 
 
-def test_release_workflow_builds_compiled_site_distribution():
-    release = (WORKFLOWS / "release-downloads.yml").read_text(encoding="utf-8")
-    assert "python site/build.py --out site/dist" in release
+def test_site_pages_workflow_builds_compiled_site_distribution():
+    pages = (WORKFLOWS / "site-pages.yml").read_text(encoding="utf-8")
+    assert "python site/build.py --out site/dist" in pages
 
 
 def test_pages_workflow_deploys_site_and_feed_workflow_uploads_feed_artifact_only():
@@ -683,7 +683,6 @@ def test_site_docs_cover_compiled_distribution_and_public_boundaries():
         for path in [
             SITE / "README.md",
             ROOT / "docs" / "public-launch-checklist.md",
-            ROOT / "docs" / "release-downloads.md",
         ]
     )
 
