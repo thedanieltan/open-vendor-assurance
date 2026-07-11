@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 164,
+  "count": 167,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -5302,6 +5302,118 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "ai_terms",
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-ai-transparency",
+          "source_type": "ai_terms",
+          "source_url": "https://about.gitlab.com/ai-transparency-center/",
+          "title": "GitLab AI Transparency Center"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-dpa",
+          "source_type": "dpa",
+          "source_url": "https://handbook.gitlab.com/handbook/legal/data-processing-agreement/",
+          "title": "GitLab Data Processing Agreement and Standard Contractual Clauses"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://handbook.gitlab.com/handbook/legal/privacy/",
+          "title": "GitLab Privacy Statement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://about.gitlab.com/privacy/subprocessors/",
+          "title": "GitLab Subprocessors"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.gitlab.com/",
+          "title": "GitLab Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "GitLab",
+      "legal_entities": [],
+      "legal_name": "GitLab Inc.",
+      "manifest_path": "dist/vendors/gitlab.json",
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "official_domains": [
+        "gitlab.com",
+        "about.gitlab.com",
+        "handbook.gitlab.com",
+        "trust.gitlab.com"
+      ],
+      "primary_source_by_type": {
+        "ai_terms": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-ai-transparency",
+          "source_type": "ai_terms",
+          "source_url": "https://about.gitlab.com/ai-transparency-center/",
+          "title": "GitLab AI Transparency Center"
+        },
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-dpa",
+          "source_type": "dpa",
+          "source_url": "https://handbook.gitlab.com/handbook/legal/data-processing-agreement/",
+          "title": "GitLab Data Processing Agreement and Standard Contractual Clauses"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://handbook.gitlab.com/handbook/legal/privacy/",
+          "title": "GitLab Privacy Statement"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://about.gitlab.com/privacy/subprocessors/",
+          "title": "GitLab Subprocessors"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gitlab-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.gitlab.com/",
+          "title": "GitLab Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "gitlab"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -5721,6 +5833,99 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "grafana-labs"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grammarly-compliance",
+          "source_type": "compliance_page",
+          "source_url": "https://www.grammarly.com/compliance",
+          "title": "Grammarly Security Compliances, Certifications, and Validations"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grammarly-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.grammarly.com/privacy-policy",
+          "title": "Grammarly Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grammarly-security",
+          "source_type": "security_page",
+          "source_url": "https://www.grammarly.com/security",
+          "title": "Security at Grammarly"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grammarly-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.grammarly.com/trust",
+          "title": "The Grammarly User Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Grammarly",
+      "legal_entities": [],
+      "legal_name": "Grammarly, Inc.",
+      "manifest_path": "dist/vendors/grammarly.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "grammarly.com"
+      ],
+      "primary_source_by_type": {
+        "compliance_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grammarly-compliance",
+          "source_type": "compliance_page",
+          "source_url": "https://www.grammarly.com/compliance",
+          "title": "Grammarly Security Compliances, Certifications, and Validations"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grammarly-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.grammarly.com/privacy-policy",
+          "title": "Grammarly Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grammarly-security",
+          "source_type": "security_page",
+          "source_url": "https://www.grammarly.com/security",
+          "title": "Security at Grammarly"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "grammarly-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.grammarly.com/trust",
+          "title": "The Grammarly User Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "grammarly"
     },
     {
       "candidate_source_types": [],
@@ -12446,6 +12651,98 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "slack"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smartsheet-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.smartsheet.com/legal/DPA",
+          "title": "Smartsheet Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smartsheet-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.smartsheet.com/legal/privacy",
+          "title": "Smartsheet Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smartsheet-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.smartsheet.com/legal/subprocessors",
+          "title": "Smartsheet Subprocessors"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smartsheet-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.smartsheet.com/trust",
+          "title": "Smartsheet Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Smartsheet",
+      "legal_entities": [],
+      "legal_name": "Smartsheet Inc.",
+      "manifest_path": "dist/vendors/smartsheet.json",
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "official_domains": [
+        "smartsheet.com"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smartsheet-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.smartsheet.com/legal/DPA",
+          "title": "Smartsheet Data Processing Addendum"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smartsheet-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.smartsheet.com/legal/privacy",
+          "title": "Smartsheet Privacy Notice"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smartsheet-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.smartsheet.com/legal/subprocessors",
+          "title": "Smartsheet Subprocessors"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smartsheet-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.smartsheet.com/trust",
+          "title": "Smartsheet Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "smartsheet"
     },
     {
       "candidate_source_types": [],
