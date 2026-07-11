@@ -80,7 +80,6 @@ ASSURANCE_RELEASE_FILES = [
 ]
 
 ASSURANCE_PUBLICATION_FILES = [
-    ".github/workflows/release-downloads.yml",
     ".github/workflows/site-pages.yml",
     "config/assurance-intelligence-publication-policy.yaml",
     "docs/architecture/ASSURANCE_INTELLIGENCE_PUBLICATION.md",
