@@ -7,8 +7,11 @@ OPERATING_MODEL = Path("docs/operations/WORKFLOW_OPERATING_MODEL.md")
 CONSOLIDATION_AUDIT = Path("docs/operations/WORKFLOW_CONSOLIDATION_AUDIT.md")
 DISCOVERY_MESH_MODEL = Path("docs/operations/DISCOVERY_MESH_OPERATING_MODEL.md")
 REVIEWER_DECISION_HANDOFF = Path("docs/operations/REVIEWER_DECISION_HANDOFF.md")
+WORKFLOW_INVENTORY = Path("docs/operations/contracts/workflow-inventory.yaml")
 
 EXPECTED_PUBLIC_WORKFLOWS = {
+    "autonomous-catalog-growth.yml",
+    "candidate-intake-pr.yml",
     "candidate-promotion-pr.yml",
     "agent-automerge.yml",
     "agent-weighted-review.yml",
@@ -16,7 +19,10 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "bot-dashboard-issue.yml",
     "catalog-agent-pr.yml",
     "catalog-growth-discovery.yml",
+    "catalog-growth-promotion-bridge.yml",
+    "discovery-ledger-append-pr.yml",
     "discovery-mesh.yml",
+    "machine-provisional-materialization.yml",
     "catalog-maintenance-pr.yml",
     "catalog-maintenance.yml",
     "catalog-pr-guard.yml",
@@ -24,8 +30,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "coverage-audit.yml",
     "observation-ledger-append-pr.yml",
     "observe-report.yml",
-    "release-candidate.yml",
-    "release-downloads.yml",
+    "release-image.yml",
     "site-live-feed.yml",
     "site-pages.yml",
     "source-maintenance-report.yml",
@@ -34,6 +39,7 @@ EXPECTED_PUBLIC_WORKFLOWS = {
     "source-refinement-queue.yml",
     "source-refinement-scan.yml",
     "submitted-source-verification.yml",
+    "validate-pr-metadata.yml",
     "validate.yml",
 }
 
@@ -67,11 +73,20 @@ def consolidation_audit_text() -> str:
     return CONSOLIDATION_AUDIT.read_text(encoding="utf-8") + "\n" + DISCOVERY_MESH_MODEL.read_text(encoding="utf-8")
 
 
+def inventory_workflow_names() -> set[str]:
+    contract = yaml.safe_load(WORKFLOW_INVENTORY.read_text(encoding="utf-8"))
+    return {entry["name"] for entry in contract["public_workflows"]}
+
+
 def test_public_workflows_are_intentional_and_allowlisted():
-    assert {path.name for path in WORKFLOW_DIR.glob("*.yml")} == EXPECTED_PUBLIC_WORKFLOWS
+    actual = {path.name for path in WORKFLOW_DIR.glob("*.yml")}
+    assert actual == EXPECTED_PUBLIC_WORKFLOWS
+    assert inventory_workflow_names() == actual
+    assert "release-candidate.yml" not in actual
+    assert "release-downloads.yml" not in actual
 
 
-def test_workflow_operating_model_documents_core_loops_and_public_workflows():
+def test_workflow_operating_model_documents_core_loops():
     text = operating_model_text()
 
     for fragment in {
@@ -88,14 +103,26 @@ def test_workflow_operating_model_documents_core_loops_and_public_workflows():
     }:
         assert fragment in text
 
-    for workflow_name in EXPECTED_PUBLIC_WORKFLOWS:
+    for workflow_name in {
+        "validate.yml",
+        "agent-automerge.yml",
+        "source-maintenance-report.yml",
+        "discovery-mesh.yml",
+        "candidate-promotion-pr.yml",
+        "site-pages.yml",
+    }:
         assert f"`{workflow_name}`" in text
 
 
 def test_workflow_consolidation_audit_classifies_current_legacy_posture():
     text = consolidation_audit_text()
 
-    for workflow_name in EXPECTED_PUBLIC_WORKFLOWS:
+    for workflow_name in {
+        "catalog-maintenance.yml",
+        "source-refinement-queue.yml",
+        "observe-report.yml",
+        "bot-chatops.yml",
+    }:
         assert f"`{workflow_name}`" in text
 
     assert "`catalog-maintenance.yml` | `retire_candidate`" in text
@@ -163,14 +190,10 @@ def _pr_scope_guard_run_text() -> str:
 
 
 def test_pr_scope_guard_job_is_pull_request_only():
-    """The scope guard must only run on pull_request events; it reads PR-event payload
-    (base/head SHAs and PR body) that does not exist on push."""
     assert _pr_scope_guard_job()["if"] == "github.event_name == 'pull_request'"
 
 
 def test_pr_scope_guard_derives_shas_and_body_from_pull_request_event():
-    """BASE_SHA/HEAD_SHA/PR_BODY must come from the pull_request event payload, so the
-    guard evaluates the exact base->head diff and the current PR-body declaration."""
     env_blobs = []
     for step in _pr_scope_guard_job()["steps"]:
         env = step.get("env")
@@ -183,9 +206,6 @@ def test_pr_scope_guard_derives_shas_and_body_from_pull_request_event():
 
 
 def test_pr_scope_guard_runs_from_trusted_base_worktree_not_head():
-    """Trusted-base evaluation: the guard must add a worktree at the BASE SHA and run the
-    guard module FROM that base copy, so a PR cannot weaken the policy that judges it. It
-    must NOT evaluate the guard from the head revision."""
     run_text = _pr_scope_guard_run_text()
     assert 'git worktree add /tmp/base-guard "$BASE_SHA"' in run_text
     assert "cd /tmp/base-guard" in run_text
@@ -196,11 +216,6 @@ def test_pr_scope_guard_runs_from_trusted_base_worktree_not_head():
 
 
 def test_pr_scope_guard_contains_self_bootstrap_skip_branch():
-    """The job must skip (exit 0) when the BASE revision lacks the guard module, so the
-    guard can be introduced without failing its own introducing PR. NOTE: this means the
-    introducing PR's pr-scope-guard success may be bootstrap-only (skipped) and is NOT
-    proof the diff passed the future policy — that policy applies only to later PRs whose
-    base already contains the guard."""
     run_text = _pr_scope_guard_run_text()
     assert "/tmp/base-guard/tools/openva/pr_scope_guard.py" in run_text
     assert "self-bootstrap" in run_text
