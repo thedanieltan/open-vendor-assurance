@@ -26,7 +26,6 @@ REQUIRED_FIELDS = (
     "project_name",
     "canonical_base_url",
     "repository_url",
-    "release_url",
     "agent_index_path",
 )
 
@@ -44,7 +43,6 @@ class PublicationConfig:
     project_name: str
     canonical_base_url: str
     repository_url: str
-    release_url: str
     agent_index_path: str
 
     def url(self, path: str) -> str:
@@ -90,6 +88,5 @@ def load_publication_config(path: Path = DEFAULT_CONFIG_PATH) -> PublicationConf
         # Trailing slashes would double up when joined with relative paths.
         canonical_base_url=str(raw["canonical_base_url"]).rstrip("/"),
         repository_url=str(raw["repository_url"]).rstrip("/"),
-        release_url=str(raw["release_url"]),
         agent_index_path=str(raw["agent_index_path"]).lstrip("/"),
     )

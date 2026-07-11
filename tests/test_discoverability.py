@@ -123,7 +123,6 @@ def test_well_known_manifest_points_to_root_agent_index(site, config):
 
 def test_generated_files_derive_from_publication_configuration(site, config):
     robots = (site / "robots.txt").read_text(encoding="utf-8")
-    llms = (site / "llms.txt").read_text(encoding="utf-8")
     manifest = json.loads((site / ".well-known" / "openva.json").read_text(encoding="utf-8"))
     sample_page = (site / "vendors" / canonical_vendor_ids()[0] / "index.html").read_text(encoding="utf-8")
 
@@ -131,11 +130,9 @@ def test_generated_files_derive_from_publication_configuration(site, config):
     assert config.canonical_base_url in sample_page
     assert manifest["canonical_base_url"] == config.canonical_base_url
     assert manifest["repository_url"] == config.repository_url
-    assert manifest["release_url"] == config.release_url
-    assert config.release_url in llms
-    # The compiled meta also sources its release URL from the same config.
+    assert "release_url" not in manifest
     meta = json.loads((site / "data" / "meta.json").read_text(encoding="utf-8"))
-    assert meta["github_releases_url"] == config.release_url
+    assert "github_releases_url" not in meta
     assert meta["canonical_base_url"] == config.canonical_base_url
 
 

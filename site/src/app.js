@@ -112,11 +112,10 @@ function download(filename, content, type) {
 function snapshotDisclosure() {
   const meta = catalogData.meta;
   return `
-    <strong>Reviewed catalog snapshot: ${html(meta.catalog_snapshot_identity)}</strong><br>
-    Catalog date: ${html(meta.catalog_snapshot_date)}<br>
-    This catalog is a read-only view of an OpenVA public metadata snapshot, not a live monitoring feed.
-    For the latest reproducible pack, check <a href="${html(meta.github_releases_url)}">GitHub Releases</a>.
-    ${meta.release_tag ? `Release tag: ${html(meta.release_tag)}` : `Commit SHA: ${html(meta.commit_sha)}`}
+    <strong>Current accepted catalog state: ${html(meta.catalog_snapshot_identity)}</strong><br>
+    Catalog generated at: ${html(meta.catalog_snapshot_date)}<br>
+    This page follows the latest accepted OpenVA catalog deployed from <code>main</code>.<br>
+    Source commit: ${html(meta.commit_sha)}
   `;
 }
 
@@ -194,7 +193,6 @@ function renderSnapshotDisclosures() {
   document.querySelectorAll("[data-snapshot-disclosure]").forEach((node) => {
     node.innerHTML = snapshotDisclosure();
   });
-  document.getElementById("github-releases-link").href = catalogData.meta.github_releases_url;
 }
 
 function renderHome() {
@@ -721,7 +719,6 @@ function exportMetadata() {
     schemaVersion: meta.schemaVersion,
     packId: meta.packId,
     schema_version: meta.schema_version,
-    release_tag: meta.release_tag,
     commit_sha: meta.commit_sha,
     catalog_snapshot_date: meta.catalog_snapshot_date,
     exported_at: new Date().toISOString(),
