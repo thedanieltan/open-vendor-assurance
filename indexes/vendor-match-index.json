@@ -1,8 +1,102 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 171,
+  "count": 174,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "1password-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://1password.com/legal/privacy",
+          "title": "1Password Notice of Privacy Practices"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "1password-security-page",
+          "source_type": "security_page",
+          "source_url": "https://1password.com/security",
+          "title": "1Password Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "1password-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://1password.com/legal/terms-of-service",
+          "title": "1Password Terms and Conditions of Service"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "1password-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://trust.1password.io/",
+          "title": "1Password Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "1Password",
+      "legal_entities": [],
+      "legal_name": "AgileBits Inc.",
+      "manifest_path": "dist/vendors/1password.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "1password.com",
+        "trust.1password.io"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "1password-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://1password.com/legal/privacy",
+          "title": "1Password Notice of Privacy Practices"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "1password-security-page",
+          "source_type": "security_page",
+          "source_url": "https://1password.com/security",
+          "title": "1Password Security"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "1password-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://1password.com/legal/terms-of-service",
+          "title": "1Password Terms and Conditions of Service"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "1password-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://trust.1password.io/",
+          "title": "1Password Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "1password"
+    },
     {
       "candidate_source_types": [],
       "candidate_sources": [],
@@ -5183,6 +5277,100 @@
         "dpa"
       ],
       "vendor_id": "figma"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fortinet-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.fortinet.com/corporate/about-us/privacy",
+          "title": "Fortinet Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fortinet-security-page",
+          "source_type": "security_page",
+          "source_url": "https://www.fortinet.com/trust",
+          "title": "Fortinet Trust and Security Overview"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fortinet-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.fortinet.com/corporate/about-us/legal",
+          "title": "Fortinet Legal Terms and Conditions"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fortinet-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://trust.fortinet.com/",
+          "title": "Fortinet Trust Resource Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Fortinet",
+      "legal_entities": [],
+      "legal_name": "Fortinet, Inc.",
+      "manifest_path": "dist/vendors/fortinet.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "fortinet.com",
+        "trust.fortinet.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fortinet-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.fortinet.com/corporate/about-us/privacy",
+          "title": "Fortinet Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fortinet-security-page",
+          "source_type": "security_page",
+          "source_url": "https://www.fortinet.com/trust",
+          "title": "Fortinet Trust and Security Overview"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fortinet-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.fortinet.com/corporate/about-us/legal",
+          "title": "Fortinet Legal Terms and Conditions"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fortinet-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://trust.fortinet.com/",
+          "title": "Fortinet Trust Resource Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "fortinet"
     },
     {
       "candidate_source_types": [],
@@ -16104,6 +16292,99 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "zoom"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "transparency_report"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zscaler-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.zscaler.com/privacy-compliance/dpa",
+          "title": "Zscaler Data Processing Agreement and Amendments"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zscaler-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.zscaler.com/privacy-compliance/company-privacy-policy",
+          "title": "Zscaler Website Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zscaler-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.zscaler.com/privacy-compliance/subprocessors",
+          "title": "Zscaler Sub-Processors"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zscaler-transparency-report",
+          "source_type": "transparency_report",
+          "source_url": "https://www.zscaler.com/privacy-compliance/transparency-report",
+          "title": "Zscaler Transparency Report"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Zscaler",
+      "legal_entities": [],
+      "legal_name": "Zscaler, Inc.",
+      "manifest_path": "dist/vendors/zscaler.json",
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "official_domains": [
+        "zscaler.com",
+        "compliance.zscaler.com"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zscaler-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.zscaler.com/privacy-compliance/dpa",
+          "title": "Zscaler Data Processing Agreement and Amendments"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zscaler-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.zscaler.com/privacy-compliance/company-privacy-policy",
+          "title": "Zscaler Website Privacy Policy"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zscaler-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.zscaler.com/privacy-compliance/subprocessors",
+          "title": "Zscaler Sub-Processors"
+        },
+        "transparency_report": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "zscaler-transparency-report",
+          "source_type": "transparency_report",
+          "source_url": "https://www.zscaler.com/privacy-compliance/transparency-report",
+          "title": "Zscaler Transparency Report"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "zscaler"
     }
   ],
   "non_advisory": true,
