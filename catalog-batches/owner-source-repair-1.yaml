@@ -1,0 +1,203 @@
+schema_version: 0.1.0
+batch_id: owner-source-repair-1
+operation: refresh
+collected_at: '2026-07-13T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: workday
+    display_name: Workday
+    legal_name: Workday, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - workday.com
+    public_entrypoints:
+      - https://www.workday.com/en-us/legal.html
+      - https://www.workday.com/en-us/why-workday/trust/overview.html
+    vendor_categories:
+      - hr_software
+      - financial_infrastructure
+      - productivity_software
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering current Workday legal, trust, privacy, security, compliance, and processor-resource metadata. Bespoke customer agreements and gated materials are excluded.
+    sources:
+      - source_id: workday-compliance
+        source_type: compliance_page
+        title_native: Workday Compliance and Third-Party Assessments
+        title_en: Workday Compliance and Third-Party Assessments
+        source_url: https://www.workday.com/en-us/why-workday/trust/compliance.html
+        source_language: en
+        access_class: public_web
+        summary_native: Public Workday compliance and third-party assessment metadata reference.
+        summary_en: Public Workday compliance and third-party assessment metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: workday-compliance
+          artifact_type: compliance_page
+          region_scope:
+            - global
+          product_scope:
+            - Workday services
+      - source_id: workday-dpa
+        source_type: dpa
+        title_native: Workday Universal Data Processing Exhibit Index
+        title_en: Workday Universal Data Processing Exhibit Index
+        source_url: https://www.workday.com/en-us/legal/universal-contract-terms-and-conditions/index.html
+        source_language: en
+        access_class: public_web
+        summary_native: Public Workday legal index linking current regional Universal Data Processing Exhibits and related FAQs.
+        summary_en: Public Workday legal index linking current regional Universal Data Processing Exhibits and related FAQs.
+        confidence: high
+        artifact:
+          artifact_id: workday-dpa
+          artifact_type: dpa
+          region_scope:
+            - global
+          product_scope:
+            - Workday services
+
+  - vendor_id: docker
+    display_name: Docker
+    legal_name: Docker, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - docker.com
+    public_entrypoints:
+      - https://www.docker.com/legal/
+      - https://www.docker.com/trust/
+    vendor_categories:
+      - developer_platform
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering current Docker legal, trust, privacy, security, and compliance metadata. Customer-specific and gated materials are excluded.
+    sources:
+      - source_id: docker-compliance
+        source_type: compliance_page
+        title_native: Docker Compliance
+        title_en: Docker Compliance
+        source_url: https://www.docker.com/trust/compliance/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Docker compliance metadata reference.
+        summary_en: Public Docker compliance metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: docker-compliance
+          artifact_type: compliance_page
+          region_scope:
+            - global
+          product_scope:
+            - Docker services
+      - source_id: docker-dpa
+        source_type: dpa
+        title_native: Docker Data Processing Agreement
+        title_en: Docker Data Processing Agreement
+        source_url: https://www.docker.com/static/Data_Processing_Agreement.pdf
+        source_language: en
+        access_class: public_web
+        summary_native: Public Docker data processing agreement metadata reference.
+        summary_en: Public Docker data processing agreement metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: docker-dpa
+          artifact_type: dpa
+          region_scope:
+            - global
+          product_scope:
+            - Docker services
+      - source_id: docker-security
+        source_type: security_page
+        title_native: Docker Trust and Security
+        title_en: Docker Trust and Security
+        source_url: https://www.docker.com/trust/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Docker trust and security metadata reference.
+        summary_en: Public Docker trust and security metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: docker-security
+          artifact_type: security_page
+          region_scope:
+            - global
+          product_scope:
+            - Docker services
+
+  - vendor_id: zapier
+    display_name: Zapier
+    legal_name: Zapier, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - zapier.com
+    public_entrypoints:
+      - https://zapier.com/legal
+      - https://zapier.com/security-compliance
+    vendor_categories:
+      - developer_platform
+      - productivity_software
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering current Zapier legal, privacy, data-security, and compliance metadata. Customer-specific and gated materials are excluded.
+    sources:
+      - source_id: zapier-security
+        source_type: security_page
+        title_native: Zapier Security and Compliance
+        title_en: Zapier Security and Compliance
+        source_url: https://zapier.com/security-compliance
+        source_language: en
+        access_class: public_web
+        summary_native: Public Zapier security and compliance metadata reference.
+        summary_en: Public Zapier security and compliance metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: zapier-security
+          artifact_type: security_page
+          region_scope:
+            - global
+          product_scope:
+            - Zapier services
+
+  - vendor_id: freshworks
+    display_name: Freshworks
+    legal_name: Freshworks Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - freshworks.com
+    public_entrypoints:
+      - https://www.freshworks.com/security/
+      - https://trust.freshworks.com/
+      - https://www.freshworks.com/privacy/
+    vendor_categories:
+      - customer_support
+      - customer_engagement
+      - crm
+      - productivity_software
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering current Freshworks security, trust, privacy, legal, and compliance metadata. Gated trust-center documents and customer-specific agreements are excluded.
+    sources:
+      - source_id: freshworks-compliance
+        source_type: compliance_page
+        title_native: Freshworks Trust Center
+        title_en: Freshworks Trust Center
+        source_url: https://trust.freshworks.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Freshworks trust center entrypoint for cybersecurity certifications, attestations, and related assurance documents.
+        summary_en: Public Freshworks trust center entrypoint for cybersecurity certifications, attestations, and related assurance documents.
+        confidence: high
+        artifact:
+          artifact_id: freshworks-compliance
+          artifact_type: compliance_page
+          region_scope:
+            - global
+          product_scope:
+            - Freshworks services
