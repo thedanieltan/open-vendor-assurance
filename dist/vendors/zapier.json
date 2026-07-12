@@ -5,8 +5,12 @@
       "access_class": "public_web",
       "artifact_id": "zapier-compliance",
       "artifact_type": "compliance_page",
-      "canonical_url": "https://zapier.com/security#compliance",
+      "canonical_url": "https://zapier.com/security-compliance",
       "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -132,9 +136,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "low",
-        "observer": "human",
+        "collected_at": "2026-07-13T00:00:00Z",
+        "confidence": "high",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -143,11 +147,11 @@
       "source_id": "zapier-compliance",
       "source_language": "en",
       "source_type": "compliance_page",
-      "source_url": "https://zapier.com/security#compliance",
-      "summary_en": "Public Zapier compliance metadata reference.",
-      "summary_native": "Public Zapier compliance metadata reference.",
-      "title_en": "Zapier Compliance",
-      "title_native": "Zapier Compliance",
+      "source_url": "https://zapier.com/security-compliance",
+      "summary_en": "Public Zapier security and compliance page linking its current trust-center and assurance references.",
+      "summary_native": "Public Zapier security and compliance page linking its current trust-center and assurance references.",
+      "title_en": "Zapier Security and Compliance",
+      "title_native": "Zapier Security and Compliance",
       "vendor_id": "zapier"
     },
     {
@@ -234,6 +238,23 @@
       "review_state": "proposed",
       "schema_version": "0.1.0",
       "source_id": "zapier-security",
+      "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "zapier"
+    },
+    {
+      "_openva_path": "data/vendors/zapier/changes/owner-source-repair-2-zapier-compliance.yaml",
+      "artifact_id": "zapier-compliance",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-repair-2-zapier-compliance",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "zapier-compliance",
       "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "zapier"
