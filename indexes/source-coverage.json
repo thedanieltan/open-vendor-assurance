@@ -4,14 +4,15 @@
   "covered_role_counts": {
     "ai_terms": 1,
     "compliance_page": 97,
-    "dpa": 103,
+    "dpa": 104,
     "other_public_source": 29,
-    "privacy_notice": 165,
-    "security_page": 140,
+    "privacy_notice": 168,
+    "security_page": 142,
     "status_page": 2,
-    "subprocessors_list": 111,
-    "terms_of_service": 35,
-    "trust_center": 12
+    "subprocessors_list": 112,
+    "terms_of_service": 37,
+    "transparency_report": 1,
+    "trust_center": 14
   },
   "duplicate_source_url_count": 0,
   "generated_at": "1970-01-01T00:00:00Z",
@@ -19,20 +20,53 @@
   "source_type_counts": {
     "ai_terms": 1,
     "compliance_page": 97,
-    "dpa": 103,
+    "dpa": 104,
     "other_public_source": 29,
-    "privacy_notice": 165,
-    "security_page": 140,
+    "privacy_notice": 168,
+    "security_page": 142,
     "status_page": 2,
-    "subprocessors_list": 111,
-    "terms_of_service": 35,
-    "trust_center": 12
+    "subprocessors_list": 112,
+    "terms_of_service": 37,
+    "transparency_report": 1,
+    "trust_center": 14
   },
   "unavailable_source_type_counts": {
     "dpa": 16
   },
-  "unique_source_location_count": 695,
+  "unique_source_location_count": 707,
   "vendor_coverage": [
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "1password"
+    },
     {
       "candidate_source_types": [],
       "canonical_source_types": [
@@ -1719,6 +1753,38 @@
       ],
       "unique_source_locations": 4,
       "vendor_id": "figma"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "fortinet"
     },
     {
       "candidate_source_types": [],
@@ -5264,6 +5330,37 @@
       "unavailable_source_types": [],
       "unique_source_locations": 7,
       "vendor_id": "zoom"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "transparency_report"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "transparency_report"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "transparency_report"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "zscaler"
     }
   ]
 }

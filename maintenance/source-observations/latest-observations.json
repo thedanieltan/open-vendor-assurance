@@ -1,14 +1,90 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-12T17:33:29Z",
+  "generated_at": "2026-07-12T17:51:43Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 695,
-    "observed_this_run": 16,
-    "carried_forward": 679
+    "source_count": 707,
+    "observed_this_run": 12,
+    "carried_forward": 695
   },
   "sources": [
+    {
+      "source_id": "1password-privacy-notice",
+      "vendor_id": "1password",
+      "source_url": "https://1password.com/legal/privacy",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "1password-privacy-notice-2026-07-12-owner-29202777610",
+      "final_url": "https://1password.com/legal/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f73caa94740f003c2bc412d26442cdab2e50b5067fe362185f994182582797ee",
+      "normalized_text_sample_sha256": "sha256:c679afdc60dbff41632bf8b18553c9ec5a97ae22e0b7cad5904e1e039ed7070e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "1password-security-page",
+      "vendor_id": "1password",
+      "source_url": "https://1password.com/security",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "1password-security-page-2026-07-12-owner-29202777610",
+      "final_url": "https://1password.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f29d45698d3d06e20addbc4abe65f572f2fa3b5370b2b683ed034c08ec84a235",
+      "normalized_text_sample_sha256": "sha256:3b8d490f4b0e69570d323d01c875bbeafcebbe37457a2910fa4db15a66f870e9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "1password-terms",
+      "vendor_id": "1password",
+      "source_url": "https://1password.com/legal/terms-of-service",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "1password-terms-2026-07-12-owner-29202777610",
+      "final_url": "https://1password.com/legal/terms-of-service",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ccce8f52d09aed2533e21b4a1c3db5edd810588647957ae1a80d7311e94370ed",
+      "normalized_text_sample_sha256": "sha256:8b164a56749bb9a76273f13957da3f521c21dc5e37b0abac40566faab2beac07",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "1password-trust-center",
+      "vendor_id": "1password",
+      "source_url": "https://trust.1password.io/",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "1password-trust-center-2026-07-12-owner-29202777610",
+      "final_url": "https://trust.1password.io/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3417d3d4c18517329b2ca49c30b1e192048bd798a0b5b47843f8be276b3b7b99",
+      "normalized_text_sample_sha256": "sha256:95d99ce70f2ab7109d3285662501a5779d18c28e1c727c3a65fee825ce2c25b7",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
     {
       "source_id": "acuity-scheduling-privacy",
       "vendor_id": "acuity-scheduling",
@@ -2781,7 +2857,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cyberark-subprocessors",
@@ -2800,7 +2876,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cyberark-trust-center",
@@ -2819,7 +2895,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cyberark-website-terms",
@@ -2838,7 +2914,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "darktrace-master-services-agreement",
@@ -2857,7 +2933,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "darktrace-privacy-notice",
@@ -2876,7 +2952,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "darktrace-subprocessors",
@@ -2895,7 +2971,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "darktrace-trust-center",
@@ -2914,7 +2990,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "darwinbox-privacy",
@@ -4207,6 +4283,82 @@
         "reason": "change_class_material_possible"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "fortinet-privacy-notice",
+      "vendor_id": "fortinet",
+      "source_url": "https://www.fortinet.com/corporate/about-us/privacy",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "fortinet-privacy-notice-2026-07-12-owner-29202777610",
+      "final_url": "https://www.fortinet.com/corporate/about-us/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:222c0f5fd6c644fea42939680dd66b375623e8ef2aebb315d1197af89c75a40e",
+      "normalized_text_sample_sha256": "sha256:238b590b767f576c791cbe47e44133ea3c3184202c9c1485ffa3ddf73c88f602",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fortinet-security-page",
+      "vendor_id": "fortinet",
+      "source_url": "https://www.fortinet.com/trust",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "fortinet-security-page-2026-07-12-owner-29202777610",
+      "final_url": "https://www.fortinet.com/trust",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1e3454fcf949e5990a01faa3a8f9f6652e7871639a28c874246ef723a2b47ba7",
+      "normalized_text_sample_sha256": "sha256:4b4f879d7bb9fd9e37ba243776e809097b6b7130907a0e0fd7ea3ce1531d9511",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fortinet-terms",
+      "vendor_id": "fortinet",
+      "source_url": "https://www.fortinet.com/corporate/about-us/legal",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "fortinet-terms-2026-07-12-owner-29202777610",
+      "final_url": "https://www.fortinet.com/corporate/about-us/legal",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7552063c5105ececd3c4908948cdd7f4e91518c2d29a476b2f81012d3eec6c3a",
+      "normalized_text_sample_sha256": "sha256:cf1193dcdcd0cc059373946fc9e2613aeeebc58c9bd0d047506df8374b3dfc12",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fortinet-trust-center",
+      "vendor_id": "fortinet",
+      "source_url": "https://trust.fortinet.com/",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "fortinet-trust-center-2026-07-12-owner-29202777610",
+      "final_url": "https://trust.fortinet.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c9d11a7b11f66cd4828198ae4bff7808189910bcce3d2db26c1de8ed2093c2e1",
+      "normalized_text_sample_sha256": "sha256:08fb75cb288223e8ff4e3a2b4964e8d3cec9153b19ad27285e8a299a3f9d741f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "freshworks-compliance",
@@ -10742,7 +10894,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sophos-privacy-notice",
@@ -10761,7 +10913,7 @@
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sophos-status",
@@ -10780,7 +10932,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sophos-trust-center",
@@ -10799,7 +10951,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "splunk-compliance",
@@ -12528,7 +12680,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wiz-status",
@@ -12547,7 +12699,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wiz-subprocessors",
@@ -12566,7 +12718,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wiz-trust-center",
@@ -12585,7 +12737,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "workday-compliance",
@@ -13213,6 +13365,82 @@
         "reason": "change_class_material_possible"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "zscaler-dpa",
+      "vendor_id": "zscaler",
+      "source_url": "https://www.zscaler.com/privacy-compliance/dpa",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "zscaler-dpa-2026-07-12-owner-29202777610",
+      "final_url": "https://www.zscaler.com/privacy-compliance/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0dfeabdf1288200f89e9d86e94ace110d4ba55c2291f8ebe4b91a3424648936d",
+      "normalized_text_sample_sha256": "sha256:326d57b6b49a2cfb596ec7cf15dc7167940c22cf4156953ae4ffe11cdf68d2af",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "zscaler-privacy-notice",
+      "vendor_id": "zscaler",
+      "source_url": "https://www.zscaler.com/privacy-compliance/company-privacy-policy",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "zscaler-privacy-notice-2026-07-12-owner-29202777610",
+      "final_url": "https://www.zscaler.com/privacy-compliance/company-privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f3aac0d7a49b1ed4de1141f673569beb5359ba44812550936858bec672e1426d",
+      "normalized_text_sample_sha256": "sha256:a7f060cdce58c7fbfcd2d2264110b086f98bf0088d297e0de114cbb4eba2cd7b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "zscaler-subprocessors",
+      "vendor_id": "zscaler",
+      "source_url": "https://www.zscaler.com/privacy-compliance/subprocessors",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "zscaler-subprocessors-2026-07-12-owner-29202777610",
+      "final_url": "https://www.zscaler.com/privacy-compliance/subprocessors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b68fae1af6cfb479df500e238c8ee56ced632564e7e807a193c2c360b6678e46",
+      "normalized_text_sample_sha256": "sha256:f6730b53d6a072357b2638724b3a15f58f62380fab744b7664c8acd94472aea0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "zscaler-transparency-report",
+      "vendor_id": "zscaler",
+      "source_url": "https://www.zscaler.com/privacy-compliance/transparency-report",
+      "observed_at": "2026-07-12T17:51:43Z",
+      "observation_id": "zscaler-transparency-report-2026-07-12-owner-29202777610",
+      "final_url": "https://www.zscaler.com/privacy-compliance/transparency-report",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:124eadcf693c4183654d6dfe9717a0c2aa8d72f7379e80834492127a4c1bee6b",
+      "normalized_text_sample_sha256": "sha256:de4cd322648ed0566aa597d075e915d5e9310692323b6ed261ce052b11b64458",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     }
   ],
   "not_advice": true

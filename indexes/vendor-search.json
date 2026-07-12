@@ -1,7 +1,28 @@
 {
-  "count": 171,
+  "count": 174,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
+    {
+      "candidate_source_types": [],
+      "catalog_status": "active",
+      "display_name": "1Password",
+      "headquarters_country": "CA",
+      "legal_name": "AgileBits Inc.",
+      "manifest_path": "dist/vendors/1password.json",
+      "official_domains": [
+        "1password.com",
+        "trust.1password.io"
+      ],
+      "source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "status": "active",
+      "unavailable_source_types": [],
+      "vendor_id": "1password"
+    },
     {
       "candidate_source_types": [],
       "catalog_status": "active",
@@ -1112,6 +1133,27 @@
         "dpa"
       ],
       "vendor_id": "figma"
+    },
+    {
+      "candidate_source_types": [],
+      "catalog_status": "active",
+      "display_name": "Fortinet",
+      "headquarters_country": "US",
+      "legal_name": "Fortinet, Inc.",
+      "manifest_path": "dist/vendors/fortinet.json",
+      "official_domains": [
+        "fortinet.com",
+        "trust.fortinet.com"
+      ],
+      "source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "status": "active",
+      "unavailable_source_types": [],
+      "vendor_id": "fortinet"
     },
     {
       "candidate_source_types": [],
@@ -3476,6 +3518,27 @@
       "status": "active",
       "unavailable_source_types": [],
       "vendor_id": "zoom"
+    },
+    {
+      "candidate_source_types": [],
+      "catalog_status": "active",
+      "display_name": "Zscaler",
+      "headquarters_country": "US",
+      "legal_name": "Zscaler, Inc.",
+      "manifest_path": "dist/vendors/zscaler.json",
+      "official_domains": [
+        "zscaler.com",
+        "compliance.zscaler.com"
+      ],
+      "source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "transparency_report"
+      ],
+      "status": "active",
+      "unavailable_source_types": [],
+      "vendor_id": "zscaler"
     }
   ],
   "schema_version": "0.1.0"
