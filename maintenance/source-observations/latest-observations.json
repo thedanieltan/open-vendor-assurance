@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-12T17:23:03Z",
+  "generated_at": "2026-07-12T17:33:04Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
     "source_count": 695,
@@ -2768,8 +2768,8 @@
       "source_id": "cyberark-privacy-notice",
       "vendor_id": "cyberark",
       "source_url": "https://www.cyberark.com/privacy-notice/",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "cyberark-privacy-notice-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "cyberark-privacy-notice-2026-07-12-owner-29202192763",
       "final_url": "https://www.cyberark.com/privacy-notice/",
       "http_status": 200,
       "source_health_status": "reachable",
@@ -2779,7 +2779,7 @@
       "normalized_text_sample_sha256": "sha256:fec4ba891c4ab38ee7ee19e036dd2b1d654280ddbc3755d99871d0e507ab078c",
       "review_signal": {
         "required": false,
-        "reason": "first_observation"
+        "reason": null
       },
       "carried_forward": false
     },
@@ -2787,18 +2787,18 @@
       "source_id": "cyberark-subprocessors",
       "vendor_id": "cyberark",
       "source_url": "https://trust.cyberark.com/?itemUid=2211b1f8-b438-4fca-8049-2a7b1882f62a&source=click",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "cyberark-subprocessors-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "cyberark-subprocessors-2026-07-12-owner-29202192763",
       "final_url": "https://trust.cyberark.com/?itemUid=2211b1f8-b438-4fca-8049-2a7b1882f62a&source=click",
       "http_status": 200,
       "source_health_status": "reachable",
-      "change_class": "none",
+      "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:5b4975e11ab6c58cb592590009c158774cdfccfac3805430b2c4461d50620a1e",
-      "normalized_text_sample_sha256": "sha256:f95e9691691ceeb7e7eac66b0206d54876f79b543b6ddb8a7c6620fbe001580f",
+      "raw_sample_sha256": "sha256:733cbe252e283a869dcb0f8a1ae30011bca2262947a308f8a7e189fa2f187a9c",
+      "normalized_text_sample_sha256": "sha256:ec3b47fa010287ff5eb7b3a22b6382676ec8ec89e4f374fa2b2b032a3ec812ea",
       "review_signal": {
-        "required": false,
-        "reason": "first_observation"
+        "required": true,
+        "reason": "change_class_material_possible"
       },
       "carried_forward": false
     },
@@ -2806,18 +2806,18 @@
       "source_id": "cyberark-trust-center",
       "vendor_id": "cyberark",
       "source_url": "https://trust.cyberark.com/",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "cyberark-trust-center-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "cyberark-trust-center-2026-07-12-owner-29202192763",
       "final_url": "https://trust.cyberark.com/",
       "http_status": 200,
       "source_health_status": "reachable",
-      "change_class": "none",
+      "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:5b4975e11ab6c58cb592590009c158774cdfccfac3805430b2c4461d50620a1e",
-      "normalized_text_sample_sha256": "sha256:f95e9691691ceeb7e7eac66b0206d54876f79b543b6ddb8a7c6620fbe001580f",
+      "raw_sample_sha256": "sha256:733cbe252e283a869dcb0f8a1ae30011bca2262947a308f8a7e189fa2f187a9c",
+      "normalized_text_sample_sha256": "sha256:ec3b47fa010287ff5eb7b3a22b6382676ec8ec89e4f374fa2b2b032a3ec812ea",
       "review_signal": {
-        "required": false,
-        "reason": "first_observation"
+        "required": true,
+        "reason": "change_class_material_possible"
       },
       "carried_forward": false
     },
@@ -2825,8 +2825,8 @@
       "source_id": "cyberark-website-terms",
       "vendor_id": "cyberark",
       "source_url": "https://www.cyberark.com/terms-conditions/",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "cyberark-website-terms-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "cyberark-website-terms-2026-07-12-owner-29202192763",
       "final_url": "https://www.cyberark.com/terms-conditions/",
       "http_status": 200,
       "source_health_status": "reachable",
@@ -2836,7 +2836,7 @@
       "normalized_text_sample_sha256": "sha256:bcfc29eebca8278bf44b415b599c384461019d1faffd2f8bf71527a3d1183ada",
       "review_signal": {
         "required": false,
-        "reason": "first_observation"
+        "reason": null
       },
       "carried_forward": false
     },
@@ -2844,8 +2844,8 @@
       "source_id": "darktrace-master-services-agreement",
       "vendor_id": "darktrace",
       "source_url": "https://www.darktrace.com/legal/master-services-agreement",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "darktrace-master-services-agreement-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "darktrace-master-services-agreement-2026-07-12-owner-29202192763",
       "final_url": "https://www.darktrace.com/legal/master-services-agreement",
       "http_status": 200,
       "source_health_status": "reachable",
@@ -2855,7 +2855,7 @@
       "normalized_text_sample_sha256": "sha256:dbbe0fd9535b95b7e58d0750cf89dccc00e1a85e24761b3a252326af89aab1b3",
       "review_signal": {
         "required": false,
-        "reason": "first_observation"
+        "reason": null
       },
       "carried_forward": false
     },
@@ -2863,8 +2863,8 @@
       "source_id": "darktrace-privacy-notice",
       "vendor_id": "darktrace",
       "source_url": "https://www.darktrace.com/legal/privacy-policy",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "darktrace-privacy-notice-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "darktrace-privacy-notice-2026-07-12-owner-29202192763",
       "final_url": "https://www.darktrace.com/legal/privacy-policy",
       "http_status": 200,
       "source_health_status": "reachable",
@@ -2874,7 +2874,7 @@
       "normalized_text_sample_sha256": "sha256:fa488c4fd7e5574ef5a6ed656eee959bac90700eafa8b9fd042d3e276b7c84dd",
       "review_signal": {
         "required": false,
-        "reason": "first_observation"
+        "reason": null
       },
       "carried_forward": false
     },
@@ -2882,8 +2882,8 @@
       "source_id": "darktrace-subprocessors",
       "vendor_id": "darktrace",
       "source_url": "https://www.darktrace.com/legal/darktrace-product-sub-processors",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "darktrace-subprocessors-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "darktrace-subprocessors-2026-07-12-owner-29202192763",
       "final_url": "https://www.darktrace.com/legal/darktrace-product-sub-processors",
       "http_status": 200,
       "source_health_status": "reachable",
@@ -2893,7 +2893,7 @@
       "normalized_text_sample_sha256": "sha256:c3e3f004dda6a4774d78c1c093598b68acf59b6746ea832d1b16dfedcc2f9747",
       "review_signal": {
         "required": false,
-        "reason": "first_observation"
+        "reason": null
       },
       "carried_forward": false
     },
@@ -2901,8 +2901,8 @@
       "source_id": "darktrace-trust-center",
       "vendor_id": "darktrace",
       "source_url": "https://www.darktrace.com/trust",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "darktrace-trust-center-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "darktrace-trust-center-2026-07-12-owner-29202192763",
       "final_url": "https://www.darktrace.com/trust",
       "http_status": 200,
       "source_health_status": "reachable",
@@ -2912,7 +2912,7 @@
       "normalized_text_sample_sha256": "sha256:c8acc87fb8b2496c6012685ec90dfa8c7652977d9c58c5804d8c543402d1642b",
       "review_signal": {
         "required": false,
-        "reason": "first_observation"
+        "reason": null
       },
       "carried_forward": false
     },
@@ -10729,18 +10729,18 @@
       "source_id": "sophos-compliance",
       "vendor_id": "sophos",
       "source_url": "https://www.sophos.com/en-gb/trust/business-certifications",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "sophos-compliance-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "sophos-compliance-2026-07-12-owner-29202192763",
       "final_url": "https://www.sophos.com/en-gb/trust/business-certifications",
       "http_status": 200,
       "source_health_status": "reachable",
-      "change_class": "none",
+      "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:e1a018042479af16d6c6f71f7cb4aed5620b1bf553ad5f415acf8be0c09dee0f",
-      "normalized_text_sample_sha256": "sha256:cb9a4bff68faf394c1e0405d87da330448e00b88d8ad5a69cd0abdab784902b6",
+      "raw_sample_sha256": "sha256:c59cd9e5ab1c82bd07ae86bf4e7a75865d5f9798da9d26d3d68e4827f5991b33",
+      "normalized_text_sample_sha256": "sha256:c1b157f6688d12bb310c029639c314941193892578db21e343554e9a71401732",
       "review_signal": {
-        "required": false,
-        "reason": "first_observation"
+        "required": true,
+        "reason": "change_class_material_possible"
       },
       "carried_forward": false
     },
@@ -10748,18 +10748,18 @@
       "source_id": "sophos-privacy-notice",
       "vendor_id": "sophos",
       "source_url": "https://www.sophos.com/en-gb/legal/sophos-group-privacy-notice",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "sophos-privacy-notice-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "sophos-privacy-notice-2026-07-12-owner-29202192763",
       "final_url": "https://www.sophos.com/en-gb/legal/sophos-group-privacy-notice",
       "http_status": 200,
       "source_health_status": "reachable",
-      "change_class": "none",
+      "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:5598e5163745352b8d133a770a13798f9971a1135bbf016ad4db696a1fa3ced0",
-      "normalized_text_sample_sha256": "sha256:7e793088cf3d9c300b5030b02ed9e8889a7eb43d5fa381a05932a2fc6b35f6c0",
+      "raw_sample_sha256": "sha256:99d14e25797c69c11d86264483cb9691117da25086a1ab4c1ddbe666303592ea",
+      "normalized_text_sample_sha256": "sha256:8a11ffeadfb198ec7cd3b07586ce6f079e9b8075cd41f0967803bbe80c339a0b",
       "review_signal": {
-        "required": false,
-        "reason": "first_observation"
+        "required": true,
+        "reason": "change_class_material_possible"
       },
       "carried_forward": false
     },
@@ -10767,8 +10767,8 @@
       "source_id": "sophos-status",
       "vendor_id": "sophos",
       "source_url": "https://status.sophos.com/",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "sophos-status-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "sophos-status-2026-07-12-owner-29202192763",
       "final_url": "https://status.sophos.com/",
       "http_status": 403,
       "source_health_status": "gated",
@@ -10786,18 +10786,18 @@
       "source_id": "sophos-trust-center",
       "vendor_id": "sophos",
       "source_url": "https://www.sophos.com/en-gb/trust",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "sophos-trust-center-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "sophos-trust-center-2026-07-12-owner-29202192763",
       "final_url": "https://www.sophos.com/en-gb/trust",
       "http_status": 200,
       "source_health_status": "reachable",
-      "change_class": "none",
+      "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:d14d4be2833357e461725bf3ebc22b30c5b50b38dce76849f944bb13407f3675",
-      "normalized_text_sample_sha256": "sha256:1050319bd1a634736a3ef5db64bcd7a518873c970b1f5a42343ba0c25ae38cd0",
+      "raw_sample_sha256": "sha256:86ad30c1153550e357034e4ae3327a60585617e8b3134cd4e2cd88b8a6d4d722",
+      "normalized_text_sample_sha256": "sha256:c4221da9ce863444fd3e0d53ad4ddc5f4711e61281c1367d4fced52f7595dea4",
       "review_signal": {
-        "required": false,
-        "reason": "first_observation"
+        "required": true,
+        "reason": "change_class_material_possible"
       },
       "carried_forward": false
     },
@@ -12514,19 +12514,19 @@
     {
       "source_id": "wiz-privacy-notice",
       "vendor_id": "wiz",
-      "source_url": "https://cloud.google.com/terms/cloud-acquisitions-privacy-notice?e=0&hl=en",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "wiz-privacy-notice-2026-07-12-owner-29201880275",
-      "final_url": "https://cloud.google.com/terms/cloud-acquisitions-privacy-notice?e=0&hl=en",
+      "source_url": "https://www.wiz.io/legal/privacy",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "wiz-privacy-notice-2026-07-12-owner-29202192763",
+      "final_url": "https://www.wiz.io/legal/privacy",
       "http_status": null,
       "source_health_status": "unreachable",
-      "change_class": "none",
+      "change_class": "redirect_changed",
       "retrieval_method": "other",
       "raw_sample_sha256": "sha256:TBD",
       "normalized_text_sample_sha256": "sha256:TBD",
       "review_signal": {
         "required": true,
-        "reason": "source_health_unreachable"
+        "reason": "change_class_redirect_changed"
       },
       "carried_forward": false
     },
@@ -12534,18 +12534,18 @@
       "source_id": "wiz-status",
       "vendor_id": "wiz",
       "source_url": "https://status.wiz.io/",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "wiz-status-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "wiz-status-2026-07-12-owner-29202192763",
       "final_url": "https://status.wiz.io/",
       "http_status": 200,
       "source_health_status": "reachable",
-      "change_class": "none",
+      "change_class": "non_material",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:95821c28334681bd53b466e5de5487a735cb0a7f87989e89ba9ee1f8e7cc3c74",
+      "raw_sample_sha256": "sha256:4d133ab62bbb5198cfe4cba582dee3eb8b910a0a17fc0566eba7ef2d0691b740",
       "normalized_text_sample_sha256": "sha256:055b2a2db0b1f0544346c2e552d0c30a839ff0c38a472fee4f0e76b671604a92",
       "review_signal": {
         "required": false,
-        "reason": "first_observation"
+        "reason": null
       },
       "carried_forward": false
     },
@@ -12553,8 +12553,8 @@
       "source_id": "wiz-subprocessors",
       "vendor_id": "wiz",
       "source_url": "https://www.wiz.io/legal/sub-processor-list",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "wiz-subprocessors-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "wiz-subprocessors-2026-07-12-owner-29202192763",
       "final_url": "https://www.wiz.io/legal/sub-processor-list",
       "http_status": 200,
       "source_health_status": "reachable",
@@ -12564,7 +12564,7 @@
       "normalized_text_sample_sha256": "sha256:9fba24a8ea21afc3495988b457e7d7cd142850574f411da5bc9b5eb244689e33",
       "review_signal": {
         "required": false,
-        "reason": "first_observation"
+        "reason": null
       },
       "carried_forward": false
     },
@@ -12572,8 +12572,8 @@
       "source_id": "wiz-trust-center",
       "vendor_id": "wiz",
       "source_url": "https://www.wiz.io/trust-center",
-      "observed_at": "2026-07-12T17:23:03Z",
-      "observation_id": "wiz-trust-center-2026-07-12-owner-29201880275",
+      "observed_at": "2026-07-12T17:33:04Z",
+      "observation_id": "wiz-trust-center-2026-07-12-owner-29202192763",
       "final_url": "https://www.wiz.io/trust-center",
       "http_status": 200,
       "source_health_status": "reachable",
@@ -12583,7 +12583,7 @@
       "normalized_text_sample_sha256": "sha256:dd79b71fbe2a02e2773ae8109692c87672586828ecca1b89d38f5a110b6edc70",
       "review_signal": {
         "required": false,
-        "reason": "first_observation"
+        "reason": null
       },
       "carried_forward": false
     },
