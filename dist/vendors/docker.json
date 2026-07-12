@@ -5,8 +5,12 @@
       "access_class": "public_web",
       "artifact_id": "docker-compliance",
       "artifact_type": "compliance_page",
-      "canonical_url": "https://www.docker.com/trust/",
+      "canonical_url": "https://www.docker.com/trust/compliance/",
       "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -35,8 +39,12 @@
       "access_class": "public_web",
       "artifact_id": "docker-dpa",
       "artifact_type": "dpa",
-      "canonical_url": "https://www.docker.com/legal/data-processing-agreement/",
+      "canonical_url": "https://www.docker.com/static/Data_Processing_Agreement.pdf",
       "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -95,8 +103,12 @@
       "access_class": "public_web",
       "artifact_id": "docker-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.docker.com/security/",
+      "canonical_url": "https://www.docker.com/trust/",
       "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -158,9 +170,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "low",
-        "observer": "human",
+        "collected_at": "2026-07-13T00:00:00Z",
+        "confidence": "high",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -169,11 +181,11 @@
       "source_id": "docker-compliance",
       "source_language": "en",
       "source_type": "compliance_page",
-      "source_url": "https://www.docker.com/trust/",
-      "summary_en": "Public Docker trust/compliance metadata reference.",
-      "summary_native": "Public Docker trust/compliance metadata reference.",
-      "title_en": "Docker Trust",
-      "title_native": "Docker Trust",
+      "source_url": "https://www.docker.com/trust/compliance/",
+      "summary_en": "Public Docker compliance metadata reference.",
+      "summary_native": "Public Docker compliance metadata reference.",
+      "title_en": "Docker Compliance",
+      "title_native": "Docker Compliance",
       "vendor_id": "docker"
     },
     {
@@ -181,9 +193,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
-        "observer": "human",
+        "collected_at": "2026-07-13T00:00:00Z",
+        "confidence": "high",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -192,11 +204,11 @@
       "source_id": "docker-dpa",
       "source_language": "en",
       "source_type": "dpa",
-      "source_url": "https://www.docker.com/legal/data-processing-agreement/",
-      "summary_en": "Public Docker data processing addendum metadata reference.",
-      "summary_native": "Public Docker data processing addendum metadata reference.",
-      "title_en": "Docker Data Processing Addendum",
-      "title_native": "Docker Data Processing Addendum",
+      "source_url": "https://www.docker.com/static/Data_Processing_Agreement.pdf",
+      "summary_en": "Public Docker data processing agreement metadata reference.",
+      "summary_native": "Public Docker data processing agreement metadata reference.",
+      "title_en": "Docker Data Processing Agreement",
+      "title_native": "Docker Data Processing Agreement",
       "vendor_id": "docker"
     },
     {
@@ -227,9 +239,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
-        "observer": "human",
+        "collected_at": "2026-07-13T00:00:00Z",
+        "confidence": "high",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -238,11 +250,11 @@
       "source_id": "docker-security",
       "source_language": "en",
       "source_type": "security_page",
-      "source_url": "https://www.docker.com/security/",
-      "summary_en": "Public Docker security metadata reference.",
-      "summary_native": "Public Docker security metadata reference.",
-      "title_en": "Docker Security",
-      "title_native": "Docker Security",
+      "source_url": "https://www.docker.com/trust/",
+      "summary_en": "Public Docker trust and security metadata reference.",
+      "summary_native": "Public Docker trust and security metadata reference.",
+      "title_en": "Docker Trust and Security",
+      "title_native": "Docker Trust and Security",
       "vendor_id": "docker"
     },
     {
@@ -270,6 +282,57 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/docker/changes/owner-source-repair-1-docker-compliance.yaml",
+      "artifact_id": "docker-compliance",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-repair-1-docker-compliance",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "docker-compliance",
+      "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "docker"
+    },
+    {
+      "_openva_path": "data/vendors/docker/changes/owner-source-repair-1-docker-dpa.yaml",
+      "artifact_id": "docker-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-repair-1-docker-dpa",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "docker-dpa",
+      "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "docker"
+    },
+    {
+      "_openva_path": "data/vendors/docker/changes/owner-source-repair-1-docker-security.yaml",
+      "artifact_id": "docker-security",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-repair-1-docker-security",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "docker-security",
+      "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "docker"
+    },
     {
       "_openva_path": "data/vendors/docker/changes/security-devops-observability-batch-1-docker-compliance.yaml",
       "artifact_id": "docker-compliance",
@@ -392,13 +455,13 @@
     "entity_surface": "global_brand",
     "headquarters_country": "US",
     "legal_name": "Docker, Inc.",
-    "notes": "Public-source-only catalog record. Metadata references general public Docker assurance materials and does not cover bespoke customer agreements.",
+    "notes": "Public-source-only catalog record covering current Docker legal, trust, privacy, security, and compliance metadata. Customer-specific and gated materials are excluded.",
     "official_domains": [
       "docker.com"
     ],
     "public_entrypoints": [
       "https://www.docker.com/legal/",
-      "https://www.docker.com/security/"
+      "https://www.docker.com/trust/"
     ],
     "regions_served": [
       "global"

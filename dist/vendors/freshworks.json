@@ -5,8 +5,12 @@
       "access_class": "public_web",
       "artifact_id": "freshworks-compliance",
       "artifact_type": "compliance_page",
-      "canonical_url": "https://www.freshworks.com/security/compliance/",
+      "canonical_url": "https://trust.freshworks.com/",
       "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -158,9 +162,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
-        "observer": "human",
+        "collected_at": "2026-07-13T00:00:00Z",
+        "confidence": "high",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -169,11 +173,11 @@
       "source_id": "freshworks-compliance",
       "source_language": "en",
       "source_type": "compliance_page",
-      "source_url": "https://www.freshworks.com/security/compliance/",
-      "summary_en": "Public Freshworks compliance metadata reference.",
-      "summary_native": "Public Freshworks compliance metadata reference.",
-      "title_en": "Freshworks Compliance",
-      "title_native": "Freshworks Compliance",
+      "source_url": "https://trust.freshworks.com/",
+      "summary_en": "Public Freshworks trust center entrypoint for cybersecurity certifications, attestations, and related assurance documents.",
+      "summary_native": "Public Freshworks trust center entrypoint for cybersecurity certifications, attestations, and related assurance documents.",
+      "title_en": "Freshworks Trust Center",
+      "title_native": "Freshworks Trust Center",
       "vendor_id": "freshworks"
     },
     {
@@ -404,6 +408,23 @@
       "summary": "Catalog lifecycle operation create recorded for public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "freshworks"
+    },
+    {
+      "_openva_path": "data/vendors/freshworks/changes/owner-source-repair-1-freshworks-compliance.yaml",
+      "artifact_id": "freshworks-compliance",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-repair-1-freshworks-compliance",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "freshworks-compliance",
+      "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "freshworks"
     }
   ],
   "entity_mentions": [],
@@ -472,12 +493,13 @@
     "entity_surface": "global_brand",
     "headquarters_country": "US",
     "legal_name": "Freshworks Inc.",
-    "notes": "Public-source-only catalog record. Metadata references general public Freshworks assurance materials and does not cover bespoke customer agreements.",
+    "notes": "Public-source-only catalog record covering current Freshworks security, trust, privacy, legal, and compliance metadata. Gated trust-center documents and customer-specific agreements are excluded.",
     "official_domains": [
       "freshworks.com"
     ],
     "public_entrypoints": [
       "https://www.freshworks.com/security/",
+      "https://trust.freshworks.com/",
       "https://www.freshworks.com/privacy/"
     ],
     "regions_served": [

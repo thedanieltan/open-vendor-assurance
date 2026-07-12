@@ -5,8 +5,12 @@
       "access_class": "public_web",
       "artifact_id": "workday-compliance",
       "artifact_type": "compliance_page",
-      "canonical_url": "https://www.workday.com/en-us/company/about-workday/security-trust/compliance.html",
+      "canonical_url": "https://www.workday.com/en-us/why-workday/trust/compliance.html",
       "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -35,8 +39,12 @@
       "access_class": "public_web",
       "artifact_id": "workday-dpa",
       "artifact_type": "dpa",
-      "canonical_url": "https://www.workday.com/en-us/legal/contract-terms-and-conditions/data-processing-terms.html",
+      "canonical_url": "https://www.workday.com/en-us/legal/universal-contract-terms-and-conditions/index.html",
       "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -158,9 +166,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
-        "observer": "human",
+        "collected_at": "2026-07-13T00:00:00Z",
+        "confidence": "high",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -169,11 +177,11 @@
       "source_id": "workday-compliance",
       "source_language": "en",
       "source_type": "compliance_page",
-      "source_url": "https://www.workday.com/en-us/company/about-workday/security-trust/compliance.html",
-      "summary_en": "Public Workday compliance metadata reference.",
-      "summary_native": "Public Workday compliance metadata reference.",
-      "title_en": "Workday Compliance",
-      "title_native": "Workday Compliance",
+      "source_url": "https://www.workday.com/en-us/why-workday/trust/compliance.html",
+      "summary_en": "Public Workday compliance and third-party assessment metadata reference.",
+      "summary_native": "Public Workday compliance and third-party assessment metadata reference.",
+      "title_en": "Workday Compliance and Third-Party Assessments",
+      "title_native": "Workday Compliance and Third-Party Assessments",
       "vendor_id": "workday"
     },
     {
@@ -181,9 +189,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
-        "observer": "human",
+        "collected_at": "2026-07-13T00:00:00Z",
+        "confidence": "high",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -192,11 +200,11 @@
       "source_id": "workday-dpa",
       "source_language": "en",
       "source_type": "dpa",
-      "source_url": "https://www.workday.com/en-us/legal/contract-terms-and-conditions/data-processing-terms.html",
-      "summary_en": "Public Workday data processing terms metadata reference.",
-      "summary_native": "Public Workday data processing terms metadata reference.",
-      "title_en": "Workday Data Processing Terms",
-      "title_native": "Workday Data Processing Terms",
+      "source_url": "https://www.workday.com/en-us/legal/universal-contract-terms-and-conditions/index.html",
+      "summary_en": "Public Workday legal index linking current regional Universal Data Processing Exhibits and related FAQs.",
+      "summary_native": "Public Workday legal index linking current regional Universal Data Processing Exhibits and related FAQs.",
+      "title_en": "Workday Universal Data Processing Exhibit Index",
+      "title_native": "Workday Universal Data Processing Exhibit Index",
       "vendor_id": "workday"
     },
     {
@@ -318,6 +326,40 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/workday/changes/owner-source-repair-1-workday-compliance.yaml",
+      "artifact_id": "workday-compliance",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-repair-1-workday-compliance",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "workday-compliance",
+      "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "workday"
+    },
+    {
+      "_openva_path": "data/vendors/workday/changes/owner-source-repair-1-workday-dpa.yaml",
+      "artifact_id": "workday-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-repair-1-workday-dpa",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "workday-dpa",
+      "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "workday"
+    },
     {
       "_openva_path": "data/vendors/workday/changes/saas-productivity-identity-batch-1-workday-compliance.yaml",
       "artifact_id": "workday-compliance",
@@ -470,13 +512,13 @@
     "entity_surface": "global_brand",
     "headquarters_country": "US",
     "legal_name": "Workday, Inc.",
-    "notes": "Public-source-only catalog record. Metadata references general public Workday assurance materials and does not cover bespoke customer agreements.",
+    "notes": "Public-source-only catalog record covering current Workday legal, trust, privacy, security, compliance, and processor-resource metadata. Bespoke customer agreements and gated materials are excluded.",
     "official_domains": [
       "workday.com"
     ],
     "public_entrypoints": [
-      "https://www.workday.com/en-us/privacy.html",
-      "https://www.workday.com/en-us/company/about-workday/security-trust.html"
+      "https://www.workday.com/en-us/legal.html",
+      "https://www.workday.com/en-us/why-workday/trust/overview.html"
     ],
     "regions_served": [
       "global"
