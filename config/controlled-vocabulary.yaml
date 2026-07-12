@@ -17,6 +17,30 @@ source_types:
   - status_page
   - other_public_source
 
+# The single authoritative mapping from stable machine source-type keys to
+# human-facing display labels. Machine keys are compatibility-sensitive and
+# must never be renamed or removed; every human-facing surface (browser UI,
+# help text, docs, accessible labels, Excel worksheets, vendor pages, search
+# filters, search-engine metadata) must derive its wording from this map
+# rather than defining a second enum or abbreviating (e.g. never a bare
+# "DPA" as the display label).
+source_type_labels:
+  dpa: Data processing addendum
+  subprocessors_list: Subprocessor list
+  privacy_notice: Privacy notice
+  trust_center: Trust center
+  security_page: Security page
+  compliance_page: Compliance page
+  certification_reference: Certification reference
+  terms_of_service: Terms of service
+  kyc_statement: Know your customer statement
+  aml_statement: Anti-money laundering statement
+  ai_terms: Artificial intelligence terms
+  government_request_policy: Government request policy
+  transparency_report: Transparency report
+  status_page: Service status page
+  other_public_source: Other public source
+
 artifact_types:
   - dpa
   - subprocessors_list

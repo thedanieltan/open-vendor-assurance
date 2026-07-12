@@ -33,7 +33,7 @@ OpenVA currently ships:
 - configurable source-pack field selection;
 - direct public source lookup;
 - static/digest-verifiable agent exports;
-- release CSV assets;
+- browser CSV exports;
 - source-pack result schema;
 - connector-neutral workspace write-back row projection;
 - bounded source-map discovery primitives;
@@ -106,8 +106,8 @@ vendor list
 
 Role labels are presets only:
 
-- CISO preset: security page, trust center, compliance page, vulnerability disclosure, certification references;
-- DPO preset: DPA, privacy notice, subprocessor list, data transfer terms, AI/data terms;
+- CISO preset: security page, trust center, compliance page, certification reference;
+- DPO preset: data processing addendum, privacy notice, subprocessor list, artificial intelligence terms;
 - procurement preset: vendor identity, official domain, legal entity hints, source coverage, missing/ambiguous/gated flags, export/write-back status.
 
 Users can include or remove fields. Presets are not separate products, approval paths, or conclusions.

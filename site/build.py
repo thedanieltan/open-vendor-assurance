@@ -8,8 +8,13 @@ commit the sole catalog snapshot identity.
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 _CORE_PATH = Path(__file__).with_name("build_core.py")
 _SPEC = importlib.util.spec_from_file_location("openva_site_build_core", _CORE_PATH)
