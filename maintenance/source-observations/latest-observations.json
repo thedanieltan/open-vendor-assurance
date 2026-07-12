@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-12T20:36:19Z",
+  "generated_at": "2026-07-12T20:41:50Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
     "source_count": 730,
@@ -13199,18 +13199,18 @@
       "source_id": "workday-security",
       "vendor_id": "workday",
       "source_url": "https://www.workday.com/en-us/why-workday/trust/overview.html",
-      "observed_at": "2026-07-12T20:36:19Z",
-      "observation_id": "workday-security-2026-07-12-owner-29208033452",
+      "observed_at": "2026-07-12T20:41:50Z",
+      "observation_id": "workday-security-2026-07-12-owner-29208202183",
       "final_url": "https://www.workday.com/en-us/why-workday/trust/overview.html",
       "http_status": 200,
       "source_health_status": "reachable",
-      "change_class": "redirect_changed",
+      "change_class": "none",
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:e8062bfc2ce018a9acaaf2a5b1491990c080b8895e59b1464583814c55aa0120",
       "normalized_text_sample_sha256": "sha256:b318840676062c5e507a58d2bc6551bc1c9a2926f6157e980a8b6dfdea6ffc38",
       "review_signal": {
-        "required": true,
-        "reason": "change_class_redirect_changed"
+        "required": false,
+        "reason": null
       },
       "carried_forward": false
     },
@@ -13407,16 +13407,16 @@
     {
       "source_id": "zapier-compliance",
       "vendor_id": "zapier",
-      "source_url": "https://zapier.com/security-compliance",
-      "observed_at": "2026-07-12T20:36:19Z",
-      "observation_id": "zapier-compliance-2026-07-12-owner-29208033452",
-      "final_url": "https://zapier.com/security-compliance",
+      "source_url": "https://trust.zapier.com/",
+      "observed_at": "2026-07-12T20:41:50Z",
+      "observation_id": "zapier-compliance-2026-07-12-owner-29208202183",
+      "final_url": "https://trust.zapier.com/",
       "http_status": 200,
       "source_health_status": "reachable",
       "change_class": "redirect_changed",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:d09a9cdc03c20f5a2494ddfa0675776d9bb03fe28493c3f0720d1002574e676b",
-      "normalized_text_sample_sha256": "sha256:60036f387f3cb81222614c0e9794a3b61672e4e31c9c92a58d2770d84806c711",
+      "raw_sample_sha256": "sha256:2be94327c602157756404bf6dd78b38e2ae54364d22ef0e0b03dbf4b3e2ef1b0",
+      "normalized_text_sample_sha256": "sha256:4821e48745566a11739a98bf0d9273b270b476814425fb6ed5f4b89293c723eb",
       "review_signal": {
         "required": true,
         "reason": "change_class_redirect_changed"
