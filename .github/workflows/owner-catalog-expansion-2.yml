@@ -1,0 +1,99 @@
+name: owner-catalog-expansion-2
+
+on:
+  push:
+    branches:
+      - catalog/owner-security-identity-expansion-2
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-catalog-expansion-2
+  cancel-in-progress: true
+
+jobs:
+  materialize-observe:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-batch-2-complete]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install project
+        run: pip install -e '.[dev]'
+      - name: Generate catalog records and indexes
+        run: python -m tools.openva.catalog_batch catalog-batches/owner-security-identity-expansion-2.yaml --build-indexes
+      - name: Select new source records
+        run: |
+          cat > owner-source-paths.txt <<'EOF'
+          data/vendors/fortinet/sources/fortinet-trust-center.yaml
+          data/vendors/fortinet/sources/fortinet-privacy-notice.yaml
+          data/vendors/fortinet/sources/fortinet-terms.yaml
+          data/vendors/fortinet/sources/fortinet-security-page.yaml
+          data/vendors/zscaler/sources/zscaler-dpa.yaml
+          data/vendors/zscaler/sources/zscaler-subprocessors.yaml
+          data/vendors/zscaler/sources/zscaler-privacy-notice.yaml
+          data/vendors/zscaler/sources/zscaler-transparency-report.yaml
+          data/vendors/1password/sources/1password-trust-center.yaml
+          data/vendors/1password/sources/1password-privacy-notice.yaml
+          data/vendors/1password/sources/1password-terms.yaml
+          data/vendors/1password/sources/1password-security-page.yaml
+          EOF
+      - name: Verify selected public sources
+        run: |
+          python -m tools.openva.source_verification verify \
+            --source-path-file owner-source-paths.txt \
+            --output owner-source-verification-report.json
+      - name: Build latest observation projection
+        run: |
+          python -m tools.openva.observation_ledger build \
+            --verification-report owner-source-verification-report.json \
+            --run-id "owner-${{ github.run_id }}" \
+            --baseline maintenance/source-observations/latest-observations.json \
+            --output-dir owner-observation
+          cp owner-observation/latest-observations.json maintenance/source-observations/latest-observations.json
+      - name: Validate generated catalog
+        run: python -m tools.openva.validate validate
+      - name: Run focused catalog tests
+        run: pytest -q tests/test_catalog_batch.py tests/test_catalog_guard.py tests/test_source_type_labels.py tests/test_generated_exports.py
+      - name: Show observation outcomes
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          selected = {Path(line).stem for line in Path('owner-source-paths.txt').read_text().splitlines() if line.strip()}
+          data = json.loads(Path('maintenance/source-observations/latest-observations.json').read_text())
+          for row in data.get('sources', []):
+              if row.get('source_id') in selected:
+                  print(json.dumps({
+                      'source_id': row.get('source_id'),
+                      'http_status': row.get('http_status'),
+                      'source_health_status': row.get('source_health_status'),
+                      'final_url': row.get('final_url'),
+                      'review_signal': row.get('review_signal'),
+                  }, sort_keys=True))
+          PY
+      - name: Commit materialized and observed catalog
+        run: |
+          set -euo pipefail
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add \
+            data/vendors/fortinet \
+            data/vendors/zscaler \
+            data/vendors/1password \
+            dist/vendors/fortinet.json \
+            dist/vendors/zscaler.json \
+            dist/vendors/1password.json \
+            indexes \
+            openva-pack.json \
+            maintenance/source-observations/latest-observations.json
+          git diff --cached --stat
+          git commit -m 'Catalog: materialize and observe owner security identity batch 2 [owner-batch-2-complete]'
+          git push
