@@ -1,0 +1,98 @@
+name: owner-apac-expansion-1
+
+on:
+  push:
+    branches:
+      - catalog/owner-apac-expansion-1
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-apac-expansion-1
+  cancel-in-progress: true
+
+jobs:
+  materialize-observe:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-apac-1-complete]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install project
+        run: pip install -e '.[dev]'
+      - name: Materialize catalog records and indexes
+        run: python -m tools.openva.catalog_batch catalog-batches/owner-apac-expansion-1.yaml --build-indexes
+      - name: Select new APAC source records
+        run: |
+          cat > owner-apac-source-paths.txt <<'EOF'
+          data/vendors/xendit/sources/xendit-service-agreement.yaml
+          data/vendors/xendit/sources/xendit-privacy-policy.yaml
+          data/vendors/xendit/sources/xendit-licenses.yaml
+          data/vendors/xendit/sources/xendit-status.yaml
+          data/vendors/smarthr/sources/smarthr-security.yaml
+          data/vendors/smarthr/sources/smarthr-terms.yaml
+          data/vendors/smarthr/sources/smarthr-privacy-policy.yaml
+          data/vendors/keka/sources/keka-security.yaml
+          data/vendors/keka/sources/keka-terms.yaml
+          data/vendors/keka/sources/keka-privacy-policy.yaml
+          data/vendors/keka/sources/keka-dpa.yaml
+          EOF
+      - name: Verify selected public sources
+        run: |
+          python -m tools.openva.source_verification verify \
+            --source-path-file owner-apac-source-paths.txt \
+            --output owner-apac-verification-report.json
+      - name: Build latest observation projection
+        run: |
+          python -m tools.openva.observation_ledger build \
+            --verification-report owner-apac-verification-report.json \
+            --run-id "owner-${{ github.run_id }}" \
+            --baseline maintenance/source-observations/latest-observations.json \
+            --output-dir owner-apac-observation
+          cp owner-apac-observation/latest-observations.json maintenance/source-observations/latest-observations.json
+      - name: Validate materialized catalog
+        run: python -m tools.openva.validate validate
+      - name: Run focused catalog tests
+        run: pytest -q tests/test_catalog_batch.py tests/test_catalog_guard.py tests/test_source_type_labels.py tests/test_generated_exports.py
+      - name: Show observation outcomes
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          selected = {Path(line).stem for line in Path('owner-apac-source-paths.txt').read_text().splitlines() if line.strip()}
+          data = json.loads(Path('maintenance/source-observations/latest-observations.json').read_text())
+          for row in data.get('sources', []):
+              if row.get('source_id') in selected:
+                  print(json.dumps({
+                      'source_id': row.get('source_id'),
+                      'http_status': row.get('http_status'),
+                      'source_health_status': row.get('source_health_status'),
+                      'final_url': row.get('final_url'),
+                      'review_signal': row.get('review_signal'),
+                  }, sort_keys=True))
+          PY
+      - name: Commit materialized and observed catalog
+        run: |
+          set -euo pipefail
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add \
+            data/vendors/xendit \
+            data/vendors/smarthr \
+            data/vendors/keka \
+            dist/vendors/xendit.json \
+            dist/vendors/smarthr.json \
+            dist/vendors/keka.json \
+            indexes \
+            openva-pack.json \
+            maintenance/source-observations/latest-observations.json
+          git diff --cached --stat
+          git commit -m 'Catalog: materialize and observe owner APAC batch 1 [owner-apac-1-complete]'
+          git push
