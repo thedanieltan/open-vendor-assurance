@@ -225,6 +225,19 @@ def test_committed_manifest_is_well_formed():
         assert isinstance(body["allowed_paths"], list)
 
 
+def test_top_500_expansion_scope_is_limited_to_its_queue_contract():
+    manifest = load_manifest()
+    allowed = [
+        "config/category-taxonomy.yaml",
+        "maintenance/queues/catalog-growth-discovery.json",
+        "tests/test_catalog_growth_discovery_queue.py",
+    ]
+    assert out_of_scope_paths(allowed, "WP-TOP-500-CATALOG-EXPANSION-01", manifest) == []
+    assert out_of_scope_paths(
+        ["data/vendors/example/vendor.yaml"], "WP-TOP-500-CATALOG-EXPANSION-01", manifest
+    ) == ["data/vendors/example/vendor.yaml"]
+
+
 def test_scope_manifest_contains_no_known_mojibake_markers():
     text = (ROOT / "docs" / "operations" / "contracts" / "work-package-scope.yaml").read_text(
         encoding="utf-8"

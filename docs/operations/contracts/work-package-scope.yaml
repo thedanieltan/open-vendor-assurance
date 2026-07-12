@@ -50,6 +50,13 @@ work_packages:
       - tests/test_source_discovery.py
       - tests/test_catalog_growth_discovery_queue.py
 
+  WP-TOP-500-CATALOG-EXPANSION-01:
+    description: Curated global top-500 vendor baseline, its coverage-lane queue, and full canonical source-type discovery scope. Discovery remains public-source-only and proposal-only; catalog admission stays on the existing evidence and PR lanes.
+    allowed_paths:
+      - config/category-taxonomy.yaml
+      - maintenance/queues/catalog-growth-discovery.json
+      - tests/test_catalog_growth_discovery_queue.py
+
   WP-WORKFLOW-CONTROL-PLANE-01:
     description: Existing workflow inventory, retirement contracts, docs, and metadata-only PR validation control plane.
     allowed_paths:
