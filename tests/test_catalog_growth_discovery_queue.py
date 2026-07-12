@@ -43,6 +43,23 @@ def test_catalog_growth_discovery_queue_is_taxonomy_driven_and_bounded():
     assert "cloud_platforms" in summary["coverage_lane_counts"]
     assert "security_identity" in summary["coverage_lane_counts"]
     assert "regional_apac" in summary["coverage_lane_counts"]
+    assert set(summary["source_types"]) == {
+        "dpa",
+        "subprocessors_list",
+        "privacy_notice",
+        "trust_center",
+        "security_page",
+        "compliance_page",
+        "certification_reference",
+        "terms_of_service",
+        "kyc_statement",
+        "aml_statement",
+        "ai_terms",
+        "government_request_policy",
+        "transparency_report",
+        "status_page",
+        "other_public_source",
+    }
 
 
 def test_catalog_growth_discovery_queue_posture_reflects_network_modes_but_never_writes():
