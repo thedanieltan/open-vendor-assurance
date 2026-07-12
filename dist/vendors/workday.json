@@ -103,8 +103,12 @@
       "access_class": "public_web",
       "artifact_id": "workday-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.workday.com/en-us/company/about-workday/security-trust.html",
+      "canonical_url": "https://www.workday.com/en-us/why-workday/trust/overview.html",
       "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -283,9 +287,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
-        "observer": "human",
+        "collected_at": "2026-07-13T00:00:00Z",
+        "confidence": "high",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -294,11 +298,11 @@
       "source_id": "workday-security",
       "source_language": "en",
       "source_type": "security_page",
-      "source_url": "https://www.workday.com/en-us/company/about-workday/security-trust.html",
-      "summary_en": "Public Workday security and trust metadata reference.",
-      "summary_native": "Public Workday security and trust metadata reference.",
-      "title_en": "Workday Security and Trust",
-      "title_native": "Workday Security and Trust",
+      "source_url": "https://www.workday.com/en-us/why-workday/trust/overview.html",
+      "summary_en": "Public Workday trust overview covering security, privacy, compliance, and responsible artificial intelligence metadata.",
+      "summary_native": "Public Workday trust overview covering security, privacy, compliance, and responsible artificial intelligence metadata.",
+      "title_en": "Workday Trust",
+      "title_native": "Workday Trust",
       "vendor_id": "workday"
     },
     {
@@ -356,6 +360,23 @@
       "review_state": "proposed",
       "schema_version": "0.1.0",
       "source_id": "workday-dpa",
+      "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "workday"
+    },
+    {
+      "_openva_path": "data/vendors/workday/changes/owner-source-repair-2-workday-security.yaml",
+      "artifact_id": "workday-security",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-repair-2-workday-security",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "workday-security",
       "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "workday"
