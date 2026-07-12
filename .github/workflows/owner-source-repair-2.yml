@@ -1,0 +1,70 @@
+name: owner-source-repair-2
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-repair-2
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-repair-2
+  cancel-in-progress: true
+
+jobs:
+  materialize-observe:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-repair-2-complete]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install project
+        run: pip install -e '.[dev]'
+      - name: Refresh catalog records and indexes
+        run: python -m tools.openva.catalog_batch catalog-batches/owner-source-repair-2.yaml --build-indexes
+      - name: Select repaired source records
+        run: |
+          cat > owner-source-paths.txt <<'EOF'
+          data/vendors/workday/sources/workday-security.yaml
+          data/vendors/zapier/sources/zapier-compliance.yaml
+          EOF
+      - name: Verify selected public sources
+        run: |
+          python -m tools.openva.source_verification verify \
+            --source-path-file owner-source-paths.txt \
+            --output owner-source-verification-report.json
+      - name: Build latest observation projection
+        run: |
+          python -m tools.openva.observation_ledger build \
+            --verification-report owner-source-verification-report.json \
+            --run-id "owner-${{ github.run_id }}" \
+            --baseline maintenance/source-observations/latest-observations.json \
+            --output-dir owner-observation
+          cp owner-observation/latest-observations.json maintenance/source-observations/latest-observations.json
+      - name: Validate refreshed catalog
+        run: python -m tools.openva.validate validate
+      - name: Run focused catalog tests
+        run: pytest -q tests/test_catalog_batch.py tests/test_catalog_guard.py tests/test_source_type_labels.py tests/test_generated_exports.py
+      - name: Commit refreshed catalog
+        run: |
+          set -euo pipefail
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add \
+            data/vendors/workday \
+            data/vendors/zapier \
+            dist/vendors/workday.json \
+            dist/vendors/zapier.json \
+            indexes \
+            openva-pack.json \
+            maintenance/source-observations/latest-observations.json
+          git diff --cached --stat
+          git commit -m 'Catalog: refresh and observe owner source repair batch 2 [owner-repair-2-complete]'
+          git push
