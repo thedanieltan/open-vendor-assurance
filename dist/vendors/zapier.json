@@ -65,8 +65,12 @@
       "access_class": "public_web",
       "artifact_id": "zapier-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://zapier.com/security",
+      "canonical_url": "https://zapier.com/security-compliance",
       "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
         "normalized_text_sha256": "sha256:TBD",
@@ -174,9 +178,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
-        "observer": "human",
+        "collected_at": "2026-07-13T00:00:00Z",
+        "confidence": "high",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -185,11 +189,11 @@
       "source_id": "zapier-security",
       "source_language": "en",
       "source_type": "security_page",
-      "source_url": "https://zapier.com/security",
-      "summary_en": "Public Zapier security metadata reference.",
-      "summary_native": "Public Zapier security metadata reference.",
-      "title_en": "Zapier Security",
-      "title_native": "Zapier Security",
+      "source_url": "https://zapier.com/security-compliance",
+      "summary_en": "Public Zapier security and compliance metadata reference.",
+      "summary_native": "Public Zapier security and compliance metadata reference.",
+      "title_en": "Zapier Security and Compliance",
+      "title_native": "Zapier Security and Compliance",
       "vendor_id": "zapier"
     },
     {
@@ -217,6 +221,23 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/zapier/changes/owner-source-repair-1-zapier-security.yaml",
+      "artifact_id": "zapier-security",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-repair-1-zapier-security",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T00:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "zapier-security",
+      "summary": "Catalog lifecycle operation refresh recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "zapier"
+    },
     {
       "_openva_path": "data/vendors/zapier/changes/productivity-commerce-growth-batch-1-zapier-compliance.yaml",
       "artifact_id": "zapier-compliance",
@@ -341,13 +362,13 @@
     "entity_surface": "global_brand",
     "headquarters_country": "US",
     "legal_name": "Zapier, Inc.",
-    "notes": "Public-source-only catalog record. Metadata references general public Zapier assurance materials and does not cover bespoke customer agreements.",
+    "notes": "Public-source-only catalog record covering current Zapier legal, privacy, data-security, and compliance metadata. Customer-specific and gated materials are excluded.",
     "official_domains": [
       "zapier.com"
     ],
     "public_entrypoints": [
-      "https://zapier.com/security",
-      "https://zapier.com/privacy"
+      "https://zapier.com/legal",
+      "https://zapier.com/security-compliance"
     ],
     "regions_served": [
       "global"

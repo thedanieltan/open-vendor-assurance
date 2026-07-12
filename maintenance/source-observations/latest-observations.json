@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-12T18:09:38Z",
+  "generated_at": "2026-07-12T19:30:38Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
     "source_count": 719,
-    "observed_this_run": 12,
-    "carried_forward": 707
+    "observed_this_run": 7,
+    "carried_forward": 712
   },
   "sources": [
     {
@@ -1869,7 +1869,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "beyondtrust-privacy-notice",
@@ -1888,7 +1888,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "beyondtrust-subprocessors",
@@ -1907,7 +1907,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "beyondtrust-trust-center",
@@ -1926,7 +1926,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bigcommerce-privacy-notice",
@@ -3584,40 +3584,40 @@
     {
       "source_id": "docker-compliance",
       "vendor_id": "docker",
-      "source_url": "https://www.docker.com/trust/",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "docker-compliance-2026-07-11-29141337215",
-      "final_url": "https://www.docker.com/trust/",
+      "source_url": "https://www.docker.com/trust/compliance/",
+      "observed_at": "2026-07-12T19:30:38Z",
+      "observation_id": "docker-compliance-2026-07-12-owner-29205917527",
+      "final_url": "https://www.docker.com/trust/compliance/",
       "http_status": 200,
       "source_health_status": "reachable",
-      "change_class": "non_material",
+      "change_class": "redirect_changed",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:0103f51b34f4deebfb5b92041b3614f934dd8a23b79f954f3ce6ba5759db177b",
-      "normalized_text_sample_sha256": "sha256:3653bf73638425385ecc9bf5ee0801ece08c47bc43a1d2ff77ca8e53b814215a",
+      "raw_sample_sha256": "sha256:e8884073c6e68db4076dbc65dffdfdc9fe73b446d563241071f7eee3aadbc610",
+      "normalized_text_sample_sha256": "sha256:ea02bc8435014d9eb66dbff0e745510d4fc8fa2f377c9095efa6f9c62e195530",
       "review_signal": {
-        "required": false,
-        "reason": null
+        "required": true,
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "docker-dpa",
       "vendor_id": "docker",
-      "source_url": "https://www.docker.com/legal/data-processing-agreement/",
-      "observed_at": "2026-07-12T07:42:56Z",
-      "observation_id": "docker-dpa-2026-07-12-29184618599",
-      "final_url": "https://www.docker.com/legal/",
+      "source_url": "https://www.docker.com/static/Data_Processing_Agreement.pdf",
+      "observed_at": "2026-07-12T19:30:38Z",
+      "observation_id": "docker-dpa-2026-07-12-owner-29205917527",
+      "final_url": "https://www.docker.com/static/Data_Processing_Agreement.pdf",
       "http_status": 200,
-      "source_health_status": "redirected",
-      "change_class": "material_possible",
-      "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:eb55d2de66b8985c06f3476cef6118d6018e6bad2b2824d2b01e7a038f8c3551",
-      "normalized_text_sample_sha256": "sha256:ef5a73cece1b6c5f806115dd27ee002a267730e79c5f0f83cb8e2fba78705d81",
+      "source_health_status": "reachable",
+      "change_class": "redirect_changed",
+      "retrieval_method": "pdf_document",
+      "raw_sample_sha256": "sha256:aaf63baa2e3ce643ab3f2ea0cc8ce91c10ceca52ffb1029c210c2bd3942402d4",
+      "normalized_text_sample_sha256": "sha256:TBD",
       "review_signal": {
         "required": true,
-        "reason": "change_class_material_possible"
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "docker-privacy",
@@ -3641,21 +3641,21 @@
     {
       "source_id": "docker-security",
       "vendor_id": "docker",
-      "source_url": "https://www.docker.com/security/",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "docker-security-2026-07-11-29141337215",
-      "final_url": "https://www.docker.com/solutions/security/",
+      "source_url": "https://www.docker.com/trust/",
+      "observed_at": "2026-07-12T19:30:38Z",
+      "observation_id": "docker-security-2026-07-12-owner-29205917527",
+      "final_url": "https://www.docker.com/trust/",
       "http_status": 200,
-      "source_health_status": "redirected",
-      "change_class": "material_possible",
+      "source_health_status": "reachable",
+      "change_class": "redirect_changed",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:8410c04fff1d85240a0de910e0869d082d7cbb5c931a5c84949e281ed087994b",
-      "normalized_text_sample_sha256": "sha256:89e22a4a760b6979375758a49b0fbc53eb1e059a706e386076a2ab2b79f5abdd",
+      "raw_sample_sha256": "sha256:0103f51b34f4deebfb5b92041b3614f934dd8a23b79f954f3ce6ba5759db177b",
+      "normalized_text_sample_sha256": "sha256:3653bf73638425385ecc9bf5ee0801ece08c47bc43a1d2ff77ca8e53b814215a",
       "review_signal": {
         "required": true,
-        "reason": "change_class_material_possible"
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "docker-subprocessors",
@@ -4439,21 +4439,21 @@
     {
       "source_id": "freshworks-compliance",
       "vendor_id": "freshworks",
-      "source_url": "https://www.freshworks.com/security/compliance/",
-      "observed_at": "2026-07-12T07:42:56Z",
-      "observation_id": "freshworks-compliance-2026-07-12-29184618599",
-      "final_url": "https://www.freshworks.com/security/compliance/",
-      "http_status": 404,
-      "source_health_status": "unreachable",
-      "change_class": "none",
+      "source_url": "https://trust.freshworks.com/",
+      "observed_at": "2026-07-12T19:30:38Z",
+      "observation_id": "freshworks-compliance-2026-07-12-owner-29205917527",
+      "final_url": "https://trust.freshworks.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "redirect_changed",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:994a84f5c90bde29cc17ae4a9aa2d9f716268ac83055996b77e0bdc8b6435078",
-      "normalized_text_sample_sha256": "sha256:25e653d49363630b70f85599b4c2647e9be70a78b5fc408f49132399f76f3316",
+      "raw_sample_sha256": "sha256:e05f9911c931f17944077ebfe671a1f7719162a0fad952024281783254e4b5f3",
+      "normalized_text_sample_sha256": "sha256:6c5ebf5e41cf3b0dc05304ea2aba045b38b54092a5c871e76137f58a9f236d61",
       "review_signal": {
         "required": true,
-        "reason": "source_health_unreachable"
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "freshworks-dpa",
@@ -7645,7 +7645,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netskope-privacy-notice",
@@ -7664,7 +7664,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netskope-terms",
@@ -7683,7 +7683,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netskope-trust-center",
@@ -7702,7 +7702,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netsuite-compliance",
@@ -8880,7 +8880,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ping-identity-privacy-notice",
@@ -8899,7 +8899,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ping-identity-subprocessors",
@@ -8918,7 +8918,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ping-identity-trust-center",
@@ -8937,7 +8937,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pipedrive-privacy-notice",
@@ -12970,40 +12970,40 @@
     {
       "source_id": "workday-compliance",
       "vendor_id": "workday",
-      "source_url": "https://www.workday.com/en-us/company/about-workday/security-trust/compliance.html",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "workday-compliance-2026-07-11-29141337215",
-      "final_url": "https://www.workday.com/en-us/company/about-workday/security-trust/compliance.html",
-      "http_status": 404,
-      "source_health_status": "unreachable",
-      "change_class": "none",
+      "source_url": "https://www.workday.com/en-us/why-workday/trust/compliance.html",
+      "observed_at": "2026-07-12T19:30:38Z",
+      "observation_id": "workday-compliance-2026-07-12-owner-29205917527",
+      "final_url": "https://www.workday.com/en-us/why-workday/trust/compliance.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "redirect_changed",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:43578fa70b40134519ae8ac8332f666d4dd605aefaccbbf3458a4360ba80c93f",
-      "normalized_text_sample_sha256": "sha256:074530c43a6220f767470cd2ac492fc2b1a52bbd21ac45ae2ff5c9a700eee110",
+      "raw_sample_sha256": "sha256:b456b875f65b542f57680e62891671b04d05000fd498b2d3af4e0d61e4fc1041",
+      "normalized_text_sample_sha256": "sha256:09fcb7835f3ced5d9aecdf19c598063b3d5b79d402597b1665082847822a0b24",
       "review_signal": {
         "required": true,
-        "reason": "source_health_unreachable"
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "workday-dpa",
       "vendor_id": "workday",
-      "source_url": "https://www.workday.com/en-us/legal/contract-terms-and-conditions/data-processing-terms.html",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "workday-dpa-2026-07-11-29141337215",
-      "final_url": "https://www.workday.com/en-us/legal/contract-terms-and-conditions/data-processing-terms.html",
-      "http_status": 404,
-      "source_health_status": "unreachable",
-      "change_class": "non_material",
+      "source_url": "https://www.workday.com/en-us/legal/universal-contract-terms-and-conditions/index.html",
+      "observed_at": "2026-07-12T19:30:38Z",
+      "observation_id": "workday-dpa-2026-07-12-owner-29205917527",
+      "final_url": "https://www.workday.com/en-us/legal/universal-contract-terms-and-conditions/index.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "redirect_changed",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:43578fa70b40134519ae8ac8332f666d4dd605aefaccbbf3458a4360ba80c93f",
-      "normalized_text_sample_sha256": "sha256:074530c43a6220f767470cd2ac492fc2b1a52bbd21ac45ae2ff5c9a700eee110",
+      "raw_sample_sha256": "sha256:55b07ee1b84402cbba818504eb36927d24566ed746d26333a74674a26eba82f4",
+      "normalized_text_sample_sha256": "sha256:89fe44b234051d98cba842abe2d109925dafd79a45dc5b32f0bc2eeb82fba023",
       "review_signal": {
         "required": true,
-        "reason": "source_health_unreachable"
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "workday-inc-sec-edgar",
@@ -13236,21 +13236,21 @@
     {
       "source_id": "zapier-security",
       "vendor_id": "zapier",
-      "source_url": "https://zapier.com/security",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "zapier-security-2026-07-11-29141337215",
-      "final_url": "https://zapier.com/security",
-      "http_status": 404,
-      "source_health_status": "unreachable",
-      "change_class": "non_material",
+      "source_url": "https://zapier.com/security-compliance",
+      "observed_at": "2026-07-12T19:30:38Z",
+      "observation_id": "zapier-security-2026-07-12-owner-29205917527",
+      "final_url": "https://zapier.com/security-compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "redirect_changed",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:ebcad9372a69bc9bb3864f248da6663ba95c44d90cab0a9d3c4310f3bf2c6ba9",
-      "normalized_text_sample_sha256": "sha256:e39202c32277f548a2c4bbe69c8a6c484618d8f76dfd0ab11271d7463b5bbd6b",
+      "raw_sample_sha256": "sha256:d09a9cdc03c20f5a2494ddfa0675776d9bb03fe28493c3f0720d1002574e676b",
+      "normalized_text_sample_sha256": "sha256:60036f387f3cb81222614c0e9794a3b61672e4e31c9c92a58d2770d84806c711",
       "review_signal": {
         "required": true,
-        "reason": "source_health_unreachable"
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "zapier-subprocessors",
