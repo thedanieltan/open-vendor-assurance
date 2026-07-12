@@ -27,6 +27,7 @@ jobs:
       release_site: ${{ steps.classify.outputs.release_site }}
       mcp_integration: ${{ steps.classify.outputs.mcp_integration }}
       google_sheets_integration: ${{ steps.classify.outputs.google_sheets_integration }}
+      workspace_affected: ${{ steps.classify.outputs.workspace_affected }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -48,6 +49,7 @@ jobs:
               echo "release_site=true"
               echo "mcp_integration=true"
               echo "google_sheets_integration=true"
+              echo "workspace_affected=true"
             } >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -140,6 +142,18 @@ jobs:
               or exact("tests/test_agent_bundle_verification.py")
           )
           google_sheets = starts("integrations/google-sheets/")
+          # The dedicated lanes already cover catalog, source maintenance, site,
+          # MCP, and Sheets changes.  Run the cross-package workspace planner
+          # only when its own manifest/control plane or a package dependency
+          # boundary changes; this avoids re-running the same tests on every PR.
+          workspace_affected = (
+              exact("tools/openva/workspace.py")
+              or exact("tools/openva/workspace.yaml")
+              or starts("adapters/python/")
+              or starts("integrations/mcp/")
+              or starts("services/openva_match_service/")
+              or starts("integrations/google-sheets/")
+          )
           workflow_operating_model = (
               workflow_paths
               or governance_docs
@@ -167,6 +181,7 @@ jobs:
               "release_site": release_site,
               "mcp_integration": mcp_integration,
               "google_sheets_integration": google_sheets,
+              "workspace_affected": workspace_affected,
           }
 
           with Path(__import__("os").environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as handle:
@@ -296,7 +311,8 @@ jobs:
   workspace-affected-tests:
     name: workspace-affected-tests
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    needs: pr-change-classifier
+    if: github.event_name == 'pull_request' && needs.pr-change-classifier.outputs.workspace_affected == 'true'
     steps:
       - uses: actions/checkout@v5
         with:
