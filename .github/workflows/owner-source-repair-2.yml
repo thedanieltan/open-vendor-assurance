@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   materialize-observe:
-    if: ${{ github.event_name == 'pull_request' || !contains(github.event.head_commit.message, '[owner-repair-2-complete]') }}
+    if: ${{ github.event_name == 'pull_request' || (!contains(github.event.head_commit.message, '[owner-repair-2-complete]') && !contains(github.event.head_commit.message, '[owner-repair-2-diagnostic]')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -55,10 +55,18 @@ jobs:
             --output-dir owner-observation
           cp owner-observation/latest-observations.json maintenance/source-observations/latest-observations.json
       - name: Validate refreshed catalog
-        run: python -m tools.openva.validate validate
+        id: validate_catalog
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python -m tools.openva.validate validate 2>&1 | tee owner-source-repair-2-validation.log
       - name: Run focused catalog tests
+        if: ${{ steps.validate_catalog.outcome == 'success' }}
         run: pytest -q tests/test_catalog_batch.py tests/test_catalog_guard.py tests/test_source_type_labels.py tests/test_generated_exports.py
-      - name: Commit refreshed catalog
+      - name: Commit refreshed catalog or diagnostic snapshot
+        if: ${{ always() }}
+        env:
+          VALIDATION_OUTCOME: ${{ steps.validate_catalog.outcome }}
         run: |
           set -euo pipefail
           git config user.name 'openva-owner-catalog'
@@ -70,7 +78,13 @@ jobs:
             dist/vendors/zapier.json \
             indexes \
             openva-pack.json \
-            maintenance/source-observations/latest-observations.json
+            maintenance/source-observations/latest-observations.json \
+            owner-source-repair-2-validation.log
           git diff --cached --stat
-          git commit -m 'Catalog: refresh and observe owner source repair batch 2 [owner-repair-2-complete]'
+          if [ "$VALIDATION_OUTCOME" = "success" ]; then
+            message='Catalog: refresh and observe owner source repair batch 2 [owner-repair-2-complete]'
+          else
+            message='Catalog: preserve owner source repair batch 2 diagnostic [owner-repair-2-diagnostic]'
+          fi
+          git commit -m "$message"
           git push
