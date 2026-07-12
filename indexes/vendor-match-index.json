@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 174,
+  "count": 177,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -2206,6 +2206,99 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "bamboohr"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "beyondtrust-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.beyondtrust.com/privacy-center/data-processing-addendum",
+          "title": "BeyondTrust Data Processing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "beyondtrust-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.beyondtrust.com/privacy-center/privacy-notice",
+          "title": "BeyondTrust Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "beyondtrust-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.beyondtrust.com/privacy-center/sub-processors-list",
+          "title": "BeyondTrust Sub-Processors and Affiliates List"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "beyondtrust-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.beyondtrust.com/trust-center",
+          "title": "BeyondTrust Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "BeyondTrust",
+      "legal_entities": [],
+      "legal_name": "BeyondTrust Corporation",
+      "manifest_path": "dist/vendors/beyondtrust.json",
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "official_domains": [
+        "beyondtrust.com",
+        "trustportal.beyondtrust.com"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "beyondtrust-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.beyondtrust.com/privacy-center/data-processing-addendum",
+          "title": "BeyondTrust Data Processing Addendum"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "beyondtrust-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.beyondtrust.com/privacy-center/privacy-notice",
+          "title": "BeyondTrust Privacy Notice"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "beyondtrust-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.beyondtrust.com/privacy-center/sub-processors-list",
+          "title": "BeyondTrust Sub-Processors and Affiliates List"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "beyondtrust-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.beyondtrust.com/trust-center",
+          "title": "BeyondTrust Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "beyondtrust"
     },
     {
       "candidate_source_types": [],
@@ -9243,6 +9336,101 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "compliance_page",
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netskope-compliance-page",
+          "source_type": "compliance_page",
+          "source_url": "https://www.netskope.com/company/security-compliance-and-assurance",
+          "title": "Netskope Security, Compliance and Assurance"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netskope-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.netskope.com/privacy",
+          "title": "Netskope Privacy Overview"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netskope-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.netskope.com/terms-of-use",
+          "title": "Netskope Terms of Use"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netskope-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://trust.netskope.com/",
+          "title": "Netskope Trust Portal"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Netskope",
+      "legal_entities": [],
+      "legal_name": "Netskope, Inc.",
+      "manifest_path": "dist/vendors/netskope.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "netskope.com",
+        "trust.netskope.com"
+      ],
+      "primary_source_by_type": {
+        "compliance_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netskope-compliance-page",
+          "source_type": "compliance_page",
+          "source_url": "https://www.netskope.com/company/security-compliance-and-assurance",
+          "title": "Netskope Security, Compliance and Assurance"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netskope-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.netskope.com/privacy",
+          "title": "Netskope Privacy Overview"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netskope-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.netskope.com/terms-of-use",
+          "title": "Netskope Terms of Use"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netskope-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://trust.netskope.com/",
+          "title": "Netskope Trust Portal"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "netskope"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "compliance_page",
         "security_page"
       ],
       "canonical_sources": [
@@ -10647,6 +10835,98 @@
         "dpa"
       ],
       "vendor_id": "pinecone"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ping-identity-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.pingidentity.com/en/legal/data-privacy-addendum.html",
+          "title": "Ping Identity Data Privacy Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ping-identity-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.pingidentity.com/en/legal/privacy.html",
+          "title": "Ping Identity Privacy Statement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ping-identity-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.pingidentity.com/en-us/docs/legal/data-supplement",
+          "title": "Ping Identity Data Supplement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ping-identity-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.pingidentity.com/en/legal/trust-center.html",
+          "title": "Ping Identity Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Ping Identity",
+      "legal_entities": [],
+      "legal_name": "Ping Identity Corporation",
+      "manifest_path": "dist/vendors/ping-identity.json",
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "official_domains": [
+        "pingidentity.com"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ping-identity-dpa",
+          "source_type": "dpa",
+          "source_url": "https://www.pingidentity.com/en/legal/data-privacy-addendum.html",
+          "title": "Ping Identity Data Privacy Addendum"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ping-identity-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.pingidentity.com/en/legal/privacy.html",
+          "title": "Ping Identity Privacy Statement"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ping-identity-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.pingidentity.com/en-us/docs/legal/data-supplement",
+          "title": "Ping Identity Data Supplement"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ping-identity-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.pingidentity.com/en/legal/trust-center.html",
+          "title": "Ping Identity Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "ping-identity"
     },
     {
       "candidate_source_types": [],

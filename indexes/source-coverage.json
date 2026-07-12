@@ -3,37 +3,37 @@
   "coverage_claim_role_counts": {},
   "covered_role_counts": {
     "ai_terms": 1,
-    "compliance_page": 97,
-    "dpa": 104,
+    "compliance_page": 98,
+    "dpa": 106,
     "other_public_source": 29,
-    "privacy_notice": 168,
+    "privacy_notice": 171,
     "security_page": 142,
     "status_page": 2,
-    "subprocessors_list": 112,
-    "terms_of_service": 37,
+    "subprocessors_list": 114,
+    "terms_of_service": 38,
     "transparency_report": 1,
-    "trust_center": 14
+    "trust_center": 17
   },
   "duplicate_source_url_count": 0,
   "generated_at": "1970-01-01T00:00:00Z",
   "schema_version": "0.1.0",
   "source_type_counts": {
     "ai_terms": 1,
-    "compliance_page": 97,
-    "dpa": 104,
+    "compliance_page": 98,
+    "dpa": 106,
     "other_public_source": 29,
-    "privacy_notice": 168,
+    "privacy_notice": 171,
     "security_page": 142,
     "status_page": 2,
-    "subprocessors_list": 112,
-    "terms_of_service": 37,
+    "subprocessors_list": 114,
+    "terms_of_service": 38,
     "transparency_report": 1,
-    "trust_center": 14
+    "trust_center": 17
   },
   "unavailable_source_type_counts": {
     "dpa": 16
   },
-  "unique_source_location_count": 707,
+  "unique_source_location_count": 719,
   "vendor_coverage": [
     {
       "candidate_source_types": [],
@@ -726,6 +726,37 @@
       "unavailable_source_types": [],
       "unique_source_locations": 5,
       "vendor_id": "bamboohr"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "beyondtrust"
     },
     {
       "candidate_source_types": [],
@@ -3043,6 +3074,39 @@
       "candidate_source_types": [],
       "canonical_source_types": [
         "compliance_page",
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "compliance_page",
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "compliance_page",
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "netskope"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "compliance_page",
         "security_page"
       ],
       "coverage_claim_role_coverage": [],
@@ -3495,6 +3559,37 @@
       ],
       "unique_source_locations": 4,
       "vendor_id": "pinecone"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "ping-identity"
     },
     {
       "candidate_source_types": [],
