@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 177,
+  "count": 180,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -7986,6 +7986,98 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "keka-dpa",
+          "source_type": "dpa",
+          "source_url": "https://keka.com/data-protection-addendum",
+          "title": "Keka Data Protection Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "keka-privacy-policy",
+          "source_type": "privacy_notice",
+          "source_url": "https://keka.com/privacy-policy",
+          "title": "Keka Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "keka-security",
+          "source_type": "security_page",
+          "source_url": "https://keka.com/security",
+          "title": "Keka Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "keka-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://keka.com/terms-of-services",
+          "title": "Keka Terms and Conditions"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Keka",
+      "legal_entities": [],
+      "legal_name": "Keka Technologies Private Limited",
+      "manifest_path": "dist/vendors/keka.json",
+      "missing_core_source_types": [
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "keka.com"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "keka-dpa",
+          "source_type": "dpa",
+          "source_url": "https://keka.com/data-protection-addendum",
+          "title": "Keka Data Protection Addendum"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "keka-privacy-policy",
+          "source_type": "privacy_notice",
+          "source_url": "https://keka.com/privacy-policy",
+          "title": "Keka Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "keka-security",
+          "source_type": "security_page",
+          "source_url": "https://keka.com/security",
+          "title": "Keka Security"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "keka-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://keka.com/terms-of-services",
+          "title": "Keka Terms and Conditions"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "keka"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -13311,6 +13403,83 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smarthr-privacy-policy",
+          "source_type": "privacy_notice",
+          "source_url": "https://smarthr.co.jp/privacy/",
+          "title": "SmartHR Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smarthr-security",
+          "source_type": "security_page",
+          "source_url": "https://smarthr.jp/about/security/",
+          "title": "SmartHR Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smarthr-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://smarthr.jp/terms/",
+          "title": "SmartHR Terms of Use"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "SmartHR",
+      "legal_entities": [],
+      "legal_name": "SmartHR, Inc.",
+      "manifest_path": "dist/vendors/smarthr.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "smarthr.jp",
+        "smarthr.co.jp"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smarthr-privacy-policy",
+          "source_type": "privacy_notice",
+          "source_url": "https://smarthr.co.jp/privacy/",
+          "title": "SmartHR Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smarthr-security",
+          "source_type": "security_page",
+          "source_url": "https://smarthr.jp/about/security/",
+          "title": "SmartHR Security"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "smarthr-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://smarthr.jp/terms/",
+          "title": "SmartHR Terms of Use"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "smarthr"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "dpa",
         "privacy_notice",
         "subprocessors_list",
@@ -16007,6 +16176,101 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "workday"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "xendit-licenses",
+          "source_type": "compliance_page",
+          "source_url": "https://www.xendit.co/en/company/xendit-licenses/",
+          "title": "Xendit Licenses"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "xendit-privacy-policy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.xendit.co/en-id/privacy-policy/",
+          "title": "Xendit Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "xendit-service-agreement",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.xendit.co/en/xendit-service-agreement/",
+          "title": "Xendit Services Agreement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "xendit-status",
+          "source_type": "status_page",
+          "source_url": "https://status.xendit.co/",
+          "title": "Xendit Status"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Xendit",
+      "legal_entities": [],
+      "legal_name": "Xendit Inc.",
+      "manifest_path": "dist/vendors/xendit.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "xendit.co",
+        "status.xendit.co"
+      ],
+      "primary_source_by_type": {
+        "compliance_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "xendit-licenses",
+          "source_type": "compliance_page",
+          "source_url": "https://www.xendit.co/en/company/xendit-licenses/",
+          "title": "Xendit Licenses"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "xendit-privacy-policy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.xendit.co/en-id/privacy-policy/",
+          "title": "Xendit Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "xendit-status",
+          "source_type": "status_page",
+          "source_url": "https://status.xendit.co/",
+          "title": "Xendit Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "xendit-service-agreement",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.xendit.co/en/xendit-service-agreement/",
+          "title": "Xendit Services Agreement"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "xendit"
     },
     {
       "candidate_source_types": [],
