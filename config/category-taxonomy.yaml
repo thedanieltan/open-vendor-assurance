@@ -133,6 +133,25 @@ artifact_categories:
       - product_terms
       - ai_terms
       - shared_responsibility_model
+  public_legal_and_governance_sources:
+    label: Public legal and governance sources
+    maps_to_artifact_types:
+      - terms_of_service
+      - government_request_policy
+      - transparency_report
+  financial_crime_public_statements:
+    label: Financial crime public statements
+    maps_to_artifact_types:
+      - kyc_statement
+      - aml_statement
+  service_status:
+    label: Service status
+    maps_to_artifact_types:
+      - status_page
+  other_public_source:
+    label: Other public source
+    maps_to_artifact_types:
+      - other_public_source
 
 coverage_lanes:
   cloud_platforms:
