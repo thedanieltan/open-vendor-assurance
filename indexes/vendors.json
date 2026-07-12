@@ -1,5 +1,5 @@
 {
-  "count": 174,
+  "count": 177,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -742,6 +742,39 @@
         "productivity_software"
       ],
       "vendor_id": "bamboohr"
+    },
+    {
+      "_openva_path": "data/vendors/beyondtrust/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "BeyondTrust",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "BeyondTrust Corporation",
+      "notes": "Public-source-only catalog record covering vendor-published BeyondTrust trust, privacy, data processing, and subprocessor references. Gated Trust Portal materials and customer-specific agreements are excluded.",
+      "official_domains": [
+        "beyondtrust.com",
+        "trustportal.beyondtrust.com"
+      ],
+      "public_entrypoints": [
+        "https://www.beyondtrust.com/trust-center",
+        "https://www.beyondtrust.com/privacy-center"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "identity_access",
+        "security"
+      ],
+      "vendor_id": "beyondtrust"
     },
     {
       "_openva_path": "data/vendors/bigcommerce/vendor.yaml",
@@ -3211,6 +3244,40 @@
       "vendor_id": "neo4j"
     },
     {
+      "_openva_path": "data/vendors/netskope/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Netskope",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Netskope, Inc.",
+      "notes": "Public-source-only catalog record covering vendor-published Netskope trust, privacy, terms, and security-compliance pages. Authenticated Trust Portal documents and private customer evidence are excluded.",
+      "official_domains": [
+        "netskope.com",
+        "trust.netskope.com"
+      ],
+      "public_entrypoints": [
+        "https://www.netskope.com/company/security-compliance-and-assurance",
+        "https://www.netskope.com/privacy",
+        "https://trust.netskope.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "security",
+        "cloud_infrastructure"
+      ],
+      "vendor_id": "netskope"
+    },
+    {
       "_openva_path": "data/vendors/netsuite/vendor.yaml",
       "catalog_status": "active",
       "display_name": "NetSuite",
@@ -3703,6 +3770,38 @@
         "developer_platform"
       ],
       "vendor_id": "pinecone"
+    },
+    {
+      "_openva_path": "data/vendors/ping-identity/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Ping Identity",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Ping Identity Corporation",
+      "notes": "Public-source-only catalog record covering vendor-published Ping Identity trust, privacy, data processing, and subprocessor references. Private customer materials and authenticated support content are excluded.",
+      "official_domains": [
+        "pingidentity.com"
+      ],
+      "public_entrypoints": [
+        "https://www.pingidentity.com/en/legal/trust-center.html",
+        "https://www.pingidentity.com/en/legal/privacy.html"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "identity_access",
+        "security"
+      ],
+      "vendor_id": "ping-identity"
     },
     {
       "_openva_path": "data/vendors/pipedrive/vendor.yaml",

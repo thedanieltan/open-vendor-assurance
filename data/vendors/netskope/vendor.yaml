@@ -1,0 +1,27 @@
+schema_version: 0.1.0
+vendor_id: netskope
+display_name: Netskope
+legal_name: Netskope, Inc.
+headquarters_country: US
+regions_served:
+- global
+official_domains:
+- netskope.com
+- trust.netskope.com
+public_entrypoints:
+- https://www.netskope.com/company/security-compliance-and-assurance
+- https://www.netskope.com/privacy
+- https://trust.netskope.com/
+vendor_categories:
+- security
+- cloud_infrastructure
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+catalog_status: active
+notes: Public-source-only catalog record covering vendor-published Netskope trust,
+  privacy, terms, and security-compliance pages. Authenticated Trust Portal documents
+  and private customer evidence are excluded.
+entity_surface: global_brand
+source_authority_language: en

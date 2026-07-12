@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-12T17:51:43Z",
+  "generated_at": "2026-07-12T18:09:38Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 707,
+    "source_count": 719,
     "observed_this_run": 12,
-    "carried_forward": 695
+    "carried_forward": 707
   },
   "sources": [
     {
@@ -26,7 +26,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "1password-security-page",
@@ -45,7 +45,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "1password-terms",
@@ -64,7 +64,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "1password-trust-center",
@@ -83,7 +83,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "acuity-scheduling-privacy",
@@ -1851,6 +1851,82 @@
         "reason": "change_class_access_changed"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "beyondtrust-dpa",
+      "vendor_id": "beyondtrust",
+      "source_url": "https://www.beyondtrust.com/privacy-center/data-processing-addendum",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "beyondtrust-dpa-2026-07-12-owner-29203332211",
+      "final_url": "https://www.beyondtrust.com/privacy-center/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:95e160f4e6305db821cc9e5d980e1da9cf706de7c05f82bf5feb8f7cb0d628e4",
+      "normalized_text_sample_sha256": "sha256:9750d0713ba07e2528800502b287195ecf16c23d7720969d60a60b7a5d345b93",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "beyondtrust-privacy-notice",
+      "vendor_id": "beyondtrust",
+      "source_url": "https://www.beyondtrust.com/privacy-center/privacy-notice",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "beyondtrust-privacy-notice-2026-07-12-owner-29203332211",
+      "final_url": "https://www.beyondtrust.com/privacy-center/privacy-notice",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c83ee970f10e7c0d9b568b111cd33c835d4ea37e9f98d879c313daefc4c33cbb",
+      "normalized_text_sample_sha256": "sha256:4482f75b4824c007b5d66377d707181cba314826f338013ad7732b3eeb7a889a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "beyondtrust-subprocessors",
+      "vendor_id": "beyondtrust",
+      "source_url": "https://www.beyondtrust.com/privacy-center/sub-processors-list",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "beyondtrust-subprocessors-2026-07-12-owner-29203332211",
+      "final_url": "https://www.beyondtrust.com/privacy-center/sub-processors-list",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:81c806c7c8762292ed130f042dbcdb65e3e2b77d48357d21e766c4499e2473a4",
+      "normalized_text_sample_sha256": "sha256:8cab88c8e0e07075c41822ec37c27d3744433c080cf21b078610a2e5a586bdf7",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "beyondtrust-trust-center",
+      "vendor_id": "beyondtrust",
+      "source_url": "https://www.beyondtrust.com/trust-center",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "beyondtrust-trust-center-2026-07-12-owner-29203332211",
+      "final_url": "https://www.beyondtrust.com/trust-center",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2d63075d341b8d3cb0a122ca4920769c2d4f1334a4d1114bc9184e2ea760d5bf",
+      "normalized_text_sample_sha256": "sha256:d539a10a9f54032ab015f26a252c225d858ed53e753f41bd15dd2824197ee306",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "bigcommerce-privacy-notice",
@@ -4301,7 +4377,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fortinet-security-page",
@@ -4320,7 +4396,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fortinet-terms",
@@ -4339,7 +4415,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fortinet-trust-center",
@@ -4358,7 +4434,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "freshworks-compliance",
@@ -7553,6 +7629,82 @@
       "carried_forward": true
     },
     {
+      "source_id": "netskope-compliance-page",
+      "vendor_id": "netskope",
+      "source_url": "https://www.netskope.com/company/security-compliance-and-assurance",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "netskope-compliance-page-2026-07-12-owner-29203332211",
+      "final_url": "https://www.netskope.com/company/security-compliance-and-assurance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:819bf36b0acbd189b87a25b68d1338cd848a42ab977308c84c91e64ffd973017",
+      "normalized_text_sample_sha256": "sha256:c85ebeddbf3fdb13ec861e03d31ea87e90e517f24c90f6e2d8fbac4899382de8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "netskope-privacy-notice",
+      "vendor_id": "netskope",
+      "source_url": "https://www.netskope.com/privacy",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "netskope-privacy-notice-2026-07-12-owner-29203332211",
+      "final_url": "https://www.netskope.com/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d52feaf8d2cc184fbcea6ba7bbce73d1a15d59f5f68b1f2700df2d6832a08969",
+      "normalized_text_sample_sha256": "sha256:f7d1afe8adc853c8d014526b2228d621760e08ac1ac542beb5785b9cbd43b66f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "netskope-terms",
+      "vendor_id": "netskope",
+      "source_url": "https://www.netskope.com/terms-of-use",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "netskope-terms-2026-07-12-owner-29203332211",
+      "final_url": "https://www.netskope.com/terms-of-use",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8630797e0d2cd34c044fe5039f872af015a306ff2e40797aa9423e4c7266d400",
+      "normalized_text_sample_sha256": "sha256:f3c80d42f82c985fcb48b643c08bbfc741842f65b8c9deeb6f02598ae3732116",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "netskope-trust-center",
+      "vendor_id": "netskope",
+      "source_url": "https://trust.netskope.com/",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "netskope-trust-center-2026-07-12-owner-29203332211",
+      "final_url": "https://trust.netskope.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:81d63208498d736ba8d772948a3f6a0fc737e1ccc4e7de0749ee57d1aaedb860",
+      "normalized_text_sample_sha256": "sha256:10bc9909ff923c1fff52c30e008bf46c92cb1c371c7f52d508ede79d5ce1d813",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "netsuite-compliance",
       "vendor_id": "netsuite",
       "source_url": "https://www.netsuite.com/portal/platform/compliance.shtml",
@@ -8710,6 +8862,82 @@
         "reason": "change_class_material_possible"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "ping-identity-dpa",
+      "vendor_id": "ping-identity",
+      "source_url": "https://www.pingidentity.com/en/legal/data-privacy-addendum.html",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "ping-identity-dpa-2026-07-12-owner-29203332211",
+      "final_url": "https://www.pingidentity.com/en/legal/data-privacy-addendum.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5d5cd7e6be331b5575296240bc3ca862db6880fb7dc40570a933f47a81355612",
+      "normalized_text_sample_sha256": "sha256:7257b498605dee741a9e30f73a2125c285e3fd9ab4be86c080d2afbe1e251e76",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "ping-identity-privacy-notice",
+      "vendor_id": "ping-identity",
+      "source_url": "https://www.pingidentity.com/en/legal/privacy.html",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "ping-identity-privacy-notice-2026-07-12-owner-29203332211",
+      "final_url": "https://www.pingidentity.com/en-us/docs/legal/privacy",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:170b0e9949188e0a28f5daa5ab80ccc48b6f064176e8d6b29154810294f8f264",
+      "normalized_text_sample_sha256": "sha256:724348ec819178bad7ab4d453663b417fa3fc8ca6bd80a3f4bf5947c4efa0d77",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "ping-identity-subprocessors",
+      "vendor_id": "ping-identity",
+      "source_url": "https://www.pingidentity.com/en-us/docs/legal/data-supplement",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "ping-identity-subprocessors-2026-07-12-owner-29203332211",
+      "final_url": "https://www.pingidentity.com/en-us/docs/legal/data-supplement",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3020a74975e4ed06e24f4f6b3e9b66b4674e3780c09f645be70261ce798bb29d",
+      "normalized_text_sample_sha256": "sha256:d0a2058fdaae87cc90d7f6103522042461216bdaa7e34fb00e443d88d5bc0455",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "ping-identity-trust-center",
+      "vendor_id": "ping-identity",
+      "source_url": "https://www.pingidentity.com/en/legal/trust-center.html",
+      "observed_at": "2026-07-12T18:09:38Z",
+      "observation_id": "ping-identity-trust-center-2026-07-12-owner-29203332211",
+      "final_url": "https://www.pingidentity.com/en/legal/trust-center.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:28a7a329a20487225116710213ced467489d047a0d01fdde07a8269c1498bc5f",
+      "normalized_text_sample_sha256": "sha256:87c7759bd7d8e9084c904c455500211eab098cc7670d8972414ec8c591f6a020",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "pipedrive-privacy-notice",
@@ -13383,7 +13611,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zscaler-privacy-notice",
@@ -13402,7 +13630,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zscaler-subprocessors",
@@ -13421,7 +13649,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zscaler-transparency-report",
@@ -13440,7 +13668,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     }
   ],
   "not_advice": true
