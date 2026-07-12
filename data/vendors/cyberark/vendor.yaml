@@ -1,0 +1,26 @@
+schema_version: 0.1.0
+vendor_id: cyberark
+display_name: CyberArk
+legal_name: CyberArk Software Ltd.
+headquarters_country: IL
+regions_served:
+- global
+official_domains:
+- cyberark.com
+- trust.cyberark.com
+public_entrypoints:
+- https://www.cyberark.com/privacy-notice/
+- https://trust.cyberark.com/
+vendor_categories:
+- identity_access
+- security
+source_policy:
+  public_sources_only: true
+  gated_materials_excluded: true
+  raw_documents_mirrored_by_default: false
+catalog_status: active
+notes: Public-source-only catalog record. Metadata references general public CyberArk
+  assurance materials and does not cover gated trust-center documents or bespoke customer
+  agreements.
+entity_surface: global_brand
+source_authority_language: en

@@ -1,5 +1,5 @@
 {
-  "count": 167,
+  "count": 171,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -1187,6 +1187,71 @@
         "hr_software"
       ],
       "vendor_id": "culture-amp"
+    },
+    {
+      "_openva_path": "data/vendors/cyberark/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "CyberArk",
+      "entity_surface": "global_brand",
+      "headquarters_country": "IL",
+      "legal_name": "CyberArk Software Ltd.",
+      "notes": "Public-source-only catalog record. Metadata references general public CyberArk assurance materials and does not cover gated trust-center documents or bespoke customer agreements.",
+      "official_domains": [
+        "cyberark.com",
+        "trust.cyberark.com"
+      ],
+      "public_entrypoints": [
+        "https://www.cyberark.com/privacy-notice/",
+        "https://trust.cyberark.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "identity_access",
+        "security"
+      ],
+      "vendor_id": "cyberark"
+    },
+    {
+      "_openva_path": "data/vendors/darktrace/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Darktrace",
+      "entity_surface": "global_brand",
+      "headquarters_country": "GB",
+      "legal_name": "Darktrace Holdings Limited",
+      "notes": "Public-source-only catalog record. Metadata references general public Darktrace assurance and legal materials and does not cover customer-portal materials or bespoke agreements.",
+      "official_domains": [
+        "darktrace.com"
+      ],
+      "public_entrypoints": [
+        "https://www.darktrace.com/trust",
+        "https://www.darktrace.com/legal"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "security",
+        "ai_platform"
+      ],
+      "vendor_id": "darktrace"
     },
     {
       "_openva_path": "data/vendors/darwinbox/vendor.yaml",
@@ -4492,6 +4557,38 @@
       "vendor_id": "snowflake"
     },
     {
+      "_openva_path": "data/vendors/sophos/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Sophos",
+      "entity_surface": "global_brand",
+      "headquarters_country": "GB",
+      "legal_name": "Sophos Ltd.",
+      "notes": "Public-source-only catalog record. Metadata references general public Sophos trust, privacy, certification, and service-status materials and does not cover authenticated portals or bespoke agreements.",
+      "official_domains": [
+        "sophos.com",
+        "status.sophos.com"
+      ],
+      "public_entrypoints": [
+        "https://www.sophos.com/en-gb/trust",
+        "https://www.sophos.com/en-gb/legal/sophos-group-privacy-notice"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "security"
+      ],
+      "vendor_id": "sophos"
+    },
+    {
       "_openva_path": "data/vendors/splunk/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Splunk",
@@ -5281,6 +5378,40 @@
         "marketing_technology"
       ],
       "vendor_id": "wix"
+    },
+    {
+      "_openva_path": "data/vendors/wiz/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Wiz",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Wiz, Inc.",
+      "notes": "Public-source-only catalog record. Metadata references public Wiz and current parent-company privacy materials and does not cover authenticated customer trust-center documents or bespoke agreements.",
+      "official_domains": [
+        "wiz.io",
+        "status.wiz.io",
+        "cloud.google.com"
+      ],
+      "public_entrypoints": [
+        "https://www.wiz.io/trust-center",
+        "https://cloud.google.com/terms/cloud-acquisitions-privacy-notice?e=0&hl=en"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "security",
+        "cloud_infrastructure"
+      ],
+      "vendor_id": "wiz"
     },
     {
       "_openva_path": "data/vendors/workday/vendor.yaml",
