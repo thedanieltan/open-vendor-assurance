@@ -1,5 +1,5 @@
 {
-  "count": 177,
+  "count": 180,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -2796,6 +2796,41 @@
       "vendor_id": "intercom"
     },
     {
+      "_openva_path": "data/vendors/keka/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Keka",
+      "entity_surface": "global_brand",
+      "headquarters_country": "IN",
+      "legal_name": "Keka Technologies Private Limited",
+      "notes": "Public-source-only catalog record covering Keka security, service terms, privacy, and data-processing metadata. Customer-specific agreements and authenticated materials are excluded.",
+      "official_domains": [
+        "keka.com"
+      ],
+      "public_entrypoints": [
+        "https://keka.com/security",
+        "https://keka.com/terms-of-services",
+        "https://keka.com/privacy-policy",
+        "https://keka.com/data-protection-addendum"
+      ],
+      "regions_served": [
+        "apac",
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "hr_software",
+        "productivity_software"
+      ],
+      "vendor_id": "keka"
+    },
+    {
       "_openva_path": "data/vendors/klaviyo/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Klaviyo",
@@ -4659,6 +4694,40 @@
       "vendor_id": "slack"
     },
     {
+      "_openva_path": "data/vendors/smarthr/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "SmartHR",
+      "entity_surface": "global_brand",
+      "headquarters_country": "JP",
+      "legal_name": "SmartHR, Inc.",
+      "notes": "Public-source-only catalog record covering SmartHR security, service terms, and corporate privacy metadata. Authenticated service content and customer-specific documents are excluded.",
+      "official_domains": [
+        "smarthr.jp",
+        "smarthr.co.jp"
+      ],
+      "public_entrypoints": [
+        "https://smarthr.jp/about/security/",
+        "https://smarthr.jp/terms/",
+        "https://smarthr.co.jp/privacy/"
+      ],
+      "regions_served": [
+        "apac"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "ja",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "hr_software",
+        "productivity_software"
+      ],
+      "vendor_id": "smarthr"
+    },
+    {
       "_openva_path": "data/vendors/smartsheet/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Smartsheet",
@@ -5613,6 +5682,42 @@
         "productivity_software"
       ],
       "vendor_id": "workday"
+    },
+    {
+      "_openva_path": "data/vendors/xendit/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Xendit",
+      "entity_surface": "global_brand",
+      "headquarters_country": "ID",
+      "legal_name": "Xendit Inc.",
+      "notes": "Public-source-only catalog record covering Xendit regional service terms, privacy, licensing, and service-status metadata. Country-specific contracts and customer-specific materials remain separate from these general references.",
+      "official_domains": [
+        "xendit.co",
+        "status.xendit.co"
+      ],
+      "public_entrypoints": [
+        "https://www.xendit.co/en/xendit-service-agreement/",
+        "https://www.xendit.co/en-id/privacy-policy/",
+        "https://www.xendit.co/en/company/xendit-licenses/",
+        "https://status.xendit.co/"
+      ],
+      "regions_served": [
+        "apac",
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "xendit"
     },
     {
       "_openva_path": "data/vendors/xero/vendor.yaml",

@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-12T19:30:38Z",
+  "generated_at": "2026-07-12T20:11:57Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 719,
-    "observed_this_run": 7,
-    "carried_forward": 712
+    "source_count": 730,
+    "observed_this_run": 11,
+    "carried_forward": 719
   },
   "sources": [
     {
@@ -3598,7 +3598,7 @@
         "required": true,
         "reason": "change_class_redirect_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docker-dpa",
@@ -3617,7 +3617,7 @@
         "required": true,
         "reason": "change_class_redirect_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docker-privacy",
@@ -3655,7 +3655,7 @@
         "required": true,
         "reason": "change_class_redirect_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docker-subprocessors",
@@ -4453,7 +4453,7 @@
         "required": true,
         "reason": "change_class_redirect_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "freshworks-dpa",
@@ -6506,6 +6506,82 @@
         "reason": "source_health_unreachable"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "keka-dpa",
+      "vendor_id": "keka",
+      "source_url": "https://keka.com/data-protection-addendum",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "keka-dpa-2026-07-12-owner-29207249086",
+      "final_url": "https://keka.com/data-protection-addendum",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "keka-privacy-policy",
+      "vendor_id": "keka",
+      "source_url": "https://keka.com/privacy-policy",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "keka-privacy-policy-2026-07-12-owner-29207249086",
+      "final_url": "https://keka.com/privacy-policy",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "keka-security",
+      "vendor_id": "keka",
+      "source_url": "https://keka.com/security",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "keka-security-2026-07-12-owner-29207249086",
+      "final_url": "https://keka.com/security",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "keka-terms",
+      "vendor_id": "keka",
+      "source_url": "https://keka.com/terms-of-services",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "keka-terms-2026-07-12-owner-29207249086",
+      "final_url": "https://keka.com/terms-of-services",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "klaviyo-compliance",
@@ -10897,6 +10973,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "smarthr-privacy-policy",
+      "vendor_id": "smarthr",
+      "source_url": "https://smarthr.co.jp/privacy/",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "smarthr-privacy-policy-2026-07-12-owner-29207249086",
+      "final_url": "https://smarthr.co.jp/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:026566b498a18895a504c8d115e5db07c67324dfe6ae88f380d5f6eadd992b3b",
+      "normalized_text_sample_sha256": "sha256:259556308cfceb3f04a274c73358a677c2430eb22a7384fa3b06f74839d9cad5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "smarthr-security",
+      "vendor_id": "smarthr",
+      "source_url": "https://smarthr.jp/about/security/",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "smarthr-security-2026-07-12-owner-29207249086",
+      "final_url": "https://smarthr.jp/about/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9c508b44ce6ae9fe9ff57a7f8a381e0eb15072f70fe648bb15fb12b6c167c827",
+      "normalized_text_sample_sha256": "sha256:dc368ee0b3cb3e368da943661359d7ba6bc0eac28c10a0bf1e0ff040b67be076",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "smarthr-terms",
+      "vendor_id": "smarthr",
+      "source_url": "https://smarthr.jp/terms/",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "smarthr-terms-2026-07-12-owner-29207249086",
+      "final_url": "https://smarthr.jp/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:051a1601c32b406f9746bcecd1652088aab165b7284c17435694a19d42c31302",
+      "normalized_text_sample_sha256": "sha256:337fd47adf611d6fb2ba2a86be13ebf58bec7a40b291a4fa0a778c33dc0a16fb",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "smartsheet-dpa",
       "vendor_id": "smartsheet",
       "source_url": "https://www.smartsheet.com/legal/DPA",
@@ -12984,7 +13117,7 @@
         "required": true,
         "reason": "change_class_redirect_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "workday-dpa",
@@ -13003,7 +13136,7 @@
         "required": true,
         "reason": "change_class_redirect_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "workday-inc-sec-edgar",
@@ -13099,6 +13232,82 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "xendit-licenses",
+      "vendor_id": "xendit",
+      "source_url": "https://www.xendit.co/en/company/xendit-licenses/",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "xendit-licenses-2026-07-12-owner-29207249086",
+      "final_url": "https://www.xendit.co/en/company/xendit-licenses/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:593c3631497812a5b33ff0534153309429a62222cc19a430e2c5bfbb4d216da1",
+      "normalized_text_sample_sha256": "sha256:40ff8999f70a8d5422d30f5cb04aa8933cdfcf82794d2f2f659b9380dc31e7aa",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "xendit-privacy-policy",
+      "vendor_id": "xendit",
+      "source_url": "https://www.xendit.co/en-id/privacy-policy/",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "xendit-privacy-policy-2026-07-12-owner-29207249086",
+      "final_url": "https://www.xendit.co/en-id/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b68942f79e700e74e23f103a346710631f766ecd0c5ad163cd230c58a59ab7c5",
+      "normalized_text_sample_sha256": "sha256:8dc8862ce8df43d8d3c78cec390e44c7ae1e89dbfd75a10e79886defd7b228e1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "xendit-service-agreement",
+      "vendor_id": "xendit",
+      "source_url": "https://www.xendit.co/en/xendit-service-agreement/",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "xendit-service-agreement-2026-07-12-owner-29207249086",
+      "final_url": "https://www.xendit.co/en/xendit-service-agreement/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:50bfbb7e44b415eec2f6398ecfb745854de7d59fc03fa7dfdf4b054be7ca7118",
+      "normalized_text_sample_sha256": "sha256:084b2c7f783b20c447dd4457441d5b3bdbbfe0489b280b7ef27d0e159da66440",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "xendit-status",
+      "vendor_id": "xendit",
+      "source_url": "https://status.xendit.co/",
+      "observed_at": "2026-07-12T20:11:57Z",
+      "observation_id": "xendit-status-2026-07-12-owner-29207249086",
+      "final_url": "https://status.xendit.co/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8d4f77209fb0576d2731a7079c84b4d8f9ad769ffc9dd24bba1f767e747351a8",
+      "normalized_text_sample_sha256": "sha256:9e7af42bd2f705a814956c9885b4b936e1c8077737e9b69046831e9a30ea85e5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "xero-compliance",
@@ -13250,7 +13459,7 @@
         "required": true,
         "reason": "change_class_redirect_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zapier-subprocessors",
