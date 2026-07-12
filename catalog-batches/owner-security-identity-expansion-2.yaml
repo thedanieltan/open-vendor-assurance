@@ -1,0 +1,272 @@
+schema_version: 0.1.0
+batch_id: owner-security-identity-expansion-2
+operation: create
+collected_at: '2026-07-13T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: fortinet
+    display_name: Fortinet
+    legal_name: Fortinet, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - fortinet.com
+      - trust.fortinet.com
+    public_entrypoints:
+      - https://www.fortinet.com/trust
+      - https://trust.fortinet.com/
+      - https://www.fortinet.com/corporate/about-us/privacy
+    vendor_categories:
+      - security
+      - cloud_infrastructure
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering general public Fortinet trust, privacy, security, and legal pages. Gated trust-center documents and customer-specific agreements are excluded.
+    sources:
+      - source_id: fortinet-trust-center
+        source_type: trust_center
+        title_native: Fortinet Trust Resource Center
+        title_en: Fortinet Trust Resource Center
+        source_url: https://trust.fortinet.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Fortinet trust resource center metadata reference.
+        summary_en: Public Fortinet trust resource center metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: fortinet-trust-center
+          artifact_type: trust_center
+          region_scope:
+            - global
+          product_scope:
+            - Fortinet services
+      - source_id: fortinet-privacy-notice
+        source_type: privacy_notice
+        title_native: Fortinet Privacy Policy
+        title_en: Fortinet Privacy Policy
+        source_url: https://www.fortinet.com/corporate/about-us/privacy
+        source_language: en
+        access_class: public_web
+        summary_native: Public Fortinet privacy policy metadata reference.
+        summary_en: Public Fortinet privacy policy metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: fortinet-privacy-notice
+          artifact_type: privacy_notice
+          region_scope:
+            - global
+          product_scope:
+            - Fortinet websites and services
+      - source_id: fortinet-terms
+        source_type: terms_of_service
+        title_native: Fortinet Legal Terms and Conditions
+        title_en: Fortinet Legal Terms and Conditions
+        source_url: https://www.fortinet.com/corporate/about-us/legal
+        source_language: en
+        access_class: public_web
+        summary_native: Public Fortinet legal terms and conditions metadata reference.
+        summary_en: Public Fortinet legal terms and conditions metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: fortinet-terms
+          artifact_type: terms_of_service
+          region_scope:
+            - global
+          product_scope:
+            - Fortinet websites and services
+      - source_id: fortinet-security-page
+        source_type: security_page
+        title_native: Fortinet Trust and Security Overview
+        title_en: Fortinet Trust and Security Overview
+        source_url: https://www.fortinet.com/trust
+        source_language: en
+        access_class: public_web
+        summary_native: Public Fortinet trust and security overview metadata reference.
+        summary_en: Public Fortinet trust and security overview metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: fortinet-security-page
+          artifact_type: security_page
+          region_scope:
+            - global
+          product_scope:
+            - Fortinet organization and products
+
+  - vendor_id: zscaler
+    display_name: Zscaler
+    legal_name: Zscaler, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - zscaler.com
+      - compliance.zscaler.com
+    public_entrypoints:
+      - https://www.zscaler.com/privacy-compliance/overview
+      - https://www.zscaler.com/legal/overview
+      - https://compliance.zscaler.com/
+    vendor_categories:
+      - security
+      - cloud_infrastructure
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering vendor-published data processing, subprocessor, privacy, and transparency pages. Customer-only compliance materials are excluded.
+    sources:
+      - source_id: zscaler-dpa
+        source_type: dpa
+        title_native: Zscaler Data Processing Agreement and Amendments
+        title_en: Zscaler Data Processing Agreement and Amendments
+        source_url: https://www.zscaler.com/privacy-compliance/dpa
+        source_language: en
+        access_class: public_web
+        summary_native: Public Zscaler data processing agreement and amendments metadata reference.
+        summary_en: Public Zscaler data processing agreement and amendments metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: zscaler-dpa
+          artifact_type: dpa
+          region_scope:
+            - global
+          product_scope:
+            - Zscaler services
+      - source_id: zscaler-subprocessors
+        source_type: subprocessors_list
+        title_native: Zscaler Sub-Processors
+        title_en: Zscaler Sub-Processors
+        source_url: https://www.zscaler.com/privacy-compliance/subprocessors
+        source_language: en
+        access_class: public_web
+        summary_native: Public Zscaler subprocessor list metadata reference.
+        summary_en: Public Zscaler subprocessor list metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: zscaler-subprocessors
+          artifact_type: subprocessors_list
+          region_scope:
+            - global
+          product_scope:
+            - Zscaler services
+      - source_id: zscaler-privacy-notice
+        source_type: privacy_notice
+        title_native: Zscaler Website Privacy Policy
+        title_en: Zscaler Website Privacy Policy
+        source_url: https://www.zscaler.com/privacy-compliance/company-privacy-policy
+        source_language: en
+        access_class: public_web
+        summary_native: Public Zscaler website privacy policy metadata reference.
+        summary_en: Public Zscaler website privacy policy metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: zscaler-privacy-notice
+          artifact_type: privacy_notice
+          region_scope:
+            - global
+          product_scope:
+            - Zscaler websites and business interactions
+      - source_id: zscaler-transparency-report
+        source_type: transparency_report
+        title_native: Zscaler Transparency Report
+        title_en: Zscaler Transparency Report
+        source_url: https://www.zscaler.com/privacy-compliance/transparency-report
+        source_language: en
+        access_class: public_web
+        summary_native: Public Zscaler transparency report metadata reference.
+        summary_en: Public Zscaler transparency report metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: zscaler-transparency-report
+          artifact_type: transparency_report
+          region_scope:
+            - global
+          product_scope:
+            - Zscaler services
+
+  - vendor_id: 1password
+    display_name: 1Password
+    legal_name: AgileBits Inc.
+    headquarters_country: CA
+    regions_served:
+      - global
+    official_domains:
+      - 1password.com
+      - trust.1password.io
+    public_entrypoints:
+      - https://1password.com/security
+      - https://1password.com/legal-center
+      - https://trust.1password.io/
+    vendor_categories:
+      - identity_access
+      - security
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record for AgileBits Inc. doing business as 1Password. Public trust, privacy, security, and service terms are included; gated trust-center documents are excluded.
+    sources:
+      - source_id: 1password-trust-center
+        source_type: trust_center
+        title_native: 1Password Trust Center
+        title_en: 1Password Trust Center
+        source_url: https://trust.1password.io/
+        source_language: en
+        access_class: public_web
+        summary_native: Public 1Password trust center metadata reference.
+        summary_en: Public 1Password trust center metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: 1password-trust-center
+          artifact_type: trust_center
+          region_scope:
+            - global
+          product_scope:
+            - 1Password services
+      - source_id: 1password-privacy-notice
+        source_type: privacy_notice
+        title_native: 1Password Notice of Privacy Practices
+        title_en: 1Password Notice of Privacy Practices
+        source_url: https://1password.com/legal/privacy
+        source_language: en
+        access_class: public_web
+        summary_native: Public 1Password privacy notice metadata reference.
+        summary_en: Public 1Password privacy notice metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: 1password-privacy-notice
+          artifact_type: privacy_notice
+          region_scope:
+            - global
+          product_scope:
+            - 1Password websites and services
+      - source_id: 1password-terms
+        source_type: terms_of_service
+        title_native: 1Password Terms and Conditions of Service
+        title_en: 1Password Terms and Conditions of Service
+        source_url: https://1password.com/legal/terms-of-service
+        source_language: en
+        access_class: public_web
+        summary_native: Public 1Password terms and conditions of service metadata reference.
+        summary_en: Public 1Password terms and conditions of service metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: 1password-terms
+          artifact_type: terms_of_service
+          region_scope:
+            - global
+          product_scope:
+            - 1Password services
+      - source_id: 1password-security-page
+        source_type: security_page
+        title_native: 1Password Security
+        title_en: 1Password Security
+        source_url: https://1password.com/security
+        source_language: en
+        access_class: public_web
+        summary_native: Public 1Password security overview metadata reference.
+        summary_en: Public 1Password security overview metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: 1password-security-page
+          artifact_type: security_page
+          region_scope:
+            - global
+          product_scope:
+            - 1Password services
