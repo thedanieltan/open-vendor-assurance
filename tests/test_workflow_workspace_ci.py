@@ -17,7 +17,8 @@ def test_workspace_lane_is_part_of_existing_validate_authority() -> None:
     job = workflow["jobs"]["workspace-affected-tests"]
 
     assert workflow["permissions"] == {"contents": "read"}
-    assert job["if"] == "github.event_name == 'pull_request'"
+    assert job["needs"] == "pr-change-classifier"
+    assert "workspace_affected == 'true'" in job["if"]
     assert job["runs-on"] == "ubuntu-latest"
 
 
@@ -51,6 +52,7 @@ def test_workspace_lane_is_registered_as_a_required_owned_context() -> None:
     assert job["owner_loop"] == "workspace_control_plane"
     assert "tools/openva/workspace.py" in job["protects"]
     assert "tools/openva/workspace.yaml" in job["protects"]
+    assert "site/**" not in job["protects"]
 
 
 def test_workspace_lane_is_additive_not_a_replacement() -> None:
