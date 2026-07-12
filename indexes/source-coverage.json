@@ -3,33 +3,35 @@
   "coverage_claim_role_counts": {},
   "covered_role_counts": {
     "ai_terms": 1,
-    "compliance_page": 96,
+    "compliance_page": 97,
     "dpa": 103,
     "other_public_source": 29,
-    "privacy_notice": 161,
+    "privacy_notice": 165,
     "security_page": 140,
-    "subprocessors_list": 108,
-    "terms_of_service": 33,
-    "trust_center": 8
+    "status_page": 2,
+    "subprocessors_list": 111,
+    "terms_of_service": 35,
+    "trust_center": 12
   },
   "duplicate_source_url_count": 0,
   "generated_at": "1970-01-01T00:00:00Z",
   "schema_version": "0.1.0",
   "source_type_counts": {
     "ai_terms": 1,
-    "compliance_page": 96,
+    "compliance_page": 97,
     "dpa": 103,
     "other_public_source": 29,
-    "privacy_notice": 161,
+    "privacy_notice": 165,
     "security_page": 140,
-    "subprocessors_list": 108,
-    "terms_of_service": 33,
-    "trust_center": 8
+    "status_page": 2,
+    "subprocessors_list": 111,
+    "terms_of_service": 35,
+    "trust_center": 12
   },
   "unavailable_source_type_counts": {
     "dpa": 16
   },
-  "unique_source_location_count": 679,
+  "unique_source_location_count": 695,
   "vendor_coverage": [
     {
       "candidate_source_types": [],
@@ -1131,6 +1133,70 @@
       "unavailable_source_types": [],
       "unique_source_locations": 2,
       "vendor_id": "culture-amp"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "cyberark"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "darktrace"
     },
     {
       "candidate_source_types": [],
@@ -4225,6 +4291,39 @@
       "candidate_source_types": [],
       "canonical_source_types": [
         "compliance_page",
+        "privacy_notice",
+        "status_page",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "compliance_page",
+        "privacy_notice",
+        "status_page",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "compliance_page",
+        "privacy_notice",
+        "status_page",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "sophos"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
@@ -4930,6 +5029,38 @@
       "unavailable_source_types": [],
       "unique_source_locations": 4,
       "vendor_id": "wix"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "status_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "status_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "wiz"
     },
     {
       "candidate_source_types": [],

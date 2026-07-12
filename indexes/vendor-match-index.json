@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 167,
+  "count": 171,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -3397,6 +3397,193 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "culture-amp"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cyberark-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.cyberark.com/privacy-notice/",
+          "title": "CyberArk Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cyberark-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://trust.cyberark.com/?itemUid=2211b1f8-b438-4fca-8049-2a7b1882f62a&source=click",
+          "title": "CyberArk Subprocessors"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cyberark-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://trust.cyberark.com/",
+          "title": "CyberArk Trust Center"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cyberark-website-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.cyberark.com/terms-conditions/",
+          "title": "CyberArk Website Terms and Conditions"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "CyberArk",
+      "legal_entities": [],
+      "legal_name": "CyberArk Software Ltd.",
+      "manifest_path": "dist/vendors/cyberark.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "official_domains": [
+        "cyberark.com",
+        "trust.cyberark.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cyberark-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.cyberark.com/privacy-notice/",
+          "title": "CyberArk Privacy Notice"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cyberark-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://trust.cyberark.com/?itemUid=2211b1f8-b438-4fca-8049-2a7b1882f62a&source=click",
+          "title": "CyberArk Subprocessors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cyberark-website-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.cyberark.com/terms-conditions/",
+          "title": "CyberArk Website Terms and Conditions"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cyberark-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://trust.cyberark.com/",
+          "title": "CyberArk Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "cyberark"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "darktrace-master-services-agreement",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.darktrace.com/legal/master-services-agreement",
+          "title": "Darktrace Master Services Agreement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "darktrace-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.darktrace.com/legal/privacy-policy",
+          "title": "Darktrace Privacy and Data Protection Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "darktrace-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.darktrace.com/legal/darktrace-product-sub-processors",
+          "title": "Darktrace Product Sub-processors"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "darktrace-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.darktrace.com/trust",
+          "title": "Darktrace Trust Centre"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Darktrace",
+      "legal_entities": [],
+      "legal_name": "Darktrace Holdings Limited",
+      "manifest_path": "dist/vendors/darktrace.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "official_domains": [
+        "darktrace.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "darktrace-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.darktrace.com/legal/privacy-policy",
+          "title": "Darktrace Privacy and Data Protection Notice"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "darktrace-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.darktrace.com/legal/darktrace-product-sub-processors",
+          "title": "Darktrace Product Sub-processors"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "darktrace-master-services-agreement",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.darktrace.com/legal/master-services-agreement",
+          "title": "Darktrace Master Services Agreement"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "darktrace-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.darktrace.com/trust",
+          "title": "Darktrace Trust Centre"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "darktrace"
     },
     {
       "candidate_source_types": [],
@@ -12900,6 +13087,101 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "compliance_page",
+        "privacy_notice",
+        "status_page",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sophos-compliance",
+          "source_type": "compliance_page",
+          "source_url": "https://www.sophos.com/en-gb/trust/business-certifications",
+          "title": "Sophos Security Compliance and Certifications"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sophos-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.sophos.com/en-gb/legal/sophos-group-privacy-notice",
+          "title": "Sophos Group Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sophos-status",
+          "source_type": "status_page",
+          "source_url": "https://status.sophos.com/",
+          "title": "Sophos Service Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sophos-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.sophos.com/en-gb/trust",
+          "title": "Sophos Trust Centre"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Sophos",
+      "legal_entities": [],
+      "legal_name": "Sophos Ltd.",
+      "manifest_path": "dist/vendors/sophos.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "sophos.com",
+        "status.sophos.com"
+      ],
+      "primary_source_by_type": {
+        "compliance_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sophos-compliance",
+          "source_type": "compliance_page",
+          "source_url": "https://www.sophos.com/en-gb/trust/business-certifications",
+          "title": "Sophos Security Compliance and Certifications"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sophos-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.sophos.com/en-gb/legal/sophos-group-privacy-notice",
+          "title": "Sophos Group Privacy Notice"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sophos-status",
+          "source_type": "status_page",
+          "source_url": "https://status.sophos.com/",
+          "title": "Sophos Service Status"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sophos-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.sophos.com/en-gb/trust",
+          "title": "Sophos Trust Centre"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "sophos"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
@@ -15011,6 +15293,101 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "wix"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wiz-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.wiz.io/legal/privacy",
+          "title": "Google Cloud Acquisitions Privacy Notice - Wiz Annex"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wiz-status",
+          "source_type": "status_page",
+          "source_url": "https://status.wiz.io/",
+          "title": "Wiz Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wiz-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.wiz.io/legal/sub-processor-list",
+          "title": "Wiz Sub Processor List"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wiz-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.wiz.io/trust-center",
+          "title": "Wiz Public Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Wiz",
+      "legal_entities": [],
+      "legal_name": "Wiz, Inc.",
+      "manifest_path": "dist/vendors/wiz.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "official_domains": [
+        "wiz.io",
+        "status.wiz.io",
+        "cloud.google.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wiz-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.wiz.io/legal/privacy",
+          "title": "Google Cloud Acquisitions Privacy Notice - Wiz Annex"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wiz-status",
+          "source_type": "status_page",
+          "source_url": "https://status.wiz.io/",
+          "title": "Wiz Status"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wiz-subprocessors",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.wiz.io/legal/sub-processor-list",
+          "title": "Wiz Sub Processor List"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wiz-trust-center",
+          "source_type": "trust_center",
+          "source_url": "https://www.wiz.io/trust-center",
+          "title": "Wiz Public Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "wiz"
     },
     {
       "candidate_source_types": [],
