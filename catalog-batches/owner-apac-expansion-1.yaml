@@ -1,0 +1,265 @@
+schema_version: 0.1.0
+batch_id: owner-apac-expansion-1
+operation: create
+collected_at: '2026-07-13T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: xendit
+    display_name: Xendit
+    legal_name: Xendit Inc.
+    headquarters_country: ID
+    regions_served:
+      - apac
+      - global
+    official_domains:
+      - xendit.co
+      - status.xendit.co
+    public_entrypoints:
+      - https://www.xendit.co/en/xendit-service-agreement/
+      - https://www.xendit.co/en-id/privacy-policy/
+      - https://www.xendit.co/en/company/xendit-licenses/
+      - https://status.xendit.co/
+    vendor_categories:
+      - payments
+      - financial_infrastructure
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering Xendit regional service terms, privacy, licensing, and service-status metadata. Country-specific contracts and customer-specific materials remain separate from these general references.
+    sources:
+      - source_id: xendit-service-agreement
+        source_type: terms_conditions
+        title_native: Xendit Services Agreement
+        title_en: Xendit Services Agreement
+        source_url: https://www.xendit.co/en/xendit-service-agreement/
+        source_language: en
+        access_class: public_web
+        summary_native: Public regional agreement index and general legal terms for the Xendit system and services.
+        summary_en: Public regional agreement index and general legal terms for the Xendit system and services.
+        confidence: high
+        artifact:
+          artifact_id: xendit-service-agreement
+          artifact_type: terms_conditions
+          region_scope:
+            - apac
+            - global
+          product_scope:
+            - Xendit services
+      - source_id: xendit-privacy-policy
+        source_type: privacy_notice
+        title_native: Xendit Privacy Policy
+        title_en: Xendit Privacy Policy
+        source_url: https://www.xendit.co/en-id/privacy-policy/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Xendit privacy policy for its Indonesian service surface.
+        summary_en: Public Xendit privacy policy for its Indonesian service surface.
+        confidence: high
+        artifact:
+          artifact_id: xendit-privacy-policy
+          artifact_type: privacy_notice
+          region_scope:
+            - ID
+          product_scope:
+            - Xendit websites and services
+      - source_id: xendit-licenses
+        source_type: compliance_page
+        title_native: Xendit Licenses
+        title_en: Xendit Licenses
+        source_url: https://www.xendit.co/en/company/xendit-licenses/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Xendit page listing licences and regulated operating entities across supported markets.
+        summary_en: Public Xendit page listing licences and regulated operating entities across supported markets.
+        confidence: high
+        artifact:
+          artifact_id: xendit-licenses
+          artifact_type: compliance_page
+          region_scope:
+            - apac
+            - global
+          product_scope:
+            - Xendit regulated services
+      - source_id: xendit-status
+        source_type: status_page
+        title_native: Xendit Status
+        title_en: Xendit Status
+        source_url: https://status.xendit.co/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Xendit service-status and incident-notification page.
+        summary_en: Public Xendit service-status and incident-notification page.
+        confidence: high
+        artifact:
+          artifact_id: xendit-status
+          artifact_type: status_page
+          region_scope:
+            - apac
+            - global
+          product_scope:
+            - Xendit services
+
+  - vendor_id: smarthr
+    display_name: SmartHR
+    legal_name: SmartHR, Inc.
+    headquarters_country: JP
+    regions_served:
+      - apac
+    official_domains:
+      - smarthr.jp
+      - smarthr.co.jp
+    public_entrypoints:
+      - https://smarthr.jp/about/security/
+      - https://smarthr.jp/terms/
+      - https://smarthr.co.jp/privacy/
+    vendor_categories:
+      - hr_software
+      - productivity_software
+    entity_surface: global_brand
+    source_authority_language: ja
+    notes: Public-source-only catalog record covering SmartHR security, service terms, and corporate privacy metadata. Authenticated service content and customer-specific documents are excluded.
+    sources:
+      - source_id: smarthr-security
+        source_type: security_page
+        title_native: セキュリティ
+        title_en: SmartHR Security
+        source_url: https://smarthr.jp/about/security/
+        source_language: ja
+        access_class: public_web
+        summary_native: SmartHRが公開するサービスのセキュリティ対策に関する情報ページ。
+        summary_en: Public SmartHR page describing service security measures and assurance practices.
+        confidence: high
+        artifact:
+          artifact_id: smarthr-security
+          artifact_type: security_page
+          region_scope:
+            - JP
+          product_scope:
+            - SmartHR services
+      - source_id: smarthr-terms
+        source_type: terms_conditions
+        title_native: 利用規約
+        title_en: SmartHR Terms of Use
+        source_url: https://smarthr.jp/terms/
+        source_language: ja
+        access_class: public_web
+        summary_native: SmartHRサービスの公開利用規約。
+        summary_en: Public terms governing use of SmartHR services.
+        confidence: high
+        artifact:
+          artifact_id: smarthr-terms
+          artifact_type: terms_conditions
+          region_scope:
+            - JP
+          product_scope:
+            - SmartHR services
+      - source_id: smarthr-privacy-policy
+        source_type: privacy_notice
+        title_native: プライバシーポリシー
+        title_en: SmartHR Privacy Policy
+        source_url: https://smarthr.co.jp/privacy/
+        source_language: ja
+        access_class: public_web
+        summary_native: 株式会社SmartHRが公開する個人情報の取扱いに関する方針。
+        summary_en: Public SmartHR, Inc. policy describing its handling of personal information.
+        confidence: high
+        artifact:
+          artifact_id: smarthr-privacy-policy
+          artifact_type: privacy_notice
+          region_scope:
+            - JP
+          product_scope:
+            - SmartHR corporate and service surfaces
+
+  - vendor_id: keka
+    display_name: Keka
+    legal_name: Keka Technologies Private Limited
+    headquarters_country: IN
+    regions_served:
+      - apac
+      - global
+    official_domains:
+      - keka.com
+    public_entrypoints:
+      - https://keka.com/security
+      - https://keka.com/terms-of-services
+      - https://keka.com/privacy-policy
+      - https://keka.com/data-protection-addendum
+    vendor_categories:
+      - hr_software
+      - productivity_software
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering Keka security, service terms, privacy, and data-processing metadata. Customer-specific agreements and authenticated materials are excluded.
+    sources:
+      - source_id: keka-security
+        source_type: security_page
+        title_native: Keka Security
+        title_en: Keka Security
+        source_url: https://keka.com/security
+        source_language: en
+        access_class: public_web
+        summary_native: Public Keka page describing platform security and assurance practices.
+        summary_en: Public Keka page describing platform security and assurance practices.
+        confidence: high
+        artifact:
+          artifact_id: keka-security
+          artifact_type: security_page
+          region_scope:
+            - apac
+            - global
+          product_scope:
+            - Keka services
+      - source_id: keka-terms
+        source_type: terms_conditions
+        title_native: Keka Terms and Conditions
+        title_en: Keka Terms and Conditions
+        source_url: https://keka.com/terms-of-services
+        source_language: en
+        access_class: public_web
+        summary_native: Public terms governing use of Keka services.
+        summary_en: Public terms governing use of Keka services.
+        confidence: high
+        artifact:
+          artifact_id: keka-terms
+          artifact_type: terms_conditions
+          region_scope:
+            - apac
+            - global
+          product_scope:
+            - Keka services
+      - source_id: keka-privacy-policy
+        source_type: privacy_notice
+        title_native: Keka Privacy Policy
+        title_en: Keka Privacy Policy
+        source_url: https://keka.com/privacy-policy
+        source_language: en
+        access_class: public_web
+        summary_native: Public Keka policy describing personal-data processing for its websites and services.
+        summary_en: Public Keka policy describing personal-data processing for its websites and services.
+        confidence: high
+        artifact:
+          artifact_id: keka-privacy-policy
+          artifact_type: privacy_notice
+          region_scope:
+            - apac
+            - global
+          product_scope:
+            - Keka websites and services
+      - source_id: keka-dpa
+        source_type: dpa
+        title_native: Keka Data Protection Addendum
+        title_en: Keka Data Protection Addendum
+        source_url: https://keka.com/data-protection-addendum
+        source_language: en
+        access_class: public_web
+        summary_native: Public Keka data protection addendum metadata reference.
+        summary_en: Public Keka data protection addendum metadata reference.
+        confidence: high
+        artifact:
+          artifact_id: keka-dpa
+          artifact_type: dpa
+          region_scope:
+            - apac
+            - global
+          product_scope:
+            - Keka services
