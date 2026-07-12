@@ -1,0 +1,78 @@
+schema_version: 0.1.0
+batch_id: owner-source-repair-2
+operation: refresh
+collected_at: '2026-07-13T00:00:00Z'
+observer: hybrid
+vendors:
+  - vendor_id: workday
+    display_name: Workday
+    legal_name: Workday, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - workday.com
+    public_entrypoints:
+      - https://www.workday.com/en-us/legal.html
+      - https://www.workday.com/en-us/why-workday/trust/overview.html
+    vendor_categories:
+      - hr_software
+      - financial_infrastructure
+      - productivity_software
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering current Workday legal, trust, privacy, security, compliance, and processor-resource metadata. Bespoke customer agreements and gated materials are excluded.
+    sources:
+      - source_id: workday-security
+        source_type: security_page
+        title_native: Workday Trust
+        title_en: Workday Trust
+        source_url: https://www.workday.com/en-us/why-workday/trust/overview.html
+        source_language: en
+        access_class: public_web
+        summary_native: Public Workday trust overview covering security, privacy, compliance, and responsible artificial intelligence metadata.
+        summary_en: Public Workday trust overview covering security, privacy, compliance, and responsible artificial intelligence metadata.
+        confidence: high
+        artifact:
+          artifact_id: workday-security
+          artifact_type: security_page
+          region_scope:
+            - global
+          product_scope:
+            - Workday services
+
+  - vendor_id: zapier
+    display_name: Zapier
+    legal_name: Zapier, Inc.
+    headquarters_country: US
+    regions_served:
+      - global
+    official_domains:
+      - zapier.com
+    public_entrypoints:
+      - https://zapier.com/legal
+      - https://zapier.com/security-compliance
+    vendor_categories:
+      - developer_platform
+      - productivity_software
+    entity_surface: global_brand
+    source_authority_language: en
+    notes: Public-source-only catalog record covering current Zapier legal, privacy, data-security, and compliance metadata. Customer-specific and gated materials are excluded.
+    sources:
+      - source_id: zapier-compliance
+        source_type: compliance_page
+        title_native: Zapier Security and Compliance
+        title_en: Zapier Security and Compliance
+        source_url: https://zapier.com/security-compliance
+        source_language: en
+        access_class: public_web
+        summary_native: Public Zapier security and compliance page linking its current trust-center and assurance references.
+        summary_en: Public Zapier security and compliance page linking its current trust-center and assurance references.
+        confidence: high
+        artifact:
+          artifact_id: zapier-compliance
+          artifact_type: compliance_page
+          region_scope:
+            - global
+          product_scope:
+            - Zapier services
