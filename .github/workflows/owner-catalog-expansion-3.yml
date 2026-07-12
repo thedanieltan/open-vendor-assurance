@@ -1,0 +1,99 @@
+name: owner-catalog-expansion-3
+
+on:
+  push:
+    branches:
+      - catalog/owner-security-identity-expansion-3
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-catalog-expansion-3
+  cancel-in-progress: true
+
+jobs:
+  materialize-observe:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-batch-3-complete]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install project
+        run: pip install -e '.[dev]'
+      - name: Generate catalog records and indexes
+        run: python -m tools.openva.catalog_batch catalog-batches/owner-security-identity-expansion-3.yaml --build-indexes
+      - name: Select new source records
+        run: |
+          cat > owner-source-paths.txt <<'EOF'
+          data/vendors/ping-identity/sources/ping-identity-trust-center.yaml
+          data/vendors/ping-identity/sources/ping-identity-dpa.yaml
+          data/vendors/ping-identity/sources/ping-identity-subprocessors.yaml
+          data/vendors/ping-identity/sources/ping-identity-privacy-notice.yaml
+          data/vendors/beyondtrust/sources/beyondtrust-trust-center.yaml
+          data/vendors/beyondtrust/sources/beyondtrust-dpa.yaml
+          data/vendors/beyondtrust/sources/beyondtrust-subprocessors.yaml
+          data/vendors/beyondtrust/sources/beyondtrust-privacy-notice.yaml
+          data/vendors/netskope/sources/netskope-trust-center.yaml
+          data/vendors/netskope/sources/netskope-privacy-notice.yaml
+          data/vendors/netskope/sources/netskope-terms.yaml
+          data/vendors/netskope/sources/netskope-compliance-page.yaml
+          EOF
+      - name: Verify selected public sources
+        run: |
+          python -m tools.openva.source_verification verify \
+            --source-path-file owner-source-paths.txt \
+            --output owner-source-verification-report.json
+      - name: Build latest observation projection
+        run: |
+          python -m tools.openva.observation_ledger build \
+            --verification-report owner-source-verification-report.json \
+            --run-id "owner-${{ github.run_id }}" \
+            --baseline maintenance/source-observations/latest-observations.json \
+            --output-dir owner-observation
+          cp owner-observation/latest-observations.json maintenance/source-observations/latest-observations.json
+      - name: Validate generated catalog
+        run: python -m tools.openva.validate validate
+      - name: Run focused catalog tests
+        run: pytest -q tests/test_catalog_batch.py tests/test_catalog_guard.py tests/test_source_type_labels.py tests/test_generated_exports.py
+      - name: Show observation outcomes
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          selected = {Path(line).stem for line in Path('owner-source-paths.txt').read_text().splitlines() if line.strip()}
+          data = json.loads(Path('maintenance/source-observations/latest-observations.json').read_text())
+          for row in data.get('sources', []):
+              if row.get('source_id') in selected:
+                  print(json.dumps({
+                      'source_id': row.get('source_id'),
+                      'http_status': row.get('http_status'),
+                      'source_health_status': row.get('source_health_status'),
+                      'final_url': row.get('final_url'),
+                      'review_signal': row.get('review_signal'),
+                  }, sort_keys=True))
+          PY
+      - name: Commit materialized and observed catalog
+        run: |
+          set -euo pipefail
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add \
+            data/vendors/ping-identity \
+            data/vendors/beyondtrust \
+            data/vendors/netskope \
+            dist/vendors/ping-identity.json \
+            dist/vendors/beyondtrust.json \
+            dist/vendors/netskope.json \
+            indexes \
+            openva-pack.json \
+            maintenance/source-observations/latest-observations.json
+          git diff --cached --stat
+          git commit -m 'Catalog: materialize and observe owner security identity batch 3 [owner-batch-3-complete]'
+          git push
