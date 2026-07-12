@@ -203,7 +203,7 @@ def git_value(*args: str) -> str:
             stderr=subprocess.DEVNULL,
             text=True,
         ).strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
+    except (OSError, subprocess.CalledProcessError, FileNotFoundError):
         return ""
 
 
