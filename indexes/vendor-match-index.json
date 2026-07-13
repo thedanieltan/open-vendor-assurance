@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 223,
+  "count": 228,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -96,6 +96,85 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "1password"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "activecampaign-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.activecampaign.com/legal/privacy-policy",
+          "title": "ActiveCampaign Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "activecampaign-status",
+          "source_type": "status_page",
+          "source_url": "https://status.activecampaign.com/",
+          "title": "ActiveCampaign Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "activecampaign-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.activecampaign.com/legal/terms-of-service",
+          "title": "ActiveCampaign Terms of Service"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "ActiveCampaign",
+      "legal_entities": [],
+      "legal_name": "ActiveCampaign, LLC",
+      "manifest_path": "dist/vendors/activecampaign.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "activecampaign.com",
+        "www.activecampaign.com",
+        "status.activecampaign.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "activecampaign-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.activecampaign.com/legal/privacy-policy",
+          "title": "ActiveCampaign Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "activecampaign-status",
+          "source_type": "status_page",
+          "source_url": "https://status.activecampaign.com/",
+          "title": "ActiveCampaign Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "activecampaign-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.activecampaign.com/legal/terms-of-service",
+          "title": "ActiveCampaign Terms of Service"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "activecampaign"
     },
     {
       "candidate_source_types": [],
@@ -3147,6 +3226,87 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "campaign-monitor-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.campaignmonitor.com/policies/#privacy-policy",
+          "title": "Campaign Monitor Privacy Notice Index"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "campaign-monitor-status",
+          "source_type": "status_page",
+          "source_url": "https://status.campaignmonitor.com/",
+          "title": "Campaign Monitor Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "campaign-monitor-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.campaignmonitor.com/policies/#terms-of-use",
+          "title": "Campaign Monitor Terms of Use"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Campaign Monitor",
+      "legal_entities": [],
+      "legal_name": "Campaign Monitor Pty Ltd",
+      "manifest_path": "dist/vendors/campaign-monitor.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "campaignmonitor.com",
+        "www.campaignmonitor.com",
+        "createsend.com",
+        "meetmarigold.com",
+        "status.campaignmonitor.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "campaign-monitor-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.campaignmonitor.com/policies/#privacy-policy",
+          "title": "Campaign Monitor Privacy Notice Index"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "campaign-monitor-status",
+          "source_type": "status_page",
+          "source_url": "https://status.campaignmonitor.com/",
+          "title": "Campaign Monitor Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "campaign-monitor-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.campaignmonitor.com/policies/#terms-of-use",
+          "title": "Campaign Monitor Terms of Use"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "campaign-monitor"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "other_public_source",
@@ -4258,6 +4418,84 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "culture-amp"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "customer-io-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://customer.io/legal/privacy-policy",
+          "title": "Customer.io Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "customer-io-status",
+          "source_type": "status_page",
+          "source_url": "https://status.customerio.com",
+          "title": "Customer.io Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "customer-io-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://customer.io/legal/terms-of-service",
+          "title": "Customer.io Terms of Service"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Customer.io",
+      "legal_entities": [],
+      "legal_name": "Peaberry Software Inc. d/b/a Customer.io",
+      "manifest_path": "dist/vendors/customer-io.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "customer.io",
+        "status.customerio.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "customer-io-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://customer.io/legal/privacy-policy",
+          "title": "Customer.io Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "customer-io-status",
+          "source_type": "status_page",
+          "source_url": "https://status.customerio.com",
+          "title": "Customer.io Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "customer-io-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://customer.io/legal/terms-of-service",
+          "title": "Customer.io Terms of Service"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "customer-io"
     },
     {
       "candidate_source_types": [],
@@ -6796,6 +7034,86 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "freshworks"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "front-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://front.com/legal/privacy-notice",
+          "title": "Front Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "front-status",
+          "source_type": "status_page",
+          "source_url": "https://www.frontstatus.com/",
+          "title": "Front Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "front-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://front.com/legal/saas-services-agreement",
+          "title": "Front SaaS Services Agreement"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Front",
+      "legal_entities": [],
+      "legal_name": "FrontApp, Inc.",
+      "manifest_path": "dist/vendors/front.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "front.com",
+        "frontapp.com",
+        "frontstatus.com",
+        "www.frontstatus.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "front-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://front.com/legal/privacy-notice",
+          "title": "Front Privacy Notice"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "front-status",
+          "source_type": "status_page",
+          "source_url": "https://www.frontstatus.com/",
+          "title": "Front Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "front-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://front.com/legal/saas-services-agreement",
+          "title": "Front SaaS Services Agreement"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "front"
     },
     {
       "candidate_source_types": [],
@@ -10160,6 +10478,85 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "mailchimp"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mailerlite-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.mailerlite.com/legal/privacy-policy",
+          "title": "MailerLite Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mailerlite-status",
+          "source_type": "status_page",
+          "source_url": "https://status.mailerlite.com/",
+          "title": "MailerLite Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mailerlite-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.mailerlite.com/legal/terms-of-service",
+          "title": "MailerLite Terms of Use"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "MailerLite",
+      "legal_entities": [],
+      "legal_name": "MailerLite Limited",
+      "manifest_path": "dist/vendors/mailerlite.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "mailerlite.com",
+        "www.mailerlite.com",
+        "status.mailerlite.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mailerlite-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.mailerlite.com/legal/privacy-policy",
+          "title": "MailerLite Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mailerlite-status",
+          "source_type": "status_page",
+          "source_url": "https://status.mailerlite.com/",
+          "title": "MailerLite Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mailerlite-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.mailerlite.com/legal/terms-of-service",
+          "title": "MailerLite Terms of Use"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "mailerlite"
     },
     {
       "candidate_source_types": [],
