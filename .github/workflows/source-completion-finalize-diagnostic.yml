@@ -18,29 +18,32 @@ jobs:
       REPO: ${{ github.repository }}
       JOB_ID: '86925993113'
     steps:
-      - name: Print latest release or test failure
+      - name: Print post-validation acceptance output
         run: |
           set -euo pipefail
           gh api "repos/$REPO/actions/jobs/$JOB_ID/logs" > /tmp/job.log
           python - <<'PY'
           from pathlib import Path
           lines = Path('/tmp/job.log').read_text(encoding='utf-8', errors='replace').splitlines()
+          validation_hits = [index for index, line in enumerate(lines) if 'OpenVA validation passed.' in line]
+          start = validation_hits[-1] if validation_hits else max(0, len(lines) - 1500)
+          segment = lines[start:]
           tokens = (
-              '##[error]', 'process completed with exit code', 'release gate', 'failed', 'failure',
-              'short test summary', 'assertionerror', 'traceback', 'error:', 'drift', 'diff -u',
-              'generated-before', 'generated-after', 'review_required', 'source_observation',
+              'openva validation passed', 'built openva indexes', 'diff -u', 'release gate',
+              'short test summary', 'passed', 'failed', 'failure', 'assertionerror', 'traceback',
+              '##[error]', 'process completed with exit code', 'review_required', 'error:',
           )
           selected = set()
-          for index, line in enumerate(lines):
+          for offset, line in enumerate(segment):
               lower = line.lower()
               if any(token in lower for token in tokens):
-                  selected.update(range(max(0, index - 6), min(len(lines), index + 12)))
-          print('LATEST_ACCEPTANCE_DIAGNOSTIC_BEGIN')
+                  selected.update(range(max(0, offset - 5), min(len(segment), offset + 12)))
+          print('POST_VALIDATION_ACCEPTANCE_BEGIN')
           for index in sorted(selected):
-              print(lines[index])
-          print('LATEST_ACCEPTANCE_LOG_TAIL_BEGIN')
-          for line in lines[-250:]:
+              print(segment[index])
+          print('POST_VALIDATION_TAIL_BEGIN')
+          for line in segment[-300:]:
               print(line)
-          print('LATEST_ACCEPTANCE_LOG_TAIL_END')
-          print('LATEST_ACCEPTANCE_DIAGNOSTIC_END')
+          print('POST_VALIDATION_TAIL_END')
+          print('POST_VALIDATION_ACCEPTANCE_END')
           PY
