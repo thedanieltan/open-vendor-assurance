@@ -1,0 +1,276 @@
+name: owner-source-maintenance-3-materialize
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-maintenance-3
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-maintenance-3-materialize
+  cancel-in-progress: true
+
+jobs:
+  materialize-observe:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-maintenance-3-complete]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install project
+        run: pip install -e '.[dev]'
+      - name: Apply evidence-backed source repairs
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          from pathlib import Path
+          from typing import Any
+
+          import yaml
+
+          from tools.openva.catalog_lifecycle import change_event
+          from tools.openva.indexes import build_indexes
+
+          root = Path('.')
+          plan = json.loads(
+              (root / 'maintenance/reviewed/owner-source-maintenance-3-plan.json').read_text(encoding='utf-8')
+          )
+          classification = json.loads(
+              (root / 'maintenance/reviewed/owner-source-maintenance-3-classification.json').read_text(encoding='utf-8')
+          )
+          replacements = {str(key): str(value) for key, value in plan['replacements'].items()}
+          collected_at = str(plan['collected_at'])
+          batch_id = str(plan['batch_id'])
+
+          align_ids = {
+              str(row['source_id'])
+              for row in classification.get('candidates', [])
+              if row.get('recommended_action') == 'align_artifact_to_source'
+          }
+          refresh_observation_ids = {
+              str(row['source_id'])
+              for row in classification.get('candidates', [])
+              if row.get('recommended_action') == 'refresh_observation_only'
+          }
+          mutation_ids = sorted(align_ids | set(replacements))
+          verification_ids = sorted(set(mutation_ids) | refresh_observation_ids)
+
+          if len(align_ids) != 40:
+              raise SystemExit(f'expected 40 artifact alignments, found {len(align_ids)}')
+          if len(replacements) != 10:
+              raise SystemExit(f'expected 10 replacements, found {len(replacements)}')
+          if len(refresh_observation_ids) != 4:
+              raise SystemExit(f'expected 4 recovered observation refreshes, found {len(refresh_observation_ids)}')
+
+          source_paths: dict[str, Path] = {}
+          source_records: dict[str, dict[str, Any]] = {}
+          for path in sorted((root / 'data/vendors').glob('*/sources/*.yaml')):
+              record = yaml.safe_load(path.read_text(encoding='utf-8')) or {}
+              source_id = str(record.get('source_id') or '')
+              if source_id:
+                  source_paths[source_id] = path
+                  source_records[source_id] = record
+
+          artifact_paths_by_source: dict[str, list[Path]] = {}
+          artifact_records_by_path: dict[Path, dict[str, Any]] = {}
+          for path in sorted((root / 'data/vendors').glob('*/artifacts/*.yaml')):
+              record = yaml.safe_load(path.read_text(encoding='utf-8')) or {}
+              source_id = str(record.get('source_id') or '')
+              if source_id:
+                  artifact_paths_by_source.setdefault(source_id, []).append(path)
+                  artifact_records_by_path[path] = record
+
+          missing_sources = sorted(set(verification_ids) - set(source_paths))
+          if missing_sources:
+              raise SystemExit(f'missing source records: {missing_sources}')
+
+          touched_vendors: set[str] = set()
+          mutation_report = []
+
+          def write_yaml(path: Path, payload: dict[str, Any]) -> None:
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding='utf-8')
+
+          for source_id in mutation_ids:
+              source_path = source_paths[source_id]
+              source = dict(source_records[source_id])
+              vendor_id = str(source.get('vendor_id') or source_path.parents[1].name)
+              artifact_paths = artifact_paths_by_source.get(source_id, [])
+              if not artifact_paths:
+                  raise SystemExit(f'{source_id}: no artifact record references this source')
+
+              old_url = str(source.get('source_url') or '')
+              new_url = replacements.get(source_id, old_url)
+              if not new_url.startswith('https://'):
+                  raise SystemExit(f'{source_id}: replacement must be HTTPS: {new_url}')
+
+              # Preserve all governance and review metadata; mutate only the maintained fields.
+              source['source_url'] = new_url
+              provenance = dict(source.get('provenance') or {})
+              provenance['publisher'] = provenance.get('publisher') or 'vendor'
+              provenance['collected_at'] = collected_at
+              provenance['observer'] = 'hybrid'
+              provenance['confidence'] = provenance.get('confidence') or 'high'
+              source['provenance'] = provenance
+              source['not_advice'] = True
+              write_yaml(source_path, source)
+
+              artifact_ids = []
+              for artifact_path in artifact_paths:
+                  artifact = dict(artifact_records_by_path[artifact_path])
+                  artifact['canonical_url'] = new_url
+                  artifact['not_advice'] = True
+                  write_yaml(artifact_path, artifact)
+                  artifact_ids.append(str(artifact.get('artifact_id') or artifact_path.stem))
+
+              primary_artifact_id = artifact_ids[0] if artifact_ids else None
+              change_path = source_path.parents[1] / 'changes' / f'{batch_id}-{source_id}.yaml'
+              summary = (
+                  'Owner-led catalog maintenance replaced a confirmed broken public source URL and aligned its artifact metadata.'
+                  if source_id in replacements
+                  else 'Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.'
+              )
+              write_yaml(
+                  change_path,
+                  change_event(
+                      change_id=f'{batch_id}-{source_id}',
+                      vendor_id=vendor_id,
+                      source_id=source_id,
+                      artifact_id=primary_artifact_id,
+                      change_type='updated',
+                      detected_at=collected_at,
+                      summary=summary,
+                  ),
+              )
+              touched_vendors.add(vendor_id)
+              mutation_report.append({
+                  'vendor_id': vendor_id,
+                  'source_id': source_id,
+                  'old_url': old_url,
+                  'new_url': new_url,
+                  'replacement': source_id in replacements,
+                  'artifact_ids': artifact_ids,
+                  'source_path': source_path.as_posix(),
+                  'change_path': change_path.as_posix(),
+              })
+
+          build_indexes()
+
+          source_path_lines = [source_paths[source_id].as_posix() for source_id in verification_ids]
+          Path('owner-source-paths.txt').write_text('\n'.join(source_path_lines) + '\n', encoding='utf-8')
+          Path('owner-replacement-source-ids.txt').write_text('\n'.join(sorted(replacements)) + '\n', encoding='utf-8')
+          Path('owner-touched-vendors.txt').write_text('\n'.join(sorted(touched_vendors)) + '\n', encoding='utf-8')
+          Path('owner-source-mutation-report.json').write_text(
+              json.dumps({
+                  'batch_id': batch_id,
+                  'alignments': len(align_ids),
+                  'replacements': len(replacements),
+                  'observation_refreshes': len(refresh_observation_ids),
+                  'verified_sources': len(verification_ids),
+                  'touched_vendors': sorted(touched_vendors),
+                  'mutations': mutation_report,
+                  'not_advice': True,
+              }, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps({
+              'alignments': len(align_ids),
+              'replacements': len(replacements),
+              'observation_refreshes': len(refresh_observation_ids),
+              'verified_sources': len(verification_ids),
+              'touched_vendors': len(touched_vendors),
+          }, indent=2, sort_keys=True))
+          PY
+      - name: Verify maintained public sources
+        run: |
+          set -euo pipefail
+          python -m tools.openva.source_verification verify \
+            --source-path-file owner-source-paths.txt \
+            --output owner-source-verification-report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('owner-source-verification-report.json').read_text(encoding='utf-8'))
+          replacement_ids = {
+              line.strip()
+              for line in Path('owner-replacement-source-ids.txt').read_text(encoding='utf-8').splitlines()
+              if line.strip()
+          }
+          by_id = {str(row.get('source_id')): row for row in report.get('sources', [])}
+          missing = sorted(replacement_ids - set(by_id))
+          if missing:
+              raise SystemExit(f'replacement verification rows missing: {missing}')
+          allowed = {'ok', 'redirected'}
+          failures = [
+              {
+                  'source_id': source_id,
+                  'status': by_id[source_id].get('verification_status'),
+                  'http_status': by_id[source_id].get('http_status'),
+                  'final_url': by_id[source_id].get('final_url'),
+                  'semantic_match': by_id[source_id].get('semantic_match'),
+                  'fetch_error': by_id[source_id].get('fetch_error'),
+              }
+              for source_id in sorted(replacement_ids)
+              if by_id[source_id].get('verification_status') not in allowed
+          ]
+          if failures:
+              print(json.dumps(failures, indent=2, sort_keys=True))
+              raise SystemExit('one or more replacement URLs failed live semantic verification')
+          print(json.dumps({
+              'replacement_urls_verified': len(replacement_ids),
+              'statuses': {source_id: by_id[source_id].get('verification_status') for source_id in sorted(replacement_ids)},
+          }, indent=2, sort_keys=True))
+          PY
+      - name: Build current observation projection
+        run: |
+          set -euo pipefail
+          python -m tools.openva.observation_ledger build \
+            --verification-report owner-source-verification-report.json \
+            --run-id "owner-maintenance-3-${{ github.run_id }}" \
+            --baseline maintenance/source-observations/latest-observations.json \
+            --output-dir owner-observation
+          python -m tools.openva.observation_ledger install-latest \
+            --latest owner-observation/latest-observations.json \
+            --out maintenance/source-observations/latest-observations.json
+      - name: Validate maintained catalog
+        run: |
+          set -euo pipefail
+          python -m tools.openva.validate validate
+          python -m tools.openva.catalog_audit audit --enforce
+          pytest -q \
+            tests/test_catalog_guard.py \
+            tests/test_source_type_labels.py \
+            tests/test_generated_exports.py \
+            tests/test_source_verification.py \
+            tests/test_observation_ledger.py \
+            tests/test_catalog_audit.py
+      - name: Commit maintained catalog
+        run: |
+          set -euo pipefail
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add \
+            data/vendors \
+            dist/vendors \
+            indexes \
+            openva-pack.json \
+            maintenance/source-observations/latest-observations.json
+          git diff --cached --stat
+          if git diff --cached --quiet; then
+            echo 'No catalog changes were produced.' >&2
+            exit 1
+          fi
+          git commit -m 'Catalog: repair and observe confirmed vendor source links [owner-maintenance-3-complete]'
+          git push
