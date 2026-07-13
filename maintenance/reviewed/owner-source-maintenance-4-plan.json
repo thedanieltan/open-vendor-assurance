@@ -1,0 +1,169 @@
+{
+  "schema_version": "0.1.0",
+  "report_type": "owner_source_maintenance_plan",
+  "work_package": "owner-source-maintenance-4",
+  "reviewed_at": "2026-07-13T16:00:00Z",
+  "replacement_count": 13,
+  "refresh_only_count": 3,
+  "replacements": [
+    {
+      "vendor_id": "aliyun",
+      "source_id": "aliyun-compliance",
+      "source_type": "compliance_page",
+      "old_url": "https://www.aliyun.com/trust-center",
+      "new_url": "https://security.aliyun.com/trust-center",
+      "confidence": "high",
+      "reason": "official Aliyun trust-center replacement with source-specific title and live official-host response"
+    },
+    {
+      "vendor_id": "aliyun",
+      "source_id": "aliyun-security",
+      "source_type": "security_page",
+      "old_url": "https://www.aliyun.com/product/security",
+      "new_url": "https://cn.aliyun.com/security",
+      "confidence": "high",
+      "reason": "official Aliyun security replacement with source-specific title and live official-host response"
+    },
+    {
+      "vendor_id": "darwinbox",
+      "source_id": "darwinbox-security",
+      "source_type": "security_page",
+      "old_url": "https://darwinbox.com/security/",
+      "new_url": "https://darwinbox.com/trust/security",
+      "confidence": "high",
+      "reason": "official Darwinbox Trust Center security page"
+    },
+    {
+      "vendor_id": "okta",
+      "source_id": "okta-inc-terms",
+      "source_type": "terms_of_service",
+      "old_url": "https://www.okta.com/terms-of-use/",
+      "new_url": "https://www.okta.com/legal/terms-of-service",
+      "confidence": "high",
+      "reason": "official Okta Terms of Service replacement"
+    },
+    {
+      "vendor_id": "qualtrics",
+      "source_id": "qualtrics-subprocessors",
+      "source_type": "subprocessors_list",
+      "old_url": "https://www.qualtrics.com/subprocessors/",
+      "new_url": "https://www.qualtrics.com/subprocessor-list",
+      "confidence": "high",
+      "reason": "official Qualtrics subprocessor list"
+    },
+    {
+      "vendor_id": "scrut-automation",
+      "source_id": "scrut-automation-dpa",
+      "source_type": "dpa",
+      "old_url": "https://www.scrut.io/data-processing-addendum",
+      "new_url": "https://www.scrut.io/dpa",
+      "confidence": "high",
+      "reason": "official Scrut Data Protection Addendum"
+    },
+    {
+      "vendor_id": "secureframe",
+      "source_id": "secureframe-subprocessors",
+      "source_type": "subprocessors_list",
+      "old_url": "https://secureframe.com/legal/subprocessors",
+      "new_url": "https://secureframe.com/subprocessor-list",
+      "confidence": "high",
+      "reason": "official Secureframe subprocessor list"
+    },
+    {
+      "vendor_id": "shift-technology",
+      "source_id": "shift-technology-security",
+      "source_type": "security_page",
+      "old_url": "https://www.shift-technology.com/en/security",
+      "new_url": "https://www.shift-technology.com/security",
+      "confidence": "high",
+      "reason": "official Shift Technology security page"
+    },
+    {
+      "vendor_id": "snowflake",
+      "source_id": "snowflake-security",
+      "source_type": "security_page",
+      "old_url": "https://www.snowflake.com/en/trust/",
+      "new_url": "https://www.snowflake.com/en/why-snowflake/snowflake-security-hub",
+      "confidence": "high",
+      "reason": "official Snowflake Security and Trust Center"
+    },
+    {
+      "vendor_id": "twilio",
+      "source_id": "twilio-security",
+      "source_type": "security_page",
+      "old_url": "https://www.twilio.com/en-us/trust/security",
+      "new_url": "https://www.twilio.com/en-us/security",
+      "confidence": "medium",
+      "reason": "official Twilio security page with source-specific title"
+    },
+    {
+      "vendor_id": "weaviate",
+      "source_id": "weaviate-privacy",
+      "source_type": "privacy_notice",
+      "old_url": "https://weaviate.io/privacy-policy",
+      "new_url": "https://weaviate.io/privacy",
+      "confidence": "high",
+      "reason": "official Weaviate privacy policy"
+    },
+    {
+      "vendor_id": "weaviate",
+      "source_id": "weaviate-subprocessors",
+      "source_type": "subprocessors_list",
+      "old_url": "https://weaviate.io/legal/subprocessors",
+      "new_url": "https://weaviate.io/subprocessors",
+      "confidence": "high",
+      "reason": "official Weaviate list of subprocessors"
+    },
+    {
+      "vendor_id": "zendesk",
+      "source_id": "zendesk-compliance",
+      "source_type": "compliance_page",
+      "old_url": "https://www.zendesk.com/trust-center/compliance/",
+      "new_url": "https://www.zendesk.com/trust-center",
+      "confidence": "high",
+      "reason": "official Zendesk Trust Center replacement"
+    }
+  ],
+  "refresh_only": [
+    {
+      "vendor_id": "gusto",
+      "source_id": "gusto-security",
+      "source_type": "security_page",
+      "url": "https://gusto.com/security",
+      "reason": "current canonical source is reachable; refresh stale observation only"
+    },
+    {
+      "vendor_id": "mistral-ai",
+      "source_id": "mistral-ai-dpa",
+      "source_type": "dpa",
+      "url": "https://legal.mistral.ai/terms/data-processing-addendum",
+      "reason": "current canonical source is reachable; refresh stale observation only"
+    },
+    {
+      "vendor_id": "retool",
+      "source_id": "retool-privacy",
+      "source_type": "privacy_notice",
+      "url": "https://docs.retool.com/legal/privacy-policy",
+      "reason": "current canonical source is reachable; refresh stale observation only"
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "source_id": "hugging-face-dpa",
+      "reason": "candidate resolved to a user-created Hugging Face page rather than an official legal document"
+    },
+    {
+      "source_id": "hyperproof-dpa",
+      "reason": "candidate is password-protected and therefore not a public source"
+    },
+    {
+      "source_id": "microsoft-security",
+      "reason": "candidate is a broad product marketing page rather than a vendor assurance security reference"
+    },
+    {
+      "source_id": "okta-dpa",
+      "reason": "candidate was an old dated PDF and was not accepted as the current canonical DPA"
+    }
+  ],
+  "not_advice": true
+}
