@@ -1,0 +1,338 @@
+schema_version: 0.1.0
+batch_id: owner-payments-expansion-1
+operation: create
+collected_at: '2026-07-13T15:30:00Z'
+observer: human
+vendors:
+  - vendor_id: checkout-com
+    display_name: Checkout.com
+    legal_name: Checkout Ltd
+    headquarters_country: GB
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - checkout.com
+      - www.checkout.com
+      - trust.checkout.com
+    public_entrypoints:
+      - https://www.checkout.com/legal/privacy-policy
+      - https://trust.checkout.com/
+      - https://www.checkout.com/legal/terms-and-policies
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for Checkout.com. Metadata references vendor-controlled privacy, trust, and legal surfaces only.
+    sources:
+      - source_id: checkout-com-privacy
+        source_type: privacy_notice
+        title_native: Checkout.com Privacy Notice
+        title_en: Checkout.com Privacy Notice
+        source_url: https://www.checkout.com/legal/privacy-policy
+        source_language: en
+        summary_native: Public Checkout.com privacy notice.
+        summary_en: Public Checkout.com privacy notice.
+        confidence: high
+        artifact:
+          artifact_id: checkout-com-privacy
+          artifact_type: privacy_notice
+      - source_id: checkout-com-trust
+        source_type: trust_center
+        title_native: Checkout.com Trust Center
+        title_en: Checkout.com Trust Center
+        source_url: https://trust.checkout.com/
+        source_language: en
+        summary_native: Public Checkout.com trust and assurance center.
+        summary_en: Public Checkout.com trust and assurance center.
+        confidence: high
+        artifact:
+          artifact_id: checkout-com-trust
+          artifact_type: trust_center
+      - source_id: checkout-com-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: Checkout.com Terms and Policies
+        title_en: Checkout.com Terms and Policies
+        source_url: https://www.checkout.com/legal/terms-and-policies
+        source_language: en
+        summary_native: Public Checkout.com legal terms and policy index.
+        summary_en: Public Checkout.com legal terms and policy index.
+        confidence: high
+        artifact:
+          artifact_id: checkout-com-terms
+          artifact_type: terms_of_service
+
+  - vendor_id: marqeta
+    display_name: Marqeta
+    legal_name: Marqeta, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - marqeta.com
+      - www.marqeta.com
+      - trust.marqeta.com
+      - status.marqeta.com
+    public_entrypoints:
+      - https://www.marqeta.com/privacy
+      - https://trust.marqeta.com/
+      - https://status.marqeta.com/
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for Marqeta. Metadata references vendor-controlled privacy, trust, and service-status surfaces only.
+    sources:
+      - source_id: marqeta-privacy
+        source_type: privacy_notice
+        title_native: Marqeta Website Privacy Notice
+        title_en: Marqeta Website Privacy Notice
+        source_url: https://www.marqeta.com/privacy
+        source_language: en
+        summary_native: Public Marqeta website privacy notice.
+        summary_en: Public Marqeta website privacy notice.
+        confidence: high
+        artifact:
+          artifact_id: marqeta-privacy
+          artifact_type: privacy_notice
+      - source_id: marqeta-trust
+        source_type: trust_center
+        title_native: Marqeta Trust Center
+        title_en: Marqeta Trust Center
+        source_url: https://trust.marqeta.com/
+        source_language: en
+        summary_native: Public Marqeta trust and assurance center.
+        summary_en: Public Marqeta trust and assurance center.
+        confidence: high
+        artifact:
+          artifact_id: marqeta-trust
+          artifact_type: trust_center
+      - source_id: marqeta-status
+        source_type: status_page
+        title_native: Marqeta Status
+        title_en: Marqeta Status
+        source_url: https://status.marqeta.com/
+        source_language: en
+        summary_native: Public Marqeta service-status page.
+        summary_en: Public Marqeta service-status page.
+        confidence: high
+        artifact:
+          artifact_id: marqeta-status
+          artifact_type: status_page
+
+  - vendor_id: gocardless
+    display_name: GoCardless
+    legal_name: GoCardless Ltd
+    headquarters_country: GB
+    regions_served: [global, eu]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - gocardless.com
+      - www.gocardless-status.com
+      - status.gocardless.com
+    public_entrypoints:
+      - https://gocardless.com/privacy
+      - https://gocardless.com/security
+      - https://status.gocardless.com/
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for GoCardless. Metadata references vendor-controlled privacy, security, and service-status surfaces only.
+    sources:
+      - source_id: gocardless-privacy
+        source_type: privacy_notice
+        title_native: GoCardless Privacy Centre
+        title_en: GoCardless Privacy Centre
+        source_url: https://gocardless.com/privacy
+        source_language: en
+        summary_native: Public GoCardless privacy center.
+        summary_en: Public GoCardless privacy center.
+        confidence: high
+        artifact:
+          artifact_id: gocardless-privacy
+          artifact_type: privacy_notice
+      - source_id: gocardless-security
+        source_type: security_page
+        title_native: GoCardless Security
+        title_en: GoCardless Security
+        source_url: https://gocardless.com/security
+        source_language: en
+        summary_native: Public GoCardless security page.
+        summary_en: Public GoCardless security page.
+        confidence: high
+        artifact:
+          artifact_id: gocardless-security
+          artifact_type: security_page
+      - source_id: gocardless-status
+        source_type: status_page
+        title_native: GoCardless Status
+        title_en: GoCardless Status
+        source_url: https://status.gocardless.com/
+        source_language: en
+        summary_native: Public GoCardless service-status page.
+        summary_en: Public GoCardless service-status page.
+        confidence: high
+        artifact:
+          artifact_id: gocardless-status
+          artifact_type: status_page
+
+  - vendor_id: mollie
+    display_name: Mollie
+    legal_name: Mollie B.V.
+    headquarters_country: NL
+    regions_served: [eu]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - mollie.com
+      - www.mollie.com
+      - status.mollie.com
+    public_entrypoints:
+      - https://www.mollie.com/privacy
+      - https://www.mollie.com/security
+      - https://status.mollie.com/
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for Mollie. Metadata references vendor-controlled privacy, security, and service-status surfaces only.
+    sources:
+      - source_id: mollie-privacy
+        source_type: privacy_notice
+        title_native: Mollie Privacy
+        title_en: Mollie Privacy
+        source_url: https://www.mollie.com/privacy
+        source_language: en
+        summary_native: Public Mollie privacy notice.
+        summary_en: Public Mollie privacy notice.
+        confidence: high
+        artifact:
+          artifact_id: mollie-privacy
+          artifact_type: privacy_notice
+      - source_id: mollie-security
+        source_type: security_page
+        title_native: Mollie Security
+        title_en: Mollie Security
+        source_url: https://www.mollie.com/security
+        source_language: en
+        summary_native: Public Mollie security page.
+        summary_en: Public Mollie security page.
+        confidence: high
+        artifact:
+          artifact_id: mollie-security
+          artifact_type: security_page
+      - source_id: mollie-status
+        source_type: status_page
+        title_native: Mollie Status
+        title_en: Mollie Status
+        source_url: https://status.mollie.com/
+        source_language: en
+        summary_native: Public Mollie service-status page.
+        summary_en: Public Mollie service-status page.
+        confidence: high
+        artifact:
+          artifact_id: mollie-status
+          artifact_type: status_page
+
+  - vendor_id: payoneer
+    display_name: Payoneer
+    legal_name: Payoneer Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - payoneer.com
+      - www.payoneer.com
+      - status.payoneer.com
+    public_entrypoints:
+      - https://www.payoneer.com/legal/privacy-policy/
+      - https://www.payoneer.com/about/security-center/
+      - https://status.payoneer.com/
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for Payoneer. Metadata references vendor-controlled privacy, security, and service-status surfaces only.
+    sources:
+      - source_id: payoneer-privacy
+        source_type: privacy_notice
+        title_native: Payoneer Privacy Policy
+        title_en: Payoneer Privacy Policy
+        source_url: https://www.payoneer.com/legal/privacy-policy/
+        source_language: en
+        summary_native: Public Payoneer privacy policy.
+        summary_en: Public Payoneer privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: payoneer-privacy
+          artifact_type: privacy_notice
+      - source_id: payoneer-security
+        source_type: security_page
+        title_native: Payoneer Security Center
+        title_en: Payoneer Security Center
+        source_url: https://www.payoneer.com/about/security-center/
+        source_language: en
+        summary_native: Public Payoneer security center.
+        summary_en: Public Payoneer security center.
+        confidence: high
+        artifact:
+          artifact_id: payoneer-security
+          artifact_type: security_page
+      - source_id: payoneer-status
+        source_type: status_page
+        title_native: Payoneer Status
+        title_en: Payoneer Status
+        source_url: https://status.payoneer.com/
+        source_language: en
+        summary_native: Public Payoneer service-status page.
+        summary_en: Public Payoneer service-status page.
+        confidence: high
+        artifact:
+          artifact_id: payoneer-status
+          artifact_type: status_page
+
+  - vendor_id: klarna
+    display_name: Klarna
+    legal_name: Klarna Bank AB (publ)
+    headquarters_country: SE
+    regions_served: [global, eu]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - klarna.com
+      - www.klarna.com
+      - status.klarna.com
+    public_entrypoints:
+      - https://www.klarna.com/international/privacy-policy/
+      - https://www.klarna.com/international/terms-and-conditions/
+      - https://status.klarna.com/
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for Klarna. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: klarna-privacy
+        source_type: privacy_notice
+        title_native: Klarna Privacy Notice
+        title_en: Klarna Privacy Notice
+        source_url: https://www.klarna.com/international/privacy-policy/
+        source_language: en
+        summary_native: Public Klarna privacy notice.
+        summary_en: Public Klarna privacy notice.
+        confidence: medium
+        artifact:
+          artifact_id: klarna-privacy
+          artifact_type: privacy_notice
+      - source_id: klarna-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: Klarna Terms and Conditions
+        title_en: Klarna Terms and Conditions
+        source_url: https://www.klarna.com/international/terms-and-conditions/
+        source_language: en
+        summary_native: Public Klarna terms and conditions index.
+        summary_en: Public Klarna terms and conditions index.
+        confidence: medium
+        artifact:
+          artifact_id: klarna-terms
+          artifact_type: terms_of_service
+      - source_id: klarna-status
+        source_type: status_page
+        title_native: Klarna Status
+        title_en: Klarna Status
+        source_url: https://status.klarna.com/
+        source_language: en
+        summary_native: Public Klarna service-status page.
+        summary_en: Public Klarna service-status page.
+        confidence: high
+        artifact:
+          artifact_id: klarna-status
+          artifact_type: status_page
