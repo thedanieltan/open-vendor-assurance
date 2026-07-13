@@ -1221,3 +1221,30 @@ footer .meta-line { color: #b8c4bd; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* Phase 3 direct-answer surface. */
+#questions-view {
+  padding: clamp(4rem, 8vw, 6.5rem) clamp(1rem, 5vw, 4rem);
+  background: #eef4ef;
+  scroll-margin-top: 5rem;
+}
+.question-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  width: min(100%, 74rem);
+  margin: 0 auto;
+}
+.question-grid article {
+  border: 1px solid var(--page-line);
+  border-radius: 1rem;
+  background: var(--page-surface);
+  padding: 1.2rem;
+  box-shadow: var(--page-shadow-soft);
+}
+.question-grid h3 { margin-top: 0; }
+.question-grid p { margin-bottom: 0; color: var(--page-muted); line-height: 1.65; }
+@media (max-width: 760px) {
+  .question-grid { grid-template-columns: 1fr; }
+  #questions-view { padding: 3.5rem 1rem; }
+}

@@ -8,15 +8,36 @@
     <meta property="og:title" content="OpenVA — Vendor Assurance Source Resolver">
     <meta property="og:description" content="Search vendor-published privacy, security, data-processing, subprocessor, trust, compliance, and related public source URLs.">
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="OpenVA">
+    <meta property="og:image" content="{{OPENVA_HOME_URL}}assets/openva-social-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="OpenVA public vendor assurance source resolver">
     <meta property="og:url" content="{{OPENVA_HOME_URL}}">
     <link rel="canonical" href="{{OPENVA_HOME_URL}}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="OpenVA — Vendor Assurance Source Resolver">
     <meta name="twitter:description" content="Search public vendor assurance sources and resolve a vendor CSV locally in your browser.">
+    <meta name="twitter:image" content="{{OPENVA_HOME_URL}}assets/openva-social-preview.png">
+    <meta name="twitter:image:alt" content="OpenVA public vendor assurance source resolver">
+    <link rel="icon" type="image/svg+xml" href="assets/openva-favicon.svg">
+    <link rel="manifest" href="site.webmanifest">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": "{{OPENVA_HOME_URL}}#organization",
+        "name": "OpenVA",
+        "alternateName": "Open Vendor Assurance",
+        "url": "{{OPENVA_HOME_URL}}",
+        "sameAs": ["{{OPENVA_REPOSITORY_URL}}"]
+      }
+    </script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
+        "@id": "{{OPENVA_HOME_URL}}#application",
         "name": "OpenVA",
         "applicationCategory": "BusinessApplication",
         "applicationSubCategory": "Vendor assurance source resolver",
@@ -29,6 +50,7 @@
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
+        "@id": "{{OPENVA_HOME_URL}}#website",
         "name": "OpenVA",
         "alternateName": "Open Vendor Assurance",
         "url": "{{OPENVA_HOME_URL}}",
@@ -39,6 +61,7 @@
       {
         "@context": "https://schema.org",
         "@type": "DataCatalog",
+        "@id": "{{OPENVA_HOME_URL}}#catalog",
         "name": "Open Vendor Assurance",
         "url": "{{OPENVA_HOME_URL}}",
         "description": "Public vendor-published assurance source references. Metadata only; not advice.",
@@ -46,6 +69,7 @@
         "license": "https://creativecommons.org/publicdomain/zero/1.0/",
         "dataset": {
           "@type": "Dataset",
+          "@id": "{{OPENVA_HOME_URL}}#dataset",
           "name": "OpenVA public assurance source references",
           "isAccessibleForFree": true,
           "license": "https://creativecommons.org/publicdomain/zero/1.0/",
@@ -75,6 +99,7 @@
         <a href="#catalog">Catalog</a>
         <a href="#matcher">Resolve CSV</a>
         <a href="#review">Review &amp; export</a>
+        <a href="#questions">Questions</a>
         <a href="#about">About</a>
         <a href="https://github.com/thedanieltan/open-vendor-assurance" target="_blank" rel="noreferrer">GitHub</a>
       </nav>
@@ -231,6 +256,42 @@
           <button type="button" class="secondary-button" id="download-vendors-csv">Download vendor CSV</button>
           <button type="button" class="secondary-button" id="download-sources-csv">Download source CSV</button>
           <button type="button" class="secondary-button" id="download-json">Download JSON</button>
+        </div>
+      </section>
+
+
+      <section id="questions-view" class="view questions-room" aria-labelledby="questions-title">
+        <span id="questions" class="section-anchor" aria-hidden="true"></span>
+        <div class="section-intro">
+<p class="eyebrow">Common questions</p>
+<h2 id="questions-title">Direct answers about OpenVA.</h2>
+<p>These answers describe the public product and its boundaries. Vendor-specific facts remain linked to the original vendor-published source URLs.</p>
+        </div>
+        <div class="question-grid">
+<article>
+  <h3>What is OpenVA?</h3>
+  <p>OpenVA is an open-source catalog and resolver of public vendor-published assurance source URLs. It records factual locator metadata for human and agent users.</p>
+</article>
+<article>
+  <h3>Which source types does OpenVA support?</h3>
+  <p>OpenVA supports fifteen source types, including data processing addenda, privacy notices, subprocessor lists, security pages, trust centers, compliance pages, terms, transparency reports, service status pages, and related public sources.</p>
+</article>
+<article>
+  <h3>Are vendor source URLs permanent?</h3>
+  <p>No. Vendors can move, redirect, replace, or remove their pages. OpenVA records observed destinations and repairs accepted source records when an authoritative public location changes.</p>
+</article>
+<article>
+  <h3>Does OpenVA assess or approve vendors?</h3>
+  <p>No. OpenVA does not certify, approve, endorse, rank, recommend, or determine whether a vendor is compliant, secure, suitable, or low risk.</p>
+</article>
+<article>
+  <h3>Does a vendor CSV leave the browser?</h3>
+  <p>No. The public resolver processes the selected CSV in browser memory. OpenVA has no upload endpoint, account system, or server-side workspace for the file.</p>
+</article>
+<article>
+  <h3>How should an OpenVA result be cited?</h3>
+  <p>Cite the original vendor-published URL for the underlying source. Use the OpenVA vendor page or JSON export to cite the catalog snapshot, source type, observation metadata, and provenance.</p>
+</article>
         </div>
       </section>
 
