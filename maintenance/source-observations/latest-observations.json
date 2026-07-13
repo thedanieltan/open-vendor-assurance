@@ -330,6 +330,44 @@
     },
     {
       "carried_forward": true,
+      "change_class": "none",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=8670",
+      "http_status": null,
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "observation_id": "automatic-data-processing-inc-sec-edgar-2026-07-12-29184618599",
+      "observed_at": "2026-07-12T07:42:56Z",
+      "raw_sample_sha256": "sha256:TBD",
+      "retrieval_method": "other",
+      "review_signal": {
+        "reason": "source_health_unreachable",
+        "required": true
+      },
+      "source_health_status": "unreachable",
+      "source_id": "automatic-data-processing-inc-sec-edgar",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=8670",
+      "vendor_id": "adp"
+    },
+    {
+      "carried_forward": true,
+      "change_class": "non_material",
+      "final_url": "https://www.adp.com/legal.aspx",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:13efcb87577df9034ebe6ba839ad8931ef1882fc492fcc7987afe2be34e2cd9b",
+      "observation_id": "automatic-data-processing-inc-terms-2026-07-11-29141337215",
+      "observed_at": "2026-07-11T05:37:18Z",
+      "raw_sample_sha256": "sha256:6e6246818ae74350ab70b060d7fb6354c847a85e1b55a573986dea7fd291081c",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": null,
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "automatic-data-processing-inc-terms",
+      "source_url": "https://www.adp.com/legal.aspx",
+      "vendor_id": "adp"
+    },
+    {
+      "carried_forward": true,
       "change_class": "material_possible",
       "final_url": "https://www.adyen.com/en_GB/legal/list-of-adyen-subprocessors",
       "http_status": 200,
@@ -1600,44 +1638,6 @@
       "source_id": "auth0-subprocessors",
       "source_url": "https://auth0.com/legal/subprocessors",
       "vendor_id": "auth0"
-    },
-    {
-      "carried_forward": true,
-      "change_class": "none",
-      "final_url": "https://www.sec.gov/edgar/browse/?CIK=8670",
-      "http_status": null,
-      "normalized_text_sample_sha256": "sha256:TBD",
-      "observation_id": "automatic-data-processing-inc-sec-edgar-2026-07-12-29184618599",
-      "observed_at": "2026-07-12T07:42:56Z",
-      "raw_sample_sha256": "sha256:TBD",
-      "retrieval_method": "other",
-      "review_signal": {
-        "reason": "source_health_unreachable",
-        "required": true
-      },
-      "source_health_status": "unreachable",
-      "source_id": "automatic-data-processing-inc-sec-edgar",
-      "source_url": "https://www.sec.gov/edgar/browse/?CIK=8670",
-      "vendor_id": "adp"
-    },
-    {
-      "carried_forward": true,
-      "change_class": "non_material",
-      "final_url": "https://www.adp.com/legal.aspx",
-      "http_status": 200,
-      "normalized_text_sample_sha256": "sha256:13efcb87577df9034ebe6ba839ad8931ef1882fc492fcc7987afe2be34e2cd9b",
-      "observation_id": "automatic-data-processing-inc-terms-2026-07-11-29141337215",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "raw_sample_sha256": "sha256:6e6246818ae74350ab70b060d7fb6354c847a85e1b55a573986dea7fd291081c",
-      "retrieval_method": "html_page",
-      "review_signal": {
-        "reason": null,
-        "required": false
-      },
-      "source_health_status": "reachable",
-      "source_id": "automatic-data-processing-inc-terms",
-      "source_url": "https://www.adp.com/legal.aspx",
-      "vendor_id": "adp"
     },
     {
       "carried_forward": true,
@@ -6810,6 +6810,44 @@
     {
       "carried_forward": true,
       "change_class": "none",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=51143",
+      "http_status": null,
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "observation_id": "international-business-machines-corporation-sec-edgar-2026-07-11-29141337215",
+      "observed_at": "2026-07-11T05:37:18Z",
+      "raw_sample_sha256": "sha256:TBD",
+      "retrieval_method": "other",
+      "review_signal": {
+        "reason": "source_health_unreachable",
+        "required": true
+      },
+      "source_health_status": "unreachable",
+      "source_id": "international-business-machines-corporation-sec-edgar",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=51143",
+      "vendor_id": "ibm-cloud"
+    },
+    {
+      "carried_forward": true,
+      "change_class": "non_material",
+      "final_url": "https://www.ibm.com/legal",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:4d57a7605ed5b50bfa3ced15929766731932f777110c90feaaa55deb23530608",
+      "observation_id": "international-business-machines-corporation-terms-2026-07-11-29141337215",
+      "observed_at": "2026-07-11T05:37:18Z",
+      "raw_sample_sha256": "sha256:b7394c7a4798b7ad38393b45804445f5a0acf4ccb30780af85138670384f09d8",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": null,
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "international-business-machines-corporation-terms",
+      "source_url": "https://www.ibm.com/legal",
+      "vendor_id": "ibm-cloud"
+    },
+    {
+      "carried_forward": true,
+      "change_class": "none",
       "final_url": "https://insider.com/privacy-policy",
       "http_status": null,
       "normalized_text_sample_sha256": "sha256:TBD",
@@ -6977,82 +7015,6 @@
       "source_id": "intercom-subprocessors",
       "source_url": "https://www.intercom.com/legal/subprocessors",
       "vendor_id": "intercom"
-    },
-    {
-      "carried_forward": true,
-      "change_class": "none",
-      "final_url": "https://www.sec.gov/edgar/browse/?CIK=51143",
-      "http_status": null,
-      "normalized_text_sample_sha256": "sha256:TBD",
-      "observation_id": "international-business-machines-corporation-sec-edgar-2026-07-11-29141337215",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "raw_sample_sha256": "sha256:TBD",
-      "retrieval_method": "other",
-      "review_signal": {
-        "reason": "source_health_unreachable",
-        "required": true
-      },
-      "source_health_status": "unreachable",
-      "source_id": "international-business-machines-corporation-sec-edgar",
-      "source_url": "https://www.sec.gov/edgar/browse/?CIK=51143",
-      "vendor_id": "ibm-cloud"
-    },
-    {
-      "carried_forward": true,
-      "change_class": "non_material",
-      "final_url": "https://www.ibm.com/legal",
-      "http_status": 200,
-      "normalized_text_sample_sha256": "sha256:4d57a7605ed5b50bfa3ced15929766731932f777110c90feaaa55deb23530608",
-      "observation_id": "international-business-machines-corporation-terms-2026-07-11-29141337215",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "raw_sample_sha256": "sha256:b7394c7a4798b7ad38393b45804445f5a0acf4ccb30780af85138670384f09d8",
-      "retrieval_method": "html_page",
-      "review_signal": {
-        "reason": null,
-        "required": false
-      },
-      "source_health_status": "reachable",
-      "source_id": "international-business-machines-corporation-terms",
-      "source_url": "https://www.ibm.com/legal",
-      "vendor_id": "ibm-cloud"
-    },
-    {
-      "carried_forward": true,
-      "change_class": "none",
-      "final_url": "https://www.sec.gov/edgar/browse/?CIK=896878",
-      "http_status": null,
-      "normalized_text_sample_sha256": "sha256:TBD",
-      "observation_id": "intuit-inc-sec-edgar-2026-07-11-29141337215",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "raw_sample_sha256": "sha256:TBD",
-      "retrieval_method": "other",
-      "review_signal": {
-        "reason": "source_health_unreachable",
-        "required": true
-      },
-      "source_health_status": "unreachable",
-      "source_id": "intuit-inc-sec-edgar",
-      "source_url": "https://www.sec.gov/edgar/browse/?CIK=896878",
-      "vendor_id": "quickbooks"
-    },
-    {
-      "carried_forward": true,
-      "change_class": "none",
-      "final_url": "https://www.intuit.com/legal/terms/",
-      "http_status": 429,
-      "normalized_text_sample_sha256": "sha256:TBD",
-      "observation_id": "intuit-inc-terms-2026-07-11-29141337215",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "raw_sample_sha256": "sha256:TBD",
-      "retrieval_method": "html_page",
-      "review_signal": {
-        "reason": "source_health_unreachable",
-        "required": true
-      },
-      "source_health_status": "unreachable",
-      "source_id": "intuit-inc-terms",
-      "source_url": "https://www.intuit.com/legal/terms/",
-      "vendor_id": "quickbooks"
     },
     {
       "carried_forward": true,
@@ -7626,25 +7588,6 @@
     },
     {
       "carried_forward": true,
-      "change_class": "none",
-      "final_url": "https://azure.microsoft.com/security",
-      "http_status": null,
-      "normalized_text_sample_sha256": "sha256:TBD",
-      "observation_id": "microsoft-azure-security-page-2026-07-11-29141337215",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "raw_sample_sha256": "sha256:TBD",
-      "retrieval_method": "other",
-      "review_signal": {
-        "reason": "source_health_unreachable",
-        "required": true
-      },
-      "source_health_status": "unreachable",
-      "source_id": "microsoft-azure-security-page",
-      "source_url": "https://azure.microsoft.com/security",
-      "vendor_id": "microsoft-azure"
-    },
-    {
-      "carried_forward": true,
       "change_class": "material_possible",
       "final_url": "https://www.microsoft.com/en-us/trust-center/compliance/compliance-overview",
       "http_status": 200,
@@ -7775,6 +7718,25 @@
       "source_id": "microsoft-subprocessors",
       "source_url": "https://www.microsoft.com/en-us/trust-center/privacy/data-management",
       "vendor_id": "microsoft"
+    },
+    {
+      "carried_forward": true,
+      "change_class": "none",
+      "final_url": "https://azure.microsoft.com/security",
+      "http_status": null,
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "observation_id": "microsoft-azure-security-page-2026-07-11-29141337215",
+      "observed_at": "2026-07-11T05:37:18Z",
+      "raw_sample_sha256": "sha256:TBD",
+      "retrieval_method": "other",
+      "review_signal": {
+        "reason": "source_health_unreachable",
+        "required": true
+      },
+      "source_health_status": "unreachable",
+      "source_id": "microsoft-azure-security-page",
+      "source_url": "https://azure.microsoft.com/security",
+      "vendor_id": "microsoft-azure"
     },
     {
       "carried_forward": true,
@@ -9998,6 +9960,44 @@
       "source_id": "qualtrics-subprocessors",
       "source_url": "https://www.qualtrics.com/subprocessors/",
       "vendor_id": "qualtrics"
+    },
+    {
+      "carried_forward": true,
+      "change_class": "none",
+      "final_url": "https://www.sec.gov/edgar/browse/?CIK=896878",
+      "http_status": null,
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "observation_id": "intuit-inc-sec-edgar-2026-07-11-29141337215",
+      "observed_at": "2026-07-11T05:37:18Z",
+      "raw_sample_sha256": "sha256:TBD",
+      "retrieval_method": "other",
+      "review_signal": {
+        "reason": "source_health_unreachable",
+        "required": true
+      },
+      "source_health_status": "unreachable",
+      "source_id": "intuit-inc-sec-edgar",
+      "source_url": "https://www.sec.gov/edgar/browse/?CIK=896878",
+      "vendor_id": "quickbooks"
+    },
+    {
+      "carried_forward": true,
+      "change_class": "none",
+      "final_url": "https://www.intuit.com/legal/terms/",
+      "http_status": 429,
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "observation_id": "intuit-inc-terms-2026-07-11-29141337215",
+      "observed_at": "2026-07-11T05:37:18Z",
+      "raw_sample_sha256": "sha256:TBD",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "source_health_unreachable",
+        "required": true
+      },
+      "source_health_status": "unreachable",
+      "source_id": "intuit-inc-terms",
+      "source_url": "https://www.intuit.com/legal/terms/",
+      "vendor_id": "quickbooks"
     },
     {
       "carried_forward": true,
