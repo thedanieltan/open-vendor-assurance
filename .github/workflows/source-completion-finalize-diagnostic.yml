@@ -16,24 +16,31 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
-      JOB_ID: '86924811237'
+      JOB_ID: '86925993113'
     steps:
-      - name: Print final acceptance step output
+      - name: Print latest release or test failure
         run: |
           set -euo pipefail
           gh api "repos/$REPO/actions/jobs/$JOB_ID/logs" > /tmp/job.log
           python - <<'PY'
           from pathlib import Path
           lines = Path('/tmp/job.log').read_text(encoding='utf-8', errors='replace').splitlines()
-          needles = (
-              'python -m tools.openva.validate validate',
-              'python -m tools.openva.release_gates check --profile pr',
-              'pytest -q tests/test_catalog',
+          tokens = (
+              '##[error]', 'process completed with exit code', 'release gate', 'failed', 'failure',
+              'short test summary', 'assertionerror', 'traceback', 'error:', 'drift', 'diff -u',
+              'generated-before', 'generated-after', 'review_required', 'source_observation',
           )
-          starts = [index for index, line in enumerate(lines) if any(needle in line for needle in needles)]
-          start = max(0, min(starts) - 8) if starts else max(0, len(lines) - 500)
-          print('FINAL_ACCEPTANCE_STEP_BEGIN')
-          for line in lines[start:]:
+          selected = set()
+          for index, line in enumerate(lines):
+              lower = line.lower()
+              if any(token in lower for token in tokens):
+                  selected.update(range(max(0, index - 6), min(len(lines), index + 12)))
+          print('LATEST_ACCEPTANCE_DIAGNOSTIC_BEGIN')
+          for index in sorted(selected):
+              print(lines[index])
+          print('LATEST_ACCEPTANCE_LOG_TAIL_BEGIN')
+          for line in lines[-250:]:
               print(line)
-          print('FINAL_ACCEPTANCE_STEP_END')
+          print('LATEST_ACCEPTANCE_LOG_TAIL_END')
+          print('LATEST_ACCEPTANCE_DIAGNOSTIC_END')
           PY
