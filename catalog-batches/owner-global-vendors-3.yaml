@@ -1,0 +1,496 @@
+schema_version: 0.1.0
+batch_id: owner-global-vendors-3
+operation: create
+collected_at: '2026-07-13T14:00:00Z'
+observer: human
+vendors:
+  - vendor_id: f-secure
+    display_name: F-Secure
+    legal_name: F-Secure Corporation
+    headquarters_country: FI
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [f-secure.com]
+    public_entrypoints:
+      - https://www.f-secure.com/en/legal/privacy/statement
+      - https://www.f-secure.com/en/legal/terms
+      - https://status.f-secure.com/
+    vendor_categories: [security]
+    notes: Owner-led public-source-only catalog record for F-Secure. Metadata references public vendor-controlled legal and service-status surfaces only.
+    sources:
+      - source_id: f-secure-privacy
+        source_type: privacy_notice
+        title_native: F-Secure Privacy Statement
+        title_en: F-Secure Privacy Statement
+        source_url: https://www.f-secure.com/en/legal/privacy/statement
+        source_language: en
+        access_class: public_web
+        summary_native: Public F-Secure privacy statement metadata reference.
+        summary_en: Public F-Secure privacy statement metadata reference.
+        confidence: high
+        artifact: { artifact_id: f-secure-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [F-Secure services] }
+      - source_id: f-secure-terms
+        source_type: terms_of_service
+        title_native: F-Secure License Terms
+        title_en: F-Secure License Terms
+        source_url: https://www.f-secure.com/en/legal/terms
+        source_language: en
+        access_class: public_web
+        summary_native: Public F-Secure service and software terms metadata reference.
+        summary_en: Public F-Secure service and software terms metadata reference.
+        confidence: high
+        artifact: { artifact_id: f-secure-terms, artifact_type: terms_of_service, region_scope: [global], product_scope: [F-Secure services] }
+      - source_id: f-secure-status
+        source_type: status_page
+        title_native: F-Secure Services Status
+        title_en: F-Secure Services Status
+        source_url: https://status.f-secure.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public F-Secure service status metadata reference.
+        summary_en: Public F-Secure service status metadata reference.
+        confidence: high
+        artifact: { artifact_id: f-secure-status, artifact_type: status_page, region_scope: [global], product_scope: [F-Secure services] }
+
+  - vendor_id: withsecure
+    display_name: WithSecure
+    legal_name: WithSecure Corporation
+    headquarters_country: FI
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [withsecure.com]
+    public_entrypoints:
+      - https://www.withsecure.com/privacy-and-security/
+      - https://www.withsecure.com/en/terms/
+      - https://status.withsecure.com/
+    vendor_categories: [security]
+    notes: Owner-led public-source-only catalog record for WithSecure. Metadata references public vendor-controlled legal and service-status surfaces only.
+    sources:
+      - source_id: withsecure-privacy
+        source_type: privacy_notice
+        title_native: WithSecure Privacy and Security
+        title_en: WithSecure Privacy and Security
+        source_url: https://www.withsecure.com/privacy-and-security/
+        source_language: en
+        access_class: public_web
+        summary_native: Public WithSecure privacy metadata reference.
+        summary_en: Public WithSecure privacy metadata reference.
+        confidence: high
+        artifact: { artifact_id: withsecure-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [WithSecure services] }
+      - source_id: withsecure-terms
+        source_type: terms_of_service
+        title_native: WithSecure Terms of Use
+        title_en: WithSecure Terms of Use
+        source_url: https://www.withsecure.com/en/terms/
+        source_language: en
+        access_class: public_web
+        summary_native: Public WithSecure service terms metadata reference.
+        summary_en: Public WithSecure service terms metadata reference.
+        confidence: high
+        artifact: { artifact_id: withsecure-terms, artifact_type: terms_of_service, region_scope: [global], product_scope: [WithSecure services] }
+      - source_id: withsecure-status
+        source_type: status_page
+        title_native: WithSecure Services Status
+        title_en: WithSecure Services Status
+        source_url: https://status.withsecure.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public WithSecure service status metadata reference.
+        summary_en: Public WithSecure service status metadata reference.
+        confidence: high
+        artifact: { artifact_id: withsecure-status, artifact_type: status_page, region_scope: [global], product_scope: [WithSecure services] }
+
+  - vendor_id: jetbrains
+    display_name: JetBrains
+    legal_name: JetBrains s.r.o.
+    headquarters_country: CZ
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [jetbrains.com]
+    public_entrypoints:
+      - https://www.jetbrains.com/legal/docs/privacy/privacy/
+      - https://trust-center.jetbrains.com/
+      - https://status.jetbrains.com/
+    vendor_categories: [developer_platform, productivity_software]
+    notes: Owner-led public-source-only catalog record for JetBrains. Metadata references public vendor-controlled privacy, trust, and service-status surfaces only.
+    sources:
+      - source_id: jetbrains-privacy
+        source_type: privacy_notice
+        title_native: JetBrains Privacy Notice
+        title_en: JetBrains Privacy Notice
+        source_url: https://www.jetbrains.com/legal/docs/privacy/privacy/
+        source_language: en
+        access_class: public_web
+        summary_native: Public JetBrains privacy notice metadata reference.
+        summary_en: Public JetBrains privacy notice metadata reference.
+        confidence: high
+        artifact: { artifact_id: jetbrains-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [JetBrains products and services] }
+      - source_id: jetbrains-trust
+        source_type: trust_center
+        title_native: JetBrains Trust Center
+        title_en: JetBrains Trust Center
+        source_url: https://trust-center.jetbrains.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public JetBrains trust center metadata reference.
+        summary_en: Public JetBrains trust center metadata reference.
+        confidence: high
+        artifact: { artifact_id: jetbrains-trust, artifact_type: trust_center, region_scope: [global], product_scope: [JetBrains products and services] }
+      - source_id: jetbrains-status
+        source_type: status_page
+        title_native: JetBrains Services Status
+        title_en: JetBrains Services Status
+        source_url: https://status.jetbrains.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public JetBrains service status metadata reference.
+        summary_en: Public JetBrains service status metadata reference.
+        confidence: high
+        artifact: { artifact_id: jetbrains-status, artifact_type: status_page, region_scope: [global], product_scope: [JetBrains services] }
+
+  - vendor_id: hashicorp
+    display_name: HashiCorp
+    legal_name: HashiCorp, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [hashicorp.com]
+    public_entrypoints:
+      - https://www.hashicorp.com/en/trust/privacy
+      - https://www.hashicorp.com/en/trust
+      - https://status.hashicorp.com/
+    vendor_categories: [developer_platform, cloud_infrastructure]
+    notes: Owner-led public-source-only catalog record for HashiCorp. Metadata references public vendor-controlled privacy, trust, and service-status surfaces only.
+    sources:
+      - source_id: hashicorp-privacy
+        source_type: privacy_notice
+        title_native: HashiCorp Privacy
+        title_en: HashiCorp Privacy
+        source_url: https://www.hashicorp.com/en/trust/privacy
+        source_language: en
+        access_class: public_web
+        summary_native: Public HashiCorp privacy metadata reference.
+        summary_en: Public HashiCorp privacy metadata reference.
+        confidence: high
+        artifact: { artifact_id: hashicorp-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [HashiCorp services] }
+      - source_id: hashicorp-trust
+        source_type: trust_center
+        title_native: HashiCorp Trust Center
+        title_en: HashiCorp Trust Center
+        source_url: https://www.hashicorp.com/en/trust
+        source_language: en
+        access_class: public_web
+        summary_native: Public HashiCorp trust center metadata reference.
+        summary_en: Public HashiCorp trust center metadata reference.
+        confidence: high
+        artifact: { artifact_id: hashicorp-trust, artifact_type: trust_center, region_scope: [global], product_scope: [HashiCorp services] }
+      - source_id: hashicorp-status
+        source_type: status_page
+        title_native: HashiCorp Services Status
+        title_en: HashiCorp Services Status
+        source_url: https://status.hashicorp.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public HashiCorp service status metadata reference.
+        summary_en: Public HashiCorp service status metadata reference.
+        confidence: high
+        artifact: { artifact_id: hashicorp-status, artifact_type: status_page, region_scope: [global], product_scope: [HashiCorp services] }
+
+  - vendor_id: red-hat
+    display_name: Red Hat
+    legal_name: Red Hat, LLC
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [redhat.com]
+    public_entrypoints:
+      - https://www.redhat.com/en/about/privacy-policy
+      - https://www.redhat.com/en/trust
+      - https://status.redhat.com/
+    vendor_categories: [developer_platform, cloud_infrastructure, enterprise_software]
+    notes: Owner-led public-source-only catalog record for Red Hat. Metadata references public vendor-controlled privacy, trust, and service-status surfaces only.
+    sources:
+      - source_id: red-hat-privacy
+        source_type: privacy_notice
+        title_native: Red Hat Privacy Statement
+        title_en: Red Hat Privacy Statement
+        source_url: https://www.redhat.com/en/about/privacy-policy
+        source_language: en
+        access_class: public_web
+        summary_native: Public Red Hat privacy statement metadata reference.
+        summary_en: Public Red Hat privacy statement metadata reference.
+        confidence: high
+        artifact: { artifact_id: red-hat-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Red Hat services] }
+      - source_id: red-hat-trust
+        source_type: trust_center
+        title_native: Trust Red Hat
+        title_en: Trust Red Hat
+        source_url: https://www.redhat.com/en/trust
+        source_language: en
+        access_class: public_web
+        summary_native: Public Red Hat trust metadata reference.
+        summary_en: Public Red Hat trust metadata reference.
+        confidence: high
+        artifact: { artifact_id: red-hat-trust, artifact_type: trust_center, region_scope: [global], product_scope: [Red Hat services] }
+      - source_id: red-hat-status
+        source_type: status_page
+        title_native: Red Hat Status
+        title_en: Red Hat Status
+        source_url: https://status.redhat.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Red Hat service status metadata reference.
+        summary_en: Public Red Hat service status metadata reference.
+        confidence: high
+        artifact: { artifact_id: red-hat-status, artifact_type: status_page, region_scope: [global], product_scope: [Red Hat services] }
+
+  - vendor_id: grafana-labs
+    display_name: Grafana Labs
+    legal_name: Raintank, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [grafana.com]
+    public_entrypoints:
+      - https://grafana.com/legal/privacy-policy/
+      - https://trust.grafana.com/
+      - https://status.grafana.com/
+    vendor_categories: [observability, developer_platform]
+    notes: Owner-led public-source-only catalog record for Grafana Labs. Metadata references public vendor-controlled privacy, trust, and service-status surfaces only.
+    sources:
+      - source_id: grafana-labs-privacy
+        source_type: privacy_notice
+        title_native: Grafana Labs Privacy Policy
+        title_en: Grafana Labs Privacy Policy
+        source_url: https://grafana.com/legal/privacy-policy/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Grafana Labs privacy policy metadata reference.
+        summary_en: Public Grafana Labs privacy policy metadata reference.
+        confidence: high
+        artifact: { artifact_id: grafana-labs-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Grafana Labs services] }
+      - source_id: grafana-labs-trust
+        source_type: trust_center
+        title_native: Grafana Labs Trust Center
+        title_en: Grafana Labs Trust Center
+        source_url: https://trust.grafana.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Grafana Labs trust center metadata reference.
+        summary_en: Public Grafana Labs trust center metadata reference.
+        confidence: high
+        artifact: { artifact_id: grafana-labs-trust, artifact_type: trust_center, region_scope: [global], product_scope: [Grafana Labs services] }
+      - source_id: grafana-labs-status
+        source_type: status_page
+        title_native: Grafana Cloud Status
+        title_en: Grafana Cloud Status
+        source_url: https://status.grafana.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Grafana Labs service status metadata reference.
+        summary_en: Public Grafana Labs service status metadata reference.
+        confidence: high
+        artifact: { artifact_id: grafana-labs-status, artifact_type: status_page, region_scope: [global], product_scope: [Grafana Cloud] }
+
+  - vendor_id: pagerduty
+    display_name: PagerDuty
+    legal_name: PagerDuty, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [pagerduty.com]
+    public_entrypoints:
+      - https://www.pagerduty.com/privacy-policy/
+      - https://trust.pagerduty.com/
+      - https://status.pagerduty.com/
+    vendor_categories: [observability, incident_management]
+    notes: Owner-led public-source-only catalog record for PagerDuty. Metadata references public vendor-controlled privacy, trust, and service-status surfaces only.
+    sources:
+      - source_id: pagerduty-privacy
+        source_type: privacy_notice
+        title_native: PagerDuty Privacy Policy
+        title_en: PagerDuty Privacy Policy
+        source_url: https://www.pagerduty.com/privacy-policy/
+        source_language: en
+        access_class: public_web
+        summary_native: Public PagerDuty privacy policy metadata reference.
+        summary_en: Public PagerDuty privacy policy metadata reference.
+        confidence: high
+        artifact: { artifact_id: pagerduty-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [PagerDuty services] }
+      - source_id: pagerduty-trust
+        source_type: trust_center
+        title_native: PagerDuty Trust Center
+        title_en: PagerDuty Trust Center
+        source_url: https://trust.pagerduty.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public PagerDuty trust center metadata reference.
+        summary_en: Public PagerDuty trust center metadata reference.
+        confidence: medium
+        artifact: { artifact_id: pagerduty-trust, artifact_type: trust_center, region_scope: [global], product_scope: [PagerDuty services] }
+      - source_id: pagerduty-status
+        source_type: status_page
+        title_native: PagerDuty Status
+        title_en: PagerDuty Status
+        source_url: https://status.pagerduty.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public PagerDuty service status metadata reference.
+        summary_en: Public PagerDuty service status metadata reference.
+        confidence: high
+        artifact: { artifact_id: pagerduty-status, artifact_type: status_page, region_scope: [global], product_scope: [PagerDuty services] }
+
+  - vendor_id: bigcommerce
+    display_name: BigCommerce
+    legal_name: Commerce.com US, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_family: commerce
+    entity_surface: product_surface
+    source_authority_language: en
+    official_domains: [bigcommerce.com, commerce.com]
+    public_entrypoints:
+      - https://www.bigcommerce.com/privacy/
+      - https://www.bigcommerce.com/security/
+      - https://status.bigcommerce.com/
+    vendor_categories: [commerce_platform, enterprise_software]
+    notes: Owner-led public-source-only product-surface record for BigCommerce under Commerce.com. Metadata references public privacy, security, and service-status surfaces only.
+    sources:
+      - source_id: bigcommerce-privacy
+        source_type: privacy_notice
+        title_native: Commerce Privacy Policy
+        title_en: Commerce Privacy Policy
+        source_url: https://www.bigcommerce.com/privacy/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Commerce privacy policy metadata reference reached from the BigCommerce product surface.
+        summary_en: Public Commerce privacy policy metadata reference reached from the BigCommerce product surface.
+        confidence: high
+        artifact: { artifact_id: bigcommerce-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [BigCommerce] }
+      - source_id: bigcommerce-security
+        source_type: security_page
+        title_native: BigCommerce Security
+        title_en: BigCommerce Security
+        source_url: https://www.bigcommerce.com/security/
+        source_language: en
+        access_class: public_web
+        summary_native: Public BigCommerce security metadata reference.
+        summary_en: Public BigCommerce security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: bigcommerce-security, artifact_type: security_page, region_scope: [global], product_scope: [BigCommerce] }
+      - source_id: bigcommerce-status
+        source_type: status_page
+        title_native: BigCommerce Status
+        title_en: BigCommerce Status
+        source_url: https://status.bigcommerce.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public BigCommerce service status metadata reference.
+        summary_en: Public BigCommerce service status metadata reference.
+        confidence: medium
+        artifact: { artifact_id: bigcommerce-status, artifact_type: status_page, region_scope: [global], product_scope: [BigCommerce] }
+
+  - vendor_id: commercetools
+    display_name: commercetools
+    legal_name: commercetools GmbH
+    headquarters_country: DE
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [commercetools.com]
+    public_entrypoints:
+      - https://commercetools.com/privacy
+      - https://trust.commercetools.com/
+      - https://status.commercetools.com/
+    vendor_categories: [commerce_platform, developer_platform]
+    notes: Owner-led public-source-only catalog record for commercetools. Metadata references public vendor-controlled privacy, trust, and service-status surfaces only.
+    sources:
+      - source_id: commercetools-privacy
+        source_type: privacy_notice
+        title_native: commercetools Privacy Notice
+        title_en: commercetools Privacy Notice
+        source_url: https://commercetools.com/privacy
+        source_language: en
+        access_class: public_web
+        summary_native: Public commercetools privacy notice metadata reference.
+        summary_en: Public commercetools privacy notice metadata reference.
+        confidence: high
+        artifact: { artifact_id: commercetools-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [commercetools services] }
+      - source_id: commercetools-trust
+        source_type: trust_center
+        title_native: commercetools Trust Center
+        title_en: commercetools Trust Center
+        source_url: https://trust.commercetools.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public commercetools trust center metadata reference.
+        summary_en: Public commercetools trust center metadata reference.
+        confidence: high
+        artifact: { artifact_id: commercetools-trust, artifact_type: trust_center, region_scope: [global], product_scope: [commercetools services] }
+      - source_id: commercetools-status
+        source_type: status_page
+        title_native: commercetools Platform Status
+        title_en: commercetools Platform Status
+        source_url: https://status.commercetools.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public commercetools platform status metadata reference.
+        summary_en: Public commercetools platform status metadata reference.
+        confidence: high
+        artifact: { artifact_id: commercetools-status, artifact_type: status_page, region_scope: [global], product_scope: [commercetools platform] }
+
+  - vendor_id: docebo
+    display_name: Docebo
+    legal_name: Docebo S.p.A.
+    headquarters_country: IT
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [docebo.com]
+    public_entrypoints:
+      - https://www.docebo.com/company/privacy-policy/
+      - https://www.docebo.com/security/
+      - https://status.docebo.com/
+    vendor_categories: [learning_management, enterprise_software]
+    notes: Owner-led public-source-only catalog record for Docebo. Metadata references public vendor-controlled privacy, security, and service-status surfaces only.
+    sources:
+      - source_id: docebo-privacy
+        source_type: privacy_notice
+        title_native: Docebo Privacy Policy
+        title_en: Docebo Privacy Policy
+        source_url: https://www.docebo.com/company/privacy-policy/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Docebo privacy policy metadata reference.
+        summary_en: Public Docebo privacy policy metadata reference.
+        confidence: high
+        artifact: { artifact_id: docebo-privacy, artifact_type: privacy_notice, region_scope: [global], product_scope: [Docebo services] }
+      - source_id: docebo-security
+        source_type: security_page
+        title_native: Docebo Security
+        title_en: Docebo Security
+        source_url: https://www.docebo.com/security/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Docebo security metadata reference.
+        summary_en: Public Docebo security metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docebo-security, artifact_type: security_page, region_scope: [global], product_scope: [Docebo services] }
+      - source_id: docebo-status
+        source_type: status_page
+        title_native: Docebo Status
+        title_en: Docebo Status
+        source_url: https://status.docebo.com/
+        source_language: en
+        access_class: public_web
+        summary_native: Public Docebo service status metadata reference.
+        summary_en: Public Docebo service status metadata reference.
+        confidence: medium
+        artifact: { artifact_id: docebo-status, artifact_type: status_page, region_scope: [global], product_scope: [Docebo services] }
