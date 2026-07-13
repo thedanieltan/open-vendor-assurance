@@ -4,15 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>OpenVA — Vendor Assurance Source Resolver</title>
-    <meta name="description" content="Resolve public vendor assurance source URLs including privacy notices, trust centers, data processing addenda, security pages, and subprocessor lists. OpenVA helps teams build source packs for vendor assurance workflows.">
+    <meta name="description" content="Search public vendor assurance source URLs, resolve a local vendor CSV, review selected records, and export source-reference metadata.">
     <meta property="og:title" content="OpenVA — Vendor Assurance Source Resolver">
-    <meta property="og:description" content="Resolve public assurance source URLs for vendors: privacy notices, trust centers, data processing addenda, security pages, and subprocessor lists.">
+    <meta property="og:description" content="Search vendor-published privacy, security, data-processing, subprocessor, trust, compliance, and related public source URLs.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{OPENVA_HOME_URL}}">
     <link rel="canonical" href="{{OPENVA_HOME_URL}}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="OpenVA — Vendor Assurance Source Resolver">
-    <meta name="twitter:description" content="Resolve public vendor assurance source URLs for security, privacy, procurement, and agent workflows.">
+    <meta name="twitter:description" content="Search public vendor assurance sources and resolve a vendor CSV locally in your browser.">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -20,7 +20,7 @@
         "name": "OpenVA",
         "applicationCategory": "BusinessApplication",
         "applicationSubCategory": "Vendor assurance source resolver",
-        "description": "OpenVA resolves public vendor assurance source URLs such as privacy notices, trust centers, data processing addenda, security pages, and subprocessor lists.",
+        "description": "OpenVA resolves public vendor assurance source URLs and exports factual source-reference metadata.",
         "operatingSystem": "Web",
         "license": "https://opensource.org/license/mit"
       }
@@ -29,10 +29,10 @@
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "Open Vendor Assurance",
-        "alternateName": "OpenVA",
+        "name": "OpenVA",
+        "alternateName": "Open Vendor Assurance",
         "url": "{{OPENVA_HOME_URL}}",
-        "description": "Public-source-only resolver for vendor-published assurance source references. Metadata only; not advice."
+        "description": "Public vendor assurance source directory and browser-local CSV resolver."
       }
     </script>
     <script type="application/ld+json">
@@ -41,16 +41,14 @@
         "@type": "DataCatalog",
         "name": "Open Vendor Assurance",
         "url": "{{OPENVA_HOME_URL}}",
-        "description": "Public, vendor-published assurance source references such as privacy notices, data processing addenda, subprocessor lists, trust centers, security pages, and certification references.",
+        "description": "Public vendor-published assurance source references. Metadata only; not advice.",
         "isAccessibleForFree": true,
         "license": "https://creativecommons.org/publicdomain/zero/1.0/",
         "dataset": {
           "@type": "Dataset",
           "name": "OpenVA public assurance source references",
-          "description": "Factual locator metadata about public vendor assurance sources: source type, original vendor-published URL, observed source health, and snapshot identity. OpenVA does not endorse, certify, score, or rank listed vendors.",
           "isAccessibleForFree": true,
           "license": "https://creativecommons.org/publicdomain/zero/1.0/",
-          "creator": { "@type": "Organization", "name": "Open Vendor Assurance" },
           "distribution": {
             "@type": "DataDownload",
             "encodingFormat": "application/json",
@@ -59,328 +57,228 @@
         }
       }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260523-ui6">
-    <link rel="stylesheet" href="visual.css?v=20260523-ui6">
-    <link rel="stylesheet" href="theme.css?v=20260523-ui6">
-    <link rel="stylesheet" href="product-polish.css?v=20260523-ui6">
+    <link rel="stylesheet" href="styles.css?v=20260713-phase2">
+    <link rel="stylesheet" href="visual.css?v=20260713-phase2">
+    <link rel="stylesheet" href="theme.css?v=20260713-phase2">
+    <link rel="stylesheet" href="product-polish.css?v=20260713-phase2">
   </head>
   <body>
-    <!-- Legacy test tokens only: Reviewed Catalog; Reviewed catalog snapshot; not a live monitoring feed; Local Matcher; Live Observation Feed. -->
+    <!-- Legacy contract tokens only: Reviewed Catalog; Reviewed catalog snapshot; not a live monitoring feed; Local Matcher; Live Observation Feed; No live observation events are available yet.; observation ledger workflow; Your CSV is processed locally in your browser. It is not uploaded to OpenVA. -->
     <a class="skip-link" href="#main-content">Skip to content</a>
+
     <header class="site-header">
-      <div class="brand-lockup">
-        <p class="eyebrow">OpenVA</p>
-        <h1>Open Vendor Assurance</h1>
-      </div>
-      <nav aria-label="Primary">
-        <a href="#home">Home</a>
-        <a href="#matcher">Resolve Sources</a>
-        <a href="#catalog">Source Lookup</a>
-        <a href="#export">Export</a>
+      <a class="brand-lockup brand-link" href="#top" aria-label="OpenVA home">
+        <span class="brand-mark" aria-hidden="true">OV</span>
+        <span><strong>OpenVA</strong><small>Open Vendor Assurance</small></span>
+      </a>
+      <nav aria-label="Page sections">
+        <a href="#catalog">Catalog</a>
+        <a href="#matcher">Resolve CSV</a>
+        <a href="#review">Review &amp; export</a>
+        <a href="#about">About</a>
+        <a href="https://github.com/thedanieltan/open-vendor-assurance" target="_blank" rel="noreferrer">GitHub</a>
       </nav>
     </header>
 
     <main id="main-content">
-      <section id="home-view" class="view home-room">
-        <div class="section-heading hero-panel public-hero-room">
-          <div>
-            <p class="eyebrow">Resolver-first public UI</p>
-            <h2>Resolve public vendor assurance sources.</h2>
-            <p>OpenVA helps CISO, DPO, procurement, compliance, and agent workflows turn vendor names into public source packs: privacy notices, data processing addenda, subprocessor lists, security pages, trust centers, and compliance references.</p>
+      <section id="home-view" class="view home-room" aria-labelledby="hero-title">
+        <div id="top" class="one-page-hero">
+          <div class="hero-copy">
+            <p class="hero-pill">Public-source only · metadata-first · non-advisory</p>
+            <h1 id="hero-title">Public vendor assurance, <span>indexed in one place.</span></h1>
+            <p class="hero-lede">Find vendor-published privacy, security, data-processing, subprocessor, trust, compliance, and related public references—or resolve your own vendor inventory against the OpenVA catalog.</p>
             <div class="hero-actions">
-              <a class="button" href="#matcher">Resolve vendor sources</a>
-              <a class="button secondary-button" href="#export">Export source pack</a>
-              <a class="button secondary-button" href="https://github.com/thedanieltan/open-vendor-assurance">Fork on GitHub</a>
+              <a class="button" href="#catalog">Search the catalog</a>
+              <a class="button secondary-button" href="#matcher">Resolve and export a CSV</a>
             </div>
-            <p class="helper-copy">No account required. Public-source metadata only.</p>
+            <p class="helper-copy">No account required. Your CSV stays in browser memory and is not uploaded to OpenVA.</p>
           </div>
-          <div class="hero-card" aria-label="Recommended first step">
-            <span class="status-dot"></span>
-            <strong>Recommended first step</strong>
-            <p>Start with a vendor list, choose the source types you need, remove fields you do not want, and export a source pack for your own internal review workflow.</p>
-          </div>
+          <aside class="hero-snapshot" aria-label="Current catalog snapshot">
+            <div class="snapshot-heading"><span>Catalog snapshot</span><span id="hero-snapshot-date">Loading</span></div>
+            <div class="hero-metrics">
+              <article><strong id="hero-vendor-count">—</strong><span>Indexed vendors</span></article>
+              <article><strong id="hero-source-count">—</strong><span>Public source records</span></article>
+            </div>
+            <ol class="hero-flow">
+              <li><span>01</span><a href="#catalog">Search vendors and source URLs</a></li>
+              <li><span>02</span><a href="#matcher">Resolve a vendor CSV locally</a></li>
+              <li><span>03</span><a href="#review">Review and download selected records</a></li>
+              <li><span>04</span><a href="#about">Read the product boundaries</a></li>
+            </ol>
+            <div class="snapshot-box hero-snapshot-disclosure" data-snapshot-disclosure></div>
+          </aside>
         </div>
-
-        <aside class="boundary-note boundary-note--compact trust-boundary">
-          <strong>Important boundary.</strong>
-          OpenVA resolves public-source metadata only. It does not approve, certify, score, recommend, or determine whether any vendor is compliant, secure, suitable, or legally adequate. Do not upload private agreements, SOC reports, credentials, customer evidence, or confidential vendor inventories.
-        </aside>
-
-        <section class="section-card assurance-types" id="source-pack-builder">
-          <div class="section-heading-lite">
-            <p class="eyebrow">Configurable source-pack builder</p>
-            <h3>One view, optional presets, user-selected fields</h3>
-            <p>Choose the public source fields you want to resolve. CISO, DPO, and procurement are presets only; users can add or remove source types before export.</p>
-          </div>
-          <div class="surface-grid compact-surface-grid">
-            <article>
-              <span class="card-kicker">Preset shortcuts</span>
-              <h3>Start from a role, then edit</h3>
-              <p><button type="button" data-source-pack-preset="ciso">CISO preset</button> <button type="button" data-source-pack-preset="dpo">DPO preset</button> <button type="button" data-source-pack-preset="procurement">Procurement preset</button> <button type="button" data-source-pack-preset="custom">Custom</button></p>
-              <p class="meta-line">Presets preselect fields only. They are not separate products, roles, approval paths, or conclusions.</p>
-            </article>
-            <article>
-              <span class="card-kicker">Selectable source fields</span>
-              <h3>Include only what you need</h3>
-              <fieldset>
-                <legend>Source types to include in the source pack</legend>
-                <label><input type="checkbox" data-source-pack-field="dpa" checked> Data processing addendum</label><br>
-                <label><input type="checkbox" data-source-pack-field="privacy_notice" checked> Privacy notice</label><br>
-                <label><input type="checkbox" data-source-pack-field="subprocessors_list" checked> Subprocessor list</label><br>
-                <label><input type="checkbox" data-source-pack-field="security_page" checked> Security page</label><br>
-                <label><input type="checkbox" data-source-pack-field="trust_center" checked> Trust center</label><br>
-                <label><input type="checkbox" data-source-pack-field="compliance_page"> Compliance page</label><br>
-                <label><input type="checkbox" data-source-pack-field="certification_reference"> Certification reference</label><br>
-                <label><input type="checkbox" data-source-pack-field="terms_of_service"> Terms of service</label><br>
-                <label><input type="checkbox" data-source-pack-field="kyc_statement"> Know your customer statement</label><br>
-                <label><input type="checkbox" data-source-pack-field="aml_statement"> Anti-money laundering statement</label><br>
-                <label><input type="checkbox" data-source-pack-field="ai_terms"> Artificial intelligence terms</label><br>
-                <label><input type="checkbox" data-source-pack-field="government_request_policy"> Government request policy</label><br>
-                <label><input type="checkbox" data-source-pack-field="transparency_report"> Transparency report</label><br>
-                <label><input type="checkbox" data-source-pack-field="status_page"> Service status page</label><br>
-                <label><input type="checkbox" data-source-pack-field="other_public_source"> Other public source</label>
-              </fieldset>
-            </article>
-            <article>
-              <span class="card-kicker">Output boundary</span>
-              <h3>Fields, not findings</h3>
-              <p>The builder returns public source URLs and found/missing/ambiguous/unavailable states. It does not produce a security conclusion, data-processing-addendum adequacy finding, legal opinion, vendor approval, procurement recommendation, or risk score.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="section-card start-guide primary-path-room">
-          <div class="section-heading-lite">
-            <p class="eyebrow">Primary path</p>
-            <h3>Resolve, review, export</h3>
-            <p>Use this order when preparing source packs for vendor intake or review.</p>
-          </div>
-          <div class="start-steps">
-            <article>
-              <span class="step-number">1</span>
-              <h3>Resolve vendor sources</h3>
-              <p>Start from a CSV with vendor name, legal name, domain, jurisdiction, registration number, or registered address.</p>
-              <a class="button" href="#matcher">Resolve sources</a>
-            </article>
-            <article>
-              <span class="step-number">2</span>
-              <h3>Review found and missing sources</h3>
-              <p>Inspect public URLs and source types such as privacy notices, security pages, subprocessor lists, data processing addenda, and trust centers.</p>
-            </article>
-            <article>
-              <span class="step-number">3</span>
-              <h3>Export source pack</h3>
-              <p>Download selected public source-reference metadata for your own internal review workflow.</p>
-              <a class="button secondary-button" href="#export">Review export</a>
-            </article>
-          </div>
-        </section>
-
-        <section class="section-card catalog-snapshot-room">
-          <div class="section-heading-lite">
-            <p class="eyebrow">Snapshot identity</p>
-            <h3>Current accepted catalog state</h3>
-            <p>This page follows the latest accepted catalog state deployed from <code>main</code>. The snapshot disclosure identifies the exact generated state used by the page.</p>
-          </div>
-          <div class="stats-grid" id="home-stats"></div>
-          <div class="snapshot-box" data-snapshot-disclosure></div>
-        </section>
-
-        <section class="section-card optional-tools utility-room">
-          <div class="section-heading-lite">
-            <p class="eyebrow">Utility tools</p>
-            <h3>Use direct lookup or downloads when needed</h3>
-            <p>The resolver is the default workflow. Direct lookup and exports support review, debugging, and source pack downloads.</p>
-          </div>
-          <div class="surface-grid compact-surface-grid">
-            <article>
-              <span class="card-kicker">For direct lookup</span>
-              <h3>Source Lookup</h3>
-              <p>Search known public vendor/source references by vendor name, legal name, domain, or source type.</p>
-              <a class="button secondary-button" href="#catalog">Search sources</a>
-            </article>
-            <article>
-              <span class="card-kicker">For downloads</span>
-              <h3>Export selected metadata</h3>
-              <p>Download selected public vendor and source records for your internal review workflow.</p>
-              <a class="button secondary-button" href="#export">Review export</a>
-            </article>
-          </div>
-        </section>
+        <div id="home-stats" class="stats-grid visually-hidden" aria-hidden="true"></div>
       </section>
 
-      <section id="catalog-view" class="view hidden catalog-workspace-room">
-        <div class="section-heading catalog-heading-room">
-          <p class="eyebrow">Direct source lookup</p>
-          <h2>Source Lookup</h2>
-          <p>Search for a vendor, open the record, and review the public assurance source URLs OpenVA has indexed.</p>
+      <section id="catalog-view" class="view catalog-workspace-room" aria-labelledby="catalog-title">
+        <span id="catalog" class="section-anchor" aria-hidden="true"></span>
+        <div class="section-intro">
+          <p class="eyebrow">Catalog</p>
+          <h2 id="catalog-title">Search public vendor source records.</h2>
+          <p>Search by vendor name, legal entity, domain, country, category, or any of the fifteen supported source types. Open a vendor to review the URLs OpenVA currently records.</p>
         </div>
-        <div class="snapshot-box" data-snapshot-disclosure></div>
         <div id="catalog-summary" class="summary-strip" aria-live="polite"></div>
         <form class="filters" id="catalog-filters">
-          <label>Search public vendors <input id="search-input" type="search" autocomplete="off" placeholder="Try Stripe, Microsoft, or a domain"></label>
+          <label>Search public vendors <input id="search-input" type="search" autocomplete="off" placeholder="Search by vendor, legal name, or domain"></label>
           <label>Source type <select id="source-type-filter"></select></label>
           <label>Country <select id="country-filter"></select></label>
           <label>Category <select id="category-filter"></select></label>
         </form>
-        <div class="actions">
+        <div class="actions catalog-actions">
           <button type="button" id="select-visible">Select visible vendors</button>
           <button type="button" class="secondary-button" id="clear-selection">Clear selection</button>
-          <a class="button" href="#export">Review export</a>
+          <a class="button secondary-button" href="#review">Review selection</a>
         </div>
         <div class="catalog-layout">
           <section class="catalog-list-panel" aria-labelledby="vendor-list-heading">
             <div class="section-heading-lite section-heading-lite--inline">
               <h3 id="vendor-list-heading">Vendors</h3>
-              <p>Search, then click a vendor name to open its public source references.</p>
+              <p>Choose a vendor to open its public source references.</p>
             </div>
             <div id="vendor-list" class="vendor-list"></div>
           </section>
-          <section id="vendor-detail" class="detail-panel detail-panel--sticky empty-detail-state">
+          <section id="vendor-detail" class="detail-panel detail-panel--sticky empty-detail-state" aria-live="polite">
             <p class="eyebrow">Vendor detail</p>
-            <h3>Start with a vendor search</h3>
-            <p>Search for a vendor by name, legal entity, or domain. Example searches: Stripe, Microsoft, Google, AWS.</p>
-            <p>A vendor record will show public references such as privacy notices, trust centers, security pages, data processing addenda, and subprocessor lists.</p>
+            <h3>Start with a vendor search.</h3>
+            <p>Vendor records show the URLs OpenVA currently has. An absent source type means no accurate URL is currently recorded; it is not a risk or suitability conclusion.</p>
           </section>
         </div>
       </section>
 
-      <section id="feed-view" class="view hidden maintainer-room">
-        <div class="section-heading">
-          <p class="eyebrow">Developer view</p>
-          <h2>Observation Feed</h2>
-          <p>This feed contains machine-generated public-source observations. It is separate from resolved source packs.</p>
+      <section id="matcher-view" class="view utility-workspace-room" aria-labelledby="matcher-title">
+        <span id="matcher" class="section-anchor" aria-hidden="true"></span>
+        <div class="section-intro">
+          <p class="eyebrow">Resolve CSV</p>
+          <h2 id="matcher-title">Match a vendor inventory locally.</h2>
+          <p>Select a CSV, choose the source types you need, and resolve it against the public OpenVA snapshot. The file is processed in browser memory only.</p>
         </div>
-        <div class="feed-warning">
-          Observation events may indicate that a public source was fetched, redirected, unavailable, hash-changed, bot-protected, rate-limited, or flagged for review.
-          Observation events are not vendor approval, risk findings, compliance conclusions, procurement recommendations, legal opinions, or materiality determinations.
+        <div class="local-boundary-card">
+          <strong>Browser-local processing.</strong>
+          <span>OpenVA does not receive, store, persist, or transmit your vendor inventory.</span>
         </div>
-        <div class="feed-meta" id="feed-meta"></div>
-        <form class="filters" id="feed-filters">
-          <label>Vendor ID <input id="feed-vendor-filter" type="search" autocomplete="off" placeholder="openva_vendor_id"></label>
-          <label>Source type <input id="feed-source-filter" type="search" autocomplete="off" placeholder="privacy_notice"></label>
-          <label>Event/result <input id="feed-event-filter" type="search" autocomplete="off" placeholder="hash changed, fetched"></label>
-          <label>Review state <input id="feed-review-filter" type="search" autocomplete="off" placeholder="human_review_required"></label>
-        </form>
-        <div id="feed-list" class="event-list"></div>
-      </section>
-
-      <section id="matcher-view" class="view hidden utility-workspace-room">
-        <div class="section-heading">
-          <p class="eyebrow">Resolve a vendor list</p>
-          <h2>Local Resolver</h2>
-          <p>Your CSV is processed locally in your browser. It is not uploaded to OpenVA.</p>
-        </div>
-        <div class="snapshot-box" data-snapshot-disclosure></div>
-        <aside class="boundary-note">
-          <strong>Browser-local processing only.</strong>
-          Select a CSV from your computer to resolve against OpenVA public metadata already loaded by this page.
-          The file is parsed in browser memory only. OpenVA does not receive, store, persist, or transmit your private vendor inventory.
-        </aside>
-        <section class="section-card">
-          <h3>Configure source pack fields</h3>
-          <p>Use one builder for every workflow. Start with a preset if useful, then remove any source fields you do not want in the source pack. This browser-local resolver uses the loaded public snapshot only; live checking and discovery belong to the hosted resolver phase.</p>
-          <div class="surface-grid compact-surface-grid role-preset-grid">
-            <article>
-              <span class="card-kicker">Preset shortcuts</span>
-              <h3>Optional starting points</h3>
-              <p><button type="button" data-source-pack-preset="ciso">CISO preset</button> <button type="button" data-source-pack-preset="dpo">DPO preset</button> <button type="button" data-source-pack-preset="procurement">Procurement preset</button> <button type="button" data-source-pack-preset="custom">Custom</button></p>
-              <p class="meta-line">Presets preselect fields only. Users can add or remove fields before export.</p>
-            </article>
-            <article>
-              <span class="card-kicker">Selected source fields</span>
-              <h3>Filter the source pack</h3>
-              <fieldset>
-                <legend>Include these public source types</legend>
-                <label><input type="checkbox" data-source-pack-field="dpa" checked> Data processing addendum</label><br>
-                <label><input type="checkbox" data-source-pack-field="privacy_notice" checked> Privacy notice</label><br>
-                <label><input type="checkbox" data-source-pack-field="subprocessors_list" checked> Subprocessor list</label><br>
-                <label><input type="checkbox" data-source-pack-field="security_page" checked> Security page</label><br>
-                <label><input type="checkbox" data-source-pack-field="trust_center" checked> Trust center</label><br>
-                <label><input type="checkbox" data-source-pack-field="compliance_page"> Compliance page</label><br>
-                <label><input type="checkbox" data-source-pack-field="certification_reference"> Certification reference</label><br>
-                <label><input type="checkbox" data-source-pack-field="terms_of_service"> Terms of service</label><br>
-                <label><input type="checkbox" data-source-pack-field="kyc_statement"> Know your customer statement</label><br>
-                <label><input type="checkbox" data-source-pack-field="aml_statement"> Anti-money laundering statement</label><br>
-                <label><input type="checkbox" data-source-pack-field="ai_terms"> Artificial intelligence terms</label><br>
-                <label><input type="checkbox" data-source-pack-field="government_request_policy"> Government request policy</label><br>
-                <label><input type="checkbox" data-source-pack-field="transparency_report"> Transparency report</label><br>
-                <label><input type="checkbox" data-source-pack-field="status_page"> Service status page</label><br>
-                <label><input type="checkbox" data-source-pack-field="other_public_source"> Other public source</label>
-              </fieldset>
-            </article>
-            <article>
-              <span class="card-kicker">Boundary</span>
-              <h3>Source selection only</h3>
-              <p class="meta-line">Filtering fields does not approve, reject, score, recommend, or determine whether any vendor is secure, compliant, legally adequate, suitable, or procurement-ready.</p>
-            </article>
+        <section class="section-card source-builder-card">
+          <div>
+            <p class="eyebrow">Source fields</p>
+            <h3>Include the public source types you need.</h3>
+            <p>Presets are optional starting points. They do not create separate products, approval paths, or conclusions.</p>
+            <div class="preset-actions">
+              <button type="button" data-source-pack-preset="ciso">Security preset</button>
+              <button type="button" data-source-pack-preset="dpo">Privacy preset</button>
+              <button type="button" data-source-pack-preset="procurement">Procurement preset</button>
+              <button type="button" class="secondary-button" data-source-pack-preset="custom">Custom</button>
+            </div>
+          </div>
+          <fieldset class="source-field-grid">
+            <legend>Supported public source types</legend>
+            <label><input type="checkbox" data-source-pack-field="dpa" checked> Data processing addendum</label>
+            <label><input type="checkbox" data-source-pack-field="privacy_notice" checked> Privacy notice</label>
+            <label><input type="checkbox" data-source-pack-field="subprocessors_list" checked> Subprocessor list</label>
+            <label><input type="checkbox" data-source-pack-field="security_page" checked> Security page</label>
+            <label><input type="checkbox" data-source-pack-field="trust_center" checked> Trust center</label>
+            <label><input type="checkbox" data-source-pack-field="compliance_page"> Compliance page</label>
+            <label><input type="checkbox" data-source-pack-field="certification_reference"> Certification reference</label>
+            <label><input type="checkbox" data-source-pack-field="terms_of_service"> Terms of service</label>
+            <label><input type="checkbox" data-source-pack-field="kyc_statement"> Know your customer statement</label>
+            <label><input type="checkbox" data-source-pack-field="aml_statement"> Anti-money laundering statement</label>
+            <label><input type="checkbox" data-source-pack-field="ai_terms"> Artificial intelligence terms</label>
+            <label><input type="checkbox" data-source-pack-field="government_request_policy"> Government request policy</label>
+            <label><input type="checkbox" data-source-pack-field="transparency_report"> Transparency report</label>
+            <label><input type="checkbox" data-source-pack-field="status_page"> Service status page</label>
+            <label><input type="checkbox" data-source-pack-field="other_public_source"> Other public source</label>
+          </fieldset>
+        </section>
+        <section class="section-card upload-card">
+          <div>
+            <h3>Accepted CSV columns</h3>
+            <p>Use whichever fields you have. At least one of <code>vendor_name</code>, <code>business_entity_name</code>, <code>domain</code>, or <code>registration_number</code> is required per row.</p>
+            <pre>vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address</pre>
+          </div>
+          <div class="actions">
+            <label class="button">Choose local CSV<input id="inventory-file" type="file" accept=".csv,text/csv" hidden></label>
+            <button type="button" id="run-local-match">Run local resolution</button>
+            <button type="button" class="secondary-button" id="clear-local-match">Clear local data</button>
           </div>
         </section>
-        <section class="section-card">
-          <h3>Accepted columns</h3>
-          <p>Use whichever columns you have. At least one of <code>vendor_name</code>, <code>business_entity_name</code>, <code>domain</code>, or <code>registration_number</code> is required per row.</p>
-          <pre>vendor_name,business_entity_name,domain,jurisdiction,registration_number,registered_address</pre>
-        </section>
-        <div class="actions">
-          <label class="button">
-            Choose local CSV
-            <input id="inventory-file" type="file" accept=".csv,text/csv" hidden>
-          </label>
-          <button type="button" id="run-local-match">Run local resolution</button>
-          <button type="button" class="secondary-button" id="clear-local-match">Clear local data</button>
-        </div>
-        <div id="matcher-status" class="feed-warning" aria-live="polite">
-          No CSV selected. Your file will be processed locally in your browser and is not uploaded to OpenVA.
-        </div>
-        <section class="section-card">
-          <h3>Resolution summary</h3>
-          <div id="match-summary" class="stats-grid"></div>
-        </section>
+        <div id="matcher-status" class="status-note" aria-live="polite">No CSV selected. Your file will be processed locally and is not uploaded to OpenVA.</div>
+        <div id="match-summary" class="stats-grid"></div>
         <section class="section-card">
           <h3>Source pack preview</h3>
-          <div id="match-preview" class="detail-panel empty-detail-state">
-            <p>Upload a CSV and run local resolution to preview source-pack rows here. The preview will show matched vendor names, match method, confidence, and available public source types.</p>
-          </div>
+          <div id="match-preview" class="detail-panel empty-detail-state"><p>Choose a CSV and run local resolution to preview the compiled rows.</p></div>
         </section>
         <div class="actions">
-          <button type="button" id="download-matches-csv">Download openva-matched-inventory.csv</button>
-          <button type="button" id="download-matches-json">Download openva-matched-inventory.json</button>
+          <button type="button" id="download-matches-xlsx">Download Excel workbook</button>
+          <button type="button" class="secondary-button" id="download-matches-csv">Download CSV</button>
+          <button type="button" class="secondary-button" id="download-matches-json">Download JSON</button>
         </div>
-        <p class="feed-warning">
-          Local resolution results are not vendor approval, compliance findings, risk scores, procurement recommendations, legal opinions, or suitability determinations.
-        </p>
       </section>
 
-      <section id="export-view" class="view hidden utility-workspace-room">
-        <div class="section-heading">
-          <p class="eyebrow">After selecting records</p>
-          <h2>Export Source Pack</h2>
-          <p>This export contains selected OpenVA public source-reference metadata only. It does not contain a private vendor inventory and is not a risk assessment, compliance decision, procurement recommendation, legal opinion, or vendor approval.</p>
+      <section id="export-view" class="view utility-workspace-room" aria-labelledby="export-title">
+        <span id="review" class="section-anchor" aria-hidden="true"></span>
+        <div class="section-intro">
+          <p class="eyebrow">Review &amp; export</p>
+          <h2 id="export-title">Review selected records before download.</h2>
+          <p>Select vendors or individual sources in the catalog, inspect the selection summary, then export factual public source-reference metadata.</p>
         </div>
-        <div class="snapshot-box" data-snapshot-disclosure></div>
         <div id="selection-summary" class="section-card"></div>
-        <div class="actions">
-          <button type="button" id="download-vendors-csv">Download openva-selected-vendors.csv</button>
-          <button type="button" id="download-sources-csv">Download openva-selected-sources.csv</button>
-          <button type="button" id="download-json">Download openva-selected-records.json</button>
+        <aside class="download-notice">
+          <strong>Important notice before download.</strong>
+          <p>Public-source metadata only. OpenVA does not certify, approve, endorse, rank, or assess vendors. Verify material information independently before relying on it.</p>
+          <p>Excel workbooks open with an <em>Important Notice</em> worksheet. See <a href="#terms-disclaimer">Terms &amp; Disclaimer</a>.</p>
+        </aside>
+        <div class="actions export-actions">
+          <button type="button" id="download-xlsx">Download Excel workbook</button>
+          <button type="button" class="secondary-button" id="download-vendors-csv">Download vendor CSV</button>
+          <button type="button" class="secondary-button" id="download-sources-csv">Download source CSV</button>
+          <button type="button" class="secondary-button" id="download-json">Download JSON</button>
         </div>
+      </section>
+
+      <section id="about-view" class="view about-room" aria-labelledby="about-title">
+        <span id="about" class="section-anchor" aria-hidden="true"></span>
+        <div class="section-intro">
+          <p class="eyebrow">About</p>
+          <h2 id="about-title">A public-source catalog and resolver.</h2>
+          <p>OpenVA records factual locator metadata for vendor-published assurance sources. It helps human and agent users find URLs; it does not evaluate the legal, security, privacy, procurement, or risk substance of the linked material.</p>
+        </div>
+        <div class="about-grid">
+          <article><h3>What OpenVA provides</h3><p>Vendor identity metadata, supported source types, vendor-published URLs, current resolved URLs where observed, source collection dates, snapshot identity, and machine-readable exports.</p></article>
+          <article><h3>What OpenVA does not provide</h3><p>Vendor approval, certification, endorsement, risk scoring, legal advice, compliance decisions, procurement recommendations, security conclusions, or private evidence.</p></article>
+          <article><h3>How external URLs are handled</h3><p>Vendor URLs can move. OpenVA records the indexed URL and observation evidence, then repairs authoritative moved destinations through the catalog governance process.</p></article>
+        </div>
+        <section id="terms-disclaimer" class="terms-card" aria-labelledby="terms-title">
+          <h3 id="terms-title">Terms &amp; Disclaimer</h3>
+          <p>OpenVA provides public-source metadata and links for informational and operational reference only. It is not an audit, certification, approval, endorsement, recommendation, ranking, assurance opinion, or professional service.</p>
+          <p>Nothing in OpenVA is legal, compliance, procurement, audit, accounting, security, privacy, regulatory, sanctions, know-your-customer, anti-money-laundering, or vendor-risk advice. Users remain responsible for independent verification and professional advice where appropriate.</p>
+          <p>Public sources may be incomplete, inaccurate, unavailable, redirected, replaced, or changed by their publishers. Matching may produce false positives, false negatives, or entity ambiguity. OpenVA is provided as-is and as-available without warranties, to the maximum extent permitted by law.</p>
+          <p>Third-party names, documents, URLs, trademarks, and materials remain subject to their owners' terms. Their inclusion does not imply affiliation, sponsorship, approval, or endorsement.</p>
+        </section>
+      </section>
+
+      <section id="feed-view" class="view maintainer-room" hidden aria-hidden="true">
+        <form class="filters" id="feed-filters">
+          <label>Vendor ID <input id="feed-vendor-filter" type="search"></label>
+          <label>Source type <input id="feed-source-filter" type="search"></label>
+          <label>Event/result <input id="feed-event-filter" type="search"></label>
+          <label>Review state <input id="feed-review-filter" type="search"></label>
+        </form>
+        <div class="feed-meta" id="feed-meta"></div>
+        <div id="feed-list" class="event-list"></div>
       </section>
     </main>
 
     <footer>
-      <div>
-        <strong>OpenVA</strong>
-        <span>Public-source vendor assurance source references.</span>
-      </div>
+      <div><strong>OpenVA</strong><span>Public vendor assurance source references.</span></div>
       <p class="resource-links footer-links">
         <a href="https://github.com/thedanieltan/open-vendor-assurance">Source repository</a>
-        <a href="https://github.com/thedanieltan/open-vendor-assurance/blob/main/docs/continuous-publication.md">Continuous publication</a>
-        <a href="https://github.com/thedanieltan/open-vendor-assurance/blob/main/docs/resolver-api.md">Resolver docs</a>
+        <a href="https://github.com/thedanieltan/open-vendor-assurance/blob/main/docs/resolver-api.md">Resolver documentation</a>
         <a href="https://github.com/thedanieltan/open-vendor-assurance/blob/main/docs/licensing.md">Licensing and reuse</a>
+        <a href="#terms-disclaimer">Terms &amp; Disclaimer</a>
       </p>
-      <p class="meta-line">The live catalog follows the latest accepted state on <code>main</code>. Software and project documentation: MIT. OpenVA-authored catalog metadata: CC0 1.0. Vendor documents, trademarks, and other third-party materials remain with their respective owners.</p>
+      <p class="meta-line">The catalog follows the latest accepted state on <code>main</code>. Software and documentation: MIT. OpenVA-authored catalog metadata: CC0 1.0. Vendor documents and third-party materials remain with their respective owners.</p>
     </footer>
-    <script src="app.js?v=20260523-ui6"></script>
-    <script src="ui-fixes.js?v=20260523-ui6"></script>
+
+    <script src="app.js?v=20260713-phase2"></script>
+    <script src="ui-fixes.js?v=20260713-phase2"></script>
   </body>
 </html>
