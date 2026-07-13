@@ -1,0 +1,113 @@
+name: source-completion-finalize-v2
+
+on:
+  pull_request:
+    branches:
+      - catalog/source-completion-final-control-v2
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: source-completion-finalize-v2
+  cancel-in-progress: true
+
+jobs:
+  finalize:
+    if: github.event.pull_request.head.ref == 'catalog/source-completion-final-worker-v2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/source-completion-final-worker-v2
+          fetch-depth: 0
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/source-completion-final-control-v2
+          path: .source-completion-control
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Reconcile current main
+        run: |
+          set -euo pipefail
+          git config user.name 'openva-owner-maintenance-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git fetch origin main
+          git merge --no-edit origin/main
+      - name: Install package and finalizer dependencies
+        run: pip install -e '.[dev]' requests
+      - name: Clean temporary branch artifacts
+        run: |
+          rm -rf .owner-source-completion-1
+          rm -f tools/openva/catalog_source_completion.py tests/test_catalog_source_completion.py
+      - name: Harden and complete catalog source coverage
+        run: python .source-completion-control/.github/source-completion/finalize.py
+      - name: Remove trusted control checkout
+        run: rm -rf .source-completion-control
+      - name: Rebuild generated catalog state
+        run: python -m tools.openva.validate build-indexes
+      - name: Verify changed canonical sources and install observations
+        run: |
+          set -euo pipefail
+          git diff --name-only --diff-filter=AM origin/main -- 'data/vendors/*/sources/*.yaml' > /tmp/changed-source-paths.txt
+          if [ -s /tmp/changed-source-paths.txt ]; then
+            python -m tools.openva.source_verification verify \
+              --source-path-file /tmp/changed-source-paths.txt \
+              --output /tmp/source-completion-verification.json
+            python -m tools.openva.observation_ledger build \
+              --verification-report /tmp/source-completion-verification.json \
+              --output-dir /tmp/source-completion-observations \
+              --baseline maintenance/source-observations/latest-observations.json \
+              --run-id owner-source-completion-final
+            python -m tools.openva.observation_ledger install-latest \
+              --latest /tmp/source-completion-observations/latest-observations.json
+          fi
+      - name: Validate exact final catalog transaction
+        run: |
+          set -euo pipefail
+          python -m tools.openva.validate validate
+          python -m tools.openva.validate build-indexes
+          git diff --exit-code openva-pack.json indexes/ dist/
+          python -m tools.openva.release_gates check --profile pr \
+            --out-json /tmp/source-completion-release-gates.json \
+            --out-md /tmp/source-completion-release-gates.md
+          pytest -q tests/test_catalog*.py tests/test_automation_rules.py
+      - name: Enforce canonical-only final tree
+        run: |
+          set -euo pipefail
+          git diff --name-only origin/main > /tmp/final-paths.txt
+          python - <<'PY'
+          from pathlib import Path
+          allowed_exact = {'openva-pack.json', 'maintenance/source-observations/latest-observations.json'}
+          allowed_prefixes = ('data/vendors/', 'dist/vendors/', 'indexes/')
+          paths = [line.strip() for line in Path('/tmp/final-paths.txt').read_text().splitlines() if line.strip()]
+          bad = [path for path in paths if path not in allowed_exact and not path.startswith(allowed_prefixes)]
+          if bad:
+              raise SystemExit('non-canonical final paths:\n' + '\n'.join(bad))
+          print(f'canonical final paths: {len(paths)}')
+          PY
+      - name: Commit validated finalization
+        run: |
+          set -euo pipefail
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No source-completion changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Catalog: finalize complete public-source coverage'
+          git push origin HEAD:catalog/source-completion-final-worker-v2
+      - name: Publish finalization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-completion-finalization-v2-evidence
+          path: |
+            /tmp/source-completion-finalization.json
+            /tmp/source-completion-verification.json
+            /tmp/source-completion-release-gates.json
+            /tmp/source-completion-release-gates.md
+          if-no-files-found: ignore
