@@ -1,8 +1,0 @@
-{
-  "head_sha": "6e7e83476148a2b94837473b419e8f4aad743c6d",
-  "log": "From https://github.com/thedanieltan/open-vendor-assurance\n * branch              main       -> FETCH_HEAD\nAuto-merging indexes/artifacts.json\nAuto-merging indexes/changes.json\nCONFLICT (content): Merge conflict in indexes/changes.json\nAuto-merging indexes/sources.json\nAuto-merging indexes/summary.json\nCONFLICT (content): Merge conflict in indexes/summary.json\nAuto-merging indexes/vendor-match-index.json\nAuto-merging maintenance/source-observations/latest-observations.json\nCONFLICT (content): Merge conflict in maintenance/source-observations/latest-observations.json\nAutomatic merge failed; fix conflicts and then commit the result.\nMerge conflicts:\nindexes/changes.json\nindexes/summary.json\nmaintenance/source-observations/latest-observations.json\n{\n  \"combined_observations\": 764,\n  \"main_observations\": 764,\n  \"maintenance_observations\": 749,\n  \"maintenance_rows_preserved\": 14\n}\nBuilt OpenVA indexes, registry outputs, and pack manifest.\nindexes/summary.json: count for vendor 185 does not match vendors count 190\nindexes/summary.json: count for source 749 does not match sources count 764\nindexes/summary.json: count for artifact 696 does not match artifacts count 711\nindexes/changes.json is not up to date; run python -m tools.openva.validate build-indexes\nindexes/summary.json is not up to date; run python -m tools.openva.validate build-indexes\nValidation failed: 5 issue(s).\n",
-  "not_advice": true,
-  "report_type": "owner_source_maintenance_reconcile_diagnostic",
-  "run_id": "29258441807",
-  "schema_version": "0.1.0"
-}
