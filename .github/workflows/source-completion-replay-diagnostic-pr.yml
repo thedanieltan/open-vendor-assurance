@@ -1,0 +1,92 @@
+name: source-completion-replay-diagnostic-pr
+
+on:
+  pull_request:
+    branches:
+      - catalog/source-completion-audit-control
+    types: [opened, synchronize, reopened]
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: '29276262664'
+    steps:
+      - name: Fetch failed replay jobs and logs
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/source-completion-diagnostic/logs
+          gh api "repos/$REPO/actions/runs/$RUN_ID/jobs?filter=latest&per_page=100" > /tmp/source-completion-diagnostic/jobs.json
+          jq -r '.jobs[] | select(.conclusion == "failure") | .id' /tmp/source-completion-diagnostic/jobs.json > /tmp/source-completion-diagnostic/failed-job-ids.txt
+          while read -r job_id; do
+            [ -n "$job_id" ] || continue
+            gh api "repos/$REPO/actions/jobs/$job_id/logs" > "/tmp/source-completion-diagnostic/logs/job-$job_id.log" || true
+          done < /tmp/source-completion-diagnostic/failed-job-ids.txt
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('/tmp/source-completion-diagnostic')
+          jobs = json.loads((root / 'jobs.json').read_text())
+          failed = []
+          for job in jobs.get('jobs', []):
+              if job.get('conclusion') != 'failure':
+                  continue
+              job_id = job.get('id')
+              log_path = root / 'logs' / f'job-{job_id}.log'
+              log_text = log_path.read_text(encoding='utf-8', errors='replace') if log_path.exists() else ''
+              failed_steps = [
+                  {
+                      'name': step.get('name'),
+                      'number': step.get('number'),
+                      'status': step.get('status'),
+                      'conclusion': step.get('conclusion'),
+                  }
+                  for step in job.get('steps') or []
+                  if step.get('conclusion') == 'failure'
+              ]
+              lines = log_text.splitlines()
+              signal = [
+                  line for line in lines
+                  if any(token in line.lower() for token in ('error', 'failed', 'failure', 'traceback', 'exception', 'assert', 'invalid'))
+              ]
+              failed.append({
+                  'job_id': job_id,
+                  'job_name': job.get('name'),
+                  'failed_steps': failed_steps,
+                  'log_signal_tail': signal[-120:],
+                  'log_tail': lines[-180:],
+              })
+          report = {
+              'schema_version': '0.1.0',
+              'report_type': 'source_completion_replay_diagnostic',
+              'run_id': 29276262664,
+              'run_html_url': 'https://github.com/thedanieltan/open-vendor-assurance/actions/runs/29276262664',
+              'job_count': len(jobs.get('jobs', [])),
+              'failed_job_count': len(failed),
+              'failed_jobs': failed,
+              'not_advice': True,
+          }
+          (root / 'diagnostic.json').write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
+          PY
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-source-completion-1-builder
+          fetch-depth: 0
+      - name: Record diagnostic on current builder head
+        run: |
+          git fetch origin catalog/owner-source-completion-1-builder
+          git reset --hard origin/catalog/owner-source-completion-1-builder
+          mkdir -p .owner-source-completion-1/results
+          cp /tmp/source-completion-diagnostic/diagnostic.json .owner-source-completion-1/results/replay-diagnostic.json
+          git config user.name 'openva-owner-maintenance-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add .owner-source-completion-1/results/replay-diagnostic.json
+          git commit -m 'Catalog: capture failed source completion replay diagnostic'
+          git push origin HEAD:catalog/owner-source-completion-1-builder
