@@ -1,0 +1,194 @@
+name: owner-source-completion-1-adversarial-audit
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-completion-1-builder
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-completion-1-adversarial-audit
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-source-completion-1-builder
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Build added-source manifest
+        run: |
+          git diff --name-only 664dd4cb396757c0a9fb80c8561c826e1067dfa3...HEAD -- 'data/vendors/*/sources/*.yaml' \
+            | sort -u > added-source-paths.txt
+          test -s added-source-paths.txt
+      - name: Independently verify added source shard
+        run: |
+          mkdir -p adversarial-audit
+          python -m tools.openva.source_verification verify \
+            --source-path-file added-source-paths.txt \
+            --shard-count 12 \
+            --shard-index "${{ matrix.shard }}" \
+            --output "adversarial-audit/shard-${{ matrix.shard }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: owner-source-completion-audit-${{ matrix.shard }}
+          path: adversarial-audit/shard-${{ matrix.shard }}.json
+          if-no-files-found: error
+
+  aggregate:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-source-completion-1-builder
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: owner-source-completion-audit-*
+          path: .owner-source-completion-1/adversarial-shards
+          merge-multiple: true
+      - name: Build adversarial audit report
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter, defaultdict
+          from pathlib import Path
+          from urllib.parse import urlsplit
+
+          root = Path('.owner-source-completion-1')
+          rows = []
+          failures = []
+          for path in sorted((root / 'adversarial-shards').glob('*.json')):
+              report = json.loads(path.read_text(encoding='utf-8'))
+              rows.extend(report.get('sources') or [])
+              failures.extend(report.get('failures') or [])
+          rows.sort(key=lambda row: (str(row.get('vendor_id')), str(row.get('source_id'))))
+
+          review_statuses = Counter(str(row.get('verification_status')) for row in rows)
+          semantic_statuses = Counter(str((row.get('semantic_match') or {}).get('status')) for row in rows)
+          review_rows = [row for row in rows if row.get('verification_status') not in {'ok', 'redirected'}]
+          weak_rows = [
+              row for row in rows
+              if (row.get('semantic_match') or {}).get('status') != 'strong'
+          ]
+          redirects = [row for row in rows if row.get('verification_status') == 'redirected']
+
+          by_vendor_hash = defaultdict(list)
+          by_vendor_final = defaultdict(list)
+          by_vendor_title = defaultdict(list)
+          for row in rows:
+              vendor_id = str(row.get('vendor_id') or '')
+              digest = str(row.get('normalized_text_sample_sha256') or '')
+              if digest and digest != 'sha256:TBD':
+                  by_vendor_hash[(vendor_id, digest)].append(row)
+              final_url = str(row.get('final_url') or '').rstrip('/')
+              if final_url:
+                  by_vendor_final[(vendor_id, final_url)].append(row)
+              title = ' '.join(str(row.get('title_detected') or '').lower().split())
+              if title:
+                  by_vendor_title[(vendor_id, title)].append(row)
+
+          def compact(groups):
+              return [
+                  {
+                      'vendor_id': key[0],
+                      'value': key[1],
+                      'sources': [
+                          {
+                              'source_id': row.get('source_id'),
+                              'source_type': row.get('source_type'),
+                              'source_url': row.get('source_url'),
+                              'final_url': row.get('final_url'),
+                              'title_detected': row.get('title_detected'),
+                          }
+                          for row in values
+                      ],
+                  }
+                  for key, values in sorted(groups.items())
+                  if len(values) > 1
+              ]
+
+          duplicate_content = compact(by_vendor_hash)
+          duplicate_final = compact(by_vendor_final)
+          duplicate_titles = compact(by_vendor_title)
+          generic_titles = []
+          for row in rows:
+              title = ' '.join(str(row.get('title_detected') or '').lower().split()).strip(' -|:')
+              host = (urlsplit(str(row.get('source_url') or '')).hostname or '').lower().removeprefix('www.')
+              brand = host.split('.')[0].replace('-', ' ')
+              if title in {'home', 'homepage', 'welcome', brand} or len(title) < 4:
+                  generic_titles.append(row)
+
+          suspicious_ids = sorted({
+              str(row.get('source_id'))
+              for row in [*review_rows, *weak_rows, *generic_titles]
+              if row.get('source_id')
+          } | {
+              str(item.get('source_id'))
+              for group in [*duplicate_content, *duplicate_final]
+              for item in group['sources']
+              if item.get('source_id')
+          })
+
+          output = {
+              'schema_version': '0.1.0',
+              'report_type': 'owner_source_completion_adversarial_audit',
+              'base_commit': '664dd4cb396757c0a9fb80c8561c826e1067dfa3',
+              'summary': {
+                  'added_sources_verified': len(rows),
+                  'pipeline_failures': len(failures),
+                  'sources_requiring_review': len(review_rows),
+                  'non_strong_semantic_sources': len(weak_rows),
+                  'redirected_sources': len(redirects),
+                  'duplicate_content_groups': len(duplicate_content),
+                  'duplicate_final_url_groups': len(duplicate_final),
+                  'duplicate_title_groups': len(duplicate_titles),
+                  'generic_title_sources': len(generic_titles),
+                  'suspicious_source_count': len(suspicious_ids),
+                  'verification_statuses': dict(sorted(review_statuses.items())),
+                  'semantic_statuses': dict(sorted(semantic_statuses.items())),
+              },
+              'pipeline_failures': failures,
+              'sources_requiring_review': review_rows,
+              'non_strong_semantic_sources': weak_rows,
+              'redirected_sources': redirects,
+              'duplicate_content_groups': duplicate_content,
+              'duplicate_final_url_groups': duplicate_final,
+              'duplicate_title_groups': duplicate_titles,
+              'generic_title_sources': generic_titles,
+              'suspicious_source_ids': suspicious_ids,
+              'sources': rows,
+              'not_advice': True,
+          }
+          out = root / 'results' / 'adversarial-audit.json'
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(output, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps(output['summary'], indent=2, sort_keys=True))
+          PY
+      - name: Remove temporary workflow inputs
+        run: |
+          rm -f .github/workflows/owner-source-completion-1-adversarial-audit.yml
+          rm -rf .owner-source-completion-1/adversarial-shards
+      - name: Commit audit evidence
+        run: |
+          git config user.name "openva-owner-maintenance-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Catalog: audit completed source coverage adversarially"
+          git push origin HEAD:catalog/owner-source-completion-1-builder
