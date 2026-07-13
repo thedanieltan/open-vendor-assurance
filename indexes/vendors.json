@@ -1,5 +1,5 @@
 {
-  "count": 228,
+  "count": 233,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -1418,6 +1418,43 @@
       "vendor_id": "cockroach-labs"
     },
     {
+      "_openva_path": "data/vendors/coda/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Coda",
+      "entity_family": "superhuman",
+      "entity_surface": "product_surface",
+      "headquarters_country": "US",
+      "legal_name": "Coda Project LLC",
+      "notes": "Owner-led public-source-only product-surface record for Coda within the Superhuman entity family. The current privacy and terms authority identifies Coda Project LLC and the Coda product under Superhuman Platform Inc.; the existing Grammarly record is not modified.",
+      "official_domains": [
+        "coda.io",
+        "superhuman.com",
+        "status.coda.io"
+      ],
+      "public_entrypoints": [
+        "https://coda.io/trust/privacy",
+        "https://superhuman.com/legal/terms",
+        "https://status.coda.io/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "productivity_software",
+        "collaboration_software",
+        "content_management"
+      ],
+      "vendor_id": "coda"
+    },
+    {
       "_openva_path": "data/vendors/cohere/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Cohere",
@@ -1869,6 +1906,42 @@
       "vendor_id": "deepl"
     },
     {
+      "_openva_path": "data/vendors/descript/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Descript",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Descript, Inc.",
+      "notes": "Owner-led public-source-only catalog record for Descript. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.",
+      "official_domains": [
+        "descript.com",
+        "www.descript.com",
+        "status.descript.com"
+      ],
+      "public_entrypoints": [
+        "https://www.descript.com/privacy",
+        "https://www.descript.com/terms",
+        "https://status.descript.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "content_management",
+        "productivity_software",
+        "ai_platform"
+      ],
+      "vendor_id": "descript"
+    },
+    {
       "_openva_path": "data/vendors/digitalocean/vendor.yaml",
       "catalog_status": "active",
       "display_name": "DigitalOcean",
@@ -1995,6 +2068,41 @@
         "productivity_software"
       ],
       "vendor_id": "docusign"
+    },
+    {
+      "_openva_path": "data/vendors/doodle/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Doodle",
+      "entity_surface": "global_brand",
+      "headquarters_country": "CH",
+      "legal_name": "Doodle AG",
+      "notes": "Owner-led public-source-only catalog record for Doodle. Metadata references vendor-controlled privacy, data-processing, and security surfaces only.",
+      "official_domains": [
+        "doodle.com",
+        "www.doodle.com"
+      ],
+      "public_entrypoints": [
+        "https://doodle.com/en/privacy-policy/",
+        "https://doodle.com/en/general-data-processing-terms/",
+        "https://doodle.com/en/features/security/"
+      ],
+      "regions_served": [
+        "global",
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "productivity_software",
+        "collaboration_software"
+      ],
+      "vendor_id": "doodle"
     },
     {
       "_openva_path": "data/vendors/dotdigital/vendor.yaml",
@@ -3814,6 +3922,82 @@
         "productivity_software"
       ],
       "vendor_id": "logicgate"
+    },
+    {
+      "_openva_path": "data/vendors/loom/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Loom",
+      "entity_family": "atlassian",
+      "entity_surface": "product_surface",
+      "headquarters_country": "US",
+      "legal_name": "Atlassian US, Inc.",
+      "notes": "Owner-led public-source-only product-surface record for Loom within the Atlassian entity family. Metadata references Atlassian legal sources reached from Loom and the public Loom status page only.",
+      "official_domains": [
+        "loom.com",
+        "www.loom.com",
+        "atlassian.com",
+        "www.atlassian.com",
+        "loom.status.atlassian.com"
+      ],
+      "public_entrypoints": [
+        "https://www.loom.com/privacy-policy",
+        "https://www.atlassian.com/legal/atlassian-customer-agreement",
+        "https://loom.status.atlassian.com"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "related_vendor_ids": [
+        "atlassian"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "collaboration_software",
+        "productivity_software",
+        "content_management"
+      ],
+      "vendor_id": "loom"
+    },
+    {
+      "_openva_path": "data/vendors/lucid-software/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Lucid Software",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Lucid Software Inc.",
+      "notes": "Owner-led public-source-only catalog record for Lucid Software. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.",
+      "official_domains": [
+        "lucid.co",
+        "status.lucid.co"
+      ],
+      "public_entrypoints": [
+        "https://lucid.co/privacy",
+        "https://lucid.co/tos",
+        "https://status.lucid.co/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "productivity_software",
+        "collaboration_software"
+      ],
+      "vendor_id": "lucid-software"
     },
     {
       "_openva_path": "data/vendors/mailchimp/vendor.yaml",
