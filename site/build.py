@@ -1,8 +1,9 @@
 """Continuous-publication wrapper for the compiled site builder.
 
 The implementation is preserved byte-for-byte in ``site/build_core.py``. This
-wrapper removes the retired formal-release metadata and makes the exact source
-commit the sole catalog snapshot identity.
+wrapper removes the retired formal-release metadata, makes the exact source
+commit the sole catalog snapshot identity, and adds the bounded public identity
+keys required by the browser resolver.
 """
 
 from __future__ import annotations
@@ -27,6 +28,7 @@ for _name, _value in vars(_CORE).items():
         globals()[_name] = _value
 
 _ORIGINAL_BUILD_META = _CORE.build_meta
+_ORIGINAL_BUILD_COMPILED_CATALOG = _CORE.build_compiled_catalog
 
 
 def release_tag() -> str:
@@ -43,8 +45,65 @@ def build_meta(pack: dict[str, Any], sources: list[dict[str, Any]], vendor_count
     return meta
 
 
+def _public_registration_keys() -> dict[str, list[dict[str, str]]]:
+    """Return canonical public registration keys grouped by vendor.
+
+    The browser resolver receives only the identity fields needed for matching.
+    Internal paths, evidence references, notes, and lifecycle metadata remain out
+    of the lightweight vendor-search payload.
+    """
+    path = ROOT / "indexes" / "legal-entities.json"
+    if not path.is_file():
+        return {}
+
+    payload = load_json(path)
+    grouped: dict[str, list[dict[str, str]]] = {}
+    for row in payload.get("items", []):
+        if not isinstance(row, dict) or row.get("catalog_status") != "canonical":
+            continue
+        vendor_id = str(row.get("vendor_id") or "").strip()
+        registration_number = str(row.get("registration_number") or "").strip()
+        if not vendor_id or not registration_number:
+            continue
+        grouped.setdefault(vendor_id, []).append(
+            {
+                "registration_number": registration_number,
+                "jurisdiction": str(row.get("jurisdiction") or "").strip(),
+                "legal_name": str(row.get("legal_name") or "").strip(),
+            }
+        )
+
+    return {
+        vendor_id: sorted(
+            rows,
+            key=lambda row: (
+                row["jurisdiction"],
+                row["registration_number"],
+                row["legal_name"],
+            ),
+        )
+        for vendor_id, rows in grouped.items()
+    }
+
+
+def build_compiled_catalog(
+    source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT,
+    assurance_intelligence_snapshot_path: Path = DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT,
+) -> dict[str, Any]:
+    compiled = _ORIGINAL_BUILD_COMPILED_CATALOG(
+        source_health_snapshot_path,
+        assurance_intelligence_snapshot_path,
+    )
+    registration_keys = _public_registration_keys()
+    for summary in compiled["vendor_summaries"]:
+        vendor_id = str(summary.get("vendor_id") or "")
+        summary["registration_keys"] = registration_keys.get(vendor_id, [])
+    return compiled
+
+
 _CORE.release_tag = release_tag
 _CORE.build_meta = build_meta
+_CORE.build_compiled_catalog = build_compiled_catalog
 
 
 def main() -> int:
