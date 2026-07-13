@@ -1,15 +1,13 @@
 name: phase3-fast-materialize
 
 on:
-  push:
-    branches:
-      - site/seo-aeo-geo-phase3
   pull_request:
     branches:
       - main
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: phase3-materialize
@@ -17,20 +15,22 @@ concurrency:
 
 jobs:
   materialize:
-    if: ${{ !contains(github.event.head_commit.message || '', '[phase3-materialized]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
+          ref: ${{ github.head_ref }}
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-      - name: Execute materialization steps
+      - name: Execute materialization steps with diagnostics
+        id: materialize
+        shell: bash
         run: |
-          pip install PyYAML
-          python - <<'PY'
+          set +e
+          pip install PyYAML > phase3-materialize.log 2>&1
+          python - <<'PY' >> phase3-materialize.log 2>&1
           import subprocess
           from pathlib import Path
           import yaml
@@ -44,14 +44,35 @@ jobs:
           }
           for step in steps:
               if step.get('name') in selected:
+                  print(f"RUNNING: {step['name']}", flush=True)
                   subprocess.run(['bash', '-euo', 'pipefail', '-c', step['run']], check=True)
           PY
-          git rm .github/workflows/phase3-fast-materialize.yml
-      - name: Commit materialized publication surface
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          tail -n 180 phase3-materialize.log > phase3-tail.log
+          cat phase3-tail.log
+          exit 0
+      - name: Post diagnostic
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          {
+            echo '<!-- phase3-materializer-diagnostic -->'
+            echo '### Phase 3 materializer diagnostic'
+            echo '```text'
+            cat phase3-tail.log
+            echo '```'
+          } > phase3-comment.md
+          gh pr comment 660 --body-file phase3-comment.md
+      - name: Commit materialized publication surface
+        if: steps.materialize.outputs.exit_code == '0'
+        run: |
+          git rm .github/workflows/phase3-fast-materialize.yml
           git config user.name 'openva-publication-maintainer'
           git config user.email 'openva-publication-maintainer@users.noreply.github.com'
           git add site/src/index.html site/src/styles.css tools/openva/site_discovery.py tests/test_discoverability.py
           python -m py_compile tools/openva/site_discovery.py tests/test_discoverability.py
           git commit -m 'Site: add SEO AEO and GEO discovery surfaces [phase3-materialized]'
           git push origin HEAD:site/seo-aeo-geo-phase3
+      - name: Enforce materialization result
+        run: exit "${{ steps.materialize.outputs.exit_code }}"
