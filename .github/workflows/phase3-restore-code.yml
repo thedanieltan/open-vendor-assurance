@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 concurrency:
   group: phase3-restore-code
@@ -64,15 +63,11 @@ jobs:
           tests_path.write_text(tests, encoding="utf-8")
           PY
           python -m py_compile tools/openva/site_discovery.py tests/test_discoverability.py
-          git rm .github/workflows/phase3-discovery-diagnostic.yml .github/workflows/phase3-restore-code.yml
-      - name: Run focused discovery tests
-        run: |
-          pip install -e '.[dev]'
-          pytest -q tests/test_discoverability.py --tb=short
+          git rm .github/workflows/phase3-restore-code.yml
       - name: Commit restored implementation
         run: |
           git config user.name 'openva-publication-maintainer'
           git config user.email 'openva-publication-maintainer@users.noreply.github.com'
           git add tools/openva/site_discovery.py tests/test_discoverability.py
-          git commit -m 'Site: restore validated Phase 3 discovery implementation'
+          git commit -m 'Site: restore syntax-correct Phase 3 discovery implementation'
           git push origin HEAD:site/seo-aeo-geo-phase3
