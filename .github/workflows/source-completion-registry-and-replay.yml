@@ -1,22 +1,20 @@
 name: source-completion-registry-and-replay
 
 on:
-  pull_request:
+  push:
     branches:
       - catalog/source-completion-audit-control
-    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
   actions: read
 
 concurrency:
-  group: source-completion-registry-and-replay-${{ github.event.pull_request.number }}
+  group: source-completion-registry-and-replay
   cancel-in-progress: true
 
 jobs:
   replay:
-    if: github.event.pull_request.head.ref == 'catalog/owner-source-completion-1-builder'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -153,6 +151,7 @@ def test_completion_source_roles_are_promotable() -> None:
       - name: Commit validated replay transaction
         run: |
           rm -f .owner-source-completion-1/expanded_completion.py
+          rm -f .owner-source-completion-1/registry-replay-trigger.txt
           rm -rf .owner-source-completion-1/expanded-discovery
           git config user.name 'openva-owner-maintenance-bot'
           git config user.email 'actions@users.noreply.github.com'
