@@ -1,0 +1,311 @@
+schema_version: 0.1.0
+batch_id: owner-customer-engagement-expansion-1
+operation: create
+collected_at: '2026-07-14T00:42:00+08:00'
+observer: human
+vendors:
+  - vendor_id: customer-io
+    display_name: Customer.io
+    legal_name: Peaberry Software Inc. d/b/a Customer.io
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [customer.io, status.customerio.com]
+    public_entrypoints:
+      - https://customer.io/legal/privacy-policy
+      - https://customer.io/legal/terms-of-service
+      - https://status.customerio.com
+    vendor_categories: [customer_engagement, marketing_technology]
+    notes: Owner-led public-source-only catalog record for Customer.io. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: customer-io-privacy
+        source_type: privacy_notice
+        title_native: Customer.io Privacy Policy
+        title_en: Customer.io Privacy Policy
+        source_url: https://customer.io/legal/privacy-policy
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Customer.io privacy policy.
+        summary_en: Public Customer.io privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: customer-io-privacy
+          artifact_type: privacy_notice
+          region_scope: [global]
+      - source_id: customer-io-terms
+        source_type: terms_of_service
+        title_native: Customer.io Terms of Service
+        title_en: Customer.io Terms of Service
+        source_url: https://customer.io/legal/terms-of-service
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public Customer.io terms of service.
+        summary_en: Public Customer.io terms of service.
+        confidence: high
+        artifact:
+          artifact_id: customer-io-terms
+          artifact_type: terms_of_service
+          region_scope: [global]
+      - source_id: customer-io-status
+        source_type: status_page
+        title_native: Customer.io Status
+        title_en: Customer.io Status
+        source_url: https://status.customerio.com
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Customer.io service status page.
+        summary_en: Public Customer.io service status page.
+        confidence: high
+        artifact:
+          artifact_id: customer-io-status
+          artifact_type: status_page
+          region_scope: [global]
+
+  - vendor_id: activecampaign
+    display_name: ActiveCampaign
+    legal_name: ActiveCampaign, LLC
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [activecampaign.com, www.activecampaign.com, status.activecampaign.com]
+    public_entrypoints:
+      - https://www.activecampaign.com/legal/privacy-policy
+      - https://www.activecampaign.com/legal/terms-of-service
+      - https://status.activecampaign.com/
+    vendor_categories: [marketing_technology, customer_engagement]
+    notes: Owner-led public-source-only catalog record for ActiveCampaign. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: activecampaign-privacy
+        source_type: privacy_notice
+        title_native: ActiveCampaign Privacy Policy
+        title_en: ActiveCampaign Privacy Policy
+        source_url: https://www.activecampaign.com/legal/privacy-policy
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public ActiveCampaign privacy policy.
+        summary_en: Public ActiveCampaign privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: activecampaign-privacy
+          artifact_type: privacy_notice
+          region_scope: [global]
+      - source_id: activecampaign-terms
+        source_type: terms_of_service
+        title_native: ActiveCampaign Terms of Service
+        title_en: ActiveCampaign Terms of Service
+        source_url: https://www.activecampaign.com/legal/terms-of-service
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public ActiveCampaign terms of service.
+        summary_en: Public ActiveCampaign terms of service.
+        confidence: high
+        artifact:
+          artifact_id: activecampaign-terms
+          artifact_type: terms_of_service
+          region_scope: [global]
+      - source_id: activecampaign-status
+        source_type: status_page
+        title_native: ActiveCampaign Status
+        title_en: ActiveCampaign Status
+        source_url: https://status.activecampaign.com/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public ActiveCampaign service status page.
+        summary_en: Public ActiveCampaign service status page.
+        confidence: high
+        artifact:
+          artifact_id: activecampaign-status
+          artifact_type: status_page
+          region_scope: [global]
+
+  - vendor_id: front
+    display_name: Front
+    legal_name: FrontApp, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [front.com, frontapp.com, frontstatus.com, www.frontstatus.com]
+    public_entrypoints:
+      - https://front.com/legal/privacy-notice
+      - https://front.com/legal/saas-services-agreement
+      - https://www.frontstatus.com/
+    vendor_categories: [customer_support, customer_engagement]
+    notes: Owner-led public-source-only catalog record for Front. Metadata references vendor-controlled privacy, SaaS agreement, and service-status surfaces only.
+    sources:
+      - source_id: front-privacy
+        source_type: privacy_notice
+        title_native: Front Privacy Notice
+        title_en: Front Privacy Notice
+        source_url: https://front.com/legal/privacy-notice
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Front privacy notice.
+        summary_en: Public Front privacy notice.
+        confidence: high
+        artifact:
+          artifact_id: front-privacy
+          artifact_type: privacy_notice
+          region_scope: [global]
+      - source_id: front-terms
+        source_type: terms_of_service
+        title_native: Front SaaS Services Agreement
+        title_en: Front SaaS Services Agreement
+        source_url: https://front.com/legal/saas-services-agreement
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public Front SaaS services agreement.
+        summary_en: Public Front SaaS services agreement.
+        confidence: high
+        artifact:
+          artifact_id: front-terms
+          artifact_type: terms_of_service
+          region_scope: [global]
+      - source_id: front-status
+        source_type: status_page
+        title_native: Front Status
+        title_en: Front Status
+        source_url: https://www.frontstatus.com/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Front service status page.
+        summary_en: Public Front service status page.
+        confidence: high
+        artifact:
+          artifact_id: front-status
+          artifact_type: status_page
+          region_scope: [global]
+
+  - vendor_id: campaign-monitor
+    display_name: Campaign Monitor
+    legal_name: Campaign Monitor Pty Ltd
+    headquarters_country: AU
+    regions_served: [global]
+    entity_family: marigold
+    entity_surface: product_surface
+    source_authority_language: en
+    official_domains: [campaignmonitor.com, www.campaignmonitor.com, createsend.com, meetmarigold.com, status.campaignmonitor.com]
+    public_entrypoints:
+      - https://www.campaignmonitor.com/policies/#privacy-policy
+      - https://www.campaignmonitor.com/policies/#terms-of-use
+      - https://status.campaignmonitor.com/
+    vendor_categories: [marketing_technology, customer_engagement]
+    notes: Owner-led public-source-only product-surface record for Campaign Monitor within the Marigold entity family. Metadata references the Campaign Monitor policy index, Marigold privacy authority, and the public Campaign Monitor status page only.
+    sources:
+      - source_id: campaign-monitor-privacy
+        source_type: privacy_notice
+        title_native: Campaign Monitor Privacy Notice Index
+        title_en: Campaign Monitor Privacy Notice Index
+        source_url: https://www.campaignmonitor.com/policies/#privacy-policy
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Campaign Monitor privacy notice section linking to Marigold privacy notices.
+        summary_en: Public Campaign Monitor privacy notice section linking to Marigold privacy notices.
+        confidence: high
+        artifact:
+          artifact_id: campaign-monitor-privacy
+          artifact_type: privacy_notice
+          region_scope: [global]
+      - source_id: campaign-monitor-terms
+        source_type: terms_of_service
+        title_native: Campaign Monitor Terms of Use
+        title_en: Campaign Monitor Terms of Use
+        source_url: https://www.campaignmonitor.com/policies/#terms-of-use
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public Campaign Monitor terms of use.
+        summary_en: Public Campaign Monitor terms of use.
+        confidence: high
+        artifact:
+          artifact_id: campaign-monitor-terms
+          artifact_type: terms_of_service
+          region_scope: [global]
+      - source_id: campaign-monitor-status
+        source_type: status_page
+        title_native: Campaign Monitor Status
+        title_en: Campaign Monitor Status
+        source_url: https://status.campaignmonitor.com/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Campaign Monitor service status page.
+        summary_en: Public Campaign Monitor service status page.
+        confidence: high
+        artifact:
+          artifact_id: campaign-monitor-status
+          artifact_type: status_page
+          region_scope: [global]
+
+  - vendor_id: mailerlite
+    display_name: MailerLite
+    legal_name: MailerLite Limited
+    headquarters_country: IE
+    regions_served: [global, eu]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [mailerlite.com, www.mailerlite.com, status.mailerlite.com]
+    public_entrypoints:
+      - https://www.mailerlite.com/legal/privacy-policy
+      - https://www.mailerlite.com/legal/terms-of-service
+      - https://status.mailerlite.com/
+    vendor_categories: [marketing_technology, customer_engagement]
+    notes: Owner-led public-source-only catalog record for MailerLite. The public privacy policy identifies MailerLite Limited for EEA, UK, and Swiss customers and MailerLite, Inc. for other customers; this record does not imply a single contracting entity for every customer.
+    sources:
+      - source_id: mailerlite-privacy
+        source_type: privacy_notice
+        title_native: MailerLite Privacy Policy
+        title_en: MailerLite Privacy Policy
+        source_url: https://www.mailerlite.com/legal/privacy-policy
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public MailerLite privacy policy.
+        summary_en: Public MailerLite privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: mailerlite-privacy
+          artifact_type: privacy_notice
+          region_scope: [global, eu]
+      - source_id: mailerlite-terms
+        source_type: terms_of_service
+        title_native: MailerLite Terms of Use
+        title_en: MailerLite Terms of Use
+        source_url: https://www.mailerlite.com/legal/terms-of-service
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public MailerLite terms of use.
+        summary_en: Public MailerLite terms of use.
+        confidence: high
+        artifact:
+          artifact_id: mailerlite-terms
+          artifact_type: terms_of_service
+          region_scope: [global, eu]
+      - source_id: mailerlite-status
+        source_type: status_page
+        title_native: MailerLite Status
+        title_en: MailerLite Status
+        source_url: https://status.mailerlite.com/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public MailerLite service status page.
+        summary_en: Public MailerLite service status page.
+        confidence: high
+        artifact:
+          artifact_id: mailerlite-status
+          artifact_type: status_page
+          region_scope: [global]
