@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/neo4j/artifacts/neo4j-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "neo4j-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://neo4j.com/use-cases/privacy-risk-compliance/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "neo4j-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "neo4j"
+    },
+    {
       "_openva_path": "data/vendors/neo4j/artifacts/neo4j-privacy-notice.yaml",
       "access_class": "public_web",
       "artifact_id": "neo4j-privacy-notice",
@@ -64,6 +94,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/neo4j/sources/neo4j-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.990755Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "neo4j-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://neo4j.com/use-cases/privacy-risk-compliance/",
+      "title_native": "Data privacy, risk, and compliance graph database use cases",
+      "vendor_id": "neo4j"
+    },
+    {
       "_openva_path": "data/vendors/neo4j/sources/neo4j-privacy-notice.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -105,6 +155,23 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/neo4j/changes/candidate-promotion-neo4j-compliance-page.yaml",
+      "artifact_id": "neo4j-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-neo4j-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.990755Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "neo4j-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "neo4j"
+    },
     {
       "_openva_path": "data/vendors/neo4j/changes/strict-growth-neo4j-privacy-notice.yaml",
       "artifact_id": "neo4j-privacy-notice",
@@ -152,20 +219,121 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 2,
+    "artifact_count": 3,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 2,
+    "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
       "privacy_notice",
       "security_page"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "dpa",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/neo4j/unavailable_sources/neo4j-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://neo4j.com/security/certifications",
+        "https://neo4j.com/trust/certifications",
+        "https://neo4j.com/trust-center/certifications",
+        "https://neo4j.com/trustcenter/certifications",
+        "https://neo4j.com/compliance/certifications",
+        "https://neo4j.com/security/compliance",
+        "https://neo4j.com/trust/compliance",
+        "https://www.neo4j.com/security/certifications",
+        "https://www.neo4j.com/trust/certifications",
+        "https://www.neo4j.com/trust-center/certifications",
+        "https://www.neo4j.com/trustcenter/certifications",
+        "https://www.neo4j.com/compliance/certifications",
+        "https://www.neo4j.com/security/compliance",
+        "https://www.neo4j.com/trust/compliance",
+        "https://neo4j.com",
+        "https://www.neo4j.com",
+        "https://neo4j.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:41:09Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "neo4j-certification-reference",
+      "vendor_id": "neo4j"
+    },
+    {
+      "_openva_path": "data/vendors/neo4j/unavailable_sources/neo4j-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://neo4j.com/legal/data-processing-addendum",
+        "https://neo4j.com/data-processing-addendum",
+        "https://neo4j.com/legal/dpa",
+        "https://neo4j.com/dpa",
+        "https://neo4j.com/privacy/dpa.html",
+        "https://neo4j.com/privacy/dpa",
+        "https://www.neo4j.com/legal/data-processing-addendum",
+        "https://www.neo4j.com/data-processing-addendum",
+        "https://www.neo4j.com/legal/dpa",
+        "https://www.neo4j.com/dpa",
+        "https://www.neo4j.com/privacy/dpa.html",
+        "https://www.neo4j.com/privacy/dpa",
+        "https://neo4j.com",
+        "https://www.neo4j.com",
+        "https://neo4j.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:32Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "neo4j-dpa",
+      "vendor_id": "neo4j"
+    },
+    {
+      "_openva_path": "data/vendors/neo4j/unavailable_sources/neo4j-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://neo4j.com/legal/subprocessors",
+        "https://neo4j.com/subprocessors",
+        "https://neo4j.com/legal/sub-processors",
+        "https://neo4j.com/sub-processors",
+        "https://neo4j.com/privacy/sub-processors.html",
+        "https://neo4j.com/privacy/subprocessors",
+        "https://www.neo4j.com/legal/subprocessors",
+        "https://www.neo4j.com/subprocessors",
+        "https://www.neo4j.com/legal/sub-processors",
+        "https://www.neo4j.com/sub-processors",
+        "https://www.neo4j.com/privacy/sub-processors.html",
+        "https://www.neo4j.com/privacy/subprocessors",
+        "https://neo4j.com",
+        "https://www.neo4j.com",
+        "https://neo4j.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:13Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "neo4j-subprocessors-list",
+      "vendor_id": "neo4j"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/neo4j/vendor.yaml",
     "catalog_status": "active",

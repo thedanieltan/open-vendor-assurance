@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/complyadvantage/artifacts/complyadvantage-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "complyadvantage-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://complyadvantage.com/dpa/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "complyadvantage-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "complyadvantage"
+    },
+    {
       "_openva_path": "data/vendors/complyadvantage/artifacts/complyadvantage-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "complyadvantage-privacy",
@@ -30,10 +60,90 @@
         "screenshot_stored": false
       },
       "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/artifacts/complyadvantage-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "artifact_id": "complyadvantage-subprocessors-list",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://complyadvantage.com/sub-processors-list/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "complyadvantage-subprocessors-list",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/artifacts/complyadvantage-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "complyadvantage-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://complyadvantage.com/security/compliance",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "complyadvantage-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "complyadvantage"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/complyadvantage/sources/complyadvantage-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.891027Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "complyadvantage-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://complyadvantage.com/dpa/",
+      "title_native": "DPA",
+      "vendor_id": "complyadvantage"
+    },
     {
       "_openva_path": "data/vendors/complyadvantage/sources/complyadvantage-privacy.yaml",
       "access_class": "public_web",
@@ -56,9 +166,100 @@
       "title_en": "ComplyAdvantage Privacy Policy",
       "title_native": "ComplyAdvantage Privacy Policy",
       "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/sources/complyadvantage-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.854648Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "complyadvantage-subprocessors-list",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://complyadvantage.com/sub-processors-list/",
+      "title_native": "Sub-Processors List",
+      "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/sources/complyadvantage-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.806111Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "complyadvantage-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://complyadvantage.com/security/compliance",
+      "title_native": "Compliance and Change Management: Building a Platform for Growth",
+      "vendor_id": "complyadvantage"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/complyadvantage/changes/candidate-promotion-complyadvantage-dpa.yaml",
+      "artifact_id": "complyadvantage-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-complyadvantage-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.891027Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "complyadvantage-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/changes/candidate-promotion-complyadvantage-subprocessors-list.yaml",
+      "artifact_id": "complyadvantage-subprocessors-list",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-complyadvantage-subprocessors-list",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.854648Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "complyadvantage-subprocessors-list",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/changes/candidate-promotion-complyadvantage-trust-center.yaml",
+      "artifact_id": "complyadvantage-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-complyadvantage-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.806111Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "complyadvantage-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "complyadvantage"
+    },
     {
       "_openva_path": "data/vendors/complyadvantage/changes/owner-source-maintenance-3-complyadvantage-privacy.yaml",
       "artifact_id": "complyadvantage-privacy",
@@ -106,19 +307,131 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 1,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "privacy_notice"
+      "dpa",
+      "privacy_notice",
+      "subprocessors_list",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "security_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/complyadvantage/unavailable_sources/complyadvantage-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://complyadvantage.com/security/certifications",
+        "https://complyadvantage.com/trust/certifications",
+        "https://complyadvantage.com/trust-center/certifications",
+        "https://complyadvantage.com/trustcenter/certifications",
+        "https://complyadvantage.com/compliance/certifications",
+        "https://complyadvantage.com/security/compliance",
+        "https://complyadvantage.com/trust/compliance",
+        "https://www.complyadvantage.com/security/certifications",
+        "https://www.complyadvantage.com/trust/certifications",
+        "https://www.complyadvantage.com/trust-center/certifications",
+        "https://www.complyadvantage.com/trustcenter/certifications",
+        "https://www.complyadvantage.com/compliance/certifications",
+        "https://www.complyadvantage.com/security/compliance",
+        "https://www.complyadvantage.com/trust/compliance",
+        "https://complyadvantage.com/privacy-policy/",
+        "https://complyadvantage.com",
+        "https://www.complyadvantage.com",
+        "https://complyadvantage.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:51Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "complyadvantage-certification-reference",
+      "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/unavailable_sources/complyadvantage-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://complyadvantage.com/compliance",
+        "https://complyadvantage.com/security/compliance",
+        "https://complyadvantage.com/trust/compliance",
+        "https://complyadvantage.com/trust-center/compliance",
+        "https://complyadvantage.com/trustcenter/compliance",
+        "https://complyadvantage.com/compliance.html",
+        "https://www.complyadvantage.com/compliance",
+        "https://www.complyadvantage.com/security/compliance",
+        "https://www.complyadvantage.com/trust/compliance",
+        "https://www.complyadvantage.com/trust-center/compliance",
+        "https://www.complyadvantage.com/trustcenter/compliance",
+        "https://www.complyadvantage.com/compliance.html",
+        "https://complyadvantage.com/insights/topic/aml-compliance/",
+        "https://complyadvantage.com/reports/business-brief-agentic-ai-and-aml-compliance/",
+        "https://complyadvantage.com/privacy-policy/",
+        "https://complyadvantage.com",
+        "https://www.complyadvantage.com",
+        "https://complyadvantage.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:51Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "complyadvantage-compliance-page",
+      "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/unavailable_sources/complyadvantage-security-page.yaml",
+      "candidate_urls_checked": [
+        "https://complyadvantage.com/security",
+        "https://complyadvantage.com/trust",
+        "https://complyadvantage.com/trust-center",
+        "https://complyadvantage.com/trustcenter",
+        "https://complyadvantage.com/security.html",
+        "https://www.complyadvantage.com/security",
+        "https://www.complyadvantage.com/trust",
+        "https://www.complyadvantage.com/trust-center",
+        "https://www.complyadvantage.com/trustcenter",
+        "https://www.complyadvantage.com/security.html",
+        "https://security.complyadvantage.com",
+        "https://security.complyadvantage.com/security",
+        "https://security.complyadvantage.com/trust",
+        "https://security.complyadvantage.com/trust-center",
+        "https://security.complyadvantage.com/trustcenter",
+        "https://security.complyadvantage.com/security.html",
+        "https://complyadvantage.com/privacy-policy/",
+        "https://complyadvantage.com",
+        "https://www.complyadvantage.com",
+        "https://complyadvantage.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:17Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "security_page",
+      "status": "not_identified",
+      "unavailable_source_id": "complyadvantage-security-page",
+      "vendor_id": "complyadvantage"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/complyadvantage/vendor.yaml",
     "catalog_status": "active",

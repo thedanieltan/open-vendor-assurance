@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/adp/artifacts/adp-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "adp-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.adp.com/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "adp-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "adp"
+    },
+    {
       "_openva_path": "data/vendors/adp/artifacts/adp-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "adp-dpa",
@@ -123,6 +153,26 @@
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/adp/sources/adp-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.093295Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "adp-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.adp.com/",
+      "title_native": "Payroll, HR and Tax Services | ADP Official Site",
+      "vendor_id": "adp"
+    },
     {
       "_openva_path": "data/vendors/adp/sources/adp-dpa.yaml",
       "access_class": "public_web",
@@ -266,6 +316,23 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/adp/changes/candidate-promotion-adp-compliance-page.yaml",
+      "artifact_id": "adp-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-adp-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.093295Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "adp-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "adp"
+    },
+    {
       "_openva_path": "data/vendors/adp/changes/regional-business-platforms-batch-1-adp-dpa.yaml",
       "artifact_id": "adp-dpa",
       "catalog_change_significance": "unknown",
@@ -374,13 +441,14 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 6,
+    "canonical_source_count": 7,
     "entity_mention_count": 0,
     "legal_entity_count": 1,
     "source_types": [
+      "compliance_page",
       "dpa",
       "other_public_source",
       "privacy_notice",
@@ -388,10 +456,49 @@
       "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "certification_reference"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/adp/unavailable_sources/adp-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.adp.com/security/certifications",
+        "https://www.adp.com/trust/certifications",
+        "https://www.adp.com/trust-center/certifications",
+        "https://www.adp.com/trustcenter/certifications",
+        "https://www.adp.com/compliance/certifications",
+        "https://www.adp.com/security/compliance",
+        "https://www.adp.com/trust/compliance",
+        "https://adp.com/security/certifications",
+        "https://adp.com/trust/certifications",
+        "https://adp.com/trust-center/certifications",
+        "https://adp.com/trustcenter/certifications",
+        "https://adp.com/compliance/certifications",
+        "https://adp.com/security/compliance",
+        "https://adp.com/trust/compliance",
+        "https://www.adp.com/about-adp/corporate-social-responsibility.aspx",
+        "https://www.adp.com/who-we-serve/by-industry/nonprofit-social-services.aspx",
+        "https://www.adp.com/who-we-serve/by-partner/financial-advisors.aspx",
+        "https://www.adp.com/legal/data-privacy/data-processing-addendum.aspx",
+        "https://www.adp.com/legal/data-privacy/subprocessors.aspx",
+        "https://adp.com"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:07Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "adp-certification-reference",
+      "vendor_id": "adp"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/adp/vendor.yaml",
     "catalog_status": "active",

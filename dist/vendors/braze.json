@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/braze/artifacts/braze-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "braze-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://www.braze.com/ja/company/regulations-compliance",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "braze-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/artifacts/braze-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "braze-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.braze.com/resources/articles/vppa-compliance",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "braze-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "braze"
+    },
+    {
       "_openva_path": "data/vendors/braze/artifacts/braze-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "braze-dpa",
@@ -59,10 +119,140 @@
         "screenshot_stored": false
       },
       "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/artifacts/braze-security-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "braze-security-page",
+      "artifact_type": "security_page",
+      "canonical_url": "https://www.braze.com/product/trust",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "braze-security-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/artifacts/braze-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "artifact_id": "braze-subprocessors-list",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://www.braze.com/company/legal/subprocessors",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "braze-subprocessors-list",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/artifacts/braze-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "braze-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://www.braze.com/resources/articles/ltr-2017-speakers-brain-trust",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "braze-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "braze"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/braze/sources/braze-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.286915Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "braze-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://www.braze.com/ja/company/regulations-compliance",
+      "title_native": "国際規格認証| 顧客エンゲージメントプラットフォームBraze（ブレイズ)",
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/sources/braze-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.301324Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "braze-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.braze.com/resources/articles/vppa-compliance",
+      "title_native": "Why VPPA forces media brands to choose between compliance and relevance",
+      "vendor_id": "braze"
+    },
     {
       "_openva_path": "data/vendors/braze/sources/braze-dpa.yaml",
       "access_class": "public_web",
@@ -102,9 +292,154 @@
       "source_url": "https://www.braze.com/company/legal/privacy",
       "title_native": "Privacy Policy | Braze",
       "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/sources/braze-security-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.646018Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "braze-security-page",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://www.braze.com/product/trust",
+      "title_native": "Build Trust with Every Interaction | Braze",
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/sources/braze-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.778266Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "braze-subprocessors-list",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.braze.com/company/legal/subprocessors",
+      "title_native": "Braze Subprocessors | Braze",
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/sources/braze-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.662331Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "braze-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://www.braze.com/resources/articles/ltr-2017-speakers-brain-trust",
+      "title_native": "Meet the LTR 2017 Brain Trust",
+      "vendor_id": "braze"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/braze/changes/candidate-promotion-braze-certification-reference.yaml",
+      "artifact_id": "braze-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-braze-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.286915Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "braze-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/changes/candidate-promotion-braze-compliance-page.yaml",
+      "artifact_id": "braze-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-braze-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.301324Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "braze-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/changes/candidate-promotion-braze-security-page.yaml",
+      "artifact_id": "braze-security-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-braze-security-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.646018Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "braze-security-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/changes/candidate-promotion-braze-subprocessors-list.yaml",
+      "artifact_id": "braze-subprocessors-list",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-braze-subprocessors-list",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.778266Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "braze-subprocessors-list",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "braze"
+    },
+    {
+      "_openva_path": "data/vendors/braze/changes/candidate-promotion-braze-trust-center.yaml",
+      "artifact_id": "braze-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-braze-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.662331Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "braze-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "braze"
+    },
     {
       "_openva_path": "data/vendors/braze/changes/redirect-canonicalization-braze-dpa.yaml",
       "artifact_id": "braze-dpa",
@@ -186,15 +521,20 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 2,
+    "artifact_count": 7,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 2,
+    "canonical_source_count": 7,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
+      "compliance_page",
       "dpa",
-      "privacy_notice"
+      "privacy_notice",
+      "security_page",
+      "subprocessors_list",
+      "trust_center"
     ],
     "unavailable_source_count": 0,
     "unavailable_source_types": []

@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/marqeta/artifacts/marqeta-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "marqeta-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://trust.marqeta.com/?itemUid=fa950d02-cbb3-4010-b917-7137a7c2a982&source=click&itemName=certifications",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "marqeta-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "marqeta"
+    },
+    {
       "_openva_path": "data/vendors/marqeta/artifacts/marqeta-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "marqeta-privacy",
@@ -65,6 +95,36 @@
       "vendor_id": "marqeta"
     },
     {
+      "_openva_path": "data/vendors/marqeta/artifacts/marqeta-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "artifact_id": "marqeta-subprocessors-list",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://trust.marqeta.com/?itemUid=e3fae2ca-94a9-416b-b577-5c90e382df57",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "marqeta-subprocessors-list",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "marqeta"
+    },
+    {
       "_openva_path": "data/vendors/marqeta/artifacts/marqeta-trust.yaml",
       "access_class": "public_web",
       "artifact_id": "marqeta-trust",
@@ -99,6 +159,26 @@
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/marqeta/sources/marqeta-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.977122Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "marqeta-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://trust.marqeta.com/?itemUid=fa950d02-cbb3-4010-b917-7137a7c2a982&source=click&itemName=certifications",
+      "title_native": "Marqeta Marqeta&#x27;s Trust Center | Powered by SafeBase",
+      "vendor_id": "marqeta"
+    },
     {
       "_openva_path": "data/vendors/marqeta/sources/marqeta-privacy.yaml",
       "access_class": "public_web",
@@ -146,6 +226,26 @@
       "vendor_id": "marqeta"
     },
     {
+      "_openva_path": "data/vendors/marqeta/sources/marqeta-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.962548Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "marqeta-subprocessors-list",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://trust.marqeta.com/?itemUid=e3fae2ca-94a9-416b-b577-5c90e382df57",
+      "title_native": "Marqeta Marqeta&#x27;s Trust Center | Powered by SafeBase",
+      "vendor_id": "marqeta"
+    },
+    {
       "_openva_path": "data/vendors/marqeta/sources/marqeta-trust.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -170,6 +270,40 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/marqeta/changes/candidate-promotion-marqeta-certification-reference.yaml",
+      "artifact_id": "marqeta-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-marqeta-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.977122Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "marqeta-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "marqeta"
+    },
+    {
+      "_openva_path": "data/vendors/marqeta/changes/candidate-promotion-marqeta-subprocessors-list.yaml",
+      "artifact_id": "marqeta-subprocessors-list",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-marqeta-subprocessors-list",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.962548Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "marqeta-subprocessors-list",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "marqeta"
+    },
     {
       "_openva_path": "data/vendors/marqeta/changes/owner-payments-expansion-1-marqeta-privacy.yaml",
       "artifact_id": "marqeta-privacy",
@@ -234,21 +368,62 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
       "privacy_notice",
       "status_page",
+      "subprocessors_list",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "dpa"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/marqeta/unavailable_sources/marqeta-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://www.marqeta.com/legal/data-processing-addendum",
+        "https://www.marqeta.com/data-processing-addendum",
+        "https://www.marqeta.com/legal/dpa",
+        "https://www.marqeta.com/dpa",
+        "https://www.marqeta.com/privacy/dpa.html",
+        "https://www.marqeta.com/privacy/dpa",
+        "https://trust.marqeta.com/legal/data-processing-addendum",
+        "https://trust.marqeta.com/data-processing-addendum",
+        "https://trust.marqeta.com/legal/dpa",
+        "https://trust.marqeta.com/dpa",
+        "https://trust.marqeta.com/privacy/dpa.html",
+        "https://trust.marqeta.com/privacy/dpa",
+        "https://status.marqeta.com/legal/data-processing-addendum",
+        "https://status.marqeta.com/data-processing-addendum",
+        "https://status.marqeta.com/legal/dpa",
+        "https://status.marqeta.com/dpa",
+        "https://status.marqeta.com/privacy/dpa.html",
+        "https://status.marqeta.com/privacy/dpa",
+        "https://marqeta.com/legal/data-processing-addendum",
+        "https://marqeta.com/data-processing-addendum"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:22Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "marqeta-dpa",
+      "vendor_id": "marqeta"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/marqeta/vendor.yaml",
     "catalog_status": "active",

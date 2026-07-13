@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/ping-identity/artifacts/ping-identity-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "ping-identity-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://www.pingidentity.com/en/legal/gdpr-compliance-faq.html",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "ping-identity-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "ping-identity"
+    },
+    {
+      "_openva_path": "data/vendors/ping-identity/artifacts/ping-identity-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "ping-identity-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.pingidentity.com/en-us/docs/legal/business-associate-agreement",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "ping-identity-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "ping-identity"
+    },
+    {
       "_openva_path": "data/vendors/ping-identity/artifacts/ping-identity-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "ping-identity-dpa",
@@ -140,6 +200,46 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/ping-identity/sources/ping-identity-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.180051Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "ping-identity-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://www.pingidentity.com/en/legal/gdpr-compliance-faq.html",
+      "title_native": "GDPR Compliance Frequently Asked Questions | Ping Identity",
+      "vendor_id": "ping-identity"
+    },
+    {
+      "_openva_path": "data/vendors/ping-identity/sources/ping-identity-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.161622Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "ping-identity-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.pingidentity.com/en-us/docs/legal/business-associate-agreement",
+      "title_native": "Business Associate Agreement | Ping Identity",
+      "vendor_id": "ping-identity"
+    },
+    {
       "_openva_path": "data/vendors/ping-identity/sources/ping-identity-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -234,6 +334,40 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/ping-identity/changes/candidate-promotion-ping-identity-certification-reference.yaml",
+      "artifact_id": "ping-identity-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-ping-identity-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.180051Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "ping-identity-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "ping-identity"
+    },
+    {
+      "_openva_path": "data/vendors/ping-identity/changes/candidate-promotion-ping-identity-compliance-page.yaml",
+      "artifact_id": "ping-identity-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-ping-identity-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.161622Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "ping-identity-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "ping-identity"
+    },
+    {
       "_openva_path": "data/vendors/ping-identity/changes/owner-security-identity-expansion-3-ping-identity-dpa.yaml",
       "artifact_id": "ping-identity-dpa",
       "catalog_change_significance": "unknown",
@@ -314,13 +448,15 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
+      "compliance_page",
       "dpa",
       "privacy_notice",
       "subprocessors_list",

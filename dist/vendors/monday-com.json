@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/monday-com/artifacts/monday-com-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "monday-com-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://monday.com/l/privacy/dpa/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "monday-com-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "monday-com"
+    },
+    {
       "_openva_path": "data/vendors/monday-com/artifacts/monday-com-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "monday-com-privacy",
@@ -65,6 +95,36 @@
       "vendor_id": "monday-com"
     },
     {
+      "_openva_path": "data/vendors/monday-com/artifacts/monday-com-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "artifact_id": "monday-com-subprocessors-list",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://monday.com/l/privacy/sub-processors-subsidiaries-support/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "monday-com-subprocessors-list",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "monday-com"
+    },
+    {
       "_openva_path": "data/vendors/monday-com/artifacts/monday-com-terms.yaml",
       "access_class": "public_web",
       "artifact_id": "monday-com-terms",
@@ -95,10 +155,60 @@
         "screenshot_stored": false
       },
       "vendor_id": "monday-com"
+    },
+    {
+      "_openva_path": "data/vendors/monday-com/artifacts/monday-com-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "monday-com-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://monday.com/trustcenter",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "monday-com-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "monday-com"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/monday-com/sources/monday-com-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.116186Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "monday-com-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://monday.com/l/privacy/dpa/",
+      "title_native": "Data Processing Addendum (DPA) - monday.com Legal Portal",
+      "vendor_id": "monday-com"
+    },
     {
       "_openva_path": "data/vendors/monday-com/sources/monday-com-privacy.yaml",
       "access_class": "public_web",
@@ -146,6 +256,26 @@
       "vendor_id": "monday-com"
     },
     {
+      "_openva_path": "data/vendors/monday-com/sources/monday-com-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.981547Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "monday-com-subprocessors-list",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://monday.com/l/privacy/sub-processors-subsidiaries-support/",
+      "title_native": "Sub-Processors, Subsidiaries &amp; Support - monday.com Legal Portal",
+      "vendor_id": "monday-com"
+    },
+    {
       "_openva_path": "data/vendors/monday-com/sources/monday-com-terms.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -167,9 +297,80 @@
       "title_en": "monday.com Terms of Service",
       "title_native": "monday.com Terms of Service",
       "vendor_id": "monday-com"
+    },
+    {
+      "_openva_path": "data/vendors/monday-com/sources/monday-com-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.179415Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "monday-com-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://monday.com/trustcenter",
+      "title_native": "monday.com Work Platform | Made For Work, Designed To Love",
+      "vendor_id": "monday-com"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/monday-com/changes/candidate-promotion-monday-com-dpa.yaml",
+      "artifact_id": "monday-com-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-monday-com-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.116186Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "monday-com-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "monday-com"
+    },
+    {
+      "_openva_path": "data/vendors/monday-com/changes/candidate-promotion-monday-com-subprocessors-list.yaml",
+      "artifact_id": "monday-com-subprocessors-list",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-monday-com-subprocessors-list",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.981547Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "monday-com-subprocessors-list",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "monday-com"
+    },
+    {
+      "_openva_path": "data/vendors/monday-com/changes/candidate-promotion-monday-com-trust-center.yaml",
+      "artifact_id": "monday-com-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-monday-com-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.179415Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "monday-com-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "monday-com"
+    },
     {
       "_openva_path": "data/vendors/monday-com/changes/owner-collab-dev-expansion-1-monday-com-privacy.yaml",
       "artifact_id": "monday-com-privacy",
@@ -234,21 +435,137 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "dpa",
       "privacy_notice",
       "status_page",
-      "terms_of_service"
+      "subprocessors_list",
+      "terms_of_service",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "security_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/monday-com/unavailable_sources/monday-com-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://monday.com/security/certifications",
+        "https://monday.com/trust/certifications",
+        "https://monday.com/trust-center/certifications",
+        "https://monday.com/trustcenter/certifications",
+        "https://monday.com/compliance/certifications",
+        "https://monday.com/security/compliance",
+        "https://monday.com/trust/compliance",
+        "https://status.monday.com/security/certifications",
+        "https://status.monday.com/trust/certifications",
+        "https://status.monday.com/trust-center/certifications",
+        "https://status.monday.com/trustcenter/certifications",
+        "https://status.monday.com/compliance/certifications",
+        "https://status.monday.com/security/compliance",
+        "https://status.monday.com/trust/compliance",
+        "https://www.monday.com/security/certifications",
+        "https://www.monday.com/trust/certifications",
+        "https://www.monday.com/trust-center/certifications",
+        "https://www.monday.com/trustcenter/certifications",
+        "https://www.monday.com/compliance/certifications",
+        "https://www.monday.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:48Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "monday-com-certification-reference",
+      "vendor_id": "monday-com"
+    },
+    {
+      "_openva_path": "data/vendors/monday-com/unavailable_sources/monday-com-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://monday.com/compliance",
+        "https://monday.com/security/compliance",
+        "https://monday.com/trust/compliance",
+        "https://monday.com/trust-center/compliance",
+        "https://monday.com/trustcenter/compliance",
+        "https://monday.com/compliance.html",
+        "https://status.monday.com/compliance",
+        "https://status.monday.com/security/compliance",
+        "https://status.monday.com/trust/compliance",
+        "https://status.monday.com/trust-center/compliance",
+        "https://status.monday.com/trustcenter/compliance",
+        "https://status.monday.com/compliance.html",
+        "https://www.monday.com/compliance",
+        "https://www.monday.com/security/compliance",
+        "https://www.monday.com/trust/compliance",
+        "https://www.monday.com/trust-center/compliance",
+        "https://www.monday.com/trustcenter/compliance",
+        "https://www.monday.com/compliance.html",
+        "https://www.status.monday.com/compliance",
+        "https://www.status.monday.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:48Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "monday-com-compliance-page",
+      "vendor_id": "monday-com"
+    },
+    {
+      "_openva_path": "data/vendors/monday-com/unavailable_sources/monday-com-security-page.yaml",
+      "candidate_urls_checked": [
+        "https://monday.com/security",
+        "https://monday.com/trust",
+        "https://monday.com/trust-center",
+        "https://monday.com/trustcenter",
+        "https://monday.com/security.html",
+        "https://status.monday.com/security",
+        "https://status.monday.com/trust",
+        "https://status.monday.com/trust-center",
+        "https://status.monday.com/trustcenter",
+        "https://status.monday.com/security.html",
+        "https://www.monday.com/security",
+        "https://www.monday.com/trust",
+        "https://www.monday.com/trust-center",
+        "https://www.monday.com/trustcenter",
+        "https://www.monday.com/security.html",
+        "https://www.status.monday.com/security",
+        "https://www.status.monday.com/trust",
+        "https://www.status.monday.com/trust-center",
+        "https://www.status.monday.com/trustcenter",
+        "https://www.status.monday.com/security.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:52Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "security_page",
+      "status": "not_identified",
+      "unavailable_source_id": "monday-com-security-page",
+      "vendor_id": "monday-com"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/monday-com/vendor.yaml",
     "catalog_status": "active",

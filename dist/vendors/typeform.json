@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/typeform/artifacts/typeform-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "typeform-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.typeform.com/blog/survey-school-5-compliance-considerations",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "typeform-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "typeform"
+    },
+    {
       "_openva_path": "data/vendors/typeform/artifacts/typeform-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "typeform-dpa",
@@ -128,6 +158,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/typeform/sources/typeform-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.561565Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "typeform-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.typeform.com/blog/survey-school-5-compliance-considerations",
+      "title_native": "Data compliance considerations to maintain customer trust and avoid costly fines",
+      "vendor_id": "typeform"
+    },
+    {
       "_openva_path": "data/vendors/typeform/sources/typeform-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -222,6 +272,23 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/typeform/changes/candidate-promotion-typeform-compliance-page.yaml",
+      "artifact_id": "typeform-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-typeform-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.561565Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "typeform-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "typeform"
+    },
+    {
       "_openva_path": "data/vendors/typeform/changes/productivity-commerce-growth-batch-1-typeform-dpa.yaml",
       "artifact_id": "typeform-dpa",
       "catalog_change_significance": "unknown",
@@ -302,22 +369,62 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
       "dpa",
       "privacy_notice",
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "certification_reference"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/typeform/unavailable_sources/typeform-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.typeform.com/security/certifications",
+        "https://www.typeform.com/trust/certifications",
+        "https://www.typeform.com/trust-center/certifications",
+        "https://www.typeform.com/trustcenter/certifications",
+        "https://www.typeform.com/compliance/certifications",
+        "https://www.typeform.com/security/compliance",
+        "https://www.typeform.com/trust/compliance",
+        "https://admin.typeform.com/security/certifications",
+        "https://admin.typeform.com/trust/certifications",
+        "https://admin.typeform.com/trust-center/certifications",
+        "https://admin.typeform.com/trustcenter/certifications",
+        "https://admin.typeform.com/compliance/certifications",
+        "https://admin.typeform.com/security/compliance",
+        "https://admin.typeform.com/trust/compliance",
+        "https://typeform.com/security/certifications",
+        "https://typeform.com/trust/certifications",
+        "https://typeform.com/trust-center/certifications",
+        "https://typeform.com/trustcenter/certifications",
+        "https://typeform.com/compliance/certifications",
+        "https://typeform.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:43:39Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "typeform-certification-reference",
+      "vendor_id": "typeform"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/typeform/vendor.yaml",
     "catalog_status": "active",

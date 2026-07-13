@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/greenhouse/artifacts/greenhouse-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "greenhouse-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://www.greenhouse.com/product-features/greenhouse-achieves-iso-iec-42001-2023-certification",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "greenhouse-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "greenhouse"
+    },
+    {
+      "_openva_path": "data/vendors/greenhouse/artifacts/greenhouse-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "greenhouse-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.greenhouse.com/audit-log-terms",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "greenhouse-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "greenhouse"
+    },
+    {
       "_openva_path": "data/vendors/greenhouse/artifacts/greenhouse-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "greenhouse-dpa",
@@ -124,6 +184,46 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/greenhouse/sources/greenhouse-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.864647Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "greenhouse-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://www.greenhouse.com/product-features/greenhouse-achieves-iso-iec-42001-2023-certification",
+      "title_native": "Greenhouse achieves ISO/IEC 42001:2023 certification",
+      "vendor_id": "greenhouse"
+    },
+    {
+      "_openva_path": "data/vendors/greenhouse/sources/greenhouse-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.847505Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "greenhouse-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.greenhouse.com/audit-log-terms",
+      "title_native": "Greenhouse | Legal - Audit Log Terms",
+      "vendor_id": "greenhouse"
+    },
+    {
       "_openva_path": "data/vendors/greenhouse/sources/greenhouse-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -217,6 +317,40 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/greenhouse/changes/candidate-promotion-greenhouse-certification-reference.yaml",
+      "artifact_id": "greenhouse-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-greenhouse-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.864647Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "greenhouse-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "greenhouse"
+    },
+    {
+      "_openva_path": "data/vendors/greenhouse/changes/candidate-promotion-greenhouse-compliance-page.yaml",
+      "artifact_id": "greenhouse-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-greenhouse-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.847505Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "greenhouse-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "greenhouse"
+    },
     {
       "_openva_path": "data/vendors/greenhouse/changes/owner-source-maintenance-3-greenhouse-subprocessors.yaml",
       "artifact_id": "greenhouse-subprocessors",
@@ -315,13 +449,15 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
+      "compliance_page",
       "dpa",
       "privacy_notice",
       "security_page",

@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/pandadoc/artifacts/pandadoc-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "pandadoc-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.pandadoc.com/legal/dpa/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "pandadoc-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "pandadoc"
+    },
+    {
       "_openva_path": "data/vendors/pandadoc/artifacts/pandadoc-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "pandadoc-privacy",
@@ -95,10 +125,60 @@
         "screenshot_stored": false
       },
       "vendor_id": "pandadoc"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/artifacts/pandadoc-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "pandadoc-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://www.pandadoc.com/trust/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "pandadoc-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "pandadoc"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/pandadoc/sources/pandadoc-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.166636Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "pandadoc-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.pandadoc.com/legal/dpa/",
+      "title_native": "Data Processing Agreement | PandaDoc",
+      "vendor_id": "pandadoc"
+    },
     {
       "_openva_path": "data/vendors/pandadoc/sources/pandadoc-privacy.yaml",
       "access_class": "public_web",
@@ -167,9 +247,63 @@
       "title_en": "PandaDoc Master Services Agreement",
       "title_native": "PandaDoc Master Services Agreement",
       "vendor_id": "pandadoc"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/sources/pandadoc-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.273990Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "pandadoc-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://www.pandadoc.com/trust/",
+      "title_native": "Not Found",
+      "vendor_id": "pandadoc"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/pandadoc/changes/candidate-promotion-pandadoc-dpa.yaml",
+      "artifact_id": "pandadoc-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-pandadoc-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.166636Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "pandadoc-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "pandadoc"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/changes/candidate-promotion-pandadoc-trust-center.yaml",
+      "artifact_id": "pandadoc-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-pandadoc-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.273990Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "pandadoc-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "pandadoc"
+    },
     {
       "_openva_path": "data/vendors/pandadoc/changes/owner-collab-doc-expansion-1-pandadoc-privacy.yaml",
       "artifact_id": "pandadoc-privacy",
@@ -234,21 +368,173 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "dpa",
       "privacy_notice",
       "status_page",
-      "terms_of_service"
+      "terms_of_service",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 4,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "security_page",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/pandadoc/unavailable_sources/pandadoc-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.pandadoc.com/security/certifications",
+        "https://www.pandadoc.com/trust/certifications",
+        "https://www.pandadoc.com/trust-center/certifications",
+        "https://www.pandadoc.com/trustcenter/certifications",
+        "https://www.pandadoc.com/compliance/certifications",
+        "https://www.pandadoc.com/security/compliance",
+        "https://www.pandadoc.com/trust/compliance",
+        "https://status.pandadoc.com/security/certifications",
+        "https://status.pandadoc.com/trust/certifications",
+        "https://status.pandadoc.com/trust-center/certifications",
+        "https://status.pandadoc.com/trustcenter/certifications",
+        "https://status.pandadoc.com/compliance/certifications",
+        "https://status.pandadoc.com/security/compliance",
+        "https://status.pandadoc.com/trust/compliance",
+        "https://pandadoc.com/security/certifications",
+        "https://pandadoc.com/trust/certifications",
+        "https://pandadoc.com/trust-center/certifications",
+        "https://pandadoc.com/trustcenter/certifications",
+        "https://pandadoc.com/compliance/certifications",
+        "https://pandadoc.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:41:34Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "pandadoc-certification-reference",
+      "vendor_id": "pandadoc"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/unavailable_sources/pandadoc-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://www.pandadoc.com/compliance",
+        "https://www.pandadoc.com/security/compliance",
+        "https://www.pandadoc.com/trust/compliance",
+        "https://www.pandadoc.com/trust-center/compliance",
+        "https://www.pandadoc.com/trustcenter/compliance",
+        "https://www.pandadoc.com/compliance.html",
+        "https://status.pandadoc.com/compliance",
+        "https://status.pandadoc.com/security/compliance",
+        "https://status.pandadoc.com/trust/compliance",
+        "https://status.pandadoc.com/trust-center/compliance",
+        "https://status.pandadoc.com/trustcenter/compliance",
+        "https://status.pandadoc.com/compliance.html",
+        "https://pandadoc.com/compliance",
+        "https://pandadoc.com/security/compliance",
+        "https://pandadoc.com/trust/compliance",
+        "https://pandadoc.com/trust-center/compliance",
+        "https://pandadoc.com/trustcenter/compliance",
+        "https://pandadoc.com/compliance.html",
+        "https://www.www.pandadoc.com/compliance",
+        "https://www.www.pandadoc.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:41:34Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "pandadoc-compliance-page",
+      "vendor_id": "pandadoc"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/unavailable_sources/pandadoc-security-page.yaml",
+      "candidate_urls_checked": [
+        "https://www.pandadoc.com/security",
+        "https://www.pandadoc.com/trust",
+        "https://www.pandadoc.com/trust-center",
+        "https://www.pandadoc.com/trustcenter",
+        "https://www.pandadoc.com/security.html",
+        "https://status.pandadoc.com/security",
+        "https://status.pandadoc.com/trust",
+        "https://status.pandadoc.com/trust-center",
+        "https://status.pandadoc.com/trustcenter",
+        "https://status.pandadoc.com/security.html",
+        "https://pandadoc.com/security",
+        "https://pandadoc.com/trust",
+        "https://pandadoc.com/trust-center",
+        "https://pandadoc.com/trustcenter",
+        "https://pandadoc.com/security.html",
+        "https://www.www.pandadoc.com/security",
+        "https://www.www.pandadoc.com/trust",
+        "https://www.www.pandadoc.com/trust-center",
+        "https://www.www.pandadoc.com/trustcenter",
+        "https://www.www.pandadoc.com/security.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:18Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "security_page",
+      "status": "not_identified",
+      "unavailable_source_id": "pandadoc-security-page",
+      "vendor_id": "pandadoc"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/unavailable_sources/pandadoc-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://www.pandadoc.com/legal/subprocessors",
+        "https://www.pandadoc.com/subprocessors",
+        "https://www.pandadoc.com/legal/sub-processors",
+        "https://www.pandadoc.com/sub-processors",
+        "https://www.pandadoc.com/privacy/sub-processors.html",
+        "https://www.pandadoc.com/privacy/subprocessors",
+        "https://status.pandadoc.com/legal/subprocessors",
+        "https://status.pandadoc.com/subprocessors",
+        "https://status.pandadoc.com/legal/sub-processors",
+        "https://status.pandadoc.com/sub-processors",
+        "https://status.pandadoc.com/privacy/sub-processors.html",
+        "https://status.pandadoc.com/privacy/subprocessors",
+        "https://pandadoc.com/legal/subprocessors",
+        "https://pandadoc.com/subprocessors",
+        "https://pandadoc.com/legal/sub-processors",
+        "https://pandadoc.com/sub-processors",
+        "https://pandadoc.com/privacy/sub-processors.html",
+        "https://pandadoc.com/privacy/subprocessors",
+        "https://www.www.pandadoc.com/legal/subprocessors",
+        "https://www.www.pandadoc.com/subprocessors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:27Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "pandadoc-subprocessors-list",
+      "vendor_id": "pandadoc"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/pandadoc/vendor.yaml",
     "catalog_status": "active",

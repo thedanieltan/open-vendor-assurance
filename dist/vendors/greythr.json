@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/greythr/artifacts/greythr-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "greythr-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.greythr.com/faqs/social-security-code",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "greythr-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "greythr"
+    },
+    {
       "_openva_path": "data/vendors/greythr/artifacts/greythr-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "greythr-privacy",
@@ -64,6 +94,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/greythr/sources/greythr-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.878382Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "greythr-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.greythr.com/faqs/social-security-code",
+      "title_native": "Compliance Page",
+      "vendor_id": "greythr"
+    },
+    {
       "_openva_path": "data/vendors/greythr/sources/greythr-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -112,6 +162,23 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/greythr/changes/candidate-promotion-greythr-compliance-page.yaml",
+      "artifact_id": "greythr-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-greythr-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.878382Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "greythr-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "greythr"
+    },
+    {
       "_openva_path": "data/vendors/greythr/changes/regional-business-platforms-batch-1-greythr-privacy.yaml",
       "artifact_id": "greythr-privacy",
       "catalog_change_significance": "unknown",
@@ -158,20 +225,130 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 2,
+    "artifact_count": 3,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 2,
+    "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
       "privacy_notice",
       "security_page"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "dpa",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/greythr/unavailable_sources/greythr-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.greythr.com/security/certifications",
+        "https://www.greythr.com/trust/certifications",
+        "https://www.greythr.com/trust-center/certifications",
+        "https://www.greythr.com/trustcenter/certifications",
+        "https://www.greythr.com/compliance/certifications",
+        "https://www.greythr.com/security/compliance",
+        "https://www.greythr.com/trust/compliance",
+        "https://greythr.com/security/certifications",
+        "https://greythr.com/trust/certifications",
+        "https://greythr.com/trust-center/certifications",
+        "https://greythr.com/trustcenter/certifications",
+        "https://greythr.com/compliance/certifications",
+        "https://greythr.com/security/compliance",
+        "https://greythr.com/trust/compliance",
+        "https://www.greythr.com/privacy-policy/",
+        "https://www.greythr.com/security/",
+        "https://greythr.com",
+        "https://www.greythr.com",
+        "https://greythr.com/sitemap.xml",
+        "https://greythr.com/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:42Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "greythr-certification-reference",
+      "vendor_id": "greythr"
+    },
+    {
+      "_openva_path": "data/vendors/greythr/unavailable_sources/greythr-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://www.greythr.com/legal/data-processing-addendum",
+        "https://www.greythr.com/data-processing-addendum",
+        "https://www.greythr.com/legal/dpa",
+        "https://www.greythr.com/dpa",
+        "https://www.greythr.com/privacy/dpa.html",
+        "https://www.greythr.com/privacy/dpa",
+        "https://greythr.com/legal/data-processing-addendum",
+        "https://greythr.com/data-processing-addendum",
+        "https://greythr.com/legal/dpa",
+        "https://greythr.com/dpa",
+        "https://greythr.com/privacy/dpa.html",
+        "https://greythr.com/privacy/dpa",
+        "https://www.greythr.com/privacy-policy/",
+        "https://www.greythr.com/security/",
+        "https://greythr.com",
+        "https://www.greythr.com",
+        "https://greythr.com/sitemap.xml",
+        "https://greythr.com/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:25Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "greythr-dpa",
+      "vendor_id": "greythr"
+    },
+    {
+      "_openva_path": "data/vendors/greythr/unavailable_sources/greythr-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://www.greythr.com/legal/subprocessors",
+        "https://www.greythr.com/subprocessors",
+        "https://www.greythr.com/legal/sub-processors",
+        "https://www.greythr.com/sub-processors",
+        "https://www.greythr.com/privacy/sub-processors.html",
+        "https://www.greythr.com/privacy/subprocessors",
+        "https://greythr.com/legal/subprocessors",
+        "https://greythr.com/subprocessors",
+        "https://greythr.com/legal/sub-processors",
+        "https://greythr.com/sub-processors",
+        "https://greythr.com/privacy/sub-processors.html",
+        "https://greythr.com/privacy/subprocessors",
+        "https://www.greythr.com/privacy-policy/",
+        "https://www.greythr.com/security/",
+        "https://greythr.com",
+        "https://www.greythr.com",
+        "https://greythr.com/sitemap.xml",
+        "https://greythr.com/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:04Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "greythr-subprocessors-list",
+      "vendor_id": "greythr"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/greythr/vendor.yaml",
     "catalog_status": "active",

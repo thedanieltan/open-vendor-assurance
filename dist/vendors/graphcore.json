@@ -29,6 +29,36 @@
         "screenshot_stored": false
       },
       "vendor_id": "graphcore"
+    },
+    {
+      "_openva_path": "data/vendors/graphcore/artifacts/graphcore-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "graphcore-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://www.graphcore.ai/posts/hadean-turns-to-ipu-to-develop-uk-sovereign-ai-capabilities-for-national-security",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "graphcore-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "graphcore"
     }
   ],
   "candidate_sources": [],
@@ -52,9 +82,46 @@
       "source_url": "https://www.graphcore.ai/privacy",
       "title_native": "Privacy Policy",
       "vendor_id": "graphcore"
+    },
+    {
+      "_openva_path": "data/vendors/graphcore/sources/graphcore-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.055481Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "graphcore-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://www.graphcore.ai/posts/hadean-turns-to-ipu-to-develop-uk-sovereign-ai-capabilities-for-national-security",
+      "title_native": "Hadean turns to IPU to develop UK-sovereign AI capabilities for national security",
+      "vendor_id": "graphcore"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/graphcore/changes/candidate-promotion-graphcore-trust-center.yaml",
+      "artifact_id": "graphcore-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-graphcore-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.055481Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "graphcore-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "graphcore"
+    },
     {
       "_openva_path": "data/vendors/graphcore/changes/redirect-canonicalization-graphcore-privacy-notice.yaml",
       "artifact_id": "graphcore-privacy-notice",
@@ -102,19 +169,188 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 1,
+    "artifact_count": 2,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 2,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "privacy_notice"
+      "privacy_notice",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 5,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "dpa",
+      "security_page",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/graphcore/unavailable_sources/graphcore-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://graphcore.ai/security/certifications",
+        "https://graphcore.ai/trust/certifications",
+        "https://graphcore.ai/trust-center/certifications",
+        "https://graphcore.ai/trustcenter/certifications",
+        "https://graphcore.ai/compliance/certifications",
+        "https://graphcore.ai/security/compliance",
+        "https://graphcore.ai/trust/compliance",
+        "https://www.graphcore.ai/security/certifications",
+        "https://www.graphcore.ai/trust/certifications",
+        "https://www.graphcore.ai/trust-center/certifications",
+        "https://www.graphcore.ai/trustcenter/certifications",
+        "https://www.graphcore.ai/compliance/certifications",
+        "https://www.graphcore.ai/security/compliance",
+        "https://www.graphcore.ai/trust/compliance",
+        "https://graphcore.ai",
+        "https://www.graphcore.ai",
+        "https://graphcore.ai/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "graphcore-certification-reference",
+      "vendor_id": "graphcore"
+    },
+    {
+      "_openva_path": "data/vendors/graphcore/unavailable_sources/graphcore-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://graphcore.ai/compliance",
+        "https://graphcore.ai/security/compliance",
+        "https://graphcore.ai/trust/compliance",
+        "https://graphcore.ai/trust-center/compliance",
+        "https://graphcore.ai/trustcenter/compliance",
+        "https://graphcore.ai/compliance.html",
+        "https://www.graphcore.ai/compliance",
+        "https://www.graphcore.ai/security/compliance",
+        "https://www.graphcore.ai/trust/compliance",
+        "https://www.graphcore.ai/trust-center/compliance",
+        "https://www.graphcore.ai/trustcenter/compliance",
+        "https://www.graphcore.ai/compliance.html",
+        "https://graphcore.ai",
+        "https://www.graphcore.ai",
+        "https://graphcore.ai/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "graphcore-compliance-page",
+      "vendor_id": "graphcore"
+    },
+    {
+      "_openva_path": "data/vendors/graphcore/unavailable_sources/graphcore-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://graphcore.ai/legal/data-processing-addendum",
+        "https://graphcore.ai/data-processing-addendum",
+        "https://graphcore.ai/legal/dpa",
+        "https://graphcore.ai/dpa",
+        "https://graphcore.ai/privacy/dpa.html",
+        "https://graphcore.ai/privacy/dpa",
+        "https://www.graphcore.ai/legal/data-processing-addendum",
+        "https://www.graphcore.ai/data-processing-addendum",
+        "https://www.graphcore.ai/legal/dpa",
+        "https://www.graphcore.ai/dpa",
+        "https://www.graphcore.ai/privacy/dpa.html",
+        "https://www.graphcore.ai/privacy/dpa",
+        "https://graphcore.ai",
+        "https://www.graphcore.ai",
+        "https://graphcore.ai/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:59Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "graphcore-dpa",
+      "vendor_id": "graphcore"
+    },
+    {
+      "_openva_path": "data/vendors/graphcore/unavailable_sources/graphcore-security-page.yaml",
+      "candidate_urls_checked": [
+        "https://graphcore.ai/security",
+        "https://graphcore.ai/trust",
+        "https://graphcore.ai/trust-center",
+        "https://graphcore.ai/trustcenter",
+        "https://graphcore.ai/security.html",
+        "https://www.graphcore.ai/security",
+        "https://www.graphcore.ai/trust",
+        "https://www.graphcore.ai/trust-center",
+        "https://www.graphcore.ai/trustcenter",
+        "https://www.graphcore.ai/security.html",
+        "https://security.graphcore.ai",
+        "https://security.graphcore.ai/security",
+        "https://security.graphcore.ai/trust",
+        "https://security.graphcore.ai/trust-center",
+        "https://security.graphcore.ai/trustcenter",
+        "https://security.graphcore.ai/security.html",
+        "https://graphcore.ai",
+        "https://www.graphcore.ai",
+        "https://graphcore.ai/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:39Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "security_page",
+      "status": "not_identified",
+      "unavailable_source_id": "graphcore-security-page",
+      "vendor_id": "graphcore"
+    },
+    {
+      "_openva_path": "data/vendors/graphcore/unavailable_sources/graphcore-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://graphcore.ai/legal/subprocessors",
+        "https://graphcore.ai/subprocessors",
+        "https://graphcore.ai/legal/sub-processors",
+        "https://graphcore.ai/sub-processors",
+        "https://graphcore.ai/privacy/sub-processors.html",
+        "https://graphcore.ai/privacy/subprocessors",
+        "https://www.graphcore.ai/legal/subprocessors",
+        "https://www.graphcore.ai/subprocessors",
+        "https://www.graphcore.ai/legal/sub-processors",
+        "https://www.graphcore.ai/sub-processors",
+        "https://www.graphcore.ai/privacy/sub-processors.html",
+        "https://www.graphcore.ai/privacy/subprocessors",
+        "https://graphcore.ai",
+        "https://www.graphcore.ai",
+        "https://graphcore.ai/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:47Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "graphcore-subprocessors-list",
+      "vendor_id": "graphcore"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/graphcore/vendor.yaml",
     "catalog_status": "active",

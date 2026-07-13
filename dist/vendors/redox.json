@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/redox/artifacts/redox-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "redox-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://redoxengine.com/blog/redox-adds-hitrust-i1-certification-for-its-google-cloud-offering-to-manage-healthcare-data-protection-and-mitigate-cybersecurity-threats/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "redox-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "redox"
+    },
+    {
       "_openva_path": "data/vendors/redox/artifacts/redox-platform-security.yaml",
       "access_class": "public_web",
       "artifact_id": "redox-platform-security",
@@ -94,6 +124,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/redox/sources/redox-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.256568Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "redox-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://redoxengine.com/blog/redox-adds-hitrust-i1-certification-for-its-google-cloud-offering-to-manage-healthcare-data-protection-and-mitigate-cybersecurity-threats/",
+      "title_native": "Redox adds HITRUST i1 Certification for its Google Cloud offering to manage healthcare data protection and mitigate cybersecurity threats - Redox",
+      "vendor_id": "redox"
+    },
+    {
       "_openva_path": "data/vendors/redox/sources/redox-platform-security.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -165,6 +215,23 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/redox/changes/candidate-promotion-redox-compliance-page.yaml",
+      "artifact_id": "redox-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-redox-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.256568Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "redox-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "redox"
+    },
+    {
       "_openva_path": "data/vendors/redox/changes/regulated-profile-coverage-1-redox-platform-security.yaml",
       "artifact_id": "redox-platform-security",
       "catalog_change_significance": "unknown",
@@ -228,20 +295,134 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
       "privacy_notice",
       "security_page"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "dpa",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/redox/unavailable_sources/redox-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://redoxengine.com/security/certifications",
+        "https://redoxengine.com/trust/certifications",
+        "https://redoxengine.com/trust-center/certifications",
+        "https://redoxengine.com/trustcenter/certifications",
+        "https://redoxengine.com/compliance/certifications",
+        "https://redoxengine.com/security/compliance",
+        "https://redoxengine.com/trust/compliance",
+        "https://docs.redoxengine.com/security/certifications",
+        "https://docs.redoxengine.com/trust/certifications",
+        "https://docs.redoxengine.com/trust-center/certifications",
+        "https://docs.redoxengine.com/trustcenter/certifications",
+        "https://docs.redoxengine.com/compliance/certifications",
+        "https://docs.redoxengine.com/security/compliance",
+        "https://docs.redoxengine.com/trust/compliance",
+        "https://www.redoxengine.com/security/certifications",
+        "https://www.redoxengine.com/trust/certifications",
+        "https://www.redoxengine.com/trust-center/certifications",
+        "https://www.redoxengine.com/trustcenter/certifications",
+        "https://www.redoxengine.com/compliance/certifications",
+        "https://www.redoxengine.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:41:56Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "redox-certification-reference",
+      "vendor_id": "redox"
+    },
+    {
+      "_openva_path": "data/vendors/redox/unavailable_sources/redox-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://redoxengine.com/legal/data-processing-addendum",
+        "https://redoxengine.com/data-processing-addendum",
+        "https://redoxengine.com/legal/dpa",
+        "https://redoxengine.com/dpa",
+        "https://redoxengine.com/privacy/dpa.html",
+        "https://redoxengine.com/privacy/dpa",
+        "https://docs.redoxengine.com/legal/data-processing-addendum",
+        "https://docs.redoxengine.com/data-processing-addendum",
+        "https://docs.redoxengine.com/legal/dpa",
+        "https://docs.redoxengine.com/dpa",
+        "https://docs.redoxengine.com/privacy/dpa.html",
+        "https://docs.redoxengine.com/privacy/dpa",
+        "https://www.redoxengine.com/legal/data-processing-addendum",
+        "https://www.redoxengine.com/data-processing-addendum",
+        "https://www.redoxengine.com/legal/dpa",
+        "https://www.redoxengine.com/dpa",
+        "https://www.redoxengine.com/privacy/dpa.html",
+        "https://www.redoxengine.com/privacy/dpa",
+        "https://docs.redoxengine.com/basics/data-exchange-with-redox/operations-for-data-processing/",
+        "https://redoxengine.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:59Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "redox-dpa",
+      "vendor_id": "redox"
+    },
+    {
+      "_openva_path": "data/vendors/redox/unavailable_sources/redox-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://redoxengine.com/legal/subprocessors",
+        "https://redoxengine.com/subprocessors",
+        "https://redoxengine.com/legal/sub-processors",
+        "https://redoxengine.com/sub-processors",
+        "https://redoxengine.com/privacy/sub-processors.html",
+        "https://redoxengine.com/privacy/subprocessors",
+        "https://docs.redoxengine.com/legal/subprocessors",
+        "https://docs.redoxengine.com/subprocessors",
+        "https://docs.redoxengine.com/legal/sub-processors",
+        "https://docs.redoxengine.com/sub-processors",
+        "https://docs.redoxengine.com/privacy/sub-processors.html",
+        "https://docs.redoxengine.com/privacy/subprocessors",
+        "https://www.redoxengine.com/legal/subprocessors",
+        "https://www.redoxengine.com/subprocessors",
+        "https://www.redoxengine.com/legal/sub-processors",
+        "https://www.redoxengine.com/sub-processors",
+        "https://www.redoxengine.com/privacy/sub-processors.html",
+        "https://www.redoxengine.com/privacy/subprocessors",
+        "https://redoxengine.com/",
+        "https://redoxengine.com/legal/privacy-policy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:33Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "redox-subprocessors-list",
+      "vendor_id": "redox"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/redox/vendor.yaml",
     "catalog_status": "active",

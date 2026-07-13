@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/fly-io/artifacts/fly-io-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "fly-io-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://fly.io/blog/soc2-the-screenshots-will-continue-until-security-improves/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "fly-io-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "fly-io"
+    },
+    {
+      "_openva_path": "data/vendors/fly-io/artifacts/fly-io-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "fly-io-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://fly.io/compliance",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "fly-io-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "fly-io"
+    },
+    {
       "_openva_path": "data/vendors/fly-io/artifacts/fly-io-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "fly-io-privacy",
@@ -65,6 +125,36 @@
       "vendor_id": "fly-io"
     },
     {
+      "_openva_path": "data/vendors/fly-io/artifacts/fly-io-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "artifact_id": "fly-io-subprocessors-list",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://fly.io/legal/sub-processors/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "fly-io-subprocessors-list",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "fly-io"
+    },
+    {
       "_openva_path": "data/vendors/fly-io/artifacts/fly-io-terms.yaml",
       "access_class": "public_web",
       "artifact_id": "fly-io-terms",
@@ -95,10 +185,80 @@
         "screenshot_stored": false
       },
       "vendor_id": "fly-io"
+    },
+    {
+      "_openva_path": "data/vendors/fly-io/artifacts/fly-io-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "fly-io-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://fly.io/security",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "fly-io-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "fly-io"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/fly-io/sources/fly-io-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.698790Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "fly-io-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://fly.io/blog/soc2-the-screenshots-will-continue-until-security-improves/",
+      "title_native": "SOC2: The Screenshots Will Continue Until Security Improves · The Fly Blog",
+      "vendor_id": "fly-io"
+    },
+    {
+      "_openva_path": "data/vendors/fly-io/sources/fly-io-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.716703Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "fly-io-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://fly.io/compliance",
+      "title_native": "Compliance · Fly",
+      "vendor_id": "fly-io"
+    },
     {
       "_openva_path": "data/vendors/fly-io/sources/fly-io-privacy.yaml",
       "access_class": "public_web",
@@ -146,6 +306,26 @@
       "vendor_id": "fly-io"
     },
     {
+      "_openva_path": "data/vendors/fly-io/sources/fly-io-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.924751Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "fly-io-subprocessors-list",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://fly.io/legal/sub-processors/",
+      "title_native": "Fly.io Sub-processors · Fly Docs",
+      "vendor_id": "fly-io"
+    },
+    {
       "_openva_path": "data/vendors/fly-io/sources/fly-io-terms.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -167,9 +347,104 @@
       "title_en": "Fly.io Terms of Service",
       "title_native": "Fly.io Terms of Service",
       "vendor_id": "fly-io"
+    },
+    {
+      "_openva_path": "data/vendors/fly-io/sources/fly-io-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.002976Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "fly-io-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://fly.io/security",
+      "title_native": "Security · Fly",
+      "vendor_id": "fly-io"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/fly-io/changes/candidate-promotion-fly-io-certification-reference.yaml",
+      "artifact_id": "fly-io-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-fly-io-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.698790Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "fly-io-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "fly-io"
+    },
+    {
+      "_openva_path": "data/vendors/fly-io/changes/candidate-promotion-fly-io-compliance-page.yaml",
+      "artifact_id": "fly-io-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-fly-io-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.716703Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "fly-io-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "fly-io"
+    },
+    {
+      "_openva_path": "data/vendors/fly-io/changes/candidate-promotion-fly-io-subprocessors-list.yaml",
+      "artifact_id": "fly-io-subprocessors-list",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-fly-io-subprocessors-list",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.924751Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "fly-io-subprocessors-list",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "fly-io"
+    },
+    {
+      "_openva_path": "data/vendors/fly-io/changes/candidate-promotion-fly-io-trust-center.yaml",
+      "artifact_id": "fly-io-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-fly-io-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.002976Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "fly-io-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "fly-io"
+    },
     {
       "_openva_path": "data/vendors/fly-io/changes/owner-cloud-database-expansion-1-fly-io-privacy.yaml",
       "artifact_id": "fly-io-privacy",
@@ -234,21 +509,64 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 7,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 7,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
+      "compliance_page",
       "privacy_notice",
       "status_page",
-      "terms_of_service"
+      "subprocessors_list",
+      "terms_of_service",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "dpa"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/fly-io/unavailable_sources/fly-io-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://fly.io/legal/data-processing-addendum",
+        "https://fly.io/data-processing-addendum",
+        "https://fly.io/legal/dpa",
+        "https://fly.io/dpa",
+        "https://fly.io/privacy/dpa.html",
+        "https://fly.io/privacy/dpa",
+        "https://status.flyio.net/legal/data-processing-addendum",
+        "https://status.flyio.net/data-processing-addendum",
+        "https://status.flyio.net/legal/dpa",
+        "https://status.flyio.net/dpa",
+        "https://status.flyio.net/privacy/dpa.html",
+        "https://status.flyio.net/privacy/dpa",
+        "https://www.fly.io/legal/data-processing-addendum",
+        "https://www.fly.io/data-processing-addendum",
+        "https://www.fly.io/legal/dpa",
+        "https://www.fly.io/dpa",
+        "https://www.fly.io/privacy/dpa.html",
+        "https://www.fly.io/privacy/dpa",
+        "https://www.status.flyio.net/legal/data-processing-addendum",
+        "https://www.status.flyio.net/data-processing-addendum"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:44Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "fly-io-dpa",
+      "vendor_id": "fly-io"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/fly-io/vendor.yaml",
     "catalog_status": "active",

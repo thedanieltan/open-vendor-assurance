@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/pointclickcare/artifacts/pointclickcare-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "pointclickcare-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://pointclickcare.com/industry-solutions/hospitals-associations/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "pointclickcare-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "pointclickcare"
+    },
+    {
       "_openva_path": "data/vendors/pointclickcare/artifacts/pointclickcare-network-addendum.yaml",
       "access_class": "public_pdf",
       "artifact_id": "pointclickcare-network-addendum",
@@ -94,6 +124,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/pointclickcare/sources/pointclickcare-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.195348Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "pointclickcare-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://pointclickcare.com/industry-solutions/hospitals-associations/",
+      "title_native": "Hospital Association Care Coordination | PointClickCare",
+      "vendor_id": "pointclickcare"
+    },
+    {
       "_openva_path": "data/vendors/pointclickcare/sources/pointclickcare-network-addendum.yaml",
       "access_class": "public_pdf",
       "not_advice": true,
@@ -165,6 +215,23 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/pointclickcare/changes/candidate-promotion-pointclickcare-compliance-page.yaml",
+      "artifact_id": "pointclickcare-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-pointclickcare-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.195348Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "pointclickcare-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "pointclickcare"
+    },
+    {
       "_openva_path": "data/vendors/pointclickcare/changes/regulated-profile-coverage-1-pointclickcare-network-addendum.yaml",
       "artifact_id": "pointclickcare-network-addendum",
       "catalog_change_significance": "unknown",
@@ -228,21 +295,131 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
       "privacy_notice",
       "security_page",
       "terms_of_service"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "dpa",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/pointclickcare/unavailable_sources/pointclickcare-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://pointclickcare.com/security/certifications",
+        "https://pointclickcare.com/trust/certifications",
+        "https://pointclickcare.com/trust-center/certifications",
+        "https://pointclickcare.com/trustcenter/certifications",
+        "https://pointclickcare.com/compliance/certifications",
+        "https://pointclickcare.com/security/compliance",
+        "https://pointclickcare.com/trust/compliance",
+        "https://www.pointclickcare.com/security/certifications",
+        "https://www.pointclickcare.com/trust/certifications",
+        "https://www.pointclickcare.com/trust-center/certifications",
+        "https://www.pointclickcare.com/trustcenter/certifications",
+        "https://www.pointclickcare.com/compliance/certifications",
+        "https://www.pointclickcare.com/security/compliance",
+        "https://www.pointclickcare.com/trust/compliance",
+        "https://pointclickcare.com/",
+        "https://pointclickcare.com/privacy-policy/",
+        "https://pointclickcare.com/wp-content/uploads/2019/07/technical-specifications-practitioner-engagement-privacy-security.pdf",
+        "https://pointclickcare.com/wp-content/uploads/2025/02/PointClickCare-Network-Amendment-to-MSA-LTPAC-Customer-Final-Online-Version-01052025.pdf",
+        "https://pointclickcare.com",
+        "https://www.pointclickcare.com"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:41:41Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "pointclickcare-certification-reference",
+      "vendor_id": "pointclickcare"
+    },
+    {
+      "_openva_path": "data/vendors/pointclickcare/unavailable_sources/pointclickcare-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://pointclickcare.com/legal/data-processing-addendum",
+        "https://pointclickcare.com/data-processing-addendum",
+        "https://pointclickcare.com/legal/dpa",
+        "https://pointclickcare.com/dpa",
+        "https://pointclickcare.com/privacy/dpa.html",
+        "https://pointclickcare.com/privacy/dpa",
+        "https://www.pointclickcare.com/legal/data-processing-addendum",
+        "https://www.pointclickcare.com/data-processing-addendum",
+        "https://www.pointclickcare.com/legal/dpa",
+        "https://www.pointclickcare.com/dpa",
+        "https://www.pointclickcare.com/privacy/dpa.html",
+        "https://www.pointclickcare.com/privacy/dpa",
+        "https://pointclickcare.com/",
+        "https://pointclickcare.com/privacy-policy/",
+        "https://pointclickcare.com/wp-content/uploads/2019/07/technical-specifications-practitioner-engagement-privacy-security.pdf",
+        "https://pointclickcare.com/wp-content/uploads/2025/02/PointClickCare-Network-Amendment-to-MSA-LTPAC-Customer-Final-Online-Version-01052025.pdf",
+        "https://pointclickcare.com",
+        "https://www.pointclickcare.com"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "pointclickcare-dpa",
+      "vendor_id": "pointclickcare"
+    },
+    {
+      "_openva_path": "data/vendors/pointclickcare/unavailable_sources/pointclickcare-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://pointclickcare.com/legal/subprocessors",
+        "https://pointclickcare.com/subprocessors",
+        "https://pointclickcare.com/legal/sub-processors",
+        "https://pointclickcare.com/sub-processors",
+        "https://pointclickcare.com/privacy/sub-processors.html",
+        "https://pointclickcare.com/privacy/subprocessors",
+        "https://www.pointclickcare.com/legal/subprocessors",
+        "https://www.pointclickcare.com/subprocessors",
+        "https://www.pointclickcare.com/legal/sub-processors",
+        "https://www.pointclickcare.com/sub-processors",
+        "https://www.pointclickcare.com/privacy/sub-processors.html",
+        "https://www.pointclickcare.com/privacy/subprocessors",
+        "https://pointclickcare.com/",
+        "https://pointclickcare.com/privacy-policy/",
+        "https://pointclickcare.com/wp-content/uploads/2019/07/technical-specifications-practitioner-engagement-privacy-security.pdf",
+        "https://pointclickcare.com/wp-content/uploads/2025/02/PointClickCare-Network-Amendment-to-MSA-LTPAC-Customer-Final-Online-Version-01052025.pdf",
+        "https://pointclickcare.com",
+        "https://www.pointclickcare.com"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:26Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "pointclickcare-subprocessors-list",
+      "vendor_id": "pointclickcare"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/pointclickcare/vendor.yaml",
     "catalog_status": "active",

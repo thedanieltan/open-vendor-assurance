@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/second-front-systems/artifacts/second-front-systems-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "second-front-systems-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://www.secondfront.com/resources/blog/choosing-the-right-fedramp-compliance-tools-for-accelerating-authorization/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "second-front-systems-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "second-front-systems"
+    },
+    {
+      "_openva_path": "data/vendors/second-front-systems/artifacts/second-front-systems-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "second-front-systems-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.secondfront.com/resources/blog/navigating-the-fedramp-marketplace-a-beginners-guide-to-compliance-ato-and-becoming-certified/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "second-front-systems-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "second-front-systems"
+    },
+    {
       "_openva_path": "data/vendors/second-front-systems/artifacts/second-front-systems-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "second-front-systems-privacy",
@@ -94,6 +154,46 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/second-front-systems/sources/second-front-systems-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.301616Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "second-front-systems-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://www.secondfront.com/resources/blog/choosing-the-right-fedramp-compliance-tools-for-accelerating-authorization/",
+      "title_native": "A CCO&#039;s Guide to Choosing the right FedRAMP compliance tools for accelerating authorization",
+      "vendor_id": "second-front-systems"
+    },
+    {
+      "_openva_path": "data/vendors/second-front-systems/sources/second-front-systems-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.318149Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "second-front-systems-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.secondfront.com/resources/blog/navigating-the-fedramp-marketplace-a-beginners-guide-to-compliance-ato-and-becoming-certified/",
+      "title_native": "Navigating the FedRAMP Marketplace: A beginner&#039;s guide to compliance, ATO, and becoming certified | Second Front",
+      "vendor_id": "second-front-systems"
+    },
+    {
       "_openva_path": "data/vendors/second-front-systems/sources/second-front-systems-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -165,6 +265,40 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/second-front-systems/changes/candidate-promotion-second-front-systems-certification-reference.yaml",
+      "artifact_id": "second-front-systems-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-second-front-systems-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.301616Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "second-front-systems-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "second-front-systems"
+    },
+    {
+      "_openva_path": "data/vendors/second-front-systems/changes/candidate-promotion-second-front-systems-compliance-page.yaml",
+      "artifact_id": "second-front-systems-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-second-front-systems-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.318149Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "second-front-systems-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "second-front-systems"
+    },
+    {
       "_openva_path": "data/vendors/second-front-systems/changes/regulated-profile-coverage-1-second-front-systems-privacy.yaml",
       "artifact_id": "second-front-systems-privacy",
       "catalog_change_significance": "unknown",
@@ -228,21 +362,99 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
+      "compliance_page",
       "privacy_notice",
       "terms_of_service",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "dpa",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/second-front-systems/unavailable_sources/second-front-systems-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://secondfront.com/legal/data-processing-addendum",
+        "https://secondfront.com/data-processing-addendum",
+        "https://secondfront.com/legal/dpa",
+        "https://secondfront.com/dpa",
+        "https://secondfront.com/privacy/dpa.html",
+        "https://secondfront.com/privacy/dpa",
+        "https://www.secondfront.com/legal/data-processing-addendum",
+        "https://www.secondfront.com/data-processing-addendum",
+        "https://www.secondfront.com/legal/dpa",
+        "https://www.secondfront.com/dpa",
+        "https://www.secondfront.com/privacy/dpa.html",
+        "https://www.secondfront.com/privacy/dpa",
+        "https://trust.secondfront.com/legal/data-processing-addendum",
+        "https://trust.secondfront.com/data-processing-addendum",
+        "https://trust.secondfront.com/legal/dpa",
+        "https://trust.secondfront.com/dpa",
+        "https://trust.secondfront.com/privacy/dpa.html",
+        "https://trust.secondfront.com/privacy/dpa",
+        "https://secondfront.com/",
+        "https://www.secondfront.com/privacy-policy/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:05Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "second-front-systems-dpa",
+      "vendor_id": "second-front-systems"
+    },
+    {
+      "_openva_path": "data/vendors/second-front-systems/unavailable_sources/second-front-systems-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://secondfront.com/legal/subprocessors",
+        "https://secondfront.com/subprocessors",
+        "https://secondfront.com/legal/sub-processors",
+        "https://secondfront.com/sub-processors",
+        "https://secondfront.com/privacy/sub-processors.html",
+        "https://secondfront.com/privacy/subprocessors",
+        "https://www.secondfront.com/legal/subprocessors",
+        "https://www.secondfront.com/subprocessors",
+        "https://www.secondfront.com/legal/sub-processors",
+        "https://www.secondfront.com/sub-processors",
+        "https://www.secondfront.com/privacy/sub-processors.html",
+        "https://www.secondfront.com/privacy/subprocessors",
+        "https://trust.secondfront.com/legal/subprocessors",
+        "https://trust.secondfront.com/subprocessors",
+        "https://trust.secondfront.com/legal/sub-processors",
+        "https://trust.secondfront.com/sub-processors",
+        "https://trust.secondfront.com/privacy/sub-processors.html",
+        "https://trust.secondfront.com/privacy/subprocessors",
+        "https://secondfront.com/",
+        "https://www.secondfront.com/privacy-policy/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:42Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "second-front-systems-subprocessors-list",
+      "vendor_id": "second-front-systems"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/second-front-systems/vendor.yaml",
     "catalog_status": "active",

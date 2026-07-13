@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/hibob/artifacts/hibob-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "hibob-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.hibob.com/privacy/data-processing-addendum/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "hibob-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "hibob"
+    },
+    {
       "_openva_path": "data/vendors/hibob/artifacts/hibob-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "hibob-privacy",
@@ -64,6 +94,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/hibob/sources/hibob-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.010696Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "hibob-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.hibob.com/privacy/data-processing-addendum/",
+      "title_native": "Data Processing Addendum | HiBob",
+      "vendor_id": "hibob"
+    },
+    {
       "_openva_path": "data/vendors/hibob/sources/hibob-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -112,6 +162,23 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/hibob/changes/candidate-promotion-hibob-dpa.yaml",
+      "artifact_id": "hibob-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-hibob-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.010696Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "hibob-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "hibob"
+    },
+    {
       "_openva_path": "data/vendors/hibob/changes/regional-business-platforms-batch-1-hibob-privacy.yaml",
       "artifact_id": "hibob-privacy",
       "catalog_change_significance": "unknown",
@@ -158,20 +225,130 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 2,
+    "artifact_count": 3,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 2,
+    "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "dpa",
       "privacy_notice",
       "security_page"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/hibob/unavailable_sources/hibob-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.hibob.com/security/certifications",
+        "https://www.hibob.com/trust/certifications",
+        "https://www.hibob.com/trust-center/certifications",
+        "https://www.hibob.com/trustcenter/certifications",
+        "https://www.hibob.com/compliance/certifications",
+        "https://www.hibob.com/security/compliance",
+        "https://www.hibob.com/trust/compliance",
+        "https://hibob.com/security/certifications",
+        "https://hibob.com/trust/certifications",
+        "https://hibob.com/trust-center/certifications",
+        "https://hibob.com/trustcenter/certifications",
+        "https://hibob.com/compliance/certifications",
+        "https://hibob.com/security/compliance",
+        "https://hibob.com/trust/compliance",
+        "https://www.hibob.com/privacy-policy/",
+        "https://www.hibob.com/security/",
+        "https://hibob.com",
+        "https://www.hibob.com",
+        "https://hibob.com/sitemap.xml",
+        "https://hibob.com/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:13Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "hibob-certification-reference",
+      "vendor_id": "hibob"
+    },
+    {
+      "_openva_path": "data/vendors/hibob/unavailable_sources/hibob-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://www.hibob.com/compliance",
+        "https://www.hibob.com/security/compliance",
+        "https://www.hibob.com/trust/compliance",
+        "https://www.hibob.com/trust-center/compliance",
+        "https://www.hibob.com/trustcenter/compliance",
+        "https://www.hibob.com/compliance.html",
+        "https://hibob.com/compliance",
+        "https://hibob.com/security/compliance",
+        "https://hibob.com/trust/compliance",
+        "https://hibob.com/trust-center/compliance",
+        "https://hibob.com/trustcenter/compliance",
+        "https://hibob.com/compliance.html",
+        "https://www.hibob.com/privacy-policy/",
+        "https://www.hibob.com/security/",
+        "https://hibob.com",
+        "https://www.hibob.com",
+        "https://hibob.com/sitemap.xml",
+        "https://hibob.com/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:13Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "hibob-compliance-page",
+      "vendor_id": "hibob"
+    },
+    {
+      "_openva_path": "data/vendors/hibob/unavailable_sources/hibob-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://www.hibob.com/legal/subprocessors",
+        "https://www.hibob.com/subprocessors",
+        "https://www.hibob.com/legal/sub-processors",
+        "https://www.hibob.com/sub-processors",
+        "https://www.hibob.com/privacy/sub-processors.html",
+        "https://www.hibob.com/privacy/subprocessors",
+        "https://hibob.com/legal/subprocessors",
+        "https://hibob.com/subprocessors",
+        "https://hibob.com/legal/sub-processors",
+        "https://hibob.com/sub-processors",
+        "https://hibob.com/privacy/sub-processors.html",
+        "https://hibob.com/privacy/subprocessors",
+        "https://www.hibob.com/privacy-policy/",
+        "https://www.hibob.com/security/",
+        "https://hibob.com",
+        "https://www.hibob.com",
+        "https://hibob.com/sitemap.xml",
+        "https://hibob.com/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:52Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "hibob-subprocessors-list",
+      "vendor_id": "hibob"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/hibob/vendor.yaml",
     "catalog_status": "active",

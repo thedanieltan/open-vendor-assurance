@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/doodle/artifacts/doodle-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "doodle-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://doodle.com/fr/navigating-cybersecurity-insights-and-tips-from-niel-harper-doodles-ciso/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "doodle-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "doodle"
+    },
+    {
       "_openva_path": "data/vendors/doodle/artifacts/doodle-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "doodle-dpa",
@@ -102,6 +132,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/doodle/sources/doodle-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.592757Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "doodle-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://doodle.com/fr/navigating-cybersecurity-insights-and-tips-from-niel-harper-doodles-ciso/",
+      "title_native": "Naviguer dans la cybersécurité : Conseils de Niel Harper, RSSI de Doodle | Doodle",
+      "vendor_id": "doodle"
+    },
+    {
       "_openva_path": "data/vendors/doodle/sources/doodle-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -173,6 +223,23 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/doodle/changes/candidate-promotion-doodle-certification-reference.yaml",
+      "artifact_id": "doodle-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-doodle-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.592757Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "doodle-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "doodle"
+    },
+    {
       "_openva_path": "data/vendors/doodle/changes/owner-productivity-expansion-1-doodle-dpa.yaml",
       "artifact_id": "doodle-dpa",
       "catalog_change_significance": "unknown",
@@ -236,21 +303,61 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
       "dpa",
       "privacy_notice",
       "security_page"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/doodle/unavailable_sources/doodle-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://doodle.com/legal/subprocessors",
+        "https://doodle.com/subprocessors",
+        "https://doodle.com/legal/sub-processors",
+        "https://doodle.com/sub-processors",
+        "https://doodle.com/privacy/sub-processors.html",
+        "https://doodle.com/privacy/subprocessors",
+        "https://www.doodle.com/legal/subprocessors",
+        "https://www.doodle.com/subprocessors",
+        "https://www.doodle.com/legal/sub-processors",
+        "https://www.doodle.com/sub-processors",
+        "https://www.doodle.com/privacy/sub-processors.html",
+        "https://www.doodle.com/privacy/subprocessors",
+        "https://www.www.doodle.com/legal/subprocessors",
+        "https://www.www.doodle.com/subprocessors",
+        "https://www.www.doodle.com/legal/sub-processors",
+        "https://www.www.doodle.com/sub-processors",
+        "https://www.www.doodle.com/privacy/sub-processors.html",
+        "https://www.www.doodle.com/privacy/subprocessors",
+        "https://doodle.com/en/data-subprocessors/",
+        "https://doodle.com/de/data-subprocessors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:28Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "doodle-subprocessors-list",
+      "vendor_id": "doodle"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/doodle/vendor.yaml",
     "catalog_status": "active",

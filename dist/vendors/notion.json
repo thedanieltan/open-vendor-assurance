@@ -328,10 +328,82 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/notion/unavailable_sources/notion-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.notion.so/security/certifications",
+        "https://www.notion.so/trust/certifications",
+        "https://www.notion.so/trust-center/certifications",
+        "https://www.notion.so/trustcenter/certifications",
+        "https://www.notion.so/compliance/certifications",
+        "https://www.notion.so/security/compliance",
+        "https://www.notion.so/trust/compliance",
+        "https://notion.so/security/certifications",
+        "https://notion.so/trust/certifications",
+        "https://notion.so/trust-center/certifications",
+        "https://notion.so/trustcenter/certifications",
+        "https://notion.so/compliance/certifications",
+        "https://notion.so/security/compliance",
+        "https://notion.so/trust/compliance",
+        "https://www.notion.so/security",
+        "https://www.notion.so/privacy",
+        "https://notion.so",
+        "https://www.notion.so",
+        "https://notion.so/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "notion-certification-reference",
+      "vendor_id": "notion"
+    },
+    {
+      "_openva_path": "data/vendors/notion/unavailable_sources/notion-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://www.notion.so/compliance",
+        "https://www.notion.so/security/compliance",
+        "https://www.notion.so/trust/compliance",
+        "https://www.notion.so/trust-center/compliance",
+        "https://www.notion.so/trustcenter/compliance",
+        "https://www.notion.so/compliance.html",
+        "https://notion.so/compliance",
+        "https://notion.so/security/compliance",
+        "https://notion.so/trust/compliance",
+        "https://notion.so/trust-center/compliance",
+        "https://notion.so/trustcenter/compliance",
+        "https://notion.so/compliance.html",
+        "https://www.notion.so/security",
+        "https://www.notion.so/privacy",
+        "https://notion.so",
+        "https://www.notion.so",
+        "https://notion.so/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "notion-compliance-page",
+      "vendor_id": "notion"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/notion/vendor.yaml",
     "catalog_status": "active",

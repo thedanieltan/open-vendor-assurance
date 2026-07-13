@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/netlify/artifacts/netlify-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "netlify-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://www.netlify.com/blog/netlify-achieves-iso-27001-certification/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "netlify-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "netlify"
+    },
+    {
       "_openva_path": "data/vendors/netlify/artifacts/netlify-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "netlify-privacy",
@@ -95,10 +125,60 @@
         "screenshot_stored": false
       },
       "vendor_id": "netlify"
+    },
+    {
+      "_openva_path": "data/vendors/netlify/artifacts/netlify-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "netlify-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://www.netlify.com/security/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "netlify-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "netlify"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/netlify/sources/netlify-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.036571Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "netlify-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://www.netlify.com/blog/netlify-achieves-iso-27001-certification/",
+      "title_native": "Netlify Advances Security with ISO 27001 | Netlify Blog",
+      "vendor_id": "netlify"
+    },
     {
       "_openva_path": "data/vendors/netlify/sources/netlify-privacy.yaml",
       "access_class": "public_web",
@@ -167,9 +247,70 @@
       "title_en": "Netlify Website Terms of Use",
       "title_native": "Netlify Website Terms of Use",
       "vendor_id": "netlify"
+    },
+    {
+      "_openva_path": "data/vendors/netlify/sources/netlify-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.240819Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "netlify-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://www.netlify.com/security/",
+      "title_native": "Security at Netlify: Protecting your sites and applications",
+      "vendor_id": "netlify"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/netlify/changes/candidate-promotion-netlify-certification-reference.yaml",
+      "artifact_id": "netlify-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-netlify-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.036571Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "netlify-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "netlify"
+    },
+    {
+      "_openva_path": "data/vendors/netlify/changes/candidate-promotion-netlify-trust-center.yaml",
+      "artifact_id": "netlify-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-netlify-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.240819Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "netlify-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "netlify"
+    },
     {
       "_openva_path": "data/vendors/netlify/changes/owner-collab-dev-expansion-1-netlify-privacy.yaml",
       "artifact_id": "netlify-privacy",
@@ -234,21 +375,136 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
       "privacy_notice",
       "status_page",
-      "terms_of_service"
+      "terms_of_service",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "compliance_page",
+      "dpa",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/netlify/unavailable_sources/netlify-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://www.netlify.com/compliance",
+        "https://www.netlify.com/security/compliance",
+        "https://www.netlify.com/trust/compliance",
+        "https://www.netlify.com/trust-center/compliance",
+        "https://www.netlify.com/trustcenter/compliance",
+        "https://www.netlify.com/compliance.html",
+        "https://www.netlifystatus.com/compliance",
+        "https://www.netlifystatus.com/security/compliance",
+        "https://www.netlifystatus.com/trust/compliance",
+        "https://www.netlifystatus.com/trust-center/compliance",
+        "https://www.netlifystatus.com/trustcenter/compliance",
+        "https://www.netlifystatus.com/compliance.html",
+        "https://netlify.com/compliance",
+        "https://netlify.com/security/compliance",
+        "https://netlify.com/trust/compliance",
+        "https://netlify.com/trust-center/compliance",
+        "https://netlify.com/trustcenter/compliance",
+        "https://netlify.com/compliance.html",
+        "https://www.www.netlify.com/compliance",
+        "https://www.www.netlify.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:40:57Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "netlify-compliance-page",
+      "vendor_id": "netlify"
+    },
+    {
+      "_openva_path": "data/vendors/netlify/unavailable_sources/netlify-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://www.netlify.com/legal/data-processing-addendum",
+        "https://www.netlify.com/data-processing-addendum",
+        "https://www.netlify.com/legal/dpa",
+        "https://www.netlify.com/dpa",
+        "https://www.netlify.com/privacy/dpa.html",
+        "https://www.netlify.com/privacy/dpa",
+        "https://www.netlifystatus.com/legal/data-processing-addendum",
+        "https://www.netlifystatus.com/data-processing-addendum",
+        "https://www.netlifystatus.com/legal/dpa",
+        "https://www.netlifystatus.com/dpa",
+        "https://www.netlifystatus.com/privacy/dpa.html",
+        "https://www.netlifystatus.com/privacy/dpa",
+        "https://netlify.com/legal/data-processing-addendum",
+        "https://netlify.com/data-processing-addendum",
+        "https://netlify.com/legal/dpa",
+        "https://netlify.com/dpa",
+        "https://netlify.com/privacy/dpa.html",
+        "https://netlify.com/privacy/dpa",
+        "https://www.www.netlify.com/legal/data-processing-addendum",
+        "https://www.www.netlify.com/data-processing-addendum"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:35Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "netlify-dpa",
+      "vendor_id": "netlify"
+    },
+    {
+      "_openva_path": "data/vendors/netlify/unavailable_sources/netlify-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://www.netlify.com/legal/subprocessors",
+        "https://www.netlify.com/subprocessors",
+        "https://www.netlify.com/legal/sub-processors",
+        "https://www.netlify.com/sub-processors",
+        "https://www.netlify.com/privacy/sub-processors.html",
+        "https://www.netlify.com/privacy/subprocessors",
+        "https://www.netlifystatus.com/legal/subprocessors",
+        "https://www.netlifystatus.com/subprocessors",
+        "https://www.netlifystatus.com/legal/sub-processors",
+        "https://www.netlifystatus.com/sub-processors",
+        "https://www.netlifystatus.com/privacy/sub-processors.html",
+        "https://www.netlifystatus.com/privacy/subprocessors",
+        "https://netlify.com/legal/subprocessors",
+        "https://netlify.com/subprocessors",
+        "https://netlify.com/legal/sub-processors",
+        "https://netlify.com/sub-processors",
+        "https://netlify.com/privacy/sub-processors.html",
+        "https://netlify.com/privacy/subprocessors",
+        "https://www.www.netlify.com/legal/subprocessors",
+        "https://www.www.netlify.com/subprocessors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:14Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "netlify-subprocessors-list",
+      "vendor_id": "netlify"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/netlify/vendor.yaml",
     "catalog_status": "active",

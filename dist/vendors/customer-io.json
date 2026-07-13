@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/customer-io/artifacts/customer-io-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "customer-io-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "customer-io-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "customer-io"
+    },
+    {
+      "_openva_path": "data/vendors/customer-io/artifacts/customer-io-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "customer-io-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://customer.io/legal/dpa",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "customer-io-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "customer-io"
+    },
+    {
       "_openva_path": "data/vendors/customer-io/artifacts/customer-io-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "customer-io-privacy",
@@ -95,10 +155,80 @@
         "screenshot_stored": false
       },
       "vendor_id": "customer-io"
+    },
+    {
+      "_openva_path": "data/vendors/customer-io/artifacts/customer-io-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "customer-io-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://customer.io/security",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "customer-io-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "customer-io"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/customer-io/sources/customer-io-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.499464Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "customer-io-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
+      "title_native": "SMS marketing compliance: 6 steps to protect your business | Customer.io",
+      "vendor_id": "customer-io"
+    },
+    {
+      "_openva_path": "data/vendors/customer-io/sources/customer-io-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.923880Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "customer-io-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://customer.io/legal/dpa",
+      "title_native": "Data Processing Addendum | Customer.io",
+      "vendor_id": "customer-io"
+    },
     {
       "_openva_path": "data/vendors/customer-io/sources/customer-io-privacy.yaml",
       "access_class": "public_web",
@@ -167,9 +297,87 @@
       "title_en": "Customer.io Terms of Service",
       "title_native": "Customer.io Terms of Service",
       "vendor_id": "customer-io"
+    },
+    {
+      "_openva_path": "data/vendors/customer-io/sources/customer-io-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.855036Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "customer-io-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://customer.io/security",
+      "title_native": "Data Security and Compliance | Customer.io",
+      "vendor_id": "customer-io"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/customer-io/changes/candidate-promotion-customer-io-compliance-page.yaml",
+      "artifact_id": "customer-io-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-customer-io-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.499464Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "customer-io-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "customer-io"
+    },
+    {
+      "_openva_path": "data/vendors/customer-io/changes/candidate-promotion-customer-io-dpa.yaml",
+      "artifact_id": "customer-io-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-customer-io-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.923880Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "customer-io-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "customer-io"
+    },
+    {
+      "_openva_path": "data/vendors/customer-io/changes/candidate-promotion-customer-io-trust-center.yaml",
+      "artifact_id": "customer-io-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-customer-io-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.855036Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "customer-io-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "customer-io"
+    },
     {
       "_openva_path": "data/vendors/customer-io/changes/owner-customer-engagement-expansion-1-customer-io-privacy.yaml",
       "artifact_id": "customer-io-privacy",
@@ -234,21 +442,100 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
+      "dpa",
       "privacy_notice",
       "status_page",
-      "terms_of_service"
+      "terms_of_service",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "certification_reference",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/customer-io/unavailable_sources/customer-io-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://customer.io/security/certifications",
+        "https://customer.io/trust/certifications",
+        "https://customer.io/trust-center/certifications",
+        "https://customer.io/trustcenter/certifications",
+        "https://customer.io/compliance/certifications",
+        "https://customer.io/security/compliance",
+        "https://customer.io/trust/compliance",
+        "https://status.customerio.com/security/certifications",
+        "https://status.customerio.com/trust/certifications",
+        "https://status.customerio.com/trust-center/certifications",
+        "https://status.customerio.com/trustcenter/certifications",
+        "https://status.customerio.com/compliance/certifications",
+        "https://status.customerio.com/security/compliance",
+        "https://status.customerio.com/trust/compliance",
+        "https://www.customer.io/security/certifications",
+        "https://www.customer.io/trust/certifications",
+        "https://www.customer.io/trust-center/certifications",
+        "https://www.customer.io/trustcenter/certifications",
+        "https://www.customer.io/compliance/certifications",
+        "https://www.customer.io/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:45Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "customer-io-certification-reference",
+      "vendor_id": "customer-io"
+    },
+    {
+      "_openva_path": "data/vendors/customer-io/unavailable_sources/customer-io-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://customer.io/legal/subprocessors",
+        "https://customer.io/subprocessors",
+        "https://customer.io/legal/sub-processors",
+        "https://customer.io/sub-processors",
+        "https://customer.io/privacy/sub-processors.html",
+        "https://customer.io/privacy/subprocessors",
+        "https://status.customerio.com/legal/subprocessors",
+        "https://status.customerio.com/subprocessors",
+        "https://status.customerio.com/legal/sub-processors",
+        "https://status.customerio.com/sub-processors",
+        "https://status.customerio.com/privacy/sub-processors.html",
+        "https://status.customerio.com/privacy/subprocessors",
+        "https://www.customer.io/legal/subprocessors",
+        "https://www.customer.io/subprocessors",
+        "https://www.customer.io/legal/sub-processors",
+        "https://www.customer.io/sub-processors",
+        "https://www.customer.io/privacy/sub-processors.html",
+        "https://www.customer.io/privacy/subprocessors",
+        "https://www.status.customerio.com/legal/subprocessors",
+        "https://www.status.customerio.com/subprocessors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:16Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "customer-io-subprocessors-list",
+      "vendor_id": "customer-io"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/customer-io/vendor.yaml",
     "catalog_status": "active",
