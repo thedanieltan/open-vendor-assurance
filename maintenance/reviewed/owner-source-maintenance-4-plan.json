@@ -3,8 +3,8 @@
   "report_type": "owner_source_maintenance_plan",
   "work_package": "owner-source-maintenance-4",
   "reviewed_at": "2026-07-13T16:00:00Z",
-  "replacement_count": 13,
-  "refresh_only_count": 3,
+  "replacement_count": 12,
+  "refresh_only_count": 2,
   "replacements": [
     {
       "vendor_id": "aliyun",
@@ -13,7 +13,7 @@
       "old_url": "https://www.aliyun.com/trust-center",
       "new_url": "https://security.aliyun.com/trust-center",
       "confidence": "high",
-      "reason": "official Aliyun trust-center replacement with source-specific title and live official-host response"
+      "reason": "official Aliyun trust-center replacement with strong authority-bound semantic verification"
     },
     {
       "vendor_id": "aliyun",
@@ -22,7 +22,7 @@
       "old_url": "https://www.aliyun.com/product/security",
       "new_url": "https://cn.aliyun.com/security",
       "confidence": "high",
-      "reason": "official Aliyun security replacement with source-specific title and live official-host response"
+      "reason": "official Aliyun security page; exact official URL and Chinese security title verified"
     },
     {
       "vendor_id": "darwinbox",
@@ -58,7 +58,7 @@
       "old_url": "https://www.scrut.io/data-processing-addendum",
       "new_url": "https://www.scrut.io/dpa",
       "confidence": "high",
-      "reason": "official Scrut Data Protection Addendum"
+      "reason": "official Scrut Data Protection Addendum with exact source-specific title"
     },
     {
       "vendor_id": "secureframe",
@@ -67,7 +67,7 @@
       "old_url": "https://secureframe.com/legal/subprocessors",
       "new_url": "https://secureframe.com/subprocessor-list",
       "confidence": "high",
-      "reason": "official Secureframe subprocessor list"
+      "reason": "official Secureframe subprocessor-list path with exact final URL"
     },
     {
       "vendor_id": "shift-technology",
@@ -88,15 +88,6 @@
       "reason": "official Snowflake Security and Trust Center"
     },
     {
-      "vendor_id": "twilio",
-      "source_id": "twilio-security",
-      "source_type": "security_page",
-      "old_url": "https://www.twilio.com/en-us/trust/security",
-      "new_url": "https://www.twilio.com/en-us/security",
-      "confidence": "medium",
-      "reason": "official Twilio security page with source-specific title"
-    },
-    {
       "vendor_id": "weaviate",
       "source_id": "weaviate-privacy",
       "source_type": "privacy_notice",
@@ -112,7 +103,7 @@
       "old_url": "https://weaviate.io/legal/subprocessors",
       "new_url": "https://weaviate.io/subprocessors",
       "confidence": "high",
-      "reason": "official Weaviate list of subprocessors"
+      "reason": "official Weaviate list of subprocessors with exact source-specific title"
     },
     {
       "vendor_id": "zendesk",
@@ -126,28 +117,51 @@
   ],
   "refresh_only": [
     {
-      "vendor_id": "gusto",
-      "source_id": "gusto-security",
-      "source_type": "security_page",
-      "url": "https://gusto.com/security",
-      "reason": "current canonical source is reachable; refresh stale observation only"
-    },
-    {
       "vendor_id": "mistral-ai",
       "source_id": "mistral-ai-dpa",
       "source_type": "dpa",
       "url": "https://legal.mistral.ai/terms/data-processing-addendum",
-      "reason": "current canonical source is reachable; refresh stale observation only"
+      "reason": "current canonical source passed strong authority-bound verification; refresh observation only"
     },
     {
       "vendor_id": "retool",
       "source_id": "retool-privacy",
       "source_type": "privacy_notice",
       "url": "https://docs.retool.com/legal/privacy-policy",
-      "reason": "current canonical source is reachable; refresh stale observation only"
+      "reason": "current canonical source passed strong authority-bound verification; refresh observation only"
+    }
+  ],
+  "verification_exceptions": [
+    {
+      "source_id": "aliyun-security",
+      "allowed_statuses": ["possible_mismatch"],
+      "expected_title_terms": ["安全"],
+      "reason": "repository verifier uses English keywords; exact official Chinese page title means security"
+    },
+    {
+      "source_id": "scrut-automation-dpa",
+      "allowed_statuses": ["possible_mismatch"],
+      "expected_title_terms": ["Data Protection Addendum"],
+      "reason": "client-rendered body omits verifier keywords but exact official title identifies the DPA"
+    },
+    {
+      "source_id": "secureframe-subprocessors",
+      "allowed_statuses": ["possible_mismatch"],
+      "expected_path_terms": ["subprocessor-list"],
+      "reason": "client-rendered body has generic title; exact official final path identifies the subprocessor list"
+    },
+    {
+      "source_id": "weaviate-subprocessors",
+      "allowed_statuses": ["suspect_inferred_url"],
+      "expected_title_terms": ["List of Subprocessors"],
+      "reason": "generic inferred-path guard triggers despite exact official title and one semantic match"
     }
   ],
   "excluded_candidates": [
+    {
+      "source_id": "gusto-security",
+      "reason": "authority-bound verifier received a bot challenge; no observation refresh committed"
+    },
     {
       "source_id": "hugging-face-dpa",
       "reason": "candidate resolved to a user-created Hugging Face page rather than an official legal document"
@@ -163,6 +177,10 @@
     {
       "source_id": "okta-dpa",
       "reason": "candidate was an old dated PDF and was not accepted as the current canonical DPA"
+    },
+    {
+      "source_id": "twilio-security",
+      "reason": "candidate was a broad communications-security marketing page and failed source-type semantics"
     }
   ],
   "not_advice": true
