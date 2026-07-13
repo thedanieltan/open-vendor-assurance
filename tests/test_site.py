@@ -67,6 +67,7 @@ def test_site_docs_cover_compiled_distribution_and_public_boundaries():
         assert phrase not in readme_text
 
 
+# Phase 2 canonical one-page contract tests.
 SITE_SRC = ROOT / "site" / "src"
 
 SOURCE_LABELS = [
@@ -98,6 +99,7 @@ def phase2_site_text() -> tuple[str, str, str]:
 
 def test_canonical_site_is_one_page_catalog_first_and_lovable_independent():
     index, css, script = phase2_site_text()
+
     assert index.index('id="catalog-view"') < index.index('id="matcher-view"')
     assert index.index('id="matcher-view"') < index.index('id="export-view"')
     assert index.index('id="export-view"') < index.index('id="about-view"')
@@ -113,6 +115,7 @@ def test_canonical_site_is_one_page_catalog_first_and_lovable_independent():
 
 def test_all_supported_source_types_use_full_human_labels():
     index, _, script = phase2_site_text()
+
     for label in SOURCE_LABELS:
         assert label in index
     assert 'data-source-pack-field="dpa"' in index
@@ -122,13 +125,22 @@ def test_all_supported_source_types_use_full_human_labels():
 
 def test_local_resolver_and_review_first_exports_are_present():
     index, _, script = phase2_site_text()
+
     for element_id in [
-        "inventory-file", "run-local-match", "match-preview",
-        "download-matches-xlsx", "download-matches-csv", "download-matches-json",
-        "selection-summary", "download-xlsx", "download-vendors-csv",
-        "download-sources-csv", "download-json",
+        "inventory-file",
+        "run-local-match",
+        "match-preview",
+        "download-matches-xlsx",
+        "download-matches-csv",
+        "download-matches-json",
+        "selection-summary",
+        "download-xlsx",
+        "download-vendors-csv",
+        "download-sources-csv",
+        "download-json",
     ]:
         assert f'id="{element_id}"' in index
+
     assert "browser memory" in index
     assert "Important notice before download" in index
     assert 'id="terms-disclaimer"' in index
@@ -140,12 +152,21 @@ def test_local_resolver_and_review_first_exports_are_present():
 def test_public_page_has_no_vendor_completeness_badges_or_core_categories():
     index, css, script = phase2_site_text()
     text = "\n".join((index, css, script)).lower()
-    for phrase in ("complete enough for review", "core complete", "scope complete", "partially complete", "core source"):
+    for phrase in (
+        "complete enough for review",
+        "core complete",
+        "scope complete",
+        "partially complete",
+        "core source",
+    ):
         assert phrase not in text
 
 
 def resolver_site_build_module():
-    spec = importlib.util.spec_from_file_location("openva_site_build_browser_test", SITE / "build.py")
+    spec = importlib.util.spec_from_file_location(
+        "openva_site_build_browser_test",
+        SITE / "build.py",
+    )
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -155,8 +176,16 @@ def resolver_site_build_module():
 def test_compiled_catalog_publishes_only_bounded_registration_match_keys():
     compiled = resolver_site_build_module().build_compiled_catalog()
     vendors = {row["vendor_id"]: row for row in compiled["vendor_summaries"]}
-    assert vendors["adobe"]["registration_keys"] == [{"jurisdiction": "US", "legal_name": "Adobe Inc.", "registration_number": "0000796343"}]
+
+    assert vendors["adobe"]["registration_keys"] == [
+        {
+            "jurisdiction": "US",
+            "legal_name": "Adobe Inc.",
+            "registration_number": "0000796343",
+        }
+    ]
     assert vendors["atlassian"]["registration_keys"]
+
     allowed = {"registration_number", "jurisdiction", "legal_name"}
     for vendor in vendors.values():
         for key in vendor["registration_keys"]:
@@ -170,19 +199,30 @@ def test_static_site_vendor_index_contains_registration_match_keys(tmp_path: Pat
     module = resolver_site_build_module()
     output = tmp_path / "site-dist"
     module.build_site(output)
-    payload = json.loads((output / "data" / "vendor-search.min.json").read_text(encoding="utf-8"))
+
+    payload = json.loads(
+        (output / "data" / "vendor-search.min.json").read_text(encoding="utf-8")
+    )
     vendors = {row["vendor_id"]: row for row in payload["items"]}
+
     assert payload["meta"]["vendor_count"] == len(vendors)
     assert vendors["adobe"]["registration_keys"][0]["registration_number"] == "0000796343"
 
 
 def test_browser_resolver_source_carries_explicit_fail_closed_contract():
     source = (SITE_SRC / "ui-fixes.js").read_text(encoding="utf-8")
+
     required_tokens = {
-        'company: "vendor_name"', 'website: "domain"', 'uen: "registration_number"',
-        'method: "domain_subdomain"', 'method: "registration_number_exact"',
-        'status: "ambiguous"', '"openva_match_status"', '"openva_match_note"',
-        "No supported identity column was found", "No inventory data was uploaded",
+        'company: "vendor_name"',
+        'website: "domain"',
+        'uen: "registration_number"',
+        'method: "domain_subdomain"',
+        'method: "registration_number_exact"',
+        'status: "ambiguous"',
+        '"openva_match_status"',
+        '"openva_match_note"',
+        "No supported identity column was found",
+        "No inventory data was uploaded",
     }
     for token in required_tokens:
         assert token in source
@@ -202,90 +242,140 @@ def test_browser_resolver_javascript_executes_matching_contract(tmp_path: Path):
   };
 """
     instrumented = source[: -len(marker)] + exports + marker
+
     harness = r'''
 const vm = require("node:vm");
 const assert = require("node:assert/strict");
+
 const context = {
-  console, URL, addEventListener: () => {}, setTimeout: () => 0, clearTimeout: () => {},
+  console,
+  URL,
+  addEventListener: () => {},
+  setTimeout: () => 0,
+  clearTimeout: () => {},
   localStorage: { getItem: () => null, setItem: () => {} },
   document: {
     documentElement: { dataset: {}, removeAttribute: () => {} },
-    querySelector: () => null, querySelectorAll: () => [], getElementById: () => null,
-    addEventListener: () => {}, head: { appendChild: () => {} },
-    createElement: () => ({ addEventListener: () => {}, append: () => {}, appendChild: () => {}, classList: { add: () => {} }, dataset: {}, setAttribute: () => {} }),
+    querySelector: () => null,
+    querySelectorAll: () => [],
+    getElementById: () => null,
+    addEventListener: () => {},
+    head: { appendChild: () => {} },
+    createElement: () => ({
+      addEventListener: () => {},
+      append: () => {},
+      appendChild: () => {},
+      classList: { add: () => {} },
+      dataset: {},
+      setAttribute: () => {},
+    }),
   },
-  catalogData: { vendors: [
-    { vendor_id: "adobe", display_name: "Adobe", legal_name: "Adobe Inc.", official_domains: ["adobe.com"], registration_keys: [{ registration_number: "0000796343", jurisdiction: "US", legal_name: "Adobe Inc." }] },
-    { vendor_id: "atlassian", display_name: "Atlassian", legal_name: "Atlassian Pty Ltd", official_domains: ["atlassian.com"], registration_keys: [{ registration_number: "53102443916", jurisdiction: "AU", legal_name: "Atlassian Pty Ltd" }] },
-  ] },
+  catalogData: {
+    vendors: [
+      {
+        vendor_id: "adobe",
+        display_name: "Adobe",
+        legal_name: "Adobe Inc.",
+        official_domains: ["adobe.com"],
+        registration_keys: [{
+          registration_number: "0000796343",
+          jurisdiction: "US",
+          legal_name: "Adobe Inc.",
+        }],
+      },
+      {
+        vendor_id: "atlassian",
+        display_name: "Atlassian",
+        legal_name: "Atlassian Pty Ltd",
+        official_domains: ["atlassian.com"],
+        registration_keys: [{
+          registration_number: "53102443916",
+          jurisdiction: "AU",
+          legal_name: "Atlassian Pty Ltd",
+        }],
+      },
+    ],
+  },
 };
 context.window = context;
 context.globalThis = context;
 vm.runInNewContext(__SOURCE__, context, { filename: "ui-fixes.js" });
+
 const resolver = context.__openvaResolverTest;
-const parsed = resolver.parseInventoryCsv("Company;Website;UEN;Country\nAdobe;https://security.adobe.com/path;0000796343;US\n");
+const parsed = resolver.parseInventoryCsv(
+  "Company;Website;UEN;Country\nAdobe;https://security.adobe.com/path;0000796343;US\n"
+);
 assert.equal(parsed.length, 1);
 assert.equal(parsed[0].vendor_name, "Adobe");
 assert.equal(parsed[0].domain, "https://security.adobe.com/path");
 assert.equal(parsed[0].registration_number, "0000796343");
 assert.equal(parsed[0].jurisdiction, "US");
+
 const indexes = resolver.buildResolverIndexes();
 let decision = resolver.matchingDecision({ domain: "https://security.adobe.com/path" }, indexes);
 assert.equal(decision.status, "matched");
 assert.equal(decision.vendor.vendor_id, "adobe");
 assert.equal(decision.method, "domain_subdomain");
+
 decision = resolver.matchingDecision({ business_entity_name: "Adobe Incorporated" }, indexes);
 assert.equal(decision.status, "no_match");
+
 decision = resolver.matchingDecision({ business_entity_name: "Adobe Inc." }, indexes);
 assert.equal(decision.status, "matched");
 assert.equal(decision.vendor.vendor_id, "adobe");
 assert.equal(decision.method, "name_exact");
-decision = resolver.matchingDecision({ registration_number: "53 102 443 916", jurisdiction: "AU" }, indexes);
+
+decision = resolver.matchingDecision(
+  { registration_number: "53 102 443 916", jurisdiction: "AU" }, indexes
+);
 assert.equal(decision.status, "matched");
 assert.equal(decision.vendor.vendor_id, "atlassian");
 assert.equal(decision.method, "registration_number_exact");
-decision = resolver.matchingDecision({ domain: "adobe.com", registration_number: "53102443916", jurisdiction: "AU" }, indexes);
+
+decision = resolver.matchingDecision(
+  { domain: "adobe.com", registration_number: "53102443916", jurisdiction: "AU" }, indexes
+);
 assert.equal(decision.status, "ambiguous");
 assert.equal(decision.vendor, null);
 '''.replace("__SOURCE__", json.dumps(instrumented))
     script = tmp_path / "browser-resolver-contract.cjs"
     script.write_text(harness, encoding="utf-8")
-    completed = subprocess.run([shutil.which("node") or "node", str(script)], cwd=ROOT, check=False, capture_output=True, text=True)
+
+    completed = subprocess.run(
+        [shutil.which("node") or "node", str(script)],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
     assert completed.returncode == 0, completed.stderr or completed.stdout
 
 
-def _assert_references_only_vendor_page(page: str, source_url: str) -> None:
-    assert source_url in page
-    assert "<th>Source type</th><th>Reference</th>" in page
-    for forbidden in ["<th>Source health</th>", "<th>Last checked</th>", "Reachable at last check", "No source-health observation", "Retrieval requires review", "Access result ambiguous"]:
-        assert forbidden not in page
-
-
-def test_static_vendor_pages_use_reachability_wording_for_healthy_source_health(tmp_path):
-    source = source_rows(1)[0]
-    snapshot = write_source_health_snapshot(tmp_path / "source-health-snapshot.json", [health_row(source, "ok", "healthy")])
-    out = build_site(tmp_path, snapshot)
-    page = (out / "vendors" / source["vendor_id"] / "index.html").read_text(encoding="utf-8")
-    _assert_references_only_vendor_page(page, source["source_url"])
-
-
-def test_static_vendor_pages_use_neutral_wording_for_missing_source_health(tmp_path):
-    source = source_rows(1)[0]
-    snapshot = write_source_health_snapshot(tmp_path / "source-health-snapshot.json", [])
-    out = build_site(tmp_path, snapshot)
-    page = (out / "vendors" / source["vendor_id"] / "index.html").read_text(encoding="utf-8")
-    _assert_references_only_vendor_page(page, source["source_url"])
-
-
-def test_human_vendor_detail_renderer_is_references_only(tmp_path: Path):
+def test_vendor_detail_slide_preserves_references_and_hides_redundant_fields(tmp_path: Path):
     module = resolver_site_build_module()
     output = tmp_path / "site-dist"
     module.build_site(output)
+
     compiled_index = (output / "index.html").read_text(encoding="utf-8")
     renderer = (output / "public-vendor-detail.js").read_text(encoding="utf-8")
+
     assert 'public-vendor-detail.js?v=20260713-vendor-detail' in compiled_index
     assert 'PUBLIC_VENDOR_DETAIL_VERSION = "references-only-v1"' in renderer
-    for heading in ("<th>Source type</th>", "<th>Reference</th>", "<th>Export</th>"):
-        assert heading in renderer
-    for forbidden in ["source-health", "last checked", "candidate sources", "unavailable notes", "Related observation events", "Assurance Intelligence", "provenance.collected_at", "source_authority_class", "access_class", "rights_class", "review_state"]:
+    assert '<tr><th>Source type</th><th>Reference</th><th>Export</th></tr>' in renderer
+    assert 'href="${html(source.source_url)}"' in renderer
+    assert 'target="_blank"' in renderer
+
+    for forbidden in [
+        "source-health",
+        "last checked",
+        "candidate sources",
+        "unavailable notes",
+        "Related observation events",
+        "Assurance Intelligence",
+        "provenance.collected_at",
+        "source_authority_class",
+        "access_class",
+        "rights_class",
+        "review_state",
+    ]:
         assert forbidden not in renderer
