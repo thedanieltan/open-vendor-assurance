@@ -16,7 +16,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
-      JOB_ID: '86923195846'
+      JOB_ID: '86924811237'
     steps:
       - name: Print final acceptance step output
         run: |
@@ -31,7 +31,7 @@ jobs:
               'pytest -q tests/test_catalog',
           )
           starts = [index for index, line in enumerate(lines) if any(needle in line for needle in needles)]
-          start = max(0, min(starts) - 8) if starts else max(0, len(lines) - 400)
+          start = max(0, min(starts) - 8) if starts else max(0, len(lines) - 500)
           print('FINAL_ACCEPTANCE_STEP_BEGIN')
           for line in lines[start:]:
               print(line)
