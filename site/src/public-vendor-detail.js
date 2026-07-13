@@ -1,12 +1,32 @@
 (() => {
   const PUBLIC_VENDOR_DETAIL_VERSION = "references-only-v1";
 
+  const style = document.createElement("style");
+  style.textContent = `
+    .vendor-reference-table-wrap { overflow-x: auto; }
+    .vendor-reference-table { min-width: 34rem; }
+    .vendor-reference-table th:last-child,
+    .vendor-reference-table td:last-child { width: 6.5rem; }
+    .source-reference-cell a { display: inline-block; font-weight: 600; }
+    .source-reference-cell small {
+      display: block;
+      margin-top: .18rem;
+      color: var(--donor-muted, #64748b);
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: .72rem;
+      overflow-wrap: anywhere;
+    }
+    .source-select-cell label { white-space: nowrap; }
+    .vendor-domains { margin: -.25rem 0 1rem; color: var(--donor-muted, #64748b); }
+  `;
+  document.head.appendChild(style);
+
   function referenceRows(sources) {
-    if (!sources.length) {
+    const recorded = sources.filter((source) => source && source.source_url);
+    if (!recorded.length) {
       return '<tr><td colspan="3">No public source URL is currently recorded.</td></tr>';
     }
-    return sources
-      .filter((source) => source && source.source_url)
+    return recorded
       .sort((left, right) => {
         const leftKey = `${sourceTypeLabel(left.source_type)} ${left.title || ""} ${left.source_url}`;
         const rightKey = `${sourceTypeLabel(right.source_type)} ${right.title || ""} ${right.source_url}`;
