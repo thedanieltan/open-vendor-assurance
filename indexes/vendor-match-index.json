@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 219,
+  "count": 223,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -2284,6 +2284,83 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "bamboohr"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "basecamp-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://basecamp.com/about/policies/privacy",
+          "title": "37signals Privacy Policy for Basecamp"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "basecamp-security",
+          "source_type": "security_page",
+          "source_url": "https://basecamp.com/about/policies/security",
+          "title": "37signals Security Overview for Basecamp"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "basecamp-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://basecamp.com/about/policies/terms",
+          "title": "37signals Terms of Service for Basecamp"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Basecamp",
+      "legal_entities": [],
+      "legal_name": "37signals LLC",
+      "manifest_path": "dist/vendors/basecamp.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "basecamp.com",
+        "37signals.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "basecamp-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://basecamp.com/about/policies/privacy",
+          "title": "37signals Privacy Policy for Basecamp"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "basecamp-security",
+          "source_type": "security_page",
+          "source_url": "https://basecamp.com/about/policies/security",
+          "title": "37signals Security Overview for Basecamp"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "basecamp-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://basecamp.com/about/policies/terms",
+          "title": "37signals Terms of Service for Basecamp"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "basecamp"
     },
     {
       "candidate_source_types": [],
@@ -12649,6 +12726,85 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pandadoc-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.pandadoc.com/legal/privacy-notice/",
+          "title": "PandaDoc Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pandadoc-status",
+          "source_type": "status_page",
+          "source_url": "https://status.pandadoc.com/",
+          "title": "PandaDoc Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pandadoc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.pandadoc.com/legal/master-services-agreement/",
+          "title": "PandaDoc Master Services Agreement"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "PandaDoc",
+      "legal_entities": [],
+      "legal_name": "PandaDoc, Inc.",
+      "manifest_path": "dist/vendors/pandadoc.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "pandadoc.com",
+        "www.pandadoc.com",
+        "status.pandadoc.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pandadoc-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.pandadoc.com/legal/privacy-notice/",
+          "title": "PandaDoc Privacy Notice"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pandadoc-status",
+          "source_type": "status_page",
+          "source_url": "https://status.pandadoc.com/",
+          "title": "PandaDoc Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "pandadoc-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.pandadoc.com/legal/master-services-agreement/",
+          "title": "PandaDoc Master Services Agreement"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "pandadoc"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
         "security_page"
       ],
       "canonical_sources": [
@@ -17179,6 +17335,85 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "teamwork-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.teamwork.com/legal/privacy-notice/",
+          "title": "Teamwork Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "teamwork-status",
+          "source_type": "status_page",
+          "source_url": "https://status.teamwork.com/",
+          "title": "Teamwork Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "teamwork-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.teamwork.com/legal/terms-of-service/",
+          "title": "Teamwork Terms of Service"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Teamwork",
+      "legal_entities": [],
+      "legal_name": "Teamwork Crew Limited",
+      "manifest_path": "dist/vendors/teamwork.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "teamwork.com",
+        "www.teamwork.com",
+        "status.teamwork.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "teamwork-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.teamwork.com/legal/privacy-notice/",
+          "title": "Teamwork Privacy Notice"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "teamwork-status",
+          "source_type": "status_page",
+          "source_url": "https://status.teamwork.com/",
+          "title": "Teamwork Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "teamwork-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.teamwork.com/legal/terms-of-service/",
+          "title": "Teamwork Terms of Service"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "teamwork"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -19236,6 +19471,85 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "worldpay"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wrike-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.wrike.com/security/privacy/",
+          "title": "Wrike Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wrike-status",
+          "source_type": "status_page",
+          "source_url": "https://status.wrike.com/",
+          "title": "Wrike Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wrike-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.wrike.com/security/terms/",
+          "title": "Wrike Terms and Conditions"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Wrike",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/wrike.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "wrike.com",
+        "www.wrike.com",
+        "status.wrike.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wrike-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.wrike.com/security/privacy/",
+          "title": "Wrike Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wrike-status",
+          "source_type": "status_page",
+          "source_url": "https://status.wrike.com/",
+          "title": "Wrike Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "wrike-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.wrike.com/security/terms/",
+          "title": "Wrike Terms and Conditions"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "wrike"
     },
     {
       "candidate_source_types": [],

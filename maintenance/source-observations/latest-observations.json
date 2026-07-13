@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-13T16:12:09Z",
+  "generated_at": "2026-07-13T16:19:19Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 848,
-    "observed_this_run": 15,
-    "carried_forward": 833
+    "source_count": 860,
+    "observed_this_run": 12,
+    "carried_forward": 848
   },
   "sources": [
     {
@@ -520,7 +520,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aiven-status",
@@ -539,7 +539,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aiven-terms",
@@ -558,7 +558,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "akur8-compliance-page",
@@ -1910,6 +1910,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "basecamp-privacy",
+      "vendor_id": "basecamp",
+      "source_url": "https://basecamp.com/about/policies/privacy",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "basecamp-privacy-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://37signals.com/policies/privacy",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0340c51a58c33ed576a0c2088ecde3a8832c5845f500066396138b0bed1dc20c",
+      "normalized_text_sample_sha256": "sha256:5ace50107baae2a7aebdc7d9894ab241ad0add690436ba5208447bb6629d8f0b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "basecamp-security",
+      "vendor_id": "basecamp",
+      "source_url": "https://basecamp.com/about/policies/security",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "basecamp-security-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://37signals.com/policies/security",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a7c1f37a8304dcddd253697b1b8a6a79126a1eaa8989793781b7a7a0d8e33cd4",
+      "normalized_text_sample_sha256": "sha256:4053ae21c1758d968831e8a66b81b13d789f10a36c1a47d19a980cf0c30d56ba",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "basecamp-terms",
+      "vendor_id": "basecamp",
+      "source_url": "https://basecamp.com/about/policies/terms",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "basecamp-terms-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://37signals.com/policies/terms",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3d951f5ad8fc03164c9d57759c140bc71bc24e61f7156913ae1a50294988b0a2",
+      "normalized_text_sample_sha256": "sha256:dffed8064f034c0f140052de44a374f1c68a574faefb6408742690220af1481d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "beyondtrust-dpa",
       "vendor_id": "beyondtrust",
       "source_url": "https://www.beyondtrust.com/privacy-center/data-processing-addendum",
@@ -3047,7 +3104,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cockroach-labs-security",
@@ -3066,7 +3123,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cockroach-labs-status",
@@ -3085,7 +3142,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cohere-compliance",
@@ -5137,7 +5194,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fly-io-status",
@@ -5156,7 +5213,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fly-io-terms",
@@ -5175,7 +5232,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fortinet-privacy-notice",
@@ -10194,6 +10251,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "pandadoc-privacy",
+      "vendor_id": "pandadoc",
+      "source_url": "https://www.pandadoc.com/legal/privacy-notice/",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "pandadoc-privacy-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://www.pandadoc.com/legal/privacy-notice/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c8739f08d55757012aec8ed0328b23f0b360a59ad036bbe616d6e39c4c5e0979",
+      "normalized_text_sample_sha256": "sha256:2414a95a53bd869c3fd7b91d199cacc87df1605d5f5aab5729d1ec63d92cb939",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "pandadoc-status",
+      "vendor_id": "pandadoc",
+      "source_url": "https://status.pandadoc.com/",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "pandadoc-status-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://status.pandadoc.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:824a8568f313c73ea153eaedeae00c35a0af5a882c780dc7761e8da52a067fce",
+      "normalized_text_sample_sha256": "sha256:9a3dfd53e1a1185b542260729cba7eb0ee37e87a4addff12c64234ee14420110",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "pandadoc-terms",
+      "vendor_id": "pandadoc",
+      "source_url": "https://www.pandadoc.com/legal/master-services-agreement/",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "pandadoc-terms-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://www.pandadoc.com/legal/master-services-agreement/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:72605b2fcb9a826927cb1bd95200f2194fbdbc7b1ece3d75cc0cbaaa8971af4d",
+      "normalized_text_sample_sha256": "sha256:3c617825f5798e9e1df3980c1c8127b79bc992f13f5fae9c6b316cd217dcac51",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "paychex-privacy",
       "vendor_id": "paychex",
       "source_url": "https://www.paychex.com/privacy",
@@ -11141,7 +11255,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "railway-status",
@@ -11160,7 +11274,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "railway-terms",
@@ -11179,7 +11293,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "razorpay-privacy",
@@ -11996,7 +12110,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "scaleway-status",
@@ -12015,7 +12129,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "scaleway-terms",
@@ -12034,7 +12148,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "scrut-automation-compliance",
@@ -13804,6 +13918,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "teamwork-privacy",
+      "vendor_id": "teamwork",
+      "source_url": "https://www.teamwork.com/legal/privacy-notice/",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "teamwork-privacy-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://www.teamwork.com/legal/privacy-notice/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3c77abb5237ae77ab91b17eb3650e03e96b29034507cc09236654d5e9b3c76e3",
+      "normalized_text_sample_sha256": "sha256:a1da0f6010ec0525c2f57d8b3fb22b276504661317813506291f187276e5fee5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "teamwork-status",
+      "vendor_id": "teamwork",
+      "source_url": "https://status.teamwork.com/",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "teamwork-status-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://status.teamwork.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:edfffc8f54a0602718fb105b83d7b14ebe5ff3dcf78bda0d65ff3bf201a53abd",
+      "normalized_text_sample_sha256": "sha256:718801d04ee38e8e4546667ad23c5299c8bd7755d75f163ddadfa97ecec97dd8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "teamwork-terms",
+      "vendor_id": "teamwork",
+      "source_url": "https://www.teamwork.com/legal/terms-of-service/",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "teamwork-terms-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://www.teamwork.com/legal/terms-of-service/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ec28e5e1e08d87eacbdf4bca4c0f8648094eea1c4ab2e9599b28466df5d54e23",
+      "normalized_text_sample_sha256": "sha256:d904859afecd1abe84671dce213f9df3ea504822cec4e3c6affd44c5d775101f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "tencent-cloud-cn-compliance",
       "vendor_id": "tencent-cloud-cn",
       "source_url": "https://cloud.tencent.com/document/product/301#compliance",
@@ -15474,6 +15645,63 @@
         "reason": "first_observation"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "wrike-privacy",
+      "vendor_id": "wrike",
+      "source_url": "https://www.wrike.com/security/privacy/",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "wrike-privacy-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://www.wrike.com/security/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c9006e5e88c892753201397fe914a2766745cf229b9cf4ea4b66d9500bb60860",
+      "normalized_text_sample_sha256": "sha256:09aa0d95ae9942697c60f26b0409e6d1578c1a20d02d26f02f5bd6d6f46127fd",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "wrike-status",
+      "vendor_id": "wrike",
+      "source_url": "https://status.wrike.com/",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "wrike-status-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://status.wrike.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:84580c183599fce94269626a1f10f5aab6522bbeca553b99b6c0eb34a0b3d1f7",
+      "normalized_text_sample_sha256": "sha256:d1adc8a599c9cc98a4d72c42c10ba8899b38c58300071b3ccc5ea3c83c7874fd",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "wrike-terms",
+      "vendor_id": "wrike",
+      "source_url": "https://www.wrike.com/security/terms/",
+      "observed_at": "2026-07-13T16:19:19Z",
+      "observation_id": "wrike-terms-2026-07-13-owner-collab-doc-expansion-1",
+      "final_url": "https://www.wrike.com/security/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0c7bbbe65bdf552fd8c36ae53c795199111b36466a76ebe3821197b759a72569",
+      "normalized_text_sample_sha256": "sha256:6beee196c779a0bad9621c331ba60cd7478ac910238ff570e5df9b6a2cd47970",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "xendit-licenses",
