@@ -52,9 +52,10 @@ OBSERVATION_BASELINE_HINT = (
 )
 
 # Catalog completeness is evaluated for every vendor whose canonical data is touched by a
-# catalog PR. Foundational public surfaces must be live canonical sources. DPA,
-# subprocessor, and status gaps may be represented by durable unavailable-source discovery
-# states; those states document bounded discovery, not proof that a document does not exist.
+# catalog PR. Every core assurance group must have either a verified public source or a
+# durable unavailable-source discovery state. Privacy remains mandatory live evidence, and
+# at least two core groups must be backed by live sources. Unavailable states document
+# bounded discovery; they never prove that a document does not exist.
 SOURCE_COMPLETENESS_GROUPS: dict[str, set[str]] = {
     "privacy_notice": {"privacy_notice"},
     "terms_of_service": {"terms_of_service"},
@@ -63,7 +64,8 @@ SOURCE_COMPLETENESS_GROUPS: dict[str, set[str]] = {
     "subprocessors_list": {"subprocessors_list"},
     "status_page": {"status_page"},
 }
-MANDATORY_LIVE_GROUPS = {"privacy_notice", "terms_of_service", "security_assurance"}
+MANDATORY_LIVE_GROUPS = {"privacy_notice"}
+MINIMUM_LIVE_CORE_GROUPS = 2
 
 
 def normalize_path(path: str) -> str:
@@ -235,12 +237,11 @@ def unavailable_source_types_for_vendor(vendor_id: str, root: Path) -> set[str]:
 
 
 def validate_changed_vendor_completeness(paths: list[str], *, root: Path = ROOT) -> list[str]:
-    """Require a complete public-source posture for every touched vendor.
+    """Require complete, honest public-source coverage for every touched vendor.
 
-    Privacy, terms, and security/trust/compliance must be live canonical sources.
-    DPA, subprocessors, and status may instead have a durable unavailable-source
-    discovery state. This keeps future expansion complete without asserting that an
-    undiscovered document does not exist.
+    Each core group needs either a live canonical public source or a durable unavailable
+    discovery state. Privacy must remain live, and at least two core groups must be live,
+    preventing a vendor from being admitted on unavailable markers alone.
     """
     failures: list[str] = []
     for vendor_id in sorted(changed_vendor_ids(paths)):
@@ -249,17 +250,23 @@ def validate_changed_vendor_completeness(paths: list[str], *, root: Path = ROOT)
             continue
         live_types = source_types_for_vendor(vendor_id, root)
         unavailable_types = unavailable_source_types_for_vendor(vendor_id, root)
+        live_group_count = 0
         for group, accepted_types in SOURCE_COMPLETENESS_GROUPS.items():
             if live_types.intersection(accepted_types):
+                live_group_count += 1
                 continue
-            if group not in MANDATORY_LIVE_GROUPS and unavailable_types.intersection(accepted_types):
+            if unavailable_types.intersection(accepted_types):
+                if group in MANDATORY_LIVE_GROUPS:
+                    failures.append(
+                        f"data/vendors/{vendor_id}: incomplete {group} coverage; requires a live canonical public source"
+                    )
                 continue
-            if group in MANDATORY_LIVE_GROUPS:
-                requirement = "a live canonical public source"
-            else:
-                requirement = "a live canonical public source or an unavailable-source discovery state"
             failures.append(
-                f"data/vendors/{vendor_id}: incomplete {group} coverage; requires {requirement}"
+                f"data/vendors/{vendor_id}: incomplete {group} coverage; requires a live canonical public source or an unavailable-source discovery state"
+            )
+        if live_group_count < MINIMUM_LIVE_CORE_GROUPS:
+            failures.append(
+                f"data/vendors/{vendor_id}: insufficient live source breadth; requires at least {MINIMUM_LIVE_CORE_GROUPS} live core assurance groups"
             )
     return failures
 
