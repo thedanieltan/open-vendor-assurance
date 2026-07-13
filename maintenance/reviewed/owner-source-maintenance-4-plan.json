@@ -2,8 +2,8 @@
   "schema_version": "0.1.0",
   "report_type": "owner_source_maintenance_plan",
   "work_package": "owner-source-maintenance-4",
-  "reviewed_at": "2026-07-13T16:00:00Z",
-  "replacement_count": 12,
+  "reviewed_at": "2026-07-13T15:50:00Z",
+  "replacement_count": 11,
   "refresh_only_count": 2,
   "replacements": [
     {
@@ -104,15 +104,6 @@
       "new_url": "https://weaviate.io/subprocessors",
       "confidence": "high",
       "reason": "official Weaviate list of subprocessors with exact source-specific title"
-    },
-    {
-      "vendor_id": "zendesk",
-      "source_id": "zendesk-compliance",
-      "source_type": "compliance_page",
-      "old_url": "https://www.zendesk.com/trust-center/compliance/",
-      "new_url": "https://www.zendesk.com/trust-center",
-      "confidence": "high",
-      "reason": "official Zendesk Trust Center replacement"
     }
   ],
   "refresh_only": [
@@ -181,6 +172,10 @@
     {
       "source_id": "twilio-security",
       "reason": "candidate was a broad communications-security marketing page and failed source-type semantics"
+    },
+    {
+      "source_id": "zendesk-compliance",
+      "reason": "the live Trust Center URL is already canonical for Zendesk security; reusing it would collapse distinct source types and violate the duplicate-URL guard"
     }
   ],
   "not_advice": true
