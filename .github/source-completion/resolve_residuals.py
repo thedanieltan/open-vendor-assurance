@@ -190,12 +190,26 @@ def add_source(item: dict) -> None:
     print(f"resolved {vendor_id} {source_type}: {final_url}")
 
 
+def add_parent_authority(vendor_id: str, domain: str, note: str) -> None:
+    vendor_path = ROOT / "data/vendors" / vendor_id / "vendor.yaml"
+    vendor = load_yaml(vendor_path)
+    domains = [str(value) for value in vendor.get("official_domains") or [] if value]
+    if domain not in domains:
+        domains.append(domain)
+    vendor["official_domains"] = domains
+    current_note = str(vendor.get("notes") or "").strip()
+    if note not in current_note:
+        vendor["notes"] = (current_note + " " + note).strip()
+    write_yaml(vendor_path, vendor)
+    print(f"registered parent authority for {vendor_id}: {domain}")
+
+
 def correct_insider_identity() -> None:
     vendor_dir = ROOT / "data/vendors/insider"
     vendor_path = vendor_dir / "vendor.yaml"
     vendor = load_yaml(vendor_path)
     vendor["display_name"] = "Insider One"
-    vendor["headquarters_country"] = None
+    vendor.pop("headquarters_country", None)
     vendor["official_domains"] = ["insiderone.com", "useinsider.com"]
     vendor["public_entrypoints"] = ["https://insiderone.com"]
     vendor["notes"] = (
@@ -247,6 +261,16 @@ def correct_insider_identity() -> None:
 
 
 def main() -> int:
+    add_parent_authority(
+        "microsoft-azure",
+        "microsoft.com",
+        "Microsoft's corporate privacy domain is an official publisher authority for the Azure product surface.",
+    )
+    add_parent_authority(
+        "netsuite",
+        "oracle.com",
+        "Oracle's corporate privacy domain is an official parent-company authority for the NetSuite product surface.",
+    )
     correct_insider_identity()
     for item in RESOLUTIONS:
         add_source(item)
