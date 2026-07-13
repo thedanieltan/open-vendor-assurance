@@ -51,6 +51,20 @@ OBSERVATION_BASELINE_HINT = (
     "install latest-observations.json, then commit maintenance/source-observations/latest-observations.json"
 )
 
+# Catalog completeness is evaluated for every vendor whose canonical data is touched by a
+# catalog PR. Foundational public surfaces must be live canonical sources. DPA,
+# subprocessor, and status gaps may be represented by durable unavailable-source discovery
+# states; those states document bounded discovery, not proof that a document does not exist.
+SOURCE_COMPLETENESS_GROUPS: dict[str, set[str]] = {
+    "privacy_notice": {"privacy_notice"},
+    "terms_of_service": {"terms_of_service"},
+    "security_assurance": {"security_page", "trust_center", "compliance_page"},
+    "dpa": {"dpa"},
+    "subprocessors_list": {"subprocessors_list"},
+    "status_page": {"status_page"},
+}
+MANDATORY_LIVE_GROUPS = {"privacy_notice", "terms_of_service", "security_assurance"}
+
 
 def normalize_path(path: str) -> str:
     return normalize_repo_path(path)
@@ -178,6 +192,78 @@ def validate_changed_source_observations(paths: list[str], *, root: Path = ROOT)
     return failures
 
 
+def changed_vendor_ids(paths: list[str]) -> set[str]:
+    vendor_ids: set[str] = set()
+    for raw_path in paths:
+        path = normalize_path(raw_path)
+        parts = path.split("/")
+        if len(parts) >= 4 and parts[0:2] == ["data", "vendors"] and path.endswith((".yaml", ".yml")):
+            vendor_ids.add(parts[2])
+    return vendor_ids
+
+
+def source_types_for_vendor(vendor_id: str, root: Path) -> set[str]:
+    source_types: set[str] = set()
+    for path in sorted((root / "data" / "vendors" / vendor_id / "sources").glob("*.yaml")):
+        try:
+            record = load_yaml(path)
+        except ValueError:
+            continue
+        source_type = record.get("source_type")
+        if isinstance(source_type, str):
+            source_types.add(source_type)
+    return source_types
+
+
+def unavailable_source_types_for_vendor(vendor_id: str, root: Path) -> set[str]:
+    source_types: set[str] = set()
+    for path in sorted((root / "data" / "vendors" / vendor_id / "unavailable_sources").glob("*.yaml")):
+        try:
+            record = load_yaml(path)
+        except ValueError:
+            continue
+        source_type = record.get("source_type")
+        status = record.get("status")
+        if isinstance(source_type, str) and status in {
+            "not_publicly_available",
+            "not_identified",
+            "intentionally_omitted",
+            "gated_excluded",
+        }:
+            source_types.add(source_type)
+    return source_types
+
+
+def validate_changed_vendor_completeness(paths: list[str], *, root: Path = ROOT) -> list[str]:
+    """Require a complete public-source posture for every touched vendor.
+
+    Privacy, terms, and security/trust/compliance must be live canonical sources.
+    DPA, subprocessors, and status may instead have a durable unavailable-source
+    discovery state. This keeps future expansion complete without asserting that an
+    undiscovered document does not exist.
+    """
+    failures: list[str] = []
+    for vendor_id in sorted(changed_vendor_ids(paths)):
+        vendor_path = root / "data" / "vendors" / vendor_id / "vendor.yaml"
+        if not vendor_path.exists():
+            continue
+        live_types = source_types_for_vendor(vendor_id, root)
+        unavailable_types = unavailable_source_types_for_vendor(vendor_id, root)
+        for group, accepted_types in SOURCE_COMPLETENESS_GROUPS.items():
+            if live_types.intersection(accepted_types):
+                continue
+            if group not in MANDATORY_LIVE_GROUPS and unavailable_types.intersection(accepted_types):
+                continue
+            if group in MANDATORY_LIVE_GROUPS:
+                requirement = "a live canonical public source"
+            else:
+                requirement = "a live canonical public source or an unavailable-source discovery state"
+            failures.append(
+                f"data/vendors/{vendor_id}: incomplete {group} coverage; requires {requirement}"
+            )
+    return failures
+
+
 def validate_catalog_batch_duplicates(paths: list[str], *, root: Path = ROOT) -> list[str]:
     failures: list[str] = []
     changed_paths = {normalize_path(path) for path in paths}
@@ -223,6 +309,7 @@ def validate_catalog_pr(paths: list[str], *, root: Path = ROOT) -> list[str]:
     failures = validate_catalog_paths(paths)
     failures.extend(validate_catalog_generated_outputs(paths))
     failures.extend(validate_changed_source_observations(paths, root=root))
+    failures.extend(validate_changed_vendor_completeness(paths, root=root))
     failures.extend(validate_catalog_batch_duplicates(paths, root=root))
     return failures
 
