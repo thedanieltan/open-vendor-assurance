@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-13T15:21:54Z",
+  "generated_at": "2026-07-13T15:31:42Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 803,
+    "source_count": 815,
     "observed_this_run": 12,
-    "carried_forward": 791
+    "carried_forward": 803
   },
   "sources": [
     {
@@ -2022,6 +2022,63 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "bitbucket-privacy",
+      "vendor_id": "bitbucket",
+      "source_url": "https://www.atlassian.com/legal/privacy-policy",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "bitbucket-privacy-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://www.atlassian.com/legal/privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ab58f6e713bf0ab9a55f4477196bd7a448634b9e6d80c98c7d99ceec75058b44",
+      "normalized_text_sample_sha256": "sha256:b314189f73db95aeb9f0afa236d1c1ea4582fb0644a6914e2612de24e4ab0a6e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "bitbucket-status",
+      "vendor_id": "bitbucket",
+      "source_url": "https://bitbucket.status.atlassian.com/",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "bitbucket-status-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://bitbucket.status.atlassian.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a16104bfaa4f18732296625da94bb0cefb2336a9275f7ab62df00356509f5891",
+      "normalized_text_sample_sha256": "sha256:7b598cd589464fd0e180e5c874608bc3ee8eb2fae5e682eaf609da4c1723ce4a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "bitbucket-terms",
+      "vendor_id": "bitbucket",
+      "source_url": "https://www.atlassian.com/legal/atlassian-customer-agreement",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "bitbucket-terms-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://www.atlassian.com/legal/atlassian-customer-agreement",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3925a6bacaf83fef001594427da47ff0c2fcfbdf10c2838447e2b66e9cf326ea",
+      "normalized_text_sample_sha256": "sha256:9ed32b1fee497e20e6cbc9034774ef7d0fa836e1f6eb4bb93a8dbdce7fbd90d2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "bitdefender-privacy",
@@ -4890,7 +4947,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fis-terms",
@@ -4909,7 +4966,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fiserv-privacy",
@@ -4928,7 +4985,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fiserv-terms",
@@ -4947,7 +5004,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fortinet-privacy-notice",
@@ -5384,7 +5441,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "global-payments-terms",
@@ -5403,7 +5460,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gocardless-privacy",
@@ -10327,6 +10384,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "postman-privacy",
+      "vendor_id": "postman",
+      "source_url": "https://privacy.postman.com/policies/",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "postman-privacy-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://privacy.postman.com/policies/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bf473af160cc61313bc823e16f5af94d2271548b6ad5b53a98219651f2b274f1",
+      "normalized_text_sample_sha256": "sha256:4bb7623842fa638856fc8b2f53d0bc3a66d02a98f47ffc3fa88fd83126457809",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "postman-status",
+      "vendor_id": "postman",
+      "source_url": "https://status.postman.com/",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "postman-status-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://status.postman.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6d2f9a927a4cbc5215525f319ba54c6799c3fcd3b3133e96a8742ef85bac4ed1",
+      "normalized_text_sample_sha256": "sha256:741051c134a7128bd45ef6f143375a14f6b56f0caf73ae257837458fd79d549e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "postman-terms",
+      "vendor_id": "postman",
+      "source_url": "https://www.postman.com/legal/terms/",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "postman-terms-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://www.postman.com/legal/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9a86930b65c3626927889d12a117147483a2daef488f6147fcb62277b343f68e",
+      "normalized_text_sample_sha256": "sha256:17628f1c4d39724222d6c047eefe21d327c11b21ff326a532115685ff69a7a6d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "prismic-privacy-notice",
       "vendor_id": "prismic",
       "source_url": "https://prismic.io/legal/privacy",
@@ -10571,7 +10685,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "razorpay-status",
@@ -10590,7 +10704,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "razorpay-terms",
@@ -10609,7 +10723,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "red-hat-privacy",
@@ -12721,6 +12835,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "strapi-privacy",
+      "vendor_id": "strapi",
+      "source_url": "https://strapi.io/privacy",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "strapi-privacy-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://strapi.io/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7e3e1b29385bb0f109679cb46cd8fee61713ac5e59520b07c034d2d3d60a87fb",
+      "normalized_text_sample_sha256": "sha256:0962b2d37909bdaff195df2b100a74434618b217a23c8b0987185cba3912eec2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "strapi-status",
+      "vendor_id": "strapi",
+      "source_url": "https://status.strapi.io/",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "strapi-status-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://status.strapi.io/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f8dc69652006239186a47707abc2b807bedeaeb2449e9d783358d8d75a0450fa",
+      "normalized_text_sample_sha256": "sha256:0ffae88c555438a71a3764f42e7516d68c2611aa3d35fa41e0e4eebf841bb55a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "strapi-terms",
+      "vendor_id": "strapi",
+      "source_url": "https://strapi.io/terms-of-use",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "strapi-terms-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://strapi.io/terms-of-use",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c07a7ea0160b5da6bb07f6a517eaa4a20707d827c8e007f958a32b907cf4f49a",
+      "normalized_text_sample_sha256": "sha256:62a211fe48bc0fba885a85809a5800d0b00ba92e76a2bf09b3b2320b728b2052",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "stripe-compliance",
       "vendor_id": "stripe",
       "source_url": "https://stripe.com/guides/general-data-protection-regulation",
@@ -13747,6 +13918,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "upcloud-privacy",
+      "vendor_id": "upcloud",
+      "source_url": "https://upcloud.com/privacy-notice/",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "upcloud-privacy-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://upcloud.com/privacy-notice/",
+      "http_status": 403,
+      "source_health_status": "gated",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:785d430111d709c2f2734b82dde4aad4b435d6123e57467e61bc02b6b22557bb",
+      "normalized_text_sample_sha256": "sha256:ae0b26c68939e8214056c2517af3b5091f1c674c8aef5f1e1fbab7804a78829b",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_gated"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "upcloud-status",
+      "vendor_id": "upcloud",
+      "source_url": "https://status.upcloud.com/",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "upcloud-status-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://status.upcloud.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:dc126e5b36f8053af60a29ffef6209a4d1c72676dd1c8bf1a0b39d230fecfe77",
+      "normalized_text_sample_sha256": "sha256:d0f2172760159b01ebb9cb409c60c540b5aede4ddfcdb46ddb7abfd951bc2abf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "upcloud-terms",
+      "vendor_id": "upcloud",
+      "source_url": "https://upcloud.com/global/terms-of-service/",
+      "observed_at": "2026-07-13T15:31:42Z",
+      "observation_id": "upcloud-terms-2026-07-13-owner-cross-lane-expansion-1",
+      "final_url": "https://upcloud.com/global/terms-of-service/",
+      "http_status": 403,
+      "source_health_status": "gated",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ccd733606314c988350bbad61927a6675249a8ac51b74a958cf7926b1cb8f9d5",
+      "normalized_text_sample_sha256": "sha256:ae0b26c68939e8214056c2517af3b5091f1c674c8aef5f1e1fbab7804a78829b",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_gated"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "vanta-compliance",
       "vendor_id": "vanta",
       "source_url": "https://www.vanta.com/trust",
@@ -14580,7 +14808,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "worldpay-status",
@@ -14599,7 +14827,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "worldpay-terms",
@@ -14618,7 +14846,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "xendit-licenses",
