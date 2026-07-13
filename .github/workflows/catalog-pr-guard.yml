@@ -3,18 +3,21 @@ name: catalog-pr-guard
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened, ready_for_review]
+  pull_request_target:
+    types: [labeled]
 
 permissions:
-  contents: read
-  pull-requests: read
+  contents: write
+  pull-requests: write
+  issues: write
 
 concurrency:
-  group: catalog-pr-guard-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  group: catalog-pr-guard-${{ github.event.pull_request.number }}-${{ github.event_name }}
+  cancel-in-progress: false
 
 jobs:
   catalog-pr-guard:
-    if: startsWith(github.event.pull_request.title, 'Catalog:')
+    if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Catalog:')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -129,3 +132,91 @@ jobs:
         run: |
           echo "catalog-pr-guard completed boundary checks."
           echo "Heavy validation, generated-output freshness, release gates, and tests are enforced by validate.yml."
+
+  owner-catalog-executor:
+    if: >-
+      github.event_name == 'pull_request_target' &&
+      github.event.label.name == 'owner-catalog-execute' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.login == github.repository_owner &&
+      startsWith(github.event.pull_request.head.ref, 'catalog/owner-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out exact owner branch
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Reject stale or substituted head
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD_SHA"
+          test "$(git remote get-url origin)" = "https://github.com/${GITHUB_REPOSITORY}.git"
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Execute owner catalog work package
+        run: |
+          set -euo pipefail
+          test -f maintenance/generated/owner_catalog_executor.py
+          python maintenance/generated/owner_catalog_executor.py
+      - name: Verify new canonical sources
+        run: |
+          set -euo pipefail
+          git ls-files --others --modified --exclude-standard \
+            | grep '/sources/.*\.yaml$' \
+            | sort -u > /tmp/owner-catalog-new-source-paths.txt || true
+          if [ -s /tmp/owner-catalog-new-source-paths.txt ]; then
+            python -m tools.openva.source_verification verify \
+              --source-path-file /tmp/owner-catalog-new-source-paths.txt \
+              --output /tmp/owner-catalog-verification.json
+            python -m tools.openva.observation_ledger build \
+              --verification-report /tmp/owner-catalog-verification.json \
+              --output-dir /tmp/owner-catalog-observations \
+              --run-id "owner-catalog-pr-${PR_NUMBER}" \
+              --baseline maintenance/source-observations/latest-observations.json
+            python -m tools.openva.observation_ledger install-latest \
+              --latest /tmp/owner-catalog-observations/latest-observations.json
+          fi
+      - name: Validate completed catalog state
+        run: |
+          set -euo pipefail
+          python -m tools.openva.validate validate
+          python -m pytest -q \
+            tests/test_catalog_guard.py \
+            tests/test_source_discovery.py \
+            tests/test_generated_exports.py \
+            tests/test_source_observation_ledger.py
+      - name: Remove executor controls
+        run: |
+          rm -f maintenance/generated/owner_catalog_executor.py
+          rm -f maintenance/generated/owner-catalog-executor-state.json
+          rm -f maintenance/generated/owner-catalog-executor-diagnostic.md
+      - name: Commit completed work package
+        run: |
+          set -euo pipefail
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'Owner catalog executor produced no changes.'
+            exit 1
+          fi
+          git commit -m 'Catalog: materialize owner-led completeness and expansion work package'
+          git push origin "HEAD:${HEAD_REF}"
+      - name: Remove execution label
+        if: always()
+        run: |
+          gh api --method DELETE \
+            "/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/labels/owner-catalog-execute" \
+            >/dev/null 2>&1 || true
