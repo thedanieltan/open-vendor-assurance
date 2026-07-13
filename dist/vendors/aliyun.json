@@ -5,7 +5,7 @@
       "access_class": "public_web",
       "artifact_id": "aliyun-compliance",
       "artifact_type": "compliance_page",
-      "canonical_url": "https://www.aliyun.com/trust-center",
+      "canonical_url": "https://security.aliyun.com/trust-center",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -95,7 +95,7 @@
       "access_class": "public_web",
       "artifact_id": "aliyun-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.aliyun.com/product/security",
+      "canonical_url": "https://cn.aliyun.com/security",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -158,8 +158,8 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "low",
+        "collected_at": "2026-07-13T15:50:00Z",
+        "confidence": "high",
         "observer": "human",
         "publisher": "vendor"
       },
@@ -169,7 +169,7 @@
       "source_id": "aliyun-compliance",
       "source_language": "zh",
       "source_type": "compliance_page",
-      "source_url": "https://www.aliyun.com/trust-center",
+      "source_url": "https://security.aliyun.com/trust-center",
       "summary_en": "Public Aliyun trust or compliance metadata reference.",
       "summary_native": "阿里云公开信任中心或合规信息元数据引用。",
       "title_en": "Aliyun Trust Center",
@@ -227,8 +227,8 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
+        "collected_at": "2026-07-13T15:50:00Z",
+        "confidence": "high",
         "observer": "human",
         "publisher": "vendor"
       },
@@ -238,7 +238,7 @@
       "source_id": "aliyun-security",
       "source_language": "zh",
       "source_type": "security_page",
-      "source_url": "https://www.aliyun.com/product/security",
+      "source_url": "https://cn.aliyun.com/security",
       "summary_en": "Public Aliyun security page metadata reference.",
       "summary_native": "阿里云公开安全产品与安全信息页面元数据引用。",
       "title_en": "Aliyun Security",
@@ -352,6 +352,40 @@
       "schema_version": "0.1.0",
       "source_id": "aliyun-subprocessors",
       "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "aliyun"
+    },
+    {
+      "_openva_path": "data/vendors/aliyun/changes/owner-source-maintenance-4-aliyun-compliance.yaml",
+      "artifact_id": "aliyun-compliance",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-4-aliyun-compliance",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T15:50:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "aliyun-compliance",
+      "summary": "Owner-led catalog maintenance replaced a confirmed broken public source URL and aligned its artifact metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "aliyun"
+    },
+    {
+      "_openva_path": "data/vendors/aliyun/changes/owner-source-maintenance-4-aliyun-security.yaml",
+      "artifact_id": "aliyun-security",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-4-aliyun-security",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T15:50:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "aliyun-security",
+      "summary": "Owner-led catalog maintenance replaced a confirmed broken public source URL and aligned its artifact metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "aliyun"
     }
