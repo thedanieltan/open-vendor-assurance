@@ -45,7 +45,9 @@ jobs:
           rm -rf .owner-source-completion-1
           rm -f tools/openva/catalog_source_completion.py tests/test_catalog_source_completion.py
       - name: Resolve final live-breadth and identity residuals
-        run: python .source-completion-control/.github/source-completion/resolve_residuals.py
+        run: |
+          python .source-completion-control/.github/source-completion/resolve_residuals.py
+          python .source-completion-control/.github/source-completion/set_insider_headquarters.py
       - name: Harden and complete catalog source coverage
         run: python .source-completion-control/.github/source-completion/finalize.py
       - name: Remove trusted control checkout
