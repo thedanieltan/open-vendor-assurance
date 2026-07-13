@@ -1,0 +1,173 @@
+name: owner-source-maintenance-4-live-acceptance
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-maintenance-4-live-acceptance
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-maintenance-4-live-acceptance
+  cancel-in-progress: true
+
+jobs:
+  accept:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-maintenance-4-live-accepted]') && !contains(github.event.head_commit.message, '[owner-maintenance-4-live-blocked]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install HTTP client
+        run: pip install 'requests>=2.32'
+      - name: Poll deployed snapshot and verify repaired URLs
+        id: acceptance
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          mkdir -p maintenance/reviewed
+          python - <<'PY'
+          import json
+          import time
+          from datetime import UTC, datetime
+          from pathlib import Path
+          from urllib.parse import urljoin
+
+          import requests
+
+          base = 'https://thedanieltan.github.io/open-vendor-assurance/'
+          expected_commit = '3ac5d9e8e9af38a1f555f178b93d964459c01097'
+          expected = {
+              'aliyun-compliance': 'https://security.aliyun.com/trust-center',
+              'aliyun-security': 'https://cn.aliyun.com/security',
+              'darwinbox-security': 'https://darwinbox.com/trust/security',
+              'okta-inc-terms': 'https://www.okta.com/legal/terms-of-service',
+              'qualtrics-subprocessors': 'https://www.qualtrics.com/subprocessor-list',
+              'scrut-automation-dpa': 'https://www.scrut.io/dpa',
+              'secureframe-subprocessors': 'https://secureframe.com/subprocessor-list',
+              'shift-technology-security': 'https://www.shift-technology.com/security',
+              'snowflake-security': 'https://www.snowflake.com/en/why-snowflake/snowflake-security-hub',
+              'weaviate-privacy': 'https://weaviate.io/privacy',
+              'weaviate-subprocessors': 'https://weaviate.io/subprocessors',
+          }
+          session = requests.Session()
+          session.headers.update({
+              'User-Agent': 'OpenVA-owner-live-acceptance/0.1',
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache',
+              'Accept': 'application/json,text/html;q=0.8,*/*;q=0.5',
+          })
+          attempts = []
+          accepted = None
+
+          for attempt in range(1, 41):
+              row = {'attempt': attempt, 'checked_at': datetime.now(UTC).strftime('%Y-%m-%dT%H:%M:%SZ')}
+              try:
+                  home = session.get(base, params={'acceptance': f'{expected_commit}-{attempt}'}, timeout=20)
+                  index_url = urljoin(base, 'public/openva-agent-index.json')
+                  index_response = session.get(index_url, params={'acceptance': f'{expected_commit}-{attempt}'}, timeout=20)
+                  row['home_status'] = home.status_code
+                  row['index_status'] = index_response.status_code
+                  index_response.raise_for_status()
+                  index = index_response.json()
+                  deployed_commit = str((index.get('snapshot') or {}).get('commit_sha') or '')
+                  row['deployed_commit'] = deployed_commit
+                  if home.status_code != 200:
+                      row['state'] = 'home_not_ready'
+                  elif deployed_commit != expected_commit:
+                      row['state'] = 'stale_snapshot'
+                  else:
+                      exports = index.get('exports') or {}
+                      source_pointer = exports.get('sources_index') or {}
+                      source_path = str(source_pointer.get('path') or 'sources/index.json')
+                      sources_url = urljoin(urljoin(base, 'public/'), source_path)
+                      sources_response = session.get(
+                          sources_url,
+                          params={'acceptance': f'{expected_commit}-{attempt}'},
+                          timeout=20,
+                      )
+                      row['sources_status'] = sources_response.status_code
+                      sources_response.raise_for_status()
+                      source_index = sources_response.json()
+                      source_commit = str((source_index.get('snapshot') or {}).get('commit_sha') or '')
+                      row['sources_commit'] = source_commit
+                      by_id = {
+                          str(item.get('source_id')): item
+                          for item in source_index.get('sources', [])
+                          if item.get('source_id')
+                      }
+                      checks = []
+                      for source_id, expected_url in expected.items():
+                          actual_url = str((by_id.get(source_id) or {}).get('source_url') or '')
+                          checks.append({
+                              'source_id': source_id,
+                              'expected_url': expected_url,
+                              'actual_url': actual_url,
+                              'matched': actual_url.rstrip('/') == expected_url.rstrip('/'),
+                          })
+                      row['source_checks'] = checks
+                      if source_commit != expected_commit:
+                          row['state'] = 'mixed_snapshot'
+                      elif not all(item['matched'] for item in checks):
+                          row['state'] = 'source_projection_mismatch'
+                      else:
+                          row['state'] = 'accepted'
+                          accepted = row
+                          attempts.append(row)
+                          break
+              except Exception as exc:
+                  row['state'] = 'fetch_error'
+                  row['error'] = f'{type(exc).__name__}: {exc}'
+              attempts.append(row)
+              time.sleep(15)
+
+          report = {
+              'schema_version': '0.1.0',
+              'report_type': 'owner_source_maintenance_live_acceptance',
+              'expected_commit': expected_commit,
+              'site_base_url': base,
+              'status': 'accepted' if accepted else 'blocked',
+              'accepted_at': accepted.get('checked_at') if accepted else None,
+              'attempt_count': len(attempts),
+              'source_count_checked': len(expected),
+              'accepted_result': accepted,
+              'attempts': attempts,
+              'not_advice': True,
+          }
+          out = Path('maintenance/reviewed/owner-source-maintenance-4-live-acceptance.json')
+          out.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps({
+              'status': report['status'],
+              'attempt_count': report['attempt_count'],
+              'accepted_at': report['accepted_at'],
+              'source_count_checked': report['source_count_checked'],
+          }, indent=2, sort_keys=True))
+          raise SystemExit(0 if accepted else 1)
+          PY
+      - name: Commit live acceptance result
+        if: steps.acceptance.outcome == 'success'
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/owner-source-maintenance-4-live-acceptance.yml
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add -A
+          git commit -m 'Catalog: record published source maintenance acceptance [owner-maintenance-4-live-accepted]'
+          git push
+      - name: Commit blocked live acceptance diagnostic
+        if: steps.acceptance.outcome == 'failure'
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/owner-source-maintenance-4-live-acceptance.yml
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add -A
+          git commit -m 'Catalog: record blocked published source maintenance acceptance [owner-maintenance-4-live-blocked]'
+          git push
+          exit 1
