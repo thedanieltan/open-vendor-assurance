@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 190,
+  "count": 193,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -5793,6 +5793,84 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://factorialhr.com/privacy",
+          "title": "Factorial Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://factorialhr.com/terms-of-use",
+          "title": "Factorial Terms and Conditions"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.factorial.co/",
+          "title": "Factorial Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Factorial",
+      "legal_entities": [],
+      "legal_name": "Everyday Software, S.L.",
+      "manifest_path": "dist/vendors/factorial.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "factorialhr.com",
+        "factorial.co"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://factorialhr.com/privacy",
+          "title": "Factorial Privacy Policy"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://factorialhr.com/terms-of-use",
+          "title": "Factorial Terms and Conditions"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.factorial.co/",
+          "title": "Factorial Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "factorial"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
         "security_page",
@@ -8384,6 +8462,83 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "insider"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.instructure.com/policies/product-privacy-policy",
+          "title": "Instructure Product Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-status",
+          "source_type": "status_page",
+          "source_url": "https://status.instructure.com/",
+          "title": "Instructure Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.instructure.com/",
+          "title": "Instructure Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Instructure",
+      "legal_entities": [],
+      "legal_name": "Instructure, Inc.",
+      "manifest_path": "dist/vendors/instructure.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "instructure.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.instructure.com/policies/product-privacy-policy",
+          "title": "Instructure Product Privacy Notice"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-status",
+          "source_type": "status_page",
+          "source_url": "https://status.instructure.com/",
+          "title": "Instructure Status"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.instructure.com/",
+          "title": "Instructure Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "instructure"
     },
     {
       "candidate_source_types": [],
@@ -15990,6 +16145,83 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "typeform"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.ukg.com/privacy",
+          "title": "UKG Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.ukg.com/terms-of-use",
+          "title": "UKG Terms of Use"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trustcenter.ukg.com/",
+          "title": "UKG Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "UKG",
+      "legal_entities": [],
+      "legal_name": "UKG Inc.",
+      "manifest_path": "dist/vendors/ukg.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "ukg.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.ukg.com/privacy",
+          "title": "UKG Privacy Notice"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.ukg.com/terms-of-use",
+          "title": "UKG Terms of Use"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trustcenter.ukg.com/",
+          "title": "UKG Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "ukg"
     },
     {
       "candidate_source_types": [],
