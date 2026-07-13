@@ -1,6 +1,6 @@
 {
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
-  "generated_at": "2026-07-13T16:19:19Z",
+  "generated_at": "2026-07-13T16:33:39Z",
   "not_advice": true,
   "report_type": "latest_observations_index",
   "schema_version": "0.1.0",
@@ -80,6 +80,63 @@
       "source_id": "1password-trust-center",
       "source_url": "https://trust.1password.io/",
       "vendor_id": "1password"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://www.activecampaign.com/legal/privacy-policy",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:4dfb58014417282c21b0f2056791f7a868711b8be39497e4224b16815f3e8b55",
+      "observation_id": "activecampaign-privacy-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:3343ece45dc7c0d41be41a6bc7b6b08210331152410ccc095a520bd5f5505dcb",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "activecampaign-privacy",
+      "source_url": "https://www.activecampaign.com/legal/privacy-policy",
+      "vendor_id": "activecampaign"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://status.activecampaign.com/",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:4280cf82f64f29762c9e0cbe18f904ebc9f36c34e3b7819957f3c9f6fd4931d9",
+      "observation_id": "activecampaign-status-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:d303a621f319b2d75ac7191648a31c00e2643a26772d34c22f79ea5017c15e9e",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "activecampaign-status",
+      "source_url": "https://status.activecampaign.com/",
+      "vendor_id": "activecampaign"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://www.activecampaign.com/legal/terms-of-service",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:a93ce023cf601c1b89c94e3b5c0d03297ab84146727277b017322b33b36d08a2",
+      "observation_id": "activecampaign-terms-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:efc3dff56296b2bf76651a5f662efdd2a0876c66af337d8f00e544bc0c9b40b3",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "activecampaign-terms",
+      "source_url": "https://www.activecampaign.com/legal/terms-of-service",
+      "vendor_id": "activecampaign"
     },
     {
       "carried_forward": true,
@@ -1906,7 +1963,7 @@
       "vendor_id": "bamboohr"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://37signals.com/policies/privacy",
       "http_status": 200,
@@ -1925,7 +1982,7 @@
       "vendor_id": "basecamp"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://37signals.com/policies/security",
       "http_status": 200,
@@ -1944,7 +2001,7 @@
       "vendor_id": "basecamp"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://37signals.com/policies/terms",
       "http_status": 200,
@@ -2569,6 +2626,63 @@
       "source_id": "calendly-security",
       "source_url": "https://calendly.com/security",
       "vendor_id": "calendly"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://www.campaignmonitor.com/policies/#privacy-policy",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:e4db70d9b1223c8dacfd33a3068a6c3f611729a9c3a3da8a81dc6f72a7d538d8",
+      "observation_id": "campaign-monitor-privacy-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:f97d6921ae5e1b0c83bf1fb4e1a7d980e2c44e32f052689a931fe72bf89511fd",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "campaign-monitor-privacy",
+      "source_url": "https://www.campaignmonitor.com/policies/#privacy-policy",
+      "vendor_id": "campaign-monitor"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://status.campaignmonitor.com/",
+      "http_status": 403,
+      "normalized_text_sample_sha256": "sha256:347b4558e231e492ac8324bf746faf25dd34ac5659df286d6a61f314010cc006",
+      "observation_id": "campaign-monitor-status-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:347b4558e231e492ac8324bf746faf25dd34ac5659df286d6a61f314010cc006",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "source_health_gated",
+        "required": true
+      },
+      "source_health_status": "gated",
+      "source_id": "campaign-monitor-status",
+      "source_url": "https://status.campaignmonitor.com/",
+      "vendor_id": "campaign-monitor"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://www.campaignmonitor.com/policies/#terms-of-use",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:e4db70d9b1223c8dacfd33a3068a6c3f611729a9c3a3da8a81dc6f72a7d538d8",
+      "observation_id": "campaign-monitor-terms-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:f97d6921ae5e1b0c83bf1fb4e1a7d980e2c44e32f052689a931fe72bf89511fd",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "campaign-monitor-terms",
+      "source_url": "https://www.campaignmonitor.com/policies/#terms-of-use",
+      "vendor_id": "campaign-monitor"
     },
     {
       "carried_forward": true,
@@ -3424,6 +3538,63 @@
       "source_id": "culture-amp-security",
       "source_url": "https://www.cultureamp.com/company/trust/security",
       "vendor_id": "culture-amp"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://customer.io/legal/privacy-policy",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:4d9af07f9bd2bc64cef478aa662345b588822c017df05229ef1dbca67691e1bd",
+      "observation_id": "customer-io-privacy-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:59cb8d81751f3be23f9ff35dc48502c896e0fe6ff6774328cb717708cf4ecf65",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "customer-io-privacy",
+      "source_url": "https://customer.io/legal/privacy-policy",
+      "vendor_id": "customer-io"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://status.customerio.com",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:5a868b79cba537f55bec6f4f56364a82bae7a7b0820ca07bd6b28d425ad59824",
+      "observation_id": "customer-io-status-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:897b5c09303525181edc77e178186b16563640b4253e97244e61f967ca6c738e",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "customer-io-status",
+      "source_url": "https://status.customerio.com",
+      "vendor_id": "customer-io"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://customer.io/legal/terms-of-service",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:0b043e938eb890e42d2bc993de6cb3e08df45c638c277152c20954ea3434d738",
+      "observation_id": "customer-io-terms-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:4133dc6ef1eac3bf4d816a9ff8ae2a8ed13e5b5ce2aad25ecb2dbc5ee0d1b9ce",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "customer-io-terms",
+      "source_url": "https://customer.io/legal/terms-of-service",
+      "vendor_id": "customer-io"
     },
     {
       "carried_forward": true,
@@ -5438,6 +5609,63 @@
       "source_id": "freshworks-subprocessors",
       "source_url": "https://www.freshworks.com/privacy/sub-processor-july31-2025/",
       "vendor_id": "freshworks"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://front.com/legal/privacy-notice",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:043d0a12c4a11252091724dd8afc74c93b70fb35ad89eea63d8c77ffc25cb2d1",
+      "observation_id": "front-privacy-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:6593cc936285a3737c080b31441124b575eb91afbf115b1786a4ec36b94959f3",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "front-privacy",
+      "source_url": "https://front.com/legal/privacy-notice",
+      "vendor_id": "front"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://www.frontstatus.com/",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:11cd1a8c8d26f55244dafff5d1184563140ab242648104163fa85b0fc3ff0846",
+      "observation_id": "front-status-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:370586d8689ecd8f6fea8750b2888a528304355bbe7bf2107ba43b2f81917ecd",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "front-status",
+      "source_url": "https://www.frontstatus.com/",
+      "vendor_id": "front"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://front.com/legal/saas-services-agreement",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:bdc34d77f30960560a794f687231f881b326bb0136c6473f0badb982a775813d",
+      "observation_id": "front-terms-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:625e22ead679ecd122bdd6b4607f501d8a9c5891f25d108255e8f15278feb9b7",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "front-terms",
+      "source_url": "https://front.com/legal/saas-services-agreement",
+      "vendor_id": "front"
     },
     {
       "carried_forward": true,
@@ -8157,6 +8385,63 @@
       "vendor_id": "mailchimp"
     },
     {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://www.mailerlite.com/legal/privacy-policy",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:d9908acd0145f2318687f82a15c587f9549962725888486f643beae375297e4d",
+      "observation_id": "mailerlite-privacy-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:ee4a7c395b0d042d9dfe3bc1ba8059d5b770e6a613dbba3804b792b5c7c00b36",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "mailerlite-privacy",
+      "source_url": "https://www.mailerlite.com/legal/privacy-policy",
+      "vendor_id": "mailerlite"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://status.mailerlite.com/",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:142dadcdbb4387224e008ce226c3128b5f3abe4ea0e925e4a60693e77aaa6e7a",
+      "observation_id": "mailerlite-status-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:4a0b984a226c1e07d518a7a763b07b8c28306e40c11dd7f36318cdf0f2a07327",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "mailerlite-status",
+      "source_url": "https://status.mailerlite.com/",
+      "vendor_id": "mailerlite"
+    },
+    {
+      "carried_forward": false,
+      "change_class": "none",
+      "final_url": "https://www.mailerlite.com/legal/terms-of-service",
+      "http_status": 200,
+      "normalized_text_sample_sha256": "sha256:71ea9910762e5224d7dfa71bdb7f0aa8e3107d26cffb8257457c89caf00cd719",
+      "observation_id": "mailerlite-terms-2026-07-13-owner-customer-engagement-expansion-1",
+      "observed_at": "2026-07-13T16:33:39Z",
+      "raw_sample_sha256": "sha256:9d32f4c49fea44ac9dd4347aa954057267c5c08d97cf3599817d28d76b8a4b4b",
+      "retrieval_method": "html_page",
+      "review_signal": {
+        "reason": "first_observation",
+        "required": false
+      },
+      "source_health_status": "reachable",
+      "source_id": "mailerlite-terms",
+      "source_url": "https://www.mailerlite.com/legal/terms-of-service",
+      "vendor_id": "mailerlite"
+    },
+    {
       "carried_forward": true,
       "change_class": "none",
       "final_url": "https://www.marqeta.com/privacy",
@@ -10247,7 +10532,7 @@
       "vendor_id": "palantir"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://www.pandadoc.com/legal/privacy-notice/",
       "http_status": 200,
@@ -10266,7 +10551,7 @@
       "vendor_id": "pandadoc"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://status.pandadoc.com/",
       "http_status": 200,
@@ -10285,7 +10570,7 @@
       "vendor_id": "pandadoc"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://www.pandadoc.com/legal/master-services-agreement/",
       "http_status": 200,
@@ -13914,7 +14199,7 @@
       "vendor_id": "surveymonkey"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://www.teamwork.com/legal/privacy-notice/",
       "http_status": 200,
@@ -13933,7 +14218,7 @@
       "vendor_id": "teamwork"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://status.teamwork.com/",
       "http_status": 200,
@@ -13952,7 +14237,7 @@
       "vendor_id": "teamwork"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://www.teamwork.com/legal/terms-of-service/",
       "http_status": 200,
@@ -15643,7 +15928,7 @@
       "vendor_id": "worldpay"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://www.wrike.com/security/privacy/",
       "http_status": 200,
@@ -15662,7 +15947,7 @@
       "vendor_id": "wrike"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://status.wrike.com/",
       "http_status": 200,
@@ -15681,7 +15966,7 @@
       "vendor_id": "wrike"
     },
     {
-      "carried_forward": false,
+      "carried_forward": true,
       "change_class": "none",
       "final_url": "https://www.wrike.com/security/terms/",
       "http_status": 200,
@@ -16347,8 +16632,8 @@
     }
   ],
   "summary": {
-    "carried_forward": 847,
+    "carried_forward": 862,
     "observed_this_run": 13,
-    "source_count": 860
+    "source_count": 875
   }
 }
