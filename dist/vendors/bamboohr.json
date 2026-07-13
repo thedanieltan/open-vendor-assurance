@@ -35,7 +35,7 @@
       "access_class": "public_web",
       "artifact_id": "bamboohr-dpa",
       "artifact_type": "dpa",
-      "canonical_url": "https://www.bamboohr.com/legal/data-processing-addendum",
+      "canonical_url": "https://www.bamboohr.com/legal/data-processing-agreement",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -181,9 +181,9 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "medium",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "rights_class": "metadata_only",
@@ -192,7 +192,7 @@
       "source_id": "bamboohr-dpa",
       "source_language": "en",
       "source_type": "dpa",
-      "source_url": "https://www.bamboohr.com/legal/data-processing-addendum",
+      "source_url": "https://www.bamboohr.com/legal/data-processing-agreement",
       "summary_en": "Public BambooHR data processing addendum metadata reference.",
       "summary_native": "Public BambooHR data processing addendum metadata reference.",
       "title_en": "BambooHR Data Processing Addendum",
@@ -352,6 +352,23 @@
       "schema_version": "0.1.0",
       "source_id": "bamboohr-subprocessors",
       "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "bamboohr"
+    },
+    {
+      "_openva_path": "data/vendors/bamboohr/changes/owner-source-maintenance-3-bamboohr-dpa.yaml",
+      "artifact_id": "bamboohr-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-bamboohr-dpa",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "bamboohr-dpa",
+      "summary": "Owner-led catalog maintenance replaced a confirmed broken public source URL and aligned its artifact metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "bamboohr"
     }

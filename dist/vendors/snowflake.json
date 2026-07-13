@@ -35,7 +35,7 @@
       "access_class": "public_web",
       "artifact_id": "snowflake-dpa",
       "artifact_type": "dpa",
-      "canonical_url": "https://www.snowflake.com/en/legal/data-processing-addendum/",
+      "canonical_url": "https://www.snowflake.com/en/legal/addenda/data-processing-addendum/",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -65,7 +65,7 @@
       "access_class": "public_web",
       "artifact_id": "snowflake-privacy",
       "artifact_type": "privacy_notice",
-      "canonical_url": "https://www.snowflake.com/en/legal/privacy-notice/",
+      "canonical_url": "https://www.snowflake.com/en/legal/privacy/privacy-policy/",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -125,7 +125,7 @@
       "access_class": "public_web",
       "artifact_id": "snowflake-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://www.snowflake.com/en/legal/subprocessors/",
+      "canonical_url": "https://www.snowflake.com/en/legal/privacy/snowflake-sub-processors/",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -182,9 +182,9 @@
       "catalog_tier": "human_reviewed",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "high",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "review_state": "human_reviewed",
@@ -255,9 +255,9 @@
       "catalog_tier": "human_reviewed",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "high",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "review_state": "human_reviewed",
@@ -303,9 +303,9 @@
       "catalog_tier": "human_reviewed",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "high",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "review_state": "human_reviewed",
@@ -406,6 +406,57 @@
       "schema_version": "0.1.0",
       "source_id": "snowflake-subprocessors",
       "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "snowflake"
+    },
+    {
+      "_openva_path": "data/vendors/snowflake/changes/owner-source-maintenance-3-snowflake-dpa.yaml",
+      "artifact_id": "snowflake-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-snowflake-dpa",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "snowflake-dpa",
+      "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "snowflake"
+    },
+    {
+      "_openva_path": "data/vendors/snowflake/changes/owner-source-maintenance-3-snowflake-privacy.yaml",
+      "artifact_id": "snowflake-privacy",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-snowflake-privacy",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "snowflake-privacy",
+      "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "snowflake"
+    },
+    {
+      "_openva_path": "data/vendors/snowflake/changes/owner-source-maintenance-3-snowflake-subprocessors.yaml",
+      "artifact_id": "snowflake-subprocessors",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-snowflake-subprocessors",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "snowflake-subprocessors",
+      "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
       "to_hash": "sha256:TBD",
       "vendor_id": "snowflake"
     }

@@ -5,7 +5,7 @@
       "access_class": "public_web",
       "artifact_id": "complyadvantage-privacy",
       "artifact_type": "privacy_notice",
-      "canonical_url": "https://complyadvantage.com/privacy-policy/",
+      "canonical_url": "https://complyadvantage.com/privacy-notice",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -39,7 +39,7 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-18T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "medium",
         "observer": "hybrid",
         "publisher": "vendor"
@@ -50,7 +50,7 @@
       "source_id": "complyadvantage-privacy",
       "source_language": "en",
       "source_type": "privacy_notice",
-      "source_url": "https://complyadvantage.com/privacy-policy/",
+      "source_url": "https://complyadvantage.com/privacy-notice",
       "summary_en": "Public ComplyAdvantage privacy policy metadata reference.",
       "summary_native": "Public ComplyAdvantage privacy policy metadata reference.",
       "title_en": "ComplyAdvantage Privacy Policy",
@@ -59,6 +59,23 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/complyadvantage/changes/owner-source-maintenance-3-complyadvantage-privacy.yaml",
+      "artifact_id": "complyadvantage-privacy",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-complyadvantage-privacy",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "complyadvantage-privacy",
+      "summary": "Owner-led catalog maintenance replaced a confirmed broken public source URL and aligned its artifact metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "complyadvantage"
+    },
     {
       "_openva_path": "data/vendors/complyadvantage/changes/payments-kyc-batch-1-complyadvantage-privacy.yaml",
       "artifact_id": "complyadvantage-privacy",

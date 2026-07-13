@@ -5,7 +5,7 @@
       "access_class": "public_web",
       "artifact_id": "mistral-ai-compliance",
       "artifact_type": "compliance_page",
-      "canonical_url": "https://mistral.ai/trust/",
+      "canonical_url": "https://trust.mistral.ai/",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -67,7 +67,7 @@
       "access_class": "public_web",
       "artifact_id": "mistral-ai-privacy",
       "artifact_type": "privacy_notice",
-      "canonical_url": "https://mistral.ai/privacy/",
+      "canonical_url": "https://legal.mistral.ai/terms/privacy-policy",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -164,9 +164,9 @@
       "catalog_tier": "human_reviewed",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "high",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "review_state": "human_reviewed",
@@ -214,9 +214,9 @@
       "catalog_tier": "human_reviewed",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "high",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "review_state": "human_reviewed",
@@ -363,6 +363,40 @@
       "schema_version": "0.1.0",
       "source_id": "mistral-ai-subprocessors",
       "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "mistral-ai"
+    },
+    {
+      "_openva_path": "data/vendors/mistral-ai/changes/owner-source-maintenance-3-mistral-ai-compliance.yaml",
+      "artifact_id": "mistral-ai-compliance",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-mistral-ai-compliance",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "mistral-ai-compliance",
+      "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "mistral-ai"
+    },
+    {
+      "_openva_path": "data/vendors/mistral-ai/changes/owner-source-maintenance-3-mistral-ai-privacy.yaml",
+      "artifact_id": "mistral-ai-privacy",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-mistral-ai-privacy",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "mistral-ai-privacy",
+      "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
       "to_hash": "sha256:TBD",
       "vendor_id": "mistral-ai"
     }
