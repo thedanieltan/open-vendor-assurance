@@ -1,0 +1,172 @@
+name: owner-source-maintenance-3-probe
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-maintenance-3
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-maintenance-3-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-maintenance-3-probes]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install project
+        run: pip install -e '.[dev]'
+      - name: Probe audit candidates
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import re
+          import ssl
+          from collections import defaultdict
+          from concurrent.futures import ThreadPoolExecutor, as_completed
+          from pathlib import Path
+          from urllib.error import HTTPError, URLError
+          from urllib.request import Request, urlopen
+
+          audit_path = Path('maintenance/reviewed/owner-source-maintenance-3-audit.json')
+          audit = json.loads(audit_path.read_text(encoding='utf-8'))
+
+          candidates = {}
+          for finding in audit.get('findings', []):
+              kind = finding.get('kind')
+              if kind not in {'observed_not_found', 'source_artifact_url_mismatch', 'quarantined_source'}:
+                  continue
+              source_id = finding.get('source_id')
+              if not source_id:
+                  continue
+              item = candidates.setdefault(source_id, {
+                  'source_id': source_id,
+                  'vendor_id': finding.get('vendor_id'),
+                  'source_path': finding.get('source_path'),
+                  'source_url': finding.get('source_url'),
+                  'artifact_url': None,
+                  'kinds': [],
+              })
+              if kind not in item['kinds']:
+                  item['kinds'].append(kind)
+              if finding.get('artifact_url'):
+                  item['artifact_url'] = finding['artifact_url']
+
+          urls = sorted({
+              url
+              for item in candidates.values()
+              for url in (item.get('source_url'), item.get('artifact_url'))
+              if isinstance(url, str) and url.strip()
+          })
+
+          title_re = re.compile(r'<title[^>]*>(.*?)</title>', re.IGNORECASE | re.DOTALL)
+          ws_re = re.compile(r'\s+')
+          context = ssl.create_default_context()
+
+          def probe(url: str) -> dict:
+              request = Request(
+                  url,
+                  headers={
+                      'User-Agent': 'OpenVA owner-led catalog maintenance/0.1 (+https://github.com/thedanieltan/open-vendor-assurance)',
+                      'Accept': 'text/html,application/xhtml+xml,application/pdf;q=0.9,*/*;q=0.5',
+                      'Range': 'bytes=0-131071',
+                  },
+                  method='GET',
+              )
+              result = {
+                  'url': url,
+                  'status': None,
+                  'final_url': url,
+                  'content_type': None,
+                  'title': None,
+                  'error': None,
+              }
+              try:
+                  with urlopen(request, timeout=25, context=context) as response:
+                      result['status'] = response.getcode()
+                      result['final_url'] = response.geturl()
+                      result['content_type'] = response.headers.get_content_type()
+                      data = response.read(131072)
+                      if result['content_type'] in {'text/html', 'application/xhtml+xml'}:
+                          text = data.decode(response.headers.get_content_charset() or 'utf-8', errors='replace')
+                          match = title_re.search(text)
+                          if match:
+                              result['title'] = ws_re.sub(' ', match.group(1)).strip()[:300]
+              except HTTPError as exc:
+                  result['status'] = exc.code
+                  result['final_url'] = exc.geturl() or url
+                  result['content_type'] = exc.headers.get_content_type() if exc.headers else None
+                  result['error'] = f'HTTPError: {exc.code}'
+              except (URLError, TimeoutError, ssl.SSLError, ValueError) as exc:
+                  result['error'] = f'{type(exc).__name__}: {exc}'[:500]
+              except Exception as exc:
+                  result['error'] = f'{type(exc).__name__}: {exc}'[:500]
+              return result
+
+          probes = {}
+          with ThreadPoolExecutor(max_workers=8) as executor:
+              futures = {executor.submit(probe, url): url for url in urls}
+              for future in as_completed(futures):
+                  result = future.result()
+                  probes[result['url']] = result
+
+          status_counts = defaultdict(int)
+          for result in probes.values():
+              status_counts[str(result.get('status'))] += 1
+
+          rows = []
+          for source_id, item in sorted(candidates.items()):
+              source_probe = probes.get(item.get('source_url'))
+              artifact_probe = probes.get(item.get('artifact_url')) if item.get('artifact_url') else None
+              rows.append({
+                  **item,
+                  'kinds': sorted(item['kinds']),
+                  'source_probe': source_probe,
+                  'artifact_probe': artifact_probe,
+              })
+
+          report = {
+              'schema_version': '0.1.0',
+              'report_type': 'owner_source_maintenance_probe',
+              'base_sha': '${{ github.sha }}',
+              'candidate_count': len(rows),
+              'unique_url_count': len(urls),
+              'status_counts': dict(sorted(status_counts.items())),
+              'candidates': rows,
+              'not_advice': True,
+              'guardrails': {
+                  'public_urls_only': True,
+                  'no_authentication': True,
+                  'no_antibot_bypass': True,
+                  'no_raw_documents_stored': True,
+              },
+          }
+          output = Path('maintenance/reviewed/owner-source-maintenance-3-probes.json')
+          output.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps({
+              'candidate_count': report['candidate_count'],
+              'unique_url_count': report['unique_url_count'],
+              'status_counts': report['status_counts'],
+          }, indent=2, sort_keys=True))
+          PY
+      - name: Commit probe report
+        run: |
+          set -euo pipefail
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add maintenance/reviewed/owner-source-maintenance-3-probes.json
+          git commit -m 'Catalog: record owner source maintenance probes [owner-maintenance-3-probes]'
+          git push
