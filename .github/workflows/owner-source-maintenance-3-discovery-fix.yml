@@ -1,0 +1,43 @@
+name: owner-source-maintenance-3-discovery-fix
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-maintenance-3
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-maintenance-3-discovery-fix
+  cancel-in-progress: true
+
+jobs:
+  fix:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-maintenance-3-discovery-fix]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Repair temporary discovery runner
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/workflows/owner-source-maintenance-3-discovery.yml')
+          content = path.read_text(encoding='utf-8')
+          content = content.replace("'subprocessors': [('subprocessor'", "'subprocessors_list': [('subprocessor'")
+          content = content.replace('              nonlocal bytes_read\n', '              global bytes_read\n')
+          path.write_text(content, encoding='utf-8')
+          PY
+          grep -n "subprocessors_list\|global bytes_read" .github/workflows/owner-source-maintenance-3-discovery.yml
+      - name: Commit repaired runner
+        run: |
+          set -euo pipefail
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add .github/workflows/owner-source-maintenance-3-discovery.yml
+          git commit -m 'CI: fix official replacement discovery [owner-maintenance-3-discovery-fix]'
+          git push
