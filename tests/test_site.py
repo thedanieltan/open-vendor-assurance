@@ -349,3 +349,67 @@ assert.equal(decision.vendor, null);
         text=True,
     )
     assert completed.returncode == 0, completed.stderr or completed.stdout
+
+
+# The imported legacy contract used to require source-health wording on human
+# vendor pages. The public product now deliberately exposes references only;
+# source-health and governance metadata remain available in machine outputs.
+def _assert_references_only_vendor_page(page: str, source_url: str) -> None:
+    assert source_url in page
+    assert "<th>Source type</th><th>Reference</th>" in page
+    for forbidden in [
+        "<th>Source health</th>",
+        "<th>Last checked</th>",
+        "Reachable at last check",
+        "No source-health observation",
+        "Retrieval requires review",
+        "Access result ambiguous",
+    ]:
+        assert forbidden not in page
+
+
+def test_static_vendor_pages_use_reachability_wording_for_healthy_source_health(tmp_path):
+    source = source_rows(1)[0]
+    snapshot = write_source_health_snapshot(
+        tmp_path / "source-health-snapshot.json",
+        [health_row(source, "ok", "healthy")],
+    )
+
+    out = build_site(tmp_path, snapshot)
+    page = (out / "vendors" / source["vendor_id"] / "index.html").read_text(encoding="utf-8")
+    _assert_references_only_vendor_page(page, source["source_url"])
+
+
+def test_static_vendor_pages_use_neutral_wording_for_missing_source_health(tmp_path):
+    source = source_rows(1)[0]
+    snapshot = write_source_health_snapshot(tmp_path / "source-health-snapshot.json", [])
+
+    out = build_site(tmp_path, snapshot)
+    page = (out / "vendors" / source["vendor_id"] / "index.html").read_text(encoding="utf-8")
+    _assert_references_only_vendor_page(page, source["source_url"])
+
+
+def test_human_vendor_detail_renderer_is_references_only(tmp_path: Path):
+    module = resolver_site_build_module()
+    output = tmp_path / "site-dist"
+    module.build_site(output)
+
+    compiled_index = (output / "index.html").read_text(encoding="utf-8")
+    renderer = (output / "public-vendor-detail.js").read_text(encoding="utf-8")
+    assert 'public-vendor-detail.js?v=20260713-vendor-detail' in compiled_index
+    assert 'PUBLIC_VENDOR_DETAIL_VERSION = "references-only-v1"' in renderer
+    assert '<tr><th>Source type</th><th>Reference</th><th>Export</th></tr>' in renderer
+    for forbidden in [
+        "source-health",
+        "last checked",
+        "candidate sources",
+        "unavailable notes",
+        "Related observation events",
+        "Assurance Intelligence",
+        "provenance.collected_at",
+        "source_authority_class",
+        "access_class",
+        "rights_class",
+        "review_state",
+    ]:
+        assert forbidden not in renderer
