@@ -41,48 +41,53 @@ def unavailable(base: Path, source_type: str, next_review_after: str = "2026-10-
     )
 
 
-def complete_live_foundation(base: Path) -> None:
-    source(base, "example-privacy", "privacy_notice")
-    source(base, "example-terms", "terms_of_service")
-    source(base, "example-trust", "trust_center")
-
-
-def test_current_main_contract_can_complete_vendor(tmp_path: Path) -> None:
+def test_complete_vendor_accepts_honest_unavailable_core_groups(tmp_path: Path) -> None:
     base = vendor(tmp_path)
-    complete_live_foundation(base)
-    unavailable(base, "dpa")
-    unavailable(base, "subprocessors_list")
-    unavailable(base, "status_page")
-    unavailable(base, "compliance_page")
-    unavailable(base, "certification_reference")
+    source(base, "example-privacy", "privacy_notice")
+    source(base, "example-status", "status_page")
+    for source_type in ("terms_of_service", "security_page", "dpa", "subprocessors_list", "compliance_page"):
+        unavailable(base, source_type)
     report = build_report(tmp_path, today=date(2026, 7, 14), generated_at="2026-07-14T00:00:00Z")
+    row = report["vendors"][0]
     assert report["summary"]["group_cell_count"] == 7
-    assert report["summary"]["complete_vendor_count"] == 1
-    assert report["summary"]["unresolved_group_count"] == 0
+    assert row["privacy_live"] is True
+    assert row["live_core_group_count"] == 2
+    assert row["group_resolutions"]["terms_of_service"] == "evidenced_unavailable"
+    assert row["group_resolutions"]["security_assurance"] == "evidenced_unavailable"
+    assert row["complete"] is True
 
 
-def test_live_required_groups_do_not_accept_unavailable_records(tmp_path: Path) -> None:
+def test_privacy_must_remain_live(tmp_path: Path) -> None:
     base = vendor(tmp_path)
     unavailable(base, "privacy_notice")
-    unavailable(base, "terms_of_service")
-    unavailable(base, "security_page")
-    unavailable(base, "trust_center")
-    unavailable(base, "compliance_page")
-    for source_type in ("dpa", "subprocessors_list", "status_page", "certification_reference"):
+    source(base, "example-terms", "terms_of_service")
+    source(base, "example-status", "status_page")
+    for source_type in ("security_page", "dpa", "subprocessors_list", "compliance_page"):
         unavailable(base, source_type)
     report = build_report(tmp_path, today=date(2026, 7, 14), generated_at="2026-07-14T00:00:00Z")
     row = report["vendors"][0]
     assert row["group_resolutions"]["privacy_notice"] == "unresolved"
-    assert row["group_resolutions"]["terms_of_service"] == "unresolved"
-    assert row["group_resolutions"]["security_assurance"] == "unresolved"
-    assert row["group_resolutions"]["compliance"] == "evidenced_unavailable"
+    assert row["privacy_live"] is False
+    assert "privacy_notice_requires_live_source" in row["completion_failures"]
+    assert row["complete"] is False
+
+
+def test_minimum_two_live_core_groups_is_enforced(tmp_path: Path) -> None:
+    base = vendor(tmp_path)
+    source(base, "example-privacy", "privacy_notice")
+    for source_type in ("terms_of_service", "security_page", "dpa", "subprocessors_list", "status_page", "compliance_page"):
+        unavailable(base, source_type)
+    report = build_report(tmp_path, today=date(2026, 7, 14), generated_at="2026-07-14T00:00:00Z")
+    row = report["vendors"][0]
+    assert row["unresolved_groups"] == []
+    assert row["live_core_group_count"] == 1
+    assert "minimum_live_core_group_breadth_not_met" in row["completion_failures"]
     assert row["complete"] is False
 
 
 def test_security_and_compliance_coverage_claims_resolve_groups(tmp_path: Path) -> None:
     base = vendor(tmp_path)
     source(base, "example-privacy", "privacy_notice")
-    source(base, "example-terms", "terms_of_service")
     source(
         base,
         "example-security",
@@ -95,31 +100,33 @@ def test_security_and_compliance_coverage_claims_resolve_groups(tmp_path: Path) 
             }
         ],
     )
-    for source_type in ("dpa", "subprocessors_list", "status_page"):
+    for source_type in ("terms_of_service", "dpa", "subprocessors_list", "status_page"):
         unavailable(base, source_type)
     report = build_report(tmp_path, today=date(2026, 7, 14), generated_at="2026-07-14T00:00:00Z")
     row = report["vendors"][0]
     assert row["group_resolutions"]["security_assurance"] == "canonical_source_or_claim"
     assert row["group_resolutions"]["compliance"] == "canonical_source_or_claim"
+    assert row["live_core_group_count"] == 2
     assert row["complete"] is True
 
 
-def test_compliance_unavailable_requires_all_alternatives(tmp_path: Path) -> None:
+def test_one_current_unavailable_record_resolves_alternative_group(tmp_path: Path) -> None:
     base = vendor(tmp_path)
-    complete_live_foundation(base)
-    for source_type in ("dpa", "subprocessors_list", "status_page"):
+    source(base, "example-privacy", "privacy_notice")
+    source(base, "example-terms", "terms_of_service")
+    for source_type in ("security_page", "dpa", "subprocessors_list", "status_page", "compliance_page"):
         unavailable(base, source_type)
-    unavailable(base, "compliance_page")
     report = build_report(tmp_path, today=date(2026, 7, 14), generated_at="2026-07-14T00:00:00Z")
-    assert report["vendors"][0]["group_resolutions"]["compliance"] == "unresolved"
-    unavailable(base, "certification_reference")
-    report = build_report(tmp_path, today=date(2026, 7, 14), generated_at="2026-07-14T00:00:00Z")
-    assert report["vendors"][0]["group_resolutions"]["compliance"] == "evidenced_unavailable"
+    row = report["vendors"][0]
+    assert row["group_resolutions"]["security_assurance"] == "evidenced_unavailable"
+    assert row["group_resolutions"]["compliance"] == "evidenced_unavailable"
+    assert row["complete"] is True
 
 
-def test_due_unavailable_record_does_not_resolve_optional_group(tmp_path: Path) -> None:
+def test_due_unavailable_record_does_not_resolve_group(tmp_path: Path) -> None:
     base = vendor(tmp_path)
-    complete_live_foundation(base)
+    source(base, "example-privacy", "privacy_notice")
+    source(base, "example-terms", "terms_of_service")
     unavailable(base, "dpa", next_review_after="2026-07-14")
     report = build_report(tmp_path, today=date(2026, 7, 14), generated_at="2026-07-14T00:00:00Z")
     assert report["vendors"][0]["group_resolutions"]["dpa"] == "unresolved"
