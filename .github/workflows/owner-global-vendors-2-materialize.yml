@@ -15,6 +15,7 @@ concurrency:
   group: owner-hr-education-expansion-1-materializer
   cancel-in-progress: false
 
+# Fail-fast rerun after restoring the owner-reviewed manifest and base observation projection.
 jobs:
   materialize:
     runs-on: ubuntu-latest
