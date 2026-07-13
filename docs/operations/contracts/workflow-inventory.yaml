@@ -21,9 +21,9 @@ public_workflows:
   - name: catalog-pr-guard.yml
     loop: pr_safety
     status: core
-    triggers: [pull_request]
+    triggers: [pull_request, pull_request_target]
     permissions: {contents: read, pull-requests: read}
-    writes_repository_state: false
+    writes_repository_state: true
     creates_prs: false
     merges_prs: false
   - name: agent-weighted-review.yml
