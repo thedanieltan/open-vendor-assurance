@@ -1,0 +1,117 @@
+name: owner HR and education vendor materializer
+
+on:
+  push:
+    branches:
+      - catalog/owner-hr-education-expansion-1
+    paths:
+      - catalog-batches/owner-hr-education-expansion-1.yaml
+      - .github/workflows/owner-global-vendors-2-materialize.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-hr-education-expansion-1-materializer
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-hr-education-expansion-1
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install package
+        run: pip install -e '.[dev]'
+      - name: Generate, observe, and validate tranche
+        id: tranche
+        shell: bash
+        run: |
+          set +e
+          {
+            python -m tools.openva.catalog_batch catalog-batches/owner-hr-education-expansion-1.yaml --build-indexes
+
+            find \
+              data/vendors/ukg/sources \
+              data/vendors/rippling/sources \
+              data/vendors/deel/sources \
+              data/vendors/personio/sources \
+              data/vendors/employment-hero/sources \
+              data/vendors/instructure/sources \
+              data/vendors/hibob/sources \
+              data/vendors/factorial/sources \
+              -type f -name '*.yaml' | sort > /tmp/owner-hr-education-source-paths.txt
+
+            python -m tools.openva.source_verification verify \
+              --source-path-file /tmp/owner-hr-education-source-paths.txt \
+              --output /tmp/owner-hr-education-verification.json
+
+            baseline_args=()
+            if [ -f maintenance/source-observations/latest-observations.json ]; then
+              baseline_args=(--baseline maintenance/source-observations/latest-observations.json)
+            fi
+
+            python -m tools.openva.observation_ledger build \
+              --verification-report /tmp/owner-hr-education-verification.json \
+              --output-dir /tmp/owner-hr-education-observations \
+              --run-id owner-hr-education-expansion-1 \
+              "${baseline_args[@]}"
+
+            python -m tools.openva.observation_ledger install-latest \
+              --latest /tmp/owner-hr-education-observations/latest-observations.json
+
+            python -m tools.openva.validate validate
+            python -m pytest -q \
+              tests/test_catalog_guard.py \
+              tests/test_source_type_labels.py \
+              tests/test_generated_exports.py \
+              tests/test_source_observation_ledger.py
+          } > /tmp/materializer.log 2>&1
+          status=$?
+          set -e
+
+          if [ "$status" -ne 0 ]; then
+            mkdir -p maintenance/generated
+            {
+              echo '# Owner HR and education tranche diagnostic'
+              echo
+              echo 'The generator, observation, or validation lane exited non-zero.'
+              echo
+              echo '```text'
+              tail -n 300 /tmp/materializer.log
+              echo '```'
+            } > maintenance/generated/owner-hr-education-expansion-1-diagnostic.md
+            echo 'success=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'success=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Remove one-time inputs after successful validation
+        if: steps.tranche.outputs.success == 'true'
+        run: |
+          rm catalog-batches/owner-hr-education-expansion-1.yaml
+          rm .github/workflows/owner-global-vendors-2-materialize.yml
+      - name: Commit materialized result
+        shell: bash
+        run: |
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No materializer output was produced.'
+            exit 1
+          fi
+          if [ "${{ steps.tranche.outputs.success }}" = 'true' ]; then
+            git commit -m 'Catalog: add eight HR and education vendors'
+          else
+            git commit -m 'Catalog: capture HR education materializer failure'
+          fi
+          git push origin HEAD:catalog/owner-hr-education-expansion-1
+      - name: Fail after publishing diagnostic
+        if: steps.tranche.outputs.success != 'true'
+        run: exit 1
