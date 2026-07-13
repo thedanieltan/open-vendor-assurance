@@ -19,11 +19,11 @@ def vendor(root: Path, vendor_id: str = "example") -> Path:
     return base
 
 
-def source(base: Path, source_id: str, source_type: str) -> None:
-    write_yaml(
-        base / "sources" / f"{source_id}.yaml",
-        {"source_id": source_id, "vendor_id": base.name, "source_type": source_type},
-    )
+def source(base: Path, source_id: str, source_type: str, *, claims: list[dict] | None = None) -> None:
+    record = {"source_id": source_id, "vendor_id": base.name, "source_type": source_type}
+    if claims:
+        record["coverage_claims"] = claims
+    write_yaml(base / "sources" / f"{source_id}.yaml", record)
 
 
 def unavailable(base: Path, source_type: str, next_review_after: str) -> None:
@@ -46,6 +46,30 @@ def test_canonical_alternative_resolves_group(tmp_path: Path) -> None:
     report = build_report(tmp_path, today=date(2026, 7, 14), generated_at="2026-07-14T00:00:00Z")
     assert report["summary"]["complete_vendor_count"] == 1
     assert report["summary"]["unresolved_group_count"] == 0
+
+
+def test_coverage_claim_resolves_additional_role(tmp_path: Path) -> None:
+    base = vendor(tmp_path)
+    source(base, "example-privacy", "privacy_notice")
+    source(base, "example-dpa", "dpa")
+    source(base, "example-subprocessors", "subprocessors_list")
+    source(
+        base,
+        "example-trust",
+        "trust_center",
+        claims=[
+            {
+                "role": "compliance_page",
+                "coverage_type": "contains",
+                "evidence": "The trust center contains the vendor's public compliance material.",
+            }
+        ],
+    )
+    report = build_report(tmp_path, today=date(2026, 7, 14), generated_at="2026-07-14T00:00:00Z")
+    row = report["vendors"][0]
+    assert row["group_resolutions"]["security"] == "canonical_source_or_claim"
+    assert row["group_resolutions"]["compliance"] == "canonical_source_or_claim"
+    assert row["complete"] is True
 
 
 def test_all_alternatives_must_be_evidenced_unavailable(tmp_path: Path) -> None:
