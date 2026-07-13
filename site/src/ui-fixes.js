@@ -1,5 +1,5 @@
 (() => {
-  const RESOLVER_VERSION = "browser-parity-v1";
+  const RESOLVER_VERSION = "browser-parity-v2";
   const IDENTITY_FIELDS = ["vendor_name", "business_entity_name", "domain", "registration_number"];
   const HEADER_ALIASES = Object.freeze({
     vendor: "vendor_name",
@@ -67,8 +67,7 @@
       raw = raw.includes("@") ? raw.split("@").pop() : raw;
       if (raw.includes(":") && raw.split(":").length === 2) raw = raw.split(":", 1)[0];
     }
-    raw = raw.replace(/^www\./, "").replace(/\.$/, "");
-    return raw;
+    return raw.replace(/^www\./, "").replace(/\.$/, "");
   }
 
   function normalizeRegistrationNumber(value) {
@@ -94,22 +93,16 @@
     for (let index = 0; index < line.length; index += 1) {
       const char = line[index];
       const next = line[index + 1];
-      if (char === '"' && quoted && next === '"') {
-        index += 1;
-      } else if (char === '"') {
-        quoted = !quoted;
-      } else if (!quoted && char === delimiter) {
-        count += 1;
-      }
+      if (char === '"' && quoted && next === '"') index += 1;
+      else if (char === '"') quoted = !quoted;
+      else if (!quoted && char === delimiter) count += 1;
     }
     return count;
   }
 
   function detectDelimiter(content) {
     const firstLine = scalar(content).split(/\r?\n/).find((line) => line.trim()) || "";
-    const candidates = [",", "\t", ";"];
-    return candidates
-      .map((delimiter) => [delimiter, delimiterCount(firstLine, delimiter)])
+    return [[",", delimiterCount(firstLine, ",")], ["\t", delimiterCount(firstLine, "\t")], [";", delimiterCount(firstLine, ";")]]
       .sort((left, right) => right[1] - left[1])[0][0];
   }
 
@@ -156,6 +149,46 @@
       });
       return output;
     });
+  }
+
+  function fileReaderText(file) {
+    return new Promise((resolve, reject) => {
+      if (typeof FileReader !== "function") {
+        reject(new Error("FileReader is unavailable in this browser."));
+        return;
+      }
+      const reader = new FileReader();
+      reader.addEventListener("load", () => resolve(String(reader.result || "")), { once: true });
+      reader.addEventListener("error", () => reject(reader.error || new Error("The browser could not read the selected file.")), { once: true });
+      reader.addEventListener("abort", () => reject(new DOMException("The local file read was aborted.", "AbortError")), { once: true });
+      reader.readAsText(file);
+    });
+  }
+
+  function isTransientFileReadError(error) {
+    return ["NotFoundError", "NotReadableError", "AbortError"].includes(error && error.name);
+  }
+
+  async function readLocalTextFile(file) {
+    let lastError = null;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        if (typeof file.text === "function") return await file.text();
+        return await fileReaderText(file);
+      } catch (error) {
+        lastError = error;
+        if (!isTransientFileReadError(error) || attempt === 1) break;
+        await new Promise((resolve) => window.setTimeout(resolve, 200));
+      }
+    }
+    throw lastError || new Error("The browser could not read the selected file.");
+  }
+
+  function localFileReadMessage(file, error) {
+    if (isTransientFileReadError(error)) {
+      return `The browser lost access to ${file.name}. Save or download it to a local folder, wait for any download or cloud sync to finish, then choose the file again.`;
+    }
+    return `Could not read ${file.name}: ${error.message || "Unknown file-read error"}`;
   }
 
   function addVendor(map, key, vendor) {
@@ -209,7 +242,6 @@
     if (!domain) return { vendors: [], method: null, confidence: null };
     const exact = uniqueVendors(indexes.domainIndex.get(domain));
     if (exact.length) return { vendors: exact, method: "domain_exact", confidence: 1.0 };
-
     const matches = indexes.officialDomainRows.filter((entry) => domain.endsWith(`.${entry.domain}`));
     if (!matches.length) return { vendors: [], method: null, confidence: null };
     const longest = matches[0].domain.length;
@@ -230,8 +262,7 @@
     if (!registrationNumber) return [];
     const jurisdiction = normalizeJurisdiction(row.jurisdiction);
     const entries = indexes.registrationIndex.get(registrationNumber) || [];
-    const filtered = jurisdiction ? entries.filter((entry) => entry.jurisdiction === jurisdiction) : entries;
-    return uniqueVendors(filtered);
+    return uniqueVendors(jurisdiction ? entries.filter((entry) => entry.jurisdiction === jurisdiction) : entries);
   }
 
   function matchingDecision(row, indexes) {
@@ -243,9 +274,7 @@
     ]);
     const hasIdentity = IDENTITY_FIELDS.some((field) => scalar(row[field]));
 
-    if (!hasIdentity) {
-      return { status: "no_match", vendor: null, method: null, confidence: null, note: "No supported identity value was provided." };
-    }
+    if (!hasIdentity) return { status: "no_match", vendor: null, method: null, confidence: null, note: "No supported identity value was provided." };
     if (domain.vendors.length > 1 || registrations.length > 1 || (!domain.vendors.length && !registrations.length && names.length > 1)) {
       return { status: "ambiguous", vendor: null, method: null, confidence: null, note: "Multiple plausible catalogue vendors matched the supplied identity." };
     }
@@ -259,15 +288,9 @@
     if (registrationVendor && nameVendor && registrationVendor.vendor_id !== nameVendor.vendor_id) {
       return { status: "ambiguous", vendor: null, method: null, confidence: null, note: "Name and registration evidence point to different catalogue vendors." };
     }
-    if (domainVendor) {
-      return { status: "matched", vendor: domainVendor, method: domain.method, confidence: domain.confidence, note: null };
-    }
-    if (registrationVendor) {
-      return { status: "matched", vendor: registrationVendor, method: "registration_number_exact", confidence: 1.0, note: null };
-    }
-    if (nameVendor) {
-      return { status: "matched", vendor: nameVendor, method: "name_exact", confidence: 0.9, note: null };
-    }
+    if (domainVendor) return { status: "matched", vendor: domainVendor, method: domain.method, confidence: domain.confidence, note: null };
+    if (registrationVendor) return { status: "matched", vendor: registrationVendor, method: "registration_number_exact", confidence: 1.0, note: null };
+    if (nameVendor) return { status: "matched", vendor: nameVendor, method: "name_exact", confidence: 0.9, note: null };
 
     const registrationNumber = normalizeRegistrationNumber(row.registration_number);
     const note = registrationNumber && !indexes.registrationIndex.has(registrationNumber)
@@ -310,16 +333,7 @@
       if (!inputColumns.includes(key)) inputColumns.push(key);
     }));
     const sourceColumns = selectedSourceTypesForExport().map((sourceType) => `${sourceType}_url`);
-    const columns = [
-      ...inputColumns,
-      "openva_match_status",
-      "openva_match_method",
-      "openva_match_confidence",
-      "openva_match_note",
-      "matched_vendor_name",
-      "official_domain",
-      ...sourceColumns,
-    ];
+    const columns = [...inputColumns, "openva_match_status", "openva_match_method", "openva_match_confidence", "openva_match_note", "matched_vendor_name", "official_domain", ...sourceColumns];
     const rows = resultRows.map((result, index) => {
       const row = { ...(inputRows[index] || {}) };
       row.openva_match_status = result.match_status || "no_match";
@@ -345,22 +359,15 @@
     const unmatched = total - matched - ambiguous;
     const summaryNode = document.getElementById("match-summary");
     if (summaryNode) {
-      summaryNode.innerHTML = [
-        ["Rows processed", total],
-        ["Matched rows", matched],
-        ["Ambiguous rows", ambiguous],
-        ["No-match rows", unmatched],
-        ["Processing boundary", "Browser-local"],
-      ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
+      summaryNode.innerHTML = [["Rows processed", total], ["Matched rows", matched], ["Ambiguous rows", ambiguous], ["No-match rows", unmatched], ["Processing boundary", "Browser-local"]]
+        .map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
     }
 
     const previewNode = document.getElementById("match-preview");
     if (!previewNode) return;
     previewNode.innerHTML = localMatchRows.length
       ? `<table><thead><tr><th>Input vendor</th><th>Status</th><th>Matched vendor</th><th>Official domain</th><th>Recorded public source URLs</th><th>Match note</th></tr></thead><tbody>${localMatchRows.slice(0, 20).map((row) => {
-          const urls = Object.entries(row.source_urls || {})
-            .filter(([, url]) => Boolean(url))
-            .map(([sourceType, url]) => `${sourceTypeLabel(sourceType)}: ${url}`);
+          const urls = Object.entries(row.source_urls || {}).filter(([, url]) => Boolean(url)).map(([sourceType, url]) => `${sourceTypeLabel(sourceType)}: ${url}`);
           return `<tr><td>${html(inputIdentityLabel(row))}</td><td>${html(row.match_status || "no_match")}</td><td>${html(row.matched_vendor_name || "")}</td><td>${html(row.official_domain || "")}</td><td>${html(urls.join("; "))}</td><td>${html(row.match_note || "")}</td></tr>`;
         }).join("")}</tbody></table><p>Preview shows up to 20 rows. Downloads include every input row and an explicit match status.</p>`
       : "<p>No local match results yet.</p>";
@@ -380,29 +387,34 @@
 
     fileInput.addEventListener("change", async (event) => {
       const file = event.target.files[0];
-      localInventoryRows = [];
       localMatchRows = [];
       runButton.disabled = true;
       if (!file) {
+        localInventoryRows = [];
         statusNode.textContent = "No CSV selected. Your file will be processed locally and is not uploaded to OpenVA.";
         renderResolverResults();
         return;
       }
+
+      statusNode.textContent = `Reading ${file.name} locally...`;
       try {
-        localInventoryRows = parseInventoryCsv(await file.text());
-        const availableFields = new Set(localInventoryRows.flatMap((row) => Object.keys(row)));
+        const content = await readLocalTextFile(file);
+        const parsedRows = parseInventoryCsv(content);
+        const availableFields = new Set(parsedRows.flatMap((row) => Object.keys(row)));
         const recognized = IDENTITY_FIELDS.filter((field) => availableFields.has(field));
-        if (!localInventoryRows.length) {
+        localInventoryRows = parsedRows;
+        if (!parsedRows.length) {
           statusNode.textContent = `${file.name} contains a header but no data rows, or could not be parsed as comma-, tab-, or semicolon-delimited text.`;
         } else if (!recognized.length) {
           statusNode.textContent = `No supported identity column was found in ${file.name}. Use vendor_name, business_entity_name, domain, or registration_number; common headers such as Company and Website are also accepted.`;
         } else {
           runButton.disabled = false;
-          statusNode.textContent = `${localInventoryRows.length} row(s) loaded locally from ${file.name}. Recognized identity field(s): ${recognized.join(", ")}.`;
+          statusNode.textContent = `${parsedRows.length} row(s) loaded locally from ${file.name}. Recognized identity field(s): ${recognized.join(", ")}.`;
         }
       } catch (error) {
         localInventoryRows = [];
-        statusNode.textContent = `Could not parse ${file.name}: ${error.message}`;
+        fileInput.value = "";
+        statusNode.textContent = localFileReadMessage(file, error);
       }
       renderResolverResults();
     });
@@ -438,14 +450,8 @@
       statusNode.textContent = "Local inventory data cleared from browser memory.";
       renderResolverResults();
     });
-
-    csvButton.addEventListener("click", () => {
-      download("compiled-vendors.csv", resolverResultPackCsv(localInventoryRows, localMatchRows), "text/csv");
-    });
-    jsonButton.addEventListener("click", () => {
-      download("compiled-vendors.json", JSON.stringify(localMatchRows, null, 2) + "\n", "application/json");
-    });
-
+    csvButton.addEventListener("click", () => download("compiled-vendors.csv", resolverResultPackCsv(localInventoryRows, localMatchRows), "text/csv"));
+    jsonButton.addEventListener("click", () => download("compiled-vendors.json", JSON.stringify(localMatchRows, null, 2) + "\n", "application/json"));
     renderResolverResults();
   }
 
