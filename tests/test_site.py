@@ -349,3 +349,33 @@ assert.equal(decision.vendor, null);
         text=True,
     )
     assert completed.returncode == 0, completed.stderr or completed.stdout
+
+
+def test_vendor_detail_slide_preserves_references_and_hides_redundant_fields(tmp_path: Path):
+    module = resolver_site_build_module()
+    output = tmp_path / "site-dist"
+    module.build_site(output)
+
+    compiled_index = (output / "index.html").read_text(encoding="utf-8")
+    renderer = (output / "public-vendor-detail.js").read_text(encoding="utf-8")
+
+    assert 'public-vendor-detail.js?v=20260713-vendor-detail' in compiled_index
+    assert 'PUBLIC_VENDOR_DETAIL_VERSION = "references-only-v1"' in renderer
+    assert '<tr><th>Source type</th><th>Reference</th><th>Export</th></tr>' in renderer
+    assert 'href="${html(source.source_url)}"' in renderer
+    assert 'target="_blank"' in renderer
+
+    for forbidden in [
+        "source-health",
+        "last checked",
+        "candidate sources",
+        "unavailable notes",
+        "Related observation events",
+        "Assurance Intelligence",
+        "provenance.collected_at",
+        "source_authority_class",
+        "access_class",
+        "rights_class",
+        "review_state",
+    ]:
+        assert forbidden not in renderer
