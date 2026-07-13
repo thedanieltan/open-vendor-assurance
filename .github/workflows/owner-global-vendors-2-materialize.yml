@@ -15,6 +15,7 @@ concurrency:
   group: owner-hr-education-expansion-1-materializer
   cancel-in-progress: false
 
+# One-shot owner-led materialization; this file removes itself after success.
 jobs:
   materialize:
     runs-on: ubuntu-latest
