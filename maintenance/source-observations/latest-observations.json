@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-13T13:06:21Z",
+  "generated_at": "2026-07-13T13:56:08Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 749,
-    "observed_this_run": 19,
-    "carried_forward": 730
+    "source_count": 764,
+    "observed_this_run": 15,
+    "carried_forward": 749
   },
   "sources": [
     {
@@ -2040,7 +2040,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitdefender-status",
@@ -2059,7 +2059,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitdefender-terms",
@@ -2078,7 +2078,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitdefender-trust",
@@ -2097,7 +2097,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "box-compliance",
@@ -2287,7 +2287,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "brevo-status",
@@ -2306,7 +2306,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "brevo-terms",
@@ -2325,7 +2325,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "brevo-trust",
@@ -2344,7 +2344,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "calendly-dpa",
@@ -2572,7 +2572,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "circleci-security",
@@ -2591,7 +2591,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "circleci-status",
@@ -2610,7 +2610,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "circleci-terms",
@@ -2629,7 +2629,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "clickup-compliance",
@@ -3810,6 +3810,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "docebo-privacy",
+      "vendor_id": "docebo",
+      "source_url": "https://www.docebo.com/company/privacy-policy/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "docebo-privacy-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://www.docebo.com/company/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5e36b254eb7983c9e1492152ebbf8889b33c7293012bf117e4c0996a31452953",
+      "normalized_text_sample_sha256": "sha256:d88951b3e6e835b7f6407d6b70fb4be46d9be24f607c8bd4ee1b5205334e2858",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "docebo-security",
+      "vendor_id": "docebo",
+      "source_url": "https://www.docebo.com/security/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "docebo-security-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://www.docebo.com/company/compliance-security/",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7a59b299d60f5206a88f49e9089df92822d03dd269ad2c597d75b6ccc968c3fc",
+      "normalized_text_sample_sha256": "sha256:6f73b8478d3ba6360022f6ee91b0a22801ad157f57008ebd0a961e8e6da990e5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "docebo-status",
+      "vendor_id": "docebo",
+      "source_url": "https://status.docebo.com/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "docebo-status-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://status.docebo.com/",
+      "http_status": 403,
+      "source_health_status": "gated",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7d3cd93e5f687f60a1a3f91fb87560267cf7176fdec44bb4650bf7fe67ef20ad",
+      "normalized_text_sample_sha256": "sha256:ae0b26c68939e8214056c2517af3b5091f1c674c8aef5f1e1fbab7804a78829b",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_gated"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "docker-compliance",
       "vendor_id": "docker",
       "source_url": "https://www.docker.com/trust/compliance/",
@@ -4491,7 +4548,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "eset-security",
@@ -4510,7 +4567,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "eset-status",
@@ -4529,7 +4586,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "exoscale-dpa",
@@ -4568,6 +4625,63 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "f-secure-privacy",
+      "vendor_id": "f-secure",
+      "source_url": "https://www.f-secure.com/en/legal/privacy/statement",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "f-secure-privacy-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://www.f-secure.com/en/legal/privacy/statement",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b29872fac3638b5943afc5076696a07e1d6eafcee06f257cd115d8ea71701e72",
+      "normalized_text_sample_sha256": "sha256:26264943dabe59c0c7c46c00e4e133176fbe5c231f9e2efb73958ae8a45afaf2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "f-secure-status",
+      "vendor_id": "f-secure",
+      "source_url": "https://status.f-secure.com/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "f-secure-status-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://status.f-secure.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1ec7a50fb609f1482d6b63c30aa5e00a67427065d8b6ba785d1a6d77398e044a",
+      "normalized_text_sample_sha256": "sha256:77eae9017df6199736528dc7b255a4a095fa70019e3235c5c8b8ad58161494e9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "f-secure-terms",
+      "vendor_id": "f-secure",
+      "source_url": "https://www.f-secure.com/en/legal/terms",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "f-secure-terms-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://www.f-secure.com/en/legal/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1276d2215f65b1be94f2cf9fd392860b1e71bf6ad34648a4119ec31d8d3a04cb",
+      "normalized_text_sample_sha256": "sha256:209e0b7c3ca081987d865f5ef7028d7ea6431e9ba6d327d614f110340c2c5984",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "figma-compliance",
@@ -6791,6 +6905,63 @@
         "reason": "source_health_unreachable"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "jetbrains-privacy",
+      "vendor_id": "jetbrains",
+      "source_url": "https://www.jetbrains.com/legal/docs/privacy/privacy/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "jetbrains-privacy-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://www.jetbrains.com/legal/docs/privacy/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c65a47491b5b9095da9ee6eb535f046abec46f0018c2d9d55b873826058c86b3",
+      "normalized_text_sample_sha256": "sha256:546acbef5eb4d04989586a2342b48e06b8f5ab1d5898a606c371291888e817be",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "jetbrains-status",
+      "vendor_id": "jetbrains",
+      "source_url": "https://status.jetbrains.com/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "jetbrains-status-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://status.jetbrains.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:50264417e82ca505e36400ae0a485af531a83143efaea8dd6c40b4f3ea3b7499",
+      "normalized_text_sample_sha256": "sha256:0181193a10fcf84130ce6560b04a7ae2aefebc229b577fd27eb7e580af2c0a6c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "jetbrains-trust",
+      "vendor_id": "jetbrains",
+      "source_url": "https://trust-center.jetbrains.com/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "jetbrains-trust-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://trust-center.jetbrains.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1806f8b3c50f129f66d269e7af82b91ca8bcb308886b8fc3f43dc30b83600e7a",
+      "normalized_text_sample_sha256": "sha256:1d4fc91c741e9ef4471205dcf8211b788f3222997064b2fdf2b743e781617388",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "keka-dpa",
@@ -9814,6 +9985,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "red-hat-privacy",
+      "vendor_id": "red-hat",
+      "source_url": "https://www.redhat.com/en/about/privacy-policy",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "red-hat-privacy-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://www.redhat.com/en/about/privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1a940f284edcaf136293ffb197147cd640739060833ba58f662930bae5bb8380",
+      "normalized_text_sample_sha256": "sha256:f3169b24511b2a52484e0bbc839404be429cc7055ccc53ae06174c9883ee4850",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "red-hat-status",
+      "vendor_id": "red-hat",
+      "source_url": "https://status.redhat.com/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "red-hat-status-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://status.redhat.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:221181363e20ae947ce7d2ebe4bf4cd0176a5ce9d1a22953ed4dcb5a8695113f",
+      "normalized_text_sample_sha256": "sha256:42bce02bb87776a62599530d08209ab1bbdbb5665e5b203ecf4d13f097ec2493",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "red-hat-trust",
+      "vendor_id": "red-hat",
+      "source_url": "https://www.redhat.com/en/trust",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "red-hat-trust-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://www.redhat.com/en/trust",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3c5cb281033bec44c44ba7e0f92bca855907b064eb929a634cc4c516bca2b878",
+      "normalized_text_sample_sha256": "sha256:31dbaa98cd29241e0b02041df338a9798b9934943aa2ae523d1c9ef30c35a914",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "redis-privacy-notice",
       "vendor_id": "redis",
       "source_url": "https://redis.io/legal/privacy-policy/",
@@ -12452,7 +12680,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trend-micro-status",
@@ -12471,7 +12699,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trend-micro-terms",
@@ -12490,7 +12718,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trend-micro-trust",
@@ -12509,7 +12737,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trulioo-security",
@@ -13308,6 +13536,63 @@
         "reason": "change_class_material_possible"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "withsecure-privacy",
+      "vendor_id": "withsecure",
+      "source_url": "https://www.withsecure.com/privacy-and-security/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "withsecure-privacy-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://www.withsecure.com/en/privacy-and-security/",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5e71df17895e6fde6e5b1d0e168831a60da75817fd8151bab0825afb18cf5bd9",
+      "normalized_text_sample_sha256": "sha256:94de89009c0aff5387a6f7844560704dd1126cb5e81b5904fb62affb42259c60",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "withsecure-status",
+      "vendor_id": "withsecure",
+      "source_url": "https://status.withsecure.com/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "withsecure-status-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://status.withsecure.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:988e3f088bc003559b25d3c810b5d4591e27ffb2e3477c680b7d77da1d6c5618",
+      "normalized_text_sample_sha256": "sha256:f9d4f284a2165b5c8a23c564283d5f0884faf9ece27d7bcdd16cf35bef12e418",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "withsecure-terms",
+      "vendor_id": "withsecure",
+      "source_url": "https://www.withsecure.com/en/terms/",
+      "observed_at": "2026-07-13T13:56:08Z",
+      "observation_id": "withsecure-terms-2026-07-13-owner-global-vendors-3",
+      "final_url": "https://www.withsecure.com/en/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1baeb4070ce52b9d5c9bc1b8d6bf4b7333c2e4318c0bce7054401f586b4f9f7e",
+      "normalized_text_sample_sha256": "sha256:9b7529b690e3dc507aa16876565f7bfe1360d1183983d8767600e32a69c3de76",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "wix-dpa",
