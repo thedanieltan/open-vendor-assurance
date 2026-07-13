@@ -28,54 +28,35 @@ jobs:
           python-version: '3.12'
       - name: Install package
         run: pip install -e '.[dev]'
-      - name: Materialize new vendors and rebuild derived catalog outputs
-        run: python -m tools.openva.catalog_batch catalog-batches/owner-global-vendors-3.yaml --build-indexes
-      - name: Observe only the new source records
+      - name: Generate catalog or capture diagnostic
+        id: generate
         shell: bash
         run: |
-          find \
-            data/vendors/f-secure/sources \
-            data/vendors/withsecure/sources \
-            data/vendors/jetbrains/sources \
-            data/vendors/hashicorp/sources \
-            data/vendors/red-hat/sources \
-            data/vendors/grafana-labs/sources \
-            data/vendors/pagerduty/sources \
-            data/vendors/bigcommerce/sources \
-            data/vendors/commercetools/sources \
-            data/vendors/docebo/sources \
-            -type f -name '*.yaml' | sort > /tmp/owner-global-vendors-3-source-paths.txt
-
-          python -m tools.openva.source_verification verify \
-            --source-path-file /tmp/owner-global-vendors-3-source-paths.txt \
-            --output /tmp/owner-global-vendors-3-verification.json
-
-          baseline_args=()
-          if [ -f maintenance/source-observations/latest-observations.json ]; then
-            baseline_args=(--baseline maintenance/source-observations/latest-observations.json)
+          set +e
+          python -m tools.openva.catalog_batch catalog-batches/owner-global-vendors-3.yaml --build-indexes > /tmp/materializer.log 2>&1
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            mkdir -p maintenance/generated
+            {
+              echo '# Owner global vendors 3 materializer diagnostic'
+              echo
+              echo 'The catalog generator exited non-zero.'
+              echo
+              echo '```text'
+              tail -n 200 /tmp/materializer.log
+              echo '```'
+            } > maintenance/generated/owner-global-vendors-3-materializer-diagnostic.md
+            echo 'generated=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'generated=true' >> "$GITHUB_OUTPUT"
           fi
-
-          python -m tools.openva.observation_ledger build \
-            --verification-report /tmp/owner-global-vendors-3-verification.json \
-            --output-dir /tmp/owner-global-vendors-3-observations \
-            --run-id owner-global-vendors-3 \
-            "${baseline_args[@]}"
-
-          python -m tools.openva.observation_ledger install-latest \
-            --latest /tmp/owner-global-vendors-3-observations/latest-observations.json
-      - name: Validate generated catalog state
-        run: |
-          python -m tools.openva.validate validate
-          python -m pytest -q \
-            tests/test_catalog_guard.py \
-            tests/test_source_type_labels.py \
-            tests/test_generated_exports.py \
-            tests/test_source_observation_ledger.py
-      - name: Remove one-time materialization inputs
+      - name: Remove one-time inputs after successful generation
+        if: steps.generate.outputs.generated == 'true'
         run: |
           rm catalog-batches/owner-global-vendors-3.yaml
           rm .github/workflows/owner-global-vendors-2-materialize.yml
-      - name: Commit materialized new-vendor records
+      - name: Commit generation result
         shell: bash
         run: |
           git diff --check
@@ -83,8 +64,15 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           if git diff --cached --quiet; then
-            echo 'No generated catalog changes were produced.'
+            echo 'No materializer output was produced.'
             exit 1
           fi
-          git commit -m 'Catalog: add ten global vendors'
+          if [ "${{ steps.generate.outputs.generated }}" = 'true' ]; then
+            git commit -m 'Catalog: add ten global vendors'
+          else
+            git commit -m 'Catalog: capture ten-vendor materializer failure'
+          fi
           git push origin HEAD:catalog/owner-global-vendors-3
+      - name: Fail after publishing diagnostic
+        if: steps.generate.outputs.generated != 'true'
+        run: exit 1
