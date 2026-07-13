@@ -434,6 +434,7 @@ def build_discovery(
     }
 
 
+
 # Phase 3 SEO, answer-engine, and generative-engine discovery surface.
 SOURCE_TYPE_DESCRIPTIONS = {
     "dpa": "A public vendor-published agreement or addendum describing data-processing terms.",
@@ -475,16 +476,16 @@ def _social_preview_png() -> bytes:
     for y in range(height):
         raw.append(0)
         for x in range(width):
-  if 70 < x < 250 and 165 < y < 345:
-      pixel = (232, 246, 238)
-  elif 96 < x < 224 and 191 < y < 319:
-      pixel = (23, 107, 80)
-  elif x > 760 and y < 250:
-      pixel = (27, 116, 86)
-  else:
-      shade = int(248 - (y / height) * 13)
-      pixel = (shade, min(250, shade + 2), max(238, shade - 4))
-  raw.extend((*pixel, 255))
+            if 70 < x < 250 and 165 < y < 345:
+                pixel = (232, 246, 238)
+            elif 96 < x < 224 and 191 < y < 319:
+                pixel = (23, 107, 80)
+            elif x > 760 and y < 250:
+                pixel = (27, 116, 86)
+            else:
+                shade = int(248 - (y / height) * 13)
+                pixel = (shade, min(250, shade + 2), max(238, shade - 4))
+            raw.extend((*pixel, 255))
     signature = b"\x89PNG\r\n\x1a\n"
     ihdr = struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)
     return signature + _png_chunk(b"IHDR", ihdr) + _png_chunk(b"IDAT", zlib.compress(bytes(raw), 9)) + _png_chunk(b"IEND", b"")
@@ -502,8 +503,8 @@ def _breadcrumb_jsonld(config: PublicationConfig, items: list[tuple[str, str]]) 
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-  {"@type": "ListItem", "position": index, "name": name, "item": url}
-  for index, (name, url) in enumerate(items, start=1)
+            {"@type": "ListItem", "position": index, "name": name, "item": url}
+            for index, (name, url) in enumerate(items, start=1)
         ],
     }
     return json.dumps(payload, indent=2, sort_keys=True)
@@ -557,23 +558,23 @@ def render_vendor_page(
         directory_url = config.url(f"source-types/{source_type}/")
         recorded = sorted(by_type.get(source_type, []), key=lambda row: str(row.get("source_url") or ""))
         if not recorded:
-  rows.append(
-      "<tr>"
-      f'<td><a href="{_esc(directory_url)}">{_esc(label)}</a></td>'
-      '<td class="url"><span class="muted">No URL currently recorded</span></td>'
-      '<td><span class="muted">—</span></td><td><span class="muted">—</span></td></tr>'
-  )
-  continue
+            rows.append(
+                "<tr>"
+                f'<td><a href="{_esc(directory_url)}">{_esc(label)}</a></td>'
+                '<td class="url"><span class="muted">No URL currently recorded</span></td>'
+                '<td><span class="muted">—</span></td><td><span class="muted">—</span></td></tr>'
+            )
+            continue
         for source in recorded:
-  observed = _latest_observed_at(source)
-  health = _source_health_label(source)
-  rows.append(
-      "<tr>"
-      f'<td><a href="{_esc(directory_url)}">{_esc(label)}</a></td>'
-      f'<td class="url"><a href="{_esc(source.get("source_url"))}" rel="nofollow noopener">{_esc(source.get("source_url"))}</a></td>'
-      f"<td>{_esc(health) if health else f'<span class=\"muted\">{MISSING_SOURCE_HEALTH_LABEL}</span>'}</td>"
-      f"<td>{_esc(observed) if observed else '<span class=\"muted\">—</span>'}</td></tr>"
-  )
+            observed = _latest_observed_at(source)
+            health = _source_health_label(source)
+            rows.append(
+                "<tr>"
+                f'<td><a href="{_esc(directory_url)}">{_esc(label)}</a></td>'
+                f'<td class="url"><a href="{_esc(source.get("source_url"))}" rel="nofollow noopener">{_esc(source.get("source_url"))}</a></td>'
+                f"<td>{_esc(health) if health else f'<span class=\"muted\">{MISSING_SOURCE_HEALTH_LABEL}</span>'}</td>"
+                f"<td>{_esc(observed) if observed else '<span class=\"muted\">—</span>'}</td></tr>"
+            )
     sources_html = "<table><thead><tr><th>Source type</th><th>Vendor-published source URL</th><th>Source health</th><th>Last checked</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table>"
     dataset = _vendor_dataset_jsonld(config, vendor, export_url)
     breadcrumb = _breadcrumb_jsonld(config, [("OpenVA", config.url("")), (raw_name, canonical_url)])
@@ -625,8 +626,8 @@ def render_source_type_page(
         vendor_id = str(vendor.get("vendor_id"))
         source_total += len(sources)
         links = "<br>".join(
-  f'<a href="{_esc(source.get("source_url"))}" rel="nofollow noopener">{_esc(source.get("source_url"))}</a>'
-  for source in sources
+            f'<a href="{_esc(source.get("source_url"))}" rel="nofollow noopener">{_esc(source.get("source_url"))}</a>'
+            for source in sources
         )
         rows.append(f'<tr><td><a href="../../vendors/{_esc(vendor_id)}/">{_esc(vendor.get("display_name"))}</a></td><td class="url">{links}</td></tr>')
     records = "<table><thead><tr><th>Vendor</th><th>Vendor-published source URL</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table>" if rows else '<p class="muted">No accepted URL is currently recorded for this source type.</p>'
@@ -684,8 +685,8 @@ def render_agents_page(config: PublicationConfig, *, commit_sha: str, snapshot_d
 
 def render_index_html(template: str, config: PublicationConfig) -> str:
     return (template.replace("{{OPENVA_HOME_URL}}", config.url(""))
-  .replace("{{OPENVA_AGENT_INDEX_URL}}", config.agent_index_url)
-  .replace("{{OPENVA_REPOSITORY_URL}}", config.repository_url))
+            .replace("{{OPENVA_AGENT_INDEX_URL}}", config.agent_index_url)
+            .replace("{{OPENVA_REPOSITORY_URL}}", config.repository_url))
 
 
 def _render_urlset(urls: list[str], *, lastmod: str | None) -> str:
@@ -761,17 +762,17 @@ def discovery_manifest(
         "source_type_index_url": config.url("source-types/"),
         "export_contract_url": config.export_contract_url,
         "sitemaps": {
-  "all": config.url("sitemap.xml"),
-  "pages": config.url("sitemap-pages.xml"),
-  "vendors": config.url("sitemap-vendors.xml"),
-  "source_types": config.url("sitemap-source-types.xml"),
+            "all": config.url("sitemap.xml"),
+            "pages": config.url("sitemap-pages.xml"),
+            "vendors": config.url("sitemap-vendors.xml"),
+            "source_types": config.url("sitemap-source-types.xml"),
         },
         "catalog": {"vendor_count": vendor_count, "source_count": source_count, "source_type_count": len(labels)},
         "source_type_vocabulary": labels,
         "citation_policy": {
-  "vendor_content_authority": "original_vendor_published_url",
-  "catalog_metadata_authority": "openva_snapshot_and_export",
-  "missing_url_meaning": "no_accepted_url_currently_recorded",
+            "vendor_content_authority": "original_vendor_published_url",
+            "catalog_metadata_authority": "openva_snapshot_and_export",
+            "missing_url_meaning": "no_accepted_url_currently_recorded",
         },
         "publication_model": "continuous_main",
         "mcp": {"available": False, "manifest_url": None},
@@ -810,26 +811,26 @@ def build_discovery(
     for vendor in sorted(vendor_summaries, key=lambda row: str(row.get("vendor_id") or "")):
         vendor_id = str(vendor.get("vendor_id") or "")
         if not vendor_id:
-  continue
+            continue
         vendor_ids.append(vendor_id)
         detail = vendor_details.get(vendor_id, {})
         sources = list(detail.get("canonical_sources", []))
         source_count += len(sources)
         grouped: dict[str, list[dict[str, Any]]] = {}
         for source in sources:
-  grouped.setdefault(str(source.get("source_type") or ""), []).append(source)
+            grouped.setdefault(str(source.get("source_type") or ""), []).append(source)
         for source_type in labels:
-  if grouped.get(source_type):
-      source_type_vendors[source_type].append((vendor, grouped[source_type]))
+            if grouped.get(source_type):
+                source_type_vendors[source_type].append((vendor, grouped[source_type]))
         _write(output_dir / "vendors" / vendor_id / "index.html", render_vendor_page(
-  config, vendor, sources, commit_sha=commit_sha, snapshot_date=snapshot_date
+            config, vendor, sources, commit_sha=commit_sha, snapshot_date=snapshot_date
         ))
 
     counts = {key: (len(rows), sum(len(sources) for _, sources in rows)) for key, rows in source_type_vendors.items()}
     _write(output_dir / "source-types" / "index.html", render_source_type_index_page(config, counts, commit_sha=commit_sha, snapshot_date=snapshot_date))
     for source_type, label in labels.items():
         _write(output_dir / "source-types" / source_type / "index.html", render_source_type_page(
-  config, source_type, label, source_type_vendors[source_type], commit_sha=commit_sha, snapshot_date=snapshot_date
+            config, source_type, label, source_type_vendors[source_type], commit_sha=commit_sha, snapshot_date=snapshot_date
         ))
 
     _write(output_dir / "agents" / "index.html", render_agents_page(config, commit_sha=commit_sha, snapshot_date=snapshot_date))

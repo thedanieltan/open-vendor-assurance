@@ -264,6 +264,7 @@ def test_publication_config_requires_all_fields(tmp_path):
         load_publication_config(incomplete)
 
 
+
 # Phase 3 SEO, answer-engine, and generative-engine acceptance.
 def test_homepage_has_social_identity_assets_and_visible_direct_answers(site, config):
     page = (site / "index.html").read_text(encoding="utf-8")
