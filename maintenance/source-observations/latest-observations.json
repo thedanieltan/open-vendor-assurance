@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-13T15:12:38Z",
+  "generated_at": "2026-07-13T15:21:54Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 791,
-    "observed_this_run": 18,
-    "carried_forward": 773
+    "source_count": 803,
+    "observed_this_run": 12,
+    "carried_forward": 791
   },
   "sources": [
     {
@@ -2572,7 +2572,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "checkout-com-terms",
@@ -2591,7 +2591,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "checkout-com-trust",
@@ -2610,7 +2610,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "circleci-privacy",
@@ -4874,6 +4874,82 @@
       "carried_forward": true
     },
     {
+      "source_id": "fis-privacy",
+      "vendor_id": "fis",
+      "source_url": "https://www.fisglobal.com/privacy",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "fis-privacy-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://www.fisglobal.com/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:fc7a1ace73a12aea1fcf92a514655db66e2a98cf394a8a3a8fd21e786e2ff49e",
+      "normalized_text_sample_sha256": "sha256:a904673517144f0db28e89c94dac4b698a05ec524e0a19f437d0a665aa90de3c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fis-terms",
+      "vendor_id": "fis",
+      "source_url": "https://www.fisglobal.com/terms-of-use",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "fis-terms-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://www.fisglobal.com/terms-of-use",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3accc613f1fa276842c216e7998469f26cd6d76ec38dc8d2ee22987150bf31a2",
+      "normalized_text_sample_sha256": "sha256:bfa15838772b0a96deda7ace5c4123a2a27928f06057cb8c67820514e99e517f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fiserv-privacy",
+      "vendor_id": "fiserv",
+      "source_url": "https://www.fiserv.com/en/about-fiserv/privacy-notice.html",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "fiserv-privacy-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://www.fiserv.com/en/about-fiserv/privacy-notice.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:488dd66c323f174e00072bc7e3341bc71143537dbd70316761869a7c0268ea92",
+      "normalized_text_sample_sha256": "sha256:58e320b0e0ab939e19738fba0a78f01fed69281307b5dcd5f210b0dbbaab9566",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fiserv-terms",
+      "vendor_id": "fiserv",
+      "source_url": "https://www.fiserv.com/en/about-fiserv/terms-of-use.html",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "fiserv-terms-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://www.fiserv.com/en/about-fiserv/terms-of-use.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d2349fcc3d7a93b5d046ab17ab5dae94760544871ab9d7081b93449b55253b57",
+      "normalized_text_sample_sha256": "sha256:6cdd04531633444452be2897c22dbe4365050c087dccb93b390f483640872065",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "fortinet-privacy-notice",
       "vendor_id": "fortinet",
       "source_url": "https://www.fortinet.com/corporate/about-us/privacy",
@@ -5292,6 +5368,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "global-payments-privacy",
+      "vendor_id": "global-payments",
+      "source_url": "https://www.globalpayments.com/privacy-statement",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "global-payments-privacy-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://www.globalpayments.com/privacy-statement",
+      "http_status": 403,
+      "source_health_status": "gated",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:760e86f16bff87df90b47c159650cb1d8fe05e6ccb065fa3a8b1cad124fb8604",
+      "normalized_text_sample_sha256": "sha256:ae0b26c68939e8214056c2517af3b5091f1c674c8aef5f1e1fbab7804a78829b",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_gated"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "global-payments-terms",
+      "vendor_id": "global-payments",
+      "source_url": "https://www.globalpayments.com/terms-of-use",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "global-payments-terms-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://www.globalpayments.com/terms-of-use",
+      "http_status": 403,
+      "source_health_status": "gated",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ca1c32dd1593a3097eb799a286299d627508b8184e402552636bf2de0c845f78",
+      "normalized_text_sample_sha256": "sha256:ae0b26c68939e8214056c2517af3b5091f1c674c8aef5f1e1fbab7804a78829b",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_gated"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "gocardless-privacy",
       "vendor_id": "gocardless",
       "source_url": "https://gocardless.com/privacy",
@@ -5308,7 +5422,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gocardless-security",
@@ -5327,7 +5441,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gocardless-status",
@@ -5346,7 +5460,7 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "google-cloud-compliance",
@@ -7284,7 +7398,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "klarna-status",
@@ -7303,7 +7417,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "klarna-terms",
@@ -7322,7 +7436,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "klaviyo-compliance",
@@ -7721,7 +7835,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "marqeta-status",
@@ -7740,7 +7854,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "marqeta-trust",
@@ -7759,7 +7873,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "meditech-api-terms",
@@ -8253,7 +8367,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mollie-security",
@@ -8272,7 +8386,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mollie-status",
@@ -8291,7 +8405,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "monday-compliance",
@@ -9621,7 +9735,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "payoneer-security",
@@ -9640,7 +9754,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "payoneer-status",
@@ -9659,7 +9773,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "paypal-dpa",
@@ -10439,6 +10553,63 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "razorpay-privacy",
+      "vendor_id": "razorpay",
+      "source_url": "https://razorpay.com/privacy-policy/",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "razorpay-privacy-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://razorpay.com/us/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2724aa05993ddbc2eedba2e0de2aa8ff784b3c4d1315e2bfa7da321f87ba360d",
+      "normalized_text_sample_sha256": "sha256:4a5c2bb773c84f19492b349d7159e9ca604b52f5db1f72eee5715576169becc9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "razorpay-status",
+      "vendor_id": "razorpay",
+      "source_url": "https://status.razorpay.com/",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "razorpay-status-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://status.razorpay.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6689a3ca1039394a43c27c486dfa77c00f1eca8d074ad4523505e9c485092579",
+      "normalized_text_sample_sha256": "sha256:85dde2b6f80e5da6566d66f2da6ad73e8e1df9a7a7c9d98e57ce2191ca0a7377",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "razorpay-terms",
+      "vendor_id": "razorpay",
+      "source_url": "https://razorpay.com/terms/",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "razorpay-terms-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://razorpay.com/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ccf690f50190649ec199ae1553f0146d4c9cdf030391b52d36bedd8b372e8b73",
+      "normalized_text_sample_sha256": "sha256:50e93eb0871414e1f4e9deb507d26c383f1a23b35c4a29ee282e237d98efc4d1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "red-hat-privacy",
@@ -14391,6 +14562,63 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "worldpay-privacy",
+      "vendor_id": "worldpay",
+      "source_url": "https://www.worldpay.com/en-gb/privacy",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "worldpay-privacy-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://privacy.worldpay.com/policies/en",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bf473af160cc61313bc823e16f5af94d2271548b6ad5b53a98219651f2b274f1",
+      "normalized_text_sample_sha256": "sha256:4bb7623842fa638856fc8b2f53d0bc3a66d02a98f47ffc3fa88fd83126457809",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "worldpay-status",
+      "vendor_id": "worldpay",
+      "source_url": "https://status.worldpay.com/",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "worldpay-status-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://status.worldpay.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:99b33e50f50f92cedcdb94a4aa7e8c6ae39cab588bc971963722f58b94d388b2",
+      "normalized_text_sample_sha256": "sha256:372c1962a33153e2e8d6d73a1f524a712df8b471123a5d6bac0036dc33333df1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "worldpay-terms",
+      "vendor_id": "worldpay",
+      "source_url": "https://www.worldpay.com/en-gb/terms-of-use",
+      "observed_at": "2026-07-13T15:21:54Z",
+      "observation_id": "worldpay-terms-2026-07-13-owner-payments-expansion-2",
+      "final_url": "https://www.worldpay.com/en-GB/legal/terms-of-use",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e331faa54e136299cd1b1f3bcaebb9cd361cf3bbe0839f08db32a1501e0229cc",
+      "normalized_text_sample_sha256": "sha256:a6c1db3c822880bbfa44d5e5e99ab5baf00cd96a7a8cf2ff71b9affd0b25471e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "xendit-licenses",

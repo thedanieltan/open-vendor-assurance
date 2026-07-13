@@ -1,0 +1,212 @@
+{
+  "artifacts": [
+    {
+      "_openva_path": "data/vendors/fiserv/artifacts/fiserv-privacy.yaml",
+      "access_class": "public_web",
+      "artifact_id": "fiserv-privacy",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://www.fiserv.com/en/about-fiserv/privacy-notice.html",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "fiserv-privacy",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "fiserv"
+    },
+    {
+      "_openva_path": "data/vendors/fiserv/artifacts/fiserv-terms.yaml",
+      "access_class": "public_web",
+      "artifact_id": "fiserv-terms",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://www.fiserv.com/en/about-fiserv/terms-of-use.html",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "fiserv-terms",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "fiserv"
+    }
+  ],
+  "candidate_sources": [],
+  "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/fiserv/sources/fiserv-privacy.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T15:45:00Z",
+        "confidence": "high",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "fiserv-privacy",
+      "source_language": "en",
+      "source_type": "privacy_notice",
+      "source_url": "https://www.fiserv.com/en/about-fiserv/privacy-notice.html",
+      "summary_en": "Public Fiserv privacy notice.",
+      "summary_native": "Public Fiserv privacy notice.",
+      "title_en": "Fiserv Privacy Notice",
+      "title_native": "Fiserv Privacy Notice",
+      "vendor_id": "fiserv"
+    },
+    {
+      "_openva_path": "data/vendors/fiserv/sources/fiserv-terms.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T15:45:00Z",
+        "confidence": "high",
+        "observer": "human",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_legal_terms",
+      "source_id": "fiserv-terms",
+      "source_language": "en",
+      "source_type": "terms_of_service",
+      "source_url": "https://www.fiserv.com/en/about-fiserv/terms-of-use.html",
+      "summary_en": "Public Fiserv website terms of use.",
+      "summary_native": "Public Fiserv website terms of use.",
+      "title_en": "Fiserv Terms of Use",
+      "title_native": "Fiserv Terms of Use",
+      "vendor_id": "fiserv"
+    }
+  ],
+  "changes": [
+    {
+      "_openva_path": "data/vendors/fiserv/changes/owner-payments-expansion-2-fiserv-privacy.yaml",
+      "artifact_id": "fiserv-privacy",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-payments-expansion-2-fiserv-privacy",
+      "change_type": "created",
+      "detected_at": "2026-07-13T15:45:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "fiserv-privacy",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "fiserv"
+    },
+    {
+      "_openva_path": "data/vendors/fiserv/changes/owner-payments-expansion-2-fiserv-terms.yaml",
+      "artifact_id": "fiserv-terms",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-payments-expansion-2-fiserv-terms",
+      "change_type": "created",
+      "detected_at": "2026-07-13T15:45:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "fiserv-terms",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "fiserv"
+    }
+  ],
+  "entity_mentions": [],
+  "generated_at": "1970-01-01T00:00:00Z",
+  "guarantees": {
+    "metadata_first": true,
+    "non_advisory": true,
+    "public_sources_only": true,
+    "raw_documents_mirrored_by_default": false
+  },
+  "legal_entities": [],
+  "observations": [],
+  "schema_version": "0.1.0",
+  "summary": {
+    "artifact_count": 2,
+    "candidate_source_count": 0,
+    "candidate_source_types": [],
+    "canonical_source_count": 2,
+    "entity_mention_count": 0,
+    "legal_entity_count": 0,
+    "source_types": [
+      "privacy_notice",
+      "terms_of_service"
+    ],
+    "unavailable_source_count": 0,
+    "unavailable_source_types": []
+  },
+  "unavailable_sources": [],
+  "vendor": {
+    "_openva_path": "data/vendors/fiserv/vendor.yaml",
+    "catalog_status": "active",
+    "display_name": "Fiserv",
+    "entity_surface": "global_brand",
+    "headquarters_country": "US",
+    "legal_name": "Fiserv, Inc.",
+    "notes": "Owner-led public-source-only catalog record for Fiserv. Metadata references vendor-controlled privacy and legal surfaces only.",
+    "official_domains": [
+      "fiserv.com",
+      "www.fiserv.com"
+    ],
+    "public_entrypoints": [
+      "https://www.fiserv.com/en/about-fiserv/privacy-notice.html",
+      "https://www.fiserv.com/en/about-fiserv/terms-of-use.html"
+    ],
+    "regions_served": [
+      "global"
+    ],
+    "schema_version": "0.1.0",
+    "source_authority_language": "en",
+    "source_policy": {
+      "gated_materials_excluded": true,
+      "public_sources_only": true,
+      "raw_documents_mirrored_by_default": false
+    },
+    "status": "active",
+    "vendor_categories": [
+      "payments",
+      "financial_infrastructure"
+    ],
+    "vendor_id": "fiserv"
+  }
+}
