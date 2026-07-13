@@ -112,6 +112,36 @@ html[data-theme="dark"] footer {
   word-break: break-all;
 }
 
+/* Donor presentation hardening. These high-specificity rules intentionally
+   override the later compatibility layer without reintroducing legacy styling. */
+html body main .home-room .one-page-hero {
+  overflow: hidden !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  background-image: none !important;
+}
+html body main .home-room .one-page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--donor-border) 62%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--donor-border) 62%, transparent) 1px, transparent 1px) !important;
+  background-size: 32px 32px !important;
+  -webkit-mask-image: radial-gradient(ellipse at top, black 35%, transparent 82%) !important;
+  mask-image: radial-gradient(ellipse at top, black 35%, transparent 82%) !important;
+}
+html body main .detail-panel > .summary-strip + p {
+  display: none !important;
+}
+html body main .detail-panel > .source-list:first-of-type li > a:not(:last-of-type) {
+  display: none !important;
+}
+html body main .detail-panel > .source-list:first-of-type li > a:last-of-type {
+  display: block !important;
+}
+
 @media (max-width: 900px) {
   .theme-toggle {
     width: auto;
