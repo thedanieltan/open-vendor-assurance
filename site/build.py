@@ -103,15 +103,16 @@ def build_compiled_catalog(
 
 
 def render_index_html(template: str, config: Any) -> str:
-    """Load the focused vendor-detail panel after the existing site runtime."""
+    """Load focused public interaction layers after the existing site runtime."""
     page = _ORIGINAL_RENDER_INDEX_HTML(template, config)
     marker = '    <script src="ui-fixes.js?v=20260713-phase2"></script>'
     replacement = (
         '    <script src="public-vendor-detail.js?v=20260713-vendor-detail"></script>\n'
+        '    <script src="catalog-navigation.js?v=20260714-pagination-drawer"></script>\n'
         + marker
     )
     if marker not in page:
-        raise ValueError("could not locate the vendor-detail script insertion point")
+        raise ValueError("could not locate the public interaction script insertion point")
     return page.replace(marker, replacement, 1)
 
 
