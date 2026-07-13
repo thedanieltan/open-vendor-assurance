@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - site/seo-aeo-geo-phase3
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -14,11 +17,13 @@ concurrency:
 
 jobs:
   materialize:
-    if: ${{ !contains(github.event.head_commit.message, '[phase3-materialized]') }}
+    if: ${{ !contains(github.event.head_commit.message || '', '[phase3-materialized]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -49,4 +54,4 @@ jobs:
           git add site/src/index.html site/src/styles.css tools/openva/site_discovery.py tests/test_discoverability.py
           python -m py_compile tools/openva/site_discovery.py tests/test_discoverability.py
           git commit -m 'Site: add SEO AEO and GEO discovery surfaces [phase3-materialized]'
-          git push
+          git push origin HEAD:site/seo-aeo-geo-phase3
