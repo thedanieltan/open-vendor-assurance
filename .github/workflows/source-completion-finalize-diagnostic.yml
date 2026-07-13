@@ -18,29 +18,27 @@ jobs:
       REPO: ${{ github.repository }}
       JOB_ID: '86921009511'
     steps:
-      - name: Print final acceptance failure signal
+      - name: Print final acceptance step output
         run: |
           set -euo pipefail
           gh api "repos/$REPO/actions/jobs/$JOB_ID/logs" > /tmp/job.log
           python - <<'PY'
           from pathlib import Path
           lines = Path('/tmp/job.log').read_text(encoding='utf-8', errors='replace').splitlines()
-          tokens = (
-              '##[error]', 'process completed with exit code', 'failure', 'failed', 'traceback',
-              'error:', 'invalid', 'drift', 'release gate', 'orphan', 'observation', 'assert',
-              'test session', 'short test summary', 'non-canonical', 'not found', 'requires review',
+          needles = (
+              'python -m tools.openva.validate validate',
+              'python -m tools.openva.release_gates check --profile pr',
+              'pytest -q tests/test_catalog',
           )
-          print('FINAL_ACCEPTANCE_DIAGNOSTIC_BEGIN')
-          for index, line in enumerate(lines):
-              if any(token in line.lower() for token in tokens):
-                  start = max(0, index - 3)
-                  end = min(len(lines), index + 6)
-                  for row in lines[start:end]:
-                      print(row)
-                  print('---')
-          print('FINAL_ACCEPTANCE_LOG_TAIL_BEGIN')
-          for line in lines[-350:]:
+          starts = [index for index, line in enumerate(lines) if any(needle in line for needle in needles)]
+          start = max(0, min(starts) - 8) if starts else max(0, len(lines) - 400)
+          end_markers = [
+              index for index in range(start, len(lines))
+              if '##[endgroup]' in lines[index] and index > start + 5
+          ]
+          end = min(len(lines), (end_markers[-1] + 30) if end_markers else len(lines))
+          print('FINAL_ACCEPTANCE_STEP_BEGIN')
+          for line in lines[start:end]:
               print(line)
-          print('FINAL_ACCEPTANCE_LOG_TAIL_END')
-          print('FINAL_ACCEPTANCE_DIAGNOSTIC_END')
+          print('FINAL_ACCEPTANCE_STEP_END')
           PY
