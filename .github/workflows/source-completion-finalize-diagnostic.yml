@@ -16,40 +16,23 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
-      JOB_ID: '86917172773'
+      JOB_ID: '86917885358'
     steps:
-      - name: Print finalizer failure signal
+      - name: Print workflow failure signal
         run: |
           set -euo pipefail
-          gh api "repos/$REPO/actions/jobs/$JOB_ID/logs" > /tmp/finalizer.log
+          gh api "repos/$REPO/actions/jobs/$JOB_ID/logs" > /tmp/job.log
           python - <<'PY'
           from pathlib import Path
-          lines = Path('/tmp/finalizer.log').read_text(encoding='utf-8', errors='replace').splitlines()
-          signal = []
+          lines = Path('/tmp/job.log').read_text(encoding='utf-8', errors='replace').splitlines()
+          tokens = ('error', 'failed', 'failure', 'rejected', 'conflict', 'expected install', 'remote:', 'fatal:', 'workflow', 'permission', 'denied')
+          print('DIAGNOSTIC_BEGIN')
           for line in lines:
-              lower = line.lower()
-              if any(token in lower for token in (
-                  'requires a live canonical source',
-                  'live core groups',
-                  'unresolved groups',
-                  'removed_poisoned_sources',
-                  'added_privacy_sources',
-                  'failure_count',
-                  'airwallex',
-                  'microsoft-azure',
-                  'netsuite',
-                  'runtimeerror',
-                  'traceback',
-                  'systemexit',
-                  'error',
-              )):
-                  signal.append(line)
-          print('FINALIZER_DIAGNOSTIC_BEGIN')
-          for line in signal[-500:]:
+              if any(token in line.lower() for token in tokens):
+                  print(line)
+          print('LOG_TAIL_BEGIN')
+          for line in lines[-220:]:
               print(line)
-          print('FINALIZER_LOG_TAIL_BEGIN')
-          for line in lines[-250:]:
-              print(line)
-          print('FINALIZER_LOG_TAIL_END')
-          print('FINALIZER_DIAGNOSTIC_END')
+          print('LOG_TAIL_END')
+          print('DIAGNOSTIC_END')
           PY
