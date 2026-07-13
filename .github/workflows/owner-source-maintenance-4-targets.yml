@@ -1,0 +1,78 @@
+name: owner-source-maintenance-4-targets
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-maintenance-4
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-maintenance-4-discovery
+  cancel-in-progress: true
+
+jobs:
+  extract:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-maintenance-4-targets-complete]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Extract confirmed missing and quarantine targets
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          audit = json.loads(Path('maintenance/reviewed/owner-source-maintenance-4-audit.json').read_text(encoding='utf-8'))
+          target_reasons = {'observed_not_found', 'quarantined_source', 'source_artifact_url_mismatch'}
+          targets = []
+          for row in audit.get('candidates', []):
+              reasons = set(row.get('reasons') or [])
+              if not reasons.intersection(target_reasons):
+                  continue
+              observation = row.get('observation') or {}
+              targets.append({
+                  'vendor_id': row.get('vendor_id'),
+                  'source_id': row.get('source_id'),
+                  'source_type': row.get('source_type'),
+                  'source_url': row.get('source_url'),
+                  'review_state': row.get('review_state'),
+                  'reasons': sorted(reasons.intersection(target_reasons)),
+                  'observed_http_status': observation.get('http_status'),
+                  'observed_final_url': observation.get('final_url'),
+                  'artifact_urls': sorted({
+                      str(a.get('canonical_url'))
+                      for a in row.get('artifact_records') or []
+                      if a.get('canonical_url')
+                  }),
+              })
+          targets.sort(key=lambda row: (str(row['vendor_id']), str(row['source_id'])))
+          report = {
+              'schema_version': '0.1.0',
+              'report_type': 'owner_source_maintenance_targets',
+              'base_commit': '${{ github.sha }}',
+              'target_count': len(targets),
+              'targets': targets,
+              'not_advice': True,
+          }
+          path = Path('maintenance/reviewed/owner-source-maintenance-4-targets.json')
+          path.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps({'target_count': len(targets)}, indent=2))
+          PY
+      - name: Commit targets and remove runner
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/owner-source-maintenance-4-targets.yml
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add -A
+          git commit -m 'Catalog: extract compact maintenance targets [owner-maintenance-4-targets-complete]'
+          git push
