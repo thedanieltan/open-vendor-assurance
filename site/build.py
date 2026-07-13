@@ -2,13 +2,15 @@
 
 The implementation is preserved byte-for-byte in ``site/build_core.py``. This
 wrapper removes the retired formal-release metadata, makes the exact source
-commit the sole catalog snapshot identity, and adds the bounded public identity
-keys required by the browser resolver.
+commit the sole catalog snapshot identity, adds the bounded public identity
+keys required by the browser resolver, and keeps human vendor pages focused on
+usable public references rather than maintenance telemetry.
 """
 
 from __future__ import annotations
 
 import importlib.util
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -16,6 +18,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+from tools.openva import site_discovery as _SITE_DISCOVERY
 
 _CORE_PATH = Path(__file__).with_name("build_core.py")
 _SPEC = importlib.util.spec_from_file_location("openva_site_build_core", _CORE_PATH)
@@ -29,6 +33,7 @@ for _name, _value in vars(_CORE).items():
 
 _ORIGINAL_BUILD_META = _CORE.build_meta
 _ORIGINAL_BUILD_COMPILED_CATALOG = _CORE.build_compiled_catalog
+_ORIGINAL_RENDER_VENDOR_PAGE = _SITE_DISCOVERY.render_vendor_page
 
 
 def release_tag() -> str:
@@ -101,9 +106,78 @@ def build_compiled_catalog(
     return compiled
 
 
+def _public_source_table(sources: list[dict[str, Any]]) -> str:
+    """Render only the human-useful source type, title and external URL."""
+    labels = _SITE_DISCOVERY.source_type_labels()
+    rows = []
+    recorded = [source for source in sources if str(source.get("source_url") or "").strip()]
+    recorded.sort(
+        key=lambda source: (
+            labels.get(str(source.get("source_type") or ""), str(source.get("source_type") or "")),
+            str(source.get("title") or ""),
+            str(source.get("source_url") or ""),
+        )
+    )
+    for source in recorded:
+        source_type = str(source.get("source_type") or "")
+        label = labels.get(source_type, source_type.replace("_", " ").title())
+        url = str(source.get("source_url") or "")
+        title = str(source.get("title") or url)
+        rows.append(
+            "<tr>"
+            f"<td>{_SITE_DISCOVERY._esc(label)}</td>"
+            f'<td class="url"><a href="{_SITE_DISCOVERY._esc(url)}" target="_blank" '
+            f'rel="nofollow noopener noreferrer">{_SITE_DISCOVERY._esc(title)}</a><br>'
+            f'<span class="muted">{_SITE_DISCOVERY._esc(url)}</span></td>'
+            "</tr>"
+        )
+    if not rows:
+        rows.append('<tr><td colspan="2"><span class="muted">No public source URL is currently recorded.</span></td></tr>')
+    return (
+        "<table><thead><tr><th>Source type</th><th>Reference</th></tr></thead><tbody>"
+        + "".join(rows)
+        + "</tbody></table>"
+    )
+
+
+def render_vendor_page(
+    config: Any,
+    vendor: dict[str, Any],
+    sources: list[dict[str, Any]],
+    *,
+    commit_sha: str,
+    snapshot_date: str,
+) -> str:
+    """Remove source-health and maintenance fields from the human vendor page."""
+    page = _ORIGINAL_RENDER_VENDOR_PAGE(
+        config,
+        vendor,
+        sources,
+        commit_sha=commit_sha,
+        snapshot_date=snapshot_date,
+    )
+    replacement = (
+        "      <h2>Public assurance sources</h2>\n"
+        f"      {_public_source_table(sources)}\n\n"
+        "      <h2>Machine-readable export</h2>"
+    )
+    page, replacements = re.subn(
+        r"      <h2>Public assurance sources</h2>\n.*?\n      <h2>Machine-readable export</h2>",
+        replacement,
+        page,
+        count=1,
+        flags=re.DOTALL,
+    )
+    if replacements != 1:
+        raise ValueError("could not replace the public vendor source table")
+    return page
+
+
 _CORE.release_tag = release_tag
 _CORE.build_meta = build_meta
 _CORE.build_compiled_catalog = build_compiled_catalog
+_SITE_DISCOVERY.render_vendor_page = render_vendor_page
+_CORE.build_discovery.__globals__["render_vendor_page"] = render_vendor_page
 
 
 def main() -> int:
