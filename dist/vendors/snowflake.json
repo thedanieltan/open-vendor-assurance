@@ -95,7 +95,7 @@
       "access_class": "public_web",
       "artifact_id": "snowflake-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.snowflake.com/en/trust/",
+      "canonical_url": "https://www.snowflake.com/en/why-snowflake/snowflake-security-hub",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -279,8 +279,8 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
+        "collected_at": "2026-07-13T15:50:00Z",
+        "confidence": "high",
         "observer": "human",
         "publisher": "vendor"
       },
@@ -290,7 +290,7 @@
       "source_id": "snowflake-security",
       "source_language": "en",
       "source_type": "security_page",
-      "source_url": "https://www.snowflake.com/en/trust/",
+      "source_url": "https://www.snowflake.com/en/why-snowflake/snowflake-security-hub",
       "summary_en": "Public Snowflake trust and security metadata reference.",
       "summary_native": "Public Snowflake trust and security metadata reference.",
       "title_en": "Snowflake Trust Center",
@@ -457,6 +457,23 @@
       "schema_version": "0.1.0",
       "source_id": "snowflake-subprocessors",
       "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "snowflake"
+    },
+    {
+      "_openva_path": "data/vendors/snowflake/changes/owner-source-maintenance-4-snowflake-security.yaml",
+      "artifact_id": "snowflake-security",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-4-snowflake-security",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T15:50:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "snowflake-security",
+      "summary": "Owner-led catalog maintenance replaced a confirmed broken public source URL and aligned its artifact metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "snowflake"
     }
