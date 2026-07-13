@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-13T13:56:08Z",
+  "generated_at": "2026-07-13T14:20:20Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
     "source_count": 764,
-    "observed_this_run": 15,
-    "carried_forward": 749
+    "observed_this_run": 17,
+    "carried_forward": 747
   },
   "sources": [
     {
@@ -3566,96 +3566,96 @@
       "source_id": "deel-compliance",
       "vendor_id": "deel",
       "source_url": "https://www.deel.com/security#compliance",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "deel-compliance-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "deel-compliance-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.deel.com/security/",
       "http_status": 200,
       "source_health_status": "reachable",
       "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:399e4ed0379b436489d9ea2a749ca1b199020e56bde12c264373ab7a7e97e440",
-      "normalized_text_sample_sha256": "sha256:2756ff50ec8dcd4890549ce3e9c06ee94b52f719dc3e4328f473adce189f344e",
+      "raw_sample_sha256": "sha256:4b316f520ce3764ac9f84f0a180858671a225df1457f659c981d311f18b8e4b7",
+      "normalized_text_sample_sha256": "sha256:634fe5755cc4c4735b6d8acbedec6276a056b536054dbd2af68650e2bdbcded0",
       "review_signal": {
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "deel-dpa",
       "vendor_id": "deel",
       "source_url": "https://www.deel.com/legal/data-processing-addendum",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "deel-dpa-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "deel-dpa-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.deel.com/legal/data-processing-addendum/",
       "http_status": 200,
       "source_health_status": "reachable",
       "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:8cd28dc50000503cf2e3c1e8c4a718beb2e193693664deea092c1f5386ae924a",
-      "normalized_text_sample_sha256": "sha256:0d51c19f273fdc7e0df44d3b64d2b0f33e05b201bc0784348ad8f2f9a548fe99",
+      "raw_sample_sha256": "sha256:e6abb34887d7cd0803925e27a977f4fcd0e14683479d25db7f9542649479142b",
+      "normalized_text_sample_sha256": "sha256:082a1868869340892270750ef0b5bdc68e36d6585ab882ec8a04795cef71ed1e",
       "review_signal": {
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "deel-privacy",
       "vendor_id": "deel",
       "source_url": "https://www.deel.com/privacy",
-      "observed_at": "2026-07-12T07:42:56Z",
-      "observation_id": "deel-privacy-2026-07-12-29184618599",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "deel-privacy-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.deel.com/legal/privacy-policy/",
       "http_status": 200,
       "source_health_status": "redirected",
-      "change_class": "none",
+      "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:ed17af1598acb7ccc370cc2e9bff17d23014a1afede0be0befe2f9a9f009f8b4",
-      "normalized_text_sample_sha256": "sha256:26930a02d70491519a182a02d299bd13c6e1a52625d4670dcdea2af53540fb45",
+      "raw_sample_sha256": "sha256:f0cd5ef5ca76d5e5c20a3fa550ba5665160f579cffefdce0186a342cd69d83a7",
+      "normalized_text_sample_sha256": "sha256:4efd49f729c06ed0178a0475bd1fe92b2eb2a4d1f39541529eeb1ae2cfdc210c",
       "review_signal": {
-        "required": false,
-        "reason": null
+        "required": true,
+        "reason": "change_class_material_possible"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "deel-security",
       "vendor_id": "deel",
       "source_url": "https://www.deel.com/security",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "deel-security-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "deel-security-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.deel.com/security/",
       "http_status": 200,
       "source_health_status": "reachable",
       "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:399e4ed0379b436489d9ea2a749ca1b199020e56bde12c264373ab7a7e97e440",
-      "normalized_text_sample_sha256": "sha256:2756ff50ec8dcd4890549ce3e9c06ee94b52f719dc3e4328f473adce189f344e",
+      "raw_sample_sha256": "sha256:4b316f520ce3764ac9f84f0a180858671a225df1457f659c981d311f18b8e4b7",
+      "normalized_text_sample_sha256": "sha256:634fe5755cc4c4735b6d8acbedec6276a056b536054dbd2af68650e2bdbcded0",
       "review_signal": {
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "deel-subprocessors",
       "vendor_id": "deel",
       "source_url": "https://www.deel.com/legal/subprocessors",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "deel-subprocessors-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "deel-subprocessors-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.deel.com/legal/subprocessors/",
       "http_status": 404,
       "source_health_status": "unreachable",
       "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:606be926333ac8d572d4089080363e7e56ed14e448eead30d8164597375fd267",
-      "normalized_text_sample_sha256": "sha256:ef8c268ee118ac9e69d131a4f37a0ee79ef673b0ec91d64e8754f8fb8cb0b547",
+      "raw_sample_sha256": "sha256:048e290f5f31824c94400ea4d5f2171e324ef5bf73139c6412a53815e42dbf23",
+      "normalized_text_sample_sha256": "sha256:df2b368a726e19a59f82855585cca3ca92ed3f64ae87d81d50adfd42bc2b0d55",
       "review_signal": {
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "deepl-privacy-notice",
@@ -3826,7 +3826,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docebo-security",
@@ -3845,7 +3845,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docebo-status",
@@ -3864,7 +3864,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docker-compliance",
@@ -4497,27 +4497,27 @@
       "source_id": "employment-hero-privacy",
       "vendor_id": "employment-hero",
       "source_url": "https://employmenthero.com/privacy-policy/",
-      "observed_at": "2026-07-12T07:42:56Z",
-      "observation_id": "employment-hero-privacy-2026-07-12-29184618599",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "employment-hero-privacy-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://employmenthero.com/legals/privacy-policy/",
       "http_status": 200,
       "source_health_status": "redirected",
       "change_class": "non_material",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:e9342a29e1473f7565b76c1a3524e1b7604124584d867a080d6cb4611cccc163",
+      "raw_sample_sha256": "sha256:40e51fffc6a8f7ffd6ee3b8e85abb21e3ddb13740219eba5703227434279f0da",
       "normalized_text_sample_sha256": "sha256:17610ee85da53da0e46132069e15c185f0aa6c41baf1d847c19d92278d14e4ff",
       "review_signal": {
         "required": false,
         "reason": null
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "employment-hero-security",
       "vendor_id": "employment-hero",
       "source_url": "https://employmenthero.com/security/",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "employment-hero-security-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "employment-hero-security-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://employmenthero.com/wp-content/uploads/2023/09/Security.jpg",
       "http_status": 200,
       "source_health_status": "reachable",
@@ -4529,7 +4529,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "eset-privacy",
@@ -4643,7 +4643,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "f-secure-status",
@@ -4662,7 +4662,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "f-secure-terms",
@@ -4681,7 +4681,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "figma-compliance",
@@ -6093,39 +6093,39 @@
       "source_id": "hibob-privacy",
       "vendor_id": "hibob",
       "source_url": "https://www.hibob.com/privacy-policy/",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "hibob-privacy-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "hibob-privacy-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.hibob.com/privacy/privacy-policy/",
       "http_status": 200,
       "source_health_status": "redirected",
-      "change_class": "none",
+      "change_class": "non_material",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:bdad47fc70030e4a6b210ce6d981b80dcd04b9c80497fc48d0f5d414432e573d",
+      "raw_sample_sha256": "sha256:83a024b315837311638d612804bd2e23ab712d851d5115d5b135a3c2c5f31743",
       "normalized_text_sample_sha256": "sha256:5f9cf7bf85e3aea3bd4bc07ae0789dc6e6df049512b6855dbeec79650249b065",
       "review_signal": {
         "required": false,
         "reason": null
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "hibob-security",
       "vendor_id": "hibob",
       "source_url": "https://www.hibob.com/security/",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "hibob-security-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "hibob-security-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.hibob.com/privacy/security/",
       "http_status": 200,
       "source_health_status": "redirected",
-      "change_class": "material_possible",
+      "change_class": "non_material",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:77741f5a49dd0217f2ea92dfecc35a608d298a98e9180eff1d7856a635afb173",
+      "raw_sample_sha256": "sha256:2c495a553df55d5923c5a320548394a513bf1f69493e006014f6698868bd8168",
       "normalized_text_sample_sha256": "sha256:891ae1b00751a129212347a0d66ef8fa5fde6919a48741aae5318700e3543a19",
       "review_signal": {
-        "required": true,
-        "reason": "change_class_material_possible"
+        "required": false,
+        "reason": null
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "huawei-cloud-cn-compliance",
@@ -6923,7 +6923,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jetbrains-status",
@@ -6942,7 +6942,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jetbrains-trust",
@@ -6961,7 +6961,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "keka-dpa",
@@ -9266,58 +9266,58 @@
       "source_id": "personio-dpa",
       "vendor_id": "personio",
       "source_url": "https://www.personio.com/legal/data-processing-agreement/",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "personio-dpa-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "personio-dpa-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.personio.com/legal/data-processing-agreement/",
       "http_status": 429,
       "source_health_status": "unreachable",
       "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:553576ce7b5fb42edc5fec1fd70155992fb23f7148d465f24f983c4e8fc8acd2",
-      "normalized_text_sample_sha256": "sha256:c79bca58442f8366815b58a15a1e18d37b0b8ead6ed5597bb0d57e7ac0c4e41b",
+      "raw_sample_sha256": "sha256:bbdbf2b270b6198f57238621934ce0183837b58152f9f3cf27d1a1665cd16cc7",
+      "normalized_text_sample_sha256": "sha256:89dc1a623e46d901c1b32aa94535b97a31e4e1ae571094e0768162bd8f5eb0a1",
       "review_signal": {
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "personio-privacy",
       "vendor_id": "personio",
       "source_url": "https://www.personio.com/privacy-policy/",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "personio-privacy-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "personio-privacy-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.personio.com/privacy-policy/",
       "http_status": 429,
       "source_health_status": "unreachable",
       "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:a4168cefc71bef2702a712a3ee12b032425ec635acea9cdd98a164266e507c24",
-      "normalized_text_sample_sha256": "sha256:8c50bb09edafdac13fcfa4fb6e5b4d9787f601936bd7412422dc29f156ea48e3",
+      "raw_sample_sha256": "sha256:49c0ba484f106c6a6c42360ad7b50b2e364fa15b426a718ce4ad4f37ffbaef9d",
+      "normalized_text_sample_sha256": "sha256:253042435c2bbd6f5a5ed7f7e5c0f68923faa27389d5607e5738e72c602f8074",
       "review_signal": {
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "personio-security",
       "vendor_id": "personio",
       "source_url": "https://www.personio.com/security/",
-      "observed_at": "2026-07-12T07:42:56Z",
-      "observation_id": "personio-security-2026-07-12-29184618599",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "personio-security-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.personio.com/security/",
       "http_status": 429,
       "source_health_status": "unreachable",
       "change_class": "material_possible",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:061a5efcc20095f2512daab6a74490284a762e20da90205fcdf8b500ee66cb1d",
-      "normalized_text_sample_sha256": "sha256:1db84fa68fa181399219ff5824be26a0bd9622eced89dad7c9302df645bef9fd",
+      "raw_sample_sha256": "sha256:d49f6b1fbaef329de96bfa72f526a461463708dba7cf117dfaf3aa9a9b418029",
+      "normalized_text_sample_sha256": "sha256:95b436c5e1932d57945efb8183eda76a0fd87f3b11ccb6e80d8153f80a9fda75",
       "review_signal": {
         "required": true,
         "reason": "change_class_material_possible"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "pinecone-compliance",
@@ -10001,7 +10001,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "red-hat-status",
@@ -10020,7 +10020,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "red-hat-trust",
@@ -10039,7 +10039,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "redis-privacy-notice",
@@ -10197,8 +10197,8 @@
       "source_id": "rippling-compliance",
       "vendor_id": "rippling",
       "source_url": "https://www.rippling.com/security#compliance",
-      "observed_at": "2026-07-12T07:42:56Z",
-      "observation_id": "rippling-compliance-2026-07-12-29184618599",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "rippling-compliance-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.rippling.com/security#compliance",
       "http_status": null,
       "source_health_status": "unreachable",
@@ -10210,52 +10210,52 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "rippling-dpa",
       "vendor_id": "rippling",
       "source_url": "https://www.rippling.com/legal/data-processing-addendum",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "rippling-dpa-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "rippling-dpa-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.rippling.com/legal/data-processing-addendum",
       "http_status": 404,
       "source_health_status": "unreachable",
-      "change_class": "material_possible",
+      "change_class": "non_material",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:4b304a0b29e5cbe3a1194001c4e4e4eee6f87557b0ad478feb6e6f16470cb3b9",
+      "raw_sample_sha256": "sha256:d7f0fdb590baf72e4d8fa8ab5cb7e47d75c5b0902e09d976a745866cf2ec2744",
       "normalized_text_sample_sha256": "sha256:b868affd269efe67cd0f03bfd738dcf58e2fd2bc856cb6a5aabb8b2c31edb90b",
       "review_signal": {
         "required": true,
-        "reason": "change_class_material_possible"
+        "reason": "source_health_unreachable"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "rippling-privacy",
       "vendor_id": "rippling",
       "source_url": "https://www.rippling.com/privacy",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "rippling-privacy-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "rippling-privacy-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.rippling.com/privacy",
       "http_status": 404,
       "source_health_status": "unreachable",
-      "change_class": "material_possible",
+      "change_class": "non_material",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:4b304a0b29e5cbe3a1194001c4e4e4eee6f87557b0ad478feb6e6f16470cb3b9",
+      "raw_sample_sha256": "sha256:d7f0fdb590baf72e4d8fa8ab5cb7e47d75c5b0902e09d976a745866cf2ec2744",
       "normalized_text_sample_sha256": "sha256:b868affd269efe67cd0f03bfd738dcf58e2fd2bc856cb6a5aabb8b2c31edb90b",
       "review_signal": {
         "required": true,
-        "reason": "change_class_material_possible"
+        "reason": "source_health_unreachable"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "rippling-security",
       "vendor_id": "rippling",
       "source_url": "https://www.rippling.com/security",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "rippling-security-2026-07-11-29141337215",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "rippling-security-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.rippling.com/security",
       "http_status": null,
       "source_health_status": "unreachable",
@@ -10267,26 +10267,26 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "rippling-subprocessors",
       "vendor_id": "rippling",
       "source_url": "https://www.rippling.com/legal/subprocessors",
-      "observed_at": "2026-07-12T07:42:56Z",
-      "observation_id": "rippling-subprocessors-2026-07-12-29184618599",
+      "observed_at": "2026-07-13T14:20:20Z",
+      "observation_id": "rippling-subprocessors-2026-07-13-owner-hr-education-expansion-1",
       "final_url": "https://www.rippling.com/legal/subprocessors",
       "http_status": 404,
       "source_health_status": "unreachable",
       "change_class": "non_material",
       "retrieval_method": "html_page",
-      "raw_sample_sha256": "sha256:86e1b76ca970c918ba9e1eea88afa9936637c12212d9b3eedc8ce3eb24fb20b6",
+      "raw_sample_sha256": "sha256:d7f0fdb590baf72e4d8fa8ab5cb7e47d75c5b0902e09d976a745866cf2ec2744",
       "normalized_text_sample_sha256": "sha256:b868affd269efe67cd0f03bfd738dcf58e2fd2bc856cb6a5aabb8b2c31edb90b",
       "review_signal": {
         "required": true,
         "reason": "source_health_unreachable"
       },
-      "carried_forward": true
+      "carried_forward": false
     },
     {
       "source_id": "sage-privacy",
@@ -13554,7 +13554,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "withsecure-status",
@@ -13573,7 +13573,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "withsecure-terms",
@@ -13592,7 +13592,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wix-dpa",
