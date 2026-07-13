@@ -1,0 +1,1545 @@
+{
+  "base_commit": "664dd4cb396757c0a9fb80c8561c826e1067dfa3",
+  "not_advice": true,
+  "report_type": "owner_source_completion_page_purpose_audit",
+  "schema_version": "0.1.0",
+  "sources": [
+    {
+      "editorial_segments": [],
+      "final_host": "trust.1password.io",
+      "final_url": "https://trust.1password.io/",
+      "official_domains": [
+        "1password.com",
+        "trust.1password.io"
+      ],
+      "reasons": [
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "soc",
+          "iso",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "1password.com",
+      "source_id": "1password-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://1password.com/resources/soc2",
+      "title_detected": "1Password Trust Center | Powered by SafeBase",
+      "vendor_id": "1password",
+      "verification_status": "homepage_or_generic_redirect"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "adp.com",
+      "final_url": "https://www.adp.com/",
+      "official_domains": [
+        "adp.com"
+      ],
+      "reasons": [
+        "generic_final_homepage",
+        "generic_primary_homepage"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "soc",
+          "iso"
+        ],
+        "status": "strong"
+      },
+      "source_host": "adp.com",
+      "source_id": "adp-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.adp.com/",
+      "title_detected": "Payroll, HR and Tax Services | ADP Official Site",
+      "vendor_id": "adp",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "aiven.io",
+      "final_url": "https://aiven.io/blog/the-intersection-of-compliance-and-risk-vs-security",
+      "official_domains": [
+        "aiven.io",
+        "status.aiven.io"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "soc",
+          "iso",
+          "audit"
+        ],
+        "status": "strong"
+      },
+      "source_host": "aiven.io",
+      "source_id": "aiven-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://aiven.io/blog/the-intersection-of-compliance-and-risk-vs-security",
+      "title_detected": "Compliance, Risk &amp; Security in Finance | Aiven",
+      "vendor_id": "aiven",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "aiven.io",
+      "final_url": "https://aiven.io/blog/data-security-compliance-in-the-cloud",
+      "official_domains": [
+        "aiven.io",
+        "status.aiven.io"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "status": "strong"
+      },
+      "source_host": "aiven.io",
+      "source_id": "aiven-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://aiven.io/blog/data-security-compliance-in-the-cloud",
+      "title_detected": "Data security compliance in the cloud",
+      "vendor_id": "aiven",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "37signals.com",
+      "final_url": "https://37signals.com/policies/privacy",
+      "official_domains": [
+        "37signals.com",
+        "basecamp.com"
+      ],
+      "reasons": [
+        "redirected_to_different_non_specialized_host"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "subprocessor",
+          "service providers"
+        ],
+        "status": "strong"
+      },
+      "source_host": "basecamp.com",
+      "source_id": "basecamp-subprocessors-list",
+      "source_type": "subprocessors_list",
+      "source_url": "https://basecamp.com/privacy/subprocessors",
+      "title_detected": "37signals \u2014 Privacy Policy",
+      "vendor_id": "basecamp",
+      "verification_status": "redirected"
+    },
+    {
+      "editorial_segments": [
+        "press"
+      ],
+      "final_host": "bigcommerce.com",
+      "final_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
+      "official_domains": [
+        "bigcommerce.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "soc"
+        ],
+        "status": "strong"
+      },
+      "source_host": "bigcommerce.com",
+      "source_id": "bigcommerce-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
+      "title_detected": "BigCommerce Achieves SOC 1 and SOC 2 Compliance, Verifying Data Security Practices and Procedures",
+      "vendor_id": "bigcommerce",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "security.bigcommerce.com",
+      "final_url": "https://security.bigcommerce.com/",
+      "official_domains": [
+        "bigcommerce.com"
+      ],
+      "reasons": [
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "status": "strong"
+      },
+      "source_host": "bigcommerce.com",
+      "source_id": "bigcommerce-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://bigcommerce.com/security",
+      "title_detected": "Commerce Commerce Trust Center | Powered by SafeBase",
+      "vendor_id": "bigcommerce",
+      "verification_status": "homepage_or_generic_redirect"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "bitdefender.com",
+      "final_url": "https://www.bitdefender.com/en-us/business/services/cybersecurity-advisories",
+      "official_domains": [
+        "bitdefender.com"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "soc 2",
+          "iso 27001"
+        ],
+        "status": "strong"
+      },
+      "source_host": "bitdefender.com",
+      "source_id": "bitdefender-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://www.bitdefender.com/en-us/business/services/cybersecurity-advisories",
+      "title_detected": "Bitdefender Cybersecurity Advisory Services",
+      "vendor_id": "bitdefender",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "bitdefender.com",
+      "final_url": "https://www.bitdefender.com/en-us/consumer/",
+      "official_domains": [
+        "bitdefender.com"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "soc",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "bitdefender.com",
+      "source_id": "bitdefender-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.bitdefender.com/en-us/consumer/",
+      "title_detected": "Bitdefender Security Software Solutions for Home Users",
+      "vendor_id": "bitdefender",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "articles"
+      ],
+      "final_host": "braze.com",
+      "final_url": "https://www.braze.com/resources/articles/vppa-compliance",
+      "official_domains": [
+        "braze.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "certification",
+          "soc",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "braze.com",
+      "source_id": "braze-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.braze.com/resources/articles/vppa-compliance",
+      "title_detected": "Why VPPA forces media brands to choose between compliance and relevance",
+      "vendor_id": "braze",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "articles"
+      ],
+      "final_host": "braze.com",
+      "final_url": "https://www.braze.com/resources/articles/ltr-2017-speakers-brain-trust",
+      "official_domains": [
+        "braze.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "trust",
+          "compliance",
+          "privacy"
+        ],
+        "status": "strong"
+      },
+      "source_host": "braze.com",
+      "source_id": "braze-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://www.braze.com/resources/articles/ltr-2017-speakers-brain-trust",
+      "title_detected": "Meet the LTR 2017 Brain Trust",
+      "vendor_id": "braze",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "trust.campaignmonitor.meetmarigold.com",
+      "final_url": "https://trust.campaignmonitor.meetmarigold.com/",
+      "official_domains": [
+        "campaignmonitor.com",
+        "createsend.com",
+        "meetmarigold.com",
+        "status.campaignmonitor.com"
+      ],
+      "reasons": [
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "soc 2"
+        ],
+        "status": "strong"
+      },
+      "source_host": "campaignmonitor.com",
+      "source_id": "campaign-monitor-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://www.campaignmonitor.com/trust/certifications",
+      "title_detected": "Campaign Monitor Trust Center | Powered by SecurityPal AI",
+      "vendor_id": "campaign-monitor",
+      "verification_status": "homepage_or_generic_redirect"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "trust.campaignmonitor.meetmarigold.com",
+      "final_url": "https://trust.campaignmonitor.meetmarigold.com/",
+      "official_domains": [
+        "campaignmonitor.com",
+        "createsend.com",
+        "meetmarigold.com",
+        "status.campaignmonitor.com"
+      ],
+      "reasons": [
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "certification",
+          "soc",
+          "audit",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "campaignmonitor.com",
+      "source_id": "campaign-monitor-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.campaignmonitor.com/trust/compliance",
+      "title_detected": "Campaign Monitor Trust Center | Powered by SecurityPal AI",
+      "vendor_id": "campaign-monitor",
+      "verification_status": "homepage_or_generic_redirect"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "trust.campaignmonitor.meetmarigold.com",
+      "final_url": "https://trust.campaignmonitor.meetmarigold.com/",
+      "official_domains": [
+        "campaignmonitor.com",
+        "createsend.com",
+        "meetmarigold.com",
+        "status.campaignmonitor.com"
+      ],
+      "reasons": [
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "status": "strong"
+      },
+      "source_host": "campaignmonitor.com",
+      "source_id": "campaign-monitor-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://www.campaignmonitor.com/trust",
+      "title_detected": "Campaign Monitor Trust Center | Powered by SecurityPal AI",
+      "vendor_id": "campaign-monitor",
+      "verification_status": "homepage_or_generic_redirect"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "checkout.com",
+      "final_url": "https://www.checkout.com/legal/certificates",
+      "official_domains": [
+        "checkout.com",
+        "trust.checkout.com"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "soc",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "checkout.com",
+      "source_id": "checkout-com-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.checkout.com/legal/certificates",
+      "title_detected": "Checkout.com - FCA, Bank &amp; Payment Association Certificates",
+      "vendor_id": "checkout-com",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "circleci.com",
+      "final_url": "https://circleci.com/blog/automate-software-delivery-compliance/",
+      "official_domains": [
+        "circleci.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "certificate"
+        ],
+        "status": "strong"
+      },
+      "source_host": "circleci.com",
+      "source_id": "circleci-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://circleci.com/blog/automate-software-delivery-compliance/",
+      "title_detected": "Automating compliance in software delivery - CircleCI",
+      "vendor_id": "circleci",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "coda.io",
+      "final_url": "https://coda.io/@compliancequest",
+      "official_domains": [
+        "coda.io",
+        "status.coda.io",
+        "superhuman.com"
+      ],
+      "reasons": [
+        "user_generated_or_community_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "iso",
+          "audit",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "coda.io",
+      "source_id": "coda-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://coda.io/@compliancequest",
+      "title_detected": "Compliance Quest - Coda Profile",
+      "vendor_id": "coda",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "docs.superhuman.com",
+      "final_url": "https://docs.superhuman.com/@james-smith1/impact-of-ai-on-unstructured-data-processing-for-modern-business",
+      "official_domains": [
+        "coda.io",
+        "status.coda.io",
+        "superhuman.com"
+      ],
+      "reasons": [
+        "redirected_to_different_non_specialized_host",
+        "user_generated_or_community_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "data processing",
+          "dpa"
+        ],
+        "status": "strong"
+      },
+      "source_host": "coda.io",
+      "source_id": "coda-dpa",
+      "source_type": "dpa",
+      "source_url": "https://coda.io/@james-smith1/impact-of-ai-on-unstructured-data-processing-for-modern-business",
+      "title_detected": "Impact of AI on Unstructured Data Processing for Modern Businesses",
+      "vendor_id": "coda",
+      "verification_status": "redirected"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "commercetools.com",
+      "final_url": "https://commercetools.com/blog/commercetools-connect-speed-security-and-resilience",
+      "official_domains": [
+        "commercetools.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "security",
+          "availability",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "commercetools.com",
+      "source_id": "commercetools-security-page",
+      "source_type": "security_page",
+      "source_url": "https://commercetools.com/blog/commercetools-connect-speed-security-and-resilience",
+      "title_detected": "commercetools Connect: Speed, Security and Resilience",
+      "vendor_id": "commercetools",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "get.complyadvantage.com",
+      "final_url": "https://get.complyadvantage.com/insights/state-of-compliance-2023/compliance-change-management-webinar",
+      "official_domains": [
+        "complyadvantage.com"
+      ],
+      "reasons": [
+        "redirected_to_different_non_specialized_host"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "privacy"
+        ],
+        "status": "strong"
+      },
+      "source_host": "complyadvantage.com",
+      "source_id": "complyadvantage-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://complyadvantage.com/security/compliance",
+      "title_detected": "Compliance and Change Management: Building a Platform for Growth",
+      "vendor_id": "complyadvantage",
+      "verification_status": "redirected"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "developer.confluent.io",
+      "final_url": "https://developer.confluent.io/courses/security/audit-logs/",
+      "official_domains": [
+        "confluent.io"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certificate",
+          "audit report"
+        ],
+        "status": "strong"
+      },
+      "source_host": "developer.confluent.io",
+      "source_id": "confluent-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://developer.confluent.io/courses/security/audit-logs/",
+      "title_detected": "Kafka Audit Logs with Log4j Plus ELK for Log Analysis",
+      "vendor_id": "confluent",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "learn"
+      ],
+      "final_host": "customer.io",
+      "final_url": "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
+      "official_domains": [
+        "customer.io",
+        "status.customerio.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "soc",
+          "audit"
+        ],
+        "status": "strong"
+      },
+      "source_host": "customer.io",
+      "source_id": "customer-io-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
+      "title_detected": "SMS marketing compliance: 6 steps to protect your business | Customer.io",
+      "vendor_id": "customer-io",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "darwinbox.com",
+      "final_url": "https://darwinbox.com/blog/social-security-code",
+      "official_domains": [
+        "darwinbox.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "soc"
+        ],
+        "status": "strong"
+      },
+      "source_host": "darwinbox.com",
+      "source_id": "darwinbox-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://darwinbox.com/blog/social-security-code",
+      "title_detected": "Social Security Code, 2020: A Quick Overview",
+      "vendor_id": "darwinbox",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "doodle.com",
+      "final_url": "https://doodle.com/fr/navigating-cybersecurity-insights-and-tips-from-niel-harper-doodles-ciso/",
+      "official_domains": [
+        "doodle.com"
+      ],
+      "reasons": [
+        "not_found_surface",
+        "path_lacks_source_purpose_term",
+        "semantic_not_strong",
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [],
+        "status": "mismatch"
+      },
+      "source_host": "doodle.com",
+      "source_id": "doodle-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://doodle.com/fr/navigating-cybersecurity-insights-and-tips-from-niel-harper-doodles-ciso/",
+      "title_detected": "Page Not Found - Error 404",
+      "vendor_id": "doodle",
+      "verification_status": "not_found"
+    },
+    {
+      "editorial_segments": [
+        "blog",
+        "learn"
+      ],
+      "final_host": "emarsys.com",
+      "final_url": "https://emarsys.com/learn/blog/first-party-data-privacy-how-brands-prioritize-trust-for-lasting-customer-relationships/",
+      "official_domains": [
+        "emarsys.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "trust",
+          "privacy"
+        ],
+        "status": "strong"
+      },
+      "source_host": "emarsys.com",
+      "source_id": "emarsys-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://emarsys.com/learn/blog/first-party-data-privacy-how-brands-prioritize-trust-for-lasting-customer-relationships/",
+      "title_detected": "First-Party Data Privacy: How Brands Prioritize Trust for Lasting Customer Relationships | SAP Engagement Cloud",
+      "vendor_id": "emarsys",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "fiserv.com",
+      "final_url": "https://www.fiserv.com/en/solutions/risk-compliance.html",
+      "official_domains": [
+        "fiserv.com"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "status": "strong"
+      },
+      "source_host": "fiserv.com",
+      "source_id": "fiserv-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://www.fiserv.com/en/solutions/risk-compliance.html",
+      "title_detected": "Risk and Compliance, Risk Management, Regulatory Compliance | Fiserv",
+      "vendor_id": "fiserv",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "fly.io",
+      "final_url": "https://fly.io/blog/soc2-the-screenshots-will-continue-until-security-improves/",
+      "official_domains": [
+        "fly.io",
+        "status.flyio.net"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "certificate"
+        ],
+        "status": "strong"
+      },
+      "source_host": "fly.io",
+      "source_id": "fly-io-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://fly.io/blog/soc2-the-screenshots-will-continue-until-security-improves/",
+      "title_detected": "SOC2: The Screenshots Will Continue Until Security Improves \u00b7 The Fly Blog",
+      "vendor_id": "fly-io",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "about.gitlab.com",
+      "final_url": "https://about.gitlab.com/blog/soc2-compliance/",
+      "official_domains": [
+        "about.gitlab.com",
+        "gitlab.com",
+        "handbook.gitlab.com",
+        "trust.gitlab.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "soc 2",
+          "iso 27001",
+          "audit report"
+        ],
+        "status": "strong"
+      },
+      "source_host": "about.gitlab.com",
+      "source_id": "gitlab-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://about.gitlab.com/blog/soc2-compliance/",
+      "title_detected": "How secure is GitLab?",
+      "vendor_id": "gitlab",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "about.gitlab.com",
+      "final_url": "https://about.gitlab.com/blog/git-security-audit/",
+      "official_domains": [
+        "about.gitlab.com",
+        "gitlab.com",
+        "handbook.gitlab.com",
+        "trust.gitlab.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "audit",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "about.gitlab.com",
+      "source_id": "gitlab-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://about.gitlab.com/blog/git-security-audit/",
+      "title_detected": "Git security audit: Inside the hunt for - and discovery of - CVEs",
+      "vendor_id": "gitlab",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "greenhouse.com",
+      "final_url": "https://www.greenhouse.com/audit-log-terms",
+      "official_domains": [
+        "greenhouse.com"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "audit",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "greenhouse.com",
+      "source_id": "greenhouse-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.greenhouse.com/audit-log-terms",
+      "title_detected": "Greenhouse | Legal - Audit Log Terms",
+      "vendor_id": "greenhouse",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "faqs"
+      ],
+      "final_host": "greythr.com",
+      "final_url": "https://www.greythr.com/faqs/social-security-code",
+      "official_domains": [
+        "greythr.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "status": "strong"
+      },
+      "source_host": "greythr.com",
+      "source_id": "greythr-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.greythr.com/faqs/social-security-code",
+      "title_detected": null,
+      "vendor_id": "greythr",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "klarna.com",
+      "final_url": "https://www.klarna.com/us/security/?grs=%2Fsecurity%2F&grr=empty",
+      "official_domains": [
+        "klarna.com",
+        "status.klarna.com"
+      ],
+      "reasons": [
+        "semantic_not_strong",
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [],
+        "status": "mismatch"
+      },
+      "source_host": "klarna.com",
+      "source_id": "klarna-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://www.klarna.com/us/security/?grs=%2Fsecurity%2F&grr=empty",
+      "title_detected": "",
+      "vendor_id": "klarna",
+      "verification_status": "possible_mismatch"
+    },
+    {
+      "editorial_segments": [
+        "integrations"
+      ],
+      "final_host": "linear.app",
+      "final_url": "https://linear.app/integrations/security-and-compliance",
+      "official_domains": [
+        "linear.app",
+        "linearstatus.com",
+        "status.linear.app"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "soc 2",
+          "iso 27001"
+        ],
+        "status": "strong"
+      },
+      "source_host": "linear.app",
+      "source_id": "linear-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://linear.app/integrations/security-and-compliance",
+      "title_detected": null,
+      "vendor_id": "linear",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "neon.com",
+      "final_url": "https://neon.com/platform-terms#3.4",
+      "official_domains": [
+        "databricks.com",
+        "neon.com",
+        "neonstatus.com"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "data processing",
+          "dpa",
+          "processor"
+        ],
+        "status": "strong"
+      },
+      "source_host": "neon.com",
+      "source_id": "neon-dpa",
+      "source_type": "dpa",
+      "source_url": "https://neon.com/platform-terms#3.4",
+      "title_detected": "Neon Platform Services Product Specific Schedule - Neon",
+      "vendor_id": "neon",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "netlify.com",
+      "final_url": "https://www.netlify.com/blog/netlify-achieves-iso-27001-certification/",
+      "official_domains": [
+        "netlify.com",
+        "netlifystatus.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "certificate",
+          "soc 2",
+          "iso 27001"
+        ],
+        "status": "strong"
+      },
+      "source_host": "netlify.com",
+      "source_id": "netlify-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://www.netlify.com/blog/netlify-achieves-iso-27001-certification/",
+      "title_detected": "Netlify Advances Security with ISO 27001 | Netlify Blog",
+      "vendor_id": "netlify",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "onetrust.com",
+      "final_url": "https://www.onetrust.com/error-pages/404/",
+      "official_domains": [
+        "onetrust.com"
+      ],
+      "reasons": [
+        "not_found_surface",
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "certification",
+          "soc",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "onetrust.com",
+      "source_id": "onetrust-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.onetrust.com/error-pages/404/",
+      "title_detected": "404 Not Found | OneTrust",
+      "vendor_id": "onetrust",
+      "verification_status": "soft_not_found"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "pandadoc.com",
+      "final_url": "https://www.pandadoc.com/trust/",
+      "official_domains": [
+        "pandadoc.com",
+        "status.pandadoc.com"
+      ],
+      "reasons": [
+        "not_found_surface",
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "security",
+          "compliance"
+        ],
+        "status": "strong"
+      },
+      "source_host": "pandadoc.com",
+      "source_id": "pandadoc-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://www.pandadoc.com/trust/",
+      "title_detected": "Not Found",
+      "vendor_id": "pandadoc",
+      "verification_status": "soft_not_found"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "trustcenter.pipedrive.com",
+      "final_url": "https://trustcenter.pipedrive.com",
+      "official_domains": [
+        "pipedrive.com"
+      ],
+      "reasons": [
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "security",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "pipedrive.com",
+      "source_id": "pipedrive-security-page",
+      "source_type": "security_page",
+      "source_url": "https://pipedrive.com/trust-center",
+      "title_detected": "Trust Center | Pipedrive",
+      "vendor_id": "pipedrive",
+      "verification_status": "homepage_or_generic_redirect"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "trust.railway.com",
+      "final_url": "https://trust.railway.com/",
+      "official_domains": [
+        "railway.com",
+        "status.railway.com"
+      ],
+      "reasons": [
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "trust",
+          "trust center",
+          "security",
+          "compliance",
+          "privacy"
+        ],
+        "status": "strong"
+      },
+      "source_host": "railway.com",
+      "source_id": "railway-trust-center",
+      "source_type": "trust_center",
+      "source_url": "https://railway.com/security",
+      "title_detected": "Railway Trust Center | Powered by SafeBase",
+      "vendor_id": "railway",
+      "verification_status": "homepage_or_generic_redirect"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "redoxengine.com",
+      "final_url": "https://redoxengine.com/blog/redox-adds-hitrust-i1-certification-for-its-google-cloud-offering-to-manage-healthcare-data-protection-and-mitigate-cybersecurity-threats/",
+      "official_domains": [
+        "redoxengine.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "certification",
+          "iso",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "redoxengine.com",
+      "source_id": "redox-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://redoxengine.com/blog/redox-adds-hitrust-i1-certification-for-its-google-cloud-offering-to-manage-healthcare-data-protection-and-mitigate-cybersecurity-threats/",
+      "title_detected": "Redox adds HITRUST i1 Certification for its Google Cloud offering to manage healthcare data protection and mitigate cybersecurity threats - Redox",
+      "vendor_id": "redox",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "scaleway.com",
+      "final_url": "https://www.scaleway.com/en/blog/k8s-security-episode-6/",
+      "official_domains": [
+        "scaleway.com",
+        "status.scaleway.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "soc",
+          "iso",
+          "audit",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "scaleway.com",
+      "source_id": "scaleway-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.scaleway.com/en/blog/k8s-security-episode-6/",
+      "title_detected": "",
+      "vendor_id": "scaleway",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "secondfront.com",
+      "final_url": "https://www.secondfront.com/resources/blog/choosing-the-right-fedramp-compliance-tools-for-accelerating-authorization/",
+      "official_domains": [
+        "secondfront.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "soc 2",
+          "iso 27001"
+        ],
+        "status": "strong"
+      },
+      "source_host": "secondfront.com",
+      "source_id": "second-front-systems-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://www.secondfront.com/resources/blog/choosing-the-right-fedramp-compliance-tools-for-accelerating-authorization/",
+      "title_detected": "A CCO&#039;s Guide to Choosing the right FedRAMP compliance tools for accelerating authorization",
+      "vendor_id": "second-front-systems",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "secondfront.com",
+      "final_url": "https://www.secondfront.com/resources/blog/navigating-the-fedramp-marketplace-a-beginners-guide-to-compliance-ato-and-becoming-certified/",
+      "official_domains": [
+        "secondfront.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "certification",
+          "iso",
+          "audit",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "secondfront.com",
+      "source_id": "second-front-systems-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.secondfront.com/resources/blog/navigating-the-fedramp-marketplace-a-beginners-guide-to-compliance-ato-and-becoming-certified/",
+      "title_detected": "Navigating the FedRAMP Marketplace: A beginner&#039;s guide to compliance, ATO, and becoming certified | Second Front",
+      "vendor_id": "second-front-systems",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "news"
+      ],
+      "final_host": "shift-technology.com",
+      "final_url": "https://www.shift-technology.com/fr/resources/news/fr/shift-technology-obtient-la-certification-de-securite-soc-2-type-ii",
+      "official_domains": [
+        "shift-technology.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "soc 2",
+          "iso 27001"
+        ],
+        "status": "strong"
+      },
+      "source_host": "shift-technology.com",
+      "source_id": "shift-technology-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://www.shift-technology.com/fr/resources/news/fr/shift-technology-obtient-la-certification-de-securite-soc-2-type-ii",
+      "title_detected": "Shift Technology obtient la certification de s\u00e9curit\u00e9 SOC 2 Type II",
+      "vendor_id": "shift-technology",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "starburst.io",
+      "final_url": "https://www.starburst.io/blog/",
+      "official_domains": [
+        "starburst.io"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path",
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "soc 2"
+        ],
+        "status": "strong"
+      },
+      "source_host": "starburst.io",
+      "source_id": "starburst-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://www.starburst.io/blog/",
+      "title_detected": "Starburst Blog: Unlock the Power of Trino | Starburst",
+      "vendor_id": "starburst",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "strapi.io",
+      "final_url": "https://strapi.io/headless-cms/comparison/strapi-vs-contentful",
+      "official_domains": [
+        "status.strapi.io",
+        "strapi.io"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "soc 2"
+        ],
+        "status": "strong"
+      },
+      "source_host": "strapi.io",
+      "source_id": "strapi-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://strapi.io/headless-cms/comparison/strapi-vs-contentful",
+      "title_detected": "Strapi vs Contentful",
+      "vendor_id": "strapi",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "sumsub.com",
+      "final_url": "https://sumsub.com/blog/sumsub-receives-a-soc-2-type-1-report-to-reinforce-its-commitment-to-information-security-and-privacy/",
+      "official_domains": [
+        "sumsub.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path",
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "soc 2"
+        ],
+        "status": "strong"
+      },
+      "source_host": "sumsub.com",
+      "source_id": "sumsub-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://sumsub.com/blog/sumsub-receives-a-soc-2-type-1-report-to-reinforce-its-commitment-to-information-security-and-privacy/",
+      "title_detected": "Sumsub receives a SOC 2 Type 1 report to reinforce its commitment to information security and privacy | The Sumsuber",
+      "vendor_id": "sumsub",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "trulioo.com",
+      "final_url": "https://www.trulioo.com/resources/white-papers/e-id-inflection-point?utm_campaign=e-id-inflection-point&utm_medium=social&utm_source=announcement-bar",
+      "official_domains": [
+        "trulioo.com"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "soc 2",
+          "iso 27001"
+        ],
+        "status": "strong"
+      },
+      "source_host": "trulioo.com",
+      "source_id": "trulioo-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://www.trulioo.com/resources/white-papers/e-id-inflection-point?utm_campaign=e-id-inflection-point&utm_medium=social&utm_source=announcement-bar",
+      "title_detected": "The eID Inflection Point: A Guide to eIDAS 2.0 | Trulioo",
+      "vendor_id": "trulioo",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "typeform.com",
+      "final_url": "https://www.typeform.com/blog/survey-school-5-compliance-considerations",
+      "official_domains": [
+        "typeform.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "typeform.com",
+      "source_id": "typeform-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.typeform.com/blog/survey-school-5-compliance-considerations",
+      "title_detected": "Data compliance considerations to maintain customer trust and avoid costly fines",
+      "vendor_id": "typeform",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "blog"
+      ],
+      "final_host": "vertafore.com",
+      "final_url": "https://www.vertafore.com/resources/blog/understanding-soc-2-type-ii-compliance-insurance-industry",
+      "official_domains": [
+        "vertafore.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "soc 2",
+          "audit report"
+        ],
+        "status": "strong"
+      },
+      "source_host": "vertafore.com",
+      "source_id": "vertafore-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://www.vertafore.com/resources/blog/understanding-soc-2-type-ii-compliance-insurance-industry",
+      "title_detected": "Understanding SOC 2 Type II compliance in the insurance industry",
+      "vendor_id": "vertafore",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "compliance.vtex.com",
+      "final_url": "https://compliance.vtex.com/",
+      "official_domains": [
+        "vtex.com"
+      ],
+      "reasons": [
+        "verification_requires_review"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "compliance",
+          "soc",
+          "iso",
+          "trust"
+        ],
+        "status": "strong"
+      },
+      "source_host": "vtex.com",
+      "source_id": "vtex-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://vtex.com/trust/compliance",
+      "title_detected": "compliance.vtex.com",
+      "vendor_id": "vtex",
+      "verification_status": "homepage_or_generic_redirect"
+    },
+    {
+      "editorial_segments": [
+        "academy"
+      ],
+      "final_host": "wiz.io",
+      "final_url": "https://www.wiz.io/academy/ai-security/ai-audit",
+      "official_domains": [
+        "cloud.google.com",
+        "status.wiz.io",
+        "wiz.io"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path",
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "certification",
+          "iso 27001"
+        ],
+        "status": "strong"
+      },
+      "source_host": "wiz.io",
+      "source_id": "wiz-certification-reference",
+      "source_type": "certification_reference",
+      "source_url": "https://www.wiz.io/academy/ai-security/ai-audit",
+      "title_detected": "What Is an AI Audit? A Security and Compliance Guide | Wiz",
+      "vendor_id": "wiz",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "articles"
+      ],
+      "final_host": "worldpay.com",
+      "final_url": "https://www.worldpay.com/en-AE/insights/articles/ISO-advantage-podcast",
+      "official_domains": [
+        "status.worldpay.com",
+        "worldpay.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "soc",
+          "iso"
+        ],
+        "status": "strong"
+      },
+      "source_host": "worldpay.com",
+      "source_id": "worldpay-compliance-page",
+      "source_type": "compliance_page",
+      "source_url": "https://www.worldpay.com/en-AE/insights/articles/ISO-advantage-podcast",
+      "title_detected": "Tune in to get the ISO partner advantage | Insights | Worldpay",
+      "vendor_id": "worldpay",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [],
+      "final_host": "worldpay.com",
+      "final_url": "https://worldpay.com/en/legal",
+      "official_domains": [
+        "status.worldpay.com",
+        "worldpay.com"
+      ],
+      "reasons": [
+        "path_lacks_source_purpose_term"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "data processing",
+          "data processing addendum",
+          "dpa"
+        ],
+        "status": "strong"
+      },
+      "source_host": "worldpay.com",
+      "source_id": "worldpay-dpa",
+      "source_type": "dpa",
+      "source_url": "https://worldpay.com/en/legal",
+      "title_detected": "Legal | Worldpay",
+      "vendor_id": "worldpay",
+      "verification_status": "ok"
+    },
+    {
+      "editorial_segments": [
+        "articles"
+      ],
+      "final_host": "worldpay.com",
+      "final_url": "https://www.worldpay.com/en-AE/insights/articles/deciphering-payment-security-lingo-what-is-p2pe",
+      "official_domains": [
+        "status.worldpay.com",
+        "worldpay.com"
+      ],
+      "reasons": [
+        "editorial_or_marketplace_path"
+      ],
+      "semantic_match": {
+        "matched_terms": [
+          "security",
+          "encryption",
+          "vulnerability"
+        ],
+        "status": "strong"
+      },
+      "source_host": "worldpay.com",
+      "source_id": "worldpay-security-page",
+      "source_type": "security_page",
+      "source_url": "https://www.worldpay.com/en-AE/insights/articles/deciphering-payment-security-lingo-what-is-p2pe",
+      "title_detected": "Payment Security Guide | Insights | Worldpay",
+      "vendor_id": "worldpay",
+      "verification_status": "ok"
+    }
+  ],
+  "summary": {
+    "added_sources_evaluated": 232,
+    "editorial_or_marketplace_count": 28,
+    "generic_homepage_count": 1,
+    "semantic_not_strong_count": 2,
+    "suspicious_page_purpose_count": 55,
+    "user_generated_or_community_count": 2,
+    "verification_review_count": 12
+  }
+}
