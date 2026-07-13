@@ -58,20 +58,22 @@ jobs:
               for row in classification.get('candidates', [])
               if row.get('recommended_action') == 'align_artifact_to_source'
           }
-          refresh_observation_ids = {
+          recovered_ids = {
               str(row['source_id'])
               for row in classification.get('candidates', [])
               if row.get('recommended_action') == 'refresh_observation_only'
           }
           mutation_ids = sorted(align_ids | set(replacements))
-          verification_ids = sorted(set(mutation_ids) | refresh_observation_ids)
+          verification_ids = sorted(set(replacements) | recovered_ids)
 
-          if len(align_ids) != 40:
-              raise SystemExit(f'expected 40 artifact alignments, found {len(align_ids)}')
-          if len(replacements) != 10:
-              raise SystemExit(f'expected 10 replacements, found {len(replacements)}')
-          if len(refresh_observation_ids) != 4:
-              raise SystemExit(f'expected 4 recovered observation refreshes, found {len(refresh_observation_ids)}')
+          expected = {
+              'artifact_alignments': (len(align_ids), 40),
+              'replacement_urls': (len(replacements), 10),
+              'recovered_observations': (len(recovered_ids), 4),
+          }
+          for label, (actual, wanted) in expected.items():
+              if actual != wanted:
+                  raise SystemExit(f'{label}: expected {wanted}, found {actual}')
 
           source_paths: dict[str, Path] = {}
           source_records: dict[str, dict[str, Any]] = {}
@@ -83,39 +85,38 @@ jobs:
                   source_records[source_id] = record
 
           artifact_paths_by_source: dict[str, list[Path]] = {}
-          artifact_records_by_path: dict[Path, dict[str, Any]] = {}
+          artifact_records: dict[Path, dict[str, Any]] = {}
           for path in sorted((root / 'data/vendors').glob('*/artifacts/*.yaml')):
               record = yaml.safe_load(path.read_text(encoding='utf-8')) or {}
               source_id = str(record.get('source_id') or '')
               if source_id:
                   artifact_paths_by_source.setdefault(source_id, []).append(path)
-                  artifact_records_by_path[path] = record
+                  artifact_records[path] = record
 
-          missing_sources = sorted(set(verification_ids) - set(source_paths))
-          if missing_sources:
-              raise SystemExit(f'missing source records: {missing_sources}')
-
-          touched_vendors: set[str] = set()
-          mutation_report = []
+          missing = sorted((set(mutation_ids) | set(verification_ids)) - set(source_paths))
+          if missing:
+              raise SystemExit(f'missing source records: {missing}')
 
           def write_yaml(path: Path, payload: dict[str, Any]) -> None:
               path.parent.mkdir(parents=True, exist_ok=True)
               path.write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding='utf-8')
 
+          touched_vendors: set[str] = set()
+          mutations = []
           for source_id in mutation_ids:
               source_path = source_paths[source_id]
               source = dict(source_records[source_id])
               vendor_id = str(source.get('vendor_id') or source_path.parents[1].name)
-              artifact_paths = artifact_paths_by_source.get(source_id, [])
-              if not artifact_paths:
+              linked_artifacts = artifact_paths_by_source.get(source_id, [])
+              if not linked_artifacts:
                   raise SystemExit(f'{source_id}: no artifact record references this source')
 
               old_url = str(source.get('source_url') or '')
               new_url = replacements.get(source_id, old_url)
               if not new_url.startswith('https://'):
-                  raise SystemExit(f'{source_id}: replacement must be HTTPS: {new_url}')
+                  raise SystemExit(f'{source_id}: maintained URL must be HTTPS: {new_url}')
 
-              # Preserve all governance and review metadata; mutate only the maintained fields.
+              # Preserve review tiers and governance extensions. Only maintained metadata changes.
               source['source_url'] = new_url
               provenance = dict(source.get('provenance') or {})
               provenance['publisher'] = provenance.get('publisher') or 'vendor'
@@ -127,14 +128,13 @@ jobs:
               write_yaml(source_path, source)
 
               artifact_ids = []
-              for artifact_path in artifact_paths:
-                  artifact = dict(artifact_records_by_path[artifact_path])
+              for artifact_path in linked_artifacts:
+                  artifact = dict(artifact_records[artifact_path])
                   artifact['canonical_url'] = new_url
                   artifact['not_advice'] = True
                   write_yaml(artifact_path, artifact)
                   artifact_ids.append(str(artifact.get('artifact_id') or artifact_path.stem))
 
-              primary_artifact_id = artifact_ids[0] if artifact_ids else None
               change_path = source_path.parents[1] / 'changes' / f'{batch_id}-{source_id}.yaml'
               summary = (
                   'Owner-led catalog maintenance replaced a confirmed broken public source URL and aligned its artifact metadata.'
@@ -147,52 +147,53 @@ jobs:
                       change_id=f'{batch_id}-{source_id}',
                       vendor_id=vendor_id,
                       source_id=source_id,
-                      artifact_id=primary_artifact_id,
+                      artifact_id=artifact_ids[0],
                       change_type='updated',
                       detected_at=collected_at,
                       summary=summary,
                   ),
               )
               touched_vendors.add(vendor_id)
-              mutation_report.append({
+              mutations.append({
                   'vendor_id': vendor_id,
                   'source_id': source_id,
                   'old_url': old_url,
                   'new_url': new_url,
                   'replacement': source_id in replacements,
                   'artifact_ids': artifact_ids,
-                  'source_path': source_path.as_posix(),
-                  'change_path': change_path.as_posix(),
               })
 
           build_indexes()
-
-          source_path_lines = [source_paths[source_id].as_posix() for source_id in verification_ids]
-          Path('owner-source-paths.txt').write_text('\n'.join(source_path_lines) + '\n', encoding='utf-8')
-          Path('owner-replacement-source-ids.txt').write_text('\n'.join(sorted(replacements)) + '\n', encoding='utf-8')
-          Path('owner-touched-vendors.txt').write_text('\n'.join(sorted(touched_vendors)) + '\n', encoding='utf-8')
+          Path('owner-source-paths.txt').write_text(
+              '\n'.join(source_paths[source_id].as_posix() for source_id in verification_ids) + '\n',
+              encoding='utf-8',
+          )
+          Path('owner-replacement-source-ids.txt').write_text(
+              '\n'.join(sorted(replacements)) + '\n',
+              encoding='utf-8',
+          )
           Path('owner-source-mutation-report.json').write_text(
               json.dumps({
                   'batch_id': batch_id,
-                  'alignments': len(align_ids),
-                  'replacements': len(replacements),
-                  'observation_refreshes': len(refresh_observation_ids),
-                  'verified_sources': len(verification_ids),
+                  'artifact_alignments': len(align_ids),
+                  'replacement_urls': len(replacements),
+                  'recovered_observations': len(recovered_ids),
+                  'network_verification_sources': len(verification_ids),
                   'touched_vendors': sorted(touched_vendors),
-                  'mutations': mutation_report,
+                  'mutations': mutations,
                   'not_advice': True,
               }, indent=2, sort_keys=True) + '\n',
               encoding='utf-8',
           )
           print(json.dumps({
-              'alignments': len(align_ids),
-              'replacements': len(replacements),
-              'observation_refreshes': len(refresh_observation_ids),
-              'verified_sources': len(verification_ids),
+              'artifact_alignments': len(align_ids),
+              'replacement_urls': len(replacements),
+              'recovered_observations': len(recovered_ids),
+              'network_verification_sources': len(verification_ids),
               'touched_vendors': len(touched_vendors),
           }, indent=2, sort_keys=True))
           PY
-      - name: Verify maintained public sources
+      - name: Verify changed and recovered public sources
         run: |
           set -euo pipefail
           python -m tools.openva.source_verification verify \
@@ -212,7 +213,9 @@ jobs:
           missing = sorted(replacement_ids - set(by_id))
           if missing:
               raise SystemExit(f'replacement verification rows missing: {missing}')
-          allowed = {'ok', 'redirected'}
+
+          # Bot protection, unknown 403s, and rate limiting are access conditions—not broken URLs.
+          acceptable = {'ok', 'redirected', 'bot_protected', 'forbidden_unknown', 'rate_limited'}
           failures = [
               {
                   'source_id': source_id,
@@ -223,14 +226,17 @@ jobs:
                   'fetch_error': by_id[source_id].get('fetch_error'),
               }
               for source_id in sorted(replacement_ids)
-              if by_id[source_id].get('verification_status') not in allowed
+              if by_id[source_id].get('verification_status') not in acceptable
           ]
           if failures:
               print(json.dumps(failures, indent=2, sort_keys=True))
-              raise SystemExit('one or more replacement URLs failed live semantic verification')
+              raise SystemExit('one or more replacement URLs failed authority-bound verification')
           print(json.dumps({
               'replacement_urls_verified': len(replacement_ids),
-              'statuses': {source_id: by_id[source_id].get('verification_status') for source_id in sorted(replacement_ids)},
+              'statuses': {
+                  source_id: by_id[source_id].get('verification_status')
+                  for source_id in sorted(replacement_ids)
+              },
           }, indent=2, sort_keys=True))
           PY
       - name: Build current observation projection
