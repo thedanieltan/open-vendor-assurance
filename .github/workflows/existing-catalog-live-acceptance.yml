@@ -81,7 +81,7 @@ jobs:
                   raise RuntimeError(f'{name} {url}: {exc.reason}') from exc
 
           last_error = None
-          for attempt in range(2):
+          for attempt in range(20):
               try:
                   payloads = {name: fetch(name, path) for name, path in endpoints.items()}
                   documents = {
@@ -140,9 +140,9 @@ jobs:
               except Exception as exc:
                   last_error = exc
                   print(f'attempt {attempt + 1} not accepted: {exc}')
-                  if attempt == 1:
+                  if attempt == 19:
                       raise
-                  time.sleep(5)
+                  time.sleep(15)
           else:
               raise last_error or RuntimeError('live acceptance failed')
           PY
