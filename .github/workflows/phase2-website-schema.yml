@@ -1,0 +1,46 @@
+name: phase2-website-schema
+
+on:
+  push:
+    branches:
+      - site/canonical-one-page-phase2
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, '[phase2-schema]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Restore WebSite entity and remove temporary workflow
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('site/src/index.html')
+          text = path.read_text(encoding='utf-8')
+          marker = '    <script type="application/ld+json">\n      {\n        "@context": "https://schema.org",\n        "@type": "DataCatalog",'
+          website = '''    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "OpenVA",
+        "alternateName": "Open Vendor Assurance",
+        "url": "{{OPENVA_HOME_URL}}",
+        "description": "Public vendor assurance source directory and browser-local CSV resolver."
+      }
+    </script>
+'''
+          if '"@type": "WebSite"' not in text:
+              text = text.replace(marker, website + marker, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+          git rm .github/workflows/phase2-website-schema.yml
+      - name: Commit structured-data repair
+        run: |
+          git config user.name 'openva-site-maintainer'
+          git config user.email 'openva-site-maintainer@users.noreply.github.com'
+          git add site/src/index.html
+          git commit -m 'Site: restore WebSite structured-data entity [phase2-schema]'
+          git push
