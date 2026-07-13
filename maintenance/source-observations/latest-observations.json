@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-12T20:41:50Z",
+  "generated_at": "2026-07-13T13:06:21Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 730,
-    "observed_this_run": 2,
-    "carried_forward": 728
+    "source_count": 749,
+    "observed_this_run": 19,
+    "carried_forward": 730
   },
   "sources": [
     {
@@ -2024,6 +2024,82 @@
       "carried_forward": true
     },
     {
+      "source_id": "bitdefender-privacy",
+      "vendor_id": "bitdefender",
+      "source_url": "https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-bitdefender-websites",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "bitdefender-privacy-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-bitdefender-websites",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f747dc4634ac71ad4bddb1363f5bfc18ca538f5752cba5a889f84c2a79725ca5",
+      "normalized_text_sample_sha256": "sha256:196ab2f4552b4edf187c3bab4ba41ef485b1a521f364ae8dbc503fd664d85e57",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "bitdefender-status",
+      "vendor_id": "bitdefender",
+      "source_url": "https://status.bitdefender.com/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "bitdefender-status-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://status.bitdefender.com/",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "bitdefender-terms",
+      "vendor_id": "bitdefender",
+      "source_url": "https://www.bitdefender.com/en-us/site/view/legal-terms-of-use",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "bitdefender-terms-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.bitdefender.com/en-us/site/view/legal-terms-of-use",
+      "http_status": 404,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f945745b0273430c38ca24c5882ee8947e5eb4e621be70acb2a3d304c0c422fb",
+      "normalized_text_sample_sha256": "sha256:03383326aa43a2674e1f53e151252e62006b0dcfac13c89e99e77380522ea45b",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "bitdefender-trust",
+      "vendor_id": "bitdefender",
+      "source_url": "https://www.bitdefender.com/business/support/en/77209-343110-trust-center.html",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "bitdefender-trust-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.bitdefender.com/business/support/",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:98cf9e04cf33f396048099300eae2ab22b6f809c4a5a29fd790209e1e8a97b2e",
+      "normalized_text_sample_sha256": "sha256:60a1d3b5a35d853be2bd01168d17b9d13cc1fe543b20d3c7fc47d0a81f435b85",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "box-compliance",
       "vendor_id": "box",
       "source_url": "https://www.box.com/security/compliance",
@@ -2193,6 +2269,82 @@
         "reason": "change_class_material_possible"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "brevo-privacy",
+      "vendor_id": "brevo",
+      "source_url": "https://www.brevo.com/legal/privacypolicy/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "brevo-privacy-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.brevo.com/legal/privacypolicy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9712d07663755e3299e8b0bb339b0903137ae37717e6c78fbf857b790bbb1509",
+      "normalized_text_sample_sha256": "sha256:03619261a7127fcb62d9b11c3deb3c8c15ca317b1da7526a378f769de7709d32",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "brevo-status",
+      "vendor_id": "brevo",
+      "source_url": "https://status.brevo.com/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "brevo-status-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://status.brevo.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8372a6a6384851868187fd7b46ff97b27b61ad245271949438ba85f9e8885774",
+      "normalized_text_sample_sha256": "sha256:42c55fd1b50330dcf3865fedd9bae2b00ec53b2863465f28492ad16cb87260ac",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "brevo-terms",
+      "vendor_id": "brevo",
+      "source_url": "https://www.brevo.com/legal/termsofuse/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "brevo-terms-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.brevo.com/legal/termsofuse/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8796c712f3380a8a90848563ac0555a9c9e69d155f15f475330fbdec26aff9e0",
+      "normalized_text_sample_sha256": "sha256:01b127e2ffc2e85247b5d2c2aef1c2e8959386065e885614f016693fcaff3746",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "brevo-trust",
+      "vendor_id": "brevo",
+      "source_url": "https://trust.brevo.com/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "brevo-trust-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://trust.brevo.com/",
+      "http_status": null,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "other",
+      "raw_sample_sha256": "sha256:TBD",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "calendly-dpa",
@@ -2402,6 +2554,82 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "circleci-privacy",
+      "vendor_id": "circleci",
+      "source_url": "https://circleci.com/legal/privacy/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "circleci-privacy-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://circleci.com/legal/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:57d9580b144fb6305f6f1b0fcc84b6c2f4f4c7693751334e446f778a153eb8f0",
+      "normalized_text_sample_sha256": "sha256:da00074c6074fbfaeb4c0e132832e9965b3062d61685891223f9e1c86fe1552d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "circleci-security",
+      "vendor_id": "circleci",
+      "source_url": "https://circleci.com/security/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "circleci-security-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://circleci.com/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c3c174b0dc420704537a131caad6bbfecbea0cfec2c95d7be18c8824aacdf275",
+      "normalized_text_sample_sha256": "sha256:645da8e780f616cf79ea0efbdf4e3dc6678c6c17fbe3c0b256e262899d53be4b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "circleci-status",
+      "vendor_id": "circleci",
+      "source_url": "https://status.circleci.com/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "circleci-status-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://status.circleci.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c4aca0d0c6c62fd0f3c21a89470019c6f68aa78ef83957cd8411ad0c21cfed19",
+      "normalized_text_sample_sha256": "sha256:615a2d1fadb32c8da9c930168baa64118882659eab1f644e857c578e92c725e6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "circleci-terms",
+      "vendor_id": "circleci",
+      "source_url": "https://circleci.com/legal/terms-of-service/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "circleci-terms-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://circleci.com/legal/terms-of-service/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1b5ae868ab69d9852b2c91287b2a7a54716b9bfc22fb8ec7ab2ed5ab30c6f3ae",
+      "normalized_text_sample_sha256": "sha256:43ad44aea7fa503c11bd720c38bcd758283e0dadeb0eec38c9a7107235043903",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "clickup-compliance",
@@ -4245,6 +4473,63 @@
         "reason": null
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "eset-privacy",
+      "vendor_id": "eset",
+      "source_url": "https://www.eset.com/int/policy-hub/privacy/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "eset-privacy-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.eset.com/int/policy-hub/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a315473c123f6a1a4fffd038320e0171067b16764da1719d73b328c959ac93a1",
+      "normalized_text_sample_sha256": "sha256:a600f2a0d2c7afb2d8107e85eba80451ae78934f00e5d09951c0c4a29af2b5f9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "eset-security",
+      "vendor_id": "eset",
+      "source_url": "https://www.eset.com/int/about/technology/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "eset-security-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.eset.com/us/about/technology/",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cef6b5934fa2b301ee6769cb51cf9ddf0c65b095b4c12048c5f86c9e36fb8eb8",
+      "normalized_text_sample_sha256": "sha256:fb0597dfde3a4b40f2b0c439935d61c1cd781ba5dcb53061879a70ebffd8317b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "eset-status",
+      "vendor_id": "eset",
+      "source_url": "https://status.eset.com/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "eset-status-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://status.eset.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f884ea37bc0e16047439f17cf32d084f3a61658c94328e30724963941873cab7",
+      "normalized_text_sample_sha256": "sha256:f752afbaba9653d9528580508db22e1d9a26d3abeeeddde77ce6e7635cb2cfe2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "exoscale-dpa",
@@ -12151,6 +12436,82 @@
       "carried_forward": true
     },
     {
+      "source_id": "trend-micro-privacy",
+      "vendor_id": "trend-micro",
+      "source_url": "https://www.trendmicro.com/en_us/about/trust-center/privacy.html",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "trend-micro-privacy-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.trendmicro.com/en_us/about/trust-center/privacy.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e69a1243e4a165160479a574f12e86149333c55f1598238bcf14afc296361978",
+      "normalized_text_sample_sha256": "sha256:d8d36a68399022346cb559309b740e1387ce6b18c1220cea4537e36ed638f8b6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "trend-micro-status",
+      "vendor_id": "trend-micro",
+      "source_url": "https://status.trendmicro.com/en-US/",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "trend-micro-status-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://status.trendmicro.com/en-US/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:76f5a82c03565c114b3aff27d109a783ba34497a2fb748c62c785104b3ac6dcd",
+      "normalized_text_sample_sha256": "sha256:7c1d80e7e55cb40e3d975f11200dee00e48dd2ed882d210e1e0618d06bb0e43d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "trend-micro-terms",
+      "vendor_id": "trend-micro",
+      "source_url": "https://www.trendmicro.com/en_us/about/legal/terms-of-use.html",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "trend-micro-terms-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.trendmicro.com/en_us/about/legal/terms-of-use.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:96ffda1cf008c97979f26cd8623d330fee92f3068e4428e2c8ea7ce7b3451f44",
+      "normalized_text_sample_sha256": "sha256:894713a6d05dd010546333ca15eb289e006024267cfa14dcfcb647ec623152f0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "trend-micro-trust",
+      "vendor_id": "trend-micro",
+      "source_url": "https://www.trendmicro.com/en_us/about/trust-center.html",
+      "observed_at": "2026-07-13T13:06:21Z",
+      "observation_id": "trend-micro-trust-2026-07-13-owner-global-vendors-2",
+      "final_url": "https://www.trendmicro.com/en_us/about/trust-center.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5441a4f956137a241e9fee9c6459a7f7cdbdc336bd12db3387e9fb207c4bde3a",
+      "normalized_text_sample_sha256": "sha256:3e90833df48b62e284c80d4cb93ae0795cdf749c59a2579fd3cf86b456ae0840",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "trulioo-security",
       "vendor_id": "trulioo",
       "source_url": "https://www.trulioo.com/security",
@@ -13212,7 +13573,7 @@
         "required": false,
         "reason": null
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "workday-subprocessors",
@@ -13421,7 +13782,7 @@
         "required": true,
         "reason": "change_class_redirect_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zapier-privacy",

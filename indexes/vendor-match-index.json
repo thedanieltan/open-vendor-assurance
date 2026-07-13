@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 180,
+  "count": 185,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -2439,6 +2439,100 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bitdefender-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-bitdefender-websites",
+          "title": "Bitdefender Privacy Policy for Websites"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bitdefender-status",
+          "source_type": "status_page",
+          "source_url": "https://status.bitdefender.com/",
+          "title": "Bitdefender Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bitdefender-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.bitdefender.com/en-us/site/view/legal-terms-of-use",
+          "title": "Bitdefender Legal Terms of Use"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bitdefender-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.bitdefender.com/business/support/en/77209-343110-trust-center.html",
+          "title": "Bitdefender Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Bitdefender",
+      "legal_entities": [],
+      "legal_name": "S.C. BITDEFENDER S.R.L.",
+      "manifest_path": "dist/vendors/bitdefender.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "bitdefender.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bitdefender-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-bitdefender-websites",
+          "title": "Bitdefender Privacy Policy for Websites"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bitdefender-status",
+          "source_type": "status_page",
+          "source_url": "https://status.bitdefender.com/",
+          "title": "Bitdefender Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bitdefender-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.bitdefender.com/en-us/site/view/legal-terms-of-use",
+          "title": "Bitdefender Legal Terms of Use"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bitdefender-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.bitdefender.com/business/support/en/77209-343110-trust-center.html",
+          "title": "Bitdefender Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "bitdefender"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "other_public_source",
@@ -2644,6 +2738,100 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "braze"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "brevo-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.brevo.com/legal/privacypolicy/",
+          "title": "Brevo Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "brevo-status",
+          "source_type": "status_page",
+          "source_url": "https://status.brevo.com/",
+          "title": "Brevo Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "brevo-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.brevo.com/legal/termsofuse/",
+          "title": "Brevo Terms of Service"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "brevo-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.brevo.com/",
+          "title": "Brevo Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Brevo",
+      "legal_entities": [],
+      "legal_name": "Sendinblue SAS",
+      "manifest_path": "dist/vendors/brevo.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "brevo.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "brevo-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.brevo.com/legal/privacypolicy/",
+          "title": "Brevo Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "brevo-status",
+          "source_type": "status_page",
+          "source_url": "https://status.brevo.com/",
+          "title": "Brevo Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "brevo-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.brevo.com/legal/termsofuse/",
+          "title": "Brevo Terms of Service"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "brevo-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.brevo.com/",
+          "title": "Brevo Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "brevo"
     },
     {
       "candidate_source_types": [],
@@ -2924,6 +3112,99 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "chainalysis"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "circleci-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://circleci.com/legal/privacy/",
+          "title": "CircleCI Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "circleci-security",
+          "source_type": "security_page",
+          "source_url": "https://circleci.com/security/",
+          "title": "CircleCI Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "circleci-status",
+          "source_type": "status_page",
+          "source_url": "https://status.circleci.com/",
+          "title": "CircleCI Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "circleci-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://circleci.com/legal/terms-of-service/",
+          "title": "CircleCI Software as a Service Agreement"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "CircleCI",
+      "legal_entities": [],
+      "legal_name": "Circle Internet Services, Inc.",
+      "manifest_path": "dist/vendors/circleci.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "circleci.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "circleci-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://circleci.com/legal/privacy/",
+          "title": "CircleCI Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "circleci-security",
+          "source_type": "security_page",
+          "source_url": "https://circleci.com/security/",
+          "title": "CircleCI Security"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "circleci-status",
+          "source_type": "status_page",
+          "source_url": "https://status.circleci.com/",
+          "title": "CircleCI Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "circleci-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://circleci.com/legal/terms-of-service/",
+          "title": "CircleCI Software as a Service Agreement"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "circleci"
     },
     {
       "candidate_source_types": [],
@@ -5219,6 +5500,82 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "employment-hero"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "status_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eset-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.eset.com/int/policy-hub/privacy/",
+          "title": "ESET Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eset-security",
+          "source_type": "security_page",
+          "source_url": "https://www.eset.com/int/about/technology/",
+          "title": "ESET Technology"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eset-status",
+          "source_type": "status_page",
+          "source_url": "https://status.eset.com/",
+          "title": "ESET Status"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "ESET",
+      "legal_entities": [],
+      "legal_name": "ESET, spol. s r.o.",
+      "manifest_path": "dist/vendors/eset.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "eset.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eset-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.eset.com/int/policy-hub/privacy/",
+          "title": "ESET Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eset-security",
+          "source_type": "security_page",
+          "source_url": "https://www.eset.com/int/about/technology/",
+          "title": "ESET Technology"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eset-status",
+          "source_type": "status_page",
+          "source_url": "https://status.eset.com/",
+          "title": "ESET Status"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "eset"
     },
     {
       "candidate_source_types": [],
@@ -14841,6 +15198,100 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "thoropass"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "trend-micro-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.trendmicro.com/en_us/about/trust-center/privacy.html",
+          "title": "Trend Micro Privacy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "trend-micro-status",
+          "source_type": "status_page",
+          "source_url": "https://status.trendmicro.com/en-US/",
+          "title": "Trend Micro Service Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "trend-micro-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.trendmicro.com/en_us/about/legal/terms-of-use.html",
+          "title": "Trend Micro Terms of Use"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "trend-micro-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.trendmicro.com/en_us/about/trust-center.html",
+          "title": "Trend Micro Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Trend Micro",
+      "legal_entities": [],
+      "legal_name": "Trend Micro Incorporated",
+      "manifest_path": "dist/vendors/trend-micro.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "trendmicro.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "trend-micro-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.trendmicro.com/en_us/about/trust-center/privacy.html",
+          "title": "Trend Micro Privacy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "trend-micro-status",
+          "source_type": "status_page",
+          "source_url": "https://status.trendmicro.com/en-US/",
+          "title": "Trend Micro Service Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "trend-micro-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.trendmicro.com/en_us/about/legal/terms-of-use.html",
+          "title": "Trend Micro Terms of Use"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "trend-micro-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.trendmicro.com/en_us/about/trust-center.html",
+          "title": "Trend Micro Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "trend-micro"
     },
     {
       "candidate_source_types": [],
