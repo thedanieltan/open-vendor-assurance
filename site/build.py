@@ -3,7 +3,7 @@
 The implementation is preserved byte-for-byte in ``site/build_core.py``. This
 wrapper removes the retired formal-release metadata, makes the exact source
 commit the sole catalog snapshot identity, and adds the bounded public identity
-keys required by the browser resolver.
+and source-link keys required by the browser interface.
 """
 
 from __future__ import annotations
@@ -12,6 +12,7 @@ import importlib.util
 import sys
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -86,6 +87,58 @@ def _public_registration_keys() -> dict[str, list[dict[str, str]]]:
     }
 
 
+def _safe_public_url(value: Any) -> str:
+    url = str(value or "").strip()
+    if not url:
+        return ""
+    parsed = urlsplit(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return ""
+    return url
+
+
+def _public_source_links(compiled: dict[str, Any], vendor_id: str) -> list[dict[str, str]]:
+    """Return direct, public-safe source anchors for one catalog card.
+
+    These fields are already present in the public vendor-detail shard. Publishing
+    the bounded subset in the lightweight index lets the catalog render real
+    anchors instead of non-interactive source-type badges. No internal paths,
+    observation payloads, evidence notes, or maintenance state are copied.
+    """
+    detail = compiled.get("vendor_details", {}).get(vendor_id, {})
+    records = detail.get("source_records", []) if isinstance(detail, dict) else []
+    links: list[dict[str, str]] = []
+    seen: set[tuple[str, str, str]] = set()
+    for row in records:
+        if not isinstance(row, dict):
+            continue
+        source_url = _safe_public_url(row.get("source_url"))
+        source_type = str(row.get("source_type") or "").strip()
+        source_id = str(row.get("source_id") or "").strip()
+        if not source_url or not source_type or not source_id:
+            continue
+        key = (source_type, source_id, source_url)
+        if key in seen:
+            continue
+        seen.add(key)
+        links.append(
+            {
+                "source_id": source_id,
+                "source_type": source_type,
+                "title": str(row.get("title") or source_type).strip(),
+                "source_url": source_url,
+            }
+        )
+    return sorted(
+        links,
+        key=lambda row: (
+            row["source_type"],
+            row["title"].casefold(),
+            row["source_url"],
+        ),
+    )
+
+
 def build_compiled_catalog(
     source_health_snapshot_path: Path = DEFAULT_SOURCE_HEALTH_SNAPSHOT,
     assurance_intelligence_snapshot_path: Path = DEFAULT_ASSURANCE_INTELLIGENCE_SNAPSHOT,
@@ -98,6 +151,7 @@ def build_compiled_catalog(
     for summary in compiled["vendor_summaries"]:
         vendor_id = str(summary.get("vendor_id") or "")
         summary["registration_keys"] = registration_keys.get(vendor_id, [])
+        summary["source_links"] = _public_source_links(compiled, vendor_id)
     return compiled
 
 
