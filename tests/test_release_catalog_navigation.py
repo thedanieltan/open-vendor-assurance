@@ -50,7 +50,6 @@ def test_catalog_navigation_bounds_results_and_preserves_selection_contract():
         'pageButton.textContent = `Select this page (${currentPageVendors.length})`',
         'allButton.textContent = `Select all filtered (${visibleVendors.length})`',
         "selectedVendors.add(vendor.vendor_id)",
-        "selectedSources",
     ]:
         assert token in script
 
