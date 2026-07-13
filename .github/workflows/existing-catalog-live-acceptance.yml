@@ -1,0 +1,145 @@
+name: existing-catalog-live-acceptance
+
+on:
+  pull_request:
+    branches:
+      - maintenance/existing-catalog-live-control
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  live-acceptance:
+    if: github.event.pull_request.head.ref == 'maintenance/existing-catalog-live-trigger'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: 236ee77a8883a4588a42507a689d79b9b995f782
+          path: baseline
+      - name: Verify deployed 233-vendor maintenance baseline
+        env:
+          BASE_URL: https://thedanieltan.github.io/open-vendor-assurance
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import time
+          import urllib.request
+          from pathlib import Path
+
+          base_url = os.environ['BASE_URL'].rstrip('/')
+          baseline_root = Path('baseline')
+
+          def yaml_scalar(path: Path, key: str):
+              pattern = re.compile(rf'^{re.escape(key)}:\s*["\']?([^"\'\n#]+)')
+              for line in path.read_text(encoding='utf-8').splitlines():
+                  match = pattern.match(line.strip())
+                  if match:
+                      return match.group(1).strip()
+              return None
+
+          baseline_vendors = {
+              value
+              for path in baseline_root.glob('data/vendors/*/vendor.yaml')
+              if (value := yaml_scalar(path, 'vendor_id'))
+          }
+          baseline_sources = {
+              value
+              for path in baseline_root.glob('data/vendors/*/sources/*.yaml')
+              if (value := yaml_scalar(path, 'source_id'))
+          }
+          assert len(baseline_vendors) == 233, len(baseline_vendors)
+          assert len(baseline_sources) == 1084, len(baseline_sources)
+
+          endpoints = {
+              'home': '/',
+              'manifest': '/.well-known/openva.json',
+              'agent': '/public/openva-agent-index.json',
+              'vendors': '/public/vendors/index.json',
+              'sources': '/public/sources/index.json',
+              'observations': '/public/observations/latest.json',
+          }
+
+          def fetch(path: str):
+              url = base_url + path
+              request = urllib.request.Request(url, headers={'User-Agent': 'OpenVA-existing-catalog-live-acceptance/1.0'})
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  body = response.read()
+                  if response.status != 200:
+                      raise RuntimeError(f'{url}: HTTP {response.status}')
+                  return body
+
+          last_error = None
+          for attempt in range(20):
+              try:
+                  payloads = {name: fetch(path) for name, path in endpoints.items()}
+                  documents = {
+                      name: json.loads(payloads[name])
+                      for name in ('manifest', 'agent', 'vendors', 'sources', 'observations')
+                  }
+
+                  deployed_vendors = {row['vendor_id'] for row in documents['vendors']['vendors']}
+                  deployed_sources = {row['source_id'] for row in documents['sources']['sources']}
+                  deployed_observations = {row['source_id'] for row in documents['observations']['sources']}
+
+                  missing_vendors = sorted(baseline_vendors - deployed_vendors)
+                  missing_sources = sorted(baseline_sources - deployed_sources)
+                  missing_observations = sorted(baseline_sources - deployed_observations)
+                  if missing_vendors or missing_sources or missing_observations:
+                      raise RuntimeError(
+                          'deployment does not yet contain maintenance baseline: '
+                          f'missing_vendors={len(missing_vendors)} '
+                          f'missing_sources={len(missing_sources)} '
+                          f'missing_observations={len(missing_observations)}'
+                      )
+
+                  snapshot_shas = {
+                      documents[name]['snapshot']['commit_sha']
+                      for name in ('agent', 'vendors', 'sources', 'observations')
+                  }
+                  if len(snapshot_shas) != 1:
+                      raise RuntimeError(f'mixed deployed snapshots: {sorted(snapshot_shas)}')
+
+                  if documents['vendors']['count'] != len(documents['vendors']['vendors']):
+                      raise RuntimeError('vendor index count mismatch')
+                  if documents['sources']['count'] != len(documents['sources']['sources']):
+                      raise RuntimeError('source index count mismatch')
+                  if documents['observations']['count'] != len(documents['observations']['sources']):
+                      raise RuntimeError('observation index count mismatch')
+
+                  report = {
+                      'accepted': True,
+                      'baseline_commit': '236ee77a8883a4588a42507a689d79b9b995f782',
+                      'deployed_commit': next(iter(snapshot_shas)),
+                      'baseline_vendor_count': len(baseline_vendors),
+                      'deployed_vendor_count': len(deployed_vendors),
+                      'baseline_source_count': len(baseline_sources),
+                      'deployed_source_count': len(deployed_sources),
+                      'deployed_observation_count': len(deployed_observations),
+                      'missing_baseline_vendors': 0,
+                      'missing_baseline_sources': 0,
+                      'missing_baseline_observations': 0,
+                  }
+                  print(json.dumps(report, indent=2, sort_keys=True))
+                  Path('/tmp/existing-catalog-live-acceptance.json').write_text(
+                      json.dumps(report, indent=2, sort_keys=True) + '\n',
+                      encoding='utf-8',
+                  )
+                  break
+              except Exception as exc:
+                  last_error = exc
+                  if attempt == 19:
+                      raise
+                  print(f'attempt {attempt + 1} not accepted: {exc}')
+                  time.sleep(15)
+          else:
+              raise last_error or RuntimeError('live acceptance failed')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: existing-catalog-live-acceptance
+          path: /tmp/existing-catalog-live-acceptance.json
