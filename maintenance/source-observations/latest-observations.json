@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-13T15:31:42Z",
+  "generated_at": "2026-07-13T16:04:42Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 815,
-    "observed_this_run": 12,
-    "carried_forward": 803
+    "source_count": 833,
+    "observed_this_run": 18,
+    "carried_forward": 815
   },
   "sources": [
     {
@@ -2040,7 +2040,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitbucket-status",
@@ -2059,7 +2059,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitbucket-terms",
@@ -2078,7 +2078,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitdefender-privacy",
@@ -7686,6 +7686,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "linear-privacy",
+      "vendor_id": "linear",
+      "source_url": "https://linear.app/privacy",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "linear-privacy-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://linear.app/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7a2ef684fe62364d0509070005459c7e7e6d2c534539b1e2c61c17f4d97163c8",
+      "normalized_text_sample_sha256": "sha256:e7cb2777ceb833498f90f54ec6a5a5b375e8bc4ed82a4a4dbde3ac35372db5cd",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "linear-status",
+      "vendor_id": "linear",
+      "source_url": "https://status.linear.app/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "linear-status-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://linearstatus.com",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6e800533e1cb81e904e53e25be8c43bcef2950c361edb95401458dcc8ac88bcb",
+      "normalized_text_sample_sha256": "sha256:4b7a3fd37d886865df15f9a090843511a59902fe6b41d8669f61d81288079d39",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "linear-terms",
+      "vendor_id": "linear",
+      "source_url": "https://linear.app/terms",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "linear-terms-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://linear.app/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bddd9fb166ec61653c51e677a80c80a9083628927ca1eb0920bafaae33f219ea",
+      "normalized_text_sample_sha256": "sha256:db01f737c2ef5ef22019a185d657e70e033502e932cf007393d43a9d0f2289f8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "logicgate-compliance",
       "vendor_id": "logicgate",
       "source_url": "https://www.logicgate.com/compliance/",
@@ -8560,6 +8617,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "monday-com-privacy",
+      "vendor_id": "monday-com",
+      "source_url": "https://monday.com/l/privacy/privacy-policy/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "monday-com-privacy-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://monday.com/l/privacy/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f0c086824f96a35c86b7563d86e542f285d043cfff6a091dc9e675845eecabf5",
+      "normalized_text_sample_sha256": "sha256:cb1f55ad318370d8ee92f69a4630933a03f0a4f9999473fbb65cadfbfbc602f1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "monday-com-status",
+      "vendor_id": "monday-com",
+      "source_url": "https://status.monday.com/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "monday-com-status-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://status.monday.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:670f0d5184cd1ced4681e78fe12b5df780c708cef21bdc0255aa2eb7052f6291",
+      "normalized_text_sample_sha256": "sha256:e7990bea2cda43759c195b0af702f6c64aeb3c1582b0621061c21b8a92d1194e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "monday-com-terms",
+      "vendor_id": "monday-com",
+      "source_url": "https://monday.com/l/legal/tos/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "monday-com-terms-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://monday.com/l/legal/tos/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:497015dd2bb58fb53cca37660a52dbc7d8246dcddf0af6b84b150b9c38749709",
+      "normalized_text_sample_sha256": "sha256:c245248714c6103936f4f4bd1b36dd460d6d587665781110e88ea464926b228d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "mongodb-compliance",
       "vendor_id": "mongodb",
       "source_url": "https://trust.mongodb.com/",
@@ -8693,6 +8807,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "n8n-privacy",
+      "vendor_id": "n8n",
+      "source_url": "https://n8n.io/legal/privacy/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "n8n-privacy-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://n8n.io/legal/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:88e38f2cb1cadd30595beb81f872fee2e147ba7ce9d7e9eacc555e385e629b2b",
+      "normalized_text_sample_sha256": "sha256:bb9fc69d94b639ce7afb6e24c85f97b6fc4c514d34d41c1918a0e443e51ab0c9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "n8n-status",
+      "vendor_id": "n8n",
+      "source_url": "https://status.n8n.io/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "n8n-status-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://status.n8n.cloud/",
+      "http_status": 200,
+      "source_health_status": "redirected",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:374f8a40483c10ebf7d1c8a9fd427423dd128afd77defa6e37474da6b517c993",
+      "normalized_text_sample_sha256": "sha256:a68fd51099ebf84f1b66bad3a7476e3eee6d596b453bd66a1e695decf66c950e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "n8n-terms",
+      "vendor_id": "n8n",
+      "source_url": "https://n8n.io/legal/self-serve-terms/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "n8n-terms-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://n8n.io/legal/self-serve-terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d5fad17864d895ddb8d443c3ffd3d394ae8482e5e150f95b1712568ad808162d",
+      "normalized_text_sample_sha256": "sha256:8bd3be30bd8b2c63948d762fd994d3c902edcc4819bd5fc6d3a3a6c6851e3c0e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "neo4j-privacy-notice",
       "vendor_id": "neo4j",
       "source_url": "https://neo4j.com/legal-terms/privacy-notice/",
@@ -8729,6 +8900,120 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "neon-privacy",
+      "vendor_id": "neon",
+      "source_url": "https://neon.com/privacy-policy",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "neon-privacy-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://www.databricks.com/legal/privacynotice",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:41723520f974fce48d0624af66bc86f7b6c47d5874bd24094fda6cab2924c5b1",
+      "normalized_text_sample_sha256": "sha256:254a2ce30077da442b28152bf63330b1662765a745c62dbbbe64bad577fa5c1d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "neon-status",
+      "vendor_id": "neon",
+      "source_url": "https://neonstatus.com/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "neon-status-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://neonstatus.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:239305bf0c652c96b81f96472adfb1362a0f12d131270fc1913bb32f1399a771",
+      "normalized_text_sample_sha256": "sha256:a1b36d97d48e3831ce8ab1d6423939f013f08a1dbad0f28d20446dbe6436a5aa",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "neon-terms",
+      "vendor_id": "neon",
+      "source_url": "https://neon.com/terms-of-service",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "neon-terms-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://neon.com/platform-terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:33081a721071634f366ee2ea99102c44e955e0d5d111b529838a248fc1605872",
+      "normalized_text_sample_sha256": "sha256:b007cac7f17f0809cbd2aa882a26c6a30544e3708c29ca9d31a2feb91aff2cc2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "netlify-privacy",
+      "vendor_id": "netlify",
+      "source_url": "https://www.netlify.com/privacy/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "netlify-privacy-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://www.netlify.com/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:07fba335331b83de225c3af1f99f5a6e899d38f75332f4883c089e3f1cf43ec0",
+      "normalized_text_sample_sha256": "sha256:121807aff5fbe5c2559de6c28e2d4192cece6b092ac23c42beb7773a7c2b3d94",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "netlify-status",
+      "vendor_id": "netlify",
+      "source_url": "https://www.netlifystatus.com/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "netlify-status-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://www.netlifystatus.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a7d2fa77295194afa8f17e6704baa68b109c9c8076d3141c3da078be4291c0ad",
+      "normalized_text_sample_sha256": "sha256:d3db1a363165bfda614c9f333ad7571fe018451ad8d889ae2a7ae4b1a5952094",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "netlify-terms",
+      "vendor_id": "netlify",
+      "source_url": "https://www.netlify.com/legal/terms-of-use/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "netlify-terms-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://www.netlify.com/legal/terms-of-use/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6942cbf89d5fc5658223151a60c1dbd0bec78cb14eaeb3ac3376e0d8ae197546",
+      "normalized_text_sample_sha256": "sha256:9f46c585874af91dd67c097a8baa8f8b8ea6a0ed9e606b23219b160a8367f2a3",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "netskope-compliance-page",
@@ -10400,7 +10685,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "postman-status",
@@ -10419,7 +10704,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "postman-terms",
@@ -10438,7 +10723,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "prismic-privacy-notice",
@@ -10857,6 +11142,63 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "render-privacy",
+      "vendor_id": "render",
+      "source_url": "https://render.com/privacy",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "render-privacy-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://render.com/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9d8fa014e932283f3916aee96c9bbf2ea8a86b6cde7c25cef8b7f85b6c5fc28a",
+      "normalized_text_sample_sha256": "sha256:659bd15b8a828115e991ecf00c56a83620f882a6ff087098ab289f5f89827584",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "render-status",
+      "vendor_id": "render",
+      "source_url": "https://status.render.com/",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "render-status-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://status.render.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2ece46914a8c1001e59c1534c9a654ed6e6b7031f7e3f9c3d76ca2a49b247a52",
+      "normalized_text_sample_sha256": "sha256:48861d91ebe6333ab2e5751751b9ea1b912ec36c6787c58fa8c9e9c2333f316a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "render-terms",
+      "vendor_id": "render",
+      "source_url": "https://render.com/terms",
+      "observed_at": "2026-07-13T16:04:42Z",
+      "observation_id": "render-terms-2026-07-13-owner-collab-dev-expansion-1",
+      "final_url": "https://render.com/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2facee08c22e31502d2e72f9f6401a147fb4f8c8eb84fb866321ab1ce1a4be45",
+      "normalized_text_sample_sha256": "sha256:c9d2118282b58846f2e037dc6730317e21c4f82b1beae98a7d18397019bf450e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "retool-compliance",
@@ -12851,7 +13193,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "strapi-status",
@@ -12870,7 +13212,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "strapi-terms",
@@ -12889,7 +13231,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "stripe-compliance",
@@ -13934,7 +14276,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "upcloud-status",
@@ -13953,7 +14295,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "upcloud-terms",
@@ -13972,7 +14314,7 @@
         "required": true,
         "reason": "source_health_gated"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vanta-compliance",
