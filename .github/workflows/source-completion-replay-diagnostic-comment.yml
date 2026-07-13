@@ -8,7 +8,6 @@ on:
 
 permissions:
   actions: read
-  issues: write
 
 jobs:
   diagnose:
@@ -17,9 +16,8 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
       RUN_ID: '29276262664'
-      PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
-      - name: Extract and post failed replay diagnostic
+      - name: Extract and print failed replay diagnostic
         run: |
           set -euo pipefail
           mkdir -p /tmp/source-completion-diagnostic/logs
@@ -35,12 +33,8 @@ jobs:
 
           root = Path('/tmp/source-completion-diagnostic')
           jobs = json.loads((root / 'jobs.json').read_text())
-          lines = [
-              '## Source-completion replay diagnostic',
-              '',
-              'Fixed Actions run: `29276262664`',
-              '',
-          ]
+          print('SOURCE_COMPLETION_REPLAY_DIAGNOSTIC_BEGIN')
+          print(f"run_id=29276262664 job_count={len(jobs.get('jobs', []))}")
           failed_count = 0
           for job in jobs.get('jobs', []):
               if job.get('conclusion') != 'failure':
@@ -52,32 +46,23 @@ jobs:
               log_lines = log_text.splitlines()
               signal = [
                   line for line in log_lines
-                  if any(token in line.lower() for token in ('error', 'failed', 'failure', 'traceback', 'exception', 'assert', 'invalid', 'conflict', 'rejected'))
+                  if any(token in line.lower() for token in ('error', 'failed', 'failure', 'traceback', 'exception', 'assert', 'invalid', 'conflict', 'rejected', 'keyerror', 'valueerror', 'typeerror'))
               ]
               failed_steps = [
                   str(step.get('name'))
                   for step in job.get('steps') or []
                   if step.get('conclusion') == 'failure'
               ]
-              lines.extend([
-                  f"### {job.get('name')} (`{job_id}`)",
-                  '',
-                  'Failed step(s): ' + (', '.join(failed_steps) if failed_steps else 'not reported'),
-                  '',
-                  '```text',
-                  *signal[-100:],
-                  '```',
-                  '',
-                  '<details><summary>Log tail</summary>',
-                  '',
-                  '```text',
-                  *log_lines[-140:],
-                  '```',
-                  '</details>',
-                  '',
-              ])
-          lines.insert(4, f'Failed jobs: **{failed_count}**')
-          (root / 'diagnostic.md').write_text('\n'.join(lines) + '\n')
+              print(f"FAILED_JOB id={job_id} name={job.get('name')!r}")
+              print('FAILED_STEPS ' + ' | '.join(failed_steps))
+              print('SIGNAL_BEGIN')
+              for line in signal[-160:]:
+                  print(line)
+              print('SIGNAL_END')
+              print('TAIL_BEGIN')
+              for line in log_lines[-220:]:
+                  print(line)
+              print('TAIL_END')
+          print(f'failed_job_count={failed_count}')
+          print('SOURCE_COMPLETION_REPLAY_DIAGNOSTIC_END')
           PY
-          body="$(cat /tmp/source-completion-diagnostic/diagnostic.md)"
-          gh api "repos/$REPO/issues/$PR_NUMBER/comments" -f body="$body"
