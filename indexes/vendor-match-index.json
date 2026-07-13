@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 193,
+  "count": 199,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -3112,6 +3112,85 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "chainalysis"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "checkout-com-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.checkout.com/legal/privacy-policy",
+          "title": "Checkout.com Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "checkout-com-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.checkout.com/legal/terms-and-policies",
+          "title": "Checkout.com Terms and Policies"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "checkout-com-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.checkout.com/",
+          "title": "Checkout.com Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Checkout.com",
+      "legal_entities": [],
+      "legal_name": "Checkout Ltd",
+      "manifest_path": "dist/vendors/checkout-com.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "checkout.com",
+        "www.checkout.com",
+        "trust.checkout.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "checkout-com-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.checkout.com/legal/privacy-policy",
+          "title": "Checkout.com Privacy Notice"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "checkout-com-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.checkout.com/legal/terms-and-policies",
+          "title": "Checkout.com Terms and Policies"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "checkout-com-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.checkout.com/",
+          "title": "Checkout.com Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "checkout-com"
     },
     {
       "candidate_source_types": [],
@@ -6470,6 +6549,84 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "status_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gocardless-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://gocardless.com/privacy",
+          "title": "GoCardless Privacy Centre"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gocardless-security",
+          "source_type": "security_page",
+          "source_url": "https://gocardless.com/security",
+          "title": "GoCardless Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gocardless-status",
+          "source_type": "status_page",
+          "source_url": "https://status.gocardless.com/",
+          "title": "GoCardless Status"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "GoCardless",
+      "legal_entities": [],
+      "legal_name": "GoCardless Ltd",
+      "manifest_path": "dist/vendors/gocardless.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "gocardless.com",
+        "www.gocardless-status.com",
+        "status.gocardless.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gocardless-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://gocardless.com/privacy",
+          "title": "GoCardless Privacy Centre"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gocardless-security",
+          "source_type": "security_page",
+          "source_url": "https://gocardless.com/security",
+          "title": "GoCardless Security"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "gocardless-status",
+          "source_type": "status_page",
+          "source_url": "https://status.gocardless.com/",
+          "title": "GoCardless Status"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "gocardless"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -8820,6 +8977,85 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "klarna-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.klarna.com/international/privacy-policy/",
+          "title": "Klarna Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "klarna-status",
+          "source_type": "status_page",
+          "source_url": "https://status.klarna.com/",
+          "title": "Klarna Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "klarna-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.klarna.com/international/terms-and-conditions/",
+          "title": "Klarna Terms and Conditions"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Klarna",
+      "legal_entities": [],
+      "legal_name": "Klarna Bank AB (publ)",
+      "manifest_path": "dist/vendors/klarna.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "klarna.com",
+        "www.klarna.com",
+        "status.klarna.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "klarna-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.klarna.com/international/privacy-policy/",
+          "title": "Klarna Privacy Notice"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "klarna-status",
+          "source_type": "status_page",
+          "source_url": "https://status.klarna.com/",
+          "title": "Klarna Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "klarna-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.klarna.com/international/terms-and-conditions/",
+          "title": "Klarna Terms and Conditions"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "klarna"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -9270,6 +9506,86 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "mailchimp"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "marqeta-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.marqeta.com/privacy",
+          "title": "Marqeta Website Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "marqeta-status",
+          "source_type": "status_page",
+          "source_url": "https://status.marqeta.com/",
+          "title": "Marqeta Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "marqeta-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.marqeta.com/",
+          "title": "Marqeta Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Marqeta",
+      "legal_entities": [],
+      "legal_name": "Marqeta, Inc.",
+      "manifest_path": "dist/vendors/marqeta.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "marqeta.com",
+        "www.marqeta.com",
+        "trust.marqeta.com",
+        "status.marqeta.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "marqeta-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.marqeta.com/privacy",
+          "title": "Marqeta Website Privacy Notice"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "marqeta-status",
+          "source_type": "status_page",
+          "source_url": "https://status.marqeta.com/",
+          "title": "Marqeta Status"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "marqeta-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.marqeta.com/",
+          "title": "Marqeta Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "marqeta"
     },
     {
       "candidate_source_types": [],
@@ -9847,6 +10163,84 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "mixpanel"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "status_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mollie-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.mollie.com/privacy",
+          "title": "Mollie Privacy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mollie-security",
+          "source_type": "security_page",
+          "source_url": "https://www.mollie.com/security",
+          "title": "Mollie Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mollie-status",
+          "source_type": "status_page",
+          "source_url": "https://status.mollie.com/",
+          "title": "Mollie Status"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Mollie",
+      "legal_entities": [],
+      "legal_name": "Mollie B.V.",
+      "manifest_path": "dist/vendors/mollie.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "mollie.com",
+        "www.mollie.com",
+        "status.mollie.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mollie-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.mollie.com/privacy",
+          "title": "Mollie Privacy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mollie-security",
+          "source_type": "security_page",
+          "source_url": "https://www.mollie.com/security",
+          "title": "Mollie Security"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "mollie-status",
+          "source_type": "status_page",
+          "source_url": "https://status.mollie.com/",
+          "title": "Mollie Status"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "mollie"
     },
     {
       "candidate_source_types": [],
@@ -11415,6 +11809,84 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "paychex"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "status_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "payoneer-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.payoneer.com/legal/privacy-policy/",
+          "title": "Payoneer Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "payoneer-security",
+          "source_type": "security_page",
+          "source_url": "https://www.payoneer.com/about/security-center/",
+          "title": "Payoneer Security Center"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "payoneer-status",
+          "source_type": "status_page",
+          "source_url": "https://status.payoneer.com/",
+          "title": "Payoneer Status"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Payoneer",
+      "legal_entities": [],
+      "legal_name": "Payoneer Inc.",
+      "manifest_path": "dist/vendors/payoneer.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "payoneer.com",
+        "www.payoneer.com",
+        "status.payoneer.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "payoneer-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.payoneer.com/legal/privacy-policy/",
+          "title": "Payoneer Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "payoneer-security",
+          "source_type": "security_page",
+          "source_url": "https://www.payoneer.com/about/security-center/",
+          "title": "Payoneer Security Center"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "payoneer-status",
+          "source_type": "status_page",
+          "source_url": "https://status.payoneer.com/",
+          "title": "Payoneer Status"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "payoneer"
     },
     {
       "candidate_source_types": [],

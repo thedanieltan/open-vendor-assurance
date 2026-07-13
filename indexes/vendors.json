@@ -1,5 +1,5 @@
 {
-  "count": 193,
+  "count": 199,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -1065,6 +1065,41 @@
         "financial_infrastructure"
       ],
       "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/checkout-com/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Checkout.com",
+      "entity_surface": "global_brand",
+      "headquarters_country": "GB",
+      "legal_name": "Checkout Ltd",
+      "notes": "Owner-led public-source-only catalog record for Checkout.com. Metadata references vendor-controlled privacy, trust, and legal surfaces only.",
+      "official_domains": [
+        "checkout.com",
+        "www.checkout.com",
+        "trust.checkout.com"
+      ],
+      "public_entrypoints": [
+        "https://www.checkout.com/legal/privacy-policy",
+        "https://trust.checkout.com/",
+        "https://www.checkout.com/legal/terms-and-policies"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "checkout-com"
     },
     {
       "_openva_path": "data/vendors/circleci/vendor.yaml",
@@ -2265,6 +2300,42 @@
       "vendor_id": "gitlab"
     },
     {
+      "_openva_path": "data/vendors/gocardless/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "GoCardless",
+      "entity_surface": "global_brand",
+      "headquarters_country": "GB",
+      "legal_name": "GoCardless Ltd",
+      "notes": "Owner-led public-source-only catalog record for GoCardless. Metadata references vendor-controlled privacy, security, and service-status surfaces only.",
+      "official_domains": [
+        "gocardless.com",
+        "www.gocardless-status.com",
+        "status.gocardless.com"
+      ],
+      "public_entrypoints": [
+        "https://gocardless.com/privacy",
+        "https://gocardless.com/security",
+        "https://status.gocardless.com/"
+      ],
+      "regions_served": [
+        "global",
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "gocardless"
+    },
+    {
       "_openva_path": "data/vendors/google-cloud/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Google Cloud",
@@ -3123,6 +3194,42 @@
       "vendor_id": "keka"
     },
     {
+      "_openva_path": "data/vendors/klarna/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Klarna",
+      "entity_surface": "global_brand",
+      "headquarters_country": "SE",
+      "legal_name": "Klarna Bank AB (publ)",
+      "notes": "Owner-led public-source-only catalog record for Klarna. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.",
+      "official_domains": [
+        "klarna.com",
+        "www.klarna.com",
+        "status.klarna.com"
+      ],
+      "public_entrypoints": [
+        "https://www.klarna.com/international/privacy-policy/",
+        "https://www.klarna.com/international/terms-and-conditions/",
+        "https://status.klarna.com/"
+      ],
+      "regions_served": [
+        "global",
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "klarna"
+    },
+    {
       "_openva_path": "data/vendors/klaviyo/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Klaviyo",
@@ -3281,6 +3388,42 @@
         "customer_engagement"
       ],
       "vendor_id": "mailchimp"
+    },
+    {
+      "_openva_path": "data/vendors/marqeta/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Marqeta",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Marqeta, Inc.",
+      "notes": "Owner-led public-source-only catalog record for Marqeta. Metadata references vendor-controlled privacy, trust, and service-status surfaces only.",
+      "official_domains": [
+        "marqeta.com",
+        "www.marqeta.com",
+        "trust.marqeta.com",
+        "status.marqeta.com"
+      ],
+      "public_entrypoints": [
+        "https://www.marqeta.com/privacy",
+        "https://trust.marqeta.com/",
+        "https://status.marqeta.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "marqeta"
     },
     {
       "_openva_path": "data/vendors/meditech/vendor.yaml",
@@ -3473,6 +3616,41 @@
         "data_platform"
       ],
       "vendor_id": "mixpanel"
+    },
+    {
+      "_openva_path": "data/vendors/mollie/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Mollie",
+      "entity_surface": "global_brand",
+      "headquarters_country": "NL",
+      "legal_name": "Mollie B.V.",
+      "notes": "Owner-led public-source-only catalog record for Mollie. Metadata references vendor-controlled privacy, security, and service-status surfaces only.",
+      "official_domains": [
+        "mollie.com",
+        "www.mollie.com",
+        "status.mollie.com"
+      ],
+      "public_entrypoints": [
+        "https://www.mollie.com/privacy",
+        "https://www.mollie.com/security",
+        "https://status.mollie.com/"
+      ],
+      "regions_served": [
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "mollie"
     },
     {
       "_openva_path": "data/vendors/monday/vendor.yaml",
@@ -4001,6 +4179,41 @@
         "financial_infrastructure"
       ],
       "vendor_id": "paychex"
+    },
+    {
+      "_openva_path": "data/vendors/payoneer/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Payoneer",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Payoneer Inc.",
+      "notes": "Owner-led public-source-only catalog record for Payoneer. Metadata references vendor-controlled privacy, security, and service-status surfaces only.",
+      "official_domains": [
+        "payoneer.com",
+        "www.payoneer.com",
+        "status.payoneer.com"
+      ],
+      "public_entrypoints": [
+        "https://www.payoneer.com/legal/privacy-policy/",
+        "https://www.payoneer.com/about/security-center/",
+        "https://status.payoneer.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "vendor_id": "payoneer"
     },
     {
       "_openva_path": "data/vendors/paypal/vendor.yaml",
