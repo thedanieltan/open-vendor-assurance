@@ -1,0 +1,100 @@
+name: owner-source-completion-1-builder
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-completion-1-builder
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-completion-1-builder
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    strategy:
+      fail-fast: false
+      matrix:
+        group:
+          - privacy_notice
+          - dpa
+          - subprocessors_list
+          - security
+          - compliance
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-source-completion-1-builder
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - name: Discover official public sources
+        run: |
+          mkdir -p completion-discovery
+          python .owner-source-completion-1/run_completion.py discover-group \
+            --group "${{ matrix.group }}" \
+            --output "completion-discovery/${{ matrix.group }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: owner-source-completion-${{ matrix.group }}
+          path: completion-discovery/${{ matrix.group }}.json
+          if-no-files-found: error
+
+  aggregate:
+    needs: discover
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-source-completion-1-builder
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: pip install -e ".[dev]"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: owner-source-completion-*
+          path: .owner-source-completion-1/discovery-groups
+          merge-multiple: true
+      - name: Promote strong candidates and record exhausted searches
+        run: |
+          python .owner-source-completion-1/run_completion.py aggregate \
+            --reports-dir .owner-source-completion-1/discovery-groups \
+            --output-dir .owner-source-completion-1/results
+      - name: Rebuild generated catalog outputs
+        run: python -m tools.openva.validate build-indexes
+      - name: Validate completion ledger
+        run: |
+          python -m tools.openva.catalog_source_completion check \
+            --output .owner-source-completion-1/results/final-source-completion.json
+      - name: Validate repository and focused contracts
+        run: |
+          python -m tools.openva.validate validate
+          pytest -q \
+            tests/test_catalog_source_completion.py \
+            tests/test_candidate_promotion_actions.py \
+            tests/test_source_discovery.py \
+            tests/test_sitemap_discovery.py \
+            tests/test_coverage_audit.py
+      - name: Remove temporary runner and workflow
+        run: |
+          rm -f .owner-source-completion-1/run_completion.py
+          rm -f .github/workflows/owner-source-completion-1-builder.yml
+          rm -rf .owner-source-completion-1/discovery-groups
+      - name: Commit validated completion transaction
+        run: |
+          git config user.name "openva-owner-maintenance-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Catalog: complete existing vendor source coverage"
+          git push origin HEAD:catalog/owner-source-completion-1-builder
