@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-13T16:04:42Z",
+  "generated_at": "2026-07-13T16:12:09Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 833,
-    "observed_this_run": 18,
-    "carried_forward": 815
+    "source_count": 848,
+    "observed_this_run": 15,
+    "carried_forward": 833
   },
   "sources": [
     {
@@ -502,6 +502,63 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "aiven-privacy",
+      "vendor_id": "aiven",
+      "source_url": "https://aiven.io/privacy",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "aiven-privacy-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://aiven.io/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:54ecaf108be19f41a06d3c8645a25a5e7ce744db1322dae08d16ba3838c12f71",
+      "normalized_text_sample_sha256": "sha256:ab5141bd5544769149d9fe52f3ef6e5b0c38284dfad30541ca911575039e9326",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "aiven-status",
+      "vendor_id": "aiven",
+      "source_url": "https://status.aiven.io/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "aiven-status-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://status.aiven.io/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8d394c4fb48e8c80207bfd4480efda706c5a007f3b147ee589d11e919da9c8cf",
+      "normalized_text_sample_sha256": "sha256:a528ac6582db2d235b03b8ad1809991f245f48837e27256380ab5d1638ed9851",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "aiven-terms",
+      "vendor_id": "aiven",
+      "source_url": "https://aiven.io/terms",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "aiven-terms-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://aiven.io/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3951c32f880022a647e479148046d70802a0b1b5a98ec63f52911630cc6157e1",
+      "normalized_text_sample_sha256": "sha256:6b39053e4ce69f6ed5e2c5a3b84ceff848d6a3b17f1e052a00556ebaa590de69",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "akur8-compliance-page",
@@ -2974,6 +3031,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "cockroach-labs-privacy",
+      "vendor_id": "cockroach-labs",
+      "source_url": "https://www.cockroachlabs.com/privacy/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "cockroach-labs-privacy-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://www.cockroachlabs.com/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9e71443e4097c41549ff82d3ed37d37ac1b17819d42c0156fd6f523f5e782a14",
+      "normalized_text_sample_sha256": "sha256:0d39a5f3d8ad7030b8150f91f2778ac23aa79f41bf965cde8730ae869c2a9363",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "cockroach-labs-security",
+      "vendor_id": "cockroach-labs",
+      "source_url": "https://www.cockroachlabs.com/security/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "cockroach-labs-security-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://www.cockroachlabs.com/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9450acc4128cfc7605c38bcfefa995a386a097663f9e2d603e06413c59040994",
+      "normalized_text_sample_sha256": "sha256:870d51e383fdc9b5917a9496fcee2e33e6e2400e2fbf91c9f5f1e08d4278a8da",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "cockroach-labs-status",
+      "vendor_id": "cockroach-labs",
+      "source_url": "https://status.cockroachlabs.cloud/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "cockroach-labs-status-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://status.cockroachlabs.cloud/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c34e5a5e0f3621ec1da1eaf53eb31e4ca19e1f46c3682041307f5384985b2d29",
+      "normalized_text_sample_sha256": "sha256:0ad0f24ee4bd146fadccd5d745a0ebeb8902aad15ae6444338a6194fee41cd54",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "cohere-compliance",
       "vendor_id": "cohere",
       "source_url": "https://trust.cohere.com/",
@@ -5005,6 +5119,63 @@
         "reason": "first_observation"
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "fly-io-privacy",
+      "vendor_id": "fly-io",
+      "source_url": "https://fly.io/legal/privacy-policy/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "fly-io-privacy-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://fly.io/legal/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f430716ce8e48d487bbbc3bcb901102b0ed113407d1edd0ca461a91c1f69609d",
+      "normalized_text_sample_sha256": "sha256:bef8a794c9a0cf63b0f3225b30238342de53d307c4e17a62b45aa7abdd26b38a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fly-io-status",
+      "vendor_id": "fly-io",
+      "source_url": "https://status.flyio.net/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "fly-io-status-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://status.flyio.net/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:55b379c51abef01708e174a6d52742f7df4c69fd28e9fcab64761ea81c963902",
+      "normalized_text_sample_sha256": "sha256:51eaf0de6b5afd42543a0cd7133be6d7a5d5c55b20f0ab2f5ab2fdd3f187851b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fly-io-terms",
+      "vendor_id": "fly-io",
+      "source_url": "https://fly.io/legal/terms-of-service/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "fly-io-terms-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://fly.io/legal/terms-of-service/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1a0f7b6483eb9dce184878e1caf450a1b5724a2aba4429b3bc0e5e1657fe5b73",
+      "normalized_text_sample_sha256": "sha256:4d6f0382dcb4ef99394c65d6ecaca87ddefce5c95bce7c86a5c87cb2cfe6bd11",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "fortinet-privacy-notice",
@@ -7702,7 +7873,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "linear-status",
@@ -7721,7 +7892,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "linear-terms",
@@ -7740,7 +7911,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "logicgate-compliance",
@@ -8633,7 +8804,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "monday-com-status",
@@ -8652,7 +8823,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "monday-com-terms",
@@ -8671,7 +8842,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mongodb-compliance",
@@ -8823,7 +8994,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "n8n-status",
@@ -8842,7 +9013,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "n8n-terms",
@@ -8861,7 +9032,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neo4j-privacy-notice",
@@ -8918,7 +9089,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neon-status",
@@ -8937,7 +9108,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neon-terms",
@@ -8956,7 +9127,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netlify-privacy",
@@ -8975,7 +9146,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netlify-status",
@@ -8994,7 +9165,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netlify-terms",
@@ -9013,7 +9184,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netskope-compliance-page",
@@ -10954,6 +11125,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "railway-privacy",
+      "vendor_id": "railway",
+      "source_url": "https://railway.com/legal/privacy",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "railway-privacy-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://railway.com/legal/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:49f7de559445c22914c9fc768c835cd5dfa2cfa96952ae0b691f569fc2524e7a",
+      "normalized_text_sample_sha256": "sha256:ae0c5b2415a81f90e08e67a30a8cfcaad33381fb426cb9cc46ee1162e81dc155",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "railway-status",
+      "vendor_id": "railway",
+      "source_url": "https://status.railway.com/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "railway-status-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://status.railway.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f8e2c5051151ea3124a2888a83d19cd3eb06dac5cd65d7a2ae553dfe547e756e",
+      "normalized_text_sample_sha256": "sha256:53c620490dc59924cf24c32dc962df30a0d80bd164e089535c27476ec2f78f44",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "railway-terms",
+      "vendor_id": "railway",
+      "source_url": "https://railway.com/legal/terms",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "railway-terms-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://railway.com/legal/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:155e695e8c8780119c77b1a641278e35d3d8d9181d796139c2f77680a3acbf45",
+      "normalized_text_sample_sha256": "sha256:b8c222b3887cd5089b264563c78a9023e5435efa223e7d828176f514f664d54a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "razorpay-privacy",
       "vendor_id": "razorpay",
       "source_url": "https://razorpay.com/privacy-policy/",
@@ -11160,7 +11388,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "render-status",
@@ -11179,7 +11407,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "render-terms",
@@ -11198,7 +11426,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "retool-compliance",
@@ -11750,6 +11978,63 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "scaleway-privacy",
+      "vendor_id": "scaleway",
+      "source_url": "https://www.scaleway.com/en/privacy-policy/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "scaleway-privacy-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://www.scaleway.com/en/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:28f8baea4bda1b113498d65f3aafe8f174722e6fedb473af70313173cd920301",
+      "normalized_text_sample_sha256": "sha256:d058649b1a239d4c40893dfb7146dbb1bbcad01ad0dd0386917def20396c7365",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "scaleway-status",
+      "vendor_id": "scaleway",
+      "source_url": "https://status.scaleway.com/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "scaleway-status-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://status.scaleway.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6af802a8c4ad23e7ac7871ba9ecaca040570ef7068a32212fca35405944d5a1c",
+      "normalized_text_sample_sha256": "sha256:1990774877ed558ec5da3fe0b17f9c617e0e91df8278c9cf11f5952cc5b7bafe",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "scaleway-terms",
+      "vendor_id": "scaleway",
+      "source_url": "https://www.scaleway.com/en/terms/",
+      "observed_at": "2026-07-13T16:12:09Z",
+      "observation_id": "scaleway-terms-2026-07-13-owner-cloud-database-expansion-1",
+      "final_url": "https://www.scaleway.com/en/contracts/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7888e463705ef142580bce5ef5d258d53dddf6ce3817374abdad5487d886739d",
+      "normalized_text_sample_sha256": "sha256:dc59afdde44938e51d4c1f37999510151f0fb014f7c03829ad321bd85aaf2a29",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "scrut-automation-compliance",
