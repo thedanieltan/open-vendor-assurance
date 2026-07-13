@@ -1,5 +1,5 @@
 {
-  "count": 795,
+  "count": 808,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -1208,7 +1208,7 @@
       "access_class": "public_web",
       "artifact_id": "aliyun-compliance",
       "artifact_type": "compliance_page",
-      "canonical_url": "https://www.aliyun.com/trust-center",
+      "canonical_url": "https://security.aliyun.com/trust-center",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -1298,7 +1298,7 @@
       "access_class": "public_web",
       "artifact_id": "aliyun-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.aliyun.com/product/security",
+      "canonical_url": "https://cn.aliyun.com/security",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -2822,6 +2822,102 @@
         "screenshot_stored": false
       },
       "vendor_id": "bamboohr"
+    },
+    {
+      "_openva_path": "data/vendors/basecamp/artifacts/basecamp-privacy.yaml",
+      "access_class": "public_web",
+      "artifact_id": "basecamp-privacy",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://basecamp.com/about/policies/privacy",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "basecamp-privacy",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "basecamp"
+    },
+    {
+      "_openva_path": "data/vendors/basecamp/artifacts/basecamp-security.yaml",
+      "access_class": "public_web",
+      "artifact_id": "basecamp-security",
+      "artifact_type": "security_page",
+      "canonical_url": "https://basecamp.com/about/policies/security",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "basecamp-security",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "basecamp"
+    },
+    {
+      "_openva_path": "data/vendors/basecamp/artifacts/basecamp-terms.yaml",
+      "access_class": "public_web",
+      "artifact_id": "basecamp-terms",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://basecamp.com/about/policies/terms",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "basecamp-terms",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "basecamp"
     },
     {
       "_openva_path": "data/vendors/beyondtrust/artifacts/beyondtrust-dpa.yaml",
@@ -5351,7 +5447,7 @@
       "access_class": "public_web",
       "artifact_id": "darwinbox-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://darwinbox.com/security/",
+      "canonical_url": "https://darwinbox.com/trust/security",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -14624,6 +14720,42 @@
       "vendor_id": "okta"
     },
     {
+      "_openva_path": "data/vendors/okta/artifacts/okta-inc-terms.yaml",
+      "access_class": "public_web",
+      "artifact_id": "okta-inc-terms",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://www.okta.com/legal/terms-of-service",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [
+          "okta-inc"
+        ],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Okta services"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "okta-inc-terms",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "okta"
+    },
+    {
       "_openva_path": "data/vendors/okta/artifacts/okta-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "okta-privacy",
@@ -15492,6 +15624,102 @@
         "screenshot_stored": false
       },
       "vendor_id": "palantir"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/artifacts/pandadoc-privacy.yaml",
+      "access_class": "public_web",
+      "artifact_id": "pandadoc-privacy",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://www.pandadoc.com/legal/privacy-notice/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "pandadoc-privacy",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "pandadoc"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/artifacts/pandadoc-status.yaml",
+      "access_class": "public_web",
+      "artifact_id": "pandadoc-status",
+      "artifact_type": "status_page",
+      "canonical_url": "https://status.pandadoc.com/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "pandadoc-status",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "pandadoc"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/artifacts/pandadoc-terms.yaml",
+      "access_class": "public_web",
+      "artifact_id": "pandadoc-terms",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://www.pandadoc.com/legal/master-services-agreement/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "pandadoc-terms",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "pandadoc"
     },
     {
       "_openva_path": "data/vendors/paychex/artifacts/paychex-privacy.yaml",
@@ -16699,7 +16927,7 @@
       "access_class": "public_web",
       "artifact_id": "qualtrics-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://www.qualtrics.com/subprocessors/",
+      "canonical_url": "https://www.qualtrics.com/subprocessor-list",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -18341,7 +18569,7 @@
       "access_class": "public_web",
       "artifact_id": "scrut-automation-dpa",
       "artifact_type": "dpa",
-      "canonical_url": "https://www.scrut.io/data-processing-addendum",
+      "canonical_url": "https://www.scrut.io/dpa",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -18645,7 +18873,7 @@
       "access_class": "public_web",
       "artifact_id": "secureframe-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://secureframe.com/legal/subprocessors",
+      "canonical_url": "https://secureframe.com/subprocessor-list",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -19215,7 +19443,7 @@
       "access_class": "public_web",
       "artifact_id": "shift-technology-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.shift-technology.com/en/security",
+      "canonical_url": "https://www.shift-technology.com/security",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -19873,7 +20101,7 @@
       "access_class": "public_web",
       "artifact_id": "snowflake-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.snowflake.com/en/trust/",
+      "canonical_url": "https://www.snowflake.com/en/why-snowflake/snowflake-security-hub",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -21057,6 +21285,104 @@
         "screenshot_stored": false
       },
       "vendor_id": "surveymonkey"
+    },
+    {
+      "_openva_path": "data/vendors/teamwork/artifacts/teamwork-privacy.yaml",
+      "access_class": "public_web",
+      "artifact_id": "teamwork-privacy",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://www.teamwork.com/legal/privacy-notice/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global",
+        "eu"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "teamwork-privacy",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "teamwork"
+    },
+    {
+      "_openva_path": "data/vendors/teamwork/artifacts/teamwork-status.yaml",
+      "access_class": "public_web",
+      "artifact_id": "teamwork-status",
+      "artifact_type": "status_page",
+      "canonical_url": "https://status.teamwork.com/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "teamwork-status",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "teamwork"
+    },
+    {
+      "_openva_path": "data/vendors/teamwork/artifacts/teamwork-terms.yaml",
+      "access_class": "public_web",
+      "artifact_id": "teamwork-terms",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://www.teamwork.com/legal/terms-of-service/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global",
+        "eu"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "teamwork-terms",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "teamwork"
     },
     {
       "_openva_path": "data/vendors/tencent-cloud-cn/artifacts/tencent-cloud-cn-compliance.yaml",
@@ -22760,7 +23086,7 @@
       "access_class": "public_web",
       "artifact_id": "weaviate-privacy",
       "artifact_type": "privacy_notice",
-      "canonical_url": "https://weaviate.io/privacy-policy",
+      "canonical_url": "https://weaviate.io/privacy",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -22822,7 +23148,7 @@
       "access_class": "public_web",
       "artifact_id": "weaviate-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://weaviate.io/legal/subprocessors",
+      "canonical_url": "https://weaviate.io/subprocessors",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -23630,6 +23956,102 @@
         "screenshot_stored": false
       },
       "vendor_id": "worldpay"
+    },
+    {
+      "_openva_path": "data/vendors/wrike/artifacts/wrike-privacy.yaml",
+      "access_class": "public_web",
+      "artifact_id": "wrike-privacy",
+      "artifact_type": "privacy_notice",
+      "canonical_url": "https://www.wrike.com/security/privacy/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "wrike-privacy",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "wrike"
+    },
+    {
+      "_openva_path": "data/vendors/wrike/artifacts/wrike-status.yaml",
+      "access_class": "public_web",
+      "artifact_id": "wrike-status",
+      "artifact_type": "status_page",
+      "canonical_url": "https://status.wrike.com/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "wrike-status",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "wrike"
+    },
+    {
+      "_openva_path": "data/vendors/wrike/artifacts/wrike-terms.yaml",
+      "access_class": "public_web",
+      "artifact_id": "wrike-terms",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://www.wrike.com/security/terms/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "wrike-terms",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "wrike"
     },
     {
       "_openva_path": "data/vendors/xendit/artifacts/xendit-licenses.yaml",
