@@ -1,0 +1,52 @@
+name: phase3-fast-materialize
+
+on:
+  push:
+    branches:
+      - site/seo-aeo-geo-phase3
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase3-materialize
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: ${{ !contains(github.event.head_commit.message, '[phase3-materialized]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Execute materialization steps
+        run: |
+          pip install PyYAML
+          python - <<'PY'
+          import subprocess
+          from pathlib import Path
+          import yaml
+
+          workflow = yaml.safe_load(Path('.github/workflows/phase3-materialize.yml').read_text(encoding='utf-8'))
+          steps = workflow['jobs']['materialize']['steps']
+          selected = {
+              'Extend homepage metadata and visible direct answers',
+              'Extend deterministic discovery output',
+              'Add discoverability acceptance tests',
+          }
+          for step in steps:
+              if step.get('name') in selected:
+                  subprocess.run(['bash', '-euo', 'pipefail', '-c', step['run']], check=True)
+          PY
+          git rm .github/workflows/phase3-fast-materialize.yml
+      - name: Commit materialized publication surface
+        run: |
+          git config user.name 'openva-publication-maintainer'
+          git config user.email 'openva-publication-maintainer@users.noreply.github.com'
+          git add site/src/index.html site/src/styles.css tools/openva/site_discovery.py tests/test_discoverability.py
+          python -m py_compile tools/openva/site_discovery.py tests/test_discoverability.py
+          git commit -m 'Site: add SEO AEO and GEO discovery surfaces [phase3-materialized]'
+          git push
