@@ -6,6 +6,7 @@ on:
       - fix/completeness-unavailable-state-policy
     paths:
       - .github/workflows/owner-global-vendors-2-materialize.yml
+      - maintenance/generated/completeness-policy-trigger.txt
 
 permissions:
   contents: write
@@ -178,10 +179,10 @@ MINIMUM_LIVE_CORE_GROUPS = 2
       - run: pytest -q tests/test_catalog_guard.py tests/test_source_discovery.py
       - name: Commit validated revision
         run: |
-          rm .github/workflows/owner-global-vendors-2-materialize.yml
+          rm -f .github/workflows/owner-global-vendors-2-materialize.yml
+          rm -f maintenance/generated/completeness-policy-trigger.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git commit -m 'Catalog: allow explicit unavailable states across complete coverage'
           git push origin HEAD:fix/completeness-unavailable-state-policy
-# registered-trigger
