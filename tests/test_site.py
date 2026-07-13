@@ -67,7 +67,6 @@ def test_site_docs_cover_compiled_distribution_and_public_boundaries():
         assert phrase not in readme_text
 
 
-# Phase 2 canonical one-page contract tests.
 SITE_SRC = ROOT / "site" / "src"
 
 SOURCE_LABELS = [
@@ -99,7 +98,6 @@ def phase2_site_text() -> tuple[str, str, str]:
 
 def test_canonical_site_is_one_page_catalog_first_and_lovable_independent():
     index, css, script = phase2_site_text()
-
     assert index.index('id="catalog-view"') < index.index('id="matcher-view"')
     assert index.index('id="matcher-view"') < index.index('id="export-view"')
     assert index.index('id="export-view"') < index.index('id="about-view"')
@@ -115,7 +113,6 @@ def test_canonical_site_is_one_page_catalog_first_and_lovable_independent():
 
 def test_all_supported_source_types_use_full_human_labels():
     index, _, script = phase2_site_text()
-
     for label in SOURCE_LABELS:
         assert label in index
     assert 'data-source-pack-field="dpa"' in index
@@ -125,7 +122,6 @@ def test_all_supported_source_types_use_full_human_labels():
 
 def test_local_resolver_and_review_first_exports_are_present():
     index, _, script = phase2_site_text()
-
     for element_id in [
         "inventory-file",
         "run-local-match",
@@ -140,7 +136,6 @@ def test_local_resolver_and_review_first_exports_are_present():
         "download-json",
     ]:
         assert f'id="{element_id}"' in index
-
     assert "browser memory" in index
     assert "Important notice before download" in index
     assert 'id="terms-disclaimer"' in index
@@ -176,7 +171,6 @@ def resolver_site_build_module():
 def test_compiled_catalog_publishes_only_bounded_registration_match_keys():
     compiled = resolver_site_build_module().build_compiled_catalog()
     vendors = {row["vendor_id"]: row for row in compiled["vendor_summaries"]}
-
     assert vendors["adobe"]["registration_keys"] == [
         {
             "jurisdiction": "US",
@@ -185,7 +179,6 @@ def test_compiled_catalog_publishes_only_bounded_registration_match_keys():
         }
     ]
     assert vendors["atlassian"]["registration_keys"]
-
     allowed = {"registration_number", "jurisdiction", "legal_name"}
     for vendor in vendors.values():
         for key in vendor["registration_keys"]:
@@ -199,19 +192,16 @@ def test_static_site_vendor_index_contains_registration_match_keys(tmp_path: Pat
     module = resolver_site_build_module()
     output = tmp_path / "site-dist"
     module.build_site(output)
-
     payload = json.loads(
         (output / "data" / "vendor-search.min.json").read_text(encoding="utf-8")
     )
     vendors = {row["vendor_id"]: row for row in payload["items"]}
-
     assert payload["meta"]["vendor_count"] == len(vendors)
     assert vendors["adobe"]["registration_keys"][0]["registration_number"] == "0000796343"
 
 
 def test_browser_resolver_source_carries_explicit_fail_closed_contract():
     source = (SITE_SRC / "ui-fixes.js").read_text(encoding="utf-8")
-
     required_tokens = {
         'company: "vendor_name"',
         'website: "domain"',
@@ -242,11 +232,9 @@ def test_browser_resolver_javascript_executes_matching_contract(tmp_path: Path):
   };
 """
     instrumented = source[: -len(marker)] + exports + marker
-
     harness = r'''
 const vm = require("node:vm");
 const assert = require("node:assert/strict");
-
 const context = {
   console,
   URL,
@@ -300,7 +288,6 @@ const context = {
 context.window = context;
 context.globalThis = context;
 vm.runInNewContext(__SOURCE__, context, { filename: "ui-fixes.js" });
-
 const resolver = context.__openvaResolverTest;
 const parsed = resolver.parseInventoryCsv(
   "Company;Website;UEN;Country\nAdobe;https://security.adobe.com/path;0000796343;US\n"
@@ -310,28 +297,23 @@ assert.equal(parsed[0].vendor_name, "Adobe");
 assert.equal(parsed[0].domain, "https://security.adobe.com/path");
 assert.equal(parsed[0].registration_number, "0000796343");
 assert.equal(parsed[0].jurisdiction, "US");
-
 const indexes = resolver.buildResolverIndexes();
 let decision = resolver.matchingDecision({ domain: "https://security.adobe.com/path" }, indexes);
 assert.equal(decision.status, "matched");
 assert.equal(decision.vendor.vendor_id, "adobe");
 assert.equal(decision.method, "domain_subdomain");
-
 decision = resolver.matchingDecision({ business_entity_name: "Adobe Incorporated" }, indexes);
 assert.equal(decision.status, "no_match");
-
 decision = resolver.matchingDecision({ business_entity_name: "Adobe Inc." }, indexes);
 assert.equal(decision.status, "matched");
 assert.equal(decision.vendor.vendor_id, "adobe");
 assert.equal(decision.method, "name_exact");
-
 decision = resolver.matchingDecision(
   { registration_number: "53 102 443 916", jurisdiction: "AU" }, indexes
 );
 assert.equal(decision.status, "matched");
 assert.equal(decision.vendor.vendor_id, "atlassian");
 assert.equal(decision.method, "registration_number_exact");
-
 decision = resolver.matchingDecision(
   { domain: "adobe.com", registration_number: "53102443916", jurisdiction: "AU" }, indexes
 );
@@ -340,7 +322,6 @@ assert.equal(decision.vendor, null);
 '''.replace("__SOURCE__", json.dumps(instrumented))
     script = tmp_path / "browser-resolver-contract.cjs"
     script.write_text(harness, encoding="utf-8")
-
     completed = subprocess.run(
         [shutil.which("node") or "node", str(script)],
         cwd=ROOT,
@@ -355,16 +336,13 @@ def test_vendor_detail_slide_preserves_references_and_hides_redundant_fields(tmp
     module = resolver_site_build_module()
     output = tmp_path / "site-dist"
     module.build_site(output)
-
     compiled_index = (output / "index.html").read_text(encoding="utf-8")
     renderer = (output / "public-vendor-detail.js").read_text(encoding="utf-8")
-
     assert 'public-vendor-detail.js?v=20260713-vendor-detail' in compiled_index
     assert 'PUBLIC_VENDOR_DETAIL_VERSION = "references-only-v1"' in renderer
     assert '<tr><th>Source type</th><th>Reference</th><th>Export</th></tr>' in renderer
     assert 'href="${html(source.source_url)}"' in renderer
     assert 'target="_blank"' in renderer
-
     for forbidden in [
         "source-health",
         "last checked",
@@ -379,3 +357,62 @@ def test_vendor_detail_slide_preserves_references_and_hides_redundant_fields(tmp
         "review_state",
     ]:
         assert forbidden not in renderer
+
+
+def test_catalog_navigation_is_loaded_after_vendor_detail(tmp_path: Path):
+    output = tmp_path / "site-dist"
+    resolver_site_build_module().build_site(output)
+    index = (output / "index.html").read_text(encoding="utf-8")
+    assert (output / "catalog-navigation.js").is_file()
+    assert index.index("app.js?v=20260713-phase2") < index.index(
+        "public-vendor-detail.js?v=20260713-vendor-detail"
+    )
+    assert index.index("public-vendor-detail.js?v=20260713-vendor-detail") < index.index(
+        "catalog-navigation.js?v=20260714-pagination-drawer"
+    )
+    assert index.index("catalog-navigation.js?v=20260714-pagination-drawer") < index.index(
+        "ui-fixes.js?v=20260713-phase2"
+    )
+
+
+def test_catalog_navigation_bounds_rendered_results_and_bulk_selection():
+    script = (SITE_SRC / "catalog-navigation.js").read_text(encoding="utf-8")
+    for token in [
+        'const DESKTOP_PAGE_SIZE = 25;',
+        'const COMPACT_PAGE_SIZE = 10;',
+        "visibleVendors.slice(start, start + size)",
+        'id = "catalog-page-status"',
+        'id = "catalog-pagination"',
+        'pageButton.textContent = `Select this page (${currentPageVendors.length})`',
+        'allButton.textContent = `Select all filtered (${visibleVendors.length})`',
+        "selectedVendors.add(vendor.vendor_id)",
+    ]:
+        assert token in script
+
+
+def test_catalog_navigation_provides_accessible_mobile_drawer_and_url_state():
+    script = (SITE_SRC / "catalog-navigation.js").read_text(encoding="utf-8")
+    for token in [
+        "catalog-detail-drawer",
+        "Back to results",
+        'panel.setAttribute("role", "dialog")',
+        'panel.setAttribute("aria-modal", "true")',
+        'event.key === "Escape"',
+        'params.set("page", String(currentPage))',
+        'params.set("vendor", activeVendorId)',
+        "window.history.pushState",
+        'window.addEventListener("popstate"',
+    ]:
+        assert token in script
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="Node.js is unavailable")
+def test_catalog_navigation_javascript_parses():
+    completed = subprocess.run(
+        [shutil.which("node") or "node", "--check", str(SITE_SRC / "catalog-navigation.js")],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr or completed.stdout
