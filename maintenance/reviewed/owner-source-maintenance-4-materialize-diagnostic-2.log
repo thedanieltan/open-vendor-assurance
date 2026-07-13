@@ -1,0 +1,12 @@
+STAGE apply-reviewed-records
+{
+  "replacements": 12,
+  "refreshed_observations": 14,
+  "exceptions": 4
+}
+STAGE build-indexes
+Built OpenVA indexes, registry outputs, and pack manifest.
+STAGE validate
+Built OpenVA indexes, registry outputs, and pack manifest.
+data/vendors/zendesk/sources/zendesk-security.yaml: duplicate source_url for vendor zendesk: https://www.zendesk.com/trust-center
+Validation failed: 1 issue(s).
