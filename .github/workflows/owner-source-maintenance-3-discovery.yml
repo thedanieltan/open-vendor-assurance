@@ -16,7 +16,7 @@ jobs:
   discover:
     if: ${{ !contains(github.event.head_commit.message, '[owner-maintenance-3-discovered]') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
         with:
@@ -37,6 +37,7 @@ jobs:
           import json
           import re
           import ssl
+          import threading
           import time
           import xml.etree.ElementTree as ET
           from collections import defaultdict, deque
@@ -58,44 +59,46 @@ jobs:
           ]
 
           USER_AGENT = 'OpenVA owner-led catalog maintenance/0.1 (+https://github.com/thedanieltan/open-vendor-assurance)'
-          context = ssl.create_default_context()
-          global_deadline = time.monotonic() + 35 * 60
-          global_byte_budget = 140 * 1024 * 1024
+          LIVE = {200, 203, 206}
+          deadline = time.monotonic() + 17 * 60
+          byte_budget = 90 * 1024 * 1024
           bytes_read = 0
+          byte_lock = threading.Lock()
+          tls = ssl.create_default_context()
 
           title_re = re.compile(r'<title[^>]*>(.*?)</title>', re.I | re.S)
           href_re = re.compile(r'href=["\']([^"\']+)["\']', re.I)
-          ws_re = re.compile(r'\s+')
           token_re = re.compile(r'[a-z0-9]+')
+          ws_re = re.compile(r'\s+')
 
           TYPE_TERMS = {
-              'dpa': [('data-processing', 12), ('data_processing', 12), ('data processor', 10), ('data processing', 10), ('dpa', 8), ('addendum', 5)],
-              'subprocessors': [('subprocessor', 14), ('sub-processor', 14), ('sub processor', 12), ('third-party processors', 8)],
-              'privacy_notice': [('privacy-policy', 12), ('privacy-notice', 12), ('privacy policy', 10), ('privacy notice', 10), ('privacy', 5)],
-              'security_page': [('security', 10), ('trust-center', 9), ('trust center', 9), ('data-security', 8), ('security-and-privacy', 8)],
-              'compliance_page': [('compliance', 11), ('trust-center', 9), ('trust center', 9), ('certification', 6), ('assurance', 6)],
-              'trust_center': [('trust-center', 14), ('trust center', 14), ('trust', 9), ('security', 4), ('compliance', 4)],
-              'terms_of_service': [('terms-of-service', 12), ('terms-of-use', 12), ('service-terms', 10), ('terms of service', 10), ('terms of use', 10), ('terms', 5)],
-              'status_page': [('status', 14), ('service-status', 14), ('system-status', 12)],
-              'transparency_report': [('transparency-report', 14), ('transparency report', 14), ('law-enforcement', 6)],
-              'accessibility_statement': [('accessibility', 14), ('accessibility-statement', 14)],
-              'other_public_source': [('legal', 3), ('trust', 3), ('security', 3), ('privacy', 3)],
+              'dpa': [('data-processing', 14), ('data_processing', 14), ('data processing', 12), ('dpa', 9), ('addendum', 5)],
+              'subprocessors': [('subprocessor', 15), ('sub-processor', 15), ('sub processor', 13)],
+              'privacy_notice': [('privacy-policy', 13), ('privacy-notice', 13), ('privacy policy', 11), ('privacy notice', 11), ('privacy', 5)],
+              'security_page': [('security', 11), ('trust-center', 9), ('trust center', 9), ('data-security', 9)],
+              'compliance_page': [('compliance', 12), ('trust-center', 9), ('trust center', 9), ('assurance', 6)],
+              'trust_center': [('trust-center', 15), ('trust center', 15), ('trust', 9), ('security', 4), ('compliance', 4)],
+              'terms_of_service': [('terms-of-service', 13), ('terms-of-use', 13), ('service-terms', 11), ('terms of service', 11), ('terms of use', 11), ('terms', 5)],
+              'status_page': [('service-status', 15), ('system-status', 15), ('status', 13)],
+              'transparency_report': [('transparency-report', 15), ('transparency report', 15)],
+              'accessibility_statement': [('accessibility-statement', 15), ('accessibility', 13)],
+              'other_public_source': [('legal', 4), ('trust', 4), ('security', 4), ('privacy', 4)],
           }
           STOP = {
-              'the','and','for','of','to','a','an','public','page','policy','notice','agreement','vendor',
-              'data','service','services','security','privacy','compliance','trust','center','terms','addendum',
-              'subprocessors','subprocessor','processing','official','metadata','reference'
+              'the','and','for','of','to','a','an','public','page','policy','notice','agreement','vendor','data',
+              'service','services','security','privacy','compliance','trust','center','terms','addendum','subprocessors',
+              'subprocessor','processing','official','metadata','reference'
           }
 
-          def normalize_url(value: str) -> str:
+          def normalise(value: str) -> str:
               try:
-                  parts = urlsplit(value.strip())
+                  parts = urlsplit((value or '').strip())
               except Exception:
                   return ''
               if parts.scheme.lower() not in {'http', 'https'} or not parts.hostname:
                   return ''
-              scheme = parts.scheme.lower()
               host = parts.hostname.lower()
+              scheme = parts.scheme.lower()
               port = parts.port
               netloc = host
               if port and not ((scheme == 'https' and port == 443) or (scheme == 'http' and port == 80)):
@@ -105,252 +108,232 @@ jobs:
                   path = path.rstrip('/')
               return urlunsplit((scheme, netloc, path, parts.query, ''))
 
-          def host_allowed(url: str, domains: set[str]) -> bool:
+          def allowed(url: str, domains: set[str]) -> bool:
               host = (urlsplit(url).hostname or '').lower()
               return any(host == domain or host.endswith('.' + domain) for domain in domains)
 
-          def fetch(url: str, *, max_bytes: int = 2_500_000) -> dict:
+          def fetch(url: str, max_bytes: int = 1_500_000) -> dict:
               nonlocal bytes_read
               result = {'url': url, 'status': None, 'final_url': url, 'content_type': None, 'body': b'', 'error': None}
-              if time.monotonic() >= global_deadline or bytes_read >= global_byte_budget:
+              with byte_lock:
+                  exhausted = bytes_read >= byte_budget
+              if time.monotonic() >= deadline or exhausted:
                   result['error'] = 'global_safety_budget_exhausted'
                   return result
               request = Request(
                   url,
                   headers={
                       'User-Agent': USER_AGENT,
-                      'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml,application/pdf;q=0.8,*/*;q=0.3',
+                      'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml,*/*;q=0.3',
                   },
                   method='GET',
               )
               try:
-                  with urlopen(request, timeout=20, context=context) as response:
+                  with urlopen(request, timeout=15, context=tls) as response:
                       body = response.read(max_bytes)
-                      bytes_read += len(body)
+                      with byte_lock:
+                          bytes_read += len(body)
                       result.update({
                           'status': response.getcode(),
                           'final_url': response.geturl(),
                           'content_type': response.headers.get_content_type(),
-                          'body': body,
                           'content_encoding': response.headers.get('Content-Encoding'),
+                          'body': body,
                       })
               except HTTPError as exc:
-                  result['status'] = exc.code
-                  result['final_url'] = exc.geturl() or url
-                  result['content_type'] = exc.headers.get_content_type() if exc.headers else None
-                  result['error'] = f'HTTPError: {exc.code}'
+                  result.update({
+                      'status': exc.code,
+                      'final_url': exc.geturl() or url,
+                      'content_type': exc.headers.get_content_type() if exc.headers else None,
+                      'error': f'HTTPError: {exc.code}',
+                  })
               except (URLError, TimeoutError, ssl.SSLError, ValueError) as exc:
                   result['error'] = f'{type(exc).__name__}: {exc}'[:400]
               except Exception as exc:
                   result['error'] = f'{type(exc).__name__}: {exc}'[:400]
               return result
 
-          def decode_body(result: dict) -> str:
+          def text(result: dict) -> str:
               body = result.get('body') or b''
-              if result.get('content_encoding') == 'gzip' or result.get('final_url', '').endswith('.gz'):
+              if result.get('content_encoding') == 'gzip' or str(result.get('final_url', '')).endswith('.gz'):
                   try:
                       body = gzip.decompress(body)
                   except Exception:
                       pass
               return body.decode('utf-8', errors='replace')
 
-          def extract_sitemap_urls(text: str) -> tuple[list[str], list[str]]:
-              sitemap_urls, page_urls = [], []
-              try:
-                  doc = ET.fromstring(text)
-              except ET.ParseError:
-                  return sitemap_urls, page_urls
-              tag = doc.tag.rsplit('}', 1)[-1].lower()
-              locs = [
-                  (node.text or '').strip()
-                  for node in doc.iter()
-                  if node.tag.rsplit('}', 1)[-1].lower() == 'loc' and (node.text or '').strip()
-              ]
-              if tag == 'sitemapindex':
-                  sitemap_urls.extend(locs)
-              elif tag == 'urlset':
-                  page_urls.extend(locs)
-              return sitemap_urls, page_urls
-
-          def page_title(result: dict) -> str | None:
+          def title(result: dict) -> str | None:
               if result.get('content_type') not in {'text/html', 'application/xhtml+xml'}:
                   return None
-              match = title_re.search(decode_body(result))
-              if not match:
-                  return None
-              return ws_re.sub(' ', html.unescape(match.group(1))).strip()[:300]
+              match = title_re.search(text(result))
+              return ws_re.sub(' ', html.unescape(match.group(1))).strip()[:300] if match else None
 
-          def strong_terms(source_type: str) -> list[tuple[str, int]]:
-              return TYPE_TERMS.get(source_type, TYPE_TERMS['other_public_source'])
+          def sitemap_content(result: dict) -> tuple[list[str], list[str]]:
+              try:
+                  node = ET.fromstring(text(result))
+              except ET.ParseError:
+                  return [], []
+              kind = node.tag.rsplit('}', 1)[-1].lower()
+              locs = [
+                  (child.text or '').strip()
+                  for child in node.iter()
+                  if child.tag.rsplit('}', 1)[-1].lower() == 'loc' and (child.text or '').strip()
+              ]
+              return (locs, []) if kind == 'sitemapindex' else ([], locs if kind == 'urlset' else [])
 
-          def score_candidate(url: str, title: str, source: dict, vendor_name: str) -> tuple[int, list[str]]:
-              haystack = (url + ' ' + title).lower()
+          def candidate_score(url: str, candidate_title: str, source: dict, vendor_name: str) -> tuple[int, list[str]]:
+              haystack = f'{url} {candidate_title}'.lower()
               score = 0
               reasons = []
-              for term, weight in strong_terms(source.get('source_type', 'other_public_source')):
+              source_type = source.get('source_type') or 'other_public_source'
+              for term, weight in TYPE_TERMS.get(source_type, TYPE_TERMS['other_public_source']):
                   if term in haystack:
                       score += weight
                       reasons.append(term)
+              vendor_tokens = {token for token in token_re.findall(vendor_name.lower()) if len(token) >= 3}
               title_tokens = {
                   token for token in token_re.findall((source.get('title_en') or source.get('title_native') or '').lower())
                   if token not in STOP and len(token) >= 3
               }
-              vendor_tokens = {token for token in token_re.findall(vendor_name.lower()) if len(token) >= 3}
-              for token in sorted(title_tokens - vendor_tokens):
+              for token in title_tokens - vendor_tokens:
                   if token in haystack:
                       score += 2
                       reasons.append('title:' + token)
-              old_path = urlsplit(source.get('source_url') or '').path.lower().strip('/')
-              new_path = urlsplit(url).path.lower().strip('/')
-              if old_path and new_path:
-                  old_parts = set(token_re.findall(old_path)) - STOP
-                  new_parts = set(token_re.findall(new_path)) - STOP
-                  overlap = len(old_parts & new_parts)
-                  score += min(overlap * 2, 8)
-                  if overlap:
-                      reasons.append(f'path_overlap:{overlap}')
-              if normalize_url(url) == normalize_url(source.get('source_url') or ''):
-                  score -= 50
+              old_tokens = set(token_re.findall(urlsplit(source.get('source_url') or '').path.lower())) - STOP
+              new_tokens = set(token_re.findall(urlsplit(url).path.lower())) - STOP
+              overlap = len(old_tokens & new_tokens)
+              if overlap:
+                  score += min(2 * overlap, 8)
+                  reasons.append(f'path_overlap:{overlap}')
+              if normalise(url) == normalise(source.get('source_url') or ''):
+                  score -= 60
                   reasons.append('same_as_broken')
-              return score, reasons
+              return score, sorted(set(reasons))
 
-          grouped_targets = defaultdict(list)
-          for target in targets:
-              grouped_targets[target['vendor_id']].append(target)
+          grouped = defaultdict(list)
+          for item in targets:
+              grouped[item['vendor_id']].append(item)
 
-          vendor_results = {}
-
-          def discover_vendor(vendor_id: str, vendor_targets: list[dict]) -> tuple[str, dict]:
-              vendor_path = root / 'data/vendors' / vendor_id / 'vendor.yaml'
-              vendor = yaml.safe_load(vendor_path.read_text(encoding='utf-8')) or {}
-              domains = {str(d).lower().strip() for d in vendor.get('official_domains', []) if str(d).strip()}
-              for target in vendor_targets:
-                  host = (urlsplit(target.get('source_url') or '').hostname or '').lower()
-                  if host and any(host == d or host.endswith('.' + d) for d in domains):
-                      domains.add(host)
+          def crawl_vendor(vendor_id: str, items: list[dict]) -> tuple[str, dict]:
+              vendor = yaml.safe_load((root / 'data/vendors' / vendor_id / 'vendor.yaml').read_text(encoding='utf-8')) or {}
+              domains = {str(value).lower().strip() for value in vendor.get('official_domains', []) if str(value).strip()}
+              for item in items:
+                  old_host = (urlsplit(item.get('source_url') or '').hostname or '').lower()
+                  if old_host and any(old_host == domain or old_host.endswith('.' + domain) for domain in domains):
+                      domains.add(old_host)
               vendor_name = str(vendor.get('display_name') or vendor_id)
-
-              sitemap_queue = deque()
+              pages = set()
+              seeds = set()
+              queue = deque()
               seen_sitemaps = set()
-              discovered_pages = set()
-              seed_pages = set()
-              fetch_notes = []
 
-              for entry in vendor.get('public_entrypoints', []) or []:
-                  value = normalize_url(str(entry))
-                  if value and host_allowed(value, domains):
-                      seed_pages.add(value)
+              for entrypoint in vendor.get('public_entrypoints', []) or []:
+                  value = normalise(str(entrypoint))
+                  if value and allowed(value, domains):
+                      seeds.add(value)
 
               for domain in sorted(domains):
-                  bases = [f'https://{domain}']
-                  if not domain.startswith('www.'):
-                      bases.append(f'https://www.{domain}')
-                  for base in bases:
-                      robots_url = base + '/robots.txt'
-                      robots = fetch(robots_url, max_bytes=500_000)
-                      if robots.get('status') in {200, 203, 206}:
-                          for line in decode_body(robots).splitlines():
+                  hosts = [domain] if domain.startswith('www.') else [domain, 'www.' + domain]
+                  for host in hosts:
+                      base = f'https://{host}'
+                      seeds.add(base + '/')
+                      robots = fetch(base + '/robots.txt', 350_000)
+                      if robots.get('status') in LIVE:
+                          for line in text(robots).splitlines():
                               if line.lower().startswith('sitemap:'):
-                                  candidate = normalize_url(line.split(':', 1)[1].strip())
-                                  if candidate and host_allowed(candidate, domains):
-                                      sitemap_queue.append(candidate)
+                                  found = normalise(line.split(':', 1)[1].strip())
+                                  if found and allowed(found, domains):
+                                      queue.append(found)
                       for suffix in ('/sitemap.xml', '/sitemap_index.xml', '/sitemap-index.xml', '/wp-sitemap.xml'):
-                          sitemap_queue.append(base + suffix)
-                      seed_pages.add(base + '/')
+                          queue.append(base + suffix)
 
-              while sitemap_queue and time.monotonic() < global_deadline:
-                  sitemap_url = normalize_url(sitemap_queue.popleft())
-                  if not sitemap_url or sitemap_url in seen_sitemaps or not host_allowed(sitemap_url, domains):
+              while queue and time.monotonic() < deadline:
+                  sitemap = normalise(queue.popleft())
+                  if not sitemap or sitemap in seen_sitemaps or not allowed(sitemap, domains):
                       continue
-                  seen_sitemaps.add(sitemap_url)
-                  result = fetch(sitemap_url)
-                  if result.get('status') not in {200, 203, 206}:
+                  seen_sitemaps.add(sitemap)
+                  result = fetch(sitemap)
+                  if result.get('status') not in LIVE:
                       continue
-                  text = decode_body(result)
-                  child_sitemaps, pages = extract_sitemap_urls(text)
-                  for child in child_sitemaps:
-                      child = normalize_url(child)
-                      if child and host_allowed(child, domains) and child not in seen_sitemaps:
-                          sitemap_queue.append(child)
-                  for page in pages:
-                      page = normalize_url(page)
-                      if page and host_allowed(page, domains):
-                          discovered_pages.add(page)
+                  children, locs = sitemap_content(result)
+                  for child in children:
+                      child = normalise(child)
+                      if child and allowed(child, domains) and child not in seen_sitemaps:
+                          queue.append(child)
+                  for loc in locs:
+                      loc = normalise(loc)
+                      if loc and allowed(loc, domains):
+                          pages.add(loc)
 
-              # Public entrypoints and homepages supplement sites with weak or absent sitemaps.
-              for seed in sorted(seed_pages):
-                  result = fetch(seed, max_bytes=1_000_000)
-                  if result.get('status') not in {200, 203, 206} or result.get('content_type') not in {'text/html', 'application/xhtml+xml'}:
+              for seed in sorted(seeds):
+                  result = fetch(seed, 750_000)
+                  if result.get('status') not in LIVE or result.get('content_type') not in {'text/html', 'application/xhtml+xml'}:
                       continue
-                  for href in href_re.findall(decode_body(result)):
-                      candidate = normalize_url(urljoin(result.get('final_url') or seed, html.unescape(href)))
-                      if candidate and host_allowed(candidate, domains):
-                          discovered_pages.add(candidate)
+                  for href in href_re.findall(text(result)):
+                      found = normalise(urljoin(result.get('final_url') or seed, html.unescape(href)))
+                      if found and allowed(found, domains):
+                          pages.add(found)
 
               target_results = []
-              for target in sorted(vendor_targets, key=lambda x: x['source_id']):
-                  source_path = root / target['source_path']
-                  source = yaml.safe_load(source_path.read_text(encoding='utf-8')) or {}
-                  rough = []
-                  for page in discovered_pages | seed_pages:
-                      score, reasons = score_candidate(page, '', source, vendor_name)
+              for item in sorted(items, key=lambda value: value['source_id']):
+                  source = yaml.safe_load((root / item['source_path']).read_text(encoding='utf-8')) or {}
+                  scored = []
+                  for page in pages | seeds:
+                      score, reasons = candidate_score(page, '', source, vendor_name)
                       if score >= 8:
-                          rough.append((score, page, reasons))
-                  rough.sort(key=lambda row: (-row[0], row[1]))
+                          scored.append((score, page, reasons))
+                  scored.sort(key=lambda value: (-value[0], value[1]))
 
-                  # Probe every semantically strong official candidate; the threshold, not vendor count, controls work.
-                  probe_urls = [page for score, page, reasons in rough if score >= 8]
-                  probe_results = {}
-                  with ThreadPoolExecutor(max_workers=6) as executor:
-                      futures = {executor.submit(fetch, url, max_bytes=500_000): url for url in probe_urls}
+                  # Per-source verification budget: probe strongest semantic candidates, never cap vendor breadth.
+                  probe_set = [page for _, page, _ in scored[:8]]
+                  probed = {}
+                  with ThreadPoolExecutor(max_workers=4) as pool:
+                      futures = {pool.submit(fetch, page, 500_000): page for page in probe_set}
                       for future in as_completed(futures):
-                          result = future.result()
-                          probe_results[futures[future]] = result
+                          probed[futures[future]] = future.result()
 
-                  live_candidates = []
-                  for initial_score, page, initial_reasons in rough:
-                      result = probe_results.get(page)
-                      if not result or result.get('status') not in {200, 203, 206}:
+                  live_candidates = {}
+                  for page in probe_set:
+                      result = probed.get(page) or {}
+                      if result.get('status') not in LIVE:
                           continue
-                      final_url = normalize_url(result.get('final_url') or page)
-                      if not final_url or not host_allowed(final_url, domains):
+                      final_url = normalise(result.get('final_url') or page)
+                      if not final_url or not allowed(final_url, domains):
                           continue
-                      title = page_title(result) or ''
-                      score, reasons = score_candidate(final_url, title, source, vendor_name)
+                      candidate_title = title(result) or ''
+                      score, reasons = candidate_score(final_url, candidate_title, source, vendor_name)
                       if score < 8:
                           continue
-                      live_candidates.append({
+                      candidate = {
                           'url': final_url,
                           'status': result.get('status'),
                           'content_type': result.get('content_type'),
-                          'title': title or None,
+                          'title': candidate_title or None,
                           'score': score,
-                          'reasons': sorted(set(reasons)),
-                      })
+                          'reasons': reasons,
+                      }
+                      previous = live_candidates.get(final_url)
+                      if previous is None or score > previous['score']:
+                          live_candidates[final_url] = candidate
 
-                  deduped = {}
-                  for candidate in live_candidates:
-                      current = deduped.get(candidate['url'])
-                      if current is None or candidate['score'] > current['score']:
-                          deduped[candidate['url']] = candidate
-                  ordered = sorted(deduped.values(), key=lambda item: (-item['score'], item['url']))
+                  ordered = sorted(live_candidates.values(), key=lambda value: (-value['score'], value['url']))
                   best = ordered[0] if ordered else None
-                  runner_up = ordered[1] if len(ordered) > 1 else None
+                  second = ordered[1] if len(ordered) > 1 else None
                   auto_eligible = bool(
                       best
                       and best['score'] >= 12
-                      and (runner_up is None or best['score'] >= runner_up['score'] + 3)
-                      and normalize_url(best['url']) != normalize_url(source.get('source_url') or '')
+                      and (second is None or best['score'] >= second['score'] + 3)
+                      and normalise(best['url']) != normalise(source.get('source_url') or '')
                   )
                   target_results.append({
-                      'source_id': target['source_id'],
+                      'source_id': item['source_id'],
                       'vendor_id': vendor_id,
                       'source_type': source.get('source_type'),
                       'title_en': source.get('title_en'),
                       'current_url': source.get('source_url'),
                       'official_domains': sorted(domains),
                       'sitemaps_examined': len(seen_sitemaps),
-                      'official_pages_discovered': len(discovered_pages),
+                      'official_pages_discovered': len(pages),
                       'candidate_count': len(ordered),
                       'auto_eligible': auto_eligible,
                       'recommended_url': best['url'] if auto_eligible else None,
@@ -365,58 +348,51 @@ jobs:
                   'targets': target_results,
               }
 
-          with ThreadPoolExecutor(max_workers=5) as executor:
-              futures = {
-                  executor.submit(discover_vendor, vendor_id, vendor_targets): vendor_id
-                  for vendor_id, vendor_targets in sorted(grouped_targets.items())
-              }
+          results = {}
+          with ThreadPoolExecutor(max_workers=7) as pool:
+              futures = {pool.submit(crawl_vendor, vendor_id, items): vendor_id for vendor_id, items in sorted(grouped.items())}
               for future in as_completed(futures):
                   vendor_id = futures[future]
                   try:
                       key, value = future.result()
-                      vendor_results[key] = value
+                      results[key] = value
                   except Exception as exc:
-                      vendor_results[vendor_id] = {
+                      results[vendor_id] = {
                           'vendor_id': vendor_id,
-                          'target_count': len(grouped_targets[vendor_id]),
-                          'error': f'{type(exc).__name__}: {exc}'[:500],
+                          'target_count': len(grouped[vendor_id]),
                           'targets': [],
+                          'error': f'{type(exc).__name__}: {exc}'[:500],
                       }
 
-          flat_targets = [
-              target
-              for vendor in vendor_results.values()
-              for target in vendor.get('targets', [])
-          ]
+          flat = [target for vendor in results.values() for target in vendor.get('targets', [])]
           summary = {
               'target_count': len(targets),
-              'vendors_scanned': len(grouped_targets),
-              'targets_processed': len(flat_targets),
-              'auto_eligible': sum(1 for target in flat_targets if target.get('auto_eligible')),
-              'with_live_candidates': sum(1 for target in flat_targets if target.get('candidate_count', 0) > 0),
-              'without_live_candidates': sum(1 for target in flat_targets if target.get('candidate_count', 0) == 0),
+              'vendors_scanned': len(grouped),
+              'targets_processed': len(flat),
+              'auto_eligible': sum(bool(item.get('auto_eligible')) for item in flat),
+              'with_live_candidates': sum(item.get('candidate_count', 0) > 0 for item in flat),
+              'without_live_candidates': sum(item.get('candidate_count', 0) == 0 for item in flat),
               'bytes_read': bytes_read,
-              'safety_budget_exhausted': time.monotonic() >= global_deadline or bytes_read >= global_byte_budget,
+              'safety_budget_exhausted': time.monotonic() >= deadline or bytes_read >= byte_budget,
           }
           output = {
               'schema_version': '0.1.0',
               'report_type': 'owner_source_maintenance_official_discovery',
               'base_sha': '${{ github.sha }}',
               'summary': summary,
-              'vendors': [vendor_results[key] for key in sorted(vendor_results)],
+              'vendors': [results[key] for key in sorted(results)],
               'guardrails': {
                   'official_vendor_domains_only': True,
                   'public_unauthenticated_sources_only': True,
-                  'robots_and_sitemaps_only_plus_public_entrypoints': True,
                   'no_antibot_bypass': True,
                   'no_raw_documents_committed': True,
                   'breadth_vendor_cap': None,
-                  'safety_budget_type': 'global_time_and_bytes',
+                  'safety_budget_type': 'global_time_bytes_and_per_source_verification',
               },
               'not_advice': True,
           }
-          out_path = root / 'maintenance/reviewed/owner-source-maintenance-3-discovery.json'
-          out_path.write_text(json.dumps(output, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          path = root / 'maintenance/reviewed/owner-source-maintenance-3-discovery.json'
+          path.write_text(json.dumps(output, indent=2, sort_keys=True) + '\n', encoding='utf-8')
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
       - name: Commit discovery evidence
