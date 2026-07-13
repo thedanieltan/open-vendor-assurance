@@ -1,11 +1,483 @@
 (() => {
-  const originalNormalizeForMatch = window.normalizeForMatch;
-  if (typeof originalNormalizeForMatch === "function") {
-    window.normalizeForMatch = (value) => {
-      if (value === null || value === undefined || String(value).trim() === "") return "";
-      return originalNormalizeForMatch(value);
+  const RESOLVER_VERSION = "browser-parity-v1";
+  const IDENTITY_FIELDS = ["vendor_name", "business_entity_name", "domain", "registration_number"];
+  const HEADER_ALIASES = Object.freeze({
+    vendor: "vendor_name",
+    vendor_name: "vendor_name",
+    vendorname: "vendor_name",
+    supplier: "vendor_name",
+    supplier_name: "vendor_name",
+    company: "vendor_name",
+    company_name: "vendor_name",
+    business_entity: "business_entity_name",
+    business_entity_name: "business_entity_name",
+    business_name: "business_entity_name",
+    entity_name: "business_entity_name",
+    legal_entity: "business_entity_name",
+    legal_entity_name: "business_entity_name",
+    legal_name: "business_entity_name",
+    domain: "domain",
+    vendor_domain: "domain",
+    company_domain: "domain",
+    website: "domain",
+    website_url: "domain",
+    web_address: "domain",
+    url: "domain",
+    jurisdiction: "jurisdiction",
+    country: "jurisdiction",
+    country_code: "jurisdiction",
+    registration_number: "registration_number",
+    registration_no: "registration_number",
+    registration_id: "registration_number",
+    company_number: "registration_number",
+    company_registration_number: "registration_number",
+    uen: "registration_number",
+    registered_address: "registered_address",
+    address: "registered_address",
+  });
+
+  function scalar(value) {
+    return value === null || value === undefined ? "" : String(value).trim();
+  }
+
+  function normalizeName(value) {
+    return scalar(value)
+      .toLowerCase()
+      .replaceAll("&", " and ")
+      .replace(/[^a-z0-9]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function stripLegalSuffixes(value) {
+    const suffixes = new Set(["inc", "llc", "ltd", "limited", "corp", "corporation", "company", "co"]);
+    const tokens = normalizeName(value).split(" ").filter(Boolean);
+    while (tokens.length && suffixes.has(tokens[tokens.length - 1])) tokens.pop();
+    return tokens.join(" ");
+  }
+
+  function normalizeDomainValue(value) {
+    let raw = scalar(value).toLowerCase();
+    if (!raw) return "";
+    try {
+      const parsed = new URL(raw.includes("://") ? raw : `https://${raw}`);
+      raw = parsed.hostname;
+    } catch (_error) {
+      raw = raw.split(/[\/#?]/, 1)[0];
+      raw = raw.includes("@") ? raw.split("@").pop() : raw;
+      if (raw.includes(":") && raw.split(":").length === 2) raw = raw.split(":", 1)[0];
+    }
+    raw = raw.replace(/^www\./, "").replace(/\.$/, "");
+    return raw;
+  }
+
+  function normalizeRegistrationNumber(value) {
+    return scalar(value).replace(/[^A-Za-z0-9]+/g, "").toUpperCase();
+  }
+
+  function normalizeJurisdiction(value) {
+    return scalar(value).toUpperCase();
+  }
+
+  function normalizedHeader(value, index) {
+    const key = scalar(value)
+      .replace(/^\uFEFF/, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "");
+    return HEADER_ALIASES[key] || key || `column_${index + 1}`;
+  }
+
+  function delimiterCount(line, delimiter) {
+    let count = 0;
+    let quoted = false;
+    for (let index = 0; index < line.length; index += 1) {
+      const char = line[index];
+      const next = line[index + 1];
+      if (char === '"' && quoted && next === '"') {
+        index += 1;
+      } else if (char === '"') {
+        quoted = !quoted;
+      } else if (!quoted && char === delimiter) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  function detectDelimiter(content) {
+    const firstLine = scalar(content).split(/\r?\n/).find((line) => line.trim()) || "";
+    const candidates = [",", "\t", ";"];
+    return candidates
+      .map((delimiter) => [delimiter, delimiterCount(firstLine, delimiter)])
+      .sort((left, right) => right[1] - left[1])[0][0];
+  }
+
+  function parseInventoryCsv(content) {
+    const input = String(content || "").replace(/^\uFEFF/, "");
+    if (!input.trim()) return [];
+    const delimiter = detectDelimiter(input);
+    const rows = [];
+    let row = [];
+    let cell = "";
+    let quoted = false;
+
+    for (let index = 0; index < input.length; index += 1) {
+      const char = input[index];
+      const next = input[index + 1];
+      if (quoted && char === '"' && next === '"') {
+        cell += '"';
+        index += 1;
+      } else if (char === '"') {
+        quoted = !quoted;
+      } else if (!quoted && char === delimiter) {
+        row.push(cell);
+        cell = "";
+      } else if (!quoted && (char === "\n" || char === "\r")) {
+        if (char === "\r" && next === "\n") index += 1;
+        row.push(cell);
+        if (row.some((value) => scalar(value))) rows.push(row);
+        row = [];
+        cell = "";
+      } else {
+        cell += char;
+      }
+    }
+    row.push(cell);
+    if (row.some((value) => scalar(value))) rows.push(row);
+    if (!rows.length) return [];
+
+    const headers = rows[0].map(normalizedHeader);
+    return rows.slice(1).map((values) => {
+      const output = {};
+      headers.forEach((header, index) => {
+        const value = values[index] || "";
+        if (!(header in output) || (!scalar(output[header]) && scalar(value))) output[header] = value;
+      });
+      return output;
+    });
+  }
+
+  function addVendor(map, key, vendor) {
+    if (!key) return;
+    const entries = map.get(key) || [];
+    if (!entries.some((entry) => entry.vendor_id === vendor.vendor_id)) entries.push(vendor);
+    map.set(key, entries);
+  }
+
+  function uniqueVendors(entries) {
+    const byId = new Map();
+    (entries || []).forEach((entry) => {
+      const vendor = entry.vendor || entry;
+      if (vendor && vendor.vendor_id) byId.set(vendor.vendor_id, vendor);
+    });
+    return [...byId.values()].sort((left, right) => left.vendor_id.localeCompare(right.vendor_id));
+  }
+
+  function buildResolverIndexes() {
+    const domainIndex = new Map();
+    const nameIndex = new Map();
+    const registrationIndex = new Map();
+    const officialDomainRows = [];
+
+    catalogData.vendors.forEach((vendor) => {
+      (vendor.official_domains || []).forEach((value) => {
+        const domain = normalizeDomainValue(value);
+        if (!domain) return;
+        addVendor(domainIndex, domain, vendor);
+        officialDomainRows.push({ domain, vendor });
+      });
+      [vendor.display_name, vendor.legal_name, vendor.vendor_id, scalar(vendor.vendor_id).replaceAll("-", " ")]
+        .flatMap((value) => [normalizeName(value), stripLegalSuffixes(value)])
+        .filter(Boolean)
+        .forEach((key) => addVendor(nameIndex, key, vendor));
+      (vendor.registration_keys || []).forEach((key) => {
+        const registrationNumber = normalizeRegistrationNumber(key.registration_number);
+        if (!registrationNumber) return;
+        const entries = registrationIndex.get(registrationNumber) || [];
+        entries.push({ vendor, jurisdiction: normalizeJurisdiction(key.jurisdiction) });
+        registrationIndex.set(registrationNumber, entries);
+      });
+    });
+
+    officialDomainRows.sort((left, right) => right.domain.length - left.domain.length || left.domain.localeCompare(right.domain));
+    return { domainIndex, nameIndex, registrationIndex, officialDomainRows };
+  }
+
+  function domainCandidates(value, indexes) {
+    const domain = normalizeDomainValue(value);
+    if (!domain) return { vendors: [], method: null, confidence: null };
+    const exact = uniqueVendors(indexes.domainIndex.get(domain));
+    if (exact.length) return { vendors: exact, method: "domain_exact", confidence: 1.0 };
+
+    const matches = indexes.officialDomainRows.filter((entry) => domain.endsWith(`.${entry.domain}`));
+    if (!matches.length) return { vendors: [], method: null, confidence: null };
+    const longest = matches[0].domain.length;
+    return {
+      vendors: uniqueVendors(matches.filter((entry) => entry.domain.length === longest)),
+      method: "domain_subdomain",
+      confidence: 0.95,
     };
   }
+
+  function nameCandidates(value, indexes) {
+    const keys = [...new Set([normalizeName(value), stripLegalSuffixes(value)].filter(Boolean))];
+    return uniqueVendors(keys.flatMap((key) => indexes.nameIndex.get(key) || []));
+  }
+
+  function registrationCandidates(row, indexes) {
+    const registrationNumber = normalizeRegistrationNumber(row.registration_number);
+    if (!registrationNumber) return [];
+    const jurisdiction = normalizeJurisdiction(row.jurisdiction);
+    const entries = indexes.registrationIndex.get(registrationNumber) || [];
+    const filtered = jurisdiction ? entries.filter((entry) => entry.jurisdiction === jurisdiction) : entries;
+    return uniqueVendors(filtered);
+  }
+
+  function matchingDecision(row, indexes) {
+    const domain = domainCandidates(row.domain, indexes);
+    const registrations = registrationCandidates(row, indexes);
+    const names = uniqueVendors([
+      ...nameCandidates(row.vendor_name, indexes),
+      ...nameCandidates(row.business_entity_name, indexes),
+    ]);
+    const hasIdentity = IDENTITY_FIELDS.some((field) => scalar(row[field]));
+
+    if (!hasIdentity) {
+      return { status: "no_match", vendor: null, method: null, confidence: null, note: "No supported identity value was provided." };
+    }
+    if (domain.vendors.length > 1 || registrations.length > 1 || (!domain.vendors.length && !registrations.length && names.length > 1)) {
+      return { status: "ambiguous", vendor: null, method: null, confidence: null, note: "Multiple plausible catalogue vendors matched the supplied identity." };
+    }
+
+    const domainVendor = domain.vendors[0] || null;
+    const registrationVendor = registrations[0] || null;
+    const nameVendor = names.length === 1 ? names[0] : null;
+    if (registrationVendor && domainVendor && registrationVendor.vendor_id !== domainVendor.vendor_id) {
+      return { status: "ambiguous", vendor: null, method: null, confidence: null, note: "Domain and registration evidence point to different catalogue vendors." };
+    }
+    if (registrationVendor && nameVendor && registrationVendor.vendor_id !== nameVendor.vendor_id) {
+      return { status: "ambiguous", vendor: null, method: null, confidence: null, note: "Name and registration evidence point to different catalogue vendors." };
+    }
+    if (domainVendor) {
+      return { status: "matched", vendor: domainVendor, method: domain.method, confidence: domain.confidence, note: null };
+    }
+    if (registrationVendor) {
+      return { status: "matched", vendor: registrationVendor, method: "registration_number_exact", confidence: 1.0, note: null };
+    }
+    if (nameVendor) {
+      return { status: "matched", vendor: nameVendor, method: "name_exact", confidence: 0.9, note: null };
+    }
+
+    const registrationNumber = normalizeRegistrationNumber(row.registration_number);
+    const note = registrationNumber && !indexes.registrationIndex.has(registrationNumber)
+      ? "The registration number is not indexed in the current public catalogue snapshot."
+      : "No catalogue vendor matched the supplied identity.";
+    return { status: "no_match", vendor: null, method: null, confidence: null, note };
+  }
+
+  async function matchInventoryRowHardened(row, inputIndex, indexes) {
+    const decision = matchingDecision(row, indexes);
+    let summary = null;
+    let sourceLoadNote = null;
+    if (decision.vendor) {
+      try {
+        summary = await vendorSourceSummary(decision.vendor.vendor_id);
+      } catch (_error) {
+        sourceLoadNote = "Vendor identity matched, but its source-detail shard could not be loaded.";
+      }
+    }
+    const result = browserResultPackRow(row, inputIndex, decision.vendor, summary);
+    return {
+      ...result,
+      input_registration_number: row.registration_number || null,
+      match_status: decision.status,
+      match_method: decision.method,
+      match_confidence: decision.confidence,
+      match_note: sourceLoadNote || decision.note,
+    };
+  }
+
+  function selectedSourceTypesForExport() {
+    return [...document.querySelectorAll("#matcher-view [data-source-pack-field]:checked")]
+      .map((box) => box.dataset.sourcePackField)
+      .filter(Boolean);
+  }
+
+  function resolverResultPackCsv(inputRows, resultRows) {
+    const inputColumns = [];
+    inputRows.forEach((row) => Object.keys(row).forEach((key) => {
+      if (!inputColumns.includes(key)) inputColumns.push(key);
+    }));
+    const sourceColumns = selectedSourceTypesForExport().map((sourceType) => `${sourceType}_url`);
+    const columns = [
+      ...inputColumns,
+      "openva_match_status",
+      "openva_match_method",
+      "openva_match_confidence",
+      "openva_match_note",
+      "matched_vendor_name",
+      "official_domain",
+      ...sourceColumns,
+    ];
+    const rows = resultRows.map((result, index) => {
+      const row = { ...(inputRows[index] || {}) };
+      row.openva_match_status = result.match_status || "no_match";
+      row.openva_match_method = result.match_method || "";
+      row.openva_match_confidence = result.match_confidence ?? "";
+      row.openva_match_note = result.match_note || "";
+      row.matched_vendor_name = result.matched_vendor_name || "";
+      row.official_domain = result.official_domain || "";
+      sourceColumns.forEach((column) => { row[column] = result[column] || ""; });
+      return row;
+    });
+    return serializeCsv(rows, columns);
+  }
+
+  function inputIdentityLabel(row) {
+    return row.input_vendor_name || row.input_domain || row.input_registration_number || "Unavailable";
+  }
+
+  function renderResolverResults() {
+    const total = localMatchRows.length;
+    const matched = localMatchRows.filter((row) => row.match_status === "matched").length;
+    const ambiguous = localMatchRows.filter((row) => row.match_status === "ambiguous").length;
+    const unmatched = total - matched - ambiguous;
+    const summaryNode = document.getElementById("match-summary");
+    if (summaryNode) {
+      summaryNode.innerHTML = [
+        ["Rows processed", total],
+        ["Matched rows", matched],
+        ["Ambiguous rows", ambiguous],
+        ["No-match rows", unmatched],
+        ["Processing boundary", "Browser-local"],
+      ].map(([label, value]) => `<article><strong>${html(label)}</strong><p>${html(value)}</p></article>`).join("");
+    }
+
+    const previewNode = document.getElementById("match-preview");
+    if (!previewNode) return;
+    previewNode.innerHTML = localMatchRows.length
+      ? `<table><thead><tr><th>Input vendor</th><th>Status</th><th>Matched vendor</th><th>Official domain</th><th>Recorded public source URLs</th><th>Match note</th></tr></thead><tbody>${localMatchRows.slice(0, 20).map((row) => {
+          const urls = Object.entries(row.source_urls || {})
+            .filter(([, url]) => Boolean(url))
+            .map(([sourceType, url]) => `${sourceTypeLabel(sourceType)}: ${url}`);
+          return `<tr><td>${html(inputIdentityLabel(row))}</td><td>${html(row.match_status || "no_match")}</td><td>${html(row.matched_vendor_name || "")}</td><td>${html(row.official_domain || "")}</td><td>${html(urls.join("; "))}</td><td>${html(row.match_note || "")}</td></tr>`;
+        }).join("")}</tbody></table><p>Preview shows up to 20 rows. Downloads include every input row and an explicit match status.</p>`
+      : "<p>No local match results yet.</p>";
+  }
+
+  function setupResolver() {
+    const fileInput = document.getElementById("inventory-file");
+    const runButton = document.getElementById("run-local-match");
+    const clearButton = document.getElementById("clear-local-match");
+    const csvButton = document.getElementById("download-matches-csv");
+    const jsonButton = document.getElementById("download-matches-json");
+    const statusNode = document.getElementById("matcher-status");
+    if (!fileInput || !runButton || !clearButton || !csvButton || !jsonButton || !statusNode) return;
+    if (fileInput.dataset.openvaResolverVersion === RESOLVER_VERSION) return;
+    fileInput.dataset.openvaResolverVersion = RESOLVER_VERSION;
+    runButton.disabled = true;
+
+    fileInput.addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      localInventoryRows = [];
+      localMatchRows = [];
+      runButton.disabled = true;
+      if (!file) {
+        statusNode.textContent = "No CSV selected. Your file will be processed locally and is not uploaded to OpenVA.";
+        renderResolverResults();
+        return;
+      }
+      try {
+        localInventoryRows = parseInventoryCsv(await file.text());
+        const availableFields = new Set(localInventoryRows.flatMap((row) => Object.keys(row)));
+        const recognized = IDENTITY_FIELDS.filter((field) => availableFields.has(field));
+        if (!localInventoryRows.length) {
+          statusNode.textContent = `${file.name} contains a header but no data rows, or could not be parsed as comma-, tab-, or semicolon-delimited text.`;
+        } else if (!recognized.length) {
+          statusNode.textContent = `No supported identity column was found in ${file.name}. Use vendor_name, business_entity_name, domain, or registration_number; common headers such as Company and Website are also accepted.`;
+        } else {
+          runButton.disabled = false;
+          statusNode.textContent = `${localInventoryRows.length} row(s) loaded locally from ${file.name}. Recognized identity field(s): ${recognized.join(", ")}.`;
+        }
+      } catch (error) {
+        localInventoryRows = [];
+        statusNode.textContent = `Could not parse ${file.name}: ${error.message}`;
+      }
+      renderResolverResults();
+    });
+
+    runButton.addEventListener("click", async () => {
+      if (!localInventoryRows.length) {
+        statusNode.textContent = "Choose a CSV containing at least one vendor identity row before running resolution.";
+        return;
+      }
+      runButton.disabled = true;
+      statusNode.textContent = "Resolving locally against the current OpenVA vendor index...";
+      try {
+        const indexes = buildResolverIndexes();
+        localMatchRows = await Promise.all(localInventoryRows.map((row, index) => matchInventoryRowHardened(row, index, indexes)));
+        const matched = localMatchRows.filter((row) => row.match_status === "matched").length;
+        const ambiguous = localMatchRows.filter((row) => row.match_status === "ambiguous").length;
+        const unmatched = localMatchRows.length - matched - ambiguous;
+        statusNode.textContent = `${localMatchRows.length} row(s) resolved locally: ${matched} matched, ${ambiguous} ambiguous, ${unmatched} no match. No inventory data was uploaded.`;
+      } catch (error) {
+        localMatchRows = [];
+        statusNode.textContent = `Resolution failed before producing results: ${error.message}`;
+      } finally {
+        runButton.disabled = false;
+      }
+      renderResolverResults();
+    });
+
+    clearButton.addEventListener("click", () => {
+      localInventoryRows = [];
+      localMatchRows = [];
+      fileInput.value = "";
+      runButton.disabled = true;
+      statusNode.textContent = "Local inventory data cleared from browser memory.";
+      renderResolverResults();
+    });
+
+    csvButton.addEventListener("click", () => {
+      download("compiled-vendors.csv", resolverResultPackCsv(localInventoryRows, localMatchRows), "text/csv");
+    });
+    jsonButton.addEventListener("click", () => {
+      download("compiled-vendors.json", JSON.stringify(localMatchRows, null, 2) + "\n", "application/json");
+    });
+
+    renderResolverResults();
+  }
+
+  function replaceResolverControls() {
+    ["inventory-file", "run-local-match", "clear-local-match", "download-matches-csv", "download-matches-json"].forEach((id) => {
+      const node = document.getElementById(id);
+      if (node) node.replaceWith(node.cloneNode(true));
+    });
+  }
+
+  function ensureResolverInstalled() {
+    try {
+      if (!catalogData || !catalogData.vendors) return false;
+    } catch (_error) {
+      return false;
+    }
+    const fileInput = document.getElementById("inventory-file");
+    if (!fileInput) return false;
+    if (fileInput.dataset.openvaResolverVersion === RESOLVER_VERSION) return true;
+    replaceResolverControls();
+    setupResolver();
+    return true;
+  }
+
+  try { normalizeForMatch = normalizeName; } catch (_error) { window.normalizeForMatch = normalizeName; }
+  try { normalizeDomain = normalizeDomainValue; } catch (_error) { window.normalizeDomain = normalizeDomainValue; }
+  try { parseCsv = parseInventoryCsv; } catch (_error) { window.parseCsv = parseInventoryCsv; }
+  try { buildLocalMatchIndexes = buildResolverIndexes; } catch (_error) { window.buildLocalMatchIndexes = buildResolverIndexes; }
+  try { matchInventoryRow = matchInventoryRowHardened; } catch (_error) { window.matchInventoryRow = matchInventoryRowHardened; }
+  try { renderLocalMatcher = renderResolverResults; } catch (_error) { window.renderLocalMatcher = renderResolverResults; }
+  try { resultPackCsv = resolverResultPackCsv; } catch (_error) { window.resultPackCsv = resolverResultPackCsv; }
+  try { setupLocalMatcher = setupResolver; } catch (_error) { window.setupLocalMatcher = setupResolver; }
 
   const THEMES = ["system", "light", "dark"];
   const LABELS = { system: "System", light: "Day", dark: "Night" };
@@ -97,10 +569,16 @@
     links.appendChild(sponsor);
   }
 
+  function installWhenReady() {
+    if (ensureResolverInstalled()) return;
+    window.setTimeout(installWhenReady, 50);
+  }
+
   applyTheme(storedTheme());
   window.addEventListener("DOMContentLoaded", () => {
     installThemeToggle();
     polishCatalogFilters();
     installSponsorLink();
+    installWhenReady();
   });
 })();
