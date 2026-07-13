@@ -7,7 +7,6 @@ on:
     paths:
       - catalog-batches/owner-global-vendors-3.yaml
       - .github/workflows/owner-global-vendors-3-materialize.yml
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,7 +15,6 @@ concurrency:
   group: owner-global-vendors-3-materializer
   cancel-in-progress: false
 
-# This workflow is intentionally one-shot and deletes itself after successful materialization.
 jobs:
   materialize:
     runs-on: ubuntu-latest
