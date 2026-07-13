@@ -1,0 +1,39 @@
+name: existing-catalog-live-diagnostic
+
+on:
+  pull_request:
+    branches:
+      - maintenance/existing-catalog-live-control
+    types: [opened, synchronize, reopened]
+
+permissions:
+  actions: read
+
+jobs:
+  diagnose:
+    if: github.event.pull_request.head.ref == 'maintenance/existing-catalog-live-trigger'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      JOB_ID: '86959357002'
+    steps:
+      - name: Print live acceptance failure
+        run: |
+          set -euo pipefail
+          gh api "repos/$REPO/actions/jobs/$JOB_ID/logs" > /tmp/job.log
+          python - <<'PY'
+          from pathlib import Path
+          lines = Path('/tmp/job.log').read_text(encoding='utf-8', errors='replace').splitlines()
+          tokens = (
+              'attempt ', 'not accepted', 'runtimeerror', 'traceback', 'http error',
+              'urlerror', 'assertionerror', 'missing_vendors', 'missing_sources',
+              'missing_observations', 'mixed deployed snapshots', 'count mismatch',
+              'process completed with exit code',
+          )
+          print('EXISTING_CATALOG_LIVE_FAILURE_BEGIN')
+          for line in lines:
+              if any(token in line.lower() for token in tokens):
+                  print(line)
+          print('EXISTING_CATALOG_LIVE_FAILURE_END')
+          PY
