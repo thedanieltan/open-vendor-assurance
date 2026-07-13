@@ -1,0 +1,186 @@
+name: revise completeness unavailable-state policy
+
+on:
+  push:
+    branches:
+      - fix/completeness-unavailable-state-policy
+    paths:
+      - .github/workflows/owner-global-vendors-2-materialize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  revise:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: fix/completeness-unavailable-state-policy
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install -e '.[dev]'
+      - name: Apply policy revision
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          guard = Path('tools/openva/catalog_guard.py')
+          text = guard.read_text(encoding='utf-8')
+          old_constants = '''# Catalog completeness is evaluated for every vendor whose canonical data is touched by a
+# catalog PR. Foundational public surfaces must be live canonical sources. DPA,
+# subprocessor, and status gaps may be represented by durable unavailable-source discovery
+# states; those states document bounded discovery, not proof that a document does not exist.
+SOURCE_COMPLETENESS_GROUPS: dict[str, set[str]] = {
+    "privacy_notice": {"privacy_notice"},
+    "terms_of_service": {"terms_of_service"},
+    "security_assurance": {"security_page", "trust_center", "compliance_page"},
+    "dpa": {"dpa"},
+    "subprocessors_list": {"subprocessors_list"},
+    "status_page": {"status_page"},
+}
+MANDATORY_LIVE_GROUPS = {"privacy_notice", "terms_of_service", "security_assurance"}
+'''
+          new_constants = '''# Catalog completeness is evaluated for every vendor whose canonical data is touched by a
+# catalog PR. Every core assurance group must have either a verified public source or a
+# durable unavailable-source discovery state. Privacy remains mandatory live evidence, and
+# at least two core groups must be backed by live sources. Unavailable states document
+# bounded discovery; they never prove that a document does not exist.
+SOURCE_COMPLETENESS_GROUPS: dict[str, set[str]] = {
+    "privacy_notice": {"privacy_notice"},
+    "terms_of_service": {"terms_of_service"},
+    "security_assurance": {"security_page", "trust_center", "compliance_page"},
+    "dpa": {"dpa"},
+    "subprocessors_list": {"subprocessors_list"},
+    "status_page": {"status_page"},
+}
+MANDATORY_LIVE_GROUPS = {"privacy_notice"}
+MINIMUM_LIVE_CORE_GROUPS = 2
+'''
+          if old_constants not in text:
+              raise SystemExit('constant block not found')
+          text = text.replace(old_constants, new_constants)
+
+          old_function = '''def validate_changed_vendor_completeness(paths: list[str], *, root: Path = ROOT) -> list[str]:
+    """Require a complete public-source posture for every touched vendor.
+
+    Privacy, terms, and security/trust/compliance must be live canonical sources.
+    DPA, subprocessors, and status may instead have a durable unavailable-source
+    discovery state. This keeps future expansion complete without asserting that an
+    undiscovered document does not exist.
+    """
+    failures: list[str] = []
+    for vendor_id in sorted(changed_vendor_ids(paths)):
+        vendor_path = root / "data" / "vendors" / vendor_id / "vendor.yaml"
+        if not vendor_path.exists():
+            continue
+        live_types = source_types_for_vendor(vendor_id, root)
+        unavailable_types = unavailable_source_types_for_vendor(vendor_id, root)
+        for group, accepted_types in SOURCE_COMPLETENESS_GROUPS.items():
+            if live_types.intersection(accepted_types):
+                continue
+            if group not in MANDATORY_LIVE_GROUPS and unavailable_types.intersection(accepted_types):
+                continue
+            if group in MANDATORY_LIVE_GROUPS:
+                requirement = "a live canonical public source"
+            else:
+                requirement = "a live canonical public source or an unavailable-source discovery state"
+            failures.append(
+                f"data/vendors/{vendor_id}: incomplete {group} coverage; requires {requirement}"
+            )
+    return failures
+'''
+          new_function = '''def validate_changed_vendor_completeness(paths: list[str], *, root: Path = ROOT) -> list[str]:
+    """Require complete, honest public-source coverage for every touched vendor.
+
+    Each core group needs either a live canonical public source or a durable unavailable
+    discovery state. Privacy must remain live, and at least two core groups must be live,
+    preventing a vendor from being admitted on unavailable markers alone.
+    """
+    failures: list[str] = []
+    for vendor_id in sorted(changed_vendor_ids(paths)):
+        vendor_path = root / "data" / "vendors" / vendor_id / "vendor.yaml"
+        if not vendor_path.exists():
+            continue
+        live_types = source_types_for_vendor(vendor_id, root)
+        unavailable_types = unavailable_source_types_for_vendor(vendor_id, root)
+        live_group_count = 0
+        for group, accepted_types in SOURCE_COMPLETENESS_GROUPS.items():
+            if live_types.intersection(accepted_types):
+                live_group_count += 1
+                continue
+            if unavailable_types.intersection(accepted_types):
+                if group in MANDATORY_LIVE_GROUPS:
+                    failures.append(
+                        f"data/vendors/{vendor_id}: incomplete {group} coverage; requires a live canonical public source"
+                    )
+                continue
+            failures.append(
+                f"data/vendors/{vendor_id}: incomplete {group} coverage; requires a live canonical public source or an unavailable-source discovery state"
+            )
+        if live_group_count < MINIMUM_LIVE_CORE_GROUPS:
+            failures.append(
+                f"data/vendors/{vendor_id}: insufficient live source breadth; requires at least {MINIMUM_LIVE_CORE_GROUPS} live core assurance groups"
+            )
+    return failures
+'''
+          if old_function not in text:
+              raise SystemExit('validation function block not found')
+          guard.write_text(text.replace(old_function, new_function), encoding='utf-8')
+
+          tests = Path('tests/test_catalog_guard.py')
+          test_text = tests.read_text(encoding='utf-8')
+          old_test = '''def test_changed_vendor_completeness_requires_foundational_live_sources(tmp_path):
+    write_vendor(tmp_path)
+    write_source(tmp_path, "example", "example-privacy", "privacy_notice")
+    write_unavailable(tmp_path, "example", "terms_of_service")
+    write_unavailable(tmp_path, "example", "security_page")
+    write_unavailable(tmp_path, "example", "dpa")
+    write_unavailable(tmp_path, "example", "subprocessors_list")
+    write_unavailable(tmp_path, "example", "status_page")
+
+    failures = validate_changed_vendor_completeness(
+        ["data/vendors/example/vendor.yaml", "data/vendors/example/sources/example-privacy.yaml"],
+        root=tmp_path,
+    )
+
+    assert failures == [
+        "data/vendors/example: incomplete terms_of_service coverage; requires a live canonical public source",
+        "data/vendors/example: incomplete security_assurance coverage; requires a live canonical public source",
+    ]
+'''
+          new_test = '''def test_changed_vendor_completeness_requires_live_privacy_and_two_live_groups(tmp_path):
+    write_vendor(tmp_path)
+    write_unavailable(tmp_path, "example", "privacy_notice")
+    write_source(tmp_path, "example", "example-terms", "terms_of_service")
+    write_unavailable(tmp_path, "example", "security_page")
+    write_unavailable(tmp_path, "example", "dpa")
+    write_unavailable(tmp_path, "example", "subprocessors_list")
+    write_unavailable(tmp_path, "example", "status_page")
+
+    failures = validate_changed_vendor_completeness(
+        ["data/vendors/example/vendor.yaml", "data/vendors/example/sources/example-terms.yaml"],
+        root=tmp_path,
+    )
+
+    assert failures == [
+        "data/vendors/example: incomplete privacy_notice coverage; requires a live canonical public source",
+        "data/vendors/example: insufficient live source breadth; requires at least 2 live core assurance groups",
+    ]
+'''
+          if old_test not in test_text:
+              raise SystemExit('old completeness test not found')
+          tests.write_text(test_text.replace(old_test, new_test), encoding='utf-8')
+          PY
+      - run: ruff check tools/openva/catalog_guard.py tests/test_catalog_guard.py
+      - run: pytest -q tests/test_catalog_guard.py tests/test_source_discovery.py
+      - name: Commit validated revision
+        run: |
+          rm .github/workflows/owner-global-vendors-2-materialize.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Catalog: allow explicit unavailable states across complete coverage'
+          git push origin HEAD:fix/completeness-unavailable-state-policy
