@@ -1,0 +1,40 @@
+name: phase2-site-diagnostic
+
+on:
+  push:
+    branches:
+      - site/canonical-one-page-phase2
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install package
+        run: pip install -e '.[dev]'
+      - name: Run focused site tests
+        id: tests
+        shell: bash
+        run: |
+          set +e
+          pytest -q tests/test_site.py -vv --tb=short > phase2-site-tests.log 2>&1
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          tail -n 160 phase2-site-tests.log
+          exit 0
+      - name: Upload focused diagnostics
+        uses: actions/upload-artifact@v6
+        with:
+          name: phase2-site-diagnostic
+          path: phase2-site-tests.log
+          retention-days: 2
+      - name: Enforce result
+        run: exit "${{ steps.tests.outputs.exit_code }}"
