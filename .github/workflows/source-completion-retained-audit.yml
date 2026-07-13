@@ -1,0 +1,304 @@
+name: source-completion-retained-audit
+
+on:
+  pull_request:
+    branches:
+      - catalog/source-completion-audit-control
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: source-completion-retained-audit-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    if: github.event.pull_request.head.ref == 'catalog/owner-source-completion-1-builder'
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-source-completion-1-builder
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install package
+        run: pip install -e '.[dev]'
+      - name: Build retained added-source manifest
+        run: |
+          git diff --diff-filter=A --name-only \
+            664dd4cb396757c0a9fb80c8561c826e1067dfa3...HEAD \
+            -- 'data/vendors/*/sources/*.yaml' \
+            | sort -u > retained-source-paths.txt
+          test -s retained-source-paths.txt
+      - name: Independently verify retained source shard
+        run: |
+          mkdir -p retained-audit
+          python -m tools.openva.source_verification verify \
+            --source-path-file retained-source-paths.txt \
+            --shard-count 12 \
+            --shard-index '${{ matrix.shard }}' \
+            --output 'retained-audit/shard-${{ matrix.shard }}.json'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-completion-retained-${{ matrix.shard }}
+          path: retained-audit/shard-${{ matrix.shard }}.json
+          if-no-files-found: error
+
+  aggregate:
+    if: github.event.pull_request.head.ref == 'catalog/owner-source-completion-1-builder'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-source-completion-1-builder
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: source-completion-retained-*
+          path: retained-audit
+          merge-multiple: true
+      - name: Aggregate strict retained-source audit
+        id: audit
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import os
+          from collections import Counter, defaultdict
+          from pathlib import Path
+          from urllib.parse import urlsplit
+
+          rows = []
+          pipeline_failures = []
+          for path in sorted(Path('retained-audit').glob('*.json')):
+              report = json.loads(path.read_text(encoding='utf-8'))
+              rows.extend(report.get('sources') or [])
+              pipeline_failures.extend(report.get('failures') or [])
+          rows.sort(key=lambda row: (str(row.get('vendor_id')), str(row.get('source_id'))))
+
+          reviewed_exceptions = {
+              'adyen-security-page',
+              'complyadvantage-dpa',
+              'fly-io-certification-reference',
+              'gitlab-certification-reference',
+              'marqeta-certification-reference',
+              'marqeta-subprocessors-list',
+              'neon-dpa',
+              'netlify-certification-reference',
+              'shift-technology-certification-reference',
+              'sumsub-certification-reference',
+          }
+          editorial_certification_exceptions = {
+              'fly-io-certification-reference',
+              'gitlab-certification-reference',
+              'netlify-certification-reference',
+              'shift-technology-certification-reference',
+              'sumsub-certification-reference',
+          }
+          duplicate_content_exception_groups = {
+              frozenset({'marqeta-certification-reference', 'marqeta-subprocessors-list'}),
+          }
+          purpose_terms = {
+              'dpa': {'dpa', 'data-processing', 'data-processing-agreement', 'data-processing-addendum'},
+              'subprocessors_list': {'subprocessor', 'subprocessors', 'sub-processors', 'third-party-processors'},
+              'privacy_notice': {'privacy', 'privacy-policy', 'privacy-notice'},
+              'security_page': {'security', 'trust', 'secure'},
+              'trust_center': {'trust', 'trust-center', 'trustcenter', 'security'},
+              'compliance_page': {'compliance', 'trust', 'security', 'soc', 'iso', 'certification'},
+              'certification_reference': {'certification', 'certifications', 'certificate', 'certificates', 'soc2', 'iso27001', 'iso-27001', 'compliance', 'trust'},
+          }
+          editorial_segments = {
+              'blog', 'blogs', 'article', 'articles', 'news', 'press', 'faq', 'faqs',
+              'webinar', 'webinars', 'event', 'events', 'academy', 'learn', 'podcast',
+              'case-study', 'case-studies', 'customer-stories', 'integrations', 'marketplace'
+          }
+
+          unexpected = []
+          review_notes = []
+          status_counts = Counter()
+          semantic_counts = Counter()
+          by_vendor_final = defaultdict(list)
+          by_vendor_digest = defaultdict(list)
+
+          for row in rows:
+              source_id = str(row.get('source_id') or '')
+              source_type = str(row.get('source_type') or '')
+              status = str(row.get('verification_status') or '')
+              semantic = str((row.get('semantic_match') or {}).get('status') or '')
+              status_counts[status] += 1
+              semantic_counts[semantic] += 1
+              reasons = []
+              if status not in {'ok', 'redirected'} and source_id not in reviewed_exceptions:
+                  reasons.append(f'verification_status:{status}')
+              if semantic != 'strong' and source_id not in reviewed_exceptions:
+                  reasons.append(f'semantic_status:{semantic}')
+              if row.get('soft_404_detected'):
+                  reasons.append('soft_404_detected')
+
+              source_url = str(row.get('source_url') or '')
+              final_url = str(row.get('final_url') or source_url)
+              source_parts = urlsplit(source_url)
+              final_parts = urlsplit(final_url)
+              segments = [part.lower() for part in source_parts.path.split('/') if part]
+              final_segments = [part.lower() for part in final_parts.path.split('/') if part]
+              combined_segments = segments + final_segments
+              combined_text = '-'.join(combined_segments)
+              source_host = (source_parts.hostname or '').lower().removeprefix('www.')
+              final_host = (final_parts.hostname or '').lower().removeprefix('www.')
+              specialized_subdomain = any(
+                  token in final_host.split('.')[0]
+                  for token in ('trust', 'security', 'compliance', 'privacy', 'legal')
+              )
+              editorial_hits = sorted(set(combined_segments) & editorial_segments)
+              user_content = '@' in source_parts.path or '@' in final_parts.path or any(
+                  part in {'community', 'forum', 'forums'} for part in combined_segments
+              )
+              purpose_hit = any(term in combined_text for term in purpose_terms.get(source_type, set()))
+              if not segments and source_type in purpose_terms and not specialized_subdomain:
+                  reasons.append('generic_primary_homepage')
+              if editorial_hits and source_id not in editorial_certification_exceptions:
+                  reasons.append('editorial_or_marketplace_path')
+              if user_content:
+                  reasons.append('user_generated_or_community_path')
+              if source_type in purpose_terms and combined_segments and not purpose_hit and not specialized_subdomain:
+                  if source_id in reviewed_exceptions:
+                      review_notes.append({
+                          'vendor_id': row.get('vendor_id'),
+                          'source_id': source_id,
+                          'note': 'reviewed path-purpose exception',
+                          'source_url': source_url,
+                      })
+                  else:
+                      reasons.append('path_lacks_source_purpose_term')
+              if source_host != final_host and status == 'redirected' and not specialized_subdomain:
+                  reasons.append('redirected_to_different_non_specialized_host')
+
+              final_key = final_url.rstrip('/')
+              if final_key:
+                  by_vendor_final[(str(row.get('vendor_id') or ''), final_key)].append(row)
+              digest = str(row.get('normalized_text_sample_sha256') or '')
+              if digest and digest != 'sha256:TBD':
+                  by_vendor_digest[(str(row.get('vendor_id') or ''), digest)].append(row)
+              if reasons:
+                  unexpected.append({
+                      'vendor_id': row.get('vendor_id'),
+                      'source_id': source_id,
+                      'source_type': source_type,
+                      'source_url': source_url,
+                      'final_url': final_url,
+                      'title_detected': row.get('title_detected'),
+                      'verification_status': status,
+                      'semantic_status': semantic,
+                      'reasons': sorted(set(reasons)),
+                  })
+
+          duplicate_groups = []
+          for kind, groups in (('final_url', by_vendor_final), ('content_digest', by_vendor_digest)):
+              for (vendor_id, value), group_rows in sorted(groups.items()):
+                  if len(group_rows) < 2:
+                      continue
+                  source_ids = frozenset(str(row.get('source_id') or '') for row in group_rows)
+                  if source_ids in duplicate_content_exception_groups:
+                      review_notes.append({
+                          'vendor_id': vendor_id,
+                          'source_ids': sorted(source_ids),
+                          'note': f'reviewed duplicate {kind} exception for item-specific trust-center URLs',
+                      })
+                      continue
+                  duplicate_groups.append({
+                      'kind': kind,
+                      'vendor_id': vendor_id,
+                      'value': value,
+                      'source_ids': sorted(source_ids),
+                      'source_urls': sorted(str(row.get('source_url') or '') for row in group_rows),
+                  })
+
+          strict_failure_count = len(pipeline_failures) + len(unexpected) + len(duplicate_groups)
+          report = {
+              'schema_version': '0.1.0',
+              'report_type': 'owner_source_completion_retained_source_audit',
+              'summary': {
+                  'retained_added_source_count': len(rows),
+                  'pipeline_failure_count': len(pipeline_failures),
+                  'unexpected_source_count': len(unexpected),
+                  'unexpected_duplicate_group_count': len(duplicate_groups),
+                  'reviewed_exception_note_count': len(review_notes),
+                  'strict_failure_count': strict_failure_count,
+                  'verification_statuses': dict(sorted(status_counts.items())),
+                  'semantic_statuses': dict(sorted(semantic_counts.items())),
+              },
+              'pipeline_failures': pipeline_failures,
+              'unexpected_sources': unexpected,
+              'unexpected_duplicate_groups': duplicate_groups,
+              'reviewed_exception_notes': review_notes,
+              'not_advice': True,
+          }
+          Path('retained-source-audit.json').write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+
+          lines = [
+              '## Retained source completion audit',
+              '',
+              f"- Retained added sources checked: **{len(rows)}**",
+              f"- Pipeline failures: **{len(pipeline_failures)}**",
+              f"- Unexpected source findings: **{len(unexpected)}**",
+              f"- Unexpected duplicate groups: **{len(duplicate_groups)}**",
+              f"- Reviewed exception notes: **{len(review_notes)}**",
+              f"- Strict failure count: **{strict_failure_count}**",
+              '',
+              f"Verification statuses: `{dict(sorted(status_counts.items()))}`",
+              '',
+              f"Semantic statuses: `{dict(sorted(semantic_counts.items()))}`",
+          ]
+          if unexpected:
+              lines.extend(['', '### Unexpected source findings'])
+              for item in unexpected[:100]:
+                  lines.append(
+                      f"- `{item['source_id']}` ({item['vendor_id']}, {item['source_type']}): "
+                      f"{', '.join(item['reasons'])} — {item['source_url']}"
+                  )
+          if duplicate_groups:
+              lines.extend(['', '### Unexpected duplicate groups'])
+              for item in duplicate_groups[:100]:
+                  lines.append(
+                      f"- {item['kind']} `{item['vendor_id']}`: {', '.join(item['source_ids'])}"
+                  )
+          if review_notes:
+              lines.extend(['', '### Reviewed exceptions'])
+              for item in review_notes[:100]:
+                  ids = item.get('source_id') or ', '.join(item.get('source_ids') or [])
+                  lines.append(f"- `{ids}`: {item['note']}")
+          Path('retained-source-audit.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as handle:
+              handle.write(f'strict_failure_count={strict_failure_count}\n')
+          print(json.dumps(report['summary'], indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-completion-retained-audit
+          path: |
+            retained-source-audit.json
+            retained-source-audit.md
+          if-no-files-found: error
+      - name: Post audit result to temporary carrier
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr comment "$PR_NUMBER" --body-file retained-source-audit.md
+      - name: Enforce strict retained-source acceptance
+        if: steps.audit.outputs.strict_failure_count != '0'
+        run: |
+          echo 'Retained source audit found unexpected results.'
+          exit 1
