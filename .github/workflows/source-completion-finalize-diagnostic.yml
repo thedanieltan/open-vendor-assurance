@@ -11,28 +11,36 @@ permissions:
 
 jobs:
   diagnose:
-    if: github.event.pull_request.head.ref == 'catalog/source-completion-final-diagnostic-trigger'
+    if: github.event.pull_request.head.ref == 'catalog/source-completion-final-diagnostic-trigger-v2'
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
-      JOB_ID: '86917885358'
+      JOB_ID: '86921009511'
     steps:
-      - name: Print workflow failure signal
+      - name: Print final acceptance failure signal
         run: |
           set -euo pipefail
           gh api "repos/$REPO/actions/jobs/$JOB_ID/logs" > /tmp/job.log
           python - <<'PY'
           from pathlib import Path
           lines = Path('/tmp/job.log').read_text(encoding='utf-8', errors='replace').splitlines()
-          tokens = ('error', 'failed', 'failure', 'rejected', 'conflict', 'expected install', 'remote:', 'fatal:', 'workflow', 'permission', 'denied')
-          print('DIAGNOSTIC_BEGIN')
-          for line in lines:
+          tokens = (
+              '##[error]', 'process completed with exit code', 'failure', 'failed', 'traceback',
+              'error:', 'invalid', 'drift', 'release gate', 'orphan', 'observation', 'assert',
+              'test session', 'short test summary', 'non-canonical', 'not found', 'requires review',
+          )
+          print('FINAL_ACCEPTANCE_DIAGNOSTIC_BEGIN')
+          for index, line in enumerate(lines):
               if any(token in line.lower() for token in tokens):
-                  print(line)
-          print('LOG_TAIL_BEGIN')
-          for line in lines[-220:]:
+                  start = max(0, index - 3)
+                  end = min(len(lines), index + 6)
+                  for row in lines[start:end]:
+                      print(row)
+                  print('---')
+          print('FINAL_ACCEPTANCE_LOG_TAIL_BEGIN')
+          for line in lines[-350:]:
               print(line)
-          print('LOG_TAIL_END')
-          print('DIAGNOSTIC_END')
+          print('FINAL_ACCEPTANCE_LOG_TAIL_END')
+          print('FINAL_ACCEPTANCE_DIAGNOSTIC_END')
           PY
