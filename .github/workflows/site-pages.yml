@@ -108,6 +108,7 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: site/dist
+          include-hidden-files: true
 
   deploy:
     runs-on: ubuntu-latest
