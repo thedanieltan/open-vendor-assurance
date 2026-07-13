@@ -29,6 +29,7 @@ for _name, _value in vars(_CORE).items():
 
 _ORIGINAL_BUILD_META = _CORE.build_meta
 _ORIGINAL_BUILD_COMPILED_CATALOG = _CORE.build_compiled_catalog
+_ORIGINAL_RENDER_INDEX_HTML = _CORE.render_index_html
 
 
 def release_tag() -> str:
@@ -101,9 +102,23 @@ def build_compiled_catalog(
     return compiled
 
 
+def render_index_html(template: str, config: Any) -> str:
+    """Load the focused vendor-detail panel after the existing site runtime."""
+    page = _ORIGINAL_RENDER_INDEX_HTML(template, config)
+    marker = '    <script src="ui-fixes.js?v=20260713-phase2"></script>'
+    replacement = (
+        '    <script src="public-vendor-detail.js?v=20260713-vendor-detail"></script>\n'
+        + marker
+    )
+    if marker not in page:
+        raise ValueError("could not locate the vendor-detail script insertion point")
+    return page.replace(marker, replacement, 1)
+
+
 _CORE.release_tag = release_tag
 _CORE.build_meta = build_meta
 _CORE.build_compiled_catalog = build_compiled_catalog
+_CORE.render_index_html = render_index_html
 
 
 def main() -> int:

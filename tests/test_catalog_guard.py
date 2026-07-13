@@ -1,10 +1,13 @@
 import json
 
+import yaml
+
 from tools.openva.catalog_guard import (
     validate_catalog_batch_duplicates,
     validate_catalog_generated_outputs,
     validate_catalog_paths,
     validate_changed_source_observations,
+    validate_changed_vendor_completeness,
 )
 
 
@@ -14,7 +17,6 @@ def test_catalog_guard_allows_catalog_files():
             "catalog-batches/p26-project-management-saas.yaml",
             "data/vendors/example/vendor.yaml",
             "data/vendors/example/sources/example-source.yaml",
-            "data/vendors/example/artifacts/example-artifact.yaml",
             "indexes/vendors.json",
             "dist/vendors/example.json",
             "openva-pack.json",
@@ -115,6 +117,111 @@ source_url: https://example.com/legal
     latest_path.write_text(json.dumps({"sources": [{"source_id": "example-source"}]}), encoding="utf-8")
 
     failures = validate_changed_source_observations(["data/vendors/example/sources/example-source.yaml"], root=tmp_path)
+
+    assert failures == []
+
+
+def write_source(root, vendor_id, source_id, source_type):
+    path = root / "data" / "vendors" / vendor_id / "sources" / f"{source_id}.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        yaml.safe_dump(
+            {
+                "source_id": source_id,
+                "vendor_id": vendor_id,
+                "source_type": source_type,
+                "source_url": f"https://example.com/{source_id}",
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+
+def write_unavailable(root, vendor_id, source_type):
+    path = root / "data" / "vendors" / vendor_id / "unavailable_sources" / f"{vendor_id}-{source_type}.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        yaml.safe_dump(
+            {
+                "unavailable_source_id": f"{vendor_id}-{source_type}",
+                "vendor_id": vendor_id,
+                "source_type": source_type,
+                "status": "not_identified",
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+
+def write_vendor(root, vendor_id="example"):
+    path = root / "data" / "vendors" / vendor_id / "vendor.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(f"vendor_id: {vendor_id}\n", encoding="utf-8")
+
+
+def test_changed_vendor_completeness_requires_live_privacy_and_two_live_groups(tmp_path):
+    write_vendor(tmp_path)
+    write_unavailable(tmp_path, "example", "privacy_notice")
+    write_source(tmp_path, "example", "example-terms", "terms_of_service")
+    write_unavailable(tmp_path, "example", "security_page")
+    write_unavailable(tmp_path, "example", "dpa")
+    write_unavailable(tmp_path, "example", "subprocessors_list")
+    write_unavailable(tmp_path, "example", "status_page")
+
+    failures = validate_changed_vendor_completeness(
+        ["data/vendors/example/vendor.yaml", "data/vendors/example/sources/example-terms.yaml"],
+        root=tmp_path,
+    )
+
+    assert failures == [
+        "data/vendors/example: incomplete privacy_notice coverage; requires a live canonical public source",
+        "data/vendors/example: insufficient live source breadth; requires at least 2 live core assurance groups",
+    ]
+
+
+def test_changed_vendor_completeness_accepts_live_or_unavailable_core_groups(tmp_path):
+    write_vendor(tmp_path)
+    write_source(tmp_path, "example", "example-privacy", "privacy_notice")
+    write_source(tmp_path, "example", "example-terms", "terms_of_service")
+    write_source(tmp_path, "example", "example-trust", "trust_center")
+    write_unavailable(tmp_path, "example", "dpa")
+    write_unavailable(tmp_path, "example", "subprocessors_list")
+    write_unavailable(tmp_path, "example", "status_page")
+
+    failures = validate_changed_vendor_completeness(
+        ["data/vendors/example/vendor.yaml", "data/vendors/example/sources/example-privacy.yaml"],
+        root=tmp_path,
+    )
+
+    assert failures == []
+
+
+def test_changed_vendor_completeness_accepts_unavailable_terms_and_security_with_live_status(tmp_path):
+    write_vendor(tmp_path)
+    write_source(tmp_path, "example", "example-privacy", "privacy_notice")
+    write_source(tmp_path, "example", "example-status", "status_page")
+    write_unavailable(tmp_path, "example", "terms_of_service")
+    write_unavailable(tmp_path, "example", "security_page")
+    write_unavailable(tmp_path, "example", "dpa")
+    write_unavailable(tmp_path, "example", "subprocessors_list")
+
+    failures = validate_changed_vendor_completeness(
+        ["data/vendors/example/vendor.yaml", "data/vendors/example/sources/example-status.yaml"],
+        root=tmp_path,
+    )
+
+    assert failures == []
+
+
+def test_changed_vendor_completeness_ignores_untouched_incomplete_vendor(tmp_path):
+    write_vendor(tmp_path, "untouched")
+
+    failures = validate_changed_vendor_completeness(
+        ["data/vendors/example/sources/example-privacy.yaml"],
+        root=tmp_path,
+    )
 
     assert failures == []
 
