@@ -21,12 +21,20 @@ EXPECTED_GROUPS: dict[str, frozenset[str]] = {
     "dpa": frozenset({"dpa"}),
     "subprocessors_list": frozenset({"subprocessors_list"}),
     "status_page": frozenset({"status_page"}),
-    # Extended OpenVA coverage beyond the touched-vendor guard: preserve a
-    # distinct compliance/certification posture rather than treating every
-    # security page as equivalent to a compliance reference.
     "compliance": frozenset({"compliance_page", "certification_reference"}),
 }
-LIVE_REQUIRED_GROUPS = frozenset({"privacy_notice", "terms_of_service", "security_assurance"})
+CORE_GROUPS = frozenset(
+    {
+        "privacy_notice",
+        "terms_of_service",
+        "security_assurance",
+        "dpa",
+        "subprocessors_list",
+        "status_page",
+    }
+)
+MANDATORY_LIVE_GROUPS = frozenset({"privacy_notice"})
+MINIMUM_LIVE_CORE_GROUPS = 2
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -77,12 +85,9 @@ def group_resolution(
 ) -> str:
     if covered_roles & expected_types:
         return "canonical_source_or_claim"
-    if group in LIVE_REQUIRED_GROUPS:
+    if group in MANDATORY_LIVE_GROUPS:
         return "unresolved"
-    # Alternative groups are resolved as unavailable only after every supported
-    # alternative has an active evidence-backed unavailable record. Single-type
-    # groups naturally require one current record.
-    if expected_types <= unavailable_types:
+    if unavailable_types & expected_types:
         return "evidenced_unavailable"
     return "unresolved"
 
@@ -96,6 +101,17 @@ def vendor_completion(vendor_dir: Path, *, today: date) -> dict[str, Any]:
         for group, expected in EXPECTED_GROUPS.items()
     }
     unresolved = [group for group, resolution in resolutions.items() if resolution == "unresolved"]
+    live_core_groups = sorted(
+        group for group in CORE_GROUPS if covered_roles & EXPECTED_GROUPS[group]
+    )
+    privacy_live = bool(covered_roles & EXPECTED_GROUPS["privacy_notice"])
+    live_breadth_complete = len(live_core_groups) >= MINIMUM_LIVE_CORE_GROUPS
+    completion_failures: list[str] = []
+    if not privacy_live:
+        completion_failures.append("privacy_notice_requires_live_source")
+    if not live_breadth_complete:
+        completion_failures.append("minimum_live_core_group_breadth_not_met")
+    complete = not unresolved and not completion_failures
     return {
         "vendor_id": str(vendor.get("vendor_id") or vendor_dir.name),
         "display_name": vendor.get("display_name"),
@@ -103,8 +119,13 @@ def vendor_completion(vendor_dir: Path, *, today: date) -> dict[str, Any]:
         "canonical_source_types": sorted(direct_types),
         "canonical_covered_roles": sorted(covered_roles),
         "current_unavailable_source_types": sorted(unavailable),
+        "live_core_groups": live_core_groups,
+        "live_core_group_count": len(live_core_groups),
+        "privacy_live": privacy_live,
+        "live_breadth_complete": live_breadth_complete,
         "unresolved_groups": unresolved,
-        "complete": not unresolved,
+        "completion_failures": completion_failures,
+        "complete": complete,
         "not_advice": True,
     }
 
@@ -128,6 +149,10 @@ def build_report(
         for row in vendors
         for resolution in row["group_resolutions"].values()
     )
+    insufficient_live_breadth = sorted(
+        row["vendor_id"] for row in vendors if not row["live_breadth_complete"]
+    )
+    missing_live_privacy = sorted(row["vendor_id"] for row in vendors if not row["privacy_live"])
     return {
         "schema_version": SCHEMA_VERSION,
         "report_type": REPORT_TYPE,
@@ -136,11 +161,13 @@ def build_report(
         "as_of_date": today.isoformat(),
         "completion_rule": {
             "expected_source_groups": {key: sorted(value) for key, value in EXPECTED_GROUPS.items()},
-            "live_required_groups": sorted(LIVE_REQUIRED_GROUPS),
-            "source_or_evidenced_unavailable_groups": sorted(set(EXPECTED_GROUPS) - set(LIVE_REQUIRED_GROUPS)),
+            "core_groups": sorted(CORE_GROUPS),
+            "mandatory_live_groups": sorted(MANDATORY_LIVE_GROUPS),
+            "minimum_live_core_groups": MINIMUM_LIVE_CORE_GROUPS,
+            "source_or_evidenced_unavailable_groups": sorted(set(EXPECTED_GROUPS) - set(MANDATORY_LIVE_GROUPS)),
             "accepted_coverage_claim_types": ["contains", "links_to"],
-            "alternative_group_unavailable_requires_all_alternatives": True,
             "public_sources_only": True,
+            "unavailable_states_are_bounded_discovery_not_nonexistence_claims": True,
             "not_advice": True,
         },
         "summary": {
@@ -149,6 +176,8 @@ def build_report(
             "complete_vendor_count": sum(row["complete"] for row in vendors),
             "incomplete_vendor_count": sum(not row["complete"] for row in vendors),
             "unresolved_group_count": sum(len(row["unresolved_groups"]) for row in vendors),
+            "missing_live_privacy_count": len(missing_live_privacy),
+            "insufficient_live_breadth_count": len(insufficient_live_breadth),
             "canonical_group_resolution_count": resolution_counts["canonical_source_or_claim"],
             "evidenced_unavailable_group_resolution_count": resolution_counts["evidenced_unavailable"],
             "unresolved_by_group_count": {
@@ -156,6 +185,8 @@ def build_report(
             },
         },
         "unresolved_by_group": unresolved_by_group,
+        "missing_live_privacy": missing_live_privacy,
+        "insufficient_live_breadth": insufficient_live_breadth,
         "vendors": vendors,
         "not_advice": True,
     }
@@ -172,7 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
-    if args.command == "check" and report["summary"]["unresolved_group_count"]:
+    if args.command == "check" and report["summary"]["incomplete_vendor_count"]:
         return 1
     return 0
 
