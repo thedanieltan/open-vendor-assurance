@@ -1,0 +1,51 @@
+name: owner-source-maintenance-4-compact
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-maintenance-4
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-maintenance-4-compact
+  cancel-in-progress: true
+
+jobs:
+  compact:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-maintenance-4-compact-complete]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Build compact TSV
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path('maintenance/reviewed/owner-source-maintenance-4-targets.json').read_text(encoding='utf-8'))
+          lines = ['vendor_id\tsource_id\tsource_type\tstatus\treview_state\tsource_url']
+          for row in data.get('targets', []):
+              values = [
+                  row.get('vendor_id'), row.get('source_id'), row.get('source_type'),
+                  row.get('observed_http_status'), row.get('review_state'), row.get('source_url'),
+              ]
+              lines.append('\t'.join('' if value is None else str(value).replace('\t', ' ') for value in values))
+          Path('maintenance/reviewed/owner-source-maintenance-4-targets.tsv').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          print(f'Wrote {len(lines)-1} targets')
+          PY
+      - name: Commit compact ledger and remove runner
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/owner-source-maintenance-4-compact.yml
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add -A
+          git commit -m 'Catalog: compact maintenance target ledger [owner-maintenance-4-compact-complete]'
+          git push
