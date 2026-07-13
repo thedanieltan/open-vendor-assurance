@@ -446,10 +446,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/surveymonkey/unavailable_sources/surveymonkey-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.surveymonkey.com",
+        "https://status.surveymonkey.com/status",
+        "https://status.surveymonkey.com/statuspage",
+        "https://status.surveymonkey.com/system-status",
+        "https://status.surveymonkey.com/service-status",
+        "https://status.surveymonkey.com/uptime",
+        "https://surveymonkey.com",
+        "https://surveymonkey.com/status",
+        "https://surveymonkey.com/statuspage",
+        "https://surveymonkey.com/system-status",
+        "https://surveymonkey.com/service-status",
+        "https://surveymonkey.com/uptime",
+        "https://www.surveymonkey.com",
+        "https://www.surveymonkey.com/status",
+        "https://www.surveymonkey.com/statuspage",
+        "https://www.surveymonkey.com/system-status",
+        "https://www.surveymonkey.com/service-status",
+        "https://www.surveymonkey.com/uptime",
+        "https://www.surveymonkey.com/mp/legal/data-processing-agreement/",
+        "https://www.surveymonkey.com/mp/legal/subprocessors/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "surveymonkey-status-page",
+      "vendor_id": "surveymonkey"
+    },
+    {
+      "_openva_path": "data/vendors/surveymonkey/unavailable_sources/surveymonkey-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://surveymonkey.com",
+        "https://surveymonkey.com/terms",
+        "https://surveymonkey.com/terms-of-service",
+        "https://surveymonkey.com/legal/terms",
+        "https://surveymonkey.com/legal/terms-of-service",
+        "https://surveymonkey.com/terms.html",
+        "https://www.surveymonkey.com",
+        "https://www.surveymonkey.com/terms",
+        "https://www.surveymonkey.com/terms-of-service",
+        "https://www.surveymonkey.com/legal/terms",
+        "https://www.surveymonkey.com/legal/terms-of-service",
+        "https://www.surveymonkey.com/terms.html",
+        "https://www.surveymonkey.com/mp/legal/data-processing-agreement/",
+        "https://www.surveymonkey.com/mp/legal/subprocessors/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "surveymonkey-terms-of-service",
+      "vendor_id": "surveymonkey"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/surveymonkey/vendor.yaml",
     "catalog_status": "active",

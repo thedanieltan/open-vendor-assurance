@@ -388,27 +388,77 @@
       "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 1,
+    "unavailable_source_count": 2,
     "unavailable_source_types": [
-      "dpa"
+      "dpa",
+      "status_page"
     ]
   },
   "unavailable_sources": [
     {
       "_openva_path": "data/vendors/servicenow/unavailable_sources/servicenow-dpa.yaml",
       "candidate_urls_checked": [
-        "https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/data-processing-addendum.pdf"
+        "https://servicenow.com",
+        "https://servicenow.com/legal/data-processing-addendum",
+        "https://servicenow.com/data-processing-addendum",
+        "https://servicenow.com/legal/dpa",
+        "https://servicenow.com/dpa",
+        "https://servicenow.com/privacy/dpa",
+        "https://www.servicenow.com",
+        "https://www.servicenow.com/legal/data-processing-addendum",
+        "https://www.servicenow.com/data-processing-addendum",
+        "https://www.servicenow.com/legal/dpa",
+        "https://www.servicenow.com/dpa",
+        "https://www.servicenow.com/privacy/dpa",
+        "https://www.servicenow.com/company/trust.html",
+        "https://www.servicenow.com/privacy.html"
       ],
-      "next_review_after": "2026-08-14",
+      "next_review_after": "2026-10-11",
       "not_advice": true,
-      "notes": "Canonical source removed through reviewed maintenance action because the promotion plan marked it as cleanup_source_for_review. This is not a legal, procurement, compliance, risk, or vendor approval conclusion.",
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
       "reason": "distinct_public_url_not_identified",
-      "reviewed_at": "2026-05-16T08:45:54.425191Z",
+      "reviewed_at": "2026-07-13T20:36:54Z",
       "reviewed_by": "agent",
       "schema_version": "0.1.0",
       "source_type": "dpa",
       "status": "not_identified",
       "unavailable_source_id": "servicenow-dpa",
+      "vendor_id": "servicenow"
+    },
+    {
+      "_openva_path": "data/vendors/servicenow/unavailable_sources/servicenow-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.servicenow.com",
+        "https://status.servicenow.com/status",
+        "https://status.servicenow.com/statuspage",
+        "https://status.servicenow.com/system-status",
+        "https://status.servicenow.com/service-status",
+        "https://status.servicenow.com/uptime",
+        "https://servicenow.com",
+        "https://servicenow.com/status",
+        "https://servicenow.com/statuspage",
+        "https://servicenow.com/system-status",
+        "https://servicenow.com/service-status",
+        "https://servicenow.com/uptime",
+        "https://www.servicenow.com",
+        "https://www.servicenow.com/status",
+        "https://www.servicenow.com/statuspage",
+        "https://www.servicenow.com/system-status",
+        "https://www.servicenow.com/service-status",
+        "https://www.servicenow.com/uptime",
+        "https://www.servicenow.com/company/trust.html",
+        "https://www.servicenow.com/privacy.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "servicenow-status-page",
       "vendor_id": "servicenow"
     }
   ],

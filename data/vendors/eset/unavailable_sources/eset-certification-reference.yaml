@@ -1,34 +1,25 @@
+schema_version: 0.1.0
+unavailable_source_id: eset-certification-reference
+vendor_id: eset
+source_type: certification_reference
+status: not_identified
+reason: distinct_public_url_not_identified
 candidate_urls_checked:
-- https://www.eset.com/security/certifications
-- https://www.eset.com/trust/certifications
-- https://www.eset.com/trust-center/certifications
-- https://www.eset.com/trustcenter/certifications
-- https://www.eset.com/compliance/certifications
-- https://www.eset.com/security/compliance
-- https://www.eset.com/trust/compliance
-- https://status.eset.com/security/certifications
-- https://status.eset.com/trust/certifications
-- https://status.eset.com/trust-center/certifications
-- https://status.eset.com/trustcenter/certifications
-- https://status.eset.com/compliance/certifications
-- https://status.eset.com/security/compliance
-- https://status.eset.com/trust/compliance
+- https://eset.com
 - https://eset.com/security/certifications
 - https://eset.com/trust/certifications
-- https://eset.com/trust-center/certifications
-- https://eset.com/trustcenter/certifications
 - https://eset.com/compliance/certifications
-- https://eset.com/security/compliance
+- https://www.eset.com
+- https://www.eset.com/security/certifications
+- https://www.eset.com/trust/certifications
+- https://www.eset.com/compliance/certifications
+- https://www.eset.com/int/policy-hub/privacy/
+- https://www.eset.com/int/about/technology/
+- https://status.eset.com/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
 next_review_after: '2026-10-11'
-not_advice: true
 notes: No source-type-correct canonical public source was identified after bounded
   official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
   search result, not a vendor quality or risk conclusion.
-reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-13T17:39:33Z'
-reviewed_by: agent
-schema_version: 0.1.0
-source_type: certification_reference
-status: not_identified
-unavailable_source_id: eset-certification-reference
-vendor_id: eset
+not_advice: true

@@ -4,12 +4,25 @@ vendor_id: segment
 source_type: dpa
 status: not_identified
 reason: distinct_public_url_not_identified
-reviewed_at: '2026-05-16T08:00:44.365173Z'
-reviewed_by: agent
-next_review_after: '2026-08-14'
 candidate_urls_checked:
-- https://segment.com/legal/data-processing-addendum/
-notes: Canonical source removed through reviewed maintenance action because the promotion
-  plan marked it as cleanup_source_for_review. This is not a legal, procurement, compliance,
-  risk, or vendor approval conclusion.
+- https://segment.com
+- https://segment.com/legal/data-processing-addendum
+- https://segment.com/data-processing-addendum
+- https://segment.com/legal/dpa
+- https://segment.com/dpa
+- https://segment.com/privacy/dpa
+- https://www.segment.com
+- https://www.segment.com/legal/data-processing-addendum
+- https://www.segment.com/data-processing-addendum
+- https://www.segment.com/legal/dpa
+- https://www.segment.com/dpa
+- https://www.segment.com/privacy/dpa
+- https://segment.com/legal/
+- https://segment.com/security/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
 not_advice: true

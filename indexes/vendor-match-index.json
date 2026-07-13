@@ -142,7 +142,9 @@
           "title": "1Password Trust Center"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "1password"
     },
     {
@@ -345,7 +347,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "acuity-scheduling"
     },
@@ -497,7 +501,9 @@
           "title": "Adobe public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "adobe"
     },
     {
@@ -633,7 +639,8 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "compliance_page"
+        "compliance_page",
+        "status_page"
       ],
       "vendor_id": "adp"
     },
@@ -743,7 +750,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "adyen"
     },
@@ -851,24 +860,27 @@
           "title": "Airtable Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "airtable"
     },
     {
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
+        "privacy_notice",
         "trust_center"
       ],
       "canonical_sources": [
         {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "airwallex-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://security.airwallex.com/?14=http%3A%2F%2Fnj.rs%2F&clip=http%3A%2F%2Fnj.rs%2F&leave=http%3A%2F%2Fnj.rs%2F&ckeditor=http%3A%2F%2Fnj.rs%2F&messages=http%3A%2F%2Fnj.rs%2F&db=http%3A%2F%2Fnj.rs%2F&modern=http%3A%2F%2Fnj.rs%2F&portfolio=http%3A%2F%2Fnj.rs%2F&yx=http%3A%2F%2Fnj.rs%2F&scripts=http%3A%2F%2Fnj.rs%2F&7p=http%3A%2F%2Fnj.rs%2F&like_comment=http%3A%2F%2Fnj.rs%2F&7r=http%3A%2F%2Fnj.rs%2F&query=http%3A%2F%2Fnj.rs%2F&snippets=http%3A%2F%2Fnj.rs%2F&z1=http%3A%2F%2Fnj.rs%2F&searchfilter=http%3A%2F%2Fnj.rs%2F&shtml=http%3A%2F%2Fnj.rs%2F&root=http%3A%2F%2Fnj.rs%2F&kr=http%3A%2F%2Fnj.rs%2F&linkfile=http%3A%2F%2Fnj.rs%2F&2m=http%3A%2F%2Fnj.rs%2F&qv=http%3A%2F%2Fnj.rs%2F&realpath=http%3A%2F%2Fnj.rs%2F&switch=http%3A%2F%2Fnj.rs%2F&scopes=http%3A%2F%2Fnj.rs%2F&core=http%3A%2F%2Fnj.rs%2F&prevdir=http%3A%2F%2Fnj.rs%2F&Utils=http%3A%2F%2Fnj.rs%2F&dma=http%3A%2F%2Fnj.rs%2F&oq=http%3A%2F%2Fnj.rs%2F&fullscreen=http%3A%2F%2Fnj.rs%2F&de=http%3A%2F%2Fnj.rs%2F&Extension=http%3A%2F%2Fnj.rs%2F&ids=http%3A%2F%2Fnj.rs%2F&ti=http%3A%2F%2Fnj.rs%2F&bar=http%3A%2F%2Fnj.rs%2F&bt=http%3A%2F%2Fnj.rs%2F&tabs=http%3A%2F%2Fnj.rs%2F&hideminor=http%3A%2F%2Fnj.rs%2F&boolean=http%3A%2F%2Fnj.rs%2F&simple=http%3A%2F%2Fnj.rs%2F&tr=http%3A%2F%2Fnj.rs%2F&e=http%3A%2F%2Fnj.rs%2F&board_no=http%3A%2F%2Fnj.rs%2F&ly=http%3A%2F%2Fnj.rs%2F&handler=http%3A%2F%2Fnj.rs%2F&itemName=certifications&source=click",
-          "title": "Airwallex Trust Center | Powered by SafeBase"
+          "source_id": "airwallex-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.airwallex.com/global/terms/privacy-policy",
+          "title": "Global Privacy Policy | Airwallex"
         },
         {
           "confidence": null,
@@ -892,13 +904,13 @@
         "airwallex.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
+        "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "airwallex-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://security.airwallex.com/?14=http%3A%2F%2Fnj.rs%2F&clip=http%3A%2F%2Fnj.rs%2F&leave=http%3A%2F%2Fnj.rs%2F&ckeditor=http%3A%2F%2Fnj.rs%2F&messages=http%3A%2F%2Fnj.rs%2F&db=http%3A%2F%2Fnj.rs%2F&modern=http%3A%2F%2Fnj.rs%2F&portfolio=http%3A%2F%2Fnj.rs%2F&yx=http%3A%2F%2Fnj.rs%2F&scripts=http%3A%2F%2Fnj.rs%2F&7p=http%3A%2F%2Fnj.rs%2F&like_comment=http%3A%2F%2Fnj.rs%2F&7r=http%3A%2F%2Fnj.rs%2F&query=http%3A%2F%2Fnj.rs%2F&snippets=http%3A%2F%2Fnj.rs%2F&z1=http%3A%2F%2Fnj.rs%2F&searchfilter=http%3A%2F%2Fnj.rs%2F&shtml=http%3A%2F%2Fnj.rs%2F&root=http%3A%2F%2Fnj.rs%2F&kr=http%3A%2F%2Fnj.rs%2F&linkfile=http%3A%2F%2Fnj.rs%2F&2m=http%3A%2F%2Fnj.rs%2F&qv=http%3A%2F%2Fnj.rs%2F&realpath=http%3A%2F%2Fnj.rs%2F&switch=http%3A%2F%2Fnj.rs%2F&scopes=http%3A%2F%2Fnj.rs%2F&core=http%3A%2F%2Fnj.rs%2F&prevdir=http%3A%2F%2Fnj.rs%2F&Utils=http%3A%2F%2Fnj.rs%2F&dma=http%3A%2F%2Fnj.rs%2F&oq=http%3A%2F%2Fnj.rs%2F&fullscreen=http%3A%2F%2Fnj.rs%2F&de=http%3A%2F%2Fnj.rs%2F&Extension=http%3A%2F%2Fnj.rs%2F&ids=http%3A%2F%2Fnj.rs%2F&ti=http%3A%2F%2Fnj.rs%2F&bar=http%3A%2F%2Fnj.rs%2F&bt=http%3A%2F%2Fnj.rs%2F&tabs=http%3A%2F%2Fnj.rs%2F&hideminor=http%3A%2F%2Fnj.rs%2F&boolean=http%3A%2F%2Fnj.rs%2F&simple=http%3A%2F%2Fnj.rs%2F&tr=http%3A%2F%2Fnj.rs%2F&e=http%3A%2F%2Fnj.rs%2F&board_no=http%3A%2F%2Fnj.rs%2F&ly=http%3A%2F%2Fnj.rs%2F&handler=http%3A%2F%2Fnj.rs%2F&itemName=certifications&source=click",
-          "title": "Airwallex Trust Center | Powered by SafeBase"
+          "source_id": "airwallex-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.airwallex.com/global/terms/privacy-policy",
+          "title": "Global Privacy Policy | Airwallex"
         },
         "trust_center": {
           "confidence": null,
@@ -910,10 +922,12 @@
         }
       },
       "unavailable_source_types": [
+        "certification_reference",
         "compliance_page",
         "dpa",
-        "privacy_notice",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "airwallex"
     },
@@ -1148,6 +1162,7 @@
       },
       "unavailable_source_types": [
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "akur8"
@@ -1256,7 +1271,10 @@
           "title": "Algolia Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "algolia"
     },
     {
@@ -1363,7 +1381,10 @@
           "title": "Alibaba Cloud Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "alibaba-cloud-international"
     },
     {
@@ -1470,7 +1491,10 @@
           "title": "Aliyun subprocessors public reference"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "aliyun"
     },
     {
@@ -1570,7 +1594,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "alloy"
     },
@@ -1678,7 +1704,10 @@
           "title": "Amplitude Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "amplitude"
     },
     {
@@ -1785,7 +1814,10 @@
           "title": "Anthropic Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "anthropic"
     },
     {
@@ -1862,6 +1894,7 @@
         "certification_reference",
         "compliance_page",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "applied-systems"
@@ -2014,7 +2047,9 @@
           "title": "Asana public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "asana"
     },
     {
@@ -2091,6 +2126,7 @@
         "certification_reference",
         "compliance_page",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "athenahealth"
@@ -2226,7 +2262,10 @@
           "title": "Atlassian Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "atlassian"
     },
     {
@@ -2333,7 +2372,10 @@
           "title": "AuditBoard Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "auditboard"
     },
     {
@@ -2440,7 +2482,10 @@
           "title": "Auth0 Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "auth0"
     },
     {
@@ -2566,7 +2611,9 @@
           "title": "AWS Customer Agreement"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "aws"
     },
     {
@@ -2673,7 +2720,10 @@
           "title": "BambooHR Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "bamboohr"
     },
     {
@@ -2751,6 +2801,7 @@
         "certification_reference",
         "compliance_page",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "basecamp"
@@ -2879,7 +2930,10 @@
           "title": "BeyondTrust Trust Center"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "beyondtrust"
     },
     {
@@ -2984,8 +3038,9 @@
         }
       },
       "unavailable_source_types": [
-        "certification_reference",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "bigcommerce"
     },
@@ -3077,7 +3132,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "bill-com"
     },
@@ -3502,7 +3559,9 @@
           "title": "Box public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "box"
     },
     {
@@ -3609,7 +3668,10 @@
           "title": "Braze Subprocessors | Braze"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "braze"
     },
     {
@@ -3782,7 +3844,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "calendly"
     },
@@ -4107,7 +4171,9 @@
           "title": "Canva terms of use"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "canva"
     },
     {
@@ -4216,7 +4282,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "chainalysis"
     },
@@ -4312,8 +4380,8 @@
         }
       },
       "unavailable_source_types": [
-        "certification_reference",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "checkout-com"
@@ -4532,7 +4600,10 @@
           "title": "ClickUp Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "clickup"
     },
     {
@@ -4683,7 +4754,9 @@
           "title": "Cloudflare website terms"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "cloudflare"
     },
     {
@@ -4763,7 +4836,8 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "cockroach-labs"
     },
@@ -5001,7 +5075,10 @@
           "title": "Cohere Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "cohere"
     },
     {
@@ -5127,7 +5204,10 @@
           "title": "commercetools Trust Center | Powered by SafeBase"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "commercetools"
     },
     {
@@ -5204,6 +5284,8 @@
         "certification_reference",
         "compliance_page",
         "security_page",
+        "status_page",
+        "terms_of_service",
         "trust_center"
       ],
       "vendor_id": "complyadvantage"
@@ -5297,7 +5379,9 @@
       },
       "unavailable_source_types": [
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "confluent"
     },
@@ -5405,7 +5489,10 @@
           "title": "Contentful Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "contentful"
     },
     {
@@ -5497,7 +5584,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "culture-amp"
     },
@@ -5752,7 +5841,8 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page"
       ],
       "vendor_id": "cyberark"
     },
@@ -5880,7 +5970,8 @@
         }
       },
       "unavailable_source_types": [
-        "certification_reference"
+        "certification_reference",
+        "status_page"
       ],
       "vendor_id": "darktrace"
     },
@@ -5957,7 +6048,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "darwinbox"
     },
@@ -6065,7 +6158,10 @@
           "title": "Databricks Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "databricks"
     },
     {
@@ -6216,7 +6312,9 @@
           "title": "Datadog website terms of use"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "datadog"
     },
     {
@@ -6323,7 +6421,10 @@
           "title": "Deel Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "deel"
     },
     {
@@ -6383,7 +6484,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
+        "status_page",
         "subprocessors_list",
+        "terms_of_service",
         "trust_center"
       ],
       "vendor_id": "deepl"
@@ -6647,7 +6750,9 @@
           "title": "DigitalOcean public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "digitalocean"
     },
     {
@@ -6756,7 +6861,8 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "docebo"
     },
@@ -6864,7 +6970,10 @@
           "title": "Docker Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "docker"
     },
     {
@@ -7015,7 +7124,9 @@
           "title": "DocuSign public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "docusign"
     },
     {
@@ -7092,7 +7203,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "doodle"
     },
@@ -7183,7 +7296,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "dotdigital"
     },
@@ -7275,7 +7390,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "drata"
     },
@@ -7427,7 +7544,9 @@
           "title": "Dropbox terms of service"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "dropbox"
     },
     {
@@ -7520,7 +7639,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "duck-creek-technologies"
     },
@@ -7628,14 +7749,18 @@
           "title": "Elastic Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "elastic"
     },
     {
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "status_page"
       ],
       "canonical_sources": [
         {
@@ -7645,6 +7770,14 @@
           "source_type": "privacy_notice",
           "source_url": "https://emarsys.com/privacy-policy",
           "title": "Privacy Policy - SAP Engagement Cloud"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "emarsys-status-page",
+          "source_type": "status_page",
+          "source_url": "https://trust.emarsys.com/",
+          "title": "SAP Engagement Cloud Status"
         }
       ],
       "catalog_status": "active",
@@ -7665,6 +7798,14 @@
           "source_type": "privacy_notice",
           "source_url": "https://emarsys.com/privacy-policy",
           "title": "Privacy Policy - SAP Engagement Cloud"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "emarsys-status-page",
+          "source_type": "status_page",
+          "source_url": "https://trust.emarsys.com/",
+          "title": "SAP Engagement Cloud Status"
         }
       },
       "unavailable_source_types": [
@@ -7673,6 +7814,7 @@
         "dpa",
         "security_page",
         "subprocessors_list",
+        "terms_of_service",
         "trust_center"
       ],
       "vendor_id": "emarsys"
@@ -7734,7 +7876,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "employment-hero"
     },
@@ -7812,7 +7956,8 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "eset"
     },
@@ -7905,7 +8050,9 @@
       },
       "unavailable_source_types": [
         "security_page",
+        "status_page",
         "subprocessors_list",
+        "terms_of_service",
         "trust_center"
       ],
       "vendor_id": "exoscale"
@@ -8163,7 +8310,8 @@
       },
       "unavailable_source_types": [
         "compliance_page",
-        "dpa"
+        "dpa",
+        "status_page"
       ],
       "vendor_id": "factorial"
     },
@@ -8255,7 +8403,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "figma"
     },
@@ -8318,6 +8468,7 @@
         "compliance_page",
         "dpa",
         "security_page",
+        "status_page",
         "subprocessors_list",
         "trust_center"
       ],
@@ -8414,6 +8565,7 @@
       "unavailable_source_types": [
         "certification_reference",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "fiserv"
@@ -8700,6 +8852,7 @@
       },
       "unavailable_source_types": [
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "fortinet"
@@ -8852,7 +9005,9 @@
           "title": "Freshworks public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "freshworks"
     },
     {
@@ -9070,7 +9225,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "getresponse"
     },
@@ -9178,7 +9335,10 @@
           "title": "GitHub Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "github"
     },
     {
@@ -9307,7 +9467,10 @@
           "title": "GitLab Trust Center"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "gitlab"
     },
     {
@@ -9369,6 +9532,7 @@
         "compliance_page",
         "dpa",
         "security_page",
+        "status_page",
         "subprocessors_list",
         "trust_center"
       ],
@@ -9450,7 +9614,8 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "gocardless"
     },
@@ -9559,7 +9724,10 @@
           "title": "Google Cloud Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "google-cloud"
     },
     {
@@ -9652,7 +9820,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "compliance_page"
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "google-workspace"
     },
@@ -9745,7 +9915,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "compliance_page"
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "gorgias"
     },
@@ -9823,7 +9995,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "govini"
     },
@@ -9916,7 +10090,9 @@
       },
       "unavailable_source_types": [
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "grafana-labs"
     },
@@ -10009,7 +10185,9 @@
       },
       "unavailable_source_types": [
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "grammarly"
     },
@@ -10071,7 +10249,9 @@
         "compliance_page",
         "dpa",
         "security_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "graphcore"
     },
@@ -10179,7 +10359,10 @@
           "title": "Greenhouse Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "greenhouse"
     },
     {
@@ -10239,7 +10422,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "greythr"
     },
@@ -10333,7 +10518,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "guidewire"
     },
@@ -10441,7 +10628,10 @@
           "title": "Gusto Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "gusto"
     },
     {
@@ -10548,7 +10738,10 @@
           "title": "HashiCorp Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "hashicorp"
     },
     {
@@ -10640,7 +10833,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "compliance_page"
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "help-scout"
     },
@@ -10648,7 +10843,8 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "status_page"
       ],
       "canonical_sources": [
         {
@@ -10658,6 +10854,14 @@
           "source_type": "privacy_notice",
           "source_url": "https://hetzner.com/privacy-policy",
           "title": "Data Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "hetzner-status-page",
+          "source_type": "status_page",
+          "source_url": "https://status.hetzner.com/",
+          "title": "Hetzner Status"
         }
       ],
       "catalog_status": "active",
@@ -10678,6 +10882,14 @@
           "source_type": "privacy_notice",
           "source_url": "https://hetzner.com/privacy-policy",
           "title": "Data Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "hetzner-status-page",
+          "source_type": "status_page",
+          "source_url": "https://status.hetzner.com/",
+          "title": "Hetzner Status"
         }
       },
       "unavailable_source_types": [
@@ -10686,6 +10898,7 @@
         "dpa",
         "security_page",
         "subprocessors_list",
+        "terms_of_service",
         "trust_center"
       ],
       "vendor_id": "hetzner"
@@ -10763,7 +10976,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "hibob"
     },
@@ -10871,7 +11086,10 @@
           "title": "Huawei Cloud China subprocessors public reference"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "huawei-cloud-cn"
     },
     {
@@ -10978,7 +11196,10 @@
           "title": "Huawei Cloud Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "huawei-cloud-international"
     },
     {
@@ -11129,7 +11350,9 @@
           "title": "HubSpot public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "hubspot"
     },
     {
@@ -11236,7 +11459,10 @@
           "title": "Hugging Face Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "hugging-face"
     },
     {
@@ -11360,7 +11586,10 @@
           "title": "NYDFS Cybersecurity Compliance Guide | 23 NYCRR 500"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "hyperproof"
     },
     {
@@ -11511,14 +11740,18 @@
           "title": "IBM public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "ibm-cloud"
     },
     {
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -11526,19 +11759,36 @@
           "effective_or_published_at": null,
           "source_id": "insider-privacy-notice",
           "source_type": "privacy_notice",
-          "source_url": "https://insider.com/privacy-policy",
-          "title": "Privacy Notice"
+          "source_url": "https://insiderone.com/privacy-policy/",
+          "title": "Insider One Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insider-security-page",
+          "source_type": "security_page",
+          "source_url": "https://insiderone.com/security/",
+          "title": "Insider One Security Center"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insider-terms-of-service",
+          "source_type": "terms_of_service",
+          "source_url": "https://insiderone.com/terms-of-use/",
+          "title": "Insider One Terms of Use"
         }
       ],
       "catalog_status": "active",
       "contracting_entity_resolution": [],
-      "display_name": "Insider",
+      "display_name": "Insider One",
       "legal_entities": [],
       "legal_name": null,
       "manifest_path": "dist/vendors/insider.json",
       "missing_core_source_types": [],
       "official_domains": [
-        "insider.com"
+        "insiderone.com",
+        "useinsider.com"
       ],
       "primary_source_by_type": {
         "privacy_notice": {
@@ -11546,15 +11796,31 @@
           "effective_or_published_at": null,
           "source_id": "insider-privacy-notice",
           "source_type": "privacy_notice",
-          "source_url": "https://insider.com/privacy-policy",
-          "title": "Privacy Notice"
+          "source_url": "https://insiderone.com/privacy-policy/",
+          "title": "Insider One Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insider-security-page",
+          "source_type": "security_page",
+          "source_url": "https://insiderone.com/security/",
+          "title": "Insider One Security Center"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insider-terms-of-service",
+          "source_type": "terms_of_service",
+          "source_url": "https://insiderone.com/terms-of-use/",
+          "title": "Insider One Terms of Use"
         }
       },
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
         "dpa",
-        "security_page",
+        "status_page",
         "subprocessors_list",
         "trust_center"
       ],
@@ -11684,7 +11950,8 @@
         }
       },
       "unavailable_source_types": [
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "instructure"
     },
@@ -11792,7 +12059,10 @@
           "title": "Intercom Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "intercom"
     },
     {
@@ -11887,7 +12157,8 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "jetbrains"
     },
@@ -11981,6 +12252,7 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "keka"
@@ -12171,7 +12443,10 @@
           "title": "Klaviyo Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "klaviyo"
     },
     {
@@ -12247,7 +12522,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "lattice"
     },
@@ -12308,7 +12585,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "lever"
     },
@@ -12551,7 +12830,10 @@
           "title": "LogicGate Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "logicgate"
     },
     {
@@ -12945,7 +13227,10 @@
           "title": "Mailchimp Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "mailchimp"
     },
     {
@@ -13140,7 +13425,8 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "terms_of_service"
       ],
       "vendor_id": "marqeta"
     },
@@ -13218,6 +13504,7 @@
         "certification_reference",
         "compliance_page",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "meditech"
@@ -13371,16 +13658,27 @@
           "title": "Microsoft public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "microsoft"
     },
     {
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
         "security_page"
       ],
       "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "microsoft-azure-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.microsoft.com/en-us/privacy/privacystatement",
+          "title": "Microsoft Privacy Statement – Microsoft privacy"
+        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -13398,9 +13696,18 @@
       "manifest_path": "dist/vendors/microsoft-azure.json",
       "missing_core_source_types": [],
       "official_domains": [
-        "azure.microsoft.com"
+        "azure.microsoft.com",
+        "microsoft.com"
       ],
       "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "microsoft-azure-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.microsoft.com/en-us/privacy/privacystatement",
+          "title": "Microsoft Privacy Statement – Microsoft privacy"
+        },
         "security_page": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -13414,8 +13721,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "privacy_notice",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "microsoft-azure"
     },
@@ -13507,7 +13815,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "miro"
     },
@@ -13615,7 +13925,10 @@
           "title": "Mistral AI Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "mistral-ai"
     },
     {
@@ -13722,7 +14035,10 @@
           "title": "Mixpanel Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "mixpanel"
     },
     {
@@ -13801,7 +14117,8 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "mollie"
     },
@@ -13909,7 +14226,10 @@
           "title": "monday.com Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "monday"
     },
     {
@@ -14189,7 +14509,9 @@
           "title": "MongoDB public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "mongodb"
     },
     {
@@ -14408,7 +14730,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "neo4j"
     },
@@ -14806,6 +15130,7 @@
       },
       "unavailable_source_types": [
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "netskope"
@@ -14815,6 +15140,7 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "compliance_page",
+        "privacy_notice",
         "security_page"
       ],
       "canonical_sources": [
@@ -14825,6 +15151,14 @@
           "source_type": "compliance_page",
           "source_url": "https://www.netsuite.com/portal/platform/compliance.shtml",
           "title": "NetSuite Compliance"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netsuite-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.oracle.com/legal/privacy/services-privacy-policy/",
+          "title": "Services Privacy Policy | Oracle"
         },
         {
           "confidence": null,
@@ -14843,7 +15177,8 @@
       "manifest_path": "dist/vendors/netsuite.json",
       "missing_core_source_types": [],
       "official_domains": [
-        "netsuite.com"
+        "netsuite.com",
+        "oracle.com"
       ],
       "primary_source_by_type": {
         "compliance_page": {
@@ -14853,6 +15188,14 @@
           "source_type": "compliance_page",
           "source_url": "https://www.netsuite.com/portal/platform/compliance.shtml",
           "title": "NetSuite Compliance"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "netsuite-privacy-notice",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.oracle.com/legal/privacy/services-privacy-policy/",
+          "title": "Services Privacy Policy | Oracle"
         },
         "security_page": {
           "confidence": null,
@@ -14865,8 +15208,9 @@
       },
       "unavailable_source_types": [
         "dpa",
-        "privacy_notice",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "netsuite"
     },
@@ -14974,7 +15318,10 @@
           "title": "New Relic Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "new-relic"
     },
     {
@@ -15066,7 +15413,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "compliance_page"
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "notion"
     },
@@ -15175,7 +15524,9 @@
         }
       },
       "unavailable_source_types": [
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "odoo"
     },
@@ -15327,7 +15678,9 @@
           "title": "Okta public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "okta"
     },
     {
@@ -15434,7 +15787,10 @@
           "title": "1Password Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "onepassword"
     },
     {
@@ -15510,7 +15866,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "onetrust"
     },
@@ -15618,7 +15976,10 @@
           "title": "OpenAI Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "openai"
     },
     {
@@ -15769,7 +16130,9 @@
           "title": "Oracle public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "oracle-cloud"
     },
     {
@@ -15876,7 +16239,10 @@
           "title": "PagerDuty Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "pagerduty"
     },
     {
@@ -15960,7 +16326,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "palantir"
     },
@@ -16135,7 +16503,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "paychex"
     },
@@ -16247,7 +16617,8 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "payoneer"
     },
@@ -16369,6 +16740,7 @@
         "certification_reference",
         "compliance_page",
         "security_page",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "paypal"
@@ -16446,7 +16818,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "personio"
     },
@@ -16538,7 +16912,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "pinecone"
     },
@@ -16665,7 +17041,10 @@
           "title": "Ping Identity Trust Center"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "ping-identity"
     },
     {
@@ -16771,7 +17150,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "compliance_page"
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "pipedrive"
     },
@@ -16846,7 +17227,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "plaid"
     },
@@ -16938,7 +17321,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "planetscale"
     },
@@ -17032,6 +17417,7 @@
       "unavailable_source_types": [
         "certification_reference",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "pointclickcare"
@@ -17140,7 +17526,10 @@
           "title": "PostHog Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "posthog"
     },
     {
@@ -17352,7 +17741,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "prismic"
     },
@@ -17445,7 +17836,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "compliance_page"
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "qualtrics"
     },
@@ -17598,7 +17991,9 @@
           "title": "Intuit public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "quickbooks"
     },
     {
@@ -17929,7 +18324,8 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "red-hat"
     },
@@ -18023,7 +18419,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "redis"
     },
@@ -18106,9 +18504,10 @@
         }
       },
       "unavailable_source_types": [
-        "certification_reference",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "redox"
     },
@@ -18342,7 +18741,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "retool"
     },
@@ -18450,7 +18851,10 @@
           "title": "Rippling Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "rippling"
     },
     {
@@ -18526,7 +18930,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "sage"
     },
@@ -18678,7 +19084,9 @@
           "title": "Salesforce legal agreements page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "salesforce"
     },
     {
@@ -18785,7 +19193,10 @@
           "title": "Sanity Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "sanity"
     },
     {
@@ -18892,7 +19303,10 @@
           "title": "SAP Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "sap"
     },
     {
@@ -19129,7 +19543,10 @@
           "title": "Scrut Automation Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "scrut-automation"
     },
     {
@@ -19208,6 +19625,7 @@
         "certification_reference",
         "compliance_page",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "second-front-systems"
@@ -19300,7 +19718,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "secureframe"
     },
@@ -19392,7 +19812,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "segment"
     },
@@ -19500,7 +19922,10 @@
           "title": "Sentry Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "sentry"
     },
     {
@@ -19635,7 +20060,8 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page"
       ],
       "vendor_id": "servicenow"
     },
@@ -19713,7 +20139,9 @@
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "shield-ai"
     },
@@ -19798,7 +20226,9 @@
       "unavailable_source_types": [
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "shift-technology"
     },
@@ -19906,7 +20336,10 @@
           "title": "Shopify Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "shopify"
     },
     {
@@ -20013,7 +20446,10 @@
           "title": "Slack Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "slack"
     },
     {
@@ -20091,6 +20527,7 @@
         "certification_reference",
         "compliance_page",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "smarthr"
@@ -20202,7 +20639,9 @@
         }
       },
       "unavailable_source_types": [
-        "certification_reference"
+        "certification_reference",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "smartsheet"
     },
@@ -20354,7 +20793,9 @@
           "title": "Snowflake public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "snowflake"
     },
     {
@@ -20465,7 +20906,8 @@
         }
       },
       "unavailable_source_types": [
-        "subprocessors_list"
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "sophos"
     },
@@ -20573,7 +21015,10 @@
           "title": "Splunk Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "splunk"
     },
     {
@@ -20649,7 +21094,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "square"
     },
@@ -20726,7 +21173,9 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "squarespace"
     },
@@ -20819,7 +21268,9 @@
       },
       "unavailable_source_types": [
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "starburst"
     },
@@ -20942,7 +21393,9 @@
         }
       },
       "unavailable_source_types": [
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "storyblok"
     },
@@ -21175,7 +21628,10 @@
           "title": "Stripe Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "stripe"
     },
     {
@@ -21283,7 +21739,9 @@
         }
       },
       "unavailable_source_types": [
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "sumsub"
     },
@@ -21391,7 +21849,10 @@
           "title": "Supabase Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "supabase"
     },
     {
@@ -21515,7 +21976,10 @@
           "title": "SurveyMonkey Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "surveymonkey"
     },
     {
@@ -21705,7 +22169,10 @@
           "title": "Tencent Cloud China subprocessors public reference"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "tencent-cloud-cn"
     },
     {
@@ -21812,7 +22279,10 @@
           "title": "Tencent Cloud Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "tencent-cloud-international"
     },
     {
@@ -21919,7 +22389,10 @@
           "title": "Thoropass Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "thoropass"
     },
     {
@@ -22139,7 +22612,9 @@
         }
       },
       "unavailable_source_types": [
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "trulioo"
     },
@@ -22247,7 +22722,10 @@
           "title": "TrustArc Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "trustarc"
     },
     {
@@ -22398,7 +22876,9 @@
           "title": "Twilio public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "twilio"
     },
     {
@@ -22490,7 +22970,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "compliance_page"
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "typeform"
     },
@@ -22586,6 +23068,7 @@
       "unavailable_source_types": [
         "certification_reference",
         "dpa",
+        "status_page",
         "subprocessors_list"
       ],
       "vendor_id": "ukg"
@@ -22759,7 +23242,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "vanta"
     },
@@ -22867,7 +23352,10 @@
           "title": "Vercel Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "vercel"
     },
     {
@@ -22950,7 +23438,9 @@
       },
       "unavailable_source_types": [
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "vertafore"
     },
@@ -23040,7 +23530,9 @@
       },
       "unavailable_source_types": [
         "dpa",
-        "subprocessors_list"
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
       ],
       "vendor_id": "vtex"
     },
@@ -23132,7 +23624,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "weaviate"
     },
@@ -23224,7 +23718,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "webflow"
     },
@@ -23325,6 +23821,7 @@
         "compliance_page",
         "dpa",
         "security_page",
+        "status_page",
         "subprocessors_list",
         "trust_center"
       ],
@@ -23579,7 +24076,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
-        "compliance_page"
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "wix"
     },
@@ -23677,7 +24176,8 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "dpa"
+        "dpa",
+        "terms_of_service"
       ],
       "vendor_id": "wiz"
     },
@@ -23829,7 +24329,9 @@
           "title": "Workday public legal terms page"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "workday"
     },
     {
@@ -24228,7 +24730,10 @@
           "title": "Xero Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "xero"
     },
     {
@@ -24319,7 +24824,9 @@
         }
       },
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "zapier"
     },
@@ -24427,7 +24934,10 @@
           "title": "Zendesk Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "zendesk"
     },
     {
@@ -24534,7 +25044,10 @@
           "title": "Zoho Subprocessors"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "zoho"
     },
     {
@@ -24686,7 +25199,9 @@
           "title": "Zoom terms of service"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "zoom"
     },
     {
@@ -24842,7 +25357,10 @@
           "title": "Replace Legacy Systems for Better Security | Zscaler"
         }
       },
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "zscaler"
     }
   ],

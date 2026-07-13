@@ -1,29 +1,26 @@
+schema_version: 0.1.0
+unavailable_source_id: neo4j-dpa
+vendor_id: neo4j
+source_type: dpa
+status: not_identified
+reason: distinct_public_url_not_identified
 candidate_urls_checked:
+- https://neo4j.com
 - https://neo4j.com/legal/data-processing-addendum
 - https://neo4j.com/data-processing-addendum
 - https://neo4j.com/legal/dpa
 - https://neo4j.com/dpa
-- https://neo4j.com/privacy/dpa.html
 - https://neo4j.com/privacy/dpa
+- https://www.neo4j.com
 - https://www.neo4j.com/legal/data-processing-addendum
 - https://www.neo4j.com/data-processing-addendum
 - https://www.neo4j.com/legal/dpa
 - https://www.neo4j.com/dpa
-- https://www.neo4j.com/privacy/dpa.html
 - https://www.neo4j.com/privacy/dpa
-- https://neo4j.com
-- https://www.neo4j.com
-- https://neo4j.com/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
 next_review_after: '2026-10-11'
-not_advice: true
 notes: No source-type-correct canonical public source was identified after bounded
   official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
   search result, not a vendor quality or risk conclusion.
-reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-13T17:39:32Z'
-reviewed_by: agent
-schema_version: 0.1.0
-source_type: dpa
-status: not_identified
-unavailable_source_id: neo4j-dpa
-vendor_id: neo4j
+not_advice: true

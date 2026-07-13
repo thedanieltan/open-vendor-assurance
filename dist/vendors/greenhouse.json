@@ -395,10 +395,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/greenhouse/unavailable_sources/greenhouse-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.greenhouse.com",
+        "https://status.greenhouse.com/status",
+        "https://status.greenhouse.com/statuspage",
+        "https://status.greenhouse.com/system-status",
+        "https://status.greenhouse.com/service-status",
+        "https://status.greenhouse.com/uptime",
+        "https://greenhouse.com",
+        "https://greenhouse.com/status",
+        "https://greenhouse.com/statuspage",
+        "https://greenhouse.com/system-status",
+        "https://greenhouse.com/service-status",
+        "https://greenhouse.com/uptime",
+        "https://www.greenhouse.com",
+        "https://www.greenhouse.com/status",
+        "https://www.greenhouse.com/statuspage",
+        "https://www.greenhouse.com/system-status",
+        "https://www.greenhouse.com/service-status",
+        "https://www.greenhouse.com/uptime",
+        "https://www.greenhouse.com/data-processing-addendum",
+        "https://www.greenhouse.com/subprocessors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "greenhouse-status-page",
+      "vendor_id": "greenhouse"
+    },
+    {
+      "_openva_path": "data/vendors/greenhouse/unavailable_sources/greenhouse-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://greenhouse.com",
+        "https://greenhouse.com/terms",
+        "https://greenhouse.com/terms-of-service",
+        "https://greenhouse.com/legal/terms",
+        "https://greenhouse.com/legal/terms-of-service",
+        "https://greenhouse.com/terms.html",
+        "https://www.greenhouse.com",
+        "https://www.greenhouse.com/terms",
+        "https://www.greenhouse.com/terms-of-service",
+        "https://www.greenhouse.com/legal/terms",
+        "https://www.greenhouse.com/legal/terms-of-service",
+        "https://www.greenhouse.com/terms.html",
+        "https://www.greenhouse.com/data-processing-addendum",
+        "https://www.greenhouse.com/subprocessors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "greenhouse-terms-of-service",
+      "vendor_id": "greenhouse"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/greenhouse/vendor.yaml",
     "catalog_status": "active",

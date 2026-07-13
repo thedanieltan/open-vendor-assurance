@@ -421,10 +421,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/monday/unavailable_sources/monday-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.monday.com",
+        "https://status.monday.com/status",
+        "https://status.monday.com/statuspage",
+        "https://status.monday.com/system-status",
+        "https://status.monday.com/service-status",
+        "https://status.monday.com/uptime",
+        "https://monday.com",
+        "https://monday.com/status",
+        "https://monday.com/statuspage",
+        "https://monday.com/system-status",
+        "https://monday.com/service-status",
+        "https://monday.com/uptime",
+        "https://www.monday.com",
+        "https://www.monday.com/status",
+        "https://www.monday.com/statuspage",
+        "https://www.monday.com/system-status",
+        "https://www.monday.com/service-status",
+        "https://www.monday.com/uptime",
+        "https://monday.com/trustcenter",
+        "https://monday.com/privacy/privacy-policy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "monday-status-page",
+      "vendor_id": "monday"
+    },
+    {
+      "_openva_path": "data/vendors/monday/unavailable_sources/monday-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://monday.com",
+        "https://monday.com/terms",
+        "https://monday.com/terms-of-service",
+        "https://monday.com/legal/terms",
+        "https://monday.com/legal/terms-of-service",
+        "https://monday.com/terms.html",
+        "https://www.monday.com",
+        "https://www.monday.com/terms",
+        "https://www.monday.com/terms-of-service",
+        "https://www.monday.com/legal/terms",
+        "https://www.monday.com/legal/terms-of-service",
+        "https://www.monday.com/terms.html",
+        "https://monday.com/trustcenter",
+        "https://monday.com/privacy/privacy-policy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "monday-terms-of-service",
+      "vendor_id": "monday"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/monday/vendor.yaml",
     "catalog_status": "active",

@@ -1,0 +1,28 @@
+schema_version: 0.1.0
+unavailable_source_id: segment-terms-of-service
+vendor_id: segment
+source_type: terms_of_service
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://segment.com
+- https://segment.com/terms
+- https://segment.com/terms-of-service
+- https://segment.com/legal/terms
+- https://segment.com/legal/terms-of-service
+- https://segment.com/terms.html
+- https://www.segment.com
+- https://www.segment.com/terms
+- https://www.segment.com/terms-of-service
+- https://www.segment.com/legal/terms
+- https://www.segment.com/legal/terms-of-service
+- https://www.segment.com/terms.html
+- https://segment.com/legal/
+- https://segment.com/security/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

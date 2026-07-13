@@ -4,18 +4,22 @@ vendor_id: bitdefender
 source_type: certification_reference
 status: not_identified
 reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-14T00:00:00Z'
-reviewed_by: agent
-next_review_after: '2026-10-12'
 candidate_urls_checked:
-- https://www.bitdefender.com/en-us/business/services/cybersecurity-advisories
+- https://bitdefender.com
+- https://bitdefender.com/security/certifications
+- https://bitdefender.com/trust/certifications
+- https://bitdefender.com/compliance/certifications
+- https://www.bitdefender.com
+- https://www.bitdefender.com/security/certifications
+- https://www.bitdefender.com/trust/certifications
+- https://www.bitdefender.com/compliance/certifications
 - https://www.bitdefender.com/en-us/site/view/legal-privacy-policy-for-bitdefender-websites
 - https://www.bitdefender.com/business/support/en/77209-343110-trust-center.html
 - https://status.bitdefender.com/
-- https://bitdefender.com
-notes: No source-type-correct canonical public source was retained after official-path,
-  link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose
-  review. Rejected generic, editorial, user-generated, or not-found pages are not
-  treated as vendor assurance sources. This is a search result, not a vendor quality
-  or risk conclusion.
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
 not_advice: true

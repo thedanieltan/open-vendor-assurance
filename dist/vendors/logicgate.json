@@ -381,10 +381,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/logicgate/unavailable_sources/logicgate-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.logicgate.com",
+        "https://status.logicgate.com/status",
+        "https://status.logicgate.com/statuspage",
+        "https://status.logicgate.com/system-status",
+        "https://status.logicgate.com/service-status",
+        "https://status.logicgate.com/uptime",
+        "https://logicgate.com",
+        "https://logicgate.com/status",
+        "https://logicgate.com/statuspage",
+        "https://logicgate.com/system-status",
+        "https://logicgate.com/service-status",
+        "https://logicgate.com/uptime",
+        "https://www.logicgate.com",
+        "https://www.logicgate.com/status",
+        "https://www.logicgate.com/statuspage",
+        "https://www.logicgate.com/system-status",
+        "https://www.logicgate.com/service-status",
+        "https://www.logicgate.com/uptime",
+        "https://www.logicgate.com/privacy-policy/",
+        "https://www.logicgate.com/security/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "logicgate-status-page",
+      "vendor_id": "logicgate"
+    },
+    {
+      "_openva_path": "data/vendors/logicgate/unavailable_sources/logicgate-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://logicgate.com",
+        "https://logicgate.com/terms",
+        "https://logicgate.com/terms-of-service",
+        "https://logicgate.com/legal/terms",
+        "https://logicgate.com/legal/terms-of-service",
+        "https://logicgate.com/terms.html",
+        "https://www.logicgate.com",
+        "https://www.logicgate.com/terms",
+        "https://www.logicgate.com/terms-of-service",
+        "https://www.logicgate.com/legal/terms",
+        "https://www.logicgate.com/legal/terms-of-service",
+        "https://www.logicgate.com/terms.html",
+        "https://www.logicgate.com/privacy-policy/",
+        "https://www.logicgate.com/security/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "logicgate-terms-of-service",
+      "vendor_id": "logicgate"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/logicgate/vendor.yaml",
     "catalog_status": "active",

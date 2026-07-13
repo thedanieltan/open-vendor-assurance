@@ -4,12 +4,25 @@ vendor_id: bill-com
 source_type: dpa
 status: not_identified
 reason: distinct_public_url_not_identified
-reviewed_at: '2026-05-16T08:00:44.381172Z'
-reviewed_by: agent
-next_review_after: '2026-08-14'
 candidate_urls_checked:
+- https://bill.com
+- https://bill.com/legal/data-processing-addendum
+- https://bill.com/data-processing-addendum
+- https://bill.com/legal/dpa
+- https://bill.com/dpa
+- https://bill.com/privacy/dpa
+- https://www.bill.com
 - https://www.bill.com/legal/data-processing-addendum
-notes: Canonical source removed through reviewed maintenance action because the promotion
-  plan marked it as cleanup_source_for_review. This is not a legal, procurement, compliance,
-  risk, or vendor approval conclusion.
+- https://www.bill.com/data-processing-addendum
+- https://www.bill.com/legal/dpa
+- https://www.bill.com/dpa
+- https://www.bill.com/privacy/dpa
+- https://www.bill.com/legal
+- https://www.bill.com/security
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
 not_advice: true

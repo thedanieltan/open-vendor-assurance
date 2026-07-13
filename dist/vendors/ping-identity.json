@@ -462,10 +462,80 @@
       "subprocessors_list",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/ping-identity/unavailable_sources/ping-identity-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.pingidentity.com",
+        "https://status.pingidentity.com/status",
+        "https://status.pingidentity.com/statuspage",
+        "https://status.pingidentity.com/system-status",
+        "https://status.pingidentity.com/service-status",
+        "https://status.pingidentity.com/uptime",
+        "https://pingidentity.com",
+        "https://pingidentity.com/status",
+        "https://pingidentity.com/statuspage",
+        "https://pingidentity.com/system-status",
+        "https://pingidentity.com/service-status",
+        "https://pingidentity.com/uptime",
+        "https://www.pingidentity.com",
+        "https://www.pingidentity.com/status",
+        "https://www.pingidentity.com/statuspage",
+        "https://www.pingidentity.com/system-status",
+        "https://www.pingidentity.com/service-status",
+        "https://www.pingidentity.com/uptime",
+        "https://www.pingidentity.com/en/legal/trust-center.html",
+        "https://www.pingidentity.com/en/legal/privacy.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "ping-identity-status-page",
+      "vendor_id": "ping-identity"
+    },
+    {
+      "_openva_path": "data/vendors/ping-identity/unavailable_sources/ping-identity-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://pingidentity.com",
+        "https://pingidentity.com/terms",
+        "https://pingidentity.com/terms-of-service",
+        "https://pingidentity.com/legal/terms",
+        "https://pingidentity.com/legal/terms-of-service",
+        "https://pingidentity.com/terms.html",
+        "https://www.pingidentity.com",
+        "https://www.pingidentity.com/terms",
+        "https://www.pingidentity.com/terms-of-service",
+        "https://www.pingidentity.com/legal/terms",
+        "https://www.pingidentity.com/legal/terms-of-service",
+        "https://www.pingidentity.com/terms.html",
+        "https://www.pingidentity.com/en/legal/trust-center.html",
+        "https://www.pingidentity.com/en/legal/privacy.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "ping-identity-terms-of-service",
+      "vendor_id": "ping-identity"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/ping-identity/vendor.yaml",
     "catalog_status": "active",

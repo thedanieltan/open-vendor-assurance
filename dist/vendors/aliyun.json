@@ -415,10 +415,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/aliyun/unavailable_sources/aliyun-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.aliyun.com",
+        "https://status.aliyun.com/status",
+        "https://status.aliyun.com/statuspage",
+        "https://status.aliyun.com/system-status",
+        "https://status.aliyun.com/service-status",
+        "https://status.aliyun.com/uptime",
+        "https://aliyun.com",
+        "https://aliyun.com/status",
+        "https://aliyun.com/statuspage",
+        "https://aliyun.com/system-status",
+        "https://aliyun.com/service-status",
+        "https://aliyun.com/uptime",
+        "https://www.aliyun.com",
+        "https://www.aliyun.com/status",
+        "https://www.aliyun.com/statuspage",
+        "https://www.aliyun.com/system-status",
+        "https://www.aliyun.com/service-status",
+        "https://www.aliyun.com/uptime",
+        "https://www.aliyun.com/",
+        "https://terms.aliyun.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "aliyun-status-page",
+      "vendor_id": "aliyun"
+    },
+    {
+      "_openva_path": "data/vendors/aliyun/unavailable_sources/aliyun-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://aliyun.com",
+        "https://aliyun.com/terms",
+        "https://aliyun.com/terms-of-service",
+        "https://aliyun.com/legal/terms",
+        "https://aliyun.com/legal/terms-of-service",
+        "https://aliyun.com/terms.html",
+        "https://www.aliyun.com",
+        "https://www.aliyun.com/terms",
+        "https://www.aliyun.com/terms-of-service",
+        "https://www.aliyun.com/legal/terms",
+        "https://www.aliyun.com/legal/terms-of-service",
+        "https://www.aliyun.com/terms.html",
+        "https://www.aliyun.com/",
+        "https://terms.aliyun.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "aliyun-terms-of-service",
+      "vendor_id": "aliyun"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/aliyun/vendor.yaml",
     "catalog_status": "active",

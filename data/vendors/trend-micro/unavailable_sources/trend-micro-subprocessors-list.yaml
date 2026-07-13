@@ -1,34 +1,27 @@
+schema_version: 0.1.0
+unavailable_source_id: trend-micro-subprocessors-list
+vendor_id: trend-micro
+source_type: subprocessors_list
+status: not_identified
+reason: distinct_public_url_not_identified
 candidate_urls_checked:
-- https://www.trendmicro.com/legal/subprocessors
-- https://www.trendmicro.com/subprocessors
-- https://www.trendmicro.com/legal/sub-processors
-- https://www.trendmicro.com/sub-processors
-- https://www.trendmicro.com/privacy/sub-processors.html
-- https://www.trendmicro.com/privacy/subprocessors
-- https://status.trendmicro.com/legal/subprocessors
-- https://status.trendmicro.com/subprocessors
-- https://status.trendmicro.com/legal/sub-processors
-- https://status.trendmicro.com/sub-processors
-- https://status.trendmicro.com/privacy/sub-processors.html
-- https://status.trendmicro.com/privacy/subprocessors
+- https://trendmicro.com
 - https://trendmicro.com/legal/subprocessors
 - https://trendmicro.com/subprocessors
 - https://trendmicro.com/legal/sub-processors
 - https://trendmicro.com/sub-processors
-- https://trendmicro.com/privacy/sub-processors.html
-- https://trendmicro.com/privacy/subprocessors
-- https://www.trendmicro.com/en_us/about/trust-center/privacy/subprocessors.html
+- https://www.trendmicro.com
+- https://www.trendmicro.com/legal/subprocessors
+- https://www.trendmicro.com/subprocessors
+- https://www.trendmicro.com/legal/sub-processors
+- https://www.trendmicro.com/sub-processors
 - https://www.trendmicro.com/en_us/about/trust-center.html
+- https://www.trendmicro.com/en_us/about/trust-center/privacy.html
+- https://status.trendmicro.com/en-US/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
 next_review_after: '2026-10-11'
-not_advice: true
 notes: No source-type-correct canonical public source was identified after bounded
   official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
   search result, not a vendor quality or risk conclusion.
-reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-13T17:39:58Z'
-reviewed_by: agent
-schema_version: 0.1.0
-source_type: subprocessors_list
-status: not_identified
-unavailable_source_id: trend-micro-subprocessors-list
-vendor_id: trend-micro
+not_advice: true

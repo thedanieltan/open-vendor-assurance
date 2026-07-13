@@ -381,10 +381,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/mailchimp/unavailable_sources/mailchimp-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.mailchimp.com",
+        "https://status.mailchimp.com/status",
+        "https://status.mailchimp.com/statuspage",
+        "https://status.mailchimp.com/system-status",
+        "https://status.mailchimp.com/service-status",
+        "https://status.mailchimp.com/uptime",
+        "https://mailchimp.com",
+        "https://mailchimp.com/status",
+        "https://mailchimp.com/statuspage",
+        "https://mailchimp.com/system-status",
+        "https://mailchimp.com/service-status",
+        "https://mailchimp.com/uptime",
+        "https://www.mailchimp.com",
+        "https://www.mailchimp.com/status",
+        "https://www.mailchimp.com/statuspage",
+        "https://www.mailchimp.com/system-status",
+        "https://www.mailchimp.com/service-status",
+        "https://www.mailchimp.com/uptime",
+        "https://mailchimp.com/legal/",
+        "https://mailchimp.com/about/security/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "mailchimp-status-page",
+      "vendor_id": "mailchimp"
+    },
+    {
+      "_openva_path": "data/vendors/mailchimp/unavailable_sources/mailchimp-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://mailchimp.com",
+        "https://mailchimp.com/terms",
+        "https://mailchimp.com/terms-of-service",
+        "https://mailchimp.com/legal/terms",
+        "https://mailchimp.com/legal/terms-of-service",
+        "https://mailchimp.com/terms.html",
+        "https://www.mailchimp.com",
+        "https://www.mailchimp.com/terms",
+        "https://www.mailchimp.com/terms-of-service",
+        "https://www.mailchimp.com/legal/terms",
+        "https://www.mailchimp.com/legal/terms-of-service",
+        "https://www.mailchimp.com/terms.html",
+        "https://mailchimp.com/legal/",
+        "https://mailchimp.com/about/security/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "mailchimp-terms-of-service",
+      "vendor_id": "mailchimp"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/mailchimp/vendor.yaml",
     "catalog_status": "active",

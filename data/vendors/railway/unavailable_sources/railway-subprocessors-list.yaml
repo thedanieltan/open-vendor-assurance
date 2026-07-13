@@ -1,34 +1,37 @@
+schema_version: 0.1.0
+unavailable_source_id: railway-subprocessors-list
+vendor_id: railway
+source_type: subprocessors_list
+status: not_identified
+reason: distinct_public_url_not_identified
 candidate_urls_checked:
+- https://railway.com
 - https://railway.com/legal/subprocessors
 - https://railway.com/subprocessors
 - https://railway.com/legal/sub-processors
 - https://railway.com/sub-processors
-- https://railway.com/privacy/sub-processors.html
-- https://railway.com/privacy/subprocessors
-- https://status.railway.com/legal/subprocessors
-- https://status.railway.com/subprocessors
-- https://status.railway.com/legal/sub-processors
-- https://status.railway.com/sub-processors
-- https://status.railway.com/privacy/sub-processors.html
-- https://status.railway.com/privacy/subprocessors
+- https://www.railway.com
 - https://www.railway.com/legal/subprocessors
 - https://www.railway.com/subprocessors
 - https://www.railway.com/legal/sub-processors
 - https://www.railway.com/sub-processors
-- https://www.railway.com/privacy/sub-processors.html
-- https://www.railway.com/privacy/subprocessors
+- https://status.railway.com
+- https://status.railway.com/legal/subprocessors
+- https://status.railway.com/subprocessors
+- https://status.railway.com/legal/sub-processors
+- https://status.railway.com/sub-processors
+- https://www.status.railway.com
 - https://www.status.railway.com/legal/subprocessors
 - https://www.status.railway.com/subprocessors
+- https://www.status.railway.com/legal/sub-processors
+- https://www.status.railway.com/sub-processors
+- https://railway.com/legal/privacy
+- https://railway.com/legal/terms
+- https://status.railway.com/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
 next_review_after: '2026-10-11'
-not_advice: true
 notes: No source-type-correct canonical public source was identified after bounded
   official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
   search result, not a vendor quality or risk conclusion.
-reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-13T17:39:28Z'
-reviewed_by: agent
-schema_version: 0.1.0
-source_type: subprocessors_list
-status: not_identified
-unavailable_source_id: railway-subprocessors-list
-vendor_id: railway
+not_advice: true

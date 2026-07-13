@@ -478,10 +478,49 @@
       "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "status_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/datadog/unavailable_sources/datadog-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.datadoghq.com",
+        "https://status.datadoghq.com/status",
+        "https://status.datadoghq.com/statuspage",
+        "https://status.datadoghq.com/system-status",
+        "https://status.datadoghq.com/service-status",
+        "https://status.datadoghq.com/uptime",
+        "https://datadoghq.com",
+        "https://datadoghq.com/status",
+        "https://datadoghq.com/statuspage",
+        "https://datadoghq.com/system-status",
+        "https://datadoghq.com/service-status",
+        "https://datadoghq.com/uptime",
+        "https://www.datadoghq.com",
+        "https://www.datadoghq.com/status",
+        "https://www.datadoghq.com/statuspage",
+        "https://www.datadoghq.com/system-status",
+        "https://www.datadoghq.com/service-status",
+        "https://www.datadoghq.com/uptime",
+        "https://www.datadoghq.com/legal/",
+        "https://www.datadoghq.com/security/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "datadog-status-page",
+      "vendor_id": "datadog"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/datadog/vendor.yaml",
     "catalog_status": "active",

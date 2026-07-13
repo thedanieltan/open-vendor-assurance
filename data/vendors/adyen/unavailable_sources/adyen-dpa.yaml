@@ -1,32 +1,27 @@
+schema_version: 0.1.0
+unavailable_source_id: adyen-dpa
+vendor_id: adyen
+source_type: dpa
+status: not_identified
+reason: distinct_public_url_not_identified
 candidate_urls_checked:
-- https://www.adyen.com/legal/data-processing-addendum
-- https://www.adyen.com/data-processing-addendum
-- https://www.adyen.com/legal/dpa
-- https://www.adyen.com/dpa
-- https://www.adyen.com/privacy/dpa.html
-- https://www.adyen.com/privacy/dpa
+- https://adyen.com
 - https://adyen.com/legal/data-processing-addendum
 - https://adyen.com/data-processing-addendum
 - https://adyen.com/legal/dpa
 - https://adyen.com/dpa
-- https://adyen.com/privacy/dpa.html
 - https://adyen.com/privacy/dpa
-- https://www.adyen.com/en_GB/legal
-- https://adyen.com
 - https://www.adyen.com
-- https://adyen.com/sitemap.xml
-- https://www.adyen.com/sitemap-en_GB.xml
-- https://www.adyen.com/sitemap_index.xml
+- https://www.adyen.com/legal/data-processing-addendum
+- https://www.adyen.com/data-processing-addendum
+- https://www.adyen.com/legal/dpa
+- https://www.adyen.com/dpa
+- https://www.adyen.com/privacy/dpa
+- https://www.adyen.com/en_GB/legal
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
 next_review_after: '2026-10-11'
-not_advice: true
 notes: No source-type-correct canonical public source was identified after bounded
   official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
   search result, not a vendor quality or risk conclusion.
-reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-13T17:38:26Z'
-reviewed_by: agent
-schema_version: 0.1.0
-source_type: dpa
-status: not_identified
-unavailable_source_id: adyen-dpa
-vendor_id: adyen
+not_advice: true

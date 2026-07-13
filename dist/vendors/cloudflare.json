@@ -478,10 +478,49 @@
       "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "status_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/cloudflare/unavailable_sources/cloudflare-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.cloudflare.com",
+        "https://status.cloudflare.com/status",
+        "https://status.cloudflare.com/statuspage",
+        "https://status.cloudflare.com/system-status",
+        "https://status.cloudflare.com/service-status",
+        "https://status.cloudflare.com/uptime",
+        "https://cloudflare.com",
+        "https://cloudflare.com/status",
+        "https://cloudflare.com/statuspage",
+        "https://cloudflare.com/system-status",
+        "https://cloudflare.com/service-status",
+        "https://cloudflare.com/uptime",
+        "https://www.cloudflare.com",
+        "https://www.cloudflare.com/status",
+        "https://www.cloudflare.com/statuspage",
+        "https://www.cloudflare.com/system-status",
+        "https://www.cloudflare.com/service-status",
+        "https://www.cloudflare.com/uptime",
+        "https://www.cloudflare.com/trust-hub/",
+        "https://www.cloudflare.com/privacypolicy/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "cloudflare-status-page",
+      "vendor_id": "cloudflare"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/cloudflare/vendor.yaml",
     "catalog_status": "active",

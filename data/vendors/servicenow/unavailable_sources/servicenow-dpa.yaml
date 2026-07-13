@@ -4,12 +4,25 @@ vendor_id: servicenow
 source_type: dpa
 status: not_identified
 reason: distinct_public_url_not_identified
-reviewed_at: '2026-05-16T08:45:54.425191Z'
-reviewed_by: agent
-next_review_after: '2026-08-14'
 candidate_urls_checked:
-- https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/data-processing-addendum.pdf
-notes: Canonical source removed through reviewed maintenance action because the promotion
-  plan marked it as cleanup_source_for_review. This is not a legal, procurement, compliance,
-  risk, or vendor approval conclusion.
+- https://servicenow.com
+- https://servicenow.com/legal/data-processing-addendum
+- https://servicenow.com/data-processing-addendum
+- https://servicenow.com/legal/dpa
+- https://servicenow.com/dpa
+- https://servicenow.com/privacy/dpa
+- https://www.servicenow.com
+- https://www.servicenow.com/legal/data-processing-addendum
+- https://www.servicenow.com/data-processing-addendum
+- https://www.servicenow.com/legal/dpa
+- https://www.servicenow.com/dpa
+- https://www.servicenow.com/privacy/dpa
+- https://www.servicenow.com/company/trust.html
+- https://www.servicenow.com/privacy.html
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
 not_advice: true

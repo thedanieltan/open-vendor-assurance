@@ -381,10 +381,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/klaviyo/unavailable_sources/klaviyo-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.klaviyo.com",
+        "https://status.klaviyo.com/status",
+        "https://status.klaviyo.com/statuspage",
+        "https://status.klaviyo.com/system-status",
+        "https://status.klaviyo.com/service-status",
+        "https://status.klaviyo.com/uptime",
+        "https://klaviyo.com",
+        "https://klaviyo.com/status",
+        "https://klaviyo.com/statuspage",
+        "https://klaviyo.com/system-status",
+        "https://klaviyo.com/service-status",
+        "https://klaviyo.com/uptime",
+        "https://www.klaviyo.com",
+        "https://www.klaviyo.com/status",
+        "https://www.klaviyo.com/statuspage",
+        "https://www.klaviyo.com/system-status",
+        "https://www.klaviyo.com/service-status",
+        "https://www.klaviyo.com/uptime",
+        "https://www.klaviyo.com/legal",
+        "https://www.klaviyo.com/security"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "klaviyo-status-page",
+      "vendor_id": "klaviyo"
+    },
+    {
+      "_openva_path": "data/vendors/klaviyo/unavailable_sources/klaviyo-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://klaviyo.com",
+        "https://klaviyo.com/terms",
+        "https://klaviyo.com/terms-of-service",
+        "https://klaviyo.com/legal/terms",
+        "https://klaviyo.com/legal/terms-of-service",
+        "https://klaviyo.com/terms.html",
+        "https://www.klaviyo.com",
+        "https://www.klaviyo.com/terms",
+        "https://www.klaviyo.com/terms-of-service",
+        "https://www.klaviyo.com/legal/terms",
+        "https://www.klaviyo.com/legal/terms-of-service",
+        "https://www.klaviyo.com/terms.html",
+        "https://www.klaviyo.com/legal",
+        "https://www.klaviyo.com/security"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "klaviyo-terms-of-service",
+      "vendor_id": "klaviyo"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/klaviyo/vendor.yaml",
     "catalog_status": "active",

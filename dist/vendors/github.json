@@ -398,10 +398,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/github/unavailable_sources/github-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.github.com",
+        "https://status.github.com/status",
+        "https://status.github.com/statuspage",
+        "https://status.github.com/system-status",
+        "https://status.github.com/service-status",
+        "https://status.github.com/uptime",
+        "https://github.com",
+        "https://github.com/status",
+        "https://github.com/statuspage",
+        "https://github.com/system-status",
+        "https://github.com/service-status",
+        "https://github.com/uptime",
+        "https://www.github.com",
+        "https://www.github.com/status",
+        "https://www.github.com/statuspage",
+        "https://www.github.com/system-status",
+        "https://www.github.com/service-status",
+        "https://www.github.com/uptime",
+        "https://github.com/security",
+        "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "github-status-page",
+      "vendor_id": "github"
+    },
+    {
+      "_openva_path": "data/vendors/github/unavailable_sources/github-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://github.com",
+        "https://github.com/terms",
+        "https://github.com/terms-of-service",
+        "https://github.com/legal/terms",
+        "https://github.com/legal/terms-of-service",
+        "https://github.com/terms.html",
+        "https://www.github.com",
+        "https://www.github.com/terms",
+        "https://www.github.com/terms-of-service",
+        "https://www.github.com/legal/terms",
+        "https://www.github.com/legal/terms-of-service",
+        "https://www.github.com/terms.html",
+        "https://github.com/security",
+        "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "github-terms-of-service",
+      "vendor_id": "github"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/github/vendor.yaml",
     "catalog_status": "active",

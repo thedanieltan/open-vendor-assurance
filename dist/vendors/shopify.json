@@ -381,10 +381,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/shopify/unavailable_sources/shopify-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.shopify.com",
+        "https://status.shopify.com/status",
+        "https://status.shopify.com/statuspage",
+        "https://status.shopify.com/system-status",
+        "https://status.shopify.com/service-status",
+        "https://status.shopify.com/uptime",
+        "https://shopify.com",
+        "https://shopify.com/status",
+        "https://shopify.com/statuspage",
+        "https://shopify.com/system-status",
+        "https://shopify.com/service-status",
+        "https://shopify.com/uptime",
+        "https://www.shopify.com",
+        "https://www.shopify.com/status",
+        "https://www.shopify.com/statuspage",
+        "https://www.shopify.com/system-status",
+        "https://www.shopify.com/service-status",
+        "https://www.shopify.com/uptime",
+        "https://www.shopify.com/security",
+        "https://www.shopify.com/legal/privacy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "shopify-status-page",
+      "vendor_id": "shopify"
+    },
+    {
+      "_openva_path": "data/vendors/shopify/unavailable_sources/shopify-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://shopify.com",
+        "https://shopify.com/terms",
+        "https://shopify.com/terms-of-service",
+        "https://shopify.com/legal/terms",
+        "https://shopify.com/legal/terms-of-service",
+        "https://shopify.com/terms.html",
+        "https://www.shopify.com",
+        "https://www.shopify.com/terms",
+        "https://www.shopify.com/terms-of-service",
+        "https://www.shopify.com/legal/terms",
+        "https://www.shopify.com/legal/terms-of-service",
+        "https://www.shopify.com/terms.html",
+        "https://www.shopify.com/security",
+        "https://www.shopify.com/legal/privacy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "shopify-terms-of-service",
+      "vendor_id": "shopify"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/shopify/vendor.yaml",
     "catalog_status": "active",

@@ -1,0 +1,34 @@
+schema_version: 0.1.0
+unavailable_source_id: new-relic-status-page
+vendor_id: new-relic
+source_type: status_page
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://status.newrelic.com
+- https://status.newrelic.com/status
+- https://status.newrelic.com/statuspage
+- https://status.newrelic.com/system-status
+- https://status.newrelic.com/service-status
+- https://status.newrelic.com/uptime
+- https://newrelic.com
+- https://newrelic.com/status
+- https://newrelic.com/statuspage
+- https://newrelic.com/system-status
+- https://newrelic.com/service-status
+- https://newrelic.com/uptime
+- https://www.newrelic.com
+- https://www.newrelic.com/status
+- https://www.newrelic.com/statuspage
+- https://www.newrelic.com/system-status
+- https://www.newrelic.com/service-status
+- https://www.newrelic.com/uptime
+- https://newrelic.com/termsandconditions
+- https://newrelic.com/security
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

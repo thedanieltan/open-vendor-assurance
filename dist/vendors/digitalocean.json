@@ -478,10 +478,49 @@
       "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "status_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/digitalocean/unavailable_sources/digitalocean-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.digitalocean.com",
+        "https://status.digitalocean.com/status",
+        "https://status.digitalocean.com/statuspage",
+        "https://status.digitalocean.com/system-status",
+        "https://status.digitalocean.com/service-status",
+        "https://status.digitalocean.com/uptime",
+        "https://digitalocean.com",
+        "https://digitalocean.com/status",
+        "https://digitalocean.com/statuspage",
+        "https://digitalocean.com/system-status",
+        "https://digitalocean.com/service-status",
+        "https://digitalocean.com/uptime",
+        "https://www.digitalocean.com",
+        "https://www.digitalocean.com/status",
+        "https://www.digitalocean.com/statuspage",
+        "https://www.digitalocean.com/system-status",
+        "https://www.digitalocean.com/service-status",
+        "https://www.digitalocean.com/uptime",
+        "https://www.digitalocean.com/trust",
+        "https://www.digitalocean.com/legal"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "digitalocean-status-page",
+      "vendor_id": "digitalocean"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/digitalocean/vendor.yaml",
     "catalog_status": "active",

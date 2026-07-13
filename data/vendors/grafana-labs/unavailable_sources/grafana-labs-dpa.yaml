@@ -1,34 +1,26 @@
+schema_version: 0.1.0
+unavailable_source_id: grafana-labs-dpa
+vendor_id: grafana-labs
+source_type: dpa
+status: not_identified
+reason: distinct_public_url_not_identified
 candidate_urls_checked:
+- https://grafana.com
 - https://grafana.com/legal/data-processing-addendum
 - https://grafana.com/data-processing-addendum
 - https://grafana.com/legal/dpa
 - https://grafana.com/dpa
-- https://grafana.com/privacy/dpa.html
 - https://grafana.com/privacy/dpa
+- https://www.grafana.com
 - https://www.grafana.com/legal/data-processing-addendum
 - https://www.grafana.com/data-processing-addendum
 - https://www.grafana.com/legal/dpa
 - https://www.grafana.com/dpa
-- https://www.grafana.com/privacy/dpa.html
 - https://www.grafana.com/privacy/dpa
-- https://grafana.com/docs/grafana-cloud/send-data/metrics/metrics-prometheus/prometheus-config-examples/open-source-projects/data-processing-analytics
-- https://grafana.com/docs/k6/latest/javascript-api/jslib/aws/s3client/uploadpart
-- https://grafana.com/grafana/dashboards/18134-redpanda-default-dashboard
-- https://grafana.com/grafana/dashboards/18135-redpanda-ops-dashboard
-- https://grafana.com/grafana/dashboards/22157-redpanda-connect-monitoring
-- https://grafana.com/grafana/dashboards/5496-apache-jmeter-dashboard-by-ubikloadpack
-- https://grafana.com
-- https://www.grafana.com
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
 next_review_after: '2026-10-11'
-not_advice: true
 notes: No source-type-correct canonical public source was identified after bounded
   official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
   search result, not a vendor quality or risk conclusion.
-reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-13T17:39:02Z'
-reviewed_by: agent
-schema_version: 0.1.0
-source_type: dpa
-status: not_identified
-unavailable_source_id: grafana-labs-dpa
-vendor_id: grafana-labs
+not_advice: true

@@ -386,10 +386,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/alibaba-cloud-international/unavailable_sources/alibaba-cloud-international-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.alibabacloud.com",
+        "https://status.alibabacloud.com/status",
+        "https://status.alibabacloud.com/statuspage",
+        "https://status.alibabacloud.com/system-status",
+        "https://status.alibabacloud.com/service-status",
+        "https://status.alibabacloud.com/uptime",
+        "https://alibabacloud.com",
+        "https://alibabacloud.com/status",
+        "https://alibabacloud.com/statuspage",
+        "https://alibabacloud.com/system-status",
+        "https://alibabacloud.com/service-status",
+        "https://alibabacloud.com/uptime",
+        "https://www.alibabacloud.com",
+        "https://www.alibabacloud.com/status",
+        "https://www.alibabacloud.com/statuspage",
+        "https://www.alibabacloud.com/system-status",
+        "https://www.alibabacloud.com/service-status",
+        "https://www.alibabacloud.com/uptime",
+        "https://www.alibabacloud.com/trust-center",
+        "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-privacy-policy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "alibaba-cloud-international-status-page",
+      "vendor_id": "alibaba-cloud-international"
+    },
+    {
+      "_openva_path": "data/vendors/alibaba-cloud-international/unavailable_sources/alibaba-cloud-international-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://alibabacloud.com",
+        "https://alibabacloud.com/terms",
+        "https://alibabacloud.com/terms-of-service",
+        "https://alibabacloud.com/legal/terms",
+        "https://alibabacloud.com/legal/terms-of-service",
+        "https://alibabacloud.com/terms.html",
+        "https://www.alibabacloud.com",
+        "https://www.alibabacloud.com/terms",
+        "https://www.alibabacloud.com/terms-of-service",
+        "https://www.alibabacloud.com/legal/terms",
+        "https://www.alibabacloud.com/legal/terms-of-service",
+        "https://www.alibabacloud.com/terms.html",
+        "https://www.alibabacloud.com/trust-center",
+        "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-privacy-policy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "alibaba-cloud-international-terms-of-service",
+      "vendor_id": "alibaba-cloud-international"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/alibaba-cloud-international/vendor.yaml",
     "catalog_status": "active",

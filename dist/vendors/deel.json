@@ -381,10 +381,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/deel/unavailable_sources/deel-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.deel.com",
+        "https://status.deel.com/status",
+        "https://status.deel.com/statuspage",
+        "https://status.deel.com/system-status",
+        "https://status.deel.com/service-status",
+        "https://status.deel.com/uptime",
+        "https://deel.com",
+        "https://deel.com/status",
+        "https://deel.com/statuspage",
+        "https://deel.com/system-status",
+        "https://deel.com/service-status",
+        "https://deel.com/uptime",
+        "https://www.deel.com",
+        "https://www.deel.com/status",
+        "https://www.deel.com/statuspage",
+        "https://www.deel.com/system-status",
+        "https://www.deel.com/service-status",
+        "https://www.deel.com/uptime",
+        "https://www.deel.com/legal",
+        "https://www.deel.com/security"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "deel-status-page",
+      "vendor_id": "deel"
+    },
+    {
+      "_openva_path": "data/vendors/deel/unavailable_sources/deel-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://deel.com",
+        "https://deel.com/terms",
+        "https://deel.com/terms-of-service",
+        "https://deel.com/legal/terms",
+        "https://deel.com/legal/terms-of-service",
+        "https://deel.com/terms.html",
+        "https://www.deel.com",
+        "https://www.deel.com/terms",
+        "https://www.deel.com/terms-of-service",
+        "https://www.deel.com/legal/terms",
+        "https://www.deel.com/legal/terms-of-service",
+        "https://www.deel.com/terms.html",
+        "https://www.deel.com/legal",
+        "https://www.deel.com/security"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "deel-terms-of-service",
+      "vendor_id": "deel"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/deel/vendor.yaml",
     "catalog_status": "active",

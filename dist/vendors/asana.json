@@ -497,10 +497,49 @@
       "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "status_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/asana/unavailable_sources/asana-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.asana.com",
+        "https://status.asana.com/status",
+        "https://status.asana.com/statuspage",
+        "https://status.asana.com/system-status",
+        "https://status.asana.com/service-status",
+        "https://status.asana.com/uptime",
+        "https://asana.com",
+        "https://asana.com/status",
+        "https://asana.com/statuspage",
+        "https://asana.com/system-status",
+        "https://asana.com/service-status",
+        "https://asana.com/uptime",
+        "https://www.asana.com",
+        "https://www.asana.com/status",
+        "https://www.asana.com/statuspage",
+        "https://www.asana.com/system-status",
+        "https://www.asana.com/service-status",
+        "https://www.asana.com/uptime",
+        "https://asana.com/security",
+        "https://asana.com/privacy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "asana-status-page",
+      "vendor_id": "asana"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/asana/vendor.yaml",
     "catalog_status": "active",

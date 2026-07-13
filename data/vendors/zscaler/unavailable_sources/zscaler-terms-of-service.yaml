@@ -1,0 +1,41 @@
+schema_version: 0.1.0
+unavailable_source_id: zscaler-terms-of-service
+vendor_id: zscaler
+source_type: terms_of_service
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://compliance.zscaler.com
+- https://compliance.zscaler.com/terms
+- https://compliance.zscaler.com/terms-of-service
+- https://compliance.zscaler.com/legal/terms
+- https://compliance.zscaler.com/legal/terms-of-service
+- https://compliance.zscaler.com/terms.html
+- https://www.compliance.zscaler.com
+- https://www.compliance.zscaler.com/terms
+- https://www.compliance.zscaler.com/terms-of-service
+- https://www.compliance.zscaler.com/legal/terms
+- https://www.compliance.zscaler.com/legal/terms-of-service
+- https://www.compliance.zscaler.com/terms.html
+- https://zscaler.com
+- https://zscaler.com/terms
+- https://zscaler.com/terms-of-service
+- https://zscaler.com/legal/terms
+- https://zscaler.com/legal/terms-of-service
+- https://zscaler.com/terms.html
+- https://www.zscaler.com
+- https://www.zscaler.com/terms
+- https://www.zscaler.com/terms-of-service
+- https://www.zscaler.com/legal/terms
+- https://www.zscaler.com/legal/terms-of-service
+- https://www.zscaler.com/terms.html
+- https://www.zscaler.com/privacy-compliance/overview
+- https://www.zscaler.com/legal/overview
+- https://compliance.zscaler.com/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

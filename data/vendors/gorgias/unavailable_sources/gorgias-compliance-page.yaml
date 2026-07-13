@@ -1,31 +1,26 @@
+schema_version: 0.1.0
+unavailable_source_id: gorgias-compliance-page
+vendor_id: gorgias
+source_type: compliance_page
+status: not_identified
+reason: distinct_public_url_not_identified
 candidate_urls_checked:
-- https://www.gorgias.com/compliance
-- https://www.gorgias.com/security/compliance
-- https://www.gorgias.com/trust/compliance
-- https://www.gorgias.com/trust-center/compliance
-- https://www.gorgias.com/trustcenter/compliance
-- https://www.gorgias.com/compliance.html
+- https://gorgias.com
 - https://gorgias.com/compliance
 - https://gorgias.com/security/compliance
 - https://gorgias.com/trust/compliance
 - https://gorgias.com/trust-center/compliance
-- https://gorgias.com/trustcenter/compliance
-- https://gorgias.com/compliance.html
+- https://www.gorgias.com
+- https://www.gorgias.com/compliance
+- https://www.gorgias.com/security/compliance
+- https://www.gorgias.com/trust/compliance
+- https://www.gorgias.com/trust-center/compliance
 - https://www.gorgias.com/legal
 - https://www.gorgias.com/security
-- https://gorgias.com
-- https://www.gorgias.com
-- https://gorgias.com/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
 next_review_after: '2026-10-11'
-not_advice: true
 notes: No source-type-correct canonical public source was identified after bounded
   official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
   search result, not a vendor quality or risk conclusion.
-reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-13T17:39:48Z'
-reviewed_by: agent
-schema_version: 0.1.0
-source_type: compliance_page
-status: not_identified
-unavailable_source_id: gorgias-compliance-page
-vendor_id: gorgias
+not_advice: true

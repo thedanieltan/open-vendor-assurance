@@ -394,9 +394,11 @@
       "subprocessors_list",
       "trust_center"
     ],
-    "unavailable_source_count": 1,
+    "unavailable_source_count": 3,
     "unavailable_source_types": [
-      "certification_reference"
+      "certification_reference",
+      "status_page",
+      "terms_of_service"
     ]
   },
   "unavailable_sources": [
@@ -433,6 +435,72 @@
       "source_type": "certification_reference",
       "status": "not_identified",
       "unavailable_source_id": "smartsheet-certification-reference",
+      "vendor_id": "smartsheet"
+    },
+    {
+      "_openva_path": "data/vendors/smartsheet/unavailable_sources/smartsheet-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.smartsheet.com",
+        "https://status.smartsheet.com/status",
+        "https://status.smartsheet.com/statuspage",
+        "https://status.smartsheet.com/system-status",
+        "https://status.smartsheet.com/service-status",
+        "https://status.smartsheet.com/uptime",
+        "https://smartsheet.com",
+        "https://smartsheet.com/status",
+        "https://smartsheet.com/statuspage",
+        "https://smartsheet.com/system-status",
+        "https://smartsheet.com/service-status",
+        "https://smartsheet.com/uptime",
+        "https://www.smartsheet.com",
+        "https://www.smartsheet.com/status",
+        "https://www.smartsheet.com/statuspage",
+        "https://www.smartsheet.com/system-status",
+        "https://www.smartsheet.com/service-status",
+        "https://www.smartsheet.com/uptime",
+        "https://www.smartsheet.com/trust",
+        "https://www.smartsheet.com/legal/privacy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "smartsheet-status-page",
+      "vendor_id": "smartsheet"
+    },
+    {
+      "_openva_path": "data/vendors/smartsheet/unavailable_sources/smartsheet-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://smartsheet.com",
+        "https://smartsheet.com/terms",
+        "https://smartsheet.com/terms-of-service",
+        "https://smartsheet.com/legal/terms",
+        "https://smartsheet.com/legal/terms-of-service",
+        "https://smartsheet.com/terms.html",
+        "https://www.smartsheet.com",
+        "https://www.smartsheet.com/terms",
+        "https://www.smartsheet.com/terms-of-service",
+        "https://www.smartsheet.com/legal/terms",
+        "https://www.smartsheet.com/legal/terms-of-service",
+        "https://www.smartsheet.com/terms.html",
+        "https://www.smartsheet.com/trust",
+        "https://www.smartsheet.com/legal/privacy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "smartsheet-terms-of-service",
       "vendor_id": "smartsheet"
     }
   ],

@@ -1,32 +1,28 @@
+schema_version: 0.1.0
+unavailable_source_id: greythr-dpa
+vendor_id: greythr
+source_type: dpa
+status: not_identified
+reason: distinct_public_url_not_identified
 candidate_urls_checked:
-- https://www.greythr.com/legal/data-processing-addendum
-- https://www.greythr.com/data-processing-addendum
-- https://www.greythr.com/legal/dpa
-- https://www.greythr.com/dpa
-- https://www.greythr.com/privacy/dpa.html
-- https://www.greythr.com/privacy/dpa
+- https://greythr.com
 - https://greythr.com/legal/data-processing-addendum
 - https://greythr.com/data-processing-addendum
 - https://greythr.com/legal/dpa
 - https://greythr.com/dpa
-- https://greythr.com/privacy/dpa.html
 - https://greythr.com/privacy/dpa
+- https://www.greythr.com
+- https://www.greythr.com/legal/data-processing-addendum
+- https://www.greythr.com/data-processing-addendum
+- https://www.greythr.com/legal/dpa
+- https://www.greythr.com/dpa
+- https://www.greythr.com/privacy/dpa
 - https://www.greythr.com/privacy-policy/
 - https://www.greythr.com/security/
-- https://greythr.com
-- https://www.greythr.com
-- https://greythr.com/sitemap.xml
-- https://greythr.com/sitemap_index.xml
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
 next_review_after: '2026-10-11'
-not_advice: true
 notes: No source-type-correct canonical public source was identified after bounded
   official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
   search result, not a vendor quality or risk conclusion.
-reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-13T17:39:25Z'
-reviewed_by: agent
-schema_version: 0.1.0
-source_type: dpa
-status: not_identified
-unavailable_source_id: greythr-dpa
-vendor_id: greythr
+not_advice: true

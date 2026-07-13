@@ -400,10 +400,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/mixpanel/unavailable_sources/mixpanel-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.mixpanel.com",
+        "https://status.mixpanel.com/status",
+        "https://status.mixpanel.com/statuspage",
+        "https://status.mixpanel.com/system-status",
+        "https://status.mixpanel.com/service-status",
+        "https://status.mixpanel.com/uptime",
+        "https://mixpanel.com",
+        "https://mixpanel.com/status",
+        "https://mixpanel.com/statuspage",
+        "https://mixpanel.com/system-status",
+        "https://mixpanel.com/service-status",
+        "https://mixpanel.com/uptime",
+        "https://www.mixpanel.com",
+        "https://www.mixpanel.com/status",
+        "https://www.mixpanel.com/statuspage",
+        "https://www.mixpanel.com/system-status",
+        "https://www.mixpanel.com/service-status",
+        "https://www.mixpanel.com/uptime",
+        "https://mixpanel.com/legal/",
+        "https://mixpanel.com/security/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "mixpanel-status-page",
+      "vendor_id": "mixpanel"
+    },
+    {
+      "_openva_path": "data/vendors/mixpanel/unavailable_sources/mixpanel-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://mixpanel.com",
+        "https://mixpanel.com/terms",
+        "https://mixpanel.com/terms-of-service",
+        "https://mixpanel.com/legal/terms",
+        "https://mixpanel.com/legal/terms-of-service",
+        "https://mixpanel.com/terms.html",
+        "https://www.mixpanel.com",
+        "https://www.mixpanel.com/terms",
+        "https://www.mixpanel.com/terms-of-service",
+        "https://www.mixpanel.com/legal/terms",
+        "https://www.mixpanel.com/legal/terms-of-service",
+        "https://www.mixpanel.com/terms.html",
+        "https://mixpanel.com/legal/",
+        "https://mixpanel.com/security/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "mixpanel-terms-of-service",
+      "vendor_id": "mixpanel"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/mixpanel/vendor.yaml",
     "catalog_status": "active",

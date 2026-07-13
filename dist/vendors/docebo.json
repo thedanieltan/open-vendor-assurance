@@ -387,10 +387,11 @@
       "security_page",
       "status_page"
     ],
-    "unavailable_source_count": 2,
+    "unavailable_source_count": 3,
     "unavailable_source_types": [
       "certification_reference",
-      "subprocessors_list"
+      "subprocessors_list",
+      "terms_of_service"
     ]
   },
   "unavailable_sources": [
@@ -433,37 +434,61 @@
     {
       "_openva_path": "data/vendors/docebo/unavailable_sources/docebo-subprocessors-list.yaml",
       "candidate_urls_checked": [
-        "https://www.docebo.com/legal/subprocessors",
-        "https://www.docebo.com/subprocessors",
-        "https://www.docebo.com/legal/sub-processors",
-        "https://www.docebo.com/sub-processors",
-        "https://www.docebo.com/privacy/sub-processors.html",
-        "https://www.docebo.com/privacy/subprocessors",
-        "https://status.docebo.com/legal/subprocessors",
-        "https://status.docebo.com/subprocessors",
-        "https://status.docebo.com/legal/sub-processors",
-        "https://status.docebo.com/sub-processors",
-        "https://status.docebo.com/privacy/sub-processors.html",
-        "https://status.docebo.com/privacy/subprocessors",
+        "https://docebo.com",
         "https://docebo.com/legal/subprocessors",
         "https://docebo.com/subprocessors",
         "https://docebo.com/legal/sub-processors",
         "https://docebo.com/sub-processors",
-        "https://docebo.com/privacy/sub-processors.html",
-        "https://docebo.com/privacy/subprocessors",
+        "https://www.docebo.com",
+        "https://www.docebo.com/legal/subprocessors",
+        "https://www.docebo.com/subprocessors",
+        "https://www.docebo.com/legal/sub-processors",
+        "https://www.docebo.com/sub-processors",
         "https://www.docebo.com/company/privacy-policy/",
-        "https://www.docebo.com/security/"
+        "https://www.docebo.com/security/",
+        "https://status.docebo.com/"
       ],
       "next_review_after": "2026-10-11",
       "not_advice": true,
       "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
       "reason": "distinct_public_url_not_identified",
-      "reviewed_at": "2026-07-13T17:38:33Z",
+      "reviewed_at": "2026-07-13T20:36:54Z",
       "reviewed_by": "agent",
       "schema_version": "0.1.0",
       "source_type": "subprocessors_list",
       "status": "not_identified",
       "unavailable_source_id": "docebo-subprocessors-list",
+      "vendor_id": "docebo"
+    },
+    {
+      "_openva_path": "data/vendors/docebo/unavailable_sources/docebo-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://docebo.com",
+        "https://docebo.com/terms",
+        "https://docebo.com/terms-of-service",
+        "https://docebo.com/legal/terms",
+        "https://docebo.com/legal/terms-of-service",
+        "https://docebo.com/terms.html",
+        "https://www.docebo.com",
+        "https://www.docebo.com/terms",
+        "https://www.docebo.com/terms-of-service",
+        "https://www.docebo.com/legal/terms",
+        "https://www.docebo.com/legal/terms-of-service",
+        "https://www.docebo.com/terms.html",
+        "https://www.docebo.com/company/privacy-policy/",
+        "https://www.docebo.com/security/",
+        "https://status.docebo.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "docebo-terms-of-service",
       "vendor_id": "docebo"
     }
   ],

@@ -1,34 +1,27 @@
+schema_version: 0.1.0
+unavailable_source_id: red-hat-subprocessors-list
+vendor_id: red-hat
+source_type: subprocessors_list
+status: not_identified
+reason: distinct_public_url_not_identified
 candidate_urls_checked:
-- https://www.redhat.com/legal/subprocessors
-- https://www.redhat.com/subprocessors
-- https://www.redhat.com/legal/sub-processors
-- https://www.redhat.com/sub-processors
-- https://www.redhat.com/privacy/sub-processors.html
-- https://www.redhat.com/privacy/subprocessors
-- https://status.redhat.com/legal/subprocessors
-- https://status.redhat.com/subprocessors
-- https://status.redhat.com/legal/sub-processors
-- https://status.redhat.com/sub-processors
-- https://status.redhat.com/privacy/sub-processors.html
-- https://status.redhat.com/privacy/subprocessors
+- https://redhat.com
 - https://redhat.com/legal/subprocessors
 - https://redhat.com/subprocessors
 - https://redhat.com/legal/sub-processors
 - https://redhat.com/sub-processors
-- https://redhat.com/privacy/sub-processors.html
-- https://redhat.com/privacy/subprocessors
+- https://www.redhat.com
+- https://www.redhat.com/legal/subprocessors
+- https://www.redhat.com/subprocessors
+- https://www.redhat.com/legal/sub-processors
+- https://www.redhat.com/sub-processors
 - https://www.redhat.com/en/about/privacy-policy
 - https://www.redhat.com/en/trust
+- https://status.redhat.com/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
 next_review_after: '2026-10-11'
-not_advice: true
 notes: No source-type-correct canonical public source was identified after bounded
   official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
   search result, not a vendor quality or risk conclusion.
-reason: distinct_public_url_not_identified
-reviewed_at: '2026-07-13T17:39:26Z'
-reviewed_by: agent
-schema_version: 0.1.0
-source_type: subprocessors_list
-status: not_identified
-unavailable_source_id: red-hat-subprocessors-list
-vendor_id: red-hat
+not_advice: true
