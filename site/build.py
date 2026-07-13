@@ -171,7 +171,6 @@ def render_vendor_page(
         snapshot_date=snapshot_date,
     )
     replacement = (
-        "      <!-- Legacy test tokens only; maintenance telemetry is intentionally not rendered: Reachable at last check; No source-health observation. -->\n"
         "      <h2>Public assurance sources</h2>\n"
         f"      {_public_source_table(sources)}\n\n"
         "      <h2>Machine-readable export</h2>"
