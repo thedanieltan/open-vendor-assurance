@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 214,
+  "count": 219,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -634,6 +634,84 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "airwallex"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aiven-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://aiven.io/privacy",
+          "title": "Aiven Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aiven-status",
+          "source_type": "status_page",
+          "source_url": "https://status.aiven.io/",
+          "title": "Aiven Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aiven-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://aiven.io/terms",
+          "title": "Aiven Terms of Service"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Aiven",
+      "legal_entities": [],
+      "legal_name": "Aiven Oy",
+      "manifest_path": "dist/vendors/aiven.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "aiven.io",
+        "status.aiven.io"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aiven-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://aiven.io/privacy",
+          "title": "Aiven Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aiven-status",
+          "source_type": "status_page",
+          "source_url": "https://status.aiven.io/",
+          "title": "Aiven Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aiven-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://aiven.io/terms",
+          "title": "Aiven Terms of Service"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "aiven"
     },
     {
       "candidate_source_types": [],
@@ -3627,6 +3705,85 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "status_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cockroach-labs-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.cockroachlabs.com/privacy/",
+          "title": "Cockroach Labs Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cockroach-labs-security",
+          "source_type": "security_page",
+          "source_url": "https://www.cockroachlabs.com/security/",
+          "title": "Cockroach Labs Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cockroach-labs-status",
+          "source_type": "status_page",
+          "source_url": "https://status.cockroachlabs.cloud/",
+          "title": "CockroachDB Cloud Status"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Cockroach Labs",
+      "legal_entities": [],
+      "legal_name": "Cockroach Labs, Inc.",
+      "manifest_path": "dist/vendors/cockroach-labs.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "cockroachlabs.com",
+        "www.cockroachlabs.com",
+        "cockroachlabs.cloud",
+        "status.cockroachlabs.cloud"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cockroach-labs-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.cockroachlabs.com/privacy/",
+          "title": "Cockroach Labs Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cockroach-labs-security",
+          "source_type": "security_page",
+          "source_url": "https://www.cockroachlabs.com/security/",
+          "title": "Cockroach Labs Security"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cockroach-labs-status",
+          "source_type": "status_page",
+          "source_url": "https://status.cockroachlabs.cloud/",
+          "title": "CockroachDB Cloud Status"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "cockroach-labs"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -6239,6 +6396,84 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "fiserv"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fly-io-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://fly.io/legal/privacy-policy/",
+          "title": "Fly.io Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fly-io-status",
+          "source_type": "status_page",
+          "source_url": "https://status.flyio.net/",
+          "title": "Fly.io Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fly-io-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://fly.io/legal/terms-of-service/",
+          "title": "Fly.io Terms of Service"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Fly.io",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/fly-io.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "fly.io",
+        "status.flyio.net"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fly-io-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://fly.io/legal/privacy-policy/",
+          "title": "Fly.io Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fly-io-status",
+          "source_type": "status_page",
+          "source_url": "https://status.flyio.net/",
+          "title": "Fly.io Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "fly-io-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://fly.io/legal/terms-of-service/",
+          "title": "Fly.io Terms of Service"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "fly-io"
     },
     {
       "candidate_source_types": [],
@@ -13646,6 +13881,84 @@
         {
           "confidence": null,
           "effective_or_published_at": null,
+          "source_id": "railway-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://railway.com/legal/privacy",
+          "title": "Railway Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "railway-status",
+          "source_type": "status_page",
+          "source_url": "https://status.railway.com/",
+          "title": "Railway Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "railway-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://railway.com/legal/terms",
+          "title": "Railway Terms of Service"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Railway",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/railway.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "railway.com",
+        "status.railway.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "railway-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://railway.com/legal/privacy",
+          "title": "Railway Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "railway-status",
+          "source_type": "status_page",
+          "source_url": "https://status.railway.com/",
+          "title": "Railway Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "railway-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://railway.com/legal/terms",
+          "title": "Railway Terms of Service"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "railway"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
           "source_id": "razorpay-privacy",
           "source_type": "privacy_notice",
           "source_url": "https://razorpay.com/privacy-policy/",
@@ -14615,6 +14928,85 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "sap"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "scaleway-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.scaleway.com/en/privacy-policy/",
+          "title": "Scaleway Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "scaleway-status",
+          "source_type": "status_page",
+          "source_url": "https://status.scaleway.com/",
+          "title": "Scaleway Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "scaleway-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.scaleway.com/en/terms/",
+          "title": "Scaleway Contracts and Terms"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Scaleway",
+      "legal_entities": [],
+      "legal_name": "Scaleway SAS",
+      "manifest_path": "dist/vendors/scaleway.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "scaleway.com",
+        "www.scaleway.com",
+        "status.scaleway.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "scaleway-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.scaleway.com/en/privacy-policy/",
+          "title": "Scaleway Privacy Policy"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "scaleway-status",
+          "source_type": "status_page",
+          "source_url": "https://status.scaleway.com/",
+          "title": "Scaleway Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "scaleway-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.scaleway.com/en/terms/",
+          "title": "Scaleway Contracts and Terms"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "scaleway"
     },
     {
       "candidate_source_types": [],
