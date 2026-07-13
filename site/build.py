@@ -171,14 +171,13 @@ def render_vendor_page(
         snapshot_date=snapshot_date,
     )
     replacement = (
-        "      <!-- Compatibility markers for the legacy test contract only; not rendered: Reachable at last check; No source-health observation. -->\n"
         "      <h2>Public assurance sources</h2>\n"
         f"      {_public_source_table(sources)}\n\n"
         "      <h2>Machine-readable export</h2>"
     )
     page, replacements = re.subn(
         r"      <h2>Public assurance sources</h2>\n.*?\n      <h2>Machine-readable export</h2>",
-        replacement,
+        lambda _match: replacement,
         page,
         count=1,
         flags=re.DOTALL,
