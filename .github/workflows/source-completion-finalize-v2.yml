@@ -57,7 +57,11 @@ jobs:
       - name: Verify changed canonical sources and install observations
         run: |
           set -euo pipefail
-          git diff --name-only --diff-filter=AM origin/main -- 'data/vendors/*/sources/*.yaml' > /tmp/changed-source-paths.txt
+          {
+            git diff --name-only --diff-filter=AM origin/main -- 'data/vendors/*/sources/*.yaml'
+            git ls-files --others --exclude-standard -- 'data/vendors/*/sources/*.yaml'
+          } | sort -u > /tmp/changed-source-paths.txt
+          echo "Sources selected for verification: $(wc -l < /tmp/changed-source-paths.txt)"
           if [ -s /tmp/changed-source-paths.txt ]; then
             python -m tools.openva.source_verification verify \
               --source-path-file /tmp/changed-source-paths.txt \
@@ -70,6 +74,37 @@ jobs:
             python -m tools.openva.observation_ledger install-latest \
               --latest /tmp/source-completion-observations/latest-observations.json
           fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import yaml
+
+          canonical_ids = set()
+          for path in sorted(Path('data/vendors').glob('*/sources/*.yaml')):
+              record = yaml.safe_load(path.read_text(encoding='utf-8')) or {}
+              source_id = record.get('source_id')
+              if source_id:
+                  canonical_ids.add(str(source_id))
+
+          latest = json.loads(Path('maintenance/source-observations/latest-observations.json').read_text(encoding='utf-8'))
+          observed_ids = {
+              str(entry.get('source_id'))
+              for entry in latest.get('sources', [])
+              if entry.get('source_id')
+          }
+          missing = sorted(canonical_ids - observed_ids)
+          extra = sorted(observed_ids - canonical_ids)
+          print(json.dumps({
+              'canonical_source_count': len(canonical_ids),
+              'observed_source_count': len(observed_ids),
+              'missing_observation_count': len(missing),
+              'missing_observations': missing,
+              'orphan_observation_count': len(extra),
+              'orphan_observations': extra,
+          }, indent=2))
+          if missing or extra:
+              raise SystemExit('observation baseline does not exactly match canonical sources')
+          PY
       - name: Validate exact final catalog transaction
         run: |
           set -euo pipefail
