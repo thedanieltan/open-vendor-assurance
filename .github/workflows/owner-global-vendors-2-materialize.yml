@@ -1,0 +1,79 @@
+name: diagnose owner global vendors merge ref
+
+on:
+  push:
+    branches:
+      - catalog/owner-global-vendors-3
+    paths:
+      - .github/workflows/owner-global-vendors-2-materialize.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-global-vendors-3-merge-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR merge ref
+        uses: actions/checkout@v5
+        with:
+          ref: refs/pull/667/merge
+          path: pr-merge
+          fetch-depth: 0
+      - name: Check out writable branch
+        uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-global-vendors-3
+          path: branch
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install package from merge ref
+        working-directory: pr-merge
+        run: pip install -e '.[dev]'
+      - name: Capture exact merge-ref failures
+        shell: bash
+        run: |
+          set +e
+          cd pr-merge
+          python -m tools.openva.validate validate > /tmp/validator.log 2>&1
+          validator_status=$?
+          pytest -q tests/test_source_*.py tests/test_p0_repair_automerge_workflow.py tests/test_release_candidate_workflow.py --tb=short > /tmp/source-tests.log 2>&1
+          source_status=$?
+          set -e
+          cd ../branch
+          mkdir -p maintenance/generated
+          {
+            echo '# PR 667 merge-ref diagnostic'
+            echo
+            echo "Validator exit: $validator_status"
+            echo "Source-maintenance exit: $source_status"
+            echo
+            echo '## Validator'
+            echo
+            echo '```text'
+            tail -n 220 /tmp/validator.log
+            echo '```'
+            echo
+            echo '## Source-maintenance tests'
+            echo
+            echo '```text'
+            tail -n 300 /tmp/source-tests.log
+            echo '```'
+          } > maintenance/generated/pr-667-merge-ref-diagnostic.md
+          rm .github/workflows/owner-global-vendors-2-materialize.yml
+      - name: Commit diagnostic
+        working-directory: branch
+        shell: bash
+        run: |
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Catalog: capture PR 667 merge-ref failures'
+          git push origin HEAD:catalog/owner-global-vendors-3
