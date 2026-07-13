@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   diagnose:
@@ -28,8 +29,21 @@ jobs:
           pytest -q tests/test_site.py -vv --tb=short > phase2-site-tests.log 2>&1
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
-          tail -n 160 phase2-site-tests.log
+          tail -n 160 phase2-site-tests.log > phase2-site-tests-tail.log
+          cat phase2-site-tests-tail.log
           exit 0
+      - name: Post focused diagnostic to PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo '<!-- phase2-site-diagnostic -->'
+            echo '### Phase 2 focused site diagnostic'
+            echo '```text'
+            cat phase2-site-tests-tail.log
+            echo '```'
+          } > phase2-comment.md
+          gh pr comment 659 --body-file phase2-comment.md
       - name: Upload focused diagnostics
         uses: actions/upload-artifact@v6
         with:
