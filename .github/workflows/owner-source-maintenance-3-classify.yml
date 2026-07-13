@@ -1,0 +1,121 @@
+name: owner-source-maintenance-3-classify
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-maintenance-3
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-maintenance-3-classify
+  cancel-in-progress: true
+
+jobs:
+  classify:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-maintenance-3-classified]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Classify repair evidence
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          probe_path = Path('maintenance/reviewed/owner-source-maintenance-3-probes.json')
+          report = json.loads(probe_path.read_text(encoding='utf-8'))
+
+          live = {200, 203, 206}
+          gone = {404, 410}
+          rows = []
+
+          for item in report.get('candidates', []):
+              source_probe = item.get('source_probe') or {}
+              artifact_probe = item.get('artifact_probe') or {}
+              source_status = source_probe.get('status')
+              artifact_status = artifact_probe.get('status')
+              kinds = set(item.get('kinds') or [])
+
+              action = 'review'
+              reason = 'ambiguous_or_transient'
+
+              if 'source_artifact_url_mismatch' in kinds:
+                  if source_status in live and artifact_status not in live:
+                      action = 'align_artifact_to_source'
+                      reason = 'source_live_artifact_stale'
+                  elif source_status in gone and artifact_status in live:
+                      action = 'align_source_to_artifact'
+                      reason = 'source_stale_artifact_live'
+                  elif source_status in live and artifact_status in live:
+                      action = 'review_dual_live_mismatch'
+                      reason = 'both_urls_live'
+                  elif source_status in gone and artifact_status in gone:
+                      action = 'discover_replacement'
+                      reason = 'both_urls_not_found'
+                  elif source_status in gone:
+                      action = 'discover_replacement'
+                      reason = 'source_not_found_artifact_not_confirmed'
+              elif 'observed_not_found' in kinds:
+                  if source_status in live:
+                      action = 'refresh_observation_only'
+                      reason = 'source_recovered'
+                  elif source_status in gone:
+                      action = 'discover_replacement'
+                      reason = 'confirmed_not_found'
+                  else:
+                      action = 'review_transient_access'
+                      reason = 'current_probe_not_conclusive'
+
+              if 'quarantined_source' in kinds and action == 'discover_replacement':
+                  reason = 'quarantined_confirmed_not_found'
+
+              rows.append({
+                  'source_id': item.get('source_id'),
+                  'vendor_id': item.get('vendor_id'),
+                  'source_path': item.get('source_path'),
+                  'source_url': item.get('source_url'),
+                  'artifact_url': item.get('artifact_url'),
+                  'source_status': source_status,
+                  'source_final_url': source_probe.get('final_url'),
+                  'source_title': source_probe.get('title'),
+                  'artifact_status': artifact_status,
+                  'artifact_final_url': artifact_probe.get('final_url'),
+                  'artifact_title': artifact_probe.get('title'),
+                  'kinds': sorted(kinds),
+                  'recommended_action': action,
+                  'reason': reason,
+              })
+
+          counts = Counter(row['recommended_action'] for row in rows)
+          classified = {
+              'schema_version': '0.1.0',
+              'report_type': 'owner_source_maintenance_classification',
+              'base_sha': '${{ github.sha }}',
+              'candidate_count': len(rows),
+              'counts_by_action': dict(sorted(counts.items())),
+              'candidates': rows,
+              'not_advice': True,
+          }
+          output = Path('maintenance/reviewed/owner-source-maintenance-3-classification.json')
+          output.write_text(json.dumps(classified, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps(classified['counts_by_action'], indent=2, sort_keys=True))
+          PY
+      - name: Commit classification
+        run: |
+          set -euo pipefail
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add maintenance/reviewed/owner-source-maintenance-3-classification.json
+          git commit -m 'Catalog: classify owner source maintenance candidates [owner-maintenance-3-classified]'
+          git push
