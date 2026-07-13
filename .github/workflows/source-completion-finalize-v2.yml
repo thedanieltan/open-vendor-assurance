@@ -74,8 +74,40 @@ jobs:
         run: |
           set -euo pipefail
           python -m tools.openva.validate validate
+          python - <<'PY' > /tmp/generated-before.json
+          import hashlib, json
+          from pathlib import Path
+          roots = [Path('openva-pack.json'), Path('indexes'), Path('dist')]
+          files = []
+          for root in roots:
+              if root.is_file():
+                  files.append(root)
+              elif root.is_dir():
+                  files.extend(path for path in root.rglob('*') if path.is_file())
+          manifest = {
+              path.as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+              for path in sorted(files)
+          }
+          print(json.dumps(manifest, sort_keys=True, indent=2))
+          PY
           python -m tools.openva.validate build-indexes
-          git diff --exit-code openva-pack.json indexes/ dist/
+          python - <<'PY' > /tmp/generated-after.json
+          import hashlib, json
+          from pathlib import Path
+          roots = [Path('openva-pack.json'), Path('indexes'), Path('dist')]
+          files = []
+          for root in roots:
+              if root.is_file():
+                  files.append(root)
+              elif root.is_dir():
+                  files.extend(path for path in root.rglob('*') if path.is_file())
+          manifest = {
+              path.as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+              for path in sorted(files)
+          }
+          print(json.dumps(manifest, sort_keys=True, indent=2))
+          PY
+          diff -u /tmp/generated-before.json /tmp/generated-after.json
           python -m tools.openva.release_gates check --profile pr \
             --out-json /tmp/source-completion-release-gates.json \
             --out-md /tmp/source-completion-release-gates.md
