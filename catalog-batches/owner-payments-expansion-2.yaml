@@ -1,0 +1,242 @@
+schema_version: 0.1.0
+batch_id: owner-payments-expansion-2
+operation: create
+collected_at: '2026-07-13T15:45:00Z'
+observer: human
+vendors:
+  - vendor_id: worldpay
+    display_name: Worldpay
+    legal_name: Worldpay, LLC
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - worldpay.com
+      - www.worldpay.com
+      - status.worldpay.com
+    public_entrypoints:
+      - https://www.worldpay.com/en-gb/privacy
+      - https://www.worldpay.com/en-gb/terms-of-use
+      - https://status.worldpay.com/
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for Worldpay. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: worldpay-privacy
+        source_type: privacy_notice
+        title_native: Worldpay Privacy Policy
+        title_en: Worldpay Privacy Policy
+        source_url: https://www.worldpay.com/en-gb/privacy
+        source_language: en
+        summary_native: Public Worldpay privacy policy.
+        summary_en: Public Worldpay privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: worldpay-privacy
+          artifact_type: privacy_notice
+      - source_id: worldpay-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: Worldpay Terms of Use
+        title_en: Worldpay Terms of Use
+        source_url: https://www.worldpay.com/en-gb/terms-of-use
+        source_language: en
+        summary_native: Public Worldpay website terms of use.
+        summary_en: Public Worldpay website terms of use.
+        confidence: high
+        artifact:
+          artifact_id: worldpay-terms
+          artifact_type: terms_of_service
+      - source_id: worldpay-status
+        source_type: status_page
+        title_native: Worldpay Platform Status
+        title_en: Worldpay Platform Status
+        source_url: https://status.worldpay.com/
+        source_language: en
+        summary_native: Public Worldpay platform service-status page.
+        summary_en: Public Worldpay platform service-status page.
+        confidence: high
+        artifact:
+          artifact_id: worldpay-status
+          artifact_type: status_page
+
+  - vendor_id: fiserv
+    display_name: Fiserv
+    legal_name: Fiserv, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - fiserv.com
+      - www.fiserv.com
+    public_entrypoints:
+      - https://www.fiserv.com/en/about-fiserv/privacy-notice.html
+      - https://www.fiserv.com/en/about-fiserv/terms-of-use.html
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for Fiserv. Metadata references vendor-controlled privacy and legal surfaces only.
+    sources:
+      - source_id: fiserv-privacy
+        source_type: privacy_notice
+        title_native: Fiserv Privacy Notice
+        title_en: Fiserv Privacy Notice
+        source_url: https://www.fiserv.com/en/about-fiserv/privacy-notice.html
+        source_language: en
+        summary_native: Public Fiserv privacy notice.
+        summary_en: Public Fiserv privacy notice.
+        confidence: high
+        artifact:
+          artifact_id: fiserv-privacy
+          artifact_type: privacy_notice
+      - source_id: fiserv-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: Fiserv Terms of Use
+        title_en: Fiserv Terms of Use
+        source_url: https://www.fiserv.com/en/about-fiserv/terms-of-use.html
+        source_language: en
+        summary_native: Public Fiserv website terms of use.
+        summary_en: Public Fiserv website terms of use.
+        confidence: high
+        artifact:
+          artifact_id: fiserv-terms
+          artifact_type: terms_of_service
+
+  - vendor_id: fis
+    display_name: FIS
+    legal_name: Fidelity National Information Services, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - fisglobal.com
+      - www.fisglobal.com
+    public_entrypoints:
+      - https://www.fisglobal.com/privacy
+      - https://www.fisglobal.com/terms-of-use
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for FIS. Metadata references vendor-controlled privacy and legal surfaces only.
+    sources:
+      - source_id: fis-privacy
+        source_type: privacy_notice
+        title_native: FIS Privacy
+        title_en: FIS Privacy
+        source_url: https://www.fisglobal.com/privacy
+        source_language: en
+        summary_native: Public FIS privacy notice and privacy-resource page.
+        summary_en: Public FIS privacy notice and privacy-resource page.
+        confidence: high
+        artifact:
+          artifact_id: fis-privacy
+          artifact_type: privacy_notice
+      - source_id: fis-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: FIS Terms of Use
+        title_en: FIS Terms of Use
+        source_url: https://www.fisglobal.com/terms-of-use
+        source_language: en
+        summary_native: Public FIS website terms of use.
+        summary_en: Public FIS website terms of use.
+        confidence: high
+        artifact:
+          artifact_id: fis-terms
+          artifact_type: terms_of_service
+
+  - vendor_id: global-payments
+    display_name: Global Payments
+    legal_name: Global Payments Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - globalpayments.com
+      - www.globalpayments.com
+    public_entrypoints:
+      - https://www.globalpayments.com/privacy-statement
+      - https://www.globalpayments.com/terms-of-use
+    vendor_categories: [payments, financial_infrastructure]
+    notes: Owner-led public-source-only catalog record for Global Payments. Metadata references vendor-controlled privacy and legal surfaces only.
+    sources:
+      - source_id: global-payments-privacy
+        source_type: privacy_notice
+        title_native: Global Payments Privacy Statement
+        title_en: Global Payments Privacy Statement
+        source_url: https://www.globalpayments.com/privacy-statement
+        source_language: en
+        summary_native: Public Global Payments privacy statement.
+        summary_en: Public Global Payments privacy statement.
+        confidence: high
+        artifact:
+          artifact_id: global-payments-privacy
+          artifact_type: privacy_notice
+      - source_id: global-payments-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: Global Payments Terms of Use
+        title_en: Global Payments Terms of Use
+        source_url: https://www.globalpayments.com/terms-of-use
+        source_language: en
+        summary_native: Public Global Payments website terms of use.
+        summary_en: Public Global Payments website terms of use.
+        confidence: high
+        artifact:
+          artifact_id: global-payments-terms
+          artifact_type: terms_of_service
+
+  - vendor_id: razorpay
+    display_name: Razorpay
+    legal_name: Razorpay Software Private Limited
+    headquarters_country: IN
+    regions_served: [global, apac]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - razorpay.com
+      - status.razorpay.com
+    public_entrypoints:
+      - https://razorpay.com/privacy-policy/
+      - https://razorpay.com/terms/
+      - https://status.razorpay.com/
+    vendor_categories: [payments, financial_infrastructure, regional_apac]
+    notes: Owner-led public-source-only catalog record for Razorpay. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: razorpay-privacy
+        source_type: privacy_notice
+        title_native: Razorpay Privacy Policy
+        title_en: Razorpay Privacy Policy
+        source_url: https://razorpay.com/privacy-policy/
+        source_language: en
+        summary_native: Public Razorpay privacy policy.
+        summary_en: Public Razorpay privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: razorpay-privacy
+          artifact_type: privacy_notice
+      - source_id: razorpay-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: Razorpay Terms and Conditions
+        title_en: Razorpay Terms and Conditions
+        source_url: https://razorpay.com/terms/
+        source_language: en
+        summary_native: Public Razorpay terms and conditions.
+        summary_en: Public Razorpay terms and conditions.
+        confidence: high
+        artifact:
+          artifact_id: razorpay-terms
+          artifact_type: terms_of_service
+      - source_id: razorpay-status
+        source_type: status_page
+        title_native: Razorpay Status
+        title_en: Razorpay Status
+        source_url: https://status.razorpay.com/
+        source_language: en
+        summary_native: Public Razorpay service-status page.
+        summary_en: Public Razorpay service-status page.
+        confidence: high
+        artifact:
+          artifact_id: razorpay-status
+          artifact_type: status_page
