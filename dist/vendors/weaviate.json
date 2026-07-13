@@ -36,7 +36,7 @@
       "access_class": "public_web",
       "artifact_id": "weaviate-privacy",
       "artifact_type": "privacy_notice",
-      "canonical_url": "https://weaviate.io/privacy-policy",
+      "canonical_url": "https://weaviate.io/privacy",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -98,7 +98,7 @@
       "access_class": "public_web",
       "artifact_id": "weaviate-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://weaviate.io/legal/subprocessors",
+      "canonical_url": "https://weaviate.io/subprocessors",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -155,8 +155,8 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "medium",
+        "collected_at": "2026-07-13T15:50:00Z",
+        "confidence": "high",
         "observer": "human",
         "publisher": "vendor"
       },
@@ -166,7 +166,7 @@
       "source_id": "weaviate-privacy",
       "source_language": "en",
       "source_type": "privacy_notice",
-      "source_url": "https://weaviate.io/privacy-policy",
+      "source_url": "https://weaviate.io/privacy",
       "summary_en": "Public Weaviate privacy policy metadata reference.",
       "summary_native": "Public Weaviate privacy policy metadata reference.",
       "title_en": "Weaviate Privacy Policy",
@@ -201,8 +201,8 @@
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
-        "confidence": "low",
+        "collected_at": "2026-07-13T15:50:00Z",
+        "confidence": "high",
         "observer": "human",
         "publisher": "vendor"
       },
@@ -212,7 +212,7 @@
       "source_id": "weaviate-subprocessors",
       "source_language": "en",
       "source_type": "subprocessors_list",
-      "source_url": "https://weaviate.io/legal/subprocessors",
+      "source_url": "https://weaviate.io/subprocessors",
       "summary_en": "Public Weaviate subprocessors metadata reference.",
       "summary_native": "Public Weaviate subprocessors metadata reference.",
       "title_en": "Weaviate Subprocessors",
@@ -286,6 +286,40 @@
       "schema_version": "0.1.0",
       "source_id": "weaviate-subprocessors",
       "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "weaviate"
+    },
+    {
+      "_openva_path": "data/vendors/weaviate/changes/owner-source-maintenance-4-weaviate-privacy.yaml",
+      "artifact_id": "weaviate-privacy",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-4-weaviate-privacy",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T15:50:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "weaviate-privacy",
+      "summary": "Owner-led catalog maintenance replaced a confirmed broken public source URL and aligned its artifact metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "weaviate"
+    },
+    {
+      "_openva_path": "data/vendors/weaviate/changes/owner-source-maintenance-4-weaviate-subprocessors.yaml",
+      "artifact_id": "weaviate-subprocessors",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-4-weaviate-subprocessors",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T15:50:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "weaviate-subprocessors",
+      "summary": "Owner-led catalog maintenance replaced a confirmed broken public source URL and aligned its artifact metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "weaviate"
     }

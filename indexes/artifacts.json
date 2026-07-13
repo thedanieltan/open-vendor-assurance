@@ -1,5 +1,5 @@
 {
-  "count": 822,
+  "count": 823,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -1304,7 +1304,7 @@
       "access_class": "public_web",
       "artifact_id": "aliyun-compliance",
       "artifact_type": "compliance_page",
-      "canonical_url": "https://www.aliyun.com/trust-center",
+      "canonical_url": "https://security.aliyun.com/trust-center",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -1394,7 +1394,7 @@
       "access_class": "public_web",
       "artifact_id": "aliyun-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.aliyun.com/product/security",
+      "canonical_url": "https://cn.aliyun.com/security",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -5735,7 +5735,7 @@
       "access_class": "public_web",
       "artifact_id": "darwinbox-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://darwinbox.com/security/",
+      "canonical_url": "https://darwinbox.com/trust/security",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -15202,6 +15202,42 @@
       "vendor_id": "okta"
     },
     {
+      "_openva_path": "data/vendors/okta/artifacts/okta-inc-terms.yaml",
+      "access_class": "public_web",
+      "artifact_id": "okta-inc-terms",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://www.okta.com/legal/terms-of-service",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [
+          "okta-inc"
+        ],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [
+        "Okta services"
+      ],
+      "region_scope": [
+        "global"
+      ],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "okta-inc-terms",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "okta"
+    },
+    {
       "_openva_path": "data/vendors/okta/artifacts/okta-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "okta-privacy",
@@ -17373,7 +17409,7 @@
       "access_class": "public_web",
       "artifact_id": "qualtrics-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://www.qualtrics.com/subprocessors/",
+      "canonical_url": "https://www.qualtrics.com/subprocessor-list",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -19015,7 +19051,7 @@
       "access_class": "public_web",
       "artifact_id": "scrut-automation-dpa",
       "artifact_type": "dpa",
-      "canonical_url": "https://www.scrut.io/data-processing-addendum",
+      "canonical_url": "https://www.scrut.io/dpa",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -19319,7 +19355,7 @@
       "access_class": "public_web",
       "artifact_id": "secureframe-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://secureframe.com/legal/subprocessors",
+      "canonical_url": "https://secureframe.com/subprocessor-list",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -19889,7 +19925,7 @@
       "access_class": "public_web",
       "artifact_id": "shift-technology-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.shift-technology.com/en/security",
+      "canonical_url": "https://www.shift-technology.com/security",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -20547,7 +20583,7 @@
       "access_class": "public_web",
       "artifact_id": "snowflake-security",
       "artifact_type": "security_page",
-      "canonical_url": "https://www.snowflake.com/en/trust/",
+      "canonical_url": "https://www.snowflake.com/en/why-snowflake/snowflake-security-hub",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -23532,7 +23568,7 @@
       "access_class": "public_web",
       "artifact_id": "weaviate-privacy",
       "artifact_type": "privacy_notice",
-      "canonical_url": "https://weaviate.io/privacy-policy",
+      "canonical_url": "https://weaviate.io/privacy",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -23594,7 +23630,7 @@
       "access_class": "public_web",
       "artifact_id": "weaviate-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://weaviate.io/legal/subprocessors",
+      "canonical_url": "https://weaviate.io/subprocessors",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
