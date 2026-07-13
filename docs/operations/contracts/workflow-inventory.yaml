@@ -218,3 +218,38 @@ public_workflows:
     status: support
     triggers: [issues, workflow_dispatch]
     permissions: {contents: write, pull-requests: write, issues: write}
+    writes_repository_state: true
+    creates_prs: true
+    merges_prs: false
+  - name: submitted-source-verification.yml
+    loop: support
+    status: support
+    triggers: [issues, workflow_dispatch]
+    permissions: {contents: read, issues: write}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: catalog-maintenance.yml
+    loop: legacy_report
+    status: consolidation_candidate
+    triggers: [workflow_dispatch, schedule]
+    permissions: {contents: read, actions: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: source-refinement-queue.yml
+    loop: legacy_report
+    status: quarantined
+    triggers: [workflow_dispatch]
+    permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
+  - name: observe-report.yml
+    loop: legacy_report
+    status: quarantined
+    triggers: [workflow_dispatch]
+    permissions: {contents: read}
+    writes_repository_state: false
+    creates_prs: false
+    merges_prs: false
