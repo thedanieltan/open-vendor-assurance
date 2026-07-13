@@ -28,6 +28,7 @@ jobs:
           import os
           import re
           import time
+          import urllib.error
           import urllib.request
           from pathlib import Path
 
@@ -64,19 +65,25 @@ jobs:
               'observations': '/public/observations/latest.json',
           }
 
-          def fetch(path: str):
+          def fetch(name: str, path: str):
               url = base_url + path
               request = urllib.request.Request(url, headers={'User-Agent': 'OpenVA-existing-catalog-live-acceptance/1.0'})
-              with urllib.request.urlopen(request, timeout=30) as response:
-                  body = response.read()
-                  if response.status != 200:
-                      raise RuntimeError(f'{url}: HTTP {response.status}')
-                  return body
+              try:
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      body = response.read()
+                      if response.status != 200:
+                          raise RuntimeError(f'{name} {url}: HTTP {response.status}')
+                      print(f'{name}: HTTP {response.status} bytes={len(body)}')
+                      return body
+              except urllib.error.HTTPError as exc:
+                  raise RuntimeError(f'{name} {url}: HTTP {exc.code}') from exc
+              except urllib.error.URLError as exc:
+                  raise RuntimeError(f'{name} {url}: {exc.reason}') from exc
 
           last_error = None
-          for attempt in range(20):
+          for attempt in range(2):
               try:
-                  payloads = {name: fetch(path) for name, path in endpoints.items()}
+                  payloads = {name: fetch(name, path) for name, path in endpoints.items()}
                   documents = {
                       name: json.loads(payloads[name])
                       for name in ('manifest', 'agent', 'vendors', 'sources', 'observations')
@@ -91,7 +98,7 @@ jobs:
                   missing_observations = sorted(baseline_sources - deployed_observations)
                   if missing_vendors or missing_sources or missing_observations:
                       raise RuntimeError(
-                          'deployment does not yet contain maintenance baseline: '
+                          'deployment does not contain maintenance baseline: '
                           f'missing_vendors={len(missing_vendors)} '
                           f'missing_sources={len(missing_sources)} '
                           f'missing_observations={len(missing_observations)}'
@@ -132,10 +139,10 @@ jobs:
                   break
               except Exception as exc:
                   last_error = exc
-                  if attempt == 19:
-                      raise
                   print(f'attempt {attempt + 1} not accepted: {exc}')
-                  time.sleep(15)
+                  if attempt == 1:
+                      raise
+                  time.sleep(5)
           else:
               raise last_error or RuntimeError('live acceptance failed')
           PY
