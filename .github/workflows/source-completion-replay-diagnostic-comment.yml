@@ -1,0 +1,82 @@
+name: source-completion-replay-diagnostic-comment
+
+on:
+  pull_request:
+    branches:
+      - catalog/source-completion-audit-control
+    types: [opened, synchronize, reopened]
+
+permissions:
+  actions: read
+  pull-requests: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: '29276262664'
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Extract and post failed replay diagnostic
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/source-completion-diagnostic/logs
+          gh api "repos/$REPO/actions/runs/$RUN_ID/jobs?filter=latest&per_page=100" > /tmp/source-completion-diagnostic/jobs.json
+          jq -r '.jobs[] | select(.conclusion == "failure") | .id' /tmp/source-completion-diagnostic/jobs.json > /tmp/source-completion-diagnostic/failed-job-ids.txt
+          while read -r job_id; do
+            [ -n "$job_id" ] || continue
+            gh api "repos/$REPO/actions/jobs/$job_id/logs" > "/tmp/source-completion-diagnostic/logs/job-$job_id.log" || true
+          done < /tmp/source-completion-diagnostic/failed-job-ids.txt
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('/tmp/source-completion-diagnostic')
+          jobs = json.loads((root / 'jobs.json').read_text())
+          lines = [
+              '## Source-completion replay diagnostic',
+              '',
+              'Fixed Actions run: `29276262664`',
+              '',
+          ]
+          failed_count = 0
+          for job in jobs.get('jobs', []):
+              if job.get('conclusion') != 'failure':
+                  continue
+              failed_count += 1
+              job_id = job.get('id')
+              log_path = root / 'logs' / f'job-{job_id}.log'
+              log_text = log_path.read_text(encoding='utf-8', errors='replace') if log_path.exists() else ''
+              log_lines = log_text.splitlines()
+              signal = [
+                  line for line in log_lines
+                  if any(token in line.lower() for token in ('error', 'failed', 'failure', 'traceback', 'exception', 'assert', 'invalid', 'conflict', 'rejected'))
+              ]
+              failed_steps = [
+                  str(step.get('name'))
+                  for step in job.get('steps') or []
+                  if step.get('conclusion') == 'failure'
+              ]
+              lines.extend([
+                  f"### {job.get('name')} (`{job_id}`)",
+                  '',
+                  'Failed step(s): ' + (', '.join(failed_steps) if failed_steps else 'not reported'),
+                  '',
+                  '```text',
+                  *signal[-100:],
+                  '```',
+                  '',
+                  '<details><summary>Log tail</summary>',
+                  '',
+                  '```text',
+                  *log_lines[-140:],
+                  '```',
+                  '</details>',
+                  '',
+              ])
+          lines.insert(4, f'Failed jobs: **{failed_count}**')
+          (root / 'diagnostic.md').write_text('\n'.join(lines) + '\n')
+          PY
+          gh pr comment "$PR_NUMBER" --body-file /tmp/source-completion-diagnostic/diagnostic.md
