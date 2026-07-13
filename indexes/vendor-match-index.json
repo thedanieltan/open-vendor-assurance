@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 185,
+  "count": 193,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -4675,6 +4675,82 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "status_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docebo-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.docebo.com/company/privacy-policy/",
+          "title": "Docebo Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docebo-security",
+          "source_type": "security_page",
+          "source_url": "https://www.docebo.com/security/",
+          "title": "Docebo Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docebo-status",
+          "source_type": "status_page",
+          "source_url": "https://status.docebo.com/",
+          "title": "Docebo Status"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Docebo",
+      "legal_entities": [],
+      "legal_name": "Docebo S.p.A.",
+      "manifest_path": "dist/vendors/docebo.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "docebo.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docebo-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.docebo.com/company/privacy-policy/",
+          "title": "Docebo Privacy Policy"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docebo-security",
+          "source_type": "security_page",
+          "source_url": "https://www.docebo.com/security/",
+          "title": "Docebo Security"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "docebo-status",
+          "source_type": "status_page",
+          "source_url": "https://status.docebo.com/",
+          "title": "Docebo Status"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "docebo"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -5635,6 +5711,161 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "exoscale"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "f-secure-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.f-secure.com/en/legal/privacy/statement",
+          "title": "F-Secure Privacy Statement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "f-secure-status",
+          "source_type": "status_page",
+          "source_url": "https://status.f-secure.com/",
+          "title": "F-Secure Services Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "f-secure-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.f-secure.com/en/legal/terms",
+          "title": "F-Secure License Terms"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "F-Secure",
+      "legal_entities": [],
+      "legal_name": "F-Secure Corporation",
+      "manifest_path": "dist/vendors/f-secure.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "f-secure.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "f-secure-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.f-secure.com/en/legal/privacy/statement",
+          "title": "F-Secure Privacy Statement"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "f-secure-status",
+          "source_type": "status_page",
+          "source_url": "https://status.f-secure.com/",
+          "title": "F-Secure Services Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "f-secure-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.f-secure.com/en/legal/terms",
+          "title": "F-Secure License Terms"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "f-secure"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://factorialhr.com/privacy",
+          "title": "Factorial Privacy Policy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://factorialhr.com/terms-of-use",
+          "title": "Factorial Terms and Conditions"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.factorial.co/",
+          "title": "Factorial Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Factorial",
+      "legal_entities": [],
+      "legal_name": "Everyday Software, S.L.",
+      "manifest_path": "dist/vendors/factorial.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "factorialhr.com",
+        "factorial.co"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://factorialhr.com/privacy",
+          "title": "Factorial Privacy Policy"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://factorialhr.com/terms-of-use",
+          "title": "Factorial Terms and Conditions"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "factorial-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.factorial.co/",
+          "title": "Factorial Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "factorial"
     },
     {
       "candidate_source_types": [],
@@ -8236,6 +8467,83 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.instructure.com/policies/product-privacy-policy",
+          "title": "Instructure Product Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-status",
+          "source_type": "status_page",
+          "source_url": "https://status.instructure.com/",
+          "title": "Instructure Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.instructure.com/",
+          "title": "Instructure Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Instructure",
+      "legal_entities": [],
+      "legal_name": "Instructure, Inc.",
+      "manifest_path": "dist/vendors/instructure.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "instructure.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.instructure.com/policies/product-privacy-policy",
+          "title": "Instructure Product Privacy Notice"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-status",
+          "source_type": "status_page",
+          "source_url": "https://status.instructure.com/",
+          "title": "Instructure Status"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "instructure-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust.instructure.com/",
+          "title": "Instructure Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "instructure"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -8338,6 +8646,83 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "intercom"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jetbrains-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.jetbrains.com/legal/docs/privacy/privacy/",
+          "title": "JetBrains Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jetbrains-status",
+          "source_type": "status_page",
+          "source_url": "https://status.jetbrains.com/",
+          "title": "JetBrains Services Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jetbrains-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust-center.jetbrains.com/",
+          "title": "JetBrains Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "JetBrains",
+      "legal_entities": [],
+      "legal_name": "JetBrains s.r.o.",
+      "manifest_path": "dist/vendors/jetbrains.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "jetbrains.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jetbrains-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.jetbrains.com/legal/docs/privacy/privacy/",
+          "title": "JetBrains Privacy Notice"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jetbrains-status",
+          "source_type": "status_page",
+          "source_url": "https://status.jetbrains.com/",
+          "title": "JetBrains Services Status"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jetbrains-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trust-center.jetbrains.com/",
+          "title": "JetBrains Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "jetbrains"
     },
     {
       "candidate_source_types": [],
@@ -12043,6 +12428,83 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "red-hat-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.redhat.com/en/about/privacy-policy",
+          "title": "Red Hat Privacy Statement"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "red-hat-status",
+          "source_type": "status_page",
+          "source_url": "https://status.redhat.com/",
+          "title": "Red Hat Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "red-hat-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.redhat.com/en/trust",
+          "title": "Trust Red Hat"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Red Hat",
+      "legal_entities": [],
+      "legal_name": "Red Hat, LLC",
+      "manifest_path": "dist/vendors/red-hat.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "redhat.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "red-hat-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.redhat.com/en/about/privacy-policy",
+          "title": "Red Hat Privacy Statement"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "red-hat-status",
+          "source_type": "status_page",
+          "source_url": "https://status.redhat.com/",
+          "title": "Red Hat Status"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "red-hat-trust",
+          "source_type": "trust_center",
+          "source_url": "https://www.redhat.com/en/trust",
+          "title": "Trust Red Hat"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "red-hat"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "privacy_notice"
       ],
       "canonical_sources": [
@@ -15688,6 +16150,83 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.ukg.com/privacy",
+          "title": "UKG Privacy Notice"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.ukg.com/terms-of-use",
+          "title": "UKG Terms of Use"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trustcenter.ukg.com/",
+          "title": "UKG Trust Center"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "UKG",
+      "legal_entities": [],
+      "legal_name": "UKG Inc.",
+      "manifest_path": "dist/vendors/ukg.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "ukg.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.ukg.com/privacy",
+          "title": "UKG Privacy Notice"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.ukg.com/terms-of-use",
+          "title": "UKG Terms of Use"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "ukg-trust",
+          "source_type": "trust_center",
+          "source_url": "https://trustcenter.ukg.com/",
+          "title": "UKG Trust Center"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "ukg"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "privacy_notice",
         "security_page",
@@ -16291,6 +16830,83 @@
       },
       "unavailable_source_types": [],
       "vendor_id": "wise"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "status_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "withsecure-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.withsecure.com/privacy-and-security/",
+          "title": "WithSecure Privacy and Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "withsecure-status",
+          "source_type": "status_page",
+          "source_url": "https://status.withsecure.com/",
+          "title": "WithSecure Services Status"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "withsecure-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.withsecure.com/en/terms/",
+          "title": "WithSecure Terms of Use"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "WithSecure",
+      "legal_entities": [],
+      "legal_name": "WithSecure Corporation",
+      "manifest_path": "dist/vendors/withsecure.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "withsecure.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "withsecure-privacy",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.withsecure.com/privacy-and-security/",
+          "title": "WithSecure Privacy and Security"
+        },
+        "status_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "withsecure-status",
+          "source_type": "status_page",
+          "source_url": "https://status.withsecure.com/",
+          "title": "WithSecure Services Status"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "withsecure-terms",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.withsecure.com/en/terms/",
+          "title": "WithSecure Terms of Use"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "withsecure"
     },
     {
       "candidate_source_types": [],
