@@ -29,6 +29,36 @@
         "screenshot_stored": false
       },
       "vendor_id": "prismic"
+    },
+    {
+      "_openva_path": "data/vendors/prismic/artifacts/prismic-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "prismic-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://prismic.io/legal/security",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "prismic-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "prismic"
     }
   ],
   "candidate_sources": [],
@@ -52,9 +82,53 @@
       "source_url": "https://prismic.io/legal/privacy",
       "title_native": "Prismic Privacy Policy",
       "vendor_id": "prismic"
+    },
+    {
+      "_openva_path": "data/vendors/prismic/sources/prismic-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.382628Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "prismic-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://prismic.io/legal/security",
+      "title_native": "Prismic Security",
+      "vendor_id": "prismic"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/prismic/changes/candidate-promotion-prismic-trust-center.yaml",
+      "artifact_id": "prismic-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-prismic-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.382628Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "prismic-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "prismic"
+    },
     {
       "_openva_path": "data/vendors/prismic/changes/strict-growth-prismic-privacy-notice.yaml",
       "artifact_id": "prismic-privacy-notice",
@@ -85,19 +159,194 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 1,
+    "artifact_count": 2,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 2,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "privacy_notice"
+      "privacy_notice",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 6,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "dpa",
+      "status_page",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/prismic/unavailable_sources/prismic-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://prismic.io",
+        "https://prismic.io/security/certifications",
+        "https://prismic.io/trust/certifications",
+        "https://prismic.io/compliance/certifications",
+        "https://www.prismic.io",
+        "https://www.prismic.io/security/certifications",
+        "https://www.prismic.io/trust/certifications",
+        "https://www.prismic.io/compliance/certifications"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "prismic-certification-reference",
+      "vendor_id": "prismic"
+    },
+    {
+      "_openva_path": "data/vendors/prismic/unavailable_sources/prismic-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://prismic.io",
+        "https://prismic.io/compliance",
+        "https://prismic.io/security/compliance",
+        "https://prismic.io/trust/compliance",
+        "https://prismic.io/trust-center/compliance",
+        "https://www.prismic.io",
+        "https://www.prismic.io/compliance",
+        "https://www.prismic.io/security/compliance",
+        "https://www.prismic.io/trust/compliance",
+        "https://www.prismic.io/trust-center/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "prismic-compliance-page",
+      "vendor_id": "prismic"
+    },
+    {
+      "_openva_path": "data/vendors/prismic/unavailable_sources/prismic-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://prismic.io",
+        "https://prismic.io/legal/data-processing-addendum",
+        "https://prismic.io/data-processing-addendum",
+        "https://prismic.io/legal/dpa",
+        "https://prismic.io/dpa",
+        "https://prismic.io/privacy/dpa",
+        "https://www.prismic.io",
+        "https://www.prismic.io/legal/data-processing-addendum",
+        "https://www.prismic.io/data-processing-addendum",
+        "https://www.prismic.io/legal/dpa",
+        "https://www.prismic.io/dpa",
+        "https://www.prismic.io/privacy/dpa"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "prismic-dpa",
+      "vendor_id": "prismic"
+    },
+    {
+      "_openva_path": "data/vendors/prismic/unavailable_sources/prismic-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.prismic.io",
+        "https://status.prismic.io/status",
+        "https://status.prismic.io/statuspage",
+        "https://status.prismic.io/system-status",
+        "https://status.prismic.io/service-status",
+        "https://status.prismic.io/uptime",
+        "https://prismic.io",
+        "https://prismic.io/status",
+        "https://prismic.io/statuspage",
+        "https://prismic.io/system-status",
+        "https://prismic.io/service-status",
+        "https://prismic.io/uptime",
+        "https://www.prismic.io",
+        "https://www.prismic.io/status",
+        "https://www.prismic.io/statuspage",
+        "https://www.prismic.io/system-status",
+        "https://www.prismic.io/service-status",
+        "https://www.prismic.io/uptime"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "prismic-status-page",
+      "vendor_id": "prismic"
+    },
+    {
+      "_openva_path": "data/vendors/prismic/unavailable_sources/prismic-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://prismic.io",
+        "https://prismic.io/legal/subprocessors",
+        "https://prismic.io/subprocessors",
+        "https://prismic.io/legal/sub-processors",
+        "https://prismic.io/sub-processors",
+        "https://www.prismic.io",
+        "https://www.prismic.io/legal/subprocessors",
+        "https://www.prismic.io/subprocessors",
+        "https://www.prismic.io/legal/sub-processors",
+        "https://www.prismic.io/sub-processors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "prismic-subprocessors-list",
+      "vendor_id": "prismic"
+    },
+    {
+      "_openva_path": "data/vendors/prismic/unavailable_sources/prismic-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://prismic.io",
+        "https://prismic.io/terms",
+        "https://prismic.io/terms-of-service",
+        "https://prismic.io/legal/terms",
+        "https://prismic.io/legal/terms-of-service",
+        "https://prismic.io/terms.html",
+        "https://www.prismic.io",
+        "https://www.prismic.io/terms",
+        "https://www.prismic.io/terms-of-service",
+        "https://www.prismic.io/legal/terms",
+        "https://www.prismic.io/legal/terms-of-service",
+        "https://www.prismic.io/terms.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "prismic-terms-of-service",
+      "vendor_id": "prismic"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/prismic/vendor.yaml",
     "catalog_status": "active",

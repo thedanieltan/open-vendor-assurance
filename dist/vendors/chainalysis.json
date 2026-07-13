@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/chainalysis/artifacts/chainalysis-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "chainalysis-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.chainalysis.com/solution/crypto-compliance/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "chainalysis-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/artifacts/chainalysis-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "chainalysis-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.chainalysis.com/data-processing-addendum/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "chainalysis-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "chainalysis"
+    },
+    {
       "_openva_path": "data/vendors/chainalysis/artifacts/chainalysis-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "chainalysis-privacy",
@@ -29,10 +89,110 @@
         "screenshot_stored": false
       },
       "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/artifacts/chainalysis-security-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "chainalysis-security-page",
+      "artifact_type": "security_page",
+      "canonical_url": "https://www.chainalysis.com/national-security/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "chainalysis-security-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/artifacts/chainalysis-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "chainalysis-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://trust.chainalysis.com",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "chainalysis-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "chainalysis"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/chainalysis/sources/chainalysis-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.353040Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "chainalysis-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.chainalysis.com/solution/crypto-compliance/",
+      "title_native": "Crypto Compliance Solution - Chainalysis",
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/sources/chainalysis-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.853478Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "chainalysis-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.chainalysis.com/data-processing-addendum/",
+      "title_native": "Data Processing Addendum - Chainalysis",
+      "vendor_id": "chainalysis"
+    },
     {
       "_openva_path": "data/vendors/chainalysis/sources/chainalysis-privacy.yaml",
       "access_class": "public_web",
@@ -55,9 +215,117 @@
       "title_en": "Chainalysis Privacy Policy",
       "title_native": "Chainalysis Privacy Policy",
       "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/sources/chainalysis-security-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.714485Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "chainalysis-security-page",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://www.chainalysis.com/national-security/",
+      "title_native": "Blockchain Intelligence for Defense &amp; National Security - Chainalysis",
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/sources/chainalysis-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.699027Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "chainalysis-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://trust.chainalysis.com",
+      "title_native": "chainalysis.com Trust Center",
+      "vendor_id": "chainalysis"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/chainalysis/changes/candidate-promotion-chainalysis-compliance-page.yaml",
+      "artifact_id": "chainalysis-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-chainalysis-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.353040Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "chainalysis-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/changes/candidate-promotion-chainalysis-dpa.yaml",
+      "artifact_id": "chainalysis-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-chainalysis-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.853478Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "chainalysis-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/changes/candidate-promotion-chainalysis-security-page.yaml",
+      "artifact_id": "chainalysis-security-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-chainalysis-security-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.714485Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "chainalysis-security-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/changes/candidate-promotion-chainalysis-trust-center.yaml",
+      "artifact_id": "chainalysis-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-chainalysis-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.699027Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "chainalysis-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "chainalysis"
+    },
     {
       "_openva_path": "data/vendors/chainalysis/changes/payments-kyc-batch-1-chainalysis-privacy.yaml",
       "artifact_id": "chainalysis-privacy",
@@ -88,19 +356,156 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 1,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "privacy_notice"
+      "compliance_page",
+      "dpa",
+      "privacy_notice",
+      "security_page",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 4,
+    "unavailable_source_types": [
+      "certification_reference",
+      "status_page",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/chainalysis/unavailable_sources/chainalysis-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.chainalysis.com/security/certifications",
+        "https://www.chainalysis.com/trust/certifications",
+        "https://www.chainalysis.com/trust-center/certifications",
+        "https://www.chainalysis.com/trustcenter/certifications",
+        "https://www.chainalysis.com/compliance/certifications",
+        "https://www.chainalysis.com/security/compliance",
+        "https://www.chainalysis.com/trust/compliance",
+        "https://chainalysis.com/security/certifications",
+        "https://chainalysis.com/trust/certifications",
+        "https://chainalysis.com/trust-center/certifications",
+        "https://chainalysis.com/trustcenter/certifications",
+        "https://chainalysis.com/compliance/certifications",
+        "https://chainalysis.com/security/compliance",
+        "https://chainalysis.com/trust/compliance",
+        "https://www.chainalysis.com/chainalysis-certification-programs/",
+        "https://www.chainalysis.com/asset-seizure-certification",
+        "https://www.chainalysis.com/blog/episode-53-building-trust-and-safety-in-the-crypto-threat-landscape",
+        "https://www.chainalysis.com/blog/introducing-chainalysis-asset-seizure-certification",
+        "https://www.chainalysis.com/blog/podcast-episode-36-web3-security-and-cryptos-10-billion-problem",
+        "https://www.chainalysis.com/chainalysis-certification-programs"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:27Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "chainalysis-certification-reference",
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/unavailable_sources/chainalysis-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.chainalysis.com",
+        "https://status.chainalysis.com/status",
+        "https://status.chainalysis.com/statuspage",
+        "https://status.chainalysis.com/system-status",
+        "https://status.chainalysis.com/service-status",
+        "https://status.chainalysis.com/uptime",
+        "https://chainalysis.com",
+        "https://chainalysis.com/status",
+        "https://chainalysis.com/statuspage",
+        "https://chainalysis.com/system-status",
+        "https://chainalysis.com/service-status",
+        "https://chainalysis.com/uptime",
+        "https://www.chainalysis.com",
+        "https://www.chainalysis.com/status",
+        "https://www.chainalysis.com/statuspage",
+        "https://www.chainalysis.com/system-status",
+        "https://www.chainalysis.com/service-status",
+        "https://www.chainalysis.com/uptime",
+        "https://www.chainalysis.com/privacy-policy/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "chainalysis-status-page",
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/unavailable_sources/chainalysis-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://chainalysis.com",
+        "https://chainalysis.com/legal/subprocessors",
+        "https://chainalysis.com/subprocessors",
+        "https://chainalysis.com/legal/sub-processors",
+        "https://chainalysis.com/sub-processors",
+        "https://www.chainalysis.com",
+        "https://www.chainalysis.com/legal/subprocessors",
+        "https://www.chainalysis.com/subprocessors",
+        "https://www.chainalysis.com/legal/sub-processors",
+        "https://www.chainalysis.com/sub-processors",
+        "https://www.chainalysis.com/privacy-policy/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "chainalysis-subprocessors-list",
+      "vendor_id": "chainalysis"
+    },
+    {
+      "_openva_path": "data/vendors/chainalysis/unavailable_sources/chainalysis-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://chainalysis.com",
+        "https://chainalysis.com/terms",
+        "https://chainalysis.com/terms-of-service",
+        "https://chainalysis.com/legal/terms",
+        "https://chainalysis.com/legal/terms-of-service",
+        "https://chainalysis.com/terms.html",
+        "https://www.chainalysis.com",
+        "https://www.chainalysis.com/terms",
+        "https://www.chainalysis.com/terms-of-service",
+        "https://www.chainalysis.com/legal/terms",
+        "https://www.chainalysis.com/legal/terms-of-service",
+        "https://www.chainalysis.com/terms.html",
+        "https://www.chainalysis.com/privacy-policy/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "chainalysis-terms-of-service",
+      "vendor_id": "chainalysis"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/chainalysis/vendor.yaml",
     "catalog_status": "active",

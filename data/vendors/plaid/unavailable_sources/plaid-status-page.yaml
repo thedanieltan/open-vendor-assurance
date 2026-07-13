@@ -1,0 +1,33 @@
+schema_version: 0.1.0
+unavailable_source_id: plaid-status-page
+vendor_id: plaid
+source_type: status_page
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://status.plaid.com
+- https://status.plaid.com/status
+- https://status.plaid.com/statuspage
+- https://status.plaid.com/system-status
+- https://status.plaid.com/service-status
+- https://status.plaid.com/uptime
+- https://plaid.com
+- https://plaid.com/status
+- https://plaid.com/statuspage
+- https://plaid.com/system-status
+- https://plaid.com/service-status
+- https://plaid.com/uptime
+- https://www.plaid.com
+- https://www.plaid.com/status
+- https://www.plaid.com/statuspage
+- https://www.plaid.com/system-status
+- https://www.plaid.com/service-status
+- https://www.plaid.com/uptime
+- https://plaid.com/legal/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

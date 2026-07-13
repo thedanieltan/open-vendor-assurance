@@ -398,10 +398,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/anthropic/unavailable_sources/anthropic-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.anthropic.com",
+        "https://status.anthropic.com/status",
+        "https://status.anthropic.com/statuspage",
+        "https://status.anthropic.com/system-status",
+        "https://status.anthropic.com/service-status",
+        "https://status.anthropic.com/uptime",
+        "https://anthropic.com",
+        "https://anthropic.com/status",
+        "https://anthropic.com/statuspage",
+        "https://anthropic.com/system-status",
+        "https://anthropic.com/service-status",
+        "https://anthropic.com/uptime",
+        "https://www.anthropic.com",
+        "https://www.anthropic.com/status",
+        "https://www.anthropic.com/statuspage",
+        "https://www.anthropic.com/system-status",
+        "https://www.anthropic.com/service-status",
+        "https://www.anthropic.com/uptime",
+        "https://www.anthropic.com/legal",
+        "https://trust.anthropic.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "anthropic-status-page",
+      "vendor_id": "anthropic"
+    },
+    {
+      "_openva_path": "data/vendors/anthropic/unavailable_sources/anthropic-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://anthropic.com",
+        "https://anthropic.com/terms",
+        "https://anthropic.com/terms-of-service",
+        "https://anthropic.com/legal/terms",
+        "https://anthropic.com/legal/terms-of-service",
+        "https://anthropic.com/terms.html",
+        "https://www.anthropic.com",
+        "https://www.anthropic.com/terms",
+        "https://www.anthropic.com/terms-of-service",
+        "https://www.anthropic.com/legal/terms",
+        "https://www.anthropic.com/legal/terms-of-service",
+        "https://www.anthropic.com/terms.html",
+        "https://www.anthropic.com/legal",
+        "https://trust.anthropic.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "anthropic-terms-of-service",
+      "vendor_id": "anthropic"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/anthropic/vendor.yaml",
     "catalog_status": "active",

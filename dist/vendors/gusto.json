@@ -383,10 +383,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/gusto/unavailable_sources/gusto-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.gusto.com",
+        "https://status.gusto.com/status",
+        "https://status.gusto.com/statuspage",
+        "https://status.gusto.com/system-status",
+        "https://status.gusto.com/service-status",
+        "https://status.gusto.com/uptime",
+        "https://gusto.com",
+        "https://gusto.com/status",
+        "https://gusto.com/statuspage",
+        "https://gusto.com/system-status",
+        "https://gusto.com/service-status",
+        "https://gusto.com/uptime",
+        "https://www.gusto.com",
+        "https://www.gusto.com/status",
+        "https://www.gusto.com/statuspage",
+        "https://www.gusto.com/system-status",
+        "https://www.gusto.com/service-status",
+        "https://www.gusto.com/uptime",
+        "https://gusto.com/about/security",
+        "https://gusto.com/about/privacy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "gusto-status-page",
+      "vendor_id": "gusto"
+    },
+    {
+      "_openva_path": "data/vendors/gusto/unavailable_sources/gusto-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://gusto.com",
+        "https://gusto.com/terms",
+        "https://gusto.com/terms-of-service",
+        "https://gusto.com/legal/terms",
+        "https://gusto.com/legal/terms-of-service",
+        "https://gusto.com/terms.html",
+        "https://www.gusto.com",
+        "https://www.gusto.com/terms",
+        "https://www.gusto.com/terms-of-service",
+        "https://www.gusto.com/legal/terms",
+        "https://www.gusto.com/legal/terms-of-service",
+        "https://www.gusto.com/terms.html",
+        "https://gusto.com/about/security",
+        "https://gusto.com/about/privacy"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "gusto-terms-of-service",
+      "vendor_id": "gusto"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/gusto/vendor.yaml",
     "catalog_status": "active",

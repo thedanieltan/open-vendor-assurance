@@ -1,0 +1,34 @@
+schema_version: 0.1.0
+unavailable_source_id: sap-status-page
+vendor_id: sap
+source_type: status_page
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://status.sap.com
+- https://status.sap.com/status
+- https://status.sap.com/statuspage
+- https://status.sap.com/system-status
+- https://status.sap.com/service-status
+- https://status.sap.com/uptime
+- https://sap.com
+- https://sap.com/status
+- https://sap.com/statuspage
+- https://sap.com/system-status
+- https://sap.com/service-status
+- https://sap.com/uptime
+- https://www.sap.com
+- https://www.sap.com/status
+- https://www.sap.com/statuspage
+- https://www.sap.com/system-status
+- https://www.sap.com/service-status
+- https://www.sap.com/uptime
+- https://www.sap.com/about/trust-center/agreements/data-processing-agreement.html
+- https://www.sap.com/about/trust-center/cloud-service-status/subprocessors.html
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

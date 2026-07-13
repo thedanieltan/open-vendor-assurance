@@ -29,6 +29,36 @@
         "screenshot_stored": false
       },
       "vendor_id": "plaid"
+    },
+    {
+      "_openva_path": "data/vendors/plaid/artifacts/plaid-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "plaid-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://plaid.com/trust-safety/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "plaid-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "plaid"
     }
   ],
   "candidate_sources": [],
@@ -55,9 +85,53 @@
       "title_en": "Plaid Privacy Statement",
       "title_native": "Plaid Privacy Statement",
       "vendor_id": "plaid"
+    },
+    {
+      "_openva_path": "data/vendors/plaid/sources/plaid-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.353713Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "plaid-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://plaid.com/trust-safety/",
+      "title_native": "Consumer trust - Plaid safety &amp; security | Plaid",
+      "vendor_id": "plaid"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/plaid/changes/candidate-promotion-plaid-trust-center.yaml",
+      "artifact_id": "plaid-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-plaid-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.353713Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "plaid-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "plaid"
+    },
     {
       "_openva_path": "data/vendors/plaid/changes/payments-kyc-batch-1-plaid-privacy.yaml",
       "artifact_id": "plaid-privacy",
@@ -88,19 +162,200 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 1,
+    "artifact_count": 2,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 2,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "privacy_notice"
+      "privacy_notice",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 6,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "dpa",
+      "status_page",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/plaid/unavailable_sources/plaid-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://plaid.com",
+        "https://plaid.com/security/certifications",
+        "https://plaid.com/trust/certifications",
+        "https://plaid.com/compliance/certifications",
+        "https://www.plaid.com",
+        "https://www.plaid.com/security/certifications",
+        "https://www.plaid.com/trust/certifications",
+        "https://www.plaid.com/compliance/certifications",
+        "https://plaid.com/legal/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "plaid-certification-reference",
+      "vendor_id": "plaid"
+    },
+    {
+      "_openva_path": "data/vendors/plaid/unavailable_sources/plaid-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://plaid.com",
+        "https://plaid.com/compliance",
+        "https://plaid.com/security/compliance",
+        "https://plaid.com/trust/compliance",
+        "https://plaid.com/trust-center/compliance",
+        "https://www.plaid.com",
+        "https://www.plaid.com/compliance",
+        "https://www.plaid.com/security/compliance",
+        "https://www.plaid.com/trust/compliance",
+        "https://www.plaid.com/trust-center/compliance",
+        "https://plaid.com/legal/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "plaid-compliance-page",
+      "vendor_id": "plaid"
+    },
+    {
+      "_openva_path": "data/vendors/plaid/unavailable_sources/plaid-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://plaid.com",
+        "https://plaid.com/legal/data-processing-addendum",
+        "https://plaid.com/data-processing-addendum",
+        "https://plaid.com/legal/dpa",
+        "https://plaid.com/dpa",
+        "https://plaid.com/privacy/dpa",
+        "https://www.plaid.com",
+        "https://www.plaid.com/legal/data-processing-addendum",
+        "https://www.plaid.com/data-processing-addendum",
+        "https://www.plaid.com/legal/dpa",
+        "https://www.plaid.com/dpa",
+        "https://www.plaid.com/privacy/dpa",
+        "https://plaid.com/legal/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "plaid-dpa",
+      "vendor_id": "plaid"
+    },
+    {
+      "_openva_path": "data/vendors/plaid/unavailable_sources/plaid-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.plaid.com",
+        "https://status.plaid.com/status",
+        "https://status.plaid.com/statuspage",
+        "https://status.plaid.com/system-status",
+        "https://status.plaid.com/service-status",
+        "https://status.plaid.com/uptime",
+        "https://plaid.com",
+        "https://plaid.com/status",
+        "https://plaid.com/statuspage",
+        "https://plaid.com/system-status",
+        "https://plaid.com/service-status",
+        "https://plaid.com/uptime",
+        "https://www.plaid.com",
+        "https://www.plaid.com/status",
+        "https://www.plaid.com/statuspage",
+        "https://www.plaid.com/system-status",
+        "https://www.plaid.com/service-status",
+        "https://www.plaid.com/uptime",
+        "https://plaid.com/legal/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "plaid-status-page",
+      "vendor_id": "plaid"
+    },
+    {
+      "_openva_path": "data/vendors/plaid/unavailable_sources/plaid-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://plaid.com",
+        "https://plaid.com/legal/subprocessors",
+        "https://plaid.com/subprocessors",
+        "https://plaid.com/legal/sub-processors",
+        "https://plaid.com/sub-processors",
+        "https://www.plaid.com",
+        "https://www.plaid.com/legal/subprocessors",
+        "https://www.plaid.com/subprocessors",
+        "https://www.plaid.com/legal/sub-processors",
+        "https://www.plaid.com/sub-processors",
+        "https://plaid.com/legal/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "plaid-subprocessors-list",
+      "vendor_id": "plaid"
+    },
+    {
+      "_openva_path": "data/vendors/plaid/unavailable_sources/plaid-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://plaid.com",
+        "https://plaid.com/terms",
+        "https://plaid.com/terms-of-service",
+        "https://plaid.com/legal/terms",
+        "https://plaid.com/legal/terms-of-service",
+        "https://plaid.com/terms.html",
+        "https://www.plaid.com",
+        "https://www.plaid.com/terms",
+        "https://www.plaid.com/terms-of-service",
+        "https://www.plaid.com/legal/terms",
+        "https://www.plaid.com/legal/terms-of-service",
+        "https://www.plaid.com/terms.html",
+        "https://plaid.com/legal/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "plaid-terms-of-service",
+      "vendor_id": "plaid"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/plaid/vendor.yaml",
     "catalog_status": "active",

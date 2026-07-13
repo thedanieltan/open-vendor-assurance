@@ -419,10 +419,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/splunk/unavailable_sources/splunk-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.splunk.com",
+        "https://status.splunk.com/status",
+        "https://status.splunk.com/statuspage",
+        "https://status.splunk.com/system-status",
+        "https://status.splunk.com/service-status",
+        "https://status.splunk.com/uptime",
+        "https://splunk.com",
+        "https://splunk.com/status",
+        "https://splunk.com/statuspage",
+        "https://splunk.com/system-status",
+        "https://splunk.com/service-status",
+        "https://splunk.com/uptime",
+        "https://www.splunk.com",
+        "https://www.splunk.com/status",
+        "https://www.splunk.com/statuspage",
+        "https://www.splunk.com/system-status",
+        "https://www.splunk.com/service-status",
+        "https://www.splunk.com/uptime",
+        "https://www.splunk.com/en_us/legal.html",
+        "https://www.splunk.com/en_us/about-splunk/splunk-security.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "splunk-status-page",
+      "vendor_id": "splunk"
+    },
+    {
+      "_openva_path": "data/vendors/splunk/unavailable_sources/splunk-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://splunk.com",
+        "https://splunk.com/terms",
+        "https://splunk.com/terms-of-service",
+        "https://splunk.com/legal/terms",
+        "https://splunk.com/legal/terms-of-service",
+        "https://splunk.com/terms.html",
+        "https://www.splunk.com",
+        "https://www.splunk.com/terms",
+        "https://www.splunk.com/terms-of-service",
+        "https://www.splunk.com/legal/terms",
+        "https://www.splunk.com/legal/terms-of-service",
+        "https://www.splunk.com/terms.html",
+        "https://www.splunk.com/en_us/legal.html",
+        "https://www.splunk.com/en_us/about-splunk/splunk-security.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "splunk-terms-of-service",
+      "vendor_id": "splunk"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/splunk/vendor.yaml",
     "catalog_status": "active",

@@ -381,10 +381,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/trustarc/unavailable_sources/trustarc-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.trustarc.com",
+        "https://status.trustarc.com/status",
+        "https://status.trustarc.com/statuspage",
+        "https://status.trustarc.com/system-status",
+        "https://status.trustarc.com/service-status",
+        "https://status.trustarc.com/uptime",
+        "https://trustarc.com",
+        "https://trustarc.com/status",
+        "https://trustarc.com/statuspage",
+        "https://trustarc.com/system-status",
+        "https://trustarc.com/service-status",
+        "https://trustarc.com/uptime",
+        "https://www.trustarc.com",
+        "https://www.trustarc.com/status",
+        "https://www.trustarc.com/statuspage",
+        "https://www.trustarc.com/system-status",
+        "https://www.trustarc.com/service-status",
+        "https://www.trustarc.com/uptime",
+        "https://trustarc.com/privacy-policy/",
+        "https://trustarc.com/security/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "trustarc-status-page",
+      "vendor_id": "trustarc"
+    },
+    {
+      "_openva_path": "data/vendors/trustarc/unavailable_sources/trustarc-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://trustarc.com",
+        "https://trustarc.com/terms",
+        "https://trustarc.com/terms-of-service",
+        "https://trustarc.com/legal/terms",
+        "https://trustarc.com/legal/terms-of-service",
+        "https://trustarc.com/terms.html",
+        "https://www.trustarc.com",
+        "https://www.trustarc.com/terms",
+        "https://www.trustarc.com/terms-of-service",
+        "https://www.trustarc.com/legal/terms",
+        "https://www.trustarc.com/legal/terms-of-service",
+        "https://www.trustarc.com/terms.html",
+        "https://trustarc.com/privacy-policy/",
+        "https://trustarc.com/security/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "trustarc-terms-of-service",
+      "vendor_id": "trustarc"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/trustarc/vendor.yaml",
     "catalog_status": "active",

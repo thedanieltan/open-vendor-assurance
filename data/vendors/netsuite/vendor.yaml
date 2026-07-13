@@ -7,6 +7,7 @@ regions_served:
 - global
 official_domains:
 - netsuite.com
+- oracle.com
 public_entrypoints:
 - https://www.oracle.com/legal/privacy/
 - https://www.netsuite.com/portal/platform/security.shtml
@@ -23,7 +24,9 @@ notes: Public-source-only catalog record. Metadata references general public Net
   assurance materials and does not cover bespoke customer agreements. NetSuite is
   modeled as an Oracle product surface. Distinct public NetSuite-specific DPA and
   subprocessor URLs were not identified in this batch, so those source records are
-  intentionally omitted rather than inferred from Oracle-level materials.
+  intentionally omitted rather than inferred from Oracle-level materials. Oracle's
+  corporate privacy domain is an official parent-company authority for the NetSuite
+  product surface.
 entity_family: oracle
 entity_surface: product_surface
 related_vendor_ids:

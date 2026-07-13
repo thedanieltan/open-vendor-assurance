@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/cyberark/artifacts/cyberark-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "cyberark-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://trust.cyberark.com/?itemName=certifications&source=click",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "cyberark-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "cyberark"
+    },
+    {
+      "_openva_path": "data/vendors/cyberark/artifacts/cyberark-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "cyberark-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.cyberark.com/es/trust/compliance/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "cyberark-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "cyberark"
+    },
+    {
       "_openva_path": "data/vendors/cyberark/artifacts/cyberark-privacy-notice.yaml",
       "access_class": "public_web",
       "artifact_id": "cyberark-privacy-notice",
@@ -140,6 +200,46 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/cyberark/sources/cyberark-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.515651Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "cyberark-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://trust.cyberark.com/?itemName=certifications&source=click",
+      "title_native": "CyberArk CyberArk Trust Center | Powered by SafeBase",
+      "vendor_id": "cyberark"
+    },
+    {
+      "_openva_path": "data/vendors/cyberark/sources/cyberark-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.532487Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "cyberark-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.cyberark.com/es/trust/compliance/",
+      "title_native": "Compliance | CyberArk",
+      "vendor_id": "cyberark"
+    },
+    {
       "_openva_path": "data/vendors/cyberark/sources/cyberark-privacy-notice.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -234,6 +334,40 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/cyberark/changes/candidate-promotion-cyberark-certification-reference.yaml",
+      "artifact_id": "cyberark-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-cyberark-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.515651Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "cyberark-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "cyberark"
+    },
+    {
+      "_openva_path": "data/vendors/cyberark/changes/candidate-promotion-cyberark-compliance-page.yaml",
+      "artifact_id": "cyberark-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-cyberark-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.532487Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "cyberark-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "cyberark"
+    },
+    {
       "_openva_path": "data/vendors/cyberark/changes/owner-security-identity-expansion-1-cyberark-privacy-notice.yaml",
       "artifact_id": "cyberark-privacy-notice",
       "catalog_change_significance": "unknown",
@@ -314,22 +448,124 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
+      "compliance_page",
       "privacy_notice",
       "subprocessors_list",
       "terms_of_service",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "dpa",
+      "status_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/cyberark/unavailable_sources/cyberark-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://cyberark.com",
+        "https://cyberark.com/legal/data-processing-addendum",
+        "https://cyberark.com/data-processing-addendum",
+        "https://cyberark.com/legal/dpa",
+        "https://cyberark.com/dpa",
+        "https://cyberark.com/privacy/dpa",
+        "https://www.cyberark.com",
+        "https://www.cyberark.com/legal/data-processing-addendum",
+        "https://www.cyberark.com/data-processing-addendum",
+        "https://www.cyberark.com/legal/dpa",
+        "https://www.cyberark.com/dpa",
+        "https://www.cyberark.com/privacy/dpa",
+        "https://trust.cyberark.com",
+        "https://trust.cyberark.com/legal/data-processing-addendum",
+        "https://trust.cyberark.com/data-processing-addendum",
+        "https://trust.cyberark.com/legal/dpa",
+        "https://trust.cyberark.com/dpa",
+        "https://trust.cyberark.com/privacy/dpa",
+        "https://www.trust.cyberark.com",
+        "https://www.trust.cyberark.com/legal/data-processing-addendum",
+        "https://www.trust.cyberark.com/data-processing-addendum",
+        "https://www.trust.cyberark.com/legal/dpa",
+        "https://www.trust.cyberark.com/dpa",
+        "https://www.trust.cyberark.com/privacy/dpa",
+        "https://www.cyberark.com/privacy-notice/",
+        "https://trust.cyberark.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "cyberark-dpa",
+      "vendor_id": "cyberark"
+    },
+    {
+      "_openva_path": "data/vendors/cyberark/unavailable_sources/cyberark-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.cyberark.com",
+        "https://status.cyberark.com/status",
+        "https://status.cyberark.com/statuspage",
+        "https://status.cyberark.com/system-status",
+        "https://status.cyberark.com/service-status",
+        "https://status.cyberark.com/uptime",
+        "https://cyberark.com",
+        "https://cyberark.com/status",
+        "https://cyberark.com/statuspage",
+        "https://cyberark.com/system-status",
+        "https://cyberark.com/service-status",
+        "https://cyberark.com/uptime",
+        "https://www.cyberark.com",
+        "https://www.cyberark.com/status",
+        "https://www.cyberark.com/statuspage",
+        "https://www.cyberark.com/system-status",
+        "https://www.cyberark.com/service-status",
+        "https://www.cyberark.com/uptime",
+        "https://status.trust.cyberark.com",
+        "https://status.trust.cyberark.com/status",
+        "https://status.trust.cyberark.com/statuspage",
+        "https://status.trust.cyberark.com/system-status",
+        "https://status.trust.cyberark.com/service-status",
+        "https://status.trust.cyberark.com/uptime",
+        "https://trust.cyberark.com",
+        "https://trust.cyberark.com/status",
+        "https://trust.cyberark.com/statuspage",
+        "https://trust.cyberark.com/system-status",
+        "https://trust.cyberark.com/service-status",
+        "https://trust.cyberark.com/uptime",
+        "https://www.trust.cyberark.com",
+        "https://www.trust.cyberark.com/status",
+        "https://www.trust.cyberark.com/statuspage",
+        "https://www.trust.cyberark.com/system-status",
+        "https://www.trust.cyberark.com/service-status",
+        "https://www.trust.cyberark.com/uptime",
+        "https://www.cyberark.com/privacy-notice/",
+        "https://trust.cyberark.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "cyberark-status-page",
+      "vendor_id": "cyberark"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/cyberark/vendor.yaml",
     "catalog_status": "active",

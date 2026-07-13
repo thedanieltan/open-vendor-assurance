@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/ukg/artifacts/ukg-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "ukg-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://trustcenter.ukg.com/?itemUid=5f41759e-586c-45bc-b9cd-dc147d8e6aaa&groupName=IRAP&section=Compliance",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "ukg-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "ukg"
+    },
+    {
       "_openva_path": "data/vendors/ukg/artifacts/ukg-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "ukg-privacy",
@@ -106,6 +136,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/ukg/sources/ukg-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.576614Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "ukg-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://trustcenter.ukg.com/?itemUid=5f41759e-586c-45bc-b9cd-dc147d8e6aaa&groupName=IRAP&section=Compliance",
+      "title_native": "UKG Trust Center | Powered by SafeBase",
+      "vendor_id": "ukg"
+    },
+    {
       "_openva_path": "data/vendors/ukg/sources/ukg-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -177,6 +227,23 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/ukg/changes/candidate-promotion-ukg-compliance-page.yaml",
+      "artifact_id": "ukg-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-ukg-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.576614Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "ukg-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "ukg"
+    },
+    {
       "_openva_path": "data/vendors/ukg/changes/owner-hr-education-expansion-1-ukg-privacy.yaml",
       "artifact_id": "ukg-privacy",
       "catalog_change_significance": "unknown",
@@ -240,21 +307,161 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
       "privacy_notice",
       "terms_of_service",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 4,
+    "unavailable_source_types": [
+      "certification_reference",
+      "dpa",
+      "status_page",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/ukg/unavailable_sources/ukg-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.ukg.com/security/certifications",
+        "https://www.ukg.com/trust/certifications",
+        "https://www.ukg.com/trust-center/certifications",
+        "https://www.ukg.com/trustcenter/certifications",
+        "https://www.ukg.com/compliance/certifications",
+        "https://www.ukg.com/security/compliance",
+        "https://www.ukg.com/trust/compliance",
+        "https://trustcenter.ukg.com/security/certifications",
+        "https://trustcenter.ukg.com/trust/certifications",
+        "https://trustcenter.ukg.com/trust-center/certifications",
+        "https://trustcenter.ukg.com/trustcenter/certifications",
+        "https://trustcenter.ukg.com/compliance/certifications",
+        "https://trustcenter.ukg.com/security/compliance",
+        "https://trustcenter.ukg.com/trust/compliance",
+        "https://ukg.com/security/certifications",
+        "https://ukg.com/trust/certifications",
+        "https://ukg.com/trust-center/certifications",
+        "https://ukg.com/trustcenter/certifications",
+        "https://ukg.com/compliance/certifications",
+        "https://ukg.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:42:28Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "ukg-certification-reference",
+      "vendor_id": "ukg"
+    },
+    {
+      "_openva_path": "data/vendors/ukg/unavailable_sources/ukg-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://ukg.com",
+        "https://ukg.com/legal/data-processing-addendum",
+        "https://ukg.com/data-processing-addendum",
+        "https://ukg.com/legal/dpa",
+        "https://ukg.com/dpa",
+        "https://ukg.com/privacy/dpa",
+        "https://www.ukg.com",
+        "https://www.ukg.com/legal/data-processing-addendum",
+        "https://www.ukg.com/data-processing-addendum",
+        "https://www.ukg.com/legal/dpa",
+        "https://www.ukg.com/dpa",
+        "https://www.ukg.com/privacy/dpa",
+        "https://www.ukg.com/privacy",
+        "https://trustcenter.ukg.com/",
+        "https://www.ukg.com/terms-of-use"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "ukg-dpa",
+      "vendor_id": "ukg"
+    },
+    {
+      "_openva_path": "data/vendors/ukg/unavailable_sources/ukg-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.ukg.com",
+        "https://status.ukg.com/status",
+        "https://status.ukg.com/statuspage",
+        "https://status.ukg.com/system-status",
+        "https://status.ukg.com/service-status",
+        "https://status.ukg.com/uptime",
+        "https://ukg.com",
+        "https://ukg.com/status",
+        "https://ukg.com/statuspage",
+        "https://ukg.com/system-status",
+        "https://ukg.com/service-status",
+        "https://ukg.com/uptime",
+        "https://www.ukg.com",
+        "https://www.ukg.com/status",
+        "https://www.ukg.com/statuspage",
+        "https://www.ukg.com/system-status",
+        "https://www.ukg.com/service-status",
+        "https://www.ukg.com/uptime",
+        "https://www.ukg.com/privacy",
+        "https://trustcenter.ukg.com/",
+        "https://www.ukg.com/terms-of-use"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "ukg-status-page",
+      "vendor_id": "ukg"
+    },
+    {
+      "_openva_path": "data/vendors/ukg/unavailable_sources/ukg-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://ukg.com",
+        "https://ukg.com/legal/subprocessors",
+        "https://ukg.com/subprocessors",
+        "https://ukg.com/legal/sub-processors",
+        "https://ukg.com/sub-processors",
+        "https://www.ukg.com",
+        "https://www.ukg.com/legal/subprocessors",
+        "https://www.ukg.com/subprocessors",
+        "https://www.ukg.com/legal/sub-processors",
+        "https://www.ukg.com/sub-processors",
+        "https://www.ukg.com/privacy",
+        "https://trustcenter.ukg.com/",
+        "https://www.ukg.com/terms-of-use"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "ukg-subprocessors-list",
+      "vendor_id": "ukg"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/ukg/vendor.yaml",
     "catalog_status": "active",

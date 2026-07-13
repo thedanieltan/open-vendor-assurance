@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/docebo/artifacts/docebo-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "docebo-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.docebo.com/university/certifications/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "docebo-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "docebo"
+    },
+    {
+      "_openva_path": "data/vendors/docebo/artifacts/docebo-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "docebo-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.docebo.com/company/data-processing-addendum/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "docebo-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "docebo"
+    },
+    {
       "_openva_path": "data/vendors/docebo/artifacts/docebo-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "docebo-privacy",
@@ -106,6 +166,46 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/docebo/sources/docebo-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.577524Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "docebo-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.docebo.com/university/certifications/",
+      "title_native": "Docebo LMS Training Certification &amp; Credentialing",
+      "vendor_id": "docebo"
+    },
+    {
+      "_openva_path": "data/vendors/docebo/sources/docebo-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.958563Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "docebo-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.docebo.com/company/data-processing-addendum/",
+      "title_native": "Docebo – Data Processing Addendum | Docebo",
+      "vendor_id": "docebo"
+    },
+    {
       "_openva_path": "data/vendors/docebo/sources/docebo-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -177,6 +277,40 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/docebo/changes/candidate-promotion-docebo-compliance-page.yaml",
+      "artifact_id": "docebo-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-docebo-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.577524Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "docebo-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "docebo"
+    },
+    {
+      "_openva_path": "data/vendors/docebo/changes/candidate-promotion-docebo-dpa.yaml",
+      "artifact_id": "docebo-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-docebo-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.958563Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "docebo-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "docebo"
+    },
+    {
       "_openva_path": "data/vendors/docebo/changes/owner-global-vendors-3-docebo-privacy.yaml",
       "artifact_id": "docebo-privacy",
       "catalog_change_significance": "unknown",
@@ -240,21 +374,124 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
+      "dpa",
       "privacy_notice",
       "security_page",
       "status_page"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/docebo/unavailable_sources/docebo-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.docebo.com/security/certifications",
+        "https://www.docebo.com/trust/certifications",
+        "https://www.docebo.com/trust-center/certifications",
+        "https://www.docebo.com/trustcenter/certifications",
+        "https://www.docebo.com/compliance/certifications",
+        "https://www.docebo.com/security/compliance",
+        "https://www.docebo.com/trust/compliance",
+        "https://status.docebo.com/security/certifications",
+        "https://status.docebo.com/trust/certifications",
+        "https://status.docebo.com/trust-center/certifications",
+        "https://status.docebo.com/trustcenter/certifications",
+        "https://status.docebo.com/compliance/certifications",
+        "https://status.docebo.com/security/compliance",
+        "https://status.docebo.com/trust/compliance",
+        "https://docebo.com/security/certifications",
+        "https://docebo.com/trust/certifications",
+        "https://docebo.com/trust-center/certifications",
+        "https://docebo.com/trustcenter/certifications",
+        "https://docebo.com/compliance/certifications",
+        "https://docebo.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:39:59Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "docebo-certification-reference",
+      "vendor_id": "docebo"
+    },
+    {
+      "_openva_path": "data/vendors/docebo/unavailable_sources/docebo-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://docebo.com",
+        "https://docebo.com/legal/subprocessors",
+        "https://docebo.com/subprocessors",
+        "https://docebo.com/legal/sub-processors",
+        "https://docebo.com/sub-processors",
+        "https://www.docebo.com",
+        "https://www.docebo.com/legal/subprocessors",
+        "https://www.docebo.com/subprocessors",
+        "https://www.docebo.com/legal/sub-processors",
+        "https://www.docebo.com/sub-processors",
+        "https://www.docebo.com/company/privacy-policy/",
+        "https://www.docebo.com/security/",
+        "https://status.docebo.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "docebo-subprocessors-list",
+      "vendor_id": "docebo"
+    },
+    {
+      "_openva_path": "data/vendors/docebo/unavailable_sources/docebo-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://docebo.com",
+        "https://docebo.com/terms",
+        "https://docebo.com/terms-of-service",
+        "https://docebo.com/legal/terms",
+        "https://docebo.com/legal/terms-of-service",
+        "https://docebo.com/terms.html",
+        "https://www.docebo.com",
+        "https://www.docebo.com/terms",
+        "https://www.docebo.com/terms-of-service",
+        "https://www.docebo.com/legal/terms",
+        "https://www.docebo.com/legal/terms-of-service",
+        "https://www.docebo.com/terms.html",
+        "https://www.docebo.com/company/privacy-policy/",
+        "https://www.docebo.com/security/",
+        "https://status.docebo.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "docebo-terms-of-service",
+      "vendor_id": "docebo"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/docebo/vendor.yaml",
     "catalog_status": "active",

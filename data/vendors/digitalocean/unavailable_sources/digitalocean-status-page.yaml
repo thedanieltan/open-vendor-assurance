@@ -1,0 +1,34 @@
+schema_version: 0.1.0
+unavailable_source_id: digitalocean-status-page
+vendor_id: digitalocean
+source_type: status_page
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://status.digitalocean.com
+- https://status.digitalocean.com/status
+- https://status.digitalocean.com/statuspage
+- https://status.digitalocean.com/system-status
+- https://status.digitalocean.com/service-status
+- https://status.digitalocean.com/uptime
+- https://digitalocean.com
+- https://digitalocean.com/status
+- https://digitalocean.com/statuspage
+- https://digitalocean.com/system-status
+- https://digitalocean.com/service-status
+- https://digitalocean.com/uptime
+- https://www.digitalocean.com
+- https://www.digitalocean.com/status
+- https://www.digitalocean.com/statuspage
+- https://www.digitalocean.com/system-status
+- https://www.digitalocean.com/service-status
+- https://www.digitalocean.com/uptime
+- https://www.digitalocean.com/trust
+- https://www.digitalocean.com/legal
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

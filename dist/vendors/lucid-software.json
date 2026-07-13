@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/lucid-software/artifacts/lucid-software-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "lucid-software-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://lucid.co/data-processing-addendum",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "lucid-software-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "lucid-software"
+    },
+    {
       "_openva_path": "data/vendors/lucid-software/artifacts/lucid-software-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "lucid-software-privacy",
@@ -95,10 +125,60 @@
         "screenshot_stored": false
       },
       "vendor_id": "lucid-software"
+    },
+    {
+      "_openva_path": "data/vendors/lucid-software/artifacts/lucid-software-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "lucid-software-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://lucid.co/security",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "lucid-software-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "lucid-software"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/lucid-software/sources/lucid-software-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.099178Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "lucid-software-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://lucid.co/data-processing-addendum",
+      "title_native": "Lucid Software Inc. Data Processing Addendum | Lucid",
+      "vendor_id": "lucid-software"
+    },
     {
       "_openva_path": "data/vendors/lucid-software/sources/lucid-software-privacy.yaml",
       "access_class": "public_web",
@@ -167,9 +247,70 @@
       "title_en": "Lucid Software Terms of Service",
       "title_native": "Lucid Software Terms of Service",
       "vendor_id": "lucid-software"
+    },
+    {
+      "_openva_path": "data/vendors/lucid-software/sources/lucid-software-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.158483Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "lucid-software-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://lucid.co/security",
+      "title_native": "Security | Lucid Software",
+      "vendor_id": "lucid-software"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/lucid-software/changes/candidate-promotion-lucid-software-dpa.yaml",
+      "artifact_id": "lucid-software-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-lucid-software-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.099178Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "lucid-software-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "lucid-software"
+    },
+    {
+      "_openva_path": "data/vendors/lucid-software/changes/candidate-promotion-lucid-software-trust-center.yaml",
+      "artifact_id": "lucid-software-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-lucid-software-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.158483Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "lucid-software-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "lucid-software"
+    },
     {
       "_openva_path": "data/vendors/lucid-software/changes/owner-productivity-expansion-1-lucid-software-privacy.yaml",
       "artifact_id": "lucid-software-privacy",
@@ -234,21 +375,141 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "dpa",
       "privacy_notice",
       "status_page",
-      "terms_of_service"
+      "terms_of_service",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/lucid-software/unavailable_sources/lucid-software-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://lucid.co",
+        "https://lucid.co/security/certifications",
+        "https://lucid.co/trust/certifications",
+        "https://lucid.co/compliance/certifications",
+        "https://www.lucid.co",
+        "https://www.lucid.co/security/certifications",
+        "https://www.lucid.co/trust/certifications",
+        "https://www.lucid.co/compliance/certifications",
+        "https://status.lucid.co",
+        "https://status.lucid.co/security/certifications",
+        "https://status.lucid.co/trust/certifications",
+        "https://status.lucid.co/compliance/certifications",
+        "https://www.status.lucid.co",
+        "https://www.status.lucid.co/security/certifications",
+        "https://www.status.lucid.co/trust/certifications",
+        "https://www.status.lucid.co/compliance/certifications",
+        "https://lucid.co/privacy",
+        "https://lucid.co/tos",
+        "https://status.lucid.co/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "lucid-software-certification-reference",
+      "vendor_id": "lucid-software"
+    },
+    {
+      "_openva_path": "data/vendors/lucid-software/unavailable_sources/lucid-software-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://lucid.co",
+        "https://lucid.co/compliance",
+        "https://lucid.co/security/compliance",
+        "https://lucid.co/trust/compliance",
+        "https://lucid.co/trust-center/compliance",
+        "https://www.lucid.co",
+        "https://www.lucid.co/compliance",
+        "https://www.lucid.co/security/compliance",
+        "https://www.lucid.co/trust/compliance",
+        "https://www.lucid.co/trust-center/compliance",
+        "https://status.lucid.co",
+        "https://status.lucid.co/compliance",
+        "https://status.lucid.co/security/compliance",
+        "https://status.lucid.co/trust/compliance",
+        "https://status.lucid.co/trust-center/compliance",
+        "https://www.status.lucid.co",
+        "https://www.status.lucid.co/compliance",
+        "https://www.status.lucid.co/security/compliance",
+        "https://www.status.lucid.co/trust/compliance",
+        "https://www.status.lucid.co/trust-center/compliance",
+        "https://lucid.co/privacy",
+        "https://lucid.co/tos",
+        "https://status.lucid.co/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "lucid-software-compliance-page",
+      "vendor_id": "lucid-software"
+    },
+    {
+      "_openva_path": "data/vendors/lucid-software/unavailable_sources/lucid-software-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://lucid.co",
+        "https://lucid.co/legal/subprocessors",
+        "https://lucid.co/subprocessors",
+        "https://lucid.co/legal/sub-processors",
+        "https://lucid.co/sub-processors",
+        "https://www.lucid.co",
+        "https://www.lucid.co/legal/subprocessors",
+        "https://www.lucid.co/subprocessors",
+        "https://www.lucid.co/legal/sub-processors",
+        "https://www.lucid.co/sub-processors",
+        "https://status.lucid.co",
+        "https://status.lucid.co/legal/subprocessors",
+        "https://status.lucid.co/subprocessors",
+        "https://status.lucid.co/legal/sub-processors",
+        "https://status.lucid.co/sub-processors",
+        "https://www.status.lucid.co",
+        "https://www.status.lucid.co/legal/subprocessors",
+        "https://www.status.lucid.co/subprocessors",
+        "https://www.status.lucid.co/legal/sub-processors",
+        "https://www.status.lucid.co/sub-processors",
+        "https://lucid.co/privacy",
+        "https://lucid.co/tos",
+        "https://status.lucid.co/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "lucid-software-subprocessors-list",
+      "vendor_id": "lucid-software"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/lucid-software/vendor.yaml",
     "catalog_status": "active",

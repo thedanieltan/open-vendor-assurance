@@ -1,0 +1,29 @@
+schema_version: 0.1.0
+unavailable_source_id: red-hat-terms-of-service
+vendor_id: red-hat
+source_type: terms_of_service
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://redhat.com
+- https://redhat.com/terms
+- https://redhat.com/terms-of-service
+- https://redhat.com/legal/terms
+- https://redhat.com/legal/terms-of-service
+- https://redhat.com/terms.html
+- https://www.redhat.com
+- https://www.redhat.com/terms
+- https://www.redhat.com/terms-of-service
+- https://www.redhat.com/legal/terms
+- https://www.redhat.com/legal/terms-of-service
+- https://www.redhat.com/terms.html
+- https://www.redhat.com/en/about/privacy-policy
+- https://www.redhat.com/en/trust
+- https://status.redhat.com/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

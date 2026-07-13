@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/dotdigital/artifacts/dotdigital-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "dotdigital-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://dotdigital.com/terms/data-processing-agreement/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "dotdigital-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "dotdigital"
+    },
+    {
       "_openva_path": "data/vendors/dotdigital/artifacts/dotdigital-privacy-notice.yaml",
       "access_class": "public_web",
       "artifact_id": "dotdigital-privacy-notice",
@@ -29,10 +59,60 @@
         "screenshot_stored": false
       },
       "vendor_id": "dotdigital"
+    },
+    {
+      "_openva_path": "data/vendors/dotdigital/artifacts/dotdigital-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "dotdigital-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://dotdigital.com/trust-center/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "dotdigital-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "dotdigital"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/dotdigital/sources/dotdigital-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.970957Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "dotdigital-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://dotdigital.com/terms/data-processing-agreement/",
+      "title_native": "Dotdigital data processing agreement",
+      "vendor_id": "dotdigital"
+    },
     {
       "_openva_path": "data/vendors/dotdigital/sources/dotdigital-privacy-notice.yaml",
       "access_class": "public_web",
@@ -52,9 +132,70 @@
       "source_url": "https://dotdigital.com/terms/privacy-policy/",
       "title_native": "Dotdigital privacy policy",
       "vendor_id": "dotdigital"
+    },
+    {
+      "_openva_path": "data/vendors/dotdigital/sources/dotdigital-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.905254Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "dotdigital-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://dotdigital.com/trust-center/",
+      "title_native": "Dotdigital Trust Center",
+      "vendor_id": "dotdigital"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/dotdigital/changes/candidate-promotion-dotdigital-dpa.yaml",
+      "artifact_id": "dotdigital-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-dotdigital-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.970957Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "dotdigital-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "dotdigital"
+    },
+    {
+      "_openva_path": "data/vendors/dotdigital/changes/candidate-promotion-dotdigital-trust-center.yaml",
+      "artifact_id": "dotdigital-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-dotdigital-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.905254Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "dotdigital-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "dotdigital"
+    },
     {
       "_openva_path": "data/vendors/dotdigital/changes/redirect-canonicalization-dotdigital-privacy-notice.yaml",
       "artifact_id": "dotdigital-privacy-notice",
@@ -102,19 +243,166 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 1,
+    "artifact_count": 3,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "privacy_notice"
+      "dpa",
+      "privacy_notice",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 5,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "status_page",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/dotdigital/unavailable_sources/dotdigital-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://dotdigital.com",
+        "https://dotdigital.com/security/certifications",
+        "https://dotdigital.com/trust/certifications",
+        "https://dotdigital.com/compliance/certifications",
+        "https://www.dotdigital.com",
+        "https://www.dotdigital.com/security/certifications",
+        "https://www.dotdigital.com/trust/certifications",
+        "https://www.dotdigital.com/compliance/certifications"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "dotdigital-certification-reference",
+      "vendor_id": "dotdigital"
+    },
+    {
+      "_openva_path": "data/vendors/dotdigital/unavailable_sources/dotdigital-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://dotdigital.com",
+        "https://dotdigital.com/compliance",
+        "https://dotdigital.com/security/compliance",
+        "https://dotdigital.com/trust/compliance",
+        "https://dotdigital.com/trust-center/compliance",
+        "https://www.dotdigital.com",
+        "https://www.dotdigital.com/compliance",
+        "https://www.dotdigital.com/security/compliance",
+        "https://www.dotdigital.com/trust/compliance",
+        "https://www.dotdigital.com/trust-center/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "dotdigital-compliance-page",
+      "vendor_id": "dotdigital"
+    },
+    {
+      "_openva_path": "data/vendors/dotdigital/unavailable_sources/dotdigital-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.dotdigital.com",
+        "https://status.dotdigital.com/status",
+        "https://status.dotdigital.com/statuspage",
+        "https://status.dotdigital.com/system-status",
+        "https://status.dotdigital.com/service-status",
+        "https://status.dotdigital.com/uptime",
+        "https://dotdigital.com",
+        "https://dotdigital.com/status",
+        "https://dotdigital.com/statuspage",
+        "https://dotdigital.com/system-status",
+        "https://dotdigital.com/service-status",
+        "https://dotdigital.com/uptime",
+        "https://www.dotdigital.com",
+        "https://www.dotdigital.com/status",
+        "https://www.dotdigital.com/statuspage",
+        "https://www.dotdigital.com/system-status",
+        "https://www.dotdigital.com/service-status",
+        "https://www.dotdigital.com/uptime"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "dotdigital-status-page",
+      "vendor_id": "dotdigital"
+    },
+    {
+      "_openva_path": "data/vendors/dotdigital/unavailable_sources/dotdigital-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://dotdigital.com",
+        "https://dotdigital.com/legal/subprocessors",
+        "https://dotdigital.com/subprocessors",
+        "https://dotdigital.com/legal/sub-processors",
+        "https://dotdigital.com/sub-processors",
+        "https://www.dotdigital.com",
+        "https://www.dotdigital.com/legal/subprocessors",
+        "https://www.dotdigital.com/subprocessors",
+        "https://www.dotdigital.com/legal/sub-processors",
+        "https://www.dotdigital.com/sub-processors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "dotdigital-subprocessors-list",
+      "vendor_id": "dotdigital"
+    },
+    {
+      "_openva_path": "data/vendors/dotdigital/unavailable_sources/dotdigital-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://dotdigital.com",
+        "https://dotdigital.com/terms",
+        "https://dotdigital.com/terms-of-service",
+        "https://dotdigital.com/legal/terms",
+        "https://dotdigital.com/legal/terms-of-service",
+        "https://dotdigital.com/terms.html",
+        "https://www.dotdigital.com",
+        "https://www.dotdigital.com/terms",
+        "https://www.dotdigital.com/terms-of-service",
+        "https://www.dotdigital.com/legal/terms",
+        "https://www.dotdigital.com/legal/terms-of-service",
+        "https://www.dotdigital.com/terms.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "dotdigital-terms-of-service",
+      "vendor_id": "dotdigital"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/dotdigital/vendor.yaml",
     "catalog_status": "active",

@@ -471,10 +471,49 @@
       "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "status_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/canva/unavailable_sources/canva-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.canva.com",
+        "https://status.canva.com/status",
+        "https://status.canva.com/statuspage",
+        "https://status.canva.com/system-status",
+        "https://status.canva.com/service-status",
+        "https://status.canva.com/uptime",
+        "https://canva.com",
+        "https://canva.com/status",
+        "https://canva.com/statuspage",
+        "https://canva.com/system-status",
+        "https://canva.com/service-status",
+        "https://canva.com/uptime",
+        "https://www.canva.com",
+        "https://www.canva.com/status",
+        "https://www.canva.com/statuspage",
+        "https://www.canva.com/system-status",
+        "https://www.canva.com/service-status",
+        "https://www.canva.com/uptime",
+        "https://www.canva.com/security/",
+        "https://www.canva.com/policies/privacy-policy/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "canva-status-page",
+      "vendor_id": "canva"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/canva/vendor.yaml",
     "catalog_status": "active",

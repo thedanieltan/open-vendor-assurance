@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/jetbrains/artifacts/jetbrains-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "jetbrains-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.jetbrains.com/legal/dpa/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "jetbrains-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "jetbrains"
+    },
+    {
       "_openva_path": "data/vendors/jetbrains/artifacts/jetbrains-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "jetbrains-privacy",
@@ -106,6 +136,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/jetbrains/sources/jetbrains-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.043109Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "jetbrains-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.jetbrains.com/legal/dpa/",
+      "title_native": "Data Processing Addendum (DPA) - JetBrains",
+      "vendor_id": "jetbrains"
+    },
+    {
       "_openva_path": "data/vendors/jetbrains/sources/jetbrains-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -177,6 +227,23 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/jetbrains/changes/candidate-promotion-jetbrains-dpa.yaml",
+      "artifact_id": "jetbrains-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-jetbrains-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.043109Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "jetbrains-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "jetbrains"
+    },
+    {
       "_openva_path": "data/vendors/jetbrains/changes/owner-global-vendors-3-jetbrains-privacy.yaml",
       "artifact_id": "jetbrains-privacy",
       "catalog_change_significance": "unknown",
@@ -240,21 +307,144 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "dpa",
       "privacy_notice",
       "status_page",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 4,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/jetbrains/unavailable_sources/jetbrains-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://jetbrains.com",
+        "https://jetbrains.com/security/certifications",
+        "https://jetbrains.com/trust/certifications",
+        "https://jetbrains.com/compliance/certifications",
+        "https://www.jetbrains.com",
+        "https://www.jetbrains.com/security/certifications",
+        "https://www.jetbrains.com/trust/certifications",
+        "https://www.jetbrains.com/compliance/certifications",
+        "https://www.jetbrains.com/legal/docs/privacy/privacy/",
+        "https://trust-center.jetbrains.com/",
+        "https://status.jetbrains.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "jetbrains-certification-reference",
+      "vendor_id": "jetbrains"
+    },
+    {
+      "_openva_path": "data/vendors/jetbrains/unavailable_sources/jetbrains-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://jetbrains.com",
+        "https://jetbrains.com/compliance",
+        "https://jetbrains.com/security/compliance",
+        "https://jetbrains.com/trust/compliance",
+        "https://jetbrains.com/trust-center/compliance",
+        "https://www.jetbrains.com",
+        "https://www.jetbrains.com/compliance",
+        "https://www.jetbrains.com/security/compliance",
+        "https://www.jetbrains.com/trust/compliance",
+        "https://www.jetbrains.com/trust-center/compliance",
+        "https://www.jetbrains.com/legal/docs/privacy/privacy/",
+        "https://trust-center.jetbrains.com/",
+        "https://status.jetbrains.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "jetbrains-compliance-page",
+      "vendor_id": "jetbrains"
+    },
+    {
+      "_openva_path": "data/vendors/jetbrains/unavailable_sources/jetbrains-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://jetbrains.com",
+        "https://jetbrains.com/legal/subprocessors",
+        "https://jetbrains.com/subprocessors",
+        "https://jetbrains.com/legal/sub-processors",
+        "https://jetbrains.com/sub-processors",
+        "https://www.jetbrains.com",
+        "https://www.jetbrains.com/legal/subprocessors",
+        "https://www.jetbrains.com/subprocessors",
+        "https://www.jetbrains.com/legal/sub-processors",
+        "https://www.jetbrains.com/sub-processors",
+        "https://www.jetbrains.com/legal/docs/privacy/privacy/",
+        "https://trust-center.jetbrains.com/",
+        "https://status.jetbrains.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "jetbrains-subprocessors-list",
+      "vendor_id": "jetbrains"
+    },
+    {
+      "_openva_path": "data/vendors/jetbrains/unavailable_sources/jetbrains-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://jetbrains.com",
+        "https://jetbrains.com/terms",
+        "https://jetbrains.com/terms-of-service",
+        "https://jetbrains.com/legal/terms",
+        "https://jetbrains.com/legal/terms-of-service",
+        "https://jetbrains.com/terms.html",
+        "https://www.jetbrains.com",
+        "https://www.jetbrains.com/terms",
+        "https://www.jetbrains.com/terms-of-service",
+        "https://www.jetbrains.com/legal/terms",
+        "https://www.jetbrains.com/legal/terms-of-service",
+        "https://www.jetbrains.com/terms.html",
+        "https://www.jetbrains.com/legal/docs/privacy/privacy/",
+        "https://trust-center.jetbrains.com/",
+        "https://status.jetbrains.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "jetbrains-terms-of-service",
+      "vendor_id": "jetbrains"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/jetbrains/vendor.yaml",
     "catalog_status": "active",

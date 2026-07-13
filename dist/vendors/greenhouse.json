@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/greenhouse/artifacts/greenhouse-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "greenhouse-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://www.greenhouse.com/product-features/greenhouse-achieves-iso-iec-42001-2023-certification",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "greenhouse-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "greenhouse"
+    },
+    {
       "_openva_path": "data/vendors/greenhouse/artifacts/greenhouse-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "greenhouse-dpa",
@@ -124,6 +154,26 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/greenhouse/sources/greenhouse-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.864647Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "greenhouse-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://www.greenhouse.com/product-features/greenhouse-achieves-iso-iec-42001-2023-certification",
+      "title_native": "Greenhouse achieves ISO/IEC 42001:2023 certification",
+      "vendor_id": "greenhouse"
+    },
+    {
       "_openva_path": "data/vendors/greenhouse/sources/greenhouse-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -217,6 +267,23 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/greenhouse/changes/candidate-promotion-greenhouse-certification-reference.yaml",
+      "artifact_id": "greenhouse-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-greenhouse-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.864647Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "greenhouse-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "greenhouse"
+    },
     {
       "_openva_path": "data/vendors/greenhouse/changes/owner-source-maintenance-3-greenhouse-subprocessors.yaml",
       "artifact_id": "greenhouse-subprocessors",
@@ -315,22 +382,93 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
       "dpa",
       "privacy_notice",
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/greenhouse/unavailable_sources/greenhouse-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.greenhouse.com",
+        "https://status.greenhouse.com/status",
+        "https://status.greenhouse.com/statuspage",
+        "https://status.greenhouse.com/system-status",
+        "https://status.greenhouse.com/service-status",
+        "https://status.greenhouse.com/uptime",
+        "https://greenhouse.com",
+        "https://greenhouse.com/status",
+        "https://greenhouse.com/statuspage",
+        "https://greenhouse.com/system-status",
+        "https://greenhouse.com/service-status",
+        "https://greenhouse.com/uptime",
+        "https://www.greenhouse.com",
+        "https://www.greenhouse.com/status",
+        "https://www.greenhouse.com/statuspage",
+        "https://www.greenhouse.com/system-status",
+        "https://www.greenhouse.com/service-status",
+        "https://www.greenhouse.com/uptime",
+        "https://www.greenhouse.com/data-processing-addendum",
+        "https://www.greenhouse.com/subprocessors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "greenhouse-status-page",
+      "vendor_id": "greenhouse"
+    },
+    {
+      "_openva_path": "data/vendors/greenhouse/unavailable_sources/greenhouse-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://greenhouse.com",
+        "https://greenhouse.com/terms",
+        "https://greenhouse.com/terms-of-service",
+        "https://greenhouse.com/legal/terms",
+        "https://greenhouse.com/legal/terms-of-service",
+        "https://greenhouse.com/terms.html",
+        "https://www.greenhouse.com",
+        "https://www.greenhouse.com/terms",
+        "https://www.greenhouse.com/terms-of-service",
+        "https://www.greenhouse.com/legal/terms",
+        "https://www.greenhouse.com/legal/terms-of-service",
+        "https://www.greenhouse.com/terms.html",
+        "https://www.greenhouse.com/data-processing-addendum",
+        "https://www.greenhouse.com/subprocessors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "greenhouse-terms-of-service",
+      "vendor_id": "greenhouse"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/greenhouse/vendor.yaml",
     "catalog_status": "active",

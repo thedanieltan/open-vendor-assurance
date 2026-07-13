@@ -1,0 +1,32 @@
+schema_version: 0.1.0
+unavailable_source_id: grafana-labs-status-page
+vendor_id: grafana-labs
+source_type: status_page
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://status.grafana.com
+- https://status.grafana.com/status
+- https://status.grafana.com/statuspage
+- https://status.grafana.com/system-status
+- https://status.grafana.com/service-status
+- https://status.grafana.com/uptime
+- https://grafana.com
+- https://grafana.com/status
+- https://grafana.com/statuspage
+- https://grafana.com/system-status
+- https://grafana.com/service-status
+- https://grafana.com/uptime
+- https://www.grafana.com
+- https://www.grafana.com/status
+- https://www.grafana.com/statuspage
+- https://www.grafana.com/system-status
+- https://www.grafana.com/service-status
+- https://www.grafana.com/uptime
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

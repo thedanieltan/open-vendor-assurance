@@ -1,6 +1,96 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/instructure/artifacts/instructure-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "instructure-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://trust.instructure.com/security/certifications",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "instructure-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "instructure"
+    },
+    {
+      "_openva_path": "data/vendors/instructure/artifacts/instructure-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "instructure-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.instructure.com/trust-center/compliance",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "instructure-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "instructure"
+    },
+    {
+      "_openva_path": "data/vendors/instructure/artifacts/instructure-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "instructure-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.instructure.com/policies/data-processing-addendum",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "instructure-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "instructure"
+    },
+    {
       "_openva_path": "data/vendors/instructure/artifacts/instructure-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "instructure-privacy",
@@ -106,6 +196,66 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/instructure/sources/instructure-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.904593Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "instructure-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://trust.instructure.com/security/certifications",
+      "title_native": "Instructure Trust Center | Powered by Conveyor",
+      "vendor_id": "instructure"
+    },
+    {
+      "_openva_path": "data/vendors/instructure/sources/instructure-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.931841Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "instructure-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.instructure.com/trust-center/compliance",
+      "title_native": "Compliance | Trust Center",
+      "vendor_id": "instructure"
+    },
+    {
+      "_openva_path": "data/vendors/instructure/sources/instructure-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.027701Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "instructure-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.instructure.com/policies/data-processing-addendum",
+      "title_native": "Data Processing Addendum | Policy | Instructure",
+      "vendor_id": "instructure"
+    },
+    {
       "_openva_path": "data/vendors/instructure/sources/instructure-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -177,6 +327,57 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/instructure/changes/candidate-promotion-instructure-certification-reference.yaml",
+      "artifact_id": "instructure-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-instructure-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.904593Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "instructure-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "instructure"
+    },
+    {
+      "_openva_path": "data/vendors/instructure/changes/candidate-promotion-instructure-compliance-page.yaml",
+      "artifact_id": "instructure-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-instructure-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.931841Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "instructure-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "instructure"
+    },
+    {
+      "_openva_path": "data/vendors/instructure/changes/candidate-promotion-instructure-dpa.yaml",
+      "artifact_id": "instructure-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-instructure-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.027701Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "instructure-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "instructure"
+    },
+    {
       "_openva_path": "data/vendors/instructure/changes/owner-hr-education-expansion-1-instructure-privacy.yaml",
       "artifact_id": "instructure-privacy",
       "catalog_change_significance": "unknown",
@@ -240,21 +441,88 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
+      "compliance_page",
+      "dpa",
       "privacy_notice",
       "status_page",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/instructure/unavailable_sources/instructure-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://instructure.com",
+        "https://instructure.com/legal/subprocessors",
+        "https://instructure.com/subprocessors",
+        "https://instructure.com/legal/sub-processors",
+        "https://instructure.com/sub-processors",
+        "https://www.instructure.com",
+        "https://www.instructure.com/legal/subprocessors",
+        "https://www.instructure.com/subprocessors",
+        "https://www.instructure.com/legal/sub-processors",
+        "https://www.instructure.com/sub-processors",
+        "https://www.instructure.com/policies/product-privacy-policy",
+        "https://trust.instructure.com/",
+        "https://status.instructure.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "instructure-subprocessors-list",
+      "vendor_id": "instructure"
+    },
+    {
+      "_openva_path": "data/vendors/instructure/unavailable_sources/instructure-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://instructure.com",
+        "https://instructure.com/terms",
+        "https://instructure.com/terms-of-service",
+        "https://instructure.com/legal/terms",
+        "https://instructure.com/legal/terms-of-service",
+        "https://instructure.com/terms.html",
+        "https://www.instructure.com",
+        "https://www.instructure.com/terms",
+        "https://www.instructure.com/terms-of-service",
+        "https://www.instructure.com/legal/terms",
+        "https://www.instructure.com/legal/terms-of-service",
+        "https://www.instructure.com/terms.html",
+        "https://www.instructure.com/policies/product-privacy-policy",
+        "https://trust.instructure.com/",
+        "https://status.instructure.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "instructure-terms-of-service",
+      "vendor_id": "instructure"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/instructure/vendor.yaml",
     "catalog_status": "active",

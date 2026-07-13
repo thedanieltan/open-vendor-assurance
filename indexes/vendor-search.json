@@ -14,13 +14,18 @@
         "trust.1password.io"
       ],
       "source_types": [
+        "certification_reference",
+        "dpa",
         "privacy_notice",
         "security_page",
+        "subprocessors_list",
         "terms_of_service",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "1password"
     },
     {
@@ -36,12 +41,18 @@
         "status.activecampaign.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page"
+      ],
       "vendor_id": "activecampaign"
     },
     {
@@ -59,7 +70,14 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "acuity-scheduling"
     },
     {
@@ -82,7 +100,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "adobe"
     },
     {
@@ -104,7 +124,11 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page"
+      ],
       "vendor_id": "adp"
     },
     {
@@ -118,10 +142,19 @@
         "adyen.com"
       ],
       "source_types": [
-        "subprocessors_list"
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "dpa",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "adyen"
     },
     {
@@ -142,7 +175,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "airtable"
     },
     {
@@ -156,10 +192,18 @@
         "airwallex.com"
       ],
       "source_types": [
+        "privacy_notice",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "airwallex"
     },
     {
@@ -174,8 +218,12 @@
         "status.aiven.io"
       ],
       "source_types": [
+        "certification_reference",
+        "dpa",
         "privacy_notice",
+        "security_page",
         "status_page",
+        "subprocessors_list",
         "terms_of_service"
       ],
       "status": "active",
@@ -199,7 +247,11 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "akur8"
     },
     {
@@ -220,7 +272,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "algolia"
     },
     {
@@ -241,7 +296,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "alibaba-cloud-international"
     },
     {
@@ -262,7 +320,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "aliyun"
     },
     {
@@ -278,10 +339,16 @@
       ],
       "source_types": [
         "dpa",
-        "privacy_notice"
+        "privacy_notice",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "alloy"
     },
     {
@@ -302,7 +369,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "amplitude"
     },
     {
@@ -323,7 +393,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "anthropic"
     },
     {
@@ -342,7 +415,13 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "applied-systems"
     },
     {
@@ -365,7 +444,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "asana"
     },
     {
@@ -384,7 +465,13 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "athenahealth"
     },
     {
@@ -406,7 +493,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "atlassian"
     },
     {
@@ -427,7 +517,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "auditboard"
     },
     {
@@ -448,7 +541,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "auth0"
     },
     {
@@ -472,7 +568,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "aws"
     },
     {
@@ -493,7 +591,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "bamboohr"
     },
     {
@@ -513,7 +614,13 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "basecamp"
     },
     {
@@ -528,13 +635,18 @@
         "trustportal.beyondtrust.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "subprocessors_list",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "beyondtrust"
     },
     {
@@ -548,10 +660,17 @@
         "bigcommerce.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "certification_reference",
+        "dpa",
+        "privacy_notice",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "bigcommerce"
     },
     {
@@ -572,7 +691,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "bill-com"
     },
@@ -590,12 +711,18 @@
         "bitbucket.status.atlassian.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference"
+      ],
       "vendor_id": "bitbucket"
     },
     {
@@ -609,13 +736,18 @@
         "bitdefender.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
         "terms_of_service",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "bitdefender"
     },
     {
@@ -638,7 +770,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "box"
     },
     {
@@ -652,11 +786,17 @@
         "braze.com"
       ],
       "source_types": [
+        "certification_reference",
         "dpa",
-        "privacy_notice"
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "braze"
     },
     {
@@ -676,7 +816,12 @@
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "subprocessors_list"
+      ],
       "vendor_id": "brevo"
     },
     {
@@ -695,7 +840,13 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "calendly"
     },
     {
@@ -713,9 +864,12 @@
         "status.campaignmonitor.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
       "unavailable_source_types": [],
@@ -741,7 +895,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "canva"
     },
     {
@@ -755,10 +911,19 @@
         "chainalysis.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "chainalysis"
     },
     {
@@ -774,12 +939,17 @@
         "trust.checkout.com"
       ],
       "source_types": [
+        "certification_reference",
         "privacy_notice",
         "terms_of_service",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "checkout-com"
     },
     {
@@ -793,13 +963,17 @@
         "circleci.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "security_page",
         "status_page",
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
       "vendor_id": "circleci"
     },
     {
@@ -820,7 +994,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "clickup"
     },
     {
@@ -843,7 +1020,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "cloudflare"
     },
     {
@@ -865,7 +1044,13 @@
         "status_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "cockroach-labs"
     },
     {
@@ -882,11 +1067,18 @@
       ],
       "source_types": [
         "privacy_notice",
+        "security_page",
         "status_page",
-        "terms_of_service"
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa"
+      ],
       "vendor_id": "coda"
     },
     {
@@ -907,7 +1099,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "cohere"
     },
     {
@@ -921,10 +1116,18 @@
         "commercetools.com"
       ],
       "source_types": [
-        "dpa"
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "commercetools"
     },
     {
@@ -938,10 +1141,19 @@
         "complyadvantage.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "security_page",
+        "status_page",
+        "terms_of_service",
+        "trust_center"
+      ],
       "vendor_id": "complyadvantage"
     },
     {
@@ -955,10 +1167,18 @@
         "confluent.io"
       ],
       "source_types": [
-        "privacy_notice"
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "confluent"
     },
     {
@@ -979,7 +1199,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "contentful"
     },
     {
@@ -993,11 +1216,18 @@
         "cultureamp.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "culture-amp"
     },
     {
@@ -1012,12 +1242,18 @@
         "status.customerio.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "customer-io"
     },
     {
@@ -1032,13 +1268,18 @@
         "trust.cyberark.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "privacy_notice",
         "subprocessors_list",
         "terms_of_service",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page"
+      ],
       "vendor_id": "cyberark"
     },
     {
@@ -1052,13 +1293,18 @@
         "darktrace.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "subprocessors_list",
         "terms_of_service",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "status_page"
+      ],
       "vendor_id": "darktrace"
     },
     {
@@ -1073,10 +1319,17 @@
       ],
       "source_types": [
         "privacy_notice",
-        "security_page"
+        "security_page",
+        "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "darwinbox"
     },
     {
@@ -1097,7 +1350,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "databricks"
     },
     {
@@ -1120,7 +1376,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "datadog"
     },
     {
@@ -1141,7 +1399,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "deel"
     },
     {
@@ -1155,10 +1416,19 @@
         "deepl.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
       "vendor_id": "deepl"
     },
     {
@@ -1176,10 +1446,16 @@
       "source_types": [
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "subprocessors_list"
+      ],
       "vendor_id": "descript"
     },
     {
@@ -1202,7 +1478,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "digitalocean"
     },
     {
@@ -1216,12 +1494,18 @@
         "docebo.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "security_page",
         "status_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "docebo"
     },
     {
@@ -1242,7 +1526,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "docker"
     },
     {
@@ -1265,7 +1552,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "docusign"
     },
     {
@@ -1285,7 +1574,13 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "doodle"
     },
     {
@@ -1299,10 +1594,18 @@
         "dotdigital.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "dpa",
+        "privacy_notice",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "dotdigital"
     },
     {
@@ -1323,7 +1626,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "drata"
     },
@@ -1347,7 +1652,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "dropbox"
     },
     {
@@ -1363,10 +1670,15 @@
       "source_types": [
         "compliance_page",
         "privacy_notice",
+        "subprocessors_list",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "duck-creek-technologies"
     },
     {
@@ -1387,7 +1699,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "elastic"
     },
     {
@@ -1401,10 +1716,19 @@
         "emarsys.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "status_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
       "vendor_id": "emarsys"
     },
     {
@@ -1422,7 +1746,14 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "employment-hero"
     },
     {
@@ -1441,7 +1772,13 @@
         "status_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "eset"
     },
     {
@@ -1455,11 +1792,19 @@
         "exoscale.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa",
         "privacy_notice"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "security_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
       "vendor_id": "exoscale"
     },
     {
@@ -1473,12 +1818,19 @@
         "f-secure.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "privacy_notice",
+        "security_page",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
       "vendor_id": "f-secure"
     },
     {
@@ -1493,12 +1845,18 @@
         "factorial.co"
       ],
       "source_types": [
+        "certification_reference",
         "privacy_notice",
+        "subprocessors_list",
         "terms_of_service",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "compliance_page",
+        "dpa",
+        "status_page"
+      ],
       "vendor_id": "factorial"
     },
     {
@@ -1519,7 +1877,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "figma"
     },
@@ -1539,7 +1899,15 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "status_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "fis"
     },
     {
@@ -1554,11 +1922,18 @@
         "www.fiserv.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
+        "security_page",
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "fiserv"
     },
     {
@@ -1573,12 +1948,18 @@
         "status.flyio.net"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa"
+      ],
       "vendor_id": "fly-io"
     },
     {
@@ -1593,13 +1974,19 @@
         "trust.fortinet.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "privacy_notice",
         "security_page",
         "terms_of_service",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "fortinet"
     },
     {
@@ -1622,7 +2009,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "freshworks"
     },
     {
@@ -1639,12 +2028,18 @@
         "www.frontstatus.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "subprocessors_list"
+      ],
       "vendor_id": "front"
     },
     {
@@ -1658,10 +2053,18 @@
         "getresponse.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "getresponse"
     },
     {
@@ -1682,7 +2085,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "github"
     },
     {
@@ -1700,13 +2106,17 @@
       ],
       "source_types": [
         "ai_terms",
+        "certification_reference",
         "dpa",
         "privacy_notice",
         "subprocessors_list",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "gitlab"
     },
     {
@@ -1725,7 +2135,15 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "status_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "global-payments"
     },
     {
@@ -1746,7 +2164,13 @@
         "status_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "gocardless"
     },
     {
@@ -1768,7 +2192,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "google-cloud"
     },
     {
@@ -1789,7 +2216,12 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "google-workspace"
     },
     {
@@ -1809,7 +2241,12 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "gorgias"
     },
     {
@@ -1828,7 +2265,14 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "govini"
     },
     {
@@ -1842,11 +2286,18 @@
         "grafana.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "grafana-labs"
     },
     {
@@ -1866,7 +2317,12 @@
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "grammarly"
     },
     {
@@ -1880,10 +2336,19 @@
         "graphcore.ai"
       ],
       "source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "graphcore"
     },
     {
@@ -1897,13 +2362,17 @@
         "greenhouse.com"
       ],
       "source_types": [
+        "certification_reference",
         "dpa",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "greenhouse"
     },
     {
@@ -1921,7 +2390,14 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "greythr"
     },
     {
@@ -1941,7 +2417,13 @@
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "guidewire"
     },
     {
@@ -1962,7 +2444,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "gusto"
     },
     {
@@ -1983,7 +2468,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "hashicorp"
     },
     {
@@ -2003,7 +2491,12 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "help-scout"
     },
     {
@@ -2017,10 +2510,19 @@
         "hetzner.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "status_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
+      ],
       "vendor_id": "hetzner"
     },
     {
@@ -2034,11 +2536,18 @@
         "hibob.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "hibob"
     },
     {
@@ -2059,7 +2568,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "huawei-cloud-cn"
     },
     {
@@ -2080,7 +2592,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "huawei-cloud-international"
     },
     {
@@ -2103,7 +2618,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "hubspot"
     },
     {
@@ -2124,7 +2641,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "hugging-face"
     },
     {
@@ -2146,7 +2666,10 @@
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "hyperproof"
     },
     {
@@ -2169,24 +2692,36 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "ibm-cloud"
     },
     {
       "candidate_source_types": [],
       "catalog_status": "active",
-      "display_name": "Insider",
-      "headquarters_country": "GB",
+      "display_name": "Insider One",
+      "headquarters_country": "SG",
       "legal_name": null,
       "manifest_path": "dist/vendors/insider.json",
       "official_domains": [
-        "insider.com"
+        "insiderone.com",
+        "useinsider.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "insider"
     },
     {
@@ -2200,12 +2735,18 @@
         "instructure.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "status_page",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "instructure"
     },
     {
@@ -2226,7 +2767,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "intercom"
     },
     {
@@ -2240,12 +2784,18 @@
         "jetbrains.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "jetbrains"
     },
     {
@@ -2265,7 +2815,12 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "keka"
     },
     {
@@ -2286,7 +2841,14 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "klarna"
     },
     {
@@ -2307,7 +2869,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "klaviyo"
     },
     {
@@ -2326,7 +2891,13 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "lattice"
     },
     {
@@ -2344,7 +2915,14 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "lever"
     },
     {
@@ -2360,12 +2938,16 @@
         "linearstatus.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "subprocessors_list"
+      ],
       "vendor_id": "linear"
     },
     {
@@ -2386,7 +2968,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "logicgate"
     },
     {
@@ -2404,12 +2989,18 @@
         "loom.status.atlassian.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference"
+      ],
       "vendor_id": "loom"
     },
     {
@@ -2424,12 +3015,18 @@
         "status.lucid.co"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "lucid-software"
     },
     {
@@ -2450,7 +3047,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "mailchimp"
     },
     {
@@ -2471,7 +3071,14 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "mailerlite"
     },
     {
@@ -2488,12 +3095,17 @@
         "status.marqeta.com"
       ],
       "source_types": [
+        "certification_reference",
         "privacy_notice",
         "status_page",
+        "subprocessors_list",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "terms_of_service"
+      ],
       "vendor_id": "marqeta"
     },
     {
@@ -2512,7 +3124,13 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "meditech"
     },
     {
@@ -2536,7 +3154,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "microsoft"
     },
     {
@@ -2547,13 +3167,22 @@
       "legal_name": null,
       "manifest_path": "dist/vendors/microsoft-azure.json",
       "official_domains": [
-        "azure.microsoft.com"
+        "azure.microsoft.com",
+        "microsoft.com"
       ],
       "source_types": [
+        "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "microsoft-azure"
     },
     {
@@ -2574,7 +3203,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "miro"
     },
@@ -2596,7 +3227,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "mistral-ai"
     },
     {
@@ -2617,7 +3251,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "mixpanel"
     },
     {
@@ -2638,7 +3275,13 @@
         "status_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "mollie"
     },
     {
@@ -2659,7 +3302,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "monday"
     },
     {
@@ -2674,12 +3320,19 @@
         "status.monday.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "security_page"
+      ],
       "vendor_id": "monday-com"
     },
     {
@@ -2702,7 +3355,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "mongodb"
     },
     {
@@ -2718,12 +3373,18 @@
         "status.n8n.cloud"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page"
+      ],
       "vendor_id": "n8n"
     },
     {
@@ -2737,11 +3398,18 @@
         "neo4j.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "neo4j"
     },
     {
@@ -2758,9 +3426,14 @@
         "www.databricks.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "subprocessors_list",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
       "unavailable_source_types": [],
@@ -2779,12 +3452,18 @@
         "netlifystatus.com"
       ],
       "source_types": [
+        "certification_reference",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "compliance_page",
+        "dpa",
+        "subprocessors_list"
+      ],
       "vendor_id": "netlify"
     },
     {
@@ -2805,7 +3484,11 @@
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "netskope"
     },
     {
@@ -2816,14 +3499,21 @@
       "legal_name": "Oracle NetSuite",
       "manifest_path": "dist/vendors/netsuite.json",
       "official_domains": [
-        "netsuite.com"
+        "netsuite.com",
+        "oracle.com"
       ],
       "source_types": [
         "compliance_page",
+        "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "netsuite"
     },
     {
@@ -2844,7 +3534,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "new-relic"
     },
     {
@@ -2864,7 +3557,12 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "notion"
     },
     {
@@ -2878,12 +3576,18 @@
         "odoo.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "odoo"
     },
     {
@@ -2906,7 +3610,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "okta"
     },
     {
@@ -2927,7 +3633,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "onepassword"
     },
     {
@@ -2947,7 +3656,11 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "onetrust"
     },
@@ -2969,7 +3682,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "openai"
     },
     {
@@ -2992,7 +3708,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "oracle-cloud"
     },
     {
@@ -3013,7 +3731,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "pagerduty"
     },
     {
@@ -3027,11 +3748,18 @@
         "palantir.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "palantir"
     },
     {
@@ -3047,12 +3775,19 @@
         "status.pandadoc.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "pandadoc"
     },
     {
@@ -3066,11 +3801,18 @@
         "paychex.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "paychex"
     },
     {
@@ -3086,12 +3828,18 @@
         "status.payoneer.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "security_page",
         "status_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "payoneer"
     },
     {
@@ -3107,10 +3855,18 @@
       "source_types": [
         "dpa",
         "other_public_source",
-        "terms_of_service"
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "security_page",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "paypal"
     },
     {
@@ -3129,7 +3885,13 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "personio"
     },
     {
@@ -3150,7 +3912,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "pinecone"
     },
@@ -3165,13 +3929,18 @@
         "pingidentity.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "subprocessors_list",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "ping-identity"
     },
     {
@@ -3185,11 +3954,18 @@
         "pipedrive.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
-        "subprocessors_list"
+        "subprocessors_list",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "pipedrive"
     },
     {
@@ -3203,10 +3979,18 @@
         "plaid.com"
       ],
       "source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "plaid"
     },
     {
@@ -3227,7 +4011,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "planetscale"
     },
@@ -3242,12 +4028,18 @@
         "pointclickcare.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "security_page",
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "pointclickcare"
     },
     {
@@ -3268,7 +4060,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "posthog"
     },
     {
@@ -3285,12 +4080,16 @@
         "status.postman.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "status_page",
+        "subprocessors_list",
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa"
+      ],
       "vendor_id": "postman"
     },
     {
@@ -3304,10 +4103,18 @@
         "prismic.io"
       ],
       "source_types": [
-        "privacy_notice"
+        "privacy_notice",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "prismic"
     },
     {
@@ -3327,7 +4134,12 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "qualtrics"
     },
     {
@@ -3351,7 +4163,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "quickbooks"
     },
     {
@@ -3366,12 +4180,18 @@
         "status.railway.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "railway"
     },
     {
@@ -3386,12 +4206,18 @@
         "status.razorpay.com"
       ],
       "source_types": [
+        "certification_reference",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "compliance_page",
+        "dpa",
+        "subprocessors_list"
+      ],
       "vendor_id": "razorpay"
     },
     {
@@ -3410,7 +4236,13 @@
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "red-hat"
     },
     {
@@ -3424,10 +4256,19 @@
         "redis.io"
       ],
       "source_types": [
-        "privacy_notice"
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "redis"
     },
     {
@@ -3441,11 +4282,17 @@
         "redoxengine.com"
       ],
       "source_types": [
+        "certification_reference",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "redox"
     },
     {
@@ -3460,12 +4307,18 @@
         "status.render.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "subprocessors_list"
+      ],
       "vendor_id": "render"
     },
     {
@@ -3486,7 +4339,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "retool"
     },
@@ -3508,7 +4363,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "rippling"
     },
     {
@@ -3528,7 +4386,11 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "sage"
     },
@@ -3552,7 +4414,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "salesforce"
     },
     {
@@ -3573,7 +4437,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "sanity"
     },
     {
@@ -3594,7 +4461,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "sap"
     },
     {
@@ -3610,12 +4480,19 @@
         "status.scaleway.com"
       ],
       "source_types": [
+        "dpa",
         "privacy_notice",
+        "security_page",
         "status_page",
+        "subprocessors_list",
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "trust_center"
+      ],
       "vendor_id": "scaleway"
     },
     {
@@ -3636,7 +4513,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "scrut-automation"
     },
     {
@@ -3655,7 +4535,13 @@
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "second-front-systems"
     },
     {
@@ -3676,7 +4562,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "secureframe"
     },
@@ -3698,7 +4586,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "segment"
     },
@@ -3720,7 +4610,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "sentry"
     },
     {
@@ -3743,7 +4636,8 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page"
       ],
       "vendor_id": "servicenow"
     },
@@ -3763,7 +4657,14 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "shield-ai"
     },
     {
@@ -3777,11 +4678,18 @@
         "shift-technology.com"
       ],
       "source_types": [
+        "certification_reference",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "shift-technology"
     },
     {
@@ -3802,7 +4710,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "shopify"
     },
     {
@@ -3823,7 +4734,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "slack"
     },
     {
@@ -3843,7 +4757,13 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "smarthr"
     },
     {
@@ -3857,13 +4777,18 @@
         "smartsheet.com"
       ],
       "source_types": [
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "subprocessors_list",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "smartsheet"
     },
     {
@@ -3886,7 +4811,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "snowflake"
     },
     {
@@ -3902,12 +4829,16 @@
       ],
       "source_types": [
         "compliance_page",
+        "dpa",
         "privacy_notice",
         "status_page",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "sophos"
     },
     {
@@ -3928,7 +4859,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "splunk"
     },
     {
@@ -3947,7 +4881,13 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "square"
     },
     {
@@ -3966,7 +4906,13 @@
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "squarespace"
     },
     {
@@ -3980,10 +4926,18 @@
         "starburst.io"
       ],
       "source_types": [
-        "privacy_notice"
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "starburst"
     },
     {
@@ -3997,11 +4951,18 @@
         "storyblok.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa",
-        "privacy_notice"
+        "privacy_notice",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "storyblok"
     },
     {
@@ -4016,12 +4977,17 @@
         "status.strapi.io"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
       "vendor_id": "strapi"
     },
     {
@@ -4042,7 +5008,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "stripe"
     },
     {
@@ -4056,10 +5025,18 @@
         "sumsub.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "sumsub"
     },
     {
@@ -4080,7 +5057,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "supabase"
     },
     {
@@ -4094,13 +5074,18 @@
         "surveymonkey.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "surveymonkey"
     },
     {
@@ -4121,7 +5106,14 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "teamwork"
     },
     {
@@ -4143,7 +5135,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "tencent-cloud-cn"
     },
     {
@@ -4164,7 +5159,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "tencent-cloud-international"
     },
     {
@@ -4185,7 +5183,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "thoropass"
     },
     {
@@ -4199,13 +5200,18 @@
         "trendmicro.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
         "privacy_notice",
         "status_page",
         "terms_of_service",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "subprocessors_list"
+      ],
       "vendor_id": "trend-micro"
     },
     {
@@ -4219,10 +5225,17 @@
         "trulioo.com"
       ],
       "source_types": [
+        "compliance_page",
+        "dpa",
+        "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "trulioo"
     },
     {
@@ -4243,7 +5256,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "trustarc"
     },
     {
@@ -4266,7 +5282,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "twilio"
     },
     {
@@ -4286,7 +5304,12 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "typeform"
     },
     {
@@ -4300,12 +5323,18 @@
         "ukg.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "terms_of_service",
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "dpa",
+        "status_page",
+        "subprocessors_list"
+      ],
       "vendor_id": "ukg"
     },
     {
@@ -4325,7 +5354,14 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "upcloud"
     },
     {
@@ -4346,7 +5382,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "vanta"
     },
@@ -4368,7 +5406,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "vercel"
     },
     {
@@ -4382,11 +5423,17 @@
         "vertafore.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "vertafore"
     },
     {
@@ -4400,11 +5447,17 @@
         "vtex.com"
       ],
       "source_types": [
+        "compliance_page",
         "privacy_notice",
         "security_page"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "status_page",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
       "vendor_id": "vtex"
     },
     {
@@ -4425,7 +5478,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "weaviate"
     },
@@ -4447,7 +5502,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "webflow"
     },
@@ -4467,7 +5524,15 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "status_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "wise"
     },
     {
@@ -4481,12 +5546,19 @@
         "withsecure.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
         "privacy_notice",
+        "security_page",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "subprocessors_list"
+      ],
       "vendor_id": "withsecure"
     },
     {
@@ -4506,7 +5578,12 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "wix"
     },
     {
@@ -4528,7 +5605,12 @@
         "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "terms_of_service"
+      ],
       "vendor_id": "wiz"
     },
     {
@@ -4551,7 +5633,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "workday"
     },
     {
@@ -4572,7 +5656,14 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "worldpay"
     },
     {
@@ -4589,11 +5680,18 @@
       ],
       "source_types": [
         "privacy_notice",
+        "security_page",
         "status_page",
-        "terms_of_service"
+        "terms_of_service",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "dpa",
+        "subprocessors_list"
+      ],
       "vendor_id": "wrike"
     },
     {
@@ -4614,7 +5712,12 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
+      ],
       "vendor_id": "xendit"
     },
     {
@@ -4635,7 +5738,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "xero"
     },
     {
@@ -4656,7 +5762,9 @@
       ],
       "status": "active",
       "unavailable_source_types": [
-        "dpa"
+        "dpa",
+        "status_page",
+        "terms_of_service"
       ],
       "vendor_id": "zapier"
     },
@@ -4678,7 +5786,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "zendesk"
     },
     {
@@ -4699,7 +5810,10 @@
         "subprocessors_list"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "zoho"
     },
     {
@@ -4723,7 +5837,9 @@
         "terms_of_service"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page"
+      ],
       "vendor_id": "zoom"
     },
     {
@@ -4738,13 +5854,19 @@
         "compliance.zscaler.com"
       ],
       "source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "subprocessors_list",
-        "transparency_report"
+        "transparency_report",
+        "trust_center"
       ],
       "status": "active",
-      "unavailable_source_types": [],
+      "unavailable_source_types": [
+        "status_page",
+        "terms_of_service"
+      ],
       "vendor_id": "zscaler"
     }
   ],

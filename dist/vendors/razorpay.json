@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/razorpay/artifacts/razorpay-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "razorpay-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://razorpay.com/security/certifications",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "razorpay-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "razorpay"
+    },
+    {
       "_openva_path": "data/vendors/razorpay/artifacts/razorpay-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "razorpay-privacy",
@@ -98,10 +128,60 @@
         "screenshot_stored": false
       },
       "vendor_id": "razorpay"
+    },
+    {
+      "_openva_path": "data/vendors/razorpay/artifacts/razorpay-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "razorpay-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://razorpay.com/security",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "razorpay-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "razorpay"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/razorpay/sources/razorpay-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.228584Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "razorpay-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://razorpay.com/security/certifications",
+      "title_native": "Certifications - Razorpay Trust Portal",
+      "vendor_id": "razorpay"
+    },
     {
       "_openva_path": "data/vendors/razorpay/sources/razorpay-privacy.yaml",
       "access_class": "public_web",
@@ -170,9 +250,70 @@
       "title_en": "Razorpay Terms and Conditions",
       "title_native": "Razorpay Terms and Conditions",
       "vendor_id": "razorpay"
+    },
+    {
+      "_openva_path": "data/vendors/razorpay/sources/razorpay-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.419972Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "razorpay-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://razorpay.com/security",
+      "title_native": "Dashboard - Razorpay Trust Portal",
+      "vendor_id": "razorpay"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/razorpay/changes/candidate-promotion-razorpay-certification-reference.yaml",
+      "artifact_id": "razorpay-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-razorpay-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.228584Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "razorpay-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "razorpay"
+    },
+    {
+      "_openva_path": "data/vendors/razorpay/changes/candidate-promotion-razorpay-trust-center.yaml",
+      "artifact_id": "razorpay-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-razorpay-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.419972Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "razorpay-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "razorpay"
+    },
     {
       "_openva_path": "data/vendors/razorpay/changes/owner-payments-expansion-2-razorpay-privacy.yaml",
       "artifact_id": "razorpay-privacy",
@@ -237,21 +378,146 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
       "privacy_notice",
       "status_page",
-      "terms_of_service"
+      "terms_of_service",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "compliance_page",
+      "dpa",
+      "subprocessors_list"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/razorpay/unavailable_sources/razorpay-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://razorpay.com/compliance",
+        "https://razorpay.com/security/compliance",
+        "https://razorpay.com/trust/compliance",
+        "https://razorpay.com/trust-center/compliance",
+        "https://razorpay.com/trustcenter/compliance",
+        "https://razorpay.com/compliance.html",
+        "https://status.razorpay.com/compliance",
+        "https://status.razorpay.com/security/compliance",
+        "https://status.razorpay.com/trust/compliance",
+        "https://status.razorpay.com/trust-center/compliance",
+        "https://status.razorpay.com/trustcenter/compliance",
+        "https://status.razorpay.com/compliance.html",
+        "https://www.razorpay.com/compliance",
+        "https://www.razorpay.com/security/compliance",
+        "https://www.razorpay.com/trust/compliance",
+        "https://www.razorpay.com/trust-center/compliance",
+        "https://www.razorpay.com/trustcenter/compliance",
+        "https://www.razorpay.com/compliance.html",
+        "https://www.status.razorpay.com/compliance",
+        "https://www.status.razorpay.com/security/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:42:32Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "razorpay-compliance-page",
+      "vendor_id": "razorpay"
+    },
+    {
+      "_openva_path": "data/vendors/razorpay/unavailable_sources/razorpay-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://razorpay.com",
+        "https://razorpay.com/legal/data-processing-addendum",
+        "https://razorpay.com/data-processing-addendum",
+        "https://razorpay.com/legal/dpa",
+        "https://razorpay.com/dpa",
+        "https://razorpay.com/privacy/dpa",
+        "https://www.razorpay.com",
+        "https://www.razorpay.com/legal/data-processing-addendum",
+        "https://www.razorpay.com/data-processing-addendum",
+        "https://www.razorpay.com/legal/dpa",
+        "https://www.razorpay.com/dpa",
+        "https://www.razorpay.com/privacy/dpa",
+        "https://status.razorpay.com",
+        "https://status.razorpay.com/legal/data-processing-addendum",
+        "https://status.razorpay.com/data-processing-addendum",
+        "https://status.razorpay.com/legal/dpa",
+        "https://status.razorpay.com/dpa",
+        "https://status.razorpay.com/privacy/dpa",
+        "https://www.status.razorpay.com",
+        "https://www.status.razorpay.com/legal/data-processing-addendum",
+        "https://www.status.razorpay.com/data-processing-addendum",
+        "https://www.status.razorpay.com/legal/dpa",
+        "https://www.status.razorpay.com/dpa",
+        "https://www.status.razorpay.com/privacy/dpa",
+        "https://razorpay.com/privacy-policy/",
+        "https://razorpay.com/terms/",
+        "https://status.razorpay.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "razorpay-dpa",
+      "vendor_id": "razorpay"
+    },
+    {
+      "_openva_path": "data/vendors/razorpay/unavailable_sources/razorpay-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://razorpay.com",
+        "https://razorpay.com/legal/subprocessors",
+        "https://razorpay.com/subprocessors",
+        "https://razorpay.com/legal/sub-processors",
+        "https://razorpay.com/sub-processors",
+        "https://www.razorpay.com",
+        "https://www.razorpay.com/legal/subprocessors",
+        "https://www.razorpay.com/subprocessors",
+        "https://www.razorpay.com/legal/sub-processors",
+        "https://www.razorpay.com/sub-processors",
+        "https://status.razorpay.com",
+        "https://status.razorpay.com/legal/subprocessors",
+        "https://status.razorpay.com/subprocessors",
+        "https://status.razorpay.com/legal/sub-processors",
+        "https://status.razorpay.com/sub-processors",
+        "https://www.status.razorpay.com",
+        "https://www.status.razorpay.com/legal/subprocessors",
+        "https://www.status.razorpay.com/subprocessors",
+        "https://www.status.razorpay.com/legal/sub-processors",
+        "https://www.status.razorpay.com/sub-processors",
+        "https://razorpay.com/privacy-policy/",
+        "https://razorpay.com/terms/",
+        "https://status.razorpay.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "razorpay-subprocessors-list",
+      "vendor_id": "razorpay"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/razorpay/vendor.yaml",
     "catalog_status": "active",

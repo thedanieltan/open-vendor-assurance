@@ -61,6 +61,36 @@
       "vendor_id": "duck-creek-technologies"
     },
     {
+      "_openva_path": "data/vendors/duck-creek-technologies/artifacts/duck-creek-technologies-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "artifact_id": "duck-creek-technologies-subprocessors-list",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://www.duckcreek.com/subprocessor-list/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "duck-creek-technologies-subprocessors-list",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "duck-creek-technologies"
+    },
+    {
       "_openva_path": "data/vendors/duck-creek-technologies/artifacts/duck-creek-technologies-trust.yaml",
       "access_class": "public_web",
       "artifact_id": "duck-creek-technologies-trust",
@@ -140,6 +170,26 @@
       "vendor_id": "duck-creek-technologies"
     },
     {
+      "_openva_path": "data/vendors/duck-creek-technologies/sources/duck-creek-technologies-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.886973Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "duck-creek-technologies-subprocessors-list",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.duckcreek.com/subprocessor-list/",
+      "title_native": "Duck Creek Subprocessor List - Duck Creek",
+      "vendor_id": "duck-creek-technologies"
+    },
+    {
       "_openva_path": "data/vendors/duck-creek-technologies/sources/duck-creek-technologies-trust.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -164,6 +214,23 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/duck-creek-technologies/changes/candidate-promotion-duck-creek-technologies-subprocessors-list.yaml",
+      "artifact_id": "duck-creek-technologies-subprocessors-list",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-duck-creek-technologies-subprocessors-list",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.886973Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "duck-creek-technologies-subprocessors-list",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "duck-creek-technologies"
+    },
     {
       "_openva_path": "data/vendors/duck-creek-technologies/changes/regulated-profile-coverage-1-duck-creek-technologies-governance.yaml",
       "artifact_id": "duck-creek-technologies-governance",
@@ -228,21 +295,129 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
       "compliance_page",
       "privacy_notice",
+      "subprocessors_list",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "dpa",
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/duck-creek-technologies/unavailable_sources/duck-creek-technologies-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://duckcreek.com",
+        "https://duckcreek.com/legal/data-processing-addendum",
+        "https://duckcreek.com/data-processing-addendum",
+        "https://duckcreek.com/legal/dpa",
+        "https://duckcreek.com/dpa",
+        "https://duckcreek.com/privacy/dpa",
+        "https://www.duckcreek.com",
+        "https://www.duckcreek.com/legal/data-processing-addendum",
+        "https://www.duckcreek.com/data-processing-addendum",
+        "https://www.duckcreek.com/legal/dpa",
+        "https://www.duckcreek.com/dpa",
+        "https://www.duckcreek.com/privacy/dpa",
+        "https://duckcreek.com/",
+        "https://www.duckcreek.com/privacy-notice/",
+        "https://www.duckcreek.com/trust/",
+        "https://www.duckcreek.com/governance-statement/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "duck-creek-technologies-dpa",
+      "vendor_id": "duck-creek-technologies"
+    },
+    {
+      "_openva_path": "data/vendors/duck-creek-technologies/unavailable_sources/duck-creek-technologies-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.duckcreek.com",
+        "https://status.duckcreek.com/status",
+        "https://status.duckcreek.com/statuspage",
+        "https://status.duckcreek.com/system-status",
+        "https://status.duckcreek.com/service-status",
+        "https://status.duckcreek.com/uptime",
+        "https://duckcreek.com",
+        "https://duckcreek.com/status",
+        "https://duckcreek.com/statuspage",
+        "https://duckcreek.com/system-status",
+        "https://duckcreek.com/service-status",
+        "https://duckcreek.com/uptime",
+        "https://www.duckcreek.com",
+        "https://www.duckcreek.com/status",
+        "https://www.duckcreek.com/statuspage",
+        "https://www.duckcreek.com/system-status",
+        "https://www.duckcreek.com/service-status",
+        "https://www.duckcreek.com/uptime",
+        "https://duckcreek.com/",
+        "https://www.duckcreek.com/privacy-notice/",
+        "https://www.duckcreek.com/trust/",
+        "https://www.duckcreek.com/governance-statement/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "duck-creek-technologies-status-page",
+      "vendor_id": "duck-creek-technologies"
+    },
+    {
+      "_openva_path": "data/vendors/duck-creek-technologies/unavailable_sources/duck-creek-technologies-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://duckcreek.com",
+        "https://duckcreek.com/terms",
+        "https://duckcreek.com/terms-of-service",
+        "https://duckcreek.com/legal/terms",
+        "https://duckcreek.com/legal/terms-of-service",
+        "https://duckcreek.com/terms.html",
+        "https://www.duckcreek.com",
+        "https://www.duckcreek.com/terms",
+        "https://www.duckcreek.com/terms-of-service",
+        "https://www.duckcreek.com/legal/terms",
+        "https://www.duckcreek.com/legal/terms-of-service",
+        "https://www.duckcreek.com/terms.html",
+        "https://duckcreek.com/",
+        "https://www.duckcreek.com/privacy-notice/",
+        "https://www.duckcreek.com/trust/",
+        "https://www.duckcreek.com/governance-statement/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "duck-creek-technologies-terms-of-service",
+      "vendor_id": "duck-creek-technologies"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/duck-creek-technologies/vendor.yaml",
     "catalog_status": "active",

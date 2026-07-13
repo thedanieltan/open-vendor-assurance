@@ -1,0 +1,28 @@
+schema_version: 0.1.0
+unavailable_source_id: sentry-terms-of-service
+vendor_id: sentry
+source_type: terms_of_service
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://sentry.io
+- https://sentry.io/terms
+- https://sentry.io/terms-of-service
+- https://sentry.io/legal/terms
+- https://sentry.io/legal/terms-of-service
+- https://sentry.io/terms.html
+- https://www.sentry.io
+- https://www.sentry.io/terms
+- https://www.sentry.io/terms-of-service
+- https://www.sentry.io/legal/terms
+- https://www.sentry.io/legal/terms-of-service
+- https://www.sentry.io/terms.html
+- https://sentry.io/legal/
+- https://sentry.io/security/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

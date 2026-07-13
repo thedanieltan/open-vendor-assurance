@@ -1,0 +1,34 @@
+schema_version: 0.1.0
+unavailable_source_id: mailchimp-status-page
+vendor_id: mailchimp
+source_type: status_page
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://status.mailchimp.com
+- https://status.mailchimp.com/status
+- https://status.mailchimp.com/statuspage
+- https://status.mailchimp.com/system-status
+- https://status.mailchimp.com/service-status
+- https://status.mailchimp.com/uptime
+- https://mailchimp.com
+- https://mailchimp.com/status
+- https://mailchimp.com/statuspage
+- https://mailchimp.com/system-status
+- https://mailchimp.com/service-status
+- https://mailchimp.com/uptime
+- https://www.mailchimp.com
+- https://www.mailchimp.com/status
+- https://www.mailchimp.com/statuspage
+- https://www.mailchimp.com/system-status
+- https://www.mailchimp.com/service-status
+- https://www.mailchimp.com/uptime
+- https://mailchimp.com/legal/
+- https://mailchimp.com/about/security/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

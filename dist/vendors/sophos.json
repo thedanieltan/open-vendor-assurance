@@ -35,6 +35,36 @@
       "vendor_id": "sophos"
     },
     {
+      "_openva_path": "data/vendors/sophos/artifacts/sophos-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "sophos-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.sophos.com/en-us/legal/data-processing-addendum",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "sophos-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "sophos"
+    },
+    {
       "_openva_path": "data/vendors/sophos/artifacts/sophos-privacy-notice.yaml",
       "access_class": "public_web",
       "artifact_id": "sophos-privacy-notice",
@@ -163,6 +193,26 @@
       "vendor_id": "sophos"
     },
     {
+      "_openva_path": "data/vendors/sophos/sources/sophos-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.267261Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "sophos-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.sophos.com/en-us/legal/data-processing-addendum",
+      "title_native": "Data Processing Addendum | Sophos",
+      "vendor_id": "sophos"
+    },
+    {
       "_openva_path": "data/vendors/sophos/sources/sophos-privacy-notice.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -233,6 +283,23 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/sophos/changes/candidate-promotion-sophos-dpa.yaml",
+      "artifact_id": "sophos-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-sophos-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.267261Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "sophos-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "sophos"
+    },
     {
       "_openva_path": "data/vendors/sophos/changes/owner-security-identity-expansion-1-sophos-compliance.yaml",
       "artifact_id": "sophos-compliance",
@@ -314,22 +381,107 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
       "compliance_page",
+      "dpa",
       "privacy_notice",
       "status_page",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/sophos/unavailable_sources/sophos-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://sophos.com",
+        "https://sophos.com/legal/subprocessors",
+        "https://sophos.com/subprocessors",
+        "https://sophos.com/legal/sub-processors",
+        "https://sophos.com/sub-processors",
+        "https://www.sophos.com",
+        "https://www.sophos.com/legal/subprocessors",
+        "https://www.sophos.com/subprocessors",
+        "https://www.sophos.com/legal/sub-processors",
+        "https://www.sophos.com/sub-processors",
+        "https://status.sophos.com",
+        "https://status.sophos.com/legal/subprocessors",
+        "https://status.sophos.com/subprocessors",
+        "https://status.sophos.com/legal/sub-processors",
+        "https://status.sophos.com/sub-processors",
+        "https://www.status.sophos.com",
+        "https://www.status.sophos.com/legal/subprocessors",
+        "https://www.status.sophos.com/subprocessors",
+        "https://www.status.sophos.com/legal/sub-processors",
+        "https://www.status.sophos.com/sub-processors",
+        "https://www.sophos.com/en-gb/trust",
+        "https://www.sophos.com/en-gb/legal/sophos-group-privacy-notice"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "sophos-subprocessors-list",
+      "vendor_id": "sophos"
+    },
+    {
+      "_openva_path": "data/vendors/sophos/unavailable_sources/sophos-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://sophos.com",
+        "https://sophos.com/terms",
+        "https://sophos.com/terms-of-service",
+        "https://sophos.com/legal/terms",
+        "https://sophos.com/legal/terms-of-service",
+        "https://sophos.com/terms.html",
+        "https://www.sophos.com",
+        "https://www.sophos.com/terms",
+        "https://www.sophos.com/terms-of-service",
+        "https://www.sophos.com/legal/terms",
+        "https://www.sophos.com/legal/terms-of-service",
+        "https://www.sophos.com/terms.html",
+        "https://status.sophos.com",
+        "https://status.sophos.com/terms",
+        "https://status.sophos.com/terms-of-service",
+        "https://status.sophos.com/legal/terms",
+        "https://status.sophos.com/legal/terms-of-service",
+        "https://status.sophos.com/terms.html",
+        "https://www.status.sophos.com",
+        "https://www.status.sophos.com/terms",
+        "https://www.status.sophos.com/terms-of-service",
+        "https://www.status.sophos.com/legal/terms",
+        "https://www.status.sophos.com/legal/terms-of-service",
+        "https://www.status.sophos.com/terms.html",
+        "https://www.sophos.com/en-gb/trust",
+        "https://www.sophos.com/en-gb/legal/sophos-group-privacy-notice"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "sophos-terms-of-service",
+      "vendor_id": "sophos"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/sophos/vendor.yaml",
     "catalog_status": "active",

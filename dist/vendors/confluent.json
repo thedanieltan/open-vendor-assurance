@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/confluent/artifacts/confluent-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "confluent-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://docs.confluent.io/cloud/current/release-notes/compliance.html",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "confluent-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "confluent"
+    },
+    {
       "_openva_path": "data/vendors/confluent/artifacts/confluent-privacy-notice.yaml",
       "access_class": "public_web",
       "artifact_id": "confluent-privacy-notice",
@@ -29,10 +59,90 @@
         "screenshot_stored": false
       },
       "vendor_id": "confluent"
+    },
+    {
+      "_openva_path": "data/vendors/confluent/artifacts/confluent-security-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "confluent-security-page",
+      "artifact_type": "security_page",
+      "canonical_url": "https://developer.confluent.io/courses/security/intro/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "confluent-security-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "confluent"
+    },
+    {
+      "_openva_path": "data/vendors/confluent/artifacts/confluent-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "confluent-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://docs.confluent.io/confluentgov/current/security/index.html",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "confluent-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "confluent"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/confluent/sources/confluent-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.470382Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "confluent-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://docs.confluent.io/cloud/current/release-notes/compliance.html",
+      "title_native": "Compliance for Confluent Cloud &#124; Confluent Documentation",
+      "vendor_id": "confluent"
+    },
     {
       "_openva_path": "data/vendors/confluent/sources/confluent-privacy-notice.yaml",
       "access_class": "public_web",
@@ -52,9 +162,100 @@
       "source_url": "https://www.confluent.io/legal/confluent-privacy-notice/",
       "title_native": "Confluent Privacy Notice",
       "vendor_id": "confluent"
+    },
+    {
+      "_openva_path": "data/vendors/confluent/sources/confluent-security-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.820385Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "confluent-security-page",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://developer.confluent.io/courses/security/intro/",
+      "title_native": "Kafka Security Basics, A Complete Checklist",
+      "vendor_id": "confluent"
+    },
+    {
+      "_openva_path": "data/vendors/confluent/sources/confluent-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.835634Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "confluent-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://docs.confluent.io/confluentgov/current/security/index.html",
+      "title_native": "Manage Security for Confluent Cloud for Government &#124; Confluent Documentation",
+      "vendor_id": "confluent"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/confluent/changes/candidate-promotion-confluent-compliance-page.yaml",
+      "artifact_id": "confluent-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-confluent-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.470382Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "confluent-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "confluent"
+    },
+    {
+      "_openva_path": "data/vendors/confluent/changes/candidate-promotion-confluent-security-page.yaml",
+      "artifact_id": "confluent-security-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-confluent-security-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.820385Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "confluent-security-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "confluent"
+    },
+    {
+      "_openva_path": "data/vendors/confluent/changes/candidate-promotion-confluent-trust-center.yaml",
+      "artifact_id": "confluent-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-confluent-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.835634Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "confluent-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "confluent"
+    },
     {
       "_openva_path": "data/vendors/confluent/changes/redirect-canonicalization-confluent-privacy-notice.yaml",
       "artifact_id": "confluent-privacy-notice",
@@ -102,19 +303,144 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 1,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "privacy_notice"
+      "compliance_page",
+      "privacy_notice",
+      "security_page",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 4,
+    "unavailable_source_types": [
+      "dpa",
+      "status_page",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/confluent/unavailable_sources/confluent-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://confluent.io",
+        "https://confluent.io/legal/data-processing-addendum",
+        "https://confluent.io/data-processing-addendum",
+        "https://confluent.io/legal/dpa",
+        "https://confluent.io/dpa",
+        "https://confluent.io/privacy/dpa",
+        "https://www.confluent.io",
+        "https://www.confluent.io/legal/data-processing-addendum",
+        "https://www.confluent.io/data-processing-addendum",
+        "https://www.confluent.io/legal/dpa",
+        "https://www.confluent.io/dpa",
+        "https://www.confluent.io/privacy/dpa"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "confluent-dpa",
+      "vendor_id": "confluent"
+    },
+    {
+      "_openva_path": "data/vendors/confluent/unavailable_sources/confluent-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.confluent.io",
+        "https://status.confluent.io/status",
+        "https://status.confluent.io/statuspage",
+        "https://status.confluent.io/system-status",
+        "https://status.confluent.io/service-status",
+        "https://status.confluent.io/uptime",
+        "https://confluent.io",
+        "https://confluent.io/status",
+        "https://confluent.io/statuspage",
+        "https://confluent.io/system-status",
+        "https://confluent.io/service-status",
+        "https://confluent.io/uptime",
+        "https://www.confluent.io",
+        "https://www.confluent.io/status",
+        "https://www.confluent.io/statuspage",
+        "https://www.confluent.io/system-status",
+        "https://www.confluent.io/service-status",
+        "https://www.confluent.io/uptime"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "confluent-status-page",
+      "vendor_id": "confluent"
+    },
+    {
+      "_openva_path": "data/vendors/confluent/unavailable_sources/confluent-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://confluent.io",
+        "https://confluent.io/legal/subprocessors",
+        "https://confluent.io/subprocessors",
+        "https://confluent.io/legal/sub-processors",
+        "https://confluent.io/sub-processors",
+        "https://www.confluent.io",
+        "https://www.confluent.io/legal/subprocessors",
+        "https://www.confluent.io/subprocessors",
+        "https://www.confluent.io/legal/sub-processors",
+        "https://www.confluent.io/sub-processors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "confluent-subprocessors-list",
+      "vendor_id": "confluent"
+    },
+    {
+      "_openva_path": "data/vendors/confluent/unavailable_sources/confluent-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://confluent.io",
+        "https://confluent.io/terms",
+        "https://confluent.io/terms-of-service",
+        "https://confluent.io/legal/terms",
+        "https://confluent.io/legal/terms-of-service",
+        "https://confluent.io/terms.html",
+        "https://www.confluent.io",
+        "https://www.confluent.io/terms",
+        "https://www.confluent.io/terms-of-service",
+        "https://www.confluent.io/legal/terms",
+        "https://www.confluent.io/legal/terms-of-service",
+        "https://www.confluent.io/terms.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "confluent-terms-of-service",
+      "vendor_id": "confluent"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/confluent/vendor.yaml",
     "catalog_status": "active",

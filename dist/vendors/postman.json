@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/postman/artifacts/postman-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "postman-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.postman.com/security/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "postman-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "postman"
+    },
+    {
       "_openva_path": "data/vendors/postman/artifacts/postman-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "postman-privacy",
@@ -65,6 +95,36 @@
       "vendor_id": "postman"
     },
     {
+      "_openva_path": "data/vendors/postman/artifacts/postman-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "artifact_id": "postman-subprocessors-list",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://www.postman.com/legal/sub-processors/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "postman-subprocessors-list",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "postman"
+    },
+    {
       "_openva_path": "data/vendors/postman/artifacts/postman-terms.yaml",
       "access_class": "public_web",
       "artifact_id": "postman-terms",
@@ -99,6 +159,38 @@
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/postman/sources/postman-compliance-page.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "certification_reference"
+        },
+        {
+          "coverage_type": "contains",
+          "evidence": "The existing official public source URL independently returned HTTP 200 and strong source-type-specific semantic evidence for this additional role during source-completion discovery.",
+          "role": "trust_center"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.211531Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "postman-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.postman.com/security/",
+      "title_native": "Postman Security - Compliance, Privacy, &amp; Reliability",
+      "vendor_id": "postman"
+    },
     {
       "_openva_path": "data/vendors/postman/sources/postman-privacy.yaml",
       "access_class": "public_web",
@@ -146,6 +238,26 @@
       "vendor_id": "postman"
     },
     {
+      "_openva_path": "data/vendors/postman/sources/postman-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:46.036824Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "postman-subprocessors-list",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.postman.com/legal/sub-processors/",
+      "title_native": "Postman Sub-processors | Postman",
+      "vendor_id": "postman"
+    },
+    {
       "_openva_path": "data/vendors/postman/sources/postman-terms.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -170,6 +282,40 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/postman/changes/candidate-promotion-postman-compliance-page.yaml",
+      "artifact_id": "postman-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-postman-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.211531Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "postman-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "postman"
+    },
+    {
+      "_openva_path": "data/vendors/postman/changes/candidate-promotion-postman-subprocessors-list.yaml",
+      "artifact_id": "postman-subprocessors-list",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-postman-subprocessors-list",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:46.036824Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "postman-subprocessors-list",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "postman"
+    },
     {
       "_openva_path": "data/vendors/postman/changes/owner-cross-lane-expansion-1-postman-privacy.yaml",
       "artifact_id": "postman-privacy",
@@ -220,6 +366,23 @@
       "summary": "Catalog lifecycle operation create recorded for public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "postman"
+    },
+    {
+      "_openva_path": "data/vendors/postman/changes/owner-source-completion-claim-postman-compliance-page-trust-center.yaml",
+      "artifact_id": "postman-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-completion-claim-postman-compliance-page-trust-center",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T17:45:51Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "postman-compliance-page",
+      "summary": "Owner-led source completion added an evidence-backed coverage role to an existing canonical public source.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "postman"
     }
   ],
   "entity_mentions": [],
@@ -234,21 +397,82 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
       "privacy_notice",
       "status_page",
+      "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 1,
+    "unavailable_source_types": [
+      "dpa"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/postman/unavailable_sources/postman-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://postman.com",
+        "https://postman.com/legal/data-processing-addendum",
+        "https://postman.com/data-processing-addendum",
+        "https://postman.com/legal/dpa",
+        "https://postman.com/dpa",
+        "https://postman.com/privacy/dpa",
+        "https://www.postman.com",
+        "https://www.postman.com/legal/data-processing-addendum",
+        "https://www.postman.com/data-processing-addendum",
+        "https://www.postman.com/legal/dpa",
+        "https://www.postman.com/dpa",
+        "https://www.postman.com/privacy/dpa",
+        "https://privacy.postman.com",
+        "https://privacy.postman.com/legal/data-processing-addendum",
+        "https://privacy.postman.com/data-processing-addendum",
+        "https://privacy.postman.com/legal/dpa",
+        "https://privacy.postman.com/dpa",
+        "https://privacy.postman.com/privacy/dpa",
+        "https://www.privacy.postman.com",
+        "https://www.privacy.postman.com/legal/data-processing-addendum",
+        "https://www.privacy.postman.com/data-processing-addendum",
+        "https://www.privacy.postman.com/legal/dpa",
+        "https://www.privacy.postman.com/dpa",
+        "https://www.privacy.postman.com/privacy/dpa",
+        "https://status.postman.com",
+        "https://status.postman.com/legal/data-processing-addendum",
+        "https://status.postman.com/data-processing-addendum",
+        "https://status.postman.com/legal/dpa",
+        "https://status.postman.com/dpa",
+        "https://status.postman.com/privacy/dpa",
+        "https://www.status.postman.com",
+        "https://www.status.postman.com/legal/data-processing-addendum",
+        "https://www.status.postman.com/data-processing-addendum",
+        "https://www.status.postman.com/legal/dpa",
+        "https://www.status.postman.com/dpa",
+        "https://www.status.postman.com/privacy/dpa",
+        "https://www.www.postman.com",
+        "https://www.www.postman.com/legal/data-processing-addendum",
+        "https://www.www.postman.com/data-processing-addendum",
+        "https://www.www.postman.com/legal/dpa"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "postman-dpa",
+      "vendor_id": "postman"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/postman/vendor.yaml",
     "catalog_status": "active",

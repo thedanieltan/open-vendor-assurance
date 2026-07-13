@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/darktrace/artifacts/darktrace-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "darktrace-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.darktrace.com/inside-the-soc",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "darktrace-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "darktrace"
+    },
+    {
+      "_openva_path": "data/vendors/darktrace/artifacts/darktrace-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "darktrace-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.darktrace.com/legal/data-processing-addendum",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "darktrace-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "darktrace"
+    },
+    {
       "_openva_path": "data/vendors/darktrace/artifacts/darktrace-master-services-agreement.yaml",
       "access_class": "public_web",
       "artifact_id": "darktrace-master-services-agreement",
@@ -140,6 +200,46 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/darktrace/sources/darktrace-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.548691Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "darktrace-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.darktrace.com/inside-the-soc",
+      "title_native": "Threat Stories &amp; Analysis from the Darktrace SOC",
+      "vendor_id": "darktrace"
+    },
+    {
+      "_openva_path": "data/vendors/darktrace/sources/darktrace-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.942850Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "darktrace-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.darktrace.com/legal/data-processing-addendum",
+      "title_native": "Data Processing Addendum | Darktrace Legal",
+      "vendor_id": "darktrace"
+    },
+    {
       "_openva_path": "data/vendors/darktrace/sources/darktrace-master-services-agreement.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -234,6 +334,40 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/darktrace/changes/candidate-promotion-darktrace-compliance-page.yaml",
+      "artifact_id": "darktrace-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-darktrace-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.548691Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "darktrace-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "darktrace"
+    },
+    {
+      "_openva_path": "data/vendors/darktrace/changes/candidate-promotion-darktrace-dpa.yaml",
+      "artifact_id": "darktrace-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-darktrace-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.942850Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "darktrace-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "darktrace"
+    },
+    {
       "_openva_path": "data/vendors/darktrace/changes/owner-security-identity-expansion-1-darktrace-master-services-agreement.yaml",
       "artifact_id": "darktrace-master-services-agreement",
       "catalog_change_significance": "unknown",
@@ -314,22 +448,99 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
+      "dpa",
       "privacy_notice",
       "subprocessors_list",
       "terms_of_service",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "certification_reference",
+      "status_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/darktrace/unavailable_sources/darktrace-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.darktrace.com/security/certifications",
+        "https://www.darktrace.com/trust/certifications",
+        "https://www.darktrace.com/trust-center/certifications",
+        "https://www.darktrace.com/trustcenter/certifications",
+        "https://www.darktrace.com/compliance/certifications",
+        "https://www.darktrace.com/security/compliance",
+        "https://www.darktrace.com/trust/compliance",
+        "https://darktrace.com/security/certifications",
+        "https://darktrace.com/trust/certifications",
+        "https://darktrace.com/trust-center/certifications",
+        "https://darktrace.com/trustcenter/certifications",
+        "https://darktrace.com/compliance/certifications",
+        "https://darktrace.com/security/compliance",
+        "https://darktrace.com/trust/compliance",
+        "https://www.darktrace.com/trust",
+        "https://www.darktrace.com/legal",
+        "https://darktrace.com",
+        "https://www.darktrace.com",
+        "https://darktrace.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:42Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "darktrace-certification-reference",
+      "vendor_id": "darktrace"
+    },
+    {
+      "_openva_path": "data/vendors/darktrace/unavailable_sources/darktrace-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.darktrace.com",
+        "https://status.darktrace.com/status",
+        "https://status.darktrace.com/statuspage",
+        "https://status.darktrace.com/system-status",
+        "https://status.darktrace.com/service-status",
+        "https://status.darktrace.com/uptime",
+        "https://darktrace.com",
+        "https://darktrace.com/status",
+        "https://darktrace.com/statuspage",
+        "https://darktrace.com/system-status",
+        "https://darktrace.com/service-status",
+        "https://darktrace.com/uptime",
+        "https://www.darktrace.com",
+        "https://www.darktrace.com/status",
+        "https://www.darktrace.com/statuspage",
+        "https://www.darktrace.com/system-status",
+        "https://www.darktrace.com/service-status",
+        "https://www.darktrace.com/uptime",
+        "https://www.darktrace.com/trust",
+        "https://www.darktrace.com/legal"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "darktrace-status-page",
+      "vendor_id": "darktrace"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/darktrace/vendor.yaml",
     "catalog_status": "active",

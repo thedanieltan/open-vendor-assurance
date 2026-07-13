@@ -1,14 +1,52 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-13T16:54:29Z",
+  "generated_at": "2026-07-13T20:38:29Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 890,
-    "observed_this_run": 15,
-    "carried_forward": 875
+    "source_count": 1084,
+    "observed_this_run": 195,
+    "carried_forward": 889
   },
   "sources": [
+    {
+      "source_id": "1password-certification-reference",
+      "vendor_id": "1password",
+      "source_url": "https://1password.com/resources/iso27001",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "1password-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://1password.com/resources/iso27001",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0697d6a13cb1999d016a877a045ae2c552485ed7cf0230926acfe6813cb65934",
+      "normalized_text_sample_sha256": "sha256:cc24c8e744e4b328ef355687cbc76ccd5c26a91e25862677823971dc6bc1fdf5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "1password-dpa",
+      "vendor_id": "1password",
+      "source_url": "https://1password.com/legal/saas-manager/data-processing-agreement",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "1password-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://1password.com/legal/saas-manager/data-processing-agreement",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e108cedb2e6728e1276785cb1bc4828afe716504ea8b6ee82726045b52fb8213",
+      "normalized_text_sample_sha256": "sha256:93066a0fa7af289112118ac8d50877ac633722c30421ba87467bf39e329a7483",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
     {
       "source_id": "1password-privacy-notice",
       "vendor_id": "1password",
@@ -46,6 +84,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "1password-subprocessors-list",
+      "vendor_id": "1password",
+      "source_url": "https://1password.com/legal/saas-manager/third-party-sub-processors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "1password-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://1password.com/legal/saas-manager/third-party-sub-processors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e69b7faf8f82c03756924162348105dfbb792b432e5b9d8452edc0dbefe90fec",
+      "normalized_text_sample_sha256": "sha256:b06a7b9b241cc79717c3046b7c6368be2dc647a0a9ffece6428df2c497523779",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "1password-terms",
@@ -86,6 +143,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "activecampaign-dpa",
+      "vendor_id": "activecampaign",
+      "source_url": "https://www.activecampaign.com/legal/dpa",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "activecampaign-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.activecampaign.com/legal/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4e2b676113fb315a1f562bd42b458f4ce7d22208e40c8e739353a370e856794b",
+      "normalized_text_sample_sha256": "sha256:846187622147dd1112a01ea3df1f80ff9edfd6d4b44d9e55978838fb04a14be5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "activecampaign-privacy",
       "vendor_id": "activecampaign",
       "source_url": "https://www.activecampaign.com/legal/privacy-policy",
@@ -124,6 +200,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "activecampaign-subprocessors-list",
+      "vendor_id": "activecampaign",
+      "source_url": "https://www.activecampaign.com/legal/subprocessors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "activecampaign-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.activecampaign.com/legal/subprocessors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:289e99e4477e4aaccde1772646dbdfb946cf091b40803e37f74b19fd4599da70",
+      "normalized_text_sample_sha256": "sha256:38abb97c86093da71c52aa6bf734ee1eb822ec6e7252f989b225593adb5f14e4",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "activecampaign-terms",
       "vendor_id": "activecampaign",
       "source_url": "https://www.activecampaign.com/legal/terms-of-service",
@@ -141,6 +236,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "activecampaign-trust-center",
+      "vendor_id": "activecampaign",
+      "source_url": "https://www.activecampaign.com/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "activecampaign-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.activecampaign.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e54b0c675edb8d191add490fc99f5e06511707e0240a2d1df8680b51b8132153",
+      "normalized_text_sample_sha256": "sha256:6502e7ea7f0f861eaaecc32a13891c08c3424449fe3a9a6148cd66e9c3c38a07",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "acuity-scheduling-privacy",
@@ -428,6 +542,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "adyen-compliance-page",
+      "vendor_id": "adyen",
+      "source_url": "https://www.adyen.com/es_ES/privacy-policy/compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "adyen-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.adyen.com/es_ES/privacy-policy/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:35ef54c5ae116f32b214bcb3b6962ea1bd366f21ce4ac0617bebd50e0a70b416",
+      "normalized_text_sample_sha256": "sha256:630c03f797c4b16298c05b41d277e8f4c2b1d8cb9fa47584101e0f19c38e2e7d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "adyen-privacy-notice",
+      "vendor_id": "adyen",
+      "source_url": "https://www.adyen.com/privacy-policy",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "adyen-privacy-notice-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.adyen.com/privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8300c5929455c74269f3af7901a191b6c236b1504cd2f096c6206e605e0851b6",
+      "normalized_text_sample_sha256": "sha256:e340ed9306485458ee23fc52ce326f7ce9055676a95767605fdd76e0d307d51f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "adyen-security-page",
+      "vendor_id": "adyen",
+      "source_url": "https://www.adyen.com/sv_SE/privacy-policy/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "adyen-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.adyen.com/sv_SE/privacy-policy/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:10ce66567fbb6f7e16f9180e0bcf594fdffa097291025d2a53b628941b7ecae3",
+      "normalized_text_sample_sha256": "sha256:dbf90f70607ed74c8d8aeb6b6490efbb571f5d3408a990d43b1a6f1bc7712b9c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "adyen-subprocessors",
       "vendor_id": "adyen",
       "source_url": "https://www.adyen.com/en_GB/legal/list-of-adyen-subprocessors",
@@ -445,6 +616,25 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "adyen-trust-center",
+      "vendor_id": "adyen",
+      "source_url": "https://trust.adyen.com",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "adyen-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.adyen.com",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:fa916341b8f2a43371990048870266a0354a764b864d165a9b0eb104b2ece1c8",
+      "normalized_text_sample_sha256": "sha256:cdbc295a6a3cefc5c2e23f5d068061d71367a3ff25d81e6c0c0246c818f31aaf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "airtable-compliance",
@@ -542,6 +732,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "airwallex-privacy-notice",
+      "vendor_id": "airwallex",
+      "source_url": "https://www.airwallex.com/global/terms/privacy-policy",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "airwallex-privacy-notice-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.airwallex.com/global/terms/privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:09f193b1b922b4e077920101c2276b313333fae4005ca7816e2227b2b6403dc9",
+      "normalized_text_sample_sha256": "sha256:e566bf803cb20d5aa6c41ffb20abc45efa4917cc768c46540ea1c877eec52d6f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "airwallex-trust",
       "vendor_id": "airwallex",
       "source_url": "https://security.airwallex.com/",
@@ -559,6 +768,44 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "aiven-certification-reference",
+      "vendor_id": "aiven",
+      "source_url": "https://aiven.io/security-compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "aiven-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://aiven.io/security-compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:91d05405fb3696351043934f761f674e7280e9793464ae8efaf18b3249bba419",
+      "normalized_text_sample_sha256": "sha256:be7c98d873726252b72e1cd462ed2046d9248f162dc6be9600871b731d3241e8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "aiven-dpa",
+      "vendor_id": "aiven",
+      "source_url": "https://aiven.io/dpa",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "aiven-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://aiven.io/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1dbe299ea79b7579dd645331d9ddef8de039a95be101e516fe44b674f9199906",
+      "normalized_text_sample_sha256": "sha256:64eb01640f21d9f134393284d97e3c6f19f901d554f1634a9a1c83f8694aa7ef",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "aiven-privacy",
@@ -580,6 +827,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "aiven-security-page",
+      "vendor_id": "aiven",
+      "source_url": "https://aiven.io/developer/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "aiven-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://aiven.io/developer/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f996efa2256b686322795f35eb7cb6c0e75af3d9e766eb6ba61f7ef55110b85e",
+      "normalized_text_sample_sha256": "sha256:ec5df7dcad172aba6cbf1fdb2f3ceea9bac064624c83e0bd87e767252b72a2d3",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "aiven-status",
       "vendor_id": "aiven",
       "source_url": "https://status.aiven.io/",
@@ -597,6 +863,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "aiven-subprocessors-list",
+      "vendor_id": "aiven",
+      "source_url": "https://aiven.io/subprocessors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "aiven-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://aiven.io/subprocessors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3a115c6aca193e0e62e9996561fc12e3f9428ecd352852b78dac21fbfe3f0c59",
+      "normalized_text_sample_sha256": "sha256:4afb0ba8e200e8db6b0be0917e39046d71b742c6399ea57eb8dff628058adbd8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "aiven-terms",
@@ -1015,6 +1300,25 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "alloy-trust-center",
+      "vendor_id": "alloy",
+      "source_url": "https://alloy.app/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "alloy-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://alloy.app/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7ef2666e74918f23a1373ebc50de66d23c4950adc397ae49d1024ebda406e039",
+      "normalized_text_sample_sha256": "sha256:0f46b6a265cd03cd8dbcbdb597d94138161bc2f69f4f2f5068d0e46d28ec1cb4",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "amplitude-compliance",
@@ -2024,6 +2328,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "beyondtrust-certification-reference",
+      "vendor_id": "beyondtrust",
+      "source_url": "https://www.beyondtrust.com/trust-center/industry-certifications",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "beyondtrust-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.beyondtrust.com/trust-center/industry-certifications",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:90cdae734b62370725d43ba90685757da1d4b3c4587587d75ee93bebe27dc3bd",
+      "normalized_text_sample_sha256": "sha256:bfd10fcc81d39ab373d3169756bd89638977506f09052c8c86e187f0f97214bf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "beyondtrust-compliance-page",
+      "vendor_id": "beyondtrust",
+      "source_url": "https://www.beyondtrust.com/solutions/compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "beyondtrust-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.beyondtrust.com/solutions/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3d7dca0431073feadc2bc7884f2ba82cfe70b9d3158c0d9425374dff65ceee47",
+      "normalized_text_sample_sha256": "sha256:64e6222092777d830bc1db12cb2ddc0c1c36acd429079832181931a837e55de7",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "beyondtrust-dpa",
       "vendor_id": "beyondtrust",
       "source_url": "https://www.beyondtrust.com/privacy-center/data-processing-addendum",
@@ -2100,6 +2442,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "bigcommerce-certification-reference",
+      "vendor_id": "bigcommerce",
+      "source_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "bigcommerce-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8ec7b7a6c5abac30467bdf0c6c5bb1e832101b6be3a522a2e2173bb5830f0b60",
+      "normalized_text_sample_sha256": "sha256:7e531e238e02aea1e23b552ad9fa4449e1fc066f1993396c3bc98b7ace3e1b39",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "bigcommerce-dpa",
+      "vendor_id": "bigcommerce",
+      "source_url": "https://www.bigcommerce.com/apps/worldpay-wpg/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "bigcommerce-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.bigcommerce.com/apps/worldpay-wpg/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f629ca1f4c3c87604a6ed2a14f7716ad7ccd35144f16fb170c93a7c4bbdfcae5",
+      "normalized_text_sample_sha256": "sha256:17debdd1b3ecdb109664f20a0f0125966fecd8656737c149992c441cd6a6cd43",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "bigcommerce-privacy-notice",
       "vendor_id": "bigcommerce",
       "source_url": "https://bigcommerce.com/privacy",
@@ -2117,6 +2497,25 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "bigcommerce-trust-center",
+      "vendor_id": "bigcommerce",
+      "source_url": "https://security.bigcommerce.com/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "bigcommerce-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://security.bigcommerce.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:845aa073c5f4037b1cf0dc05995e077e61a7fd0efb76c672115eb5ee8a86c623",
+      "normalized_text_sample_sha256": "sha256:241843bdf07b483da4b5c427c279dec21b9c311d13f778b4b0bec399fd94ddfd",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "bill-com-compliance",
@@ -2195,6 +2594,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "bitbucket-compliance-page",
+      "vendor_id": "bitbucket",
+      "source_url": "https://www.atlassian.com/trust/data-protection#compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "bitbucket-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.atlassian.com/trust/data-protection#compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9cd5e64c323011df0137cf44f15a4ff0b7c9ddff24cc5c10a806cf88028045b9",
+      "normalized_text_sample_sha256": "sha256:e66654d9434e0b660bdfbbd270eda7f13e8d77ae172b4c88109f256253b9a121",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "bitbucket-dpa",
+      "vendor_id": "bitbucket",
+      "source_url": "https://www.atlassian.com/legal/data-processing-addendum",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "bitbucket-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.atlassian.com/legal/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d1500ec33966804da4532616cdea260ca78485455c72c12672e5b7dcf31f83a4",
+      "normalized_text_sample_sha256": "sha256:0eccb47fc54c2845a0a20b18e694b936f12ef95e155c986e052591efbeccbcc6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "bitbucket-privacy",
       "vendor_id": "bitbucket",
       "source_url": "https://www.atlassian.com/legal/privacy-policy",
@@ -2233,6 +2670,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "bitbucket-subprocessors-list",
+      "vendor_id": "bitbucket",
+      "source_url": "https://www.atlassian.com/legal/sub-processors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "bitbucket-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.atlassian.com/legal/sub-processors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d19949cffb22000b8e1bbbaced2df728a55affd88c9aefa8175259e8d73afa09",
+      "normalized_text_sample_sha256": "sha256:e5a79859b2020049c65dadc237cc0b3a14b27bf9b2bea59857bc0436ef66e9fd",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "bitbucket-terms",
       "vendor_id": "bitbucket",
       "source_url": "https://www.atlassian.com/legal/atlassian-customer-agreement",
@@ -2250,6 +2706,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "bitbucket-trust-center",
+      "vendor_id": "bitbucket",
+      "source_url": "https://www.atlassian.com/trust",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "bitbucket-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.atlassian.com/trust",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:89544558fb75e23e80a115f3e00f3ecf68ec4be5e239788c76736103518f1846",
+      "normalized_text_sample_sha256": "sha256:c56354321ac53825bb4b8ab18c4b9c587d77b7ecb2ead7b98cee4290c2186d08",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "bitdefender-dpa",
+      "vendor_id": "bitdefender",
+      "source_url": "https://www.bitdefender.com/en-bg/site/view/data-processing-agreement",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "bitdefender-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.bitdefender.com/en-bg/site/view/data-processing-agreement",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8d49d85ea0a3dfee192440b43c2c9a579b937576ff203ec38efff69c631da148",
+      "normalized_text_sample_sha256": "sha256:dc09e2d43d6aaf255b2b6bc921c01db4ce816249fa475e26eeb7e8929bcc5beb",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "bitdefender-privacy",
@@ -2461,6 +2955,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "braze-certification-reference",
+      "vendor_id": "braze",
+      "source_url": "https://www.braze.com/ja/company/regulations-compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "braze-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.braze.com/ja/company/regulations-compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d115eb13fd7d4b34d13115ec831bd7769c9121804f681d505c5c6f97fb3d5f7c",
+      "normalized_text_sample_sha256": "sha256:7a0c5a7db0b074371abde4191da7e02b1dde612c8eb9fa5b4254dfdc891d4024",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "braze-dpa",
       "vendor_id": "braze",
       "source_url": "https://www.braze.com/company/legal/dpa",
@@ -2497,6 +3010,44 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "braze-security-page",
+      "vendor_id": "braze",
+      "source_url": "https://www.braze.com/product/trust",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "braze-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.braze.com/product/trust",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cc81b0dbc279adc03879dcabd93ab140706eeaf6be37b33851aab6d4adf34c31",
+      "normalized_text_sample_sha256": "sha256:845117e34a1cc66ad814865278f102d67b2a263da9e023d3bc35ad1e32516d96",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "braze-subprocessors-list",
+      "vendor_id": "braze",
+      "source_url": "https://www.braze.com/company/legal/subprocessors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "braze-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.braze.com/company/legal/subprocessors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f23bb6fe2324a5f7555d72caa2b15fd615b50eb11ffc19950e2f121da2875e30",
+      "normalized_text_sample_sha256": "sha256:216e258a9bdc182a122f93144fd6c1371103175857071316c2d08eb2d92702fe",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "brevo-privacy",
@@ -2632,6 +3183,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "campaign-monitor-dpa",
+      "vendor_id": "campaign-monitor",
+      "source_url": "https://meetmarigold.com/company/compliance/selligent-legal-dpa",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "campaign-monitor-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://meetmarigold.com/company/compliance/selligent-legal-dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d25b94878b56229422502cc65e66508ad5f00ac9225ed4d4099b6d9dbd415f18",
+      "normalized_text_sample_sha256": "sha256:bc1dcd37875acfde22066f434d504ea65c36748e4d273c80d34e88f19149a329",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "campaign-monitor-privacy",
       "vendor_id": "campaign-monitor",
       "source_url": "https://www.campaignmonitor.com/policies/#privacy-policy",
@@ -2670,6 +3240,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "campaign-monitor-subprocessors-list",
+      "vendor_id": "campaign-monitor",
+      "source_url": "https://meetmarigold.com/company/sub-processors-privacy",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "campaign-monitor-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://meetmarigold.com/company/sub-processors-privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6c49aa5e2607550373cb5d92c180802d9dc69cfad503979957a0f5c3fcf63547",
+      "normalized_text_sample_sha256": "sha256:02728098478aab41bb6da3c604a06e25ae8940f3d71ffc27e1e7c04c3c3f76aa",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "campaign-monitor-terms",
       "vendor_id": "campaign-monitor",
       "source_url": "https://www.campaignmonitor.com/policies/#terms-of-use",
@@ -2687,6 +3276,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "campaign-monitor-trust-center",
+      "vendor_id": "campaign-monitor",
+      "source_url": "https://trust.campaignmonitor.meetmarigold.com/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "campaign-monitor-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.campaignmonitor.meetmarigold.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:448b833487e8c94dbc20f08d69ddca143090cef94e9fc7a794b47c73b058aac1",
+      "normalized_text_sample_sha256": "sha256:1ace8ff0884152c1b136cf27d832e1622c3ec50002f6f32ca53c513cb2151c69",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "canva-compliance",
@@ -2822,6 +3430,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "chainalysis-compliance-page",
+      "vendor_id": "chainalysis",
+      "source_url": "https://www.chainalysis.com/solution/crypto-compliance/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "chainalysis-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.chainalysis.com/solution/crypto-compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9dcb5ac7ab9de0555129981bcf38f9d51412c087e6fd9ab9f413de69838b2372",
+      "normalized_text_sample_sha256": "sha256:cbdc31e407b00455fea3a1d0c0ca3328c3244d7e9df966cacf7c86f6f25ab6ff",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "chainalysis-dpa",
+      "vendor_id": "chainalysis",
+      "source_url": "https://www.chainalysis.com/data-processing-addendum/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "chainalysis-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.chainalysis.com/data-processing-addendum/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5f9736063f7b70adbb9617c7f1fb16441cee0f3337ef3ac9e8b1fbab9b27df95",
+      "normalized_text_sample_sha256": "sha256:4fc61c059d8ec34d5e08986cd01c4e8bf1dae30adbadd65f92c99ac0751e2e39",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "chainalysis-privacy",
       "vendor_id": "chainalysis",
       "source_url": "https://www.chainalysis.com/privacy-policy/",
@@ -2839,6 +3485,63 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "chainalysis-security-page",
+      "vendor_id": "chainalysis",
+      "source_url": "https://www.chainalysis.com/national-security/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "chainalysis-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.chainalysis.com/national-security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6e61abdef94554fd165ae94924221dfde38bc49cd1d20b1e366f5759cca2ae31",
+      "normalized_text_sample_sha256": "sha256:7ad8b1761ea6ccc85756fc9933711097fdcc9eb7c392c737b7755c9aeff61f34",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "chainalysis-trust-center",
+      "vendor_id": "chainalysis",
+      "source_url": "https://trust.chainalysis.com",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "chainalysis-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.chainalysis.com",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b1cc3b6fde2cbc12d43478b8a9f0f3e73f5891be48ad594cf7cc8b312d018c56",
+      "normalized_text_sample_sha256": "sha256:9c9a7fe38388ca3da3888a339fe4402879e2e26e32e9cd12c418a77db2379239",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "checkout-com-certification-reference",
+      "vendor_id": "checkout-com",
+      "source_url": "https://www.checkout.com/legal/certificates",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "checkout-com-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.checkout.com/legal/certificates",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:46118bdcce4617d6a38af6f8d326ec6420dc7cc4511e4c3f5947a6fc32ea5899",
+      "normalized_text_sample_sha256": "sha256:054be05dccdcee23872392f145346d5498dfcfdd788b1ef1a0e7538eb3785a04",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "checkout-com-privacy",
@@ -2896,6 +3599,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "circleci-compliance-page",
+      "vendor_id": "circleci",
+      "source_url": "https://circleci.com/docs/guides/security/audit-logs/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "circleci-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://circleci.com/docs/guides/security/audit-logs/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d8debce72e5f9df05c3ef7c1b7c537df50a693a371c4d1dbf74f147fc612d7ba",
+      "normalized_text_sample_sha256": "sha256:189341ce9bb92addd290519a2193abcc36bb3a59cd45138f5a3647c1f7008529",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "circleci-privacy",
@@ -3275,6 +3997,25 @@
         "required": true,
         "reason": "source_health_unreachable"
       },
+      "carried_forward": true
+    },
+    {
+      "source_id": "coda-security-page",
+      "vendor_id": "coda",
+      "source_url": "https://coda.io/trust/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "coda-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://coda.io/trust/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d1e1794780c506ae2cf8075945c1f677842f6dca6189c66e734c5d4f4f514308",
+      "normalized_text_sample_sha256": "sha256:d373f4f7856e53f42e23333d73e6b235a326967e95bd5111afdbea524b98dbf8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
       "carried_forward": false
     },
     {
@@ -3294,6 +4035,25 @@
         "required": false,
         "reason": "first_observation"
       },
+      "carried_forward": true
+    },
+    {
+      "source_id": "coda-subprocessors-list",
+      "vendor_id": "coda",
+      "source_url": "https://superhuman.com/products/mail/subprocessors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "coda-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://superhuman.com/products/mail/subprocessors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:80134b6861b4c0483d99110e5ee781d513d2618ae4b2d246fb6963633f7e02e4",
+      "normalized_text_sample_sha256": "sha256:c91c955b760e4911238a5a4b5d470a191b2ba06fb8a52b47691860349948d837",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
       "carried_forward": false
     },
     {
@@ -3309,6 +4069,25 @@
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:7fe655511eff0913d2f5e962dea14c68a6eb0f251cd8e6b9deb176ec0471cfbb",
       "normalized_text_sample_sha256": "sha256:de7a80fcda0556c4c7418f798418eb5a6952cd371ac4bbc0e743a799a42aaf5f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": true
+    },
+    {
+      "source_id": "coda-trust-center",
+      "vendor_id": "coda",
+      "source_url": "https://coda.io/trust",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "coda-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://coda.io/trust",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7b868125465db093108df67b8e2c4abd879f7a57275063a40e3be62171fdd1ee",
+      "normalized_text_sample_sha256": "sha256:d1f3e2222ec64fb7dcd8a5f0d02841074c9eaa67196cd6237de68a4ed740c1ad",
       "review_signal": {
         "required": false,
         "reason": "first_observation"
@@ -3411,6 +4190,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "commercetools-certification-reference",
+      "vendor_id": "commercetools",
+      "source_url": "https://commercetools.com/press-releases/commercetools-announces-soc2-type-ii-and-hds-compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "commercetools-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://commercetools.com/press-releases/commercetools-announces-soc2-type-ii-and-hds-compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cb22cd21858129bad8b0d8c281d54905f2410c26c42a5cee7627f2399373dc51",
+      "normalized_text_sample_sha256": "sha256:b79ee38e11d361318f8a5377560e04bdf5c852747c504a4b9a7bb8e67ffeb004",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "commercetools-compliance-page",
+      "vendor_id": "commercetools",
+      "source_url": "https://commercetools.com/compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "commercetools-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://commercetools.com/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:77c0c51a20022efbe9dfd6affb71fcab21f475d1492f60f7c2b6a78bcafc2718",
+      "normalized_text_sample_sha256": "sha256:d070bb8ba0e518577e2394cdd33101dbdfa9097d0e2b4a4a90c5d7842b2f4f7f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "commercetools-dpa",
       "vendor_id": "commercetools",
       "source_url": "https://commercetools.com/dpa",
@@ -3428,6 +4245,82 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "commercetools-privacy-notice",
+      "vendor_id": "commercetools",
+      "source_url": "https://commercetools.com/privacy",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "commercetools-privacy-notice-2026-07-13-owner-source-completion-final",
+      "final_url": "https://commercetools.com/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:248e1594da13fb737fc01367bbc3185c6943b775e0d540e917641c3c420def79",
+      "normalized_text_sample_sha256": "sha256:f1a10ca357d636bdfe04a37c2ea47b5109309aa1f984a1acfbbb319c7a8f6ded",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "commercetools-subprocessors-list",
+      "vendor_id": "commercetools",
+      "source_url": "https://commercetools.com/subprocessors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "commercetools-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://commercetools.com/subprocessors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a6d5f68f6a8e0fc07d87ff21a397d3879ba5879df63808a1682cb03eb17c9ef2",
+      "normalized_text_sample_sha256": "sha256:028b9b380186c24996ef028d85dbc4998bb4d15b4b690c419a0e0ece22e13e85",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "commercetools-trust-center",
+      "vendor_id": "commercetools",
+      "source_url": "https://trust.commercetools.com",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "commercetools-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.commercetools.com",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:05f0f9b55b90cd2f05b86ec2dd9ff4d8d1723d3c792152c50a82404bfea616b0",
+      "normalized_text_sample_sha256": "sha256:adec350dbf285e1112195469b077a75dc444c031c473b372134e2558aaa8287c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "complyadvantage-dpa",
+      "vendor_id": "complyadvantage",
+      "source_url": "https://complyadvantage.com/dpa/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "complyadvantage-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://complyadvantage.com/dpa/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:09d95c9602075cc73a99ea50b4fc268ee378992c83dc8d1b42f047609891bedb",
+      "normalized_text_sample_sha256": "sha256:6d49070d50de40951dd26019e0c98b8e4eaba43fb25d6a2d90146985a7f652fe",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "complyadvantage-privacy",
@@ -3449,6 +4342,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "complyadvantage-subprocessors-list",
+      "vendor_id": "complyadvantage",
+      "source_url": "https://complyadvantage.com/sub-processors-list/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "complyadvantage-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://complyadvantage.com/sub-processors-list/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:302b53eeb6fd28c002b84e2726c8e002009a05a740b4398177b9e6c27045ff71",
+      "normalized_text_sample_sha256": "sha256:cfe03edea1aa42e2d14ca4eaab93bc7fd8fb4145724768e3ff9cd82ebb179005",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "confluent-compliance-page",
+      "vendor_id": "confluent",
+      "source_url": "https://docs.confluent.io/cloud/current/release-notes/compliance.html",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "confluent-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://docs.confluent.io/cloud/current/release-notes/compliance.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:10813da7a8f0d60881fdb59c12e84e58414cd460f7fc368773844943e8346797",
+      "normalized_text_sample_sha256": "sha256:64aeb247bb659df2fa8d60102be5deb4fd7b3679c7eb8226449a247081344588",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "confluent-privacy-notice",
       "vendor_id": "confluent",
       "source_url": "https://www.confluent.io/legal/confluent-privacy-notice/",
@@ -3466,6 +4397,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "confluent-security-page",
+      "vendor_id": "confluent",
+      "source_url": "https://developer.confluent.io/courses/security/intro/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "confluent-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://developer.confluent.io/courses/security/intro/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a53f708c9a0aeac2a6d7784254140a89f800c6301016483d19a041eacd29640a",
+      "normalized_text_sample_sha256": "sha256:533c9d02eeefdc50d3b433ad774d899431b731a566246eebf74cb799455ab70d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "confluent-trust-center",
+      "vendor_id": "confluent",
+      "source_url": "https://docs.confluent.io/confluentgov/current/security/index.html",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "confluent-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://docs.confluent.io/confluentgov/current/security/index.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cf671bb8febb7cc5bd72104ee4f3893d4de4baa8cc1515eaaf0b13d5af2acb0d",
+      "normalized_text_sample_sha256": "sha256:45f0ffd82107c1a1e63f43677eed57acb91b7dc89b1d52be169f8f63ae0f92c7",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "contentful-compliance",
@@ -3563,6 +4532,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "culture-amp-compliance-page",
+      "vendor_id": "culture-amp",
+      "source_url": "https://www.cultureamp.com/company/announcements/bcorp-recertification-2026",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "culture-amp-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.cultureamp.com/company/announcements/bcorp-recertification-2026",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6f3b1d1d339c88e7580f51365dfc9b3a966be273929282ff773f1efbf8f7cbb6",
+      "normalized_text_sample_sha256": "sha256:2804358847b970a1c4a878d9ab83cfd13180df77b621c65143570df0d0657787",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "culture-amp-dpa",
+      "vendor_id": "culture-amp",
+      "source_url": "https://www.cultureamp.com/company/legal/data-processing-addendum",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "culture-amp-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.cultureamp.com/company/legal/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:856ef6a0dee7f9fe1f9d2acb2625de32f6cc7371b45027e924d3eb59e0fe2e47",
+      "normalized_text_sample_sha256": "sha256:0ef915855d499820cab25fff48002bbea32119da568e75717f8130a6d09056c9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "culture-amp-privacy",
       "vendor_id": "culture-amp",
       "source_url": "https://www.cultureamp.com/privacy-policy",
@@ -3599,6 +4606,25 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "customer-io-dpa",
+      "vendor_id": "customer-io",
+      "source_url": "https://customer.io/legal/dpa",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "customer-io-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://customer.io/legal/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d5a8714b4ddcf3fbec93ea762737e4a2dfc9963240e289f898197807d10bdf12",
+      "normalized_text_sample_sha256": "sha256:45d56edb11ce1c831460d4b13002adf77d5fd7c48d96910e7d84086b5dc7db86",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "customer-io-privacy",
@@ -3656,6 +4682,63 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "customer-io-trust-center",
+      "vendor_id": "customer-io",
+      "source_url": "https://customer.io/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "customer-io-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://customer.io/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e232b300a7a9828c1d8cb3a4dc40037249360e002c663f9bca4ed5b5601aa5da",
+      "normalized_text_sample_sha256": "sha256:540701b960f3723cd06872ed4a67c4ec4222066ebc35ac3edc05c56e80f32b65",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "cyberark-certification-reference",
+      "vendor_id": "cyberark",
+      "source_url": "https://trust.cyberark.com/?itemName=certifications&source=click",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "cyberark-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.cyberark.com/?itemName=certifications&source=click",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:269212af853ecfc6206927b324a32974416a52bebd8e2ca1b809b9e8da675942",
+      "normalized_text_sample_sha256": "sha256:8e9e2cc3043cae3e1f9e72059293eb05f8ae13c7529ae739b8e2a2884a46acf4",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "cyberark-compliance-page",
+      "vendor_id": "cyberark",
+      "source_url": "https://www.cyberark.com/es/trust/compliance/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "cyberark-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.cyberark.com/es/trust/compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3c21073e770de69d005529ee4982443b965c0d8c8c47bc28f3db7fbd145c9c86",
+      "normalized_text_sample_sha256": "sha256:1842f4adbb8f5e1bc4915a679ea9b0835ff73695e36566a573138c1c19251f46",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "cyberark-privacy-notice",
@@ -3732,6 +4815,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "darktrace-compliance-page",
+      "vendor_id": "darktrace",
+      "source_url": "https://www.darktrace.com/inside-the-soc",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "darktrace-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.darktrace.com/inside-the-soc",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5b9da2dd2b129d889fc6fa9c147feada24e5bc4ff03a86e93a38f410245f7a38",
+      "normalized_text_sample_sha256": "sha256:e6be2bda43d625cacab479643accdf58229d450eba42d00492f678f38d01df67",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "darktrace-dpa",
+      "vendor_id": "darktrace",
+      "source_url": "https://www.darktrace.com/legal/data-processing-addendum",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "darktrace-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.darktrace.com/legal/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:24d8f90d2504be99c5d3c78f2088557b5fdc0a46477debb8c13f93078407c1df",
+      "normalized_text_sample_sha256": "sha256:7b8618d902381a0b31e21aea3cef6ee5cb5f1e70034ab4e995df2b4e7f734bd3",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "darktrace-master-services-agreement",
@@ -3846,6 +4967,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "darwinbox-subprocessors-list",
+      "vendor_id": "darwinbox",
+      "source_url": "https://darwinbox.com/sub-processors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "darwinbox-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://darwinbox.com/sub-processors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f4c11c0b57acf91a6dfee253448aebdd6d8eb523bff0ab5e7395aa998b3df050",
+      "normalized_text_sample_sha256": "sha256:4217e0cb98ebff05bd4b50bfe3943aa304380e8dd63440173bfb6ac68b9deb66",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "databricks-compliance",
@@ -4190,6 +5330,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "deepl-security-page",
+      "vendor_id": "deepl",
+      "source_url": "https://www.deepl.com/en/pro-data-security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "deepl-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.deepl.com/en/pro-data-security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4d3cc4f891aee05577e7ba24553e569c552eed324a676dc59d2408f3bc4210a9",
+      "normalized_text_sample_sha256": "sha256:1310e4ee7c1ce295964773c3eafd87d60a466247f6ba241b401ec4e8e9646b10",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "descript-privacy",
       "vendor_id": "descript",
       "source_url": "https://www.descript.com/privacy",
@@ -4206,7 +5365,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "descript-status",
@@ -4225,7 +5384,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "descript-terms",
@@ -4240,6 +5399,25 @@
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:0c2daa89734318455f084fe1b2ee9ef9f7a51695bf5c1d48d68256748488a323",
       "normalized_text_sample_sha256": "sha256:998bb1b3a4018046edea00a936ac534da89e9937256e165adf048f179e494c2c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": true
+    },
+    {
+      "source_id": "descript-trust-center",
+      "vendor_id": "descript",
+      "source_url": "https://www.descript.com/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "descript-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.descript.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7cb196b344972e9453daf851fc1b3a166567b0912f4e6a439b03818057677c2f",
+      "normalized_text_sample_sha256": "sha256:02bb8bc9a20ff813f7028db961327ccd84f64e5171012b57302c6a5baaa5cca4",
       "review_signal": {
         "required": false,
         "reason": "first_observation"
@@ -4378,6 +5556,44 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "docebo-compliance-page",
+      "vendor_id": "docebo",
+      "source_url": "https://www.docebo.com/university/certifications/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "docebo-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.docebo.com/university/certifications/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5e795b88b7c8c9b691520776d753fcbaac1d63a980d0dfb2bc15f789a2b208e1",
+      "normalized_text_sample_sha256": "sha256:f516d1b67a2dd78ae32ef8feccb6e017f1dce62b377c754a9643e736d64210e0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "docebo-dpa",
+      "vendor_id": "docebo",
+      "source_url": "https://www.docebo.com/company/data-processing-addendum/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "docebo-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.docebo.com/company/data-processing-addendum/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:92b19007ae1514eac1791c55e31b4141d0388433a931eb73ed8fa83088e995bf",
+      "normalized_text_sample_sha256": "sha256:eb43c3bb0b908f4144b1281ff5f40f8556cef91647e8de2cbd839e3276a9f308",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "docebo-privacy",
@@ -4681,7 +5897,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "doodle-privacy",
@@ -4700,7 +5916,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "doodle-security",
@@ -4715,6 +5931,25 @@
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:dddb72526c622aeea65f40f1b63d10aa7be1bcc74ade0e63afa83f58b74da8bd",
       "normalized_text_sample_sha256": "sha256:93128883d7987423edef83ff0448fad669c050e59d494867fbd93271798d906d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": true
+    },
+    {
+      "source_id": "dotdigital-dpa",
+      "vendor_id": "dotdigital",
+      "source_url": "https://dotdigital.com/terms/data-processing-agreement/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "dotdigital-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://dotdigital.com/terms/data-processing-agreement/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3c4ca28857858f9e8ac5c272eea4498b31b6a44f05e5c1c803e320303147c7f8",
+      "normalized_text_sample_sha256": "sha256:515b8c2f698166fd466d6cf26cb919cb1fedecfb8b1cb108318e9e5ab2b59b40",
       "review_signal": {
         "required": false,
         "reason": "first_observation"
@@ -4739,6 +5974,25 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "dotdigital-trust-center",
+      "vendor_id": "dotdigital",
+      "source_url": "https://dotdigital.com/trust-center/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "dotdigital-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://dotdigital.com/trust-center/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6d655c08e6c5894ab551ece6ee38697a7925e55b76a4c32f6ae0761402639808",
+      "normalized_text_sample_sha256": "sha256:3539cb10f2c7fdc4cf2f42e55f340b591376e3bedb0c0af4f866ed8a33c1b02e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "drata-compliance",
@@ -4988,6 +6242,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "duck-creek-technologies-subprocessors-list",
+      "vendor_id": "duck-creek-technologies",
+      "source_url": "https://www.duckcreek.com/subprocessor-list/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "duck-creek-technologies-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.duckcreek.com/subprocessor-list/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8383ae11c1802c4e8cfc062c412898495fcbdf08766b0b3b3562d129ec390236",
+      "normalized_text_sample_sha256": "sha256:231b8c105d5193c455582b51a72a0bcf25d6153122e7979e81d72c3d99d13b32",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "duck-creek-technologies-trust",
       "vendor_id": "duck-creek-technologies",
       "source_url": "https://www.duckcreek.com/trust/",
@@ -5121,6 +6394,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "emarsys-status-page",
+      "vendor_id": "emarsys",
+      "source_url": "https://trust.emarsys.com/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "emarsys-status-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.emarsys.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0dd1104dd360b0850dc551ac3cbc7d6de43e4f576de0f84c5af93787b1e4f965",
+      "normalized_text_sample_sha256": "sha256:2d7f6a1aee0bb28b90b5a77eba8d7eed97994d635c1eb68a9e439615e538c003",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "employment-hero-privacy",
       "vendor_id": "employment-hero",
       "source_url": "https://employmenthero.com/privacy-policy/",
@@ -5216,6 +6508,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "exoscale-certification-reference",
+      "vendor_id": "exoscale",
+      "source_url": "https://www.exoscale.com/compliance/iso27018/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "exoscale-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.exoscale.com/compliance/iso27018/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:db8da2968be77d4080f10fc037795622dc0c820b2a86372ef9dafb2aaa4ad509",
+      "normalized_text_sample_sha256": "sha256:c187d15b77021ef068f8d9f8b089408263af9f0e860f3f7448af6558d6b0b56d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "exoscale-compliance-page",
+      "vendor_id": "exoscale",
+      "source_url": "https://www.exoscale.com/compliance/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "exoscale-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.exoscale.com/compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ed0e552d50beb2fe5f396834b60c49237d16b0794140e89455ca6c780e66f532",
+      "normalized_text_sample_sha256": "sha256:b0078d3acea7eb5e744b01f681b0281f0581c8e0eb574262ec2fce2327cf9495",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "exoscale-dpa",
       "vendor_id": "exoscale",
       "source_url": "https://exoscale.com/dpa",
@@ -5254,6 +6584,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "f-secure-certification-reference",
+      "vendor_id": "f-secure",
+      "source_url": "https://www.f-secure.com/en/partners/insights/f-secure-achieves-iso-iec-27001-certification",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "f-secure-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.f-secure.com/en/partners/insights/f-secure-achieves-iso-iec-27001-certification",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:768b9aa036cb8888d6fc08f8ca429a6f3158f1aa62be03bbc6a8e7d045f1b9fe",
+      "normalized_text_sample_sha256": "sha256:bd3cabd63f6894df3e69c99805b458b63fc7d1cbdf17f0ddc2b983b2ece80dfb",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "f-secure-compliance-page",
+      "vendor_id": "f-secure",
+      "source_url": "https://www.f-secure.com/en/partners/newsroom/f-secure-earns-av-comparatives-fake-shops-detection-certification-for-second-straight-year",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "f-secure-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.f-secure.com/en/partners/newsroom/f-secure-earns-av-comparatives-fake-shops-detection-certification-for-second-straight-year",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:660e88c459320d3bc7f3483b76af453d4cb95d12098755d924012d7d7ca2ed95",
+      "normalized_text_sample_sha256": "sha256:370756cccab927bd903ddab790938bdf149a9d6d1e0a83a72270e6aeefc4d361",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "f-secure-privacy",
       "vendor_id": "f-secure",
       "source_url": "https://www.f-secure.com/en/legal/privacy/statement",
@@ -5271,6 +6639,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "f-secure-security-page",
+      "vendor_id": "f-secure",
+      "source_url": "https://www.f-secure.com/en/internet-security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "f-secure-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.f-secure.com/en/internet-security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a3de61f6c0c94405c48ea649738ffb395ad4fb80237823ae02666f58304e1ac3",
+      "normalized_text_sample_sha256": "sha256:7c3ad3e6fe18c7b482f846895794d6977fa2159d60dcc5773cb62c97f8b53433",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "f-secure-status",
@@ -5311,6 +6698,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "f-secure-trust-center",
+      "vendor_id": "f-secure",
+      "source_url": "https://www.f-secure.com/en/internet-security/buy",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "f-secure-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.f-secure.com/en/internet-security/buy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:fa228932c42f1b13f9e3053abc90578a14a25cdf51e99d2e7cffecff19b22f79",
+      "normalized_text_sample_sha256": "sha256:c961b33447196e7fcbdf0bc82126b4b71fcd7fbd79066e0abd538b515416da97",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "factorial-certification-reference",
+      "vendor_id": "factorial",
+      "source_url": "https://trust.factorial.co/?itemName=certifications&source=click",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "factorial-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.factorial.co/?itemName=certifications&source=click",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:88f63956a6c1b2efbae2d678cebbe439abda54120a73380385ec7939de6d0ab7",
+      "normalized_text_sample_sha256": "sha256:0a3389ba9b13b05f97cf4b9a9031c60732f494e24983714d4a011a66cdfd7624",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "factorial-privacy",
       "vendor_id": "factorial",
       "source_url": "https://factorialhr.com/privacy",
@@ -5328,6 +6753,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "factorial-subprocessors-list",
+      "vendor_id": "factorial",
+      "source_url": "https://factorialhr.com/sub-processors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "factorial-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://factorialhr.com/sub-processors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d6ecb57c70266e908f229bdf46671d84cb5d69bcc57de0af9020bab6fb30df4b",
+      "normalized_text_sample_sha256": "sha256:d4c528362004b10799be180efeac267e1ff1ec1cf5a8941495df289c3ac36228",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "factorial-terms",
@@ -5482,6 +6926,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "fiserv-compliance-page",
+      "vendor_id": "fiserv",
+      "source_url": "https://www.fiserv.com/es-es/legal/aviso-de-cookies.html",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "fiserv-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.fiserv.com/es-es/legal/aviso-de-cookies.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f3bedd4d1d3eb38bcd16333f89a5cb6ae97b0be8afc3d6ff696ba029a66c8e0f",
+      "normalized_text_sample_sha256": "sha256:a201f55bd047db45777eddcff4bebb6a4e23444d0504e0249e684a75d6f84c4b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "fiserv-privacy",
       "vendor_id": "fiserv",
       "source_url": "https://www.fiserv.com/en/about-fiserv/privacy-notice.html",
@@ -5501,6 +6964,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "fiserv-security-page",
+      "vendor_id": "fiserv",
+      "source_url": "https://www.fiserv.com/en/solutions/risk-compliance/cybersecurity-solution.html",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "fiserv-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.fiserv.com/en/solutions/risk-compliance/cybersecurity-solution.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:96d27fc7966c9080b0c57a02e1f0213ffa372d3d788817dc929c814a34a70cd5",
+      "normalized_text_sample_sha256": "sha256:73d8f8c8be8f635b8afd08324db6c287beebabeaf6d5d98cd9f2b92aa51070b5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "fiserv-terms",
       "vendor_id": "fiserv",
       "source_url": "https://www.fiserv.com/en/about-fiserv/terms-of-use.html",
@@ -5518,6 +7000,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "fly-io-certification-reference",
+      "vendor_id": "fly-io",
+      "source_url": "https://fly.io/blog/soc2-the-screenshots-will-continue-until-security-improves/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "fly-io-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://fly.io/blog/soc2-the-screenshots-will-continue-until-security-improves/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9c17f227a3ccf082c03a8fa37fea86029cdc3443d6216ce253d4ea1c17257126",
+      "normalized_text_sample_sha256": "sha256:dd07a95f2be82599406a6cc08882a8eae677c86af65f010bdd669f5070c27ed8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fly-io-compliance-page",
+      "vendor_id": "fly-io",
+      "source_url": "https://fly.io/compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "fly-io-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://fly.io/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:faa124ac585bd0bf37415135a1f6985884ab6f105714539939cb97e98a95bf11",
+      "normalized_text_sample_sha256": "sha256:59780e7bed61d547122469fa2f6c351ae568510b9a8000885c3367fd80798dbb",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "fly-io-privacy",
@@ -5558,6 +7078,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "fly-io-subprocessors-list",
+      "vendor_id": "fly-io",
+      "source_url": "https://fly.io/legal/sub-processors/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "fly-io-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://fly.io/legal/sub-processors/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:36b5c5e9f2b6c6854975b90b137b648e603a89e70fd3d273123e6c5cb9a06570",
+      "normalized_text_sample_sha256": "sha256:9971b31203ac9456391879518d43716078776db1d72bb79e7d8eccad1a360f9b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "fly-io-terms",
       "vendor_id": "fly-io",
       "source_url": "https://fly.io/legal/terms-of-service/",
@@ -5575,6 +7114,63 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "fly-io-trust-center",
+      "vendor_id": "fly-io",
+      "source_url": "https://fly.io/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "fly-io-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://fly.io/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e86c33c9011f149844b91e17cf7bfc9fc89e70dfb80208a0c292e5687a857ffb",
+      "normalized_text_sample_sha256": "sha256:3ea3acab0edb073f7a7cb57fbdbc77578e3d54ee9eacac415856ff6c227ee298",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fortinet-certification-reference",
+      "vendor_id": "fortinet",
+      "source_url": "https://trust.fortinet.com/?itemName=certifications&itemUid=ef061e5b-a2f4-469e-92bc-ab973e3d7842&source=click",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "fortinet-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.fortinet.com/?itemName=certifications&itemUid=ef061e5b-a2f4-469e-92bc-ab973e3d7842&source=click",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c83eaa818fd50d6afb9296c9363bbe38c71f59e2feb60ccbec43192e97da9110",
+      "normalized_text_sample_sha256": "sha256:43218c25f66b3655e2e178de7d83cadb7493155ab55b51d739313e3e60224f10",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "fortinet-compliance-page",
+      "vendor_id": "fortinet",
+      "source_url": "https://www.fortinet.com/products/socaas",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "fortinet-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.fortinet.com/products/socaas",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ecd0c64e92e88063238eea41c2e7517b6687715c3706f24dc7137e9753c77422",
+      "normalized_text_sample_sha256": "sha256:aed85a510896654e3d280e65aadbd0246918286486bd2dc3d80a970b8ddb1cb0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "fortinet-privacy-notice",
@@ -5786,6 +7382,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "front-compliance-page",
+      "vendor_id": "front",
+      "source_url": "https://front.com/legal/privacy-framework-certification-notice",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "front-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://front.com/legal/privacy-framework-certification-notice",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b5f2af6047acaad590cf78120ad6cf4858fee747c4b0b80aad860a2de2483ba5",
+      "normalized_text_sample_sha256": "sha256:be9c232bfe266e399ce39230615fecfb531237add1076e1c0ee5eb3d3ffb82b5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "front-dpa",
+      "vendor_id": "front",
+      "source_url": "https://front.com/legal/data-processing-addendum",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "front-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://front.com/legal/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c81ef593d6d8d67dffe1c4e0b32abcb96f48abd053f857ee3ac62649f48bc062",
+      "normalized_text_sample_sha256": "sha256:d482ec7d6b813bbdcf7a07d5fb17dfc6b38a912da1c81aa99f617720fcd31333",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "front-privacy",
       "vendor_id": "front",
       "source_url": "https://front.com/legal/privacy-notice",
@@ -5843,6 +7477,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "front-trust-center",
+      "vendor_id": "front",
+      "source_url": "https://front.com/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "front-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://front.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:86fb9947445ad5e420eb887fe9a99cbdd0e704452841ad571696276939a05639",
+      "normalized_text_sample_sha256": "sha256:63d61c47977a8a4ea14dbea19f8ab2aa9fecbfd74956148d16c576302e44e41a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "getresponse-privacy-notice",
       "vendor_id": "getresponse",
       "source_url": "https://www.getresponse.com/legal/privacy",
@@ -5860,6 +7513,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "getresponse-trust-center",
+      "vendor_id": "getresponse",
+      "source_url": "https://www.getresponse.com/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "getresponse-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.getresponse.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a346e328263636185fd7f69a67d3fb973f34a761d6bb325c53d6996ef3420829",
+      "normalized_text_sample_sha256": "sha256:321ac58700c7e95f7ea070e5929bd4009cda5f974e546834179d11b793311131",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "github-compliance",
@@ -5974,6 +7646,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "gitlab-certification-reference",
+      "vendor_id": "gitlab",
+      "source_url": "https://about.gitlab.com/blog/soc2-compliance/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "gitlab-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://about.gitlab.com/blog/soc2-compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9bfc626a6db31115cf640d0336e3e63030438278488575b22a2cdd3fd94c2605",
+      "normalized_text_sample_sha256": "sha256:9669437e17d7b0c543e383d97d93a710cf17bbeb045e9475c9f52cc73f828f27",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "gitlab-dpa",
@@ -6451,6 +8142,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "grafana-labs-certification-reference",
+      "vendor_id": "grafana-labs",
+      "source_url": "https://grafana.com/docs/learning-hub/which-grafana/02-understand-your-options/10-data-residency-and-compliance/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "grafana-labs-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://grafana.com/docs/learning-hub/which-grafana/02-understand-your-options/10-data-residency-and-compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0fa94042b075f2e875bd842f17ce400358d5797c178ad1bb8215b52b74afb5f1",
+      "normalized_text_sample_sha256": "sha256:bb64babf243a127d6eab52ee49ca9f97a3c750b5f65e0d75741fd648b4aed95a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "grafana-labs-compliance-page",
+      "vendor_id": "grafana-labs",
+      "source_url": "https://grafana.com/grafana/dashboards/23187-aws-trusted-advisor/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "grafana-labs-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://grafana.com/grafana/dashboards/23187-aws-trusted-advisor/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:aa68ae3b318c7f17d9e2c7d7f7255262afc6cc4fb539062f40942df8c4a9f7ee",
+      "normalized_text_sample_sha256": "sha256:027630054e710e1881e478ff72239c6ad322afa7443ef83af5c0cbaf3645f76a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "grafana-labs-privacy-notice",
       "vendor_id": "grafana-labs",
       "source_url": "https://grafana.com/legal/privacy-policy",
@@ -6582,6 +8311,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "graphcore-trust-center",
+      "vendor_id": "graphcore",
+      "source_url": "https://www.graphcore.ai/posts/hadean-turns-to-ipu-to-develop-uk-sovereign-ai-capabilities-for-national-security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "graphcore-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.graphcore.ai/posts/hadean-turns-to-ipu-to-develop-uk-sovereign-ai-capabilities-for-national-security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:56256c3e59ba9ad77222ec376a02ccabbcad8c438375951375910e64b2f93447",
+      "normalized_text_sample_sha256": "sha256:d0b0622f3ca6ccb395c3bd3ad1f4680b984ef577929a6272a14d9428bc1bfed0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "greenhouse-certification-reference",
+      "vendor_id": "greenhouse",
+      "source_url": "https://www.greenhouse.com/product-features/greenhouse-achieves-iso-iec-42001-2023-certification",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "greenhouse-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.greenhouse.com/product-features/greenhouse-achieves-iso-iec-42001-2023-certification",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5b1f9e2dcf39b5588fdf54fc427b1dbc26ab2ee1ed36fdb60acb1414cebe07b9",
+      "normalized_text_sample_sha256": "sha256:167f9265bebf20bdcdec9fd1faa93a5d1ff94c765041961295d2a4d827a10461",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "greenhouse-dpa",
@@ -7057,6 +8824,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "hetzner-status-page",
+      "vendor_id": "hetzner",
+      "source_url": "https://status.hetzner.com/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "hetzner-status-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://status.hetzner.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d874a7764e60152a481c155800b0a38e0c25f9abe487587a5d1df5c83cb0ac47",
+      "normalized_text_sample_sha256": "sha256:2483b665cb76d7245af3255c0dd156258c850a1cc5a2a8328b4a5705a7056f82",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "hibob-dpa",
+      "vendor_id": "hibob",
+      "source_url": "https://www.hibob.com/privacy/data-processing-addendum/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "hibob-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.hibob.com/privacy/data-processing-addendum/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e23b3a377a76ca8ec3f1eda7e5779c9fc3a1207eb28ccd72f627774f01fa52ce",
+      "normalized_text_sample_sha256": "sha256:33f13380fa016883520bf6edb073e6ed4ef3292c0eb8408e8ae7275e2c7906dc",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "hibob-privacy",
@@ -7764,21 +9569,116 @@
     {
       "source_id": "insider-privacy-notice",
       "vendor_id": "insider",
-      "source_url": "https://insider.com/privacy-policy",
-      "observed_at": "2026-07-11T05:37:18Z",
-      "observation_id": "insider-privacy-notice-2026-07-11-29141337215",
-      "final_url": "https://insider.com/privacy-policy",
-      "http_status": null,
-      "source_health_status": "unreachable",
-      "change_class": "none",
-      "retrieval_method": "other",
-      "raw_sample_sha256": "sha256:TBD",
-      "normalized_text_sample_sha256": "sha256:TBD",
+      "source_url": "https://insiderone.com/privacy-policy/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "insider-privacy-notice-2026-07-13-owner-source-completion-final",
+      "final_url": "https://insiderone.com/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "redirect_changed",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ea22a07078f15d2bd8832e6147059b6de559663c706f7882bd9f855229808175",
+      "normalized_text_sample_sha256": "sha256:3a2c2421b44db3789691e6a368645911d8cd078a4b0ebaa1204a29758f17b91e",
       "review_signal": {
-        "reason": "source_health_unreachable",
-        "required": true
+        "required": true,
+        "reason": "change_class_redirect_changed"
       },
-      "carried_forward": true
+      "carried_forward": false
+    },
+    {
+      "source_id": "insider-security-page",
+      "vendor_id": "insider",
+      "source_url": "https://insiderone.com/security/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "insider-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://insiderone.com/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:83c34111591bcd686bcc0cbcbe9e54b3ffa5d8a3bdfc9467518494b18bc58354",
+      "normalized_text_sample_sha256": "sha256:3da3ccf2387c0ad2c1291e14767aa1df190a980866d0545c7119a38af581fa22",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "insider-terms-of-service",
+      "vendor_id": "insider",
+      "source_url": "https://insiderone.com/terms-of-use/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "insider-terms-of-service-2026-07-13-owner-source-completion-final",
+      "final_url": "https://insiderone.com/terms-of-use/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cfe533917814157a12fbbce19b80af583e546466dbc57631a9fc3db47e547678",
+      "normalized_text_sample_sha256": "sha256:ee7a856264771f85b54fa2ef6bc48793c098cd5ffa686e647287b8178a36664d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "instructure-certification-reference",
+      "vendor_id": "instructure",
+      "source_url": "https://trust.instructure.com/security/certifications",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "instructure-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.instructure.com/security/certifications",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1f60ac4f09bb50a8c34f17d87573bec1ed6b6efc017a4d2d05bd4f685cebd9ff",
+      "normalized_text_sample_sha256": "sha256:b01ce754b9f2eaaec5b4d7eecebc16749d9395245759058faaa26918609c88b8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "instructure-compliance-page",
+      "vendor_id": "instructure",
+      "source_url": "https://www.instructure.com/trust-center/compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "instructure-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.instructure.com/trust-center/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b9193c6f442e7c7c2434e7b58afeda6e81caa4ca1d4a4b5db543326f4950c5df",
+      "normalized_text_sample_sha256": "sha256:c22ddbff13e40a1f2d69b97c14fa821fc82e2417ceae48332468cf2bbbc2079b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "instructure-dpa",
+      "vendor_id": "instructure",
+      "source_url": "https://www.instructure.com/policies/data-processing-addendum",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "instructure-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.instructure.com/policies/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:fdcebc13075f475d578669b9d35a218d93041dcf0af9b6fb322f51beef03161b",
+      "normalized_text_sample_sha256": "sha256:d24543b820da1979f0dc30b70e44c2bc1183dc36cbf24eda49e646168e94eab6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "instructure-privacy",
@@ -7931,6 +9831,25 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "jetbrains-dpa",
+      "vendor_id": "jetbrains",
+      "source_url": "https://www.jetbrains.com/legal/dpa/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "jetbrains-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.jetbrains.com/legal/dpa/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:963ed18ca6d0aa6f8f2fd5b4b26b7bc57a7b67e378ea4a67c72e01553d98ff54",
+      "normalized_text_sample_sha256": "sha256:b9e1de77cc7e7ef9f59bc16effd1864ee59e09927cf191373a0e330992a8aa60",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "jetbrains-privacy",
@@ -8313,6 +10232,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "linear-dpa",
+      "vendor_id": "linear",
+      "source_url": "https://linear.app/dpa",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "linear-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://linear.app/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7138598b2bf35f1e43cf6722ac498a74943381b6fdd7a3d9e5c4251b90c86270",
+      "normalized_text_sample_sha256": "sha256:0980e5afda7becb82ddcab61a7b730613f0ab7fc47f7d9dc985483fbdf75bbda",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "linear-privacy",
       "vendor_id": "linear",
       "source_url": "https://linear.app/privacy",
@@ -8368,6 +10306,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "linear-trust-center",
+      "vendor_id": "linear",
+      "source_url": "https://linear.app/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "linear-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://linear.app/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:be54733bec8bd921c6c7203613e9646d8e06d720c435d0895677e40980632ace",
+      "normalized_text_sample_sha256": "sha256:90a83bb5743ef8a99a43123e9f1ff6e3aa15643d2413ce397ea044ef04158182",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "logicgate-compliance",
@@ -8465,6 +10422,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "loom-compliance-page",
+      "vendor_id": "loom",
+      "source_url": "https://www.atlassian.com/trust/data-protection#compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "loom-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.atlassian.com/trust/data-protection#compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bb047a5e88c7b2506544f860e981ee2bcb9a5d21f88dbe211a0a04722cff9e58",
+      "normalized_text_sample_sha256": "sha256:e66654d9434e0b660bdfbbd270eda7f13e8d77ae172b4c88109f256253b9a121",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "loom-dpa",
+      "vendor_id": "loom",
+      "source_url": "https://www.atlassian.com/legal/data-processing-addendum",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "loom-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.atlassian.com/legal/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f7f9c745306b551e1d1b737ada56f9651d1961440aface75db482251f1bc43cf",
+      "normalized_text_sample_sha256": "sha256:0eccb47fc54c2845a0a20b18e694b936f12ef95e155c986e052591efbeccbcc6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "loom-privacy",
       "vendor_id": "loom",
       "source_url": "https://www.loom.com/privacy-policy",
@@ -8481,7 +10476,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "loom-status",
@@ -8496,6 +10491,25 @@
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:d7122251c47793f17d572874b5a8d66bc1495a16aa695a87b2838501bab7567f",
       "normalized_text_sample_sha256": "sha256:11c740e6b312cc6ad0028d929af48f0b11381fbc109084416341353639348bc2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": true
+    },
+    {
+      "source_id": "loom-subprocessors-list",
+      "vendor_id": "loom",
+      "source_url": "https://www.atlassian.com/legal/sub-processors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "loom-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.atlassian.com/legal/sub-processors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d19949cffb22000b8e1bbbaced2df728a55affd88c9aefa8175259e8d73afa09",
+      "normalized_text_sample_sha256": "sha256:e5a79859b2020049c65dadc237cc0b3a14b27bf9b2bea59857bc0436ef66e9fd",
       "review_signal": {
         "required": false,
         "reason": "first_observation"
@@ -8519,6 +10533,44 @@
         "required": false,
         "reason": "first_observation"
       },
+      "carried_forward": true
+    },
+    {
+      "source_id": "loom-trust-center",
+      "vendor_id": "loom",
+      "source_url": "https://www.atlassian.com/trust",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "loom-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.atlassian.com/trust",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d6ffa3c74b9f2e491e4dcbecc1e7871b8fd38dced80146526cd1f915a590b5ba",
+      "normalized_text_sample_sha256": "sha256:c56354321ac53825bb4b8ab18c4b9c587d77b7ecb2ead7b98cee4290c2186d08",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "lucid-software-dpa",
+      "vendor_id": "lucid-software",
+      "source_url": "https://lucid.co/data-processing-addendum",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "lucid-software-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://lucid.co/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:51e57f00fb2e44598799664e3f56cdcca1f6a99c4381cefdd653a415205f3256",
+      "normalized_text_sample_sha256": "sha256:42217486a50c0c87b93ef0a3d765ca8da079e3a95749e8a95d792df063cd712b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
       "carried_forward": false
     },
     {
@@ -8538,7 +10590,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "lucid-software-status",
@@ -8557,7 +10609,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "lucid-software-terms",
@@ -8572,6 +10624,25 @@
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:e0a40c7b728cbf097e584ba7e2e0738604544b27f7476935d392108c31e09636",
       "normalized_text_sample_sha256": "sha256:477bacb7f66d8a916402fd977c4e7296e633a3ff7036f756b79c8e406c0f49f8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": true
+    },
+    {
+      "source_id": "lucid-software-trust-center",
+      "vendor_id": "lucid-software",
+      "source_url": "https://lucid.co/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "lucid-software-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://lucid.co/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8a2d0d9226da40255fbfa17a99d7983ce13a60bbd672ee223fc22a9a1b729df1",
+      "normalized_text_sample_sha256": "sha256:24641aaa4ed1e94bd088cc522c85ee4d9f1089b9c3f50eac1ae4c6923a798d40",
       "review_signal": {
         "required": false,
         "reason": "first_observation"
@@ -8731,6 +10802,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "marqeta-certification-reference",
+      "vendor_id": "marqeta",
+      "source_url": "https://trust.marqeta.com/?itemUid=fa950d02-cbb3-4010-b917-7137a7c2a982&source=click&itemName=certifications",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "marqeta-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.marqeta.com/?itemUid=fa950d02-cbb3-4010-b917-7137a7c2a982&source=click&itemName=certifications",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a0ed81b5097dd6569c1c2e52b9be3b699dec71d878a1df165f7b95cd09bf088d",
+      "normalized_text_sample_sha256": "sha256:fd78529d0c151d1337bdecffa91ca757c75881441271e62c49fd9eb60d6f87cf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "marqeta-privacy",
       "vendor_id": "marqeta",
       "source_url": "https://www.marqeta.com/privacy",
@@ -8767,6 +10857,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "marqeta-subprocessors-list",
+      "vendor_id": "marqeta",
+      "source_url": "https://trust.marqeta.com/?itemUid=e3fae2ca-94a9-416b-b577-5c90e382df57",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "marqeta-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.marqeta.com/?itemUid=e3fae2ca-94a9-416b-b577-5c90e382df57",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a0ed81b5097dd6569c1c2e52b9be3b699dec71d878a1df165f7b95cd09bf088d",
+      "normalized_text_sample_sha256": "sha256:fd78529d0c151d1337bdecffa91ca757c75881441271e62c49fd9eb60d6f87cf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "marqeta-trust",
@@ -8976,6 +11085,25 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "microsoft-azure-privacy-notice",
+      "vendor_id": "microsoft-azure",
+      "source_url": "https://www.microsoft.com/en-us/privacy/privacystatement",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "microsoft-azure-privacy-notice-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.microsoft.com/en-us/privacy/privacystatement",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8654ee8fc6040b76abe4a73063f76ddf68b06648a2582207994b44658290221b",
+      "normalized_text_sample_sha256": "sha256:44aa8a98b20e45ac9245e32434719e69c86fe6e1a4752b76bd734803b99f5a74",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "microsoft-azure-security-page",
@@ -9415,6 +11543,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "monday-com-dpa",
+      "vendor_id": "monday-com",
+      "source_url": "https://monday.com/l/privacy/dpa/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "monday-com-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://monday.com/l/privacy/dpa/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:17399d570d0a294d2d7e78e5702fb842c245d73ff31f10b2ebb70b0f3e9b6efe",
+      "normalized_text_sample_sha256": "sha256:cece4a8cfee3033fc41645574b1225e037032a59e9e769cfd619daeae65e3719",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "monday-com-privacy",
       "vendor_id": "monday-com",
       "source_url": "https://monday.com/l/privacy/privacy-policy/",
@@ -9453,6 +11600,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "monday-com-subprocessors-list",
+      "vendor_id": "monday-com",
+      "source_url": "https://monday.com/l/privacy/sub-processors-subsidiaries-support/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "monday-com-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://monday.com/l/privacy/sub-processors-subsidiaries-support/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c1558665cf95b5847f2bc01045b0e0a9f8bd7b4a0c9c4935ba834f1d0a4af518",
+      "normalized_text_sample_sha256": "sha256:c6eda11e85d5351851b27c40ea5c4725654153ab51f6efaa57096c7d3e095777",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "monday-com-terms",
       "vendor_id": "monday-com",
       "source_url": "https://monday.com/l/legal/tos/",
@@ -9470,6 +11636,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "monday-com-trust-center",
+      "vendor_id": "monday-com",
+      "source_url": "https://monday.com/trustcenter",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "monday-com-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://monday.com/trustcenter",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ade78ee2bb69b7ab5de05f4f8a1102ac0e304d2fc768a0b3940757a86db6713d",
+      "normalized_text_sample_sha256": "sha256:ede658735ee375efbc1dd0c1da3c407d821425699662587df63aa746155a52b1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "mongodb-compliance",
@@ -9605,6 +11790,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "n8n-dpa",
+      "vendor_id": "n8n",
+      "source_url": "https://n8n.io/legal/data-processing-agreement/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "n8n-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://n8n.io/legal/data-processing-agreement/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2b430bc030e4222b5d95b4eec1d1cfd9bbff81e7d079ccd532dcaf88236d4d0d",
+      "normalized_text_sample_sha256": "sha256:20f77753038b0c01bf3d5c5c7aa7b5b6871dfe02110dc0631024d2bf01597814",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "n8n-privacy",
       "vendor_id": "n8n",
       "source_url": "https://n8n.io/legal/privacy/",
@@ -9643,6 +11847,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "n8n-subprocessors-list",
+      "vendor_id": "n8n",
+      "source_url": "https://n8n.io/legal/sub-processors/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "n8n-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://n8n.io/legal/sub-processors/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0b76e17feab3a746be902d9c960452b2ea838b62d8e4cb316bf853dc4676f9cf",
+      "normalized_text_sample_sha256": "sha256:fe6a5d8d98bfe3dd5ae9f726612fc49a6f7765ddb7191f217fca0c2fbb46edd6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "n8n-terms",
       "vendor_id": "n8n",
       "source_url": "https://n8n.io/legal/self-serve-terms/",
@@ -9660,6 +11883,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "n8n-trust-center",
+      "vendor_id": "n8n",
+      "source_url": "https://n8n.io/legal/security/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "n8n-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://n8n.io/legal/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e829337c38360107e58e494e12c18afb16ec166888c1b60d0465d24ac59692c1",
+      "normalized_text_sample_sha256": "sha256:0033555f2984b3d4058d6ff88e680f96f98d943fd6f52ad1250b38965879c613",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "neo4j-compliance-page",
+      "vendor_id": "neo4j",
+      "source_url": "https://neo4j.com/use-cases/privacy-risk-compliance/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "neo4j-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://neo4j.com/use-cases/privacy-risk-compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ad3558bf93e60d548f575ae279cc1043203abad06631591a7614263a21b07c61",
+      "normalized_text_sample_sha256": "sha256:00801595054bf47ddd731c5bdaf52c6489223a1d3abb059a88c8b2e7c391e2c7",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "neo4j-privacy-notice",
@@ -9700,6 +11961,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "neon-certification-reference",
+      "vendor_id": "neon",
+      "source_url": "https://neon.com/docs/security/compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "neon-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://neon.com/docs/security/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a3687d845fd0d06e4b3372eb64515fc89a6bed362cd5126d67639242f5f5cd84",
+      "normalized_text_sample_sha256": "sha256:e0aa8e24f81fcbb68cfeacb6b94d10a4f695e9654f94eef6c448d80296a7d914",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "neon-compliance-page",
+      "vendor_id": "neon",
+      "source_url": "https://neon.com/docs/reference/api/dataapi/get-project-advisor-security-issues",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "neon-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://neon.com/docs/reference/api/dataapi/get-project-advisor-security-issues",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3e6110f6e613f848e1580a4de60508f72de3d7de356003efbfcd67221a7dc90d",
+      "normalized_text_sample_sha256": "sha256:7e018e0c695a2334d973e61948b4d65375200adb3f4cff5737f4bbd79cddd2ce",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "neon-dpa",
+      "vendor_id": "neon",
+      "source_url": "https://neon.com/platform-terms#3.4",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "neon-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://neon.com/platform-terms#3.4",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:854d3c6d2a18d2141db2133681eb3dfd736c893a208da71e817f306da4e70218",
+      "normalized_text_sample_sha256": "sha256:b007cac7f17f0809cbd2aa882a26c6a30544e3708c29ca9d31a2feb91aff2cc2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "neon-privacy",
       "vendor_id": "neon",
       "source_url": "https://neon.com/privacy-policy",
@@ -9738,6 +12056,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "neon-subprocessors-list",
+      "vendor_id": "neon",
+      "source_url": "https://neon.com/subprocessors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "neon-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://neon.com/subprocessors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:90330ca796384be61d9342271f95ae2cb025f55e2f4a217627688e5da43b0e23",
+      "normalized_text_sample_sha256": "sha256:19d0350649b47017c939df0eda879657d7b9e280aa32f3858e2d0da884a209fc",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "neon-terms",
       "vendor_id": "neon",
       "source_url": "https://neon.com/terms-of-service",
@@ -9755,6 +12092,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "neon-trust-center",
+      "vendor_id": "neon",
+      "source_url": "https://neon.com/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "neon-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://neon.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0a3768e2a40efeb408266c2fb67f3ac389a15c59ad6c8a31f4684e23f3e42978",
+      "normalized_text_sample_sha256": "sha256:c00822d220582cfbd6824b5bd6c7aab093fe274d9ac9eb1d98c8c5f9b4b59117",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "netlify-certification-reference",
+      "vendor_id": "netlify",
+      "source_url": "https://www.netlify.com/blog/netlify-achieves-iso-27001-certification/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "netlify-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.netlify.com/blog/netlify-achieves-iso-27001-certification/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:85961d7bae5356bd7f5ff557b7321fb22d85994cd6b390d48b287f10637feafd",
+      "normalized_text_sample_sha256": "sha256:9e2897b602785c3b075a9f692ffb993f95ea878f41b6a1eac1fefb638522682d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "netlify-privacy",
@@ -9812,6 +12187,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "netlify-trust-center",
+      "vendor_id": "netlify",
+      "source_url": "https://www.netlify.com/security/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "netlify-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.netlify.com/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:701c3b7bd44cc2046f5efc2a1a41eb711b2b09305d6d9734dbeb64de4a5fa7db",
+      "normalized_text_sample_sha256": "sha256:21a132f9ae78a38901e9a1cf5b89ee13900d2eb70e2b444a030a31a0814ea9be",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "netskope-compliance-page",
@@ -9907,6 +12301,25 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "netsuite-privacy-notice",
+      "vendor_id": "netsuite",
+      "source_url": "https://www.oracle.com/legal/privacy/services-privacy-policy/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "netsuite-privacy-notice-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.oracle.com/legal/privacy/services-privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4deed4a59fd49c14e8407d7b20af5996e9f36bf8cb87ea5f39b99666a03c4cd6",
+      "normalized_text_sample_sha256": "sha256:226d77bd43caa8e6d3e4070923f6cb47bc25f1dbc109b62cf42c1a980e760b78",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "netsuite-security",
@@ -10097,6 +12510,44 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "odoo-certification-reference",
+      "vendor_id": "odoo",
+      "source_url": "https://www.odoo.com/industries/audit-certification",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "odoo-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.odoo.com/industries/audit-certification",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8fc9e54baf90e65727fb956688bd54216b284cfc175ecfce93099d215973b57d",
+      "normalized_text_sample_sha256": "sha256:83a17feea87afa6e3b7ef3dc72fc23d6c3719c7aa456deeced8179fbc7c470e3",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "odoo-compliance-page",
+      "vendor_id": "odoo",
+      "source_url": "https://www.odoo.com/app/social-marketing",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "odoo-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.odoo.com/app/social-marketing",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:80f903518d40ab8530cf5cde9f307e41a349c1db1ab6f32c728770b7b6afd952",
+      "normalized_text_sample_sha256": "sha256:74049a97d7ceb0476b08d73003506f047fc9e023ef97291260183273e45c7f82",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "odoo-dpa",
@@ -10783,6 +13234,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "palantir-compliance-page",
+      "vendor_id": "palantir",
+      "source_url": "https://www.palantir.com/impact/compliance-acceleration",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "palantir-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.palantir.com/impact/compliance-acceleration",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4a9cd68b5692dd3b3e519ac6d73d9df7fa5b79a578c27cb183474f5cba67d615",
+      "normalized_text_sample_sha256": "sha256:1da8d68aaf39f6f96ab6fea1e56b756e2b84875fcaa988368c82c59333c4349f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "palantir-privacy-security",
       "vendor_id": "palantir",
       "source_url": "https://www.palantir.com/assets/xrfr7uokpv1b/2Zka4A9yAwaHwyi4eW1rDU/7bddc145ffde3b9fba2bc12c53340163/Palantir-s_Privacy_and_Security_Statement_PDF_April_2024.pdf",
@@ -10819,6 +13289,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "pandadoc-dpa",
+      "vendor_id": "pandadoc",
+      "source_url": "https://www.pandadoc.com/legal/dpa/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "pandadoc-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.pandadoc.com/legal/dpa/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f4b5575319f440c49b8a2f0e00e064739efae2ab51e903b0f9a9251babaec0ec",
+      "normalized_text_sample_sha256": "sha256:53b89acf20e7e2ea486e8786f6d2cc2f025b3fc6c30f47f72703a01905a8075e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "pandadoc-privacy",
@@ -10878,6 +13367,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "paychex-compliance-page",
+      "vendor_id": "paychex",
+      "source_url": "https://www.paychex.com/partnerships/financial-advisors",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "paychex-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.paychex.com/partnerships/financial-advisors",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1ac8c7ffca70ab1170961df5a8ffc997a230c067a2d3648c66478eac5653caea",
+      "normalized_text_sample_sha256": "sha256:baa9f57d70bb3f22a33388cde8cee5beb2b4dbcfc5d1dbb4d9d7795ba0ed59fa",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "paychex-privacy",
       "vendor_id": "paychex",
       "source_url": "https://www.paychex.com/privacy",
@@ -10914,6 +13422,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "payoneer-compliance-page",
+      "vendor_id": "payoneer",
+      "source_url": "https://www.payoneer.com/resources/global-trade/compliance-vs-growth-in-apac/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "payoneer-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.payoneer.com/resources/global-trade/compliance-vs-growth-in-apac/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2ad638b192cc718e6b8255297c096cabf0b150bf4657300369a9ce2774187685",
+      "normalized_text_sample_sha256": "sha256:b6b4d9ecccc7bd62e3f1c248c3fefbd097cdf17f00d02f97bae996b5f6e1545e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "payoneer-dpa",
+      "vendor_id": "payoneer",
+      "source_url": "https://www.payoneer.com/legal/controller-to-controller-data-processing-addendum-partnerships/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "payoneer-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.payoneer.com/legal/controller-to-controller-data-processing-addendum-partnerships/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d93342378d16fd11ecb956265fa6cc43c51f95e16b471c2573d42561877136dd",
+      "normalized_text_sample_sha256": "sha256:5807ad1eb77d7911200da670b94e4ec07e793c112effbf7168ca941cab58ae38",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "payoneer-privacy",
@@ -11028,6 +13574,44 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "paypal-privacy-notice",
+      "vendor_id": "paypal",
+      "source_url": "https://www.paypal.com/us/legalhub/paypal/privacy-full",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "paypal-privacy-notice-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.paypal.com/us/legalhub/paypal/privacy-full",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a1ca11d09c2f9db325042a0fd2296d3311dfe72881ef40ef2c7afaf2884857f5",
+      "normalized_text_sample_sha256": "sha256:48303c75be3a38fc88e3e24e2b8a46bf6dfb2f4593577c0d20abaab9dffecfd6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "paypal-trust-center",
+      "vendor_id": "paypal",
+      "source_url": "https://www.paypal.com/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "paypal-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.paypal.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3c627e576793ed383e664e1194965f6ba04d7460254e218a59b656b99baf88cd",
+      "normalized_text_sample_sha256": "sha256:46c9d2830227037005cfaea2baf7041704c2755e36afde707b440bcd8734602d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "personio-dpa",
@@ -11163,6 +13747,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "ping-identity-certification-reference",
+      "vendor_id": "ping-identity",
+      "source_url": "https://www.pingidentity.com/en/legal/gdpr-compliance-faq.html",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "ping-identity-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.pingidentity.com/en/legal/gdpr-compliance-faq.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ecb892eb0d2a5d0fde24810b5450f88480f12960eefe10e96d30b95672822206",
+      "normalized_text_sample_sha256": "sha256:5abdab0919beb7acb890587388f2859d774fd95453c831b72cc8e8bf58cf1920",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "ping-identity-compliance-page",
+      "vendor_id": "ping-identity",
+      "source_url": "https://www.pingidentity.com/en-us/docs/legal/business-associate-agreement",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "ping-identity-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.pingidentity.com/en-us/docs/legal/business-associate-agreement",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1c61dd6c32dc9262e10034f24969b4aeba1f924cfd6f2992796363f067ca3553",
+      "normalized_text_sample_sha256": "sha256:2c4ca20e57f179a612aaeaa1e5e16b806b0638ab9450d3db222e150c13e6a32c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "ping-identity-dpa",
       "vendor_id": "ping-identity",
       "source_url": "https://www.pingidentity.com/en/legal/data-privacy-addendum.html",
@@ -11239,6 +13861,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "pipedrive-dpa",
+      "vendor_id": "pipedrive",
+      "source_url": "https://www.pipedrive.com/en/privacy/dpa",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "pipedrive-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.pipedrive.com/en/privacy/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9a743635a32721ba6f9f7ce757a4ec7e81bd7e256b27fe5a2b6dc8287a4eeb0d",
+      "normalized_text_sample_sha256": "sha256:531c9da1f8de95d2164a5d082e08f788f873071e77026ea3ec53eca949d66a2e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "pipedrive-privacy-notice",
       "vendor_id": "pipedrive",
       "source_url": "https://www.pipedrive.com/en/privacy",
@@ -11277,6 +13918,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "pipedrive-trust-center",
+      "vendor_id": "pipedrive",
+      "source_url": "https://trustcenter.pipedrive.com",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "pipedrive-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trustcenter.pipedrive.com",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ceee651a2ebcba35471e3dfbeb4e0b090f88a36bc12c29eb976e6d1d22596c3a",
+      "normalized_text_sample_sha256": "sha256:4be0e53eea89a1c0152305d4632c4a03242aec2b1e3721382d3b1cacebc8f494",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "plaid-privacy",
       "vendor_id": "plaid",
       "source_url": "https://plaid.com/legal/#privacy-statement",
@@ -11294,6 +13954,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "plaid-trust-center",
+      "vendor_id": "plaid",
+      "source_url": "https://plaid.com/trust-safety/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "plaid-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://plaid.com/trust-safety/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1ccdf6ad828c07100e7f390231bf1fcf31acc0512105f3cac49865077a88bab1",
+      "normalized_text_sample_sha256": "sha256:06a91ee0c74b106c7456983e6fd155b34c8bcf55ad4d055765c4e03efcbfc8b9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "planetscale-compliance",
@@ -11370,6 +14049,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "pointclickcare-compliance-page",
+      "vendor_id": "pointclickcare",
+      "source_url": "https://pointclickcare.com/industry-solutions/hospitals-associations/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "pointclickcare-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://pointclickcare.com/industry-solutions/hospitals-associations/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:402c520d8223af11e107a1425e7b4871b2e812e9cca317b2e8e6e159b06a8d8c",
+      "normalized_text_sample_sha256": "sha256:e688f40e794b766c0a45463e62637e46b4a79d929fe0a8fb6cb481197628c486",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "pointclickcare-network-addendum",
@@ -11524,6 +14222,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "postman-compliance-page",
+      "vendor_id": "postman",
+      "source_url": "https://www.postman.com/security/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "postman-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.postman.com/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a6d006d73739e91134a5443819c1f854a60f4f27ab9a85bb6774a919c0f86533",
+      "normalized_text_sample_sha256": "sha256:ab803ef22e3757ac28561f8a2aea544b36dbb14e0436bd03700804664733d574",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "postman-privacy",
       "vendor_id": "postman",
       "source_url": "https://privacy.postman.com/policies/",
@@ -11562,6 +14279,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "postman-subprocessors-list",
+      "vendor_id": "postman",
+      "source_url": "https://www.postman.com/legal/sub-processors/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "postman-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.postman.com/legal/sub-processors/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:66b20002df9b8b9eb6778aabd2485899040bc883c8ae35ca465db306dab41d4f",
+      "normalized_text_sample_sha256": "sha256:5dfcea2e95b3331b30b82819990e3cc6ae8704ad927fd8bb3772bd17a2ef0044",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "postman-terms",
       "vendor_id": "postman",
       "source_url": "https://www.postman.com/legal/terms/",
@@ -11598,6 +14334,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "prismic-trust-center",
+      "vendor_id": "prismic",
+      "source_url": "https://prismic.io/legal/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "prismic-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://prismic.io/legal/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:71e2e2092b4a0692a5b7f02a655d63e99be0589ef33c21eb54d716ac87b7f5cb",
+      "normalized_text_sample_sha256": "sha256:f6fcfc89ce581d38d8d02a3c40455bdd3cbba21ea8704fb6dff85f66c2e66e60",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "qualtrics-dpa",
@@ -11809,6 +14564,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "railway-dpa",
+      "vendor_id": "railway",
+      "source_url": "https://railway.com/legal/dpa",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "railway-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://railway.com/legal/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f895744404f9ec517a2c8c3d0960c50ca814e142e1b96b8b16c47e2df25a4846",
+      "normalized_text_sample_sha256": "sha256:fc0416fe02f162c9361b5930e18b4cc53aa4966986efa6ed35fb910bb97317bd",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "railway-privacy",
       "vendor_id": "railway",
       "source_url": "https://railway.com/legal/privacy",
@@ -11864,6 +14638,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "railway-trust-center",
+      "vendor_id": "railway",
+      "source_url": "https://trust.railway.com/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "railway-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.railway.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a616b7d944179cf4e3212df7b291303e2bf2b72f1b857e12a31cab480f9cfb3c",
+      "normalized_text_sample_sha256": "sha256:bf8bc87e15b07ffa73e0ed019b33078757f7518016593b3843113a2d9d9ff47e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "razorpay-certification-reference",
+      "vendor_id": "razorpay",
+      "source_url": "https://razorpay.com/security/certifications",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "razorpay-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://razorpay.com/security/certifications",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:148b0f13c2ee747f9e2ec318269eb5d63c4dcaa18aaac44139ac05c67cfab5a5",
+      "normalized_text_sample_sha256": "sha256:250094e89a62d6ad6c36dd29ffc3e729cba7a7ab934d2eaa9f23a691dc5cbeb6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "razorpay-privacy",
@@ -11923,6 +14735,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "razorpay-trust-center",
+      "vendor_id": "razorpay",
+      "source_url": "https://razorpay.com/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "razorpay-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://razorpay.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:575432cdc78cec559976f5cc1c63141f18ba47f65a7c50c0bff6072fe806b9ac",
+      "normalized_text_sample_sha256": "sha256:0675ca4a8322888cdcc14416bc6e56b9831f5e333788089e2f935cb9e62b421d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "red-hat-privacy",
       "vendor_id": "red-hat",
       "source_url": "https://www.redhat.com/en/about/privacy-policy",
@@ -11980,6 +14811,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "redis-compliance-page",
+      "vendor_id": "redis",
+      "source_url": "https://redis.io/docs/latest/operate/rs/security/certificates/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "redis-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://redis.io/docs/latest/operate/rs/security/certificates/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9d06556747485b7f233c07c518b8057608a5eb66b176f187bcb1df189e90e189",
+      "normalized_text_sample_sha256": "sha256:abdce4f0c8e5eefe5495a928a78254c156315b6f9f55a8dc8d1c962a8853410a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "redis-privacy-notice",
       "vendor_id": "redis",
       "source_url": "https://redis.io/legal/privacy-policy/",
@@ -11997,6 +14847,63 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "redis-security-page",
+      "vendor_id": "redis",
+      "source_url": "https://redis.io/docs/latest/operate/rs/security/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "redis-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://redis.io/docs/latest/operate/rs/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:6d8a9a8354f60c8ba7a2315078da85446c7792f78895b17ded87b19af38c6075",
+      "normalized_text_sample_sha256": "sha256:ac6f95d2e69033c3e0ae6c1ef07e7639dc7d316942b0beed2657bdd5ed060273",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "redis-trust-center",
+      "vendor_id": "redis",
+      "source_url": "https://trust.redis.io",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "redis-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.redis.io",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b653eb9a88d6b67af05e4736e91e06d882065b4a0de5c84cef9bb241148ce838",
+      "normalized_text_sample_sha256": "sha256:0ed873c391f10684af1dd9cdec25fe1855e718fde10075dcc0a0f821c269c327",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "redox-certification-reference",
+      "vendor_id": "redox",
+      "source_url": "https://redoxengine.com/blog/redox-adds-hitrust-i1-certification-for-its-google-cloud-offering-to-manage-healthcare-data-protection-and-mitigate-cybersecurity-threats/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "redox-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://redoxengine.com/blog/redox-adds-hitrust-i1-certification-for-its-google-cloud-offering-to-manage-healthcare-data-protection-and-mitigate-cybersecurity-threats/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:16e9ba43573ff241d85d4c7ff070c0d72b15be6805b74693df973d0103dd7d76",
+      "normalized_text_sample_sha256": "sha256:e4ee1e6b7affa7bb3edb7d67f432dd9e5b4e797262d9ffaa753f069cec009f4b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "redox-platform-security",
@@ -12056,6 +14963,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "render-compliance-page",
+      "vendor_id": "render",
+      "source_url": "https://render.com/docs/render-vs-vercel-comparison",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "render-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://render.com/docs/render-vs-vercel-comparison",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:dede7ea6527eb769dfbc39eaca79622bc97b1c58906fec06bb08d557743d30b6",
+      "normalized_text_sample_sha256": "sha256:0416794a0a8f71c6c37891e0c8a2dd8f86b11b3a2bdd624c00ee78d6cf927355",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "render-dpa",
+      "vendor_id": "render",
+      "source_url": "https://render.com/dpa",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "render-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://render.com/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:941888d1883d766faccf81f1d4a2e17afec86da882fda385e2e061f6350b8950",
+      "normalized_text_sample_sha256": "sha256:7dc2c01e76ad9e419fc41964c5965798d4f8c098511f5c7274b81265a1c36c5c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "render-privacy",
       "vendor_id": "render",
       "source_url": "https://render.com/privacy",
@@ -12111,6 +15056,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "render-trust-center",
+      "vendor_id": "render",
+      "source_url": "https://render.com/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "render-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://render.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:867c8fab87c128b7d1ba16a5355ea50c1b9df9f2634b80b7588ffc0573d7cffb",
+      "normalized_text_sample_sha256": "sha256:efd1d3736e0dc601339910835299c7daedc91c3e76814ba15bd9cd7ae8434fc0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "retool-compliance",
@@ -12664,6 +15628,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "scaleway-dpa",
+      "vendor_id": "scaleway",
+      "source_url": "https://www.scaleway.com/fr/temoignages-clients/adpage/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "scaleway-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.scaleway.com/fr/temoignages-clients/adpage/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5a3c67b6ac001c0a01abc3604bd67c919d2629feccc6c50625d105a33caf81b7",
+      "normalized_text_sample_sha256": "sha256:a62fa4b5f42b94a2d16087f728691f9b4dffdd66abf9893cdcd9c01b276c52da",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "scaleway-privacy",
       "vendor_id": "scaleway",
       "source_url": "https://www.scaleway.com/en/privacy-policy/",
@@ -12683,6 +15666,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "scaleway-security-page",
+      "vendor_id": "scaleway",
+      "source_url": "https://www.scaleway.com/fr/contact-trust-et-safety/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "scaleway-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.scaleway.com/fr/contact-trust-et-safety/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9256d573baf19be3afa82033e08badc2fc10daf64441b677299c4f44607097f0",
+      "normalized_text_sample_sha256": "sha256:8751569f86c3aaeaaae56d4fcd84ccdc68d420023bfa34fb0c374a181b65b5b0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "scaleway-status",
       "vendor_id": "scaleway",
       "source_url": "https://status.scaleway.com/",
@@ -12700,6 +15702,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "scaleway-subprocessors-list",
+      "vendor_id": "scaleway",
+      "source_url": "https://www.scaleway.com/en/subprocessorlist/history/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "scaleway-subprocessors-list-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.scaleway.com/en/subprocessorlist/history/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bb63a98deb5d726cd68a3db19d0eeb131377cec5d81241ed070cc61147d2d8bb",
+      "normalized_text_sample_sha256": "sha256:59c259150f5665241e389783bc25e3932ca66f04ee631cdeeea633aa9b62c84b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "scaleway-terms",
@@ -13291,6 +16312,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "shift-technology-certification-reference",
+      "vendor_id": "shift-technology",
+      "source_url": "https://www.shift-technology.com/fr/resources/news/fr/shift-technology-obtient-la-certification-de-securite-soc-2-type-ii",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "shift-technology-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.shift-technology.com/fr/resources/news/fr/shift-technology-obtient-la-certification-de-securite-soc-2-type-ii",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:33aa59c08e8b648634837e7876ebf06ee95597a06a366608f24ce12ef96fc3a0",
+      "normalized_text_sample_sha256": "sha256:046b9d720ae809aff9cfb83d86167c38293eb6b30f7c3d2786d585ae37a8999b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "shift-technology-data-privacy",
       "vendor_id": "shift-technology",
       "source_url": "https://www.shift-technology.com/data-privacy-and-protection-policy",
@@ -13595,6 +16635,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "smartsheet-compliance-page",
+      "vendor_id": "smartsheet",
+      "source_url": "https://www.smartsheet.com/trust/compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "smartsheet-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.smartsheet.com/trust/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2cf1088a9eb456bb031bc2f009fdd03c2602529614090cd71656b58857987aed",
+      "normalized_text_sample_sha256": "sha256:d8936ac109d72dac04522835f8d15a664cf13dde470a7f258fb8f7123fd7cee0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "smartsheet-dpa",
       "vendor_id": "smartsheet",
       "source_url": "https://www.smartsheet.com/legal/DPA",
@@ -13821,6 +16880,25 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "sophos-dpa",
+      "vendor_id": "sophos",
+      "source_url": "https://www.sophos.com/en-us/legal/data-processing-addendum",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "sophos-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.sophos.com/en-us/legal/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:383438dc373656eee53431660147e7f706470a3c6a494f06f70e63ed8a0c6b6c",
+      "normalized_text_sample_sha256": "sha256:611ad72756d3758d4decc02878cfee26ed06e96ad90acf5a72b32d836cf84242",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "sophos-privacy-notice",
@@ -14089,6 +17167,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "starburst-compliance-page",
+      "vendor_id": "starburst",
+      "source_url": "https://www.starburst.io/partner-certification-program/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "starburst-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.starburst.io/partner-certification-program/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:63dc78ce979eba0650521e113b22599a082ee3e896f924cd60efc1a218eb89c4",
+      "normalized_text_sample_sha256": "sha256:9e288d5b9ed0f1e8ae49e76f99ee67318f4c2a26d2e2d9bd19266f9a0dee8433",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "starburst-privacy-notice",
       "vendor_id": "starburst",
       "source_url": "https://www.starburst.io/privacy-policy/",
@@ -14106,6 +17203,82 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "starburst-security-page",
+      "vendor_id": "starburst",
+      "source_url": "https://www.starburst.io/about/security/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "starburst-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.starburst.io/about/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:05451bb9a33d5382b87593c9b53ae29486bfabb7477dd61d067f9d08a847c88b",
+      "normalized_text_sample_sha256": "sha256:e04766e80da2c524ef8a9f2c61bd14df2aeab6abdb7e9f57079d2ba9202364f0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "starburst-trust-center",
+      "vendor_id": "starburst",
+      "source_url": "https://trust.starburst.io",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "starburst-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.starburst.io",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:35d97250c103d8a5b6814d26e8aa5ef3aa76362b81a50ad81facbab5d8c65da3",
+      "normalized_text_sample_sha256": "sha256:464412a6012a288e53fc3a460ef0f68237a0cfb97a6c56565d7139b6bb4c0dfb",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "storyblok-certification-reference",
+      "vendor_id": "storyblok",
+      "source_url": "https://www.storyblok.com/mp/storyblok-receives-iso-27001-certification",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "storyblok-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.storyblok.com/mp/storyblok-receives-iso-27001-certification",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a11d3c625c27589d01cfe72853bcd76f14258b32b9c26f9700591b0056114588",
+      "normalized_text_sample_sha256": "sha256:f96f8c2f8ac5ffc579e2c4b52b3f8735f6f154e335b2c186ee47418f3ae7f585",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "storyblok-compliance-page",
+      "vendor_id": "storyblok",
+      "source_url": "https://www.storyblok.com/mp/storyblok-partner-certification",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "storyblok-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.storyblok.com/mp/storyblok-partner-certification",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f2d42fa39b4d9ddfece93315f41ae1c3f74e25f2842be7c3216446e377ced9d8",
+      "normalized_text_sample_sha256": "sha256:078cafc7b3683772f27242f77083219b2842a183d5f5c4fa7fa65e39780d8280",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "storyblok-dpa",
@@ -14144,6 +17317,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "storyblok-trust-center",
+      "vendor_id": "storyblok",
+      "source_url": "https://www.storyblok.com/trust-center",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "storyblok-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.storyblok.com/trust-center",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e243d79208341e49ceb270b988d0023cc229e3d7521f8f806518af2867e90bc9",
+      "normalized_text_sample_sha256": "sha256:7b3324691c9341e83ca5edb47b22054d766d65bfbe0908c822936d59d6119737",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "strapi-compliance-page",
+      "vendor_id": "strapi",
+      "source_url": "https://strapi.io/headless-cms/comparison/strapi-vs-wordpressheadless",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "strapi-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://strapi.io/headless-cms/comparison/strapi-vs-wordpressheadless",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:16049749622233234bb77edfbebd4b6d39791a79907b4e7278d629eddde4f0d2",
+      "normalized_text_sample_sha256": "sha256:db9463d99d504ce7814ad8505a3f3cf9880fca5360b55a49bb77c8d68b7b1a90",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "strapi-privacy",
@@ -14201,6 +17412,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "strapi-trust-center",
+      "vendor_id": "strapi",
+      "source_url": "https://strapi.io/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "strapi-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://strapi.io/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d39e60554363d5769af7f2a0ce0820c50f5e245a305673a2db2e88c773d93878",
+      "normalized_text_sample_sha256": "sha256:a3273f0fc2c763465476c085bb02752dfe450f947ed21d3ca389302a09b5d1bf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "stripe-compliance",
@@ -14296,6 +17526,82 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "sumsub-certification-reference",
+      "vendor_id": "sumsub",
+      "source_url": "https://sumsub.com/blog/sumsub-receives-a-soc-2-type-1-report-to-reinforce-its-commitment-to-information-security-and-privacy/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "sumsub-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://sumsub.com/blog/sumsub-receives-a-soc-2-type-1-report-to-reinforce-its-commitment-to-information-security-and-privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2bda6fc4be7ffaebc51f304e373931e004298f918decf530c55603683b014b87",
+      "normalized_text_sample_sha256": "sha256:7acf9a2aa2d3b4dbbbb166121fc925335b9ffaa22d73ecc5e3806079c8c97bee",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "sumsub-compliance-page",
+      "vendor_id": "sumsub",
+      "source_url": "https://sumsub.com/aml-compliance/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "sumsub-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://sumsub.com/aml-compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:31dcc18719f559b20cae2826f236354c2f1d1183b13546621f189ca0e4776971",
+      "normalized_text_sample_sha256": "sha256:257a682dd15c86ecc28ff34a0f8435cf0fa791d7a906b3ba5a4eeeea224a7540",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "sumsub-dpa",
+      "vendor_id": "sumsub",
+      "source_url": "https://sumsub.com/consent-to-personal-data-processing/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "sumsub-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://sumsub.com/consent-to-personal-data-processing/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:81a6f75f951b4cda24556dcf1a21545556c6d72e9c5cee9b7ae60307ebe5998d",
+      "normalized_text_sample_sha256": "sha256:136258fc3e50cc6a11528166cea378edfa4686988292636a438996a479a8265c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "sumsub-privacy-notice",
+      "vendor_id": "sumsub",
+      "source_url": "https://sumsub.com/ccpa-privacy-notification/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "sumsub-privacy-notice-2026-07-13-owner-source-completion-final",
+      "final_url": "https://sumsub.com/ccpa-privacy-notification/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:35b21cc641d62f9de4d2d80d5c3f6f9870d22c5a25c397695bb9262325ac3233",
+      "normalized_text_sample_sha256": "sha256:e676280d876041b081b9d1b4aa5aec0d560a8e987629098a18b333a9a2284758",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "sumsub-security",
@@ -14410,6 +17716,44 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "surveymonkey-certification-reference",
+      "vendor_id": "surveymonkey",
+      "source_url": "https://www.surveymonkey.com/curiosity/security-is-the-cornerstone-for-building-trust-surveymonkey-achieves-iso-27001-certification/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "surveymonkey-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.surveymonkey.com/curiosity/security-is-the-cornerstone-for-building-trust-surveymonkey-achieves-iso-27001-certification/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2d2c7a53eb153d92ba7cde963b54a3423cd0ebee2744c1f785eeb0445369a187",
+      "normalized_text_sample_sha256": "sha256:66dfa5e6975c1ee6dc219bc6be655582b427607e18864491b6a9795980840514",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "surveymonkey-compliance-page",
+      "vendor_id": "surveymonkey",
+      "source_url": "https://www.surveymonkey.com/curiosity/axios-voting-certification/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "surveymonkey-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.surveymonkey.com/curiosity/axios-voting-certification/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5c2c37401cc2fbdb6412223b453f2767b66b392452babf46d97e1126dcd362e7",
+      "normalized_text_sample_sha256": "sha256:6276c1dda982e577e62c4c1c84fb532ddd4b701c81241aabc5993b771e1d9c62",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "surveymonkey-dpa",
@@ -14830,6 +18174,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "trend-micro-compliance-page",
+      "vendor_id": "trend-micro",
+      "source_url": "https://www.trendmicro.com/en_us/about/trust-center/compliance.html?utm_campaign=VURL:USA-_-Archive-_-Archive-_-compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "trend-micro-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.trendmicro.com/en_us/about/trust-center/compliance.html?utm_campaign=VURL:USA-_-Archive-_-Archive-_-compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:10f036dab2a4674f84bd8c47f0ceddbbda56f027521d0fefde251c85ada444c3",
+      "normalized_text_sample_sha256": "sha256:c8cbe5c7ec1a4087f6c7a8145dcd4ddad6b52c0462f4e9fb3cf049be7bb0cfc9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "trend-micro-dpa",
+      "vendor_id": "trend-micro",
+      "source_url": "https://www.trendmicro.com/en_us/about/trust-center/privacy/data-processing-addendum.html",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "trend-micro-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.trendmicro.com/en_us/about/trust-center/privacy/data-processing-addendum.html",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b7493c5a9e4e389d31ec52370049b757360e25f30c4da77ca159b8b869ded446",
+      "normalized_text_sample_sha256": "sha256:7323cab7931026f8b143fe0ec5f8d4249bae7cc05eea45dbc631880938afaad4",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "trend-micro-privacy",
       "vendor_id": "trend-micro",
       "source_url": "https://www.trendmicro.com/en_us/about/trust-center/privacy.html",
@@ -14904,6 +18286,63 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "trulioo-compliance-page",
+      "vendor_id": "trulioo",
+      "source_url": "https://www.trulioo.com/compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "trulioo-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.trulioo.com/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7bea5a60217da5fe833d4025e5e0543f2d65ef7aefa926538799ff20337ab63a",
+      "normalized_text_sample_sha256": "sha256:731a2e652a93bfbd4ce73fbd6e19f0f338d1ea668e06308aae9b14c946bafcda",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "trulioo-dpa",
+      "vendor_id": "trulioo",
+      "source_url": "https://www.trulioo.com/legal/dpa",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "trulioo-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.trulioo.com/legal/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:072bb7d358d242c7f459ef83c2a43dfc82e5cb7a280fbdf60c8bcbb92f2af7c7",
+      "normalized_text_sample_sha256": "sha256:f64112cdc9d09cf138a37a159b1ef0953875f783895f7a5aa61061cf4d675e21",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "trulioo-privacy-notice",
+      "vendor_id": "trulioo",
+      "source_url": "https://www.trulioo.com/privacy",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "trulioo-privacy-notice-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.trulioo.com/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9d7965f0009637d0ba8bd4a8f83a7349ca0b7dcb83076339fa0688af226c4633",
+      "normalized_text_sample_sha256": "sha256:59631fd013645c925f0aa61faac4abfe7794eb2ccfa7e79f4885cdd8c0940d38",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "trulioo-security",
@@ -15229,6 +18668,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "ukg-compliance-page",
+      "vendor_id": "ukg",
+      "source_url": "https://trustcenter.ukg.com/?itemUid=5f41759e-586c-45bc-b9cd-dc147d8e6aaa&groupName=IRAP&section=Compliance",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "ukg-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trustcenter.ukg.com/?itemUid=5f41759e-586c-45bc-b9cd-dc147d8e6aaa&groupName=IRAP&section=Compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8e7560028d2839fa25338f82985e3fcc19ce8984c24b20765ac58987a880b406",
+      "normalized_text_sample_sha256": "sha256:7e9dd891fdd086a68773c8194434493d8c51a70ddbbba285f78ea76cd6b44f7f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "ukg-privacy",
       "vendor_id": "ukg",
       "source_url": "https://www.ukg.com/privacy",
@@ -15514,6 +18972,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "vertafore-compliance-page",
+      "vendor_id": "vertafore",
+      "source_url": "https://www.vertafore.com/trusted-compliance-blogs",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "vertafore-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.vertafore.com/trusted-compliance-blogs",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:138118a618bc1a7ba5133481292b083d785f75fffa61c35b81f7c10f8f994574",
+      "normalized_text_sample_sha256": "sha256:106dd0c37807db714f587fb2ce4930d29da3345df39225f6d9839c288999d06c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "vertafore-information-security-terms",
       "vendor_id": "vertafore",
       "source_url": "https://www.vertafore.com/sites/default/files/documents/Information-Security-Terms-Online-2022.pdf",
@@ -15569,6 +19046,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "vtex-compliance-page",
+      "vendor_id": "vtex",
+      "source_url": "https://compliance.vtex.com/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "vtex-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://compliance.vtex.com/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4bb49e4d03733dd49e994c1654d51ddaf119e35bb89109a4c69f5f1e0a70db4d",
+      "normalized_text_sample_sha256": "sha256:4df04673d27c2444e26f7763d52ac0cf69325381848a7fef3b6fb7dd9d9c625f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "vtex-privacy-notice",
@@ -15818,6 +19314,63 @@
       "carried_forward": true
     },
     {
+      "source_id": "withsecure-certification-reference",
+      "vendor_id": "withsecure",
+      "source_url": "https://www.withsecure.com/fr/a-propos-de-nous/certifications/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "withsecure-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.withsecure.com/fr/a-propos-de-nous/certifications/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1cd6a1b4dcaa794bea032251deae82d3f9784aff569754b84d71cd10afdef096",
+      "normalized_text_sample_sha256": "sha256:0049d724366d082fc4b19a551a76bb0da88f4801b78399bbee7e539fd6a19ab9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "withsecure-compliance-page",
+      "vendor_id": "withsecure",
+      "source_url": "https://www.withsecure.com/en/trade-compliance/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "withsecure-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.withsecure.com/en/trade-compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:72180654d2469fd9ddf1ac0ad97befa20d93ee7164e97d16b334e60bfc09b268",
+      "normalized_text_sample_sha256": "sha256:6e3c71f97a3bef0bba544a451272fb41eddceb279d91da5486fec75ee025c0f4",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "withsecure-dpa",
+      "vendor_id": "withsecure",
+      "source_url": "https://www.withsecure.com/fr/data-processing-agreement/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "withsecure-dpa-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.withsecure.com/fr/data-processing-agreement/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bf507970f2a2823f96695eb4a42f3af117f36bd8681a25412a4c1a8a5cad1968",
+      "normalized_text_sample_sha256": "sha256:9b3d48de1bca6340721e0795eecf422cdaaddb9d33c93bf8ad94baabc02a7df9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "withsecure-privacy",
       "vendor_id": "withsecure",
       "source_url": "https://www.withsecure.com/privacy-and-security/",
@@ -15835,6 +19388,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "withsecure-security-page",
+      "vendor_id": "withsecure",
+      "source_url": "https://www.withsecure.com/en/privacy-and-security/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "withsecure-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.withsecure.com/en/privacy-and-security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5e71df17895e6fde6e5b1d0e168831a60da75817fd8151bab0825afb18cf5bd9",
+      "normalized_text_sample_sha256": "sha256:94de89009c0aff5387a6f7844560704dd1126cb5e81b5904fb62affb42259c60",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "withsecure-status",
@@ -15873,6 +19445,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "withsecure-trust-center",
+      "vendor_id": "withsecure",
+      "source_url": "https://trust.withsecure.com",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "withsecure-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://trust.withsecure.com",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0f3c25933dd5c8a82c83f8408d808b6f37bd2396f75910dd95fc1c58ed947982",
+      "normalized_text_sample_sha256": "sha256:dcf1e03ffe18f82221c8a3d9a975dadb68c981648c49bc1332ee65734db6845d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "wix-dpa",
@@ -16236,6 +19827,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "wrike-security-page",
+      "vendor_id": "wrike",
+      "source_url": "https://www.wrike.com/security/report/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "wrike-security-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.wrike.com/security/report/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b715d5fbef8db4caec8e5d5d24f82e06e5808b0446bc71f0a51839cdd2a6b0b3",
+      "normalized_text_sample_sha256": "sha256:8ed5884b385179d290f394855e7f7c9afe967a6092f2ce22f5de6032f1ec7e12",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "wrike-status",
       "vendor_id": "wrike",
       "source_url": "https://status.wrike.com/",
@@ -16272,6 +19882,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "wrike-trust-center",
+      "vendor_id": "wrike",
+      "source_url": "https://www.wrike.com/templates/it-security-governance-compliance/",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "wrike-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.wrike.com/templates/it-security-governance-compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:147f844f278eabd810f5d7f04dbdd1796c82b595cd7d1518660e1a38ecdf56ac",
+      "normalized_text_sample_sha256": "sha256:bb00c5d8b98bce80fac23b8a5fa3ea24507b03163c238b87de0ea6a16d4e36dc",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "xendit-licenses",
@@ -16844,6 +20473,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "zscaler-certification-reference",
+      "vendor_id": "zscaler",
+      "source_url": "https://compliance.zscaler.com",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "zscaler-certification-reference-2026-07-13-owner-source-completion-final",
+      "final_url": "https://compliance.zscaler.com",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:12c52bac3d73b89cde543112d851bbdd6456f939c4122ff99fe1d1a352f2b423",
+      "normalized_text_sample_sha256": "sha256:240f14d64fa98cef310cc35c31024b8969f689d3e0c5b9d9669428833d30cb56",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "zscaler-compliance-page",
+      "vendor_id": "zscaler",
+      "source_url": "https://www.zscaler.com/security-advisories",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "zscaler-compliance-page-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.zscaler.com/security-advisories",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cb03536d8ea944864b4821318b4278c5509a6e36076de76680da942e30ee28ff",
+      "normalized_text_sample_sha256": "sha256:86797606ad7880f0f8e3b68af25f8ff294a4c2cfc0bdab04fed7d5fa1f6a85bb",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "zscaler-dpa",
       "vendor_id": "zscaler",
       "source_url": "https://www.zscaler.com/privacy-compliance/dpa",
@@ -16918,6 +20585,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "zscaler-trust-center",
+      "vendor_id": "zscaler",
+      "source_url": "https://www.zscaler.com/security",
+      "observed_at": "2026-07-13T20:38:29Z",
+      "observation_id": "zscaler-trust-center-2026-07-13-owner-source-completion-final",
+      "final_url": "https://www.zscaler.com/security",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:dd6612e3293ee4f7344b70d8ae58bb2d361a004b32b3d0efc5945b898d030050",
+      "normalized_text_sample_sha256": "sha256:a2e465a383995f2c7140ce8aa6f5201d002128c2821de246275e8cc523b2dd49",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     }
   ],
   "not_advice": true

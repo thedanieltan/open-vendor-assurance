@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/activecampaign/artifacts/activecampaign-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "activecampaign-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.activecampaign.com/legal/dpa",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "activecampaign-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "activecampaign"
+    },
+    {
       "_openva_path": "data/vendors/activecampaign/artifacts/activecampaign-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "activecampaign-privacy",
@@ -65,6 +95,36 @@
       "vendor_id": "activecampaign"
     },
     {
+      "_openva_path": "data/vendors/activecampaign/artifacts/activecampaign-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "artifact_id": "activecampaign-subprocessors-list",
+      "artifact_type": "subprocessors_list",
+      "canonical_url": "https://www.activecampaign.com/legal/subprocessors",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "activecampaign-subprocessors-list",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "activecampaign"
+    },
+    {
       "_openva_path": "data/vendors/activecampaign/artifacts/activecampaign-terms.yaml",
       "access_class": "public_web",
       "artifact_id": "activecampaign-terms",
@@ -95,10 +155,60 @@
         "screenshot_stored": false
       },
       "vendor_id": "activecampaign"
+    },
+    {
+      "_openva_path": "data/vendors/activecampaign/artifacts/activecampaign-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "activecampaign-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://www.activecampaign.com/security",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "activecampaign-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "activecampaign"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/activecampaign/sources/activecampaign-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.754674Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "activecampaign-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.activecampaign.com/legal/dpa",
+      "title_native": "DPA | ActiveCampaign",
+      "vendor_id": "activecampaign"
+    },
     {
       "_openva_path": "data/vendors/activecampaign/sources/activecampaign-privacy.yaml",
       "access_class": "public_web",
@@ -146,6 +256,26 @@
       "vendor_id": "activecampaign"
     },
     {
+      "_openva_path": "data/vendors/activecampaign/sources/activecampaign-subprocessors-list.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.700387Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "activecampaign-subprocessors-list",
+      "source_language": "en",
+      "source_type": "subprocessors_list",
+      "source_url": "https://www.activecampaign.com/legal/subprocessors",
+      "title_native": "subprocessors | ActiveCampaign",
+      "vendor_id": "activecampaign"
+    },
+    {
       "_openva_path": "data/vendors/activecampaign/sources/activecampaign-terms.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -167,9 +297,87 @@
       "title_en": "ActiveCampaign Terms of Service",
       "title_native": "ActiveCampaign Terms of Service",
       "vendor_id": "activecampaign"
+    },
+    {
+      "_openva_path": "data/vendors/activecampaign/sources/activecampaign-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.452848Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "activecampaign-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://www.activecampaign.com/security",
+      "title_native": "Security | ActiveCampaign",
+      "vendor_id": "activecampaign"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/activecampaign/changes/candidate-promotion-activecampaign-dpa.yaml",
+      "artifact_id": "activecampaign-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-activecampaign-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.754674Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "activecampaign-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "activecampaign"
+    },
+    {
+      "_openva_path": "data/vendors/activecampaign/changes/candidate-promotion-activecampaign-subprocessors-list.yaml",
+      "artifact_id": "activecampaign-subprocessors-list",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-activecampaign-subprocessors-list",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.700387Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "activecampaign-subprocessors-list",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "activecampaign"
+    },
+    {
+      "_openva_path": "data/vendors/activecampaign/changes/candidate-promotion-activecampaign-trust-center.yaml",
+      "artifact_id": "activecampaign-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-activecampaign-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.452848Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "activecampaign-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "activecampaign"
+    },
     {
       "_openva_path": "data/vendors/activecampaign/changes/owner-customer-engagement-expansion-1-activecampaign-privacy.yaml",
       "artifact_id": "activecampaign-privacy",
@@ -234,21 +442,111 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "dpa",
       "privacy_notice",
       "status_page",
-      "terms_of_service"
+      "subprocessors_list",
+      "terms_of_service",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/activecampaign/unavailable_sources/activecampaign-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://activecampaign.com",
+        "https://activecampaign.com/security/certifications",
+        "https://activecampaign.com/trust/certifications",
+        "https://activecampaign.com/compliance/certifications",
+        "https://www.activecampaign.com",
+        "https://www.activecampaign.com/security/certifications",
+        "https://www.activecampaign.com/trust/certifications",
+        "https://www.activecampaign.com/compliance/certifications",
+        "https://status.activecampaign.com",
+        "https://status.activecampaign.com/security/certifications",
+        "https://status.activecampaign.com/trust/certifications",
+        "https://status.activecampaign.com/compliance/certifications",
+        "https://www.status.activecampaign.com",
+        "https://www.status.activecampaign.com/security/certifications",
+        "https://www.status.activecampaign.com/trust/certifications",
+        "https://www.status.activecampaign.com/compliance/certifications",
+        "https://www.www.activecampaign.com",
+        "https://www.www.activecampaign.com/security/certifications",
+        "https://www.www.activecampaign.com/trust/certifications",
+        "https://www.www.activecampaign.com/compliance/certifications",
+        "https://www.activecampaign.com/legal/privacy-policy",
+        "https://www.activecampaign.com/legal/terms-of-service",
+        "https://status.activecampaign.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "activecampaign-certification-reference",
+      "vendor_id": "activecampaign"
+    },
+    {
+      "_openva_path": "data/vendors/activecampaign/unavailable_sources/activecampaign-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://activecampaign.com",
+        "https://activecampaign.com/compliance",
+        "https://activecampaign.com/security/compliance",
+        "https://activecampaign.com/trust/compliance",
+        "https://activecampaign.com/trust-center/compliance",
+        "https://www.activecampaign.com",
+        "https://www.activecampaign.com/compliance",
+        "https://www.activecampaign.com/security/compliance",
+        "https://www.activecampaign.com/trust/compliance",
+        "https://www.activecampaign.com/trust-center/compliance",
+        "https://status.activecampaign.com",
+        "https://status.activecampaign.com/compliance",
+        "https://status.activecampaign.com/security/compliance",
+        "https://status.activecampaign.com/trust/compliance",
+        "https://status.activecampaign.com/trust-center/compliance",
+        "https://www.status.activecampaign.com",
+        "https://www.status.activecampaign.com/compliance",
+        "https://www.status.activecampaign.com/security/compliance",
+        "https://www.status.activecampaign.com/trust/compliance",
+        "https://www.status.activecampaign.com/trust-center/compliance",
+        "https://www.www.activecampaign.com",
+        "https://www.www.activecampaign.com/compliance",
+        "https://www.www.activecampaign.com/security/compliance",
+        "https://www.www.activecampaign.com/trust/compliance",
+        "https://www.www.activecampaign.com/trust-center/compliance",
+        "https://www.activecampaign.com/legal/privacy-policy",
+        "https://www.activecampaign.com/legal/terms-of-service",
+        "https://status.activecampaign.com/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "activecampaign-compliance-page",
+      "vendor_id": "activecampaign"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/activecampaign/vendor.yaml",
     "catalog_status": "active",

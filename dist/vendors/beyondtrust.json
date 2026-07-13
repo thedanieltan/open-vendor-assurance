@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/beyondtrust/artifacts/beyondtrust-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "beyondtrust-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://www.beyondtrust.com/trust-center/industry-certifications",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "beyondtrust-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "beyondtrust"
+    },
+    {
+      "_openva_path": "data/vendors/beyondtrust/artifacts/beyondtrust-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "beyondtrust-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.beyondtrust.com/solutions/compliance",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "beyondtrust-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "beyondtrust"
+    },
+    {
       "_openva_path": "data/vendors/beyondtrust/artifacts/beyondtrust-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "beyondtrust-dpa",
@@ -140,6 +200,46 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/beyondtrust/sources/beyondtrust-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.210108Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "beyondtrust-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://www.beyondtrust.com/trust-center/industry-certifications",
+      "title_native": "Industry Certifications | BeyondTrust",
+      "vendor_id": "beyondtrust"
+    },
+    {
+      "_openva_path": "data/vendors/beyondtrust/sources/beyondtrust-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.193046Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "beyondtrust-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.beyondtrust.com/solutions/compliance",
+      "title_native": "Align with IT Compliance Mandates | BeyondTrust",
+      "vendor_id": "beyondtrust"
+    },
+    {
       "_openva_path": "data/vendors/beyondtrust/sources/beyondtrust-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -234,6 +334,40 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/beyondtrust/changes/candidate-promotion-beyondtrust-certification-reference.yaml",
+      "artifact_id": "beyondtrust-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-beyondtrust-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.210108Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "beyondtrust-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "beyondtrust"
+    },
+    {
+      "_openva_path": "data/vendors/beyondtrust/changes/candidate-promotion-beyondtrust-compliance-page.yaml",
+      "artifact_id": "beyondtrust-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-beyondtrust-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.193046Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "beyondtrust-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "beyondtrust"
+    },
+    {
       "_openva_path": "data/vendors/beyondtrust/changes/owner-security-identity-expansion-3-beyondtrust-dpa.yaml",
       "artifact_id": "beyondtrust-dpa",
       "catalog_change_significance": "unknown",
@@ -314,22 +448,124 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
+      "compliance_page",
       "dpa",
       "privacy_notice",
       "subprocessors_list",
       "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/beyondtrust/unavailable_sources/beyondtrust-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.beyondtrust.com",
+        "https://status.beyondtrust.com/status",
+        "https://status.beyondtrust.com/statuspage",
+        "https://status.beyondtrust.com/system-status",
+        "https://status.beyondtrust.com/service-status",
+        "https://status.beyondtrust.com/uptime",
+        "https://beyondtrust.com",
+        "https://beyondtrust.com/status",
+        "https://beyondtrust.com/statuspage",
+        "https://beyondtrust.com/system-status",
+        "https://beyondtrust.com/service-status",
+        "https://beyondtrust.com/uptime",
+        "https://www.beyondtrust.com",
+        "https://www.beyondtrust.com/status",
+        "https://www.beyondtrust.com/statuspage",
+        "https://www.beyondtrust.com/system-status",
+        "https://www.beyondtrust.com/service-status",
+        "https://www.beyondtrust.com/uptime",
+        "https://status.trustportal.beyondtrust.com",
+        "https://status.trustportal.beyondtrust.com/status",
+        "https://status.trustportal.beyondtrust.com/statuspage",
+        "https://status.trustportal.beyondtrust.com/system-status",
+        "https://status.trustportal.beyondtrust.com/service-status",
+        "https://status.trustportal.beyondtrust.com/uptime",
+        "https://trustportal.beyondtrust.com",
+        "https://trustportal.beyondtrust.com/status",
+        "https://trustportal.beyondtrust.com/statuspage",
+        "https://trustportal.beyondtrust.com/system-status",
+        "https://trustportal.beyondtrust.com/service-status",
+        "https://trustportal.beyondtrust.com/uptime",
+        "https://www.trustportal.beyondtrust.com",
+        "https://www.trustportal.beyondtrust.com/status",
+        "https://www.trustportal.beyondtrust.com/statuspage",
+        "https://www.trustportal.beyondtrust.com/system-status",
+        "https://www.trustportal.beyondtrust.com/service-status",
+        "https://www.trustportal.beyondtrust.com/uptime",
+        "https://www.beyondtrust.com/trust-center",
+        "https://www.beyondtrust.com/privacy-center"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "beyondtrust-status-page",
+      "vendor_id": "beyondtrust"
+    },
+    {
+      "_openva_path": "data/vendors/beyondtrust/unavailable_sources/beyondtrust-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://beyondtrust.com",
+        "https://beyondtrust.com/terms",
+        "https://beyondtrust.com/terms-of-service",
+        "https://beyondtrust.com/legal/terms",
+        "https://beyondtrust.com/legal/terms-of-service",
+        "https://beyondtrust.com/terms.html",
+        "https://www.beyondtrust.com",
+        "https://www.beyondtrust.com/terms",
+        "https://www.beyondtrust.com/terms-of-service",
+        "https://www.beyondtrust.com/legal/terms",
+        "https://www.beyondtrust.com/legal/terms-of-service",
+        "https://www.beyondtrust.com/terms.html",
+        "https://trustportal.beyondtrust.com",
+        "https://trustportal.beyondtrust.com/terms",
+        "https://trustportal.beyondtrust.com/terms-of-service",
+        "https://trustportal.beyondtrust.com/legal/terms",
+        "https://trustportal.beyondtrust.com/legal/terms-of-service",
+        "https://trustportal.beyondtrust.com/terms.html",
+        "https://www.trustportal.beyondtrust.com",
+        "https://www.trustportal.beyondtrust.com/terms",
+        "https://www.trustportal.beyondtrust.com/terms-of-service",
+        "https://www.trustportal.beyondtrust.com/legal/terms",
+        "https://www.trustportal.beyondtrust.com/legal/terms-of-service",
+        "https://www.trustportal.beyondtrust.com/terms.html",
+        "https://www.beyondtrust.com/trust-center",
+        "https://www.beyondtrust.com/privacy-center"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "beyondtrust-terms-of-service",
+      "vendor_id": "beyondtrust"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/beyondtrust/vendor.yaml",
     "catalog_status": "active",

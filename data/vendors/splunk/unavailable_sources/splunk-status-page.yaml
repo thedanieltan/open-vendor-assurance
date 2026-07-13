@@ -1,0 +1,34 @@
+schema_version: 0.1.0
+unavailable_source_id: splunk-status-page
+vendor_id: splunk
+source_type: status_page
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://status.splunk.com
+- https://status.splunk.com/status
+- https://status.splunk.com/statuspage
+- https://status.splunk.com/system-status
+- https://status.splunk.com/service-status
+- https://status.splunk.com/uptime
+- https://splunk.com
+- https://splunk.com/status
+- https://splunk.com/statuspage
+- https://splunk.com/system-status
+- https://splunk.com/service-status
+- https://splunk.com/uptime
+- https://www.splunk.com
+- https://www.splunk.com/status
+- https://www.splunk.com/statuspage
+- https://www.splunk.com/system-status
+- https://www.splunk.com/service-status
+- https://www.splunk.com/uptime
+- https://www.splunk.com/en_us/legal.html
+- https://www.splunk.com/en_us/about-splunk/splunk-security.html
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

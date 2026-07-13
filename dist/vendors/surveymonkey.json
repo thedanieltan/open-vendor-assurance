@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/surveymonkey/artifacts/surveymonkey-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "surveymonkey-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://www.surveymonkey.com/curiosity/security-is-the-cornerstone-for-building-trust-surveymonkey-achieves-iso-27001-certification/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "surveymonkey-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "surveymonkey"
+    },
+    {
+      "_openva_path": "data/vendors/surveymonkey/artifacts/surveymonkey-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "surveymonkey-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.surveymonkey.com/curiosity/axios-voting-certification/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "surveymonkey-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "surveymonkey"
+    },
+    {
       "_openva_path": "data/vendors/surveymonkey/artifacts/surveymonkey-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "surveymonkey-dpa",
@@ -124,6 +184,46 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/surveymonkey/sources/surveymonkey-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.497773Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "surveymonkey-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://www.surveymonkey.com/curiosity/security-is-the-cornerstone-for-building-trust-surveymonkey-achieves-iso-27001-certification/",
+      "title_native": "Security Is The Cornerstone For Building Trust—SurveyMonkey Achieves ISO 27001 Certification",
+      "vendor_id": "surveymonkey"
+    },
+    {
+      "_openva_path": "data/vendors/surveymonkey/sources/surveymonkey-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.480615Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "surveymonkey-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.surveymonkey.com/curiosity/axios-voting-certification/",
+      "title_native": "Axios|SurveyMonkey Poll: Voting Certification",
+      "vendor_id": "surveymonkey"
+    },
+    {
       "_openva_path": "data/vendors/surveymonkey/sources/surveymonkey-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -218,6 +318,40 @@
   ],
   "changes": [
     {
+      "_openva_path": "data/vendors/surveymonkey/changes/candidate-promotion-surveymonkey-certification-reference.yaml",
+      "artifact_id": "surveymonkey-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-surveymonkey-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.497773Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "surveymonkey-certification-reference",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "surveymonkey"
+    },
+    {
+      "_openva_path": "data/vendors/surveymonkey/changes/candidate-promotion-surveymonkey-compliance-page.yaml",
+      "artifact_id": "surveymonkey-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-surveymonkey-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.480615Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "surveymonkey-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "surveymonkey"
+    },
+    {
       "_openva_path": "data/vendors/surveymonkey/changes/regional-business-platforms-batch-1-surveymonkey-dpa.yaml",
       "artifact_id": "surveymonkey-dpa",
       "catalog_change_significance": "unknown",
@@ -298,22 +432,94 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "certification_reference",
+      "compliance_page",
       "dpa",
       "privacy_notice",
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/surveymonkey/unavailable_sources/surveymonkey-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.surveymonkey.com",
+        "https://status.surveymonkey.com/status",
+        "https://status.surveymonkey.com/statuspage",
+        "https://status.surveymonkey.com/system-status",
+        "https://status.surveymonkey.com/service-status",
+        "https://status.surveymonkey.com/uptime",
+        "https://surveymonkey.com",
+        "https://surveymonkey.com/status",
+        "https://surveymonkey.com/statuspage",
+        "https://surveymonkey.com/system-status",
+        "https://surveymonkey.com/service-status",
+        "https://surveymonkey.com/uptime",
+        "https://www.surveymonkey.com",
+        "https://www.surveymonkey.com/status",
+        "https://www.surveymonkey.com/statuspage",
+        "https://www.surveymonkey.com/system-status",
+        "https://www.surveymonkey.com/service-status",
+        "https://www.surveymonkey.com/uptime",
+        "https://www.surveymonkey.com/mp/legal/data-processing-agreement/",
+        "https://www.surveymonkey.com/mp/legal/subprocessors/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "surveymonkey-status-page",
+      "vendor_id": "surveymonkey"
+    },
+    {
+      "_openva_path": "data/vendors/surveymonkey/unavailable_sources/surveymonkey-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://surveymonkey.com",
+        "https://surveymonkey.com/terms",
+        "https://surveymonkey.com/terms-of-service",
+        "https://surveymonkey.com/legal/terms",
+        "https://surveymonkey.com/legal/terms-of-service",
+        "https://surveymonkey.com/terms.html",
+        "https://www.surveymonkey.com",
+        "https://www.surveymonkey.com/terms",
+        "https://www.surveymonkey.com/terms-of-service",
+        "https://www.surveymonkey.com/legal/terms",
+        "https://www.surveymonkey.com/legal/terms-of-service",
+        "https://www.surveymonkey.com/terms.html",
+        "https://www.surveymonkey.com/mp/legal/data-processing-agreement/",
+        "https://www.surveymonkey.com/mp/legal/subprocessors/"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "surveymonkey-terms-of-service",
+      "vendor_id": "surveymonkey"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/surveymonkey/vendor.yaml",
     "catalog_status": "active",

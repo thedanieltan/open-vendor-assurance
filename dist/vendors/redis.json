@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/redis/artifacts/redis-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "redis-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://redis.io/docs/latest/operate/rs/security/certificates/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "redis-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "redis"
+    },
+    {
       "_openva_path": "data/vendors/redis/artifacts/redis-privacy-notice.yaml",
       "access_class": "public_web",
       "artifact_id": "redis-privacy-notice",
@@ -29,10 +59,90 @@
         "screenshot_stored": false
       },
       "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/artifacts/redis-security-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "redis-security-page",
+      "artifact_type": "security_page",
+      "canonical_url": "https://redis.io/docs/latest/operate/rs/security/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "redis-security-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/artifacts/redis-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "redis-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://trust.redis.io",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "redis-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "redis"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/redis/sources/redis-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.241051Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "redis-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://redis.io/docs/latest/operate/rs/security/certificates/",
+      "title_native": "Certificates | Docs",
+      "vendor_id": "redis"
+    },
     {
       "_openva_path": "data/vendors/redis/sources/redis-privacy-notice.yaml",
       "access_class": "public_web",
@@ -52,9 +162,100 @@
       "source_url": "https://redis.io/legal/privacy-policy/",
       "title_native": "Privacy Policy",
       "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/sources/redis-security-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.433444Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "redis-security-page",
+      "source_language": "en",
+      "source_type": "security_page",
+      "source_url": "https://redis.io/docs/latest/operate/rs/security/",
+      "title_native": "Security | Docs",
+      "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/sources/redis-trust-center.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.448150Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "redis-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://trust.redis.io",
+      "title_native": "Redis Trust Center",
+      "vendor_id": "redis"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/redis/changes/candidate-promotion-redis-compliance-page.yaml",
+      "artifact_id": "redis-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-redis-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.241051Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "redis-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/changes/candidate-promotion-redis-security-page.yaml",
+      "artifact_id": "redis-security-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-redis-security-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.433444Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "redis-security-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/changes/candidate-promotion-redis-trust-center.yaml",
+      "artifact_id": "redis-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-redis-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.448150Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "redis-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "redis"
+    },
     {
       "_openva_path": "data/vendors/redis/changes/strict-growth-redis-privacy-notice.yaml",
       "artifact_id": "redis-privacy-notice",
@@ -85,19 +286,181 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 1,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "privacy_notice"
+      "compliance_page",
+      "privacy_notice",
+      "security_page",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 5,
+    "unavailable_source_types": [
+      "certification_reference",
+      "dpa",
+      "status_page",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/redis/unavailable_sources/redis-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://redis.io/security/certifications",
+        "https://redis.io/trust/certifications",
+        "https://redis.io/trust-center/certifications",
+        "https://redis.io/trustcenter/certifications",
+        "https://redis.io/compliance/certifications",
+        "https://redis.io/security/compliance",
+        "https://redis.io/trust/compliance",
+        "https://www.redis.io/security/certifications",
+        "https://www.redis.io/trust/certifications",
+        "https://www.redis.io/trust-center/certifications",
+        "https://www.redis.io/trustcenter/certifications",
+        "https://www.redis.io/compliance/certifications",
+        "https://www.redis.io/security/compliance",
+        "https://www.redis.io/trust/compliance",
+        "https://redis.io/blog/iso-certification",
+        "https://redis.io/blog/redis-cloud-pci-certification",
+        "https://redis.io/blog/redis-developer-certification-is-here",
+        "https://redis.io/blog/redis-earns-isoiec-42001-certification-for-responsible-ai-practices",
+        "https://redis.io/blog/redis-iso-27001-cybersecurity-certification",
+        "https://redis.io/blog/securing-redis-with-redis-enterprise-for-compliance-requirements"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:43:22Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "redis-certification-reference",
+      "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/unavailable_sources/redis-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://redis.io",
+        "https://redis.io/legal/data-processing-addendum",
+        "https://redis.io/data-processing-addendum",
+        "https://redis.io/legal/dpa",
+        "https://redis.io/dpa",
+        "https://redis.io/privacy/dpa",
+        "https://www.redis.io",
+        "https://www.redis.io/legal/data-processing-addendum",
+        "https://www.redis.io/data-processing-addendum",
+        "https://www.redis.io/legal/dpa",
+        "https://www.redis.io/dpa",
+        "https://www.redis.io/privacy/dpa"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "redis-dpa",
+      "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/unavailable_sources/redis-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.redis.io",
+        "https://status.redis.io/status",
+        "https://status.redis.io/statuspage",
+        "https://status.redis.io/system-status",
+        "https://status.redis.io/service-status",
+        "https://status.redis.io/uptime",
+        "https://redis.io",
+        "https://redis.io/status",
+        "https://redis.io/statuspage",
+        "https://redis.io/system-status",
+        "https://redis.io/service-status",
+        "https://redis.io/uptime",
+        "https://www.redis.io",
+        "https://www.redis.io/status",
+        "https://www.redis.io/statuspage",
+        "https://www.redis.io/system-status",
+        "https://www.redis.io/service-status",
+        "https://www.redis.io/uptime"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "redis-status-page",
+      "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/unavailable_sources/redis-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://redis.io",
+        "https://redis.io/legal/subprocessors",
+        "https://redis.io/subprocessors",
+        "https://redis.io/legal/sub-processors",
+        "https://redis.io/sub-processors",
+        "https://www.redis.io",
+        "https://www.redis.io/legal/subprocessors",
+        "https://www.redis.io/subprocessors",
+        "https://www.redis.io/legal/sub-processors",
+        "https://www.redis.io/sub-processors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "redis-subprocessors-list",
+      "vendor_id": "redis"
+    },
+    {
+      "_openva_path": "data/vendors/redis/unavailable_sources/redis-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://redis.io",
+        "https://redis.io/terms",
+        "https://redis.io/terms-of-service",
+        "https://redis.io/legal/terms",
+        "https://redis.io/legal/terms-of-service",
+        "https://redis.io/terms.html",
+        "https://www.redis.io",
+        "https://www.redis.io/terms",
+        "https://www.redis.io/terms-of-service",
+        "https://www.redis.io/legal/terms",
+        "https://www.redis.io/legal/terms-of-service",
+        "https://www.redis.io/terms.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "redis-terms-of-service",
+      "vendor_id": "redis"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/redis/vendor.yaml",
     "catalog_status": "active",

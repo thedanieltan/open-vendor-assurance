@@ -381,10 +381,80 @@
       "security_page",
       "subprocessors_list"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 2,
+    "unavailable_source_types": [
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/new-relic/unavailable_sources/new-relic-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.newrelic.com",
+        "https://status.newrelic.com/status",
+        "https://status.newrelic.com/statuspage",
+        "https://status.newrelic.com/system-status",
+        "https://status.newrelic.com/service-status",
+        "https://status.newrelic.com/uptime",
+        "https://newrelic.com",
+        "https://newrelic.com/status",
+        "https://newrelic.com/statuspage",
+        "https://newrelic.com/system-status",
+        "https://newrelic.com/service-status",
+        "https://newrelic.com/uptime",
+        "https://www.newrelic.com",
+        "https://www.newrelic.com/status",
+        "https://www.newrelic.com/statuspage",
+        "https://www.newrelic.com/system-status",
+        "https://www.newrelic.com/service-status",
+        "https://www.newrelic.com/uptime",
+        "https://newrelic.com/termsandconditions",
+        "https://newrelic.com/security"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "new-relic-status-page",
+      "vendor_id": "new-relic"
+    },
+    {
+      "_openva_path": "data/vendors/new-relic/unavailable_sources/new-relic-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://newrelic.com",
+        "https://newrelic.com/terms",
+        "https://newrelic.com/terms-of-service",
+        "https://newrelic.com/legal/terms",
+        "https://newrelic.com/legal/terms-of-service",
+        "https://newrelic.com/terms.html",
+        "https://www.newrelic.com",
+        "https://www.newrelic.com/terms",
+        "https://www.newrelic.com/terms-of-service",
+        "https://www.newrelic.com/legal/terms",
+        "https://www.newrelic.com/legal/terms-of-service",
+        "https://www.newrelic.com/terms.html",
+        "https://newrelic.com/termsandconditions",
+        "https://newrelic.com/security"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "new-relic-terms-of-service",
+      "vendor_id": "new-relic"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/new-relic/vendor.yaml",
     "catalog_status": "active",

@@ -1,0 +1,28 @@
+schema_version: 0.1.0
+unavailable_source_id: bill-com-terms-of-service
+vendor_id: bill-com
+source_type: terms_of_service
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://bill.com
+- https://bill.com/terms
+- https://bill.com/terms-of-service
+- https://bill.com/legal/terms
+- https://bill.com/legal/terms-of-service
+- https://bill.com/terms.html
+- https://www.bill.com
+- https://www.bill.com/terms
+- https://www.bill.com/terms-of-service
+- https://www.bill.com/legal/terms
+- https://www.bill.com/legal/terms-of-service
+- https://www.bill.com/terms.html
+- https://www.bill.com/legal
+- https://www.bill.com/security
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

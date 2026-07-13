@@ -388,10 +388,105 @@
       "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "status_page"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/adp/unavailable_sources/adp-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://adp.com",
+        "https://adp.com/security/certifications",
+        "https://adp.com/trust/certifications",
+        "https://adp.com/compliance/certifications",
+        "https://www.adp.com",
+        "https://www.adp.com/security/certifications",
+        "https://www.adp.com/trust/certifications",
+        "https://www.adp.com/compliance/certifications",
+        "https://www.adp.com/legal/data-privacy/data-processing-addendum.aspx",
+        "https://www.adp.com/legal/data-privacy/subprocessors.aspx"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "adp-certification-reference",
+      "vendor_id": "adp"
+    },
+    {
+      "_openva_path": "data/vendors/adp/unavailable_sources/adp-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://adp.com",
+        "https://adp.com/compliance",
+        "https://adp.com/security/compliance",
+        "https://adp.com/trust/compliance",
+        "https://adp.com/trust-center/compliance",
+        "https://www.adp.com",
+        "https://www.adp.com/compliance",
+        "https://www.adp.com/security/compliance",
+        "https://www.adp.com/trust/compliance",
+        "https://www.adp.com/trust-center/compliance",
+        "https://www.adp.com/legal/data-privacy/data-processing-addendum.aspx",
+        "https://www.adp.com/legal/data-privacy/subprocessors.aspx"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "adp-compliance-page",
+      "vendor_id": "adp"
+    },
+    {
+      "_openva_path": "data/vendors/adp/unavailable_sources/adp-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.adp.com",
+        "https://status.adp.com/status",
+        "https://status.adp.com/statuspage",
+        "https://status.adp.com/system-status",
+        "https://status.adp.com/service-status",
+        "https://status.adp.com/uptime",
+        "https://adp.com",
+        "https://adp.com/status",
+        "https://adp.com/statuspage",
+        "https://adp.com/system-status",
+        "https://adp.com/service-status",
+        "https://adp.com/uptime",
+        "https://www.adp.com",
+        "https://www.adp.com/status",
+        "https://www.adp.com/statuspage",
+        "https://www.adp.com/system-status",
+        "https://www.adp.com/service-status",
+        "https://www.adp.com/uptime",
+        "https://www.adp.com/legal/data-privacy/data-processing-addendum.aspx",
+        "https://www.adp.com/legal/data-privacy/subprocessors.aspx"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "adp-status-page",
+      "vendor_id": "adp"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/adp/vendor.yaml",
     "catalog_status": "active",

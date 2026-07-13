@@ -1,6 +1,36 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/pipedrive/artifacts/pipedrive-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "pipedrive-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.pipedrive.com/en/privacy/dpa",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "pipedrive-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "pipedrive"
+    },
+    {
       "_openva_path": "data/vendors/pipedrive/artifacts/pipedrive-privacy-notice.yaml",
       "access_class": "public_web",
       "artifact_id": "pipedrive-privacy-notice",
@@ -59,10 +89,60 @@
         "screenshot_stored": false
       },
       "vendor_id": "pipedrive"
+    },
+    {
+      "_openva_path": "data/vendors/pipedrive/artifacts/pipedrive-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "pipedrive-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://trustcenter.pipedrive.com",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "pipedrive-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "pipedrive"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/pipedrive/sources/pipedrive-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.198481Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "pipedrive-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.pipedrive.com/en/privacy/dpa",
+      "title_native": "Pipedrive Data Processing Addendum | Pipedrive",
+      "vendor_id": "pipedrive"
+    },
     {
       "_openva_path": "data/vendors/pipedrive/sources/pipedrive-privacy-notice.yaml",
       "access_class": "public_web",
@@ -102,9 +182,70 @@
       "source_url": "https://www.pipedrive.com/en/subprocessors",
       "title_native": "Sub-processors | Pipedrive",
       "vendor_id": "pipedrive"
+    },
+    {
+      "_openva_path": "data/vendors/pipedrive/sources/pipedrive-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:45.338250Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "pipedrive-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://trustcenter.pipedrive.com",
+      "title_native": "Trust Center | Pipedrive",
+      "vendor_id": "pipedrive"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/pipedrive/changes/candidate-promotion-pipedrive-dpa.yaml",
+      "artifact_id": "pipedrive-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-pipedrive-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.198481Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "pipedrive-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "pipedrive"
+    },
+    {
+      "_openva_path": "data/vendors/pipedrive/changes/candidate-promotion-pipedrive-trust-center.yaml",
+      "artifact_id": "pipedrive-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-pipedrive-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:45.338250Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "pipedrive-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "pipedrive"
+    },
     {
       "_openva_path": "data/vendors/pipedrive/changes/strict-growth-pipedrive-privacy-notice.yaml",
       "artifact_id": "pipedrive-privacy-notice",
@@ -152,20 +293,140 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 2,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 2,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "dpa",
       "privacy_notice",
-      "subprocessors_list"
+      "subprocessors_list",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 4,
+    "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
+      "status_page",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/pipedrive/unavailable_sources/pipedrive-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://pipedrive.com",
+        "https://pipedrive.com/security/certifications",
+        "https://pipedrive.com/trust/certifications",
+        "https://pipedrive.com/compliance/certifications",
+        "https://www.pipedrive.com",
+        "https://www.pipedrive.com/security/certifications",
+        "https://www.pipedrive.com/trust/certifications",
+        "https://www.pipedrive.com/compliance/certifications"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "pipedrive-certification-reference",
+      "vendor_id": "pipedrive"
+    },
+    {
+      "_openva_path": "data/vendors/pipedrive/unavailable_sources/pipedrive-compliance-page.yaml",
+      "candidate_urls_checked": [
+        "https://pipedrive.com",
+        "https://pipedrive.com/compliance",
+        "https://pipedrive.com/security/compliance",
+        "https://pipedrive.com/trust/compliance",
+        "https://pipedrive.com/trust-center/compliance",
+        "https://www.pipedrive.com",
+        "https://www.pipedrive.com/compliance",
+        "https://www.pipedrive.com/security/compliance",
+        "https://www.pipedrive.com/trust/compliance",
+        "https://www.pipedrive.com/trust-center/compliance"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "pipedrive-compliance-page",
+      "vendor_id": "pipedrive"
+    },
+    {
+      "_openva_path": "data/vendors/pipedrive/unavailable_sources/pipedrive-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.pipedrive.com",
+        "https://status.pipedrive.com/status",
+        "https://status.pipedrive.com/statuspage",
+        "https://status.pipedrive.com/system-status",
+        "https://status.pipedrive.com/service-status",
+        "https://status.pipedrive.com/uptime",
+        "https://pipedrive.com",
+        "https://pipedrive.com/status",
+        "https://pipedrive.com/statuspage",
+        "https://pipedrive.com/system-status",
+        "https://pipedrive.com/service-status",
+        "https://pipedrive.com/uptime",
+        "https://www.pipedrive.com",
+        "https://www.pipedrive.com/status",
+        "https://www.pipedrive.com/statuspage",
+        "https://www.pipedrive.com/system-status",
+        "https://www.pipedrive.com/service-status",
+        "https://www.pipedrive.com/uptime"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "pipedrive-status-page",
+      "vendor_id": "pipedrive"
+    },
+    {
+      "_openva_path": "data/vendors/pipedrive/unavailable_sources/pipedrive-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://pipedrive.com",
+        "https://pipedrive.com/terms",
+        "https://pipedrive.com/terms-of-service",
+        "https://pipedrive.com/legal/terms",
+        "https://pipedrive.com/legal/terms-of-service",
+        "https://pipedrive.com/terms.html",
+        "https://www.pipedrive.com",
+        "https://www.pipedrive.com/terms",
+        "https://www.pipedrive.com/terms-of-service",
+        "https://www.pipedrive.com/legal/terms",
+        "https://www.pipedrive.com/legal/terms-of-service",
+        "https://www.pipedrive.com/terms.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "pipedrive-terms-of-service",
+      "vendor_id": "pipedrive"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/pipedrive/vendor.yaml",
     "catalog_status": "active",

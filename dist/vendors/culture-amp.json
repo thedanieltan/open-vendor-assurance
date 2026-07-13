@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/culture-amp/artifacts/culture-amp-compliance-page.yaml",
+      "access_class": "public_web",
+      "artifact_id": "culture-amp-compliance-page",
+      "artifact_type": "compliance_page",
+      "canonical_url": "https://www.cultureamp.com/company/announcements/bcorp-recertification-2026",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "culture-amp-compliance-page",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "culture-amp"
+    },
+    {
+      "_openva_path": "data/vendors/culture-amp/artifacts/culture-amp-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "culture-amp-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.cultureamp.com/company/legal/data-processing-addendum",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "culture-amp-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "culture-amp"
+    },
+    {
       "_openva_path": "data/vendors/culture-amp/artifacts/culture-amp-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "culture-amp-privacy",
@@ -66,6 +126,46 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
+      "_openva_path": "data/vendors/culture-amp/sources/culture-amp-compliance-page.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.484470Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "culture-amp-compliance-page",
+      "source_language": "en",
+      "source_type": "compliance_page",
+      "source_url": "https://www.cultureamp.com/company/announcements/bcorp-recertification-2026",
+      "title_native": "Culture Amp Recertifies as a B Corp, Lifting Impact Score to 102 | Culture Amp",
+      "vendor_id": "culture-amp"
+    },
+    {
+      "_openva_path": "data/vendors/culture-amp/sources/culture-amp-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.905981Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "culture-amp-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.cultureamp.com/company/legal/data-processing-addendum",
+      "title_native": "Data Processing Addendum | Culture Amp",
+      "vendor_id": "culture-amp"
+    },
+    {
       "_openva_path": "data/vendors/culture-amp/sources/culture-amp-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -113,6 +213,40 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/culture-amp/changes/candidate-promotion-culture-amp-compliance-page.yaml",
+      "artifact_id": "culture-amp-compliance-page",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-culture-amp-compliance-page",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.484470Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "culture-amp-compliance-page",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "culture-amp"
+    },
+    {
+      "_openva_path": "data/vendors/culture-amp/changes/candidate-promotion-culture-amp-dpa.yaml",
+      "artifact_id": "culture-amp-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-culture-amp-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.905981Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "culture-amp-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "culture-amp"
+    },
     {
       "_openva_path": "data/vendors/culture-amp/changes/owner-source-maintenance-3-culture-amp-security.yaml",
       "artifact_id": "culture-amp-security",
@@ -177,20 +311,158 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 2,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 2,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
+      "compliance_page",
+      "dpa",
       "privacy_notice",
       "security_page"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 4,
+    "unavailable_source_types": [
+      "certification_reference",
+      "status_page",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/culture-amp/unavailable_sources/culture-amp-certification-reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.cultureamp.com/security/certifications",
+        "https://www.cultureamp.com/trust/certifications",
+        "https://www.cultureamp.com/trust-center/certifications",
+        "https://www.cultureamp.com/trustcenter/certifications",
+        "https://www.cultureamp.com/compliance/certifications",
+        "https://www.cultureamp.com/security/compliance",
+        "https://www.cultureamp.com/trust/compliance",
+        "https://cultureamp.com/security/certifications",
+        "https://cultureamp.com/trust/certifications",
+        "https://cultureamp.com/trust-center/certifications",
+        "https://cultureamp.com/trustcenter/certifications",
+        "https://cultureamp.com/compliance/certifications",
+        "https://cultureamp.com/security/compliance",
+        "https://cultureamp.com/trust/compliance",
+        "https://www.cultureamp.com/privacy-policy",
+        "https://www.cultureamp.com/security",
+        "https://cultureamp.com",
+        "https://www.cultureamp.com",
+        "https://cultureamp.com/sitemap.xml",
+        "https://cultureamp.com/sitemap_index.xml"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T17:38:40Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "culture-amp-certification-reference",
+      "vendor_id": "culture-amp"
+    },
+    {
+      "_openva_path": "data/vendors/culture-amp/unavailable_sources/culture-amp-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.cultureamp.com",
+        "https://status.cultureamp.com/status",
+        "https://status.cultureamp.com/statuspage",
+        "https://status.cultureamp.com/system-status",
+        "https://status.cultureamp.com/service-status",
+        "https://status.cultureamp.com/uptime",
+        "https://cultureamp.com",
+        "https://cultureamp.com/status",
+        "https://cultureamp.com/statuspage",
+        "https://cultureamp.com/system-status",
+        "https://cultureamp.com/service-status",
+        "https://cultureamp.com/uptime",
+        "https://www.cultureamp.com",
+        "https://www.cultureamp.com/status",
+        "https://www.cultureamp.com/statuspage",
+        "https://www.cultureamp.com/system-status",
+        "https://www.cultureamp.com/service-status",
+        "https://www.cultureamp.com/uptime",
+        "https://www.cultureamp.com/privacy-policy",
+        "https://www.cultureamp.com/security"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "culture-amp-status-page",
+      "vendor_id": "culture-amp"
+    },
+    {
+      "_openva_path": "data/vendors/culture-amp/unavailable_sources/culture-amp-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://cultureamp.com",
+        "https://cultureamp.com/legal/subprocessors",
+        "https://cultureamp.com/subprocessors",
+        "https://cultureamp.com/legal/sub-processors",
+        "https://cultureamp.com/sub-processors",
+        "https://www.cultureamp.com",
+        "https://www.cultureamp.com/legal/subprocessors",
+        "https://www.cultureamp.com/subprocessors",
+        "https://www.cultureamp.com/legal/sub-processors",
+        "https://www.cultureamp.com/sub-processors",
+        "https://www.cultureamp.com/privacy-policy",
+        "https://www.cultureamp.com/security"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "culture-amp-subprocessors-list",
+      "vendor_id": "culture-amp"
+    },
+    {
+      "_openva_path": "data/vendors/culture-amp/unavailable_sources/culture-amp-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://cultureamp.com",
+        "https://cultureamp.com/terms",
+        "https://cultureamp.com/terms-of-service",
+        "https://cultureamp.com/legal/terms",
+        "https://cultureamp.com/legal/terms-of-service",
+        "https://cultureamp.com/terms.html",
+        "https://www.cultureamp.com",
+        "https://www.cultureamp.com/terms",
+        "https://www.cultureamp.com/terms-of-service",
+        "https://www.cultureamp.com/legal/terms",
+        "https://www.cultureamp.com/legal/terms-of-service",
+        "https://www.cultureamp.com/terms.html",
+        "https://www.cultureamp.com/privacy-policy",
+        "https://www.cultureamp.com/security"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "culture-amp-terms-of-service",
+      "vendor_id": "culture-amp"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/culture-amp/vendor.yaml",
     "catalog_status": "active",

@@ -1,0 +1,21 @@
+schema_version: 0.1.0
+source_id: render-trust-center
+vendor_id: render
+source_type: trust_center
+source_authority_class: vendor_published
+title_native: Security and Trust | Render
+source_url: https://render.com/security
+source_language: en
+access_class: public_web
+rights_class: metadata_only
+provenance:
+  publisher: vendor
+  collected_at: '2026-07-13T17:45:45.470540Z'
+  observer: agent
+  confidence: high
+not_advice: true
+coverage_claims:
+- coverage_type: contains
+  evidence: The same official public page returned HTTP 200 and strong source-type-specific
+    semantic evidence for this role during bounded source-completion discovery.
+  role: security_page

@@ -1,0 +1,34 @@
+schema_version: 0.1.0
+unavailable_source_id: docker-status-page
+vendor_id: docker
+source_type: status_page
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://status.docker.com
+- https://status.docker.com/status
+- https://status.docker.com/statuspage
+- https://status.docker.com/system-status
+- https://status.docker.com/service-status
+- https://status.docker.com/uptime
+- https://docker.com
+- https://docker.com/status
+- https://docker.com/statuspage
+- https://docker.com/system-status
+- https://docker.com/service-status
+- https://docker.com/uptime
+- https://www.docker.com
+- https://www.docker.com/status
+- https://www.docker.com/statuspage
+- https://www.docker.com/system-status
+- https://www.docker.com/service-status
+- https://www.docker.com/uptime
+- https://www.docker.com/legal/
+- https://www.docker.com/trust/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true

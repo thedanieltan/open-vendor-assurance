@@ -1,6 +1,66 @@
 {
   "artifacts": [
     {
+      "_openva_path": "data/vendors/bigcommerce/artifacts/bigcommerce-certification-reference.yaml",
+      "access_class": "public_web",
+      "artifact_id": "bigcommerce-certification-reference",
+      "artifact_type": "certification_reference",
+      "canonical_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "bigcommerce-certification-reference",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "bigcommerce"
+    },
+    {
+      "_openva_path": "data/vendors/bigcommerce/artifacts/bigcommerce-dpa.yaml",
+      "access_class": "public_web",
+      "artifact_id": "bigcommerce-dpa",
+      "artifact_type": "dpa",
+      "canonical_url": "https://www.bigcommerce.com/apps/worldpay-wpg/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "bigcommerce-dpa",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "bigcommerce"
+    },
+    {
       "_openva_path": "data/vendors/bigcommerce/artifacts/bigcommerce-privacy-notice.yaml",
       "access_class": "public_web",
       "artifact_id": "bigcommerce-privacy-notice",
@@ -29,10 +89,80 @@
         "screenshot_stored": false
       },
       "vendor_id": "bigcommerce"
+    },
+    {
+      "_openva_path": "data/vendors/bigcommerce/artifacts/bigcommerce-trust-center.yaml",
+      "access_class": "public_web",
+      "artifact_id": "bigcommerce-trust-center",
+      "artifact_type": "trust_center",
+      "canonical_url": "https://security.bigcommerce.com/",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "bigcommerce-trust-center",
+      "source_language": "en",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "bigcommerce"
     }
   ],
   "candidate_sources": [],
   "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-certification-reference.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:42.222983Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "bigcommerce-certification-reference",
+      "source_language": "en",
+      "source_type": "certification_reference",
+      "source_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
+      "title_native": "Certification Reference",
+      "vendor_id": "bigcommerce"
+    },
+    {
+      "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-dpa.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:43.786690Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "bigcommerce-dpa",
+      "source_language": "en",
+      "source_type": "dpa",
+      "source_url": "https://www.bigcommerce.com/apps/worldpay-wpg/",
+      "title_native": "Worldpay WPG | BigCommerce Integrations",
+      "vendor_id": "bigcommerce"
+    },
     {
       "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-privacy-notice.yaml",
       "access_class": "public_web",
@@ -52,9 +182,87 @@
       "source_url": "https://bigcommerce.com/privacy",
       "title_native": "Privacy Policy | Commerce",
       "vendor_id": "bigcommerce"
+    },
+    {
+      "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-trust-center.yaml",
+      "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "security_page"
+        }
+      ],
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-13T17:45:44.577900Z",
+        "confidence": "high",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_published",
+      "source_id": "bigcommerce-trust-center",
+      "source_language": "en",
+      "source_type": "trust_center",
+      "source_url": "https://security.bigcommerce.com/",
+      "title_native": "Commerce Commerce Trust Center | Powered by SafeBase",
+      "vendor_id": "bigcommerce"
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/bigcommerce/changes/candidate-promotion-bigcommerce-certification-reference.yaml",
+      "artifact_id": "bigcommerce-certification-reference",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-bigcommerce-certification-reference",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:42.222983Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "bigcommerce-certification-reference",
+      "summary": "Owner-led source completion promoted a source-type-correct official certification reference after page-purpose review.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "bigcommerce"
+    },
+    {
+      "_openva_path": "data/vendors/bigcommerce/changes/candidate-promotion-bigcommerce-dpa.yaml",
+      "artifact_id": "bigcommerce-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-bigcommerce-dpa",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:43.786690Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "bigcommerce-dpa",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "bigcommerce"
+    },
+    {
+      "_openva_path": "data/vendors/bigcommerce/changes/candidate-promotion-bigcommerce-trust-center.yaml",
+      "artifact_id": "bigcommerce-trust-center",
+      "catalog_change_significance": "unknown",
+      "change_id": "candidate-promotion-bigcommerce-trust-center",
+      "change_type": "created",
+      "detected_at": "2026-07-13T17:45:44.577900Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "bigcommerce-trust-center",
+      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "bigcommerce"
+    },
     {
       "_openva_path": "data/vendors/bigcommerce/changes/strict-growth-bigcommerce-privacy-notice.yaml",
       "artifact_id": "bigcommerce-privacy-notice",
@@ -85,19 +293,115 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 1,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 1,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "privacy_notice"
+      "certification_reference",
+      "dpa",
+      "privacy_notice",
+      "trust_center"
     ],
-    "unavailable_source_count": 0,
-    "unavailable_source_types": []
+    "unavailable_source_count": 3,
+    "unavailable_source_types": [
+      "status_page",
+      "subprocessors_list",
+      "terms_of_service"
+    ]
   },
-  "unavailable_sources": [],
+  "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/bigcommerce/unavailable_sources/bigcommerce-status-page.yaml",
+      "candidate_urls_checked": [
+        "https://status.bigcommerce.com",
+        "https://status.bigcommerce.com/status",
+        "https://status.bigcommerce.com/statuspage",
+        "https://status.bigcommerce.com/system-status",
+        "https://status.bigcommerce.com/service-status",
+        "https://status.bigcommerce.com/uptime",
+        "https://bigcommerce.com",
+        "https://bigcommerce.com/status",
+        "https://bigcommerce.com/statuspage",
+        "https://bigcommerce.com/system-status",
+        "https://bigcommerce.com/service-status",
+        "https://bigcommerce.com/uptime",
+        "https://www.bigcommerce.com",
+        "https://www.bigcommerce.com/status",
+        "https://www.bigcommerce.com/statuspage",
+        "https://www.bigcommerce.com/system-status",
+        "https://www.bigcommerce.com/service-status",
+        "https://www.bigcommerce.com/uptime"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "status_page",
+      "status": "not_identified",
+      "unavailable_source_id": "bigcommerce-status-page",
+      "vendor_id": "bigcommerce"
+    },
+    {
+      "_openva_path": "data/vendors/bigcommerce/unavailable_sources/bigcommerce-subprocessors-list.yaml",
+      "candidate_urls_checked": [
+        "https://bigcommerce.com",
+        "https://bigcommerce.com/legal/subprocessors",
+        "https://bigcommerce.com/subprocessors",
+        "https://bigcommerce.com/legal/sub-processors",
+        "https://bigcommerce.com/sub-processors",
+        "https://www.bigcommerce.com",
+        "https://www.bigcommerce.com/legal/subprocessors",
+        "https://www.bigcommerce.com/subprocessors",
+        "https://www.bigcommerce.com/legal/sub-processors",
+        "https://www.bigcommerce.com/sub-processors"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "bigcommerce-subprocessors-list",
+      "vendor_id": "bigcommerce"
+    },
+    {
+      "_openva_path": "data/vendors/bigcommerce/unavailable_sources/bigcommerce-terms-of-service.yaml",
+      "candidate_urls_checked": [
+        "https://bigcommerce.com",
+        "https://bigcommerce.com/terms",
+        "https://bigcommerce.com/terms-of-service",
+        "https://bigcommerce.com/legal/terms",
+        "https://bigcommerce.com/legal/terms-of-service",
+        "https://bigcommerce.com/terms.html",
+        "https://www.bigcommerce.com",
+        "https://www.bigcommerce.com/terms",
+        "https://www.bigcommerce.com/terms-of-service",
+        "https://www.bigcommerce.com/legal/terms",
+        "https://www.bigcommerce.com/legal/terms-of-service",
+        "https://www.bigcommerce.com/terms.html"
+      ],
+      "next_review_after": "2026-10-11",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-13T20:36:54Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "terms_of_service",
+      "status": "not_identified",
+      "unavailable_source_id": "bigcommerce-terms-of-service",
+      "vendor_id": "bigcommerce"
+    }
+  ],
   "vendor": {
     "_openva_path": "data/vendors/bigcommerce/vendor.yaml",
     "catalog_status": "active",

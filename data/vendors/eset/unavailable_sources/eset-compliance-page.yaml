@@ -1,0 +1,27 @@
+schema_version: 0.1.0
+unavailable_source_id: eset-compliance-page
+vendor_id: eset
+source_type: compliance_page
+status: not_identified
+reason: distinct_public_url_not_identified
+candidate_urls_checked:
+- https://eset.com
+- https://eset.com/compliance
+- https://eset.com/security/compliance
+- https://eset.com/trust/compliance
+- https://eset.com/trust-center/compliance
+- https://www.eset.com
+- https://www.eset.com/compliance
+- https://www.eset.com/security/compliance
+- https://www.eset.com/trust/compliance
+- https://www.eset.com/trust-center/compliance
+- https://www.eset.com/int/policy-hub/privacy/
+- https://www.eset.com/int/about/technology/
+- https://status.eset.com/
+reviewed_at: '2026-07-13T20:36:54Z'
+reviewed_by: agent
+next_review_after: '2026-10-11'
+notes: No source-type-correct canonical public source was identified after bounded
+  official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA
+  search result, not a vendor quality or risk conclusion.
+not_advice: true
