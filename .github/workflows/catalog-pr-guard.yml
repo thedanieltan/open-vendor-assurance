@@ -7,9 +7,8 @@ on:
     types: [labeled]
 
 permissions:
-  contents: write
-  pull-requests: write
-  issues: write
+  contents: read
+  pull-requests: read
 
 concurrency:
   group: catalog-pr-guard-${{ github.event.pull_request.number }}-${{ github.event_name }}
@@ -17,7 +16,7 @@ concurrency:
 
 jobs:
   catalog-pr-guard:
-    if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Catalog:')
+    if: startsWith(github.event.pull_request.title, 'Catalog:')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -140,6 +139,10 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.event.pull_request.user.login == github.repository_owner &&
       startsWith(github.event.pull_request.head.ref, 'catalog/owner-')
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
     runs-on: ubuntu-latest
     timeout-minutes: 300
     env:
