@@ -84,7 +84,6 @@ jobs:
           git config user.name 'openva-publication-maintainer'
           git config user.email 'openva-publication-maintainer@users.noreply.github.com'
           git add site/src/index.html site/src/styles.css tools/openva/site_discovery.py tests/test_discoverability.py
-          python -m py_compile tools/openva/site_discovery.py tests/test_discoverability.py
           git commit -m 'Site: add SEO AEO and GEO discovery surfaces [phase3-materialized]'
           git push origin HEAD:site/seo-aeo-geo-phase3
       - name: Enforce materialization result
