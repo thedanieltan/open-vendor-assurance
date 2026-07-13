@@ -16,9 +16,9 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
-      JOB_ID: '86959357002'
+      JOB_ID: '86960745830'
     steps:
-      - name: Print live acceptance failure
+      - name: Print exact live endpoint failure
         run: |
           set -euo pipefail
           gh api "repos/$REPO/actions/jobs/$JOB_ID/logs" > /tmp/job.log
@@ -26,6 +26,7 @@ jobs:
           from pathlib import Path
           lines = Path('/tmp/job.log').read_text(encoding='utf-8', errors='replace').splitlines()
           tokens = (
+              'home:', 'manifest:', 'agent:', 'vendors:', 'sources:', 'observations:',
               'attempt ', 'not accepted', 'runtimeerror', 'traceback', 'http error',
               'urlerror', 'assertionerror', 'missing_vendors', 'missing_sources',
               'missing_observations', 'mixed deployed snapshots', 'count mismatch',
