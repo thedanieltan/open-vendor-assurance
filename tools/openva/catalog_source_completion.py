@@ -16,11 +16,17 @@ SCHEMA_VERSION = "0.1.0"
 REPORT_TYPE = "catalog_source_completion_report"
 EXPECTED_GROUPS: dict[str, frozenset[str]] = {
     "privacy_notice": frozenset({"privacy_notice"}),
+    "terms_of_service": frozenset({"terms_of_service"}),
+    "security_assurance": frozenset({"security_page", "trust_center", "compliance_page"}),
     "dpa": frozenset({"dpa"}),
     "subprocessors_list": frozenset({"subprocessors_list"}),
-    "security": frozenset({"security_page", "trust_center"}),
+    "status_page": frozenset({"status_page"}),
+    # Extended OpenVA coverage beyond the touched-vendor guard: preserve a
+    # distinct compliance/certification posture rather than treating every
+    # security page as equivalent to a compliance reference.
     "compliance": frozenset({"compliance_page", "certification_reference"}),
 }
+LIVE_REQUIRED_GROUPS = frozenset({"privacy_notice", "terms_of_service", "security_assurance"})
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -64,12 +70,18 @@ def canonical_coverage(vendor_dir: Path) -> tuple[set[str], set[str]]:
 
 
 def group_resolution(
-    covered_roles: set[str], unavailable_types: set[str], expected_types: frozenset[str]
+    group: str,
+    covered_roles: set[str],
+    unavailable_types: set[str],
+    expected_types: frozenset[str],
 ) -> str:
     if covered_roles & expected_types:
         return "canonical_source_or_claim"
+    if group in LIVE_REQUIRED_GROUPS:
+        return "unresolved"
     # Alternative groups are resolved as unavailable only after every supported
-    # alternative has an active evidence-backed unavailable record.
+    # alternative has an active evidence-backed unavailable record. Single-type
+    # groups naturally require one current record.
     if expected_types <= unavailable_types:
         return "evidenced_unavailable"
     return "unresolved"
@@ -80,7 +92,7 @@ def vendor_completion(vendor_dir: Path, *, today: date) -> dict[str, Any]:
     direct_types, covered_roles = canonical_coverage(vendor_dir)
     unavailable = current_unavailable_types(vendor_dir, today=today)
     resolutions = {
-        group: group_resolution(covered_roles, unavailable, expected)
+        group: group_resolution(group, covered_roles, unavailable, expected)
         for group, expected in EXPECTED_GROUPS.items()
     }
     unresolved = [group for group, resolution in resolutions.items() if resolution == "unresolved"]
@@ -124,7 +136,8 @@ def build_report(
         "as_of_date": today.isoformat(),
         "completion_rule": {
             "expected_source_groups": {key: sorted(value) for key, value in EXPECTED_GROUPS.items()},
-            "canonical_source_or_coverage_claim_or_evidenced_unavailable": True,
+            "live_required_groups": sorted(LIVE_REQUIRED_GROUPS),
+            "source_or_evidenced_unavailable_groups": sorted(set(EXPECTED_GROUPS) - set(LIVE_REQUIRED_GROUPS)),
             "accepted_coverage_claim_types": ["contains", "links_to"],
             "alternative_group_unavailable_requires_all_alternatives": True,
             "public_sources_only": True,
@@ -132,6 +145,7 @@ def build_report(
         },
         "summary": {
             "vendor_count": len(vendors),
+            "group_cell_count": len(vendors) * len(EXPECTED_GROUPS),
             "complete_vendor_count": sum(row["complete"] for row in vendors),
             "incomplete_vendor_count": sum(not row["complete"] for row in vendors),
             "unresolved_group_count": sum(len(row["unresolved_groups"]) for row in vendors),
