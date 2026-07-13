@@ -29,23 +29,36 @@ jobs:
         shell: bash
         run: |
           set +e
-          pip install PyYAML > phase3-materialize.log 2>&1
-          python - <<'PY' >> phase3-materialize.log 2>&1
+          python - <<'PY' > phase3-materialize.log 2>&1
           import subprocess
           from pathlib import Path
-          import yaml
 
-          workflow = yaml.safe_load(Path('.github/workflows/phase3-materialize.yml').read_text(encoding='utf-8'))
-          steps = workflow['jobs']['materialize']['steps']
-          selected = {
+          raw = Path('.github/workflows/phase3-materialize.yml').read_text(encoding='utf-8')
+          names = [
               'Extend homepage metadata and visible direct answers',
               'Extend deterministic discovery output',
               'Add discoverability acceptance tests',
-          }
-          for step in steps:
-              if step.get('name') in selected:
-                  print(f"RUNNING: {step['name']}", flush=True)
-                  subprocess.run(['bash', '-euo', 'pipefail', '-c', step['run']], check=True)
+          ]
+          for index, name in enumerate(names):
+              marker = f'      - name: {name}\n        run: |\n'
+              start = raw.index(marker) + len(marker)
+              next_positions = [
+                  raw.find(f'\n      - name: {candidate}', start)
+                  for candidate in names[index + 1:]
+              ]
+              next_positions.extend([
+                  raw.find('\n      - name: Validate generated discovery surface', start),
+                  raw.find('\n      - name: Commit phase 3 implementation', start),
+              ])
+              ends = [position for position in next_positions if position >= 0]
+              end = min(ends) if ends else len(raw)
+              block = raw[start:end]
+              script_lines = []
+              for line in block.splitlines():
+                  script_lines.append(line[10:] if line.startswith('          ') else line)
+              script = '\n'.join(script_lines) + '\n'
+              print(f'RUNNING: {name}', flush=True)
+              subprocess.run(['bash', '-euo', 'pipefail', '-c', script], check=True)
           PY
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
