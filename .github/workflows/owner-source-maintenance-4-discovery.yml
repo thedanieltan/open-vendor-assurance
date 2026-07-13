@@ -1,0 +1,368 @@
+name: owner-source-maintenance-4-discovery
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-maintenance-4
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-maintenance-4-discovery
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    if: ${{ !contains(github.event.head_commit.message, '[owner-maintenance-4-discovery-complete]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install discovery dependencies
+        run: pip install 'pyyaml>=6' 'requests>=2.32'
+      - name: Probe unresolved sources and discover official candidates
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import html
+          import json
+          import re
+          import time
+          import xml.etree.ElementTree as ET
+          from collections import defaultdict
+          from pathlib import Path
+          from urllib.parse import urljoin, urlsplit, urlunsplit
+
+          import requests
+          import yaml
+
+          ROOT = Path('.')
+          AUDIT = ROOT / 'maintenance/reviewed/owner-source-maintenance-4-audit.json'
+          OUT = ROOT / 'maintenance/reviewed/owner-source-maintenance-4-discovery.json'
+          audit = json.loads(AUDIT.read_text(encoding='utf-8'))
+
+          session = requests.Session()
+          session.headers.update({
+              'User-Agent': 'OpenVA-owner-source-maintenance/0.1 (+https://github.com/thedanieltan/open-vendor-assurance)',
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.5',
+          })
+
+          TARGET_REASONS = {'observed_not_found', 'quarantined_source', 'source_artifact_url_mismatch'}
+          BAD_PATH = re.compile(r'/(blog|news|press|events?|webinars?|customers?|case-stud|careers?|jobs?|community|forum|support|help|docs?|documentation|developer|academy|learn|resources?)/', re.I)
+          TITLE_RE = re.compile(r'<title[^>]*>(.*?)</title>', re.I | re.S)
+          HREF_RE = re.compile(r'href=["\']([^"\']+)["\']', re.I)
+          LOC_RE = re.compile(r'<loc>\s*(.*?)\s*</loc>', re.I | re.S)
+
+          TYPE_TERMS = {
+              'privacy_notice': ['privacy notice', 'privacy policy', 'privacy statement', 'privacy'],
+              'dpa': ['data processing addendum', 'data processing agreement', 'dpa'],
+              'subprocessors_list': ['subprocessor list', 'subprocessors', 'sub-processor', 'sub processor'],
+              'security_page': ['security', 'information security'],
+              'compliance_overview': ['compliance', 'trust center', 'trust centre', 'security compliance'],
+              'trust_center': ['trust center', 'trust centre', 'trust'],
+              'certifications': ['certifications', 'certificates', 'compliance'],
+              'status_page': ['status', 'service status', 'system status'],
+              'terms_of_service': ['terms of service', 'terms and conditions', 'terms of use', 'legal terms'],
+              'cookie_notice': ['cookie policy', 'cookie notice', 'cookies'],
+              'other_public_source': [],
+          }
+
+          COMMON_PATHS = {
+              'privacy_notice': ['/privacy', '/privacy-policy', '/privacy-notice', '/legal/privacy', '/legal/privacy-policy', '/company/privacy', '/company/privacy-policy'],
+              'dpa': ['/dpa', '/legal/dpa', '/data-processing-addendum', '/legal/data-processing-addendum', '/data-processing-agreement', '/legal/data-processing-agreement'],
+              'subprocessors_list': ['/subprocessors', '/legal/subprocessors', '/subprocessor-list', '/legal/subprocessor-list', '/trust/subprocessors', '/trust-center/subprocessors'],
+              'security_page': ['/security', '/company/security', '/trust/security', '/security-and-trust'],
+              'compliance_overview': ['/compliance', '/security/compliance', '/trust', '/trust-center'],
+              'trust_center': ['/trust', '/trust-center', '/trust-centre', '/security'],
+              'certifications': ['/certifications', '/security/certifications', '/compliance'],
+              'status_page': ['/status'],
+              'terms_of_service': ['/terms', '/terms-of-service', '/terms-of-use', '/legal/terms', '/legal/terms-of-service'],
+              'cookie_notice': ['/cookies', '/cookie-policy', '/legal/cookie-policy'],
+          }
+
+          def load_yaml(path):
+              return yaml.safe_load(Path(path).read_text(encoding='utf-8')) or {}
+
+          def clean_text(value):
+              value = html.unescape(value or '')
+              value = re.sub(r'<[^>]+>', ' ', value)
+              return re.sub(r'\s+', ' ', value).strip()
+
+          def normalize_url(value):
+              if not isinstance(value, str) or not value.strip():
+                  return None
+              try:
+                  p = urlsplit(value.strip())
+                  host = (p.hostname or '').lower()
+                  scheme = (p.scheme or 'https').lower()
+                  port = p.port
+                  netloc = host
+                  if port and not ((scheme == 'https' and port == 443) or (scheme == 'http' and port == 80)):
+                      netloc = f'{host}:{port}'
+                  path = p.path or '/'
+                  if path != '/':
+                      path = path.rstrip('/')
+                  return urlunsplit((scheme, netloc, path, p.query, ''))
+              except Exception:
+                  return value.strip()
+
+          def host_allowed(host, allowed_hosts):
+              host = (host or '').lower().rstrip('.')
+              return any(host == allowed or host.endswith('.' + allowed) for allowed in allowed_hosts)
+
+          def fetch(url, *, timeout=12, max_bytes=1_500_000):
+              result = {
+                  'requested_url': url,
+                  'status': None,
+                  'final_url': None,
+                  'content_type': None,
+                  'title': None,
+                  'body_sample': None,
+                  'error': None,
+              }
+              try:
+                  response = session.get(url, timeout=timeout, allow_redirects=True, stream=True)
+                  result['status'] = response.status_code
+                  result['final_url'] = response.url
+                  result['content_type'] = response.headers.get('content-type')
+                  chunks = []
+                  size = 0
+                  for chunk in response.iter_content(65536):
+                      if not chunk:
+                          continue
+                      chunks.append(chunk)
+                      size += len(chunk)
+                      if size >= max_bytes:
+                          break
+                  raw = b''.join(chunks)
+                  text = raw.decode(response.encoding or 'utf-8', errors='replace')
+                  match = TITLE_RE.search(text)
+                  result['title'] = clean_text(match.group(1)) if match else None
+                  result['body_sample'] = clean_text(text[:200000])[:5000]
+              except Exception as exc:
+                  result['error'] = f'{type(exc).__name__}: {exc}'
+              return result
+
+          def extract_links(base_url, text, allowed_hosts):
+              links = set()
+              for href in HREF_RE.findall(text or ''):
+                  href = html.unescape(href.strip())
+                  if not href or href.startswith(('#', 'mailto:', 'tel:', 'javascript:')):
+                      continue
+                  absolute = normalize_url(urljoin(base_url, href))
+                  if not absolute:
+                      continue
+                  parsed = urlsplit(absolute)
+                  if parsed.scheme in {'http', 'https'} and host_allowed(parsed.hostname, allowed_hosts):
+                      links.add(absolute)
+              return links
+
+          def extract_sitemap_urls(text):
+              urls = []
+              try:
+                  root = ET.fromstring(text)
+                  for elem in root.iter():
+                      if elem.tag.lower().endswith('loc') and elem.text:
+                          urls.append(elem.text.strip())
+              except Exception:
+                  urls.extend(clean_text(value) for value in LOC_RE.findall(text or ''))
+              return [url for url in urls if url]
+
+          def semantic_score(url, title, body, source_type):
+              haystack = ' '.join([url or '', title or '', (body or '')[:2000]]).lower()
+              path = (urlsplit(url).path or '/').lower()
+              terms = TYPE_TERMS.get(source_type, [])
+              score = 0
+              matched = []
+              for term in terms:
+                  if term in path.replace('-', ' ').replace('_', ' '):
+                      score += 8
+                      matched.append(f'path:{term}')
+                  elif term in (title or '').lower():
+                      score += 6
+                      matched.append(f'title:{term}')
+                  elif term in haystack:
+                      score += 2
+                      matched.append(f'body:{term}')
+              if BAD_PATH.search(path + '/'):
+                  score -= 12
+                  matched.append('disqualifier:editorial_or_support_path')
+              if path in {'/', ''}:
+                  score -= 6
+                  matched.append('disqualifier:homepage')
+              if source_type == 'status_page' and (urlsplit(url).hostname or '').startswith('status.'):
+                  score += 8
+                  matched.append('host:status')
+              if source_type in {'trust_center', 'compliance_overview'} and 'trust' in (urlsplit(url).hostname or ''):
+                  score += 4
+                  matched.append('host:trust')
+              return score, matched
+
+          target_candidates = [
+              row for row in audit.get('candidates', [])
+              if TARGET_REASONS.intersection(row.get('reasons') or [])
+          ]
+          vendors = defaultdict(list)
+          for row in target_candidates:
+              vendors[row['vendor_id']].append(row)
+
+          results = []
+          vendor_discovery = {}
+
+          for vendor_id, rows in sorted(vendors.items()):
+              vendor_path = ROOT / 'data' / 'vendors' / vendor_id / 'vendor.yaml'
+              vendor = load_yaml(vendor_path) if vendor_path.exists() else {}
+              official_domains = [str(x).lower().strip() for x in vendor.get('official_domains') or [] if x]
+              public_entrypoints = [str(x) for x in vendor.get('public_entrypoints') or [] if x]
+              current_urls = [str(row.get('source_url')) for row in rows if row.get('source_url')]
+              allowed_hosts = set(official_domains)
+              for value in public_entrypoints + current_urls:
+                  host = urlsplit(value).hostname
+                  if host:
+                      allowed_hosts.add(host.lower())
+              allowed_hosts = sorted(allowed_hosts)
+
+              discovered = set(normalize_url(x) for x in public_entrypoints if normalize_url(x))
+              seed_urls = []
+              for domain in official_domains[:3]:
+                  seed_urls.extend([f'https://{domain}/', f'https://www.{domain}/'])
+              seed_urls.extend(public_entrypoints[:10])
+
+              fetched_seeds = []
+              sitemap_candidates = set()
+              for seed in list(dict.fromkeys(seed_urls))[:12]:
+                  probe = fetch(seed, timeout=10, max_bytes=800_000)
+                  fetched_seeds.append({k: probe[k] for k in ('requested_url', 'status', 'final_url', 'title', 'error')})
+                  if probe.get('status') and 200 <= probe['status'] < 400:
+                      final = probe.get('final_url') or seed
+                      discovered.update(extract_links(final, probe.get('body_sample') or '', allowed_hosts))
+                      base = f'{urlsplit(final).scheme}://{urlsplit(final).netloc}'
+                      sitemap_candidates.update({urljoin(base, '/sitemap.xml'), urljoin(base, '/sitemap_index.xml'), urljoin(base, '/robots.txt')})
+
+              sitemap_urls = set()
+              for sitemap_url in sorted(sitemap_candidates)[:12]:
+                  probe = fetch(sitemap_url, timeout=10, max_bytes=1_200_000)
+                  if not probe.get('status') or not (200 <= probe['status'] < 400):
+                      continue
+                  body = probe.get('body_sample') or ''
+                  urls = extract_sitemap_urls(body)
+                  for url in urls[:3000]:
+                      normalized = normalize_url(url)
+                      if normalized and host_allowed(urlsplit(normalized).hostname, allowed_hosts):
+                          sitemap_urls.add(normalized)
+
+              discovered.update(sitemap_urls)
+              vendor_discovery[vendor_id] = {
+                  'allowed_hosts': allowed_hosts,
+                  'seed_results': fetched_seeds,
+                  'discovered_url_count': len(discovered),
+              }
+
+              for row in sorted(rows, key=lambda item: item['source_id']):
+                  source_type = str(row.get('source_type') or '')
+                  source_url = str(row.get('source_url') or '')
+                  source_probe = fetch(source_url, timeout=15) if source_url else {'status': None, 'error': 'missing source URL'}
+                  artifact_probes = []
+                  for artifact in row.get('artifact_records') or []:
+                      artifact_url = artifact.get('canonical_url')
+                      if artifact_url:
+                          artifact_probes.append({**artifact, 'probe': fetch(str(artifact_url), timeout=15)})
+
+                  candidate_urls = set(discovered)
+                  for domain in allowed_hosts:
+                      for path in COMMON_PATHS.get(source_type, []):
+                          candidate_urls.add(normalize_url(f'https://{domain}{path}'))
+                  candidate_urls.discard(normalize_url(source_url))
+
+                  scored = []
+                  for candidate_url in candidate_urls:
+                      if not candidate_url or not host_allowed(urlsplit(candidate_url).hostname, allowed_hosts):
+                          continue
+                      pre_score, pre_matches = semantic_score(candidate_url, '', '', source_type)
+                      if pre_score < 0 and source_type != 'other_public_source':
+                          continue
+                      scored.append((pre_score, candidate_url, pre_matches))
+                  scored.sort(key=lambda item: (-item[0], item[1]))
+
+                  live_candidates = []
+                  for _, candidate_url, _ in scored[:8]:
+                      probe = fetch(candidate_url, timeout=12)
+                      if not probe.get('status') or not (200 <= probe['status'] < 400):
+                          continue
+                      final_url = normalize_url(probe.get('final_url') or candidate_url)
+                      if not final_url or not host_allowed(urlsplit(final_url).hostname, allowed_hosts):
+                          continue
+                      score, matches = semantic_score(final_url, probe.get('title'), probe.get('body_sample'), source_type)
+                      live_candidates.append({
+                          'candidate_url': candidate_url,
+                          'final_url': final_url,
+                          'status': probe.get('status'),
+                          'content_type': probe.get('content_type'),
+                          'title': probe.get('title'),
+                          'score': score,
+                          'matches': matches,
+                      })
+                  live_candidates.sort(key=lambda item: (-item['score'], item['final_url']))
+
+                  source_status = source_probe.get('status')
+                  source_live = bool(source_status and 200 <= source_status < 400)
+                  best = live_candidates[0] if live_candidates else None
+                  auto_eligible = bool(
+                      not source_live
+                      and source_status in {404, 410}
+                      and best
+                      and best['score'] >= 8
+                      and not any(match.startswith('disqualifier:') for match in best['matches'])
+                      and normalize_url(best['final_url']) != normalize_url(source_url)
+                  )
+                  results.append({
+                      'vendor_id': vendor_id,
+                      'source_id': row['source_id'],
+                      'source_type': source_type,
+                      'reasons': row.get('reasons') or [],
+                      'source_url': source_url,
+                      'source_probe': source_probe,
+                      'artifact_probes': artifact_probes,
+                      'live_candidates': live_candidates[:5],
+                      'best_candidate': best,
+                      'auto_eligible': auto_eligible,
+                  })
+                  time.sleep(0.05)
+
+          report = {
+              'schema_version': '0.1.0',
+              'report_type': 'owner_source_maintenance_discovery',
+              'base_commit': '${{ github.sha }}',
+              'target_count': len(target_candidates),
+              'vendor_count': len(vendors),
+              'auto_eligible_count': sum(1 for row in results if row['auto_eligible']),
+              'source_live_count': sum(1 for row in results if row.get('source_probe', {}).get('status') and 200 <= row['source_probe']['status'] < 400),
+              'confirmed_not_found_count': sum(1 for row in results if row.get('source_probe', {}).get('status') in {404, 410}),
+              'vendor_discovery': vendor_discovery,
+              'results': results,
+              'not_advice': True,
+          }
+          OUT.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps({
+              'target_count': report['target_count'],
+              'vendor_count': report['vendor_count'],
+              'source_live_count': report['source_live_count'],
+              'confirmed_not_found_count': report['confirmed_not_found_count'],
+              'auto_eligible_count': report['auto_eligible_count'],
+          }, indent=2, sort_keys=True))
+          PY
+      - name: Commit discovery and remove runner
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/owner-source-maintenance-4-discovery.yml
+          git config user.name 'openva-owner-catalog'
+          git config user.email 'openva-owner-catalog@users.noreply.github.com'
+          git add -A
+          git commit -m 'Catalog: discover official replacements [owner-maintenance-4-discovery-complete]'
+          git push
