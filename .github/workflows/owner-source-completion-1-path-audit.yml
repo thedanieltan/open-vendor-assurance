@@ -1,0 +1,115 @@
+name: owner-source-completion-1-path-audit
+
+on:
+  push:
+    branches:
+      - catalog/owner-source-completion-1-builder
+
+permissions:
+  contents: write
+
+concurrency:
+  group: owner-source-completion-1-path-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-source-completion-1-builder
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Audit page purpose and path shape
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          import yaml
+
+          root = Path('.')
+          audit = json.loads((root / '.owner-source-completion-1/results/adversarial-audit.json').read_text(encoding='utf-8'))
+          editorial_segments = {
+              'blog', 'blogs', 'article', 'articles', 'news', 'press', 'faq', 'faqs',
+              'webinar', 'webinars', 'event', 'events', 'academy', 'learn', 'podcast',
+              'case-study', 'case-studies', 'customer-stories', 'integrations', 'marketplace'
+          }
+          purpose_terms = {
+              'dpa': {'dpa', 'data-processing', 'data-processing-agreement', 'data-processing-addendum'},
+              'subprocessors_list': {'subprocessor', 'subprocessors', 'sub-processors', 'third-party-processors'},
+              'privacy_notice': {'privacy', 'privacy-policy', 'privacy-notice'},
+              'security_page': {'security', 'trust', 'secure'},
+              'trust_center': {'trust', 'trust-center', 'trustcenter', 'security'},
+              'compliance_page': {'compliance', 'trust', 'security', 'soc', 'iso', 'certification'},
+              'certification_reference': {'certification', 'certifications', 'certificate', 'certificates', 'soc2', 'iso27001', 'iso-27001', 'compliance', 'trust'},
+          }
+          specialized = set(purpose_terms)
+          rows = []
+          for source in audit.get('sources') or []:
+              url = str(source.get('source_url') or '')
+              parsed = urlsplit(url)
+              host = (parsed.hostname or '').lower().removeprefix('www.')
+              segments = [part.lower() for part in parsed.path.split('/') if part]
+              source_type = str(source.get('source_type') or '')
+              vendor_id = str(source.get('vendor_id') or '')
+              vendor_path = root / 'data' / 'vendors' / vendor_id / 'vendor.yaml'
+              vendor = yaml.safe_load(vendor_path.read_text(encoding='utf-8')) if vendor_path.exists() else {}
+              official = {(str(item).lower().removeprefix('www.')) for item in (vendor.get('official_domains') or [])}
+              is_primary_homepage = not segments and host in official
+              is_specialized_subdomain = any(token in host.split('.')[0] for token in ('trust', 'security', 'compliance', 'privacy', 'legal'))
+              editorial_hits = sorted(set(segments) & editorial_segments)
+              path_text = '-'.join(segments)
+              purpose_hit = any(term in path_text for term in purpose_terms.get(source_type, set()))
+              reasons = []
+              if source_type in specialized and is_primary_homepage and not is_specialized_subdomain:
+                  reasons.append('generic_primary_homepage')
+              if editorial_hits:
+                  reasons.append('editorial_or_marketplace_path')
+              if source_type in specialized and segments and not purpose_hit and not is_specialized_subdomain:
+                  reasons.append('path_lacks_source_purpose_term')
+              if reasons:
+                  rows.append({
+                      'vendor_id': vendor_id,
+                      'source_id': source.get('source_id'),
+                      'source_type': source_type,
+                      'source_url': url,
+                      'final_url': source.get('final_url'),
+                      'title_detected': source.get('title_detected'),
+                      'verification_status': source.get('verification_status'),
+                      'semantic_match': source.get('semantic_match'),
+                      'reasons': reasons,
+                      'editorial_segments': editorial_hits,
+                      'is_primary_homepage': is_primary_homepage,
+                      'is_specialized_subdomain': is_specialized_subdomain,
+                  })
+          rows.sort(key=lambda row: (row['vendor_id'], row['source_id']))
+          output = {
+              'schema_version': '0.1.0',
+              'report_type': 'owner_source_completion_page_purpose_audit',
+              'summary': {
+                  'added_sources_evaluated': len(audit.get('sources') or []),
+                  'suspicious_page_purpose_count': len(rows),
+                  'generic_primary_homepage_count': sum('generic_primary_homepage' in row['reasons'] for row in rows),
+                  'editorial_or_marketplace_count': sum('editorial_or_marketplace_path' in row['reasons'] for row in rows),
+                  'path_lacks_source_purpose_term_count': sum('path_lacks_source_purpose_term' in row['reasons'] for row in rows),
+              },
+              'sources': rows,
+              'not_advice': True,
+          }
+          path = root / '.owner-source-completion-1/results/page-purpose-audit.json'
+          path.write_text(json.dumps(output, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps(output['summary'], indent=2, sort_keys=True))
+          PY
+      - name: Remove temporary workflow and commit evidence
+        run: |
+          rm .github/workflows/owner-source-completion-1-path-audit.yml
+          git config user.name "openva-owner-maintenance-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Catalog: audit completed source page purpose"
+          git push origin HEAD:catalog/owner-source-completion-1-builder
