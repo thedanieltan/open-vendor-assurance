@@ -1,0 +1,1569 @@
+{
+  "generated_at": "2026-07-13T17:27:24.024245Z",
+  "posture": {
+    "network_fetch_performed": false,
+    "non_advisory": true,
+    "writes_canonical_sources": false,
+    "writes_canonical_vendors": false,
+    "writes_repository_state": false
+  },
+  "report_type": "vendor_candidate_discovery_report",
+  "schema_version": "0.1.0",
+  "summary": {
+    "breadth_candidate_count": 0,
+    "candidate_vendor_count": 95,
+    "catalog_vendor_count_cap": null,
+    "invalid_breadth_candidate_count": 0,
+    "known_vendor_count": 233,
+    "seed_candidate_count": 95
+  },
+  "vendor_candidates": [
+    {
+      "candidate_vendor_id": "ovhcloud",
+      "cohort_id": "cloud-platforms-launch",
+      "coverage_lane": "cloud_platforms",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "OVHcloud",
+      "headquarters_country_candidate": "FR",
+      "non_advisory": true,
+      "official_domain_candidate": "ovhcloud.com",
+      "requires_review": true,
+      "source_index_url": "https://ovhcloud.com",
+      "vendor_category_candidates": [
+        "cloud_infrastructure"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "sakura-internet",
+      "cohort_id": "cloud-platforms-launch",
+      "coverage_lane": "cloud_platforms",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Sakura Internet",
+      "headquarters_country_candidate": "JP",
+      "non_advisory": true,
+      "official_domain_candidate": "sakura.ad.jp",
+      "requires_review": true,
+      "source_index_url": "https://sakura.ad.jp",
+      "vendor_category_candidates": [
+        "cloud_infrastructure"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "icertis",
+      "cohort_id": "commerce-content-docs-launch",
+      "coverage_lane": "commerce_content_docs",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Icertis",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "icertis.com",
+      "requires_review": true,
+      "source_index_url": "https://icertis.com",
+      "vendor_category_candidates": [
+        "document_workflow"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "tiendanube",
+      "cohort_id": "commerce-content-docs-launch",
+      "coverage_lane": "commerce_content_docs",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Tiendanube",
+      "headquarters_country_candidate": "AR",
+      "non_advisory": true,
+      "official_domain_candidate": "tiendanube.com",
+      "requires_review": true,
+      "source_index_url": "https://tiendanube.com",
+      "vendor_category_candidates": [
+        "ecommerce_platform"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "woocommerce",
+      "cohort_id": "commerce-content-docs-launch",
+      "coverage_lane": "commerce_content_docs",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "WooCommerce",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "woocommerce.com",
+      "requires_review": true,
+      "source_index_url": "https://woocommerce.com",
+      "vendor_category_candidates": [
+        "ecommerce_platform"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "user-com",
+      "cohort_id": "crm-customer-marketing-launch",
+      "coverage_lane": "crm_customer_marketing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "User.com",
+      "headquarters_country_candidate": "PL",
+      "non_advisory": true,
+      "official_domain_candidate": "user.com",
+      "requires_review": true,
+      "source_index_url": "https://user.com",
+      "vendor_category_candidates": [
+        "customer_engagement",
+        "marketing_technology"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "aleph-alpha",
+      "cohort_id": "data-ai-launch",
+      "coverage_lane": "data_ai",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Aleph Alpha",
+      "headquarters_country_candidate": "DE",
+      "non_advisory": true,
+      "official_domain_candidate": "aleph-alpha.com",
+      "requires_review": true,
+      "source_index_url": "https://aleph-alpha.com",
+      "vendor_category_candidates": [
+        "ai_platform"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "mindsdb",
+      "cohort_id": "data-ai-launch",
+      "coverage_lane": "data_ai",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "MindsDB",
+      "headquarters_country_candidate": "GB",
+      "non_advisory": true,
+      "official_domain_candidate": "mindsdb.com",
+      "requires_review": true,
+      "source_index_url": "https://mindsdb.com",
+      "vendor_category_candidates": [
+        "ai_platform",
+        "database"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "bigid",
+      "cohort_id": "grc-privacy-trust-launch",
+      "coverage_lane": "grc_privacy_trust",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "BigID",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "bigid.com",
+      "requires_review": true,
+      "source_index_url": "https://bigid.com",
+      "vendor_category_candidates": [
+        "grc_privacy",
+        "data_platform"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "clausematch",
+      "cohort_id": "grc-privacy-trust-launch",
+      "coverage_lane": "grc_privacy_trust",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Clausematch",
+      "headquarters_country_candidate": "GB",
+      "non_advisory": true,
+      "official_domain_candidate": "clausematch.com",
+      "requires_review": true,
+      "source_index_url": "https://clausematch.com",
+      "vendor_category_candidates": [
+        "grc_privacy"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "consentmanager",
+      "cohort_id": "grc-privacy-trust-launch",
+      "coverage_lane": "grc_privacy_trust",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "consentmanager",
+      "headquarters_country_candidate": "DE",
+      "non_advisory": true,
+      "official_domain_candidate": "consentmanager.net",
+      "requires_review": true,
+      "source_index_url": "https://consentmanager.net",
+      "vendor_category_candidates": [
+        "grc_privacy"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "dataguard",
+      "cohort_id": "grc-privacy-trust-launch",
+      "coverage_lane": "grc_privacy_trust",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "DataGuard",
+      "headquarters_country_candidate": "DE",
+      "non_advisory": true,
+      "official_domain_candidate": "dataguard.com",
+      "requires_review": true,
+      "source_index_url": "https://dataguard.com",
+      "vendor_category_candidates": [
+        "grc_privacy"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "osano",
+      "cohort_id": "grc-privacy-trust-launch",
+      "coverage_lane": "grc_privacy_trust",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Osano",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "osano.com",
+      "requires_review": true,
+      "source_index_url": "https://osano.com",
+      "vendor_category_candidates": [
+        "grc_privacy"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "privado-ai",
+      "cohort_id": "grc-privacy-trust-launch",
+      "coverage_lane": "grc_privacy_trust",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Privado.ai",
+      "headquarters_country_candidate": "IN",
+      "non_advisory": true,
+      "official_domain_candidate": "privado.ai",
+      "requires_review": true,
+      "source_index_url": "https://privado.ai",
+      "vendor_category_candidates": [
+        "grc_privacy"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "sprinto",
+      "cohort_id": "grc-privacy-trust-launch",
+      "coverage_lane": "grc_privacy_trust",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Sprinto",
+      "headquarters_country_candidate": "IN",
+      "non_advisory": true,
+      "official_domain_candidate": "sprinto.com",
+      "requires_review": true,
+      "source_index_url": "https://sprinto.com",
+      "vendor_category_candidates": [
+        "grc_privacy"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "transcend",
+      "cohort_id": "grc-privacy-trust-launch",
+      "coverage_lane": "grc_privacy_trust",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Transcend",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "transcend.io",
+      "requires_review": true,
+      "source_index_url": "https://transcend.io",
+      "vendor_category_candidates": [
+        "grc_privacy"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "usercentrics",
+      "cohort_id": "grc-privacy-trust-launch",
+      "coverage_lane": "grc_privacy_trust",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Usercentrics",
+      "headquarters_country_candidate": "DE",
+      "non_advisory": true,
+      "official_domain_candidate": "usercentrics.com",
+      "requires_review": true,
+      "source_index_url": "https://usercentrics.com",
+      "vendor_category_candidates": [
+        "grc_privacy"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "aidoc",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Aidoc",
+      "headquarters_country_candidate": "IL",
+      "non_advisory": true,
+      "official_domain_candidate": "aidoc.com",
+      "requires_review": true,
+      "source_index_url": "https://aidoc.com",
+      "vendor_category_candidates": [
+        "healthcare_software",
+        "ai_platform"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "alcidion",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Alcidion",
+      "headquarters_country_candidate": "AU",
+      "non_advisory": true,
+      "official_domain_candidate": "alcidion.com",
+      "requires_review": true,
+      "source_index_url": "https://alcidion.com",
+      "vendor_category_candidates": [
+        "healthcare_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "dedalus",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Dedalus",
+      "headquarters_country_candidate": "IT",
+      "non_advisory": true,
+      "official_domain_candidate": "dedalus.com",
+      "requires_review": true,
+      "source_index_url": "https://dedalus.com",
+      "vendor_category_candidates": [
+        "healthcare_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "epic",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Epic",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "epic.com",
+      "requires_review": true,
+      "source_index_url": "https://epic.com",
+      "vendor_category_candidates": [
+        "healthcare_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "innovaccer",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Innovaccer",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "innovaccer.com",
+      "requires_review": true,
+      "source_index_url": "https://innovaccer.com",
+      "vendor_category_candidates": [
+        "healthcare_software",
+        "data_platform"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "orion-health",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Orion Health",
+      "headquarters_country_candidate": "NZ",
+      "non_advisory": true,
+      "official_domain_candidate": "orionhealth.com",
+      "requires_review": true,
+      "source_index_url": "https://orionhealth.com",
+      "vendor_category_candidates": [
+        "healthcare_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "sectra",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Sectra",
+      "headquarters_country_candidate": "SE",
+      "non_advisory": true,
+      "official_domain_candidate": "sectra.com",
+      "requires_review": true,
+      "source_index_url": "https://sectra.com",
+      "vendor_category_candidates": [
+        "healthcare_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "system-c",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "System C",
+      "headquarters_country_candidate": "GB",
+      "non_advisory": true,
+      "official_domain_candidate": "systemc.com",
+      "requires_review": true,
+      "source_index_url": "https://systemc.com",
+      "vendor_category_candidates": [
+        "healthcare_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "telstra-health",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Telstra Health",
+      "headquarters_country_candidate": "AU",
+      "non_advisory": true,
+      "official_domain_candidate": "telstrahealth.com",
+      "requires_review": true,
+      "source_index_url": "https://telstrahealth.com",
+      "vendor_category_candidates": [
+        "healthcare_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "tpp",
+      "cohort_id": "healthcare-launch",
+      "coverage_lane": "healthcare",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "TPP",
+      "headquarters_country_candidate": "GB",
+      "non_advisory": true,
+      "official_domain_candidate": "tpp-uk.com",
+      "requires_review": true,
+      "source_index_url": "https://tpp-uk.com",
+      "vendor_category_candidates": [
+        "healthcare_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "papaya-global",
+      "cohort_id": "hr-education-launch",
+      "coverage_lane": "hr_education",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Papaya Global",
+      "headquarters_country_candidate": "IL",
+      "non_advisory": true,
+      "official_domain_candidate": "papayaglobal.com",
+      "requires_review": true,
+      "source_index_url": "https://papayaglobal.com",
+      "vendor_category_candidates": [
+        "hr_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "sap-successfactors",
+      "cohort_id": "hr-education-launch",
+      "coverage_lane": "hr_education",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "SAP SuccessFactors",
+      "headquarters_country_candidate": "DE",
+      "non_advisory": true,
+      "official_domain_candidate": "successfactors.com",
+      "requires_review": true,
+      "source_index_url": "https://successfactors.com",
+      "vendor_category_candidates": [
+        "hr_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "bolttech",
+      "cohort_id": "insurance-launch",
+      "coverage_lane": "insurance",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "bolttech",
+      "headquarters_country_candidate": "SG",
+      "non_advisory": true,
+      "official_domain_candidate": "bolttech.io",
+      "requires_review": true,
+      "source_index_url": "https://bolttech.io",
+      "vendor_category_candidates": [
+        "insurance_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "cover-genius",
+      "cohort_id": "insurance-launch",
+      "coverage_lane": "insurance",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Cover Genius",
+      "headquarters_country_candidate": "AU",
+      "non_advisory": true,
+      "official_domain_candidate": "covergenius.com",
+      "requires_review": true,
+      "source_index_url": "https://covergenius.com",
+      "vendor_category_candidates": [
+        "insurance_software",
+        "payments"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "earnix",
+      "cohort_id": "insurance-launch",
+      "coverage_lane": "insurance",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Earnix",
+      "headquarters_country_candidate": "IL",
+      "non_advisory": true,
+      "official_domain_candidate": "earnix.com",
+      "requires_review": true,
+      "source_index_url": "https://earnix.com",
+      "vendor_category_candidates": [
+        "insurance_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "eis-group",
+      "cohort_id": "insurance-launch",
+      "coverage_lane": "insurance",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "EIS Group",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "eisgroup.com",
+      "requires_review": true,
+      "source_index_url": "https://eisgroup.com",
+      "vendor_category_candidates": [
+        "insurance_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "insurity",
+      "cohort_id": "insurance-launch",
+      "coverage_lane": "insurance",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Insurity",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "insurity.com",
+      "requires_review": true,
+      "source_index_url": "https://insurity.com",
+      "vendor_category_candidates": [
+        "insurance_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "majesco",
+      "cohort_id": "insurance-launch",
+      "coverage_lane": "insurance",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Majesco",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "majesco.com",
+      "requires_review": true,
+      "source_index_url": "https://majesco.com",
+      "vendor_category_candidates": [
+        "insurance_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "oneshield",
+      "cohort_id": "insurance-launch",
+      "coverage_lane": "insurance",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "OneShield",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "oneshield.com",
+      "requires_review": true,
+      "source_index_url": "https://oneshield.com",
+      "vendor_category_candidates": [
+        "insurance_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "sapiens",
+      "cohort_id": "insurance-launch",
+      "coverage_lane": "insurance",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Sapiens",
+      "headquarters_country_candidate": "IL",
+      "non_advisory": true,
+      "official_domain_candidate": "sapiens.com",
+      "requires_review": true,
+      "source_index_url": "https://sapiens.com",
+      "vendor_category_candidates": [
+        "insurance_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "socotra",
+      "cohort_id": "insurance-launch",
+      "coverage_lane": "insurance",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Socotra",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "socotra.com",
+      "requires_review": true,
+      "source_index_url": "https://socotra.com",
+      "vendor_category_candidates": [
+        "insurance_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "feedzai",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Feedzai",
+      "headquarters_country_candidate": "PT",
+      "non_advisory": true,
+      "official_domain_candidate": "feedzai.com",
+      "requires_review": true,
+      "source_index_url": "https://feedzai.com",
+      "vendor_category_candidates": [
+        "fraud_risk",
+        "kyc_kyb_aml"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "idnow",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "IDnow",
+      "headquarters_country_candidate": "DE",
+      "non_advisory": true,
+      "official_domain_candidate": "idnow.io",
+      "requires_review": true,
+      "source_index_url": "https://idnow.io",
+      "vendor_category_candidates": [
+        "kyc_kyb_aml"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "jumio",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Jumio",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "jumio.com",
+      "requires_review": true,
+      "source_index_url": "https://jumio.com",
+      "vendor_category_candidates": [
+        "kyc_kyb_aml"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "onfido",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Onfido",
+      "headquarters_country_candidate": "GB",
+      "non_advisory": true,
+      "official_domain_candidate": "onfido.com",
+      "requires_review": true,
+      "source_index_url": "https://onfido.com",
+      "vendor_category_candidates": [
+        "kyc_kyb_aml"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "persona",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Persona",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "withpersona.com",
+      "requires_review": true,
+      "source_index_url": "https://withpersona.com",
+      "vendor_category_candidates": [
+        "kyc_kyb_aml"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "riskified",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Riskified",
+      "headquarters_country_candidate": "IL",
+      "non_advisory": true,
+      "official_domain_candidate": "riskified.com",
+      "requires_review": true,
+      "source_index_url": "https://riskified.com",
+      "vendor_category_candidates": [
+        "fraud_risk"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "sardine",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Sardine",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "sardine.ai",
+      "requires_review": true,
+      "source_index_url": "https://sardine.ai",
+      "vendor_category_candidates": [
+        "fraud_risk",
+        "kyc_kyb_aml"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "seon",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "SEON",
+      "headquarters_country_candidate": "HU",
+      "non_advisory": true,
+      "official_domain_candidate": "seon.io",
+      "requires_review": true,
+      "source_index_url": "https://seon.io",
+      "vendor_category_candidates": [
+        "fraud_risk"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "sift",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Sift",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "sift.com",
+      "requires_review": true,
+      "source_index_url": "https://sift.com",
+      "vendor_category_candidates": [
+        "fraud_risk"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "socure",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Socure",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "socure.com",
+      "requires_review": true,
+      "source_index_url": "https://socure.com",
+      "vendor_category_candidates": [
+        "kyc_kyb_aml",
+        "fraud_risk"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "veriff",
+      "cohort_id": "kyc-risk-launch",
+      "coverage_lane": "kyc_risk",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Veriff",
+      "headquarters_country_candidate": "EE",
+      "non_advisory": true,
+      "official_domain_candidate": "veriff.com",
+      "requires_review": true,
+      "source_index_url": "https://veriff.com",
+      "vendor_category_candidates": [
+        "kyc_kyb_aml"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "blue-yonder",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Blue Yonder",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "blueyonder.com",
+      "requires_review": true,
+      "source_index_url": "https://blueyonder.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "descartes",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Descartes",
+      "headquarters_country_candidate": "CA",
+      "non_advisory": true,
+      "official_domain_candidate": "descartes.com",
+      "requires_review": true,
+      "source_index_url": "https://descartes.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "e2open",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "E2open",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "e2open.com",
+      "requires_review": true,
+      "source_index_url": "https://e2open.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "easypost",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "EasyPost",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "easypost.com",
+      "requires_review": true,
+      "source_index_url": "https://easypost.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "flexport",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Flexport",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "flexport.com",
+      "requires_review": true,
+      "source_index_url": "https://flexport.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "fourkites",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "FourKites",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "fourkites.com",
+      "requires_review": true,
+      "source_index_url": "https://fourkites.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "geotab",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Geotab",
+      "headquarters_country_candidate": "CA",
+      "non_advisory": true,
+      "official_domain_candidate": "geotab.com",
+      "requires_review": true,
+      "source_index_url": "https://geotab.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "kinaxis",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Kinaxis",
+      "headquarters_country_candidate": "CA",
+      "non_advisory": true,
+      "official_domain_candidate": "kinaxis.com",
+      "requires_review": true,
+      "source_index_url": "https://kinaxis.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "manhattan-associates",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Manhattan Associates",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "manh.com",
+      "requires_review": true,
+      "source_index_url": "https://manh.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "project44",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "project44",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "project44.com",
+      "requires_review": true,
+      "source_index_url": "https://project44.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "ptc",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "PTC",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "ptc.com",
+      "requires_review": true,
+      "source_index_url": "https://ptc.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "shipbob",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "ShipBob",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "shipbob.com",
+      "requires_review": true,
+      "source_index_url": "https://shipbob.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "shippo",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Shippo",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "goshippo.com",
+      "requires_review": true,
+      "source_index_url": "https://goshippo.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "siemens",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Siemens",
+      "headquarters_country_candidate": "DE",
+      "non_advisory": true,
+      "official_domain_candidate": "siemens.com",
+      "requires_review": true,
+      "source_index_url": "https://siemens.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "stord",
+      "cohort_id": "logistics-manufacturing-launch",
+      "coverage_lane": "logistics_manufacturing",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Stord",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "stord.com",
+      "requires_review": true,
+      "source_index_url": "https://stord.com",
+      "vendor_category_candidates": [
+        "logistics_supply_chain"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "dlocal",
+      "cohort_id": "payments-fintech-launch",
+      "coverage_lane": "payments_fintech",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "dLocal",
+      "headquarters_country_candidate": "UY",
+      "non_advisory": true,
+      "official_domain_candidate": "dlocal.com",
+      "requires_review": true,
+      "source_index_url": "https://dlocal.com",
+      "vendor_category_candidates": [
+        "payments"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "revolut",
+      "cohort_id": "payments-fintech-launch",
+      "coverage_lane": "payments_fintech",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Revolut",
+      "headquarters_country_candidate": "GB",
+      "non_advisory": true,
+      "official_domain_candidate": "revolut.com",
+      "requires_review": true,
+      "source_index_url": "https://revolut.com",
+      "vendor_category_candidates": [
+        "financial_infrastructure",
+        "payments"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "lark",
+      "cohort_id": "productivity-collaboration-launch",
+      "coverage_lane": "productivity_collaboration",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Lark",
+      "headquarters_country_candidate": "SG",
+      "non_advisory": true,
+      "official_domain_candidate": "larksuite.com",
+      "requires_review": true,
+      "source_index_url": "https://larksuite.com",
+      "vendor_category_candidates": [
+        "collaboration_software",
+        "productivity_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "meistertask",
+      "cohort_id": "productivity-collaboration-launch",
+      "coverage_lane": "productivity_collaboration",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "MeisterTask",
+      "headquarters_country_candidate": "AT",
+      "non_advisory": true,
+      "official_domain_candidate": "meistertask.com",
+      "requires_review": true,
+      "source_index_url": "https://meistertask.com",
+      "vendor_category_candidates": [
+        "project_management",
+        "collaboration_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "nulab",
+      "cohort_id": "productivity-collaboration-launch",
+      "coverage_lane": "productivity_collaboration",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Nulab",
+      "headquarters_country_candidate": "JP",
+      "non_advisory": true,
+      "official_domain_candidate": "nulab.com",
+      "requires_review": true,
+      "source_index_url": "https://nulab.com",
+      "vendor_category_candidates": [
+        "project_management",
+        "collaboration_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "onlyoffice",
+      "cohort_id": "productivity-collaboration-launch",
+      "coverage_lane": "productivity_collaboration",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "ONLYOFFICE",
+      "headquarters_country_candidate": "LV",
+      "non_advisory": true,
+      "official_domain_candidate": "onlyoffice.com",
+      "requires_review": true,
+      "source_index_url": "https://onlyoffice.com",
+      "vendor_category_candidates": [
+        "productivity_software",
+        "collaboration_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "stackby",
+      "cohort_id": "productivity-collaboration-launch",
+      "coverage_lane": "productivity_collaboration",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Stackby",
+      "headquarters_country_candidate": "IN",
+      "non_advisory": true,
+      "official_domain_candidate": "stackby.com",
+      "requires_review": true,
+      "source_index_url": "https://stackby.com",
+      "vendor_category_candidates": [
+        "productivity_software",
+        "collaboration_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "airbus",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Airbus",
+      "headquarters_country_candidate": "FR",
+      "non_advisory": true,
+      "official_domain_candidate": "airbus.com",
+      "requires_review": true,
+      "source_index_url": "https://airbus.com",
+      "vendor_category_candidates": [
+        "public_sector_defense"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "anduril",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Anduril",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "anduril.com",
+      "requires_review": true,
+      "source_index_url": "https://anduril.com",
+      "vendor_category_candidates": [
+        "public_sector_defense",
+        "ai_platform"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "bae-systems",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "BAE Systems",
+      "headquarters_country_candidate": "GB",
+      "non_advisory": true,
+      "official_domain_candidate": "baesystems.com",
+      "requires_review": true,
+      "source_index_url": "https://baesystems.com",
+      "vendor_category_candidates": [
+        "public_sector_defense"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "elbit-systems",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Elbit Systems",
+      "headquarters_country_candidate": "IL",
+      "non_advisory": true,
+      "official_domain_candidate": "elbitsystems.com",
+      "requires_review": true,
+      "source_index_url": "https://elbitsystems.com",
+      "vendor_category_candidates": [
+        "public_sector_defense"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "esri",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Esri",
+      "headquarters_country_candidate": "US",
+      "non_advisory": true,
+      "official_domain_candidate": "esri.com",
+      "requires_review": true,
+      "source_index_url": "https://esri.com",
+      "vendor_category_candidates": [
+        "public_sector_defense",
+        "data_platform"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "indra",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Indra",
+      "headquarters_country_candidate": "ES",
+      "non_advisory": true,
+      "official_domain_candidate": "indracompany.com",
+      "requires_review": true,
+      "source_index_url": "https://indracompany.com",
+      "vendor_category_candidates": [
+        "public_sector_defense"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "leonardo",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Leonardo",
+      "headquarters_country_candidate": "IT",
+      "non_advisory": true,
+      "official_domain_candidate": "leonardo.com",
+      "requires_review": true,
+      "source_index_url": "https://leonardo.com",
+      "vendor_category_candidates": [
+        "public_sector_defense"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "rheinmetall",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Rheinmetall",
+      "headquarters_country_candidate": "DE",
+      "non_advisory": true,
+      "official_domain_candidate": "rheinmetall.com",
+      "requires_review": true,
+      "source_index_url": "https://rheinmetall.com",
+      "vendor_category_candidates": [
+        "public_sector_defense"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "saab",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Saab",
+      "headquarters_country_candidate": "SE",
+      "non_advisory": true,
+      "official_domain_candidate": "saab.com",
+      "requires_review": true,
+      "source_index_url": "https://saab.com",
+      "vendor_category_candidates": [
+        "public_sector_defense"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "st-engineering",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "ST Engineering",
+      "headquarters_country_candidate": "SG",
+      "non_advisory": true,
+      "official_domain_candidate": "stengg.com",
+      "requires_review": true,
+      "source_index_url": "https://stengg.com",
+      "vendor_category_candidates": [
+        "public_sector_defense"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "thales",
+      "cohort_id": "public-sector-defense-launch",
+      "coverage_lane": "public_sector_defense",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Thales",
+      "headquarters_country_candidate": "FR",
+      "non_advisory": true,
+      "official_domain_candidate": "thalesgroup.com",
+      "requires_review": true,
+      "source_index_url": "https://thalesgroup.com",
+      "vendor_category_candidates": [
+        "public_sector_defense",
+        "security"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "dingtalk",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "DingTalk",
+      "headquarters_country_candidate": "CN",
+      "non_advisory": true,
+      "official_domain_candidate": "dingtalk.com",
+      "requires_review": true,
+      "source_index_url": "https://dingtalk.com",
+      "vendor_category_candidates": [
+        "collaboration_software",
+        "productivity_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "feishu",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Feishu",
+      "headquarters_country_candidate": "CN",
+      "non_advisory": true,
+      "official_domain_candidate": "feishu.cn",
+      "requires_review": true,
+      "source_index_url": "https://feishu.cn",
+      "vendor_category_candidates": [
+        "collaboration_software",
+        "productivity_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "freee",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "freee",
+      "headquarters_country_candidate": "JP",
+      "non_advisory": true,
+      "official_domain_candidate": "freee.co.jp",
+      "requires_review": true,
+      "source_index_url": "https://freee.co.jp",
+      "vendor_category_candidates": [
+        "financial_infrastructure",
+        "productivity_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "kakao-enterprise",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Kakao Enterprise",
+      "headquarters_country_candidate": "KR",
+      "non_advisory": true,
+      "official_domain_candidate": "kakaoenterprise.com",
+      "requires_review": true,
+      "source_index_url": "https://kakaoenterprise.com",
+      "vendor_category_candidates": [
+        "cloud_infrastructure",
+        "collaboration_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "kakao-pay",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Kakao Pay",
+      "headquarters_country_candidate": "KR",
+      "non_advisory": true,
+      "official_domain_candidate": "kakaopay.com",
+      "requires_review": true,
+      "source_index_url": "https://kakaopay.com",
+      "vendor_category_candidates": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "kingdee",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Kingdee",
+      "headquarters_country_candidate": "CN",
+      "non_advisory": true,
+      "official_domain_candidate": "kingdee.com",
+      "requires_review": true,
+      "source_index_url": "https://kingdee.com",
+      "vendor_category_candidates": [
+        "financial_infrastructure",
+        "productivity_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "line-works",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "LINE WORKS",
+      "headquarters_country_candidate": "JP",
+      "non_advisory": true,
+      "official_domain_candidate": "worksmobile.com",
+      "requires_review": true,
+      "source_index_url": "https://worksmobile.com",
+      "vendor_category_candidates": [
+        "collaboration_software",
+        "productivity_software"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "money-forward",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Money Forward",
+      "headquarters_country_candidate": "JP",
+      "non_advisory": true,
+      "official_domain_candidate": "moneyforward.com",
+      "requires_review": true,
+      "source_index_url": "https://moneyforward.com",
+      "vendor_category_candidates": [
+        "financial_infrastructure"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "naver-cloud",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "NAVER Cloud",
+      "headquarters_country_candidate": "KR",
+      "non_advisory": true,
+      "official_domain_candidate": "ncloud.com",
+      "requires_review": true,
+      "source_index_url": "https://ncloud.com",
+      "vendor_category_candidates": [
+        "cloud_infrastructure"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "nhn-cloud",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "NHN Cloud",
+      "headquarters_country_candidate": "KR",
+      "non_advisory": true,
+      "official_domain_candidate": "nhncloud.com",
+      "requires_review": true,
+      "source_index_url": "https://nhncloud.com",
+      "vendor_category_candidates": [
+        "cloud_infrastructure"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "tokopedia",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Tokopedia",
+      "headquarters_country_candidate": "ID",
+      "non_advisory": true,
+      "official_domain_candidate": "tokopedia.com",
+      "requires_review": true,
+      "source_index_url": "https://tokopedia.com",
+      "vendor_category_candidates": [
+        "ecommerce_platform"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "toss",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Toss",
+      "headquarters_country_candidate": "KR",
+      "non_advisory": true,
+      "official_domain_candidate": "toss.im",
+      "requires_review": true,
+      "source_index_url": "https://toss.im",
+      "vendor_category_candidates": [
+        "payments",
+        "financial_infrastructure"
+      ],
+      "writes_canonical_vendors": false
+    },
+    {
+      "candidate_vendor_id": "yonyou",
+      "cohort_id": "regional-apac-launch",
+      "coverage_lane": "regional_apac",
+      "discovery_method": "curated_identity_seed",
+      "display_name_candidate": "Yonyou",
+      "headquarters_country_candidate": "CN",
+      "non_advisory": true,
+      "official_domain_candidate": "yonyou.com",
+      "requires_review": true,
+      "source_index_url": "https://yonyou.com",
+      "vendor_category_candidates": [
+        "financial_infrastructure",
+        "productivity_software"
+      ],
+      "writes_canonical_vendors": false
+    }
+  ]
+}
