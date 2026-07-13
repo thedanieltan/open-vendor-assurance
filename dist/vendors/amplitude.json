@@ -35,7 +35,7 @@
       "access_class": "public_web",
       "artifact_id": "amplitude-dpa",
       "artifact_type": "dpa",
-      "canonical_url": "https://amplitude.com/data-processing-addendum",
+      "canonical_url": "https://www.amplitude.com/dpa",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -125,7 +125,7 @@
       "access_class": "public_web",
       "artifact_id": "amplitude-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://amplitude.com/subprocessors",
+      "canonical_url": "https://amplitude.com/subprocessor-list",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -182,9 +182,9 @@
       "catalog_tier": "human_reviewed",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "high",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "review_state": "human_reviewed",
@@ -253,9 +253,9 @@
       "catalog_tier": "human_reviewed",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "high",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "review_state": "human_reviewed",
@@ -274,6 +274,40 @@
     }
   ],
   "changes": [
+    {
+      "_openva_path": "data/vendors/amplitude/changes/owner-source-maintenance-3-amplitude-dpa.yaml",
+      "artifact_id": "amplitude-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-amplitude-dpa",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "amplitude-dpa",
+      "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "amplitude"
+    },
+    {
+      "_openva_path": "data/vendors/amplitude/changes/owner-source-maintenance-3-amplitude-subprocessors.yaml",
+      "artifact_id": "amplitude-subprocessors",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-amplitude-subprocessors",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "amplitude-subprocessors",
+      "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "amplitude"
+    },
     {
       "_openva_path": "data/vendors/amplitude/changes/productivity-commerce-growth-batch-1-amplitude-compliance.yaml",
       "artifact_id": "amplitude-compliance",

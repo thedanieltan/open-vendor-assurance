@@ -35,7 +35,7 @@
       "access_class": "public_web",
       "artifact_id": "xero-dpa",
       "artifact_type": "dpa",
-      "canonical_url": "https://www.xero.com/about/legal/terms/data-processing-addendum/",
+      "canonical_url": "https://www.xero.com/us/legal/terms/data-processing/",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -125,7 +125,7 @@
       "access_class": "public_web",
       "artifact_id": "xero-subprocessors",
       "artifact_type": "subprocessors_list",
-      "canonical_url": "https://www.xero.com/about/legal/subprocessors/",
+      "canonical_url": "https://www.xero.com/us/legal/xero-subprocessors/",
       "effective_or_published_at": null,
       "hashes": {
         "hash_method": "metadata_plus_hash_only",
@@ -182,9 +182,9 @@
       "catalog_tier": "human_reviewed",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "high",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "review_state": "human_reviewed",
@@ -253,9 +253,9 @@
       "catalog_tier": "human_reviewed",
       "not_advice": true,
       "provenance": {
-        "collected_at": "2026-05-16T00:00:00Z",
+        "collected_at": "2026-07-13T14:00:00Z",
         "confidence": "high",
-        "observer": "human",
+        "observer": "hybrid",
         "publisher": "vendor"
       },
       "review_state": "human_reviewed",
@@ -356,6 +356,40 @@
       "schema_version": "0.1.0",
       "source_id": "xero-subprocessors",
       "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "xero"
+    },
+    {
+      "_openva_path": "data/vendors/xero/changes/owner-source-maintenance-3-xero-dpa.yaml",
+      "artifact_id": "xero-dpa",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-xero-dpa",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "xero-dpa",
+      "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "xero"
+    },
+    {
+      "_openva_path": "data/vendors/xero/changes/owner-source-maintenance-3-xero-subprocessors.yaml",
+      "artifact_id": "xero-subprocessors",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-source-maintenance-3-xero-subprocessors",
+      "change_type": "updated",
+      "detected_at": "2026-07-13T14:00:00Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "xero-subprocessors",
+      "summary": "Owner-led catalog maintenance aligned stale artifact metadata to the live canonical public source URL.",
       "to_hash": "sha256:TBD",
       "vendor_id": "xero"
     }
