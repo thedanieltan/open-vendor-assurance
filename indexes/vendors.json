@@ -1,5 +1,5 @@
 {
-  "count": 204,
+  "count": 208,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -837,6 +837,45 @@
         "payments"
       ],
       "vendor_id": "bill-com"
+    },
+    {
+      "_openva_path": "data/vendors/bitbucket/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Bitbucket",
+      "entity_family": "atlassian",
+      "entity_surface": "product_surface",
+      "headquarters_country": "AU",
+      "legal_name": "Atlassian Pty Ltd",
+      "notes": "Owner-led public-source-only product-surface record for Bitbucket within the Atlassian entity family. Metadata references Atlassian legal sources and the public Bitbucket status page only.",
+      "official_domains": [
+        "bitbucket.org",
+        "atlassian.com",
+        "www.atlassian.com",
+        "bitbucket.status.atlassian.com"
+      ],
+      "public_entrypoints": [
+        "https://www.atlassian.com/legal/privacy-policy",
+        "https://www.atlassian.com/legal/atlassian-customer-agreement",
+        "https://bitbucket.status.atlassian.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "related_vendor_ids": [
+        "atlassian"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "developer_platform"
+      ],
+      "vendor_id": "bitbucket"
     },
     {
       "_openva_path": "data/vendors/bitdefender/vendor.yaml",
@@ -4602,6 +4641,41 @@
       "vendor_id": "posthog"
     },
     {
+      "_openva_path": "data/vendors/postman/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Postman",
+      "entity_surface": "global_brand",
+      "headquarters_country": "US",
+      "legal_name": "Postman, Inc.",
+      "notes": "Owner-led public-source-only catalog record for Postman. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.",
+      "official_domains": [
+        "postman.com",
+        "www.postman.com",
+        "privacy.postman.com",
+        "status.postman.com"
+      ],
+      "public_entrypoints": [
+        "https://privacy.postman.com/policies/",
+        "https://www.postman.com/legal/terms/",
+        "https://status.postman.com/"
+      ],
+      "regions_served": [
+        "global"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "developer_platform"
+      ],
+      "vendor_id": "postman"
+    },
+    {
       "_openva_path": "data/vendors/prismic/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Prismic",
@@ -5659,6 +5733,41 @@
       "vendor_id": "storyblok"
     },
     {
+      "_openva_path": "data/vendors/strapi/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "Strapi",
+      "entity_surface": "global_brand",
+      "headquarters_country": "FR",
+      "legal_name": null,
+      "notes": "Owner-led public-source-only catalog record for Strapi. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.",
+      "official_domains": [
+        "strapi.io",
+        "status.strapi.io"
+      ],
+      "public_entrypoints": [
+        "https://strapi.io/privacy",
+        "https://strapi.io/terms-of-use",
+        "https://status.strapi.io/"
+      ],
+      "regions_served": [
+        "global",
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "content_management",
+        "developer_platform"
+      ],
+      "vendor_id": "strapi"
+    },
+    {
       "_openva_path": "data/vendors/stripe/vendor.yaml",
       "catalog_status": "active",
       "display_name": "Stripe",
@@ -6095,6 +6204,41 @@
         "hr_software"
       ],
       "vendor_id": "ukg"
+    },
+    {
+      "_openva_path": "data/vendors/upcloud/vendor.yaml",
+      "catalog_status": "active",
+      "display_name": "UpCloud",
+      "entity_surface": "global_brand",
+      "headquarters_country": "FI",
+      "legal_name": "UpCloud Ltd",
+      "notes": "Owner-led public-source-only catalog record for UpCloud. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.",
+      "official_domains": [
+        "upcloud.com",
+        "status.upcloud.com"
+      ],
+      "public_entrypoints": [
+        "https://upcloud.com/privacy-notice/",
+        "https://upcloud.com/global/terms-of-service/",
+        "https://status.upcloud.com/"
+      ],
+      "regions_served": [
+        "global",
+        "eu"
+      ],
+      "schema_version": "0.1.0",
+      "source_authority_language": "en",
+      "source_policy": {
+        "gated_materials_excluded": true,
+        "public_sources_only": true,
+        "raw_documents_mirrored_by_default": false
+      },
+      "status": "active",
+      "vendor_categories": [
+        "cloud_infrastructure",
+        "developer_platform"
+      ],
+      "vendor_id": "upcloud"
     },
     {
       "_openva_path": "data/vendors/vanta/vendor.yaml",
