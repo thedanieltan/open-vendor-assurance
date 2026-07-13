@@ -108,6 +108,7 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: site/dist
+          # Required so site/dist/.well-known/openva.json is included in the Pages artifact.
           include-hidden-files: true
 
   deploy:
