@@ -1,0 +1,231 @@
+schema_version: 0.1.0
+batch_id: owner-cross-lane-expansion-1
+operation: create
+collected_at: '2026-07-13T16:00:00Z'
+observer: human
+vendors:
+  - vendor_id: postman
+    display_name: Postman
+    legal_name: Postman, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - postman.com
+      - www.postman.com
+      - privacy.postman.com
+      - status.postman.com
+    public_entrypoints:
+      - https://privacy.postman.com/policies/
+      - https://www.postman.com/legal/terms/
+      - https://status.postman.com/
+    vendor_categories: [developer_platform]
+    notes: Owner-led public-source-only catalog record for Postman. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: postman-privacy
+        source_type: privacy_notice
+        title_native: Postman Privacy Policies
+        title_en: Postman Privacy Policies
+        source_url: https://privacy.postman.com/policies/
+        source_language: en
+        summary_native: Public Postman privacy-policy hub.
+        summary_en: Public Postman privacy-policy hub.
+        confidence: high
+        artifact:
+          artifact_id: postman-privacy
+          artifact_type: privacy_notice
+      - source_id: postman-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: Postman Terms of Service
+        title_en: Postman Terms of Service
+        source_url: https://www.postman.com/legal/terms/
+        source_language: en
+        summary_native: Public Postman terms of service.
+        summary_en: Public Postman terms of service.
+        confidence: high
+        artifact:
+          artifact_id: postman-terms
+          artifact_type: terms_of_service
+      - source_id: postman-status
+        source_type: status_page
+        title_native: Postman Status
+        title_en: Postman Status
+        source_url: https://status.postman.com/
+        source_language: en
+        summary_native: Public Postman service-status page.
+        summary_en: Public Postman service-status page.
+        confidence: high
+        artifact:
+          artifact_id: postman-status
+          artifact_type: status_page
+
+  - vendor_id: strapi
+    display_name: Strapi
+    legal_name: null
+    headquarters_country: FR
+    regions_served: [global, eu]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - strapi.io
+      - status.strapi.io
+    public_entrypoints:
+      - https://strapi.io/privacy
+      - https://strapi.io/terms-of-use
+      - https://status.strapi.io/
+    vendor_categories: [content_management, developer_platform]
+    notes: Owner-led public-source-only catalog record for Strapi. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: strapi-privacy
+        source_type: privacy_notice
+        title_native: Strapi Privacy Policy
+        title_en: Strapi Privacy Policy
+        source_url: https://strapi.io/privacy
+        source_language: en
+        summary_native: Public Strapi privacy policy.
+        summary_en: Public Strapi privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: strapi-privacy
+          artifact_type: privacy_notice
+      - source_id: strapi-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: Strapi Terms of Use
+        title_en: Strapi Terms of Use
+        source_url: https://strapi.io/terms-of-use
+        source_language: en
+        summary_native: Public Strapi terms of use.
+        summary_en: Public Strapi terms of use.
+        confidence: high
+        artifact:
+          artifact_id: strapi-terms
+          artifact_type: terms_of_service
+      - source_id: strapi-status
+        source_type: status_page
+        title_native: Strapi Status
+        title_en: Strapi Status
+        source_url: https://status.strapi.io/
+        source_language: en
+        summary_native: Public Strapi service-status page.
+        summary_en: Public Strapi service-status page.
+        confidence: high
+        artifact:
+          artifact_id: strapi-status
+          artifact_type: status_page
+
+  - vendor_id: upcloud
+    display_name: UpCloud
+    legal_name: UpCloud Ltd
+    headquarters_country: FI
+    regions_served: [global, eu]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains:
+      - upcloud.com
+      - status.upcloud.com
+    public_entrypoints:
+      - https://upcloud.com/privacy-notice/
+      - https://upcloud.com/global/terms-of-service/
+      - https://status.upcloud.com/
+    vendor_categories: [cloud_infrastructure, developer_platform]
+    notes: Owner-led public-source-only catalog record for UpCloud. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: upcloud-privacy
+        source_type: privacy_notice
+        title_native: UpCloud Privacy Notice
+        title_en: UpCloud Privacy Notice
+        source_url: https://upcloud.com/privacy-notice/
+        source_language: en
+        summary_native: Public UpCloud privacy notice.
+        summary_en: Public UpCloud privacy notice.
+        confidence: high
+        artifact:
+          artifact_id: upcloud-privacy
+          artifact_type: privacy_notice
+      - source_id: upcloud-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: UpCloud Global Terms of Service
+        title_en: UpCloud Global Terms of Service
+        source_url: https://upcloud.com/global/terms-of-service/
+        source_language: en
+        summary_native: Public UpCloud global terms of service.
+        summary_en: Public UpCloud global terms of service.
+        confidence: high
+        artifact:
+          artifact_id: upcloud-terms
+          artifact_type: terms_of_service
+      - source_id: upcloud-status
+        source_type: status_page
+        title_native: UpCloud Status
+        title_en: UpCloud Status
+        source_url: https://status.upcloud.com/
+        source_language: en
+        summary_native: Public UpCloud service-status page.
+        summary_en: Public UpCloud service-status page.
+        confidence: high
+        artifact:
+          artifact_id: upcloud-status
+          artifact_type: status_page
+
+  - vendor_id: bitbucket
+    display_name: Bitbucket
+    legal_name: Atlassian Pty Ltd
+    headquarters_country: AU
+    regions_served: [global]
+    entity_family: atlassian
+    entity_surface: product_surface
+    related_vendor_ids: [atlassian]
+    source_authority_language: en
+    official_domains:
+      - bitbucket.org
+      - atlassian.com
+      - www.atlassian.com
+      - bitbucket.status.atlassian.com
+    public_entrypoints:
+      - https://www.atlassian.com/legal/privacy-policy
+      - https://www.atlassian.com/legal/atlassian-customer-agreement
+      - https://bitbucket.status.atlassian.com/
+    vendor_categories: [developer_platform]
+    notes: Owner-led public-source-only product-surface record for Bitbucket within the Atlassian entity family. Metadata references Atlassian legal sources and the public Bitbucket status page only.
+    sources:
+      - source_id: bitbucket-privacy
+        source_type: privacy_notice
+        title_native: Atlassian Privacy Policy
+        title_en: Atlassian Privacy Policy
+        source_url: https://www.atlassian.com/legal/privacy-policy
+        source_language: en
+        summary_native: Public Atlassian privacy policy applicable to the Bitbucket product family.
+        summary_en: Public Atlassian privacy policy applicable to the Bitbucket product family.
+        confidence: high
+        artifact:
+          artifact_id: bitbucket-privacy
+          artifact_type: privacy_notice
+      - source_id: bitbucket-terms
+        source_type: terms_of_service
+        source_authority_class: vendor_legal_terms
+        title_native: Atlassian Customer Agreement
+        title_en: Atlassian Customer Agreement
+        source_url: https://www.atlassian.com/legal/atlassian-customer-agreement
+        source_language: en
+        summary_native: Public Atlassian customer agreement applicable to cloud products including Bitbucket.
+        summary_en: Public Atlassian customer agreement applicable to cloud products including Bitbucket.
+        confidence: high
+        artifact:
+          artifact_id: bitbucket-terms
+          artifact_type: terms_of_service
+      - source_id: bitbucket-status
+        source_type: status_page
+        title_native: Atlassian Bitbucket Status
+        title_en: Atlassian Bitbucket Status
+        source_url: https://bitbucket.status.atlassian.com/
+        source_language: en
+        summary_native: Public Bitbucket service-status page operated by Atlassian.
+        summary_en: Public Bitbucket service-status page operated by Atlassian.
+        confidence: high
+        artifact:
+          artifact_id: bitbucket-status
+          artifact_type: status_page
