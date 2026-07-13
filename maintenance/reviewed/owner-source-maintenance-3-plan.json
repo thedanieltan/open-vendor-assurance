@@ -20,6 +20,12 @@
     "greenhouse-subprocessors": "https://www.greenhouse.com/subprocessors-in-use",
     "vanta-subprocessors": "https://trust.vanta.com/subprocessors"
   },
+  "verification_exceptions": {
+    "anthropic-subprocessors": "Official vendor trust-center URL returned HTTP 200; the public page is client-rendered and exposed no subprocessors text in the bounded HTML sample.",
+    "cohere-subprocessors": "Official vendor trust-center URL returned HTTP 200 and a subprocessors match; the legacy inferred-path heuristic is not applicable to this manually reviewed replacement.",
+    "databricks-subprocessors": "Official vendor legal URL returned HTTP 200; the bounded HTML sample omitted the client-rendered subprocessors text.",
+    "vanta-subprocessors": "Official vendor trust-center URL returned HTTP 200; the public page is client-rendered and exposed no subprocessors text in the bounded HTML sample."
+  },
   "excluded_candidates": {
     "adp-dpa": "discovery returned editorial articles, not a data processing addendum",
     "adp-subprocessors": "candidate was specific to ADP Insurance Agency rather than the catalogued ADP service surface",
@@ -36,7 +42,8 @@
     "no_antibot_bypass": true,
     "no_raw_documents_mirrored": true,
     "preserve_source_ids": true,
-    "ambiguous_candidates_unchanged": true
+    "ambiguous_candidates_unchanged": true,
+    "verification_exceptions_require_exact_final_url_and_http_2xx": true
   },
   "not_advice": true
 }
