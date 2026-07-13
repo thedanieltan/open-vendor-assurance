@@ -4,7 +4,7 @@ vendor_id: bigcommerce
 source_type: trust_center
 source_authority_class: vendor_published
 title_native: Commerce Commerce Trust Center | Powered by SafeBase
-source_url: https://bigcommerce.com/security
+source_url: https://security.bigcommerce.com/
 source_language: en
 access_class: public_web
 rights_class: metadata_only
@@ -14,3 +14,9 @@ provenance:
   observer: agent
   confidence: high
 not_advice: true
+coverage_claims:
+- role: security_page
+  coverage_type: contains
+  evidence: Independent source-completion verification found strong role-specific
+    terms on this same official public page; a separate inferred URL was removed during
+    page-purpose remediation.

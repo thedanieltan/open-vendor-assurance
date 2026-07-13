@@ -19,3 +19,8 @@ coverage_claims:
   evidence: The same official public page returned HTTP 200 and strong source-type-specific
     semantic evidence for this role during bounded source-completion discovery.
   role: security_page
+- role: compliance_page
+  coverage_type: contains
+  evidence: Independent source-completion verification found strong role-specific
+    terms on this same official public page; a separate inferred URL was removed during
+    page-purpose remediation.

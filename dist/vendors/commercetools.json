@@ -121,36 +121,6 @@
       "vendor_id": "commercetools"
     },
     {
-      "_openva_path": "data/vendors/commercetools/artifacts/commercetools-security-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "commercetools-security-page",
-      "artifact_type": "security_page",
-      "canonical_url": "https://commercetools.com/blog/commercetools-connect-speed-security-and-resilience",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "commercetools-security-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "commercetools"
-    },
-    {
       "_openva_path": "data/vendors/commercetools/artifacts/commercetools-subprocessors-list.yaml",
       "access_class": "public_web",
       "artifact_id": "commercetools-subprocessors-list",
@@ -294,26 +264,6 @@
       "vendor_id": "commercetools"
     },
     {
-      "_openva_path": "data/vendors/commercetools/sources/commercetools-security-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.773443Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "commercetools-security-page",
-      "source_language": "en",
-      "source_type": "security_page",
-      "source_url": "https://commercetools.com/blog/commercetools-connect-speed-security-and-resilience",
-      "title_native": "commercetools Connect: Speed, Security and Resilience",
-      "vendor_id": "commercetools"
-    },
-    {
       "_openva_path": "data/vendors/commercetools/sources/commercetools-subprocessors-list.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -407,23 +357,6 @@
       "vendor_id": "commercetools"
     },
     {
-      "_openva_path": "data/vendors/commercetools/changes/candidate-promotion-commercetools-security-page.yaml",
-      "artifact_id": "commercetools-security-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-commercetools-security-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:44.773443Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "commercetools-security-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "commercetools"
-    },
-    {
       "_openva_path": "data/vendors/commercetools/changes/candidate-promotion-commercetools-subprocessors-list.yaml",
       "artifact_id": "commercetools-subprocessors-list",
       "catalog_change_significance": "unknown",
@@ -487,10 +420,10 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 7,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 7,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
@@ -498,7 +431,6 @@
       "compliance_page",
       "dpa",
       "privacy_notice",
-      "security_page",
       "subprocessors_list",
       "trust_center"
     ],

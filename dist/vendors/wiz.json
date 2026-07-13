@@ -1,36 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/wiz/artifacts/wiz-certification-reference.yaml",
-      "access_class": "public_web",
-      "artifact_id": "wiz-certification-reference",
-      "artifact_type": "certification_reference",
-      "canonical_url": "https://www.wiz.io/academy/ai-security/ai-audit",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "wiz-certification-reference",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "wiz"
-    },
-    {
       "_openva_path": "data/vendors/wiz/artifacts/wiz-privacy-notice.yaml",
       "access_class": "public_web",
       "artifact_id": "wiz-privacy-notice",
@@ -170,26 +140,6 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/wiz/sources/wiz-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.671256Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "wiz-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.wiz.io/academy/ai-security/ai-audit",
-      "title_native": "What Is an AI Audit? A Security and Compliance Guide | Wiz",
-      "vendor_id": "wiz"
-    },
-    {
       "_openva_path": "data/vendors/wiz/sources/wiz-privacy-notice.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -284,23 +234,6 @@
   ],
   "changes": [
     {
-      "_openva_path": "data/vendors/wiz/changes/candidate-promotion-wiz-certification-reference.yaml",
-      "artifact_id": "wiz-certification-reference",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-wiz-certification-reference",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:43.671256Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "wiz-certification-reference",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "wiz"
-    },
-    {
       "_openva_path": "data/vendors/wiz/changes/owner-security-identity-expansion-1-wiz-privacy-notice.yaml",
       "artifact_id": "wiz-privacy-notice",
       "catalog_change_significance": "unknown",
@@ -381,25 +314,69 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 5,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 5,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "certification_reference",
       "privacy_notice",
       "status_page",
       "subprocessors_list",
       "trust_center"
     ],
-    "unavailable_source_count": 1,
+    "unavailable_source_count": 3,
     "unavailable_source_types": [
+      "certification_reference",
+      "compliance_page",
       "dpa"
     ]
   },
   "unavailable_sources": [
+    {
+      "_openva_path": "data/vendors/wiz/unavailable_sources/wiz-certification_reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.wiz.io/academy/ai-security/ai-audit",
+        "https://www.wiz.io/trust-center",
+        "https://cloud.google.com/terms/cloud-acquisitions-privacy-notice?e=0&hl=en",
+        "https://wiz.io",
+        "https://status.wiz.io",
+        "https://cloud.google.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "wiz-certification-reference",
+      "vendor_id": "wiz"
+    },
+    {
+      "_openva_path": "data/vendors/wiz/unavailable_sources/wiz-compliance_page.yaml",
+      "candidate_urls_checked": [
+        "https://www.wiz.io/trust-center",
+        "https://cloud.google.com/terms/cloud-acquisitions-privacy-notice?e=0&hl=en",
+        "https://wiz.io",
+        "https://status.wiz.io",
+        "https://cloud.google.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "wiz-compliance-page",
+      "vendor_id": "wiz"
+    },
     {
       "_openva_path": "data/vendors/wiz/unavailable_sources/wiz-dpa.yaml",
       "candidate_urls_checked": [

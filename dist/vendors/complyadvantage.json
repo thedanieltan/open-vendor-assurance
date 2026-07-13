@@ -90,36 +90,6 @@
         "screenshot_stored": false
       },
       "vendor_id": "complyadvantage"
-    },
-    {
-      "_openva_path": "data/vendors/complyadvantage/artifacts/complyadvantage-trust-center.yaml",
-      "access_class": "public_web",
-      "artifact_id": "complyadvantage-trust-center",
-      "artifact_type": "trust_center",
-      "canonical_url": "https://complyadvantage.com/security/compliance",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "complyadvantage-trust-center",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "complyadvantage"
     }
   ],
   "candidate_sources": [],
@@ -186,26 +156,6 @@
       "source_url": "https://complyadvantage.com/sub-processors-list/",
       "title_native": "Sub-Processors List",
       "vendor_id": "complyadvantage"
-    },
-    {
-      "_openva_path": "data/vendors/complyadvantage/sources/complyadvantage-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.806111Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "complyadvantage-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://complyadvantage.com/security/compliance",
-      "title_native": "Compliance and Change Management: Building a Platform for Growth",
-      "vendor_id": "complyadvantage"
     }
   ],
   "changes": [
@@ -239,23 +189,6 @@
       "review_state": "proposed",
       "schema_version": "0.1.0",
       "source_id": "complyadvantage-subprocessors-list",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "complyadvantage"
-    },
-    {
-      "_openva_path": "data/vendors/complyadvantage/changes/candidate-promotion-complyadvantage-trust-center.yaml",
-      "artifact_id": "complyadvantage-trust-center",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-complyadvantage-trust-center",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:44.806111Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "complyadvantage-trust-center",
       "summary": "Reviewed candidate source promoted to canonical public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "complyadvantage"
@@ -307,23 +240,23 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 3,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
       "dpa",
       "privacy_notice",
-      "subprocessors_list",
-      "trust_center"
+      "subprocessors_list"
     ],
-    "unavailable_source_count": 3,
+    "unavailable_source_count": 5,
     "unavailable_source_types": [
       "certification_reference",
       "compliance_page",
-      "security_page"
+      "security_page",
+      "trust_center"
     ]
   },
   "unavailable_sources": [
@@ -429,6 +362,43 @@
       "source_type": "security_page",
       "status": "not_identified",
       "unavailable_source_id": "complyadvantage-security-page",
+      "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/unavailable_sources/complyadvantage-security_page.yaml",
+      "candidate_urls_checked": [
+        "https://complyadvantage.com/privacy-policy/",
+        "https://complyadvantage.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "security_page",
+      "status": "not_identified",
+      "unavailable_source_id": "complyadvantage-security-page",
+      "vendor_id": "complyadvantage"
+    },
+    {
+      "_openva_path": "data/vendors/complyadvantage/unavailable_sources/complyadvantage-trust_center.yaml",
+      "candidate_urls_checked": [
+        "https://complyadvantage.com/security/compliance",
+        "https://complyadvantage.com/privacy-policy/",
+        "https://complyadvantage.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "trust_center",
+      "status": "not_identified",
+      "unavailable_source_id": "complyadvantage-trust-center",
       "vendor_id": "complyadvantage"
     }
   ],

@@ -1,36 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/linear/artifacts/linear-certification-reference.yaml",
-      "access_class": "public_web",
-      "artifact_id": "linear-certification-reference",
-      "artifact_type": "certification_reference",
-      "canonical_url": "https://linear.app/integrations/security-and-compliance",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "linear-certification-reference",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "linear"
-    },
-    {
       "_openva_path": "data/vendors/linear/artifacts/linear-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "linear-dpa",
@@ -190,26 +160,6 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/linear/sources/linear-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.946568Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "linear-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://linear.app/integrations/security-and-compliance",
-      "title_native": "Certification Reference",
-      "vendor_id": "linear"
-    },
-    {
       "_openva_path": "data/vendors/linear/sources/linear-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -306,6 +256,11 @@
           "coverage_type": "contains",
           "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
           "role": "security_page"
+        },
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "compliance_page"
         }
       ],
       "not_advice": true,
@@ -327,23 +282,6 @@
     }
   ],
   "changes": [
-    {
-      "_openva_path": "data/vendors/linear/changes/candidate-promotion-linear-certification-reference.yaml",
-      "artifact_id": "linear-certification-reference",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-linear-certification-reference",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:42.946568Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "linear-certification-reference",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "linear"
-    },
     {
       "_openva_path": "data/vendors/linear/changes/candidate-promotion-linear-dpa.yaml",
       "artifact_id": "linear-dpa",
@@ -442,14 +380,13 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 6,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 6,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "certification_reference",
       "dpa",
       "privacy_notice",
       "status_page",

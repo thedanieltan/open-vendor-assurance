@@ -1,36 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/greythr/artifacts/greythr-compliance-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "greythr-compliance-page",
-      "artifact_type": "compliance_page",
-      "canonical_url": "https://www.greythr.com/faqs/social-security-code",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "greythr-compliance-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "greythr"
-    },
-    {
       "_openva_path": "data/vendors/greythr/artifacts/greythr-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "greythr-privacy",
@@ -94,26 +64,6 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/greythr/sources/greythr-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.878382Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "greythr-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.greythr.com/faqs/social-security-code",
-      "title_native": "Compliance Page",
-      "vendor_id": "greythr"
-    },
-    {
       "_openva_path": "data/vendors/greythr/sources/greythr-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -162,23 +112,6 @@
   ],
   "changes": [
     {
-      "_openva_path": "data/vendors/greythr/changes/candidate-promotion-greythr-compliance-page.yaml",
-      "artifact_id": "greythr-compliance-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-greythr-compliance-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:42.878382Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "greythr-compliance-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "greythr"
-    },
-    {
       "_openva_path": "data/vendors/greythr/changes/regional-business-platforms-batch-1-greythr-privacy.yaml",
       "artifact_id": "greythr-privacy",
       "catalog_change_significance": "unknown",
@@ -225,20 +158,20 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 3,
+    "artifact_count": 2,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 3,
+    "canonical_source_count": 2,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "compliance_page",
       "privacy_notice",
       "security_page"
     ],
-    "unavailable_source_count": 3,
+    "unavailable_source_count": 5,
     "unavailable_source_types": [
       "certification_reference",
+      "compliance_page",
       "dpa",
       "subprocessors_list"
     ]
@@ -278,6 +211,45 @@
       "source_type": "certification_reference",
       "status": "not_identified",
       "unavailable_source_id": "greythr-certification-reference",
+      "vendor_id": "greythr"
+    },
+    {
+      "_openva_path": "data/vendors/greythr/unavailable_sources/greythr-certification_reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.greythr.com/privacy-policy/",
+        "https://www.greythr.com/security/",
+        "https://greythr.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "greythr-certification-reference",
+      "vendor_id": "greythr"
+    },
+    {
+      "_openva_path": "data/vendors/greythr/unavailable_sources/greythr-compliance_page.yaml",
+      "candidate_urls_checked": [
+        "https://www.greythr.com/faqs/social-security-code",
+        "https://www.greythr.com/privacy-policy/",
+        "https://www.greythr.com/security/",
+        "https://greythr.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "greythr-compliance-page",
       "vendor_id": "greythr"
     },
     {

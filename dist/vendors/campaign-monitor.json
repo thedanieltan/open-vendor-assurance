@@ -1,66 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/campaign-monitor/artifacts/campaign-monitor-certification-reference.yaml",
-      "access_class": "public_web",
-      "artifact_id": "campaign-monitor-certification-reference",
-      "artifact_type": "certification_reference",
-      "canonical_url": "https://www.campaignmonitor.com/trust/certifications",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "campaign-monitor-certification-reference",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "campaign-monitor"
-    },
-    {
-      "_openva_path": "data/vendors/campaign-monitor/artifacts/campaign-monitor-compliance-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "campaign-monitor-compliance-page",
-      "artifact_type": "compliance_page",
-      "canonical_url": "https://www.campaignmonitor.com/trust/compliance",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "campaign-monitor-compliance-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "campaign-monitor"
-    },
-    {
       "_openva_path": "data/vendors/campaign-monitor/artifacts/campaign-monitor-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "campaign-monitor-dpa",
@@ -221,7 +161,7 @@
       "access_class": "public_web",
       "artifact_id": "campaign-monitor-trust-center",
       "artifact_type": "trust_center",
-      "canonical_url": "https://www.campaignmonitor.com/trust",
+      "canonical_url": "https://trust.campaignmonitor.meetmarigold.com/",
       "effective_or_published_at": null,
       "entity_scope": {
         "entity_ids": [],
@@ -249,46 +189,6 @@
   ],
   "candidate_sources": [],
   "canonical_sources": [
-    {
-      "_openva_path": "data/vendors/campaign-monitor/sources/campaign-monitor-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.319935Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "campaign-monitor-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.campaignmonitor.com/trust/certifications",
-      "title_native": "Campaign Monitor Trust Center | Powered by SecurityPal AI",
-      "vendor_id": "campaign-monitor"
-    },
-    {
-      "_openva_path": "data/vendors/campaign-monitor/sources/campaign-monitor-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.338158Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "campaign-monitor-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.campaignmonitor.com/trust/compliance",
-      "title_native": "Campaign Monitor Trust Center | Powered by SecurityPal AI",
-      "vendor_id": "campaign-monitor"
-    },
     {
       "_openva_path": "data/vendors/campaign-monitor/sources/campaign-monitor-dpa.yaml",
       "access_class": "public_web",
@@ -406,6 +306,16 @@
           "coverage_type": "contains",
           "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
           "role": "security_page"
+        },
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "compliance_page"
+        },
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "certification_reference"
         }
       ],
       "not_advice": true,
@@ -421,46 +331,12 @@
       "source_id": "campaign-monitor-trust-center",
       "source_language": "en",
       "source_type": "trust_center",
-      "source_url": "https://www.campaignmonitor.com/trust",
+      "source_url": "https://trust.campaignmonitor.meetmarigold.com/",
       "title_native": "Campaign Monitor Trust Center | Powered by SecurityPal AI",
       "vendor_id": "campaign-monitor"
     }
   ],
   "changes": [
-    {
-      "_openva_path": "data/vendors/campaign-monitor/changes/candidate-promotion-campaign-monitor-certification-reference.yaml",
-      "artifact_id": "campaign-monitor-certification-reference",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-campaign-monitor-certification-reference",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:42.319935Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "campaign-monitor-certification-reference",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "campaign-monitor"
-    },
-    {
-      "_openva_path": "data/vendors/campaign-monitor/changes/candidate-promotion-campaign-monitor-compliance-page.yaml",
-      "artifact_id": "campaign-monitor-compliance-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-campaign-monitor-compliance-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:42.338158Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "campaign-monitor-compliance-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "campaign-monitor"
-    },
     {
       "_openva_path": "data/vendors/campaign-monitor/changes/candidate-promotion-campaign-monitor-dpa.yaml",
       "artifact_id": "campaign-monitor-dpa",
@@ -576,15 +452,13 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 8,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 8,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "certification_reference",
-      "compliance_page",
       "dpa",
       "privacy_notice",
       "status_page",

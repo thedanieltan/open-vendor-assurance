@@ -65,36 +65,6 @@
       "vendor_id": "basecamp"
     },
     {
-      "_openva_path": "data/vendors/basecamp/artifacts/basecamp-subprocessors-list.yaml",
-      "access_class": "public_web",
-      "artifact_id": "basecamp-subprocessors-list",
-      "artifact_type": "subprocessors_list",
-      "canonical_url": "https://basecamp.com/privacy/subprocessors",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "basecamp-subprocessors-list",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "basecamp"
-    },
-    {
       "_openva_path": "data/vendors/basecamp/artifacts/basecamp-terms.yaml",
       "access_class": "public_web",
       "artifact_id": "basecamp-terms",
@@ -176,26 +146,6 @@
       "vendor_id": "basecamp"
     },
     {
-      "_openva_path": "data/vendors/basecamp/sources/basecamp-subprocessors-list.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:45.738887Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "basecamp-subprocessors-list",
-      "source_language": "en",
-      "source_type": "subprocessors_list",
-      "source_url": "https://basecamp.com/privacy/subprocessors",
-      "title_native": "37signals — Privacy Policy",
-      "vendor_id": "basecamp"
-    },
-    {
       "_openva_path": "data/vendors/basecamp/sources/basecamp-terms.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -220,23 +170,6 @@
     }
   ],
   "changes": [
-    {
-      "_openva_path": "data/vendors/basecamp/changes/candidate-promotion-basecamp-subprocessors-list.yaml",
-      "artifact_id": "basecamp-subprocessors-list",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-basecamp-subprocessors-list",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:45.738887Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "basecamp-subprocessors-list",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "basecamp"
-    },
     {
       "_openva_path": "data/vendors/basecamp/changes/owner-collab-doc-expansion-1-basecamp-privacy.yaml",
       "artifact_id": "basecamp-privacy",
@@ -301,23 +234,23 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 4,
+    "artifact_count": 3,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 4,
+    "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
       "privacy_notice",
       "security_page",
-      "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 3,
+    "unavailable_source_count": 4,
     "unavailable_source_types": [
       "certification_reference",
       "compliance_page",
-      "dpa"
+      "dpa",
+      "subprocessors_list"
     ]
   },
   "unavailable_sources": [
@@ -427,6 +360,28 @@
       "source_type": "dpa",
       "status": "not_identified",
       "unavailable_source_id": "basecamp-dpa",
+      "vendor_id": "basecamp"
+    },
+    {
+      "_openva_path": "data/vendors/basecamp/unavailable_sources/basecamp-subprocessors_list.yaml",
+      "candidate_urls_checked": [
+        "https://basecamp.com/privacy/subprocessors",
+        "https://basecamp.com/about/policies/privacy",
+        "https://basecamp.com/about/policies/terms",
+        "https://basecamp.com/about/policies/security",
+        "https://basecamp.com",
+        "https://37signals.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "subprocessors_list",
+      "status": "not_identified",
+      "unavailable_source_id": "basecamp-subprocessors-list",
       "vendor_id": "basecamp"
     }
   ],

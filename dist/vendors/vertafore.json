@@ -1,36 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/vertafore/artifacts/vertafore-certification-reference.yaml",
-      "access_class": "public_web",
-      "artifact_id": "vertafore-certification-reference",
-      "artifact_type": "certification_reference",
-      "canonical_url": "https://www.vertafore.com/resources/blog/understanding-soc-2-type-ii-compliance-insurance-industry",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "vertafore-certification-reference",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "vertafore"
-    },
-    {
       "_openva_path": "data/vendors/vertafore/artifacts/vertafore-compliance-page.yaml",
       "access_class": "public_web",
       "artifact_id": "vertafore-compliance-page",
@@ -154,26 +124,6 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/vertafore/sources/vertafore-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.591895Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "vertafore-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.vertafore.com/resources/blog/understanding-soc-2-type-ii-compliance-insurance-industry",
-      "title_native": "Understanding SOC 2 Type II compliance in the insurance industry",
-      "vendor_id": "vertafore"
-    },
-    {
       "_openva_path": "data/vendors/vertafore/sources/vertafore-compliance-page.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -265,23 +215,6 @@
   ],
   "changes": [
     {
-      "_openva_path": "data/vendors/vertafore/changes/candidate-promotion-vertafore-certification-reference.yaml",
-      "artifact_id": "vertafore-certification-reference",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-vertafore-certification-reference",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:43.591895Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "vertafore-certification-reference",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "vertafore"
-    },
-    {
       "_openva_path": "data/vendors/vertafore/changes/candidate-promotion-vertafore-compliance-page.yaml",
       "artifact_id": "vertafore-compliance-page",
       "catalog_change_significance": "unknown",
@@ -362,14 +295,13 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 5,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 5,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "certification_reference",
       "compliance_page",
       "privacy_notice",
       "security_page"

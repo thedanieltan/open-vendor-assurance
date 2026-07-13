@@ -8,7 +8,6 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "certification_reference",
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
@@ -24,14 +23,6 @@
           "source_type": "certification_reference",
           "source_url": "https://1password.com/resources/iso27001",
           "title": "1Password ISO certificates | 1Password"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "1password-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://1password.com/resources/soc2",
-          "title": "1Password Trust Center | Powered by SafeBase"
         },
         {
           "confidence": null,
@@ -101,14 +92,6 @@
           "source_type": "certification_reference",
           "source_url": "https://1password.com/resources/iso27001",
           "title": "1Password ISO certificates | 1Password"
-        },
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "1password-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://1password.com/resources/soc2",
-          "title": "1Password Trust Center | Powered by SafeBase"
         },
         "dpa": {
           "confidence": null,
@@ -521,7 +504,6 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
         "dpa",
         "other_public_source",
         "privacy_notice",
@@ -530,14 +512,6 @@
         "terms_of_service"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "adp-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.adp.com/",
-          "title": "Payroll, HR and Tax Services | ADP Official Site"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -608,14 +582,6 @@
         "adp.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "adp-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.adp.com/",
-          "title": "Payroll, HR and Tax Services | ADP Official Site"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -666,7 +632,8 @@
         }
       },
       "unavailable_source_types": [
-        "certification_reference"
+        "certification_reference",
+        "compliance_page"
       ],
       "vendor_id": "adp"
     },
@@ -955,14 +922,12 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "certification_reference",
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
         "status_page",
         "subprocessors_list",
-        "terms_of_service",
-        "trust_center"
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -972,14 +937,6 @@
           "source_type": "certification_reference",
           "source_url": "https://aiven.io/security-compliance",
           "title": "Security, Privacy &amp; Compliance | Aiven"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "aiven-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://aiven.io/blog/the-intersection-of-compliance-and-risk-vs-security",
-          "title": "Compliance, Risk &amp; Security in Finance | Aiven"
         },
         {
           "confidence": null,
@@ -1028,14 +985,6 @@
           "source_type": "terms_of_service",
           "source_url": "https://aiven.io/terms",
           "title": "Aiven Terms of Service"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "aiven-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://aiven.io/blog/data-security-compliance-in-the-cloud",
-          "title": "Data security compliance in the cloud"
         }
       ],
       "catalog_status": "active",
@@ -1057,14 +1006,6 @@
           "source_type": "certification_reference",
           "source_url": "https://aiven.io/security-compliance",
           "title": "Security, Privacy &amp; Compliance | Aiven"
-        },
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "aiven-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://aiven.io/blog/the-intersection-of-compliance-and-risk-vs-security",
-          "title": "Compliance, Risk &amp; Security in Finance | Aiven"
         },
         "dpa": {
           "confidence": null,
@@ -1113,14 +1054,6 @@
           "source_type": "terms_of_service",
           "source_url": "https://aiven.io/terms",
           "title": "Aiven Terms of Service"
-        },
-        "trust_center": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "aiven-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://aiven.io/blog/data-security-compliance-in-the-cloud",
-          "title": "Data security compliance in the cloud"
         }
       },
       "unavailable_source_types": [],
@@ -1544,20 +1477,11 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "alloy-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://alloy.app/security/compliance",
-          "title": "Security · Alloy"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -1581,6 +1505,11 @@
               "coverage_type": "contains",
               "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
               "role": "security_page"
+            },
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "compliance_page"
             }
           ],
           "effective_or_published_at": null,
@@ -1602,14 +1531,6 @@
         "alloy.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "alloy-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://alloy.app/security/compliance",
-          "title": "Security · Alloy"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -1633,6 +1554,11 @@
               "coverage_type": "contains",
               "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
               "role": "security_page"
+            },
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "compliance_page"
             }
           ],
           "effective_or_published_at": null,
@@ -2756,7 +2682,6 @@
       "canonical_source_types": [
         "privacy_notice",
         "security_page",
-        "subprocessors_list",
         "terms_of_service"
       ],
       "canonical_sources": [
@@ -2775,14 +2700,6 @@
           "source_type": "security_page",
           "source_url": "https://basecamp.com/about/policies/security",
           "title": "37signals Security Overview for Basecamp"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "basecamp-subprocessors-list",
-          "source_type": "subprocessors_list",
-          "source_url": "https://basecamp.com/privacy/subprocessors",
-          "title": "37signals — Privacy Policy"
         },
         {
           "confidence": null,
@@ -2821,14 +2738,6 @@
           "source_url": "https://basecamp.com/about/policies/security",
           "title": "37signals Security Overview for Basecamp"
         },
-        "subprocessors_list": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "basecamp-subprocessors-list",
-          "source_type": "subprocessors_list",
-          "source_url": "https://basecamp.com/privacy/subprocessors",
-          "title": "37signals — Privacy Policy"
-        },
         "terms_of_service": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -2841,7 +2750,8 @@
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "dpa"
+        "dpa",
+        "subprocessors_list"
       ],
       "vendor_id": "basecamp"
     },
@@ -2976,20 +2886,19 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
+        "certification_reference",
         "dpa",
         "privacy_notice",
-        "security_page",
         "trust_center"
       ],
       "canonical_sources": [
         {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "bigcommerce-compliance-page",
-          "source_type": "compliance_page",
+          "source_id": "bigcommerce-certification-reference",
+          "source_type": "certification_reference",
           "source_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
-          "title": "BigCommerce Achieves SOC 1 and SOC 2 Compliance, Verifying Data Security Practices and Procedures"
+          "title": "Certification Reference"
         },
         {
           "confidence": null,
@@ -3009,18 +2918,17 @@
         },
         {
           "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "bigcommerce-security-page",
-          "source_type": "security_page",
-          "source_url": "https://security.bigcommerce.com",
-          "title": "Commerce Commerce Trust Center | Powered by SafeBase"
-        },
-        {
-          "confidence": null,
+          "coverage_claims": [
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "security_page"
+            }
+          ],
           "effective_or_published_at": null,
           "source_id": "bigcommerce-trust-center",
           "source_type": "trust_center",
-          "source_url": "https://bigcommerce.com/security",
+          "source_url": "https://security.bigcommerce.com/",
           "title": "Commerce Commerce Trust Center | Powered by SafeBase"
         }
       ],
@@ -3035,13 +2943,13 @@
         "bigcommerce.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
+        "certification_reference": {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "bigcommerce-compliance-page",
-          "source_type": "compliance_page",
+          "source_id": "bigcommerce-certification-reference",
+          "source_type": "certification_reference",
           "source_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
-          "title": "BigCommerce Achieves SOC 1 and SOC 2 Compliance, Verifying Data Security Practices and Procedures"
+          "title": "Certification Reference"
         },
         "dpa": {
           "confidence": null,
@@ -3059,20 +2967,19 @@
           "source_url": "https://bigcommerce.com/privacy",
           "title": "Privacy Policy | Commerce"
         },
-        "security_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "bigcommerce-security-page",
-          "source_type": "security_page",
-          "source_url": "https://security.bigcommerce.com",
-          "title": "Commerce Commerce Trust Center | Powered by SafeBase"
-        },
         "trust_center": {
           "confidence": null,
+          "coverage_claims": [
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "security_page"
+            }
+          ],
           "effective_or_published_at": null,
           "source_id": "bigcommerce-trust-center",
           "source_type": "trust_center",
-          "source_url": "https://bigcommerce.com/security",
+          "source_url": "https://security.bigcommerce.com/",
           "title": "Commerce Commerce Trust Center | Powered by SafeBase"
         }
       },
@@ -3338,8 +3245,6 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "status_page",
@@ -3347,22 +3252,6 @@
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "bitdefender-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.bitdefender.com/en-us/business/services/cybersecurity-advisories",
-          "title": "Bitdefender Cybersecurity Advisory Services"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "bitdefender-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.bitdefender.com/en-us/consumer/",
-          "title": "Bitdefender Security Software Solutions for Home Users"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -3417,22 +3306,6 @@
         "bitdefender.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "bitdefender-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.bitdefender.com/en-us/business/services/cybersecurity-advisories",
-          "title": "Bitdefender Cybersecurity Advisory Services"
-        },
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "bitdefender-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.bitdefender.com/en-us/consumer/",
-          "title": "Bitdefender Security Software Solutions for Home Users"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -3475,6 +3348,8 @@
         }
       },
       "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
         "subprocessors_list"
       ],
       "vendor_id": "bitdefender"
@@ -3635,12 +3510,10 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "certification_reference",
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
-        "subprocessors_list",
-        "trust_center"
+        "subprocessors_list"
       ],
       "canonical_sources": [
         {
@@ -3650,14 +3523,6 @@
           "source_type": "certification_reference",
           "source_url": "https://www.braze.com/ja/company/regulations-compliance",
           "title": "国際規格認証| 顧客エンゲージメントプラットフォームBraze（ブレイズ)"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "braze-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.braze.com/resources/articles/vppa-compliance",
-          "title": "Why VPPA forces media brands to choose between compliance and relevance"
         },
         {
           "confidence": null,
@@ -3690,14 +3555,6 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.braze.com/company/legal/subprocessors",
           "title": "Braze Subprocessors | Braze"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "braze-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://www.braze.com/resources/articles/ltr-2017-speakers-brain-trust",
-          "title": "Meet the LTR 2017 Brain Trust"
         }
       ],
       "catalog_status": "active",
@@ -3718,14 +3575,6 @@
           "source_type": "certification_reference",
           "source_url": "https://www.braze.com/ja/company/regulations-compliance",
           "title": "国際規格認証| 顧客エンゲージメントプラットフォームBraze（ブレイズ)"
-        },
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "braze-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.braze.com/resources/articles/vppa-compliance",
-          "title": "Why VPPA forces media brands to choose between compliance and relevance"
         },
         "dpa": {
           "confidence": null,
@@ -3758,14 +3607,6 @@
           "source_type": "subprocessors_list",
           "source_url": "https://www.braze.com/company/legal/subprocessors",
           "title": "Braze Subprocessors | Braze"
-        },
-        "trust_center": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "braze-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://www.braze.com/resources/articles/ltr-2017-speakers-brain-trust",
-          "title": "Meet the LTR 2017 Brain Trust"
         }
       },
       "unavailable_source_types": [],
@@ -3949,8 +3790,6 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "status_page",
@@ -3959,22 +3798,6 @@
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "campaign-monitor-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.campaignmonitor.com/trust/certifications",
-          "title": "Campaign Monitor Trust Center | Powered by SecurityPal AI"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "campaign-monitor-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.campaignmonitor.com/trust/compliance",
-          "title": "Campaign Monitor Trust Center | Powered by SecurityPal AI"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -4022,12 +3845,22 @@
               "coverage_type": "contains",
               "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
               "role": "security_page"
+            },
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "compliance_page"
+            },
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "certification_reference"
             }
           ],
           "effective_or_published_at": null,
           "source_id": "campaign-monitor-trust-center",
           "source_type": "trust_center",
-          "source_url": "https://www.campaignmonitor.com/trust",
+          "source_url": "https://trust.campaignmonitor.meetmarigold.com/",
           "title": "Campaign Monitor Trust Center | Powered by SecurityPal AI"
         }
       ],
@@ -4046,22 +3879,6 @@
         "status.campaignmonitor.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "campaign-monitor-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.campaignmonitor.com/trust/certifications",
-          "title": "Campaign Monitor Trust Center | Powered by SecurityPal AI"
-        },
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "campaign-monitor-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.campaignmonitor.com/trust/compliance",
-          "title": "Campaign Monitor Trust Center | Powered by SecurityPal AI"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -4109,12 +3926,22 @@
               "coverage_type": "contains",
               "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
               "role": "security_page"
+            },
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "compliance_page"
+            },
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "certification_reference"
             }
           ],
           "effective_or_published_at": null,
           "source_id": "campaign-monitor-trust-center",
           "source_type": "trust_center",
-          "source_url": "https://www.campaignmonitor.com/trust",
+          "source_url": "https://trust.campaignmonitor.meetmarigold.com/",
           "title": "Campaign Monitor Trust Center | Powered by SecurityPal AI"
         }
       },
@@ -4397,7 +4224,7 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
+        "certification_reference",
         "privacy_notice",
         "terms_of_service",
         "trust_center"
@@ -4406,10 +4233,10 @@
         {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "checkout-com-compliance-page",
-          "source_type": "compliance_page",
+          "source_id": "checkout-com-certification-reference",
+          "source_type": "certification_reference",
           "source_url": "https://www.checkout.com/legal/certificates",
-          "title": "Checkout.com - FCA, Bank &amp; Payment Association Certificates"
+          "title": "Certification Reference"
         },
         {
           "confidence": null,
@@ -4451,13 +4278,13 @@
         "trust.checkout.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
+        "certification_reference": {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "checkout-com-compliance-page",
-          "source_type": "compliance_page",
+          "source_id": "checkout-com-certification-reference",
+          "source_type": "certification_reference",
           "source_url": "https://www.checkout.com/legal/certificates",
-          "title": "Checkout.com - FCA, Bank &amp; Payment Association Certificates"
+          "title": "Certification Reference"
         },
         "privacy_notice": {
           "confidence": null,
@@ -4495,7 +4322,6 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
         "compliance_page",
         "privacy_notice",
         "security_page",
@@ -4503,14 +4329,6 @@
         "terms_of_service"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "circleci-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://circleci.com/blog/automate-software-delivery-compliance/",
-          "title": "Automating compliance in software delivery - CircleCI"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -4563,14 +4381,6 @@
         "circleci.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "circleci-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://circleci.com/blog/automate-software-delivery-compliance/",
-          "title": "Automating compliance in software delivery - CircleCI"
-        },
         "compliance_page": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -4961,8 +4771,6 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
-        "dpa",
         "privacy_notice",
         "security_page",
         "status_page",
@@ -4971,22 +4779,6 @@
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "coda-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://coda.io/@compliancequest",
-          "title": "Compliance Quest - Coda Profile"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "coda-dpa",
-          "source_type": "dpa",
-          "source_url": "https://coda.io/@james-smith1/impact-of-ai-on-unstructured-data-processing-for-modern-business",
-          "title": "Impact of AI on Unstructured Data Processing for Modern Businesses"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -5049,22 +4841,6 @@
         "status.coda.io"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "coda-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://coda.io/@compliancequest",
-          "title": "Compliance Quest - Coda Profile"
-        },
-        "dpa": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "coda-dpa",
-          "source_type": "dpa",
-          "source_url": "https://coda.io/@james-smith1/impact-of-ai-on-unstructured-data-processing-for-modern-business",
-          "title": "Impact of AI on Unstructured Data Processing for Modern Businesses"
-        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -5115,7 +4891,9 @@
         }
       },
       "unavailable_source_types": [
-        "certification_reference"
+        "certification_reference",
+        "compliance_page",
+        "dpa"
       ],
       "vendor_id": "coda"
     },
@@ -5234,7 +5012,6 @@
         "compliance_page",
         "dpa",
         "privacy_notice",
-        "security_page",
         "subprocessors_list",
         "trust_center"
       ],
@@ -5274,14 +5051,6 @@
         {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "commercetools-security-page",
-          "source_type": "security_page",
-          "source_url": "https://commercetools.com/blog/commercetools-connect-speed-security-and-resilience",
-          "title": "commercetools Connect: Speed, Security and Resilience"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
           "source_id": "commercetools-subprocessors-list",
           "source_type": "subprocessors_list",
           "source_url": "https://commercetools.com/subprocessors",
@@ -5302,7 +5071,9 @@
       "legal_entities": [],
       "legal_name": null,
       "manifest_path": "dist/vendors/commercetools.json",
-      "missing_core_source_types": [],
+      "missing_core_source_types": [
+        "security_page"
+      ],
       "official_domains": [
         "commercetools.com"
       ],
@@ -5339,14 +5110,6 @@
           "source_url": "https://commercetools.com/privacy",
           "title": "Privacy Notice"
         },
-        "security_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "commercetools-security-page",
-          "source_type": "security_page",
-          "source_url": "https://commercetools.com/blog/commercetools-connect-speed-security-and-resilience",
-          "title": "commercetools Connect: Speed, Security and Resilience"
-        },
         "subprocessors_list": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -5373,8 +5136,7 @@
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
-        "subprocessors_list",
-        "trust_center"
+        "subprocessors_list"
       ],
       "canonical_sources": [
         {
@@ -5400,14 +5162,6 @@
           "source_type": "subprocessors_list",
           "source_url": "https://complyadvantage.com/sub-processors-list/",
           "title": "Sub-Processors List"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "complyadvantage-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://complyadvantage.com/security/compliance",
-          "title": "Compliance and Change Management: Building a Platform for Growth"
         }
       ],
       "catalog_status": "active",
@@ -5444,20 +5198,13 @@
           "source_type": "subprocessors_list",
           "source_url": "https://complyadvantage.com/sub-processors-list/",
           "title": "Sub-Processors List"
-        },
-        "trust_center": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "complyadvantage-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://complyadvantage.com/security/compliance",
-          "title": "Compliance and Change Management: Building a Platform for Growth"
         }
       },
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
-        "security_page"
+        "security_page",
+        "trust_center"
       ],
       "vendor_id": "complyadvantage"
     },
@@ -5465,21 +5212,12 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
         "compliance_page",
         "privacy_notice",
         "security_page",
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "confluent-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://developer.confluent.io/courses/security/audit-logs/",
-          "title": "Kafka Audit Logs with Log4j Plus ELK for Log Analysis"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -5524,14 +5262,6 @@
         "confluent.io"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "confluent-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://developer.confluent.io/courses/security/audit-logs/",
-          "title": "Kafka Audit Logs with Log4j Plus ELK for Log Analysis"
-        },
         "compliance_page": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -5775,7 +5505,6 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "status_page",
@@ -5783,14 +5512,6 @@
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "customer-io-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
-          "title": "SMS marketing compliance: 6 steps to protect your business | Customer.io"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -5851,14 +5572,6 @@
         "status.customerio.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "customer-io-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
-          "title": "SMS marketing compliance: 6 steps to protect your business | Customer.io"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -5909,6 +5622,7 @@
       },
       "unavailable_source_types": [
         "certification_reference",
+        "compliance_page",
         "subprocessors_list"
       ],
       "vendor_id": "customer-io"
@@ -6174,20 +5888,11 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "darwinbox-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://darwinbox.com/blog/social-security-code",
-          "title": "Social Security Code, 2020: A Quick Overview"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -6224,14 +5929,6 @@
         "darwinbox.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "darwinbox-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://darwinbox.com/blog/social-security-code",
-          "title": "Social Security Code, 2020: A Quick Overview"
-        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -6259,6 +5956,7 @@
       },
       "unavailable_source_types": [
         "certification_reference",
+        "compliance_page",
         "dpa"
       ],
       "vendor_id": "darwinbox"
@@ -7324,20 +7022,11 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
         "dpa",
         "privacy_notice",
         "security_page"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "doodle-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://doodle.com/fr/navigating-cybersecurity-insights-and-tips-from-niel-harper-doodles-ciso/",
-          "title": "Naviguer dans la cybersécurité : Conseils de Niel Harper, RSSI de Doodle | Doodle"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -7375,14 +7064,6 @@
         "www.doodle.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "doodle-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://doodle.com/fr/navigating-cybersecurity-insights-and-tips-from-niel-harper-doodles-ciso/",
-          "title": "Naviguer dans la cybersécurité : Conseils de Niel Harper, RSSI de Doodle | Doodle"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -7409,6 +7090,8 @@
         }
       },
       "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
         "subprocessors_list"
       ],
       "vendor_id": "doodle"
@@ -7952,8 +7635,7 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "privacy_notice",
-        "trust_center"
+        "privacy_notice"
       ],
       "canonical_sources": [
         {
@@ -7963,14 +7645,6 @@
           "source_type": "privacy_notice",
           "source_url": "https://emarsys.com/privacy-policy",
           "title": "Privacy Policy - SAP Engagement Cloud"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "emarsys-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://emarsys.com/learn/blog/first-party-data-privacy-how-brands-prioritize-trust-for-lasting-customer-relationships/",
-          "title": "First-Party Data Privacy: How Brands Prioritize Trust for Lasting Customer Relationships | SAP Engagement Cloud"
         }
       ],
       "catalog_status": "active",
@@ -7991,14 +7665,6 @@
           "source_type": "privacy_notice",
           "source_url": "https://emarsys.com/privacy-policy",
           "title": "Privacy Policy - SAP Engagement Cloud"
-        },
-        "trust_center": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "emarsys-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://emarsys.com/learn/blog/first-party-data-privacy-how-brands-prioritize-trust-for-lasting-customer-relationships/",
-          "title": "First-Party Data Privacy: How Brands Prioritize Trust for Lasting Customer Relationships | SAP Engagement Cloud"
         }
       },
       "unavailable_source_types": [
@@ -8006,7 +7672,8 @@
         "compliance_page",
         "dpa",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "trust_center"
       ],
       "vendor_id": "emarsys"
     },
@@ -8663,8 +8330,7 @@
         "compliance_page",
         "privacy_notice",
         "security_page",
-        "terms_of_service",
-        "trust_center"
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -8698,14 +8364,6 @@
           "source_type": "terms_of_service",
           "source_url": "https://www.fiserv.com/en/about-fiserv/terms-of-use.html",
           "title": "Fiserv Terms of Use"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "fiserv-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://www.fiserv.com/en/solutions/risk-compliance.html",
-          "title": "Risk and Compliance, Risk Management, Regulatory Compliance | Fiserv"
         }
       ],
       "catalog_status": "active",
@@ -8751,14 +8409,6 @@
           "source_type": "terms_of_service",
           "source_url": "https://www.fiserv.com/en/about-fiserv/terms-of-use.html",
           "title": "Fiserv Terms of Use"
-        },
-        "trust_center": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "fiserv-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://www.fiserv.com/en/solutions/risk-compliance.html",
-          "title": "Risk and Compliance, Risk Management, Regulatory Compliance | Fiserv"
         }
       },
       "unavailable_source_types": [
@@ -9537,7 +9187,6 @@
       "canonical_source_types": [
         "ai_terms",
         "certification_reference",
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "subprocessors_list",
@@ -9559,14 +9208,6 @@
           "source_type": "certification_reference",
           "source_url": "https://about.gitlab.com/blog/soc2-compliance/",
           "title": "How secure is GitLab?"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "gitlab-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://about.gitlab.com/blog/git-security-audit/",
-          "title": "Git security audit: Inside the hunt for - and discovery of - CVEs"
         },
         {
           "confidence": null,
@@ -9632,14 +9273,6 @@
           "source_type": "certification_reference",
           "source_url": "https://about.gitlab.com/blog/soc2-compliance/",
           "title": "How secure is GitLab?"
-        },
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "gitlab-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://about.gitlab.com/blog/git-security-audit/",
-          "title": "Git security audit: Inside the hunt for - and discovery of - CVEs"
         },
         "dpa": {
           "confidence": null,
@@ -10447,7 +10080,6 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "certification_reference",
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
@@ -10461,14 +10093,6 @@
           "source_type": "certification_reference",
           "source_url": "https://www.greenhouse.com/product-features/greenhouse-achieves-iso-iec-42001-2023-certification",
           "title": "Greenhouse achieves ISO/IEC 42001:2023 certification"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "greenhouse-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.greenhouse.com/audit-log-terms",
-          "title": "Greenhouse | Legal - Audit Log Terms"
         },
         {
           "confidence": null,
@@ -10522,14 +10146,6 @@
           "source_url": "https://www.greenhouse.com/product-features/greenhouse-achieves-iso-iec-42001-2023-certification",
           "title": "Greenhouse achieves ISO/IEC 42001:2023 certification"
         },
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "greenhouse-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.greenhouse.com/audit-log-terms",
-          "title": "Greenhouse | Legal - Audit Log Terms"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -10570,19 +10186,10 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
         "privacy_notice",
         "security_page"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "greythr-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.greythr.com/faqs/social-security-code",
-          "title": "Compliance Page"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -10611,14 +10218,6 @@
         "greythr.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "greythr-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.greythr.com/faqs/social-security-code",
-          "title": "Compliance Page"
-        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -10638,6 +10237,7 @@
       },
       "unavailable_source_types": [
         "certification_reference",
+        "compliance_page",
         "dpa",
         "subprocessors_list"
       ],
@@ -12391,8 +11991,7 @@
       "canonical_source_types": [
         "privacy_notice",
         "status_page",
-        "terms_of_service",
-        "trust_center"
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -12418,21 +12017,6 @@
           "source_type": "terms_of_service",
           "source_url": "https://www.klarna.com/international/terms-and-conditions/",
           "title": "Klarna Terms and Conditions"
-        },
-        {
-          "confidence": null,
-          "coverage_claims": [
-            {
-              "coverage_type": "contains",
-              "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
-              "role": "security_page"
-            }
-          ],
-          "effective_or_published_at": null,
-          "source_id": "klarna-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://www.klarna.com/us/security/?grs=%2Fsecurity%2F&grr=empty",
-          "title": "Security comes as standard | Klarna US"
         }
       ],
       "catalog_status": "active",
@@ -12471,28 +12055,15 @@
           "source_type": "terms_of_service",
           "source_url": "https://www.klarna.com/international/terms-and-conditions/",
           "title": "Klarna Terms and Conditions"
-        },
-        "trust_center": {
-          "confidence": null,
-          "coverage_claims": [
-            {
-              "coverage_type": "contains",
-              "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
-              "role": "security_page"
-            }
-          ],
-          "effective_or_published_at": null,
-          "source_id": "klarna-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://www.klarna.com/us/security/?grs=%2Fsecurity%2F&grr=empty",
-          "title": "Security comes as standard | Klarna US"
         }
       },
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
         "dpa",
-        "subprocessors_list"
+        "security_page",
+        "subprocessors_list",
+        "trust_center"
       ],
       "vendor_id": "klarna"
     },
@@ -12745,7 +12316,6 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
         "dpa",
         "privacy_notice",
         "status_page",
@@ -12753,14 +12323,6 @@
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "linear-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://linear.app/integrations/security-and-compliance",
-          "title": "Certification Reference"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -12800,6 +12362,11 @@
               "coverage_type": "contains",
               "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
               "role": "security_page"
+            },
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "compliance_page"
             }
           ],
           "effective_or_published_at": null,
@@ -12822,14 +12389,6 @@
         "linearstatus.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "linear-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://linear.app/integrations/security-and-compliance",
-          "title": "Certification Reference"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -12869,6 +12428,11 @@
               "coverage_type": "contains",
               "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
               "role": "security_page"
+            },
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "compliance_page"
             }
           ],
           "effective_or_published_at": null,
@@ -15877,27 +15441,11 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "coverage_claims": [
-            {
-              "coverage_type": "contains",
-              "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
-              "role": "certification_reference"
-            }
-          ],
-          "effective_or_published_at": null,
-          "source_id": "onetrust-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.onetrust.com/error-pages/404/",
-          "title": "404 Not Found | OneTrust"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -15934,21 +15482,6 @@
         "onetrust.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "coverage_claims": [
-            {
-              "coverage_type": "contains",
-              "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
-              "role": "certification_reference"
-            }
-          ],
-          "effective_or_published_at": null,
-          "source_id": "onetrust-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.onetrust.com/error-pages/404/",
-          "title": "404 Not Found | OneTrust"
-        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -15975,6 +15508,8 @@
         }
       },
       "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa"
       ],
       "vendor_id": "onetrust"
@@ -16436,8 +15971,7 @@
         "dpa",
         "privacy_notice",
         "status_page",
-        "terms_of_service",
-        "trust_center"
+        "terms_of_service"
       ],
       "canonical_sources": [
         {
@@ -16471,14 +16005,6 @@
           "source_type": "terms_of_service",
           "source_url": "https://www.pandadoc.com/legal/master-services-agreement/",
           "title": "PandaDoc Master Services Agreement"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "pandadoc-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://www.pandadoc.com/trust/",
-          "title": "Not Found"
         }
       ],
       "catalog_status": "active",
@@ -16525,21 +16051,14 @@
           "source_type": "terms_of_service",
           "source_url": "https://www.pandadoc.com/legal/master-services-agreement/",
           "title": "PandaDoc Master Services Agreement"
-        },
-        "trust_center": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "pandadoc-trust-center",
-          "source_type": "trust_center",
-          "source_url": "https://www.pandadoc.com/trust/",
-          "title": "Not Found"
         }
       },
       "unavailable_source_types": [
         "certification_reference",
         "compliance_page",
         "security_page",
-        "subprocessors_list"
+        "subprocessors_list",
+        "trust_center"
       ],
       "vendor_id": "pandadoc"
     },
@@ -17155,7 +16674,6 @@
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
-        "security_page",
         "subprocessors_list",
         "trust_center"
       ],
@@ -17179,14 +16697,6 @@
         {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "pipedrive-security-page",
-          "source_type": "security_page",
-          "source_url": "https://pipedrive.com/trust-center",
-          "title": "Trust Center | Pipedrive"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
           "source_id": "pipedrive-subprocessors-list",
           "source_type": "subprocessors_list",
           "source_url": "https://www.pipedrive.com/en/subprocessors",
@@ -17194,6 +16704,13 @@
         },
         {
           "confidence": null,
+          "coverage_claims": [
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "security_page"
+            }
+          ],
           "effective_or_published_at": null,
           "source_id": "pipedrive-trust-center",
           "source_type": "trust_center",
@@ -17228,14 +16745,6 @@
           "source_url": "https://www.pipedrive.com/en/privacy",
           "title": "Privacy Notice | Pipedrive"
         },
-        "security_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "pipedrive-security-page",
-          "source_type": "security_page",
-          "source_url": "https://pipedrive.com/trust-center",
-          "title": "Trust Center | Pipedrive"
-        },
         "subprocessors_list": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -17246,6 +16755,13 @@
         },
         "trust_center": {
           "confidence": null,
+          "coverage_claims": [
+            {
+              "coverage_type": "contains",
+              "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+              "role": "security_page"
+            }
+          ],
           "effective_or_published_at": null,
           "source_id": "pipedrive-trust-center",
           "source_type": "trust_center",
@@ -18140,7 +17656,7 @@
           "effective_or_published_at": null,
           "source_id": "railway-trust-center",
           "source_type": "trust_center",
-          "source_url": "https://railway.com/security",
+          "source_url": "https://trust.railway.com/",
           "title": "Railway Trust Center | Powered by SafeBase"
         }
       ],
@@ -18200,7 +17716,7 @@
           "effective_or_published_at": null,
           "source_id": "railway-trust-center",
           "source_type": "trust_center",
-          "source_url": "https://railway.com/security",
+          "source_url": "https://trust.railway.com/",
           "title": "Railway Trust Center | Powered by SafeBase"
         }
       },
@@ -18515,7 +18031,7 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
+        "certification_reference",
         "privacy_notice",
         "security_page"
       ],
@@ -18523,10 +18039,10 @@
         {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "redox-compliance-page",
-          "source_type": "compliance_page",
+          "source_id": "redox-certification-reference",
+          "source_type": "certification_reference",
           "source_url": "https://redoxengine.com/blog/redox-adds-hitrust-i1-certification-for-its-google-cloud-offering-to-manage-healthcare-data-protection-and-mitigate-cybersecurity-threats/",
-          "title": "Redox adds HITRUST i1 Certification for its Google Cloud offering to manage healthcare data protection and mitigate cybersecurity threats - Redox"
+          "title": "Certification Reference"
         },
         {
           "confidence": null,
@@ -18564,13 +18080,13 @@
         "redoxengine.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
+        "certification_reference": {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "redox-compliance-page",
-          "source_type": "compliance_page",
+          "source_id": "redox-certification-reference",
+          "source_type": "certification_reference",
           "source_url": "https://redoxengine.com/blog/redox-adds-hitrust-i1-certification-for-its-google-cloud-offering-to-manage-healthcare-data-protection-and-mitigate-cybersecurity-threats/",
-          "title": "Redox adds HITRUST i1 Certification for its Google Cloud offering to manage healthcare data protection and mitigate cybersecurity threats - Redox"
+          "title": "Certification Reference"
         },
         "privacy_notice": {
           "confidence": null,
@@ -19383,7 +18899,6 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
@@ -19392,14 +18907,6 @@
         "terms_of_service"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "scaleway-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.scaleway.com/en/blog/k8s-security-episode-6/",
-          "title": "Compliance Page"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -19462,14 +18969,6 @@
         "status.scaleway.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "scaleway-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.scaleway.com/en/blog/k8s-security-episode-6/",
-          "title": "Compliance Page"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -19521,6 +19020,7 @@
       },
       "unavailable_source_types": [
         "certification_reference",
+        "compliance_page",
         "trust_center"
       ],
       "vendor_id": "scaleway"
@@ -19636,29 +19136,11 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
-        "compliance_page",
         "privacy_notice",
         "terms_of_service",
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "second-front-systems-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.secondfront.com/resources/blog/choosing-the-right-fedramp-compliance-tools-for-accelerating-authorization/",
-          "title": "A CCO&#039;s Guide to Choosing the right FedRAMP compliance tools for accelerating authorization"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "second-front-systems-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.secondfront.com/resources/blog/navigating-the-fedramp-marketplace-a-beginners-guide-to-compliance-ato-and-becoming-certified/",
-          "title": "Navigating the FedRAMP Marketplace: A beginner&#039;s guide to compliance, ATO, and becoming certified | Second Front"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -19697,22 +19179,6 @@
         "secondfront.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "second-front-systems-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.secondfront.com/resources/blog/choosing-the-right-fedramp-compliance-tools-for-accelerating-authorization/",
-          "title": "A CCO&#039;s Guide to Choosing the right FedRAMP compliance tools for accelerating authorization"
-        },
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "second-front-systems-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.secondfront.com/resources/blog/navigating-the-fedramp-marketplace-a-beginners-guide-to-compliance-ato-and-becoming-certified/",
-          "title": "Navigating the FedRAMP Marketplace: A beginner&#039;s guide to compliance, ATO, and becoming certified | Second Front"
-        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -19739,6 +19205,8 @@
         }
       },
       "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa",
         "subprocessors_list"
       ],
@@ -21266,21 +20734,12 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
         "compliance_page",
         "privacy_notice",
         "security_page",
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "starburst-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.starburst.io/blog/",
-          "title": "Starburst Blog: Unlock the Power of Trino | Starburst"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -21325,14 +20784,6 @@
         "starburst.io"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "starburst-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.starburst.io/blog/",
-          "title": "Starburst Blog: Unlock the Power of Trino | Starburst"
-        },
         "compliance_page": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -21499,7 +20950,6 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
         "compliance_page",
         "privacy_notice",
         "status_page",
@@ -21507,14 +20957,6 @@
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "strapi-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://strapi.io/headless-cms/comparison/strapi-vs-contentful",
-          "title": "Strapi vs Contentful"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -21575,14 +21017,6 @@
         "status.strapi.io"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "strapi-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://strapi.io/headless-cms/comparison/strapi-vs-contentful",
-          "title": "Strapi vs Contentful"
-        },
         "compliance_page": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -22621,21 +22055,12 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
         "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "trulioo-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.trulioo.com/resources/white-papers/e-id-inflection-point?utm_campaign=e-id-inflection-point&utm_medium=social&utm_source=announcement-bar",
-          "title": "The eID Inflection Point: A Guide to eIDAS 2.0 | Trulioo"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -22680,14 +22105,6 @@
         "trulioo.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "trulioo-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.trulioo.com/resources/white-papers/e-id-inflection-point?utm_campaign=e-id-inflection-point&utm_medium=social&utm_source=announcement-bar",
-          "title": "The eID Inflection Point: A Guide to eIDAS 2.0 | Trulioo"
-        },
         "compliance_page": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -22988,21 +22405,12 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "typeform-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.typeform.com/blog/survey-school-5-compliance-considerations",
-          "title": "Data compliance considerations to maintain customer trust and avoid costly fines"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -23047,14 +22455,6 @@
         "typeform.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "typeform-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.typeform.com/blog/survey-school-5-compliance-considerations",
-          "title": "Data compliance considerations to maintain customer trust and avoid costly fines"
-        },
         "dpa": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -23089,7 +22489,8 @@
         }
       },
       "unavailable_source_types": [
-        "certification_reference"
+        "certification_reference",
+        "compliance_page"
       ],
       "vendor_id": "typeform"
     },
@@ -23473,20 +22874,11 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
         "compliance_page",
         "privacy_notice",
         "security_page"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "vertafore-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.vertafore.com/resources/blog/understanding-soc-2-type-ii-compliance-insurance-industry",
-          "title": "Understanding SOC 2 Type II compliance in the insurance industry"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -23531,14 +22923,6 @@
         "vertafore.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "vertafore-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.vertafore.com/resources/blog/understanding-soc-2-type-ii-compliance-insurance-industry",
-          "title": "Understanding SOC 2 Type II compliance in the insurance industry"
-        },
         "compliance_page": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -23591,7 +22975,7 @@
           "effective_or_published_at": null,
           "source_id": "vtex-compliance-page",
           "source_type": "compliance_page",
-          "source_url": "https://vtex.com/trust/compliance",
+          "source_url": "https://compliance.vtex.com/",
           "title": "compliance.vtex.com"
         },
         {
@@ -23634,7 +23018,7 @@
           "effective_or_published_at": null,
           "source_id": "vtex-compliance-page",
           "source_type": "compliance_page",
-          "source_url": "https://vtex.com/trust/compliance",
+          "source_url": "https://compliance.vtex.com/",
           "title": "compliance.vtex.com"
         },
         "privacy_notice": {
@@ -24203,21 +23587,12 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "certification_reference",
         "privacy_notice",
         "status_page",
         "subprocessors_list",
         "trust_center"
       ],
       "canonical_sources": [
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "wiz-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.wiz.io/academy/ai-security/ai-audit",
-          "title": "What Is an AI Audit? A Security and Compliance Guide | Wiz"
-        },
         {
           "confidence": null,
           "effective_or_published_at": null,
@@ -24266,14 +23641,6 @@
         "cloud.google.com"
       ],
       "primary_source_by_type": {
-        "certification_reference": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "wiz-certification-reference",
-          "source_type": "certification_reference",
-          "source_url": "https://www.wiz.io/academy/ai-security/ai-audit",
-          "title": "What Is an AI Audit? A Security and Compliance Guide | Wiz"
-        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -24308,6 +23675,8 @@
         }
       },
       "unavailable_source_types": [
+        "certification_reference",
+        "compliance_page",
         "dpa"
       ],
       "vendor_id": "wiz"
@@ -24467,10 +23836,7 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
-        "compliance_page",
-        "dpa",
         "privacy_notice",
-        "security_page",
         "status_page",
         "terms_of_service"
       ],
@@ -24478,34 +23844,10 @@
         {
           "confidence": null,
           "effective_or_published_at": null,
-          "source_id": "worldpay-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.worldpay.com/en-AE/insights/articles/ISO-advantage-podcast",
-          "title": "Tune in to get the ISO partner advantage | Insights | Worldpay"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "worldpay-dpa",
-          "source_type": "dpa",
-          "source_url": "https://worldpay.com/en/legal",
-          "title": "Legal | Worldpay"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
           "source_id": "worldpay-privacy",
           "source_type": "privacy_notice",
           "source_url": "https://www.worldpay.com/en-gb/privacy",
           "title": "Worldpay Privacy Policy"
-        },
-        {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "worldpay-security-page",
-          "source_type": "security_page",
-          "source_url": "https://www.worldpay.com/en-AE/insights/articles/deciphering-payment-security-lingo-what-is-p2pe",
-          "title": "Payment Security Guide | Insights | Worldpay"
         },
         {
           "confidence": null,
@@ -24537,22 +23879,6 @@
         "status.worldpay.com"
       ],
       "primary_source_by_type": {
-        "compliance_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "worldpay-compliance-page",
-          "source_type": "compliance_page",
-          "source_url": "https://www.worldpay.com/en-AE/insights/articles/ISO-advantage-podcast",
-          "title": "Tune in to get the ISO partner advantage | Insights | Worldpay"
-        },
-        "dpa": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "worldpay-dpa",
-          "source_type": "dpa",
-          "source_url": "https://worldpay.com/en/legal",
-          "title": "Legal | Worldpay"
-        },
         "privacy_notice": {
           "confidence": null,
           "effective_or_published_at": null,
@@ -24560,14 +23886,6 @@
           "source_type": "privacy_notice",
           "source_url": "https://www.worldpay.com/en-gb/privacy",
           "title": "Worldpay Privacy Policy"
-        },
-        "security_page": {
-          "confidence": null,
-          "effective_or_published_at": null,
-          "source_id": "worldpay-security-page",
-          "source_type": "security_page",
-          "source_url": "https://www.worldpay.com/en-AE/insights/articles/deciphering-payment-security-lingo-what-is-p2pe",
-          "title": "Payment Security Guide | Insights | Worldpay"
         },
         "status_page": {
           "confidence": null,
@@ -24588,6 +23906,9 @@
       },
       "unavailable_source_types": [
         "certification_reference",
+        "compliance_page",
+        "dpa",
+        "security_page",
         "subprocessors_list",
         "trust_center"
       ],

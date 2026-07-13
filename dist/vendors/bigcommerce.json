@@ -1,10 +1,10 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/bigcommerce/artifacts/bigcommerce-compliance-page.yaml",
+      "_openva_path": "data/vendors/bigcommerce/artifacts/bigcommerce-certification-reference.yaml",
       "access_class": "public_web",
-      "artifact_id": "bigcommerce-compliance-page",
-      "artifact_type": "compliance_page",
+      "artifact_id": "bigcommerce-certification-reference",
+      "artifact_type": "certification_reference",
       "canonical_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
       "effective_or_published_at": null,
       "entity_scope": {
@@ -21,7 +21,7 @@
       "region_scope": [],
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
-      "source_id": "bigcommerce-compliance-page",
+      "source_id": "bigcommerce-certification-reference",
       "source_language": "en",
       "storage": {
         "extracted_text_stored": false,
@@ -91,41 +91,11 @@
       "vendor_id": "bigcommerce"
     },
     {
-      "_openva_path": "data/vendors/bigcommerce/artifacts/bigcommerce-security-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "bigcommerce-security-page",
-      "artifact_type": "security_page",
-      "canonical_url": "https://security.bigcommerce.com",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "bigcommerce-security-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "bigcommerce"
-    },
-    {
       "_openva_path": "data/vendors/bigcommerce/artifacts/bigcommerce-trust-center.yaml",
       "access_class": "public_web",
       "artifact_id": "bigcommerce-trust-center",
       "artifact_type": "trust_center",
-      "canonical_url": "https://bigcommerce.com/security",
+      "canonical_url": "https://security.bigcommerce.com/",
       "effective_or_published_at": null,
       "entity_scope": {
         "entity_ids": [],
@@ -154,7 +124,7 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-compliance-page.yaml",
+      "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-certification-reference.yaml",
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
@@ -166,11 +136,11 @@
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
       "source_authority_class": "vendor_published",
-      "source_id": "bigcommerce-compliance-page",
+      "source_id": "bigcommerce-certification-reference",
       "source_language": "en",
-      "source_type": "compliance_page",
+      "source_type": "certification_reference",
       "source_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
-      "title_native": "BigCommerce Achieves SOC 1 and SOC 2 Compliance, Verifying Data Security Practices and Procedures",
+      "title_native": "Certification Reference",
       "vendor_id": "bigcommerce"
     },
     {
@@ -214,28 +184,15 @@
       "vendor_id": "bigcommerce"
     },
     {
-      "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-security-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.596779Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "bigcommerce-security-page",
-      "source_language": "en",
-      "source_type": "security_page",
-      "source_url": "https://security.bigcommerce.com",
-      "title_native": "Commerce Commerce Trust Center | Powered by SafeBase",
-      "vendor_id": "bigcommerce"
-    },
-    {
       "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-trust-center.yaml",
       "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "security_page"
+        }
+      ],
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-07-13T17:45:44.577900Z",
@@ -249,17 +206,17 @@
       "source_id": "bigcommerce-trust-center",
       "source_language": "en",
       "source_type": "trust_center",
-      "source_url": "https://bigcommerce.com/security",
+      "source_url": "https://security.bigcommerce.com/",
       "title_native": "Commerce Commerce Trust Center | Powered by SafeBase",
       "vendor_id": "bigcommerce"
     }
   ],
   "changes": [
     {
-      "_openva_path": "data/vendors/bigcommerce/changes/candidate-promotion-bigcommerce-compliance-page.yaml",
-      "artifact_id": "bigcommerce-compliance-page",
+      "_openva_path": "data/vendors/bigcommerce/changes/candidate-promotion-bigcommerce-certification-reference.yaml",
+      "artifact_id": "bigcommerce-certification-reference",
       "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-bigcommerce-compliance-page",
+      "change_id": "candidate-promotion-bigcommerce-certification-reference",
       "change_type": "created",
       "detected_at": "2026-07-13T17:45:42.222983Z",
       "from_hash": "sha256:TBD",
@@ -267,8 +224,8 @@
       "not_advice": true,
       "review_state": "proposed",
       "schema_version": "0.1.0",
-      "source_id": "bigcommerce-compliance-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "source_id": "bigcommerce-certification-reference",
+      "summary": "Owner-led source completion promoted a source-type-correct official certification reference after page-purpose review.",
       "to_hash": "sha256:TBD",
       "vendor_id": "bigcommerce"
     },
@@ -285,23 +242,6 @@
       "review_state": "proposed",
       "schema_version": "0.1.0",
       "source_id": "bigcommerce-dpa",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "bigcommerce"
-    },
-    {
-      "_openva_path": "data/vendors/bigcommerce/changes/candidate-promotion-bigcommerce-security-page.yaml",
-      "artifact_id": "bigcommerce-security-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-bigcommerce-security-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:44.596779Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "bigcommerce-security-page",
       "summary": "Reviewed candidate source promoted to canonical public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "bigcommerce"
@@ -353,17 +293,16 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 5,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 5,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "compliance_page",
+      "certification_reference",
       "dpa",
       "privacy_notice",
-      "security_page",
       "trust_center"
     ],
     "unavailable_source_count": 2,

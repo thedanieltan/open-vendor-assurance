@@ -1,0 +1,22 @@
+schema_version: 0.1.0
+unavailable_source_id: klarna-security-page
+vendor_id: klarna
+source_type: security_page
+status: not_identified
+reason: distinct_public_url_not_identified
+reviewed_at: '2026-07-14T00:00:00Z'
+reviewed_by: agent
+next_review_after: '2026-10-12'
+candidate_urls_checked:
+- https://www.klarna.com/international/privacy-policy/
+- https://www.klarna.com/international/terms-and-conditions/
+- https://status.klarna.com/
+- https://klarna.com
+- https://www.klarna.com
+- https://status.klarna.com
+notes: No source-type-correct canonical public source was retained after official-path,
+  link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose
+  review. Rejected generic, editorial, user-generated, or not-found pages are not
+  treated as vendor assurance sources. This is a search result, not a vendor quality
+  or risk conclusion.
+not_advice: true

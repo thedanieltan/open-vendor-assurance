@@ -61,36 +61,6 @@
       "vendor_id": "pipedrive"
     },
     {
-      "_openva_path": "data/vendors/pipedrive/artifacts/pipedrive-security-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "pipedrive-security-page",
-      "artifact_type": "security_page",
-      "canonical_url": "https://pipedrive.com/trust-center",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "pipedrive-security-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "pipedrive"
-    },
-    {
       "_openva_path": "data/vendors/pipedrive/artifacts/pipedrive-subprocessors-list.yaml",
       "access_class": "public_web",
       "artifact_id": "pipedrive-subprocessors-list",
@@ -194,26 +164,6 @@
       "vendor_id": "pipedrive"
     },
     {
-      "_openva_path": "data/vendors/pipedrive/sources/pipedrive-security-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:45.308332Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "pipedrive-security-page",
-      "source_language": "en",
-      "source_type": "security_page",
-      "source_url": "https://pipedrive.com/trust-center",
-      "title_native": "Trust Center | Pipedrive",
-      "vendor_id": "pipedrive"
-    },
-    {
       "_openva_path": "data/vendors/pipedrive/sources/pipedrive-subprocessors-list.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -236,6 +186,13 @@
     {
       "_openva_path": "data/vendors/pipedrive/sources/pipedrive-trust-center.yaml",
       "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "security_page"
+        }
+      ],
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-07-13T17:45:45.338250Z",
@@ -268,23 +225,6 @@
       "review_state": "proposed",
       "schema_version": "0.1.0",
       "source_id": "pipedrive-dpa",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "pipedrive"
-    },
-    {
-      "_openva_path": "data/vendors/pipedrive/changes/candidate-promotion-pipedrive-security-page.yaml",
-      "artifact_id": "pipedrive-security-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-pipedrive-security-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:45.308332Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "pipedrive-security-page",
       "summary": "Reviewed candidate source promoted to canonical public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "pipedrive"
@@ -353,16 +293,15 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 5,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 5,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
       "dpa",
       "privacy_notice",
-      "security_page",
       "subprocessors_list",
       "trust_center"
     ],

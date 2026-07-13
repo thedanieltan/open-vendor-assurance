@@ -1,66 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/coda/artifacts/coda-compliance-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "coda-compliance-page",
-      "artifact_type": "compliance_page",
-      "canonical_url": "https://coda.io/@compliancequest",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "coda-compliance-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "coda"
-    },
-    {
-      "_openva_path": "data/vendors/coda/artifacts/coda-dpa.yaml",
-      "access_class": "public_web",
-      "artifact_id": "coda-dpa",
-      "artifact_type": "dpa",
-      "canonical_url": "https://coda.io/@james-smith1/impact-of-ai-on-unstructured-data-processing-for-modern-business",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "coda-dpa",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "coda"
-    },
-    {
       "_openva_path": "data/vendors/coda/artifacts/coda-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "coda-privacy",
@@ -250,46 +190,6 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/coda/sources/coda-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.416006Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "coda-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://coda.io/@compliancequest",
-      "title_native": "Compliance Quest - Coda Profile",
-      "vendor_id": "coda"
-    },
-    {
-      "_openva_path": "data/vendors/coda/sources/coda-dpa.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.869593Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "coda-dpa",
-      "source_language": "en",
-      "source_type": "dpa",
-      "source_url": "https://coda.io/@james-smith1/impact-of-ai-on-unstructured-data-processing-for-modern-business",
-      "title_native": "Impact of AI on Unstructured Data Processing for Modern Businesses",
-      "vendor_id": "coda"
-    },
-    {
       "_openva_path": "data/vendors/coda/sources/coda-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -421,40 +321,6 @@
   ],
   "changes": [
     {
-      "_openva_path": "data/vendors/coda/changes/candidate-promotion-coda-compliance-page.yaml",
-      "artifact_id": "coda-compliance-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-coda-compliance-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:42.416006Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "coda-compliance-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "coda"
-    },
-    {
-      "_openva_path": "data/vendors/coda/changes/candidate-promotion-coda-dpa.yaml",
-      "artifact_id": "coda-dpa",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-coda-dpa",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:43.869593Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "coda-dpa",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "coda"
-    },
-    {
       "_openva_path": "data/vendors/coda/changes/candidate-promotion-coda-security-page.yaml",
       "artifact_id": "coda-security-page",
       "catalog_change_significance": "unknown",
@@ -569,15 +435,13 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 8,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 8,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "compliance_page",
-      "dpa",
       "privacy_notice",
       "security_page",
       "status_page",
@@ -585,9 +449,11 @@
       "terms_of_service",
       "trust_center"
     ],
-    "unavailable_source_count": 1,
+    "unavailable_source_count": 4,
     "unavailable_source_types": [
-      "certification_reference"
+      "certification_reference",
+      "compliance_page",
+      "dpa"
     ]
   },
   "unavailable_sources": [
@@ -625,6 +491,74 @@
       "source_type": "certification_reference",
       "status": "not_identified",
       "unavailable_source_id": "coda-certification-reference",
+      "vendor_id": "coda"
+    },
+    {
+      "_openva_path": "data/vendors/coda/unavailable_sources/coda-certification_reference.yaml",
+      "candidate_urls_checked": [
+        "https://coda.io/trust/privacy",
+        "https://superhuman.com/legal/terms",
+        "https://status.coda.io/",
+        "https://coda.io",
+        "https://superhuman.com",
+        "https://status.coda.io"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "coda-certification-reference",
+      "vendor_id": "coda"
+    },
+    {
+      "_openva_path": "data/vendors/coda/unavailable_sources/coda-compliance_page.yaml",
+      "candidate_urls_checked": [
+        "https://coda.io/@compliancequest",
+        "https://coda.io/trust/privacy",
+        "https://superhuman.com/legal/terms",
+        "https://status.coda.io/",
+        "https://coda.io",
+        "https://superhuman.com",
+        "https://status.coda.io"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "coda-compliance-page",
+      "vendor_id": "coda"
+    },
+    {
+      "_openva_path": "data/vendors/coda/unavailable_sources/coda-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://coda.io/@james-smith1/impact-of-ai-on-unstructured-data-processing-for-modern-business",
+        "https://coda.io/trust/privacy",
+        "https://superhuman.com/legal/terms",
+        "https://status.coda.io/",
+        "https://coda.io",
+        "https://superhuman.com",
+        "https://status.coda.io"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "coda-dpa",
       "vendor_id": "coda"
     }
   ],

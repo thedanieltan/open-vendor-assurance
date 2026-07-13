@@ -1,5 +1,5 @@
 {
-  "count": 1122,
+  "count": 1078,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -20,26 +20,6 @@
       "source_type": "certification_reference",
       "source_url": "https://1password.com/resources/iso27001",
       "title_native": "1Password ISO certificates | 1Password",
-      "vendor_id": "1password"
-    },
-    {
-      "_openva_path": "data/vendors/1password/sources/1password-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.069527Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "1password-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://1password.com/resources/soc2",
-      "title_native": "1Password Trust Center | Powered by SafeBase",
       "vendor_id": "1password"
     },
     {
@@ -548,26 +528,6 @@
       "vendor_id": "adobe"
     },
     {
-      "_openva_path": "data/vendors/adp/sources/adp-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.093295Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "adp-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.adp.com/",
-      "title_native": "Payroll, HR and Tax Services | ADP Official Site",
-      "vendor_id": "adp"
-    },
-    {
       "_openva_path": "data/vendors/adp/sources/adp-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -945,26 +905,6 @@
       "vendor_id": "aiven"
     },
     {
-      "_openva_path": "data/vendors/aiven/sources/aiven-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.140145Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "aiven-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://aiven.io/blog/the-intersection-of-compliance-and-risk-vs-security",
-      "title_native": "Compliance, Risk &amp; Security in Finance | Aiven",
-      "vendor_id": "aiven"
-    },
-    {
       "_openva_path": "data/vendors/aiven/sources/aiven-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -1091,26 +1031,6 @@
       "summary_native": "Public Aiven terms of service.",
       "title_en": "Aiven Terms of Service",
       "title_native": "Aiven Terms of Service",
-      "vendor_id": "aiven"
-    },
-    {
-      "_openva_path": "data/vendors/aiven/sources/aiven-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.511255Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "aiven-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://aiven.io/blog/data-security-compliance-in-the-cloud",
-      "title_native": "Data security compliance in the cloud",
       "vendor_id": "aiven"
     },
     {
@@ -1548,26 +1468,6 @@
       "vendor_id": "aliyun"
     },
     {
-      "_openva_path": "data/vendors/alloy/sources/alloy-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.174593Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "alloy-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://alloy.app/security/compliance",
-      "title_native": "Security · Alloy",
-      "vendor_id": "alloy"
-    },
-    {
       "_openva_path": "data/vendors/alloy/sources/alloy-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -1621,6 +1521,11 @@
           "coverage_type": "contains",
           "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
           "role": "security_page"
+        },
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "compliance_page"
         }
       ],
       "not_advice": true,
@@ -2899,26 +2804,6 @@
       "vendor_id": "basecamp"
     },
     {
-      "_openva_path": "data/vendors/basecamp/sources/basecamp-subprocessors-list.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:45.738887Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "basecamp-subprocessors-list",
-      "source_language": "en",
-      "source_type": "subprocessors_list",
-      "source_url": "https://basecamp.com/privacy/subprocessors",
-      "title_native": "37signals — Privacy Policy",
-      "vendor_id": "basecamp"
-    },
-    {
       "_openva_path": "data/vendors/basecamp/sources/basecamp-terms.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -3074,7 +2959,7 @@
       "vendor_id": "beyondtrust"
     },
     {
-      "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-compliance-page.yaml",
+      "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-certification-reference.yaml",
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
@@ -3086,11 +2971,11 @@
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
       "source_authority_class": "vendor_published",
-      "source_id": "bigcommerce-compliance-page",
+      "source_id": "bigcommerce-certification-reference",
       "source_language": "en",
-      "source_type": "compliance_page",
+      "source_type": "certification_reference",
       "source_url": "https://www.bigcommerce.com/press/releases/bigcommerce-achieves-soc-1-and-soc-2-compliance-verifying-data-security-practices-and-procedures/",
-      "title_native": "BigCommerce Achieves SOC 1 and SOC 2 Compliance, Verifying Data Security Practices and Procedures",
+      "title_native": "Certification Reference",
       "vendor_id": "bigcommerce"
     },
     {
@@ -3134,28 +3019,15 @@
       "vendor_id": "bigcommerce"
     },
     {
-      "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-security-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.596779Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "bigcommerce-security-page",
-      "source_language": "en",
-      "source_type": "security_page",
-      "source_url": "https://security.bigcommerce.com",
-      "title_native": "Commerce Commerce Trust Center | Powered by SafeBase",
-      "vendor_id": "bigcommerce"
-    },
-    {
       "_openva_path": "data/vendors/bigcommerce/sources/bigcommerce-trust-center.yaml",
       "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "security_page"
+        }
+      ],
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-07-13T17:45:44.577900Z",
@@ -3169,7 +3041,7 @@
       "source_id": "bigcommerce-trust-center",
       "source_language": "en",
       "source_type": "trust_center",
-      "source_url": "https://bigcommerce.com/security",
+      "source_url": "https://security.bigcommerce.com/",
       "title_native": "Commerce Commerce Trust Center | Powered by SafeBase",
       "vendor_id": "bigcommerce"
     },
@@ -3420,46 +3292,6 @@
       "source_url": "https://www.atlassian.com/trust",
       "title_native": "Trust Center | Atlassian",
       "vendor_id": "bitbucket"
-    },
-    {
-      "_openva_path": "data/vendors/bitdefender/sources/bitdefender-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.254549Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "bitdefender-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.bitdefender.com/en-us/business/services/cybersecurity-advisories",
-      "title_native": "Bitdefender Cybersecurity Advisory Services",
-      "vendor_id": "bitdefender"
-    },
-    {
-      "_openva_path": "data/vendors/bitdefender/sources/bitdefender-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.273472Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "bitdefender-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.bitdefender.com/en-us/consumer/",
-      "title_native": "Bitdefender Security Software Solutions for Home Users",
-      "vendor_id": "bitdefender"
     },
     {
       "_openva_path": "data/vendors/bitdefender/sources/bitdefender-dpa.yaml",
@@ -3757,26 +3589,6 @@
       "vendor_id": "braze"
     },
     {
-      "_openva_path": "data/vendors/braze/sources/braze-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.301324Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "braze-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.braze.com/resources/articles/vppa-compliance",
-      "title_native": "Why VPPA forces media brands to choose between compliance and relevance",
-      "vendor_id": "braze"
-    },
-    {
       "_openva_path": "data/vendors/braze/sources/braze-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -3854,26 +3666,6 @@
       "source_type": "subprocessors_list",
       "source_url": "https://www.braze.com/company/legal/subprocessors",
       "title_native": "Braze Subprocessors | Braze",
-      "vendor_id": "braze"
-    },
-    {
-      "_openva_path": "data/vendors/braze/sources/braze-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.662331Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "braze-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://www.braze.com/resources/articles/ltr-2017-speakers-brain-trust",
-      "title_native": "Meet the LTR 2017 Brain Trust",
       "vendor_id": "braze"
     },
     {
@@ -4038,46 +3830,6 @@
       "vendor_id": "calendly"
     },
     {
-      "_openva_path": "data/vendors/campaign-monitor/sources/campaign-monitor-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.319935Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "campaign-monitor-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.campaignmonitor.com/trust/certifications",
-      "title_native": "Campaign Monitor Trust Center | Powered by SecurityPal AI",
-      "vendor_id": "campaign-monitor"
-    },
-    {
-      "_openva_path": "data/vendors/campaign-monitor/sources/campaign-monitor-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.338158Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "campaign-monitor-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.campaignmonitor.com/trust/compliance",
-      "title_native": "Campaign Monitor Trust Center | Powered by SecurityPal AI",
-      "vendor_id": "campaign-monitor"
-    },
-    {
       "_openva_path": "data/vendors/campaign-monitor/sources/campaign-monitor-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -4194,6 +3946,16 @@
           "coverage_type": "contains",
           "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
           "role": "security_page"
+        },
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "compliance_page"
+        },
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "certification_reference"
         }
       ],
       "not_advice": true,
@@ -4209,7 +3971,7 @@
       "source_id": "campaign-monitor-trust-center",
       "source_language": "en",
       "source_type": "trust_center",
-      "source_url": "https://www.campaignmonitor.com/trust",
+      "source_url": "https://trust.campaignmonitor.meetmarigold.com/",
       "title_native": "Campaign Monitor Trust Center | Powered by SecurityPal AI",
       "vendor_id": "campaign-monitor"
     },
@@ -4480,7 +4242,7 @@
       "vendor_id": "chainalysis"
     },
     {
-      "_openva_path": "data/vendors/checkout-com/sources/checkout-com-compliance-page.yaml",
+      "_openva_path": "data/vendors/checkout-com/sources/checkout-com-certification-reference.yaml",
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
@@ -4492,11 +4254,11 @@
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
       "source_authority_class": "vendor_published",
-      "source_id": "checkout-com-compliance-page",
+      "source_id": "checkout-com-certification-reference",
       "source_language": "en",
-      "source_type": "compliance_page",
+      "source_type": "certification_reference",
       "source_url": "https://www.checkout.com/legal/certificates",
-      "title_native": "Checkout.com - FCA, Bank &amp; Payment Association Certificates",
+      "title_native": "Certification Reference",
       "vendor_id": "checkout-com"
     },
     {
@@ -4567,26 +4329,6 @@
       "title_en": "Checkout.com Trust Center",
       "title_native": "Checkout.com Trust Center",
       "vendor_id": "checkout-com"
-    },
-    {
-      "_openva_path": "data/vendors/circleci/sources/circleci-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.384085Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "circleci-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://circleci.com/blog/automate-software-delivery-compliance/",
-      "title_native": "Automating compliance in software delivery - CircleCI",
-      "vendor_id": "circleci"
     },
     {
       "_openva_path": "data/vendors/circleci/sources/circleci-compliance-page.yaml",
@@ -5050,46 +4792,6 @@
       "vendor_id": "cockroach-labs"
     },
     {
-      "_openva_path": "data/vendors/coda/sources/coda-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.416006Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "coda-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://coda.io/@compliancequest",
-      "title_native": "Compliance Quest - Coda Profile",
-      "vendor_id": "coda"
-    },
-    {
-      "_openva_path": "data/vendors/coda/sources/coda-dpa.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.869593Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "coda-dpa",
-      "source_language": "en",
-      "source_type": "dpa",
-      "source_url": "https://coda.io/@james-smith1/impact-of-ai-on-unstructured-data-processing-for-modern-business",
-      "title_native": "Impact of AI on Unstructured Data Processing for Modern Businesses",
-      "vendor_id": "coda"
-    },
-    {
       "_openva_path": "data/vendors/coda/sources/coda-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -5414,26 +5116,6 @@
       "vendor_id": "commercetools"
     },
     {
-      "_openva_path": "data/vendors/commercetools/sources/commercetools-security-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.773443Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "commercetools-security-page",
-      "source_language": "en",
-      "source_type": "security_page",
-      "source_url": "https://commercetools.com/blog/commercetools-connect-speed-security-and-resilience",
-      "title_native": "commercetools Connect: Speed, Security and Resilience",
-      "vendor_id": "commercetools"
-    },
-    {
       "_openva_path": "data/vendors/commercetools/sources/commercetools-subprocessors-list.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -5535,46 +5217,6 @@
       "source_url": "https://complyadvantage.com/sub-processors-list/",
       "title_native": "Sub-Processors List",
       "vendor_id": "complyadvantage"
-    },
-    {
-      "_openva_path": "data/vendors/complyadvantage/sources/complyadvantage-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.806111Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "complyadvantage-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://complyadvantage.com/security/compliance",
-      "title_native": "Compliance and Change Management: Building a Platform for Growth",
-      "vendor_id": "complyadvantage"
-    },
-    {
-      "_openva_path": "data/vendors/confluent/sources/confluent-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.456849Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "confluent-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://developer.confluent.io/courses/security/audit-logs/",
-      "title_native": "Kafka Audit Logs with Log4j Plus ELK for Log Analysis",
-      "vendor_id": "confluent"
     },
     {
       "_openva_path": "data/vendors/confluent/sources/confluent-compliance-page.yaml",
@@ -5856,26 +5498,6 @@
       "title_en": "Culture Amp Security",
       "title_native": "Culture Amp Security",
       "vendor_id": "culture-amp"
-    },
-    {
-      "_openva_path": "data/vendors/customer-io/sources/customer-io-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.499464Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "customer-io-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
-      "title_native": "SMS marketing compliance: 6 steps to protect your business | Customer.io",
-      "vendor_id": "customer-io"
     },
     {
       "_openva_path": "data/vendors/customer-io/sources/customer-io-dpa.yaml",
@@ -6256,26 +5878,6 @@
       "title_en": "Darktrace Trust Centre",
       "title_native": "Darktrace Trust Centre",
       "vendor_id": "darktrace"
-    },
-    {
-      "_openva_path": "data/vendors/darwinbox/sources/darwinbox-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.562581Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "darwinbox-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://darwinbox.com/blog/social-security-code",
-      "title_native": "Social Security Code, 2020: A Quick Overview",
-      "vendor_id": "darwinbox"
     },
     {
       "_openva_path": "data/vendors/darwinbox/sources/darwinbox-privacy.yaml",
@@ -7433,26 +7035,6 @@
       "vendor_id": "docusign"
     },
     {
-      "_openva_path": "data/vendors/doodle/sources/doodle-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.592757Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "doodle-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://doodle.com/fr/navigating-cybersecurity-insights-and-tips-from-niel-harper-doodles-ciso/",
-      "title_native": "Naviguer dans la cybersécurité : Conseils de Niel Harper, RSSI de Doodle | Doodle",
-      "vendor_id": "doodle"
-    },
-    {
       "_openva_path": "data/vendors/doodle/sources/doodle-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -8069,26 +7651,6 @@
       "source_type": "privacy_notice",
       "source_url": "https://emarsys.com/privacy-policy",
       "title_native": "Privacy Policy - SAP Engagement Cloud",
-      "vendor_id": "emarsys"
-    },
-    {
-      "_openva_path": "data/vendors/emarsys/sources/emarsys-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.918264Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "emarsys-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://emarsys.com/learn/blog/first-party-data-privacy-how-brands-prioritize-trust-for-lasting-customer-relationships/",
-      "title_native": "First-Party Data Privacy: How Brands Prioritize Trust for Lasting Customer Relationships | SAP Engagement Cloud",
       "vendor_id": "emarsys"
     },
     {
@@ -8768,26 +8330,6 @@
       "summary_native": "Public Fiserv website terms of use.",
       "title_en": "Fiserv Terms of Use",
       "title_native": "Fiserv Terms of Use",
-      "vendor_id": "fiserv"
-    },
-    {
-      "_openva_path": "data/vendors/fiserv/sources/fiserv-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.967960Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "fiserv-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://www.fiserv.com/en/solutions/risk-compliance.html",
-      "title_native": "Risk and Compliance, Risk Management, Regulatory Compliance | Fiserv",
       "vendor_id": "fiserv"
     },
     {
@@ -9582,26 +9124,6 @@
       "source_type": "certification_reference",
       "source_url": "https://about.gitlab.com/blog/soc2-compliance/",
       "title_native": "How secure is GitLab?",
-      "vendor_id": "gitlab"
-    },
-    {
-      "_openva_path": "data/vendors/gitlab/sources/gitlab-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.781736Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "gitlab-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://about.gitlab.com/blog/git-security-audit/",
-      "title_native": "Git security audit: Inside the hunt for - and discovery of - CVEs",
       "vendor_id": "gitlab"
     },
     {
@@ -10418,26 +9940,6 @@
       "vendor_id": "greenhouse"
     },
     {
-      "_openva_path": "data/vendors/greenhouse/sources/greenhouse-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.847505Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "greenhouse-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.greenhouse.com/audit-log-terms",
-      "title_native": "Greenhouse | Legal - Audit Log Terms",
-      "vendor_id": "greenhouse"
-    },
-    {
       "_openva_path": "data/vendors/greenhouse/sources/greenhouse-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -10528,26 +10030,6 @@
       "title_en": "Greenhouse Subprocessors",
       "title_native": "Greenhouse Subprocessors",
       "vendor_id": "greenhouse"
-    },
-    {
-      "_openva_path": "data/vendors/greythr/sources/greythr-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.878382Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "greythr-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.greythr.com/faqs/social-security-code",
-      "title_native": "Compliance Page",
-      "vendor_id": "greythr"
     },
     {
       "_openva_path": "data/vendors/greythr/sources/greythr-privacy.yaml",
@@ -12465,33 +11947,6 @@
       "vendor_id": "klarna"
     },
     {
-      "_openva_path": "data/vendors/klarna/sources/klarna-trust-center.yaml",
-      "access_class": "public_web",
-      "coverage_claims": [
-        {
-          "coverage_type": "contains",
-          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
-          "role": "security_page"
-        }
-      ],
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:45.080722Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "klarna-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://www.klarna.com/us/security/?grs=%2Fsecurity%2F&grr=empty",
-      "title_native": "Security comes as standard | Klarna US",
-      "vendor_id": "klarna"
-    },
-    {
       "_openva_path": "data/vendors/klaviyo/sources/klaviyo-compliance.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -12722,26 +12177,6 @@
       "vendor_id": "lever"
     },
     {
-      "_openva_path": "data/vendors/linear/sources/linear-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.946568Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "linear-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://linear.app/integrations/security-and-compliance",
-      "title_native": "Certification Reference",
-      "vendor_id": "linear"
-    },
-    {
       "_openva_path": "data/vendors/linear/sources/linear-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -12838,6 +12273,11 @@
           "coverage_type": "contains",
           "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
           "role": "security_page"
+        },
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "compliance_page"
         }
       ],
       "not_advice": true,
@@ -15833,33 +15273,6 @@
       "vendor_id": "onepassword"
     },
     {
-      "_openva_path": "data/vendors/onetrust/sources/onetrust-compliance-page.yaml",
-      "access_class": "public_web",
-      "coverage_claims": [
-        {
-          "coverage_type": "contains",
-          "evidence": "The same official public page returned HTTP 200 and strong source-type-specific semantic evidence for this role during bounded source-completion discovery.",
-          "role": "certification_reference"
-        }
-      ],
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.101049Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "onetrust-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.onetrust.com/error-pages/404/",
-      "title_native": "404 Not Found | OneTrust",
-      "vendor_id": "onetrust"
-    },
-    {
       "_openva_path": "data/vendors/onetrust/sources/onetrust-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -16504,26 +15917,6 @@
       "vendor_id": "pandadoc"
     },
     {
-      "_openva_path": "data/vendors/pandadoc/sources/pandadoc-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:45.273990Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "pandadoc-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://www.pandadoc.com/trust/",
-      "title_native": "Not Found",
-      "vendor_id": "pandadoc"
-    },
-    {
       "_openva_path": "data/vendors/paychex/sources/paychex-compliance-page.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -17143,26 +16536,6 @@
       "vendor_id": "pipedrive"
     },
     {
-      "_openva_path": "data/vendors/pipedrive/sources/pipedrive-security-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:45.308332Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "pipedrive-security-page",
-      "source_language": "en",
-      "source_type": "security_page",
-      "source_url": "https://pipedrive.com/trust-center",
-      "title_native": "Trust Center | Pipedrive",
-      "vendor_id": "pipedrive"
-    },
-    {
       "_openva_path": "data/vendors/pipedrive/sources/pipedrive-subprocessors-list.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -17185,6 +16558,13 @@
     {
       "_openva_path": "data/vendors/pipedrive/sources/pipedrive-trust-center.yaml",
       "access_class": "public_web",
+      "coverage_claims": [
+        {
+          "coverage_type": "contains",
+          "evidence": "Independent source-completion verification found strong role-specific terms on this same official public page; a separate inferred URL was removed during page-purpose remediation.",
+          "role": "security_page"
+        }
+      ],
       "not_advice": true,
       "provenance": {
         "collected_at": "2026-07-13T17:45:45.338250Z",
@@ -18035,7 +17415,7 @@
       "source_id": "railway-trust-center",
       "source_language": "en",
       "source_type": "trust_center",
-      "source_url": "https://railway.com/security",
+      "source_url": "https://trust.railway.com/",
       "title_native": "Railway Trust Center | Powered by SafeBase",
       "vendor_id": "railway"
     },
@@ -18305,7 +17685,7 @@
       "vendor_id": "redis"
     },
     {
-      "_openva_path": "data/vendors/redox/sources/redox-compliance-page.yaml",
+      "_openva_path": "data/vendors/redox/sources/redox-certification-reference.yaml",
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
@@ -18317,11 +17697,11 @@
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
       "source_authority_class": "vendor_published",
-      "source_id": "redox-compliance-page",
+      "source_id": "redox-certification-reference",
       "source_language": "en",
-      "source_type": "compliance_page",
+      "source_type": "certification_reference",
       "source_url": "https://redoxengine.com/blog/redox-adds-hitrust-i1-certification-for-its-google-cloud-offering-to-manage-healthcare-data-protection-and-mitigate-cybersecurity-threats/",
-      "title_native": "Redox adds HITRUST i1 Certification for its Google Cloud offering to manage healthcare data protection and mitigate cybersecurity threats - Redox",
+      "title_native": "Certification Reference",
       "vendor_id": "redox"
     },
     {
@@ -19202,26 +18582,6 @@
       "vendor_id": "sap"
     },
     {
-      "_openva_path": "data/vendors/scaleway/sources/scaleway-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.286320Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "scaleway-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.scaleway.com/en/blog/k8s-security-episode-6/",
-      "title_native": "Compliance Page",
-      "vendor_id": "scaleway"
-    },
-    {
       "_openva_path": "data/vendors/scaleway/sources/scaleway-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -19464,46 +18824,6 @@
       "title_en": "Scrut Automation Subprocessors",
       "title_native": "Scrut Automation Subprocessors",
       "vendor_id": "scrut-automation"
-    },
-    {
-      "_openva_path": "data/vendors/second-front-systems/sources/second-front-systems-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.301616Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "second-front-systems-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.secondfront.com/resources/blog/choosing-the-right-fedramp-compliance-tools-for-accelerating-authorization/",
-      "title_native": "A CCO&#039;s Guide to Choosing the right FedRAMP compliance tools for accelerating authorization",
-      "vendor_id": "second-front-systems"
-    },
-    {
-      "_openva_path": "data/vendors/second-front-systems/sources/second-front-systems-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.318149Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "second-front-systems-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.secondfront.com/resources/blog/navigating-the-fedramp-marketplace-a-beginners-guide-to-compliance-ato-and-becoming-certified/",
-      "title_native": "Navigating the FedRAMP Marketplace: A beginner&#039;s guide to compliance, ATO, and becoming certified | Second Front",
-      "vendor_id": "second-front-systems"
     },
     {
       "_openva_path": "data/vendors/second-front-systems/sources/second-front-systems-privacy.yaml",
@@ -21122,26 +20442,6 @@
       "vendor_id": "squarespace"
     },
     {
-      "_openva_path": "data/vendors/starburst/sources/starburst-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.364296Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "starburst-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.starburst.io/blog/",
-      "title_native": "Starburst Blog: Unlock the Power of Trino | Starburst",
-      "vendor_id": "starburst"
-    },
-    {
       "_openva_path": "data/vendors/starburst/sources/starburst-compliance-page.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -21327,26 +20627,6 @@
       "source_url": "https://www.storyblok.com/trust-center",
       "title_native": "Storyblok Enterprise Security | Storyblok",
       "vendor_id": "storyblok"
-    },
-    {
-      "_openva_path": "data/vendors/strapi/sources/strapi-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.420248Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "strapi-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://strapi.io/headless-cms/comparison/strapi-vs-contentful",
-      "title_native": "Strapi vs Contentful",
-      "vendor_id": "strapi"
     },
     {
       "_openva_path": "data/vendors/strapi/sources/strapi-compliance-page.yaml",
@@ -22481,26 +21761,6 @@
       "vendor_id": "trend-micro"
     },
     {
-      "_openva_path": "data/vendors/trulioo/sources/trulioo-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.545458Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "trulioo-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.trulioo.com/resources/white-papers/e-id-inflection-point?utm_campaign=e-id-inflection-point&utm_medium=social&utm_source=announcement-bar",
-      "title_native": "The eID Inflection Point: A Guide to eIDAS 2.0 | Trulioo",
-      "vendor_id": "trulioo"
-    },
-    {
       "_openva_path": "data/vendors/trulioo/sources/trulioo-compliance-page.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -22860,26 +22120,6 @@
       "title_en": "Twilio Subprocessors",
       "title_native": "Twilio Subprocessors",
       "vendor_id": "twilio"
-    },
-    {
-      "_openva_path": "data/vendors/typeform/sources/typeform-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.561565Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "typeform-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.typeform.com/blog/survey-school-5-compliance-considerations",
-      "title_native": "Data compliance considerations to maintain customer trust and avoid costly fines",
-      "vendor_id": "typeform"
     },
     {
       "_openva_path": "data/vendors/typeform/sources/typeform-dpa.yaml",
@@ -23339,26 +22579,6 @@
       "vendor_id": "vercel"
     },
     {
-      "_openva_path": "data/vendors/vertafore/sources/vertafore-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.591895Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "vertafore-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.vertafore.com/resources/blog/understanding-soc-2-type-ii-compliance-insurance-industry",
-      "title_native": "Understanding SOC 2 Type II compliance in the insurance industry",
-      "vendor_id": "vertafore"
-    },
-    {
       "_openva_path": "data/vendors/vertafore/sources/vertafore-compliance-page.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -23470,7 +22690,7 @@
       "source_id": "vtex-compliance-page",
       "source_language": "en",
       "source_type": "compliance_page",
-      "source_url": "https://vtex.com/trust/compliance",
+      "source_url": "https://compliance.vtex.com/",
       "title_native": "compliance.vtex.com",
       "vendor_id": "vtex"
     },
@@ -24031,26 +23251,6 @@
       "vendor_id": "wix"
     },
     {
-      "_openva_path": "data/vendors/wiz/sources/wiz-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.671256Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "wiz-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://www.wiz.io/academy/ai-security/ai-audit",
-      "title_native": "What Is an AI Audit? A Security and Compliance Guide | Wiz",
-      "vendor_id": "wiz"
-    },
-    {
       "_openva_path": "data/vendors/wiz/sources/wiz-privacy-notice.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -24306,46 +23506,6 @@
       "vendor_id": "workday"
     },
     {
-      "_openva_path": "data/vendors/worldpay/sources/worldpay-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.686431Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "worldpay-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.worldpay.com/en-AE/insights/articles/ISO-advantage-podcast",
-      "title_native": "Tune in to get the ISO partner advantage | Insights | Worldpay",
-      "vendor_id": "worldpay"
-    },
-    {
-      "_openva_path": "data/vendors/worldpay/sources/worldpay-dpa.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.350738Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "worldpay-dpa",
-      "source_language": "en",
-      "source_type": "dpa",
-      "source_url": "https://worldpay.com/en/legal",
-      "title_native": "Legal | Worldpay",
-      "vendor_id": "worldpay"
-    },
-    {
       "_openva_path": "data/vendors/worldpay/sources/worldpay-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -24366,26 +23526,6 @@
       "summary_native": "Public Worldpay privacy policy.",
       "title_en": "Worldpay Privacy Policy",
       "title_native": "Worldpay Privacy Policy",
-      "vendor_id": "worldpay"
-    },
-    {
-      "_openva_path": "data/vendors/worldpay/sources/worldpay-security-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:45.610272Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "worldpay-security-page",
-      "source_language": "en",
-      "source_type": "security_page",
-      "source_url": "https://www.worldpay.com/en-AE/insights/articles/deciphering-payment-security-lingo-what-is-p2pe",
-      "title_native": "Payment Security Guide | Insights | Worldpay",
       "vendor_id": "worldpay"
     },
     {

@@ -31,36 +31,6 @@
       "vendor_id": "aiven"
     },
     {
-      "_openva_path": "data/vendors/aiven/artifacts/aiven-compliance-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "aiven-compliance-page",
-      "artifact_type": "compliance_page",
-      "canonical_url": "https://aiven.io/blog/the-intersection-of-compliance-and-risk-vs-security",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "aiven-compliance-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "aiven"
-    },
-    {
       "_openva_path": "data/vendors/aiven/artifacts/aiven-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "aiven-dpa",
@@ -247,36 +217,6 @@
         "screenshot_stored": false
       },
       "vendor_id": "aiven"
-    },
-    {
-      "_openva_path": "data/vendors/aiven/artifacts/aiven-trust-center.yaml",
-      "access_class": "public_web",
-      "artifact_id": "aiven-trust-center",
-      "artifact_type": "trust_center",
-      "canonical_url": "https://aiven.io/blog/data-security-compliance-in-the-cloud",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "aiven-trust-center",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "aiven"
     }
   ],
   "candidate_sources": [],
@@ -299,26 +239,6 @@
       "source_type": "certification_reference",
       "source_url": "https://aiven.io/security-compliance",
       "title_native": "Security, Privacy &amp; Compliance | Aiven",
-      "vendor_id": "aiven"
-    },
-    {
-      "_openva_path": "data/vendors/aiven/sources/aiven-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.140145Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "aiven-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://aiven.io/blog/the-intersection-of-compliance-and-risk-vs-security",
-      "title_native": "Compliance, Risk &amp; Security in Finance | Aiven",
       "vendor_id": "aiven"
     },
     {
@@ -449,26 +369,6 @@
       "title_en": "Aiven Terms of Service",
       "title_native": "Aiven Terms of Service",
       "vendor_id": "aiven"
-    },
-    {
-      "_openva_path": "data/vendors/aiven/sources/aiven-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.511255Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "aiven-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://aiven.io/blog/data-security-compliance-in-the-cloud",
-      "title_native": "Data security compliance in the cloud",
-      "vendor_id": "aiven"
     }
   ],
   "changes": [
@@ -485,23 +385,6 @@
       "review_state": "proposed",
       "schema_version": "0.1.0",
       "source_id": "aiven-certification-reference",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "aiven"
-    },
-    {
-      "_openva_path": "data/vendors/aiven/changes/candidate-promotion-aiven-compliance-page.yaml",
-      "artifact_id": "aiven-compliance-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-aiven-compliance-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:42.140145Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "aiven-compliance-page",
       "summary": "Reviewed candidate source promoted to canonical public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "aiven"
@@ -553,23 +436,6 @@
       "review_state": "proposed",
       "schema_version": "0.1.0",
       "source_id": "aiven-subprocessors-list",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "aiven"
-    },
-    {
-      "_openva_path": "data/vendors/aiven/changes/candidate-promotion-aiven-trust-center.yaml",
-      "artifact_id": "aiven-trust-center",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-aiven-trust-center",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:44.511255Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "aiven-trust-center",
       "summary": "Reviewed candidate source promoted to canonical public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "aiven"
@@ -638,22 +504,20 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 9,
+    "artifact_count": 7,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 9,
+    "canonical_source_count": 7,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
       "certification_reference",
-      "compliance_page",
       "dpa",
       "privacy_notice",
       "security_page",
       "status_page",
       "subprocessors_list",
-      "terms_of_service",
-      "trust_center"
+      "terms_of_service"
     ],
     "unavailable_source_count": 0,
     "unavailable_source_types": []

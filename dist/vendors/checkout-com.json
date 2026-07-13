@@ -1,10 +1,10 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/checkout-com/artifacts/checkout-com-compliance-page.yaml",
+      "_openva_path": "data/vendors/checkout-com/artifacts/checkout-com-certification-reference.yaml",
       "access_class": "public_web",
-      "artifact_id": "checkout-com-compliance-page",
-      "artifact_type": "compliance_page",
+      "artifact_id": "checkout-com-certification-reference",
+      "artifact_type": "certification_reference",
       "canonical_url": "https://www.checkout.com/legal/certificates",
       "effective_or_published_at": null,
       "entity_scope": {
@@ -21,7 +21,7 @@
       "region_scope": [],
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
-      "source_id": "checkout-com-compliance-page",
+      "source_id": "checkout-com-certification-reference",
       "source_language": "en",
       "storage": {
         "extracted_text_stored": false,
@@ -130,7 +130,7 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/checkout-com/sources/checkout-com-compliance-page.yaml",
+      "_openva_path": "data/vendors/checkout-com/sources/checkout-com-certification-reference.yaml",
       "access_class": "public_web",
       "not_advice": true,
       "provenance": {
@@ -142,11 +142,11 @@
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
       "source_authority_class": "vendor_published",
-      "source_id": "checkout-com-compliance-page",
+      "source_id": "checkout-com-certification-reference",
       "source_language": "en",
-      "source_type": "compliance_page",
+      "source_type": "certification_reference",
       "source_url": "https://www.checkout.com/legal/certificates",
-      "title_native": "Checkout.com - FCA, Bank &amp; Payment Association Certificates",
+      "title_native": "Certification Reference",
       "vendor_id": "checkout-com"
     },
     {
@@ -221,10 +221,10 @@
   ],
   "changes": [
     {
-      "_openva_path": "data/vendors/checkout-com/changes/candidate-promotion-checkout-com-compliance-page.yaml",
-      "artifact_id": "checkout-com-compliance-page",
+      "_openva_path": "data/vendors/checkout-com/changes/candidate-promotion-checkout-com-certification-reference.yaml",
+      "artifact_id": "checkout-com-certification-reference",
       "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-checkout-com-compliance-page",
+      "change_id": "candidate-promotion-checkout-com-certification-reference",
       "change_type": "created",
       "detected_at": "2026-07-13T17:45:42.368016Z",
       "from_hash": "sha256:TBD",
@@ -232,8 +232,8 @@
       "not_advice": true,
       "review_state": "proposed",
       "schema_version": "0.1.0",
-      "source_id": "checkout-com-compliance-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
+      "source_id": "checkout-com-certification-reference",
+      "summary": "Owner-led source completion promoted a source-type-correct official certification reference after page-purpose review.",
       "to_hash": "sha256:TBD",
       "vendor_id": "checkout-com"
     },
@@ -308,7 +308,7 @@
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "compliance_page",
+      "certification_reference",
       "privacy_notice",
       "terms_of_service",
       "trust_center"

@@ -1,36 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/customer-io/artifacts/customer-io-compliance-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "customer-io-compliance-page",
-      "artifact_type": "compliance_page",
-      "canonical_url": "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "customer-io-compliance-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "customer-io"
-    },
-    {
       "_openva_path": "data/vendors/customer-io/artifacts/customer-io-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "customer-io-dpa",
@@ -190,26 +160,6 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/customer-io/sources/customer-io-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:42.499464Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "customer-io-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
-      "title_native": "SMS marketing compliance: 6 steps to protect your business | Customer.io",
-      "vendor_id": "customer-io"
-    },
-    {
       "_openva_path": "data/vendors/customer-io/sources/customer-io-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -328,23 +278,6 @@
   ],
   "changes": [
     {
-      "_openva_path": "data/vendors/customer-io/changes/candidate-promotion-customer-io-compliance-page.yaml",
-      "artifact_id": "customer-io-compliance-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-customer-io-compliance-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:42.499464Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "customer-io-compliance-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "customer-io"
-    },
-    {
       "_openva_path": "data/vendors/customer-io/changes/candidate-promotion-customer-io-dpa.yaml",
       "artifact_id": "customer-io-dpa",
       "catalog_change_significance": "unknown",
@@ -442,23 +375,23 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 6,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 6,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "compliance_page",
       "dpa",
       "privacy_notice",
       "status_page",
       "terms_of_service",
       "trust_center"
     ],
-    "unavailable_source_count": 2,
+    "unavailable_source_count": 4,
     "unavailable_source_types": [
       "certification_reference",
+      "compliance_page",
       "subprocessors_list"
     ]
   },
@@ -497,6 +430,47 @@
       "source_type": "certification_reference",
       "status": "not_identified",
       "unavailable_source_id": "customer-io-certification-reference",
+      "vendor_id": "customer-io"
+    },
+    {
+      "_openva_path": "data/vendors/customer-io/unavailable_sources/customer-io-certification_reference.yaml",
+      "candidate_urls_checked": [
+        "https://customer.io/legal/privacy-policy",
+        "https://customer.io/legal/terms-of-service",
+        "https://status.customerio.com",
+        "https://customer.io"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "customer-io-certification-reference",
+      "vendor_id": "customer-io"
+    },
+    {
+      "_openva_path": "data/vendors/customer-io/unavailable_sources/customer-io-compliance_page.yaml",
+      "candidate_urls_checked": [
+        "https://customer.io/learn/mobile-marketing/sms-marketing-compliance",
+        "https://customer.io/legal/privacy-policy",
+        "https://customer.io/legal/terms-of-service",
+        "https://status.customerio.com",
+        "https://customer.io"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "customer-io-compliance-page",
       "vendor_id": "customer-io"
     },
     {

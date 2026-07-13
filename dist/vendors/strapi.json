@@ -1,36 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/strapi/artifacts/strapi-certification-reference.yaml",
-      "access_class": "public_web",
-      "artifact_id": "strapi-certification-reference",
-      "artifact_type": "certification_reference",
-      "canonical_url": "https://strapi.io/headless-cms/comparison/strapi-vs-contentful",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "strapi-certification-reference",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "strapi"
-    },
-    {
       "_openva_path": "data/vendors/strapi/artifacts/strapi-compliance-page.yaml",
       "access_class": "public_web",
       "artifact_id": "strapi-compliance-page",
@@ -193,26 +163,6 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/strapi/sources/strapi-certification-reference.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.420248Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "strapi-certification-reference",
-      "source_language": "en",
-      "source_type": "certification_reference",
-      "source_url": "https://strapi.io/headless-cms/comparison/strapi-vs-contentful",
-      "title_native": "Strapi vs Contentful",
-      "vendor_id": "strapi"
-    },
-    {
       "_openva_path": "data/vendors/strapi/sources/strapi-compliance-page.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -331,23 +281,6 @@
   ],
   "changes": [
     {
-      "_openva_path": "data/vendors/strapi/changes/candidate-promotion-strapi-certification-reference.yaml",
-      "artifact_id": "strapi-certification-reference",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-strapi-certification-reference",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:43.420248Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "strapi-certification-reference",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "strapi"
-    },
-    {
       "_openva_path": "data/vendors/strapi/changes/candidate-promotion-strapi-compliance-page.yaml",
       "artifact_id": "strapi-compliance-page",
       "catalog_change_significance": "unknown",
@@ -445,14 +378,13 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 6,
+    "artifact_count": 5,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 6,
+    "canonical_source_count": 5,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "certification_reference",
       "compliance_page",
       "privacy_notice",
       "status_page",

@@ -125,36 +125,6 @@
         "screenshot_stored": false
       },
       "vendor_id": "pandadoc"
-    },
-    {
-      "_openva_path": "data/vendors/pandadoc/artifacts/pandadoc-trust-center.yaml",
-      "access_class": "public_web",
-      "artifact_id": "pandadoc-trust-center",
-      "artifact_type": "trust_center",
-      "canonical_url": "https://www.pandadoc.com/trust/",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "pandadoc-trust-center",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "pandadoc"
     }
   ],
   "candidate_sources": [],
@@ -247,26 +217,6 @@
       "title_en": "PandaDoc Master Services Agreement",
       "title_native": "PandaDoc Master Services Agreement",
       "vendor_id": "pandadoc"
-    },
-    {
-      "_openva_path": "data/vendors/pandadoc/sources/pandadoc-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:45.273990Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "pandadoc-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://www.pandadoc.com/trust/",
-      "title_native": "Not Found",
-      "vendor_id": "pandadoc"
     }
   ],
   "changes": [
@@ -283,23 +233,6 @@
       "review_state": "proposed",
       "schema_version": "0.1.0",
       "source_id": "pandadoc-dpa",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "pandadoc"
-    },
-    {
-      "_openva_path": "data/vendors/pandadoc/changes/candidate-promotion-pandadoc-trust-center.yaml",
-      "artifact_id": "pandadoc-trust-center",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-pandadoc-trust-center",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:45.273990Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "pandadoc-trust-center",
       "summary": "Reviewed candidate source promoted to canonical public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "pandadoc"
@@ -368,25 +301,25 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 5,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 5,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
       "dpa",
       "privacy_notice",
       "status_page",
-      "terms_of_service",
-      "trust_center"
+      "terms_of_service"
     ],
-    "unavailable_source_count": 4,
+    "unavailable_source_count": 6,
     "unavailable_source_types": [
       "certification_reference",
       "compliance_page",
       "security_page",
-      "subprocessors_list"
+      "subprocessors_list",
+      "trust_center"
     ]
   },
   "unavailable_sources": [
@@ -499,6 +432,28 @@
       "vendor_id": "pandadoc"
     },
     {
+      "_openva_path": "data/vendors/pandadoc/unavailable_sources/pandadoc-security_page.yaml",
+      "candidate_urls_checked": [
+        "https://www.pandadoc.com/legal/privacy-notice/",
+        "https://www.pandadoc.com/legal/master-services-agreement/",
+        "https://status.pandadoc.com/",
+        "https://pandadoc.com",
+        "https://www.pandadoc.com",
+        "https://status.pandadoc.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "security_page",
+      "status": "not_identified",
+      "unavailable_source_id": "pandadoc-security-page",
+      "vendor_id": "pandadoc"
+    },
+    {
       "_openva_path": "data/vendors/pandadoc/unavailable_sources/pandadoc-subprocessors-list.yaml",
       "candidate_urls_checked": [
         "https://www.pandadoc.com/legal/subprocessors",
@@ -532,6 +487,29 @@
       "source_type": "subprocessors_list",
       "status": "not_identified",
       "unavailable_source_id": "pandadoc-subprocessors-list",
+      "vendor_id": "pandadoc"
+    },
+    {
+      "_openva_path": "data/vendors/pandadoc/unavailable_sources/pandadoc-trust_center.yaml",
+      "candidate_urls_checked": [
+        "https://www.pandadoc.com/trust/",
+        "https://www.pandadoc.com/legal/privacy-notice/",
+        "https://www.pandadoc.com/legal/master-services-agreement/",
+        "https://status.pandadoc.com/",
+        "https://pandadoc.com",
+        "https://www.pandadoc.com",
+        "https://status.pandadoc.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "trust_center",
+      "status": "not_identified",
+      "unavailable_source_id": "pandadoc-trust-center",
       "vendor_id": "pandadoc"
     }
   ],

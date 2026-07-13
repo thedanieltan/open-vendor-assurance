@@ -1,66 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/worldpay/artifacts/worldpay-compliance-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "worldpay-compliance-page",
-      "artifact_type": "compliance_page",
-      "canonical_url": "https://www.worldpay.com/en-AE/insights/articles/ISO-advantage-podcast",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "worldpay-compliance-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "worldpay"
-    },
-    {
-      "_openva_path": "data/vendors/worldpay/artifacts/worldpay-dpa.yaml",
-      "access_class": "public_web",
-      "artifact_id": "worldpay-dpa",
-      "artifact_type": "dpa",
-      "canonical_url": "https://worldpay.com/en/legal",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "worldpay-dpa",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "worldpay"
-    },
-    {
       "_openva_path": "data/vendors/worldpay/artifacts/worldpay-privacy.yaml",
       "access_class": "public_web",
       "artifact_id": "worldpay-privacy",
@@ -84,36 +24,6 @@
       "rights_class": "metadata_only",
       "schema_version": "0.1.0",
       "source_id": "worldpay-privacy",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "worldpay"
-    },
-    {
-      "_openva_path": "data/vendors/worldpay/artifacts/worldpay-security-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "worldpay-security-page",
-      "artifact_type": "security_page",
-      "canonical_url": "https://www.worldpay.com/en-AE/insights/articles/deciphering-payment-security-lingo-what-is-p2pe",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "worldpay-security-page",
       "source_language": "en",
       "storage": {
         "extracted_text_stored": false,
@@ -190,46 +100,6 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/worldpay/sources/worldpay-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.686431Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "worldpay-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.worldpay.com/en-AE/insights/articles/ISO-advantage-podcast",
-      "title_native": "Tune in to get the ISO partner advantage | Insights | Worldpay",
-      "vendor_id": "worldpay"
-    },
-    {
-      "_openva_path": "data/vendors/worldpay/sources/worldpay-dpa.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.350738Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "worldpay-dpa",
-      "source_language": "en",
-      "source_type": "dpa",
-      "source_url": "https://worldpay.com/en/legal",
-      "title_native": "Legal | Worldpay",
-      "vendor_id": "worldpay"
-    },
-    {
       "_openva_path": "data/vendors/worldpay/sources/worldpay-privacy.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -250,26 +120,6 @@
       "summary_native": "Public Worldpay privacy policy.",
       "title_en": "Worldpay Privacy Policy",
       "title_native": "Worldpay Privacy Policy",
-      "vendor_id": "worldpay"
-    },
-    {
-      "_openva_path": "data/vendors/worldpay/sources/worldpay-security-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:45.610272Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "worldpay-security-page",
-      "source_language": "en",
-      "source_type": "security_page",
-      "source_url": "https://www.worldpay.com/en-AE/insights/articles/deciphering-payment-security-lingo-what-is-p2pe",
-      "title_native": "Payment Security Guide | Insights | Worldpay",
       "vendor_id": "worldpay"
     },
     {
@@ -320,57 +170,6 @@
     }
   ],
   "changes": [
-    {
-      "_openva_path": "data/vendors/worldpay/changes/candidate-promotion-worldpay-compliance-page.yaml",
-      "artifact_id": "worldpay-compliance-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-worldpay-compliance-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:43.686431Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "worldpay-compliance-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "worldpay"
-    },
-    {
-      "_openva_path": "data/vendors/worldpay/changes/candidate-promotion-worldpay-dpa.yaml",
-      "artifact_id": "worldpay-dpa",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-worldpay-dpa",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:44.350738Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "worldpay-dpa",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "worldpay"
-    },
-    {
-      "_openva_path": "data/vendors/worldpay/changes/candidate-promotion-worldpay-security-page.yaml",
-      "artifact_id": "worldpay-security-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-worldpay-security-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:45.610272Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "worldpay-security-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "worldpay"
-    },
     {
       "_openva_path": "data/vendors/worldpay/changes/owner-payments-expansion-2-worldpay-privacy.yaml",
       "artifact_id": "worldpay-privacy",
@@ -435,23 +234,23 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 6,
+    "artifact_count": 3,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 6,
+    "canonical_source_count": 3,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "compliance_page",
-      "dpa",
       "privacy_notice",
-      "security_page",
       "status_page",
       "terms_of_service"
     ],
-    "unavailable_source_count": 3,
+    "unavailable_source_count": 8,
     "unavailable_source_types": [
       "certification_reference",
+      "compliance_page",
+      "dpa",
+      "security_page",
       "subprocessors_list",
       "trust_center"
     ]
@@ -491,6 +290,97 @@
       "source_type": "certification_reference",
       "status": "not_identified",
       "unavailable_source_id": "worldpay-certification-reference",
+      "vendor_id": "worldpay"
+    },
+    {
+      "_openva_path": "data/vendors/worldpay/unavailable_sources/worldpay-certification_reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.worldpay.com/en-gb/privacy",
+        "https://www.worldpay.com/en-gb/terms-of-use",
+        "https://status.worldpay.com/",
+        "https://worldpay.com",
+        "https://www.worldpay.com",
+        "https://status.worldpay.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "worldpay-certification-reference",
+      "vendor_id": "worldpay"
+    },
+    {
+      "_openva_path": "data/vendors/worldpay/unavailable_sources/worldpay-compliance_page.yaml",
+      "candidate_urls_checked": [
+        "https://www.worldpay.com/en-AE/insights/articles/ISO-advantage-podcast",
+        "https://www.worldpay.com/en-gb/privacy",
+        "https://www.worldpay.com/en-gb/terms-of-use",
+        "https://status.worldpay.com/",
+        "https://worldpay.com",
+        "https://www.worldpay.com",
+        "https://status.worldpay.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "worldpay-compliance-page",
+      "vendor_id": "worldpay"
+    },
+    {
+      "_openva_path": "data/vendors/worldpay/unavailable_sources/worldpay-dpa.yaml",
+      "candidate_urls_checked": [
+        "https://worldpay.com/en/legal",
+        "https://www.worldpay.com/en-gb/privacy",
+        "https://www.worldpay.com/en-gb/terms-of-use",
+        "https://status.worldpay.com/",
+        "https://worldpay.com",
+        "https://www.worldpay.com",
+        "https://status.worldpay.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "dpa",
+      "status": "not_identified",
+      "unavailable_source_id": "worldpay-dpa",
+      "vendor_id": "worldpay"
+    },
+    {
+      "_openva_path": "data/vendors/worldpay/unavailable_sources/worldpay-security_page.yaml",
+      "candidate_urls_checked": [
+        "https://www.worldpay.com/en-AE/insights/articles/deciphering-payment-security-lingo-what-is-p2pe",
+        "https://www.worldpay.com/en-gb/privacy",
+        "https://www.worldpay.com/en-gb/terms-of-use",
+        "https://status.worldpay.com/",
+        "https://worldpay.com",
+        "https://www.worldpay.com",
+        "https://status.worldpay.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "security_page",
+      "status": "not_identified",
+      "unavailable_source_id": "worldpay-security-page",
       "vendor_id": "worldpay"
     },
     {
@@ -558,6 +448,28 @@
       "notes": "No source-type-correct canonical public source was identified after bounded official-path, official-link, and robots/sitemap discovery. This is a factual OpenVA search result, not a vendor quality or risk conclusion.",
       "reason": "distinct_public_url_not_identified",
       "reviewed_at": "2026-07-13T17:39:49Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "trust_center",
+      "status": "not_identified",
+      "unavailable_source_id": "worldpay-trust-center",
+      "vendor_id": "worldpay"
+    },
+    {
+      "_openva_path": "data/vendors/worldpay/unavailable_sources/worldpay-trust_center.yaml",
+      "candidate_urls_checked": [
+        "https://www.worldpay.com/en-gb/privacy",
+        "https://www.worldpay.com/en-gb/terms-of-use",
+        "https://status.worldpay.com/",
+        "https://worldpay.com",
+        "https://www.worldpay.com",
+        "https://status.worldpay.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
       "reviewed_by": "agent",
       "schema_version": "0.1.0",
       "source_type": "trust_center",

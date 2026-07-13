@@ -123,36 +123,6 @@
         "screenshot_stored": false
       },
       "vendor_id": "fiserv"
-    },
-    {
-      "_openva_path": "data/vendors/fiserv/artifacts/fiserv-trust-center.yaml",
-      "access_class": "public_web",
-      "artifact_id": "fiserv-trust-center",
-      "artifact_type": "trust_center",
-      "canonical_url": "https://www.fiserv.com/en/solutions/risk-compliance.html",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "fiserv-trust-center",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "fiserv"
     }
   ],
   "candidate_sources": [],
@@ -242,26 +212,6 @@
       "title_en": "Fiserv Terms of Use",
       "title_native": "Fiserv Terms of Use",
       "vendor_id": "fiserv"
-    },
-    {
-      "_openva_path": "data/vendors/fiserv/sources/fiserv-trust-center.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:44.967960Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "fiserv-trust-center",
-      "source_language": "en",
-      "source_type": "trust_center",
-      "source_url": "https://www.fiserv.com/en/solutions/risk-compliance.html",
-      "title_native": "Risk and Compliance, Risk Management, Regulatory Compliance | Fiserv",
-      "vendor_id": "fiserv"
     }
   ],
   "changes": [
@@ -295,23 +245,6 @@
       "review_state": "proposed",
       "schema_version": "0.1.0",
       "source_id": "fiserv-security-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "fiserv"
-    },
-    {
-      "_openva_path": "data/vendors/fiserv/changes/candidate-promotion-fiserv-trust-center.yaml",
-      "artifact_id": "fiserv-trust-center",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-fiserv-trust-center",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:44.967960Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "fiserv-trust-center",
       "summary": "Reviewed candidate source promoted to canonical public source metadata.",
       "to_hash": "sha256:TBD",
       "vendor_id": "fiserv"
@@ -363,18 +296,17 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 5,
+    "artifact_count": 4,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 5,
+    "canonical_source_count": 4,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
       "compliance_page",
       "privacy_notice",
       "security_page",
-      "terms_of_service",
-      "trust_center"
+      "terms_of_service"
     ],
     "unavailable_source_count": 3,
     "unavailable_source_types": [

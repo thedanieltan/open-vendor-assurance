@@ -1,36 +1,6 @@
 {
   "artifacts": [
     {
-      "_openva_path": "data/vendors/scaleway/artifacts/scaleway-compliance-page.yaml",
-      "access_class": "public_web",
-      "artifact_id": "scaleway-compliance-page",
-      "artifact_type": "compliance_page",
-      "canonical_url": "https://www.scaleway.com/en/blog/k8s-security-episode-6/",
-      "effective_or_published_at": null,
-      "entity_scope": {
-        "entity_ids": [],
-        "scope_type": "brand_surface"
-      },
-      "hashes": {
-        "hash_method": "metadata_plus_hash_only",
-        "normalized_text_sha256": "sha256:TBD",
-        "raw_sha256": "sha256:TBD"
-      },
-      "not_advice": true,
-      "product_scope": [],
-      "region_scope": [],
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_id": "scaleway-compliance-page",
-      "source_language": "en",
-      "storage": {
-        "extracted_text_stored": false,
-        "raw_document_stored": false,
-        "screenshot_stored": false
-      },
-      "vendor_id": "scaleway"
-    },
-    {
       "_openva_path": "data/vendors/scaleway/artifacts/scaleway-dpa.yaml",
       "access_class": "public_web",
       "artifact_id": "scaleway-dpa",
@@ -222,26 +192,6 @@
   "candidate_sources": [],
   "canonical_sources": [
     {
-      "_openva_path": "data/vendors/scaleway/sources/scaleway-compliance-page.yaml",
-      "access_class": "public_web",
-      "not_advice": true,
-      "provenance": {
-        "collected_at": "2026-07-13T17:45:43.286320Z",
-        "confidence": "high",
-        "observer": "agent",
-        "publisher": "vendor"
-      },
-      "rights_class": "metadata_only",
-      "schema_version": "0.1.0",
-      "source_authority_class": "vendor_published",
-      "source_id": "scaleway-compliance-page",
-      "source_language": "en",
-      "source_type": "compliance_page",
-      "source_url": "https://www.scaleway.com/en/blog/k8s-security-episode-6/",
-      "title_native": "Compliance Page",
-      "vendor_id": "scaleway"
-    },
-    {
       "_openva_path": "data/vendors/scaleway/sources/scaleway-dpa.yaml",
       "access_class": "public_web",
       "not_advice": true,
@@ -373,23 +323,6 @@
   ],
   "changes": [
     {
-      "_openva_path": "data/vendors/scaleway/changes/candidate-promotion-scaleway-compliance-page.yaml",
-      "artifact_id": "scaleway-compliance-page",
-      "catalog_change_significance": "unknown",
-      "change_id": "candidate-promotion-scaleway-compliance-page",
-      "change_type": "created",
-      "detected_at": "2026-07-13T17:45:43.286320Z",
-      "from_hash": "sha256:TBD",
-      "materiality": "unknown",
-      "not_advice": true,
-      "review_state": "proposed",
-      "schema_version": "0.1.0",
-      "source_id": "scaleway-compliance-page",
-      "summary": "Reviewed candidate source promoted to canonical public source metadata.",
-      "to_hash": "sha256:TBD",
-      "vendor_id": "scaleway"
-    },
-    {
       "_openva_path": "data/vendors/scaleway/changes/candidate-promotion-scaleway-dpa.yaml",
       "artifact_id": "scaleway-dpa",
       "catalog_change_significance": "unknown",
@@ -504,14 +437,13 @@
   "observations": [],
   "schema_version": "0.1.0",
   "summary": {
-    "artifact_count": 7,
+    "artifact_count": 6,
     "candidate_source_count": 0,
     "candidate_source_types": [],
-    "canonical_source_count": 7,
+    "canonical_source_count": 6,
     "entity_mention_count": 0,
     "legal_entity_count": 0,
     "source_types": [
-      "compliance_page",
       "dpa",
       "privacy_notice",
       "security_page",
@@ -519,9 +451,10 @@
       "subprocessors_list",
       "terms_of_service"
     ],
-    "unavailable_source_count": 2,
+    "unavailable_source_count": 4,
     "unavailable_source_types": [
       "certification_reference",
+      "compliance_page",
       "trust_center"
     ]
   },
@@ -560,6 +493,51 @@
       "source_type": "certification_reference",
       "status": "not_identified",
       "unavailable_source_id": "scaleway-certification-reference",
+      "vendor_id": "scaleway"
+    },
+    {
+      "_openva_path": "data/vendors/scaleway/unavailable_sources/scaleway-certification_reference.yaml",
+      "candidate_urls_checked": [
+        "https://www.scaleway.com/en/privacy-policy/",
+        "https://www.scaleway.com/en/terms/",
+        "https://status.scaleway.com/",
+        "https://scaleway.com",
+        "https://www.scaleway.com",
+        "https://status.scaleway.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "certification_reference",
+      "status": "not_identified",
+      "unavailable_source_id": "scaleway-certification-reference",
+      "vendor_id": "scaleway"
+    },
+    {
+      "_openva_path": "data/vendors/scaleway/unavailable_sources/scaleway-compliance_page.yaml",
+      "candidate_urls_checked": [
+        "https://www.scaleway.com/en/blog/k8s-security-episode-6/",
+        "https://www.scaleway.com/en/privacy-policy/",
+        "https://www.scaleway.com/en/terms/",
+        "https://status.scaleway.com/",
+        "https://scaleway.com",
+        "https://www.scaleway.com",
+        "https://status.scaleway.com"
+      ],
+      "next_review_after": "2026-10-12",
+      "not_advice": true,
+      "notes": "No source-type-correct canonical public source was retained after official-path, link, sitemap, independent HTTP/semantic, redirect, duplicate-content, and page-purpose review. Rejected generic, editorial, user-generated, or not-found pages are not treated as vendor assurance sources. This is a search result, not a vendor quality or risk conclusion.",
+      "reason": "distinct_public_url_not_identified",
+      "reviewed_at": "2026-07-14T00:00:00Z",
+      "reviewed_by": "agent",
+      "schema_version": "0.1.0",
+      "source_type": "compliance_page",
+      "status": "not_identified",
+      "unavailable_source_id": "scaleway-compliance-page",
       "vendor_id": "scaleway"
     },
     {
