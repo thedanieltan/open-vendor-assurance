@@ -8,7 +8,7 @@ on:
 
 permissions:
   actions: read
-  pull-requests: write
+  issues: write
 
 jobs:
   diagnose:
@@ -79,4 +79,5 @@ jobs:
           lines.insert(4, f'Failed jobs: **{failed_count}**')
           (root / 'diagnostic.md').write_text('\n'.join(lines) + '\n')
           PY
-          gh pr comment "$PR_NUMBER" --body-file /tmp/source-completion-diagnostic/diagnostic.md
+          body="$(cat /tmp/source-completion-diagnostic/diagnostic.md)"
+          gh api "repos/$REPO/issues/$PR_NUMBER/comments" -f body="$body"
