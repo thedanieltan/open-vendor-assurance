@@ -161,23 +161,23 @@ def write_vendor(root, vendor_id="example"):
     path.write_text(f"vendor_id: {vendor_id}\n", encoding="utf-8")
 
 
-def test_changed_vendor_completeness_requires_foundational_live_sources(tmp_path):
+def test_changed_vendor_completeness_requires_live_privacy_and_two_live_groups(tmp_path):
     write_vendor(tmp_path)
-    write_source(tmp_path, "example", "example-privacy", "privacy_notice")
-    write_unavailable(tmp_path, "example", "terms_of_service")
+    write_unavailable(tmp_path, "example", "privacy_notice")
+    write_source(tmp_path, "example", "example-terms", "terms_of_service")
     write_unavailable(tmp_path, "example", "security_page")
     write_unavailable(tmp_path, "example", "dpa")
     write_unavailable(tmp_path, "example", "subprocessors_list")
     write_unavailable(tmp_path, "example", "status_page")
 
     failures = validate_changed_vendor_completeness(
-        ["data/vendors/example/vendor.yaml", "data/vendors/example/sources/example-privacy.yaml"],
+        ["data/vendors/example/vendor.yaml", "data/vendors/example/sources/example-terms.yaml"],
         root=tmp_path,
     )
 
     assert failures == [
-        "data/vendors/example: incomplete terms_of_service coverage; requires a live canonical public source",
-        "data/vendors/example: incomplete security_assurance coverage; requires a live canonical public source",
+        "data/vendors/example: incomplete privacy_notice coverage; requires a live canonical public source",
+        "data/vendors/example: insufficient live source breadth; requires at least 2 live core assurance groups",
     ]
 
 
@@ -192,6 +192,23 @@ def test_changed_vendor_completeness_accepts_live_or_unavailable_core_groups(tmp
 
     failures = validate_changed_vendor_completeness(
         ["data/vendors/example/vendor.yaml", "data/vendors/example/sources/example-privacy.yaml"],
+        root=tmp_path,
+    )
+
+    assert failures == []
+
+
+def test_changed_vendor_completeness_accepts_unavailable_terms_and_security_with_live_status(tmp_path):
+    write_vendor(tmp_path)
+    write_source(tmp_path, "example", "example-privacy", "privacy_notice")
+    write_source(tmp_path, "example", "example-status", "status_page")
+    write_unavailable(tmp_path, "example", "terms_of_service")
+    write_unavailable(tmp_path, "example", "security_page")
+    write_unavailable(tmp_path, "example", "dpa")
+    write_unavailable(tmp_path, "example", "subprocessors_list")
+
+    failures = validate_changed_vendor_completeness(
+        ["data/vendors/example/vendor.yaml", "data/vendors/example/sources/example-status.yaml"],
         root=tmp_path,
     )
 
