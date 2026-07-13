@@ -1,0 +1,373 @@
+schema_version: 0.1.0
+batch_id: owner-collab-dev-expansion-1
+operation: create
+collected_at: '2026-07-13T15:55:00Z'
+observer: human
+vendors:
+  - vendor_id: linear
+    display_name: Linear
+    legal_name: Linear Orbit, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [linear.app, status.linear.app, linearstatus.com]
+    public_entrypoints:
+      - https://linear.app/privacy
+      - https://linear.app/terms
+      - https://status.linear.app/
+    vendor_categories: [project_management, productivity_software, collaboration_software]
+    notes: Owner-led public-source-only catalog record for Linear. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: linear-privacy
+        source_type: privacy_notice
+        title_native: Linear Privacy Policy
+        title_en: Linear Privacy Policy
+        source_url: https://linear.app/privacy
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Linear privacy policy.
+        summary_en: Public Linear privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: linear-privacy
+          artifact_type: privacy_notice
+          region_scope: [global]
+      - source_id: linear-terms
+        source_type: terms_of_service
+        title_native: Linear Terms of Service
+        title_en: Linear Terms of Service
+        source_url: https://linear.app/terms
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public Linear terms of service.
+        summary_en: Public Linear terms of service.
+        confidence: high
+        artifact:
+          artifact_id: linear-terms
+          artifact_type: terms_of_service
+          region_scope: [global]
+      - source_id: linear-status
+        source_type: status_page
+        title_native: Linear Status
+        title_en: Linear Status
+        source_url: https://status.linear.app/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Linear service status page.
+        summary_en: Public Linear service status page.
+        confidence: high
+        artifact:
+          artifact_id: linear-status
+          artifact_type: status_page
+          region_scope: [global]
+
+  - vendor_id: netlify
+    display_name: Netlify
+    legal_name: Netlify, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [netlify.com, www.netlify.com, netlifystatus.com]
+    public_entrypoints:
+      - https://www.netlify.com/privacy/
+      - https://www.netlify.com/legal/terms-of-use/
+      - https://www.netlifystatus.com/
+    vendor_categories: [developer_platform, cloud_infrastructure]
+    notes: Owner-led public-source-only catalog record for Netlify. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: netlify-privacy
+        source_type: privacy_notice
+        title_native: Netlify Privacy Statement
+        title_en: Netlify Privacy Statement
+        source_url: https://www.netlify.com/privacy/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Netlify privacy statement.
+        summary_en: Public Netlify privacy statement.
+        confidence: high
+        artifact:
+          artifact_id: netlify-privacy
+          artifact_type: privacy_notice
+          region_scope: [global]
+      - source_id: netlify-terms
+        source_type: terms_of_service
+        title_native: Netlify Website Terms of Use
+        title_en: Netlify Website Terms of Use
+        source_url: https://www.netlify.com/legal/terms-of-use/
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public Netlify website terms of use.
+        summary_en: Public Netlify website terms of use.
+        confidence: high
+        artifact:
+          artifact_id: netlify-terms
+          artifact_type: terms_of_service
+          region_scope: [global]
+      - source_id: netlify-status
+        source_type: status_page
+        title_native: Netlify Status
+        title_en: Netlify Status
+        source_url: https://www.netlifystatus.com/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Netlify service status page.
+        summary_en: Public Netlify service status page.
+        confidence: high
+        artifact:
+          artifact_id: netlify-status
+          artifact_type: status_page
+          region_scope: [global]
+
+  - vendor_id: monday-com
+    display_name: monday.com
+    legal_name: monday.com Ltd.
+    headquarters_country: IL
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [monday.com, status.monday.com]
+    public_entrypoints:
+      - https://monday.com/l/privacy/privacy-policy/
+      - https://monday.com/l/legal/tos/
+      - https://status.monday.com/
+    vendor_categories: [project_management, productivity_software, collaboration_software]
+    notes: Owner-led public-source-only catalog record for monday.com. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: monday-com-privacy
+        source_type: privacy_notice
+        title_native: monday.com Privacy Policy
+        title_en: monday.com Privacy Policy
+        source_url: https://monday.com/l/privacy/privacy-policy/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public monday.com privacy policy.
+        summary_en: Public monday.com privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: monday-com-privacy
+          artifact_type: privacy_notice
+          region_scope: [global]
+      - source_id: monday-com-terms
+        source_type: terms_of_service
+        title_native: monday.com Terms of Service
+        title_en: monday.com Terms of Service
+        source_url: https://monday.com/l/legal/tos/
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public monday.com terms of service.
+        summary_en: Public monday.com terms of service.
+        confidence: high
+        artifact:
+          artifact_id: monday-com-terms
+          artifact_type: terms_of_service
+          region_scope: [global]
+      - source_id: monday-com-status
+        source_type: status_page
+        title_native: monday.com Status
+        title_en: monday.com Status
+        source_url: https://status.monday.com/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public monday.com service status page.
+        summary_en: Public monday.com service status page.
+        confidence: high
+        artifact:
+          artifact_id: monday-com-status
+          artifact_type: status_page
+          region_scope: [global]
+
+  - vendor_id: n8n
+    display_name: n8n
+    legal_name: n8n GmbH
+    headquarters_country: DE
+    regions_served: [global, eu]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [n8n.io, status.n8n.io, status.n8n.cloud]
+    public_entrypoints:
+      - https://n8n.io/legal/privacy/
+      - https://n8n.io/legal/self-serve-terms/
+      - https://status.n8n.io/
+    vendor_categories: [developer_platform, productivity_software]
+    notes: Owner-led public-source-only catalog record for n8n. Metadata references vendor-controlled privacy, cloud-service terms, and service-status surfaces only.
+    sources:
+      - source_id: n8n-privacy
+        source_type: privacy_notice
+        title_native: n8n Privacy Policy
+        title_en: n8n Privacy Policy
+        source_url: https://n8n.io/legal/privacy/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public n8n privacy policy.
+        summary_en: Public n8n privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: n8n-privacy
+          artifact_type: privacy_notice
+          region_scope: [global, eu]
+      - source_id: n8n-terms
+        source_type: terms_of_service
+        title_native: n8n Self-Serve Terms
+        title_en: n8n Self-Serve Terms
+        source_url: https://n8n.io/legal/self-serve-terms/
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public n8n self-serve cloud terms.
+        summary_en: Public n8n self-serve cloud terms.
+        confidence: high
+        artifact:
+          artifact_id: n8n-terms
+          artifact_type: terms_of_service
+          region_scope: [global, eu]
+      - source_id: n8n-status
+        source_type: status_page
+        title_native: n8n Cloud Status
+        title_en: n8n Cloud Status
+        source_url: https://status.n8n.io/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public n8n cloud service status page.
+        summary_en: Public n8n cloud service status page.
+        confidence: high
+        artifact:
+          artifact_id: n8n-status
+          artifact_type: status_page
+          region_scope: [global]
+
+  - vendor_id: neon
+    display_name: Neon
+    legal_name: Databricks, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_family: databricks
+    entity_surface: product_surface
+    related_vendor_ids: [databricks]
+    source_authority_language: en
+    official_domains: [neon.com, neonstatus.com, databricks.com, www.databricks.com]
+    public_entrypoints:
+      - https://neon.com/privacy-policy
+      - https://neon.com/terms-of-service
+      - https://neonstatus.com/
+    vendor_categories: [developer_platform, database, cloud_infrastructure]
+    notes: Owner-led public-source-only product-surface record for Neon within the Databricks entity family. Metadata references Databricks privacy terms and Neon platform and status surfaces only.
+    sources:
+      - source_id: neon-privacy
+        source_type: privacy_notice
+        title_native: Databricks Privacy Notice for Neon
+        title_en: Databricks Privacy Notice for Neon
+        source_url: https://neon.com/privacy-policy
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public privacy notice reached from the Neon product surface and published by Databricks.
+        summary_en: Public privacy notice reached from the Neon product surface and published by Databricks.
+        confidence: high
+        artifact:
+          artifact_id: neon-privacy
+          artifact_type: privacy_notice
+          region_scope: [global]
+      - source_id: neon-terms
+        source_type: terms_of_service
+        title_native: Neon Platform Services Terms
+        title_en: Neon Platform Services Terms
+        source_url: https://neon.com/terms-of-service
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public Neon platform-service terms.
+        summary_en: Public Neon platform-service terms.
+        confidence: high
+        artifact:
+          artifact_id: neon-terms
+          artifact_type: terms_of_service
+          region_scope: [global]
+      - source_id: neon-status
+        source_type: status_page
+        title_native: Neon Status
+        title_en: Neon Status
+        source_url: https://neonstatus.com/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Neon service status page.
+        summary_en: Public Neon service status page.
+        confidence: high
+        artifact:
+          artifact_id: neon-status
+          artifact_type: status_page
+          region_scope: [global]
+
+  - vendor_id: render
+    display_name: Render
+    legal_name: Render Services, Inc.
+    headquarters_country: US
+    regions_served: [global]
+    entity_surface: global_brand
+    source_authority_language: en
+    official_domains: [render.com, status.render.com]
+    public_entrypoints:
+      - https://render.com/privacy
+      - https://render.com/terms
+      - https://status.render.com/
+    vendor_categories: [developer_platform, cloud_infrastructure]
+    notes: Owner-led public-source-only catalog record for Render. Metadata references vendor-controlled privacy, legal, and service-status surfaces only.
+    sources:
+      - source_id: render-privacy
+        source_type: privacy_notice
+        title_native: Render Privacy Policy
+        title_en: Render Privacy Policy
+        source_url: https://render.com/privacy
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Render privacy policy.
+        summary_en: Public Render privacy policy.
+        confidence: high
+        artifact:
+          artifact_id: render-privacy
+          artifact_type: privacy_notice
+          region_scope: [global]
+      - source_id: render-terms
+        source_type: terms_of_service
+        title_native: Render Terms of Service
+        title_en: Render Terms of Service
+        source_url: https://render.com/terms
+        source_language: en
+        source_authority_class: vendor_legal_terms
+        access_class: public_web
+        summary_native: Public Render terms of service.
+        summary_en: Public Render terms of service.
+        confidence: high
+        artifact:
+          artifact_id: render-terms
+          artifact_type: terms_of_service
+          region_scope: [global]
+      - source_id: render-status
+        source_type: status_page
+        title_native: Render Status
+        title_en: Render Status
+        source_url: https://status.render.com/
+        source_language: en
+        source_authority_class: vendor_published
+        access_class: public_web
+        summary_native: Public Render service status page.
+        summary_en: Public Render service status page.
+        confidence: high
+        artifact:
+          artifact_id: render-status
+          artifact_type: status_page
+          region_scope: [global]
