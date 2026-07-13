@@ -1,0 +1,93 @@
+name: source-completion-remediation-v2
+
+on:
+  pull_request:
+    branches:
+      - catalog/source-completion-audit-control
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: source-completion-remediation-v2-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  remediate:
+    if: github.event.pull_request.head.ref == 'catalog/owner-source-completion-1-builder'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: catalog/owner-source-completion-1-builder
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install package
+        run: pip install -e '.[dev]'
+      - name: Apply deterministic remediation when staged
+        run: |
+          if [ -f .owner-source-completion-1/remediate.py ]; then
+            python .owner-source-completion-1/remediate.py
+          else
+            echo 'Remediation script already consumed.'
+          fi
+      - name: Rebuild and assert zero unresolved groups
+        run: |
+          python -m tools.openva.validate build-indexes
+          python -m tools.openva.catalog_source_completion check \
+            --as-of 2026-07-14 \
+            --output .owner-source-completion-1/results/post-remediation-completion.json
+      - name: Commit remediation before aggregate validation
+        run: |
+          rm -f .owner-source-completion-1/remediate.py
+          rm -f .owner-source-completion-1/remediation-trigger.txt
+          git config user.name 'openva-owner-maintenance-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No remediation changes to commit.'
+          else
+            git diff --cached --check
+            git commit -m 'Catalog: remediate source completion false positives'
+            git push origin HEAD:catalog/owner-source-completion-1-builder
+          fi
+      - name: Capture aggregate validation diagnostics once
+        run: |
+          if [ -f .owner-source-completion-1/results/remediation-validation.json ]; then
+            echo 'Diagnostics already captured.'
+            exit 0
+          fi
+          set +e
+          mkdir -p .owner-source-completion-1/results
+          python -m tools.openva.validate validate > .owner-source-completion-1/results/remediation-validator.log 2>&1
+          validator_exit=$?
+          pytest -q \
+            tests/test_catalog_source_completion.py \
+            tests/test_candidate_promotion_actions.py \
+            tests/test_source_discovery.py \
+            tests/test_sitemap_discovery.py \
+            tests/test_coverage_audit.py \
+            > .owner-source-completion-1/results/remediation-pytest.log 2>&1
+          pytest_exit=$?
+          python - <<PY
+          import json
+          from pathlib import Path
+          payload = {
+              'schema_version': '0.1.0',
+              'report_type': 'owner_source_completion_validation_diagnostic',
+              'validator_exit_code': int('${validator_exit}'),
+              'pytest_exit_code': int('${pytest_exit}'),
+              'validator_log': '.owner-source-completion-1/results/remediation-validator.log',
+              'pytest_log': '.owner-source-completion-1/results/remediation-pytest.log',
+              'not_advice': True,
+          }
+          Path('.owner-source-completion-1/results/remediation-validation.json').write_text(json.dumps(payload, indent=2, sort_keys=True) + '\n')
+          PY
+          git add .owner-source-completion-1/results/remediation-*.log .owner-source-completion-1/results/remediation-validation.json
+          git diff --cached --check
+          git commit -m 'Catalog: capture source completion validation diagnostics'
+          git push origin HEAD:catalog/owner-source-completion-1-builder
