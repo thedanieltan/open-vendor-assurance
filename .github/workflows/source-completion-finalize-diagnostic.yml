@@ -18,32 +18,24 @@ jobs:
       REPO: ${{ github.repository }}
       JOB_ID: '86925993113'
     steps:
-      - name: Print post-validation acceptance output
+      - name: Print blocking release gate
         run: |
           set -euo pipefail
           gh api "repos/$REPO/actions/jobs/$JOB_ID/logs" > /tmp/job.log
           python - <<'PY'
           from pathlib import Path
           lines = Path('/tmp/job.log').read_text(encoding='utf-8', errors='replace').splitlines()
-          validation_hits = [index for index, line in enumerate(lines) if 'OpenVA validation passed.' in line]
-          start = validation_hits[-1] if validation_hits else max(0, len(lines) - 1500)
-          segment = lines[start:]
-          tokens = (
-              'openva validation passed', 'built openva indexes', 'diff -u', 'release gate',
-              'short test summary', 'passed', 'failed', 'failure', 'assertionerror', 'traceback',
-              '##[error]', 'process completed with exit code', 'review_required', 'error:',
-          )
-          selected = set()
-          for offset, line in enumerate(segment):
-              lower = line.lower()
-              if any(token in lower for token in tokens):
-                  selected.update(range(max(0, offset - 5), min(len(segment), offset + 12)))
-          print('POST_VALIDATION_ACCEPTANCE_BEGIN')
-          for index in sorted(selected):
-              print(segment[index])
-          print('POST_VALIDATION_TAIL_BEGIN')
-          for line in segment[-300:]:
+          hits = [index for index, line in enumerate(lines) if '## Blocking failures' in line]
+          start = hits[-1] if hits else max(0, len(lines) - 500)
+          segment = lines[start:start + 180]
+          print('BLOCKING_RELEASE_GATE_BEGIN')
+          for line in segment:
               print(line)
-          print('POST_VALIDATION_TAIL_END')
-          print('POST_VALIDATION_ACCEPTANCE_END')
+          print('FAILED_TABLE_ROWS_BEGIN')
+          for line in lines:
+              lower = line.lower()
+              if '| ' in line and ('| fail |' in lower or '| blocked |' in lower):
+                  print(line)
+          print('FAILED_TABLE_ROWS_END')
+          print('BLOCKING_RELEASE_GATE_END')
           PY
