@@ -128,6 +128,7 @@ def sanitize_vendor(vendor: dict[str, Any] | None) -> dict[str, Any] | None:
     if not vendor:
         return None
 
+    display_name = str(vendor.get("display_name") or vendor.get("vendor_id") or "Vendor")
     cleaned_sources: list[dict[str, Any]] = []
     seen: set[tuple[str, str]] = set()
     for raw_source in vendor.get("sources") or []:
@@ -155,10 +156,11 @@ def sanitize_vendor(vendor: dict[str, Any] | None) -> dict[str, Any] | None:
         artifact = dict(source_record.get("artifact") or {})
         artifact["region_scope"] = []
         source_record["artifact"] = artifact
-        # Preserve the URL and deterministic source classification while omitting
-        # publisher marketing copy that can introduce advisory or superlative claims.
-        source_record["title_en"] = None
-        source_record["title_native"] = None
+        # Preserve source identity and classification while replacing publisher
+        # marketing copy with a neutral, deterministic catalog label.
+        neutral_title = f"{display_name} {source_type.replace('_', ' ')}"
+        source_record["title_en"] = neutral_title
+        source_record["title_native"] = neutral_title
         source_record["summary_en"] = None
         source_record["summary_native"] = None
         cleaned_sources.append(source_record)
