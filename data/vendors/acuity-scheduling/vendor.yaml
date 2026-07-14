@@ -7,9 +7,14 @@ regions_served:
 - global
 official_domains:
 - acuityscheduling.com
+- squarespace.com
+- status.squarespace.com
 public_entrypoints:
-- https://www.acuityscheduling.com/privacy
-- https://www.acuityscheduling.com/security
+- https://www.squarespace.com/privacy
+- https://www.squarespace.com/dpa
+- https://www.squarespace.com/security
+- https://www.squarespace.com/terms-of-service
+- https://status.squarespace.com/
 vendor_categories:
 - productivity_software
 - customer_engagement
@@ -18,9 +23,13 @@ source_policy:
   gated_materials_excluded: true
   raw_documents_mirrored_by_default: false
 catalog_status: active
-notes: Public-source-only catalog record. Metadata references general public Acuity
-  Scheduling assurance materials and does not cover bespoke customer agreements.
+notes: Public-source-only Acuity Scheduling product record. Squarespace parent-company
+  privacy, data-processing, security, terms, and service-status sources are included
+  where the published material expressly covers Acuity Scheduling or the Squarespace
+  Services that include acuityscheduling.com. Bespoke customer agreements and request-only
+  subprocessor lists remain excluded.
 entity_family: squarespace
 entity_surface: product_surface
-related_vendor_ids: []
+related_vendor_ids:
+- squarespace
 source_authority_language: en
