@@ -60,6 +60,59 @@ jobs:
           else
             echo "::warning::source health snapshot unavailable: public/source-health-snapshot.json was not present in run $RUN_ID. Site will show No source-health observation labels."
           fi
+      - name: Select complete latest-observation input
+        id: observation_input
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          current_sources = {
+              row["source_id"]
+              for row in json.loads(Path("indexes/sources.json").read_text(encoding="utf-8")).get("items", [])
+          }
+          committed = Path("maintenance/source-observations/latest-observations.json")
+          if not committed.is_file():
+              raise SystemExit(f"committed latest-observation index missing: {committed}")
+          committed_document = json.loads(committed.read_text(encoding="utf-8"))
+          committed_sources = {
+              row["source_id"] for row in committed_document.get("sources", [])
+          }
+          if committed_sources != current_sources:
+              missing = sorted(current_sources - committed_sources)
+              orphan = sorted(committed_sources - current_sources)
+              raise SystemExit(
+                  "committed latest-observation index is not source-complete: "
+                  f"current={len(current_sources)} observed={len(committed_sources)} "
+                  f"missing={len(missing)} orphan={len(orphan)}"
+              )
+
+          selected = committed
+          artifact = Path("source-health-artifacts/observation-ledger/latest-observations.json")
+          if artifact.is_file():
+              artifact_document = json.loads(artifact.read_text(encoding="utf-8"))
+              artifact_sources = {
+                  row["source_id"] for row in artifact_document.get("sources", [])
+              }
+              if artifact_sources == current_sources:
+                  selected = artifact
+                  print(f"Using complete run artifact with {len(artifact_sources)} observations.")
+              else:
+                  print(
+                      "::warning::latest source-maintenance artifact is incomplete for the current catalog; "
+                      f"using committed latest-observation index instead "
+                      f"(current={len(current_sources)} artifact={len(artifact_sources)} "
+                      f"missing={len(current_sources - artifact_sources)} "
+                      f"orphan={len(artifact_sources - current_sources)})."
+                  )
+          else:
+              print("No run-artifact observation index found; using committed latest-observation index.")
+
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as handle:
+              handle.write(f"path={selected.as_posix()}\n")
+          PY
       - name: Build Assurance Intelligence public snapshot
         run: python -m tools.openva.assurance_intelligence_publication build --output public/assurance-intelligence.json
       - name: Build reviewed catalog site
@@ -94,19 +147,42 @@ jobs:
           ARGS=(
             --out site/dist/public
             --commit-sha "${{ github.sha }}"
+            --latest-observations "${{ steps.observation_input.outputs.path }}"
           )
-          if [ -f source-health-artifacts/observation-ledger/latest-observations.json ]; then
-            ARGS+=(--latest-observations source-health-artifacts/observation-ledger/latest-observations.json)
-          fi
           if [ -f source-health-artifacts/observation-ledger/source-freshness-report.json ]; then
             ARGS+=(--freshness-report source-health-artifacts/observation-ledger/source-freshness-report.json)
           fi
           python -m tools.openva.agent_export build "${ARGS[@]}"
-      - name: Verify discovery manifest is present before packaging
+      - name: Verify publication exports before packaging
         run: |
           set -euo pipefail
           test -s site/dist/.well-known/openva.json
           python -m json.tool site/dist/.well-known/openva.json >/dev/null
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          current_sources = {
+              row["source_id"]
+              for row in json.loads(Path("indexes/sources.json").read_text(encoding="utf-8")).get("items", [])
+          }
+          observations_document = json.loads(
+              Path("site/dist/public/observations/latest.json").read_text(encoding="utf-8")
+          )
+          published_sources = {
+              row["source_id"] for row in observations_document.get("sources", [])
+          }
+          missing = sorted(current_sources - published_sources)
+          orphan = sorted(published_sources - current_sources)
+          if missing or orphan or observations_document.get("count") != len(published_sources):
+              raise SystemExit(
+                  "published observation export is not source-complete: "
+                  f"current={len(current_sources)} published={len(published_sources)} "
+                  f"declared={observations_document.get('count')} "
+                  f"missing={len(missing)} orphan={len(orphan)}"
+              )
+          print(f"Published observation parity: {len(current_sources)}/{len(current_sources)}")
+          PY
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload GitHub Pages artifact
