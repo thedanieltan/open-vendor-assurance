@@ -102,14 +102,34 @@ def build_compiled_catalog(
     return compiled
 
 
+def _validate_catalog_card_interactions() -> None:
+    """Fail the site build if selection and detail controls become coupled again."""
+    source_path = Path(__file__).with_name("src") / "catalog-card-interactions.js"
+    source = source_path.read_text(encoding="utf-8")
+    required_tokens = (
+        'CATALOG_CARD_INTERACTIONS_VERSION = "explicit-view-links-v2"',
+        'selectionButton.className = "vendor-card__select-hit"',
+        'detailButton.textContent = "View links"',
+        'detailButton.setAttribute("aria-label", `View public links for ${vendorName}`)',
+        'checkbox.dispatchEvent(new Event("change", { bubbles: true }))',
+    )
+    missing = [token for token in required_tokens if token not in source]
+    if missing:
+        raise ValueError(
+            "catalog card interaction contract is incomplete: "
+            + ", ".join(repr(token) for token in missing)
+        )
+
+
 def render_index_html(template: str, config: Any) -> str:
     """Load focused public interaction layers after the existing site runtime."""
+    _validate_catalog_card_interactions()
     page = _ORIGINAL_RENDER_INDEX_HTML(template, config)
     marker = '    <script src="ui-fixes.js?v=20260713-phase2"></script>'
     replacement = (
         '    <script src="public-vendor-detail.js?v=20260713-vendor-detail"></script>\n'
         '    <script src="catalog-navigation.js?v=20260714-pagination-drawer"></script>\n'
-        '    <script src="catalog-card-interactions.js?v=20260715-responsive-card-sheet"></script>\n'
+        '    <script src="catalog-card-interactions.js?v=20260715-explicit-view-links"></script>\n'
         + marker
     )
     if marker not in page:
