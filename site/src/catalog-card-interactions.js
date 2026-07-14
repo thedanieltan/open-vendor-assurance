@@ -74,13 +74,21 @@
       position: absolute;
       inset: 0;
       z-index: 1;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      border: 0;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      height: 100% !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      border: 0 !important;
       border-radius: inherit;
-      background: transparent;
+      padding: 0 !important;
+      overflow: hidden;
+      appearance: none;
+      background: transparent !important;
       color: transparent;
+      font-size: 0;
       cursor: pointer;
     }
     .vendor-card .meta-line,
