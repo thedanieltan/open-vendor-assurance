@@ -110,7 +110,7 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload GitHub Pages artifact
-        # Pin the first upstream commit that supports include-hidden-files. The v4
+        # Pin the upstream commit that adds include-hidden-files support. The v4
         # tag always excludes dot-prefixed paths and silently ignores this input.
         uses: actions/upload-pages-artifact@0ca16172ca884f0a37117fed41734f29784cc980
         with:
