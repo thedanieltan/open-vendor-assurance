@@ -227,12 +227,11 @@ def validate_catalog_batch_duplicates(paths: list[str], *, root: Path = ROOT) ->
 
 
 def validate_catalog_pr(paths: list[str], *, root: Path = ROOT) -> list[str]:
-    """Validate catalog boundaries without inventing a mandatory source checklist.
+    """Validate catalog boundaries without a mandatory source checklist.
 
-    Source availability differs by vendor. Catalog PRs may record any verified,
-    source-type-correct public vendor sources that actually exist. The guard does
-    not require absent document categories and does not accept placeholder URLs or
-    unavailable-source records as substitutes for evidence.
+    Source availability differs by vendor. A catalog PR records verified public
+    vendor sources that actually exist. It does not require absent document types,
+    fabricate URLs, or use unavailable-source records as substitutes for evidence.
     """
     failures = validate_catalog_paths(paths)
     failures.extend(validate_catalog_generated_outputs(paths))
