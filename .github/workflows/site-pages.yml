@@ -102,13 +102,19 @@ jobs:
             ARGS+=(--freshness-report source-health-artifacts/observation-ledger/source-freshness-report.json)
           fi
           python -m tools.openva.agent_export build "${ARGS[@]}"
+      - name: Verify discovery manifest is present before packaging
+        run: |
+          set -euo pipefail
+          test -s site/dist/.well-known/openva.json
+          python -m json.tool site/dist/.well-known/openva.json >/dev/null
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        # Pin the first upstream commit that supports include-hidden-files. The v4
+        # tag always excludes dot-prefixed paths and silently ignores this input.
+        uses: actions/upload-pages-artifact@0ca16172ca884f0a37117fed41734f29784cc980
         with:
           path: site/dist
-          # Required so site/dist/.well-known/openva.json is included in the Pages artifact.
           include-hidden-files: true
 
   deploy:
