@@ -109,6 +109,7 @@ def render_index_html(template: str, config: Any) -> str:
     replacement = (
         '    <script src="public-vendor-detail.js?v=20260713-vendor-detail"></script>\n'
         '    <script src="catalog-navigation.js?v=20260714-pagination-drawer"></script>\n'
+        '    <script src="catalog-card-interactions.js?v=20260715-responsive-card-sheet"></script>\n'
         + marker
     )
     if marker not in page:
