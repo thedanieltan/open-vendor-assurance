@@ -1,6 +1,6 @@
 {
   "advisory_boundary": "non_advisory",
-  "count": 233,
+  "count": 272,
   "generated_at": "1970-01-01T00:00:00Z",
   "items": [
     {
@@ -760,6 +760,82 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aidoc-privacy-notice-d354dd034db0",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.aidoc.com/privacy-policy",
+          "title": "Aidoc | Clinical AI"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aidoc-security-page-4619a3430e8e",
+          "source_type": "security_page",
+          "source_url": "https://www.aidoc.com/about/security-privacy",
+          "title": "Aidoc Security &amp; Privacy"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aidoc-terms-of-service-af3e4e7dbe4c",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.aidoc.com/terms",
+          "title": "Aidoc | Clinical AI"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Aidoc",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/aidoc.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "aidoc.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aidoc-privacy-notice-d354dd034db0",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.aidoc.com/privacy-policy",
+          "title": "Aidoc | Clinical AI"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aidoc-security-page-4619a3430e8e",
+          "source_type": "security_page",
+          "source_url": "https://www.aidoc.com/about/security-privacy",
+          "title": "Aidoc Security &amp; Privacy"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aidoc-terms-of-service-af3e4e7dbe4c",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.aidoc.com/terms",
+          "title": "Aidoc | Clinical AI"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "aidoc"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -1166,6 +1242,92 @@
         "subprocessors_list"
       ],
       "vendor_id": "akur8"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "alcidion-privacy-notice-0d3c23a96fa4",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.alcidion.com/privacy-policy-uk",
+          "title": "Privacy Policy UK - Alcidion"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Alcidion",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/alcidion.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "alcidion.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "alcidion-privacy-notice-0d3c23a96fa4",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.alcidion.com/privacy-policy-uk",
+          "title": "Privacy Policy UK - Alcidion"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "alcidion"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aleph-alpha-privacy-notice-c1b8d6e63184",
+          "source_type": "privacy_notice",
+          "source_url": "https://aleph-alpha.com/datenschutz",
+          "title": "Datenschutzerklärung | ALEPH ALPHA"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Aleph Alpha",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/aleph-alpha.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "aleph-alpha.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "aleph-alpha-privacy-notice-c1b8d6e63184",
+          "source_type": "privacy_notice",
+          "source_url": "https://aleph-alpha.com/datenschutz",
+          "title": "Datenschutzerklärung | ALEPH ALPHA"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "aleph-alpha"
     },
     {
       "candidate_source_types": [],
@@ -1709,6 +1871,57 @@
         "terms_of_service"
       ],
       "vendor_id": "amplitude"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "anduril-privacy-notice-90199970e154",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.anduril.com:443/privacy-policy",
+          "title": "Privacy Policy | Anduril"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "anduril-privacy-notice-afb26fb8bcad",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.anduril.com/privacy-policy",
+          "title": "Privacy Policy | Anduril"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Anduril",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/anduril.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "anduril.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "anduril-privacy-notice-90199970e154",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.anduril.com:443/privacy-policy",
+          "title": "Privacy Policy | Anduril"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "anduril"
     },
     {
       "candidate_source_types": [],
@@ -3043,6 +3256,65 @@
         "terms_of_service"
       ],
       "vendor_id": "bigcommerce"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bigid-dpa-8228322595ee",
+          "source_type": "dpa",
+          "source_url": "https://bigid.com/wp-content/uploads/2026/07/Customer-Data-Processing-Addendum_March-11-2025.docx-1.pdf",
+          "title": "Customer-Data-Processing-Addendum_March-11-2025.docx-1.pdf"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bigid-privacy-notice-6511713c397f",
+          "source_type": "privacy_notice",
+          "source_url": "https://bigid.com/wp-content/uploads/2026/03/BigID-Privacy-Notice_03092026.pdf",
+          "title": "BigID-Privacy-Notice_03092026.pdf"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "BigID",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/bigid.json",
+      "missing_core_source_types": [
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "bigid.com"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bigid-dpa-8228322595ee",
+          "source_type": "dpa",
+          "source_url": "https://bigid.com/wp-content/uploads/2026/07/Customer-Data-Processing-Addendum_March-11-2025.docx-1.pdf",
+          "title": "Customer-Data-Processing-Addendum_March-11-2025.docx-1.pdf"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "bigid-privacy-notice-6511713c397f",
+          "source_type": "privacy_notice",
+          "source_url": "https://bigid.com/wp-content/uploads/2026/03/BigID-Privacy-Notice_03092026.pdf",
+          "title": "BigID-Privacy-Notice_03092026.pdf"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "bigid"
     },
     {
       "candidate_source_types": [],
@@ -5499,6 +5771,57 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cover-genius-privacy-notice-096e3816a89f",
+          "source_type": "privacy_notice",
+          "source_url": "https://covergenius.com/privacy-policy/data-privacy-request-form",
+          "title": "Data Privacy Request Form | Privacy Policy - Cover Genius"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cover-genius-privacy-notice-b0a8505034a2",
+          "source_type": "privacy_notice",
+          "source_url": "https://covergenius.com/privacy-policy",
+          "title": "Privacy Policy - Cover Genius"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Cover Genius",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/cover-genius.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "covergenius.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "cover-genius-privacy-notice-096e3816a89f",
+          "source_type": "privacy_notice",
+          "source_url": "https://covergenius.com/privacy-policy/data-privacy-request-form",
+          "title": "Data Privacy Request Form | Privacy Policy - Cover Genius"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "cover-genius"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -6490,6 +6813,90 @@
         "trust_center"
       ],
       "vendor_id": "deepl"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "descartes-compliance-page-5c8d3c6f3781",
+          "source_type": "compliance_page",
+          "source_url": "https://www.descartes.com/da/loesninger/speditorer-og-toldkonsulenter/compliance-for-told",
+          "title": "Compliance for told | Descartes"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "descartes-compliance-page-adca500f094c",
+          "source_type": "compliance_page",
+          "source_url": "https://www.descartes.com/compliance",
+          "title": "Compliance | Descartes"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "descartes-privacy-notice-c008722133b4",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.descartes.com/privacy-center/general-privacy-policy",
+          "title": "General Privacy Policy | Descartes"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "descartes-security-page-ff568c6fb83f",
+          "source_type": "security_page",
+          "source_url": "https://www.descartes.com/da/loesninger/toldsystem/security-filings",
+          "title": "Security Filings | Descartes"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Descartes",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/descartes.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "descartes.com"
+      ],
+      "primary_source_by_type": {
+        "compliance_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "descartes-compliance-page-5c8d3c6f3781",
+          "source_type": "compliance_page",
+          "source_url": "https://www.descartes.com/da/loesninger/speditorer-og-toldkonsulenter/compliance-for-told",
+          "title": "Compliance for told | Descartes"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "descartes-privacy-notice-c008722133b4",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.descartes.com/privacy-center/general-privacy-policy",
+          "title": "General Privacy Policy | Descartes"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "descartes-security-page-ff568c6fb83f",
+          "source_type": "security_page",
+          "source_url": "https://www.descartes.com/da/loesninger/toldsystem/security-filings",
+          "title": "Security Filings | Descartes"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "descartes"
     },
     {
       "candidate_source_types": [],
@@ -7649,6 +8056,143 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "certification_reference"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "earnix-certification-reference-63fc0d81b781",
+          "source_type": "certification_reference",
+          "source_url": "https://earnix.com/de/insights-center/brochures/earnix-soc-2-type-ii-attestation-verified-trust-proven-security",
+          "title": "Earnix SOC 2 Type II Attestation"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "earnix-certification-reference-c98379306c95",
+          "source_type": "certification_reference",
+          "source_url": "https://earnix.com/es/insights-center/brochures/earnix-soc-2-type-ii-attestation-verified-trust-proven-security",
+          "title": "Earnix SOC 2 Type II Attestation"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Earnix",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/earnix.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "earnix.com"
+      ],
+      "primary_source_by_type": {
+        "certification_reference": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "earnix-certification-reference-63fc0d81b781",
+          "source_type": "certification_reference",
+          "source_url": "https://earnix.com/de/insights-center/brochures/earnix-soc-2-type-ii-attestation-verified-trust-proven-security",
+          "title": "Earnix SOC 2 Type II Attestation"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "earnix"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "certification_reference",
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eis-group-certification-reference-6a827bd97102",
+          "source_type": "certification_reference",
+          "source_url": "https://www.eisgroup.com/2025/06/25/eis-first-cloud-native-insurance-core-platform-provider-to-earn-iso-iec-42001-certification",
+          "title": "EIS First Cloud-Native Insurance Core Platform Provider to Earn ISO/IEC 42001 Certification, Setting New Standards for Ethical AI Management - EIS"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eis-group-certification-reference-cee1f08dc89a",
+          "source_type": "certification_reference",
+          "source_url": "https://www.eisgroup.com/2025/04/04/mach-alliance-certification",
+          "title": "MACH Alliance Certification Recognizes the Key Role of EIS in Driving the Future of Insurance Transformation - EIS"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eis-group-privacy-notice-699af62a45b8",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.eisgroup.com/privacy-statement",
+          "title": "Privacy Statement - EIS Insurance Software"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eis-group-terms-of-service-36ea299b028b",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.eisgroup.com/terms-of-use",
+          "title": "Terms of Use - EIS Insurance Software"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "EIS Group",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/eis-group.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "eisgroup.com"
+      ],
+      "primary_source_by_type": {
+        "certification_reference": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eis-group-certification-reference-6a827bd97102",
+          "source_type": "certification_reference",
+          "source_url": "https://www.eisgroup.com/2025/06/25/eis-first-cloud-native-insurance-core-platform-provider-to-earn-iso-iec-42001-certification",
+          "title": "EIS First Cloud-Native Insurance Core Platform Provider to Earn ISO/IEC 42001 Certification, Setting New Standards for Ethical AI Management - EIS"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eis-group-privacy-notice-699af62a45b8",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.eisgroup.com/privacy-statement",
+          "title": "Privacy Statement - EIS Insurance Software"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "eis-group-terms-of-service-36ea299b028b",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.eisgroup.com/terms-of-use",
+          "title": "Terms of Use - EIS Insurance Software"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "eis-group"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -7960,6 +8504,99 @@
         "terms_of_service"
       ],
       "vendor_id": "eset"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "government_request_policy",
+        "security_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "esri-government-request-policy-69a814975ca9",
+          "source_type": "government_request_policy",
+          "source_url": "https://www.esri.com/en-us/industries/law-enforcement/strategies/police-transparency",
+          "title": "Police Transparency &amp; Accountability | Police Open Data"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "esri-security-page-288f7752a1ff",
+          "source_type": "security_page",
+          "source_url": "https://www.esri.com/en-us/industries/security-operations/overview",
+          "title": "Security Operations | Incident Management Software for Corporate Security"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "esri-security-page-50200a113b77",
+          "source_type": "security_page",
+          "source_url": "https://www.esri.com/en-us/industries/security-operations/events",
+          "title": "Security Operations Events, Conferences &amp; Webinars"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "esri-terms-of-service-501deb70e8fa",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.esri.com/en-us/legal/terms/media",
+          "title": "Media Terms of Use for Esri Blogs, Podcast, and Journalists &amp; Press Agencies | Esri Legal"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "esri-terms-of-service-7f275c7998d1",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.esri.com/en-us/legal/terms/arcgis-for-power-bi-terms-of-use",
+          "title": "ArcGIS for Power BI Terms of Use | Esri Legal"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Esri",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/esri.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "esri.com"
+      ],
+      "primary_source_by_type": {
+        "government_request_policy": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "esri-government-request-policy-69a814975ca9",
+          "source_type": "government_request_policy",
+          "source_url": "https://www.esri.com/en-us/industries/law-enforcement/strategies/police-transparency",
+          "title": "Police Transparency &amp; Accountability | Police Open Data"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "esri-security-page-288f7752a1ff",
+          "source_type": "security_page",
+          "source_url": "https://www.esri.com/en-us/industries/security-operations/overview",
+          "title": "Security Operations | Incident Management Software for Corporate Security"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "esri-terms-of-service-501deb70e8fa",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.esri.com/en-us/legal/terms/media",
+          "title": "Media Terms of Use for Esri Blogs, Podcast, and Journalists &amp; Press Agencies | Esri Legal"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "esri"
     },
     {
       "candidate_source_types": [],
@@ -8314,6 +8951,66 @@
         "status_page"
       ],
       "vendor_id": "factorial"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "dpa",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "feishu-dpa-4d5a5d7d0646",
+          "source_type": "dpa",
+          "source_url": "https://www.feishu.cn/dpa",
+          "title": "飞书组织用户数据委托处理协议"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "feishu-terms-of-service-3cbc9257b269",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.feishu.cn/terms",
+          "title": "飞书用户服务协议"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Feishu",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/feishu.json",
+      "missing_core_source_types": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "feishu.cn"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "feishu-dpa-4d5a5d7d0646",
+          "source_type": "dpa",
+          "source_url": "https://www.feishu.cn/dpa",
+          "title": "飞书组织用户数据委托处理协议"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "feishu-terms-of-service-3cbc9257b269",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.feishu.cn/terms",
+          "title": "飞书用户服务协议"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "feishu"
     },
     {
       "candidate_source_types": [],
@@ -8856,6 +9553,75 @@
         "subprocessors_list"
       ],
       "vendor_id": "fortinet"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "freee-terms-of-service-087f234f3b77",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.freee.co.jp/terms",
+          "title": "freee利用規約｜ freee"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "freee-terms-of-service-df8861c63ee8",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.freee.co.jp/sign/terms",
+          "title": "freeeサイン 利用規約｜freeeサイン"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "freee-trust-center-7ebe95946936",
+          "source_type": "trust_center",
+          "source_url": "https://www.freee.co.jp/cases/trustill",
+          "title": "たった「2分」でも効率化しさらなる価値提供を。士業におけるSalesforce × freee活用の効果とは？ - 導入事例 - freee"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "freee",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/freee.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "freee.co.jp"
+      ],
+      "primary_source_by_type": {
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "freee-terms-of-service-087f234f3b77",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.freee.co.jp/terms",
+          "title": "freee利用規約｜ freee"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "freee-trust-center-7ebe95946936",
+          "source_type": "trust_center",
+          "source_url": "https://www.freee.co.jp/cases/trustill",
+          "title": "たった「2分」でも効率化しさらなる価値提供を。士業におけるSalesforce × freee活用の効果とは？ - 導入事例 - freee"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "freee"
     },
     {
       "candidate_source_types": [],
@@ -11749,6 +12515,192 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "icertis-trust-center-ff70183103c7",
+          "source_type": "trust_center",
+          "source_url": "https://www.icertis.com/archive/webinars2/trust-transparency-and-transformation/intro",
+          "title": "Webinar: General Counsel Leadership in the Age of AI - Accenture &amp; Icertis | Icertis"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Icertis",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/icertis.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "icertis.com"
+      ],
+      "primary_source_by_type": {
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "icertis-trust-center-ff70183103c7",
+          "source_type": "trust_center",
+          "source_url": "https://www.icertis.com/archive/webinars2/trust-transparency-and-transformation/intro",
+          "title": "Webinar: General Counsel Leadership in the Age of AI - Accenture &amp; Icertis | Icertis"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "icertis"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-certification-reference-a357d62849b5",
+          "source_type": "certification_reference",
+          "source_url": "https://idnow.io/fr/communiques/certification-iso-27001",
+          "title": "ARIADNEXT obtient la certification ISO 27001 - IDnow"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-certification-reference-a86ffbada2d3",
+          "source_type": "certification_reference",
+          "source_url": "https://idnow.io/certification-policies",
+          "title": "Certification Policies - - IDnow"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-compliance-page-d11c792c461d",
+          "source_type": "compliance_page",
+          "source_url": "https://idnow.io/de/blog-de/compliance-und-spielerschutz-das-igaming-in-deutschland",
+          "title": "DGGS-CEO Florian Werner: Compliance und Spielerschutz das iGaming in Deutschland prägen"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-privacy-notice-c94f77cde5c1",
+          "source_type": "privacy_notice",
+          "source_url": "https://idnow.io/privacy",
+          "title": "Privacy Policy - IDnow"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-privacy-notice-cb45f03da355",
+          "source_type": "privacy_notice",
+          "source_url": "https://idnow.io/de/datenschutzerklaerung",
+          "title": "Datenschutzerklärung - IDnow"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-security-page-4e20f931589a",
+          "source_type": "security_page",
+          "source_url": "https://idnow.io/de/blog-de/digitales-vertrauen-als-neuer-erfolgsfaktor-wie-congstar-sicherheit-und-ein-reibungsloses-onboarding-miteinander-vereint",
+          "title": "Digitales Vertrauen als neuer Erfolgsfaktor: Wie congstar"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-security-page-4fec492046af",
+          "source_type": "security_page",
+          "source_url": "https://idnow.io/de/datensicherheit",
+          "title": "Datensicherheit | Datenschutz - IDnow"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-trust-center-1645f607cb41",
+          "source_type": "trust_center",
+          "source_url": "https://idnow.io/de/trust-services",
+          "title": "Vertrauensdienste - Trust Services: IDnow"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-trust-center-ebe0cf53d5f3",
+          "source_type": "trust_center",
+          "source_url": "https://idnow.io/de/trust-platform",
+          "title": "IDnow Trust Platform: Identität, Betrug und Compliance"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "IDnow",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/idnow.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "idnow.io"
+      ],
+      "primary_source_by_type": {
+        "certification_reference": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-certification-reference-a357d62849b5",
+          "source_type": "certification_reference",
+          "source_url": "https://idnow.io/fr/communiques/certification-iso-27001",
+          "title": "ARIADNEXT obtient la certification ISO 27001 - IDnow"
+        },
+        "compliance_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-compliance-page-d11c792c461d",
+          "source_type": "compliance_page",
+          "source_url": "https://idnow.io/de/blog-de/compliance-und-spielerschutz-das-igaming-in-deutschland",
+          "title": "DGGS-CEO Florian Werner: Compliance und Spielerschutz das iGaming in Deutschland prägen"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-privacy-notice-c94f77cde5c1",
+          "source_type": "privacy_notice",
+          "source_url": "https://idnow.io/privacy",
+          "title": "Privacy Policy - IDnow"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-security-page-4e20f931589a",
+          "source_type": "security_page",
+          "source_url": "https://idnow.io/de/blog-de/digitales-vertrauen-als-neuer-erfolgsfaktor-wie-congstar-sicherheit-und-ein-reibungsloses-onboarding-miteinander-vereint",
+          "title": "Digitales Vertrauen als neuer Erfolgsfaktor: Wie congstar"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "idnow-trust-center-1645f607cb41",
+          "source_type": "trust_center",
+          "source_url": "https://idnow.io/de/trust-services",
+          "title": "Vertrauensdienste - Trust Services: IDnow"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "idnow"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page",
         "terms_of_service"
@@ -11959,6 +12911,99 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insurity-privacy-notice-208700732236",
+          "source_type": "privacy_notice",
+          "source_url": "https://insurity.com/fr/legal-fr/privacy-policy",
+          "title": "Politique de confidentialité | Insurity"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insurity-privacy-notice-d85ed4760810",
+          "source_type": "privacy_notice",
+          "source_url": "https://insurity.com/legal/privacy-notice-insurity-payments-llc",
+          "title": "Privacy Notice | Insurity Payments LLC | Insurity"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insurity-terms-of-service-8193a1446508",
+          "source_type": "terms_of_service",
+          "source_url": "https://insurity.com/legal/terms-of-use",
+          "title": "Terms of Use | Insurity"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insurity-terms-of-service-d37cb4fd3d6a",
+          "source_type": "terms_of_service",
+          "source_url": "https://insurity.com/fr/legal-fr/terms-use",
+          "title": "Conditions d’utilisation | Insurity"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insurity-trust-center-31a47ba587a7",
+          "source_type": "trust_center",
+          "source_url": "https://insurity.com/press-release/trusted-22-top-25-property-and-casualty-carriers-insurity-strengthens-its-position",
+          "title": "Insurity is Core System Provider for P&amp;C Insurance Software"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Insurity",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/insurity.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "insurity.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insurity-privacy-notice-208700732236",
+          "source_type": "privacy_notice",
+          "source_url": "https://insurity.com/fr/legal-fr/privacy-policy",
+          "title": "Politique de confidentialité | Insurity"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insurity-terms-of-service-8193a1446508",
+          "source_type": "terms_of_service",
+          "source_url": "https://insurity.com/legal/terms-of-use",
+          "title": "Terms of Use | Insurity"
+        },
+        "trust_center": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "insurity-trust-center-31a47ba587a7",
+          "source_type": "trust_center",
+          "source_url": "https://insurity.com/press-release/trusted-22-top-25-property-and-casualty-carriers-insurity-strengthens-its-position",
+          "title": "Insurity is Core System Provider for P&amp;C Insurance Software"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "insurity"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -12161,6 +13206,118 @@
         "terms_of_service"
       ],
       "vendor_id": "jetbrains"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jumio-privacy-notice-17fe92b6fdae",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.jumio.com/privacy-center",
+          "title": "Privacy Center | Jumio Privacy and Trust Center"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jumio-privacy-notice-1b9a3da9da3d",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.jumio.com/de/rechtsinformation/datenschutzhinweise",
+          "title": "Datenschutzhinweise - Jumio: End-to-End ID, Identity Verification and AML Solutions"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jumio-terms-of-service-4718472b5894",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.jumio.com/terms-and-conditions",
+          "title": "Terms and Conditions | Jumio Corp"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Jumio",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/jumio.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "jumio.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jumio-privacy-notice-17fe92b6fdae",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.jumio.com/privacy-center",
+          "title": "Privacy Center | Jumio Privacy and Trust Center"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "jumio-terms-of-service-4718472b5894",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.jumio.com/terms-and-conditions",
+          "title": "Terms and Conditions | Jumio Corp"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "jumio"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "certification_reference"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "kakao-enterprise-certification-reference-099c77957491",
+          "source_type": "certification_reference",
+          "source_url": "https://kakaoenterprise.com/info/certification",
+          "title": "정보보호인증 | 카카오엔터프라이즈"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Kakao Enterprise",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/kakao-enterprise.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "kakaoenterprise.com"
+      ],
+      "primary_source_by_type": {
+        "certification_reference": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "kakao-enterprise-certification-reference-099c77957491",
+          "source_type": "certification_reference",
+          "source_url": "https://kakaoenterprise.com/info/certification",
+          "title": "정보보호인증 | 카카오엔터프라이즈"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "kakao-enterprise"
     },
     {
       "candidate_source_types": [],
@@ -12455,6 +13612,90 @@
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "lark-dpa-ea134b796dd6",
+          "source_type": "dpa",
+          "source_url": "https://www.larksuite.com/en_us/legal/data-processing-addendum-us",
+          "title": "U.S. DATA PROCESSING ADDENDUM"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "lark-privacy-notice-9bbf9f2232e3",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.larksuite.com/de_de/privacy-policy",
+          "title": "Privacy Policy | Lark"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "lark-terms-of-service-5e682de653ad",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.larksuite.com/de_de/user-terms-of-service",
+          "title": "User Terms of Service | Lark"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "lark-terms-of-service-adbcdf6323b5",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.larksuite.com/ai-companion-terms-of-service",
+          "title": "Service Terms | Lark"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Lark",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/lark.json",
+      "missing_core_source_types": [
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "larksuite.com"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "lark-dpa-ea134b796dd6",
+          "source_type": "dpa",
+          "source_url": "https://www.larksuite.com/en_us/legal/data-processing-addendum-us",
+          "title": "U.S. DATA PROCESSING ADDENDUM"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "lark-privacy-notice-9bbf9f2232e3",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.larksuite.com/de_de/privacy-policy",
+          "title": "Privacy Policy | Lark"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "lark-terms-of-service-5e682de653ad",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.larksuite.com/de_de/user-terms-of-service",
+          "title": "User Terms of Service | Lark"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "lark"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
         "security_page"
       ],
       "canonical_sources": [
@@ -12532,6 +13773,57 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "security_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "leonardo-security-page-2ce925287fee",
+          "source_type": "security_page",
+          "source_url": "https://www.leonardo.com/en/focus-detail/-/detail/atm-tecnologie-integrate-sicurezza-sostenibilita",
+          "title": "ATM, integrated technologies for safety and sustainability"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "leonardo-security-page-691a88bd4b5c",
+          "source_type": "security_page",
+          "source_url": "https://www.leonardo.com/en/news-and-stories-detail/-/detail/leonardo-contribuisce-sicurezza-entry-exit-system-europeo",
+          "title": "Leonardo contributes to the security of the new European Entry/Exit System"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Leonardo",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/leonardo.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "leonardo.com"
+      ],
+      "primary_source_by_type": {
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "leonardo-security-page-2ce925287fee",
+          "source_type": "security_page",
+          "source_url": "https://www.leonardo.com/en/focus-detail/-/detail/atm-tecnologie-integrate-sicurezza-sostenibilita",
+          "title": "ATM, integrated technologies for safety and sustainability"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "leonardo"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page"
       ],
@@ -12590,6 +13882,50 @@
         "terms_of_service"
       ],
       "vendor_id": "lever"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "line-works-terms-of-service-c673d14b0f9e",
+          "source_type": "terms_of_service",
+          "source_url": "https://worksmobile.com/terms/naver-cloud-platform",
+          "title": "네이버 클라우드 플랫폼 서비스 이용약관 - 네이버웍스"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "LINE WORKS",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/line-works.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "worksmobile.com"
+      ],
+      "primary_source_by_type": {
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "line-works-terms-of-service-c673d14b0f9e",
+          "source_type": "terms_of_service",
+          "source_url": "https://worksmobile.com/terms/naver-cloud-platform",
+          "title": "네이버 클라우드 플랫폼 서비스 이용약관 - 네이버웍스"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "line-works"
     },
     {
       "candidate_source_types": [],
@@ -13513,6 +14849,58 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "compliance_page"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "meistertask-compliance-page-3b4528adb1ac",
+          "source_type": "compliance_page",
+          "source_url": "https://www.meistertask.com/pages/compliance",
+          "title": "MeisterTask | Work Management Software"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "meistertask-compliance-page-8e1e7cc2fec8",
+          "source_type": "compliance_page",
+          "source_url": "https://www.meistertask.com/pages/de/compliance",
+          "title": "Compliance | Datenschutz &amp; Sicherheit bei MeisterTask"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "MeisterTask",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/meistertask.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "meistertask.com"
+      ],
+      "primary_source_by_type": {
+        "compliance_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "meistertask-compliance-page-3b4528adb1ac",
+          "source_type": "compliance_page",
+          "source_url": "https://www.meistertask.com/pages/compliance",
+          "title": "MeisterTask | Work Management Software"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "meistertask"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "other_public_source",
@@ -14360,6 +15748,66 @@
         "security_page"
       ],
       "vendor_id": "monday-com"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "money-forward-privacy-notice-8ae3ce004e4d",
+          "source_type": "privacy_notice",
+          "source_url": "https://corp.moneyforward.com/privacy",
+          "title": "プライバシーポリシー｜株式会社マネーフォワード"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "money-forward-terms-of-service-ba3d7502038c",
+          "source_type": "terms_of_service",
+          "source_url": "https://moneyforward.com/terms",
+          "title": "利用規約｜マネーフォワード ME"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Money Forward",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/money-forward.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "moneyforward.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "money-forward-privacy-notice-8ae3ce004e4d",
+          "source_type": "privacy_notice",
+          "source_url": "https://corp.moneyforward.com/privacy",
+          "title": "プライバシーポリシー｜株式会社マネーフォワード"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "money-forward-terms-of-service-ba3d7502038c",
+          "source_type": "terms_of_service",
+          "source_url": "https://moneyforward.com/terms",
+          "title": "利用規約｜マネーフォワード ME"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "money-forward"
     },
     {
       "candidate_source_types": [],
@@ -15328,6 +16776,50 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "nhn-cloud-terms-of-service-8926845f0d97",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.nhncloud.com/terms",
+          "title": "토스트::TOAST"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "NHN Cloud",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/nhn-cloud.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "nhncloud.com"
+      ],
+      "primary_source_by_type": {
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "nhn-cloud-terms-of-service-8926845f0d97",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.nhncloud.com/terms",
+          "title": "토스트::TOAST"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "nhn-cloud"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "dpa",
         "privacy_notice",
         "security_page",
@@ -15797,6 +17289,49 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "oneshield-privacy-notice-e49e30db5e6d",
+          "source_type": "privacy_notice",
+          "source_url": "https://oneshield.com/privacy-policy",
+          "title": "Privacy Policy"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "OneShield",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/oneshield.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "oneshield.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "oneshield-privacy-notice-e49e30db5e6d",
+          "source_type": "privacy_notice",
+          "source_url": "https://oneshield.com/privacy-policy",
+          "title": "Privacy Policy"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "oneshield"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page",
         "subprocessors_list"
@@ -16134,6 +17669,82 @@
         "status_page"
       ],
       "vendor_id": "oracle-cloud"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "certification_reference",
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "orion-health-certification-reference-ad329235965f",
+          "source_type": "certification_reference",
+          "source_url": "https://orionhealth.com/au/certifications/spain-certifications",
+          "title": "Spain Certifications - ISO 14001 certifications - Orion Health"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "orion-health-certification-reference-d3933b539a9e",
+          "source_type": "certification_reference",
+          "source_url": "https://orionhealth.com/au/certifications",
+          "title": "Certifications | Orion Health"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "orion-health-privacy-notice-864fbcf1a081",
+          "source_type": "privacy_notice",
+          "source_url": "https://orionhealth.com/au/privacy-policy",
+          "title": "Privacy Policy - Orion Health"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "orion-health-privacy-notice-d4e8b1e8f875",
+          "source_type": "privacy_notice",
+          "source_url": "https://orionhealth.com/global/privacy-policy",
+          "title": "Privacy Policy - Orion Health"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Orion Health",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/orion-health.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "orionhealth.com"
+      ],
+      "primary_source_by_type": {
+        "certification_reference": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "orion-health-certification-reference-ad329235965f",
+          "source_type": "certification_reference",
+          "source_url": "https://orionhealth.com/au/certifications/spain-certifications",
+          "title": "Spain Certifications - ISO 14001 certifications - Orion Health"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "orion-health-privacy-notice-864fbcf1a081",
+          "source_type": "privacy_notice",
+          "source_url": "https://orionhealth.com/au/privacy-policy",
+          "title": "Privacy Policy - Orion Health"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "orion-health"
     },
     {
       "candidate_source_types": [],
@@ -17752,6 +19363,164 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "dpa",
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "privado-ai-dpa-72a99fa39a5a",
+          "source_type": "dpa",
+          "source_url": "https://www.privado.ai/data-processing-addendum",
+          "title": "Legal / DataProcessing Addendum"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "privado-ai-privacy-notice-08cf4bd043d2",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.privado.ai/ebooks/privacy-code-scanning-a-guide",
+          "title": "The Complete Guide to Privacy Code Scanning | Privado"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "privado-ai-privacy-notice-744488ef3a33",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.privado.ai/ebooks/privacy-data-mapping-a-guide",
+          "title": "The Complete Guide for Privacy Data Mapping | Privado"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Privado.ai",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/privado-ai.json",
+      "missing_core_source_types": [
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "privado.ai"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "privado-ai-dpa-72a99fa39a5a",
+          "source_type": "dpa",
+          "source_url": "https://www.privado.ai/data-processing-addendum",
+          "title": "Legal / DataProcessing Addendum"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "privado-ai-privacy-notice-08cf4bd043d2",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.privado.ai/ebooks/privacy-code-scanning-a-guide",
+          "title": "The Complete Guide to Privacy Code Scanning | Privado"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "privado-ai"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "project44-privacy-notice-06c4efe20d3b",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.project44.com/privacy",
+          "title": "Privacy | project44"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "project44-privacy-notice-bd1105c715c4",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.project44.com/de/datenschutzerklaerung",
+          "title": "Datenschutz | project44"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "project44-security-page-6169292a518c",
+          "source_type": "security_page",
+          "source_url": "https://www.project44.com/es/seguridad",
+          "title": "Seguridad | project44"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "project44-security-page-8fd77651655d",
+          "source_type": "security_page",
+          "source_url": "https://www.project44.com/fr/securite",
+          "title": "Sécurité | project44"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "project44-subprocessors-list-b0d345486761",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.project44.com/fr/politique-de-confidentialite/les-sous-traitants-de-project44",
+          "title": "Les sous-traitants | project44"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "project44",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/project44.json",
+      "missing_core_source_types": [
+        "dpa"
+      ],
+      "official_domains": [
+        "project44.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "project44-privacy-notice-06c4efe20d3b",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.project44.com/privacy",
+          "title": "Privacy | project44"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "project44-security-page-6169292a518c",
+          "source_type": "security_page",
+          "source_url": "https://www.project44.com/es/seguridad",
+          "title": "Seguridad | project44"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "project44-subprocessors-list-b0d345486761",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.project44.com/fr/politique-de-confidentialite/les-sous-traitants-de-project44",
+          "title": "Les sous-traitants | project44"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "project44"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "dpa",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
@@ -18861,6 +20630,135 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "riskified-terms-of-service-749bf0052efe",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.riskified.com/ja/terms",
+          "title": "Terms - Riskified"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Riskified",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/riskified.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "riskified.com"
+      ],
+      "primary_source_by_type": {
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "riskified-terms-of-service-749bf0052efe",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.riskified.com/ja/terms",
+          "title": "Terms - Riskified"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "riskified"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "compliance_page",
+        "security_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "saab-compliance-page-c4dea8d2a239",
+          "source_type": "compliance_page",
+          "source_url": "https://www.saab.com/career/job-opportunities/compliance-officer-it-informationssakerhet--signalskydd",
+          "title": "Compliance Officer IT-/informationss&#xE4;kerhet &amp; signalskydd"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "saab-security-page-3689a057f583",
+          "source_type": "security_page",
+          "source_url": "https://www.saab.com/career/job-opportunities/fachspezialist-personalsicherheit--pravention-40-60-wmd",
+          "title": "Fachspezialist Personalsicherheit &amp; Pr&#xE4;vention 40-60% (w/m/d)"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "saab-security-page-f540469ac0d5",
+          "source_type": "security_page",
+          "source_url": "https://www.saab.com/es/markets/colombia/contenido-editorial/nuestro-testimonio/2018/seguridad-desde-la-tierra",
+          "title": "Seguridad desde la tierra"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "saab-terms-of-service-4ce27e14449b",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.saab.com/about/for-suppliers/terms-and-conditions",
+          "title": "Terms and condition | For suppliers | Saab"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Saab",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/saab.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "saab.com"
+      ],
+      "primary_source_by_type": {
+        "compliance_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "saab-compliance-page-c4dea8d2a239",
+          "source_type": "compliance_page",
+          "source_url": "https://www.saab.com/career/job-opportunities/compliance-officer-it-informationssakerhet--signalskydd",
+          "title": "Compliance Officer IT-/informationss&#xE4;kerhet &amp; signalskydd"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "saab-security-page-3689a057f583",
+          "source_type": "security_page",
+          "source_url": "https://www.saab.com/career/job-opportunities/fachspezialist-personalsicherheit--pravention-40-60-wmd",
+          "title": "Fachspezialist Personalsicherheit &amp; Pr&#xE4;vention 40-60% (w/m/d)"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "saab-terms-of-service-4ce27e14449b",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.saab.com/about/for-suppliers/terms-and-conditions",
+          "title": "Terms and condition | For suppliers | Saab"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "saab"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page",
         "subprocessors_list"
@@ -18935,6 +20833,66 @@
         "terms_of_service"
       ],
       "vendor_id": "sage"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "certification_reference",
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sakura-internet-certification-reference-fbb3c6a59328",
+          "source_type": "certification_reference",
+          "source_url": "https://www.sakura.ad.jp/ai-certification",
+          "title": "さくらのAI検定｜さくらインターネット"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sakura-internet-privacy-notice-9908f44b710a",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.sakura.ad.jp/corporate/privacy",
+          "title": "個人情報保護ポリシー | さくらインターネット"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Sakura Internet",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/sakura-internet.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "sakura.ad.jp"
+      ],
+      "primary_source_by_type": {
+        "certification_reference": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sakura-internet-certification-reference-fbb3c6a59328",
+          "source_type": "certification_reference",
+          "source_url": "https://www.sakura.ad.jp/ai-certification",
+          "title": "さくらのAI検定｜さくらインターネット"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sakura-internet-privacy-notice-9908f44b710a",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.sakura.ad.jp/corporate/privacy",
+          "title": "個人情報保護ポリシー | さくらインターネット"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "sakura-internet"
     },
     {
       "candidate_source_types": [],
@@ -19308,6 +21266,49 @@
         "terms_of_service"
       ],
       "vendor_id": "sap"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sapiens-privacy-notice-fde50d48b5ab",
+          "source_type": "privacy_notice",
+          "source_url": "https://sapiens.com/privacy-policy",
+          "title": "Privacy Policy | Sapiens"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Sapiens",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/sapiens.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "sapiens.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sapiens-privacy-notice-fde50d48b5ab",
+          "source_type": "privacy_notice",
+          "source_url": "https://sapiens.com/privacy-policy",
+          "title": "Privacy Policy | Sapiens"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "sapiens"
     },
     {
       "candidate_source_types": [],
@@ -20347,6 +22348,131 @@
       "candidate_sources": [],
       "canonical_source_types": [
         "compliance_page",
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-compliance-page-cfb4a860793b",
+          "source_type": "compliance_page",
+          "source_url": "https://www.siemens.com/cs-cz/company/compliance",
+          "title": "Compliance | Siemens"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-compliance-page-e78ded399324",
+          "source_type": "compliance_page",
+          "source_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms",
+          "title": "Data Privacy Terms | Siemens"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-privacy-notice-5d46f25aff44",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.siemens.com/de-de/privacy-notice",
+          "title": "Privacy Notice | Siemens"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-privacy-notice-7f880e5ca5ca",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.siemens.com/en-us/privacy-notice",
+          "title": "Privacy Notice | Siemens"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-subprocessors-list-9b7d1cb524e6",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms/di-subprocessors",
+          "title": "Digital Industries – Subzpracovatelé | Siemens"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-subprocessors-list-bcd1ca117e58",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms/gbs-subprocessors",
+          "title": "Global Business Services - Subprocessors | Siemens"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-terms-of-service-af3693e8df48",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.siemens.com/cs-cz/company/compliance/terms",
+          "title": "Terms | Siemens"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-terms-of-service-b58ea0fb153b",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.siemens.com/de-de/terms-of-use",
+          "title": "Nutzungsbedingungen | Siemens"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Siemens",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/siemens.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "official_domains": [
+        "siemens.com"
+      ],
+      "primary_source_by_type": {
+        "compliance_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-compliance-page-cfb4a860793b",
+          "source_type": "compliance_page",
+          "source_url": "https://www.siemens.com/cs-cz/company/compliance",
+          "title": "Compliance | Siemens"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-privacy-notice-5d46f25aff44",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.siemens.com/de-de/privacy-notice",
+          "title": "Privacy Notice | Siemens"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-subprocessors-list-9b7d1cb524e6",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms/di-subprocessors",
+          "title": "Digital Industries – Subzpracovatelé | Siemens"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "siemens-terms-of-service-af3693e8df48",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.siemens.com/cs-cz/company/compliance/terms",
+          "title": "Terms | Siemens"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "siemens"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
@@ -20802,6 +22928,99 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "certification_reference",
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "socotra-certification-reference-8cd97334668e",
+          "source_type": "certification_reference",
+          "source_url": "https://www.socotra.com/socotras-iso-27001-certification-our-commitment-to-data-security",
+          "title": "Socotra’s ISO 27001 Certification: our commitment to data security - Socotra"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "socotra-privacy-notice-91a170ae0166",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.socotra.com/privacy-policy",
+          "title": "Privacy Policy - Socotra"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "socotra-security-page-efee4373dd35",
+          "source_type": "security_page",
+          "source_url": "https://www.socotra.com/security",
+          "title": "Robust Security for Insurance Core System | Socotra"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "socotra-terms-of-service-f03c8a921396",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.socotra.com/terms-of-use",
+          "title": "Terms of Use - Socotra"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Socotra",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/socotra.json",
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "socotra.com"
+      ],
+      "primary_source_by_type": {
+        "certification_reference": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "socotra-certification-reference-8cd97334668e",
+          "source_type": "certification_reference",
+          "source_url": "https://www.socotra.com/socotras-iso-27001-certification-our-commitment-to-data-security",
+          "title": "Socotra’s ISO 27001 Certification: our commitment to data security - Socotra"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "socotra-privacy-notice-91a170ae0166",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.socotra.com/privacy-policy",
+          "title": "Privacy Policy - Socotra"
+        },
+        "security_page": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "socotra-security-page-efee4373dd35",
+          "source_type": "security_page",
+          "source_url": "https://www.socotra.com/security",
+          "title": "Robust Security for Insurance Core System | Socotra"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "socotra-terms-of-service-f03c8a921396",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.socotra.com/terms-of-use",
+          "title": "Terms of Use - Socotra"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "socotra"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -21020,6 +23239,66 @@
         "terms_of_service"
       ],
       "vendor_id": "splunk"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sprinto-privacy-notice-557ef12b2ef0",
+          "source_type": "privacy_notice",
+          "source_url": "https://sprinto.com/privacy",
+          "title": "Privacy Policy - Sprinto"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sprinto-terms-of-service-e223489d7117",
+          "source_type": "terms_of_service",
+          "source_url": "https://sprinto.com/terms",
+          "title": "Terms of Service - Sprinto"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Sprinto",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/sprinto.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "sprinto.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sprinto-privacy-notice-557ef12b2ef0",
+          "source_type": "privacy_notice",
+          "source_url": "https://sprinto.com/privacy",
+          "title": "Privacy Policy - Sprinto"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "sprinto-terms-of-service-e223489d7117",
+          "source_type": "terms_of_service",
+          "source_url": "https://sprinto.com/terms",
+          "title": "Terms of Service - Sprinto"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "sprinto"
     },
     {
       "candidate_source_types": [],
@@ -21986,6 +24265,58 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "system-c-terms-of-service-27047298372d",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.systemc.com/legal-information/supplier-terms-and-conditions",
+          "title": "Supplier Terms &amp; Conditions | Legal Information | System C"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "system-c-terms-of-service-c83c778deace",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.systemc.com/legal-information/terms-of-use",
+          "title": "Terms of Use | Legal Information | System C"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "System C",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/system-c.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "systemc.com"
+      ],
+      "primary_source_by_type": {
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "system-c-terms-of-service-27047298372d",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.systemc.com/legal-information/supplier-terms-and-conditions",
+          "title": "Supplier Terms &amp; Conditions | Legal Information | System C"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "system-c"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "privacy_notice",
         "status_page",
         "terms_of_service"
@@ -22063,6 +24394,50 @@
         "trust_center"
       ],
       "vendor_id": "teamwork"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "telstra-health-terms-of-service-592bdba94a72",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.telstrahealth.com/terms-conditions",
+          "title": "Terms &amp; Conditions - Telstra Health"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Telstra Health",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/telstra-health.json",
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "telstrahealth.com"
+      ],
+      "primary_source_by_type": {
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "telstra-health-terms-of-service-592bdba94a72",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.telstrahealth.com/terms-conditions",
+          "title": "Terms &amp; Conditions - Telstra Health"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "telstra-health"
     },
     {
       "candidate_source_types": [],
@@ -22289,6 +24664,122 @@
       "candidate_source_types": [],
       "candidate_sources": [],
       "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-dpa-03a13b7cd4a9",
+          "source_type": "dpa",
+          "source_url": "https://www.thalesgroup.com/data-processing-agreement",
+          "title": "Pardon Our Interruption"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-dpa-2b4594cb82e7",
+          "source_type": "dpa",
+          "source_url": "https://www.thalesgroup.com/data-processing-addendum",
+          "title": "Pardon Our Interruption"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-privacy-notice-7c29ecd357ac",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.thalesgroup.com/privacy.html",
+          "title": "Pardon Our Interruption"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-privacy-notice-cc03852ff51c",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.thalesgroup.com/privacybeleid",
+          "title": "Pardon Our Interruption"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-subprocessors-list-97423f368407",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.thalesgroup.com/sub-processors",
+          "title": "Pardon Our Interruption"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-terms-of-service-742cd4eb7b4b",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.thalesgroup.com/terms-of-service",
+          "title": "Pardon Our Interruption"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-terms-of-service-f86901cdb69d",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.thalesgroup.com/termos-de-uso",
+          "title": "Pardon Our Interruption"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Thales",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/thales.json",
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "official_domains": [
+        "thalesgroup.com"
+      ],
+      "primary_source_by_type": {
+        "dpa": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-dpa-03a13b7cd4a9",
+          "source_type": "dpa",
+          "source_url": "https://www.thalesgroup.com/data-processing-agreement",
+          "title": "Pardon Our Interruption"
+        },
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-privacy-notice-7c29ecd357ac",
+          "source_type": "privacy_notice",
+          "source_url": "https://www.thalesgroup.com/privacy.html",
+          "title": "Pardon Our Interruption"
+        },
+        "subprocessors_list": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-subprocessors-list-97423f368407",
+          "source_type": "subprocessors_list",
+          "source_url": "https://www.thalesgroup.com/sub-processors",
+          "title": "Pardon Our Interruption"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "thales-terms-of-service-742cd4eb7b4b",
+          "source_type": "terms_of_service",
+          "source_url": "https://www.thalesgroup.com/terms-of-service",
+          "title": "Pardon Our Interruption"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "thales"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -22394,6 +24885,125 @@
         "terms_of_service"
       ],
       "vendor_id": "thoropass"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "toss-privacy-notice-8da5cd12de84",
+          "source_type": "privacy_notice",
+          "source_url": "https://toss.im/privacy-policy",
+          "title": "토스 개인정보처리방침"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "Toss",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/toss.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "toss.im"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "toss-privacy-notice-8da5cd12de84",
+          "source_type": "privacy_notice",
+          "source_url": "https://toss.im/privacy-policy",
+          "title": "토스 개인정보처리방침"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "toss"
+    },
+    {
+      "candidate_source_types": [],
+      "candidate_sources": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "canonical_sources": [
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "tpp-privacy-notice-5ddfc7b5a5cf",
+          "source_type": "privacy_notice",
+          "source_url": "https://tpp-uk.com/privacy-policy-mys",
+          "title": "Privacy Policy &#8211; TPP"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "tpp-privacy-notice-8b540decfa38",
+          "source_type": "privacy_notice",
+          "source_url": "https://tpp-uk.com/privacy-policy",
+          "title": "Privacy Policy &#8211; TPP"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "tpp-terms-of-service-3170fb3408d0",
+          "source_type": "terms_of_service",
+          "source_url": "https://tpp-uk.com/terms-and-conditions",
+          "title": "Terms and Conditions &#8211; TPP"
+        },
+        {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "tpp-terms-of-service-38d22bb3e54e",
+          "source_type": "terms_of_service",
+          "source_url": "https://tpp-uk.com/terms-and-conditions-for-helpful-user-competition",
+          "title": "Terms and Conditions for the ‘Helpful User’ Competition &#8211; TPP"
+        }
+      ],
+      "catalog_status": "active",
+      "contracting_entity_resolution": [],
+      "display_name": "TPP",
+      "legal_entities": [],
+      "legal_name": null,
+      "manifest_path": "dist/vendors/tpp.json",
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "official_domains": [
+        "tpp-uk.com"
+      ],
+      "primary_source_by_type": {
+        "privacy_notice": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "tpp-privacy-notice-5ddfc7b5a5cf",
+          "source_type": "privacy_notice",
+          "source_url": "https://tpp-uk.com/privacy-policy-mys",
+          "title": "Privacy Policy &#8211; TPP"
+        },
+        "terms_of_service": {
+          "confidence": null,
+          "effective_or_published_at": null,
+          "source_id": "tpp-terms-of-service-3170fb3408d0",
+          "source_type": "terms_of_service",
+          "source_url": "https://tpp-uk.com/terms-and-conditions",
+          "title": "Terms and Conditions &#8211; TPP"
+        }
+      },
+      "unavailable_source_types": [],
+      "vendor_id": "tpp"
     },
     {
       "candidate_source_types": [],

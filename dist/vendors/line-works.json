@@ -1,0 +1,134 @@
+{
+  "artifacts": [
+    {
+      "_openva_path": "data/vendors/line-works/artifacts/line-works-terms-of-service-c673d14b0f9e.yaml",
+      "access_class": "public_web",
+      "artifact_id": "line-works-terms-of-service-c673d14b0f9e",
+      "artifact_type": "terms_of_service",
+      "canonical_url": "https://worksmobile.com/terms/naver-cloud-platform",
+      "effective_or_published_at": null,
+      "entity_scope": {
+        "entity_ids": [],
+        "scope_type": "brand_surface"
+      },
+      "hashes": {
+        "hash_method": "metadata_plus_hash_only",
+        "normalized_text_sha256": "sha256:TBD",
+        "raw_sha256": "sha256:TBD"
+      },
+      "not_advice": true,
+      "product_scope": [],
+      "region_scope": [],
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_id": "line-works-terms-of-service-c673d14b0f9e",
+      "source_language": "ko",
+      "storage": {
+        "extracted_text_stored": false,
+        "raw_document_stored": false,
+        "screenshot_stored": false
+      },
+      "vendor_id": "line-works"
+    }
+  ],
+  "candidate_sources": [],
+  "canonical_sources": [
+    {
+      "_openva_path": "data/vendors/line-works/sources/line-works-terms-of-service-c673d14b0f9e.yaml",
+      "access_class": "public_web",
+      "not_advice": true,
+      "provenance": {
+        "collected_at": "2026-07-14T11:54:36.016581Z",
+        "confidence": "medium",
+        "observer": "agent",
+        "publisher": "vendor"
+      },
+      "rights_class": "metadata_only",
+      "schema_version": "0.1.0",
+      "source_authority_class": "vendor_legal_terms",
+      "source_id": "line-works-terms-of-service-c673d14b0f9e",
+      "source_language": "ko",
+      "source_type": "terms_of_service",
+      "source_url": "https://worksmobile.com/terms/naver-cloud-platform",
+      "summary_en": null,
+      "summary_native": null,
+      "title_en": null,
+      "title_native": "네이버 클라우드 플랫폼 서비스 이용약관 - 네이버웍스",
+      "vendor_id": "line-works"
+    }
+  ],
+  "changes": [
+    {
+      "_openva_path": "data/vendors/line-works/changes/owner-verified-seed-expansion-20260714115436-line-works-terms-of-service-c673d14b0f9e.yaml",
+      "artifact_id": "line-works-terms-of-service-c673d14b0f9e",
+      "catalog_change_significance": "unknown",
+      "change_id": "owner-verified-seed-expansion-20260714115436-line-works-terms-of-service-c673d14b0f9e",
+      "change_type": "created",
+      "detected_at": "2026-07-14T11:54:36.016581Z",
+      "from_hash": "sha256:TBD",
+      "materiality": "unknown",
+      "not_advice": true,
+      "review_state": "proposed",
+      "schema_version": "0.1.0",
+      "source_id": "line-works-terms-of-service-c673d14b0f9e",
+      "summary": "Catalog lifecycle operation create recorded for public source metadata.",
+      "to_hash": "sha256:TBD",
+      "vendor_id": "line-works"
+    }
+  ],
+  "entity_mentions": [],
+  "generated_at": "1970-01-01T00:00:00Z",
+  "guarantees": {
+    "metadata_first": true,
+    "non_advisory": true,
+    "public_sources_only": true,
+    "raw_documents_mirrored_by_default": false
+  },
+  "legal_entities": [],
+  "observations": [],
+  "schema_version": "0.1.0",
+  "summary": {
+    "artifact_count": 1,
+    "candidate_source_count": 0,
+    "candidate_source_types": [],
+    "canonical_source_count": 1,
+    "entity_mention_count": 0,
+    "legal_entity_count": 0,
+    "source_types": [
+      "terms_of_service"
+    ],
+    "unavailable_source_count": 0,
+    "unavailable_source_types": []
+  },
+  "unavailable_sources": [],
+  "vendor": {
+    "_openva_path": "data/vendors/line-works/vendor.yaml",
+    "catalog_status": "active",
+    "display_name": "LINE WORKS",
+    "headquarters_country": "JP",
+    "legal_name": null,
+    "notes": "Owner-led public-source-only catalog record generated from a curated identity seed. The record contains only verified vendor-controlled legal, privacy, trust, security, compliance, certification, subprocessor, data-processing, transparency, AI, KYC, AML, or service-status pages. Blog, news, event, resource, and customer-story pages are excluded.",
+    "official_domains": [
+      "worksmobile.com"
+    ],
+    "public_entrypoints": [
+      "https://worksmobile.com",
+      "https://worksmobile.com/terms/naver-cloud-platform"
+    ],
+    "regions_served": [
+      "apac"
+    ],
+    "schema_version": "0.1.0",
+    "source_policy": {
+      "gated_materials_excluded": true,
+      "public_sources_only": true,
+      "raw_documents_mirrored_by_default": false
+    },
+    "status": "active",
+    "vendor_categories": [
+      "collaboration_software",
+      "productivity_software"
+    ],
+    "vendor_id": "line-works"
+  }
+}
