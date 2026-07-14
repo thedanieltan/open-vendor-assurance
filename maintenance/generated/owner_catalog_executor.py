@@ -155,6 +155,12 @@ def sanitize_vendor(vendor: dict[str, Any] | None) -> dict[str, Any] | None:
         artifact = dict(source_record.get("artifact") or {})
         artifact["region_scope"] = []
         source_record["artifact"] = artifact
+        # Preserve the URL and deterministic source classification while omitting
+        # publisher marketing copy that can introduce advisory or superlative claims.
+        source_record["title_en"] = None
+        source_record["title_native"] = None
+        source_record["summary_en"] = None
+        source_record["summary_native"] = None
         cleaned_sources.append(source_record)
 
     if not cleaned_sources:
