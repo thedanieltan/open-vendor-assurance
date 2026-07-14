@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1.0",
   "report_type": "latest_observations_index",
-  "generated_at": "2026-07-13T20:38:29Z",
+  "generated_at": "2026-07-14T11:56:58Z",
   "doctrine": "OpenVA does not version vendor truth. OpenVA observes vendor-published sources and records source state, provenance, hashes, timestamps, and change signals.",
   "summary": {
-    "source_count": 1084,
-    "observed_this_run": 195,
-    "carried_forward": 889
+    "source_count": 1196,
+    "observed_this_run": 112,
+    "carried_forward": 1084
   },
   "sources": [
     {
@@ -26,7 +26,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "1password-dpa",
@@ -45,7 +45,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "1password-privacy-notice",
@@ -102,7 +102,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "1password-terms",
@@ -159,7 +159,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "activecampaign-privacy",
@@ -216,7 +216,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "activecampaign-terms",
@@ -254,7 +254,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "acuity-scheduling-privacy",
@@ -558,7 +558,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "adyen-privacy-notice",
@@ -577,7 +577,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "adyen-security-page",
@@ -596,7 +596,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "adyen-subprocessors",
@@ -630,6 +630,63 @@
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:fa916341b8f2a43371990048870266a0354a764b864d165a9b0eb104b2ece1c8",
       "normalized_text_sample_sha256": "sha256:cdbc295a6a3cefc5c2e23f5d068061d71367a3ff25d81e6c0c0246c818f31aaf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": true
+    },
+    {
+      "source_id": "aidoc-privacy-notice-d354dd034db0",
+      "vendor_id": "aidoc",
+      "source_url": "https://www.aidoc.com/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "aidoc-privacy-notice-d354dd034db0-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.aidoc.com/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:86205615d041defe7c0f07db2d29ee8744e538f2833d88758e80e15b6ed53372",
+      "normalized_text_sample_sha256": "sha256:fc09eae195db3bcb4230f13188824e81775e71cd82006952ce9ab267feda40bf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "aidoc-security-page-4619a3430e8e",
+      "vendor_id": "aidoc",
+      "source_url": "https://www.aidoc.com/about/security-privacy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "aidoc-security-page-4619a3430e8e-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.aidoc.com/about/security-privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cb4dd5443c9b2db5d0d19e38faa7849d62b4ebe6c0d7743891d58c90a8faadc3",
+      "normalized_text_sample_sha256": "sha256:136ec0c2853277e8928dd40bdef044dd05590adc077a346996adade8c9bf9c0b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "aidoc-terms-of-service-af3e4e7dbe4c",
+      "vendor_id": "aidoc",
+      "source_url": "https://www.aidoc.com/terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "aidoc-terms-of-service-af3e4e7dbe4c-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.aidoc.com/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8224c952468195a2fe98afff73d91ec0436010132775a37f65f328840458a921",
+      "normalized_text_sample_sha256": "sha256:a80e88c960f499daa30e04f897da94d76d8fb7aa278d2c85ad4ddd57e40617a2",
       "review_signal": {
         "required": false,
         "reason": "first_observation"
@@ -748,7 +805,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "airwallex-trust",
@@ -786,7 +843,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aiven-dpa",
@@ -805,7 +862,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aiven-privacy",
@@ -843,7 +900,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aiven-status",
@@ -881,7 +938,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "aiven-terms",
@@ -977,6 +1034,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "alcidion-privacy-notice-0d3c23a96fa4",
+      "vendor_id": "alcidion",
+      "source_url": "https://www.alcidion.com/privacy-policy-uk",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "alcidion-privacy-notice-0d3c23a96fa4-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.alcidion.com/privacy-policy-uk/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0a5ddec44200736a4a29ff057c19ff21d3fa9a93ff58f397954d56443f561647",
+      "normalized_text_sample_sha256": "sha256:172027242e5d1b0f896423229e8fa864665f6f75685f04e49b4c3e5978584c30",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "aleph-alpha-privacy-notice-c1b8d6e63184",
+      "vendor_id": "aleph-alpha",
+      "source_url": "https://aleph-alpha.com/datenschutz",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "aleph-alpha-privacy-notice-c1b8d6e63184-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://aleph-alpha.com/datenschutz/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8d180fc3d0360825883c0101ce1e0eb32fa34a4bc4506ae478e33d96a6bdb5c6",
+      "normalized_text_sample_sha256": "sha256:3d97d805abe0c7941b95ca7eb0bbe4189b5c31caf59a0aa7cdaa3dace24412c5",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "algolia-compliance",
@@ -1318,7 +1413,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "amplitude-compliance",
@@ -1414,6 +1509,44 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "anduril-privacy-notice-90199970e154",
+      "vendor_id": "anduril",
+      "source_url": "https://www.anduril.com:443/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "anduril-privacy-notice-90199970e154-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.anduril.com:443/privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:88a9dfac0cee6164e64a81141d402ad076fb8e9b454acbbd2546c6f0676cffeb",
+      "normalized_text_sample_sha256": "sha256:4d52ede3304a63818ef2a7b4a67b36dbd9f40faffa06964076ccc4a3549aab2a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "anduril-privacy-notice-afb26fb8bcad",
+      "vendor_id": "anduril",
+      "source_url": "https://www.anduril.com/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "anduril-privacy-notice-afb26fb8bcad-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.anduril.com/privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:88a9dfac0cee6164e64a81141d402ad076fb8e9b454acbbd2546c6f0676cffeb",
+      "normalized_text_sample_sha256": "sha256:4d52ede3304a63818ef2a7b4a67b36dbd9f40faffa06964076ccc4a3549aab2a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "anthropic-compliance",
@@ -2344,7 +2477,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "beyondtrust-compliance-page",
@@ -2363,7 +2496,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "beyondtrust-dpa",
@@ -2458,7 +2591,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bigcommerce-dpa",
@@ -2477,7 +2610,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bigcommerce-privacy-notice",
@@ -2511,6 +2644,44 @@
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:845aa073c5f4037b1cf0dc05995e077e61a7fd0efb76c672115eb5ee8a86c623",
       "normalized_text_sample_sha256": "sha256:241843bdf07b483da4b5c427c279dec21b9c311d13f778b4b0bec399fd94ddfd",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": true
+    },
+    {
+      "source_id": "bigid-dpa-8228322595ee",
+      "vendor_id": "bigid",
+      "source_url": "https://bigid.com/wp-content/uploads/2026/07/Customer-Data-Processing-Addendum_March-11-2025.docx-1.pdf",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "bigid-dpa-8228322595ee-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://bigid.com/wp-content/uploads/2026/07/Customer-Data-Processing-Addendum_March-11-2025.docx-1.pdf",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "pdf_document",
+      "raw_sample_sha256": "sha256:1cedea95daf49b8cb4ac3fdf17fff734485365544cf9c0c5749532b101fd4376",
+      "normalized_text_sample_sha256": "sha256:TBD",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "bigid-privacy-notice-6511713c397f",
+      "vendor_id": "bigid",
+      "source_url": "https://bigid.com/wp-content/uploads/2026/03/BigID-Privacy-Notice_03092026.pdf",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "bigid-privacy-notice-6511713c397f-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://bigid.com/wp-content/uploads/2026/03/BigID-Privacy-Notice_03092026.pdf",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "pdf_document",
+      "raw_sample_sha256": "sha256:cca31cf7eade643976eb74d322a1c42a206cf01855c3e5f06476b58ec25e8449",
+      "normalized_text_sample_sha256": "sha256:TBD",
       "review_signal": {
         "required": false,
         "reason": "first_observation"
@@ -2610,7 +2781,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitbucket-dpa",
@@ -2629,7 +2800,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitbucket-privacy",
@@ -2686,7 +2857,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitbucket-terms",
@@ -2724,7 +2895,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitdefender-dpa",
@@ -2743,7 +2914,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "bitdefender-privacy",
@@ -2971,7 +3142,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "braze-dpa",
@@ -3028,7 +3199,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "braze-subprocessors-list",
@@ -3047,7 +3218,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "brevo-privacy",
@@ -3199,7 +3370,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "campaign-monitor-privacy",
@@ -3256,7 +3427,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "campaign-monitor-terms",
@@ -3294,7 +3465,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "canva-compliance",
@@ -3446,7 +3617,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "chainalysis-dpa",
@@ -3465,7 +3636,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "chainalysis-privacy",
@@ -3503,7 +3674,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "chainalysis-trust-center",
@@ -3522,7 +3693,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "checkout-com-certification-reference",
@@ -3541,7 +3712,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "checkout-com-privacy",
@@ -3617,7 +3788,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "circleci-privacy",
@@ -4016,7 +4187,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "coda-status",
@@ -4054,7 +4225,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "coda-terms",
@@ -4092,7 +4263,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cohere-compliance",
@@ -4206,7 +4377,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "commercetools-compliance-page",
@@ -4225,7 +4396,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "commercetools-dpa",
@@ -4263,7 +4434,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "commercetools-subprocessors-list",
@@ -4282,7 +4453,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "commercetools-trust-center",
@@ -4301,7 +4472,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "complyadvantage-dpa",
@@ -4320,7 +4491,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "complyadvantage-privacy",
@@ -4358,7 +4529,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "confluent-compliance-page",
@@ -4377,7 +4548,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "confluent-privacy-notice",
@@ -4415,7 +4586,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "confluent-trust-center",
@@ -4434,7 +4605,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "contentful-compliance",
@@ -4532,6 +4703,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "cover-genius-privacy-notice-096e3816a89f",
+      "vendor_id": "cover-genius",
+      "source_url": "https://covergenius.com/privacy-policy/data-privacy-request-form",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "cover-genius-privacy-notice-096e3816a89f-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://covergenius.com/privacy-policy/data-privacy-request-form/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bf5a46d5300762e3978623bf1059d54e158a8c13168104226abea91050a6093e",
+      "normalized_text_sample_sha256": "sha256:1883e74902e3758ae788d3d00f9d677a11256ee8faa5b48daadf8478950d50f1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "cover-genius-privacy-notice-b0a8505034a2",
+      "vendor_id": "cover-genius",
+      "source_url": "https://covergenius.com/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "cover-genius-privacy-notice-b0a8505034a2-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://covergenius.com/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e868e9585dea66d37f315995ac69910e0adfb092f8e09f24c62e6cac3da54a8e",
+      "normalized_text_sample_sha256": "sha256:5a7340100d12f23fc580f107230478fe86d75275739fb8e5647ef0735abc229c",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "culture-amp-compliance-page",
       "vendor_id": "culture-amp",
       "source_url": "https://www.cultureamp.com/company/announcements/bcorp-recertification-2026",
@@ -4548,7 +4757,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "culture-amp-dpa",
@@ -4567,7 +4776,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "culture-amp-privacy",
@@ -4624,7 +4833,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "customer-io-privacy",
@@ -4700,7 +4909,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cyberark-certification-reference",
@@ -4719,7 +4928,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cyberark-compliance-page",
@@ -4738,7 +4947,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "cyberark-privacy-notice",
@@ -4833,7 +5042,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "darktrace-dpa",
@@ -4852,7 +5061,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "darktrace-master-services-agreement",
@@ -4985,7 +5194,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "databricks-compliance",
@@ -5346,6 +5555,82 @@
         "required": false,
         "reason": "first_observation"
       },
+      "carried_forward": true
+    },
+    {
+      "source_id": "descartes-compliance-page-5c8d3c6f3781",
+      "vendor_id": "descartes",
+      "source_url": "https://www.descartes.com/da/loesninger/speditorer-og-toldkonsulenter/compliance-for-told",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "descartes-compliance-page-5c8d3c6f3781-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.descartes.com/da/loesninger/speditorer-og-toldkonsulenter/compliance-for-told",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:85853879e0bf85412af2b9a60952dfe4907bf3630a2390ef91947c7f46d3869f",
+      "normalized_text_sample_sha256": "sha256:d4357d20560fc15c1cd4f4e935646014519d007bbaaf5dec97e82b5ed985fa6b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "descartes-compliance-page-adca500f094c",
+      "vendor_id": "descartes",
+      "source_url": "https://www.descartes.com/compliance",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "descartes-compliance-page-adca500f094c-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.descartes.com/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d078200926cd0aea6918b56b6dede3b3a19db7950d52e3eacd266eea56a7a2a9",
+      "normalized_text_sample_sha256": "sha256:42bf78d73dd24c6160805fecf2c0620571f235972bcdc9e807f328b517e9c3e8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "descartes-privacy-notice-c008722133b4",
+      "vendor_id": "descartes",
+      "source_url": "https://www.descartes.com/privacy-center/general-privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "descartes-privacy-notice-c008722133b4-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.descartes.com/privacy-center/general-privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cb512614f55c77f5f7cec6849648be9800f85edc0d1de3115e97ec5fe5fac505",
+      "normalized_text_sample_sha256": "sha256:ef40d4502c847681784be6c1d9d01666a0f6902232469599a75247afb6dc90c3",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "descartes-security-page-ff568c6fb83f",
+      "vendor_id": "descartes",
+      "source_url": "https://www.descartes.com/da/loesninger/toldsystem/security-filings",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "descartes-security-page-ff568c6fb83f-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.descartes.com/da/loesninger/toldsystem/security-filings",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a7ebfba12ba498a135e945be2e63b28d4e7c22f3a1e9434022765ddcad7a6ef1",
+      "normalized_text_sample_sha256": "sha256:c28a0ffc602eb8d86fd7cac7c89f6d4000e524a0f4a0687497ba2437e4742830",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
       "carried_forward": false
     },
     {
@@ -5422,7 +5707,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "digitalocean-compliance",
@@ -5574,7 +5859,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docebo-dpa",
@@ -5593,7 +5878,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "docebo-privacy",
@@ -5954,7 +6239,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "dotdigital-privacy-notice",
@@ -5992,7 +6277,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "drata-compliance",
@@ -6258,7 +6543,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "duck-creek-technologies-trust",
@@ -6278,6 +6563,120 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "earnix-certification-reference-63fc0d81b781",
+      "vendor_id": "earnix",
+      "source_url": "https://earnix.com/de/insights-center/brochures/earnix-soc-2-type-ii-attestation-verified-trust-proven-security",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "earnix-certification-reference-63fc0d81b781-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://earnix.com/de/insights-center/brochures/earnix-soc-2-type-ii-attestation-verified-trust-proven-security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e8fad66ffc6ac38e4df3af07fe40d471b395066ccea8be823d197634efb444c2",
+      "normalized_text_sample_sha256": "sha256:1c6fb0c538ace144efb00a232d9bba3e07e8288ce87f0040414b04299268ceea",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "earnix-certification-reference-c98379306c95",
+      "vendor_id": "earnix",
+      "source_url": "https://earnix.com/es/insights-center/brochures/earnix-soc-2-type-ii-attestation-verified-trust-proven-security",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "earnix-certification-reference-c98379306c95-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://earnix.com/es/insights-center/brochures/earnix-soc-2-type-ii-attestation-verified-trust-proven-security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:eb971affdf33d73719b82b7e8e2295f4062bdcd4ae1d0206357f0ce71cf4a190",
+      "normalized_text_sample_sha256": "sha256:1b3048e4619de3336d9113c9411f328243d84420d793469fa43f9b242140bc5f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "eis-group-certification-reference-6a827bd97102",
+      "vendor_id": "eis-group",
+      "source_url": "https://www.eisgroup.com/2025/06/25/eis-first-cloud-native-insurance-core-platform-provider-to-earn-iso-iec-42001-certification",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "eis-group-certification-reference-6a827bd97102-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.eisgroup.com/2025/06/25/eis-first-cloud-native-insurance-core-platform-provider-to-earn-iso-iec-42001-certification/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a1b8c632f7b6fad9c46780320deb67ad16304c04088b1400150a35c5fcdce973",
+      "normalized_text_sample_sha256": "sha256:da57f07f0e4d487ceb7cf38b9ee95a672f5532a74335a37f360a0c92cf17c5f8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "eis-group-certification-reference-cee1f08dc89a",
+      "vendor_id": "eis-group",
+      "source_url": "https://www.eisgroup.com/2025/04/04/mach-alliance-certification",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "eis-group-certification-reference-cee1f08dc89a-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.eisgroup.com/2025/04/04/mach-alliance-certification/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:80c8e044622820d098e977d2891d5435c6e65765a0bc812ee4d4ea07af3ba4a9",
+      "normalized_text_sample_sha256": "sha256:a909b384d4aa6770bb464e00c7a151eca20d2f8cbab53d87ee66826c8fa78381",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "eis-group-privacy-notice-699af62a45b8",
+      "vendor_id": "eis-group",
+      "source_url": "https://www.eisgroup.com/privacy-statement",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "eis-group-privacy-notice-699af62a45b8-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.eisgroup.com/privacy-statement/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d8134ff711f68a83922bd6ad07a0bc49f1b728dce5522668109472af0f0be277",
+      "normalized_text_sample_sha256": "sha256:a5d00c2da0e7ab19bcda827f9ab2897ce52c8a1be4af79e9143a35e70e42a5b0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "eis-group-terms-of-service-36ea299b028b",
+      "vendor_id": "eis-group",
+      "source_url": "https://www.eisgroup.com/terms-of-use",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "eis-group-terms-of-service-36ea299b028b-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.eisgroup.com/terms-of-use/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:99325e85f476a2782410f67087848bbaa8182272097e8fb8993e594e3f50fc19",
+      "normalized_text_sample_sha256": "sha256:f987ad5c1f87855128faa435c491c2cee2a52f069e4c71fb1b6b21100a63c356",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "elastic-compliance",
@@ -6410,7 +6809,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "employment-hero-privacy",
@@ -6508,6 +6907,101 @@
       "carried_forward": true
     },
     {
+      "source_id": "esri-government-request-policy-69a814975ca9",
+      "vendor_id": "esri",
+      "source_url": "https://www.esri.com/en-us/industries/law-enforcement/strategies/police-transparency",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "esri-government-request-policy-69a814975ca9-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.esri.com/en-us/industries/law-enforcement/strategies/police-transparency",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2bb2de616f89e80be7c54eaeb85b62e7faae6d0241d956d048b96ce3e9c2443a",
+      "normalized_text_sample_sha256": "sha256:2caa4ffec4b05fc51399042f57efe9447fb5502dcaad2d15997c8e133f5ddac4",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "esri-security-page-288f7752a1ff",
+      "vendor_id": "esri",
+      "source_url": "https://www.esri.com/en-us/industries/security-operations/overview",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "esri-security-page-288f7752a1ff-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.esri.com/en-us/industries/security-operations/overview",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9c14578fb2576baf98fbebd42fd6b8947c9152f18581788ec56feb2395f00731",
+      "normalized_text_sample_sha256": "sha256:10f588b3f4ce5cbcf0090c14ea49879014e7053a9b1f40c1eaaf58c430369f34",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "esri-security-page-50200a113b77",
+      "vendor_id": "esri",
+      "source_url": "https://www.esri.com/en-us/industries/security-operations/events",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "esri-security-page-50200a113b77-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.esri.com/en-us/industries/security-operations/events",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5d2d5f35cd0b263e215ddd61c040f8ea1f71ea6b82119c438f716ce8fdea4d5d",
+      "normalized_text_sample_sha256": "sha256:9fac6edb0cfc0a437afce839ffbe0414a0432d57d49f0f29b1ead76d0cd2b53f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "esri-terms-of-service-501deb70e8fa",
+      "vendor_id": "esri",
+      "source_url": "https://www.esri.com/en-us/legal/terms/media",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "esri-terms-of-service-501deb70e8fa-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.esri.com/en-us/legal/terms/media",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1e270f794445974df6e658370f48175fdaee8192f7488534e1d2f4c14d718ead",
+      "normalized_text_sample_sha256": "sha256:20732c073c64633bbd20e52f6b5ff3bec14b31a54a21103059708d6cbbf96452",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "esri-terms-of-service-7f275c7998d1",
+      "vendor_id": "esri",
+      "source_url": "https://www.esri.com/en-us/legal/terms/arcgis-for-power-bi-terms-of-use",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "esri-terms-of-service-7f275c7998d1-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.esri.com/en-us/legal/terms/arcgis-for-power-bi-terms-of-use",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4eb7759ce6a868e136630ca7da3453f554ea980772936fad4313889fc5139d93",
+      "normalized_text_sample_sha256": "sha256:f4e7cfcb375fa4ea7469f3c83bb313fde99bc394472734900c58a5f7039a0df0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "exoscale-certification-reference",
       "vendor_id": "exoscale",
       "source_url": "https://www.exoscale.com/compliance/iso27018/",
@@ -6524,7 +7018,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "exoscale-compliance-page",
@@ -6543,7 +7037,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "exoscale-dpa",
@@ -6600,7 +7094,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "f-secure-compliance-page",
@@ -6619,7 +7113,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "f-secure-privacy",
@@ -6657,7 +7151,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "f-secure-status",
@@ -6714,7 +7208,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "factorial-certification-reference",
@@ -6733,7 +7227,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "factorial-privacy",
@@ -6771,7 +7265,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "factorial-terms",
@@ -6810,6 +7304,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "feishu-dpa-4d5a5d7d0646",
+      "vendor_id": "feishu",
+      "source_url": "https://www.feishu.cn/dpa",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "feishu-dpa-4d5a5d7d0646-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.feishu.cn/dpa",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d2ff15003e50bc812f0bf982f8a7acd3e9b60fc298c6300d9cd3ed6770e3d083",
+      "normalized_text_sample_sha256": "sha256:3a130e42ce64c411c94fb05a2f98b108e683f3827a1e852a73d7f1bc4cd7c39f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "feishu-terms-of-service-3cbc9257b269",
+      "vendor_id": "feishu",
+      "source_url": "https://www.feishu.cn/terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "feishu-terms-of-service-3cbc9257b269-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.feishu.cn/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2b00cf6bee7805e0045345e5f6023567d0dd56394445ed8d36ffdb91e1a1426f",
+      "normalized_text_sample_sha256": "sha256:d16aa09ecaf73df4e2ae017d293b219dfab4dba442a06e546a55f1fd4b0f192d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "figma-compliance",
@@ -6942,7 +7474,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fiserv-privacy",
@@ -6980,7 +7512,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fiserv-terms",
@@ -7018,7 +7550,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fly-io-compliance-page",
@@ -7037,7 +7569,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fly-io-privacy",
@@ -7094,7 +7626,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fly-io-terms",
@@ -7132,7 +7664,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fortinet-certification-reference",
@@ -7151,7 +7683,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fortinet-compliance-page",
@@ -7170,7 +7702,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "fortinet-privacy-notice",
@@ -7247,6 +7779,63 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "freee-terms-of-service-087f234f3b77",
+      "vendor_id": "freee",
+      "source_url": "https://www.freee.co.jp/terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "freee-terms-of-service-087f234f3b77-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.freee.co.jp/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:39388794c2202b5f7248a618188acb90eb6e444efb2c0238e7aeda20945eb5e8",
+      "normalized_text_sample_sha256": "sha256:687f5004392feb8b7f20a9287e90f314380e601c703027abe0a8800fbaa76fbf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "freee-terms-of-service-df8861c63ee8",
+      "vendor_id": "freee",
+      "source_url": "https://www.freee.co.jp/sign/terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "freee-terms-of-service-df8861c63ee8-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.freee.co.jp/sign/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c8f0a5c38a1ca63d5be3c874f26a96c77b7b4cae9526e28aa45db1b245627154",
+      "normalized_text_sample_sha256": "sha256:b9fcb1dc9f84ddba5420864575be49da00c7dfcaaf81e2230115b4880576e145",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "freee-trust-center-7ebe95946936",
+      "vendor_id": "freee",
+      "source_url": "https://www.freee.co.jp/cases/trustill",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "freee-trust-center-7ebe95946936-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.freee.co.jp/cases/trustill/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:596e7c4307df46ecad579943af35cd586bd218908fd32db617b9a1afe750ecf2",
+      "normalized_text_sample_sha256": "sha256:38429fb0f1d3d53211467f370503b3b202e622caae90fc986b240948ceefbc2b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "freshworks-compliance",
@@ -7398,7 +7987,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "front-dpa",
@@ -7417,7 +8006,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "front-privacy",
@@ -7493,7 +8082,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "getresponse-privacy-notice",
@@ -7531,7 +8120,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "github-compliance",
@@ -7664,7 +8253,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "gitlab-dpa",
@@ -8158,7 +8747,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "grafana-labs-compliance-page",
@@ -8177,7 +8766,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "grafana-labs-privacy-notice",
@@ -8329,7 +8918,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "greenhouse-certification-reference",
@@ -8348,7 +8937,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "greenhouse-dpa",
@@ -8842,7 +9431,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hibob-dpa",
@@ -8861,7 +9450,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "hibob-privacy",
@@ -9567,6 +10156,196 @@
       "carried_forward": true
     },
     {
+      "source_id": "icertis-trust-center-ff70183103c7",
+      "vendor_id": "icertis",
+      "source_url": "https://www.icertis.com/archive/webinars2/trust-transparency-and-transformation/intro",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "icertis-trust-center-ff70183103c7-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.icertis.com/archive/webinars2/trust-transparency-and-transformation/intro",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:698dcc7c0e15536a308781ca36eca38ed1295906302ff2753267bf6b9ecfce93",
+      "normalized_text_sample_sha256": "sha256:07fe0dbdf2062117262477be8fd135fae533d9ab83f8f2ea010aaa9192ba9e46",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "idnow-certification-reference-a357d62849b5",
+      "vendor_id": "idnow",
+      "source_url": "https://idnow.io/fr/communiques/certification-iso-27001",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "idnow-certification-reference-a357d62849b5-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://idnow.io/fr/communiques/certification-iso-27001",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:97928257b72bb30820ce114e7276cc1a824958a726d36a0e9d9eefe5bfe4dd63",
+      "normalized_text_sample_sha256": "sha256:a24978503e0e7ef54c0234218b01175f77b4b74035cc946fedfbbe6be2811810",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "idnow-certification-reference-a86ffbada2d3",
+      "vendor_id": "idnow",
+      "source_url": "https://idnow.io/certification-policies",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "idnow-certification-reference-a86ffbada2d3-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://idnow.io/certification-policies",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7fdada8aae0974dea1e8f5dc707471d12d099d20ae9875843a717537257532f5",
+      "normalized_text_sample_sha256": "sha256:fd364e5ec7dd9cf0627358895072ae5308abd4941c0bf1e78c16b13b2f1134e1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "idnow-compliance-page-d11c792c461d",
+      "vendor_id": "idnow",
+      "source_url": "https://idnow.io/de/blog-de/compliance-und-spielerschutz-das-igaming-in-deutschland",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "idnow-compliance-page-d11c792c461d-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://idnow.io/de/blog-de/compliance-und-spielerschutz-das-igaming-in-deutschland",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:55f822d8346a56d71e3c16871976f2feca7e2b780c769acd154d2b905d34c299",
+      "normalized_text_sample_sha256": "sha256:0175ed2e8f7ab1ffe967665df3cda34a1074e31cd0b00390f86ee553f323ac5d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "idnow-privacy-notice-c94f77cde5c1",
+      "vendor_id": "idnow",
+      "source_url": "https://idnow.io/privacy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "idnow-privacy-notice-c94f77cde5c1-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://idnow.io/privacy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:01825e6e9c774d74fb5d547b421ebac8b4f347252c6c0b5bb77c80efec17e675",
+      "normalized_text_sample_sha256": "sha256:43d165bb2f5a1a7470d4007290f32e41671de6d5f437b1fb98481e495c30a17f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "idnow-privacy-notice-cb45f03da355",
+      "vendor_id": "idnow",
+      "source_url": "https://idnow.io/de/datenschutzerklaerung",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "idnow-privacy-notice-cb45f03da355-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://idnow.io/de/datenschutzerklaerung",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:658abcce9c423a8aee6ee930805e47549d426f6348d692cffc4b3dae74b610aa",
+      "normalized_text_sample_sha256": "sha256:d5650935a8f9d2588be5d8aab52e3f1585e795ca90dae867fd8e7ba1304f39dd",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "idnow-security-page-4e20f931589a",
+      "vendor_id": "idnow",
+      "source_url": "https://idnow.io/de/blog-de/digitales-vertrauen-als-neuer-erfolgsfaktor-wie-congstar-sicherheit-und-ein-reibungsloses-onboarding-miteinander-vereint",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "idnow-security-page-4e20f931589a-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://idnow.io/de/blog-de/digitales-vertrauen-als-neuer-erfolgsfaktor-wie-congstar-sicherheit-und-ein-reibungsloses-onboarding-miteinander-vereint",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:91fff013e15791390a93c3f0eae53fa4d02d4f3e525b8521b362b42fc5d92eb5",
+      "normalized_text_sample_sha256": "sha256:59b57f3724ed3ced7ba1945eedbb6d03b727676eefd982c672d2d00bbf0fbd22",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "idnow-security-page-4fec492046af",
+      "vendor_id": "idnow",
+      "source_url": "https://idnow.io/de/datensicherheit",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "idnow-security-page-4fec492046af-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://idnow.io/de/datensicherheit",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:2735a949dcfbb68d7e38ea9011e069876c9be000967b3f894a4407984c17048c",
+      "normalized_text_sample_sha256": "sha256:b7d2bd1d91e68918d660cbbdc37ad45c20e3777b4c3bb348b3012d86b5bc251a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "idnow-trust-center-1645f607cb41",
+      "vendor_id": "idnow",
+      "source_url": "https://idnow.io/de/trust-services",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "idnow-trust-center-1645f607cb41-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://idnow.io/de/trust-services",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3cb38ef3bf67297fc1529d57acc2f82d19c1772c7b42af461efde31f41d9a98a",
+      "normalized_text_sample_sha256": "sha256:3674dce0ef1af3e34740c4b1041f39fcde88a01a954223f46edbf1616f396562",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "idnow-trust-center-ebe0cf53d5f3",
+      "vendor_id": "idnow",
+      "source_url": "https://idnow.io/de/trust-platform",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "idnow-trust-center-ebe0cf53d5f3-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://idnow.io/de/trust-platform",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0abb0232f14898b469308a7e9b7ddb9652ef66db5942c53a313b6d793391f8c2",
+      "normalized_text_sample_sha256": "sha256:843841605ea26c8ff717b767657be15fe5f26b549d12f0998631625eda32d87d",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "insider-privacy-notice",
       "vendor_id": "insider",
       "source_url": "https://insiderone.com/privacy-policy/",
@@ -9583,7 +10362,7 @@
         "required": true,
         "reason": "change_class_redirect_changed"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "insider-security-page",
@@ -9602,7 +10381,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "insider-terms-of-service",
@@ -9621,7 +10400,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "instructure-certification-reference",
@@ -9640,7 +10419,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "instructure-compliance-page",
@@ -9659,7 +10438,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "instructure-dpa",
@@ -9678,7 +10457,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "instructure-privacy",
@@ -9736,6 +10515,101 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "insurity-privacy-notice-208700732236",
+      "vendor_id": "insurity",
+      "source_url": "https://insurity.com/fr/legal-fr/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "insurity-privacy-notice-208700732236-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://insurity.com/fr/legal-fr/privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:ae4aeed1e0dd2acca6f1c0887b2c7217c1ad2ea6554146bce48f148df6bb9333",
+      "normalized_text_sample_sha256": "sha256:78d4e81fbb92d2757118806899d4893ab789ec70bd8ed1147c9489dfe4e77db2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "insurity-privacy-notice-d85ed4760810",
+      "vendor_id": "insurity",
+      "source_url": "https://insurity.com/legal/privacy-notice-insurity-payments-llc",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "insurity-privacy-notice-d85ed4760810-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://insurity.com/legal/privacy-notice-insurity-payments-llc",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a00d98ea676638ac9ed57ed8281bd07ad125cab1a32e7761d5a7b24c7ccebf83",
+      "normalized_text_sample_sha256": "sha256:d403c637e0d4db6c9e969985becce8ee7db911de9e4fd833b66d4bb7df18f8ce",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "insurity-terms-of-service-8193a1446508",
+      "vendor_id": "insurity",
+      "source_url": "https://insurity.com/legal/terms-of-use",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "insurity-terms-of-service-8193a1446508-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://insurity.com/legal/terms-of-use",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:53c24baba5e2e37a4db590dc9be71c9dc0edf50f4900ad347164717ee2d65010",
+      "normalized_text_sample_sha256": "sha256:a17f44cc6be30b4f447284b0c2b0a8cf436e819c797f735a0f2cdf42b2442251",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "insurity-terms-of-service-d37cb4fd3d6a",
+      "vendor_id": "insurity",
+      "source_url": "https://insurity.com/fr/legal-fr/terms-use",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "insurity-terms-of-service-d37cb4fd3d6a-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://insurity.com/fr/legal-fr/terms-use",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:b11756ceeed6e89d2c7bf9497d1bf088a3cc6511608157696e702e4331aae3bd",
+      "normalized_text_sample_sha256": "sha256:5e4125352af8aee734795119779c95ba42b030600ae4b8f1e2caec5666cc331e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "insurity-trust-center-31a47ba587a7",
+      "vendor_id": "insurity",
+      "source_url": "https://insurity.com/press-release/trusted-22-top-25-property-and-casualty-carriers-insurity-strengthens-its-position",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "insurity-trust-center-31a47ba587a7-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://insurity.com/press-release/trusted-22-top-25-property-and-casualty-carriers-insurity-strengthens-its-position",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:198b0d6a68260ac576f00ab06a58827acb24ecab960be782af829d655c3ebebc",
+      "normalized_text_sample_sha256": "sha256:76f23abcc6b14b20fe47b74ad2baac63b4c90950fdff940e892c74e24332b39b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "intercom-compliance",
@@ -9849,7 +10723,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "jetbrains-privacy",
@@ -9907,6 +10781,82 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "jumio-privacy-notice-17fe92b6fdae",
+      "vendor_id": "jumio",
+      "source_url": "https://www.jumio.com/privacy-center",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "jumio-privacy-notice-17fe92b6fdae-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.jumio.com/privacy-center/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5bf16dd26cec177524718b3feb3bfae0963fc16a9f85d84b9506cacb831afb44",
+      "normalized_text_sample_sha256": "sha256:f6c668753304bde4886a13a60646c12968f4e2a775369b38e8ffc07aff6752df",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "jumio-privacy-notice-1b9a3da9da3d",
+      "vendor_id": "jumio",
+      "source_url": "https://www.jumio.com/de/rechtsinformation/datenschutzhinweise",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "jumio-privacy-notice-1b9a3da9da3d-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.jumio.com/de/rechtsinformation/datenschutzhinweise/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a8921b2894f55590bf1cfa4d790cc57643440c0e844b72ebaee29699f579ff63",
+      "normalized_text_sample_sha256": "sha256:3222a33409d474816b164f7723386d7a5b50bd8ccae52dfa1ee84318ceb14b42",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "jumio-terms-of-service-4718472b5894",
+      "vendor_id": "jumio",
+      "source_url": "https://www.jumio.com/terms-and-conditions",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "jumio-terms-of-service-4718472b5894-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.jumio.com/terms-and-conditions/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:aaab2e7c879ad3808b7b1d09883d142613e653b283a3c77e0d58663b7d47ec43",
+      "normalized_text_sample_sha256": "sha256:ae56f3aa231a15507c39bc1db1776597786d3633aff11b7cf5fc8e4530b94d3f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "kakao-enterprise-certification-reference-099c77957491",
+      "vendor_id": "kakao-enterprise",
+      "source_url": "https://kakaoenterprise.com/info/certification",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "kakao-enterprise-certification-reference-099c77957491-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://kakaoenterprise.com/info/certification/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:16b4ed5dddc41c999f0ba26673fc96871a4aace86f4a76a022c8638b5b64c818",
+      "normalized_text_sample_sha256": "sha256:645138489c51e86b723efb4fe30972ab75c4e4d1513fa0815f9eba76964118ae",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "keka-dpa",
@@ -10137,6 +11087,82 @@
       "carried_forward": true
     },
     {
+      "source_id": "lark-dpa-ea134b796dd6",
+      "vendor_id": "lark",
+      "source_url": "https://www.larksuite.com/en_us/legal/data-processing-addendum-us",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "lark-dpa-ea134b796dd6-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.larksuite.com/en_us/legal/data-processing-addendum-us",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e453fa85726069cdb3350dda07e5a1cf6bee7c58ad2a4c6e354ac3759c53ecd6",
+      "normalized_text_sample_sha256": "sha256:e9a7f78057ded891ccafcffb9abcecc9fc431c7006cddf28932e09da9f5c349f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "lark-privacy-notice-9bbf9f2232e3",
+      "vendor_id": "lark",
+      "source_url": "https://www.larksuite.com/de_de/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "lark-privacy-notice-9bbf9f2232e3-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.larksuite.com/de_de/privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bc4a5df34f331eb9a737aa22dcbd2b9cd665c9964459d1ccf7f1b7b99999126b",
+      "normalized_text_sample_sha256": "sha256:f29a63b536c5685bcfe496240dd08d8896cb59d5fa0da2b080dc3e645c5ff09f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "lark-terms-of-service-5e682de653ad",
+      "vendor_id": "lark",
+      "source_url": "https://www.larksuite.com/de_de/user-terms-of-service",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "lark-terms-of-service-5e682de653ad-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.larksuite.com/de_de/user-terms-of-service",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9349e8b8aa47f65dd11679f1940dd22e43287f7fde9cd39d55526dd48b0d459b",
+      "normalized_text_sample_sha256": "sha256:b4ca4fcba47fb1aec72abce30c26324a4c57e896ce9452f252e8713633639b85",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "lark-terms-of-service-adbcdf6323b5",
+      "vendor_id": "lark",
+      "source_url": "https://www.larksuite.com/ai-companion-terms-of-service",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "lark-terms-of-service-adbcdf6323b5-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.larksuite.com/ai-companion-terms-of-service",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1dcb6443a6c7f08ef76e81c02deb065d1496a966172db6bba011a16499d3b864",
+      "normalized_text_sample_sha256": "sha256:2aae6619656098e80c8a00ff6c000a5ad5fc5f69c4c404c7da3e8b22a36b3326",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "lattice-dpa",
       "vendor_id": "lattice",
       "source_url": "https://lattice.com/data-processing-addendum",
@@ -10194,6 +11220,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "leonardo-security-page-2ce925287fee",
+      "vendor_id": "leonardo",
+      "source_url": "https://www.leonardo.com/en/focus-detail/-/detail/atm-tecnologie-integrate-sicurezza-sostenibilita",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "leonardo-security-page-2ce925287fee-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.leonardo.com/en/focus-detail/-/detail/atm-tecnologie-integrate-sicurezza-sostenibilita",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c786bed9cead13e6e646ebca6e80fd908918f28f1adc038c4131b69ce4382795",
+      "normalized_text_sample_sha256": "sha256:aa158c80c8fee4f171e501ceaa7c9da6fdcc87a722ae153e3b009175fe9e0b97",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "leonardo-security-page-691a88bd4b5c",
+      "vendor_id": "leonardo",
+      "source_url": "https://www.leonardo.com/en/news-and-stories-detail/-/detail/leonardo-contribuisce-sicurezza-entry-exit-system-europeo",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "leonardo-security-page-691a88bd4b5c-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.leonardo.com/en/news-and-stories-detail/-/detail/leonardo-contribuisce-sicurezza-entry-exit-system-europeo",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bd7e3f3c92d5a0b48ae8f541776cbecb116968368dd04a938a9b9f23416e1edc",
+      "normalized_text_sample_sha256": "sha256:df6ae4c10e34897b57daef460261c608fab52794624e431b50b3e78e7986e6a6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "lever-privacy",
       "vendor_id": "lever",
       "source_url": "https://www.lever.co/privacy-policy/",
@@ -10232,6 +11296,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "line-works-terms-of-service-c673d14b0f9e",
+      "vendor_id": "line-works",
+      "source_url": "https://worksmobile.com/terms/naver-cloud-platform",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "line-works-terms-of-service-c673d14b0f9e-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://worksmobile.com/terms/naver-cloud-platform/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4f6b6f6e2fe0b24cd65df029d1e5417c61172ea1d40f1536c2f0ed28ff101535",
+      "normalized_text_sample_sha256": "sha256:d94452822c917e1f025da1a0317a4630bf1cb03932f9c391807ffad1cde71476",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "linear-dpa",
       "vendor_id": "linear",
       "source_url": "https://linear.app/dpa",
@@ -10248,7 +11331,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "linear-privacy",
@@ -10324,7 +11407,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "logicgate-compliance",
@@ -10438,7 +11521,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "loom-dpa",
@@ -10457,7 +11540,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "loom-privacy",
@@ -10514,7 +11597,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "loom-terms",
@@ -10552,7 +11635,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "lucid-software-dpa",
@@ -10571,7 +11654,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "lucid-software-privacy",
@@ -10647,7 +11730,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "mailchimp-compliance",
@@ -10818,7 +11901,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "marqeta-privacy",
@@ -10875,7 +11958,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "marqeta-trust",
@@ -10952,6 +12035,44 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "meistertask-compliance-page-3b4528adb1ac",
+      "vendor_id": "meistertask",
+      "source_url": "https://www.meistertask.com/pages/compliance",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "meistertask-compliance-page-3b4528adb1ac-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.meistertask.com/pages/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3e59be2b179f75201aa69f7056b37269617f9498388918b821ae8584db70e285",
+      "normalized_text_sample_sha256": "sha256:ac99c2714e15833a6968aedd9954ab0ef0c947ff0145be0a3f97112f883d95f2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "meistertask-compliance-page-8e1e7cc2fec8",
+      "vendor_id": "meistertask",
+      "source_url": "https://www.meistertask.com/pages/de/compliance",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "meistertask-compliance-page-8e1e7cc2fec8-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.meistertask.com/pages/de/compliance",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8c665ef689cdbb9b8423c095d9ffdca7916e0fe6c8b1d000bc68ed811cdecc48",
+      "normalized_text_sample_sha256": "sha256:8f0ce51ea3d7d6b559d3ede267732f2a23022ac90f2c746a8305ea5ea51f9277",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "microsoft-compliance",
@@ -11103,7 +12224,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "microsoft-azure-security-page",
@@ -11559,7 +12680,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "monday-com-privacy",
@@ -11616,7 +12737,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "monday-com-terms",
@@ -11650,6 +12771,44 @@
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:ade78ee2bb69b7ab5de05f4f8a1102ac0e304d2fc768a0b3940757a86db6713d",
       "normalized_text_sample_sha256": "sha256:ede658735ee375efbc1dd0c1da3c407d821425699662587df63aa746155a52b1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": true
+    },
+    {
+      "source_id": "money-forward-privacy-notice-8ae3ce004e4d",
+      "vendor_id": "money-forward",
+      "source_url": "https://corp.moneyforward.com/privacy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "money-forward-privacy-notice-8ae3ce004e4d-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://corp.moneyforward.com/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:718ef29a0ab910eb930198385093a212fffb1ca0a6e7e6430a5901805fa177ef",
+      "normalized_text_sample_sha256": "sha256:c129c71a0d1158072c03c83c9218d782d6b12eb2e5e18f18a9704e0daa765520",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "money-forward-terms-of-service-ba3d7502038c",
+      "vendor_id": "money-forward",
+      "source_url": "https://moneyforward.com/terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "money-forward-terms-of-service-ba3d7502038c-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://moneyforward.com/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:0dcd74e0270bfb0bb5ed812df735ed62ab6efec548e870f5a64a32b629d808a5",
+      "normalized_text_sample_sha256": "sha256:406b14db30129567f4d4f9c750fb283dba51ac681d09dda033f8a033d10e0b33",
       "review_signal": {
         "required": false,
         "reason": "first_observation"
@@ -11806,7 +12965,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "n8n-privacy",
@@ -11863,7 +13022,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "n8n-terms",
@@ -11901,7 +13060,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neo4j-compliance-page",
@@ -11920,7 +13079,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neo4j-privacy-notice",
@@ -11977,7 +13136,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neon-compliance-page",
@@ -11996,7 +13155,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neon-dpa",
@@ -12015,7 +13174,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neon-privacy",
@@ -12072,7 +13231,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "neon-terms",
@@ -12110,7 +13269,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netlify-certification-reference",
@@ -12129,7 +13288,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netlify-privacy",
@@ -12205,7 +13364,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netskope-compliance-page",
@@ -12319,7 +13478,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "netsuite-security",
@@ -12436,6 +13595,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "nhn-cloud-terms-of-service-8926845f0d97",
+      "vendor_id": "nhn-cloud",
+      "source_url": "https://www.nhncloud.com/terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "nhn-cloud-terms-of-service-8926845f0d97-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.nhncloud.com/terms",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:94a19743d275d6090acacd3b954ff2c992ff69e29e2669ebf10e36188c883417",
+      "normalized_text_sample_sha256": "sha256:07af29ec3c6299d973cbf03d01aa429b35213c7d43087e8aba8ca72b8c63c3e8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "notion-dpa",
       "vendor_id": "notion",
       "source_url": "https://www.notion.so/Data-Processing-Addendum-361b540101274b1fa7e16b90402b0d99",
@@ -12528,7 +13706,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "odoo-compliance-page",
@@ -12547,7 +13725,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "odoo-dpa",
@@ -12835,6 +14013,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "oneshield-privacy-notice-e49e30db5e6d",
+      "vendor_id": "oneshield",
+      "source_url": "https://oneshield.com/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "oneshield-privacy-notice-e49e30db5e6d-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://oneshield.com/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3620e406e7af5e2b977d5b35934e1d810adc991807609cf161e9d21a8863b8d7",
+      "normalized_text_sample_sha256": "sha256:b3a233433ae25bd3d99b98e75a081f6bfeb7a67ad72091a4dcc9de6aea179a8a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "onetrust-privacy",
       "vendor_id": "onetrust",
       "source_url": "https://www.onetrust.com/privacy/",
@@ -13120,6 +14317,82 @@
       "carried_forward": true
     },
     {
+      "source_id": "orion-health-certification-reference-ad329235965f",
+      "vendor_id": "orion-health",
+      "source_url": "https://orionhealth.com/au/certifications/spain-certifications",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "orion-health-certification-reference-ad329235965f-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://orionhealth.com/au/certifications/spain-certifications/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:76405c2d12de91e2d99a52dcbddd3ed5768aa1f933887a49adb01c8cad12171e",
+      "normalized_text_sample_sha256": "sha256:9479f0cb226d40b7f69dc25a1aec8363b7651d513efee857e1b717d5d5a22f27",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "orion-health-certification-reference-d3933b539a9e",
+      "vendor_id": "orion-health",
+      "source_url": "https://orionhealth.com/au/certifications",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "orion-health-certification-reference-d3933b539a9e-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://orionhealth.com/au/certifications/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:56afa6de24ad364b8d1e1bb5a5d6f66f6fcdddb693aad0d47886161d06bdf9d1",
+      "normalized_text_sample_sha256": "sha256:1f65552b5883d1c22b4f1113146f526a173190ac6ac3245a8661c0021240647f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "orion-health-privacy-notice-864fbcf1a081",
+      "vendor_id": "orion-health",
+      "source_url": "https://orionhealth.com/au/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "orion-health-privacy-notice-864fbcf1a081-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://orionhealth.com/au/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e5fc790358c21c7b3a47d57ac671902f454eb5c48724898274b61366fd4412d5",
+      "normalized_text_sample_sha256": "sha256:24b6c47f17155504f9df1a62203c722bb494a7b24ba5f4ed86cebbf55f92a0a0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "orion-health-privacy-notice-d4e8b1e8f875",
+      "vendor_id": "orion-health",
+      "source_url": "https://orionhealth.com/global/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "orion-health-privacy-notice-d4e8b1e8f875-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://orionhealth.com/global/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9550aa48c13f042f61bb8d37c947a602e3e841b188c1efac322b427768b614e9",
+      "normalized_text_sample_sha256": "sha256:c50a4051609101aa2faf20ea0d8fc0938024c5fcb11d057714f40b6584cc7a76",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "pagerduty-compliance",
       "vendor_id": "pagerduty",
       "source_url": "https://www.pagerduty.com/security/compliance/",
@@ -13250,7 +14523,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "palantir-privacy-security",
@@ -13307,7 +14580,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pandadoc-privacy",
@@ -13383,7 +14656,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "paychex-privacy",
@@ -13440,7 +14713,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "payoneer-dpa",
@@ -13459,7 +14732,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "payoneer-privacy",
@@ -13592,7 +14865,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "paypal-trust-center",
@@ -13611,7 +14884,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "personio-dpa",
@@ -13763,7 +15036,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ping-identity-compliance-page",
@@ -13782,7 +15055,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ping-identity-dpa",
@@ -13877,7 +15150,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pipedrive-privacy-notice",
@@ -13934,7 +15207,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "plaid-privacy",
@@ -13972,7 +15245,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "planetscale-compliance",
@@ -14067,7 +15340,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "pointclickcare-network-addendum",
@@ -14238,7 +15511,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "postman-privacy",
@@ -14295,7 +15568,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "postman-terms",
@@ -14348,6 +15621,158 @@
       "retrieval_method": "html_page",
       "raw_sample_sha256": "sha256:71e2e2092b4a0692a5b7f02a655d63e99be0589ef33c21eb54d716ac87b7f5cb",
       "normalized_text_sample_sha256": "sha256:f6fcfc89ce581d38d8d02a3c40455bdd3cbba21ea8704fb6dff85f66c2e66e60",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": true
+    },
+    {
+      "source_id": "privado-ai-dpa-72a99fa39a5a",
+      "vendor_id": "privado-ai",
+      "source_url": "https://www.privado.ai/data-processing-addendum",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "privado-ai-dpa-72a99fa39a5a-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.privado.ai/data-processing-addendum",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bbe629348f026b4f7c83d945fba6b8c2de1e652dfdb21ae8f6b78a9914b48743",
+      "normalized_text_sample_sha256": "sha256:c79d1e8e2f0fa2f42ebbecdd1da581a43a7d16b83f9725d075c29c03da5dd3e2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "privado-ai-privacy-notice-08cf4bd043d2",
+      "vendor_id": "privado-ai",
+      "source_url": "https://www.privado.ai/ebooks/privacy-code-scanning-a-guide",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "privado-ai-privacy-notice-08cf4bd043d2-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.privado.ai/ebooks/privacy-code-scanning-a-guide",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1fa99b6562be1d722a13675fa4e649158dbd414c56f3b395f1fda66a508c6970",
+      "normalized_text_sample_sha256": "sha256:999920ec2aa8962fd641ab1a0955a6d8a60c53b4920c576b2d0906504984e4e6",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "privado-ai-privacy-notice-744488ef3a33",
+      "vendor_id": "privado-ai",
+      "source_url": "https://www.privado.ai/ebooks/privacy-data-mapping-a-guide",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "privado-ai-privacy-notice-744488ef3a33-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.privado.ai/ebooks/privacy-data-mapping-a-guide",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:36a84a5e6ee2ec984bf1524e4b4b8ec63eb16c6a71743e527f0c9ffa886f47bf",
+      "normalized_text_sample_sha256": "sha256:0f3eefdb16edd45e631adcaa0ae3b0b2512bb118a05f842ad3927424cc0a2cb1",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "project44-privacy-notice-06c4efe20d3b",
+      "vendor_id": "project44",
+      "source_url": "https://www.project44.com/privacy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "project44-privacy-notice-06c4efe20d3b-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.project44.com/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9a540da2d848a76566e3463ec39a8267d915837c8a6de93ded94149756791324",
+      "normalized_text_sample_sha256": "sha256:8730e18a153eebfda48293ecc9bd7f3af45a16f9268dcf8fe843392291ac163e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "project44-privacy-notice-bd1105c715c4",
+      "vendor_id": "project44",
+      "source_url": "https://www.project44.com/de/datenschutzerklaerung",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "project44-privacy-notice-bd1105c715c4-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.project44.com/de/datenschutzerklaerung/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:fe353373c51741976874fecb57df2449c0f435cba6a8d7aa1ad7d5486f9d403a",
+      "normalized_text_sample_sha256": "sha256:1193b2cee625dbb45ca70c427e0de93baf7f7a65b01280b90ae1910dd77a98ed",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "project44-security-page-6169292a518c",
+      "vendor_id": "project44",
+      "source_url": "https://www.project44.com/es/seguridad",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "project44-security-page-6169292a518c-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.project44.com/es/seguridad/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:46c85766658c2847521d99d624311cfc9843a28888c0b4573a8dbbb4b3dba9b4",
+      "normalized_text_sample_sha256": "sha256:36037f59f0fe3e737ac552a85a8842e84d150799c1c757dd9b10baaaf6d53ae2",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "project44-security-page-8fd77651655d",
+      "vendor_id": "project44",
+      "source_url": "https://www.project44.com/fr/securite",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "project44-security-page-8fd77651655d-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.project44.com/fr/securite/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5221076784ab346ba13fcbfc02329a764f3bef686797121c2430092acf6a6744",
+      "normalized_text_sample_sha256": "sha256:0e64c734116a5fc670d4b822f18231820ca76353433ad4ccb5206b6b66dacac8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "project44-subprocessors-list-b0d345486761",
+      "vendor_id": "project44",
+      "source_url": "https://www.project44.com/fr/politique-de-confidentialite/les-sous-traitants-de-project44",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "project44-subprocessors-list-b0d345486761-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.project44.com/fr/politique-de-confidentialite/les-sous-traitants-de-project44/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:f9bb9aa2b06af78889b6787b935a12a0364bf0bbde73f2c9c867b7d1441df235",
+      "normalized_text_sample_sha256": "sha256:3c9ec532893e6324c4fbf623c1fea7d8e983764c1c698530167612e4fa239315",
       "review_signal": {
         "required": false,
         "reason": "first_observation"
@@ -14580,7 +16005,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "railway-privacy",
@@ -14656,7 +16081,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "razorpay-certification-reference",
@@ -14675,7 +16100,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "razorpay-privacy",
@@ -14751,7 +16176,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "red-hat-privacy",
@@ -14827,7 +16252,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "redis-privacy-notice",
@@ -14865,7 +16290,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "redis-trust-center",
@@ -14884,7 +16309,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "redox-certification-reference",
@@ -14903,7 +16328,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "redox-platform-security",
@@ -14979,7 +16404,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "render-dpa",
@@ -14998,7 +16423,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "render-privacy",
@@ -15074,7 +16499,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "retool-compliance",
@@ -15248,6 +16673,101 @@
       "carried_forward": true
     },
     {
+      "source_id": "riskified-terms-of-service-749bf0052efe",
+      "vendor_id": "riskified",
+      "source_url": "https://www.riskified.com/ja/terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "riskified-terms-of-service-749bf0052efe-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.riskified.com/ja/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7b621f71775e12c5ab136ead2d13c97d803b56579883a36d2600af2b98facd63",
+      "normalized_text_sample_sha256": "sha256:02ffab5ee66ed8dd15e96589c2880aa93e1dd5dcea026125eb38569c781b7874",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "saab-compliance-page-c4dea8d2a239",
+      "vendor_id": "saab",
+      "source_url": "https://www.saab.com/career/job-opportunities/compliance-officer-it-informationssakerhet--signalskydd",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "saab-compliance-page-c4dea8d2a239-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.saab.com/career/job-opportunities/compliance-officer-it-informationssakerhet--signalskydd",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:74992dd8b340de079b364ead13d9e550dc6299ca439cc5d0a28ed663834ed24d",
+      "normalized_text_sample_sha256": "sha256:62af71efcb27b379c3399d22abe9fb501e21fbb4028aaaf0f8c83aa689c51d59",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "saab-security-page-3689a057f583",
+      "vendor_id": "saab",
+      "source_url": "https://www.saab.com/career/job-opportunities/fachspezialist-personalsicherheit--pravention-40-60-wmd",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "saab-security-page-3689a057f583-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.saab.com/career/job-opportunities/fachspezialist-personalsicherheit--pravention-40-60-wmd",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4712dcd75c056f04bf3d0b82e34e093f54b472b4adda95f924642a2f81a8e598",
+      "normalized_text_sample_sha256": "sha256:5de5673ea37c80b6ff425488861e9f8430be83b0b67a827e18a4c9d8a958e2b9",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "saab-security-page-f540469ac0d5",
+      "vendor_id": "saab",
+      "source_url": "https://www.saab.com/es/markets/colombia/contenido-editorial/nuestro-testimonio/2018/seguridad-desde-la-tierra",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "saab-security-page-f540469ac0d5-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.saab.com/es/markets/colombia/contenido-editorial/nuestro-testimonio/2018/seguridad-desde-la-tierra",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a0ce84e3347a986471babb7a9e415f8ab430e774a5051f21ed94c53a0afdf75c",
+      "normalized_text_sample_sha256": "sha256:2da505f9cbe6d8fe0e06e69db95fd5d8a5baa8e04ad988865aa9e9ce795be1a0",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "saab-terms-of-service-4ce27e14449b",
+      "vendor_id": "saab",
+      "source_url": "https://www.saab.com/about/for-suppliers/terms-and-conditions",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "saab-terms-of-service-4ce27e14449b-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.saab.com/about/for-suppliers/terms-and-conditions",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d7336b782f2708edc56b50e830563e80ca580fdb41d75bcd74384886400df8b8",
+      "normalized_text_sample_sha256": "sha256:35f18bb56662ce184b6c00aa0a1cc3561887d0d44f0d4788559d14ca5aeded31",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "sage-privacy",
       "vendor_id": "sage",
       "source_url": "https://www.sage.com/en-us/legal/privacy-and-cookies/",
@@ -15303,6 +16823,44 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "sakura-internet-certification-reference-fbb3c6a59328",
+      "vendor_id": "sakura-internet",
+      "source_url": "https://www.sakura.ad.jp/ai-certification",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "sakura-internet-certification-reference-fbb3c6a59328-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.sakura.ad.jp/ai-certification/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:821abfb5a8074e5acca7114e62433a856fd95b8b1d61b272a3b8edda3ae67079",
+      "normalized_text_sample_sha256": "sha256:95e4f870b2b70c9433896efde9a8bd0f7478e935c39a3437c65e50761b8bcb78",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "sakura-internet-privacy-notice-9908f44b710a",
+      "vendor_id": "sakura-internet",
+      "source_url": "https://www.sakura.ad.jp/corporate/privacy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "sakura-internet-privacy-notice-9908f44b710a-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.sakura.ad.jp/corporate/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9ad5c84d90c1766ad19985401c9b183dae47c4242e3ddbb3d13cb3ab7f26f16a",
+      "normalized_text_sample_sha256": "sha256:4090d85dac1109a32b6ddd342b36015cf8cd0b7368c2cf6af99f43d70f80c076",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "salesforce-compliance",
@@ -15628,6 +17186,25 @@
       "carried_forward": true
     },
     {
+      "source_id": "sapiens-privacy-notice-fde50d48b5ab",
+      "vendor_id": "sapiens",
+      "source_url": "https://sapiens.com/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "sapiens-privacy-notice-fde50d48b5ab-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://sapiens.com/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d01ff11d3378b7b6de8226cf387a5ea277f79d4bbf862303cff04948f587d137",
+      "normalized_text_sample_sha256": "sha256:ed429984d7ac3c30b1cf5786d9b9ec4aedfc674d65020939ab08128d1bed116e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "scaleway-dpa",
       "vendor_id": "scaleway",
       "source_url": "https://www.scaleway.com/fr/temoignages-clients/adpage/",
@@ -15644,7 +17221,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "scaleway-privacy",
@@ -15682,7 +17259,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "scaleway-status",
@@ -15720,7 +17297,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "scaleway-terms",
@@ -16328,7 +17905,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "shift-technology-data-privacy",
@@ -16481,6 +18058,158 @@
         "required": true
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "siemens-compliance-page-cfb4a860793b",
+      "vendor_id": "siemens",
+      "source_url": "https://www.siemens.com/cs-cz/company/compliance",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "siemens-compliance-page-cfb4a860793b-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.siemens.com/cs-cz/company/compliance/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9533bffd0b6a41c5313251f9a621065c21588aff1df1021acee27c5ebc21aaf4",
+      "normalized_text_sample_sha256": "sha256:787958b7f162302c3278a771a1c2f0f36ac6f62e54616d56dce37cffefa682d8",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "siemens-compliance-page-e78ded399324",
+      "vendor_id": "siemens",
+      "source_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "siemens-compliance-page-e78ded399324-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:4a49f26103a2b067e9fe11eee7e1ac731762fb2480372a1eefda2be23ae3e062",
+      "normalized_text_sample_sha256": "sha256:08d88226c0435a8e4471497b451fd04f6f89dd20d20c2b0973f2867c73b8a4db",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "siemens-privacy-notice-5d46f25aff44",
+      "vendor_id": "siemens",
+      "source_url": "https://www.siemens.com/de-de/privacy-notice",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "siemens-privacy-notice-5d46f25aff44-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.siemens.com/de-de/privacy-notice/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:aa31dd50c68188ab7d3cb3d524a18963eff93e77ab96021d4fd98ee93a9397ff",
+      "normalized_text_sample_sha256": "sha256:6494d2e7182f93eed077dd513e27293975195fa9334e8f5331c6c84298c0f153",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "siemens-privacy-notice-7f880e5ca5ca",
+      "vendor_id": "siemens",
+      "source_url": "https://www.siemens.com/en-us/privacy-notice",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "siemens-privacy-notice-7f880e5ca5ca-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.siemens.com/en-us/privacy-notice/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:bec129aa3b9118f80bd1894f558efb0eb40dd7cf5e9368bead64e705cb9068b4",
+      "normalized_text_sample_sha256": "sha256:23a97d578f4d34f9574a603dfe7670deaf41318bd52e08ba4d62e625dd263013",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "siemens-subprocessors-list-9b7d1cb524e6",
+      "vendor_id": "siemens",
+      "source_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms/di-subprocessors",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "siemens-subprocessors-list-9b7d1cb524e6-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms/di-subprocessors/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:8ded529d77a1ec0e3c0ff3e5d0401b879308a6f1f36b552463c0676fab5590f7",
+      "normalized_text_sample_sha256": "sha256:df895ae4d239a6e7a74e53a79c57a7e093f90b7571319b3228dd3681cbf496fb",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "siemens-subprocessors-list-bcd1ca117e58",
+      "vendor_id": "siemens",
+      "source_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms/gbs-subprocessors",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "siemens-subprocessors-list-bcd1ca117e58-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.siemens.com/cs-cz/company/compliance/data-privacy/data-privacy-terms/gbs-subprocessors/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:37d42c69f23337b7e8b289e295ddd18da22b6a8e2a7e604e74581dffab91e4f7",
+      "normalized_text_sample_sha256": "sha256:d6f7f0f1095cbae39a9ccdd8985553315979a4346f535bfd7e7a475bf112a62f",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "siemens-terms-of-service-af3693e8df48",
+      "vendor_id": "siemens",
+      "source_url": "https://www.siemens.com/cs-cz/company/compliance/terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "siemens-terms-of-service-af3693e8df48-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.siemens.com/cs-cz/company/compliance/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7c167cba8b9863b8e6fa626672ed68b5ac942995525fc94650e9c2aefa4dcf2b",
+      "normalized_text_sample_sha256": "sha256:91e7813956fba9e2de872ce966286ea2934c9f8b610427b37fbbbc0c6a7f882e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "siemens-terms-of-service-b58ea0fb153b",
+      "vendor_id": "siemens",
+      "source_url": "https://www.siemens.com/de-de/terms-of-use",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "siemens-terms-of-service-b58ea0fb153b-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.siemens.com/de-de/terms-of-use/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:cbd3e346a5eeff782a7f3d24f1caa80b60b6cf83693a24ea53b54758e20de859",
+      "normalized_text_sample_sha256": "sha256:e5182028eb218531f10398f9d2fbf6aedec84bb07db268c65570db874c0a6d4e",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "slack-compliance",
@@ -16651,7 +18380,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "smartsheet-dpa",
@@ -16863,6 +18592,82 @@
       "carried_forward": true
     },
     {
+      "source_id": "socotra-certification-reference-8cd97334668e",
+      "vendor_id": "socotra",
+      "source_url": "https://www.socotra.com/socotras-iso-27001-certification-our-commitment-to-data-security",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "socotra-certification-reference-8cd97334668e-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.socotra.com/socotras-iso-27001-certification-our-commitment-to-data-security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a2a7b520814c9012b184ff1924249ce3133f044fb9342fea3c4286c4c8abc2b8",
+      "normalized_text_sample_sha256": "sha256:ac49a9a1a211722883adbc934885a210273aa8cf8399cf9695695d11a71046fa",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "socotra-privacy-notice-91a170ae0166",
+      "vendor_id": "socotra",
+      "source_url": "https://www.socotra.com/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "socotra-privacy-notice-91a170ae0166-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.socotra.com/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:d45721205bf5c358742eb175af9404e27f77bfb0ee6688e345036a3f1940929a",
+      "normalized_text_sample_sha256": "sha256:9a55f1d60d77ee93277e052dfdab98eda8a3b0ef5cb75ba36d11ce28bcb87bb4",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "socotra-security-page-efee4373dd35",
+      "vendor_id": "socotra",
+      "source_url": "https://www.socotra.com/security",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "socotra-security-page-efee4373dd35-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.socotra.com/security/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9e7e01e4823cffb9774b8486076d726c5e449560c6839706fa0f91418d6bad9a",
+      "normalized_text_sample_sha256": "sha256:fae8ac7fed754096babb27ee97962000c95cea040d94f0aafba8dd4800520979",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "socotra-terms-of-service-f03c8a921396",
+      "vendor_id": "socotra",
+      "source_url": "https://www.socotra.com/terms-of-use",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "socotra-terms-of-service-f03c8a921396-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.socotra.com/terms-of-use/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:86854ced250eba89127fbc97559477b42014ad200828cbc48fc382ac2eda5129",
+      "normalized_text_sample_sha256": "sha256:606bf25abe0a8d60bea89aa792bb8519cb5de511b073f14bd40b242fc68061b4",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "sophos-compliance",
       "vendor_id": "sophos",
       "source_url": "https://www.sophos.com/en-gb/trust/business-certifications",
@@ -16898,7 +18703,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sophos-privacy-notice",
@@ -17053,6 +18858,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "sprinto-privacy-notice-557ef12b2ef0",
+      "vendor_id": "sprinto",
+      "source_url": "https://sprinto.com/privacy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "sprinto-privacy-notice-557ef12b2ef0-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://sprinto.com/privacy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:737a203d0017c117c2f4d93615ed228568239da5c2e73e7d03785fd76321f9a1",
+      "normalized_text_sample_sha256": "sha256:854e9b4b0b2ba6762bbc8ea665e90e8cfa5dd89b12bd66bd44ae040f946d6537",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "sprinto-terms-of-service-e223489d7117",
+      "vendor_id": "sprinto",
+      "source_url": "https://sprinto.com/terms",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "sprinto-terms-of-service-e223489d7117-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://sprinto.com/terms/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:086128fa03b10b81953a117233fd88d88c6a107a35f75ca4f13d7549bd8c4329",
+      "normalized_text_sample_sha256": "sha256:25baa7762745129ef4f451ede20c8ab8dad12bbebdaacd635259497ccb962737",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "square-dpa",
       "vendor_id": "square",
       "source_url": "https://squareup.com/legal/general/data-processing",
@@ -17183,7 +19026,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "starburst-privacy-notice",
@@ -17221,7 +19064,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "starburst-trust-center",
@@ -17240,7 +19083,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "storyblok-certification-reference",
@@ -17259,7 +19102,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "storyblok-compliance-page",
@@ -17278,7 +19121,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "storyblok-dpa",
@@ -17335,7 +19178,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "strapi-compliance-page",
@@ -17354,7 +19197,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "strapi-privacy",
@@ -17430,7 +19273,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "stripe-compliance",
@@ -17544,7 +19387,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sumsub-compliance-page",
@@ -17563,7 +19406,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sumsub-dpa",
@@ -17582,7 +19425,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sumsub-privacy-notice",
@@ -17601,7 +19444,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "sumsub-security",
@@ -17734,7 +19577,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "surveymonkey-compliance-page",
@@ -17753,7 +19596,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "surveymonkey-dpa",
@@ -17832,6 +19675,44 @@
       "carried_forward": true
     },
     {
+      "source_id": "system-c-terms-of-service-27047298372d",
+      "vendor_id": "system-c",
+      "source_url": "https://www.systemc.com/legal-information/supplier-terms-and-conditions",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "system-c-terms-of-service-27047298372d-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.systemc.com/legal-information/supplier-terms-and-conditions/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:9e9122d4e4f58cb025e5288efd134f09c1411f047812ad37e8c4262f8ce61480",
+      "normalized_text_sample_sha256": "sha256:1608447cbfc54556029a2f4b6a32e861e24c10aa7f03cda4464604d864ad3d60",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "system-c-terms-of-service-c83c778deace",
+      "vendor_id": "system-c",
+      "source_url": "https://www.systemc.com/legal-information/terms-of-use",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "system-c-terms-of-service-c83c778deace-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.systemc.com/legal-information/terms-of-use/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:a02d020c866ec708eeaa54005816f496e902202fae4814087120a053c1e11466",
+      "normalized_text_sample_sha256": "sha256:16cc7d1d317d3de2a645feb89408a1d331d4640f899beac435f160aa437cfcdf",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "teamwork-privacy",
       "vendor_id": "teamwork",
       "source_url": "https://www.teamwork.com/legal/privacy-notice/",
@@ -17887,6 +19768,25 @@
         "required": false
       },
       "carried_forward": true
+    },
+    {
+      "source_id": "telstra-health-terms-of-service-592bdba94a72",
+      "vendor_id": "telstra-health",
+      "source_url": "https://www.telstrahealth.com/terms-conditions",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "telstra-health-terms-of-service-592bdba94a72-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.telstrahealth.com/terms-conditions/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e4588389c6b223cf6269a20ed6ea021c7e7e531d14449df31e7bab4bdd0d6084",
+      "normalized_text_sample_sha256": "sha256:749c5ede279d0a6e9656a0712f6e2b5b2921668593633b5bb004ae4bd4691d24",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
     },
     {
       "source_id": "tencent-cloud-cn-compliance",
@@ -18079,6 +19979,139 @@
       "carried_forward": true
     },
     {
+      "source_id": "thales-dpa-03a13b7cd4a9",
+      "vendor_id": "thales",
+      "source_url": "https://www.thalesgroup.com/data-processing-agreement",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "thales-dpa-03a13b7cd4a9-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.thalesgroup.com/data-processing-agreement",
+      "http_status": 404,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:eb06655d0caf309a33fa010ec85e3b7580b420bee5135186b529c9725cee2901",
+      "normalized_text_sample_sha256": "sha256:8fec697513ca993e45cf24f3b2b73bb79b919bc1383565390d25d1d03658ec71",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "thales-dpa-2b4594cb82e7",
+      "vendor_id": "thales",
+      "source_url": "https://www.thalesgroup.com/data-processing-addendum",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "thales-dpa-2b4594cb82e7-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.thalesgroup.com/data-processing-addendum",
+      "http_status": 404,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:5fd034ebad9161ca7a91cb8db8b18db2d054e96c21c581695b57452bf0d3dfea",
+      "normalized_text_sample_sha256": "sha256:8fec697513ca993e45cf24f3b2b73bb79b919bc1383565390d25d1d03658ec71",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "thales-privacy-notice-7c29ecd357ac",
+      "vendor_id": "thales",
+      "source_url": "https://www.thalesgroup.com/privacy.html",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "thales-privacy-notice-7c29ecd357ac-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.thalesgroup.com/privacy.html",
+      "http_status": 404,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:516ebde8d1f2fcca06e57c7ee671b43ecdb890a2433c01e6ea9b0323edc1383f",
+      "normalized_text_sample_sha256": "sha256:8fec697513ca993e45cf24f3b2b73bb79b919bc1383565390d25d1d03658ec71",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "thales-privacy-notice-cc03852ff51c",
+      "vendor_id": "thales",
+      "source_url": "https://www.thalesgroup.com/privacybeleid",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "thales-privacy-notice-cc03852ff51c-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.thalesgroup.com/privacybeleid",
+      "http_status": 404,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e96dc9aedd14951ea095333b12a6cd9a82de99f05b2fe798ee65b3e27f568c23",
+      "normalized_text_sample_sha256": "sha256:8fec697513ca993e45cf24f3b2b73bb79b919bc1383565390d25d1d03658ec71",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "thales-subprocessors-list-97423f368407",
+      "vendor_id": "thales",
+      "source_url": "https://www.thalesgroup.com/sub-processors",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "thales-subprocessors-list-97423f368407-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.thalesgroup.com/sub-processors",
+      "http_status": 404,
+      "source_health_status": "unreachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:1732a48e42ea8fc61ce8f68d83f6470563b02dd9bd23a9a3e208bca99ea65649",
+      "normalized_text_sample_sha256": "sha256:8fec697513ca993e45cf24f3b2b73bb79b919bc1383565390d25d1d03658ec71",
+      "review_signal": {
+        "required": true,
+        "reason": "source_health_unreachable"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "thales-terms-of-service-742cd4eb7b4b",
+      "vendor_id": "thales",
+      "source_url": "https://www.thalesgroup.com/terms-of-service",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "thales-terms-of-service-742cd4eb7b4b-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.thalesgroup.com/terms-of-service",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:382c555b0a7314fe8c3344e95dd44ccb10c0cf8d099ead25d24dc580baadf155",
+      "normalized_text_sample_sha256": "sha256:13d2c1cfdccda000cbef514f70c79b4231291fc681b6a1aa9abc3bc99f634d3b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "thales-terms-of-service-f86901cdb69d",
+      "vendor_id": "thales",
+      "source_url": "https://www.thalesgroup.com/termos-de-uso",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "thales-terms-of-service-f86901cdb69d-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://www.thalesgroup.com/termos-de-uso",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:c692bbe5f3a3aea6cf0b703dbc8f93c858bde90e42254f332631c698d82be788",
+      "normalized_text_sample_sha256": "sha256:13d2c1cfdccda000cbef514f70c79b4231291fc681b6a1aa9abc3bc99f634d3b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "thoropass-compliance",
       "vendor_id": "thoropass",
       "source_url": "https://trust.thoropass.com/",
@@ -18174,6 +20207,101 @@
       "carried_forward": true
     },
     {
+      "source_id": "toss-privacy-notice-8da5cd12de84",
+      "vendor_id": "toss",
+      "source_url": "https://toss.im/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "toss-privacy-notice-8da5cd12de84-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://toss.im/privacy-policy",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:04fb30908a980310dde3849d049821a7fa007134434a09dc4fd285b52f03d682",
+      "normalized_text_sample_sha256": "sha256:a0ea6a14920432b962c4a47ddea84486d932514468103f17689f9ff15befc210",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "tpp-privacy-notice-5ddfc7b5a5cf",
+      "vendor_id": "tpp",
+      "source_url": "https://tpp-uk.com/privacy-policy-mys",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "tpp-privacy-notice-5ddfc7b5a5cf-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://tpp-uk.com/privacy-policy-mys/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:3d836b5d7f7da23c5af97c2beae32ea81c6cc4a4526caf774cff39bea6490eea",
+      "normalized_text_sample_sha256": "sha256:571ec3c8ce719ebc69e755584e7d1348f13f88e4c91c0dbd7ca2e97620a6d721",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "tpp-privacy-notice-8b540decfa38",
+      "vendor_id": "tpp",
+      "source_url": "https://tpp-uk.com/privacy-policy",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "tpp-privacy-notice-8b540decfa38-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://tpp-uk.com/privacy-policy/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:e593ff95265620016ac08d19f155296cb34a6005d11f40b99e3ecf42d305d0c7",
+      "normalized_text_sample_sha256": "sha256:0a0c1dea86aa8a4087e73362fe888b5fb2763be4bba4997df88a32a5469d8d09",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "tpp-terms-of-service-3170fb3408d0",
+      "vendor_id": "tpp",
+      "source_url": "https://tpp-uk.com/terms-and-conditions",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "tpp-terms-of-service-3170fb3408d0-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://tpp-uk.com/terms-and-conditions/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:7b2bf5a06e00243218b0003d5efbeb33b53440b478b7b6157ccec85379375242",
+      "normalized_text_sample_sha256": "sha256:fa8857fee8c2e8f8aabf0bba96377718e4d75adf10d327d763e5b96d45a45e0b",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
+      "source_id": "tpp-terms-of-service-38d22bb3e54e",
+      "vendor_id": "tpp",
+      "source_url": "https://tpp-uk.com/terms-and-conditions-for-helpful-user-competition",
+      "observed_at": "2026-07-14T11:56:58Z",
+      "observation_id": "tpp-terms-of-service-38d22bb3e54e-2026-07-14-owner-catalog-pr-707",
+      "final_url": "https://tpp-uk.com/terms-and-conditions-for-helpful-user-competition/",
+      "http_status": 200,
+      "source_health_status": "reachable",
+      "change_class": "none",
+      "retrieval_method": "html_page",
+      "raw_sample_sha256": "sha256:fef04316f40b252307fe59de8b3f0332348ec5c04dd14ff2be10f75081808620",
+      "normalized_text_sample_sha256": "sha256:a30c4621fa398c33837650ac7dc5d618a80fdb6699e4ebd68f859e1759f99c4a",
+      "review_signal": {
+        "required": false,
+        "reason": "first_observation"
+      },
+      "carried_forward": false
+    },
+    {
       "source_id": "trend-micro-compliance-page",
       "vendor_id": "trend-micro",
       "source_url": "https://www.trendmicro.com/en_us/about/trust-center/compliance.html?utm_campaign=VURL:USA-_-Archive-_-Archive-_-compliance",
@@ -18190,7 +20318,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trend-micro-dpa",
@@ -18209,7 +20337,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trend-micro-privacy",
@@ -18304,7 +20432,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trulioo-dpa",
@@ -18323,7 +20451,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trulioo-privacy-notice",
@@ -18342,7 +20470,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "trulioo-security",
@@ -18684,7 +20812,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "ukg-privacy",
@@ -18988,7 +21116,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vertafore-information-security-terms",
@@ -19064,7 +21192,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "vtex-privacy-notice",
@@ -19330,7 +21458,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "withsecure-compliance-page",
@@ -19349,7 +21477,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "withsecure-dpa",
@@ -19368,7 +21496,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "withsecure-privacy",
@@ -19406,7 +21534,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "withsecure-status",
@@ -19463,7 +21591,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wix-dpa",
@@ -19843,7 +21971,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "wrike-status",
@@ -19900,7 +22028,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "xendit-licenses",
@@ -20489,7 +22617,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zscaler-compliance-page",
@@ -20508,7 +22636,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     },
     {
       "source_id": "zscaler-dpa",
@@ -20603,7 +22731,7 @@
         "required": false,
         "reason": "first_observation"
       },
-      "carried_forward": false
+      "carried_forward": true
     }
   ],
   "not_advice": true

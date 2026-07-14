@@ -8,34 +8,36 @@
   },
   "covered_role_counts": {
     "ai_terms": 1,
-    "certification_reference": 33,
-    "compliance_page": 146,
-    "dpa": 143,
+    "certification_reference": 44,
+    "compliance_page": 154,
+    "dpa": 149,
+    "government_request_policy": 1,
     "other_public_source": 29,
-    "privacy_notice": 235,
-    "security_page": 194,
+    "privacy_notice": 271,
+    "security_page": 207,
     "status_page": 50,
-    "subprocessors_list": 134,
-    "terms_of_service": 84,
+    "subprocessors_list": 138,
+    "terms_of_service": 112,
     "transparency_report": 1,
-    "trust_center": 67
+    "trust_center": 72
   },
   "duplicate_source_url_count": 0,
   "generated_at": "1970-01-01T00:00:00Z",
   "schema_version": "0.1.0",
   "source_type_counts": {
     "ai_terms": 1,
-    "certification_reference": 30,
-    "compliance_page": 143,
-    "dpa": 143,
+    "certification_reference": 41,
+    "compliance_page": 151,
+    "dpa": 149,
+    "government_request_policy": 1,
     "other_public_source": 29,
-    "privacy_notice": 235,
-    "security_page": 168,
+    "privacy_notice": 271,
+    "security_page": 181,
     "status_page": 50,
-    "subprocessors_list": 134,
-    "terms_of_service": 84,
+    "subprocessors_list": 138,
+    "terms_of_service": 112,
     "transparency_report": 1,
-    "trust_center": 66
+    "trust_center": 71
   },
   "unavailable_source_type_counts": {
     "certification_reference": 94,
@@ -47,7 +49,7 @@
     "terms_of_service": 149,
     "trust_center": 17
   },
-  "unique_source_location_count": 1084,
+  "unique_source_location_count": 1196,
   "vendor_coverage": [
     {
       "candidate_source_types": [],
@@ -282,6 +284,35 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 3,
+      "vendor_id": "aidoc"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -416,6 +447,54 @@
       ],
       "unique_source_locations": 4,
       "vendor_id": "akur8"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "alcidion"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "aleph-alpha"
     },
     {
       "candidate_source_types": [],
@@ -596,6 +675,30 @@
       ],
       "unique_source_locations": 5,
       "vendor_id": "amplitude"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "anduril"
     },
     {
       "candidate_source_types": [],
@@ -1026,6 +1129,32 @@
       ],
       "unique_source_locations": 4,
       "vendor_id": "bigcommerce"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "bigid"
     },
     {
       "candidate_source_types": [],
@@ -1807,6 +1936,30 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "cover-genius"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -2132,6 +2285,35 @@
       ],
       "unique_source_locations": 2,
       "vendor_id": "deepl"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "compliance_page",
+        "privacy_notice",
+        "security_page"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "descartes"
     },
     {
       "candidate_source_types": [],
@@ -2505,6 +2687,61 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "certification_reference"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "certification_reference"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "certification_reference"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "earnix"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "certification_reference",
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "certification_reference",
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "certification_reference",
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "eis-group"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -2633,6 +2870,36 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "government_request_policy",
+        "security_page",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "government_request_policy",
+        "security_page",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "government_request_policy",
+        "security_page",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 5,
+      "vendor_id": "esri"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "certification_reference",
         "compliance_page",
         "dpa",
@@ -2743,6 +3010,33 @@
       ],
       "unique_source_locations": 5,
       "vendor_id": "factorial"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "feishu"
     },
     {
       "candidate_source_types": [],
@@ -2926,6 +3220,34 @@
       ],
       "unique_source_locations": 6,
       "vendor_id": "fortinet"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "terms_of_service",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "terms_of_service",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "terms_of_service",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 3,
+      "vendor_id": "freee"
     },
     {
       "candidate_source_types": [],
@@ -3913,6 +4235,66 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "icertis"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "certification_reference",
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "certification_reference",
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "certification_reference",
+        "compliance_page",
+        "privacy_notice",
+        "security_page",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 9,
+      "vendor_id": "idnow"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page",
         "terms_of_service"
@@ -3986,6 +4368,36 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "terms_of_service",
+        "trust_center"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 5,
+      "vendor_id": "insurity"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -4053,6 +4465,58 @@
       ],
       "unique_source_locations": 4,
       "vendor_id": "jetbrains"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 3,
+      "vendor_id": "jumio"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "certification_reference"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "certification_reference"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "certification_reference"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "kakao-enterprise"
     },
     {
       "candidate_source_types": [],
@@ -4161,6 +4625,35 @@
       "canonical_source_types": [
         "dpa",
         "privacy_notice",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "lark"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
         "security_page"
       ],
       "coverage_claim_role_coverage": [],
@@ -4191,6 +4684,30 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "security_page"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "security_page"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "security_page"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "leonardo"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page"
       ],
@@ -4217,6 +4734,31 @@
       ],
       "unique_source_locations": 2,
       "vendor_id": "lever"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "line-works"
     },
     {
       "candidate_source_types": [],
@@ -4524,6 +5066,31 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "compliance_page"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "compliance_page"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "compliance_page"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "meistertask"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "other_public_source",
@@ -4799,6 +5366,33 @@
       ],
       "unique_source_locations": 6,
       "vendor_id": "monday-com"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "money-forward"
     },
     {
       "candidate_source_types": [],
@@ -5109,6 +5703,31 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "nhn-cloud"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "dpa",
         "privacy_notice",
         "security_page",
@@ -5254,6 +5873,30 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "oneshield"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page",
         "subprocessors_list"
@@ -5357,6 +6000,33 @@
       ],
       "unique_source_locations": 7,
       "vendor_id": "oracle-cloud"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "certification_reference",
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "certification_reference",
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "certification_reference",
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "orion-health"
     },
     {
       "candidate_source_types": [],
@@ -5934,6 +6604,60 @@
       "candidate_source_types": [],
       "canonical_source_types": [
         "dpa",
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 3,
+      "vendor_id": "privado-ai"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 5,
+      "vendor_id": "project44"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "dpa",
         "privacy_notice",
         "security_page",
         "subprocessors_list"
@@ -6303,6 +7027,61 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "riskified"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "compliance_page",
+        "security_page",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "compliance_page",
+        "security_page",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "compliance_page",
+        "security_page",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "saab"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "privacy_notice",
         "security_page",
         "subprocessors_list"
@@ -6331,6 +7110,33 @@
       ],
       "unique_source_locations": 3,
       "vendor_id": "sage"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "certification_reference",
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "certification_reference",
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "certification_reference",
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "sakura-internet"
     },
     {
       "candidate_source_types": [],
@@ -6441,6 +7247,30 @@
       ],
       "unique_source_locations": 5,
       "vendor_id": "sap"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "sapiens"
     },
     {
       "candidate_source_types": [],
@@ -6793,6 +7623,38 @@
       "candidate_source_types": [],
       "canonical_source_types": [
         "compliance_page",
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "compliance_page",
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "compliance_page",
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 8,
+      "vendor_id": "siemens"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "compliance_page",
         "dpa",
         "privacy_notice",
         "security_page",
@@ -6937,6 +7799,38 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "certification_reference",
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "certification_reference",
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "certification_reference",
+        "privacy_notice",
+        "security_page",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "socotra"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -7005,6 +7899,33 @@
       ],
       "unique_source_locations": 5,
       "vendor_id": "splunk"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "sprinto"
     },
     {
       "candidate_source_types": [],
@@ -7334,6 +8255,31 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 2,
+      "vendor_id": "system-c"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "privacy_notice",
         "status_page",
         "terms_of_service"
@@ -7363,6 +8309,31 @@
       ],
       "unique_source_locations": 3,
       "vendor_id": "teamwork"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "privacy_notice",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "telstra-health"
     },
     {
       "candidate_source_types": [],
@@ -7437,6 +8408,37 @@
     {
       "candidate_source_types": [],
       "canonical_source_types": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "security_page"
+      ],
+      "primary_source_type_coverage": [
+        "dpa",
+        "privacy_notice",
+        "subprocessors_list",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 7,
+      "vendor_id": "thales"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
         "compliance_page",
         "dpa",
         "privacy_notice",
@@ -7468,6 +8470,57 @@
       ],
       "unique_source_locations": 5,
       "vendor_id": "thoropass"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 1,
+      "vendor_id": "toss"
+    },
+    {
+      "candidate_source_types": [],
+      "canonical_source_types": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "coverage_claim_role_coverage": [],
+      "covered_roles": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "duplicate_source_url_count": 0,
+      "missing_core_source_types": [
+        "dpa",
+        "security_page",
+        "subprocessors_list"
+      ],
+      "primary_source_type_coverage": [
+        "privacy_notice",
+        "terms_of_service"
+      ],
+      "roles_covered_via_claims": 0,
+      "roles_covered_via_same_source_url": [],
+      "unavailable_source_types": [],
+      "unique_source_locations": 4,
+      "vendor_id": "tpp"
     },
     {
       "candidate_source_types": [],
