@@ -144,7 +144,6 @@ def validate_catalog_paths(paths: list[str]) -> list[str]:
 
 
 def validate_catalog_generated_outputs(paths: list[str]) -> list[str]:
-    """Require regenerated public outputs whenever canonical catalog data changes."""
     normalized = [normalize_path(path) for path in paths]
     if any(is_catalog_data_path(path) for path in normalized) and not any(
         is_generated_output_path(path) for path in normalized
@@ -154,7 +153,6 @@ def validate_catalog_generated_outputs(paths: list[str]) -> list[str]:
 
 
 def validate_changed_source_observations(paths: list[str], *, root: Path = ROOT) -> list[str]:
-    """Every changed real source record must be represented in latest observations."""
     failures: list[str] = []
     observed_source_ids = load_latest_observed_source_ids(root)
     for raw_path in paths:
@@ -227,12 +225,6 @@ def validate_catalog_batch_duplicates(paths: list[str], *, root: Path = ROOT) ->
 
 
 def validate_catalog_pr(paths: list[str], *, root: Path = ROOT) -> list[str]:
-    """Validate catalog boundaries without a mandatory source checklist.
-
-    Source availability differs by vendor. A catalog PR records verified public
-    vendor sources that actually exist. It does not require absent document types,
-    fabricate URLs, or use unavailable-source records as substitutes for evidence.
-    """
     failures = validate_catalog_paths(paths)
     failures.extend(validate_catalog_generated_outputs(paths))
     failures.extend(validate_changed_source_observations(paths, root=root))
