@@ -16,7 +16,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
-      JOB_ID: '86960745830'
+      JOB_ID: '87030636956'
     steps:
       - name: Print exact live endpoint failure
         run: |
@@ -30,7 +30,7 @@ jobs:
               'attempt ', 'not accepted', 'runtimeerror', 'traceback', 'http error',
               'urlerror', 'assertionerror', 'missing_vendors', 'missing_sources',
               'missing_observations', 'mixed deployed snapshots', 'count mismatch',
-              'process completed with exit code',
+              'process completed with exit code', 'accepted', 'deployed_commit',
           )
           print('EXISTING_CATALOG_LIVE_FAILURE_BEGIN')
           for line in lines:
