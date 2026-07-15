@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: tmp-pr716-sync-diagnose-${{ github.ref }}
-  cancel-in-progress: false
+  group: tmp-pr716-focused-${{ github.sha }}
+  cancel-in-progress: true
 
 jobs:
   diagnose:
