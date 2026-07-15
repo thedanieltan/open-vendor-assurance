@@ -189,7 +189,7 @@ workflows:
       - replacement full-catalog sharding with no scheduled vendor cap
       - replacement candidate-intake and exact-plan handoff proof
       - validation suite pass
-    allowed_triggers_until_retired: [workflow_dispatch, schedule, pull_request]
+    allowed_triggers_until_retired: [workflow_dispatch, schedule, pull_request, push]
     write_permissions_allowed_until_retired: true
   - name: autonomous-catalog-growth.yml
     current_status: active

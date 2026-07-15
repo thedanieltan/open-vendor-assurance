@@ -109,7 +109,7 @@ public_workflows:
   - name: discovery-mesh.yml
     loop: catalog_growth
     status: core
-    triggers: [workflow_dispatch, schedule, pull_request]
+    triggers: [workflow_dispatch, schedule, pull_request, push]
     permissions: {actions: write, contents: write, pull-requests: write}
     writes_repository_state: true
     creates_prs: true

@@ -165,7 +165,7 @@ def test_no_workflow_requests_write_permissions_except_approved_handoffs():
         "source-repair-pr-cleanup.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "pull-requests": "write", "issues": "write"}},
         "observation-ledger-append-pr.yml": {"triggers": {"workflow_dispatch", "workflow_run"}, "permissions": {"contents": "write", "pull-requests": "write", "actions": "read"}},
         "discovery-ledger-append-pr.yml": {"triggers": {"workflow_dispatch", "workflow_run"}, "permissions": {"contents": "write", "pull-requests": "write", "actions": "read"}},
-        "discovery-mesh.yml": {"triggers": {"workflow_dispatch", "schedule", "pull_request"}, "permissions": {"actions": "write", "contents": "write", "pull-requests": "write"}},
+        "discovery-mesh.yml": {"triggers": {"workflow_dispatch", "schedule", "pull_request", "push"}, "permissions": {"actions": "write", "contents": "write", "pull-requests": "write"}},
         "machine-provisional-materialization.yml": {"triggers": {"workflow_dispatch"}, "permissions": {"contents": "read", "actions": "write"}},
         "catalog-growth-discovery.yml": {"triggers": {"workflow_dispatch", "schedule"}, "permissions": {"contents": "read", "issues": "write"}},
         "autonomous-catalog-growth.yml": {"triggers": {"workflow_dispatch", "schedule", "push"}, "permissions": {"contents": "read", "actions": "write"}},

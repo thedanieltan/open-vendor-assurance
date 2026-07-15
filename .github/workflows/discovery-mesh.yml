@@ -1,6 +1,13 @@
 name: discovery-mesh
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/discovery-mesh.yml"
+      - "tools/openva/discovery_mesh_config.py"
+      - "tools/openva/rendered_discovery.py"
+      - "tools/openva/rendered_discovery_runner.py"
   workflow_dispatch:
     inputs:
       shard_count:
@@ -45,7 +52,7 @@ jobs:
       - name: Build full-catalog shard matrix
         id: plan
         env:
-          REQUESTED_SHARD_COUNT: "${{ inputs.shard_count || '' }}"
+          REQUESTED_SHARD_COUNT: "${{ github.event_name == 'push' && '1' || inputs.shard_count || '' }}"
         run: |
           set -euo pipefail
           python - <<'PY' >> "$GITHUB_OUTPUT"
@@ -73,14 +80,20 @@ jobs:
       max-parallel: 32
       matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
     env:
-      REQUESTED_VENDOR_LIMIT: "${{ inputs.vendor_limit || '' }}"
+      REQUESTED_VENDOR_LIMIT: "${{ github.event_name == 'push' && '25' || inputs.vendor_limit || '' }}"
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Install package
-        run: pip install -e ".[dev]"
+      - name: Install package and rendered discovery dependency
+        run: |
+          set -euo pipefail
+          pip install -e ".[dev]"
+          pip install "playwright==1.57.0"
+          CHROMIUM="$(command -v chromium)"
+          test -x "$CHROMIUM"
+          echo "OPENVA_CHROMIUM_EXECUTABLE=$CHROMIUM" >> "$GITHUB_ENV"
       - name: Resolve growth-oriented per-vendor bounds
         run: |
           set -euo pipefail
@@ -92,8 +105,13 @@ jobs:
           print(f"MESH_MAX_LINKS_PER_PAGE={config.MAX_LINKS_PER_PAGE}")
           print(f"MESH_MAX_LOCATORS={config.MAX_LOCATOR_CANDIDATES_PER_VENDOR}")
           print(f"MESH_FETCH_TIMEOUT={config.FETCH_TIMEOUT_SECONDS}")
+          print(f"MESH_RENDER_MAX_PAGES={config.RENDER_MAX_PAGES_PER_VENDOR}")
+          print(f"MESH_RENDER_MAX_REQUESTS={config.RENDER_MAX_REQUESTS_PER_PAGE}")
+          print(f"MESH_RENDER_MAX_BYTES={config.RENDER_MAX_BYTES_PER_PAGE}")
+          print(f"MESH_RENDER_TIMEOUT_MS={config.RENDER_TIMEOUT_MS}")
+          print(f"MESH_RENDER_SETTLE_MS={config.RENDER_SETTLE_MS}")
           PY
-      - name: Run full-catalog discovery shard
+      - name: Run full-catalog discovery shard with selective rendering
         run: |
           set -euo pipefail
           mkdir -p reports/discovery-mesh
@@ -105,6 +123,11 @@ jobs:
             --max-total-requests "$MESH_MAX_TOTAL_REQUESTS"
             --max-links-per-page "$MESH_MAX_LINKS_PER_PAGE"
             --max-locators-per-vendor "$MESH_MAX_LOCATORS"
+            --max-render-pages-per-vendor "$MESH_RENDER_MAX_PAGES"
+            --max-render-requests-per-page "$MESH_RENDER_MAX_REQUESTS"
+            --max-render-bytes-per-page "$MESH_RENDER_MAX_BYTES"
+            --render-timeout-ms "$MESH_RENDER_TIMEOUT_MS"
+            --render-settle-ms "$MESH_RENDER_SETTLE_MS"
             --output "reports/discovery-mesh/shard-${{ matrix.shard }}.json"
           )
           LIMIT="$(printf '%s' "$REQUESTED_VENDOR_LIMIT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
@@ -113,7 +136,7 @@ jobs:
             if [ "$LIMIT" = "0" ]; then echo "vendor_limit must be positive" >&2; exit 1; fi
             ARGS+=(--vendor-limit "$LIMIT")
           fi
-          python -m tools.openva.discovery_mesh_runner shard "${ARGS[@]}"
+          python -m tools.openva.rendered_discovery_runner "${ARGS[@]}"
       - name: Upload shard report
         uses: actions/upload-artifact@v6
         with:
@@ -141,6 +164,97 @@ jobs:
           pattern: openva-discovery-mesh-shard-*
           path: reports/discovery-mesh/shards
           merge-multiple: true
+      - name: Build rendered-discovery differential report
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          report_dir = Path("reports/discovery-mesh/shards")
+          reports = [
+              json.loads(path.read_text(encoding="utf-8"))
+              for path in sorted(report_dir.glob("shard-*.json"))
+          ]
+          if not reports:
+              raise SystemExit("no shard reports available for rendered differential")
+
+          metric_names = (
+              "javascript_fallback_eligible_pages",
+              "rendered_pages",
+              "render_failures",
+              "browser_requests",
+              "browser_fulfilled_requests",
+              "browser_blocked_requests",
+              "browser_bytes_fulfilled",
+              "rendered_locator_signal_count",
+              "rendered_verified_candidate_count",
+          )
+          totals = {name: 0 for name in metric_names}
+          reasons: Counter[str] = Counter()
+          vendors_eligible = 0
+          vendors_with_verified_candidates = 0
+          for report in reports:
+              summary = report.get("summary") or {}
+              for name in metric_names:
+                  totals[name] += int(summary.get(name) or 0)
+              for frontier in report.get("source_frontier_reports", []) or []:
+                  rendered = frontier.get("rendered_discovery") or {}
+                  if int(rendered.get("javascript_fallback_eligible_pages") or 0) > 0:
+                      vendors_eligible += 1
+                  if int(rendered.get("rendered_verified_candidate_count") or 0) > 0:
+                      vendors_with_verified_candidates += 1
+                  reasons.update(
+                      {
+                          str(key): int(value)
+                          for key, value in (rendered.get("reason_counts") or {}).items()
+                      }
+                  )
+
+          output = {
+              "schema_version": "0.1.0",
+              "report_type": "rendered_discovery_differential",
+              "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+              "shard_report_count": len(reports),
+              "baseline": "bounded_static_html_discovery",
+              "differential": {
+                  **totals,
+                  "vendors_with_javascript_fallback_eligibility": vendors_eligible,
+                  "vendors_with_rendered_verified_candidates": vendors_with_verified_candidates,
+                  "eligibility_reason_counts": dict(sorted(reasons.items())),
+              },
+              "posture": {
+                  "browser_direct_network_access": False,
+                  "rendered_signals_are_catalog_facts": False,
+                  "writes_canonical_sources": False,
+                  "public_sources_only": True,
+                  "non_advisory": True,
+              },
+          }
+          output_path = Path("reports/discovery-mesh/rendered-discovery-differential.json")
+          output_path.write_text(json.dumps(output, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          print("### Rendered discovery differential")
+          print("")
+          for key, value in output["differential"].items():
+              if key != "eligibility_reason_counts":
+                  print(f"- {key}: `{value}`")
+          PY
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("reports/discovery-mesh/rendered-discovery-differential.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          print("### Rendered discovery differential")
+          print("")
+          for key, value in report["differential"].items():
+              print(f"- {key}: `{value}`")
+          PY
       - name: Aggregate reports and stage noncanonical candidates
         run: |
           set -euo pipefail
@@ -214,6 +328,7 @@ jobs:
       - name: Validate staged candidate intake
         run: python -m tools.openva.validate validate
       - name: Prepare exact intake branch
+        if: github.event_name != 'push'
         id: intake
         env:
           INTAKE_NEEDED: ${{ steps.health.outputs.intake_needed }}
@@ -331,6 +446,7 @@ jobs:
           name: openva-discovery-mesh-aggregate
           path: |
             reports/discovery-mesh/source-discovery-report.json
+            reports/discovery-mesh/rendered-discovery-differential.json
             reports/discovery-mesh/vendor-breadth-replenishment-run-*.json
             reports/discovery-mesh/discovery-mesh-health-*.json
             reports/discovery-mesh/discovery-mesh-health-*.md
