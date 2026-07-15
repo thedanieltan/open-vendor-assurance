@@ -6,9 +6,7 @@ on:
       - agent/source-attribution-applicability
 
 permissions:
-  contents: read
-  pull-requests: write
-  issues: write
+  contents: write
 
 concurrency:
   group: tmp-pr716-sync-diagnose-${{ github.ref }}
@@ -55,9 +53,7 @@ jobs:
                   target = f"{path}[dev]"
               subprocess.run([sys.executable, '-m', 'pip', 'install', '-e', target], check=True)
           PY
-      - name: Run affected tests and post diagnostics
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Run affected tests and persist diagnostics
         run: |
           set +e
           python - <<'PY' > "$RUNNER_TEMP/pytest-output.txt" 2>&1
@@ -73,14 +69,21 @@ jobs:
           STATUS=$?
           set -e
           {
-            echo "## PR #716 workspace diagnostic"
-            echo
+            echo "PR #716 workspace diagnostic"
             echo "Branch and test plan are based on current main."
             echo
-            echo '```text'
-            tail -n 240 "$RUNNER_TEMP/pytest-output.txt"
-            echo '```'
-          } > "$RUNNER_TEMP/comment.md"
-          gh pr comment 716 --repo thedanieltan/open-vendor-assurance --body-file "$RUNNER_TEMP/comment.md"
+            echo "Workspace plan:"
+            cat "$RUNNER_TEMP/workspace-plan.json"
+            echo
+            echo "Pytest tail:"
+            tail -n 300 "$RUNNER_TEMP/pytest-output.txt"
+            echo
+            echo "exit_status=$STATUS"
+          } > tmp-pr716-workspace-diagnostic.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tmp-pr716-workspace-diagnostic.txt
+          git commit -m "Record temporary PR 716 workspace diagnostic"
+          git push origin HEAD:agent/source-attribution-applicability
           cat "$RUNNER_TEMP/pytest-output.txt"
           exit "$STATUS"
