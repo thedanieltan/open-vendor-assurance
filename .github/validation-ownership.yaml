@@ -3,6 +3,8 @@ workflow: .github/workflows/validate.yml
 required_status_contexts:
   - validate / pr-change-classifier
   - validate / repository-integrity
+  - validate / workspace-plan
+  - validate / workspace-component-tests
   - validate / workspace-affected-tests
   - validate / workflow-operating-model
   - validate / catalog-growth
@@ -39,12 +41,37 @@ jobs:
       - config/bot-constitution.yaml
       - config/release-gates.yaml
       - tools/openva/release_gates.py
-  workspace-affected-tests:
+  workspace-plan:
     owner_loop: workspace_control_plane
-    purpose: Validate the workspace manifest, calculate reverse-dependent impact from the exact PR diff, install local prerequisites in dependency order, and run the conservative affected Python test plan.
+    purpose: Validate the workspace manifest, calculate reverse-dependent impact from the exact PR diff, and publish whether the selected plan requires full regression coverage.
     commands:
       - python -m tools.openva.workspace validate
       - python -m tools.openva.workspace plan
+    protects:
+      - tools/openva/workspace.py
+      - tools/openva/workspace.yaml
+      - adapters/python/**
+      - integrations/mcp/**
+      - services/openva_match_service/**
+      - integrations/google-sheets/**
+  workspace-component-tests:
+    owner_loop: workspace_control_plane
+    purpose: Install the dependency chain and run only the selected Python tests when the workspace plan is component-scoped.
+    commands:
+      - python -m tools.openva.workspace validate
+      - python -m tools.openva.workspace plan
+      - subprocess.run([sys.executable, '-m', 'pytest', '-q', *plan['test_paths']], check=True)
+    protects:
+      - adapters/python/**
+      - integrations/mcp/**
+      - services/openva_match_service/**
+      - integrations/google-sheets/**
+  workspace-affected-tests:
+    owner_loop: workspace_control_plane
+    purpose: Preserve the required workspace status context and fail unless the delegated component tests or parallel full-regression shards succeed.
+    commands:
+      - echo "Full-suite plan validated by parallel regression shards."
+      - echo "Targeted plan validated by component-scoped tests."
     protects:
       - tools/openva/workspace.py
       - tools/openva/workspace.yaml
@@ -56,7 +83,7 @@ jobs:
     owner_loop: workflow_control_plane
     purpose: Validate workflow inventory, operating model, future-operation specs, and structured contracts.
     commands:
-      - pytest -q tests/test_ci_readiness.py tests/test_workflow_operating_model.py tests/test_workflow_retirement_evidence.py tests/test_future_operations_specs.py tests/test_workflow_contracts.py
+      - pytest -q tests/test_ci_readiness.py tests/test_workflow_operating_model.py tests/test_workflow_workspace_ci.py tests/test_workflow_retirement_evidence.py tests/test_future_operations_specs.py tests/test_workflow_contracts.py
     protects:
       - .github/workflows/**
       - .github/validation-ownership.yaml

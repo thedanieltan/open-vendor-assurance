@@ -7,10 +7,11 @@ OpenVA is maintained as a **single-product, multi-component repository**. The wo
 - `tools/openva/workspace.yaml` is the component and dependency manifest.
 - `tools/openva/workspace.py` validates the manifest and calculates affected components.
 - `.github/workflows/validate.yml` remains the single validation authority.
-- Existing named validation lanes remain active and authoritative during the initial workspace rollout.
-- The workspace lane is additive. It must not suppress an existing required lane merely because its own affected plan is narrower.
-- Shared catalog, schema, generated-contract, and core-tool changes fail safe to the full Python suite.
-- Files that are not owned by a declared component fail safe to the full Python suite.
+- `workspace-affected-tests` remains the required status aggregator for workspace validation.
+- Component-scoped plans run only the selected Python tests and install only their dependency chain.
+- Full-suite plans are delegated to the existing parallel regression shards rather than a second monolithic `pytest tests` invocation.
+- Shared catalog, schema, generated-contract, and core-tool changes continue to fail safe to full regression coverage whenever the workspace planner is activated.
+- Files that are not owned by a declared component continue to fail safe to full regression coverage.
 - Google Sheets JavaScript tests remain in the dedicated Node lane; the workspace Python plan does not send `.mjs` files to pytest.
 
 ## Component model
@@ -37,29 +38,28 @@ Specialised governance suites retain their own ownership. A change to `validate.
 
 ## Pull-request execution
 
-The `workspace-affected-tests` job:
+Pull-request workspace validation has three stages:
 
-1. checks out full Git history;
-2. validates the workspace manifest;
-3. compares the pull-request base and head commits;
-4. writes a machine-readable affected-component plan to the job summary;
-5. installs affected local packages in dependency order;
-6. runs the selected Python tests.
+1. `workspace-plan` checks out full history, validates the manifest, compares the pull-request base and head, and publishes a machine-readable plan.
+2. A non-full-suite plan runs through `workspace-component-tests`, which installs affected packages in dependency order and executes only the selected tests.
+3. A full-suite plan runs through the six `full-regression-shards` in parallel. The shards install MCP or match-service dependencies only where required.
 
-The lane runs on pull requests. Pushes to `main` retain the existing full sharded regression suite.
+The `workspace-affected-tests` required status aggregator succeeds only when the selected execution path succeeds. It preserves the existing protected context while removing the duplicate monolithic full-suite job.
+
+Pushes to `main` continue to run the same full regression shards.
 
 ## Conservative fallback
 
-The planner selects the full suite when:
+The planner selects full regression coverage when:
 
 - no changed files are supplied;
 - a changed file is not owned by any component;
 - a shared contract or core-tool component is affected;
-- the manifest cannot produce a valid test plan.
+- the manifest cannot produce a valid targeted plan.
 
-A planner error fails the job. It never silently skips validation.
+A planner error fails the required aggregator. It never silently skips validation.
 
-## Rollout and acceptance
+## Acceptance
 
 Implementation acceptance requires:
 
@@ -67,9 +67,9 @@ Implementation acceptance requires:
 - dependency ordering and reverse-dependent tests pass;
 - a leaf-package fixture produces a targeted plan;
 - a shared-contract fixture produces a full-suite plan;
-- a policy workflow fixture selects workflow and scope-policy tests without unrelated drift suites;
-- specialised governance fixtures retain their corresponding tests;
-- `validate.yml` executes the planner on a real pull request;
+- targeted plans run component-scoped tests;
+- full-suite plans run parallel regression shards on pull requests;
+- the required workspace status reflects the delegated path result;
 - existing validation and governance checks remain green.
 
-Replacing or removing existing validation lanes is a separate future decision and requires measured CI evidence. This work does not make that change.
+This rationalization removes duplicate execution but does not remove a regression boundary. Retiring specialised validation lanes remains a separate decision requiring measured evidence.
